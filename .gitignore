@@ -13,3 +13,5 @@ hs_err_pid*
 typings/
 dist/
 node_modules/
+
+.idea/
