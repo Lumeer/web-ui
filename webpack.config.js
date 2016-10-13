@@ -45,6 +45,7 @@ module.exports = {
       jQuery: 'jquery'
     }),
     new HtmlWebpackPlugin({
+      favicon: 'img/favicon.ico',
       title: 'Lumeer tool',
       template: 'src/template-index.ejs', // Load a custom template
       inject: 'head'
