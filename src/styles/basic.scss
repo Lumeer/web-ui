@@ -47,3 +47,13 @@ a {
 .lum-white-container {
   background-color: $secondary-color;
 }
+
+a.navbar-brand{
+  img {
+    display: inline-block;
+  }
+  span {
+    position: relative;
+    top: 5px;
+  }
+}

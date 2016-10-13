@@ -1,6 +1,7 @@
 "use strict";
 const webpack = require("webpack"),
-  HtmlWebpackPlugin = require("html-webpack-plugin");
+  HtmlWebpackPlugin = require("html-webpack-plugin"),
+  CopyWebpackPlugin = require("copy-webpack-plugin");
 module.exports = {
   entry: {
     "vendor": "./src/vendor",
@@ -29,6 +30,11 @@ module.exports = {
         test: /\.scss$/,
         loaders: ["style", "css", "sass"]
       },
+      {
+        //IMAGE LOADER
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        loader:'file'
+      },
       { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&minetype=application/font-woff" },
       { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" }
     ]
@@ -48,6 +54,9 @@ module.exports = {
       template: 'src/template-demo.ejs',
       inject: 'head'
     }),
+    new CopyWebpackPlugin([
+      {from: __dirname + '/img', to: 'img'}
+    ]),
     new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"js/vendor.bundle.js")
   ]
 };
