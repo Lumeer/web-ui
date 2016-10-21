@@ -1,0 +1,33 @@
+@import '../styles/variables';
+
+a.navbar-brand{
+  img {
+    display: inline-block;
+  }
+  span {
+    position: relative;
+    top: 5px;
+  }
+}
+
+@media (min-width: $mobile-width) {
+  left-panel{
+    width: 17%;
+  }
+}
+
+@media (max-width: $mobile-width) {
+  left-panel{
+    position: relative;
+    right: -1px;
+    nav {
+      margin-bottom: 0 !important;
+      .navbar-header {
+        margin-right: 0 !important;
+        .navbar-brand {
+          float: inherit;
+        }
+      }
+    }
+  }
+}

@@ -48,7 +48,7 @@ module.exports = {
       favicon: 'img/favicon.ico',
       title: 'Lumeer tool',
       template: 'src/template-index.ejs', // Load a custom template
-      inject: 'head'
+      inject: 'body'
     }),
     new HtmlWebpackPlugin({  // Also generate a test.html
       filename: 'demo.html',

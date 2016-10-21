@@ -1,0 +1,21 @@
+@import '../styles/variables';
+
+top-panel .lum-top-nav{
+  margin-left: 0;
+  height: $navbar-height;
+
+  .lum-options {
+    a {
+      cursor: pointer;
+      margin-right: 5px;
+    }
+  }
+}
+
+@media (max-width: $mobile-width) {
+  top-panel {
+    .lum-top-nav {
+      padding-top: 15px;
+    }
+  }
+}
