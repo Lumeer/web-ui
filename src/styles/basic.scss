@@ -1,6 +1,7 @@
-@import 'bootstrap.min.css';
+@import './template/bootswatch';
+@import './bootstrap.min.css';
+@import './template/custom.min.css';
 @import 'navbar-left.min.css';
-@import 'custom.min.css';
 $fa-font-path: '~font-awesome/fonts';
 @import '~font-awesome/scss/font-awesome';
 
@@ -17,43 +18,18 @@ a {
     text-decoration: none;
   }
 }
-.lum-content {
-  background-color: $primary-color;
 
-  .lum-page-content {
-    margin-top: 55px;
-    .row{
-      margin: 0;
-    }
+.lum-no-padding {
+  padding: 0;
+}
 
-    ol li{
-      display: inline-block;
-
-      &:not(:first-child):before{
-        content: "/\00a0";
-        padding: 0 5px;
-      }
-    }
-  }
-
-  .lum-options {
-    a {
-      cursor: pointer;
-      margin-right: 5px;
-    }
+.container-fluid {
+  padding-right: 0 !important;
+  .row {
+    margin-right: 0;
   }
 }
 
 .lum-white-container {
   background-color: $secondary-color;
-}
-
-a.navbar-brand{
-  img {
-    display: inline-block;
-  }
-  span {
-    position: relative;
-    top: 5px;
-  }
 }
