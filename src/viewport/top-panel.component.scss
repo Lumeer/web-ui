@@ -1,13 +1,21 @@
 @import '../styles/variables';
 
-top-panel .lum-top-nav{
-  margin-left: 0;
-  height: $navbar-height;
+top-panel {
+  .lum-top-nav {
+    margin-left: 0;
 
-  .lum-options {
-    a {
-      cursor: pointer;
-      margin-right: 5px;
+    .lum-options {
+      a {
+        cursor: pointer;
+        margin-right: 5px;
+      }
+    }
+  }
+}
+@media (min-width: $mobile-width) {
+  top-panel {
+    .lum-top-nav {
+      height: $navbar-height;
     }
   }
 }
