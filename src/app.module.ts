@@ -3,12 +3,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import {LeftPanelComponent} from './viewport/left-panel.component';
 import {ContentComponent} from './viewport/content.component';
 import {TopPanelComponent} from './viewport/top-panel.component';
+import {ViewPortComponent} from './viewport/viewport.component';
 
 @NgModule({
   imports:      [
     BrowserModule,
   ],
-  declarations: [ ContentComponent, LeftPanelComponent, TopPanelComponent ],
-  bootstrap:    [ ContentComponent, LeftPanelComponent, TopPanelComponent]
+  declarations: [
+    ViewPortComponent,
+    ContentComponent,
+    LeftPanelComponent,
+    TopPanelComponent
+  ],
+  bootstrap:    [ ViewPortComponent]
 })
 export class AppModule {}
