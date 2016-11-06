@@ -5,7 +5,8 @@
     "es6-shim": "github:DefinitelyTyped/DefinitelyTyped/es6-shim/es6-shim.d.ts#7de6c3dd94feaeb21f20054b9f30d5dabc5efabd",
     "hammerjs": "registry:dt/hammerjs#2.0.8+20160724063812",
     "jquery": "registry:dt/jquery#1.10.0+20160929162922",
-    "require": "registry:dt/require#2.1.20+20160919185614"
+    "require": "registry:dt/require#2.1.20+20160919185614",
+    "socket.io-client": "registry:dt/socket.io-client#1.4.4+20160317120654"
   },
   "dependencies": {
     "lodash": "registry:npm/lodash#4.0.0+20160723033700"
