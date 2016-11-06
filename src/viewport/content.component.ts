@@ -1,4 +1,5 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, Inject} from '@angular/core';
+
 @Component({
   selector: 'main-content',
   template: require('./content.component.html'),
