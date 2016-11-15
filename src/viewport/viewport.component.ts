@@ -11,4 +11,8 @@ export class ViewPortComponent {
   public handleCollapseEvent() {
     this.collapsed = !this.collapsed;
   }
+
+  public handleItemSelect(dataPayload) {
+    console.log(dataPayload);
+  }
 }

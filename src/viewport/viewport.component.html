@@ -1,7 +1,8 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-3" [ngClass]="{'col-lg-2': !collapsed, 'col-lg-1': collapsed}">
-      <left-panel [collapsedValue]="collapsed"></left-panel>
+      <left-panel [collapsedValue]="collapsed"
+                  (clickEvent)="handleItemSelect($event);"></left-panel>
     </div>
     <div class="col-sm-9 col-lg-10 lum-no-padding lum-content" [ngClass]="{'col-lg-10': !collapsed, 'col-lg-11': collapsed}">
       <top-panel (collapseEvent)="handleCollapseEvent();"></top-panel>
