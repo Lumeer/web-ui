@@ -1,0 +1,7 @@
+@import '../styles/variables';
+
+view-port {
+  .lum-nav-panel, .lum-content {
+    transition: width 1s ease-out;
+  }
+}

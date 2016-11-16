@@ -14,7 +14,7 @@ import { Observer } from 'rxjs';
  * ```
  */
 @Injectable()
-export class Socket {
+export class SocketService {
   public socket: any = null;
   public messages: Observable<any>;
   private _messagesObserver : Observer<string>;
