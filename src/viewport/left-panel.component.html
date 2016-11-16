@@ -14,7 +14,7 @@
     <div class="collapse navbar-collapse lum-navbar" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <template ngFor let-item [ngForOf]="router.config">
-          <li *ngIf="item.data">
+          <li *ngIf="item.data && item.data.title && item.data.id">
             <a class="lum-nav-item"
                [ngClass]="{'collapsed': item.data.collapsed}"
                (click)="item.data.collapsed = !item.data.collapsed">
@@ -24,7 +24,7 @@
             <div>
               <ul class="lum-collapsed" [ngClass]="{'lum-in': !item.data.collapsed}">
                 <template ngFor let-child [ngForOf]="item.children">
-                  <li *ngIf="child.data"
+                  <li *ngIf="child.data && child.data.title && child.data.id"
                       [ngClass]="{'active': child.data.active}"
                       (click)="onItemClick(child, item)">
                     <a href="javascript:;"><i class="fa" [ngClass]="child.data.icon" aria-hidden="true"></i>{{child.data.title}}</a>
