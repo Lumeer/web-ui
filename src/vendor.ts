@@ -6,17 +6,15 @@ import '@angular/common';
 import '@angular/http';
 import '@angular/router';
 // RxJS
-import 'rxjs';
+// import 'rxjs';
 
-import 'html5shiv';
-import 'jquery';
-import 'bootstrap';
+// import 'html5shiv';
 
 import './js/custom.js';
 
-import 'core-js/es6';
-import 'core-js/es7/reflect';
-import 'zone.js/dist/zone';
+// import 'core-js/es6';
+// import 'core-js/es7/reflect';
+// import 'zone.js/dist/zone';
 
 import 'socket.io-client';
-import 'lodash';
+// import 'lodash';

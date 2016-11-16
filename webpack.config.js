@@ -59,5 +59,10 @@ module.exports = {
       {from: __dirname + '/img', to: 'img'}
     ]),
     new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"js/vendor.bundle.js")
-  ]
+  ],
+  externals: {
+    'jquery': 'jQuery',
+    'lodash': '_',
+    'rxjs': 'Rx'
+  }
 };
