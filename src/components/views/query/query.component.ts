@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {QueryTag} from '../../common/helpers/tag.interface';
 import {QUERY_TAG_PLACEHOLDER} from '../../common/helpers/constants';
+import {AutoCompleteOptions} from '../../common/auto-complete/autocomplete.interface';
 
 @Component({
   selector: 'views-query',
@@ -33,7 +34,7 @@ export class QueryComponent {
     values: this.colNames
   };
 
-  public autocompleteOptions = {
+  public autocompleteOptions: AutoCompleteOptions = {
     displayKey: 'text'
   };
   public placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
