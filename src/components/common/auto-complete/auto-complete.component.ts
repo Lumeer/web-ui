@@ -77,6 +77,9 @@ export class AutoCompleteComponent {
   }
 
   private filterSource() {
+    if (!this.options.filterFn) {
+      this.options.filterFn = filterItems.bind(this);
+    }
     this.filteredSource = this.source.filter(this.options.filterFn);
   }
 
@@ -98,10 +101,6 @@ export class AutoCompleteComponent {
   protected ngOnInit() {
     if (this.options.fetchResources) {
       this.source = this.options.fetchResources();
-    }
-
-    if (!this.options.filterFn) {
-      this.options.filterFn = filterItems.bind(this);
     }
   }
 
