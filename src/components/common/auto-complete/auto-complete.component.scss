@@ -1,0 +1,40 @@
+@import "../../../styles/variables";
+
+lum-auto-complete {
+  .lum-autocomplete {
+    display: inline-block;
+    line-height: 25px;
+
+    .dropdown-select {
+      position: absolute;
+      min-width: 150px;
+      background-color: #fff;
+      overflow: hidden;
+      list-style-type: none;
+      padding: 0;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+      box-sizing: border-box;
+      margin-top: 10px;
+
+      .autocomplete-item {
+        padding: 0 1.25rem;
+        letter-spacing: 0.05rem;
+        font-size: $font-size-large;
+        cursor: pointer;
+        font-weight: 400;
+        line-height: 32px;
+        text-transform: none;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow-x: hidden;
+
+        &.active, &:hover {
+          background-color: $brand-info;
+          color: $gray-lighter;
+        }
+      }
+    }
+  }
+}
+
+

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'forms-pivot',
+  selector: 'views-pivot',
   template: require('./pivot.component.html')
 })
 

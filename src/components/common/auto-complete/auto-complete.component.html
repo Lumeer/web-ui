@@ -1,0 +1,16 @@
+<section class="lum-autocomplete">
+  <ng-content></ng-content>
+  <div *ngIf="pickerVisible"
+       [@animateDropdown]="'in'"
+       class="dropdown-select"
+       (mouseover)="onMouseOver()">
+    <div *ngFor="let oneOption of filteredSource"
+         class="autocomplete-item"
+         [@animateIn]="'in'"
+         #autocompleteItem
+         (click)="updateData(oneOption)"
+         [ngClass]="{active: oneOption.active}">
+    {{options && options.displayKey && oneOption[options.displayKey]}}
+    </div>
+  </div>
+</section>
