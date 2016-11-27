@@ -30,11 +30,11 @@ export class QueryComponent {
     toDisplay: ['colName', 'colValue'],
     colName: this.colNames,
     colValue: this.colValues,
+    values: this.colNames
   };
 
   public autocompleteOptions = {
-    displayKey: 'text',
-    values: this.colNames
+    displayKey: 'text'
   };
   public placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
 
@@ -42,7 +42,7 @@ export class QueryComponent {
     if (!this.items[tagIndex].sticky) {
       this.items.splice(tagIndex, 1);
       this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
-      this.autocompleteOptions.values = this.colNames;
+      this.tagOptions.values = this.colNames;
     }
   }
 
@@ -54,11 +54,11 @@ export class QueryComponent {
       if (this.items[this.items.length - 1] && this.items[this.items.length - 1].colValue === '') {
         this.items[this.items.length - 1].colValue = currentTag.dataPayload;
         this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
-        this.autocompleteOptions.values = this.colNames;
+        this.tagOptions.values = this.colNames;
       } else {
         this.items.push({colName: currentTag.dataPayload, colValue: ''});
         this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.VALUE;
-        this.autocompleteOptions.values = this.colValues;
+        this.tagOptions.values = this.colValues;
       }
     }
   }

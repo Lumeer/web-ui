@@ -16,7 +16,6 @@
                          [(modelData)]="oneTag[displayKey]">
         <span contenteditable="true"
               [textContent]="oneTag[displayKey]"
-              class="lum-editable"
               (blur)="addItem(tagIndex, oneTag);"
               (input)="oneTag[displayKey] = $event.target.textContent">
         {{oneTag[displayKey]}}
@@ -33,14 +32,13 @@
     </span>
   </div>
   <form (keydown)="onKeyDown($event, -1)">
-    <lum-auto-complete tabindex="0"
-                       [source]="autocompleteOptions.values"
+    <lum-auto-complete [source]="options.values"
                        [options]="autocompleteOptions"
                        [(modelData)]="tagValue">
-      <input #tagsInput type="text"
+      <input #tagsInput
+             type="text"
              class="lum-editable"
              (focus)="onItemFocus()"
-             tabindex="0"
              [(ngModel)]="tagValue" name="text"
              [attr.placeholder]="placeholder"/>
     </lum-auto-complete>
