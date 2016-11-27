@@ -1,0 +1,45 @@
+<div class="lum-tag">
+  <div *ngFor="let oneTag of tags; let tagIndex = index"
+       #tagItem
+       tabindex="0"
+       class="lum-tag-item"
+       (focus)="onItemFocus()"
+       (dblclick)="onDbClick(tagIndex)"
+       (keydown)="onKeyDown($event, tagIndex)">
+    <template ngFor let-displayKey let-odd="odd" [ngForOf]="options.toDisplay" >
+      <span *ngIf="odd">
+        :
+      </span>
+      <lum-auto-complete #autoComplete
+                         [source]="options[displayKey]"
+                         [options]="autocompleteOptions"
+                         [(modelData)]="oneTag[displayKey]">
+        <span [attr.contenteditable]="editedItemIndex === tagIndex"
+              [textContent]="oneTag[displayKey]"
+              (focusout)="addItem(tagIndex, oneTag); autoComplete.onHidePicker($event)"
+              (keydown)="autoComplete.onKeyDown($event)"
+              (input)="oneTag[displayKey] = $event.target.textContent">
+        {{oneTag[displayKey]}}
+      </span>
+      </lum-auto-complete>
+    </template>
+    <span (click)="deleteItem(tagIndex)" class="lum-remove">
+      <i class="fa fa-times" aria-hidden="true"></i>
+    </span>
+  </div>
+  <form (keydown)="onKeyDown($event, -1)">
+    <lum-auto-complete tabindex="0"
+                       #inputAuto
+                       [source]="autocompleteOptions.values"
+                       [options]="autocompleteOptions"
+                       [(modelData)]="tagValue">
+      <input #tagsInput type="text"
+             (focus)="onItemFocus()"
+             tabindex="0"
+             (focusout)="inputAuto.onHidePicker($event)"
+             (keydown)="inputAuto.onKeyDown($event)"
+             [(ngModel)]="tagValue" name="text"
+             [attr.placeholder]="placeholder"/>
+    </lum-auto-complete>
+  </form>
+</div>

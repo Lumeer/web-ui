@@ -8,7 +8,5 @@ import {BreadcrumbService} from '../services/breadcrumb.service';
 })
 export class ContentComponent {
   @Input() public currentView: any;
-  constructor(private breadCrumbService: BreadcrumbService) {
-    console.log(this);
-  }
+  constructor(private breadCrumbService: BreadcrumbService) {}
 }

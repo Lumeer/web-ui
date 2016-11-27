@@ -2,6 +2,9 @@ import { NgModule }             from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {PivotComponent} from './pivot/pivot.component';
 import {QueryComponent} from './query/query.component';
+import {ActiveTableComponent} from './active_table/active-table.component';
+import {SingleDocumentComponent} from './single_document/single-document.component';
+import {CommonComponentsModule} from '../common/common-components.module';
 
 const viewsRoutes: Routes = [
   {
@@ -26,7 +29,23 @@ const viewsRoutes: Routes = [
         path: 'query',
         component: QueryComponent,
         data: {
-          id: 'query', title: 'Query', icon: 'fa-th-list'
+          id: 'query', title: 'Query builder', icon: 'fa-th-list'
+        },
+        children: []
+      },
+      {
+        path: 'active_table',
+        component: ActiveTableComponent,
+        data: {
+          id: 'active_table', title: 'Active table', icon: 'fa-table'
+        },
+        children: []
+      },
+      {
+        path: 'single_document',
+        component: SingleDocumentComponent,
+        data: {
+          id: 'single_document', title: 'Single document', icon: 'fa-folder-open-o'
         },
         children: []
       }
@@ -36,11 +55,14 @@ const viewsRoutes: Routes = [
 
 @NgModule({
   imports: [
+    CommonComponentsModule,
     RouterModule.forChild(viewsRoutes)
   ],
   declarations: [
     PivotComponent,
-    QueryComponent
+    QueryComponent,
+    ActiveTableComponent,
+    SingleDocumentComponent
   ]
 })
 export class ViewsModule { }
