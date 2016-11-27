@@ -16,11 +16,3 @@
 
 })();
 
-
-var original = $.fn.val;
-$.fn.val = function() {
-  if ($(this).is('*[contenteditable=true]')) {
-    return $.fn.html.apply(this, arguments);
-  };
-  return original.apply(this, arguments);
-};

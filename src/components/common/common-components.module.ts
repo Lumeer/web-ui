@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Ng2AutoCompleteModule } from 'ng2-auto-complete';
 import {HttpModule} from '@angular/http';
 import {AutoCompleteComponent} from './auto-complete/auto-complete.component';
+import {LumEditable} from './auto-complete/lum-editable';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import {AutoCompleteComponent} from './auto-complete/auto-complete.component';
   ],
   declarations: [
     TagInputComponent,
-    AutoCompleteComponent
+    AutoCompleteComponent,
+    LumEditable
   ],
   exports: [
     TagInputComponent,

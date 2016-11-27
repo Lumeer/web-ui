@@ -16,7 +16,13 @@ export class QueryComponent {
     {text: 'Burger'}, {text: 'Pizza'}, {text: 'Bacon'}, {text: 'Salad'}, {text: 'Water'}, {text: 'Coke'}
   ];
 
+  private collections = [
+    {text: 'Store'}, {text: 'Restaurant'}, {text: 'Fast food'}
+  ];
+
   public items: Array<QueryTag> = [
+    {colName: 'Sort By', colValue: '*', readOnly: ['colName'], sticky: true, source: this.colNames},
+    {colName: 'Collection', colValue: 'Store', readOnly: ['colName'], sticky: true, source: this.collections},
     {colValue: 'Pizza', colName: 'Food'},
     {colValue: 'Burger', colName: 'Food'}
   ];
@@ -33,8 +39,11 @@ export class QueryComponent {
   public placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
 
   public deleteTag(tagIndex) {
-    this.items.splice(tagIndex, 1);
-    this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
+    if (!this.items[tagIndex].sticky) {
+      this.items.splice(tagIndex, 1);
+      this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
+      this.autocompleteOptions.values = this.colNames;
+    }
   }
 
   public addItem(currentTag) {
@@ -42,8 +51,8 @@ export class QueryComponent {
       this.items[currentTag.index].colValue = currentTag.dataPayload.colValue;
       this.items[currentTag.index].colName = currentTag.dataPayload.colName;
     } else {
-      if (this.items[this.items.length -1] && this.items[this.items.length -1].colValue === '') {
-        this.items[this.items.length -1].colValue = currentTag.dataPayload;
+      if (this.items[this.items.length - 1] && this.items[this.items.length - 1].colValue === '') {
+        this.items[this.items.length - 1].colValue = currentTag.dataPayload;
         this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
         this.autocompleteOptions.values = this.colNames;
       } else {

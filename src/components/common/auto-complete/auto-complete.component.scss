@@ -17,6 +17,7 @@ lum-auto-complete {
       margin-top: 10px;
 
       .autocomplete-item {
+        overflow: hidden;
         padding: 0 1.25rem;
         letter-spacing: 0.05rem;
         font-size: $font-size-large;
@@ -26,7 +27,6 @@ lum-auto-complete {
         text-transform: none;
         text-overflow: ellipsis;
         white-space: nowrap;
-        overflow-x: hidden;
 
         &.active, &:hover {
           background-color: $brand-info;
