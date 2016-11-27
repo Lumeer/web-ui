@@ -4,6 +4,7 @@ import {
 } from '@angular/core';
 import {getActionToKey, filterItems, inactive} from './autocomplete-actions';
 import {LumEditable} from './lum-editable';
+import {AutoCompleteOptions} from './autocomplete.interface';
 
 @Component({
   selector: 'lum-auto-complete, [lum-auto-complete]',
@@ -46,7 +47,7 @@ import {LumEditable} from './lum-editable';
 export class AutoCompleteComponent {
   @Input() public source: any[];
   @Input() public modelData: any;
-  @Input() public options: any;
+  @Input() public options: AutoCompleteOptions;
 
   @Output() public modelDataChange: any = new EventEmitter();
 
@@ -76,7 +77,7 @@ export class AutoCompleteComponent {
   }
 
   private filterSource() {
-    this.filteredSource = this.source.filter(filterItems.bind(this));
+    this.filteredSource = this.source.filter(this.options.filterFn);
   }
 
   private updateData(item) {
@@ -92,6 +93,16 @@ export class AutoCompleteComponent {
 
   public onMouseOver() {
     inactive.call(this);
+  }
+
+  protected ngOnInit() {
+    if (this.options.fetchResources) {
+      this.source = this.options.fetchResources();
+    }
+
+    if (!this.options.filterFn) {
+      this.options.filterFn = filterItems.bind(this);
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
