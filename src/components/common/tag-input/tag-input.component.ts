@@ -2,7 +2,7 @@ import {
   Component, Input, ElementRef, Renderer, ViewChild, ViewChildren, QueryList, EventEmitter, Output, SimpleChanges
 } from '@angular/core';
 import {getActionToKey} from './tag-actions';
-import {QueryTag} from '../helpers/tag.interface';
+import {CustomTag} from '../helpers/tag.interface';
 
 @Component({
   selector: 'tag-input',
@@ -11,7 +11,7 @@ import {QueryTag} from '../helpers/tag.interface';
 })
 
 export class TagInputComponent {
-  @Input() public tags: QueryTag[];
+  @Input() public tags: CustomTag[];
   @Input() public placeholder: string;
   @Input() public options: any;
   @Input() public autocompleteOptions: any;
@@ -51,5 +51,12 @@ export class TagInputComponent {
     let keyCode = $event.keyCode || $event.which;
     let action = getActionToKey(keyCode);
     action.call(this, index, $event);
+  }
+
+  public isTagEditable(tagIndex, tagKey) {
+    if (this.tags[tagIndex].hasOwnProperty('readOnly') && this.tags[tagIndex].readOnly.indexOf(tagKey) !== -1) {
+      return false;
+    }
+    return this.editedItemIndex === tagIndex;
   }
 }

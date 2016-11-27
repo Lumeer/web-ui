@@ -1,8 +1,9 @@
 import {
-  Component, Input, SimpleChanges, Output, EventEmitter, ViewChild, ElementRef, Renderer, ViewChildren, QueryList,
-  style, state, animate, transition, trigger, group, keyframes
+  Component, Input, SimpleChanges, Output, EventEmitter, ElementRef, Renderer, ContentChild,
+  style, state, animate, transition, trigger, keyframes
 } from '@angular/core';
 import {getActionToKey, filterItems, inactive} from './autocomplete-actions';
+import {LumEditable} from './lum-editable';
 
 @Component({
   selector: 'lum-auto-complete, [lum-auto-complete]',
@@ -24,7 +25,7 @@ import {getActionToKey, filterItems, inactive} from './autocomplete-actions';
         ]))
       ])
     ]),
-    trigger('animateDropdown', [
+    trigger('animateHeight', [
       state('in', style({height: '*'})),
       transition('void => *', [
         animate(200, keyframes([
@@ -33,8 +34,10 @@ import {getActionToKey, filterItems, inactive} from './autocomplete-actions';
         ]))
       ]),
       transition('* => void', [
-        style({height: '*', offset: 0}),
-        style({height: 0, offset: 1})
+        animate(200, keyframes([
+          style({height: '*', offset: 0}),
+          style({height: 0, offset: 1})
+        ]))
       ])
     ])
   ]
@@ -47,10 +50,15 @@ export class AutoCompleteComponent {
 
   @Output() public modelDataChange: any = new EventEmitter();
 
+  @ContentChild(LumEditable) private editableContent: LumEditable;
+
   public pickerVisible = false;
   public filteredSource: any[];
 
-  constructor(private elementRef: ElementRef, private renderer: Renderer) {
+  private focusFunction: Function;
+  private blurFunction: Function;
+  private keydownFunction: Function;
+  constructor(private renderer: Renderer) {
   }
 
   public onShowPicker() {
@@ -59,7 +67,7 @@ export class AutoCompleteComponent {
 
   public onHidePicker($event?) {
     if ($event && $event.relatedTarget) {
-      if ($event.relatedTarget.tagName !== 'LUM-AUTO-COMPLETE') {
+      if (!$event.relatedTarget.classList.contains('autocomplete-item')) {
         this.pickerVisible = false;
       }
     } else {
@@ -77,7 +85,6 @@ export class AutoCompleteComponent {
   }
 
   public onKeyDown($event) {
-    console.log(this);
     let keyCode = $event.keyCode || $event.which;
     let action = getActionToKey(keyCode);
     action.call(this, $event);
@@ -92,5 +99,23 @@ export class AutoCompleteComponent {
       inactive.call(this);
       this.filterSource();
     }
+  }
+
+  protected ngAfterContentInit() {
+    this.focusFunction = this.renderer.listen(this.editableContent.el.nativeElement, 'focus', (event) => {
+      this.onShowPicker();
+    });
+    this.blurFunction = this.renderer.listen(this.editableContent.el.nativeElement, 'blur', (event) => {
+      this.onHidePicker(event);
+    });
+    this.keydownFunction = this.renderer.listen(this.editableContent.el.nativeElement, 'keydown', (event) => {
+      this.onKeyDown(event);
+    });
+  }
+
+  protected ngOnDestroy() {
+    this.focusFunction();
+    this.blurFunction();
+    this.keydownFunction();
   }
 }
