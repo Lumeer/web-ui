@@ -26,10 +26,12 @@ export class TagInputComponent {
   @ViewChildren('tagItem') private tagElements: QueryList<ElementRef>;
 
   private editedItemIndex: number = -1;
-
+  private activeIndex: number = -1;
   public tagValue: string = '';
 
-  constructor(private element: ElementRef, private renderer: Renderer) {}
+  constructor(private element: ElementRef, private renderer: Renderer) {
+    console.log(this);
+  }
 
   public onItemFocus() {
     this.editedItemIndex = -1;
