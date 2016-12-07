@@ -3,8 +3,8 @@ import {
   style, state, animate, transition, trigger, keyframes
 } from '@angular/core';
 import {getActionToKey, filterItems, inactive} from './autocomplete-actions';
-import {LumEditable} from './lum-editable';
 import {AutoCompleteOptions} from './autocomplete.interface';
+import {EditableDirective} from './editable.directive';
 
 @Component({
   selector: 'lum-auto-complete, [lum-auto-complete]',
@@ -51,7 +51,7 @@ export class AutoCompleteComponent {
 
   @Output() public modelDataChange: any = new EventEmitter();
 
-  @ContentChild(LumEditable) private editableContent: LumEditable;
+  @ContentChild(EditableDirective) private editableContent: EditableDirective;
 
   public pickerVisible = false;
   public filteredSource: any[];

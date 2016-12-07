@@ -4,7 +4,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {AutoCompleteComponent} from './auto-complete/auto-complete.component';
-import {LumEditable} from './auto-complete/lum-editable';
+import {EditableDirective} from './auto-complete/editable.directive';
 
 @NgModule({
   imports: [
@@ -15,7 +15,7 @@ import {LumEditable} from './auto-complete/lum-editable';
   declarations: [
     TagInputComponent,
     AutoCompleteComponent,
-    LumEditable
+    EditableDirective
   ],
   exports: [
     TagInputComponent,
