@@ -2,12 +2,21 @@ import {Injectable} from '@angular/core';
 
 declare var Keycloak: any;
 
+export const KEYCLOAK_CONFIG = {
+  realm: 'demo',
+  clientId: 'lumeer',
+  url: 'http://localhost:8080/auth'
+};
+
 @Injectable()
 export class KeycloakService {
   public static auth: any = {};
 
   public static init(): Promise<any> {
-    let keycloakAuth: any = new Keycloak('keycloak.json');
+    let kcSetting = require('../../../webapp/WEB-INF/keycloak.json');
+    kcSetting.url = kcSetting['auth-server-url'];
+    kcSetting.clientId = kcSetting.resource;
+    let keycloakAuth: any = new Keycloak(kcSetting);
     KeycloakService.auth.loggedIn = false;
 
     return new Promise((resolve, reject) => {
@@ -16,7 +25,7 @@ export class KeycloakService {
           KeycloakService.auth.loggedIn = true;
           KeycloakService.auth.authz = keycloakAuth;
           KeycloakService.auth.logoutUrl = keycloakAuth.authServerUrl +
-            '/realms/demo/protocol/openid-connect/logout?redirect_uri=/';
+            `/realms/${KEYCLOAK_CONFIG.realm}/protocol/openid-connect/logout?redirect_uri=/`;
           resolve();
         })
         .error(() => {

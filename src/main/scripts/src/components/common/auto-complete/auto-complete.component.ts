@@ -60,6 +60,7 @@ export class AutoCompleteComponent {
   private blurFunction: Function;
   private keydownFunction: Function;
   constructor(private renderer: Renderer) {
+    console.log(this);
   }
 
   public onShowPicker() {

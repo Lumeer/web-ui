@@ -37,7 +37,8 @@ module.exports = {
         loader:'file'
       },
       { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&minetype=application/font-woff" },
-      { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" }
+      { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
+      {test: /\.json$/,  loader: 'json'}
     ]
   },
   plugins: [
@@ -57,7 +58,8 @@ module.exports = {
       inject: 'head'
     }),
     new CopyWebpackPlugin([
-      {from: __dirname + '/img', to: 'img'}
+      {from: __dirname + '/img', to: 'img'},
+      {from: __dirname + '/data', to: 'data'}
     ]),
     new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"js/vendor.bundle.js")
   ],

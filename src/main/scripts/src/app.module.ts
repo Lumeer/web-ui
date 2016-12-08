@@ -5,6 +5,8 @@ import {SocketService} from './services/socket.service';
 import { RouterModule, Routes } from '@angular/router';
 import {FormsModule, ViewsModule} from './components';
 import {BreadcrumbService, KeycloakHttp, KeycloakService} from './services';
+import {XHRBackend, RequestOptions, Http} from '@angular/http';
+import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent}
@@ -20,7 +22,16 @@ const appRoutes: Routes = [
   providers: [
     SocketService,
     BreadcrumbService,
-    KeycloakHttp,
+    {
+      provide: Http,
+      useFactory:
+        (
+          backend: XHRBackend,
+          defaultOptions: RequestOptions,
+          keycloakService: KeycloakService
+        ) => new KeycloakHttp(backend, defaultOptions, keycloakService),
+      deps: [XHRBackend, RequestOptions, KeycloakService]
+    },
     KeycloakService
   ],
   declarations: [

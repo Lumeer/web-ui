@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import {KeycloakService} from '../services/keycloak.service';
 
 @Component({
   selector: 'view-port',
@@ -11,7 +12,7 @@ export class ViewPortComponent {
   public collapsed: boolean = false;
   public activeItem: any;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private kc: KeycloakService) {}
 
   private ngOnInit() { this.activeItem = { title: 'Home'}; }
 
@@ -27,5 +28,9 @@ export class ViewPortComponent {
       this.activeItem = { title: 'Home'};
       this.router.navigate([`/`]);
     }
+  }
+
+  public handleLogOut() {
+    this.kc.logout();
   }
 }

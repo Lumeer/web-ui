@@ -6,8 +6,13 @@ import {Component, EventEmitter, Output} from '@angular/core';
 })
 export class TopPanelComponent {
   @Output() public collapseEvent = new EventEmitter();
+  @Output() public logoutEvent = new EventEmitter();
 
   public onCollapse() {
     this.collapseEvent.next();
+  }
+
+  public onLogout() {
+    this.logoutEvent.next();
   }
 }
