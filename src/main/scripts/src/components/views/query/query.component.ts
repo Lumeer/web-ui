@@ -23,7 +23,8 @@ export class QueryComponent {
 
   public items: Array<QueryTag> = [
     {colName: 'Sort By', colValue: '*', readOnly: ['colName'], sticky: true, source: this.colNames, type: STRING},
-    {colName: 'Collection', colValue: 'Store', readOnly: ['colName'], sticky: true, source: this.collections, type: STRING},
+    {colName: 'Collection', colValue: 'Store', readOnly: ['colName'],
+      sticky: true, source: this.collections, type: STRING},
     {colValue: 'Pizza', colName: 'Food', type: STRING},
     {colValue: 'Burger', colName: 'Food', type: STRING}
   ];

@@ -4,7 +4,7 @@ import {PivotComponent} from './pivot/pivot.component';
 import {QueryComponent} from './query/query.component';
 import {ActiveTableComponent} from './active_table/active-table.component';
 import {SingleDocumentComponent} from './single_document/single-document.component';
-import {CommonComponentsModule} from '../common/common-components.module';
+import {CommonComponentsModule} from '../';
 
 const viewsRoutes: Routes = [
   {

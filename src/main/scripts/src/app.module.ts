@@ -1,15 +1,10 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { LeftPanelComponent } from './viewport/left-panel.component';
-import {ContentComponent} from './viewport/content.component';
-import {TopPanelComponent} from './viewport/top-panel.component';
-import {ViewPortComponent} from './viewport/viewport.component';
+import { LeftPanelComponent, ContentComponent, TopPanelComponent, ViewPortComponent, HomeComponent } from './viewport';
 import {SocketService} from './services/socket.service';
 import { RouterModule, Routes } from '@angular/router';
-import {FormsModule} from './components/forms/forms.module';
-import {ViewsModule} from './components/views/views.module';
-import {HomeComponent} from './viewport/home.component';
-import {BreadcrumbService} from './services/breadcrumb.service';
+import {FormsModule, ViewsModule} from './components';
+import {BreadcrumbService, KeycloakHttp, KeycloakService} from './services';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent}
@@ -24,7 +19,9 @@ const appRoutes: Routes = [
   ],
   providers: [
     SocketService,
-    BreadcrumbService
+    BreadcrumbService,
+    KeycloakHttp,
+    KeycloakService
   ],
   declarations: [
     ViewPortComponent,
