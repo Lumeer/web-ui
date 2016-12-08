@@ -26,7 +26,7 @@
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
-    <!-- <security-constraint>
+    <security-constraint>
         <web-resource-collection>
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
@@ -37,10 +37,10 @@
 
     <login-config>
         <auth-method>KEYCLOAK</auth-method>
-        <realm-name>master</realm-name>
+        <realm-name>demo</realm-name>
     </login-config>
 
     <security-role>
         <role-name>user</role-name>
-    </security-role> -->
+    </security-role>
 </web-app>

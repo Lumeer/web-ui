@@ -1,10 +1,7 @@
 {
-  "realm": "master",
+  "realm": "demo",
   "auth-server-url": "http://localhost:8080/auth",
   "ssl-required": "external",
   "resource": "lumeer",
-  "credentials": {
-    "secret": "fe701801-f00e-44cc-a791-26b79956326a"
-  },
-  "use-resource-role-mappings": true
+  "public-client": true
 }
