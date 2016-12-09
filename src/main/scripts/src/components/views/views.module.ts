@@ -5,6 +5,7 @@ import {QueryComponent} from './query/query.component';
 import {ActiveTableComponent} from './active_table/active-table.component';
 import {SingleDocumentComponent} from './single_document/single-document.component';
 import {CommonComponentsModule} from '../';
+import {FilterComponent} from './query/filter.component';
 
 const viewsRoutes: Routes = [
   {
@@ -62,7 +63,8 @@ const viewsRoutes: Routes = [
     PivotComponent,
     QueryComponent,
     ActiveTableComponent,
-    SingleDocumentComponent
+    SingleDocumentComponent,
+    FilterComponent
   ]
 })
 export class ViewsModule { }
