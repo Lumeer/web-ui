@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import {QueryTag, STRING, NUMBER} from '../../common/helpers/tag.interface';
 import {QUERY_TAG_PLACEHOLDER} from '../../common/helpers/constants';
 import {AutoCompleteOptions} from '../../common/auto-complete/autocomplete.interface';
-import {KeycloakHttp} from '../../../services';
 import {Http} from '@angular/http';
+import {ITagOptions, TagBuilder} from './query-tag.inteface';
 
 @Component({
   selector: 'views-query',
@@ -11,28 +11,30 @@ import {Http} from '@angular/http';
 })
 
 export class QueryComponent {
-  constructor(private http: Http) {}
+  constructor(private http: Http) {
+    this.initTagOptions();
+  }
 
   public colNames: any[] = [];
   public colValues: any[] = [];
   public collections: any[] = [];
+  public items: QueryTag[] = [];
+  public tagOptions: ITagOptions;
 
-  public items: Array<QueryTag> = [];
+  public autocompleteOptions: AutoCompleteOptions = {
+    displayKey: 'text'
+  };
 
-  public tagOptions = {};
-
-  private collectionItem = {colName: 'Collection', colValue: 'Store', readOnly: ['colName'],
+  private collectionItem = {colValue: 'Store', colName: 'Collection', readOnly: ['colName'],
     sticky: true, source: this.collections, type: STRING};
   private sortByItem = {colName: 'Sort By', colValue: '*', readOnly: ['colName'],
     sticky: true, source: this.colNames, type: STRING};
 
   public ngOnInit() {
-    this.initTagOptions();
     this.fetchColNames();
     this.fetchColValues();
     this.fetchCollections();
     this.fetchItems();
-    console.log(this);
   }
 
   private fetchColNames() {
@@ -40,8 +42,8 @@ export class QueryComponent {
       .map(res => res.json())
       .subscribe(colNames => {
         this.colNames = colNames;
-        this.tagOptions['colName'] = colNames;
-        this.tagOptions['values'] = colNames;
+        this.tagOptions.withColNames(colNames);
+        this.tagOptions.values = colNames;
       });
   }
 
@@ -50,7 +52,7 @@ export class QueryComponent {
       .map(res => res.json())
       .subscribe(colValues => {
         this.colValues = colValues;
-        this.tagOptions['colValue'] = colValues;
+        this.tagOptions.withColValues(colValues);
       });
   }
 
@@ -71,28 +73,12 @@ export class QueryComponent {
   }
 
   private initTagOptions() {
-    this.tagOptions = {
-      toDisplay: ['colName', 'colValue'],
-      colName: this.colNames,
-      colValue: this.colValues,
-      values: this.colNames,
-      operandTypes: {type: 'string', values: ['&', '||']},
-      equalityValues: {
-        [STRING]: {
-          type: 'icon',
-          values: [{icon: 'fa-exchange', value: 'like'}, {icon: 'fa-code', value: 'not-like'}]
-        },
-        [NUMBER]: {
-          type: 'string',
-          values: ['==', '>', '<', '>=', '=<']
-        }
-      }
-    }
+    this.tagOptions = new TagBuilder()
+      .withOperands(['&', '||'])
+      .withNumberEquality(['==', '>', '<', '>=', '=<'])
+      .withStringEquality([{icon: 'fa-exchange', value: 'like'}, {icon: 'fa-code', value: 'not-like'}])
+      .build();
   }
-
-  public autocompleteOptions: AutoCompleteOptions = {
-    displayKey: 'text'
-  };
 
   public placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
 
@@ -100,29 +86,41 @@ export class QueryComponent {
     if (!this.items[tagIndex].sticky) {
       this.items.splice(tagIndex, 1);
       this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
-      this.tagOptions['values'] = this.colNames;
+      this.tagOptions.values = this.colNames;
     }
   }
 
   public addItem(currentTag) {
     if (currentTag.index !== -1) {
-      this.items[currentTag.index].colValue = currentTag.dataPayload.colValue;
-      this.items[currentTag.index].colName = currentTag.dataPayload.colName;
-      this.items[currentTag.index].type = QueryComponent.getType(currentTag.dataPayload.colValue);
-      this.items[currentTag.index].equality = currentTag.dataPayload.equality;
-      this.items[currentTag.index].operand = currentTag.dataPayload.operand;
+      this.editItem(currentTag.index, currentTag.dataPayload);
     } else {
       if (this.items[this.items.length - 1] && this.items[this.items.length - 1].colValue === '') {
-        this.items[this.items.length - 1].colValue = currentTag.dataPayload;
-        this.items[this.items.length - 1].type = QueryComponent.getType(currentTag.dataPayload);
-        this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
-        this.tagOptions['values'] = this.colNames;
+        this.newItemValue(currentTag.dataPayload);
       } else {
-        this.items.push({colName: currentTag.dataPayload, colValue: '', type: STRING});
-        this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.VALUE;
-        this.tagOptions['values'] = this.colValues;
+        this.newItem(currentTag.dataPayload);
       }
     }
+  }
+
+  private editItem(indexOfItem, data) {
+    this.items[indexOfItem].colValue = data.colValue;
+    this.items[indexOfItem].colName = data.colName;
+    this.items[indexOfItem].type = QueryComponent.getType(data.colValue);
+    this.items[indexOfItem].equality = data.equality;
+    this.items[indexOfItem].operand = data.operand;
+  }
+
+  private newItemValue(data) {
+    this.items[this.items.length - 1].colValue = data;
+    this.items[this.items.length - 1].type = QueryComponent.getType(data);
+    this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
+    this.tagOptions.values = this.colNames;
+  }
+
+  private newItem(data) {
+    this.items.push({colName: data, colValue: '', type: STRING});
+    this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.VALUE;
+    this.tagOptions.values = this.colValues;
   }
 
   private static isNumber(itemValue) {

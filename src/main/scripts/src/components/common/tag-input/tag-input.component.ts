@@ -29,8 +29,10 @@ export class TagInputComponent {
   private activeIndex: number = -1;
   public tagValue: string = '';
 
-  constructor(private element: ElementRef, private renderer: Renderer) {
-    console.log(this);
+  constructor(private element: ElementRef, private renderer: Renderer) {}
+
+  public getObjectKeys(objectToDisplay) {
+    return Object.keys(objectToDisplay);
   }
 
   public onItemFocus() {

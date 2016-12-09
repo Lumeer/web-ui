@@ -8,7 +8,7 @@
        (mouseover)="activeIndex = tagIndex"
        (mouseleave)="activeIndex = -1"
        (keydown)="onKeyDown($event, tagIndex)">
-    <template ngFor let-displayKey let-odd="odd" [ngForOf]="options.toDisplay" >
+    <template ngFor let-displayKey let-odd="odd" [ngForOf]="getObjectKeys(options.display)">
       <div *ngIf="odd" class="tag-separator">
         <div class="lum-operand" *ngIf="activeIndex === tagIndex && !oneTag.sticky">
           <template ngFor let-operand [ngForOf]="options.operandTypes.values">
@@ -43,7 +43,7 @@
         </div>
       </div>
       <lum-auto-complete *ngIf="isTagEditable(tagIndex, displayKey)"
-                         [source]="oneTag.source || options[displayKey]"
+                         [source]="oneTag.source || options.display[displayKey]"
                          [options]="autocompleteOptions"
                          [(modelData)]="oneTag[displayKey]">
         <span contenteditable="true"
