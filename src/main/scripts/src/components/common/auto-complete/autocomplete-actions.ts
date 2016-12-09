@@ -29,9 +29,11 @@ export function inactive() {
 function onSelectNext($event) {
   let activeIndex = _.findIndex(this.filteredSource, {active: true});
   inactive.call(this);
-  let nextActive = activeIndex !== this.filteredSource.length - 1 ? activeIndex + 1 : 0;
-  if (nextActive !== -1 && this.filteredSource[nextActive]) {
-    this.filteredSource[nextActive].active = true;
+  if (this.filteredSource) {
+    let nextActive = activeIndex !== this.filteredSource.length - 1 ? activeIndex + 1 : 0;
+    if (nextActive !== -1 && this.filteredSource[nextActive]) {
+      this.filteredSource[nextActive].active = true;
+    }
   }
   $event && $event.preventDefault();
 }
@@ -39,9 +41,11 @@ function onSelectNext($event) {
 function onSelectPrevious($event) {
   let activeIndex: number = _.findIndex(this.filteredSource, {active: true});
   inactive.call(this);
-  let nextActive = activeIndex !== 0 && activeIndex !== -1 ? activeIndex - 1 : this.filteredSource.length - 1;
-  if (nextActive !== -1 && this.filteredSource[nextActive]) {
-    this.filteredSource[nextActive].active = true;
+  if (this.filteredSource) {
+    let nextActive = activeIndex !== 0 && activeIndex !== -1 ? activeIndex - 1 : this.filteredSource.length - 1;
+    if (nextActive !== -1 && this.filteredSource[nextActive]) {
+      this.filteredSource[nextActive].active = true;
+    }
   }
   $event && $event.preventDefault();
 }

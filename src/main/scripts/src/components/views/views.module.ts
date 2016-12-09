@@ -6,6 +6,8 @@ import {ActiveTableComponent} from './active_table/active-table.component';
 import {SingleDocumentComponent} from './single_document/single-document.component';
 import {CommonComponentsModule} from '../';
 import {FilterComponent} from './query/filter.component';
+import {DocumentPreviewComponent} from './query/document-preview.component';
+import {BrowserModule} from '@angular/platform-browser';
 
 const viewsRoutes: Routes = [
   {
@@ -57,6 +59,7 @@ const viewsRoutes: Routes = [
 @NgModule({
   imports: [
     CommonComponentsModule,
+    BrowserModule,
     RouterModule.forChild(viewsRoutes)
   ],
   declarations: [
@@ -64,7 +67,8 @@ const viewsRoutes: Routes = [
     QueryComponent,
     ActiveTableComponent,
     SingleDocumentComponent,
-    FilterComponent
+    FilterComponent,
+    DocumentPreviewComponent
   ]
 })
 export class ViewsModule { }

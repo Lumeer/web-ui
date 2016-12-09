@@ -9,6 +9,7 @@ lum-auto-complete {
     }
 
     .dropdown-select {
+      z-index: 99;
       position: absolute;
       min-width: 150px;
       background-color: #fff;
