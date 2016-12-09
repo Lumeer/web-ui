@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, trigger, state, style, transition, group, animate} from '@angular/core';
+import {Http} from '@angular/http';
 @Component({
   selector: 'document-preview',
   template: require('./document-preview.component.html'),
@@ -6,9 +7,16 @@ import {Component} from '@angular/core';
 })
 
 export class DocumentPreviewComponent {
-  public documents: any[] = [
-    {title: 'Some Document', values: ['a', 'b', 'c', 'd']},
-    {title: 'Some Document 2', values: ['1', '2', '3', '4']},
-    {title: 'Some Document 3', values: ['t', 'r', 'e', 'y']}
-  ];
+  constructor(private http: Http) {}
+  public documents: any[];
+
+  public ngOnInit() {
+    setTimeout(() => this.fetchDocumentPreviews(), 2000);
+  }
+
+  private fetchDocumentPreviews() {
+    this.http.get('/data/documentpreview.json')
+      .map(res => res.json())
+      .subscribe(documents => this.documents = documents);
+  }
 }

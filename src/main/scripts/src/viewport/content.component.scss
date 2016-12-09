@@ -11,6 +11,8 @@
   height: 100vh;
 
   .lum-page-content {
+    height: 100%;
+    background-color: $primary-color;
     .row{
       margin: 0;
     }
