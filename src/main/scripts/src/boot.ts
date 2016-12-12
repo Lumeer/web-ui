@@ -9,4 +9,7 @@ KeycloakService.init()
   .then(() => {
     const platform = platformBrowserDynamic();
     platform.bootstrapModule(AppModule);
+  }).catch(() => {
+    const platform = platformBrowserDynamic();
+    platform.bootstrapModule(AppModule);
   });

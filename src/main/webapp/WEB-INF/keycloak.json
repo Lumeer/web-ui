@@ -3,5 +3,6 @@
   "auth-server-url": "http://localhost:8080/auth",
   "ssl-required": "external",
   "resource": "lumeer",
-  "public-client": true
+  "public-client": true,
+  "disabled": true
 }
