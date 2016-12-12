@@ -1,0 +1,30 @@
+@import '../styles/variables';
+
+@media (min-width: $mobile-width) {
+  .lum-page-content {
+    margin-top: 55px;
+  }
+}
+
+.lum-content {
+  background-color: $primary-color;
+  height: 100vh;
+
+  .lum-page-content {
+    height: 100%;
+    background-color: $primary-color;
+    .row{
+      margin: 0;
+    }
+
+    ol li{
+      display: inline-block;
+
+      &:not(:first-child):before{
+        content: "/\00a0";
+        padding: 0 5px;
+      }
+    }
+  }
+}
+

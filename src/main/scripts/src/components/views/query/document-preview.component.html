@@ -1,0 +1,10 @@
+<div class="row">
+  <div *ngFor="let document of documents" class="col-lg-4">
+    <div class="lum-preview-content">
+      <div>{{document.title}}</div>
+      <div *ngFor="let value of document.values">
+        <span>{{value}}</span>
+      </div>
+    </div>
+  </div>
+</div>

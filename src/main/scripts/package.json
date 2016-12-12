@@ -1,0 +1,60 @@
+{
+  "name": "@lumeer/web-ui",
+  "version": "1.0.0",
+  "description": "Lumeer Web UI",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "typings install",
+    "build": "webpack",
+    "start": "webpack-dev-server --hot --inline --port 7000 --content-base dist/ --history-api-fallback",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lumeer/web-ui.git"
+  },
+  "authors": [
+    "Karel Hala"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Lumeer/web-ui/issues"
+  },
+  "homepage": "https://github.com/Lumeer/web-ui#readme",
+  "devDependencies": {
+    "compass-sass-mixins": "^0.12.7",
+    "copy-webpack-plugin": "^3.0.1",
+    "css-loader": "^0.25.0",
+    "extract-text-webpack-plugin": "1.0.1",
+    "file-loader": "^0.9.0",
+    "html-loader": "^0.4.4",
+    "html-webpack-plugin": "^2.22.0",
+    "node-sass": "^3.10.0",
+    "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
+    "ts-loader": "0.8.2",
+    "tslint": "^3.15.1",
+    "tslint-loader": "^2.1.5",
+    "typescript": "^2.1.0",
+    "typings": "1.3.0",
+    "url-loader": "^0.5.7",
+    "webpack": "1.13.0",
+    "webpack-dev-server": "1.14.1",
+    "webpack-node-externals": "^1.4.3"
+  },
+  "dependencies": {
+    "@angular/common": "~2.1.0",
+    "@angular/compiler": "~2.1.0",
+    "@angular/core": "~2.1.0",
+    "@angular/forms": "~2.1.0",
+    "@angular/http": "~2.1.0",
+    "@angular/platform-browser": "~2.1.0",
+    "@angular/platform-browser-dynamic": "~2.1.0",
+    "@angular/router": "~3.1.0",
+    "lodash": "^4.17.2",
+    "respond": "^0.9.0",
+    "rxjs": "5.0.0-beta.12",
+    "socket.io-client": "^1.5.1",
+    "zone.js": "^0.6.25"
+  }
+}

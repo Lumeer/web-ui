@@ -1,0 +1,78 @@
+<div class="lum-tag">
+  <div *ngFor="let oneTag of tags; let tagIndex = index"
+       #tagItem
+       tabindex="0"
+       class="lum-tag-item"
+       (focus)="onItemFocus()"
+       (dblclick)="onDbClick(tagIndex)"
+       (mouseover)="activeIndex = tagIndex"
+       (mouseleave)="activeIndex = -1"
+       (keydown)="onKeyDown($event, tagIndex)">
+    <template ngFor let-displayKey let-odd="odd" [ngForOf]="getObjectKeys(options.display)">
+      <div *ngIf="odd" class="tag-separator">
+        <div class="lum-operand" *ngIf="activeIndex === tagIndex && !oneTag.sticky">
+          <template ngFor let-operand [ngForOf]="options.operandTypes.values">
+            <span *ngIf="options.operandTypes.type === 'string'"
+                  (click)="oneTag.operand = operand; addItem(tagIndex, oneTag);"
+                  [ngClass]="{'active': oneTag.operand === operand}">{{operand}}</span>
+            <span *ngIf="options.operandTypes.type === 'icon'"
+                  [ngClass]="{'active': oneTag.operand === operand.value}">
+              <i [ngClass]="operand.icon"
+                 [attr.title]="operand.title"
+                 (click)="oneTag.operand = operand.value; addItem(tagIndex, oneTag);"
+                 class="fa" aria-hidden="true"></i>
+            </span>
+          </template>
+        </div>
+        <span>:</span>
+        <div class="lum-operand-type"
+             *ngIf="activeIndex === tagIndex && !oneTag.sticky"
+             [ngClass]="{'number-type': oneTag.type === 'number', 'string-type': oneTag.type === 'string'}">
+          <template ngFor let-operand [ngForOf]="options.equalityValues[oneTag.type].values">
+            <span *ngIf="options.equalityValues[oneTag.type].type === 'string'"
+                  [ngClass]="{'active': oneTag.equality === operand}"
+                  (click)="oneTag.equality = operand; addItem(tagIndex, oneTag);">{{operand}}</span>
+            <span *ngIf="options.equalityValues[oneTag.type].type === 'icon'"
+                  [ngClass]="{'active': oneTag.equality === operand.value}">
+              <i [ngClass]="operand.icon"
+                 [attr.title]="operand.title"
+                 (click)="oneTag.equality = operand.value; addItem(tagIndex, oneTag);"
+                 class="fa" aria-hidden="true"></i>
+            </span>
+          </template>
+        </div>
+      </div>
+      <lum-auto-complete *ngIf="isTagEditable(tagIndex, displayKey)"
+                         [source]="oneTag.source || options.display[displayKey]"
+                         [options]="autocompleteOptions"
+                         [(modelData)]="oneTag[displayKey]">
+        <span contenteditable="true"
+              [textContent]="oneTag[displayKey]"
+              (blur)="addItem(tagIndex, oneTag);"
+              (input)="oneTag[displayKey] = $event.target.textContent">
+        {{oneTag[displayKey]}}
+      </span>
+      </lum-auto-complete>
+      <span *ngIf="!isTagEditable(tagIndex, displayKey)">
+        {{oneTag[displayKey]}}
+      </span>
+    </template>
+    <span (click)="deleteItem(tagIndex)"
+          *ngIf="!oneTag.sticky"
+          class="lum-remove">
+      <i class="fa fa-times" aria-hidden="true"></i>
+    </span>
+  </div>
+  <form (keydown)="onKeyDown($event, -1)">
+    <lum-auto-complete [source]="options.values"
+                       [options]="autocompleteOptions"
+                       [(modelData)]="tagValue">
+      <input #tagsInput
+             type="text"
+             class="lum-editable"
+             (focus)="onItemFocus()"
+             [(ngModel)]="tagValue" name="text"
+             [attr.placeholder]="placeholder"/>
+    </lum-auto-complete>
+  </form>
+</div>
