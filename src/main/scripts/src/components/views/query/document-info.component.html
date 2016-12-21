@@ -21,7 +21,8 @@
            (click)="onLinkClick(linkIndex)">
         <div><i *ngIf="link.icon" class="fa" [ngClass]="link.icon" aria-hidden="true"></i>{{link.title}}</div>
         <div *ngIf="activeIndexes.indexOf(linkIndex) !== -1" class="link-title">Name</div>
-        <div *ngIf="activeIndexes.indexOf(linkIndex) !== -1" class="link-items">
+        <div *ngIf="activeIndexes.indexOf(linkIndex) !== -1" class="link-items"
+             #linkInfo>
           <div *ngFor="let linkInfo of link.info | async">
             {{linkInfo.title}}
           </div>

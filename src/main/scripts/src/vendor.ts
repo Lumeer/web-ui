@@ -18,3 +18,5 @@ import './js/custom.js';
 
 import 'socket.io-client';
 // import 'lodash';
+import 'jquery-slimscroll';
+import 'ng2-slimscroll';

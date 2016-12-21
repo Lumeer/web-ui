@@ -1,4 +1,7 @@
-import {Component, trigger, state, style, transition, group, animate, Input, keyframes} from '@angular/core';
+import {
+  Component, trigger, state, style, transition, group, animate, Input, keyframes,
+  ViewChildren, QueryList, ElementRef
+} from '@angular/core';
 import {Http} from '@angular/http';
 @Component({
   selector: 'document-info',
@@ -27,6 +30,7 @@ export class DocumentInfoComponent {
   @Input() public document: any;
   public activeIndexes: any[] = [];
   private openLinks: number = 2;
+  @ViewChildren('linkInfo') private linksInfo: QueryList<ElementRef>;
 
   constructor(private http: Http) {
     if (window.innerWidth <= 360) {
