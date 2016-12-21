@@ -1,0 +1,35 @@
+<div *ngIf="document" [@animateHeight]="'in'">
+  <div class="document-header row" [ngStyle]="{'background-color': document.color}">
+    <span class="col-lg-9 col-xs-9">{{document.title}}</span>
+    <div class="col-lg-1 col-xs-3 lum-document-navigation">
+      <i class="fa fa-address-book" aria-hidden="true" (click)="onAddressClick()"></i>
+      <i class="fa fa-file-o" aria-hidden="true" (click)="onFileClick()"></i>
+      <i class="fa fa-times" aria-hidden="true" (click)="onCloseClick()"></i>
+    </div>
+  </div>
+  <div class="lum-info-content row">
+    <div class="document-values">
+      <div *ngFor="let value of document.values">
+        <span>{{value}}</span>
+      </div>
+    </div>
+    <div class="link-titles">
+      <div class="link-title"
+           *ngFor="let link of document.links; let linkIndex = index;"
+           [ngStyle]="{'background': link.color}"
+           [ngClass]="{'active': activeIndexes.indexOf(linkIndex) !== -1}"
+           (click)="onLinkClick(linkIndex)">
+        <div><i *ngIf="link.icon" class="fa" [ngClass]="link.icon" aria-hidden="true"></i>{{link.title}}</div>
+        <div *ngIf="activeIndexes.indexOf(linkIndex) !== -1" class="link-title">Name</div>
+        <div *ngIf="activeIndexes.indexOf(linkIndex) !== -1" class="link-items">
+          <div *ngFor="let linkInfo of link.info | async">
+            {{linkInfo.title}}
+          </div>
+        </div>
+        <div *ngIf="activeIndexes.indexOf(linkIndex) !== -1" class="link-edit">
+          <a (click)="onEditLinksClick($event)"><i class="fa fa-external-link" aria-hidden="true"></i> Edit links in Walkthrough</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

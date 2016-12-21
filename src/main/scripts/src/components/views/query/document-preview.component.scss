@@ -1,10 +1,59 @@
 @import "../../../styles/variables";
 
 document-preview {
+  .lum-document-preview {
+    max-height: 200px;
+  }
+
   .lum-preview-content {
     margin: 30px;
     background: $secondary-color;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
     padding: 10px;
+    height: 100%;
+  }
+
+  .new-document-preview {
+    background: $secondary-color;
+    min-height: 125px;
+
+    .new-icon {
+      cursor: pointer;
+      transform: rotate(45deg);
+      position: absolute;
+      background: $secondary-color;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+      top: 20px;
+      left: 35px;
+      width: 24px;
+      height: 24px;
+      text-align: center;
+      border-radius: 25px;
+    }
+
+    input {
+      width: 100%;
+      border: none;
+      background-color: transparent;
+      box-shadow: none;
+      border-radius: 4px;
+      padding-left: 15px;
+
+      &:focus {
+        border: solid 2px black;
+        outline: 0;
+      }
+    }
+  }
+
+  .lum-active-document {
+    position: absolute;
+    z-index: 9;
+    width: 100%;
+    height: 90%;
+
+    .lum-preview-content {
+      margin: 0;
+    }
   }
 }

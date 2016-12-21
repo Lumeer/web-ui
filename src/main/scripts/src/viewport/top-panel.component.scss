@@ -4,6 +4,11 @@ top-panel {
   .lum-top-nav {
     margin-left: 0;
 
+    .lum-credentials {
+      background: $primary-color;
+      margin-left: 0;
+    }
+
     .lum-options {
       height: 100%;
       display: table;
@@ -28,13 +33,10 @@ top-panel {
 }
 @media (min-width: $mobile-width) {
   top-panel {
-    .lum-top-nav {
-      height: $navbar-height;
-    }
-
     .lum-nav-toggle {
       display: inherit;
-      padding-top: 3px;
+      padding-top: 33px;
+      margin-left: 10px;
     }
   }
 }

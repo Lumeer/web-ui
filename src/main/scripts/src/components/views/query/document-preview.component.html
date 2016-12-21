@@ -1,6 +1,20 @@
+<document-info [document]="activeDocument">
+</document-info>
 <div class="row">
-  <div *ngFor="let document of documents" class="col-lg-4">
-    <div class="lum-preview-content">
+  <div class="lum-document-preview col-lg-2 col-md-2 col-xs-6">
+    <div class="lum-preview-content new-document-preview">
+      <div class="new-icon">
+        <i class="fa fa-times" aria-hidden="true"></i>
+      </div>
+      <form>
+        <input name="title" placeholder="New title">
+      </form>
+    </div>
+  </div>
+  <div *ngFor="let document of documents; let documentIndex = index"
+       class="lum-document-preview col-lg-2 col-md-2 col-xs-6"
+       (click)="activeDocument = document">
+    <div class="lum-preview-content" [ngStyle]="{'background-color': document.color}">
       <div>{{document.title}}</div>
       <div *ngFor="let value of document.values">
         <span>{{value}}</span>

@@ -8,7 +8,9 @@ import {Http} from '@angular/http';
 
 export class DocumentPreviewComponent {
   constructor(private http: Http) {}
+
   public documents: any[];
+  public activeDocument: any;
 
   public ngOnInit() {
     setTimeout(() => this.fetchDocumentPreviews(), 2000);
