@@ -1,0 +1,110 @@
+@import '../../../styles/variables';
+
+document-info {
+  > div {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 9;
+    height: 250px;
+  }
+
+  .no-link {
+    display: inline-block;
+    float: right;
+    padding-right: 20px;
+  }
+
+  .lum-info-content {
+    height: 100%;
+    background-color: $secondary-color;
+
+    > div {
+      height: 250px;
+    }
+
+    .document-values {
+      display: inline-block;
+    }
+
+    .link-titles {
+      padding-right: 0 !important;
+      display: inline-block;
+      float: right;
+      transform: rotate(90deg);
+    }
+
+    .link-title {
+      letter-spacing: 0.05rem;
+      font-size: $font-size-large;
+      width: 250px;
+      cursor: pointer;
+      padding-left: 5px;
+
+      &.active {
+        transform: rotate(-90deg);
+        height: 100%;
+        padding: 5px;
+      }
+
+      .link-info {
+        height: 100%;
+      }
+
+      .link-items {
+        padding-left: 5px;
+        margin-right: -5px;
+        height: 58%;
+        overflow-y: auto;
+      }
+
+      .link-title {
+        font-style: italic;
+        padding: 0 5px;
+      }
+
+      .link-edit, .link-title {
+        font-size: $font-size-small;
+      }
+    }
+  }
+  .document-header {
+    height: $font-size-large + 10px;
+    letter-spacing: 0.05rem;
+    font-size: $font-size-large;
+    transition: all 0.25s;
+  }
+
+  .lum-document-navigation {
+    text-align: right;
+
+    i {
+      cursor: pointer;
+    }
+  }
+}
+
+@media (min-width: $mobile-width) {
+  document-info {
+    .link-titles, .no-link {
+      margin-right: 16.6%;
+    }
+  }
+}
+
+@media (max-width: $mobile-width) {
+  document-info {
+    .link-titles {
+      margin-right: 0;
+    }
+  }
+}
+
+.ps-container > .ps-scrollbar-y-rail {
+  opacity: 0.6 !important;
+}
+
+.ps-scrollbar-y {
+  background-color: black !important;
+  opacity: 0.6 !important;
+}

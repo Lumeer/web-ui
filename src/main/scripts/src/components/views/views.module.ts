@@ -1,13 +1,13 @@
 import { NgModule }             from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {PivotComponent} from './pivot/pivot.component';
-import {QueryComponent} from './query/query.component';
 import {ActiveTableComponent} from './active_table/active-table.component';
 import {SingleDocumentComponent} from './single_document/single-document.component';
 import {CommonComponentsModule} from '../';
-import {FilterComponent} from './query/filter.component';
-import {DocumentPreviewComponent} from './query/document-preview.component';
+import { FormsModule } from '@angular/forms';
+import { QueryComponent, FilterComponent, DocumentInfoComponent, DocumentPreviewComponent } from './query';
 import {BrowserModule} from '@angular/platform-browser';
+import { PerfectScrollbarModule } from 'angular2-perfect-scrollbar';
 
 const viewsRoutes: Routes = [
   {
@@ -60,6 +60,8 @@ const viewsRoutes: Routes = [
   imports: [
     CommonComponentsModule,
     BrowserModule,
+    PerfectScrollbarModule,
+    FormsModule,
     RouterModule.forChild(viewsRoutes)
   ],
   declarations: [
@@ -68,7 +70,11 @@ const viewsRoutes: Routes = [
     ActiveTableComponent,
     SingleDocumentComponent,
     FilterComponent,
-    DocumentPreviewComponent
+    DocumentPreviewComponent,
+    DocumentInfoComponent
+  ],
+  exports: [
+    FilterComponent
   ]
 })
 export class ViewsModule { }

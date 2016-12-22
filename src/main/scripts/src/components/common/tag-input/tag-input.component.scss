@@ -5,7 +5,6 @@ tag-input {
     flex-direction: row;
     flex-wrap: wrap;
     transition: all 0.15s;
-    padding: 0.5rem 0.2rem;
     min-height: 32px;
     cursor: text;
     border-bottom: 2px solid #efefef;
@@ -85,25 +84,20 @@ tag-input {
   }
 
   form {
-    flex: 2;
+    flex: 0 0 100%;
 
     lum-auto-complete, .lum-autocomplete {
       width: 100%;
     }
 
     input[type="text"] {
-      border: none;
       display: inline;
-      padding: 0 0.5rem;
       vertical-align: middle;
       background-color: transparent;
       font-size: $font-size-large;
       width: 100%;
       height: 100%;
-
-      &:focus {
-        outline: 0;
-      }
+      margin-left: 1px;
     }
 
   }
