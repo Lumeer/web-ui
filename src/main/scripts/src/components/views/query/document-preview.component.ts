@@ -1,13 +1,42 @@
-import {Component, trigger, state, style, transition, group, animate} from '@angular/core';
+import {Component, trigger, state, style, transition, group, animate, keyframes} from '@angular/core';
 import {Http} from '@angular/http';
+import * as _ from 'lodash';
+
 @Component({
   selector: 'document-preview',
   template: require('./document-preview.component.html'),
-  styles: [ require('./document-preview.component.scss').toString() ]
+  styles: [ require('./document-preview.component.scss').toString() ],
+  animations: [
+    trigger('animateVisible', [
+      state('in', style({height: '*', width: '*', opacity: 1})),
+      transition('void => *', [
+        animate(200, keyframes([
+          style({height: 0, width: 0, opacity: 0, offset: 0}),
+          style({height: '*', width: '*', opacity: 1, offset: 1})
+        ]))
+      ]),
+      transition('* => void', [
+        animate(200, keyframes([
+          style({height: '*', width: '*', opacity: 1, offset: 0}),
+          style({height: 0, width: 0, opacity: 0, offset: 1})
+        ]))
+      ])
+    ])
+  ]
 })
 
 export class DocumentPreviewComponent {
-  constructor(private http: Http) {}
+  public pickerVisible = false;
+  public colors: string[];
+  public icons: string[];
+  public newDocument: any = {
+    links: []
+  };
+
+  constructor(private http: Http) {
+    this.initColors();
+    this.initIcons();
+  }
 
   public documents: any[];
   public activeDocument: any;
@@ -20,5 +49,46 @@ export class DocumentPreviewComponent {
     this.http.get('/data/documentpreview.json')
       .map(res => res.json())
       .subscribe(documents => this.documents = documents);
+  }
+
+  public setIcon(icon) {
+    this.newDocument.icon = icon;
+  }
+
+  public setColor(color) {
+    this.newDocument.color = color;
+  }
+
+  public newDocumentInfo() {
+    if (!this.newDocument.title) {
+      return ;
+    }
+    if (!this.newDocument.color) {
+      this.newDocument.color = 'white';
+    }
+    this.documents.push(_.cloneDeep(this.newDocument));
+    this.newDocument = {
+      links: []
+    };
+  }
+
+  private initColors() {
+    this.colors = [
+      '#c7254e',
+      '#18BC9C',
+      '#3498DB',
+      '#F39C12',
+      '#E74C3C'
+    ]
+  }
+
+  private initIcons() {
+    this.icons = [
+      'fa-user-circle-o',
+      'fa-dot-circle-o',
+      'fa-snowflake-o',
+      'fa-superpowers',
+      'fa-eye-slash'
+    ]
   }
 }

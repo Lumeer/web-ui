@@ -50,7 +50,7 @@ export class KeycloakService {
           .error(() => {
             reject('Failed to refresh token');
           });
-      } else if (KeycloakService.auth.isDisabled){
+      } else if (KeycloakService.auth.isDisabled) {
         resolve();
       } else {
         reject('Failed to refresh token');

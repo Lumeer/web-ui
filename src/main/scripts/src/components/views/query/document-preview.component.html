@@ -1,20 +1,53 @@
-<document-info [document]="activeDocument">
+<document-info [(document)]="activeDocument">
 </document-info>
 <div class="row">
   <div class="lum-document-preview col-lg-2 col-md-2 col-xs-6">
     <div class="lum-preview-content new-document-preview">
-      <div class="new-icon">
-        <i class="fa fa-times" aria-hidden="true"></i>
+      <div class="preview-icon"
+           (click)="pickerVisible = !pickerVisible"
+           [ngStyle]="{'background-color': newDocument.color}"
+           [ngClass]="{'no-rotate': newDocument.icon, 'no-color': newDocument.color}">
+        <i class="fa"
+           [ngClass]="newDocument.icon ? newDocument.icon : 'fa-times'"
+           aria-hidden="true"></i>
+      </div>
+      <div class="color-icon" *ngIf="pickerVisible" [@animateVisible]="'in'">
+        <div class="color-picker">
+          <span *ngFor="let oneColor of colors"
+                [ngClass]="{active: oneColor === newDocument.color}"
+                (click)="setColor(oneColor)"
+                [ngStyle]="{'background': oneColor}"></span>
+        </div>
+        <div class="icon-picker">
+          <span *ngFor="let oneIcon of icons"
+                (click)="setIcon(oneIcon)"
+                [ngClass]="{active: oneIcon === newDocument.icon}">
+            <i class="fa" [ngClass]="oneIcon" aria-hidden="true"></i>
+          </span>
+        </div>
+        <div class="confirm">
+          <input type="button" value="Ok" (click)="pickerVisible = false">
+        </div>
       </div>
       <form>
-        <input name="title" placeholder="New title">
+        <input name="title" placeholder="New title" id="title" [(ngModel)]="newDocument.title" required>
+        <div class="new-document-info">
+
+        </div>
+        <div class="confirm">
+          <button type="button" class="btn btn-default btn-xs" (click)="newDocumentInfo()">Save</button>
+        </div>
       </form>
     </div>
   </div>
   <div *ngFor="let document of documents; let documentIndex = index"
        class="lum-document-preview col-lg-2 col-md-2 col-xs-6"
        (click)="activeDocument = document">
-    <div class="lum-preview-content" [ngStyle]="{'background-color': document.color}">
+    <div class="lum-preview-content">
+      <div class="preview-icon" [ngStyle]="{'background-color': document.color}">
+        <i class="fa" [ngClass]="document.icon"
+           aria-hidden="true"></i>
+      </div>
       <div>{{document.title}}</div>
       <div *ngFor="let value of document.values">
         <span>{{value}}</span>

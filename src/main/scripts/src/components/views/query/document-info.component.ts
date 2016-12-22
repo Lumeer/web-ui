@@ -1,6 +1,6 @@
 import {
   Component, trigger, state, style, transition, group, animate, Input, keyframes,
-  ViewChildren, QueryList, ElementRef
+  ViewChildren, QueryList, ElementRef, Output, EventEmitter
 } from '@angular/core';
 import {Http} from '@angular/http';
 @Component({
@@ -27,10 +27,11 @@ import {Http} from '@angular/http';
 })
 
 export class DocumentInfoComponent {
-  @Input() public document: any;
   public activeIndexes: any[] = [];
   private openLinks: number = 2;
   @ViewChildren('linkInfo') private linksInfo: QueryList<ElementRef>;
+  @Input() public document: any;
+  @Output() public documentChange: any = new EventEmitter();
 
   constructor(private http: Http) {
     if (window.innerWidth <= 360) {
@@ -38,22 +39,19 @@ export class DocumentInfoComponent {
     }
   }
 
-  public onAddressClick() {
+  public onAddressClick() {}
 
-  }
-
-  public onFileClick() {
-
-  }
+  public onFileClick() {}
 
   public onCloseClick() {
     this.document = undefined;
+    this.documentChange.emit(undefined);
   }
 
   public ngOnInit() {
     if (this.document) {
-      this.document.links.map(link => {
-        link.info = this.fetchLinkInfo(link)
+      this.document.links.map( link => {
+        link.info = this.fetchLinkInfo(link);
       });
     }
   }
@@ -61,7 +59,7 @@ export class DocumentInfoComponent {
   public ngOnChanges() {
     if (this.document) {
       this.document.links.map(link => {
-        link.info = this.fetchLinkInfo(link)
+        link.info = this.fetchLinkInfo(link);
       });
     }
   }
@@ -74,6 +72,16 @@ export class DocumentInfoComponent {
         this.activeIndexes.pop();
       }
       this.activeIndexes.push(linkIndex);
+    }
+    setTimeout(() => this.updateLinksScroll());
+
+  }
+
+  private updateLinksScroll() {
+    if (this.linksInfo) {
+      this.linksInfo.toArray().forEach( (linkInfo: any) => {
+        setTimeout(() => linkInfo.update());
+      });
     }
   }
 

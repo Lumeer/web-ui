@@ -42,6 +42,7 @@
       "4"
     ],
     "color": "#FEF5CA",
+    "icon": "fa-user-circle-o",
     "links": [
       {
         "type": "tools",
@@ -75,6 +76,7 @@
       "y"
     ],
     "color": "#76EEC6",
+    "icon": "fa-user-circle-o",
     "links": [
       {
         "type": "tools",
@@ -95,204 +97,6 @@
         "icon": "fa-picture-o",
         "title": "Something Else",
         "id": 1,
-        "color": "#76EEC6"
-      }
-    ]
-  },
-  {
-    "title": "Some Document",
-    "values": [
-      "a",
-      "b",
-      "c",
-      "d"
-    ],
-    "color": "#FF4040",
-    "links": [
-      {
-        "type": "tools",
-        "title": "Tools",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#FEF5CA"
-      },
-      {
-        "type": "ingredients",
-        "title": "Ingredients",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#FF4040"
-      },
-      {
-        "type": "somethingElse",
-        "title": "Something Else",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#76EEC6"
-      }
-    ]
-  },
-  {
-    "title": "Some Document 2",
-    "values": [
-      "1",
-      "2",
-      "3",
-      "4"
-    ],
-    "color": "#FEF5CA",
-    "links": [
-      {
-        "type": "tools",
-        "title": "Tools",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#FEF5CA"
-      },
-      {
-        "type": "ingredients",
-        "title": "Ingredients",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#FF4040"
-      },
-      {
-        "type": "somethingElse",
-        "title": "Something Else",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#76EEC6"
-      }
-    ]
-  },
-  {
-    "title": "Some Document 3",
-    "values": [
-      "t",
-      "r",
-      "e",
-      "y"
-    ],
-    "color": "#76EEC6",
-    "links": [
-      {
-        "type": "tools",
-        "title": "Tools",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#FEF5CA"
-      },
-      {
-        "type": "ingredients",
-        "title": "Ingredients",
-        "icon": "fa-picture-o",
-        "id": 1,
-        "color": "#FF4040"
-      },
-      {
-        "type": "somethingElse",
-        "title": "Something Else",
-        "icon": "fa-picture-o",
-        "id": 1,
-        "color": "#76EEC6"
-      }
-    ]
-  },
-  {
-    "title": "Some Document",
-    "values": [
-      "a",
-      "b",
-      "c",
-      "d"
-    ],
-    "color": "#FF4040",
-    "links": [
-      {
-        "type": "tools",
-        "title": "Tools",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#FEF5CA"
-      },
-      {
-        "type": "ingredients",
-        "title": "Ingredients",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#FF4040"
-      },
-      {
-        "type": "somethingElse",
-        "title": "Something Else",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#76EEC6"
-      }
-    ]
-  },
-  {
-    "title": "Some Document 2",
-    "values": [
-      "1",
-      "2",
-      "3",
-      "4"
-    ],
-    "color": "#FEF5CA",
-    "links": [
-      {
-        "type": "tools",
-        "title": "Tools",
-        "icon": "fa-picture-o",
-        "id": 1,
-        "color": "#FEF5CA"
-      },
-      {
-        "type": "ingredients",
-        "title": "Ingredients",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#FF4040"
-      },
-      {
-        "type": "somethingElse",
-        "title": "Something Else",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#76EEC6"
-      }
-    ]
-  },
-  {
-    "title": "Some Document 3",
-    "values": [
-      "t",
-      "r",
-      "e",
-      "y"
-    ],
-    "color": "#76EEC6",
-    "links": [
-      {
-        "type": "tools",
-        "title": "Tools",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#FEF5CA"
-      },
-      {
-        "type": "ingredients",
-        "title": "Ingredients",
-        "icon": "fa-picture-o",
-        "id": 1,
-        "color": "#FF4040"
-      },
-      {
-        "type": "somethingElse",
-        "title": "Something Else",
-        "id": 1,
-        "icon": "fa-picture-o",
         "color": "#76EEC6"
       }
     ]
