@@ -35,10 +35,12 @@ left-panel {
         transition: max-height 0.5s ease-in;
       }
 
-      li {
+      li a {
+        display: inline-block;
+        width: 100%;
         cursor: pointer;
 
-        &:hover a {
+        &:hover {
           text-decoration: underline;
         }
       }

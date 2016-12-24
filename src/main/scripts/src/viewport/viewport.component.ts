@@ -23,7 +23,13 @@ export class ViewPortComponent {
   public handleItemSelect(dataPayload) {
     if (dataPayload) {
       this.activeItem = dataPayload.child;
-      this.router.navigate([`/${dataPayload.parent.id}`, `${dataPayload.child.id}`]);
+      let navigateTo: any = [`/${dataPayload.parent.id}`, `${dataPayload.child.id}`];
+      if (dataPayload.link) {
+        this.router.navigate(navigateTo, {queryParams: {id: dataPayload.link.id}});
+      } else {
+        this.router.navigate(navigateTo);
+      }
+
     } else {
       this.activeItem = { title: 'Home'};
       this.router.navigate([`/`]);

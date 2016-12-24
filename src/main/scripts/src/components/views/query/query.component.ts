@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {Http} from '@angular/http';
 
 @Component({
   selector: 'views-query',
@@ -6,7 +8,22 @@ import { Component } from '@angular/core';
 })
 
 export class QueryComponent {
-  public onFilterChanged(dataPayload) {
-    console.log(dataPayload);
+  public activeQuery: any;
+  public documents: any;
+  constructor(private route: ActivatedRoute, private http: Http) {}
+
+  public ngOnInit() {
+    this.route.queryParams.subscribe(
+      keys => {
+        this.activeQuery = keys['id'];
+        this.fetchDocumentPreviews();
+      }
+    );
+  }
+
+  private fetchDocumentPreviews() {
+    this.http.get('/data/documentpreview.json')
+      .map(res => res.json())
+      .subscribe(documents => this.documents = documents);
   }
 }

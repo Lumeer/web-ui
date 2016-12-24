@@ -1,4 +1,4 @@
-import {Component, trigger, state, style, transition, group, animate, keyframes} from '@angular/core';
+import {Component, trigger, state, style, transition, group, animate, keyframes, Input} from '@angular/core';
 import {Http} from '@angular/http';
 import * as _ from 'lodash';
 
@@ -29,6 +29,7 @@ export class DocumentPreviewComponent {
   public pickerVisible = false;
   public colors: string[];
   public icons: string[];
+  @Input() public documents;
   public newDocument: any = {
     links: []
   };
@@ -38,18 +39,7 @@ export class DocumentPreviewComponent {
     this.initIcons();
   }
 
-  public documents: any[];
   public activeDocument: any;
-
-  public ngOnInit() {
-    setTimeout(() => this.fetchDocumentPreviews(), 2000);
-  }
-
-  private fetchDocumentPreviews() {
-    this.http.get('/data/documentpreview.json')
-      .map(res => res.json())
-      .subscribe(documents => this.documents = documents);
-  }
 
   public setIcon(icon) {
     this.newDocument.icon = icon;
@@ -79,7 +69,7 @@ export class DocumentPreviewComponent {
       '#3498DB',
       '#F39C12',
       '#E74C3C'
-    ]
+    ];
   }
 
   private initIcons() {
@@ -89,6 +79,6 @@ export class DocumentPreviewComponent {
       'fa-snowflake-o',
       'fa-superpowers',
       'fa-eye-slash'
-    ]
+    ];
   }
 }

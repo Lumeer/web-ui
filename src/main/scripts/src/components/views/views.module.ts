@@ -32,7 +32,7 @@ const viewsRoutes: Routes = [
         path: 'query',
         component: QueryComponent,
         data: {
-          id: 'query', title: 'Query builder', icon: 'fa-th-list'
+          id: 'query', title: 'Query builder', icon: 'fa-th-list', contentUrl: '/data/queries.json'
         },
         children: []
       },
