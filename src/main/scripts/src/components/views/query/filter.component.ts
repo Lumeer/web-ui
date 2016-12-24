@@ -4,6 +4,10 @@ import {QUERY_TAG_PLACEHOLDER} from '../../common/helpers/constants';
 import {AutoCompleteOptions} from '../../common/auto-complete/autocomplete.interface';
 import {Http} from '@angular/http';
 import {ITagOptions, TagBuilder} from './query-tag.inteface';
+import * as _ from 'lodash';
+
+const COLLECTION = {text: 'Collection', type: 'collection'};
+const SORT_BY = {text: 'Sort By', type: 'sortby'};
 
 @Component({
   selector: 'query-filter',
@@ -28,9 +32,9 @@ export class FilterComponent {
   };
 
   private collectionItem = {colValue: 'Store', colName: 'Collection', readOnly: ['colName'],
-    sticky: true, source: this.collections, type: STRING};
+    source: this.collections, type: STRING};
   private sortByItem = {colName: 'Sort By', colValue: '*', readOnly: ['colName'],
-    sticky: true, source: this.colNames, type: STRING};
+    source: this.colNames, type: STRING};
 
   public ngOnInit() {
     this.fetchColNames();
@@ -43,9 +47,9 @@ export class FilterComponent {
     this.http.get('/data/colnames.json')
       .map(res => res.json())
       .subscribe(colNames => {
-        this.colNames = colNames;
-        this.tagOptions.withColNames(colNames);
-        this.tagOptions.values = colNames;
+        this.colNames = [COLLECTION, SORT_BY, ...colNames];
+        this.tagOptions.withColNames(this.colNames);
+        this.tagOptions.values = this.colNames;
       });
   }
 
@@ -68,10 +72,15 @@ export class FilterComponent {
   }
 
   private fetchItems() {
-    this.items = [this.sortByItem, this.collectionItem];
     this.http.get('/data/queryitems.json')
       .map(res => res.json())
-      .subscribe(items => this.items = [...this.items, ...items]);
+      .subscribe(items => {
+        this.items = [...this.items, ...items];
+        _.map(this.items, item => {
+          item.operand = item.operand || this.defaultOperand();
+          item.equality = item.equality || this.defaultEquality(item.colValue);
+        });
+      });
   }
 
   private initTagOptions() {
@@ -117,14 +126,24 @@ export class FilterComponent {
   private newItemValue(data) {
     this.items[this.items.length - 1].colValue = data;
     this.items[this.items.length - 1].type = FilterComponent.getType(data);
+    this.items[this.items.length - 1].operand = this.defaultOperand();
+    this.items[this.items.length - 1].equality = this.defaultEquality(data);
     this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
     this.tagOptions.values = this.colNames;
   }
 
   private newItem(data) {
-    this.items.push({colName: data, colValue: '', type: STRING});
-    this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.VALUE;
-    this.tagOptions.values = this.colValues;
+    if (data === COLLECTION.text) {
+      let newCollection = _.cloneDeep(this.collectionItem);
+      newCollection.colValue = '';
+      this.items.push(newCollection);
+      this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.COLLECTION;
+      this.tagOptions.values = newCollection.source;
+    } else {
+      this.items.push({colName: data, colValue: '', type: FilterComponent.getType(data)});
+      this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.VALUE;
+      this.tagOptions.values = this.colValues;
+    }
   }
 
   private static isNumber(itemValue) {
@@ -133,5 +152,14 @@ export class FilterComponent {
 
   private static getType(itemValue) {
     return FilterComponent.isNumber(itemValue) ? NUMBER : STRING;
+  }
+
+  private defaultOperand(): string {
+    return <string>this.tagOptions.operandTypes.values[0];
+  }
+
+  private defaultEquality(data): string {
+    return FilterComponent.getType(data) === STRING ?
+      this.tagOptions.equalityValues.string.values[0]['value'] : this.tagOptions.equalityValues.number.values[0];
   }
 }

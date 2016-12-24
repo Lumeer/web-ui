@@ -79,6 +79,6 @@ export class DocumentPreviewComponent {
       'fa-snowflake-o',
       'fa-superpowers',
       'fa-eye-slash'
-    ];
+    ];;
   }
 }

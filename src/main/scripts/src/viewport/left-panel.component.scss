@@ -35,6 +35,26 @@ left-panel {
         transition: max-height 0.5s ease-in;
       }
 
+      &.lum-child-links {
+        border-radius: 7px;
+        opacity: 1;
+        position: absolute;
+        background: $primary-color;
+        left: 50%;
+        top: 50%;
+        padding: 15px;
+        max-height: 350px;
+        overflow: auto;
+        max-width: 120px;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+
+        &.collapsed {
+          overflow: hidden;
+        }
+      }
+
       li a {
         display: inline-block;
         width: 100%;

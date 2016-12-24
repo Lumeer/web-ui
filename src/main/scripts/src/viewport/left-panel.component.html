@@ -30,8 +30,19 @@
                     <ul class="lum-collapsed"
                         [ngClass]="{'lum-in': !item.data.collapsed}"
                         *ngIf="child.data.contentUrl">
-                      <li *ngFor="let oneLink of child.data.childContent | async">
-                        <a href="javascript:;" (click)="onItemClick(child, item, oneLink)">{{oneLink.title}}</a>
+                      <li>
+                        <a href="javascript:;" (click)="child.data.visible = !child.data.visible">Show items</a>
+                      </li>
+                    </ul>
+                    <ul class="lum-collapsed lum-child-links"
+                        [ngClass]="{'lum-in': !item.data.collapsed}"
+                        [@animateVisible]="'in'"
+                        *ngIf="child.data.contentUrl && child.data.visible && !item.data.collapsed">
+                      <li *ngFor="let oneLink of child.data.childContent | async; let i = index;">
+                          <a href="javascript:;"
+                             (click)="onItemClick(child, item, oneLink); child.data.visible = false">
+                            {{oneLink.title}}
+                          </a>
                       </li>
                     </ul>
                   </li>

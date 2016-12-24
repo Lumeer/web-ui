@@ -20,6 +20,30 @@ top-panel {
       }
     }
 
+    .filter-options {
+      position: relative;
+      bottom: -35px;
+      right: 5px;
+      font-size: 25px;
+
+      a {
+        cursor: pointer;
+      }
+
+      .lum-filter-saver {
+        position: absolute;
+        right: -95px;
+        top: 46px;
+        height: 100%;
+
+        form input{
+          padding-left: 5px;
+          border: 1px solid #dce4ec;
+          border-radius: 4px;
+        }
+      }
+    }
+
     .lum-search {
       .form-group {
         width: 100%;

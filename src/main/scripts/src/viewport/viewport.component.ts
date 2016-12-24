@@ -11,6 +11,7 @@ import {KeycloakService} from '../services/keycloak.service';
 export class ViewPortComponent {
   public collapsed: boolean = false;
   public activeItem: any;
+  public activeFilter: any;
 
   constructor(private router: Router, private kc: KeycloakService) {}
 
@@ -22,6 +23,9 @@ export class ViewPortComponent {
 
   public handleItemSelect(dataPayload) {
     if (dataPayload) {
+      if (dataPayload.child.id === 'query' && dataPayload.link) {
+        this.activeFilter = dataPayload.link;
+      }
       this.activeItem = dataPayload.child;
       let navigateTo: any = [`/${dataPayload.parent.id}`, `${dataPayload.child.id}`];
       if (dataPayload.link) {
@@ -29,7 +33,6 @@ export class ViewPortComponent {
       } else {
         this.router.navigate(navigateTo);
       }
-
     } else {
       this.activeItem = { title: 'Home'};
       this.router.navigate([`/`]);
@@ -38,5 +41,9 @@ export class ViewPortComponent {
 
   public handleLogOut() {
     this.kc.logout();
+  }
+
+  public onFilterSave(dataPayload) {
+    console.log(this.router);
   }
 }

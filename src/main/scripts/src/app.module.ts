@@ -3,10 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { LeftPanelComponent, ContentComponent, TopPanelComponent, ViewPortComponent, HomeComponent } from './viewport';
 import {SocketService} from './services/socket.service';
 import { RouterModule, Routes } from '@angular/router';
-import {FormsModule, ViewsModule} from './components';
+import {LumFormsModule, ViewsModule} from './components';
 import {BreadcrumbService, KeycloakHttp, KeycloakService} from './services';
 import {XHRBackend, RequestOptions, Http} from '@angular/http';
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import {FormsModule} from '@angular/forms';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent}
@@ -17,7 +17,8 @@ const appRoutes: Routes = [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
     ViewsModule,
-    FormsModule
+    FormsModule,
+    LumFormsModule
   ],
   providers: [
     SocketService,
@@ -41,6 +42,6 @@ const appRoutes: Routes = [
     TopPanelComponent,
     HomeComponent
   ],
-  bootstrap:    [ ViewPortComponent]
+  bootstrap:    [ ViewPortComponent ]
 })
 export class AppModule {}
