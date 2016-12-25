@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Http} from '@angular/http';
+import {DocumentInfoService} from '../../../services/document-info.service';
 
 @Component({
   selector: 'views-query',
@@ -10,20 +11,14 @@ import {Http} from '@angular/http';
 export class QueryComponent {
   public activeQuery: any;
   public documents: any;
-  constructor(private route: ActivatedRoute, private http: Http) {}
+  constructor(private route: ActivatedRoute, public documentInfoService: DocumentInfoService) {}
 
   public ngOnInit() {
     this.route.queryParams.subscribe(
       keys => {
         this.activeQuery = keys['id'];
-        this.fetchDocumentPreviews();
+        this.documentInfoService.fetchDocumentPreviewsFromFilterId(this.activeQuery);
       }
     );
-  }
-
-  private fetchDocumentPreviews() {
-    this.http.get('/data/documentpreview.json')
-      .map(res => res.json())
-      .subscribe(documents => this.documents = documents);
   }
 }

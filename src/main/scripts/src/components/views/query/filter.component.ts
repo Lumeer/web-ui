@@ -5,6 +5,7 @@ import {AutoCompleteOptions} from '../../common/auto-complete/autocomplete.inter
 import {Http} from '@angular/http';
 import {ITagOptions, TagBuilder} from './query-tag.inteface';
 import * as _ from 'lodash';
+import {ActivatedRoute} from '@angular/router';
 
 const COLLECTION = {text: 'Collection', type: 'collection'};
 const SORT_BY = {text: 'Sort By', type: 'sortby'};
@@ -15,7 +16,7 @@ const SORT_BY = {text: 'Sort By', type: 'sortby'};
 })
 
 export class FilterComponent {
-  constructor(private http: Http) {
+  constructor(private http: Http, private route: ActivatedRoute) {
     this.initTagOptions();
   }
 
@@ -28,7 +29,8 @@ export class FilterComponent {
   public tagOptions: ITagOptions;
 
   public autocompleteOptions: AutoCompleteOptions = {
-    displayKey: 'text'
+    displayKey: 'text',
+    filterFn: (item, currentValue) => this.filterValues(item, currentValue)
   };
 
   private collectionItem = {colValue: 'Store', colName: 'Collection', readOnly: ['colName'],
@@ -40,10 +42,11 @@ export class FilterComponent {
     this.fetchColNames();
     this.fetchColValues();
     this.fetchCollections();
-    this.fetchItems();
+    this.route.queryParams.subscribe(keys => this.fetchItems(keys['id']));
   }
 
   private fetchColNames() {
+    //TODO: Send active filter with request to fetch correct names (for autocomplete)
     this.http.get('/data/colnames.json')
       .map(res => res.json())
       .subscribe(colNames => {
@@ -54,6 +57,7 @@ export class FilterComponent {
   }
 
   private fetchColValues() {
+    //TODO: Send active filter with request to fetch correct values (for autocomplete)
     this.http.get('/data/colvalues.json')
       .map(res => res.json())
       .subscribe(colValues => {
@@ -63,6 +67,7 @@ export class FilterComponent {
   }
 
   private fetchCollections() {
+    //TODO: Send active filter with request to fetch correct collections (for autocomplete)
     this.http.get('/data/collections.json')
       .map(res => res.json())
       .subscribe(collections => {
@@ -71,16 +76,16 @@ export class FilterComponent {
       });
   }
 
-  private fetchItems() {
+  private fetchItems(activeFilter?: any) {
+    //TODO: Send active filter ID with request to fetch correct items in query
     this.http.get('/data/queryitems.json')
-      .map(res => res.json())
-      .subscribe(items => {
-        this.items = [...this.items, ...items];
-        _.map(this.items, item => {
-          item.operand = item.operand || this.defaultOperand();
-          item.equality = item.equality || this.defaultEquality(item.colValue);
-        });
-      });
+      .flatMap(res => res.json())
+      .reduce((result: any[], item: any) => {
+        item.operand = item.operand || this.defaultOperand();
+        item.equality = item.equality || this.defaultEquality(item.colValue);
+        return [...result, item];
+      }, [])
+      .subscribe(items => this.items = items);
   }
 
   private initTagOptions() {
@@ -161,5 +166,13 @@ export class FilterComponent {
   private defaultEquality(data): string {
     return FilterComponent.getType(data) === STRING ?
       this.tagOptions.equalityValues.string.values[0]['value'] : this.tagOptions.equalityValues.number.values[0];
+  }
+
+  private filterValues(oneItem, currentValue) {
+    let currentData = currentValue.trim().toLowerCase();
+    if (currentData !== '') {
+      return oneItem[this.autocompleteOptions.displayKey].toLowerCase().indexOf(currentData) !== -1;
+    }
+    return true;
   }
 }

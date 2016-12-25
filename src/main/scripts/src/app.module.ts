@@ -1,12 +1,11 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { LeftPanelComponent, ContentComponent, TopPanelComponent, ViewPortComponent, HomeComponent } from './viewport';
-import {SocketService} from './services/socket.service';
 import { RouterModule, Routes } from '@angular/router';
 import {LumFormsModule, ViewsModule} from './components';
-import {BreadcrumbService, KeycloakHttp, KeycloakService} from './services';
-import {XHRBackend, RequestOptions, Http} from '@angular/http';
 import {FormsModule} from '@angular/forms';
+import {KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp} from './services';
+import {Http, XHRBackend, RequestOptions} from '@angular/http';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent}
@@ -22,6 +21,7 @@ const appRoutes: Routes = [
   ],
   providers: [
     SocketService,
+    DocumentInfoService,
     BreadcrumbService,
     {
       provide: Http,

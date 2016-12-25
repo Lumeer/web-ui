@@ -5,6 +5,7 @@ import '@angular/core';
 import '@angular/common';
 import '@angular/http';
 import '@angular/router';
+import '@angular/forms';
 // RxJS
 // import 'rxjs';
 
@@ -18,5 +19,4 @@ import './js/custom.js';
 
 import 'socket.io-client';
 // import 'lodash';
-import 'jquery-slimscroll';
 import 'angular2-perfect-scrollbar';

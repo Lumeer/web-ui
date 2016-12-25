@@ -44,7 +44,6 @@ export class LeftPanelComponent {
       .flatMap(item => item.children)
       .map((child: any) => child && child.data && child.data.contentUrl && this.fetchChildContent(child))
       .value();
-    console.log(this.router.config);
   }
 
   public onItemClick(child: any, parent: any, link?: any) {

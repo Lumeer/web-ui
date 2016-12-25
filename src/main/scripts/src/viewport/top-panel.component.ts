@@ -2,38 +2,24 @@ import {
   Component, EventEmitter, Output, Input, trigger, state, style, transition, animate,
   keyframes
 } from '@angular/core';
+import {DocumentInfoService} from '../services/document-info.service';
 @Component({
   selector: 'top-panel',
   template: require('./top-panel.component.html'),
-  styles: [ require('./top-panel.component.scss').toString() ],
-  animations: [
-    trigger('animateHeight', [
-      state('in', style({height: '*'})),
-      transition('void => *', [
-        animate(200, keyframes([
-          style({height: 0, offset: 0}),
-          style({height: '*', offset: 1})
-        ]))
-      ]),
-      transition('* => void', [
-        animate(200, keyframes([
-          style({height: '*', offset: 0}),
-          style({height: 0, offset: 1})
-        ]))
-      ])
-    ])
-  ]
+  styles: [ require('./top-panel.component.scss').toString() ]
 })
 export class TopPanelComponent {
   @Output() public collapseEvent = new EventEmitter();
   @Output() public logoutEvent = new EventEmitter();
   @Output() public filterSaved = new EventEmitter();
   @Input() public activeFilter;
-  public newFilterName = '';
 
+  public newFilterName = '';
   public showSave: boolean = false;
 
   private currentFilter;
+
+  constructor(private documentInfoService: DocumentInfoService) {}
 
   public onCollapse() {
     this.collapseEvent.next();
@@ -44,7 +30,7 @@ export class TopPanelComponent {
   }
 
   public onFilterChanged(dataPayload) {
-    this.currentFilter = dataPayload;
+    this.documentInfoService.fetchDocumentPreviewsFromFilter(dataPayload);
   }
 
   public onSaveClick() {

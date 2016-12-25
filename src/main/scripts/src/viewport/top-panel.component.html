@@ -16,7 +16,6 @@
       <a (click)="showSave = !showSave"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
       <a (click)="showSave = !showSave"><i class="fa fa-clipboard" aria-hidden="true"></i></a>
       <div class="lum-filter-saver"
-           [@animateHeight]="'in'"
            *ngIf="showSave">
         <form>
           <input name="filter-name" type="text" placeholder="Name of this filter" [(ngModel)]="newFilterName">

@@ -82,7 +82,7 @@ export class AutoCompleteComponent {
       this.options.filterFn = filterItems.bind(this);
     }
     if (this.source) {
-      this.filteredSource = this.source.filter(this.options.filterFn);
+      this.filteredSource = this.source.filter((item) => this.options.filterFn(item, this.modelData));
     }
   }
 
