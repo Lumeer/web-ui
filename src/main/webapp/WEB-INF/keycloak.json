@@ -1,8 +1,11 @@
 {
-  "realm": "master",
-  "auth-server-url": "http://localhost:8080/auth",
-  "ssl-required": "external",
-  "resource": "lumeer",
+  "realm": "lumeer",
+  "auth-server-url": "https://auth.lumeer.io/auth",
+  "ssl-required": "all",
+  "resource": "engine",
   "public-client": true,
-  "disabled": true
+  "disable-trust-manager": "false",
+  "truststore": "${jboss.server.config.dir}/cacerts.jks",
+  "truststore-password": "geheim",
+  "disabled": "true"
 }
