@@ -1,6 +1,6 @@
-import {Component, trigger, state, style, transition, group, animate, keyframes} from '@angular/core';
-import {Http} from '@angular/http';
+import {Component, trigger, state, style, transition, animate, keyframes, Input} from '@angular/core';
 import * as _ from 'lodash';
+import {LocalStorage} from 'ng2-webstorage';
 
 @Component({
   selector: 'document-preview',
@@ -29,26 +29,14 @@ export class DocumentPreviewComponent {
   public pickerVisible = false;
   public colors: string[];
   public icons: string[];
-  public newDocument: any = {
-    links: []
-  };
-
-  constructor(private http: Http) {
-    this.initColors();
-    this.initIcons();
-  }
-
-  public documents: any[];
+  @Input() public documents;
+  @LocalStorage() public lastDocument;
+  public newDocument: any = { links: []};
   public activeDocument: any;
 
-  public ngOnInit() {
-    setTimeout(() => this.fetchDocumentPreviews(), 2000);
-  }
-
-  private fetchDocumentPreviews() {
-    this.http.get('/data/documentpreview.json')
-      .map(res => res.json())
-      .subscribe(documents => this.documents = documents);
+  constructor() {
+    this.initColors();
+    this.initIcons();
   }
 
   public setIcon(icon) {
@@ -72,6 +60,11 @@ export class DocumentPreviewComponent {
     };
   }
 
+  public setActiveDocument(document) {
+    this.activeDocument = document;
+    this.lastDocument = document;
+  }
+
   private initColors() {
     this.colors = [
       '#c7254e',
@@ -79,7 +72,7 @@ export class DocumentPreviewComponent {
       '#3498DB',
       '#F39C12',
       '#E74C3C'
-    ]
+    ];
   }
 
   private initIcons() {
@@ -89,6 +82,6 @@ export class DocumentPreviewComponent {
       'fa-snowflake-o',
       'fa-superpowers',
       'fa-eye-slash'
-    ]
+    ];
   }
 }

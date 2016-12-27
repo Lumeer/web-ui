@@ -25,9 +25,26 @@
               <ul class="lum-collapsed" [ngClass]="{'lum-in': !item.data.collapsed}">
                 <template ngFor let-child [ngForOf]="item.children">
                   <li *ngIf="child.data && child.data.title && child.data.id"
-                      [ngClass]="{'active': child.data.active}"
-                      (click)="onItemClick(child, item)">
-                    <a href="javascript:;"><i class="fa" [ngClass]="child.data.icon" aria-hidden="true"></i>{{child.data.title}}</a>
+                      [ngClass]="{'active': child.data.active}">
+                    <a href="javascript:;" (click)="onItemClick(child, item)"><i class="fa" [ngClass]="child.data.icon" aria-hidden="true"></i>{{child.data.title}}</a>
+                    <ul class="lum-collapsed"
+                        [ngClass]="{'lum-in': !item.data.collapsed}"
+                        *ngIf="child.data.contentUrl">
+                      <li>
+                        <a href="javascript:;" (click)="child.data.visible = !child.data.visible">Show items</a>
+                      </li>
+                    </ul>
+                    <ul class="lum-collapsed lum-child-links"
+                        [ngClass]="{'lum-in': !item.data.collapsed}"
+                        [@animateVisible]="'in'"
+                        *ngIf="child.data.contentUrl && child.data.visible && !item.data.collapsed">
+                      <li *ngFor="let oneLink of child.data.childContent | async; let i = index;">
+                          <a href="javascript:;"
+                             (click)="onItemClick(child, item, oneLink); child.data.visible = false">
+                            {{oneLink.title}}
+                          </a>
+                      </li>
+                    </ul>
                   </li>
                 </template>
               </ul>

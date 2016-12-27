@@ -1,12 +1,12 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { LeftPanelComponent, ContentComponent, TopPanelComponent, ViewPortComponent, HomeComponent } from './viewport';
-import {SocketService} from './services/socket.service';
 import { RouterModule, Routes } from '@angular/router';
-import {FormsModule, ViewsModule} from './components';
-import {BreadcrumbService, KeycloakHttp, KeycloakService} from './services';
-import {XHRBackend, RequestOptions, Http} from '@angular/http';
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import {LumFormsModule, ViewsModule} from './components';
+import {FormsModule} from '@angular/forms';
+import {KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp} from './services';
+import {Http, XHRBackend, RequestOptions} from '@angular/http';
+import {Ng2Webstorage} from 'ng2-webstorage';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent}
@@ -17,10 +17,13 @@ const appRoutes: Routes = [
     BrowserModule,
     RouterModule.forRoot(appRoutes),
     ViewsModule,
-    FormsModule
+    FormsModule,
+    Ng2Webstorage,
+    LumFormsModule
   ],
   providers: [
     SocketService,
+    DocumentInfoService,
     BreadcrumbService,
     {
       provide: Http,
@@ -41,6 +44,6 @@ const appRoutes: Routes = [
     TopPanelComponent,
     HomeComponent
   ],
-  bootstrap:    [ ViewPortComponent]
+  bootstrap:    [ ViewPortComponent ]
 })
 export class AppModule {}

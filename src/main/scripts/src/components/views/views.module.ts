@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { QueryComponent, FilterComponent, DocumentInfoComponent, DocumentPreviewComponent } from './query';
 import {BrowserModule} from '@angular/platform-browser';
 import { PerfectScrollbarModule } from 'angular2-perfect-scrollbar';
+import {DocumentInfoService} from '../../services/document-info.service';
 
 const viewsRoutes: Routes = [
   {
@@ -32,7 +33,7 @@ const viewsRoutes: Routes = [
         path: 'query',
         component: QueryComponent,
         data: {
-          id: 'query', title: 'Query builder', icon: 'fa-th-list'
+          id: 'query', title: 'Query builder', icon: 'fa-th-list', contentUrl: '/data/queries.json'
         },
         children: []
       },
@@ -63,6 +64,9 @@ const viewsRoutes: Routes = [
     PerfectScrollbarModule,
     FormsModule,
     RouterModule.forChild(viewsRoutes)
+  ],
+  providers: [
+    DocumentInfoService
   ],
   declarations: [
     PivotComponent,

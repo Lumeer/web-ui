@@ -9,6 +9,7 @@
        (mouseleave)="activeIndex = -1"
        (keydown)="onKeyDown($event, tagIndex)">
     <template ngFor let-displayKey let-odd="odd" [ngForOf]="getObjectKeys(options.display)">
+      <span *ngIf="!odd && oneTag.operand">{{oneTag.operand}}</span>
       <div *ngIf="odd" class="tag-separator">
         <div class="lum-operand" *ngIf="activeIndex === tagIndex && !oneTag.sticky">
           <template ngFor let-operand [ngForOf]="options.operandTypes.values">

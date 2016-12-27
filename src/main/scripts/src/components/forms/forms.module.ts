@@ -42,4 +42,4 @@ const formsRoutes: Routes = [
     ReportComponent
   ]
 })
-export class FormsModule { }
+export class LumFormsModule { }

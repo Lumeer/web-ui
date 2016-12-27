@@ -8,5 +8,6 @@ import {BreadcrumbService} from '../services/breadcrumb.service';
 })
 export class ContentComponent {
   @Input() public currentView: any;
+  @Input() public activeLink: any;
   constructor(private breadCrumbService: BreadcrumbService) {}
 }

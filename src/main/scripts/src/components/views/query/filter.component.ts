@@ -4,6 +4,11 @@ import {QUERY_TAG_PLACEHOLDER} from '../../common/helpers/constants';
 import {AutoCompleteOptions} from '../../common/auto-complete/autocomplete.interface';
 import {Http} from '@angular/http';
 import {ITagOptions, TagBuilder} from './query-tag.inteface';
+import * as _ from 'lodash';
+import {ActivatedRoute} from '@angular/router';
+
+const COLLECTION = {text: 'Collection', type: 'collection'};
+const SORT_BY = {text: 'Sort By', type: 'sortby'};
 
 @Component({
   selector: 'query-filter',
@@ -11,7 +16,7 @@ import {ITagOptions, TagBuilder} from './query-tag.inteface';
 })
 
 export class FilterComponent {
-  constructor(private http: Http) {
+  constructor(private http: Http, private route: ActivatedRoute) {
     this.initTagOptions();
   }
 
@@ -24,32 +29,35 @@ export class FilterComponent {
   public tagOptions: ITagOptions;
 
   public autocompleteOptions: AutoCompleteOptions = {
-    displayKey: 'text'
+    displayKey: 'text',
+    filterFn: (item, currentValue) => this.filterValues(item, currentValue)
   };
 
   private collectionItem = {colValue: 'Store', colName: 'Collection', readOnly: ['colName'],
-    sticky: true, source: this.collections, type: STRING};
+    source: this.collections, type: STRING};
   private sortByItem = {colName: 'Sort By', colValue: '*', readOnly: ['colName'],
-    sticky: true, source: this.colNames, type: STRING};
+    source: this.colNames, type: STRING};
 
   public ngOnInit() {
     this.fetchColNames();
     this.fetchColValues();
     this.fetchCollections();
-    this.fetchItems();
+    this.route.queryParams.subscribe(keys => this.fetchItems(keys['id']));
   }
 
   private fetchColNames() {
+    //TODO: Send active filter with request to fetch correct names (for autocomplete)
     this.http.get('/data/colnames.json')
       .map(res => res.json())
       .subscribe(colNames => {
-        this.colNames = colNames;
-        this.tagOptions.withColNames(colNames);
-        this.tagOptions.values = colNames;
+        this.colNames = [COLLECTION, SORT_BY, ...colNames];
+        this.tagOptions.withColNames(this.colNames);
+        this.tagOptions.values = this.colNames;
       });
   }
 
   private fetchColValues() {
+    //TODO: Send active filter with request to fetch correct values (for autocomplete)
     this.http.get('/data/colvalues.json')
       .map(res => res.json())
       .subscribe(colValues => {
@@ -59,6 +67,7 @@ export class FilterComponent {
   }
 
   private fetchCollections() {
+    //TODO: Send active filter with request to fetch correct collections (for autocomplete)
     this.http.get('/data/collections.json')
       .map(res => res.json())
       .subscribe(collections => {
@@ -67,11 +76,16 @@ export class FilterComponent {
       });
   }
 
-  private fetchItems() {
-    this.items = [this.sortByItem, this.collectionItem];
+  private fetchItems(activeFilter?: any) {
+    //TODO: Send active filter ID with request to fetch correct items in query
     this.http.get('/data/queryitems.json')
-      .map(res => res.json())
-      .subscribe(items => this.items = [...this.items, ...items]);
+      .flatMap(res => res.json())
+      .reduce((result: any[], item: any) => {
+        item.operand = item.operand || this.defaultOperand();
+        item.equality = item.equality || this.defaultEquality(item.colValue);
+        return [...result, item];
+      }, [])
+      .subscribe(items => this.items = items);
   }
 
   private initTagOptions() {
@@ -117,14 +131,24 @@ export class FilterComponent {
   private newItemValue(data) {
     this.items[this.items.length - 1].colValue = data;
     this.items[this.items.length - 1].type = FilterComponent.getType(data);
+    this.items[this.items.length - 1].operand = this.defaultOperand();
+    this.items[this.items.length - 1].equality = this.defaultEquality(data);
     this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
     this.tagOptions.values = this.colNames;
   }
 
   private newItem(data) {
-    this.items.push({colName: data, colValue: '', type: STRING});
-    this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.VALUE;
-    this.tagOptions.values = this.colValues;
+    if (data === COLLECTION.text) {
+      let newCollection = _.cloneDeep(this.collectionItem);
+      newCollection.colValue = '';
+      this.items.push(newCollection);
+      this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.COLLECTION;
+      this.tagOptions.values = newCollection.source;
+    } else {
+      this.items.push({colName: data, colValue: '', type: FilterComponent.getType(data)});
+      this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.VALUE;
+      this.tagOptions.values = this.colValues;
+    }
   }
 
   private static isNumber(itemValue) {
@@ -133,5 +157,22 @@ export class FilterComponent {
 
   private static getType(itemValue) {
     return FilterComponent.isNumber(itemValue) ? NUMBER : STRING;
+  }
+
+  private defaultOperand(): string {
+    return <string>this.tagOptions.operandTypes.values[0];
+  }
+
+  private defaultEquality(data): string {
+    return FilterComponent.getType(data) === STRING ?
+      this.tagOptions.equalityValues.string.values[0]['value'] : this.tagOptions.equalityValues.number.values[0];
+  }
+
+  private filterValues(oneItem, currentValue) {
+    let currentData = currentValue.trim().toLowerCase();
+    if (currentData !== '') {
+      return oneItem[this.autocompleteOptions.displayKey].toLowerCase().indexOf(currentData) !== -1;
+    }
+    return true;
   }
 }

@@ -1,5 +1,6 @@
 "use strict";
 const webpack = require("webpack"),
+  path = require("path"),
   HtmlWebpackPlugin = require("html-webpack-plugin"),
   CopyWebpackPlugin = require("copy-webpack-plugin");
 module.exports = {
@@ -13,28 +14,25 @@ module.exports = {
     publicPath: '/'
   },
   resolve: {
-    extensions: ['', '.js', '.ts']
+    extensions: ['.js', '.ts']
   },
   devtool: 'source-map',
   module: {
-    preLoaders: [
-      {test: /\.ts$/, loader: 'tslint', exclude: /(node_modules|libs)/}
-    ],
-    loaders: [
+    rules: [
       {
         test: /\.ts/,
         loaders: ['ts-loader'],
         exclude: /node_modules/
       },
-      {test:/\.html$/, loader:'html' },
+      {test:/\.html$/, loader:'html-loader' },
       {
         test: /\.scss$/,
-        loaders: ["style", "css", "sass"]
+        loaders: ["style-loader", "css-loader", "sass-loader"]
       },
       {
         //IMAGE LOADER
         test: /\.(jpe?g|png|gif|svg)$/i,
-        loader:'file'
+        loader:'file-loader'
       },
       { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&minetype=application/font-woff" },
       { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader" },
@@ -61,11 +59,17 @@ module.exports = {
       {from: __dirname + '/img', to: 'img'},
       {from: __dirname + '/data', to: 'data'}
     ]),
-    new webpack.optimize.CommonsChunkPlugin(/* chunkName= */"vendor", /* filename= */"js/vendor.bundle.js")
+    new webpack.optimize.CommonsChunkPlugin({name: "vendor", filename: "js/vendor.bundle.js"})
   ],
   externals: {
     'jquery': 'jQuery',
     'lodash': '_',
     'rxjs': 'Rx'
+  },
+  performance: { hints: false },
+  devServer: {
+    contentBase: path.join(__dirname, "dist"),
+    historyApiFallback: true,
+    port: 7000
   }
 };

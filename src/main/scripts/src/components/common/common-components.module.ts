@@ -15,8 +15,7 @@ import {EditableDirective} from './auto-complete/editable.directive';
   declarations: [
     TagInputComponent,
     AutoCompleteComponent,
-    EditableDirective
-  ],
+    EditableDirective],
   exports: [
     TagInputComponent,
     AutoCompleteComponent
