@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "typings install",
     "build": "webpack",
-    "start": "webpack-dev-server --hot --inline --port 7000 --content-base dist/ --history-api-fallback",
+    "start": "webpack-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -39,8 +39,8 @@
     "typescript": "^2.1.0",
     "typings": "2.1.0",
     "url-loader": "^0.5.7",
-    "webpack": "1.14.0",
-    "webpack-dev-server": "^1.16.2",
+    "webpack": "^2.2.0-rc.2",
+    "webpack-dev-server": "^2.2.0-rc.0",
     "webpack-node-externals": "^1.4.3"
   },
   "dependencies": {
