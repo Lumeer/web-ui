@@ -1,6 +1,6 @@
-import {Component, trigger, state, style, transition, group, animate, keyframes, Input} from '@angular/core';
-import {Http} from '@angular/http';
+import {Component, trigger, state, style, transition, animate, keyframes, Input} from '@angular/core';
 import * as _ from 'lodash';
+import {LocalStorage} from "ng2-webstorage";
 
 @Component({
   selector: 'document-preview',
@@ -30,16 +30,14 @@ export class DocumentPreviewComponent {
   public colors: string[];
   public icons: string[];
   @Input() public documents;
-  public newDocument: any = {
-    links: []
-  };
+  @LocalStorage() public lastDocument;
+  public newDocument: any = { links: []};
+  public activeDocument: any;
 
-  constructor(private http: Http) {
+  constructor() {
     this.initColors();
     this.initIcons();
   }
-
-  public activeDocument: any;
 
   public setIcon(icon) {
     this.newDocument.icon = icon;
@@ -62,6 +60,11 @@ export class DocumentPreviewComponent {
     };
   }
 
+  public setActiveDocument(document) {
+    this.activeDocument = document;
+    this.lastDocument = document;
+  }
+
   private initColors() {
     this.colors = [
       '#c7254e',
@@ -79,6 +82,6 @@ export class DocumentPreviewComponent {
       'fa-snowflake-o',
       'fa-superpowers',
       'fa-eye-slash'
-    ];;
+    ];
   }
 }

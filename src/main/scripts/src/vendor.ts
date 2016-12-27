@@ -20,3 +20,4 @@ import './js/custom.js';
 import 'socket.io-client';
 // import 'lodash';
 import 'angular2-perfect-scrollbar';
+import 'ng2-webstorage';

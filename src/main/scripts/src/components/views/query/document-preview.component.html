@@ -42,7 +42,7 @@
   </div>
   <div *ngFor="let document of documents; let documentIndex = index"
        class="lum-document-preview col-lg-2 col-md-2 col-xs-6"
-       (click)="activeDocument = document">
+       (click)="setActiveDocument(document)">
     <div class="lum-preview-content">
       <div class="preview-icon" [ngStyle]="{'background-color': document.color}">
         <i class="fa" [ngClass]="document.icon"

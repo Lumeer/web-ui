@@ -6,6 +6,7 @@ import {LumFormsModule, ViewsModule} from './components';
 import {FormsModule} from '@angular/forms';
 import {KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp} from './services';
 import {Http, XHRBackend, RequestOptions} from '@angular/http';
+import {Ng2Webstorage} from 'ng2-webstorage';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent}
@@ -17,6 +18,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     ViewsModule,
     FormsModule,
+    Ng2Webstorage,
     LumFormsModule
   ],
   providers: [
