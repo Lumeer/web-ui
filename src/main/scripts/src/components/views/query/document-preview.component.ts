@@ -1,6 +1,6 @@
 import {Component, trigger, state, style, transition, animate, keyframes, Input} from '@angular/core';
 import * as _ from 'lodash';
-import {LocalStorage} from "ng2-webstorage";
+import {LocalStorage} from 'ng2-webstorage';
 
 @Component({
   selector: 'document-preview',
