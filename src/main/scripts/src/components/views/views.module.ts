@@ -9,6 +9,7 @@ import { QueryComponent, FilterComponent, DocumentInfoComponent, DocumentPreview
 import {BrowserModule} from '@angular/platform-browser';
 import { PerfectScrollbarModule } from 'angular2-perfect-scrollbar';
 import {DocumentInfoService} from '../../services/document-info.service';
+import {HistoryChatComponent} from "./single_document/history-chat.component";
 
 const viewsRoutes: Routes = [
   {
@@ -75,7 +76,8 @@ const viewsRoutes: Routes = [
     SingleDocumentComponent,
     FilterComponent,
     DocumentPreviewComponent,
-    DocumentInfoComponent
+    DocumentInfoComponent,
+    HistoryChatComponent
   ],
   exports: [
     FilterComponent

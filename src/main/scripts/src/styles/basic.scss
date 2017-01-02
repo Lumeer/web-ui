@@ -7,6 +7,10 @@ $fa-font-path: '~font-awesome/fonts';
 
 @import 'variables';
 
+body {
+  overflow-x: hidden;
+}
+
 li {
   list-style: none;
 }

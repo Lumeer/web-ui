@@ -38,7 +38,7 @@
                         [ngClass]="{'lum-in': !item.data.collapsed}"
                         [@animateVisible]="'in'"
                         *ngIf="child.data.contentUrl && child.data.visible && !item.data.collapsed">
-                      <li *ngFor="let oneLink of child.data.childContent | async; let i = index;">
+                      <li *ngFor="let oneLink of child.data.childContent; let i = index;">
                           <a href="javascript:;"
                              (click)="onItemClick(child, item, oneLink); child.data.visible = false">
                             {{oneLink.title}}

@@ -7,6 +7,8 @@ import {FormsModule} from '@angular/forms';
 import {KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp} from './services';
 import {Http, XHRBackend, RequestOptions} from '@angular/http';
 import {Ng2Webstorage} from 'ng2-webstorage';
+import {NavigationChildrenService} from './services/navigation-children.service';
+import {DocumentService} from './services/document.service';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent}
@@ -23,6 +25,8 @@ const appRoutes: Routes = [
   ],
   providers: [
     SocketService,
+    NavigationChildrenService,
+    DocumentService,
     DocumentInfoService,
     BreadcrumbService,
     {
