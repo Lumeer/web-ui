@@ -1,0 +1,35 @@
+@import '../../../styles/variables';
+history-chat {
+  position: absolute;
+  right: 2px;
+  height: 87%;
+
+  .info-label {
+    cursor: pointer;
+    transform: rotate(-90deg);
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 55px;
+    margin-right: -66px;
+    width: 160px;
+
+    span {
+      font-size: $font-size-large;
+      border-top-left-radius: 20px;
+      padding: 5px;
+      background: $secondary-color;
+    }
+  }
+
+  .history-chat {
+    display: inline-block;
+    z-index: 9;
+    height: 100%;
+    background: $secondary-color;
+    width: 150px;
+
+    .document-chat, .document-history {
+      height: 50%;
+    }
+  }
+}

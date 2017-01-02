@@ -33,7 +33,7 @@ export class DocumentInfoComponent {
   @Input() public document: any;
   @Output() public documentChange: any = new EventEmitter();
 
-  constructor(private http: Http) {
+  constructor() {
     if (window.innerWidth <= 360) {
       this.openLinks = 1;
     }
@@ -46,22 +46,6 @@ export class DocumentInfoComponent {
   public onCloseClick() {
     this.document = undefined;
     this.documentChange.emit(undefined);
-  }
-
-  public ngOnInit() {
-    if (this.document) {
-      this.document.links.map( link => {
-        link.info = this.fetchLinkInfo(link);
-      });
-    }
-  }
-
-  public ngOnChanges() {
-    if (this.document) {
-      this.document.links.map(link => {
-        link.info = this.fetchLinkInfo(link);
-      });
-    }
   }
 
   public onLinkClick(linkIndex) {
@@ -83,11 +67,6 @@ export class DocumentInfoComponent {
         setTimeout(() => linkInfo.update());
       });
     }
-  }
-
-  public fetchLinkInfo(link) {
-    return this.http.get('/data/linkinfo.json')
-      .map(res => res.json());
   }
 
   public onEditLinksClick($event) {

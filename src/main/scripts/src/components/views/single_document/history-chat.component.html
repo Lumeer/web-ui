@@ -1,0 +1,17 @@
+<div class="info-label" (click)="toggleVisible = !toggleVisible">
+  <span>Chat and History</span>
+</div>
+<div class="history-chat" *ngIf="toggleVisible" [@animateWidth]="'in'">
+  <div class="document-chat">
+    <div>Chat</div>
+    <div>
+      Here will be chat about document.
+    </div>
+  </div>
+  <div class="document-history">
+    <div>History</div>
+    <div>
+      Here will be history of document.
+    </div>
+  </div>
+</div>

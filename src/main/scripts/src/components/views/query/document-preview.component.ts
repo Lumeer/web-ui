@@ -1,6 +1,7 @@
 import {Component, trigger, state, style, transition, animate, keyframes, Input} from '@angular/core';
 import * as _ from 'lodash';
 import {LocalStorage} from 'ng2-webstorage';
+import {DocumentService} from '../../../services/document.service';
 
 @Component({
   selector: 'document-preview',
@@ -34,7 +35,7 @@ export class DocumentPreviewComponent {
   public newDocument: any = { links: []};
   public activeDocument: any;
 
-  constructor() {
+  constructor(private documentService: DocumentService) {
     this.initColors();
     this.initIcons();
   }
@@ -62,7 +63,7 @@ export class DocumentPreviewComponent {
 
   public setActiveDocument(document) {
     this.activeDocument = document;
-    this.lastDocument = document;
+    this.documentService.setActiveDocument(document);
   }
 
   private initColors() {

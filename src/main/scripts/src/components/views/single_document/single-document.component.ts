@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {LocalStorage} from 'ng2-webstorage';
+import {DocumentService} from '../../../services/document.service';
 
 @Component({
   selector: 'views-single-document',
@@ -7,9 +8,10 @@ import {LocalStorage} from 'ng2-webstorage';
 })
 
 export class SingleDocumentComponent {
-  @LocalStorage('lastDocument') public activeDocument;
 
-  constructor() {
-    console.log(this);
+  constructor(private documentService: DocumentService) {}
+
+  public ngOnInit() {
+    this.documentService.fetchDocumentDetailInfo();
   }
 }
