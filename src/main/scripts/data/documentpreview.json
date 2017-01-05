@@ -1,11 +1,11 @@
 [
   {
-    "title": "Some Document",
+    "title": "Amici",
     "values": [
-      "a",
-      "b",
-      "c",
-      "d"
+      "Cheeseburger",
+      "Burger",
+      "Pizza hawaii",
+      "Pizza quattro formaggi"
     ],
     "color": "#FF4040",
     "icon": "fa-picture-o",
@@ -34,12 +34,10 @@
     ]
   },
   {
-    "title": "Some Document 2",
+    "title": "McDonald's",
     "values": [
-      "1",
-      "2",
-      "3",
-      "4"
+      "Cheesburger",
+      "Burger"
     ],
     "color": "#FEF5CA",
     "icon": "fa-user-circle-o",
@@ -68,12 +66,11 @@
     ]
   },
   {
-    "title": "Some Document 3",
+    "title": "Don Antonio",
     "values": [
-      "t",
-      "r",
-      "e",
-      "y"
+      "Cheeseburger",
+      "American Burger",
+      "Pizza"
     ],
     "color": "#76EEC6",
     "icon": "fa-user-circle-o",
