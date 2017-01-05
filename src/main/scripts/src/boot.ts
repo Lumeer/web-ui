@@ -1,5 +1,3 @@
-///<reference path="tsd.d.ts"/>
-
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app.module';
 import {KeycloakService} from './services/keycloak.service';

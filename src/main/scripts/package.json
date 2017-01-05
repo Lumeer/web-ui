@@ -4,7 +4,6 @@
   "description": "Lumeer Web UI",
   "main": "index.js",
   "scripts": {
-    "postinstall": "typings install",
     "build": "webpack",
     "start": "webpack-dev-server",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -22,6 +21,9 @@
   },
   "homepage": "https://github.com/Lumeer/web-ui#readme",
   "devDependencies": {
+    "@types/es6-shim": "^0.31.32",
+    "@types/requirejs": "^2.1.28",
+    "@types/socket.io-client": "^1.4.29",
     "compass-sass-mixins": "^0.12.7",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.1",
@@ -39,7 +41,7 @@
     "typescript": "^2.1.0",
     "typings": "2.1.0",
     "url-loader": "^0.5.7",
-    "webpack": "^2.2.0-rc.2",
+    "webpack": "^2.2.0-rc.3",
     "webpack-dev-server": "^2.2.0-rc.0",
     "webpack-node-externals": "^1.4.3"
   },
