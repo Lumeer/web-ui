@@ -12,9 +12,11 @@
   </div>
   <div class="lum-info-content row">
     <div class="document-values">
-      <div *ngFor="let value of document.values">
-        <span>{{value}}</span>
-      </div>
+      <perfect-scrollbar>
+        <div *ngFor="let value of document.values">
+          <span>{{value}}</span>
+        </div>
+      </perfect-scrollbar>
     </div>
     <div class="no-link" *ngIf="document.links.length === 0">
       <a (click)="onEditLinksClick($event)"><i class="fa fa-external-link" aria-hidden="true"></i> Edit links in Walkthrough</a>
