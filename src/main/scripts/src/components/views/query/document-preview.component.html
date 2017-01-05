@@ -1,7 +1,7 @@
 <document-info [(document)]="activeDocument">
 </document-info>
 <div class="row">
-  <div class="lum-document-preview col-lg-2 col-md-2 col-xs-6">
+  <div class="lum-document-preview col-lg-2 col-md-4 col-xs-6">
     <div class="lum-preview-content new-document-preview">
       <div class="preview-icon"
            (click)="pickerVisible = !pickerVisible"
@@ -41,17 +41,8 @@
     </div>
   </div>
   <div *ngFor="let document of documents; let documentIndex = index"
-       class="lum-document-preview col-lg-2 col-md-2 col-xs-6"
+       class="lum-document-preview col-lg-2 col-md-4 col-xs-6"
        (click)="setActiveDocument(document)">
-    <div class="lum-preview-content">
-      <div class="preview-icon" [ngStyle]="{'background-color': document.color}">
-        <i class="fa" [ngClass]="document.icon"
-           aria-hidden="true"></i>
-      </div>
-      <div>{{document.title}}</div>
-      <div *ngFor="let value of document.values">
-        <span>{{value}}</span>
-      </div>
-    </div>
+    <document-post-it [document]="document"></document-post-it>
   </div>
 </div>
