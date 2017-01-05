@@ -24,8 +24,13 @@ document-info {
     }
 
     .document-values {
+      height: 220px;
       padding: 15px;
       display: inline-block;
+
+      .ps-content {
+        height: 200px;
+      }
     }
 
     .link-titles {
