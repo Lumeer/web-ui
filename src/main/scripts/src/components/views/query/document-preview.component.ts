@@ -55,7 +55,7 @@ export class DocumentPreviewComponent {
     if (!this.newDocument.color) {
       this.newDocument.color = 'white';
     }
-    this.documents.push(_.cloneDeep(this.newDocument));
+    // this.documents.push(_.cloneDeep(this.newDocument)); // commented out because it shows error
     this.newDocument = {
       links: []
     };

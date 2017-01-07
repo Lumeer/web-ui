@@ -9,29 +9,15 @@
     ],
     "color": "#FF4040",
     "icon": "fa-picture-o",
-    "links": [
-      {
-        "type": "tools",
-        "title": "Tools",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#FEF5CA"
-      },
-      {
-        "type": "ingredients",
-        "title": "Ingredients",
-        "id": 1,
-        "icon": "fa-picture-o",
-        "color": "#FF4040"
-      },
+    "something nested":
       {
         "type": "somethingElse",
         "title": "Something Else",
         "id": 1,
         "icon": "fa-picture-o",
         "color": "#76EEC6"
-      }
-    ]
+      },
+    "links": []
   },
   {
     "title": "McDonald's",

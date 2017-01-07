@@ -3,8 +3,26 @@
     <i class="fa" [ngClass]="document.icon"
        aria-hidden="true"></i>
   </div>
-  <div>{{document.title}}</div>
-  <div *ngFor="let value of document.values">
-    <span>{{value}}</span>
+  <div class="document-title">Document title</div>
+  <div>
+    <ul class="list-group">
+
+      <li *ngFor="let entry of entries " class="list-group-item">
+        <b>{{entry.key}}</b> :
+
+        <ul *ngIf="entry.nested">
+          <li *ngFor="let subentry of entry.value">
+            {{subentry.key}} : {{subentry.value}}
+          </li>
+        </ul>
+
+        <span *ngIf="!entry.nested">
+          {{entry.value}}
+        </span>
+      </li>
+
+    </ul>
+
+    <button (click)="clickedForDetail()" class="btn-default center-block">Click for detail</button>
   </div>
 </div>
