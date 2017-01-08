@@ -19,6 +19,14 @@ export class DocumentService {
     }
   }
 
+  public fetchDocumentVersions(){
+    if (this.activeDocument) {
+      this.http.get('/data/documentversions.json')
+        .map(res => res.json())
+        .subscribe(versions => this.activeDocument.versions = versions);
+    }
+  }
+
   public fetchDocumentDetailInfo() {
     this.fetchDocumentChat();
     this.fetchDocumentHistory();

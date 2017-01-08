@@ -6,4 +6,32 @@ document-versions {
     padding: 15px;
   }
 
+  .table>tbody>tr>td{
+    padding: 0;
+    vertical-align: middle;
+  }
+
+  .table{
+    margin: 0;
+  }
+
+  .versions{
+    height: 120px;
+  }
+
+  .version-preview{
+    height: 105px;
+    padding-top: 15px;
+
+    .document-values{
+      height: 105px;
+      width: 100%;
+      padding: 0
+    }
+    .ps-content {
+      height: 105px !important;
+    }
+
+  }
+
 }

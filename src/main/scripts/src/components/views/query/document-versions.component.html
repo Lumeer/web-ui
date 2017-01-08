@@ -1,3 +1,20 @@
 <div class="document-versions">
-    Here will be some old versions of document
+  <div class="versions">
+    <perfect-scrollbar>
+      <table class="table">
+        <tr *ngFor="let version of documentVersions; let ix = index">
+          <td>{{version.version}}.vz</td>
+          <td>({{version.date}})</td>
+          <td><button class="btn-link center-block" (click)="showOrHideVersion(version, ix)">
+            <span *ngIf="selectedIndex == -1 || selectedIndex != ix">Show</span>
+            <span *ngIf="selectedIndex == ix">Hide</span>
+          </button></td>
+          <td><button class="btn-link center-block">Revert</button></td>
+        </tr>
+      </table>
+    </perfect-scrollbar>
+  </div>
+  <div class="version-preview">
+    <document-content *ngIf="activeDocumentVersion" [document]="activeDocumentVersion"></document-content>
+  </div>
 </div>

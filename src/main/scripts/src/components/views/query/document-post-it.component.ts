@@ -1,4 +1,5 @@
 import {Component, Input, OnInit, EventEmitter, Output} from '@angular/core';
+import {Entry} from "./Entry";
 
 @Component({
   selector: 'document-post-it',
@@ -10,7 +11,7 @@ export class DocumentPostItComponent implements OnInit {
   @Input() public document: any;
   @Output() private eventEmitter = new EventEmitter<any>();
 
-  private entries:Entry[] = [];
+  public entries:Entry[] = [];
 
   constructor(){}
 
@@ -30,10 +31,10 @@ export class DocumentPostItComponent implements OnInit {
 
   ngOnInit(): void {
     for(let key of Object.keys(this.document)) {
-      var value = this.document[key];
+      let value = this.document[key];
 
       if(typeof value != "string" && typeof value[0] != "string") { // it is array of documents, we assume that there is just one
-        var newValue = [];
+        let newValue = [];
         for(let nestedKey of Object.keys(value)) {
           newValue.push(new Entry(nestedKey, value[nestedKey], false));
         }
@@ -49,17 +50,4 @@ export class DocumentPostItComponent implements OnInit {
     this.eventEmitter.emit(this.document);
   }
 
-}
-
-class Entry {
-
-  private key: String;
-  private value: any;
-  private nested: boolean;
-
-  constructor(key:string, value:any, nested:boolean) {
-    this.key = key;
-    this.value = value;
-    this.nested = nested;
-  }
 }

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'document-versions',
@@ -7,7 +7,21 @@ import {Component} from '@angular/core';
 })
 export class DocumentVersionsComponent{
 
+  @Input() public documentVersions;
+  private activeDocumentVersion:any = undefined;
+  private selectedIndex: number = -1;
+
   constructor(){}
+
+  public showOrHideVersion(version, ix){
+    if(this.selectedIndex == ix){
+      this.selectedIndex = -1;
+      this.activeDocumentVersion = undefined;
+    }else{
+      this.selectedIndex = ix;
+      this.activeDocumentVersion = version;
+    }
+  }
 
 }
 

@@ -1,7 +1,20 @@
 <div class="document-values">
   <perfect-scrollbar>
-    <div *ngFor="let value of documentValues">
-      <span>{{value}}</span>
-    </div>
+    <ul>
+      <li *ngFor="let entry of entries ">
+        <b>{{entry.key}}</b> :
+
+        <ul *ngIf="entry.nested">
+          <li *ngFor="let subentry of entry.value">
+            {{subentry.key}} : {{subentry.value}}
+          </li>
+        </ul>
+
+        <span *ngIf="!entry.nested">
+          {{entry.value}}
+        </span>
+      </li>
+
+    </ul>
   </perfect-scrollbar>
 </div>

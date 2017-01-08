@@ -3,6 +3,7 @@ import {
   ViewChildren, QueryList, ElementRef, Output, EventEmitter
 } from '@angular/core';
 import {Http} from '@angular/http';
+import {DocumentService} from "../../../services/document.service";
 @Component({
   selector: 'document-info',
   template: require('./document-info.component.html'),
@@ -35,7 +36,7 @@ export class DocumentInfoComponent {
   @Input() public document: any;
   @Output() public documentChange: any = new EventEmitter();
 
-  constructor() {
+  constructor(private documentService: DocumentService) {
     if (window.innerWidth <= 360) {
       this.openLinks = 1;
     }
@@ -47,6 +48,9 @@ export class DocumentInfoComponent {
 
   public onVersionsToggleClick() {
     this.versionsVisible = !this.versionsVisible;
+    if(!this.document.versions){
+      this.documentService.fetchDocumentVersions();
+    }
   }
 
   public onRightsToggleClick() {}

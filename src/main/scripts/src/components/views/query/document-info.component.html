@@ -12,9 +12,9 @@
     </div>
   </div>
   <div class="lum-info-content row">
-    <document-content [documentValues]="document.values"></document-content>
+    <document-content [document]="document"></document-content>
     <div class="document-right-panel">
-      <document-versions *ngIf="versionsVisible"></document-versions>
+      <document-versions [documentVersions]="document.versions" *ngIf="versionsVisible"></document-versions>
       <div class="no-link" *ngIf="document.links.length === 0">
         <a (click)="onEditLinksClick($event)"><i class="fa fa-external-link" aria-hidden="true"></i> Edit links in Walkthrough</a>
       </div>
