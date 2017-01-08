@@ -6,7 +6,7 @@ document-info {
     bottom: 0;
     width: 100%;
     z-index: 9;
-    height: 250px;
+    height: 300px;
   }
 
   .no-link {
@@ -20,60 +20,72 @@ document-info {
     background-color: $secondary-color;
 
     > div {
-      height: 250px;
+      height: 300px;
     }
 
     .document-values {
-      height: 220px;
+      height: 270px;
       padding: 15px;
       display: inline-block;
 
       .ps-content {
-        height: 200px;
+        height: 250px;
       }
     }
 
-    .link-titles {
-      padding-right: 0 !important;
-      display: inline-block;
+    .document-right-panel {
       float: right;
-      transform: rotate(90deg);
-    }
 
-    .link-title {
-      letter-spacing: 0.05rem;
-      font-size: $font-size-large;
-      width: 250px;
-      cursor: pointer;
-      padding-left: 5px;
-
-      &.active {
-        transform: rotate(-90deg);
-        height: 100%;
-        padding: 5px;
+      .document-versions {
+        width: 200px;
+        float: right;
       }
 
-      .link-info {
+      .link-titles {
+        padding-right: 0 !important;
+        display: inline-block;
+        float: right;
         height: 100%;
-      }
-
-      .link-items {
-        padding-left: 5px;
-        margin-right: -5px;
-        height: 58%;
-        overflow-y: auto;
+        transform: rotate(90deg);
       }
 
       .link-title {
-        font-style: italic;
-        padding: 0 5px;
-      }
+        letter-spacing: 0.05rem;
+        font-size: $font-size-large;
+        width: 300px;
+        cursor: pointer;
+        height: 29px;
+        padding-left: 5px;
 
-      .link-edit, .link-title {
-        font-size: $font-size-small;
+        &.active {
+          transform: rotate(-90deg);
+          height: 100%;
+          padding: 5px;
+        }
+
+        .link-info {
+          height: 100%;
+        }
+
+        .link-items {
+          padding-left: 5px;
+          margin-right: -5px;
+          height: 68%;
+          overflow-y: auto;
+        }
+
+        .link-title {
+          font-style: italic;
+          padding: 0 5px;
+        }
+
+        .link-edit, .link-title {
+          font-size: $font-size-small;
+        }
       }
     }
   }
+
   .document-header {
     height: $font-size-large + 10px;
     letter-spacing: 0.05rem;
@@ -92,7 +104,7 @@ document-info {
 
 @media (min-width: $mobile-width) {
   document-info {
-    .link-titles, .no-link {
+    .document-right-panel {
       margin-right: 16.6%;
     }
   }
@@ -100,7 +112,7 @@ document-info {
 
 @media (max-width: $mobile-width) {
   document-info {
-    .link-titles {
+    .document-right-panel {
       margin-right: 0;
     }
   }

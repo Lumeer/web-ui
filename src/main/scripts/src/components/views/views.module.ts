@@ -5,7 +5,7 @@ import {ActiveTableComponent} from './active_table/active-table.component';
 import {SingleDocumentComponent} from './single_document/single-document.component';
 import {CommonComponentsModule} from '../';
 import { FormsModule } from '@angular/forms';
-import { QueryComponent, FilterComponent, DocumentInfoComponent, DocumentPreviewComponent, DocumentPostItComponent } from './query';
+import { QueryComponent, FilterComponent, DocumentInfoComponent, DocumentPreviewComponent, DocumentPostItComponent, DocumentVersionsComponent, DocumentContentComponent } from './query';
 import {BrowserModule} from '@angular/platform-browser';
 import { PerfectScrollbarModule } from 'angular2-perfect-scrollbar';
 import {DocumentInfoService} from '../../services/document-info.service';
@@ -78,7 +78,9 @@ const viewsRoutes: Routes = [
     DocumentPreviewComponent,
     DocumentInfoComponent,
     HistoryChatComponent,
-    DocumentPostItComponent
+    DocumentPostItComponent,
+    DocumentVersionsComponent,
+    DocumentContentComponent
   ],
   exports: [
     FilterComponent

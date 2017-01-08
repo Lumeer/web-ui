@@ -5,44 +5,42 @@
       {{document.title}}
     </span>
     <div class="col-lg-1 col-xs-3 lum-document-navigation">
-      <i class="fa fa-address-book" aria-hidden="true" (click)="onAddressClick()"></i>
-      <i class="fa fa-file-o" aria-hidden="true" (click)="onFileClick()"></i>
+      <i class="fa fa-file-text" aria-hidden="true" (click)="onMetadataToggleClick()"></i>
+      <i class="fa fa-history" aria-hidden="true" (click)="onVersionsToggleClick()"></i>
+      <i class="fa fa-user" aria-hidden="true" (click)="onRightsToggleClick()"></i>
       <i class="fa fa-times" aria-hidden="true" (click)="onCloseClick()"></i>
     </div>
   </div>
   <div class="lum-info-content row">
-    <div class="document-values">
-      <perfect-scrollbar>
-        <div *ngFor="let value of document.values">
-          <span>{{value}}</span>
-        </div>
-      </perfect-scrollbar>
-    </div>
-    <div class="no-link" *ngIf="document.links.length === 0">
-      <a (click)="onEditLinksClick($event)"><i class="fa fa-external-link" aria-hidden="true"></i> Edit links in Walkthrough</a>
-    </div>
-    <div class="link-titles" *ngIf="document.links.length !== 0">
-      <div class="link-title"
-           *ngFor="let link of document.links; let linkIndex = index;"
-           [ngStyle]="{'background': link.color}"
-           [ngClass]="{'active': activeIndexes.indexOf(linkIndex) !== -1}"
-           (click)="onLinkClick(linkIndex)">
-        <div *ngIf="activeIndexes.indexOf(linkIndex) === -1">
-          <i *ngIf="link.icon" class="fa" [ngClass]="link.icon" aria-hidden="true"></i>{{link.title}}</div>
-        <div  class="link-info"
-              *ngIf="activeIndexes.indexOf(linkIndex) !== -1">
-          <div>
-            <i *ngIf="link.icon" class="fa" [ngClass]="link.icon" aria-hidden="true"></i>{{link.title}}
-          </div>
-          <div class="link-title">Name</div>
-          <perfect-scrollbar class="link-items"
-                             #linkInfo>
-            <div *ngFor="let linkInfo of link.info | async">
-              {{linkInfo.title}}
+    <document-content [documentValues]="document.values"></document-content>
+    <div class="document-right-panel">
+      <document-versions *ngIf="versionsVisible"></document-versions>
+      <div class="no-link" *ngIf="document.links.length === 0">
+        <a (click)="onEditLinksClick($event)"><i class="fa fa-external-link" aria-hidden="true"></i> Edit links in Walkthrough</a>
+      </div>
+      <div class="link-titles" *ngIf="document.links.length !== 0">
+        <div class="link-title"
+             *ngFor="let link of document.links; let linkIndex = index;"
+             [ngStyle]="{'background': link.color}"
+             [ngClass]="{'active': activeIndexes.indexOf(linkIndex) !== -1}"
+             (click)="onLinkClick(linkIndex)">
+          <div *ngIf="activeIndexes.indexOf(linkIndex) === -1">
+            <i *ngIf="link.icon" class="fa" [ngClass]="link.icon" aria-hidden="true"></i>{{link.title}}</div>
+          <div  class="link-info"
+                *ngIf="activeIndexes.indexOf(linkIndex) !== -1">
+            <div>
+              <i *ngIf="link.icon" class="fa" [ngClass]="link.icon" aria-hidden="true"></i>{{link.title}}
             </div>
-          </perfect-scrollbar>
-          <div class="link-edit">
-            <a (click)="onEditLinksClick($event)"><i class="fa fa-external-link" aria-hidden="true"></i> Edit links in Walkthrough</a>
+            <div class="link-title">Name</div>
+            <perfect-scrollbar class="link-items"
+                               #linkInfo>
+              <div *ngFor="let linkInfo of link.info | async">
+                {{linkInfo.title}}
+              </div>
+            </perfect-scrollbar>
+            <div class="link-edit">
+              <a (click)="onEditLinksClick($event)"><i class="fa fa-external-link" aria-hidden="true"></i> Edit links in Walkthrough</a>
+            </div>
           </div>
         </div>
       </div>

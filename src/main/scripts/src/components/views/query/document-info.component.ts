@@ -29,6 +29,8 @@ import {Http} from '@angular/http';
 export class DocumentInfoComponent {
   public activeIndexes: any[] = [];
   private openLinks: number = 2;
+  private versionsVisible = false;
+  private metadataVisible = false;
   @ViewChildren('linkInfo') private linksInfo: QueryList<ElementRef>;
   @Input() public document: any;
   @Output() public documentChange: any = new EventEmitter();
@@ -39,9 +41,15 @@ export class DocumentInfoComponent {
     }
   }
 
-  public onAddressClick() {}
+  public onMetadataToggleClick() {
+    this.metadataVisible = !this.metadataVisible;
+  }
 
-  public onFileClick() {}
+  public onVersionsToggleClick() {
+    this.versionsVisible = !this.versionsVisible;
+  }
+
+  public onRightsToggleClick() {}
 
   public onCloseClick() {
     this.document = undefined;
