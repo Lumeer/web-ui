@@ -3,8 +3,8 @@ import {Routes, RouterModule} from '@angular/router';
 import {WalkthroughComponent} from './walkthrough/walkthrough.component';
 import {PickItemComponent} from './pick_item/pick-item.component';
 import {ActiveTableComponent} from './active_table/active-table.component';
-import {ContingencyTableComponent} from "./contingency_table/contingency-table.component";
-import {DigitalAssistentComponent} from "./digital_assistent/digital-assistent.component";
+import {ContingencyTableComponent} from './contingency_table/contingency-table.component';
+import {DigitalAssistentComponent} from './digital_assistent/digital-assistent.component';
 import {CommonComponentsModule} from '../';
 import {FormsModule} from '@angular/forms';
 import {
@@ -19,7 +19,7 @@ import {
 import {BrowserModule} from '@angular/platform-browser';
 import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
 import {DocumentInfoService} from '../../services/document-info.service';
-import {HistoryChatComponent} from "./active_table/history-chat.component";
+import {HistoryChatComponent} from './active_table/history-chat.component';
 
 const viewsRoutes: Routes = [
   {

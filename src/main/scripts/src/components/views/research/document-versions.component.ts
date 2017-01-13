@@ -11,8 +11,6 @@ export class DocumentVersionsComponent{
   private activeDocumentVersion:any = undefined;
   private selectedIndex: number = -1;
 
-  constructor(){}
-
   public showOrHideVersion(version, ix){
     if(this.selectedIndex == ix){
       this.selectedIndex = -1;
@@ -22,6 +20,4 @@ export class DocumentVersionsComponent{
       this.activeDocumentVersion = version;
     }
   }
-
 }
-

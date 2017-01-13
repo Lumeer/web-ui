@@ -20,6 +20,12 @@ module.exports = {
   module: {
     rules: [
       {
+        enforce: 'pre',
+        test: /\.ts?$/,
+        loader: 'tslint-loader',
+        exclude: /(node_modules|libs)/
+      },
+      {
         test: /\.ts/,
         loaders: ['ts-loader'],
         exclude: /node_modules/
@@ -59,6 +65,14 @@ module.exports = {
       {from: __dirname + '/img', to: 'img'},
       {from: __dirname + '/data', to: 'data'}
     ]),
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        tslint: {
+          emitErrors: true,
+          failOnHint: false
+        }
+      }
+    }),
     new webpack.optimize.CommonsChunkPlugin({name: "vendor", filename: "js/vendor.bundle.js"})
   ],
   externals: {

@@ -25,5 +25,5 @@ import {Component, Input, style, state, keyframes, animate, transition, trigger}
 
 export class HistoryChatComponent {
   public toggleVisible: boolean = false;
-  @Input() activeDocument: any;
+  @Input() public  activeDocument: any;
 }
