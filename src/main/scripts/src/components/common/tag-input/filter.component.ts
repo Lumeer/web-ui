@@ -2,10 +2,10 @@ import {Component, EventEmitter, Output} from '@angular/core';
 import {QueryTag, STRING, NUMBER} from '../helpers/tag.interface';
 import {QUERY_TAG_PLACEHOLDER} from '../helpers/constants';
 import {AutoCompleteOptions} from '../auto-complete/autocomplete.interface';
-import {Http} from '@angular/http';
 import {ITagOptions, TagBuilder} from '../../views/research/query-tag.inteface';
 import * as _ from 'lodash';
 import {ActivatedRoute} from '@angular/router';
+import {QueryTagService} from '../../../services/query-tags.service';
 
 const COLLECTION = {text: 'Collection', type: 'collection'};
 const SORT_BY = {text: 'Sort By', type: 'sortby'};
@@ -16,7 +16,7 @@ const SORT_BY = {text: 'Sort By', type: 'sortby'};
 })
 
 export class FilterComponent {
-  constructor(private http: Http, private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private queyTagService: QueryTagService) {
     this.initTagOptions();
   }
 
@@ -47,8 +47,7 @@ export class FilterComponent {
 
   private fetchColNames() {
     //TODO: Send active filter with request to fetch correct names (for autocomplete)
-    this.http.get('/data/colnames.json')
-      .map(res => res.json())
+    this.queyTagService.fetchAllTagNames()
       .subscribe(colNames => {
         this.colNames = [COLLECTION, SORT_BY, ...colNames];
         this.tagOptions.withColNames(this.colNames);
@@ -58,8 +57,7 @@ export class FilterComponent {
 
   private fetchColValues() {
     //TODO: Send active filter with request to fetch correct values (for autocomplete)
-    this.http.get('/data/colvalues.json')
-      .map(res => res.json())
+    this.queyTagService.fetchAllTagValues()
       .subscribe(colValues => {
         this.colValues = colValues;
         this.tagOptions.withColValues(colValues);
@@ -68,8 +66,7 @@ export class FilterComponent {
 
   private fetchCollections() {
     //TODO: Send active filter with request to fetch correct collections (for autocomplete)
-    this.http.get('/data/collections.json')
-      .map(res => res.json())
+    this.queyTagService.fetchCollections()
       .subscribe(collections => {
         this.collections = collections;
         this.collectionItem.source = collections;
@@ -78,8 +75,8 @@ export class FilterComponent {
 
   private fetchItems(activeFilter?: any) {
     //TODO: Send active filter ID with request to fetch correct items in research
-    this.http.get('/data/queryitems.json')
-      .flatMap(res => res.json())
+    this.queyTagService.fetchItems()
+      .flatMap(res => res)
       .reduce((result: any[], item: any) => {
         item.operand = item.operand || this.defaultOperand();
         item.equality = item.equality || this.defaultEquality(item.colValue);
