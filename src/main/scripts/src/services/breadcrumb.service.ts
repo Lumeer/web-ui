@@ -1,4 +1,5 @@
-//Taken from: http://stackoverflow.com/questions/37471515/create-breadcrumb-when-navigating-nested-components-angular-2/38310404#38310404
+//Taken from:
+//https://goo.gl/Ygoa54
 import {Injectable} from '@angular/core';
 import {Router, RoutesRecognized, ActivatedRouteSnapshot} from '@angular/router';
 

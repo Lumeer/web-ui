@@ -1,0 +1,13 @@
+<form (keydown)="onKeyDown($event)">
+  <lum-auto-complete [source]="source"
+                     [options]="options"
+                     [(modelData)]="value">
+    <input #filterInput
+           type="text"
+           class="lum-editable form-control"
+           name="text"
+           (focus)="onFocus()"
+           [(ngModel)]="value"
+           [attr.placeholder]="placeholder"/>
+  </lum-auto-complete>
+</form>

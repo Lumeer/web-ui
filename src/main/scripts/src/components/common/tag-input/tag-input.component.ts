@@ -3,6 +3,7 @@ import {
 } from '@angular/core';
 import {getActionToKey} from './tag-actions';
 import {CustomTag} from '../helpers/tag.interface';
+import {IAutocomplete} from './autocomplete-interface';
 
 @Component({
   selector: 'tag-input',
@@ -10,7 +11,7 @@ import {CustomTag} from '../helpers/tag.interface';
   styles: [ require('./tag-input.component.scss').toString() ]
 })
 
-export class TagInputComponent {
+export class TagInputComponent implements IAutocomplete {
   @Input() public tags: CustomTag[];
   @Input() public placeholder: string;
   @Input() public options: any;
@@ -19,10 +20,6 @@ export class TagInputComponent {
   @Output() public onDelete = new EventEmitter<number>();
   @Output() public onAdd = new EventEmitter<any>();
 
-  public mySource = [{text: 'one'}, {text: 'two'}, {text: 'some'}, {text: 'other'}];
-  public myData = 'e';
-
-  @ViewChild('tagsInput') private inputElement: ElementRef;
   @ViewChildren('tagItem') private tagElements: QueryList<ElementRef>;
 
   private editedItemIndex: number = -1;
@@ -47,14 +44,14 @@ export class TagInputComponent {
     this.onDelete.emit(tagIndex);
   }
 
-  public addItem(itemIndex, dataPayload) {
+  public addItem(dataPayload, itemIndex) {
     this.onAdd.emit({dataPayload: dataPayload, index: itemIndex});
   }
 
   public onKeyDown($event, index): void {
     let keyCode = $event.keyCode || $event.which;
     let action = getActionToKey(keyCode);
-    action.call(this, index, $event);
+    action.call(this, $event, index);
   }
 
   public isTagEditable(tagIndex, tagKey) {
