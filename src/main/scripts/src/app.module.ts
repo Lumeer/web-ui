@@ -10,6 +10,7 @@ import {Ng2Webstorage} from 'ng2-webstorage';
 import {NavigationChildrenService} from './services/navigation-children.service';
 import {DocumentService} from './services/document.service';
 import {CommonComponentsModule} from './components/common/common-components.module';
+import {QueryTagService} from './services/query-tags.service';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent}
@@ -31,6 +32,7 @@ const appRoutes: Routes = [
     DocumentService,
     DocumentInfoService,
     BreadcrumbService,
+    QueryTagService,
     {
       provide: Http,
       useFactory: (backend: XHRBackend,
