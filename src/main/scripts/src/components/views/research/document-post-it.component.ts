@@ -31,13 +31,11 @@ export class DocumentPostItComponent implements OnInit {
   public ngOnInit(): void {
     _.each(this.document, (key, value) => {
       if(typeof value !== 'string' && typeof value[0] !== 'string') {
-        let newValue = [];
-        _.each(value, (nestedKey, nestedValue) => {
-          newValue.push(new Entry(nestedKey, nestedValue, false));
-        });
-        this.entries.push(new Entry(key, newValue, true));
+        let newValue = _
+          .reduce(value, (result, nestedValue, nestedKey) => [...result, new Entry(nestedKey, nestedValue, false)], []);
+        this.entries = [...this.entries, new Entry(key, newValue, true)];
       } else {
-        this.entries.push(new Entry(key, value, false));
+        this.entries = [...this.entries, new Entry(key, value, false)];
       }
     });
   }
