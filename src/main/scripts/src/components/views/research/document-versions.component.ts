@@ -5,18 +5,18 @@ import {Component, Input} from '@angular/core';
   template: require('./document-versions.component.html'),
   styles: [require('./document-versions.component.scss').toString()]
 })
-export class DocumentVersionsComponent{
+export class DocumentVersionsComponent {
 
   @Input() public documentVersions;
-  private activeDocumentVersion:any = undefined;
+  private activeDocumentVersion: any;
   private selectedIndex: number = -1;
 
-  public showOrHideVersion(version, ix){
-    if(this.selectedIndex == ix){
+  public showOrHideVersion(version, index) {
+    if(this.selectedIndex === index) {
       this.selectedIndex = -1;
       this.activeDocumentVersion = undefined;
-    }else{
-      this.selectedIndex = ix;
+    } else {
+      this.selectedIndex = index;
       this.activeDocumentVersion = version;
     }
   }
