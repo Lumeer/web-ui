@@ -9,7 +9,7 @@ export function getActionToKey(key): () => any {
   return PRESS_ACTIONS.hasOwnProperty(key) ? PRESS_ACTIONS[key] : makeEditable;
 }
 
-function deleteAction(itemIndex) {
+function deleteAction($event, itemIndex) {
   if (this.inputElement.nativeElement.value === '' && this.editedItemIndex === -1) {
     if (itemIndex === -1) {
       highlightItem.call(this, this.tagElements.last);
@@ -23,23 +23,19 @@ function deleteAction(itemIndex) {
   }
 }
 
-function switchPrevious(itemIndex) {
-  if (this.inputElement.nativeElement.value === '' && this.editedItemIndex === -1) {
-    if (itemIndex > 0) {
-      highlightItem.call(this, this.tagElements.toArray()[itemIndex - 1]);
-    } else {
-      highlightItem.call(this, this.tagElements.last);
-    }
+function switchPrevious($event, itemIndex) {
+  if (itemIndex > 0) {
+    highlightItem.call(this, this.tagElements.toArray()[itemIndex - 1]);
+  } else {
+    highlightItem.call(this, this.tagElements.last);
   }
 }
 
-function switchNext(itemIndex) {
-  if (this.inputElement.nativeElement.value === '' && this.editedItemIndex === -1) {
-    if (itemIndex !== -1 && itemIndex !== this.tagElements.length - 1) {
-      highlightItem.call(this, this.tagElements.toArray()[itemIndex + 1]);
-    } else {
-      highlightItem.call(this, this.inputElement);
-    }
+function switchNext($event, itemIndex) {
+  if (itemIndex !== -1 && itemIndex !== this.tagElements.length - 1) {
+    highlightItem.call(this, this.tagElements.toArray()[itemIndex + 1]);
+  } else {
+    highlightItem.call(this, this.tagElements.first);
   }
 }
 
@@ -49,13 +45,13 @@ function highlightItem(tagItem) {
   }
 }
 
-function addAction(itemIndex, $event) {
+function addAction($event, itemIndex = -1) {
   if (itemIndex === -1) {
-    this.addItem(itemIndex, this.tagValue);
+    this.addItem(this.tagValue, itemIndex);
     this.tagValue = '';
   } else {
     let currentTag = this.tags[itemIndex];
-    this.addItem(itemIndex, currentTag);
+    this.addItem(currentTag, itemIndex);
     this.editedItemIndex = -1;
     highlightItem.call(this, this.tagElements.toArray()[itemIndex]);
   }
@@ -63,7 +59,7 @@ function addAction(itemIndex, $event) {
 }
 
 function makeEditable(itemIndex) {
-  if (this.editedItemIndex !== itemIndex) {
+  if (this.editedItemIndex !== itemIndex && this.editedItemIndex !== -1) {
     this.editedItemIndex = itemIndex;
     let selectedItem = this.tagElements.toArray()[itemIndex].nativeElement;
     setCaret(selectedItem);

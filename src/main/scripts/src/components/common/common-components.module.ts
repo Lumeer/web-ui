@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {AutoCompleteComponent} from './auto-complete/auto-complete.component';
 import {EditableDirective} from './auto-complete/editable.directive';
+import {FilterInput} from './tag-input/filter-input.component';
 
 @NgModule({
   imports: [
@@ -15,10 +16,14 @@ import {EditableDirective} from './auto-complete/editable.directive';
   declarations: [
     TagInputComponent,
     AutoCompleteComponent,
-    EditableDirective],
+    EditableDirective,
+    FilterInput
+  ],
   exports: [
     TagInputComponent,
-    AutoCompleteComponent
+    AutoCompleteComponent,
+    FilterInput
   ]
 })
+
 export class CommonComponentsModule { }
