@@ -1,15 +1,25 @@
-import { NgModule }             from '@angular/core';
+import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
-import {PivotComponent} from './pivot/pivot.component';
+import {WalkthroughComponent} from './walkthrough/walkthrough.component';
+import {PickItemComponent} from './pick_item/pick-item.component';
 import {ActiveTableComponent} from './active_table/active-table.component';
-import {SingleDocumentComponent} from './single_document/single-document.component';
+import {ContingencyTableComponent} from "./contingency_table/contingency-table.component";
+import {DigitalAssistentComponent} from "./digital_assistent/digital-assistent.component";
 import {CommonComponentsModule} from '../';
-import { FormsModule } from '@angular/forms';
-import { QueryComponent, FilterComponent, DocumentInfoComponent, DocumentPreviewComponent, DocumentPostItComponent, DocumentVersionsComponent, DocumentContentComponent } from './query';
+import {FormsModule} from '@angular/forms';
+import {
+  ResearchComponent,
+  FilterComponent,
+  DocumentInfoComponent,
+  DocumentPreviewComponent,
+  DocumentPostItComponent,
+  DocumentVersionsComponent,
+  DocumentContentComponent
+} from './research';
 import {BrowserModule} from '@angular/platform-browser';
-import { PerfectScrollbarModule } from 'angular2-perfect-scrollbar';
+import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
 import {DocumentInfoService} from '../../services/document-info.service';
-import {HistoryChatComponent} from "./single_document/history-chat.component";
+import {HistoryChatComponent} from "./active_table/history-chat.component";
 
 const viewsRoutes: Routes = [
   {
@@ -22,19 +32,26 @@ const viewsRoutes: Routes = [
     },
     children: [
       {
-        path: 'pivot',
-        component: PivotComponent,
-        data:
-        {
-          id: 'pivot', title: 'Pivot', icon: 'fa-plus'
+        path: 'research',
+        component: ResearchComponent,
+        data: {
+          id: 'research', title: 'Research', icon: 'fa-search'
         },
         children: []
       },
       {
-        path: 'query',
-        component: QueryComponent,
+        path: 'pick_item',
+        component: PickItemComponent,
         data: {
-          id: 'query', title: 'Query builder', icon: 'fa-th-list', contentUrl: '/data/queries.json'
+          id: 'pick_item', title: 'Pick item', icon: 'fa-eyedropper'
+        },
+        children: []
+      },
+      {
+        path: 'walkthrough',
+        component: WalkthroughComponent,
+        data: {
+          id: 'walkthrough', title: 'Walkthrough', icon: 'fa-link'
         },
         children: []
       },
@@ -42,15 +59,23 @@ const viewsRoutes: Routes = [
         path: 'active_table',
         component: ActiveTableComponent,
         data: {
-          id: 'active_table', title: 'Active table', icon: 'fa-table'
+          id: 'active_table', title: 'Active Table', icon: 'fa-table'
         },
         children: []
       },
       {
-        path: 'single_document',
-        component: SingleDocumentComponent,
+        path: 'contigency_table',
+        component: ContingencyTableComponent,
         data: {
-          id: 'single_document', title: 'Single document', icon: 'fa-folder-open-o'
+          id: 'contigency_table', title: 'Contingency Table', icon: 'fa-list-alt'
+        },
+        children: []
+      },
+      {
+        path: 'digital_assistent',
+        component: DigitalAssistentComponent,
+        data: {
+          id: 'digital_assistent', title: 'Digital Assistent', icon: 'fa-user-secret'
         },
         children: []
       }
@@ -70,10 +95,12 @@ const viewsRoutes: Routes = [
     DocumentInfoService
   ],
   declarations: [
-    PivotComponent,
-    QueryComponent,
+    WalkthroughComponent,
+    ResearchComponent,
+    PickItemComponent,
     ActiveTableComponent,
-    SingleDocumentComponent,
+    ContingencyTableComponent,
+    DigitalAssistentComponent,
     FilterComponent,
     DocumentPreviewComponent,
     DocumentInfoComponent,
@@ -86,4 +113,5 @@ const viewsRoutes: Routes = [
     FilterComponent
   ]
 })
-export class ViewsModule { }
+export class ViewsModule {
+}

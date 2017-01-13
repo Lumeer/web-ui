@@ -77,7 +77,7 @@ export class FilterComponent {
   }
 
   private fetchItems(activeFilter?: any) {
-    //TODO: Send active filter ID with request to fetch correct items in query
+    //TODO: Send active filter ID with request to fetch correct items in research
     this.http.get('/data/queryitems.json')
       .flatMap(res => res.json())
       .reduce((result: any[], item: any) => {

@@ -4,11 +4,11 @@ import {Http} from '@angular/http';
 import {DocumentInfoService} from '../../../services/document-info.service';
 
 @Component({
-  selector: 'views-query',
-  template: require('./query.component.html')
+  selector: 'views-research',
+  template: require('./research.component.html')
 })
 
-export class QueryComponent {
+export class ResearchComponent {
   public activeQuery: any;
   public documents: any;
   constructor(private route: ActivatedRoute, public documentInfoService: DocumentInfoService) {}
