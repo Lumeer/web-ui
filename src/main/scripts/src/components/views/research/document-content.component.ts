@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, OnChanges} from '@angular/core';
-import {Entry} from "./Entry";
+import {Entry} from "./entry-interface";
 
 @Component({
   selector: 'document-content',
@@ -9,7 +9,7 @@ import {Entry} from "./Entry";
 export class DocumentContentComponent implements OnInit, OnChanges{
 
   @Input() public document:any;
-  public entries:Entry[];
+  public entries: Entry[];
 
   constructor(){}
 

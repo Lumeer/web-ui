@@ -1,9 +1,8 @@
 import {
-  Component, trigger, state, style, transition, group, animate, Input, keyframes,
+  Component, trigger, state, style, transition, animate, Input, keyframes,
   ViewChildren, QueryList, ElementRef, Output, EventEmitter
 } from '@angular/core';
-import {Http} from '@angular/http';
-import {DocumentService} from "../../../services/document.service";
+import {DocumentService} from '../../../services/document.service';
 @Component({
   selector: 'document-info',
   template: require('./document-info.component.html'),
@@ -48,12 +47,14 @@ export class DocumentInfoComponent {
 
   public onVersionsToggleClick() {
     this.versionsVisible = !this.versionsVisible;
-    if(!this.document.versions){
+    if(!this.document.versions) {
       this.documentService.fetchDocumentVersions();
     }
   }
 
-  public onRightsToggleClick() {}
+  public onRightsToggleClick() {
+    console.log('toggle click');
+  }
 
   public onCloseClick() {
     this.document = undefined;

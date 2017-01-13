@@ -1,5 +1,6 @@
 import {Component, Input, OnInit, EventEmitter, Output} from '@angular/core';
-import {Entry} from "./Entry";
+import {Entry} from './entry-interface';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'document-post-it',
@@ -11,9 +12,7 @@ export class DocumentPostItComponent implements OnInit {
   @Input() public document: any;
   @Output() private eventEmitter = new EventEmitter<any>();
 
-  public entries:Entry[] = [];
-
-  constructor(){}
+  public entries: Entry[] = [];
 
   // ngOnInit(): void {
   //   this.keys = Object.keys(this.document);
@@ -29,24 +28,21 @@ export class DocumentPostItComponent implements OnInit {
   //   }
   // }
 
-  ngOnInit(): void {
-    for(let key of Object.keys(this.document)) {
-      let value = this.document[key];
-
-      if(typeof value != "string" && typeof value[0] != "string") { // it is array of documents, we assume that there is just one
+  public ngOnInit(): void {
+    _.each(this.document, (key, value) => {
+      if(typeof value !== 'string' && typeof value[0] !== 'string') {
         let newValue = [];
-        for(let nestedKey of Object.keys(value)) {
-          newValue.push(new Entry(nestedKey, value[nestedKey], false));
-        }
+        _.each(value, (nestedKey, nestedValue) => {
+          newValue.push(new Entry(nestedKey, nestedValue, false));
+        });
         this.entries.push(new Entry(key, newValue, true));
-      }
-      else {
+      } else {
         this.entries.push(new Entry(key, value, false));
       }
-    }
+    });
   }
 
-  clickedForDetail() {
+  public clickedForDetail() {
     this.eventEmitter.emit(this.document);
   }
 

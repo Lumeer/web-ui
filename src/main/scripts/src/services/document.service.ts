@@ -19,7 +19,7 @@ export class DocumentService {
     }
   }
 
-  public fetchDocumentVersions(){
+  public fetchDocumentVersions() {
     if (this.activeDocument) {
       this.http.get('/data/documentversions.json')
         .map(res => res.json())
@@ -34,12 +34,12 @@ export class DocumentService {
 
   public fetchDocumentHistory() {
     this.activeDocument.history = this.http.get('/data/history.json')
-      .map(res => res.json())
+      .map(res => res.json());
   }
 
   public fetchDocumentChat() {
     this.activeDocument.chat = this.http.get('/data/chat.json')
-      .map(res => res.json())
+      .map(res => res.json());
   }
 
   private fetchLinkInfo(link) {
