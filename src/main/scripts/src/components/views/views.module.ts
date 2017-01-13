@@ -9,7 +9,6 @@ import {CommonComponentsModule} from '../';
 import {FormsModule} from '@angular/forms';
 import {
   ResearchComponent,
-  FilterComponent,
   DocumentInfoComponent,
   DocumentPreviewComponent,
   DocumentPostItComponent,
@@ -101,7 +100,6 @@ const viewsRoutes: Routes = [
     ActiveTableComponent,
     ContingencyTableComponent,
     DigitalAssistentComponent,
-    FilterComponent,
     DocumentPreviewComponent,
     DocumentInfoComponent,
     HistoryChatComponent,
@@ -109,9 +107,7 @@ const viewsRoutes: Routes = [
     DocumentVersionsComponent,
     DocumentContentComponent
   ],
-  exports: [
-    FilterComponent
-  ]
+  exports: []
 })
 export class ViewsModule {
 }

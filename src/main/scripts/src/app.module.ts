@@ -9,6 +9,7 @@ import {Http, XHRBackend, RequestOptions} from '@angular/http';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import {NavigationChildrenService} from './services/navigation-children.service';
 import {DocumentService} from './services/document.service';
+import {CommonComponentsModule} from './components/common/common-components.module';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent}
@@ -21,7 +22,8 @@ const appRoutes: Routes = [
     ViewsModule,
     FormsModule,
     Ng2Webstorage,
-    SettingsModule
+    SettingsModule,
+    CommonComponentsModule
   ],
   providers: [
     SocketService,

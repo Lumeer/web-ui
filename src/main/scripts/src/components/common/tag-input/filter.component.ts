@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {QueryTag, STRING, NUMBER} from '../../common/helpers/tag.interface';
-import {QUERY_TAG_PLACEHOLDER} from '../../common/helpers/constants';
-import {AutoCompleteOptions} from '../../common/auto-complete/autocomplete.interface';
+import {QueryTag, STRING, NUMBER} from '../helpers/tag.interface';
+import {QUERY_TAG_PLACEHOLDER} from '../helpers/constants';
+import {AutoCompleteOptions} from '../auto-complete/autocomplete.interface';
 import {Http} from '@angular/http';
-import {ITagOptions, TagBuilder} from './query-tag.inteface';
+import {ITagOptions, TagBuilder} from '../../views/research/query-tag.inteface';
 import * as _ from 'lodash';
 import {ActivatedRoute} from '@angular/router';
 
