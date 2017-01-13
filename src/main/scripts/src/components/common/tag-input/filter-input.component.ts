@@ -1,5 +1,6 @@
-import {Component, Output, Input, EventEmitter} from '@angular/core';
+import {Component, Output, Input, EventEmitter, ViewChild, ElementRef} from '@angular/core';
 import {IAutocomplete} from './autocomplete-interface';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'filter-input',
@@ -14,6 +15,9 @@ export class FilterInput implements IAutocomplete {
   @Input() public placeholder: any;
   @Output() public focus: EventEmitter<any> = new EventEmitter();
   @Output() public onAdd: EventEmitter<any> = new EventEmitter();
+  @Output() public change: EventEmitter<any> = new EventEmitter();
+
+  @ViewChild('filterInput') public inputElRef: ElementRef;
 
   public addItem(dataPayload: any): void {
     this.onAdd.emit(dataPayload);
@@ -29,5 +33,11 @@ export class FilterInput implements IAutocomplete {
 
   public onFocus() {
     this.focus.next();
+  }
+
+  public ngAfterViewInit() {
+    Observable.fromEvent(this.inputElRef.nativeElement, 'keyup')
+      .debounceTime(this.options.debounceTime || 1000)
+      .subscribe(keyboardEvent => this.change.emit(this.value));
   }
 }
