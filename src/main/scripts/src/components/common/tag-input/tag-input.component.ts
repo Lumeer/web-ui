@@ -48,6 +48,10 @@ export class TagInputComponent implements IAutocomplete {
     this.onAdd.emit({dataPayload: dataPayload, index: itemIndex});
   }
 
+  public onChange(data) {
+    console.log(data);
+  }
+
   public onKeyDown($event, index): void {
     let keyCode = $event.keyCode || $event.which;
     let action = getActionToKey(keyCode);
