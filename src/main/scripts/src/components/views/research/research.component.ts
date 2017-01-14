@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Http} from '@angular/http';
 import {DocumentInfoService} from '../../../services/document-info.service';
@@ -11,7 +11,9 @@ import {DocumentInfoService} from '../../../services/document-info.service';
 export class ResearchComponent {
   public activeQuery: any;
   public documents: any;
-  constructor(private route: ActivatedRoute, public documentInfoService: DocumentInfoService) {}
+
+  constructor(private route: ActivatedRoute, public documentInfoService: DocumentInfoService) {
+  }
 
   public ngOnInit() {
     this.route.queryParams.subscribe(

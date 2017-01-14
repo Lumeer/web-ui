@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {Http} from "@angular/http";
 
 @Component({
   selector: 'views-pick-item',
@@ -6,4 +7,12 @@ import { Component } from '@angular/core';
 })
 
 export class PickItemComponent {
+
+  private filterResults: any;
+
+  constructor(private http: Http) {
+    this.http.get('/data/documentdetail.json')
+      .map(res => res.json())
+      .subscribe(filterResults => this.filterResults = filterResults);
+  }
 }

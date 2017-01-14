@@ -1,7 +1,12 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {WalkthroughComponent} from './walkthrough/walkthrough.component';
-import {PickItemComponent} from './pick_item/pick-item.component';
+import {
+  PickItemComponent,
+  DocumentDetailComponent,
+  TabularResultComponent,
+  KeysPipe
+} from './pick_item';
 import {ActiveTableComponent} from './active_table/active-table.component';
 import {ContingencyTableComponent} from './contingency_table/contingency-table.component';
 import {DigitalAssistentComponent} from './digital_assistent/digital-assistent.component';
@@ -103,9 +108,12 @@ const viewsRoutes: Routes = [
     DocumentPreviewComponent,
     DocumentInfoComponent,
     HistoryChatComponent,
+    DocumentDetailComponent,
+    TabularResultComponent,
     DocumentPostItComponent,
     DocumentVersionsComponent,
-    DocumentContentComponent
+    DocumentContentComponent,
+    KeysPipe
   ],
   exports: []
 })
