@@ -6,24 +6,24 @@
 
       <div class="preview-icon"
            (click)="pickerVisible = !pickerVisible"
-           [ngStyle]="{'background-color': newDocument.color}"
-           [ngClass]="{'no-rotate': newDocument.icon, 'no-color': newDocument.color}">
+           [ngStyle]="{'background-color': newCollection.color}"
+           [ngClass]="{'no-rotate': newCollection.icon, 'no-color': newCollection.color}">
         <i class="fa"
-           [ngClass]="newDocument.icon ? newDocument.icon : 'fa-times'"
+           [ngClass]="newCollection.icon ? newCollection.icon : 'fa-times'"
            aria-hidden="true"></i>
       </div>
 
       <div class="color-icon" *ngIf="pickerVisible" [@animateVisible]="'in'">
         <div class="color-picker">
           <span *ngFor="let oneColor of colors"
-                [ngClass]="{active: oneColor === newDocument.color}"
+                [ngClass]="{active: oneColor === newCollection.color}"
                 (click)="setColor(oneColor)"
                 [ngStyle]="{'background': oneColor}"></span>
         </div>
         <div class="icon-picker">
           <span *ngFor="let oneIcon of icons"
                 (click)="setIcon(oneIcon)"
-                [ngClass]="{active: oneIcon === newDocument.icon}">
+                [ngClass]="{active: oneIcon === newCollection.icon}">
             <i class="fa" [ngClass]="oneIcon" aria-hidden="true"></i>
           </span>
         </div>
@@ -33,12 +33,12 @@
       </div>
 
       <form>
-        <input name="title" placeholder="New collection title" id="title" [(ngModel)]="newDocument.title" required>
+        <input name="title" placeholder={{placeholderTitle}} id="title" [(ngModel)]="newCollection.title" required>
         <div class="new-collection-info">
         </div>
 
         <div class="confirm">
-          <button type="button" class="btn btn-default btn-xs" (click)="newDocumentInfo()">
+          <button type="button" class="btn btn-default btn-xs" (click)="newCollectionInfo()">
             <i class="fa fa-plus fa-2x"></i>
           </button>
         </div>
@@ -50,9 +50,9 @@
     </div>
   </div>
 
-<!--  <div *ngFor="let document of documents; let documentIndex = index"
-       class="lum-collection-preview col-lg-4 col-md-4 col-xs-6">
-    <document-post-it [document]="document" (eventEmitter)="setActiveDocument($event)"></document-post-it>
-  </div>-->
+  <!--  <div *ngFor="let document of documents; let documentIndex = index"
+         class="lum-collection-preview col-lg-4 col-md-4 col-xs-6">
+      <document-post-it [document]="document" (eventEmitter)="setActiveDocument($event)"></document-post-it>
+    </div>-->
 
 </div>

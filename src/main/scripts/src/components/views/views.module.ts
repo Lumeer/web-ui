@@ -25,6 +25,7 @@ import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
 import {DocumentInfoService} from '../../services/document-info.service';
 import {HistoryChatComponent} from './active_table/history-chat.component';
 import {CollectionAddComponent} from "./collections/collection-add.component";
+import {CollectionService} from "../../services/collection.service";
 
 const viewsRoutes: Routes = [
   {
@@ -105,7 +106,8 @@ const viewsRoutes: Routes = [
     RouterModule.forChild(viewsRoutes)
   ],
   providers: [
-    DocumentInfoService
+    DocumentInfoService,
+    CollectionService
   ],
   declarations: [
     WalkthroughComponent,

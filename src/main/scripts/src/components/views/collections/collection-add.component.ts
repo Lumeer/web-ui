@@ -2,6 +2,7 @@ import {Component, trigger, state, style, transition, animate, keyframes, Input}
 import * as _ from 'lodash';
 import {LocalStorage} from 'ng2-webstorage';
 import {DocumentService} from '../../../services/document.service';
+import {CollectionService} from "../../../services/collection.service";
 
 @Component({
   selector: 'collection-add',
@@ -31,41 +32,56 @@ export class CollectionAddComponent {
   public pickerVisible = false;
   public colors: string[];
   public icons: string[];
-  @Input() public documents;
-  @LocalStorage() public lastDocument;
-  public newDocument: any = {links: []};
-  public activeDocument: any;
 
-  constructor(private documentService: DocumentService) {
+  @Input() public collections: any[];
+  @LocalStorage() public lastDocument;
+
+  public newCollection: any = {links: []};
+  public activeCollection: any;
+
+  public placeholderTitle: string;
+
+  constructor(private collectionService: CollectionService) {
     this.initColors();
     this.initIcons();
+    this.placeholderTitle = "New collection title";
   }
 
+  public newCollectionInfo() {
+    if (!this.newCollection.title || this.newCollection.title.trim() == "") {
+      console.log("empty");
 
-  /*  public newDocumentInfo() {
-   if (!this.newDocument.title) {
-   return;
-   }
-   if (!this.newDocument.color) {
-   this.newDocument.color = 'white';
-   }
-   // this.documents.push(_.cloneDeep(this.newDocument)); // commented out because it shows error
-   this.newDocument = {
-   links: []
-   };
-   }*/
+      this.placeholderTitle = "EMPTY title!";
+      this.newCollection.title = "";
+    } else {
+      console.log("filled");
+
+      this.placeholderTitle = "New collection title";
+
+      if (!this.newCollection.color) {
+        this.newCollection.color = 'white';
+      }
+
+      this.newCollection = {
+        links: []
+      };
+
+      // TODO: add new collection sheet
+    }
+  }
 
   /* public setActiveDocument(document) {
    this.activeDocument = document;
    this.documentService.setActiveDocument(document);
    }*/
 
+
   public setIcon(icon) {
-    this.newDocument.icon = icon;
+    this.newCollection.icon = icon;
   }
 
   public setColor(color) {
-    this.newDocument.color = color;
+    this.newCollection.color = color;
   }
 
   private initColors() {
