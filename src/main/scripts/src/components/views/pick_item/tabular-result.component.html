@@ -1,42 +1,48 @@
-<div *ngIf="data">
-  <div class="panel-group row" id="accordion">
-    <div class="panel panel-default" *ngFor="let d of data; let ix = index">
-      <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ix}}"
-         [ngStyle]="{'color': d.collection.color}">
-        <div class="panel-heading">
-          <h4 class="panel-title">
+<div class="row">
+  <perfect-scrollbar>
+    <div class="tabular-result-content  col-lg-12">
+      <h4>Search results</h4>
+      <h6>{{numDocuments}} documents were found in {{numCollections}} collections</h6>
+      <div class="panel-group " id="accordion">
+        <div class="panel panel-default" *ngFor="let d of data; let ix = index">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ix}}"
+             [ngStyle]="{'color': d.collection.color}">
+            <div class="panel-heading">
+              <h4 class="panel-title">
             <span>
             <i class="fa" [ngClass]="d.collection.icon" aria-hidden="true"></i>
             {{d.collection.name}}
               <span class="badge badge-info">{{d.documents.length}}</span>
             </span>
-          </h4>
-        </div>
-      </a>
-      <div id="collapse{{ix}}" class="panel-collapse collapse">
-        <div class="panel-body">
-          <perfect-scrollbar>
-            <div class="row-hover" *ngFor="let doc of d.documents" (click)="selectItem(doc)">
-              <table class="table">
-                <thead>
-                <tr>
-                  <th *ngFor="let d of doc | keys">
-                    {{d.key}}
-                  </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td *ngFor="let d of doc | keys">
-                    {{d.value}}
-                  </td>
-                </tr>
-                </tbody>
-              </table>
+              </h4>
             </div>
-          </perfect-scrollbar>
+          </a>
+          <div id="collapse{{ix}}" class="panel-collapse collapse">
+            <div class="panel-body">
+              <perfect-scrollbar>
+                <div class="row-hover" *ngFor="let doc of d.documents" (click)="selectItem(d.collection, doc)">
+                  <table class="table">
+                    <thead>
+                    <tr>
+                      <th *ngFor="let d of doc | keys">
+                        {{d.key}}
+                      </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td *ngFor="let d of doc | keys">
+                        {{d.value}}
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </perfect-scrollbar>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </perfect-scrollbar>
 </div>

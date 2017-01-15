@@ -1,8 +1,12 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'document-detail',
-  template: require('./document-detail.component.html')
+  template: require('./document-detail.component.html'),
+  styles: [require('./document-detail.component.scss').toString()]
 })
-export class DocumentDetailComponent {
+export class DocumentDetailComponent{
+
+  @Input() document: any;
+
 }

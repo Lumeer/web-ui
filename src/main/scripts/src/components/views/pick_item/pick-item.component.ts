@@ -9,10 +9,15 @@ import {Http} from '@angular/http';
 export class PickItemComponent {
 
   private filterResults: any;
+  private selectedDocument: any;
 
   constructor(private http: Http) {
     this.http.get('/data/documentdetail.json')
       .map(res => res.json())
       .subscribe(filterResults => this.filterResults = filterResults);
+  }
+
+  public selectItem(document){
+    this.selectedDocument = document;
   }
 }

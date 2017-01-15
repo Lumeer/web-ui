@@ -1,5 +1,20 @@
-<div>
-  <div class="row">
-    document detail
+<div class="row">
+  <div class="document-detail-content">
+    <div>
+      <h3>
+    <span [ngStyle]="{'color': document.collection.color}">
+    <i class="fa" [ngClass]="document.collection.icon" aria-hidden="true"></i>
+    {{document.collection.name}}
+    </span>
+      </h3>
+    </div>
+    <div>
+      <table class="table">
+        <tr *ngFor="let d of document.attributes | keys">
+          <th>{{d.key}}</th>
+          <td>{{d.value}}</td>
+        </tr>
+      </table>
+    </div>
   </div>
 </div>

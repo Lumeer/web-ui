@@ -1,2 +1,5 @@
-<tabular-result [data]="filterResults"></tabular-result>
-<document-detail></document-detail>
+<tabular-result *ngIf="filterResults"
+                [data]="filterResults"
+                (onSelectionChange)="selectItem($event)"></tabular-result>
+<document-detail *ngIf="selectedDocument"
+                 [document]="selectedDocument"></document-detail>

@@ -2,35 +2,42 @@
 
 tabular-result {
 
-  .panel-group {
-    .panel + .panel {
-      margin-top: 0;
+  .tabular-result-content {
+
+    max-height: 300px;
+
+    .panel-group {
+      margin: 0;
+
+      .panel + .panel {
+        margin-top: 0;
+      }
     }
-  }
 
-  .table {
-    width: 0;
-    margin-bottom: 0;
-  }
+    .table {
+      width: 0;
+      margin-bottom: 0;
+    }
 
-  .row-hover {
-    cursor: pointer;
-    padding: 0 15px 15px 15px;
-  }
+    .row-hover {
+      cursor: pointer;
+      padding: 0 15px 15px 15px;
+    }
 
-  .row-hover:hover {
-    background-color: #dfdfdf;
-  }
+    .row-hover:hover {
+      background-color: #dfdfdf;
+    }
 
-  .panel-body {
-    padding: 0;
-  }
+    .panel-body {
+      padding: 0;
+    }
 
-  .panel-heading:hover {
-    background-color: #dfdfdf;
-  }
+    .panel-heading:hover {
+      background-color: #dfdfdf;
+    }
 
-  a:hover, a:focus {
-    text-decoration: none;
+    a:hover, a:focus {
+      text-decoration: none;
+    }
   }
 }
