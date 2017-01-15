@@ -24,6 +24,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
 import {DocumentInfoService} from '../../services/document-info.service';
 import {HistoryChatComponent} from './active_table/history-chat.component';
+import {CollectionAddComponent} from "./collections/collection-add.component";
 
 const viewsRoutes: Routes = [
   {
@@ -40,6 +41,14 @@ const viewsRoutes: Routes = [
         component: ResearchComponent,
         data: {
           id: 'research', title: 'Research', icon: 'fa-search'
+        },
+        children: []
+      },
+      {
+        path: 'collections',
+        component: CollectionAddComponent,
+        data: {
+          id: 'collections', title: 'Collections', icon: 'fa-sitemap' // fa-sticky-note-o
         },
         children: []
       },
@@ -113,7 +122,8 @@ const viewsRoutes: Routes = [
     DocumentPostItComponent,
     DocumentVersionsComponent,
     DocumentContentComponent,
-    KeysPipe
+    KeysPipe,
+    CollectionAddComponent
   ],
   exports: []
 })

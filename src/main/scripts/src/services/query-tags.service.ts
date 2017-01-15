@@ -22,11 +22,11 @@ export class QueryTagService {
 
   public fetchCollections(filter?) {
     return this.http.get(this.collectionsUrl)
-      .map(res => res.json())
+      .map(res => res.json());
   }
 
   public fetchItems(filter?) {
     return this.http.get(this.itemsUrl)
-      .map(res => res.json())
+      .map(res => res.json());
   }
 }
