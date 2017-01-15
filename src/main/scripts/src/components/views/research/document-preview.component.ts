@@ -6,7 +6,7 @@ import {DocumentService} from '../../../services/document.service';
 @Component({
   selector: 'document-preview',
   template: require('./document-preview.component.html'),
-  styles: [ require('./document-preview.component.scss').toString() ],
+  styles: [require('./document-preview.component.scss').toString()],
   animations: [
     trigger('animateVisible', [
       state('in', style({height: '*', width: '*', opacity: 1})),
@@ -32,7 +32,7 @@ export class DocumentPreviewComponent {
   public icons: string[];
   @Input() public documents;
   @LocalStorage() public lastDocument;
-  public newDocument: any = { links: []};
+  public newDocument: any = {links: []};
   public activeDocument: any;
 
   constructor(private documentService: DocumentService) {
@@ -50,12 +50,12 @@ export class DocumentPreviewComponent {
 
   public newDocumentInfo() {
     if (!this.newDocument.title) {
-      return ;
+      return;
     }
     if (!this.newDocument.color) {
       this.newDocument.color = 'white';
     }
-    // this.documents.push(_.cloneDeep(this.newDocument)); // commented out because it shows error
+    this.documents.push(_.cloneDeep(this.newDocument));
     this.newDocument = {
       links: []
     };
