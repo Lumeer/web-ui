@@ -1,8 +1,12 @@
 {
   "collection": {
-    "name": "Cars",
-    "color": "#FF4040",
-    "icon": "fa-car"
+    "name": "Magic",
+    "color": "#76EEC6",
+    "icon": "fa-magic",
+    "default": {
+      "key": "Description",
+      "value": "Absolutely magic collection"
+    }
   },
   "attributes": {
     "attr1": "value1",

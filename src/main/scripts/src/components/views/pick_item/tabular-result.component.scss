@@ -2,7 +2,7 @@
 
 tabular-result {
 
-  .row{
+  .row {
     margin: 0;
   }
 
@@ -29,6 +29,10 @@ tabular-result {
       &:hover {
         background-color: #dfdfdf;
       }
+    }
+
+    .panel-collapse {
+      background-color: #F0F8FF;
     }
 
     .panel-body {

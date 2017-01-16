@@ -1,20 +1,30 @@
 <div class="row">
   <div class="document-detail-content">
-    <div>
-      <h3>
-    <span [ngStyle]="{'color': document.collection.color}">
-    <i class="fa" [ngClass]="document.collection.icon" aria-hidden="true"></i>
-    {{document.collection.name}}
-    </span>
-      </h3>
-    </div>
-    <div>
-      <table class="table">
-        <tr *ngFor="let d of document.attributes | keys">
-          <th>{{d.key}}</th>
-          <td>{{d.value}}</td>
-        </tr>
-      </table>
+    <div class="panel-group">
+      <div class="panel panel-default">
+        <div class="panel-heading" [ngStyle]="{'background-color': document.collection.color}">
+          <h3>
+            <span class="header-font">
+              <i class="fa" [ngClass]="document.collection.icon" aria-hidden="true"></i>
+              {{document.collection.name}}
+            </span>
+          </h3>
+          <div>
+            <h4>
+          <span class="header-font">
+            {{document.collection.default.key}}: {{document.collection.default.value}}
+          </span>
+            </h4>
+          </div>
+        </div>
+      <div class="panel-content">
+        <table class="table">
+          <tr *ngFor="let d of document.attributes | keys">
+            <th>{{d.key}}</th>
+            <td>{{d.value}}</td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </div>
