@@ -1,0 +1,14 @@
+@import "../../../styles/variables";
+
+views-research {
+
+  .document-filter {
+    padding-bottom: 5px;
+    background: $secondary-color;
+  }
+
+  .document-preview {
+    height: 100%;
+    background: $primary-color;
+  }
+}

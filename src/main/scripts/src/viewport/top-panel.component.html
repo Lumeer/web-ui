@@ -11,17 +11,25 @@
         <i class="fa fa-align-justify" aria-hidden="true"></i>
       </a>
     </div>
+    <div class="col-lg-9 breadcrumbs">
+      <h4>{{currentView && currentView.title}}</h4>
+      <ol>
+        <li>Home</li>
+        <li *ngFor="let crumb of breadCrumbService.breadcrumbs">{{crumb.data && crumb.data.title}}</li>
+      </ol>
+    </div>
+    <!--
     <query-filter (filterChanged)="onFilterChanged($event)" class="col-sm-12 col-lg-9"></query-filter>
     <div class="col-lg-1 filter-options">
       <a (click)="showSave = !showSave"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
       <a (click)="showSave = !showSave"><i class="fa fa-clipboard" aria-hidden="true"></i></a>
-      <div class="lum-filter-saver"
-           *ngIf="showSave">
+      <div class="lum-filter-saver" *ngIf="showSave">
         <form>
           <input name="filter-name" type="text" placeholder="Name of this filter" [(ngModel)]="newFilterName">
           <button class="btn btn-default btn-sm" (click)="onSaveClick()">Save</button>
         </form>
       </div>
     </div>
+    -->
   </div>
 </div>

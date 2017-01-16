@@ -17,7 +17,7 @@ export class PickItemComponent {
       .subscribe(filterResults => this.filterResults = filterResults);
   }
 
-  public selectItem(document){
+  public selectItem(document) {
     this.selectedDocument = document;
   }
 }

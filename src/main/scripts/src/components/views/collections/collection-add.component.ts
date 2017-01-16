@@ -1,8 +1,6 @@
 import {Component, trigger, state, style, transition, animate, keyframes, Input} from '@angular/core';
-import * as _ from 'lodash';
 import {LocalStorage} from 'ng2-webstorage';
-import {DocumentService} from '../../../services/document.service';
-import {CollectionService} from "../../../services/collection.service";
+import {CollectionService} from '../../../services/collection.service';
 
 @Component({
   selector: 'collection-add',
@@ -44,19 +42,19 @@ export class CollectionAddComponent {
   constructor(private collectionService: CollectionService) {
     this.initColors();
     this.initIcons();
-    this.placeholderTitle = "New collection title";
+    this.placeholderTitle = 'New collection title';
   }
 
   public newCollectionInfo() {
-    if (!this.newCollection.title || this.newCollection.title.trim() == "") {
-      console.log("empty");
+    if (!this.newCollection.title || this.newCollection.title.trim() === '') {
+      console.log('empty');
 
-      this.placeholderTitle = "EMPTY title!";
-      this.newCollection.title = "";
+      this.placeholderTitle = 'EMPTY title!';
+      this.newCollection.title = '';
     } else {
-      console.log("filled");
+      console.log('filled');
 
-      this.placeholderTitle = "New collection title";
+      this.placeholderTitle = 'New collection title';
 
       if (!this.newCollection.color) {
         this.newCollection.color = 'white';
@@ -74,7 +72,6 @@ export class CollectionAddComponent {
    this.activeDocument = document;
    this.documentService.setActiveDocument(document);
    }*/
-
 
   public setIcon(icon) {
     this.newCollection.icon = icon;

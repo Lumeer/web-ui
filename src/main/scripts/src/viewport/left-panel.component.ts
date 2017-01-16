@@ -41,7 +41,6 @@ export class LeftPanelComponent {
   constructor(public router: Router, private navigationChildren: NavigationChildrenService) {}
 
   public ngOnInit() {
-    console.log(this);
     this.navigationChildren.fetchDataForChildren();
     // _.chain(this.router.config)
     //   .flatMap(item => item.children)

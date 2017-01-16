@@ -5,7 +5,8 @@ import {DocumentInfoService} from '../../../services/document-info.service';
 
 @Component({
   selector: 'views-research',
-  template: require('./research.component.html')
+  template: require('./research.component.html'),
+  styles: [require('./research.component.scss').toString()]
 })
 
 export class ResearchComponent {

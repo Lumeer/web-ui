@@ -18,12 +18,12 @@ export class FilterInput implements IAutocomplete {
 
   public addItem(dataPayload: any): void {
     this.onAdd.emit(dataPayload);
-    this.value = '';
+    setTimeout(() => this.value = '');
   }
 
   public onKeyDown($event: any): void {
     let keyCode = $event.keyCode || $event.which;
-    if (keyCode === 13 && this.value === '') {
+    if (keyCode === 13) {
       this.addItem(this.value);
     }
   }

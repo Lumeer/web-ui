@@ -54,13 +54,24 @@ top-panel {
       }
       margin-top: 7px;
     }
+
+    .breadcrumbs {
+      ol li{
+        display: inline-block;
+
+        &:not(:first-child):before{
+          content: "/\00a0";
+          padding: 0 5px;
+        }
+      }
+    }
   }
 }
 @media (min-width: $mobile-width) {
   top-panel {
     .lum-nav-toggle {
       display: inherit;
-      padding-top: 33px;
+      padding-top: 10px;
       margin-left: 10px;
     }
   }

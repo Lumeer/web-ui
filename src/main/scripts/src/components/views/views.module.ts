@@ -24,8 +24,8 @@ import {BrowserModule} from '@angular/platform-browser';
 import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
 import {DocumentInfoService} from '../../services/document-info.service';
 import {HistoryChatComponent} from './active_table/history-chat.component';
-import {CollectionAddComponent} from "./collections/collection-add.component";
-import {CollectionService} from "../../services/collection.service";
+import {CollectionAddComponent} from './collections/collection-add.component';
+import {CollectionService} from '../../services/collection.service';
 
 const viewsRoutes: Routes = [
   {
@@ -41,7 +41,7 @@ const viewsRoutes: Routes = [
         path: 'research',
         component: ResearchComponent,
         data: {
-          id: 'research', title: 'Research', icon: 'fa-search'
+          id: 'research', title: 'Research', icon: 'fa-search', contentUrl: '/data/queries.json'
         },
         children: []
       },

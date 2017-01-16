@@ -5,7 +5,7 @@ import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
   template: require('./tabular-result.component.html'),
   styles: [require('./tabular-result.component.scss').toString()]
 })
-export class TabularResultComponent implements OnInit{
+export class TabularResultComponent implements OnInit {
 
   @Input() public data: any;
   @Output() public onSelectionChange: EventEmitter<any> = new EventEmitter();
