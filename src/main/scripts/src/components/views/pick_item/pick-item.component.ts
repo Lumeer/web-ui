@@ -3,7 +3,8 @@ import {Http} from '@angular/http';
 
 @Component({
   selector: 'views-pick-item',
-  template: require('./pick-item.component.html')
+  template: require('./pick-item.component.html'),
+  styles: [require('./pick-item.component.scss').toString()]
 })
 
 export class PickItemComponent {

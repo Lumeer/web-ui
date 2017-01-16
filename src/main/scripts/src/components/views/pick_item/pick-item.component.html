@@ -1,5 +1,15 @@
-<tabular-result *ngIf="filterResults"
-                [data]="filterResults"
-                (onSelectionChange)="selectItem($event)"></tabular-result>
-<document-detail *ngIf="selectedDocument"
-                 [document]="selectedDocument"></document-detail>
+<div>
+  <div class="document-filter">
+    <filter-save></filter-save>
+  </div>
+  <div class="pick-item-content">
+    <tabular-result *ngIf="filterResults"
+                    [data]="filterResults"
+                    (onSelectionChange)="selectItem($event)"></tabular-result>
+    <document-detail *ngIf="selectedDocument"
+                     [document]="selectedDocument"></document-detail>
+  </div>
+  <div class="row links-content">
+    <query-filter class="col-lg-10 query-filter"></query-filter>
+  </div>
+</div>
