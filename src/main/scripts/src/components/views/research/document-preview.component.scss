@@ -1,6 +1,9 @@
 @import "../../../styles/variables";
 
 document-preview {
+  .row {
+    margin-left: 0 !important;
+  }
   .lum-document-preview {
     // max-height: 200px;
     padding:0;

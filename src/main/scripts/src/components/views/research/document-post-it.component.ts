@@ -29,7 +29,7 @@ export class DocumentPostItComponent implements OnInit {
   // }
 
   public ngOnInit(): void {
-    _.each(this.document, (key, value) => {
+    _.each(this.document, (value, key) => {
       if(typeof value !== 'string' && typeof value[0] !== 'string') {
         let newValue = _
           .reduce(value, (result, nestedValue, nestedKey) => [...result, new Entry(nestedKey, nestedValue, false)], []);
