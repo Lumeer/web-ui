@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {KeycloakService} from '../services/keycloak.service';
+import {DocumentService} from '../services/document.service';
+import {DocumentInfoService} from '../services/document-info.service';
 
 @Component({
   selector: 'view-port',
@@ -13,9 +15,7 @@ export class ViewPortComponent {
   public activeItem: any;
   public activeFilter: any;
 
-  constructor(private router: Router, private kc: KeycloakService) {}
-
-  private ngOnInit() { this.activeItem = { title: 'Home'}; }
+  constructor(private router: Router, private kc: KeycloakService, private documentInfoService: DocumentInfoService) {}
 
   public handleCollapseEvent() {
     this.collapsed = !this.collapsed;
@@ -44,6 +44,11 @@ export class ViewPortComponent {
   }
 
   public onFilterSave(dataPayload) {
-    console.log(this.router);
+    console.log(this.router, dataPayload);
+  }
+
+  public ngOnInit() {
+    this.activeItem = { title: 'Home'};
+    this.documentInfoService.filterSaveSubject.subscribe(newFilter => this.onFilterSave(newFilter));
   }
 }

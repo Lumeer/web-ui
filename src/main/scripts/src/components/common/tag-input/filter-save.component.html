@@ -1,0 +1,14 @@
+<div class="row">
+  <div class="col-lg-1"></div>
+  <query-filter (filterChanged)="onFilterChanged($event)" class="col-sm-12 col-lg-9"></query-filter>
+  <div class="col-lg-2 filter-options">
+    <a (click)="showSave = !showSave"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
+    <a (click)="showSave = !showSave"><i class="fa fa-clipboard" aria-hidden="true"></i></a>
+    <div class="lum-filter-saver" *ngIf="showSave">
+      <form>
+        <input name="filter-name" type="text" placeholder="Name of this filter" [(ngModel)]="newFilterName">
+        <button class="btn btn-default btn-sm" (click)="onSaveClick()">Save</button>
+      </form>
+    </div>
+  </div>
+</div>

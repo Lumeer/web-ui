@@ -1,3 +1,8 @@
 <div>
-  <document-preview [documents]="documentInfoService.documents"></document-preview>
+  <div class="document-filter">
+    <filter-save></filter-save>
+  </div>
+  <div class="document-preview">
+    <document-preview [documents]="documentInfoService.documents"></document-preview>
+  </div>
 </div>

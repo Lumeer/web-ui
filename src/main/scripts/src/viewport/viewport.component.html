@@ -5,13 +5,10 @@
                   (clickEvent)="handleItemSelect($event);"></left-panel>
     </div>
     <div class="col-sm-9 col-lg-10 lum-no-padding lum-content" [ngClass]="{'col-lg-10': !collapsed, 'col-lg-11': collapsed}">
-      <top-panel
-        (collapseEvent)="handleCollapseEvent();"
-        (logoutEvent)="handleLogOut()"
-        (filterSaved)="onFilterSave($event)"
-        [activeFilter]="activeFilter"
-      ></top-panel>
-      <main-content [currentView]="activeItem"></main-content>
+      <top-panel (collapseEvent)="handleCollapseEvent()"
+                 (logoutEvent)="handleLogOut()"
+                 [currentView]="activeItem"></top-panel>
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>
