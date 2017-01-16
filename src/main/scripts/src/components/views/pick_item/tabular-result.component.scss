@@ -4,7 +4,7 @@ tabular-result {
 
   .tabular-result-content {
 
-    max-height: 300px;
+    max-height: 400px;
 
     .panel-group {
       margin: 0;
@@ -22,14 +22,14 @@ tabular-result {
     .row-hover {
       cursor: pointer;
       padding: 0 15px 15px 15px;
-    }
-
-    .row-hover:hover {
-      background-color: #dfdfdf;
+      &:hover {
+        background-color: #dfdfdf;
+      }
     }
 
     .panel-body {
       padding: 0;
+      max-height: 230px;
     }
 
     .panel-heading:hover {
