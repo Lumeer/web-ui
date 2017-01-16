@@ -12,6 +12,8 @@ export class TabularResultComponent implements OnInit {
   private numCollections: number;
   private numDocuments: number;
 
+  constructor(){}
+
   public ngOnInit(): void {
     if (this.data) {
       this.numCollections = this.data.length;
@@ -20,8 +22,8 @@ export class TabularResultComponent implements OnInit {
     }
   }
 
-  private selectItem(collection, attributes) {
-    this.onSelectionChange.emit({collection: collection, attributes: attributes});
+  private selectItem(document) {
+    this.onSelectionChange.emit(document);
   }
 
 }

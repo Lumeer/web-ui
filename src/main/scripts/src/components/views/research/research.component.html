@@ -1,6 +1,6 @@
 <div>
   <div class="document-filter">
-    <filter-save></filter-save>
+    <filter-save (onChanged)="onFilterChanged($event)"></filter-save>
   </div>
   <div class="document-preview">
     <document-preview [documents]="documentInfoService.documents"></document-preview>

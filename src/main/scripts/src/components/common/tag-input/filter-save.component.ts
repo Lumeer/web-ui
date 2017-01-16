@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Output, EventEmitter} from '@angular/core';
 import {DocumentInfoService} from '../../../services/document-info.service';
 
 @Component({
@@ -12,11 +12,12 @@ export class FilterSave {
   public showSave: boolean = false;
   private currentFilter;
   private filterId;
+  @Output() public onChanged: EventEmitter<any> = new EventEmitter();
 
   constructor(private documentInfoService: DocumentInfoService) {}
 
   public onFilterChanged(dataPayload) {
-    this.documentInfoService.fetchDocumentPreviewsFromFilter(dataPayload);
+    this.onChanged.emit(dataPayload);
   }
 
   public onSaveClick() {

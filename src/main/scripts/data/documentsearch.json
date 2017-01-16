@@ -1,0 +1,134 @@
+[
+  {
+    "collection": {
+      "name": "Cars",
+      "color": "#FF4040",
+      "icon": "fa-car"
+    },
+    "documents": [
+      {
+        "_id" :"id1",
+        "attr1": "value1",
+        "attr2": "value2",
+        "attr3": "value3"
+      },
+      {
+        "_id" :"id2",
+        "attr1": "value1",
+        "attr2": "value2",
+        "attr3": "value3",
+        "attr4": 4,
+        "attr5": "value5",
+        "attr6": "value6",
+        "attr7": 7,
+        "attr8": "value8",
+        "attr9": "value9",
+        "attr10": "value10",
+        "attr11": "value11",
+        "attr12": 12,
+        "attr13": "value13",
+        "attr14": "value14",
+        "attr15": 15,
+        "attr16": "value16",
+        "attr17": "value17",
+        "attr18": "value18",
+        "attr19": "value19",
+        "attr20": 20,
+        "attr21": "value21",
+        "attr22": "value22",
+        "attr23": 23,
+        "attr24": "value24",
+        "attr25": "value25",
+        "attr26": "value26",
+        "attr27": "value27",
+        "attr28": 28,
+        "attr29": "value29",
+        "attr30": "value30",
+        "attr31": 31,
+        "attr32": "value32"
+      }
+    ]
+  },
+  {
+    "collection": {
+      "name": "Magic",
+      "color": "#76EEC6",
+      "icon": "fa-magic"
+    },
+    "documents": [
+      {
+        "_id" :"id3",
+        "attr1": "value1",
+        "attr4": 4,
+        "attr5": "value5",
+        "attr6": "value6",
+        "attr7": 7,
+        "attr8": "value8"
+      }
+    ]
+  },
+  {
+    "collection": {
+      "name": "Trees",
+      "color": "#FBC02D",
+      "icon": "fa-tree"
+    },
+    "documents": [
+      {
+        "_id" :"id4",
+        "attr1": "value1",
+        "attr2": "value2",
+        "attr3": "value3",
+        "attr4": 4,
+        "attr5": "value5",
+        "attr6": "value6",
+        "attr7": 7,
+        "attr8": "value8"
+      },
+      {
+        "_id" :"id5",
+        "attr1": "value1",
+        "attr2": "value2",
+        "attr3": "value3",
+        "attr4": 4,
+        "attr5": "value5",
+        "attr6": "value6",
+        "attr7": 7,
+        "attr8": "value8"
+      },
+      {
+        "_id" :"id6",
+        "attr1": "value1",
+        "attr2": "value2",
+        "attr3": "value3",
+        "attr4": 4,
+        "attr5": "value5",
+        "attr6": "value6",
+        "attr7": 7,
+        "attr8": "value8"
+      },
+      {
+        "_id" :"id7",
+        "attr1": "value1",
+        "attr2": "value2",
+        "attr3": "value3",
+        "attr4": 4,
+        "attr5": "value5",
+        "attr6": "value6",
+        "attr7": 7,
+        "attr8": "value8"
+      },
+      {
+        "_id" :"id8",
+        "attr1": "value1",
+        "attr2": "value2",
+        "attr3": "value3",
+        "attr4": 4,
+        "attr5": "value5",
+        "attr6": "value6",
+        "attr7": 7,
+        "attr8": "value8"
+      }
+    ]
+  }
+]

@@ -1,14 +1,10 @@
 @import '../../../styles/variables';
 
 views-pick-item {
+
   .pick-item-content {
     height: 100%;
     background-color: $primary-color;
   }
 
-
-  .row.links-content {
-    margin-left: 0 !important;
-    background: $secondary-color;
-  }
 }

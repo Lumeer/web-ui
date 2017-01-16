@@ -24,4 +24,8 @@ export class ResearchComponent {
       }
     );
   }
+
+  public onFilterChanged(dataPayload){
+    this.documentInfoService.fetchDocumentPreviewsFromFilter(dataPayload);
+  }
 }

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Http} from '@angular/http';
+import {DocumentInfoService} from '../../../services/document-info.service';
 
 @Component({
   selector: 'views-pick-item',
@@ -9,16 +9,15 @@ import {Http} from '@angular/http';
 
 export class PickItemComponent {
 
-  private filterResults: any;
-  private selectedDocument: any;
-
-  constructor(private http: Http) {
-    this.http.get('/data/documentdetail.json')
-      .map(res => res.json())
-      .subscribe(filterResults => this.filterResults = filterResults);
+  constructor(public documentInfoService: DocumentInfoService) {
   }
 
   public selectItem(document) {
-    this.selectedDocument = document;
+    this.documentInfoService.fetchDocumentDetailFromId(document._id);
   }
+
+  public onFilterChanged(dataPayload) {
+    this.documentInfoService.fetchFilterResultsFromFilter(dataPayload);
+  }
+
 }
