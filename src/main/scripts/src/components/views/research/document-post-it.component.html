@@ -12,7 +12,9 @@
 
         <ul *ngIf="entry.nested">
           <li *ngFor="let subentry of entry.value">
-            {{subentry.key}} : {{subentry.value}}
+            {{subentry.key}} :
+            <span *ngIf="!subentry.value.hasOwnProperty('title')">{{subentry.value}}</span>
+            <span *ngIf="subentry.value.hasOwnProperty('title')">{{subentry.value.title}}</span>
           </li>
         </ul>
 

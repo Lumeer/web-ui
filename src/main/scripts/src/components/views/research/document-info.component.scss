@@ -1,6 +1,10 @@
 @import '../../../styles/variables';
 
 document-info {
+  .row {
+    margin-left: 0 !important;
+  }
+
   > div {
     position: fixed;
     bottom: 0;
