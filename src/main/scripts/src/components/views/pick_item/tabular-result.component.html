@@ -1,5 +1,4 @@
 <div class="row">
-  <perfect-scrollbar>
     <div class="tabular-result-content  col-lg-12">
       <h4>Search results</h4>
       <h6>{{numDocuments}} documents were found in {{numCollections}} collections</h6>
@@ -18,8 +17,8 @@
             </div>
           </a>
           <div id="collapse{{ix}}" class="panel-collapse collapse">
+            <perfect-scrollbar>
             <div class="panel-body">
-              <perfect-scrollbar>
                 <div class="row-hover" *ngFor="let doc of d.documents" (click)="selectItem(d.collection, doc)">
                   <table class="table">
                     <thead>
@@ -38,11 +37,10 @@
                     </tbody>
                   </table>
                 </div>
-              </perfect-scrollbar>
             </div>
+            </perfect-scrollbar>
           </div>
         </div>
       </div>
     </div>
-  </perfect-scrollbar>
 </div>
