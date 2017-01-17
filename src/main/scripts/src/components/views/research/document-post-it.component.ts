@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, EventEmitter, Output} from '@angular/core';
+import {Component, Input, OnInit, EventEmitter, Output, ContentChild, ElementRef, ViewChild} from '@angular/core';
 import {Entry} from './entry-interface';
 import * as _ from 'lodash';
 
@@ -11,7 +11,9 @@ export class DocumentPostItComponent implements OnInit {
 
   @Input() public document: any;
   @Output() private eventEmitter = new EventEmitter<any>();
-
+  @ViewChild('previewContent') private preview: ElementRef;
+  public overflow: boolean = false;
+  public active: boolean = false;
   public entries: Entry[] = [];
 
   // ngOnInit(): void {
@@ -30,7 +32,7 @@ export class DocumentPostItComponent implements OnInit {
 
   public ngOnInit(): void {
     _.each(this.document, (value, key) => {
-      if(typeof value !== 'string' && typeof value[0] !== 'string') {
+      if(value && typeof value !== 'string' && typeof value[0] !== 'string') {
         let newValue = _
           .reduce(value, (result, nestedValue, nestedKey) => [...result, new Entry(nestedKey, nestedValue, false)], []);
         this.entries = [...this.entries, new Entry(key, newValue, true)];
@@ -40,8 +42,16 @@ export class DocumentPostItComponent implements OnInit {
     });
   }
 
+  public ngAfterContentChecked() {
+    this.overflow = this.isOverflow();
+  }
+
   public clickedForDetail() {
     this.eventEmitter.emit(this.document);
+  }
+
+  public isOverflow(): boolean {
+    return this.preview.nativeElement.clientHeight < this.preview.nativeElement.scrollHeight;
   }
 
 }

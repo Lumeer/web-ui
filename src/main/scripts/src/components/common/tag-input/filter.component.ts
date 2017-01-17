@@ -16,7 +16,7 @@ const SORT_BY = {text: 'Sort By', type: 'sortby'};
 })
 
 export class FilterComponent {
-  constructor(private route: ActivatedRoute, private queyTagService: QueryTagService) {
+  constructor(private route: ActivatedRoute, private queryTagService: QueryTagService) {
     this.initTagOptions();
   }
 
@@ -47,7 +47,7 @@ export class FilterComponent {
 
   private fetchColNames() {
     //TODO: Send active filter with request to fetch correct names (for autocomplete)
-    this.queyTagService.fetchAllTagNames()
+    this.queryTagService.fetchAllTagNames()
       .subscribe(colNames => {
         this.colNames = [COLLECTION, SORT_BY, ...colNames];
         this.tagOptions.withColNames(this.colNames);
@@ -57,7 +57,7 @@ export class FilterComponent {
 
   private fetchColValues() {
     //TODO: Send active filter with request to fetch correct values (for autocomplete)
-    this.queyTagService.fetchAllTagValues()
+    this.queryTagService.fetchAllTagValues()
       .subscribe(colValues => {
         this.colValues = colValues;
         this.tagOptions.withColValues(colValues);
@@ -66,7 +66,7 @@ export class FilterComponent {
 
   private fetchCollections() {
     //TODO: Send active filter with request to fetch correct collections (for autocomplete)
-    this.queyTagService.fetchCollections()
+    this.queryTagService.fetchCollections()
       .subscribe(collections => {
         this.collections = collections;
         this.collectionItem.source = collections;
@@ -75,7 +75,7 @@ export class FilterComponent {
 
   private fetchItems(activeFilter?: any) {
     //TODO: Send active filter ID with request to fetch correct items in research
-    this.queyTagService.fetchItems()
+    this.queryTagService.fetchItems()
       .flatMap(res => res)
       .reduce((result: any[], item: any) => {
         item.operand = item.operand || this.defaultOperand();

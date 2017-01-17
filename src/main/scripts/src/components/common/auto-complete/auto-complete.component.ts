@@ -59,9 +59,7 @@ export class AutoCompleteComponent {
   private focusFunction: Function;
   private blurFunction: Function;
   private keydownFunction: Function;
-  constructor(private renderer: Renderer) {
-    console.log(this);
-  }
+  constructor(private renderer: Renderer) {}
 
   public onShowPicker() {
     this.pickerVisible = true;
@@ -78,6 +76,7 @@ export class AutoCompleteComponent {
   }
 
   private filterSource() {
+    this.options = this.options || {displayKey: ''};
     if (!this.options.filterFn) {
       this.options.filterFn = filterItems.bind(this);
     }

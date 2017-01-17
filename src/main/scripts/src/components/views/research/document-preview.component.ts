@@ -2,6 +2,8 @@ import {Component, trigger, state, style, transition, animate, keyframes, Input}
 import * as _ from 'lodash';
 import {LocalStorage} from 'ng2-webstorage';
 import {DocumentService} from '../../../services/document.service';
+import {DocumentInfoService} from '../../../services/document-info.service';
+import {QueryTagService} from '../../../services/query-tags.service';
 
 @Component({
   selector: 'document-preview',
@@ -34,8 +36,14 @@ export class DocumentPreviewComponent {
   @LocalStorage() public lastDocument;
   public newDocument: any = {links: []};
   public activeDocument: any;
+  public source: any[];
+  private autocompleteOptions = {
+    displayKey: 'text',
+    keepAfterSubmit: true,
+    model: ''
+  };
 
-  constructor(private documentService: DocumentService) {
+  constructor(private documentService: DocumentService, private queryService: QueryTagService) {
     this.initColors();
     this.initIcons();
   }
@@ -57,13 +65,31 @@ export class DocumentPreviewComponent {
     }
     this.documents.push(_.cloneDeep(this.newDocument));
     this.newDocument = {
-      links: []
+      links: [],
+      collection: ''
     };
+    this.autocompleteOptions.model = '';
   }
 
   public setActiveDocument(document) {
     this.activeDocument = document;
     this.documentService.setActiveDocument(document);
+  }
+
+  public onCollectionChange(payload) {
+    this.newDocument.collection = payload;
+  }
+
+  public ngOnInit() {
+    this.fetchCollections();
+  }
+
+  private fetchCollections() {
+    //TODO: Send active filter with request to fetch correct collections (for autocomplete)
+    this.queryService.fetchCollections()
+      .subscribe(collections => {
+        this.source = collections;
+      });
   }
 
   private initColors() {

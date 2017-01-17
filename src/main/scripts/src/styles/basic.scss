@@ -43,12 +43,3 @@ a {
   margin-right: 20px;
   margin-top: 10px;
 }
-
-.ng-valid[required], .ng-valid.required  {
-  border-left: 5px solid #42A948 !important; /* green */
-}
-
-.ng-invalid:not(form)  {
-  border-left: 5px solid #a94442 !important; /* red */
-}
-
