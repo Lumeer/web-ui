@@ -8,86 +8,113 @@
       "value": "Absolutely magic collection"
     }
   },
-  "attributes": {
-    "attr1": "value1",
-    "attr2": "value2",
-    "attr3": "value3",
-    "attr4": 4,
-    "attr5": "value5",
-    "attr6": "value6",
-    "attr7": 7,
-    "attr8": "value8",
-    "attr9": "value9",
-    "attr10": "value10",
-    "attr11": "value11",
-    "attr12": 12,
-    "attr13": "value13",
-    "attr14": "value14",
-    "attr15": 15
-  },
-  "typesAndConstraints": [
+  "attributes": [
     {
+      "key": "attr1",
+      "value": "value1",
+      "type": "string",
+      "constraints": {
+        "maxLength": 10,
+        "lowerCase": true
+      }
+    },
+    {
+      "key": "attr2",
+      "value": "value2",
+      "type": "string",
+      "constraints": {
+        "maxLength": 10,
+        "lowerCase": false
+      }
+    },
+    {
+      "key": "attr3",
+      "value": "value3",
+      "type": "string",
+      "constraints": {
+        "maxLength": 1000
+      }
+    },
+    {
+      "key": "attr4",
+      "value": "4456",
+      "type": "int",
+      "constraints": {
+        "gt": 10,
+        "lt": 10000
+      }
+    },
+    {
+      "key": "veryy long attribute just to test it",
+      "value": "true",
       "type": "string",
       "constraints": []
     },
     {
+      "key": "attr6",
+      "value": "15.2.2015",
+      "type": "date",
+      "constraints": []
+    },
+    {
+      "key": "attr7",
+      "value": "UPPERCASE VALUE",
+      "type": "string",
+      "constraints": {
+        "minLength": 10,
+        "upperCase": true,
+        "maxLength": 100,
+        "lowerCase": false
+      }
+    },
+    {
+      "key": "attr8",
+      "value": "value8",
       "type": "string",
       "constraints": []
     },
     {
+      "key": "attr9",
+      "value": "value9",
       "type": "string",
       "constraints": []
     },
     {
+      "key": "attr10",
+      "value": "value10",
       "type": "string",
       "constraints": []
     },
     {
+      "key": "attr11",
+      "value": "some very long value some very long value some very long value some very long value some very long value some very long value some very long value some very long value some very long value some very long value ",
       "type": "string",
       "constraints": []
     },
     {
+      "key": "attr12",
+      "value": "false",
       "type": "string",
       "constraints": []
     },
     {
-      "type": "string",
+      "key": "attr13",
+      "value": "10020.234€",
+      "type": "currency",
       "constraints": []
     },
     {
-      "type": "string",
+      "key": "attr14",
+      "value": "value14",
       "constraints": []
     },
     {
-      "type": "string",
-      "constraints": []
-    },
-    {
-      "type": "string",
-      "constraints": []
-    },
-    {
-      "type": "string",
-      "constraints": []
-    },
-    {
-      "type": "string",
-      "constraints": []
-    },
-    {
-      "type": "string",
-      "constraints": []
-    },
-    {
-      "type": "string",
-      "constraints": []
-    },
-    {
+      "key": "attr15",
+      "value": "value15",
       "type": "string",
       "constraints": []
     }
   ],
-  "constraints": {},
   "history": {},
   "rights": {},
   "links": {
