@@ -18,27 +18,40 @@
           </div>
         </div>
         <div class="panel-content">
-          <div *ngFor="let doc of document.attributes; let ixDoc = index">
-            <div class="row attributes-value">
-              <div class="col-lg-2"><strong>{{doc.key}}</strong></div>
-              <div class="col-lg-4">{{doc.value}}</div>
-              <div class="col-lg-2"><strong>Type:</strong> {{doc.type ? doc.type : "free"}}</div>
-              <div class="col-lg-4">
-                <div class="document-constraints-container">
-                  <div class="document-constraints"><strong>Constraints:</strong>
-                    <span *ngFor="let constr of doc.constraints | keys; let lastConstr = last">
-                    {{constr.key}}: {{lastConstr ? constr.value : constr.value + ", "}}
-                    </span>
-                  </div>
-                  <div class="document-constraints-icon">
-                    <button class="btn btn-link">
-                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
+          <div class="document-attributes-content">
+            <document-attributes [attributes]="document.attributes"></document-attributes>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" [ngStyle]="{'background-color': document.collection.color}">
+          <h4>History</h4>
+        </div>
+        <div class="panel-body">
+          <div class="document-history-content">
+            <div class="document-history-content">
+              <document-history [history]="document.history"></document-history>
             </div>
-            <hr class="without-margin" *ngIf="ixDoc < document.attributes.length - 1">
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" [ngStyle]="{'background-color': document.collection.color}">
+          <h4>Rights</h4>
+        </div>
+        <div class="panel-body">
+          <div class="document-rights-content">
+            <document-rights [rights]="document.rights"></document-rights>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" [ngStyle]="{'background-color': document.collection.color}">
+          <h4>Links</h4>
+        </div>
+        <div class="panel-body">
+          <div class="document-links-content">
+            <document-links [links]="document.links"></document-links>
           </div>
         </div>
       </div>

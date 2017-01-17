@@ -5,6 +5,10 @@ import {
   PickItemComponent,
   DocumentDetailComponent,
   TabularResultComponent,
+  DocumentHistoryComponent,
+  DocumentLinksComponent,
+  DocumentRightsComponent,
+  DocumentAttributesComponent,
   KeysPipe
 } from './pick_item';
 import {ActiveTableComponent} from './active_table/active-table.component';
@@ -120,6 +124,10 @@ const viewsRoutes: Routes = [
     DocumentInfoComponent,
     HistoryChatComponent,
     DocumentDetailComponent,
+    DocumentAttributesComponent,
+    DocumentLinksComponent,
+    DocumentRightsComponent,
+    DocumentHistoryComponent,
     TabularResultComponent,
     DocumentPostItComponent,
     DocumentVersionsComponent,

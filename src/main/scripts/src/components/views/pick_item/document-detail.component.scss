@@ -17,25 +17,5 @@ document-detail {
       color: black;
     }
 
-    .attributes-value {
-      margin: 5px 0 5px 0;
-    }
-
-    .without-margin {
-      margin: 0;
-    }
-
-    .document-constraints-container {
-      display: flex;
-
-      .document-constraints {
-        flex-grow: 1;
-      }
-      .document-constraints-icon {
-        width: 50px;
-      }
-
-    }
-
   }
 }
