@@ -44,7 +44,7 @@ export class DocumentInfoService {
 
   public fetchDocumentDetailFromId(id) {
     if (!id) {
-      this.documentDetail = undefined
+      this.documentDetail = undefined;
     } else {
       this.http.get('/data/documentdetail.json')
         .map(res => res.json())

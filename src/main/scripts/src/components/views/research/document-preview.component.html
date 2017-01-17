@@ -1,7 +1,7 @@
 <document-info [(document)]="activeDocument">
 </document-info>
 <div class="row">
-  <div class="lum-document-preview col-lg-12">
+  <div class="lum-document-preview col-lg-4">
     <div class="lum-preview-content new-document-preview">
       <div class="preview-icon"
            (click)="pickerVisible = !pickerVisible"
@@ -31,11 +31,23 @@
       </div>
       <form>
         <input name="title" placeholder="New title" id="title" [(ngModel)]="newDocument.title" required>
-        <div class="new-document-info">
-
+        <div>
+          <filter-input [value]="newDocument.collection"
+                        [placeholder]="'Select collection'"
+                        [source]="source"
+                        [options]="autocompleteOptions"
+                        (onChange)="onCollectionChange($event)"></filter-input>
         </div>
-        <div class="confirm">
-          <button type="button" class="btn btn-default btn-xs" (click)="newDocumentInfo()">Save</button>
+        <div class="submit-pane">
+          <div class="confirm">
+            <button type="button" class="btn btn-default btn-xs" (click)="newDocumentInfo()">
+              <i class="fa fa-plus fa-2x"></i>
+            </button>
+          </div>
+
+          <div class="txt-lbl">
+            <p>Add Document</p>
+          </div>
         </div>
       </form>
     </div>
