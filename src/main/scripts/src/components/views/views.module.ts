@@ -9,7 +9,8 @@ import {
   DocumentLinksComponent,
   DocumentRightsComponent,
   DocumentAttributesComponent,
-  KeysPipe
+  KeysPipe,
+  MetaKeysPipe
 } from './pick_item';
 import {ActiveTableComponent} from './active_table/active-table.component';
 import {ContingencyTableComponent} from './contingency_table/contingency-table.component';
@@ -133,6 +134,7 @@ const viewsRoutes: Routes = [
     DocumentVersionsComponent,
     DocumentContentComponent,
     KeysPipe,
+    MetaKeysPipe,
     CollectionAddComponent
   ],
   exports: []

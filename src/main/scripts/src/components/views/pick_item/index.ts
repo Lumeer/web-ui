@@ -6,3 +6,4 @@ export {DocumentHistoryComponent} from './document-history.component';
 export {DocumentRightsComponent} from './document-rights.component';
 export {DocumentAttributesComponent} from './document-attributes.component';
 export {KeysPipe} from './keys';
+export {MetaKeysPipe} from './metakeys';

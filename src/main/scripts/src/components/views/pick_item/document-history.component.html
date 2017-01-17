@@ -1,3 +1,51 @@
 <div class="row">
-  History content
+  <div>
+    <table class="table history-meta-table">
+      <thead>
+      <tr>
+        <th class="history-meta-cell text-center">Date</th>
+        <th class="history-meta-cell text-center">Edited by</th>
+        <th class="history-meta-cell text-center">Version</th>
+      </tr>
+      </thead>
+    </table>
+  </div>
+  <div class="history-content-row" *ngFor="let doc of history">
+    <div class="history-meta">
+      <table class="table history-meta-table">
+        <tbody>
+        <tr>
+          <td class="history-meta-cell text-center">{{doc._meta_update_date}}</td>
+          <td class="history-meta-cell text-center">{{doc._meta_update_by}}</td>
+          <td class="history-meta-cell text-center">{{doc._meta_version}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <perfect-scrollbar>
+      <div class="history-attributes">
+        <table class="table">
+          <thead>
+          <tr>
+            <th *ngFor="let d of doc | metakeys">
+              {{d.key}}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td *ngFor="let d of doc | metakeys">
+              {{d.value}}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </perfect-scrollbar>
+    <div class="history-icon">
+      <button class="btn btn-link button-padding">
+        <i class="fa fa-undo" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
 </div>

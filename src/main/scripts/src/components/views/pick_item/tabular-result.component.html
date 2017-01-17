@@ -1,7 +1,10 @@
 <div class="row">
-    <div class="tabular-result-content  col-lg-12">
-      <h4>Search results</h4>
-      <h6>{{numDocuments}} documents were found in {{numCollections}} collections</h6>
+  <div class="col-lg-12">
+    <h4>Search results</h4>
+    <h6>{{numDocuments}} documents were found in {{numCollections}} collections</h6>
+  </div>
+  <div class="tabular-result-content  col-lg-12">
+    <perfect-scrollbar>
       <div class="panel-group " id="accordion">
         <div class="panel panel-default" *ngFor="let d of data; let ix = index">
           <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ix}}"
@@ -18,7 +21,7 @@
           </a>
           <div id="collapse{{ix}}" class="panel-collapse collapse">
             <perfect-scrollbar>
-            <div class="panel-body">
+              <div class="panel-body">
                 <div class="row-hover" *ngFor="let doc of d.documents" (click)="selectItem(doc)">
                   <table class="table">
                     <thead>
@@ -37,10 +40,11 @@
                     </tbody>
                   </table>
                 </div>
-            </div>
+              </div>
             </perfect-scrollbar>
           </div>
         </div>
       </div>
-    </div>
+    </perfect-scrollbar>
+  </div>
 </div>

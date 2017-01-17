@@ -12,6 +12,9 @@ document-attributes {
       margin: 0;
     }
 
+    .button-padding{
+      padding: 1px 6px;
+    }
     .document-constraints-container {
       display: flex;
 
@@ -19,7 +22,7 @@ document-attributes {
         flex-grow: 1;
       }
       .document-constraints-icon {
-        width: 50px;
+        width: 30px;
       }
 
     }

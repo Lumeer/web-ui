@@ -2,4 +2,31 @@
 
 document-history {
 
+  .history-meta-cell{
+    width: 100px;
+  }
+  .history-meta-table {
+    width : 300px !important;
+  }
+
+  .history-content-row {
+    display: flex;
+    width:100%;
+
+    .history-meta {
+      width: 300px;
+    }
+    .history-attributes {
+      flex-grow : 1;
+    }
+    .history-icon{
+      width: 30px;
+      align-self: center;
+
+      .button-padding{
+        padding: 1px 6px;
+      }
+    }
+  }
+
 }

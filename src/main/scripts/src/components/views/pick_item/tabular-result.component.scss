@@ -12,6 +12,7 @@ tabular-result {
 
     .panel-group {
       margin: 0;
+      max-height: 400px;
 
       .panel + .panel {
         margin-top: 0;
@@ -37,7 +38,6 @@ tabular-result {
 
     .panel-body {
       padding: 0;
-      max-height: 230px;
     }
 
     .panel-heading:hover {

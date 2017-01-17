@@ -115,7 +115,72 @@
       "constraints": []
     }
   ],
-  "history": {},
+  "history": [
+    {
+      "_meta_update_date": "10.01.2017 10:33",
+      "_meta_update_by": "Martin Doe",
+      "_meta_version": "1",
+      "attr1": "value1",
+      "attr2": "value2",
+      "attr3": "value3",
+      "attr4": "value4",
+      "attr5": "value5",
+      "attr6": "value6",
+      "attr7": "value7",
+      "attr8": "value8",
+      "attr9": "value9",
+      "attr10": "value10"
+    },
+    {
+      "_meta_update_date": "12.01.2017 14:24",
+      "_meta_update_by": "Janko Hrasko",
+      "_meta_version": "2",
+      "attr1": "value11",
+      "attr2": "value22",
+      "attr3": "value33",
+      "attr4": "value44",
+      "attr5": "value55",
+      "attr6": "value66",
+      "attr9": "value99",
+      "attr10": "value100"
+    },
+    {
+      "_meta_update_date": "13.01.2017 09:00",
+      "_meta_update_by": "Jakub Milý",
+      "_meta_version": "3",
+      "attr2": "value22",
+      "attr3": "value33",
+      "attr4": "value44",
+      "attr5": "value55",
+      "attr6": "value66",
+      "attr9": "value99",
+      "attr10": "value100",
+      "attr23": "value2332",
+      "attr33": "value3333",
+      "attr433": "value44555",
+      "attr53": "value5566",
+      "attr63": "value6677",
+      "attr93": "value9889",
+      "attr103": "value10990"
+    },
+    {
+      "_meta_update_date": "13.01.2017 09:43",
+      "_meta_update_by": "Alica z krajiny zázrakov",
+      "_meta_version": "4",
+      "attr1": "value11",
+      "attr2": "value22"
+    },
+    {
+      "_meta_update_date": "15.01.2017 02:43",
+      "_meta_update_by": "Matej Swanson",
+      "_meta_version": "5",
+      "attr11": "value1",
+      "attr22": "value2",
+      "attr33": "valueeeee33",
+      "attr4": "value44",
+      "attr5": "value55"
+    }
+  ],
   "rights": {},
   "links": {
     "from": {},
