@@ -181,7 +181,92 @@
       "attr5": "value55"
     }
   ],
-  "rights": {},
+  "rights": [
+    {
+      "name": "user0",
+      "rights": 1
+    },
+    {
+      "name": "user1",
+      "rights": 4
+    },
+    {
+      "name": "user2",
+      "rights": 5
+    },
+    {
+      "name": "user3",
+      "rights": 7
+    },
+    {
+      "name": "user4",
+      "rights": 4
+    },
+    {
+      "name": "user5",
+      "rights": 6
+    },
+    {
+      "name": "user6",
+      "rights": 2
+    },
+    {
+      "name": "user7",
+      "rights": 4
+    },
+    {
+      "name": "user8",
+      "rights": 2
+    },
+    {
+      "name": "user9",
+      "rights": 3
+    },
+    {
+      "name": "user10",
+      "rights": 7
+    },
+    {
+      "name": "user11",
+      "rights": 6
+    },
+    {
+      "name": "user12",
+      "rights": 5
+    },
+    {
+      "name": "user13",
+      "rights": 4
+    },
+    {
+      "name": "user14",
+      "rights": 3
+    },
+    {
+      "name": "user15",
+      "rights": 7
+    },
+    {
+      "name": "user16",
+      "rights": 7
+    },
+    {
+      "name": "user17",
+      "rights": 4
+    },
+    {
+      "name": "user18",
+      "rights": 1
+    },
+    {
+      "name": "user19",
+      "rights": 2
+    },
+    {
+      "name": "user20",
+      "rights": 5
+    }
+  ],
   "links": {
     "from": {},
     "to": {}

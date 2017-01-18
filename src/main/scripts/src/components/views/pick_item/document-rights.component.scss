@@ -2,4 +2,33 @@
 
 document-rights {
 
+  .rights-container {
+    display: flex;
+    width: 100%;
+
+    .rights-labels {
+      width: 35px;
+      padding: 36px 15px 0 0;
+
+      .rights-labels-label {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        margin-bottom: 6px;
+        line-height: 30px;
+        font-size: 15px;
+        vertical-align: middle;
+      }
+    }
+
+    .rights-users {
+      flex-grow: 1;
+
+      th {
+        min-width: 100px;
+      }
+
+    }
+  }
+
 }

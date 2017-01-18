@@ -9,11 +9,11 @@ document-attributes {
     }
 
     .without-margin {
-      margin: 0;
+      margin: 0 !important;
     }
 
     .button-padding{
-      padding: 1px 6px;
+      padding: 1px 0 1px 6px;
     }
     .document-constraints-container {
       display: flex;
@@ -22,7 +22,7 @@ document-attributes {
         flex-grow: 1;
       }
       .document-constraints-icon {
-        width: 30px;
+        width: 21px;
       }
 
     }
