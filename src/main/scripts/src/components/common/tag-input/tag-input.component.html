@@ -65,7 +65,6 @@
     </span>
   </div>
   <filter-input (focus)="onItemFocus()"
-                (change)="onChange($event)"
                 (onAdd)="addItem($event, -1)"
                 [source]="options.values"
                 [options]="autocompleteOptions"

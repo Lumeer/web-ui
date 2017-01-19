@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'document-rights',
@@ -10,12 +11,12 @@ export class DocumentRightsComponent implements OnInit {
   @Input() public rights: any;
   private rightsCopy: any;
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.rightsCopy = JSON.parse(JSON.stringify(this.rights));
   }
 
   private onSearchChanged(userFilter: any) {
-    if (userFilter == '') {
+    if (userFilter === '') {
       this.rightsCopy = JSON.parse(JSON.stringify(this.rights));
     } else {
       this.filterUsers(userFilter);
@@ -24,20 +25,16 @@ export class DocumentRightsComponent implements OnInit {
 
   private filterUsers(userFilter: string) {
     let newRights = [];
-    this.rights.forEach(right => {
-      if (right.name.includes(userFilter))
-        newRights.push(right);
-    });
+    this.rights.forEach(right => right.name.includes(userFilter) && newRights.push(right));
     this.rightsCopy = newRights;
   }
 
-  private bitSet(value: number, bit: number) {
-    return ((value >> bit) % 2 != 0)
+  public bitSet(value: number, bit: number) {
+    return ((value >> bit) % 2 !== 0);
   }
 
-  private bitUnset(value: number, bit: number) {
-    return ((value >> bit) % 2 == 0)
+  public bitUnset(value: number, bit: number) {
+    return ((value >> bit) % 2 === 0);
   }
-
 
 }

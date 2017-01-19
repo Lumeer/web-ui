@@ -1,10 +1,19 @@
 @import '../../../styles/variables';
 
 views-pick-item {
-
+  > div {
+    height: 90%;
+  }
   .pick-item-content {
-    height: 100%;
+    height: 89.9%;
+    overflow-y: auto;
     background-color: $primary-color;
   }
 
+
+  .document-filter {
+    padding-bottom: 5px;
+    background: $secondary-color;
+    box-shadow: inset 0 -1px 0 rgba(108, 108, 108, 0.3);
+  }
 }
