@@ -1,4 +1,5 @@
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
+import {DocumentService} from '../../../services/document.service';
 
 @Component({
   selector: 'document-history',
@@ -6,7 +7,16 @@ import {Component, Input} from '@angular/core';
   styles: [require('./document-history.component.scss').toString()]
 })
 export class DocumentHistoryComponent {
+  public user = {
+    name: 'Pavel',
+    surname: 'Vomacka',
+    accountName: 'pavelVomacka'
+  };
+  public time = new Date();
+  constructor(public documentService: DocumentService) {}
 
-  @Input() public history: any;
-
+  public ngOnInit() {
+    // this.documentService.fetchDocumentDetailVersions();
+    console.log(this);
+  }
 }

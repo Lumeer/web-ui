@@ -5,6 +5,8 @@ import {Http} from '@angular/http';
 @Injectable()
 export class DocumentService {
   @LocalStorage('lastDocument') public activeDocument;
+  public documentDetail: any;
+  public filterResults: any;
 
   constructor(private http: Http) {}
 
@@ -45,5 +47,32 @@ export class DocumentService {
   private fetchLinkInfo(link) {
     link.info = this.http.get('/data/linkinfo.json')
       .map(res => res.json());
+  }
+
+  public fetchDocumentDetailFromId(id) {
+    if (!id) {
+      this.documentDetail = undefined;
+    } else {
+      this.http.get('/data/documentdetail.json')
+        .map(res => res.json())
+        .subscribe(documentDetail => this.documentDetail = documentDetail);
+    }
+  }
+
+  public fetchFilterResultsFromFilter(filter) {
+    if (!filter || filter.length === 0) {
+      this.filterResults = undefined;
+      this.documentDetail = undefined;
+    } else {
+      this.http.get('/data/documentsearch.json')
+        .map(res => res.json())
+        .subscribe(filterResults => this.filterResults = filterResults);
+    }
+  }
+
+  public fetchDocumentDetailVersions() {
+    this.http.get('/data/documentversions.json')
+      .map(res => res.json())
+      .subscribe(documentVersions => this.documentDetail.versions = documentVersions);
   }
 }

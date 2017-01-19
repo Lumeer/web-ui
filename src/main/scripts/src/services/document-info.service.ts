@@ -30,25 +30,4 @@ export class DocumentInfoService {
       .map(res => res.json())
       .subscribe(documents => this.documents = documents);
   }
-
-  public fetchFilterResultsFromFilter(filter) {
-    if (!filter || filter.length === 0) {
-      this.filterResults = undefined;
-      this.documentDetail = undefined;
-    } else {
-      this.http.get('/data/documentsearch.json')
-        .map(res => res.json())
-        .subscribe(filterResults => this.filterResults = filterResults);
-    }
-  }
-
-  public fetchDocumentDetailFromId(id) {
-    if (!id) {
-      this.documentDetail = undefined;
-    } else {
-      this.http.get('/data/documentdetail.json')
-        .map(res => res.json())
-        .subscribe(documentDetail => this.documentDetail = documentDetail);
-    }
-  }
 }

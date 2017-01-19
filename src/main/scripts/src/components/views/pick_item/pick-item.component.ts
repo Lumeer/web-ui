@@ -1,6 +1,7 @@
 import {Component, trigger, state, transition, style, animate, keyframes} from '@angular/core';
 import {DocumentInfoService} from '../../../services/document-info.service';
 import * as _ from 'lodash';
+import {DocumentService} from '../../../services/document.service';
 
 @Component({
   selector: 'views-pick-item',
@@ -28,7 +29,7 @@ import * as _ from 'lodash';
 export class PickItemComponent {
   public actions: any[];
 
-  constructor(public documentInfoService: DocumentInfoService) {
+  constructor(public documentService: DocumentService) {
   }
 
   public ngOnInit() {
@@ -63,11 +64,11 @@ export class PickItemComponent {
   }
 
   public selectItem(document) {
-    this.documentInfoService.fetchDocumentDetailFromId(document._id);
+    this.documentService.fetchDocumentDetailFromId(document._id);
   }
 
   public onFilterChanged(dataPayload) {
-    this.documentInfoService.fetchFilterResultsFromFilter(dataPayload);
+    this.documentService.fetchFilterResultsFromFilter(dataPayload);
   }
 
 }

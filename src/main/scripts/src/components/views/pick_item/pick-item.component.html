@@ -4,14 +4,21 @@
   </div>
   <div class="pick-item-content row">
     <div class="document-info" [ngClass]="{'col-lg-10': activeAction(), 'col-lg-12': !activeAction()}">
-      <tabular-result *ngIf="documentInfoService.filterResults"
-                      [data]="documentInfoService.filterResults"
+      <tabular-result *ngIf="documentService.filterResults"
+                      [data]="documentService.filterResults"
                       (onSelectionChange)="selectItem($event)"></tabular-result>
-      <document-detail *ngIf="documentInfoService.documentDetail"
-                       [document]="documentInfoService.documentDetail"></document-detail>
+      <document-detail *ngIf="documentService.documentDetail"
+                       [document]="documentService.documentDetail"></document-detail>
     </div>
-    <div *ngIf="activeAction()" class="col-lg-2 active-action" [@animateWidth]="'in'">
-      {{activeAction().title}}
+    <div *ngIf="activeAction() && documentService.documentDetail" class="col-lg-2 active-action" [@animateWidth]="'in'">
+      <document-history *ngIf="activeAction().id === 'history'"></document-history>
     </div>
+    <!--<div class="row">-->
+      <!--<div class="col-lg-2">-->
+        <!--<user-tag [user]="user" [action]="'changed something'" [time]="time">-->
+          <!--Click to find out more!dfdfdgfdas dsfgsdfg sdfg sd-->
+        <!--</user-tag>-->
+      <!--</div>-->
+    <!--</div>-->
   </div>
 </div>

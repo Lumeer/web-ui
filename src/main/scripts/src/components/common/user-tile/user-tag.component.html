@@ -1,0 +1,10 @@
+<div>
+  <div class="icon">
+    <i class="fa fa-user" aria-hidden="true"></i>
+  </div>
+  <div class="info">
+    <div><span class="user">{{user.name}}</span> {{action}}</div>
+    <div class="date-time">{{time | date: 'dd.MM.yyyy'}}</div>
+    <ng-content></ng-content>
+  </div>
+</div>
