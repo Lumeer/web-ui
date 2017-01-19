@@ -11,6 +11,14 @@ body {
   overflow-x: hidden;
 }
 
+body, html {
+  height: 100%;
+}
+
+.max-height {
+  height: 100%;
+}
+
 li {
   list-style: none;
 }

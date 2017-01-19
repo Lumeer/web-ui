@@ -1,4 +1,4 @@
-<div class="lum-page-content">
+<div class="lum-page-content max-height">
   <div class="row lum-white-container">
     <div class="col-lg-9">
       <h4>{{currentView && currentView.title}}</h4>
@@ -7,8 +7,5 @@
         <li *ngFor="let crumb of breadCrumbService.breadcrumbs">{{crumb.data && crumb.data.title}}</li>
       </ol>
     </div>
-  </div>
-  <div clas="row">
-
   </div>
 </div>

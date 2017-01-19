@@ -10,7 +10,7 @@ export class MetaKeysPipe implements PipeTransform {
     let keys = [];
     for (let key in value) {
       if (value.hasOwnProperty(key)) {
-        if (!key.startsWith("_meta")) {
+        if (!key.startsWith('_meta')) {
           keys.push({key: key, value: value[key]});
         }
       }

@@ -1,10 +1,11 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-3 lum-nav-panel" [ngClass]="{'col-lg-2': !collapsed, 'col-lg-1': collapsed}">
+<div class="container-fluid max-height">
+  <div class="row max-height">
+    <div class="col-sm-3 lum-nav-panel max-height" [ngClass]="{'col-lg-2': !collapsed, 'col-lg-1': collapsed}">
       <left-panel [collapsedValue]="collapsed"
+                  class="max-height"
                   (clickEvent)="handleItemSelect($event);"></left-panel>
     </div>
-    <div class="col-sm-9 col-lg-10 lum-no-padding lum-content" [ngClass]="{'col-lg-10': !collapsed, 'col-lg-11': collapsed}">
+    <div class="col-sm-9 col-lg-10 lum-no-padding lum-content max-height" [ngClass]="{'col-lg-10': !collapsed, 'col-lg-11': collapsed}">
       <top-panel (collapseEvent)="handleCollapseEvent()"
                  (logoutEvent)="handleLogOut()"
                  [currentView]="activeItem"></top-panel>
