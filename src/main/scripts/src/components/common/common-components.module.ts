@@ -8,6 +8,7 @@ import {EditableDirective} from './auto-complete/editable.directive';
 import {FilterInput} from './tag-input/filter-input.component';
 import {FilterComponent} from './tag-input/filter.component';
 import {FilterSave} from './tag-input/filter-save.component';
+import {UserTagComponent} from './user-tile/user-tag.component';
 
 @NgModule({
   imports: [
@@ -21,14 +22,16 @@ import {FilterSave} from './tag-input/filter-save.component';
     EditableDirective,
     FilterInput,
     FilterSave,
-    FilterComponent
+    FilterComponent,
+    UserTagComponent
   ],
   exports: [
     TagInputComponent,
     AutoCompleteComponent,
     FilterInput,
     FilterSave,
-    FilterComponent
+    FilterComponent,
+    UserTagComponent
   ]
 })
 

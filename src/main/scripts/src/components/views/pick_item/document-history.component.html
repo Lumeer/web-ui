@@ -1,57 +1,8 @@
-<div class="row">
+<div>
+  <h3>Document's history</h3>
   <div>
-    <table class="table history-meta-table">
-      <thead>
-      <tr>
-        <th class="history-meta-cell text-center">Date</th>
-        <th class="history-meta-cell text-center">Edited by</th>
-        <th class="history-meta-cell text-center">Version</th>
-      </tr>
-      </thead>
-    </table>
-  </div>
-  <hr class="without-margin" >
-  <div *ngFor="let doc of history; let last = last">
-    <div class="history-ia-container">
-      <div class="history-ia-attributes">
-        <div class="history-ia-attributes-meta">
-          <table class="table history-meta-table">
-            <tbody>
-            <tr>
-              <td class="history-meta-cell text-center">{{doc._meta_update_date}}</td>
-              <td class="history-meta-cell text-center">{{doc._meta_update_by}}</td>
-              <td class="history-meta-cell text-center">{{doc._meta_version}}</td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-        <perfect-scrollbar>
-          <div class="history-ia-attributes-attributes">
-            <table class="table">
-              <thead>
-              <tr>
-                <th *ngFor="let d of doc | metakeys">
-                  {{d.key}}
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td *ngFor="let d of doc | metakeys">
-                  {{d.value}}
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </perfect-scrollbar>
-      </div>
-      <div class="history-ia-icon">
-        <button class="btn btn-link button-padding">
-          <i class="fa fa-undo" aria-hidden="true"></i>
-        </button>
-      </div>
-    </div>
-    <hr class="without-margin" *ngIf="!last">
+    <user-tag class="history-record" *ngFor="let oneRecord of documentService.documentDetail.history" [user]="user" [time]="time">
+      Some history stuff
+    </user-tag>
   </div>
 </div>

@@ -7,6 +7,8 @@ views-pick-item {
 
   .document-info {
     transition: width 0.6s linear;
+    height: 100%;
+    overflow-y: auto;
   }
 
   .pick-item-content {
@@ -27,9 +29,10 @@ views-pick-item {
   }
 
   .active-action {
+    overflow-y: auto;
     background: $secondary-color;
     position: absolute;
-    right: 15px;
+    right: 0;
     height: 80%;
   }
 }
