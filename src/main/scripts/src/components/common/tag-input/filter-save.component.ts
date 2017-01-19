@@ -1,4 +1,4 @@
-import {Component, Output, EventEmitter} from '@angular/core';
+import {Component, Output, EventEmitter, Input} from '@angular/core';
 import {DocumentInfoService} from '../../../services/document-info.service';
 
 @Component({
@@ -12,7 +12,9 @@ export class FilterSave {
   public showSave: boolean = false;
   private currentFilter;
   private filterId;
+  @Input() public otherActions: any;
   @Output() public onChanged: EventEmitter<any> = new EventEmitter();
+  @Output() public onActionClick: EventEmitter<any> = new EventEmitter();
 
   constructor(private documentInfoService: DocumentInfoService) {}
 
@@ -38,5 +40,9 @@ export class FilterSave {
   public ngOnInit() {
     this.currentFilter = this.documentInfoService.lastFilter;
     this.filterId = this.documentInfoService.filterId;
+  }
+
+  public actionClick(action) {
+    this.onActionClick.emit({action: action});
   }
 }

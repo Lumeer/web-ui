@@ -4,6 +4,11 @@
   <div class="col-lg-2 filter-options">
     <a (click)="showSave = !showSave"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
     <a (click)="showSave = !showSave"><i class="fa fa-clipboard" aria-hidden="true"></i></a>
+    <a *ngFor="let action of otherActions"
+       [attr.title]="action.title"
+       (click)="actionClick(action)">
+      <i class="fa" [ngClass]="action.icon" aria-hidden="true"></i>
+    </a>
     <div class="lum-filter-saver" *ngIf="showSave">
       <form>
         <input name="filter-name" type="text" placeholder="Name of this filter" [(ngModel)]="newFilterName">
