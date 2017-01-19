@@ -1,12 +1,17 @@
 <div>
   <div class="document-filter">
-    <filter-save (onChanged)="onFilterChanged($event)"></filter-save>
+    <filter-save (onChanged)="onFilterChanged($event)" [otherActions]="actions" (onActionClick)="actionClick($event)"></filter-save>
   </div>
-  <div class="pick-item-content">
-    <tabular-result *ngIf="documentInfoService.filterResults"
-                    [data]="documentInfoService.filterResults"
-                    (onSelectionChange)="selectItem($event)"></tabular-result>
-    <document-detail *ngIf="documentInfoService.documentDetail"
-                     [document]="documentInfoService.documentDetail"></document-detail>
+  <div class="pick-item-content row">
+    <div class="document-info" [ngClass]="{'col-lg-10': activeAction(), 'col-lg-12': !activeAction()}">
+      <tabular-result *ngIf="documentInfoService.filterResults"
+                      [data]="documentInfoService.filterResults"
+                      (onSelectionChange)="selectItem($event)"></tabular-result>
+      <document-detail *ngIf="documentInfoService.documentDetail"
+                       [document]="documentInfoService.documentDetail"></document-detail>
+    </div>
+    <div *ngIf="activeAction()" class="col-lg-2 active-action" [@animateWidth]="'in'">
+      {{activeAction().title}}
+    </div>
   </div>
 </div>

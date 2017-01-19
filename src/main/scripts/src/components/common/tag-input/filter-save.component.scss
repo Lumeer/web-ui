@@ -16,6 +16,10 @@ filter-save {
 
     a {
       cursor: pointer;
+
+      &:hover {
+        text-decoration: none;
+      }
     }
 
     .lum-filter-saver {
