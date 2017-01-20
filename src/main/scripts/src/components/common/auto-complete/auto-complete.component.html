@@ -4,14 +4,16 @@
        [@animateHeight]="'in'"
        class="dropdown-select"
        (mouseover)="onMouseOver()">
-    <div *ngFor="let oneOption of filteredSource"
+    <div *ngFor="let oneOption of filteredSource; let idx = index;"
          class="autocomplete-item"
          tabindex="0"
          [@animateHeight]="'in'"
          #autocompleteItem
          (click)="updateData(oneOption)"
          [ngClass]="{active: oneOption.active}">
-    {{options && options.displayKey && oneOption[options.displayKey]}}
+      <template [ngIf]="!options.limit || idx < options.limit">
+        {{options && options.displayKey && oneOption[options.displayKey]}}
+      </template>
     </div>
   </div>
 </section>

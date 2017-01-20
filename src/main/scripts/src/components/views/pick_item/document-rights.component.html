@@ -1,50 +1,20 @@
 <div>
-  <div class="row">
-    <div class="form-group col-lg-4">
-      <input type="text"
-             class="form-control"
-             (keyup)="onSearchChanged($event.target.value)"
-             placeholder="Search user">
-    </div>
-  </div>
-  <div class="row">
-    <div class="rights-container">
-      <div class="rights-labels">
-        <div class="label label-info rights-labels-label">R</div>
-        <div class="label label-danger rights-labels-label">W</div>
-        <div class="label label-warning rights-labels-label">X</div>
+  <h4>Document Rights</h4>
+  <filter-input [value]="''"
+                [placeholder]="'Select User'"
+                [source]="documentService.documentDetail.rights"
+                [options]="autocompleteOptions"
+                (onChange)="onFilterChange($event)"></filter-input>
+  <div>
+    <user-tag class="rights-record"
+              *ngFor="let oneRecord of documentService.documentDetail.rights"
+              [user]="oneRecord.name"
+              [action]="'has rights'">
+      <div class="rights-list">
+        <div class="label" [ngClass]="{active: oneRecord.rightBits[0] === 1}">R</div>
+        <div class="label" [ngClass]="{active: oneRecord.rightBits[1] === 1}">W</div>
+        <div class="label" [ngClass]="{active: oneRecord.rightBits[2] === 1}">X</div>
       </div>
-      <perfect-scrollbar>
-        <div class="rights-users">
-          <table class="table">
-            <thead>
-            <tr>
-              <th *ngFor="let user of rightsCopy">{{user.name}}</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td *ngFor="let user of rightsCopy">
-                <i *ngIf="bitSet(user.rights, 0)" class="fa fa-check" style="color:green" aria-hidden="true"></i>
-                <i *ngIf="bitUnset(user.rights, 0)" class="fa fa-times" style="color:red" aria-hidden="true"></i>
-              </td>
-            </tr>
-            <tr>
-              <td *ngFor="let user of rightsCopy">
-                <i *ngIf="bitSet(user.rights, 1)" class="fa fa-check" style="color:green" aria-hidden="true"></i>
-                <i *ngIf="bitUnset(user.rights, 1)" class="fa fa-times" style="color:red" aria-hidden="true"></i>
-              </td>
-            </tr>
-            <tr>
-              <td *ngFor="let user of rightsCopy">
-                <i *ngIf="bitSet(user.rights, 2)" class="fa fa-check" style="color:green" aria-hidden="true"></i>
-                <i *ngIf="bitUnset(user.rights, 2)" class="fa fa-times" style="color:red" aria-hidden="true"></i>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      </perfect-scrollbar>
-    </div>
+    </user-tag>
   </div>
 </div>

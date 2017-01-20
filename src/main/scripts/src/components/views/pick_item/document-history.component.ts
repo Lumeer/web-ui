@@ -7,12 +7,6 @@ import {DocumentService} from '../../../services/document.service';
   styles: [require('./document-history.component.scss').toString()]
 })
 export class DocumentHistoryComponent {
-  public user = {
-    name: 'Pavel',
-    surname: 'Vomacka',
-    accountName: 'pavelVomacka'
-  };
-  public time = new Date();
   constructor(public documentService: DocumentService) {}
 
   public timestampOfRecordToDate(record) {
