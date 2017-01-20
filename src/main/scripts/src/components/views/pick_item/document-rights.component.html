@@ -7,7 +7,7 @@
                 (onChange)="onFilterChange($event)"></filter-input>
   <div>
     <user-tag class="rights-record"
-              *ngFor="let oneRecord of documentService.documentDetail.rights"
+              *ngFor="let oneRecord of filteredRights"
               [user]="oneRecord.name"
               [action]="'has rights'">
       <div class="rights-list">

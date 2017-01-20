@@ -24,11 +24,7 @@ export class DocumentRightsComponent implements OnInit {
 
   public onFilterChange(dataPayload) {
     this.filteredRights = this.documentService.documentDetail.rights.filter(
-      oneRight => {
-        console.log(oneRight, dataPayload);
-        // oneRight.user.trim().indexOf(dataPayload.trim()) !== -1
-        return true;
-      }
+      oneRight => oneRight.name.trim().indexOf(dataPayload.trim()) !== -1
     );
   }
 }
