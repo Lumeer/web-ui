@@ -4,4 +4,5 @@ export interface AutoCompleteOptions {
   remoteAddr?: string;
   fetchResources?: () => any;
   filterFn?: (item, currentValue?) => boolean;
+  limit?: number;
 }

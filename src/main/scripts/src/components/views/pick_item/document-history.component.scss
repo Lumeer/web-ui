@@ -4,45 +4,12 @@ document-history {
 
   .history-record div {
     margin-bottom: 10px;
-  }
 
-  .history-meta-cell {
-    width: 100px;
-  }
-  .history-meta-table {
-    width: 300px !important;
-  }
-  .without-margin {
-    margin: 0 !important;
-  }
-
-  .history-ia-container {
-    display: flex;
-
-    .history-ia-attributes {
-      flex-grow: 1;
-      display:flex;
-      width:100%;
-      padding-right: 46px;
-      margin-right: -46px;
-
-      .history-ia-attributes-meta{
-        width: 300px;
-      }
-
-      .history-ia-attributes-attributes{
-        flex-grow: 1;
-      }
-
-    }
-    .history-ia-icon {
-      width: 46px;
-      align-self: center;
-
-      .button-padding {
-        padding: 1px 15px;
+    .more-info {
+      cursor: pointer;
+      &:hover {
+        text-decoration: none;
       }
     }
   }
-
 }

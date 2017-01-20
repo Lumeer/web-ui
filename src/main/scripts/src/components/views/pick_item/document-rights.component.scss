@@ -1,34 +1,30 @@
 @import '../../../styles/variables';
 
 document-rights {
-
-  .rights-container {
-    display: flex;
-    width: 100%;
-
-    .rights-labels {
-      width: 35px;
-      padding: 36px 15px 0 0;
-
-      .rights-labels-label {
-        display: inline-block;
-        width: 30px;
-        height: 30px;
-        margin-bottom: 6px;
-        line-height: 30px;
-        font-size: 15px;
-        vertical-align: middle;
-      }
-    }
-
-    .rights-users {
-      flex-grow: 1;
-
-      th {
-        min-width: 100px;
-      }
-
-    }
+  filter-input form {
+    margin-bottom: 10px;
   }
 
+  .dropdown-select {
+    min-width: 200px !important;
+    margin-top: 0 !important;
+  }
+
+  .rights-record div {
+    margin-bottom: 10px;
+
+    .rights-list {
+      padding-left: 60px;
+      font-size: 18px;
+
+      .label {
+        color: black;
+        background: rgba(255, 0, 0, 0.5);
+
+        &.active {
+          background-color: rgba(0, 255, 0, 0.5);
+        }
+      }
+    }
+  }
 }

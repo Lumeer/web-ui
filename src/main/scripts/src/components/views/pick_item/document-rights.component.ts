@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import * as _ from 'lodash';
+import {DocumentService} from '../../../services/document.service';
 
 @Component({
   selector: 'document-rights',
@@ -7,34 +8,23 @@ import * as _ from 'lodash';
   styles: [require('./document-rights.component.scss').toString()]
 })
 export class DocumentRightsComponent implements OnInit {
+  public autocompleteOptions = {
+    displayKey: 'name',
+    keepAfterSubmit: true,
+    limit: 5,
+    model: ''
+  };
+  public filteredRights;
 
-  @Input() public rights: any;
-  private rightsCopy: any;
+  constructor(public documentService: DocumentService) {}
 
   public ngOnInit(): void {
-    this.rightsCopy = JSON.parse(JSON.stringify(this.rights));
+    this.filteredRights = this.documentService.documentDetail.rights;
   }
 
-  private onSearchChanged(userFilter: any) {
-    if (userFilter === '') {
-      this.rightsCopy = JSON.parse(JSON.stringify(this.rights));
-    } else {
-      this.filterUsers(userFilter);
-    }
+  public onFilterChange(dataPayload) {
+    this.filteredRights = this.documentService.documentDetail.rights.filter(
+      oneRight => oneRight.name.trim().indexOf(dataPayload.trim()) !== -1
+    );
   }
-
-  private filterUsers(userFilter: string) {
-    let newRights = [];
-    this.rights.forEach(right => right.name.includes(userFilter) && newRights.push(right));
-    this.rightsCopy = newRights;
-  }
-
-  public bitSet(value: number, bit: number) {
-    return ((value >> bit) % 2 !== 0);
-  }
-
-  public bitUnset(value: number, bit: number) {
-    return ((value >> bit) % 2 === 0);
-  }
-
 }

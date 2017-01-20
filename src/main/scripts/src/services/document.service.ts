@@ -55,6 +55,10 @@ export class DocumentService {
     } else {
       this.http.get('/data/documentdetail.json')
         .map(res => res.json())
+        .map(documentDetail => {
+          documentDetail.rights = documentDetail.rights.map(oneRight => this.updateRights(oneRight));
+          return documentDetail;
+        })
         .subscribe(documentDetail => this.documentDetail = documentDetail);
     }
   }
@@ -74,5 +78,10 @@ export class DocumentService {
     this.http.get('/data/documentversions.json')
       .map(res => res.json())
       .subscribe(documentVersions => this.documentDetail.versions = documentVersions);
+  }
+
+  private updateRights(oneRight) {
+    oneRight.rightBits = oneRight.rights.toString(2).split('').map(right => parseInt(right, 10));
+    return oneRight;
   }
 }

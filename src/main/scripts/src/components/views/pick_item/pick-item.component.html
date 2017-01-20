@@ -10,8 +10,9 @@
       <document-detail *ngIf="documentService.documentDetail"
                        [document]="documentService.documentDetail"></document-detail>
     </div>
-    <div *ngIf="activeAction() && documentService.documentDetail" class="col-lg-2 active-action" [@animateWidth]="'in'">
+    <div *ngIf="activeAction() && documentService.documentDetail" class="col-lg-2 active-action" [@animateIn]="'in'">
       <document-history *ngIf="activeAction().id === 'history'"></document-history>
+      <document-rights *ngIf="activeAction().id === 'rights'"></document-rights>
     </div>
     <!--<div class="row">-->
       <!--<div class="col-lg-2">-->

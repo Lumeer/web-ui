@@ -8,6 +8,21 @@ import {DocumentService} from '../../../services/document.service';
   template: require('./pick-item.component.html'),
   styles: [require('./pick-item.component.scss').toString()],
   animations: [
+    trigger('animateIn', [
+      state('in', style({transform: 'translateX(0)'})),
+      transition('void => *', [
+        animate('0.6s', keyframes([
+          style({transform: 'translateX(100%)', offset: 0}),
+          style({transform: 'translateX(0)',     offset: 1.0})
+        ]))
+      ]),
+      transition('* => void', [
+        animate('0.6s', keyframes([
+          style({transform: 'translateX(0)',     offset: 0}),
+          style({transform: 'translateX(100%)',  offset: 1.0})
+        ]))
+      ])
+    ]),
     trigger('animateWidth', [
       state('in', style({width: '*'})),
       transition('void => *', [

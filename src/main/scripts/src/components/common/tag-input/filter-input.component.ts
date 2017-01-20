@@ -29,7 +29,7 @@ export class FilterInput implements IAutocomplete {
     if (keyCode === 13) {
       this.addItem(this.value);
     } else {
-      this.onChange.emit(this.value);
+      setTimeout(() => this.onChange.emit(this.value));
     }
   }
 
