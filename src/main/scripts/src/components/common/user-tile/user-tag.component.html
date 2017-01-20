@@ -3,8 +3,8 @@
     <i class="fa fa-user" aria-hidden="true"></i>
   </div>
   <div class="info">
-    <div><span class="user">{{user.name}}</span> {{action}}</div>
-    <div class="date-time">{{time | date: 'dd.MM.yyyy'}}</div>
+    <div><span class="user">{{user.name || user}}</span> {{action}}</div>
+    <div class="date-time">{{time | date: 'dd.MM.yyyy H:m:s'}}</div>
     <ng-content></ng-content>
   </div>
 </div>

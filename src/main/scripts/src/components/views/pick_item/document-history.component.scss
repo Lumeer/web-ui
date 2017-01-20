@@ -4,6 +4,13 @@ document-history {
 
   .history-record div {
     margin-bottom: 10px;
+    
+    .more-info {
+      cursor: pointer;
+      &:hover {
+        text-decoration: none;
+      }
+    }
   }
 
   .history-meta-cell {

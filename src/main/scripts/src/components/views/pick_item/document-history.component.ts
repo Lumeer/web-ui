@@ -15,8 +15,11 @@ export class DocumentHistoryComponent {
   public time = new Date();
   constructor(public documentService: DocumentService) {}
 
-  public ngOnInit() {
-    // this.documentService.fetchDocumentDetailVersions();
-    console.log(this);
+  public timestampOfRecordToDate(record) {
+    return record.hasOwnProperty('_meta_update_date') && new Date(record['_meta_update_date']);
+  }
+
+  public onRecordClick(oneRecord) {
+    console.log(oneRecord);
   }
 }
