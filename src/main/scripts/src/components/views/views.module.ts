@@ -95,7 +95,7 @@ const viewsRoutes: Routes = [
         path: 'digital_assistent',
         component: DigitalAssistentComponent,
         data: {
-          id: 'digital_assistent', title: 'Digital Assistent', icon: 'fa-user-secret'
+          id: 'digital_assistent', title: 'Digital Assistant', icon: 'fa-user-secret'
         },
         children: []
       }
