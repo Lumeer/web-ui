@@ -6,21 +6,37 @@
       "icon": "fa-car"
     },
     "header": [
-      "attr1",
-      "attr2",
-      "attr3",
-      "attr4",
-      "attr5",
-      "attr6",
-      "attr7",
-      "attr8",
-      "attr9",
-      "attr10",
-      "attr11",
-      "attr12",
-      "attr13",
-      "attr14",
-      "attr15"
+      "make",
+      "type",
+      "sub-type",
+      "engine",
+      "wheels",
+      "length",
+      "width",
+      "gears",
+      "height",
+      "windows",
+      "color",
+      "valves",
+      "seats",
+      "frontLights",
+      "wipes",
+      "backLights",
+      "power",
+      "speed",
+      "heating",
+      "nuts",
+      "fuel",
+      "octanes",
+      "bolts",
+      "leather",
+      "economic",
+      "emmisions",
+      "value",
+      "battery",
+      "generator",
+      "year",
+      "active"
     ],
     "documents": [
       {
@@ -57,7 +73,6 @@
         "leather": "no",
         "ergonomic": "no",
         "emissions": "2680 ppm CO2",
-        "attr27": "value27",
         "value": 2800,
         "battery": "12 V",
         "generator": "80 W",
@@ -73,14 +88,12 @@
       "icon": "fa-magic"
     },
     "header": [
-      "attr1",
-      "attr2",
-      "attr3",
-      "attr4",
-      "attr5",
-      "attr6",
-      "attr7",
-      "attr8"
+      "name",
+      "magicians",
+      "inventedBy",
+      "mainTrick",
+      "stars",
+      "inventedYear"
     ],
     "documents": [
       {
@@ -101,14 +114,14 @@
       "icon": "fa-tree"
     },
     "header": [
-      "attr1",
-      "attr2",
-      "attr3",
-      "attr4",
-      "attr5",
-      "attr6",
-      "attr7",
-      "attr8"
+      "name",
+      "kingdom",
+      "order",
+      "family",
+      "genus",
+      "leaves",
+      "spreadIndex",
+      "latin"
     ],
     "documents": [
       {

@@ -2,3 +2,5 @@ target/
 .idea
 npm-debug.log
 *.iml
+node_modules
+typings
