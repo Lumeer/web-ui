@@ -11,6 +11,4 @@ export class DocumentLinksRowsComponent {
   @Input() public documentsLink: any[];
   @Input() public headerAttrsDoc: string[];
   @Input() public documentsDoc: any[];
-
-
 }

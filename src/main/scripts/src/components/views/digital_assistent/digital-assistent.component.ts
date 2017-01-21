@@ -4,6 +4,6 @@ import {Component} from '@angular/core';
   selector: 'views-digital-assistent',
   template: require('./digital-assistent.component.html')
 })
-export class DigitalAssistentComponent{
+export class DigitalAssistentComponent {
 
 }

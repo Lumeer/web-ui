@@ -6,6 +6,7 @@ import {ITagOptions, TagBuilder} from '../../views/research/query-tag.inteface';
 import * as _ from 'lodash';
 import {ActivatedRoute} from '@angular/router';
 import {QueryTagService} from '../../../services/query-tags.service';
+import {DocumentInfoService} from '../../../services/document-info.service';
 
 const COLLECTION = {text: 'Collection', type: 'collection'};
 const SORT_BY = {text: 'Sort By', type: 'sortby'};
@@ -16,7 +17,9 @@ const SORT_BY = {text: 'Sort By', type: 'sortby'};
 })
 
 export class FilterComponent {
-  constructor(private route: ActivatedRoute, private queryTagService: QueryTagService) {
+  constructor(private route: ActivatedRoute,
+              private queryTagService: QueryTagService,
+              private documentService: DocumentInfoService) {
     this.initTagOptions();
     this.queryTagService.filterUpdateSubject.subscribe(eventData => {
       let newCollection = _.cloneDeep(this.collectionItem);
@@ -49,6 +52,7 @@ export class FilterComponent {
     this.fetchColValues();
     this.fetchCollections();
     this.route.queryParams.subscribe(keys => this.fetchItems(keys['id']));
+    setTimeout(() => this.items = this.documentService.lastFilter);
   }
 
   private fetchColNames() {
@@ -88,7 +92,7 @@ export class FilterComponent {
         item.equality = item.equality || this.defaultEquality(item.colValue);
         return [...result, item];
       }, [])
-      .subscribe(items => this.items = items);
+      .subscribe(items => this.items = [...this.items, ...items]);
   }
 
   private initTagOptions() {
