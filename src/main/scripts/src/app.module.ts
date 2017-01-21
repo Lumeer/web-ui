@@ -19,7 +19,7 @@ const appRoutes: Routes = [
 @NgModule({
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, { useHash: true }),
     ViewsModule,
     FormsModule,
     Ng2Webstorage,
