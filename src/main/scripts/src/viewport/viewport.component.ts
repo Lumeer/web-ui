@@ -27,7 +27,7 @@ export class ViewPortComponent {
         this.activeFilter = dataPayload.link;
       }
       this.activeItem = dataPayload.child;
-      let navigateTo: any = [`/${dataPayload.parent.id}`, `${dataPayload.child.id}`];
+      let navigateTo: any = [`${dataPayload.parent.id}`, `${dataPayload.child.id}`];
       if (dataPayload.link) {
         this.router.navigate(navigateTo, {queryParams: {id: dataPayload.link.id}});
       } else {

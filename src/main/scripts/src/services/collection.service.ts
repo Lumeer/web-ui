@@ -5,12 +5,13 @@ import {Http} from '@angular/http';
 @Injectable()
 export class CollectionService {
   // @LocalStorage('lastDocument') public activeDocument;
+  public allCollections: any;
 
   constructor(private http: Http) {
   }
 
   public getAllCollections() {
-    return this.http.get('/data/collection-data.json')
+    this.allCollections = this.http.get('data/collection-data.json')
       .map(res => res.json());
   }
 

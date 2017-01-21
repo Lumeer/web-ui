@@ -2,7 +2,11 @@
   <div class="document-filter">
     <filter-save (onChanged)="onFilterChanged($event)"></filter-save>
   </div>
-  <div class="document-preview">
-    <document-preview [documents]="documentInfoService.documents"></document-preview>
+  <div class="document-preview" >
+    <empty-result *ngIf="documentInfoService.lastFilter.length === 0"
+                  (onNewCollection)="collectionAdd($event)"
+                  (onNewDocument)="documentAdd($event)"
+                  (onShowCollection)="showCollection($event)"></empty-result>
+    <document-preview [documents]="documentInfoService.documents" *ngIf="documentInfoService.lastFilter.length !== 0"></document-preview>
   </div>
 </div>

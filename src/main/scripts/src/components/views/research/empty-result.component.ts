@@ -2,6 +2,7 @@ import {
   Component, Input, Output, EventEmitter, trigger, state, style, transition, animate,
   keyframes
 } from '@angular/core';
+import {CollectionService} from '../../../services/collection.service';
 
 @Component({
   selector: 'empty-result',
@@ -30,19 +31,33 @@ export class EmptyResultComponent {
   public newDocument: any = {links: []};
   public newCollection: any = {};
   public pickerVisible: boolean = false;
+  public placeholderTitle: string = 'Title name';
 
   @Output() public onNewDocument: EventEmitter<any> = new EventEmitter();
   @Output() public onNewCollection: EventEmitter<any> = new EventEmitter();
+  @Output() public onShowCollection: EventEmitter<any> = new EventEmitter();
+
+  constructor(public collectionService: CollectionService) {}
+
+  public ngOnInit() {
+    this.collectionService.getAllCollections();
+  }
 
   public saveDocument(dataPayload) {
-    console.log(dataPayload);
+    this.onNewDocument.emit(dataPayload);
+    this.newDocument = {};
   }
 
   public saveCollection(dataPayload) {
-    console.log(dataPayload);
+    this.onNewCollection.emit(dataPayload);
+    this.newCollection = {};
   }
 
   public onCollectionChange(payload) {
     this.newDocument.collection = payload;
+  }
+
+  public showCollection(collection) {
+    this.onShowCollection.emit(collection);
   }
 }

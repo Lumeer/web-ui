@@ -47,7 +47,7 @@ const viewsRoutes: Routes = [
         path: 'research',
         component: ResearchComponent,
         data: {
-          id: 'research', title: 'Research', icon: 'fa-search', contentUrl: '/data/queries.json'
+          id: 'research', title: 'Research', icon: 'fa-search'
         },
         children: []
       },

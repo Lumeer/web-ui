@@ -16,7 +16,8 @@ export class FilterSave {
   @Output() public onChanged: EventEmitter<any> = new EventEmitter();
   @Output() public onActionClick: EventEmitter<any> = new EventEmitter();
 
-  constructor(public documentInfoService: DocumentInfoService) {}
+  constructor(public documentInfoService: DocumentInfoService) {
+  }
 
   public onFilterChanged(dataPayload) {
     this.onChanged.emit(dataPayload);

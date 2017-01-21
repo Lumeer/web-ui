@@ -1,43 +1,7 @@
 <div class="row">
-  <div class="lum-document-preview col-lg-4">
-    <div class="lum-preview-content new-document-preview">
-      <div class="preview-icon"
-           (click)="pickerVisible = !pickerVisible"
-           [ngStyle]="{'background-color': newDocument.color}"
-           [ngClass]="{'no-rotate': newDocument.icon, 'no-color': newDocument.color}">
-        <i class="fa"
-           [ngClass]="newDocument.icon ? newDocument.icon : 'fa-times'"
-           aria-hidden="true"></i>
-      </div>
-
-      <form>
-        <input name="title" placeholder="New title" id="title" [(ngModel)]="newDocument.title" required>
-        <div>
-          <filter-input [value]="newDocument.collection"
-                        [placeholder]="'Select collection'"
-                        [source]="source"
-                        [options]="autocompleteOptions"
-                        (onChange)="onCollectionChange($event)"></filter-input>
-        </div>
-        <div class="submit-pane">
-          <div class="confirm">
-            <button type="button" class="btn btn-default btn-xs" (click)="saveDocument()">
-              <i class="fa fa-plus fa-2x"></i>
-            </button>
-          </div>
-
-          <div class="txt-lbl">
-            <p>Add Document</p>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="lum-collection-preview col-lg-4">
+  <div class="lum-collection-preview col-lg-3">
     <div class="lum-preview-content new-collection-preview">
-
-      <div class="preview-icon"
+      <div class="preview-icon collection-icon"
            (click)="pickerVisible = !pickerVisible"
            [ngStyle]="{'background-color': newCollection.color}"
            [ngClass]="{'no-rotate': newCollection.icon, 'no-color': newCollection.color}">
@@ -71,17 +35,71 @@
                [(ngModel)]="newCollection.title" required>
         <div class="new-collection-info">
         </div>
+        <div class="submit-pane">
+          <div class="confirm">
+            <button type="button" class="btn btn-default btn-xs" (click)="newCollectionInfo()">
+              <i class="fa fa-plus fa-2x"></i>
+            </button>
+          </div>
 
+          <div class="txt-lbl">
+            <p>Add Collection</p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="lum-document-preview col-lg-3">
+    <div class="lum-preview-content new-document-preview">
+      <div class="preview-icon"
+           [ngStyle]="{'background-color': newDocument.color}"
+           [ngClass]="{'no-rotate': newDocument.icon, 'no-color': newDocument.color}">
+        <i class="fa"
+           [ngClass]="newDocument.icon ? newDocument.icon : 'fa-times'"
+           aria-hidden="true"></i>
+      </div>
+
+      <form>
+        <input name="title" placeholder="New title" id="title" [(ngModel)]="newDocument.title" required>
+        <div>
+          <filter-input [value]="newDocument.collection"
+                        [placeholder]="'Select collection'"
+                        [source]="source"
+                        [options]="autocompleteOptions"
+                        (onChange)="onCollectionChange($event)"></filter-input>
+        </div>
+        <div class="submit-pane">
+          <div class="confirm">
+            <button type="button" class="btn btn-default btn-xs" (click)="saveDocument()">
+              <i class="fa fa-plus fa-2x"></i>
+            </button>
+          </div>
+
+          <div class="txt-lbl">
+            <p>Add Document</p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-3 lum-document-preview lum-collection-record"
+       *ngFor="let oneCollection of collectionService.allCollections | async">
+    <div class="lum-preview-content" (click)="showCollection(oneCollection)" >
+      <span>Document count: {{oneCollection.documentsCount}}</span>
+      <div class="info-pane">
         <div class="confirm">
-          <button type="button" class="btn btn-default btn-xs" (click)="newCollectionInfo()">
-            <i class="fa fa-plus fa-2x"></i>
+          <button type="button" class="btn btn-default btn-xs"
+                  [ngStyle]="{'background-color': 'transparent', color: oneCollection.iconColor}">
+            <i class="fa fa-2x" [ngClass]="oneCollection.icon"></i>
           </button>
         </div>
 
         <div class="txt-lbl">
-          <p>Add Collection</p>
+          <h4>{{oneCollection.name}}</h4>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>
