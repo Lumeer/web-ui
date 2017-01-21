@@ -4,10 +4,10 @@ import {Subject} from 'rxjs';
 
 @Injectable()
 export class QueryTagService {
-  public tagNamesUrl: string = 'data/colnames.json';
-  public tagValuesUrl: string = 'data/colvalues.json';
-  public collectionsUrl: string = 'data/collections.json';
-  public itemsUrl: string = 'data/queryitems.json';
+  public tagNamesUrl: string = `${window['lumeer'].constants.publicPath}/data/colnames.json`;
+  public tagValuesUrl: string = `${window['lumeer'].constants.publicPath}/data/colvalues.json`;
+  public collectionsUrl: string = `${window['lumeer'].constants.publicPath}/data/collections.json`;
+  public itemsUrl: string = `${window['lumeer'].constants.publicPath}/data/queryitems.json`;
   public filterUpdateSubject: Subject<any> = new Subject();
 
   constructor(private http: Http) {}

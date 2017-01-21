@@ -18,7 +18,7 @@ export class DocumentInfoService {
   public fetchDocumentPreviewsFromFilterId(filterId) {
     //TODO: when filtering fetch filter ID and name here and store it to some class variables
     this.filterId = filterId;
-    this.http.get('data/documentpreview.json')
+    this.http.get(`${window['lumeer'].constants.publicPath}/data/documentpreview.json`)
       .map(res => res.json())
       .subscribe(documents => this.documents = documents);
   }
@@ -26,7 +26,7 @@ export class DocumentInfoService {
   public fetchDocumentPreviewsFromFilter(filter) {
     //TODO: when filtering fetch filter ID and name here and store it to some class variables
     this.lastFilter = filter;
-    this.http.get('data/documentpreview.json')
+    this.http.get(`${window['lumeer'].constants.publicPath}/data/documentpreview.json`)
       .map(res => res.json())
       .subscribe(documents => this.documents = documents);
   }

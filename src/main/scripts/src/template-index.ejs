@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <base href="/">
+    <base href="<%= htmlWebpackPlugin.options.publicPath %>">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.rawgit.com/keycloak/keycloak/master/adapters/oidc/js/src/main/resources/keycloak.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
     <title><%= htmlWebpackPlugin.options.title %></title>
-    <link href="<%= htmlWebpackPlugin.files.css %>" rel="stylesheet">
+    <script type="text/javascript">
+        var lumeer = {
+            constants: {
+                publicPath: '/ui'
+            }
+        }
+    </script>
 </head>
 <body>
 <view-port></view-port>

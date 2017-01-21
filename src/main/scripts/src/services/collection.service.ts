@@ -11,7 +11,7 @@ export class CollectionService {
   }
 
   public getAllCollections() {
-    this.allCollections = this.http.get('data/collection-data.json')
+    this.allCollections = this.http.get(`${window['lumeer'].constants.publicPath}/data/collection-data.json`)
       .map(res => res.json());
   }
 
