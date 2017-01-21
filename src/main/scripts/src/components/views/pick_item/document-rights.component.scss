@@ -19,10 +19,10 @@ document-rights {
 
       .label {
         color: black;
-        background: rgba(255, 0, 0, 0.5);
+        background: $brand-danger;
 
         &.active {
-          background-color: rgba(0, 255, 0, 0.5);
+          background-color: $brand-success;
         }
       }
     }

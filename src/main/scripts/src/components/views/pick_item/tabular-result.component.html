@@ -5,9 +5,9 @@
   </div>
   <div class="tabular-result-content  col-lg-12">
     <perfect-scrollbar>
-      <div class="panel-group " id="accordion">
+      <div class="panel-group" id="accordionTabResult">
         <div class="panel panel-default" *ngFor="let d of data; let ix = index">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ix}}"
+          <a data-toggle="collapse" data-parent="#accordionTabResult" href="#collapsets{{ix}}"
              [ngStyle]="{'color': d.collection.color}">
             <div class="panel-heading">
               <h4 class="panel-title">
@@ -19,27 +19,12 @@
               </h4>
             </div>
           </a>
-          <div id="collapse{{ix}}" class="panel-collapse collapse">
+          <div id="collapsets{{ix}}" class="panel-collapse collapse">
             <perfect-scrollbar>
               <div class="panel-body">
-                <div class="row-hover" *ngFor="let doc of d.documents" (click)="selectItem(doc)">
-                  <table class="table">
-                    <thead>
-                    <tr>
-                      <th *ngFor="let d of doc | keys">
-                        {{d.key}}
-                      </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                      <td *ngFor="let d of doc | keys">
-                        {{d.value}}
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <documents-rows [columns]="d.header"
+                                [documents]="d.documents"
+                                (onSelect)="selectItem($event)"></documents-rows>
               </div>
             </perfect-scrollbar>
           </div>

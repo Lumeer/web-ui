@@ -1,6 +1,8 @@
 [
   {
     "title": "Amici",
+    "collection": "Restaurant",
+    "default_value": "title",
     "values": [
       "Cheeseburger",
       "Burger",
@@ -21,6 +23,8 @@
   },
   {
     "title": "McDonald's",
+    "collection": "Restaurant",
+    "default_value": "title",
     "values": [
       "Cheesburger",
       "Burger"
@@ -53,6 +57,8 @@
   },
   {
     "title": "Don Antonio",
+    "collection": "Restaurant",
+    "default_value": "title",
     "values": [
       "Cheeseburger",
       "American Burger",
@@ -86,6 +92,8 @@
   },
   {
     "title": "Don Antonio",
+    "collection": "Restaurant",
+    "default_value": "title",
     "values": [
       "Cheeseburger",
       "American Burger",

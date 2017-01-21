@@ -1,3 +1,10 @@
 <div class="row">
-  Links content
+  <div class="col-lg-6">
+    <h2>Inbound</h2>
+    <links [links]="links.from" [type]="'from'"></links>
+  </div>
+  <div class="col-lg-6">
+    <h2>Outbound</h2>
+    <links [links]="links.to" [type]="'to'"></links>
+  </div>
 </div>

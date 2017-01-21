@@ -1,0 +1,27 @@
+<div class="panel-group " id="accordion{{type}}">
+  <div class="panel panel-default" *ngFor="let d of links; let ix = index">
+    <a data-toggle="collapse" [attr.data-parent]="'#accordion' + type" href="#collapse{{type}}{{ix}}"
+       [ngStyle]="{'color': d.collection.color}">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+            <span>
+            <i class="fa" [ngClass]="d.link.type === 'from' ? 'sign-out' : 'sign-in'" aria-hidden="true"></i>
+            <i class="fa" [ngClass]="d.collection.icon" aria-hidden="true"></i>
+            {{d.collection.name}} : {{d.link.role}}
+              <span class="badge badge-info">{{d.documentsDoc.length}}</span>
+            </span>
+        </h4>
+      </div>
+    </a>
+    <div id="collapse{{type}}{{ix}}" class="panel-collapse collapse">
+      <perfect-scrollbar>
+        <div class="panel-body">
+          <documents-links-rows [documentsDoc]="d.documentsDoc"
+                                [documentsLink]="d.documentsLink"
+                                [headerAttrsDoc]="d.headerAttrsDoc"
+                                [headerAttrsLink]="d.headerAttrsLink"></documents-links-rows>
+        </div>
+      </perfect-scrollbar>
+    </div>
+  </div>
+</div>

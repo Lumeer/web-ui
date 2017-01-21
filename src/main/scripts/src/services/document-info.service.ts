@@ -9,8 +9,8 @@ export class DocumentInfoService {
   public filterResults: any[];
   public documentDetail: any;
   public filterSaveSubject: Subject<any> = new Subject();
-  @LocalStorage() public lastFilter;
-  @LocalStorage() public filterId;
+  public lastFilter = [];
+  public filterId;
 
   constructor(private http: Http) {
   }

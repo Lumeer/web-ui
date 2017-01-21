@@ -4,7 +4,7 @@
     <i class="fa" [ngClass]="document.icon"
        aria-hidden="true"></i>
   </div>
-  <div class="document-title">Document title</div>
+  <div class="document-title">{{document.collection}}: {{document[document.default_value]}}</div>
   <div>
     <ul class="list-group" #previewContent>
 

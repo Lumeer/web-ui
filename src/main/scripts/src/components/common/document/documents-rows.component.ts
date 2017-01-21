@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'documents-rows',
@@ -9,5 +9,10 @@ export class DocumentsRowsComponent {
 
   @Input() public documents: any;
   @Input() public columns: any;
+  @Output() public onSelect: EventEmitter<any> = new EventEmitter();
+
+  private selectDocument(doc) {
+    this.onSelect.emit(doc);
+  }
 
 }

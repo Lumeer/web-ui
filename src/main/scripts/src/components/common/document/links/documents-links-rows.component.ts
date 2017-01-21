@@ -7,6 +7,8 @@ import {Component, Input} from '@angular/core';
 })
 export class DocumentLinksRowsComponent {
 
-  @Input() public data: any;
-
+  @Input() public headerAttrsLink: string[];
+  @Input() public documentsLink: any[];
+  @Input() public headerAttrsDoc: string[];
+  @Input() public documentsDoc: any[];
 }

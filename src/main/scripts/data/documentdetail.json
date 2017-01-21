@@ -268,7 +268,261 @@
     }
   ],
   "links": {
-    "from": {},
-    "to": {}
+    "from": [
+      {
+        "collection": {
+          "name": "Bicycles",
+          "icon": "fa-bicycle",
+          "color": "#795548"
+        },
+        "link": {
+          "type": "from",
+          "role": "Fast"
+        },
+        "headerAttrsLink": [
+          "AttrLink1",
+          "AttrLink2",
+          "AttrLink3",
+          "AttrLink4"
+        ],
+        "headerAttrsDoc": [
+          "AttrDoc1",
+          "AttrDoc2",
+          "AttrDoc3",
+          "AttrDoc4",
+          "AttrDoc5",
+          "AttrDoc6",
+          "AttrDoc7",
+          "AttrDoc8",
+          "AttrDoc9",
+          "AttrDoc10",
+          "AttrDoc11",
+          "AttrDoc12"
+        ],
+        "documentsLink": [
+          {
+            "AttrLink1": "ValueLink1",
+            "AttrLink2": "ValueLink2",
+            "AttrLink3": "ValueLink3",
+            "AttrLink4": "ValueLink4"
+          },
+          {
+            "AttrLink1": "ValueLink1",
+            "AttrLink3": "ValueLink3",
+            "AttrLink4": "ValueLink4"
+          },
+          {
+            "AttrLink1": "ValueLink1",
+            "AttrLink4": "ValueLink4"
+          }
+        ],
+        "documentsDoc": [
+          {
+            "AttrDoc1": "ValueDoc1",
+            "AttrDoc2": "ValueDoc2",
+            "AttrDoc3": "ValueDoc3",
+            "AttrDoc4": "ValueDoc4",
+            "AttrDoc5": "ValueDoc5",
+            "AttrDoc7": "ValueDoc7",
+            "AttrDoc8": "ValueDoc8",
+            "AttrDoc9": "ValueDoc9",
+            "AttrDoc11": "ValueDoc11",
+            "AttrDoc12": "ValueDoc12"
+          },
+          {
+            "AttrDoc1": "ValueDoc1",
+            "AttrDoc3": "ValueDoc3",
+            "AttrDoc4": "ValueDoc4",
+            "AttrDoc5": "ValueDoc5",
+            "AttrDoc6": "ValueDoc6",
+            "AttrDoc7": "ValueDoc7",
+            "AttrDoc8": "ValueDoc8",
+            "AttrDoc9": "ValueDoc9",
+            "AttrDoc11": "ValueDoc11",
+            "AttrDoc12": "ValueDoc12"
+          },
+          {
+            "AttrDoc1": "ValueDoc1",
+            "AttrDoc3": "ValueDoc3",
+            "AttrDoc4": "ValueDoc4",
+            "AttrDoc5": "ValueDoc5",
+            "AttrDoc6": "ValueDoc6",
+            "AttrDoc7": "ValueDoc7",
+            "AttrDoc8": "ValueDoc8",
+            "AttrDoc9": "ValueDoc9"
+          }
+        ]
+      }
+    ],
+    "to": [
+      {
+        "collection": {
+          "name": "Money",
+          "icon": "fa-money",
+          "color": "#78909C"
+        },
+        "link": {
+          "type": "to",
+          "role": "Billions"
+        },
+        "headerAttrsLink": [
+          "AttrLink1",
+          "AttrLink2",
+          "AttrLink3",
+          "AttrLink4"
+        ],
+        "headerAttrsDoc": [
+          "AttrDoc1",
+          "AttrDoc2",
+          "AttrDoc3",
+          "AttrDoc4",
+          "AttrDoc5",
+          "AttrDoc6",
+          "AttrDoc7",
+          "AttrDoc8",
+          "AttrDoc9",
+          "AttrDoc10",
+          "AttrDoc11",
+          "AttrDoc12"
+        ],
+        "documentsLink": [
+          {
+            "AttrLink1": "ValueLink1",
+            "AttrLink2": "ValueLink2",
+            "AttrLink3": "ValueLink3",
+            "AttrLink4": "ValueLink4"
+          },
+          {
+            "AttrLink1": "ValueLink1",
+            "AttrLink3": "ValueLink3",
+            "AttrLink4": "ValueLink4"
+          },
+          {
+            "AttrLink1": "ValueLink1",
+            "AttrLink4": "ValueLink4"
+          }
+        ],
+        "documentsDoc": [
+          {
+            "AttrDoc1": "ValueDoc1",
+            "AttrDoc2": "ValueDoc2",
+            "AttrDoc3": "ValueDoc3",
+            "AttrDoc4": "ValueDoc4",
+            "AttrDoc5": "ValueDoc5",
+            "AttrDoc7": "ValueDoc7",
+            "AttrDoc8": "ValueDoc8",
+            "AttrDoc9": "ValueDoc9",
+            "AttrDoc11": "ValueDoc11",
+            "AttrDoc12": "ValueDoc12"
+          },
+          {
+            "AttrDoc1": "ValueDoc1",
+            "AttrDoc3": "ValueDoc3",
+            "AttrDoc4": "ValueDoc4",
+            "AttrDoc5": "ValueDoc5",
+            "AttrDoc6": "ValueDoc6",
+            "AttrDoc7": "ValueDoc7",
+            "AttrDoc8": "ValueDoc8",
+            "AttrDoc9": "ValueDoc9",
+            "AttrDoc11": "ValueDoc11",
+            "AttrDoc12": "ValueDoc12"
+          },
+          {
+            "AttrDoc1": "ValueDoc1",
+            "AttrDoc3": "ValueDoc3",
+            "AttrDoc4": "ValueDoc4",
+            "AttrDoc5": "ValueDoc5",
+            "AttrDoc6": "ValueDoc6",
+            "AttrDoc7": "ValueDoc7",
+            "AttrDoc8": "ValueDoc8",
+            "AttrDoc9": "ValueDoc9"
+          }
+        ]
+      },
+      {
+        "collection": {
+          "name": "Trophy",
+          "icon": "fa-trophy",
+          "color": "#FF5722"
+        },
+        "link": {
+          "type": "to",
+          "role": "Competition"
+        },
+        "headerAttrsLink": [
+          "AttrLink1",
+          "AttrLink2",
+          "AttrLink3",
+          "AttrLink4"
+        ],
+        "headerAttrsDoc": [
+          "AttrDoc1",
+          "AttrDoc2",
+          "AttrDoc3",
+          "AttrDoc4",
+          "AttrDoc5",
+          "AttrDoc6",
+          "AttrDoc7",
+          "AttrDoc8",
+          "AttrDoc9",
+          "AttrDoc10",
+          "AttrDoc11",
+          "AttrDoc12"
+        ],
+        "documentsLink": [
+          {
+            "AttrLink1": "ValueLink1",
+            "AttrLink2": "ValueLink2",
+            "AttrLink3": "ValueLink3",
+            "AttrLink4": "ValueLink4"
+          },
+          {
+            "AttrLink1": "ValueLink1",
+            "AttrLink3": "ValueLink3",
+            "AttrLink4": "ValueLink4"
+          },
+          {
+            "AttrLink1": "ValueLink1",
+            "AttrLink4": "ValueLink4"
+          }
+        ],
+        "documentsDoc": [
+          {
+            "AttrDoc1": "ValueDoc1",
+            "AttrDoc2": "ValueDoc2",
+            "AttrDoc3": "ValueDoc3",
+            "AttrDoc4": "ValueDoc4",
+            "AttrDoc5": "ValueDoc5",
+            "AttrDoc7": "ValueDoc7",
+            "AttrDoc8": "ValueDoc8",
+            "AttrDoc9": "ValueDoc9",
+            "AttrDoc11": "ValueDoc11",
+            "AttrDoc12": "ValueDoc12"
+          },
+          {
+            "AttrDoc1": "ValueDoc1",
+            "AttrDoc3": "ValueDoc3",
+            "AttrDoc4": "ValueDoc4",
+            "AttrDoc5": "ValueDoc5",
+            "AttrDoc6": "ValueDoc6",
+            "AttrDoc7": "ValueDoc7",
+            "AttrDoc8": "ValueDoc8",
+            "AttrDoc9": "ValueDoc9",
+            "AttrDoc11": "ValueDoc11",
+            "AttrDoc12": "ValueDoc12"
+          },
+          {
+            "AttrDoc1": "ValueDoc1",
+            "AttrDoc3": "ValueDoc3",
+            "AttrDoc4": "ValueDoc4",
+            "AttrDoc5": "ValueDoc5",
+            "AttrDoc6": "ValueDoc6",
+            "AttrDoc7": "ValueDoc7",
+            "AttrDoc8": "ValueDoc8",
+            "AttrDoc9": "ValueDoc9"
+          }
+        ]
+      }
+    ]
   }
 }

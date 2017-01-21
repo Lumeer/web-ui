@@ -5,6 +5,23 @@
       "color": "#FF4040",
       "icon": "fa-car"
     },
+    "header": [
+      "attr1",
+      "attr2",
+      "attr3",
+      "attr4",
+      "attr5",
+      "attr6",
+      "attr7",
+      "attr8",
+      "attr9",
+      "attr10",
+      "attr11",
+      "attr12",
+      "attr13",
+      "attr14",
+      "attr15"
+    ],
     "documents": [
       {
         "_id" :"id1",
@@ -55,6 +72,16 @@
       "color": "#76EEC6",
       "icon": "fa-magic"
     },
+    "header": [
+      "attr1",
+      "attr2",
+      "attr3",
+      "attr4",
+      "attr5",
+      "attr6",
+      "attr7",
+      "attr8"
+    ],
     "documents": [
       {
         "_id" :"id3",
@@ -73,6 +100,16 @@
       "color": "#FBC02D",
       "icon": "fa-tree"
     },
+    "header": [
+      "attr1",
+      "attr2",
+      "attr3",
+      "attr4",
+      "attr5",
+      "attr6",
+      "attr7",
+      "attr8"
+    ],
     "documents": [
       {
         "_id" :"id4",
