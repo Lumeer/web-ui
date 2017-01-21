@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 
 @Component({
   selector: 'document-link-row',
-  template: require('./document-link-row.component.html'),
-  styles: [require('./document-link-row.component.scss').toString()]
+  template: require('./documents-links-rows.component.html'),
+  styles: [require('./documents-links-rows.component.scss').toString()]
 })
 export class DocumentLinkRowComponent {
 
