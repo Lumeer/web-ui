@@ -89,7 +89,9 @@ export class DocumentInfoComponent {
     this.documentService.fetchFilterResultsFromFilter({});
     const parentData: any = this.activatedRoute.parent.snapshot.data;
     this.router.navigate([`/${parentData.id}`, LINK_ID]);
-    $event.stopPropagation();
-    $event.preventDefault();
+    if ($event) {
+      $event.stopPropagation();
+      $event.preventDefault();
+    }
   }
 }
