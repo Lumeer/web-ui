@@ -11,7 +11,7 @@ export class DocumentsRowsComponent {
   @Input() public columns: any;
   @Output() public onSelect: EventEmitter<any> = new EventEmitter();
 
-  private selectDocument(doc){
+  private selectDocument(doc) {
     this.onSelect.emit(doc);
   }
 
