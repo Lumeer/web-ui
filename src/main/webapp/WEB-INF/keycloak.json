@@ -6,6 +6,5 @@
   "public-client": true,
   "disable-trust-manager": "false",
   "truststore": "${jboss.server.config.dir}/cacerts.jks",
-  "truststore-password": "geheim",
-  "disabled": "true"
+  "truststore-password": "geheim"
 }
