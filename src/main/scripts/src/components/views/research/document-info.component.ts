@@ -3,6 +3,10 @@ import {
   ViewChildren, QueryList, ElementRef, Output, EventEmitter
 } from '@angular/core';
 import {DocumentService} from '../../../services/document.service';
+import {Router, ActivatedRoute} from '@angular/router';
+
+const LINK_ID = 'pick_item';
+
 @Component({
   selector: 'document-info',
   template: require('./document-info.component.html'),
@@ -35,14 +39,12 @@ export class DocumentInfoComponent {
   @Input() public document: any;
   @Output() public documentChange: any = new EventEmitter();
 
-  constructor(private documentService: DocumentService) {
+  constructor(private documentService: DocumentService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute) {
     if (window.innerWidth <= 360) {
       this.openLinks = 1;
     }
-  }
-
-  public onMetadataToggleClick() {
-    this.metadataVisible = !this.metadataVisible;
   }
 
   public onVersionsToggleClick() {
@@ -83,6 +85,10 @@ export class DocumentInfoComponent {
   }
 
   public onEditLinksClick($event) {
+    this.documentService.fetchDocumentDetailFromId(10);
+    this.documentService.fetchFilterResultsFromFilter({});
+    const parentData: any = this.activatedRoute.parent.snapshot.data;
+    this.router.navigate([`/${parentData.id}`, LINK_ID]);
     $event.stopPropagation();
     $event.preventDefault();
   }
