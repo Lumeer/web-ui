@@ -1,59 +1,8 @@
 <document-info [(document)]="activeDocument">
 </document-info>
 <div class="row">
-  <div class="lum-document-preview col-lg-4">
-    <div class="lum-preview-content new-document-preview">
-      <div class="preview-icon"
-           (click)="pickerVisible = !pickerVisible"
-           [ngStyle]="{'background-color': newDocument.color}"
-           [ngClass]="{'no-rotate': newDocument.icon, 'no-color': newDocument.color}">
-        <i class="fa"
-           [ngClass]="newDocument.icon ? newDocument.icon : 'fa-times'"
-           aria-hidden="true"></i>
-      </div>
-      <div class="color-icon" *ngIf="pickerVisible" [@animateVisible]="'in'">
-        <div class="color-picker">
-          <span *ngFor="let oneColor of colors"
-                [ngClass]="{active: oneColor === newDocument.color}"
-                (click)="setColor(oneColor)"
-                [ngStyle]="{'background': oneColor}"></span>
-        </div>
-        <div class="icon-picker">
-          <span *ngFor="let oneIcon of icons"
-                (click)="setIcon(oneIcon)"
-                [ngClass]="{active: oneIcon === newDocument.icon}">
-            <i class="fa" [ngClass]="oneIcon" aria-hidden="true"></i>
-          </span>
-        </div>
-        <div class="confirm">
-          <input type="button" value="Ok" (click)="pickerVisible = false">
-        </div>
-      </div>
-      <form>
-        <input name="title" placeholder="New title" id="title" [(ngModel)]="newDocument.title" required>
-        <div>
-          <filter-input [value]="newDocument.collection"
-                        [placeholder]="'Select collection'"
-                        [source]="source"
-                        [options]="autocompleteOptions"
-                        (onChange)="onCollectionChange($event)"></filter-input>
-        </div>
-        <div class="submit-pane">
-          <div class="confirm">
-            <button type="button" class="btn btn-default btn-xs" (click)="newDocumentInfo()">
-              <i class="fa fa-plus fa-2x"></i>
-            </button>
-          </div>
-
-          <div class="txt-lbl">
-            <p>Add Document</p>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
   <div *ngFor="let document of documents; let documentIndex = index"
-       class="lum-document-preview col-lg-4 col-md-4 col-xs-6">
+       class="lum-document-preview col-lg-3 col-md-4 col-xs-6">
     <document-post-it [document]="document" (eventEmitter)="setActiveDocument($event)"></document-post-it>
   </div>
 </div>

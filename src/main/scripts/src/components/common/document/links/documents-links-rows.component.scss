@@ -1,2 +1,12 @@
 @import '../../../../styles/variables';
-document-link-attributes {}
+documents-links-rows {
+  .link-table {
+    display: flex;
+  }
+  documents-links-attributes {
+    max-width: 400px;
+  }
+  documents-rows {
+    flex-grow: 1;
+  }
+}

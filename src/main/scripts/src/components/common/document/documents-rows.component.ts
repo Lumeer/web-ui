@@ -7,8 +7,7 @@ import {Component, Input} from '@angular/core';
 })
 export class DocumentsRowsComponent {
 
-  @Input() public document: any;
-
-
+  @Input() public documents: any;
+  @Input() public columns: any;
 
 }

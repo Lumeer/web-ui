@@ -9,12 +9,18 @@ import {FilterInput} from './tag-input/filter-input.component';
 import {FilterComponent} from './tag-input/filter.component';
 import {FilterSave} from './tag-input/filter-save.component';
 import {UserTagComponent} from './user-tile/user-tag.component';
+import {DocumentLinksRowsComponent} from './document/links/documents-links-rows.component';
+import {DocumentLinksComponent} from '../views/pick_item/document-links.component';
+import {DocumentsRowsComponent} from './document/documents-rows.component';
+import {DocumentsLinksAttributesComponent} from './document/links/documents-links-attributes.component';
+import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
 
 @NgModule({
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    PerfectScrollbarModule
   ],
   declarations: [
     TagInputComponent,
@@ -23,7 +29,10 @@ import {UserTagComponent} from './user-tile/user-tag.component';
     FilterInput,
     FilterSave,
     FilterComponent,
-    UserTagComponent
+    UserTagComponent,
+    DocumentLinksRowsComponent,
+    DocumentsRowsComponent,
+    DocumentsLinksAttributesComponent
   ],
   exports: [
     TagInputComponent,
@@ -31,7 +40,10 @@ import {UserTagComponent} from './user-tile/user-tag.component';
     FilterInput,
     FilterSave,
     FilterComponent,
-    UserTagComponent
+    UserTagComponent,
+    DocumentLinksRowsComponent,
+    DocumentsRowsComponent,
+    DocumentsLinksAttributesComponent
   ]
 })
 

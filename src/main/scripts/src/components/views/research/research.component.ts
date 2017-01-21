@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Http} from '@angular/http';
 import {DocumentInfoService} from '../../../services/document-info.service';
+import {QueryTagService} from '../../../services/query-tags.service';
 
 @Component({
   selector: 'views-research',
@@ -13,7 +14,10 @@ export class ResearchComponent {
   public activeQuery: any;
   public documents: any;
 
-  constructor(private route: ActivatedRoute, public documentInfoService: DocumentInfoService) {
+  constructor(private route: ActivatedRoute,
+              public documentInfoService: DocumentInfoService,
+              public queryService: QueryTagService) {
+    console.log(this);
   }
 
   public ngOnInit() {
@@ -27,5 +31,17 @@ export class ResearchComponent {
 
   public onFilterChanged(dataPayload) {
     this.documentInfoService.fetchDocumentPreviewsFromFilter(dataPayload);
+  }
+
+  public collectionAdd(dataPayload) {
+    console.log(dataPayload);
+  }
+
+  public documentAdd(dataPayload) {
+    console.log(dataPayload);
+  }
+
+  public showCollection(dataPayload) {
+    this.queryService.addNewCollectionToFilter(dataPayload);
   }
 }

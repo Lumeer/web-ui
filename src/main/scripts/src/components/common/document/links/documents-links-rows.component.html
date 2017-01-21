@@ -1,3 +1,4 @@
-<div class="document-link-row">
-
+<div class="row link-table" *ngIf="data">
+  <documents-links-attributes [documents]="data.linkDocuments" [columns]="data.linkColumns"></documents-links-attributes>
+  <documents-rows [documents]="data.documents" [columns]="data.columns"></documents-rows>
 </div>

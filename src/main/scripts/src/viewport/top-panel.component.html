@@ -1,16 +1,16 @@
 <div class="lum-top-nav lum-white-container">
   <div class="row lum-credentials">
+    <div class="col-lg-1 lum-nav-toggle">
+      <a href="javascript:;" class="lum-nav-collaps" (click)="onCollapse()">
+        <i class="fa fa-align-justify" aria-hidden="true"></i>
+      </a>
+    </div>
     <div class="col-sm-12 col-lg-2 lum-options pull-right">
       <a><i class="fa fa-cog" aria-hidden="true"></i> Settings</a>
       <a (click)="onLogout()"><i class="fa fa-sign-in" aria-hidden="true"></i> Log Out</a>
     </div>
   </div>
   <div class="row">
-    <div class="col-lg-1 lum-nav-toggle">
-      <a href="javascript:;" class="lum-nav-collaps" (click)="onCollapse()">
-        <i class="fa fa-align-justify" aria-hidden="true"></i>
-      </a>
-    </div>
     <div class="col-lg-9 breadcrumbs">
       <h4>{{currentView && currentView.title}}</h4>
       <ol>
