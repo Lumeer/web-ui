@@ -1,7 +1,7 @@
 @import "../../../styles/variables";
 
-document-preview {
-  .submit-pane {
+empty-result {
+  .submit-pane, .info-pane {
     position: absolute;
     right: 40%;
     top: 40%;
@@ -9,12 +9,28 @@ document-preview {
     .confirm {
       .btn {
         border-radius: 25px;
+        border-color: transparent;
       }
     }
     .txt-lbl {
       text-align: center;
     }
   }
+
+  .lum-collection-record, .new-document-preview {
+    & .submit-pane, & .info-pane {
+      top: 30%;
+    }
+  }
+
+  .lum-collection-record {
+    .info-pane {
+      width: 100%;
+      right: 0;
+      text-align: center;
+    }
+  }
+
 
   .row {
     margin-left: 0 !important;
@@ -44,9 +60,13 @@ document-preview {
     text-align: center;
     border-radius: 25px;
     z-index: 1;
+
+    &.collection-icon {
+      left: 20px;
+    }
   }
 
-  .new-document-preview {
+  .new-document-preview, .new-collection-preview {
     background: $secondary-color;
     min-height: 125px;
 

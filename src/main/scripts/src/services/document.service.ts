@@ -24,7 +24,7 @@ export class DocumentService {
 
   public fetchDocumentVersions() {
     if (this.activeDocument) {
-      this.http.get('/data/documentversions.json')
+      this.http.get(`${window['lumeer'].constants.publicPath}/data/documentversions.json`)
         .map(res => res.json())
         .subscribe(versions => this.activeDocument.versions = versions);
     }
@@ -36,17 +36,17 @@ export class DocumentService {
   }
 
   public fetchDocumentHistory() {
-    this.activeDocument.history = this.http.get('/data/history.json')
+    this.activeDocument.history = this.http.get(`${window['lumeer'].constants.publicPath}/data/history.json`)
       .map(res => res.json());
   }
 
   public fetchDocumentChat() {
-    this.activeDocument.chat = this.http.get('/data/chat.json')
+    this.activeDocument.chat = this.http.get(`${window['lumeer'].constants.publicPath}/data/chat.json`)
       .map(res => res.json());
   }
 
   private fetchLinkInfo(link) {
-    link.info = this.http.get('/data/linkinfo.json')
+    link.info = this.http.get(`${window['lumeer'].constants.publicPath}/data/linkinfo.json`)
       .map(res => res.json());
   }
 
@@ -54,7 +54,7 @@ export class DocumentService {
     if (!id) {
       this.documentDetail = undefined;
     } else {
-      this.http.get('/data/documentdetail.json')
+      this.http.get(`${window['lumeer'].constants.publicPath}/data/documentdetail.json`)
         .map(res => res.json())
         .map(documentDetail => {
           documentDetail.rights = documentDetail.rights.map(oneRight => this.updateRights(oneRight));
@@ -69,14 +69,14 @@ export class DocumentService {
       this.filterResults = undefined;
       this.documentDetail = undefined;
     } else {
-      this.http.get('/data/documentsearch.json')
+      this.http.get(`${window['lumeer'].constants.publicPath}/data/documentsearch.json`)
         .map(res => res.json())
         .subscribe(filterResults => this.filterResults = filterResults);
     }
   }
 
   public fetchDocumentDetailVersions() {
-    this.http.get('/data/documentversions.json')
+    this.http.get(`${window['lumeer'].constants.publicPath}/data/documentversions.json`)
       .map(res => res.json())
       .subscribe(documentVersions => this.documentDetail.versions = documentVersions);
   }

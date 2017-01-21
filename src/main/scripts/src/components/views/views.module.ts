@@ -31,6 +31,7 @@ import {DocumentInfoService} from '../../services/document-info.service';
 import {HistoryChatComponent} from './active_table/history-chat.component';
 import {CollectionAddComponent} from './collections/collection-add.component';
 import {CollectionService} from '../../services/collection.service';
+import {EmptyResultComponent} from './research/empty-result.component';
 
 const viewsRoutes: Routes = [
   {
@@ -46,7 +47,7 @@ const viewsRoutes: Routes = [
         path: 'research',
         component: ResearchComponent,
         data: {
-          id: 'research', title: 'Research', icon: 'fa-search', contentUrl: '/data/queries.json'
+          id: 'research', title: 'Research', icon: 'fa-search'
         },
         children: []
       },
@@ -135,6 +136,7 @@ const viewsRoutes: Routes = [
     DocumentContentComponent,
     KeysPipe,
     MetaKeysPipe,
+    EmptyResultComponent,
     CollectionAddComponent
   ],
   exports: []

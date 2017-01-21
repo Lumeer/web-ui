@@ -6,10 +6,10 @@ document-post-it {
     background: $secondary-color;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
     padding: 10px;
-    height: 360px;
+    height: 270px;
 
     ul:not(.nested) {
-      height: 275px;
+      height: 180px;
       overflow: hidden;
     }
 
@@ -26,7 +26,7 @@ document-post-it {
 
     &.active {
       position: absolute;
-      height: 105%;
+      height: inherit;
       box-sizing: content-box;
       z-index: 8;
       width: 90%;

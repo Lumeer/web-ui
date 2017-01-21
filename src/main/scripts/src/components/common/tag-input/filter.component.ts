@@ -18,6 +18,12 @@ const SORT_BY = {text: 'Sort By', type: 'sortby'};
 export class FilterComponent {
   constructor(private route: ActivatedRoute, private queryTagService: QueryTagService) {
     this.initTagOptions();
+    this.queryTagService.filterUpdateSubject.subscribe(eventData => {
+      let newCollection = _.cloneDeep(this.collectionItem);
+      newCollection.colValue = eventData.collection.name;
+      this.items.push(newCollection);
+      this.filterChanged.emit(this.items);
+    });
   }
 
   @Output() public filterChanged: EventEmitter<any> = new EventEmitter();
