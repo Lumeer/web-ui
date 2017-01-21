@@ -7,7 +7,7 @@ import {Component, Input} from '@angular/core';
 })
 export class LinksComponent {
 
-  @Input() links: any;
-  @Input() type: string;
+  @Input() public links: any;
+  @Input() public type: string;
 
 }
