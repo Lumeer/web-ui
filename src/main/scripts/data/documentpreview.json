@@ -19,7 +19,17 @@
         "icon": "fa-picture-o",
         "color": "#76EEC6"
       },
-    "links": []
+    "links": [],
+    "content": {
+      "name" : "Cheesburger",
+      "weight" : "300 g",
+      "ingredients" : {
+        "meat" : "150 g",
+        "burger" : "100 g",
+        "vegetables" : "49 g",
+        "salt" : "1 g"
+      }
+    }
   },
   {
     "title": "McDonald's",
@@ -53,7 +63,15 @@
         "id": 1,
         "color": "#76EEC6"
       }
-    ]
+    ],
+    "content": {
+      "name" : "James",
+      "surname" : "Bond",
+      "grades" : {
+        "math" : "B",
+        "english" : "A"
+      }
+    }
   },
   {
     "title": "Don Antonio",
@@ -88,7 +106,15 @@
         "id": 1,
         "color": "#76EEC6"
       }
-    ]
+    ],
+    "content": {
+      "name" : "Mr Bean",
+      "address" : {
+        "street": "Dawning Street 9",
+        "city": "London",
+        "state" : "UK"
+      }
+    }
   },
   {
     "title": "Don Antonio",
@@ -123,6 +149,17 @@
         "id": 1,
         "color": "#76EEC6"
       }
-    ]
+    ],
+    "content": {
+      "name" : "Hamburger",
+      "weight" : "300 g",
+      "ingredients" : {
+        "meat" : "150 g",
+        "burger" : "100 g",
+        "vegetables" : "49 g",
+        "salt" : "1 g"
+      },
+      "price" : "5 dollars"
+    }
   }
 ]

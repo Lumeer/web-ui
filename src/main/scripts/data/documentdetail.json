@@ -4,14 +4,14 @@
     "color": "#76EEC6",
     "icon": "fa-magic",
     "default": {
-      "key": "Description",
-      "value": "Absolutely magic collection"
+      "key": "Name",
+      "value": "Harry"
     }
   },
   "attributes": [
     {
-      "key": "attr1",
-      "value": "value1",
+      "key": "Name",
+      "value": "Harry",
       "type": "string",
       "constraints": {
         "maxLength": 10,
@@ -19,8 +19,8 @@
       }
     },
     {
-      "key": "attr2",
-      "value": "value2",
+      "key": "Surname",
+      "value": "Potter",
       "type": "string",
       "constraints": {
         "maxLength": 10,
@@ -28,16 +28,16 @@
       }
     },
     {
-      "key": "attr3",
-      "value": "value3",
+      "key": "Address",
+      "value": "4 Privet Drive, London, England",
       "type": "string",
       "constraints": {
         "maxLength": 1000
       }
     },
     {
-      "key": "attr4",
-      "value": "4456",
+      "key": "Age",
+      "value": "11",
       "type": "int",
       "constraints": {
         "gt": 10,
@@ -45,20 +45,20 @@
       }
     },
     {
-      "key": "veryy long attribute just to test it",
-      "value": "true",
+      "key": "Favourite colour",
+      "value": "purple",
       "type": "string",
       "constraints": []
     },
     {
-      "key": "attr6",
-      "value": "15.2.2015",
+      "key": "Date of birth",
+      "value": "31.7.1980",
       "type": "date",
       "constraints": []
     },
     {
-      "key": "attr7",
-      "value": "UPPERCASE VALUE",
+      "key": "School",
+      "value": "ROCKFORT",
       "type": "string",
       "constraints": {
         "minLength": 10,
@@ -68,49 +68,26 @@
       }
     },
     {
-      "key": "attr8",
-      "value": "value8",
+      "key": "Favourite food",
+      "value": "chocolate",
       "type": "string",
       "constraints": []
     },
     {
-      "key": "attr9",
-      "value": "value9",
+      "key": "Hobbies",
+      "value": "quidditch, making problems",
       "type": "string",
       "constraints": []
     },
     {
-      "key": "attr10",
-      "value": "value10",
+      "key": "Love",
+      "value": "Ginny",
       "type": "string",
       "constraints": []
     },
     {
-      "key": "attr11",
-      "value": "some very long value some very long value some very long value some very long value some very long value some very long value some very long value some very long value some very long value some very long value ",
-      "type": "string",
-      "constraints": []
-    },
-    {
-      "key": "attr12",
-      "value": "false",
-      "type": "string",
-      "constraints": []
-    },
-    {
-      "key": "attr13",
-      "value": "10020.234€",
-      "type": "currency",
-      "constraints": []
-    },
-    {
-      "key": "attr14",
-      "value": "value14",
-      "constraints": []
-    },
-    {
-      "key": "attr15",
-      "value": "value15",
+      "key": "Motto",
+      "value": "Spicy jalapeno bacon ipsum dolor amet frankfurter cow chicken, bacon ribeye tongue tenderloin doner. Burgdoggen doner pork chop brisket. Swine strip steak chuck hamburger, drumstick rump tri-tip leberkas pastrami kielbasa pork belly. Venison bresaola tail frankfurter pancetta hamburger jerky ground round kevin. Venison kevin pork tail pig meatloaf drumstick rump.",
       "type": "string",
       "constraints": []
     }
@@ -183,88 +160,48 @@
   ],
   "rights": [
     {
-      "name": "user0",
+      "name": "Jakub",
+      "rights": 4
+    },
+    {
+      "name": "Matej",
+      "rights": 5
+    },
+    {
+      "name": "Ján",
+      "rights": 7
+    },
+    {
+      "name": "Alica",
       "rights": 1
     },
     {
-      "name": "user1",
+      "name": "Martin",
       "rights": 4
     },
     {
-      "name": "user2",
-      "rights": 5
-    },
-    {
-      "name": "user3",
-      "rights": 7
-    },
-    {
-      "name": "user4",
-      "rights": 4
-    },
-    {
-      "name": "user5",
+      "name": "Šaňo",
       "rights": 6
     },
     {
-      "name": "user6",
+      "name": "Michal",
       "rights": 2
     },
     {
-      "name": "user7",
+      "name": "Karel",
       "rights": 4
     },
     {
-      "name": "user8",
+      "name": "Tomáš",
       "rights": 2
     },
     {
-      "name": "user9",
+      "name": "Lenka",
       "rights": 3
     },
     {
-      "name": "user10",
+      "name": "Charlotte",
       "rights": 7
-    },
-    {
-      "name": "user11",
-      "rights": 6
-    },
-    {
-      "name": "user12",
-      "rights": 5
-    },
-    {
-      "name": "user13",
-      "rights": 4
-    },
-    {
-      "name": "user14",
-      "rights": 3
-    },
-    {
-      "name": "user15",
-      "rights": 7
-    },
-    {
-      "name": "user16",
-      "rights": 7
-    },
-    {
-      "name": "user17",
-      "rights": 4
-    },
-    {
-      "name": "user18",
-      "rights": 1
-    },
-    {
-      "name": "user19",
-      "rights": 2
-    },
-    {
-      "name": "user20",
-      "rights": 5
     }
   ],
   "links": {
@@ -280,76 +217,61 @@
           "role": "Fast"
         },
         "headerAttrsLink": [
-          "AttrLink1",
-          "AttrLink2",
-          "AttrLink3",
-          "AttrLink4"
+          "Can_abracadabra",
+          "Has_it_since",
+          "Loves_it",
+          "Something"
         ],
         "headerAttrsDoc": [
-          "AttrDoc1",
-          "AttrDoc2",
-          "AttrDoc3",
-          "AttrDoc4",
-          "AttrDoc5",
-          "AttrDoc6",
-          "AttrDoc7",
-          "AttrDoc8",
-          "AttrDoc9",
-          "AttrDoc10",
-          "AttrDoc11",
-          "AttrDoc12"
+          "Name",
+          "Brand",
+          "Size",
+          "Prize",
+          "Colour",
+          "Magic",
+          "Manufactured"
         ],
         "documentsLink": [
           {
-            "AttrLink1": "ValueLink1",
-            "AttrLink2": "ValueLink2",
-            "AttrLink3": "ValueLink3",
-            "AttrLink4": "ValueLink4"
+            "Can_abracadabra": "yes",
+            "Has_it_since": "december",
+            "Loves_it": "yes",
+            "Something": "more"
           },
           {
-            "AttrLink1": "ValueLink1",
-            "AttrLink3": "ValueLink3",
-            "AttrLink4": "ValueLink4"
+            "Can_abracadabra": "no",
+            "Loves_it": "yes",
+            "Something": "oh yeah"
           },
           {
-            "AttrLink1": "ValueLink1",
-            "AttrLink4": "ValueLink4"
+            "Can_abracadabra": "yes",
+            "Loves_it": "not sure"
           }
         ],
         "documentsDoc": [
           {
-            "AttrDoc1": "ValueDoc1",
-            "AttrDoc2": "ValueDoc2",
-            "AttrDoc3": "ValueDoc3",
-            "AttrDoc4": "ValueDoc4",
-            "AttrDoc5": "ValueDoc5",
-            "AttrDoc7": "ValueDoc7",
-            "AttrDoc8": "ValueDoc8",
-            "AttrDoc9": "ValueDoc9",
-            "AttrDoc11": "ValueDoc11",
-            "AttrDoc12": "ValueDoc12"
+            "Name": "Jumbojet",
+            "Brand": "Smart cycles",
+            "Size": "24",
+            "Prize": "1000€",
+            "Colour": "black",
+            "Manufactured": "2016"
           },
           {
-            "AttrDoc1": "ValueDoc1",
-            "AttrDoc3": "ValueDoc3",
-            "AttrDoc4": "ValueDoc4",
-            "AttrDoc5": "ValueDoc5",
-            "AttrDoc6": "ValueDoc6",
-            "AttrDoc7": "ValueDoc7",
-            "AttrDoc8": "ValueDoc8",
-            "AttrDoc9": "ValueDoc9",
-            "AttrDoc11": "ValueDoc11",
-            "AttrDoc12": "ValueDoc12"
+            "Name": "Spaceshuttle",
+            "Size": "22",
+            "Prize": "200€",
+            "Colour": "pink",
+            "Magic": "yes",
+            "Manufactured": "2015"
           },
           {
-            "AttrDoc1": "ValueDoc1",
-            "AttrDoc3": "ValueDoc3",
-            "AttrDoc4": "ValueDoc4",
-            "AttrDoc5": "ValueDoc5",
-            "AttrDoc6": "ValueDoc6",
-            "AttrDoc7": "ValueDoc7",
-            "AttrDoc8": "ValueDoc8",
-            "AttrDoc9": "ValueDoc9"
+            "Name": "Superman",
+            "Size": "24",
+            "Prize": "$500",
+            "Colour": "yellow",
+            "Magic": "no",
+            "Manufactured": "2017"
           }
         ]
       }
@@ -366,76 +288,44 @@
           "role": "Billions"
         },
         "headerAttrsLink": [
-          "AttrLink1",
-          "AttrLink2",
-          "AttrLink3",
-          "AttrLink4"
+          "Has_them",
+          "From",
+          "Given_to"
         ],
         "headerAttrsDoc": [
-          "AttrDoc1",
-          "AttrDoc2",
-          "AttrDoc3",
-          "AttrDoc4",
-          "AttrDoc5",
-          "AttrDoc6",
-          "AttrDoc7",
-          "AttrDoc8",
-          "AttrDoc9",
-          "AttrDoc10",
-          "AttrDoc11",
-          "AttrDoc12"
+          "Currency",
+          "Amount",
+          "Country"
         ],
         "documentsLink": [
           {
-            "AttrLink1": "ValueLink1",
-            "AttrLink2": "ValueLink2",
-            "AttrLink3": "ValueLink3",
-            "AttrLink4": "ValueLink4"
+            "Has_them": "yes",
+            "From": "mum",
+            "Given_to": "dad"
           },
           {
-            "AttrLink1": "ValueLink1",
-            "AttrLink3": "ValueLink3",
-            "AttrLink4": "ValueLink4"
+            "Has_them": "no",
+            "Given_to": "Ginny"
           },
           {
-            "AttrLink1": "ValueLink1",
-            "AttrLink4": "ValueLink4"
+            "Has_them": "no",
+            "From": "Dumbledore"
           }
         ],
         "documentsDoc": [
           {
-            "AttrDoc1": "ValueDoc1",
-            "AttrDoc2": "ValueDoc2",
-            "AttrDoc3": "ValueDoc3",
-            "AttrDoc4": "ValueDoc4",
-            "AttrDoc5": "ValueDoc5",
-            "AttrDoc7": "ValueDoc7",
-            "AttrDoc8": "ValueDoc8",
-            "AttrDoc9": "ValueDoc9",
-            "AttrDoc11": "ValueDoc11",
-            "AttrDoc12": "ValueDoc12"
+            "Currency": "Euro",
+            "Amount": "100000",
+            "Country": "Slovakia"
           },
           {
-            "AttrDoc1": "ValueDoc1",
-            "AttrDoc3": "ValueDoc3",
-            "AttrDoc4": "ValueDoc4",
-            "AttrDoc5": "ValueDoc5",
-            "AttrDoc6": "ValueDoc6",
-            "AttrDoc7": "ValueDoc7",
-            "AttrDoc8": "ValueDoc8",
-            "AttrDoc9": "ValueDoc9",
-            "AttrDoc11": "ValueDoc11",
-            "AttrDoc12": "ValueDoc12"
+            "Currency": "Dollar",
+            "Amount": "3",
+            "Country": "USA"
           },
           {
-            "AttrDoc1": "ValueDoc1",
-            "AttrDoc3": "ValueDoc3",
-            "AttrDoc4": "ValueDoc4",
-            "AttrDoc5": "ValueDoc5",
-            "AttrDoc6": "ValueDoc6",
-            "AttrDoc7": "ValueDoc7",
-            "AttrDoc8": "ValueDoc8",
-            "AttrDoc9": "ValueDoc9"
+            "Currency": "Czech crown",
+            "Amount": "1234567890"
           }
         ]
       },
@@ -450,76 +340,42 @@
           "role": "Competition"
         },
         "headerAttrsLink": [
-          "AttrLink1",
-          "AttrLink2",
-          "AttrLink3",
-          "AttrLink4"
+          "Winning_date"
         ],
         "headerAttrsDoc": [
-          "AttrDoc1",
-          "AttrDoc2",
-          "AttrDoc3",
-          "AttrDoc4",
-          "AttrDoc5",
-          "AttrDoc6",
-          "AttrDoc7",
-          "AttrDoc8",
-          "AttrDoc9",
-          "AttrDoc10",
-          "AttrDoc11",
-          "AttrDoc12"
+          "Name",
+          "Category",
+          "Colour",
+          "Periodicity"
         ],
         "documentsLink": [
           {
-            "AttrLink1": "ValueLink1",
-            "AttrLink2": "ValueLink2",
-            "AttrLink3": "ValueLink3",
-            "AttrLink4": "ValueLink4"
+            "Winning_date": "30 Sep 2016"
           },
           {
-            "AttrLink1": "ValueLink1",
-            "AttrLink3": "ValueLink3",
-            "AttrLink4": "ValueLink4"
+            "Winning_date": "1 Jan 2017"
           },
           {
-            "AttrLink1": "ValueLink1",
-            "AttrLink4": "ValueLink4"
+            "Winning_date": ""
           }
         ],
         "documentsDoc": [
           {
-            "AttrDoc1": "ValueDoc1",
-            "AttrDoc2": "ValueDoc2",
-            "AttrDoc3": "ValueDoc3",
-            "AttrDoc4": "ValueDoc4",
-            "AttrDoc5": "ValueDoc5",
-            "AttrDoc7": "ValueDoc7",
-            "AttrDoc8": "ValueDoc8",
-            "AttrDoc9": "ValueDoc9",
-            "AttrDoc11": "ValueDoc11",
-            "AttrDoc12": "ValueDoc12"
+            "Name": "Magic trophy",
+            "Category": "magic",
+            "Colour": "gold",
+            "Periodicity": "every month"
           },
           {
-            "AttrDoc1": "ValueDoc1",
-            "AttrDoc3": "ValueDoc3",
-            "AttrDoc4": "ValueDoc4",
-            "AttrDoc5": "ValueDoc5",
-            "AttrDoc6": "ValueDoc6",
-            "AttrDoc7": "ValueDoc7",
-            "AttrDoc8": "ValueDoc8",
-            "AttrDoc9": "ValueDoc9",
-            "AttrDoc11": "ValueDoc11",
-            "AttrDoc12": "ValueDoc12"
+            "Name": "Stanley cup",
+            "Category": "sport",
+            "Colour": "silver",
+            "Periodicity": "once a year"
           },
           {
-            "AttrDoc1": "ValueDoc1",
-            "AttrDoc3": "ValueDoc3",
-            "AttrDoc4": "ValueDoc4",
-            "AttrDoc5": "ValueDoc5",
-            "AttrDoc6": "ValueDoc6",
-            "AttrDoc7": "ValueDoc7",
-            "AttrDoc8": "ValueDoc8",
-            "AttrDoc9": "ValueDoc9"
+            "Name": "RedHat trophy",
+            "Category": "coding",
+            "Periodicity": "once in a lifetime"
           }
         ]
       }

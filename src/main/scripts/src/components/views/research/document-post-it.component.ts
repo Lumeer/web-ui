@@ -16,22 +16,8 @@ export class DocumentPostItComponent implements OnInit {
   public active: boolean = false;
   public entries: Entry[] = [];
 
-  // ngOnInit(): void {
-  //   this.keys = Object.keys(this.document);
-  //   for(let i = 0; i < this.keys.length; i++) {
-  //     var value = this.document[this.keys[i]];
-  //
-  //     if(typeof value != "string" && typeof value[0] != "string") { // it is array of documents
-  //         this.values.push(JSON.stringify(value));
-  //     }
-  //     else {
-  //       this.values.push(value);
-  //     }
-  //   }
-  // }
-
   public ngOnInit(): void {
-    _.each(this.document, (value, key) => {
+    _.each(this.document.content, (value, key) => {
       if(value && typeof value !== 'string' && typeof value[0] !== 'string') {
         let newValue = _
           .reduce(value, (result, nestedValue, nestedKey) => [...result, new Entry(nestedKey, nestedValue, false)], []);
