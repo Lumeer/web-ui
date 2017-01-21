@@ -7,6 +7,7 @@ export class DocumentService {
   @LocalStorage('lastDocument') public activeDocument;
   public documentDetail: any;
   public filterResults: any;
+  public linksRows: any;
 
   constructor(private http: Http) {}
 
@@ -78,6 +79,12 @@ export class DocumentService {
     this.http.get('/data/documentversions.json')
       .map(res => res.json())
       .subscribe(documentVersions => this.documentDetail.versions = documentVersions);
+  }
+
+  public fetchDocumentLinksRowsInfo() {
+    this.http.get('/data/documentlinkrows.json')
+      .map(res => res.json())
+      .subscribe(linksRows => this.linksRows = linksRows);
   }
 
   private updateRights(oneRight) {
