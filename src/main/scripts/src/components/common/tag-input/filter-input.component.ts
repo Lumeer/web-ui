@@ -36,4 +36,9 @@ export class FilterInput implements IAutocomplete {
   public onFocus() {
     this.focus.next();
   }
+
+  public onDataChange(dataPayload) {
+    this.value = dataPayload;
+    this.onChange.emit(this.value);
+  }
 }
