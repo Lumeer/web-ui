@@ -11,7 +11,7 @@ module.exports = {
   output: {
     path: __dirname + '/dist',
     filename: "js/[name].bundle.js",
-    publicPath: '/ui'
+    publicPath: '/ui/'
   },
   resolve: {
     extensions: ['.js', '.ts']
@@ -53,7 +53,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       favicon: 'img/favicon.ico',
       title: 'Lumeer tool',
-      publicPath: '/ui',
+      publicPath: '/ui/',
       template: 'src/template-index.ejs',
       inject: 'body'
     }),
