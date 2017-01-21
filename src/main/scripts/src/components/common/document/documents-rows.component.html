@@ -9,7 +9,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let doc of documents">
+      <tr *ngFor="let doc of documents" (click)="selectDocument(doc)">
         <td *ngFor="let col of columns">
           {{doc[col]}}
         </td>

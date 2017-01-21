@@ -10,10 +10,11 @@ import {FilterComponent} from './tag-input/filter.component';
 import {FilterSave} from './tag-input/filter-save.component';
 import {UserTagComponent} from './user-tile/user-tag.component';
 import {DocumentLinksRowsComponent} from './document/links/documents-links-rows.component';
-import {DocumentLinksComponent} from '../views/pick_item/document-links.component';
+import {LinksComponent} from './document/links/links.component';
 import {DocumentsRowsComponent} from './document/documents-rows.component';
 import {DocumentsLinksAttributesComponent} from './document/links/documents-links-attributes.component';
 import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
+import {LinkType} from './document/links/link-type';
 
 @NgModule({
   imports: [
@@ -32,7 +33,8 @@ import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
     UserTagComponent,
     DocumentLinksRowsComponent,
     DocumentsRowsComponent,
-    DocumentsLinksAttributesComponent
+    DocumentsLinksAttributesComponent,
+    LinksComponent
   ],
   exports: [
     TagInputComponent,
@@ -43,7 +45,8 @@ import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
     UserTagComponent,
     DocumentLinksRowsComponent,
     DocumentsRowsComponent,
-    DocumentsLinksAttributesComponent
+    DocumentsLinksAttributesComponent,
+    LinksComponent
   ]
 })
 

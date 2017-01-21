@@ -5,15 +5,32 @@
       "color": "#FF4040",
       "icon": "fa-car"
     },
+    "header": [
+      "attr1",
+      "attr2",
+      "attr3",
+      "attr4",
+      "attr5",
+      "attr6",
+      "attr7",
+      "attr8",
+      "attr9",
+      "attr10",
+      "attr11",
+      "attr12",
+      "attr13",
+      "attr14",
+      "attr15"
+    ],
     "documents": [
       {
-        "_id" :"id1",
+        "_id": "id1",
         "attr1": "value1",
         "attr2": "value2",
         "attr3": "value3"
       },
       {
-        "_id" :"id2",
+        "_id": "id2",
         "attr1": "value1",
         "attr2": "value2",
         "attr3": "value3",
@@ -28,24 +45,7 @@
         "attr12": 12,
         "attr13": "value13",
         "attr14": "value14",
-        "attr15": 15,
-        "attr16": "value16",
-        "attr17": "value17",
-        "attr18": "value18",
-        "attr19": "value19",
-        "attr20": 20,
-        "attr21": "value21",
-        "attr22": "value22",
-        "attr23": 23,
-        "attr24": "value24",
-        "attr25": "value25",
-        "attr26": "value26",
-        "attr27": "value27",
-        "attr28": 28,
-        "attr29": "value29",
-        "attr30": "value30",
-        "attr31": 31,
-        "attr32": "value32"
+        "attr15": 15
       }
     ]
   },
@@ -55,9 +55,19 @@
       "color": "#76EEC6",
       "icon": "fa-magic"
     },
+    "header": [
+      "attr1",
+      "attr2",
+      "attr3",
+      "attr4",
+      "attr5",
+      "attr6",
+      "attr7",
+      "attr8"
+    ],
     "documents": [
       {
-        "_id" :"id3",
+        "_id": "id3",
         "attr1": "value1",
         "attr4": 4,
         "attr5": "value5",
@@ -73,9 +83,19 @@
       "color": "#FBC02D",
       "icon": "fa-tree"
     },
+    "header": [
+      "attr1",
+      "attr2",
+      "attr3",
+      "attr4",
+      "attr5",
+      "attr6",
+      "attr7",
+      "attr8"
+    ],
     "documents": [
       {
-        "_id" :"id4",
+        "_id": "id4",
         "attr1": "value1",
         "attr2": "value2",
         "attr3": "value3",
@@ -86,7 +106,7 @@
         "attr8": "value8"
       },
       {
-        "_id" :"id5",
+        "_id": "id5",
         "attr1": "value1",
         "attr2": "value2",
         "attr3": "value3",
@@ -97,7 +117,7 @@
         "attr8": "value8"
       },
       {
-        "_id" :"id6",
+        "_id": "id6",
         "attr1": "value1",
         "attr2": "value2",
         "attr3": "value3",
@@ -108,7 +128,7 @@
         "attr8": "value8"
       },
       {
-        "_id" :"id7",
+        "_id": "id7",
         "attr1": "value1",
         "attr2": "value2",
         "attr3": "value3",
@@ -119,7 +139,7 @@
         "attr8": "value8"
       },
       {
-        "_id" :"id8",
+        "_id": "id8",
         "attr1": "value1",
         "attr2": "value2",
         "attr3": "value3",
