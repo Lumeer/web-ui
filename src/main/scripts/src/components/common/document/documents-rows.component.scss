@@ -1,4 +1,11 @@
 @import '../../../styles/variables';
 documents-rows {
 
+  background-color : #E3F2FD;
+
+  .select-hover:hover{
+    cursor: pointer;
+    background-color: #dfdfdf;
+  }
+
 }

@@ -9,9 +9,11 @@ export class DocumentsRowsComponent {
 
   @Input() public documents: any;
   @Input() public columns: any;
+  @Input() public canHover: boolean;
   @Output() public onSelect: EventEmitter<any> = new EventEmitter();
 
-  private selectDocument(doc) {
+
+  private selectDocument(doc){
     this.onSelect.emit(doc);
   }
 

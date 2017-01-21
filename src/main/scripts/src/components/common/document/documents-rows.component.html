@@ -2,18 +2,18 @@
 
   <table class="table">
     <thead>
-      <tr>
-        <th *ngFor="let col of columns">
-          {{col}}
-        </th>
-      </tr>
+    <tr>
+      <th *ngFor="let col of columns">
+        {{col}}
+      </th>
+    </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let doc of documents" (click)="selectDocument(doc)">
-        <td *ngFor="let col of columns">
-          {{doc[col]}}
-        </td>
-      </tr>
+    <tr *ngFor="let doc of documents" (click)="selectDocument(doc)" [ngClass]="{'select-hover' : canHover}">
+      <td *ngFor="let col of columns">
+        {{doc[col]}}
+      </td>
+    </tr>
     </tbody>
   </table>
 
