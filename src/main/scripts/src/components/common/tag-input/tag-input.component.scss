@@ -30,11 +30,14 @@ tag-input {
           span {
             padding: 2px 5px;
             display: inline-block;
-            background-color: $brand-info;
             border-radius: $form-group-margin-bottom;
+            background: transparent;
+            border: 1px solid $brand-success;
+            color: black;
 
             &.active {
               background-color: $brand-success;
+              color: $secondary-color;
             }
           }
         }
@@ -55,10 +58,13 @@ tag-input {
           span {
             padding: 2px;
             display: inline-block;
-            background-color: $brand-info;
             border-radius: $form-group-margin-bottom;
+            background: transparent;
+            border: 1px solid $brand-success;
+            color: black;
 
             &.active {
+              color: $secondary-color;
               background-color: $brand-success;
             }
           }

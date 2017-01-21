@@ -92,7 +92,7 @@ export class FilterComponent {
         item.equality = item.equality || this.defaultEquality(item.colValue);
         return [...result, item];
       }, [])
-      .subscribe(items => this.items = items);
+      .subscribe(items => this.items = [...this.items, ...items]);
   }
 
   private initTagOptions() {
