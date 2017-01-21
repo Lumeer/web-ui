@@ -1,0 +1,87 @@
+<div class="row">
+  <div class="lum-document-preview col-lg-4">
+    <div class="lum-preview-content new-document-preview">
+      <div class="preview-icon"
+           (click)="pickerVisible = !pickerVisible"
+           [ngStyle]="{'background-color': newDocument.color}"
+           [ngClass]="{'no-rotate': newDocument.icon, 'no-color': newDocument.color}">
+        <i class="fa"
+           [ngClass]="newDocument.icon ? newDocument.icon : 'fa-times'"
+           aria-hidden="true"></i>
+      </div>
+
+      <form>
+        <input name="title" placeholder="New title" id="title" [(ngModel)]="newDocument.title" required>
+        <div>
+          <filter-input [value]="newDocument.collection"
+                        [placeholder]="'Select collection'"
+                        [source]="source"
+                        [options]="autocompleteOptions"
+                        (onChange)="onCollectionChange($event)"></filter-input>
+        </div>
+        <div class="submit-pane">
+          <div class="confirm">
+            <button type="button" class="btn btn-default btn-xs" (click)="saveDocument()">
+              <i class="fa fa-plus fa-2x"></i>
+            </button>
+          </div>
+
+          <div class="txt-lbl">
+            <p>Add Document</p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="lum-collection-preview col-lg-4">
+    <div class="lum-preview-content new-collection-preview">
+
+      <div class="preview-icon"
+           (click)="pickerVisible = !pickerVisible"
+           [ngStyle]="{'background-color': newCollection.color}"
+           [ngClass]="{'no-rotate': newCollection.icon, 'no-color': newCollection.color}">
+        <i class="fa"
+           [ngClass]="newCollection.icon ? newCollection.icon : 'fa-times'"
+           aria-hidden="true"></i>
+      </div>
+
+      <div class="color-icon" *ngIf="pickerVisible" [@animateVisible]="'in'">
+        <div class="color-picker">
+          <span *ngFor="let oneColor of colors"
+                [ngClass]="{active: oneColor === newCollection.color}"
+                (click)="setColor(oneColor)"
+                [ngStyle]="{'background': oneColor}"></span>
+        </div>
+        <div class="icon-picker">
+          <span *ngFor="let oneIcon of icons"
+                (click)="setIcon(oneIcon)"
+                [ngClass]="{active: oneIcon === newCollection.icon}">
+            <i class="fa" [ngClass]="oneIcon" aria-hidden="true"></i>
+          </span>
+        </div>
+        <div class="confirm">
+          <input type="button" value="Ok" (click)="pickerVisible = false">
+        </div>
+      </div>
+
+      <form>
+        <input name="title" placeholder={{placeholderTitle}}
+               id="collection_title"
+               [(ngModel)]="newCollection.title" required>
+        <div class="new-collection-info">
+        </div>
+
+        <div class="confirm">
+          <button type="button" class="btn btn-default btn-xs" (click)="newCollectionInfo()">
+            <i class="fa fa-plus fa-2x"></i>
+          </button>
+        </div>
+
+        <div class="txt-lbl">
+          <p>Add Collection</p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
