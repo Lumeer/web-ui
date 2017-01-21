@@ -12,7 +12,7 @@
     </div>
   </div>
   <div class="lum-info-content row">
-    <document-content [document]="document.content"></document-content>
+    <document-content [document]="document"></document-content>
     <div class="document-right-panel">
       <document-versions [documentVersions]="document.versions" *ngIf="versionsVisible"></document-versions>
       <div class="no-link" *ngIf="document.links.length === 0">
