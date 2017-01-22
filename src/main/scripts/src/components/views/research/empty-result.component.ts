@@ -66,6 +66,14 @@ export class EmptyResultComponent {
     this.onShowCollection.emit(collection);
   }
 
+  public setColor(color) {
+    this.newCollection.color = color;
+  }
+
+  public setIcon(icon) {
+    this.newCollection.icon = icon;
+  }
+
   private initColors() {
     this.colors = [
       '#c7254e',
