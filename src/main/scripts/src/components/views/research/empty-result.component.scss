@@ -2,8 +2,9 @@
 
 empty-result {
   .submit-pane, .info-pane {
+
     position: absolute;
-    right: 35%;
+    right: 37.5%;
     top: 45%;
 
     .confirm {
@@ -19,10 +20,6 @@ empty-result {
     .txt-lbl {
       text-align: center;
     }
-  }
-
-  .lum-collection-preview {
-    padding-right: 0;
   }
 
   .lum-collection-record, .new-document-preview {
@@ -50,6 +47,7 @@ empty-result {
   }
 
   .lum-preview-content {
+    border-radius: 10px;
     margin: 15px;
     background: $secondary-color;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
@@ -176,4 +174,9 @@ empty-result {
       margin: 0;
     }
   }
+
+  .lum-document-preview {
+    padding-right: 15px;
+  }
+
 }
