@@ -22,7 +22,16 @@ export class DocumentContentComponent implements OnInit, OnChanges {
     this.initKeys();
   }
 
+  public isNested(value) {
+    return typeof(value) === 'object' && !value.hasOwnProperty('title');
+  }
+
+  public fetchKeys(value) {
+    return Object.keys(value);
+  }
+
   private initKeys() {
+    console.log(this.document);
     this.entries = [];
     _.each(this.document, (value, key) => {
       if(typeof value !== 'string' && typeof value[0] !== 'string') {
