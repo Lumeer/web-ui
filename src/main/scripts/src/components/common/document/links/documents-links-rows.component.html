@@ -1,4 +1,38 @@
-<div class="row link-table">
-  <documents-links-attributes [documents]="documentsLink" [columns]="headerAttrsLink"></documents-links-attributes>
-  <documents-rows [documents]="documentsDoc" [columns]="headerAttrsDoc"></documents-rows>
+<div class="row">
+  <table class="table doc-links-rows-table">
+    <thead>
+    <tr>
+      <th class="doc-links-rows-table-link-header" *ngFor="let col of headerAttrsLink">
+        {{col}}
+      </th>
+      <th>
+        <i class="fa"
+           [ngClass]="linkType === 'from' ? 'fa-sign-in' : 'fa-sign-out'"
+           [ngStyle]="{'color':collectionInfo.color}"
+           aria-hidden="true"></i>
+      </th>
+      <th [ngStyle]="{'background-color': hex2rgba(collectionInfo.color, 30)}"
+          *ngFor="let col of headerAttrsDoc">
+        {{col}}
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let doc of documentsLinkAndDoc">
+      <td class="doc-links-rows-table-link" *ngFor="let col of headerAttrsLink">
+        {{doc.documentLink[col]}}
+      </td>
+      <td>
+        <i class="fa"
+           [ngClass]="collectionInfo.icon"
+           [ngStyle]="{'color':collectionInfo.color}"
+           aria-hidden="true"></i>
+      </td>
+      <td [ngStyle]="{'background-color': hex2rgba(collectionInfo.color, 10)}"
+          *ngFor="let col of headerAttrsDoc">
+        {{doc.documentDoc[col]}}
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>

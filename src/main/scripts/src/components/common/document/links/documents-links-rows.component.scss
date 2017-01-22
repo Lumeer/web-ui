@@ -1,13 +1,16 @@
 @import '../../../../styles/variables';
 documents-links-rows {
 
-  .link-table {
-    display: flex;
+  .doc-links-rows-table{
+
+    .doc-links-rows-table-link-header{
+      white-space: nowrap;
+      font-style: italic;
+    }
+
+    .doc-links-rows-table-link{
+      font-style: italic;
+    }
   }
-  documents-links-attributes {
-    max-width: 400px;
-  }
-  documents-rows {
-    flex-grow: 1;
-  }
+
 }

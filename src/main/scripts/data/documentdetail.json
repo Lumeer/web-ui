@@ -217,9 +217,9 @@
           "role": "Fast"
         },
         "headerAttrsLink": [
-          "Can_abracadabra",
-          "Has_it_since",
-          "Loves_it",
+          "Can abracadabra",
+          "Has it since",
+          "Loves it",
           "Something"
         ],
         "headerAttrsDoc": [
@@ -233,19 +233,19 @@
         ],
         "documentsLink": [
           {
-            "Can_abracadabra": "yes",
-            "Has_it_since": "december",
-            "Loves_it": "yes",
+            "Can abracadabra": "yes",
+            "Has it since": "december",
+            "Loves it": "yes",
             "Something": "more"
           },
           {
-            "Can_abracadabra": "no",
-            "Loves_it": "yes",
+            "Can abracadabra": "no",
+            "Loves it": "yes",
             "Something": "oh yeah"
           },
           {
-            "Can_abracadabra": "yes",
-            "Loves_it": "not sure"
+            "Can abracadabra": "yes",
+            "Loves it": "not sure"
           }
         ],
         "documentsDoc": [

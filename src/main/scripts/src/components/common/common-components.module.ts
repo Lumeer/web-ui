@@ -12,9 +12,7 @@ import {UserTagComponent} from './user-tile/user-tag.component';
 import {DocumentLinksRowsComponent} from './document/links/documents-links-rows.component';
 import {LinksComponent} from './document/links/links.component';
 import {DocumentsRowsComponent} from './document/documents-rows.component';
-import {DocumentsLinksAttributesComponent} from './document/links/documents-links-attributes.component';
 import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
-import {LinkType} from './document/links/link-type';
 
 @NgModule({
   imports: [
@@ -33,7 +31,6 @@ import {LinkType} from './document/links/link-type';
     UserTagComponent,
     DocumentLinksRowsComponent,
     DocumentsRowsComponent,
-    DocumentsLinksAttributesComponent,
     LinksComponent
   ],
   exports: [
@@ -45,7 +42,6 @@ import {LinkType} from './document/links/link-type';
     UserTagComponent,
     DocumentLinksRowsComponent,
     DocumentsRowsComponent,
-    DocumentsLinksAttributesComponent,
     LinksComponent
   ]
 })

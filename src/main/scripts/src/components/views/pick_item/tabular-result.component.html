@@ -21,10 +21,11 @@
           </a>
           <div id="collapsets{{ix}}" class="panel-collapse collapse">
             <perfect-scrollbar>
-              <div class="panel-body lum-no-padding background-dummy">
+              <div class="panel-body lum-no-padding">
                 <documents-rows [columns]="d.header"
                                 [documents]="d.documents"
                                 [canHover]="true"
+                                [collectionInfo]="d.collection"
                                 (onSelect)="selectItem($event)"></documents-rows>
               </div>
             </perfect-scrollbar>

@@ -1,15 +1,18 @@
 <div class="documents-rows">
 
-  <table class="table">
+  <table class="table doc-rows-table">
     <thead>
-    <tr>
-      <th *ngFor="let col of columns">
+    <tr [ngStyle]="{'background-color': hex2rgba(collectionInfo.color, 30)}">
+      <th class="doc-rows-table-header" *ngFor="let col of columns">
         {{col}}
       </th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let doc of documents" (click)="selectDocument(doc)" [ngClass]="{'select-hover' : canHover}">
+    <tr [ngClass]="{'select-hover' : canHover}"
+        [ngStyle]="{'background-color': hex2rgba(collectionInfo.color, 10)}"
+        *ngFor="let doc of documents"
+        (click)="selectDocument(doc)">
       <td *ngFor="let col of columns">
         {{doc[col]}}
       </td>
