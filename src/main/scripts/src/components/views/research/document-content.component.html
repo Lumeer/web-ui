@@ -6,7 +6,13 @@
 
         <ul *ngIf="entry.nested">
           <li *ngFor="let subentry of entry.value">
-            {{subentry.key}} : {{subentry.value}}
+            {{subentry.key}} :
+            <span *ngIf="!isNested(subentry.value)">{{subentry.value.title || subentry.value}}</span>
+            <span *ngIf="isNested(subentry.value)">
+              <template ngFor let-oneValue [ngForOf]="fetchKeys(subentry.value)">
+                {{oneValue}}: {{subentry.value[oneValue]}}
+              </template>
+            </span>
           </li>
         </ul>
 

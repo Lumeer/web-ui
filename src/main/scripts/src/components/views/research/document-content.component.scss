@@ -5,5 +5,14 @@ document-content {
   ul:first-child {
     padding: 0;
   }
+  .document-values {
+    .ps-content {
+      padding-left: 15px !important;
+    }
 
+    .ps-scrollbar-y-rail {
+      right: auto !important;
+      left: -5px !important;
+    }
+  }
 }
