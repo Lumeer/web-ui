@@ -2,6 +2,7 @@ import {
   Component, Input, Output, EventEmitter, trigger, state, style, transition, animate,
   keyframes
 } from '@angular/core';
+import * as _ from 'lodash';
 import {CollectionService} from '../../../services/collection.service';
 
 @Component({
@@ -31,7 +32,9 @@ export class EmptyResultComponent {
   public newDocument: any = {links: []};
   public colors: string[];
   public icons: string[];
-  public newCollection: any = {};
+  public newCollection: any = {
+    iconColor: 'black'
+  };
   public pickerVisible: boolean = false;
   public placeholderTitle: string = 'Title name';
 
@@ -54,8 +57,11 @@ export class EmptyResultComponent {
   }
 
   public saveCollection(dataPayload) {
+    this.collectionService.allCollections.push(this.newCollection);
     this.onNewCollection.emit(dataPayload);
-    this.newCollection = {};
+    this.newCollection = {
+      iconColor: 'black'
+    };
   }
 
   public onCollectionChange(payload) {
@@ -67,7 +73,7 @@ export class EmptyResultComponent {
   }
 
   public setColor(color) {
-    this.newCollection.color = color;
+    this.newCollection.iconColor = color;
   }
 
   public setIcon(icon) {

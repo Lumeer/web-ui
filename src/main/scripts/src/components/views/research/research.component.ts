@@ -17,7 +17,6 @@ export class ResearchComponent {
   constructor(private route: ActivatedRoute,
               public documentInfoService: DocumentInfoService,
               public queryService: QueryTagService) {
-    console.log(this);
   }
 
   public ngOnInit() {
