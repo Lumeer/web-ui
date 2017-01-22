@@ -15,14 +15,13 @@ export class DocumentLinksRowsComponent implements OnInit {
   @Input() public collectionInfo: any;
   @Input() public linkType: string;
 
-
   public ngOnInit(): void {
     if (this.documentsDoc) {
       this.documentsLinkAndDoc = [];
       for (let i = 0; i < this.documentsDoc.length; i++) {
         this.documentsLinkAndDoc.push({
-          "documentLink": this.documentsLink[i],
-          "documentDoc": this.documentsDoc[i]
+          'documentLink': this.documentsLink[i],
+          'documentDoc': this.documentsDoc[i]
         });
       }
     }
