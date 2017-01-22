@@ -35,6 +35,11 @@ export class EmptyResultComponent {
   public newCollection: any = {
     iconColor: 'black'
   };
+  public autocompleteOptions = {
+    displayKey: 'name',
+    keepAfterSubmit: true,
+    model: ''
+  };
   public pickerVisible: boolean = false;
   public placeholderTitle: string = 'Title name';
 
@@ -51,14 +56,14 @@ export class EmptyResultComponent {
     this.collectionService.getAllCollections();
   }
 
-  public saveDocument(dataPayload) {
-    this.onNewDocument.emit(dataPayload);
+  public saveDocument() {
+    this.onNewDocument.emit(this.newDocument);
     this.newDocument = {};
   }
 
   public saveCollection(dataPayload) {
     this.collectionService.allCollections.push(this.newCollection);
-    this.onNewCollection.emit(dataPayload);
+    this.onNewCollection.emit(this.newCollection);
     this.newCollection = {
       iconColor: 'black'
     };

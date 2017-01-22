@@ -65,7 +65,7 @@
         <div>
           <filter-input [value]="newDocument.collection"
                         [placeholder]="'Select collection'"
-                        [source]="source"
+                        [source]="collectionService.allCollections"
                         [options]="autocompleteOptions"
                         (onChange)="onCollectionChange($event)"></filter-input>
         </div>
