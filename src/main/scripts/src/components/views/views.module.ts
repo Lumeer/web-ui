@@ -28,7 +28,6 @@ import {
 import {BrowserModule} from '@angular/platform-browser';
 import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
 import {DocumentInfoService} from '../../services/document-info.service';
-import {HistoryChatComponent} from './active_table/history-chat.component';
 import {CollectionService} from '../../services/collection.service';
 import {EmptyResultComponent} from './research/empty-result.component';
 
@@ -115,7 +114,6 @@ const viewsRoutes: Routes = [
     DigitalAssistentComponent,
     DocumentPreviewComponent,
     DocumentInfoComponent,
-    HistoryChatComponent,
     DocumentDetailComponent,
     DocumentAttributesComponent,
     DocumentLinksComponent,
