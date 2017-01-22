@@ -3,13 +3,17 @@
 empty-result {
   .submit-pane, .info-pane {
     position: absolute;
-    right: 40%;
-    top: 40%;
+    right: 35%;
+    top: 45%;
 
     .confirm {
       .btn {
         border-radius: 25px;
         border-color: transparent;
+
+        i {
+          margin-top: 2px;
+        }
       }
     }
     .txt-lbl {
@@ -17,9 +21,13 @@ empty-result {
     }
   }
 
+  .lum-collection-preview {
+    padding-right: 0;
+  }
+
   .lum-collection-record, .new-document-preview {
     & .submit-pane, & .info-pane {
-      top: 30%;
+      top: 34%;
     }
   }
 
