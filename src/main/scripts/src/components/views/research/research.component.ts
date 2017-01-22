@@ -44,4 +44,11 @@ export class ResearchComponent {
   public showCollection(dataPayload) {
     this.queryService.addNewCollectionToFilter(dataPayload);
   }
+
+  public isFiltered(): boolean {
+    return this.documentInfoService.lastFilter &&
+      this.documentInfoService.lastFilter.filter(oneValue => {
+        return oneValue.colName !== 'Collection' && oneValue.colValue !== '';
+      }).length !== 0;
+  }
 }

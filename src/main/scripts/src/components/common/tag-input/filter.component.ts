@@ -22,7 +22,9 @@ export class FilterComponent {
               private documentService: DocumentInfoService) {
     this.initTagOptions();
     this.queryTagService.filterUpdateSubject.subscribe(eventData => {
-      let newCollection = _.cloneDeep(this.collectionItem);
+      let newCollection: any = _.cloneDeep(this.collectionItem);
+      newCollection.operand = this.defaultOperand();
+      newCollection.equality = this.defaultEquality(STRING);
       newCollection.colValue = eventData.collection.name;
       this.items.push(newCollection);
       this.filterChanged.emit(this.items);
