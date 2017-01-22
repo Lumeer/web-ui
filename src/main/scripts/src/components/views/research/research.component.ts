@@ -48,7 +48,11 @@ export class ResearchComponent {
   public isFiltered(): boolean {
     return this.documentInfoService.lastFilter &&
       this.documentInfoService.lastFilter.filter(oneValue => {
-        return oneValue.colName !== 'Collection' && oneValue.colValue !== '';
+        return !ResearchComponent.isCollectionOrSortBy(oneValue) && oneValue.colValue !== '';
       }).length !== 0;
+  }
+
+  private static isCollectionOrSortBy(oneTag) {
+    return  oneTag.colName === 'Collection' || oneTag.colName === 'Sort By';
   }
 }
