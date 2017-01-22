@@ -37,7 +37,7 @@ export class ResearchComponent {
   }
 
   public documentAdd(dataPayload) {
-    console.log(dataPayload);
+    this.documentInfoService.documents.push(dataPayload);
   }
 
   public showCollection(dataPayload) {

@@ -12,11 +12,13 @@ export function  getActionToKey(keyCode) {
 }
 
 export function filterItems(oneItem) {
-  let currentData = this.modelData.trim().toLowerCase();
-  if (this.modelData !== '') {
-    return oneItem[this.options.displayKey].toLowerCase().indexOf(currentData) !== -1;
+  if (this.modelData) {
+    let currentData = this.modelData.trim().toLowerCase();
+    if (this.modelData !== '') {
+      return oneItem[this.options.displayKey].toLowerCase().indexOf(currentData) !== -1;
+    }
+    return true;
   }
-  return true;
 }
 
 export function inactive() {

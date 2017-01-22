@@ -3,8 +3,8 @@
     <div class="lum-preview-content new-collection-preview">
       <div class="preview-icon collection-icon"
            (click)="pickerVisible = !pickerVisible"
-           [ngStyle]="{'background-color': newCollection.color}"
-           [ngClass]="{'no-rotate': newCollection.icon, 'no-color': newCollection.color}">
+           [ngStyle]="{'background-color': newCollection.iconColor}"
+           [ngClass]="{'no-rotate': newCollection.icon, 'no-color': newCollection.iconColor}">
         <i class="fa"
            [ngClass]="newCollection.icon ? newCollection.icon : 'fa-times'"
            aria-hidden="true"></i>
@@ -13,7 +13,7 @@
       <div class="color-icon" *ngIf="pickerVisible" [@animateVisible]="'in'">
         <div class="color-picker">
           <span *ngFor="let oneColor of colors"
-                [ngClass]="{active: oneColor === newCollection.color}"
+                [ngClass]="{active: oneColor === newCollection.iconColor}"
                 (click)="setColor(oneColor)"
                 [ngStyle]="{'background': oneColor}"></span>
         </div>
@@ -65,7 +65,7 @@
         <div>
           <filter-input [value]="newDocument.collection"
                         [placeholder]="'Select collection'"
-                        [source]="source"
+                        [source]="collectionService.allCollections"
                         [options]="autocompleteOptions"
                         (onChange)="onCollectionChange($event)"></filter-input>
         </div>

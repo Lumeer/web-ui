@@ -26,11 +26,13 @@
 
     </ul>
   </div>
-  <a *ngIf="!active && overflow"
-     class="center-block load-more"
-     title="Show more information"
-     (click)="active = true">
-    ...
-  </a>
-  <button (click)="clickedForDetail()" class="btn-default center-block">Click for detail</button>
+  <div class="detail-actions">
+    <a *ngIf="!active && overflow"
+       class="center-block load-more"
+       title="Show more information"
+       (click)="active = true">
+      ...
+    </a>
+    <a (click)="clickedForDetail()" class="view-detail"><i class="fa fa-search" aria-hidden="true"></i></a>
+  </div>
 </div>
