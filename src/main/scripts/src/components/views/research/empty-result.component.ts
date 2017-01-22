@@ -33,7 +33,6 @@ export class EmptyResultComponent {
   public colors: string[];
   public icons: string[];
   public newCollection: any = {
-    iconColor: 'black'
   };
   public autocompleteOptions = {
     displayKey: 'name',
@@ -65,7 +64,6 @@ export class EmptyResultComponent {
     this.collectionService.allCollections.push(this.newCollection);
     this.onNewCollection.emit(this.newCollection);
     this.newCollection = {
-      iconColor: 'black'
     };
   }
 

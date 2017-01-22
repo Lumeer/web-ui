@@ -3,8 +3,8 @@
     <div class="lum-preview-content new-collection-preview">
       <div class="preview-icon collection-icon"
            (click)="pickerVisible = !pickerVisible"
-           [ngStyle]="{'background-color': newCollection.color}"
-           [ngClass]="{'no-rotate': newCollection.icon, 'no-color': newCollection.color}">
+           [ngStyle]="{'background-color': newCollection.iconColor}"
+           [ngClass]="{'no-rotate': newCollection.icon, 'no-color': newCollection.iconColor}">
         <i class="fa"
            [ngClass]="newCollection.icon ? newCollection.icon : 'fa-times'"
            aria-hidden="true"></i>
