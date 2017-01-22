@@ -154,11 +154,11 @@ empty-result {
       border: none;
       background-color: transparent;
       box-shadow: none;
-      border-radius: 4px;
       padding-left: 15px;
 
       &:focus {
         border-bottom: 1px solid black;
+        border-radius: 0 !important;
         outline: 0;
       }
     }
