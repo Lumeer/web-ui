@@ -27,16 +27,23 @@ filter-save {
     }
 
     .lum-filter-saver {
+      top: 34px;
+      left: -5px;
+      z-index: 10;
       position: absolute;
       right: 0;
-      top: -85px;
       height: 100%;
       transition: all 0.5s;
+
+      form button {
+        margin-bottom: 7px;
+      };
 
       form input{
         padding-left: 5px;
         border: 1px solid #dce4ec;
         border-radius: 4px;
+        width: 210px;
       }
     }
   }
