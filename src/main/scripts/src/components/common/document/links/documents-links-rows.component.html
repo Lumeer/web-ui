@@ -5,7 +5,7 @@
       <th class="doc-links-rows-table-link-header" *ngFor="let col of headerAttrsLink">
         {{col}}
       </th>
-      <th>
+      <th [ngStyle]="{'background-color': hex2rgba(collectionInfo.color, 30)}">
         <i class="fa"
            [ngClass]="linkType === 'from' ? 'fa-sign-in' : 'fa-sign-out'"
            [ngStyle]="{'color':collectionInfo.color}"
@@ -22,7 +22,7 @@
       <td class="doc-links-rows-table-link" *ngFor="let col of headerAttrsLink">
         {{doc.documentLink[col]}}
       </td>
-      <td>
+      <td [ngStyle]="{'background-color': hex2rgba(collectionInfo.color, 10)}">
         <i class="fa"
            [ngClass]="collectionInfo.icon"
            [ngStyle]="{'color':collectionInfo.color}"
