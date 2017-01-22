@@ -14,7 +14,20 @@ document-post-it {
       overflow: hidden;
     }
 
+    .detail-actions {
+      float: right;
+    }
+
+    .view-detail {
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
     .load-more {
+      display: inline-block;
       margin-top: -35px;
       font-size: 25px;
       text-align: center;
