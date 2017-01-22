@@ -17,7 +17,6 @@ export class ResearchComponent {
   constructor(private route: ActivatedRoute,
               public documentInfoService: DocumentInfoService,
               public queryService: QueryTagService) {
-    console.log(this);
   }
 
   public ngOnInit() {
@@ -46,13 +45,6 @@ export class ResearchComponent {
   }
 
   public isFiltered(): boolean {
-    return this.documentInfoService.lastFilter &&
-      this.documentInfoService.lastFilter.filter(oneValue => {
-        return !ResearchComponent.isCollectionOrSortBy(oneValue) && oneValue.colValue !== '';
-      }).length !== 0;
-  }
-
-  private static isCollectionOrSortBy(oneTag) {
-    return  oneTag.colName === 'Collection' || oneTag.colName === 'Sort By';
+    return this.documentInfoService.lastFilter && this.documentInfoService.lastFilter.length !== 0;
   }
 }

@@ -37,7 +37,7 @@
         </div>
         <div class="submit-pane">
           <div class="confirm">
-            <button type="button" class="btn btn-default btn-xs" (click)="newCollectionInfo()">
+            <button type="button" class="btn btn-default btn-xs" (click)="saveCollection()">
               <i class="fa fa-plus fa-2x"></i>
             </button>
           </div>
@@ -85,7 +85,7 @@
   </div>
 
   <div class="col-lg-3 lum-document-preview lum-collection-record"
-       *ngFor="let oneCollection of collectionService.allCollections | async">
+       *ngFor="let oneCollection of collectionService.allCollections">
     <div class="lum-preview-content" (click)="showCollection(oneCollection)" >
       <span>Document count: {{oneCollection.documentsCount}}</span>
       <div class="info-pane">

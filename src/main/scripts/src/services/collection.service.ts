@@ -11,8 +11,9 @@ export class CollectionService {
   }
 
   public getAllCollections() {
-    this.allCollections = this.http.get(`${window['lumeer'].constants.publicPath}/data/collection-data.json`)
-      .map(res => res.json());
+    this.http.get(`${window['lumeer'].constants.publicPath}/data/collection-data.json`)
+      .map(res => res.json())
+      .subscribe(collections => this.allCollections = collections);
   }
 
 /*  public setActiveDocument(document) {
