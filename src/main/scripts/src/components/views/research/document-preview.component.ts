@@ -30,8 +30,6 @@ import {QueryTagService} from '../../../services/query-tags.service';
 
 export class DocumentPreviewComponent {
   public pickerVisible = false;
-  public colors: string[];
-  public icons: string[];
   @Input() public documents;
   @LocalStorage() public lastDocument;
   public newDocument: any = {links: []};
@@ -44,8 +42,6 @@ export class DocumentPreviewComponent {
   };
 
   constructor(private documentService: DocumentService, private queryService: QueryTagService) {
-    this.initColors();
-    this.initIcons();
   }
 
   public setIcon(icon) {
@@ -90,25 +86,5 @@ export class DocumentPreviewComponent {
       .subscribe(collections => {
         this.source = collections;
       });
-  }
-
-  private initColors() {
-    this.colors = [
-      '#c7254e',
-      '#18BC9C',
-      '#3498DB',
-      '#F39C12',
-      '#E74C3C'
-    ];
-  }
-
-  private initIcons() {
-    this.icons = [
-      'fa-user-circle-o',
-      'fa-dot-circle-o',
-      'fa-snowflake-o',
-      'fa-superpowers',
-      'fa-eye-slash'
-    ];
   }
 }
