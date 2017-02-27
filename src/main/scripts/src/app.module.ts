@@ -4,8 +4,9 @@ import {LeftPanelComponent, ContentComponent, TopPanelComponent, ViewPortCompone
 import {RouterModule, Routes} from '@angular/router';
 import {SettingsModule, ViewsModule} from './components';
 import {FormsModule} from '@angular/forms';
-import {KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp} from './services';
-import {Http, XHRBackend, RequestOptions} from '@angular/http';
+import {
+  KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp, KEYCLOAK_HTTP_PROVIDER
+} from './services';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import {NavigationChildrenService} from './services/navigation-children.service';
 import {DocumentService} from './services/document.service';
@@ -33,14 +34,9 @@ const appRoutes: Routes = [
     DocumentInfoService,
     BreadcrumbService,
     QueryTagService,
-    {
-      provide: Http,
-      useFactory: (backend: XHRBackend,
-                   defaultOptions: RequestOptions,
-                   keycloakService: KeycloakService) => new KeycloakHttp(backend, defaultOptions, keycloakService),
-      deps: [XHRBackend, RequestOptions, KeycloakService]
-    },
-    KeycloakService
+    KeycloakService,
+    KeycloakHttp,
+    KEYCLOAK_HTTP_PROVIDER
   ],
   declarations: [
     ViewPortComponent,

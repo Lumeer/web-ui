@@ -4,10 +4,5 @@ import {KeycloakService} from './services/keycloak.service';
 require('./styles/basic.scss');
 
 KeycloakService.init()
-  .then(() => {
-    const platform = platformBrowserDynamic();
-    platform.bootstrapModule(AppModule);
-  }).catch(() => {
-    const platform = platformBrowserDynamic();
-    platform.bootstrapModule(AppModule);
-  });
+  .then(() => platformBrowserDynamic().bootstrapModule(AppModule))
+  .catch(e => window.location.reload());
