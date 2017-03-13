@@ -6,6 +6,7 @@ import {Http} from '@angular/http';
 export class CollectionService {
   // @LocalStorage('lastDocument') public activeDocument;
   public allCollections: any;
+  public allIcons: any;
 
   constructor(private http: Http) {
   }
@@ -14,6 +15,12 @@ export class CollectionService {
     this.http.get(`${window['lumeer'].constants.publicPath}/data/collection-data.json`)
       .map(res => res.json())
       .subscribe(collections => this.allCollections = collections);
+  }
+
+  public getAllIcons() {
+    this.http.get(`${window['lumeer'].constants.publicPath}/data/allicons.json`)
+      .map(res => res.json())
+      .subscribe(icons => this.allIcons = icons);
   }
 
 /*  public setActiveDocument(document) {

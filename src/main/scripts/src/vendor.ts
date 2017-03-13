@@ -18,6 +18,7 @@ import './js/custom.js';
 // import 'zone.js/dist/zone';
 
 import 'socket.io-client';
+import 'angular2-drag-scroll';
 // import 'lodash';
 import 'angular2-perfect-scrollbar';
 import 'ng2-webstorage';

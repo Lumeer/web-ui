@@ -104,8 +104,9 @@ empty-result {
     }
 
     .color-icon {
-      width: 150px;
-      height: 100px;
+      z-index: 9;
+      width: 320px;
+      height: 250px;
       overflow: hidden;
       position: absolute;
       background: $secondary-color;
@@ -129,9 +130,38 @@ empty-result {
         border: solid 2px $brand-primary;
       }
 
-      div:not(.confirm) {
-        width: 100%;
-        height: 37%;
+      .icon-picker {
+        padding-left: 5px;
+        //overflow-y: hidden;
+        //overflow-x: auto;
+
+        .icon-pager {
+          min-width: 300px;
+          height: 100%;
+
+          .icon-page {
+            width: 310px;
+            height: 156px;
+            display: inline-block;
+            white-space: initial;
+            cursor: all-scroll;
+          }
+        }
+
+        span {
+          width: 30px;
+          height: 35px;
+        }
+      }
+
+      .color-picker {
+        height: 40px;
+        width: 175px;
+      }
+
+      div.icon-picker {
+        width: 99%;
+        height: 70%;
       }
 
       .confirm input {

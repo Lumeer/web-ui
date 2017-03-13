@@ -29,9 +29,10 @@ import {CollectionService} from '../../../services/collection.service';
 })
 
 export class EmptyResultComponent {
+  public ITEMS_PER_PAGE = 36;
   public newDocument: any = {links: []};
   public colors: string[];
-  public icons: string[];
+  public numbers: any[];
   public newCollection: any = {
   };
   public autocompleteOptions = {
@@ -47,6 +48,7 @@ export class EmptyResultComponent {
   @Output() public onShowCollection: EventEmitter<any> = new EventEmitter();
 
   constructor(public collectionService: CollectionService) {
+    this.numbers = Array.apply(null, {length: this.ITEMS_PER_PAGE}).map(Number.call, Number);
     this.initColors();
     this.initIcons();
   }
@@ -94,12 +96,6 @@ export class EmptyResultComponent {
   }
 
   private initIcons() {
-    this.icons = [
-      'fa-user-circle-o',
-      'fa-dot-circle-o',
-      'fa-snowflake-o',
-      'fa-superpowers',
-      'fa-eye-slash'
-    ];
+    this.collectionService.getAllIcons();
   }
 }
