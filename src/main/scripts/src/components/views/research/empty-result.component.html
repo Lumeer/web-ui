@@ -17,12 +17,18 @@
                 (click)="setColor(oneColor)"
                 [ngStyle]="{'background': oneColor}"></span>
         </div>
-        <div class="icon-picker">
-          <span *ngFor="let oneIcon of icons"
-                (click)="setIcon(oneIcon)"
-                [ngClass]="{active: oneIcon === newCollection.icon}">
-            <i class="fa" [ngClass]="oneIcon" aria-hidden="true"></i>
-          </span>
+        <div class="icon-picker" drag-scroll>
+          <div class="icon-pager">
+            <template ngFor let-oneIcon let-index="index" [ngForOf]="collectionService.allIcons">
+              <div class="icon-page" *ngIf="index % 36 === 0">
+                <span *ngFor="let oneIndex of numbers"
+                      (click)="setIcon(collectionService.allIcons[index + oneIndex])"
+                      [ngClass]="{active: collectionService.allIcons[index + oneIndex] === newCollection.icon}">
+                  <i class="fa" [ngClass]="collectionService.allIcons[index + oneIndex]" aria-hidden="true"></i>
+                </span>
+              </div>
+            </template>
+          </div>
         </div>
         <div class="confirm">
           <input type="button" value="Ok" (click)="pickerVisible = false">

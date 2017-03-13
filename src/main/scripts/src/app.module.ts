@@ -12,6 +12,7 @@ import {NavigationChildrenService} from './services/navigation-children.service'
 import {DocumentService} from './services/document.service';
 import {CommonComponentsModule} from './components/common/common-components.module';
 import {QueryTagService} from './services/query-tags.service';
+import { DragScrollModule } from 'angular2-drag-scroll';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent}
@@ -19,6 +20,7 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [
+    DragScrollModule,
     BrowserModule,
     RouterModule.forRoot(appRoutes, { useHash: true }),
     ViewsModule,

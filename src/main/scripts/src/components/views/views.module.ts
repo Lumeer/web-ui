@@ -30,6 +30,7 @@ import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
 import {DocumentInfoService} from '../../services/document-info.service';
 import {CollectionService} from '../../services/collection.service';
 import {EmptyResultComponent} from './research/empty-result.component';
+import { DragScrollModule } from 'angular2-drag-scroll';
 
 const viewsRoutes: Routes = [
   {
@@ -99,6 +100,7 @@ const viewsRoutes: Routes = [
     BrowserModule,
     PerfectScrollbarModule,
     FormsModule,
+    DragScrollModule,
     RouterModule.forChild(viewsRoutes)
   ],
   providers: [

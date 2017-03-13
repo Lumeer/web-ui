@@ -46,7 +46,7 @@ export class KeycloakService {
 
   public getToken(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      if (KeycloakService.auth.authz.token) {
+      if (KeycloakService.auth.authz && KeycloakService.auth.authz.token) {
         KeycloakService.auth.authz
           .updateToken(5)
           .success(() => {
