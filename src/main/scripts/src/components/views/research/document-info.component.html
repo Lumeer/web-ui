@@ -1,10 +1,10 @@
 <div *ngIf="document" [@animateHeight]="'in'">
   <div class="document-header row" [ngStyle]="{'background-color': document.color}">
-    <span class="col-lg-9 col-xs-9">
+    <span class="col-lg-11 col-xs-11">
       <i *ngIf="document.icon" class="fa" [ngClass]="document.icon" aria-hidden="true"></i>
       {{document.title}}
     </span>
-    <div class="col-lg-1 col-xs-3 lum-document-navigation">
+    <div class="col-lg-1 col-xs-1 lum-document-navigation">
       <i class="fa fa-file-text" aria-hidden="true" (click)="onEditLinksClick()"></i>
       <i class="fa fa-history" aria-hidden="true" (click)="onVersionsToggleClick()"></i>
       <i class="fa fa-user" aria-hidden="true" (click)="onRightsToggleClick()"></i>

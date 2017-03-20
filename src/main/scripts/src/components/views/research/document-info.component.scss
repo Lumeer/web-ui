@@ -8,6 +8,7 @@ document-info {
   > div {
     position: fixed;
     bottom: 0;
+    left: 0;
     width: 100%;
     z-index: 9;
     height: 300px;
@@ -102,14 +103,6 @@ document-info {
 
     i {
       cursor: pointer;
-    }
-  }
-}
-
-@media (min-width: $mobile-width) {
-  document-info {
-    .document-right-panel {
-      margin-right: 16.6%;
     }
   }
 }
