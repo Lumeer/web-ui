@@ -1,5 +1,6 @@
 import {Component, trigger, state, transition, style, animate, keyframes} from '@angular/core';
 import {DocumentInfoService} from '../../../services/document-info.service';
+import {DocumentNavigationService} from '../../../services/document-navigation.service';
 import * as _ from 'lodash';
 import {DocumentService} from '../../../services/document.service';
 
@@ -43,11 +44,16 @@ import {DocumentService} from '../../../services/document.service';
 
 export class PickItemComponent {
   public actions: any[];
+  public activeRoutes: any[];
 
-  constructor(public documentService: DocumentService) {
+  constructor(public documentService: DocumentService,
+              public documentInfoService: DocumentInfoService,
+              private documentNavigationService: DocumentNavigationService) {
   }
 
   public ngOnInit() {
+    this.activeRoutes = this.documentNavigationService.activeRoutes();
+    this.documentService.fetchFilterResultsFromFilter(this.documentInfoService.lastFilter);
     this.actions = [
       {
         id: 'history',
@@ -86,4 +92,8 @@ export class PickItemComponent {
     this.documentService.fetchFilterResultsFromFilter(dataPayload);
   }
 
+  public onNavigationClick(route) {
+    let parent = this.documentNavigationService.getParentForChildRoute(route);
+    this.documentNavigationService.handleItemSelect({parent: parent.data, child: route.data});
+  }
 }
