@@ -1,17 +1,32 @@
 <div>
-  <div>
+
+  <div class="document-filter-nav">
     <div class="document-filter">
-      <filter-save (onChanged)="onFilterChanged($event)" [otherActions]="actions" (onActionClick)="actionClick($event)"></filter-save>
+      <filter-save (onChanged)="onFilterChanged($event)" (onActionClick)="actionClick($event)"></filter-save>
+    </div>
+    <div class="document-navigation row">
+      <div *ngFor="let route of activeRoutes" class="col-lg-2">
+        <a (click)="onNavigationClick(route)">
+          <i class="fa" [ngClass]="route.data.icon"></i>
+          <span>{{route.data.title}}</span>
+        </a>
+      </div>
+      <div class="dashboard-display pull-right col-lg-3" *ngIf="documentService.documentDetail">
+        <!-- Tile to grid and back -->
+        <a *ngFor="let oneAction of actions" (click)="actionClick({action: oneAction})">
+          <i class="fa" [ngClass]="oneAction.icon"></i>
+        </a>
+      </div>
     </div>
   </div>
   <div class="pick-item-content row">
-    <div class="document-info" [ngClass]="{'col-lg-10': activeAction(), 'col-lg-12': !activeAction()}">
+    <perfect-scrollbar class="document-info" [ngClass]="{'col-lg-10': activeAction(), 'col-lg-12': !activeAction()}">
       <tabular-result *ngIf="documentService.filterResults"
                       [data]="documentService.filterResults"
                       (onSelectionChange)="selectItem($event)"></tabular-result>
       <document-detail *ngIf="documentService.documentDetail"
                        [document]="documentService.documentDetail"></document-detail>
-    </div>
+    </perfect-scrollbar>
     <div *ngIf="activeAction() && documentService.documentDetail" class="col-lg-2 active-action" [@animateIn]="'in'">
       <document-history *ngIf="activeAction().id === 'history'"></document-history>
       <document-rights *ngIf="activeAction().id === 'rights'"></document-rights>
