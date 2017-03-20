@@ -2,7 +2,19 @@
   <div class="document-filter">
     <filter-save (onChanged)="onFilterChanged($event)"></filter-save>
   </div>
-  <div class="document-preview" >
+  <perfect-scrollbar class="document-preview" >
+    <empty-result *ngIf="!isFiltered()"
+                  (onNewCollection)="collectionAdd($event)"
+                  (onNewDocument)="documentAdd($event)"
+                  (onShowCollection)="showCollection($event)"></empty-result>
+    <empty-result *ngIf="!isFiltered()"
+                  (onNewCollection)="collectionAdd($event)"
+                  (onNewDocument)="documentAdd($event)"
+                  (onShowCollection)="showCollection($event)"></empty-result>
+    <empty-result *ngIf="!isFiltered()"
+                  (onNewCollection)="collectionAdd($event)"
+                  (onNewDocument)="documentAdd($event)"
+                  (onShowCollection)="showCollection($event)"></empty-result>
     <empty-result *ngIf="!isFiltered()"
                   (onNewCollection)="collectionAdd($event)"
                   (onNewDocument)="documentAdd($event)"
@@ -10,5 +22,5 @@
     <document-preview [documents]="documentInfoService.documents"
                       *ngIf="isFiltered()">
     </document-preview>
-  </div>
+  </perfect-scrollbar>
 </div>

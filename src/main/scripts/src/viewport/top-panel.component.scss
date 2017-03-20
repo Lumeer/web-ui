@@ -4,9 +4,25 @@ top-panel {
   .lum-top-nav {
     margin-left: 0;
 
+    a {
+      text-decoration: none;
+      color: $secondary-color;
+
+      &:hover {
+        color: $brand-success;
+      }
+    }
+
     .lum-credentials {
-      background: $primary-color;
+      background: $brand-primary;
       margin-left: 0;
+      vertical-align: baseline;
+      line-height: 3;
+
+      > div {
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
     }
 
     .lum-options {
@@ -20,43 +36,10 @@ top-panel {
       }
     }
 
-    .filter-options {
-      position: relative;
-      bottom: -35px;
-      right: 5px;
-      font-size: 25px;
-
-      a {
-        cursor: pointer;
-      }
-
-      .lum-filter-saver {
-        position: absolute;
-        right: -95px;
-        top: 46px;
-        height: 100%;
-        transition: all 0.5s;
-
-        form input{
-          padding-left: 5px;
-          border: 1px solid #dce4ec;
-          border-radius: 4px;
-        }
-      }
-    }
-
-    .lum-search {
-      .form-group {
-        width: 100%;
-        input {
-          width: 100%;
-        }
-      }
-      margin-top: 7px;
-    }
-
-    .breadcrumbs {
-      ol li{
+    .breadcrumbs ol {
+      margin: 0;
+      color: $secondary-color;
+      li{
         display: inline-block;
 
         &:not(:first-child):before{

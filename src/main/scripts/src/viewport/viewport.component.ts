@@ -43,6 +43,11 @@ export class ViewPortComponent {
     this.kc.logout();
   }
 
+  public handleNavigate() {
+    let win = window.open('http://www.lumeer.io/', '_blank');
+    win.focus();
+  }
+
   public onFilterSave(dataPayload) {
     console.log(this.router, dataPayload);
   }
