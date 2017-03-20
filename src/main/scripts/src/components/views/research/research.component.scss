@@ -5,6 +5,21 @@ views-research {
     height: 89%;
   }
 
+  .document-filter-nav {
+    margin-left: -6%;
+    padding-left: 6%;
+    box-shadow: inset 0 -1px 0 rgba(108, 108, 108, 0.3);
+
+    a {
+      text-decoration: none;
+    }
+
+    .document-navigation {
+      margin-left: 10%;
+      margin-right: 15%;
+    }
+  }
+
   .document-filter {
     line-height: 1.5;
     margin-left: 10%;

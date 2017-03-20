@@ -1,6 +1,8 @@
 <div>
-  <div class="document-filter">
-    <filter-save (onChanged)="onFilterChanged($event)" [otherActions]="actions" (onActionClick)="actionClick($event)"></filter-save>
+  <div>
+    <div class="document-filter">
+      <filter-save (onChanged)="onFilterChanged($event)" [otherActions]="actions" (onActionClick)="actionClick($event)"></filter-save>
+    </div>
   </div>
   <div class="pick-item-content row">
     <div class="document-info" [ngClass]="{'col-lg-10': activeAction(), 'col-lg-12': !activeAction()}">

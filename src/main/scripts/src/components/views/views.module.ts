@@ -31,6 +31,7 @@ import {DocumentInfoService} from '../../services/document-info.service';
 import {CollectionService} from '../../services/collection.service';
 import {EmptyResultComponent} from './research/empty-result.component';
 import { DragScrollModule } from 'angular2-drag-scroll';
+import {DocumentNavigationService} from '../../services/document-navigation.service';
 
 const viewsRoutes: Routes = [
   {
@@ -46,7 +47,7 @@ const viewsRoutes: Routes = [
         path: 'research',
         component: ResearchComponent,
         data: {
-          id: 'research', title: 'Research', icon: 'fa-search'
+          id: 'research', title: 'Research', icon: 'fa-search', active: true
         },
         children: []
       },
@@ -54,7 +55,7 @@ const viewsRoutes: Routes = [
         path: 'pick_item',
         component: PickItemComponent,
         data: {
-          id: 'pick_item', title: 'Pick item', icon: 'fa-eyedropper'
+          id: 'pick_item', title: 'Pick item', icon: 'fa-eyedropper', active: true
         },
         children: []
       },
@@ -105,6 +106,7 @@ const viewsRoutes: Routes = [
   ],
   providers: [
     DocumentInfoService,
+    DocumentNavigationService,
     CollectionService
   ],
   declarations: [

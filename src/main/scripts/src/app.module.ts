@@ -13,6 +13,7 @@ import {DocumentService} from './services/document.service';
 import {CommonComponentsModule} from './components/common/common-components.module';
 import {QueryTagService} from './services/query-tags.service';
 import { DragScrollModule } from 'angular2-drag-scroll';
+import {DocumentNavigationService} from './services/document-navigation.service';
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent}
@@ -38,6 +39,7 @@ const appRoutes: Routes = [
     QueryTagService,
     KeycloakService,
     KeycloakHttp,
+    DocumentNavigationService,
     KEYCLOAK_HTTP_PROVIDER
   ],
   declarations: [

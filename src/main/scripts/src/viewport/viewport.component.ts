@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {KeycloakService} from '../services/keycloak.service';
 import {DocumentService} from '../services/document.service';
 import {DocumentInfoService} from '../services/document-info.service';
+import {DocumentNavigationService} from '../services/document-navigation.service';
 
 @Component({
   selector: 'view-port',
@@ -15,28 +16,12 @@ export class ViewPortComponent {
   public activeItem: any;
   public activeFilter: any;
 
-  constructor(private router: Router, private kc: KeycloakService, private documentInfoService: DocumentInfoService) {}
+  constructor(private router: Router, private kc: KeycloakService,
+              private documentInfoService: DocumentInfoService,
+              private documentNavigationService: DocumentNavigationService) {}
 
   public handleCollapseEvent() {
     this.collapsed = !this.collapsed;
-  }
-
-  public handleItemSelect(dataPayload) {
-    if (dataPayload) {
-      if (dataPayload.child.id === 'query' && dataPayload.link) {
-        this.activeFilter = dataPayload.link;
-      }
-      this.activeItem = dataPayload.child;
-      let navigateTo: any = [`${dataPayload.parent.id}`, `${dataPayload.child.id}`];
-      if (dataPayload.link) {
-        this.router.navigate(navigateTo, {queryParams: {id: dataPayload.link.id}});
-      } else {
-        this.router.navigate(navigateTo);
-      }
-    } else {
-      this.activeItem = { title: 'Home'};
-      this.router.navigate([`/`]);
-    }
   }
 
   public handleLogOut() {
@@ -53,6 +38,7 @@ export class ViewPortComponent {
   }
 
   public ngOnInit() {
+    this.documentNavigationService.handleItemSelect();
     this.activeItem = { title: 'Home'};
     this.documentInfoService.filterSaveSubject.subscribe(newFilter => this.onFilterSave(newFilter));
   }

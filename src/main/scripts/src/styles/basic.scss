@@ -32,6 +32,11 @@ a {
   }
 }
 
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .lum-no-padding {
   padding: 0 !important;
 }
