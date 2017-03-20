@@ -8,4 +8,16 @@ view-port {
     -moz-transition: width 0.5s ease-out;
     transition: width 0.5s ease-out;
   }
+
+  .lum-content > :not(top-panel) > div {
+    margin-left: 5%;
+
+    > :not(.document-filter) {
+      padding-right: 5%;
+    }
+
+    .document-filter {
+      margin-right: 15%;
+    }
+  }
 }

@@ -1,6 +1,6 @@
 <div class="row">
-  <query-filter (filterChanged)="onFilterChanged($event)" class="col-sm-12 col-lg-10"></query-filter>
-  <div class="col-lg-2 filter-options"
+  <query-filter (filterChanged)="onFilterChanged($event)" class="col-sm-12 col-lg-11"></query-filter>
+  <div class="col-lg-1 filter-options"
        [ngClass]="{'no-filer': documentInfoService.lastFilter && documentInfoService.lastFilter.length === 0}">
     <a (click)="showSave = !showSave"><i class="fa fa-floppy-o" aria-hidden="true"></i></a>
     <a (click)="showSave = !showSave"><i class="fa fa-clipboard" aria-hidden="true"></i></a>

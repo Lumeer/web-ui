@@ -8,6 +8,7 @@ import {BreadcrumbService} from '../services/breadcrumb.service';
 export class TopPanelComponent {
   @Output() public collapseEvent = new EventEmitter();
   @Output() public logoutEvent = new EventEmitter();
+  @Output() public navigateEvent = new EventEmitter();
   @Input() public currentView: any;
   @Input() public activeLink: any;
   constructor(private breadCrumbService: BreadcrumbService) {}
@@ -21,5 +22,9 @@ export class TopPanelComponent {
 
   public onLogout() {
     this.logoutEvent.next();
+  }
+
+  public onHomeClick() {
+    this.navigateEvent.next();
   }
 }
