@@ -89,6 +89,7 @@ export class PickItemComponent {
   }
 
   public onFilterChanged(dataPayload) {
+    this.documentInfoService.fetchDocumentPreviewsFromFilter(dataPayload);
     this.documentService.fetchFilterResultsFromFilter(dataPayload);
   }
 
