@@ -15,18 +15,47 @@ views-pick-item {
     height: 89.9%;
     overflow-y: auto;
     background-color: $primary-color;
-  }
 
+    > * > .ps-scrollbar-y-rail {
+      left: 0;
+    }
+  }
 
   .document-filter {
+    line-height: 1.5;
+    margin-left: 10%;
+    margin-bottom: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    margin-top: 15px;
+    padding-top: 5px;
     padding-bottom: 5px;
     background: $secondary-color;
-    box-shadow: inset 0 -1px 0 rgba(108, 108, 108, 0.3);
   }
 
-  .row {
-    margin-left: 0 !important;
+  .document-filter-nav {
+    margin-left: -6%;
+    padding-left: 6%;
+    box-shadow: inset 0 -1px 0 rgba(108, 108, 108, 0.3);
+
+    a {
+      text-decoration: none;
+    }
+
+    .document-navigation {
+      margin-left: 10%;
+      margin-right: 15%;
+    }
   }
+
+  a {
+    text-decoration: none;
+  }
+
+  .document-navigation {
+    margin-left: 10%;
+    margin-right: 15%;
+  }
+
 
   .active-action {
     overflow-y: auto;

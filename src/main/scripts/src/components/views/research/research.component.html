@@ -24,14 +24,6 @@
                   (onNewCollection)="collectionAdd($event)"
                   (onNewDocument)="documentAdd($event)"
                   (onShowCollection)="showCollection($event)"></empty-result>
-    <empty-result *ngIf="!isFiltered()"
-                  (onNewCollection)="collectionAdd($event)"
-                  (onNewDocument)="documentAdd($event)"
-                  (onShowCollection)="showCollection($event)"></empty-result>
-    <empty-result *ngIf="!isFiltered()"
-                  (onNewCollection)="collectionAdd($event)"
-                  (onNewDocument)="documentAdd($event)"
-                  (onShowCollection)="showCollection($event)"></empty-result>
     <document-preview [documents]="documentInfoService.documents"
                       *ngIf="isFiltered()">
     </document-preview>

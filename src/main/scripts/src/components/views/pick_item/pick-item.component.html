@@ -1,5 +1,4 @@
 <div>
-
   <div class="document-filter-nav">
     <div class="document-filter">
       <filter-save (onChanged)="onFilterChanged($event)" (onActionClick)="actionClick($event)"></filter-save>
@@ -11,11 +10,12 @@
           <span>{{route.data.title}}</span>
         </a>
       </div>
-      <div class="dashboard-display pull-right col-lg-3" *ngIf="documentService.documentDetail">
-        <!-- Tile to grid and back -->
+      <div class="dashboard-display pull-right col-lg-1" *ngIf="documentService.documentDetail">
+        <!-- [otherActions]="actions"-->
         <a *ngFor="let oneAction of actions" (click)="actionClick({action: oneAction})">
           <i class="fa" [ngClass]="oneAction.icon"></i>
         </a>
+        <!-- Tile to grid and back -->
       </div>
     </div>
   </div>
