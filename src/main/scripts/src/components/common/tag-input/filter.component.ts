@@ -17,11 +17,12 @@ const SORT_BY = {text: 'Sort By', type: 'sortby'};
 })
 
 export class FilterComponent {
+  private subscription: any;
   constructor(private route: ActivatedRoute,
               private queryTagService: QueryTagService,
               private documentService: DocumentInfoService) {
     this.initTagOptions();
-    this.queryTagService.filterUpdateSubject.subscribe(eventData => {
+    this.subscription = this.queryTagService.filterUpdateSubject.subscribe(eventData => {
       let newCollection: any = _.cloneDeep(this.collectionItem);
       newCollection.operand = this.defaultOperand();
       newCollection.equality = this.defaultEquality(STRING);
@@ -183,5 +184,9 @@ export class FilterComponent {
       return oneItem[this.autocompleteOptions.displayKey].toLowerCase().indexOf(currentData) !== -1;
     }
     return true;
+  }
+
+  public ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

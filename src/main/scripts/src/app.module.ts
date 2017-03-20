@@ -16,7 +16,7 @@ import { DragScrollModule } from 'angular2-drag-scroll';
 import {DocumentNavigationService} from './services/document-navigation.service';
 
 const appRoutes: Routes = [
-  {path: '', redirectTo: '/views/pick_item', pathMatch: 'full'}
+  {path: '', redirectTo: '/views/research', pathMatch: 'full'}
 ];
 
 @NgModule({
