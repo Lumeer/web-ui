@@ -1,9 +1,6 @@
-import {
-  Component, Input, Output, EventEmitter, trigger, state, style, transition, animate,
-  keyframes
-} from '@angular/core';
-import * as _ from 'lodash';
+import {Component, Output, EventEmitter} from '@angular/core';
 import {CollectionService} from '../../../services/collection.service';
+import {trigger, state, style, transition, animate, keyframes} from '@angular/animations';
 
 @Component({
   selector: 'empty-result',

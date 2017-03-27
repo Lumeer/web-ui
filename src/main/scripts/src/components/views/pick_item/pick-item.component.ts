@@ -1,8 +1,9 @@
-import {Component, trigger, state, transition, style, animate, keyframes} from '@angular/core';
 import {DocumentInfoService} from '../../../services/document-info.service';
 import {DocumentNavigationService} from '../../../services/document-navigation.service';
+import {Component} from '@angular/core';
 import * as _ from 'lodash';
 import {DocumentService} from '../../../services/document.service';
+import {style, state, animate, transition, trigger, keyframes} from '@angular/animations';
 
 @Component({
   selector: 'views-pick-item',
