@@ -1,10 +1,9 @@
 import {
-  Component, Input, SimpleChanges, Output, EventEmitter, ElementRef, Renderer, ContentChild,
-  style, state, animate, transition, trigger, keyframes
-} from '@angular/core';
+  Component, Input, SimpleChanges, Output, EventEmitter, ElementRef, Renderer, ContentChild} from '@angular/core';
 import {getActionToKey, filterItems, inactive} from './autocomplete-actions';
 import {AutoCompleteOptions} from './autocomplete.interface';
 import {EditableDirective} from './editable.directive';
+import {style, state, animate, transition, trigger, keyframes} from '@angular/animations';
 
 @Component({
   selector: 'lum-auto-complete, [lum-auto-complete]',

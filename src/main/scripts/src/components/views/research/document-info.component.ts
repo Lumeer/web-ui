@@ -1,9 +1,7 @@
-import {
-  Component, trigger, state, style, transition, animate, Input, keyframes,
-  ViewChildren, QueryList, ElementRef, Output, EventEmitter
-} from '@angular/core';
+import {Component,Input, ViewChildren, QueryList, ElementRef, Output, EventEmitter} from '@angular/core';
 import {DocumentService} from '../../../services/document.service';
 import {Router, ActivatedRoute} from '@angular/router';
+import {style, state, animate, transition, trigger, keyframes} from '@angular/animations';
 
 const LINK_ID = 'pick_item';
 

@@ -14,6 +14,7 @@ import {CommonComponentsModule} from './components/common/common-components.modu
 import {QueryTagService} from './services/query-tags.service';
 import { DragScrollModule } from 'angular2-drag-scroll';
 import {DocumentNavigationService} from './services/document-navigation.service';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: '/views/research', pathMatch: 'full'}
@@ -28,6 +29,7 @@ const appRoutes: Routes = [
     FormsModule,
     Ng2Webstorage,
     SettingsModule,
+    BrowserAnimationsModule,
     CommonComponentsModule
   ],
   providers: [
