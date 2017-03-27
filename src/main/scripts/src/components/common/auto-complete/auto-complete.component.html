@@ -11,9 +11,9 @@
          #autocompleteItem
          (click)="updateData(oneOption)"
          [ngClass]="{active: oneOption.active}">
-      <template [ngIf]="!options.limit || idx < options.limit">
+      <ng-template [ngIf]="!options.limit || idx < options.limit">
         {{options && options.displayKey && oneOption[options.displayKey]}}
-      </template>
+      </ng-template>
     </div>
   </div>
 </section>

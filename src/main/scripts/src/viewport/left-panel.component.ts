@@ -58,7 +58,7 @@ export class LeftPanelComponent {
   }
 
   private activateChild(child: any) {
-    _.forEach(this.router.config, item => {
+    _.forEach(this.router.config, (item: any) => {
       let activeChild: any = _.find(item.children, {active: true});
       if (activeChild) {
         activeChild.data.active = false;
