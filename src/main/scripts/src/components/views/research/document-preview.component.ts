@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import {LocalStorage} from 'ng2-webstorage';
 import {DocumentService} from '../../../services/document.service';
 import {QueryTagService} from '../../../services/query-tags.service';
-import { trigger, state, style, transition, animate, keyframes,} from '@angular/animations';
+import {trigger, state, style, transition, animate, keyframes} from '@angular/animations';
 
 @Component({
   selector: 'document-preview',

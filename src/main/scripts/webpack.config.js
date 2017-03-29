@@ -26,6 +26,14 @@ module.exports = {
         exclude: /(node_modules|libs)/
       },
       {
+        test: /\.js$/,
+        include: /(angular2-drag-scroll)/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015']
+        }
+      },
+      {
         test: /\.ts/,
         loaders: ['ts-loader'],
         exclude: /node_modules/
