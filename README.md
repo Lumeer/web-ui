@@ -20,7 +20,7 @@ To build application locally run
 $ npm run-script build
 ```
 
-To run and watch for changes run (server will listen on `http://localhost:7000/`)
+To run and watch for changes run (server will listen on [http://localhost:7000/](http://localhost:7000/))
 ```
 $ npm start
 ```
