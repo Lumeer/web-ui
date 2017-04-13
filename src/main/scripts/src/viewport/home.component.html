@@ -1,7 +1,21 @@
-<div class="jumbotron">
-  <h1>Lumeer</h1>
-  <h3>Your go-to guy for anything related to your data</h3>
-  <p>Lumeer changes the way we work with our business data by leveraging state of the art technologies.</p>
-  <p><a class="btn btn-primary btn-lg" href="http://www.lumeer.io/" target="_blank">Learn more</a>
-  </p>
+<div>
+  <div class="document-filter-nav">
+    <div class="document-filter">
+      <filter-save (onChanged)="onFilterChanged($event)" [otherActions]="actions" (onActionClick)="actionClick($event)"></filter-save>
+    </div>
+    <div class="document-navigation row">
+      <div *ngFor="let route of activeRoutes" class="col-lg-2" [ngClass]="{active: route.data.current}">
+        <a (click)="onNavigationClick(route)">
+          <i class="fa" [ngClass]="route.data.icon"></i>
+          <span>{{route.data.title}}</span>
+        </a>
+      </div>
+      <div class="dashboard-display pull-right col-lg-3">
+        <!-- Tile to grid and back -->
+      </div>
+    </div>
+  </div>
+  <div class="company-project" *ngIf="companyVisible" [@animateHeight]="'in'">
+    <company-chooser (saveAction)="onSaveAction()"></company-chooser>
+  </div>
 </div>

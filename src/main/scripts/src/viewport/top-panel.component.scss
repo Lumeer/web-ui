@@ -1,16 +1,42 @@
 @import '../styles/variables';
 
 top-panel {
+  .user-options ul {
+    min-width: 160px;
+    position: absolute;
+    background: white;
+    z-index: 999;
+    left: -10%;
+    top: 105%;
+    box-shadow: $default-shadow;
+    overflow: hidden;
+    padding: 15px;
+
+    li {
+      line-height: 1.5;
+
+      &.divider {
+        height: 1px;
+        overflow: hidden;
+        margin: 5px -15px;
+        background-color: #e5e5e5;
+      }
+    }
+  }
+
+  .company-project {
+    cursor: pointer;
+    text-align: right;
+    color: $brand-success;
+    font-size: $font-size-h4;
+    line-height: 2.5;
+  }
+
   .lum-top-nav {
     margin-left: 0;
 
-    a {
+    a:not(.icon) {
       text-decoration: none;
-      color: $secondary-color;
-
-      &:hover {
-        color: $brand-success;
-      }
     }
 
     .lum-credentials {
@@ -32,7 +58,7 @@ top-panel {
       a {
         cursor: pointer;
         margin-right: 5px;
-        display: table-cell; vertical-align: middle;
+        vertical-align: middle;
       }
     }
 
@@ -47,6 +73,52 @@ top-panel {
           padding: 0 5px;
         }
       }
+    }
+  }
+
+  .icon {
+    line-height: initial;
+    color: #18bc9c;
+    background: white;
+    border-radius: 25px;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    display: table-cell;
+
+    &.notification {
+      text-decoration: none;
+      width: 30px;
+      height: 30px;
+      top: 9px;
+      position: relative;
+    }
+
+    i {
+      margin-right: initial;
+      font-size: 35px;
+    }
+  }
+
+  .notifications-center {
+    left: -140px;
+    top: 55px;
+    position: absolute;
+    line-height: 1;
+    background: white;
+    width: 350px;
+    height: 350px;
+    z-index: 999;
+    box-shadow: $default-shadow;
+
+    .title {
+      text-align: center;
+    }
+
+    div {
+      border-bottom: 1px solid #d1d1d1;
+      background: $primary-color;
+      padding: 5px 20px;
     }
   }
 }

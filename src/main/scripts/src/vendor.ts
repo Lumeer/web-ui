@@ -23,3 +23,4 @@ import 'angular2-drag-scroll';
 // import 'lodash';
 import 'angular2-perfect-scrollbar';
 import 'ng2-webstorage';
+window['Keycloak'] = require('./js/keycloak.js');

@@ -1,23 +1,50 @@
-import {Component, EventEmitter, Output, Input} from '@angular/core';
-import {BreadcrumbService} from '../services/breadcrumb.service';
+import {Component, EventEmitter, Output, Input, ElementRef} from '@angular/core';
+import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
+import {CompanyProject} from '../services/company-project.service';
 @Component({
+  host: {
+    '(document:click)': 'onClick($event)',
+  },
   selector: 'top-panel',
   template: require('./top-panel.component.html'),
-  styles: [ require('./top-panel.component.scss').toString() ]
+  styles: [ require('./top-panel.component.scss').toString() ],
+  animations: [
+    trigger('animateHeight', [
+      state('in', style({height: '*'})),
+      transition('void => *', [
+        animate(200, keyframes([
+          style({height: 0, offset: 0}),
+          style({height: '*', offset: 1})
+        ]))
+      ]),
+      transition('* => void', [
+        animate(200, keyframes([
+          style({height: '*', offset: 0}),
+          style({height: 0, offset: 1})
+        ]))
+      ])
+    ])
+  ]
 })
 export class TopPanelComponent {
-  @Output() public collapseEvent = new EventEmitter();
+  @Output() public companyToggle = new EventEmitter();
   @Output() public logoutEvent = new EventEmitter();
   @Output() public navigateEvent = new EventEmitter();
-  @Input() public currentView: any;
-  @Input() public activeLink: any;
-  constructor(private breadCrumbService: BreadcrumbService) {}
+  @Input() public activeCorp: any;
+  @Input() public activeProject: any;
 
-  public newFilterName = '';
-  public showSave: boolean = false;
+  constructor(private elementRef: ElementRef, public companyProject: CompanyProject) {}
 
-  public onCollapse() {
-    this.collapseEvent.next();
+  public ngOnInit() {
+    this.companyProject.fetchActiveCompany();
+    this.companyProject.fetchActiveProject();
+  }
+
+  public optionsVisible: boolean = false;
+  public notificationsVisible: boolean = false;
+
+  public showCompanyChooser() {
+    this.companyToggle.next();
   }
 
   public onLogout() {
@@ -26,5 +53,26 @@ export class TopPanelComponent {
 
   public onHomeClick() {
     this.navigateEvent.next();
+  }
+
+  public toggleOptions() {
+    this.optionsVisible = !this.optionsVisible;
+    this.notificationsVisible = false;
+  }
+
+  public toggleNotifications() {
+    this.notificationsVisible = !this.notificationsVisible;
+    this.optionsVisible = false;
+  }
+
+  public onClick(event) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.closeDropDowns();
+    }
+  }
+
+  private closeDropDowns() {
+    this.notificationsVisible = false;
+    this.optionsVisible = false;
   }
 }

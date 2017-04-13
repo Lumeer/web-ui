@@ -6,16 +6,35 @@
         <span>Lumeer</span>
       </a>
     </div>
-    <div class="col-lg-8 breadcrumbs">
-      <ol>
-        <li>Home</li>
-        <li *ngFor="let crumb of breadCrumbService.breadcrumbs">{{crumb.data && crumb.data.title}}</li>
-      </ol>
-    </div>
-    <div class="col-sm-12 col-lg-3 lum-options pull-right">
-      <a><i class="fa fa-cog" aria-hidden="true"></i>Settings</a>&nbsp;
-      <a href="https://auth.lumeer.io/auth/realms/lumeer/account"><i class="fa fa-user" aria-hidden="true"></i>Account</a>&nbsp;
-      <a href="https://auth.lumeer.io/auth/realms/lumeer/protocol/openid-connect/logout?redirect_uri=https%3A%2F%2Fwww.lumeer.io%2F"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign Out</a>
+    <div class="col-sm-12 col-lg-8 lum-options pull-right row">
+      <div class="col-lg-10 company-project" (click)="showCompanyChooser()">
+        <span>[{{companyProject.activeCompany}}@{{companyProject.activeProject}}]</span>
+      </div>
+      <div class="col-lg-2 user-options row">
+        <div class="col-lg-4">
+          <a class="icon notification"
+             [ngClass]="{active: notifications && notifications.length !== 0}"
+             (click)="toggleNotifications()">
+            {{notifications || 0}}
+          </a>
+          <div class="notifications-center"
+               [@animateHeight]="'in'"
+               *ngIf="notificationsVisible">
+            <div class="title">Notifications</div>
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <a class="icon" (click)="toggleOptions()">
+            <i class="fa fa-user" aria-hidden="true"></i>
+          </a>
+          <ul *ngIf="optionsVisible" [@animateHeight]="'in'">
+            <li><a><i class="fa fa-cog" aria-hidden="true"></i>Settings</a></li>
+            <li><a href="https://auth.lumeer.io/auth/realms/lumeer/account"><i class="fa fa-user" aria-hidden="true"></i>Account</a></li>
+            <li class="divider"></li>
+            <li><a href="https://auth.lumeer.io/auth/realms/lumeer/protocol/openid-connect/logout?redirect_uri=https%3A%2F%2Fwww.lumeer.io%2F"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign Out</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </div>

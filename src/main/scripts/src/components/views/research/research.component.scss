@@ -17,6 +17,14 @@ views-research {
     .document-navigation {
       margin-left: 10%;
       margin-right: 15%;
+
+      div:not(.dashboard-display) {
+        text-align: center;
+
+        &.active {
+          border-bottom: thick solid $brand-success;
+        }
+      }
     }
   }
 
@@ -24,7 +32,7 @@ views-research {
     line-height: 1.5;
     margin-left: 10%;
     margin-bottom: 5px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    box-shadow: $default-shadow;
     margin-top: 15px;
     padding-top: 5px;
     padding-bottom: 5px;

@@ -5,6 +5,7 @@ import {Subject} from 'rxjs';
 
 @Injectable()
 export class DocumentInfoService {
+  public filterChangeSubject: Subject<any> = new Subject();
   public documents: any[];
   public filterResults: any[];
   public documentDetail: any;
@@ -29,5 +30,6 @@ export class DocumentInfoService {
     this.http.get(`${window['lumeer'].constants.publicPath}/data/documentpreview.json`)
       .map(res => res.json())
       .subscribe(documents => this.documents = documents);
+    this.filterChangeSubject.next(filter);
   }
 }

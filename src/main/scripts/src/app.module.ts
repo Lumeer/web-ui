@@ -5,7 +5,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {SettingsModule, ViewsModule} from './components';
 import {FormsModule} from '@angular/forms';
 import {
-  KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp, KEYCLOAK_HTTP_PROVIDER
+  KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp, CompanyProject,
+  KEYCLOAK_HTTP_PROVIDER
 } from './services';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import {NavigationChildrenService} from './services/navigation-children.service';
@@ -15,6 +16,8 @@ import {QueryTagService} from './services/query-tags.service';
 import { DragScrollModule } from 'angular2-drag-scroll';
 import {DocumentNavigationService} from './services/document-navigation.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {CompanyChooser} from './viewport/company_chooser/company-chooser.component';
+import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: '/views/research', pathMatch: 'full'}
@@ -30,9 +33,11 @@ const appRoutes: Routes = [
     Ng2Webstorage,
     SettingsModule,
     BrowserAnimationsModule,
-    CommonComponentsModule
+    CommonComponentsModule,
+    PerfectScrollbarModule
   ],
   providers: [
+    CompanyProject,
     SocketService,
     NavigationChildrenService,
     DocumentService,
@@ -49,6 +54,7 @@ const appRoutes: Routes = [
     ContentComponent,
     LeftPanelComponent,
     TopPanelComponent,
+    CompanyChooser,
     HomeComponent
   ],
   bootstrap: [ViewPortComponent]

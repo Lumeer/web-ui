@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {KeycloakService} from '../services/keycloak.service';
-import {DocumentService} from '../services/document.service';
 import {DocumentInfoService} from '../services/document-info.service';
 import {DocumentNavigationService} from '../services/document-navigation.service';
 
@@ -12,7 +11,7 @@ import {DocumentNavigationService} from '../services/document-navigation.service
 })
 
 export class ViewPortComponent {
-  public collapsed: boolean = false;
+  public companyVisible: boolean = true;
   public activeItem: any;
   public activeFilter: any;
 
@@ -20,8 +19,8 @@ export class ViewPortComponent {
               private documentInfoService: DocumentInfoService,
               private documentNavigationService: DocumentNavigationService) {}
 
-  public handleCollapseEvent() {
-    this.collapsed = !this.collapsed;
+  public handleToggleCompany() {
+    this.companyVisible = !this.companyVisible;
   }
 
   public handleLogOut() {
@@ -41,5 +40,9 @@ export class ViewPortComponent {
     this.documentNavigationService.handleItemSelect();
     this.activeItem = { title: 'Home'};
     this.documentInfoService.filterSaveSubject.subscribe(newFilter => this.onFilterSave(newFilter));
+  }
+
+  public onSaveCompanyProject() {
+    this.companyVisible = false;
   }
 }
