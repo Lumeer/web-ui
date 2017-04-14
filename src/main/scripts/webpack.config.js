@@ -99,6 +99,12 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, "dist"),
     historyApiFallback: true,
-    port: 7000
+    port: 7000,
+    proxy: {
+      '/engine': {
+        target: 'http://127.0.0.1:8080/engine',
+        pathRewrite: {'^/engine' : ''}
+      }
+    }
   }
 };
