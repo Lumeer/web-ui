@@ -101,9 +101,9 @@ module.exports = {
     historyApiFallback: true,
     port: 7000,
     proxy: {
-      '/engine': {
-        target: 'http://127.0.0.1:8080/engine',
-        pathRewrite: {'^/engine' : ''}
+      '/lumeer-engine': {
+        target: 'http://127.0.0.1:8080/lumeer-engine',
+        pathRewrite: {'^/lumeer-engine' : ''}
       }
     }
   }
