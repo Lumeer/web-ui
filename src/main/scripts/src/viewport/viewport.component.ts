@@ -3,6 +3,7 @@ import {Router} from '@angular/router';
 import {KeycloakService} from '../services/keycloak.service';
 import {DocumentInfoService} from '../services/document-info.service';
 import {DocumentNavigationService} from '../services/document-navigation.service';
+import {CompanyProject} from '../services/company-project.service';
 
 @Component({
   selector: 'view-port',
@@ -17,6 +18,7 @@ export class ViewPortComponent {
 
   constructor(private router: Router, private kc: KeycloakService,
               private documentInfoService: DocumentInfoService,
+              private companyProject: CompanyProject,
               private documentNavigationService: DocumentNavigationService) {}
 
   public handleToggleCompany() {
@@ -37,6 +39,9 @@ export class ViewPortComponent {
   }
 
   public ngOnInit() {
+    this.companyProject.companyOrProjectSubject.subscribe(data => {
+      this.checkCompanyAndProject();
+    });
     this.documentNavigationService.handleItemSelect();
     this.activeItem = { title: 'Home'};
     this.documentInfoService.filterSaveSubject.subscribe(newFilter => this.onFilterSave(newFilter));
@@ -44,5 +49,11 @@ export class ViewPortComponent {
 
   public onSaveCompanyProject() {
     this.companyVisible = false;
+  }
+
+  private checkCompanyAndProject() {
+    if (this.companyProject.activeProject && this.companyProject.activeCompany) {
+      this.companyVisible = false;
+    }
   }
 }
