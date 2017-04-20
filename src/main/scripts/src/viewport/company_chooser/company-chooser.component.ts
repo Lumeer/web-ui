@@ -25,53 +25,33 @@ import {CompanyProject} from '../../services/company-project.service';
   ]
 })
 export class CompanyChooser {
-  public companies = [
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'}
-  ];
-  public projects = [
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'},
-    {title: 'ORG', icon: 'fa-life-ring'}
-  ];
   @ViewChild('comps') public companiesEl: any;
   @ViewChild('projs') public projectsEl: any;
   @Output() public saveAction: EventEmitter<any> = new EventEmitter();
   public activeProject: any;
-  public companiesWidth: Number;
+  public companiesWidth: Number = 0;
   public activeIndex: Number;
 
-  constructor(private companyProject: CompanyProject) {}
+  constructor(public companyProject: CompanyProject) {}
 
   public ngOnInit() {
-    this.companiesWidth =  this.companies.length * 170;
+    this.companyProject.fetchAllCompanies()
+      .subscribe(data => {
+        this.companyProject.allCompanies = data;
+        this.companiesWidth =  this.companyProject.allCompanies.length * 170;
+      });
+    this.companyProject.fetchAllProjects()
+      .subscribe(data => this.companyProject.allProjects = data);
   }
 
   public onCompanySelected(company: any, index: Number) {
-    this.companies.forEach((oneCompany: any) => oneCompany.active = false);
+    this.companyProject.allCompanies.forEach((oneCompany: any) => oneCompany.active = false);
     this.activeIndex = index;
     company.active = true;
   }
 
   public onProjectSelected(project: any, index: Number) {
-    this.projects.forEach((oneProject: any) => oneProject.active = false);
+    this.companyProject.allProjects.forEach((oneProject: any) => oneProject.active = false);
     this.activeProject = project;
     this.activeProject.active = true;
   }
@@ -97,8 +77,8 @@ export class CompanyChooser {
   }
 
   public saveActiveItems() {
-    if (this.companies.filter((item: any) => item.active).length !== 0 &&
-      this.projects.filter((item: any) => item.active).length) {
+    if (this.companyProject.allCompanies.filter((item: any) => item.active).length !== 0 &&
+      this.companyProject.allProjects.filter((item: any) => item.active).length) {
       this.companyProject.activeCompany = 'COM';
       this.companyProject.activeProject = 'PRJ2';
       this.saveAction.next();

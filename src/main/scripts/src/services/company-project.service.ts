@@ -5,6 +5,8 @@ import {Http} from '@angular/http';
 export class CompanyProject {
   public activeCompany: any;
   public activeProject: any;
+  public allCompanies: any;
+  public allProjects: any;
 
   constructor(private http: Http) {}
 
@@ -18,5 +20,15 @@ export class CompanyProject {
     this.http.get(`${window['lumeer'].constants.publicPath}/data/activeproject.json`)
       .map(res => res.json())
       .subscribe(data => this.activeProject = data);
+  }
+
+  public fetchAllCompanies() {
+    return this.http.get(`${window['lumeer'].constants.publicPath}/data/companies.json`)
+      .map(res => res.json());
+  }
+
+  public fetchAllProjects() {
+    return this.http.get(`${window['lumeer'].constants.publicPath}/data/companies.json`)
+      .map(res => res.json());
   }
 }

@@ -5,7 +5,7 @@
     </div>
     <perfect-scrollbar class="chooser" #comps [config]="{suppressScrollY: true}">
       <div class="companies" [ngStyle]="{width: companiesWidth + 'px'}">
-        <div *ngFor="let company of companies; let i = index"
+        <div *ngFor="let company of companyProject.allCompanies; let i = index"
              (click)="onCompanySelected(company, i)"
              [ngClass]="{active: company.active}">
           <i class="fa" [ngClass]="company.icon"></i>
@@ -16,7 +16,7 @@
         <div [ngStyle]="{width: 170 * activeIndex + 60 + 'px'}"></div>
         <div class="arrow-start"></div>
         <div class="arrow-end"></div>
-        <div [ngStyle]="{width: 170 * (companies.length - activeIndex) - 120 + 'px'}"></div>
+        <div [ngStyle]="{width: 170 * (companyProject.allCompanies.length - activeIndex) - 120 + 'px'}"></div>
       </div>
     </perfect-scrollbar>
     <div class="slide">
@@ -29,7 +29,7 @@
     </div>
     <perfect-scrollbar class="chooser" #projs [config]="{suppressScrollY: true}">
       <div class="companies" [ngStyle]="{width: companiesWidth + 'px'}">
-        <div *ngFor="let project of projects; let i = index"
+        <div *ngFor="let project of companyProject.allProjects; let i = index"
              (click)="onProjectSelected(project, i)"
              [ngClass]="{active: project.active}">
           <i class="fa" [ngClass]="project.icon"></i>
