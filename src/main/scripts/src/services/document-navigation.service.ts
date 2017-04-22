@@ -30,6 +30,10 @@ export class DocumentNavigationService {
     return _.chain(this.router.config)
             .flatMap(conf => conf.children)
             .filter(item => item && item.data['active'])
+            .map((item: any) => {
+              item.data.current = false;
+              return item;
+            })
             .value();
   }
 

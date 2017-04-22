@@ -1,5 +1,4 @@
 import {DocumentInfoService} from '../../../services/document-info.service';
-import {DocumentNavigationService} from '../../../services/document-navigation.service';
 import {Component} from '@angular/core';
 import * as _ from 'lodash';
 import {DocumentService} from '../../../services/document.service';
@@ -45,15 +44,15 @@ import {style, state, animate, transition, trigger, keyframes} from '@angular/an
 
 export class PickItemComponent {
   public actions: any[];
-  public activeRoutes: any[];
-
-  constructor(public documentService: DocumentService,
-              public documentInfoService: DocumentInfoService,
-              private documentNavigationService: DocumentNavigationService) {
+  private filterSubscribe: any;
+  constructor(private documentInfoService: DocumentInfoService,
+              public documentService: DocumentService) {
   }
 
   public ngOnInit() {
-    this.activeRoutes = this.documentNavigationService.activeRoutes();
+    this.filterSubscribe = this.documentInfoService.filterChangeSubject.subscribe(
+      (payload) => this.onFilterChanged(payload)
+    );
     this.documentService.fetchFilterResultsFromFilter(this.documentInfoService.lastFilter);
     this.actions = [
       {
@@ -90,12 +89,10 @@ export class PickItemComponent {
   }
 
   public onFilterChanged(dataPayload) {
-    this.documentInfoService.fetchDocumentPreviewsFromFilter(dataPayload);
     this.documentService.fetchFilterResultsFromFilter(dataPayload);
   }
 
-  public onNavigationClick(route) {
-    let parent = this.documentNavigationService.getParentForChildRoute(route);
-    this.documentNavigationService.handleItemSelect({parent: parent.data, child: route.data});
+  public ngOnDestroy(): void {
+    this.filterSubscribe.unsubscribe();
   }
 }

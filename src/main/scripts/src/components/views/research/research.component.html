@@ -1,20 +1,4 @@
 <div>
-  <div class="document-filter-nav">
-    <div class="document-filter">
-      <filter-save (onChanged)="onFilterChanged($event)" [otherActions]="actions" (onActionClick)="actionClick($event)"></filter-save>
-    </div>
-    <div class="document-navigation row">
-      <div *ngFor="let route of activeRoutes" class="col-lg-2">
-        <a (click)="onNavigationClick(route)">
-          <i class="fa" [ngClass]="route.data.icon"></i>
-        <span>{{route.data.title}}</span>
-        </a>
-      </div>
-      <div class="dashboard-display pull-right col-lg-3">
-        <!-- Tile to grid and back -->
-      </div>
-    </div>
-  </div>
   <perfect-scrollbar class="document-preview" >
     <empty-result *ngIf="!isFiltered()"
                   (onNewCollection)="collectionAdd($event)"

@@ -47,7 +47,7 @@ const viewsRoutes: Routes = [
         path: 'research',
         component: ResearchComponent,
         data: {
-          id: 'research', title: 'Research', icon: 'fa-search', active: true
+          id: 'research', title: 'Collections', icon: 'fa-search', active: true
         },
         children: []
       },
@@ -55,7 +55,7 @@ const viewsRoutes: Routes = [
         path: 'pick_item',
         component: PickItemComponent,
         data: {
-          id: 'pick_item', title: 'Pick item', icon: 'fa-eyedropper', active: true
+          id: 'pick_item', title: 'Documents', icon: 'fa-eyedropper', active: true
         },
         children: []
       },
