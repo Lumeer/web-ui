@@ -17,7 +17,7 @@ import { DragScrollModule } from 'angular2-drag-scroll';
 import {DocumentNavigationService} from './services/document-navigation.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CompanyChooser} from './viewport/company_chooser/company-chooser.component';
-import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
+import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: '/views/research', pathMatch: 'full'}

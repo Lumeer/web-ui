@@ -21,6 +21,6 @@ import './js/custom.js';
 import 'socket.io-client';
 import 'angular2-drag-scroll';
 // import 'lodash';
-import 'angular2-perfect-scrollbar';
+import 'ngx-perfect-scrollbar';
 import 'ng2-webstorage';
 window['Keycloak'] = require('./js/keycloak.js');

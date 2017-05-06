@@ -63,7 +63,7 @@
     "@angular/platform-browser-dynamic": "~4.0.0",
     "@angular/router": "~4.0.0",
     "angular2-drag-scroll": "^1.2.6",
-    "angular2-perfect-scrollbar": "^2.0.2",
+    "ngx-perfect-scrollbar": "^4.0.0",
     "jquery-slimscroll": "^1.3.8",
     "lodash": "^4.17.4",
     "ng2-slimscroll": "^1.2.1",
