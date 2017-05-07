@@ -12,7 +12,7 @@ import {UserTagComponent} from './user-tile/user-tag.component';
 import {DocumentLinksRowsComponent} from './document/links/documents-links-rows.component';
 import {LinksComponent} from './document/links/links.component';
 import {DocumentsRowsComponent} from './document/documents-rows.component';
-import {PerfectScrollbarModule} from 'angular2-perfect-scrollbar';
+import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 
 @NgModule({
   imports: [
