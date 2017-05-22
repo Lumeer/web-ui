@@ -5,7 +5,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {SettingsModule, ViewsModule} from './components';
 import {FormsModule} from '@angular/forms';
 import {
-  KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp, CompanyProject,
+  KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp, OrganizationProject,
   KEYCLOAK_HTTP_PROVIDER
 } from './services';
 import {Ng2Webstorage} from 'ng2-webstorage';
@@ -37,7 +37,7 @@ const appRoutes: Routes = [
     PerfectScrollbarModule
   ],
   providers: [
-    CompanyProject,
+    OrganizationProject,
     SocketService,
     NavigationChildrenService,
     DocumentService,

@@ -1,39 +1,47 @@
 <div>
   <div class="horizontal-chooser company">
     <div class="slide">
-      <a (click)="onScrollCompanies(false)"><i class="fa fa-chevron-left"></i></a>
+      <a (click)="onScrollOrganizations(false)"><i class="fa fa-chevron-left"></i></a>
     </div>
     <perfect-scrollbar class="chooser" #comps [config]="{suppressScrollY: true}">
-      <div class="companies" [ngStyle]="{width: companiesWidth + 'px'}">
-        <div *ngFor="let company of companyProject.allCompanies; let i = index"
-             (click)="onCompanySelected(company, i)"
-             [ngClass]="{active: company.active}">
-          <i class="fa" [ngClass]="company.icon"></i>
-          {{company.title}}
+      <div class="organization" [ngStyle]="{width: organizationsWidth + 'px'}">
+        <div *ngFor="let organization of organizationProject.oganizations; let i = index"
+             (click)="onOrganizationSelected(organization, i)"
+             [ngClass]="{active: organization.active}">
+          <div class="row">
+            <i class="fa" [ngClass]="organization.icon" [ngStyle]="{'color':organization.color}"></i>
+          </div>
+          <div class="row">
+            <span [ngStyle]="{'color':organization.color}">{{organization.id}}</span>
+          </div>
         </div>
       </div>
-      <div class="pointer" [ngStyle]="{width: companiesWidth + 'px'}" *ngIf="isCompanyActive()">
-        <div [ngStyle]="{width: 170 * activeIndex + 60 + 'px'}"></div>
+      <div class="pointer" [ngStyle]="{width: organizationsWidth + 'px'}" *ngIf="activeOrganization">
+        <div [ngStyle]="{width: 170 * activeOrgIndex + 60 + 'px'}"></div>
         <div class="arrow-start"></div>
         <div class="arrow-end"></div>
-        <div [ngStyle]="{width: 170 * (companyProject.allCompanies.length - activeIndex) - 120 + 'px'}"></div>
+        <div [ngStyle]="{width: 170 * (organizationProject.oganizations.length - activeOrgIndex) - 120 + 'px'}"></div>
       </div>
     </perfect-scrollbar>
     <div class="slide">
-      <a (click)="onScrollCompanies(true)"><i class="fa fa-chevron-right"></i></a>
+      <a (click)="onScrollOrganizations(true)"><i class="fa fa-chevron-right"></i></a>
     </div>
   </div>
-  <div class="horizontal-chooser project" *ngIf="isCompanyActive()">
+  <div class="horizontal-chooser project" *ngIf="activeOrganization && activeOrganization.projects">
     <div class="slide">
       <a (click)="onScrollProjects(false)"><i class="fa fa-chevron-left"></i></a>
     </div>
     <perfect-scrollbar class="chooser" #projs [config]="{suppressScrollY: true}">
-      <div class="companies" [ngStyle]="{width: companiesWidth + 'px'}">
-        <div *ngFor="let project of companyProject.allProjects; let i = index"
+      <div class="organization" [ngStyle]="{width: projectsWidth + 'px'}">
+        <div *ngFor="let project of activeOrganization.projects; let i = index"
              (click)="onProjectSelected(project, i)"
              [ngClass]="{active: project.active}">
-          <i class="fa" [ngClass]="project.icon"></i>
-          {{project.title}}
+          <div class="row">
+            <i class="fa" [ngClass]="project.icon" [ngStyle]="{'color':project.color}"></i>
+          </div>
+          <div class="row">
+            <span [ngStyle]="{'color':project.color}">{{project.id}}</span>
+          </div>
         </div>
       </div>
     </perfect-scrollbar>
@@ -43,11 +51,13 @@
     <div class="project-description" *ngIf="activeProject">
       <div class="information">
         <div class="description">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed, finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue vel augue.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
+          finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue vel
+          augue.
         </div>
         <div class="icon">
-          <i class="fa" [ngClass]="activeProject.icon"></i>
-          {{activeProject.title}}
+          <i class="fa" [ngClass]="activeProject.icon" [ngStyle]="{'color':activeProject.color}"></i>
+          <span [ngStyle]="{'color':activeProject.color}">{{activeProject.id}}</span>
         </div>
       </div>
       <div class="pull-right submit-button">

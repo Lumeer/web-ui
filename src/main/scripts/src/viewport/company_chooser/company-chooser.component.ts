@@ -1,9 +1,9 @@
-import {Component, EventEmitter, HostListener, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
-import {CompanyProject} from '../../services/company-project.service';
+import {OrganizationProject} from '../../services/company-project.service';
 
 @Component({
-  selector: 'company-chooser',
+  selector: 'organization-chooser',
   template: require('./company-chooser.component.html'),
   styles: [require('./company-chooser.component.scss').toString()],
   animations: [
@@ -25,62 +25,83 @@ import {CompanyProject} from '../../services/company-project.service';
   ]
 })
 export class CompanyChooser {
+
+  public readonly squareSize: number = 170;
   @ViewChild('comps') public companiesEl: any;
   @ViewChild('projs') public projectsEl: any;
   @Output() public saveAction: EventEmitter<any> = new EventEmitter();
+  public activeOrganization: any;
   public activeProject: any;
-  public companiesWidth: Number = 0;
-  public activeIndex: Number;
+  public organizationsWidth: number = 0;
+  public projectsWidth: number = 0;
+  public activeOrgIndex: number;
 
-  constructor(public companyProject: CompanyProject) {}
+  constructor(public organizationProject: OrganizationProject) {
+  }
 
   public ngOnInit() {
-    this.companyProject.fetchAllCompanies()
-      .subscribe(data => {
-        this.companyProject.allCompanies = data;
-        this.companiesWidth =  this.companyProject.allCompanies.length * 170;
-      });
-    this.companyProject.fetchAllProjects()
-      .subscribe(data => this.companyProject.allProjects = data);
+    if (this.organizationProject.oganizations) {
+      this.organizationsWidth = this.organizationProject.oganizations.length * this.squareSize;
+      this.projectsWidth = this.organizationProject.activeOrganization.projects.length * this.squareSize;
+      this.activeOrganization = this.organizationProject.activeOrganization;
+      this.activeOrgIndex = this.organizationProject.activeOrgIndex;
+      this.activeProject = this.organizationProject.activeProject;
+    } else {
+      this.organizationProject.fetchOrganizations()
+        .subscribe(data => {
+          this.organizationProject.oganizations = data;
+          this.organizationsWidth = this.organizationProject.oganizations.length * this.squareSize;
+        });
+    }
   }
 
-  public onCompanySelected(company: any, index: Number) {
-    this.companyProject.allCompanies.forEach((oneCompany: any) => oneCompany.active = false);
-    this.activeIndex = index;
-    company.active = true;
+  public onOrganizationSelected(organization: any, index: number) {
+    this.organizationProject.oganizations.forEach((org: any) => org.active = false);
+    organization.active = true;
+    this.activeOrgIndex = index;
+    if (this.activeOrganization && this.activeOrganization.projects) {
+      this.activeOrganization.projects.forEach((project: any) => project.active = false);
+    }
+    if (organization.projects) {
+      this.projectsWidth = organization.projects.length * this.squareSize;
+    } else {
+      this.organizationProject.fetchProjects(organization.id)
+        .subscribe(projects => {
+          organization.projects = projects;
+          this.projectsWidth = projects.length * this.squareSize;
+        });
+    }
+    this.activeOrganization = organization;
+    this.activeProject = undefined;
   }
 
-  public onProjectSelected(project: any, index: Number) {
-    this.companyProject.allProjects.forEach((oneProject: any) => oneProject.active = false);
+  public onProjectSelected(project: any, index: number) {
+    this.activeOrganization.projects.forEach((oneProject: any) => oneProject.active = false);
     this.activeProject = project;
     this.activeProject.active = true;
   }
 
-  public onScrollCompanies(toRight?: boolean) {
+  public onScrollOrganizations(toRight?: boolean) {
     if (toRight) {
-      this.companiesEl.scrollToLeft(this.companiesEl.elementRef.nativeElement.scrollLeft + 170);
+      this.companiesEl.scrollToLeft(this.companiesEl.elementRef.nativeElement.scrollLeft + this.squareSize);
     } else {
-      this.companiesEl.scrollToLeft(this.companiesEl.elementRef.nativeElement.scrollLeft - 170);
+      this.companiesEl.scrollToLeft(this.companiesEl.elementRef.nativeElement.scrollLeft - this.squareSize);
     }
   }
 
   public onScrollProjects(toRight?: boolean) {
     if (toRight) {
-      this.projectsEl.scrollToLeft(this.projectsEl.elementRef.nativeElement.scrollLeft + 170);
+      this.projectsEl.scrollToLeft(this.projectsEl.elementRef.nativeElement.scrollLeft + this.squareSize);
     } else {
-      this.projectsEl.scrollToLeft(this.projectsEl.elementRef.nativeElement.scrollLeft - 170);
+      this.projectsEl.scrollToLeft(this.projectsEl.elementRef.nativeElement.scrollLeft - this.squareSize);
     }
   }
 
-  public isCompanyActive() {
-    return typeof this.activeIndex !== 'undefined';
-  }
-
   public saveActiveItems() {
-    if (this.companyProject.allCompanies.filter((item: any) => item.active).length !== 0 &&
-      this.companyProject.allProjects.filter((item: any) => item.active).length) {
-      this.companyProject.activeCompany = 'COM';
-      this.companyProject.activeProject = 'PRJ2';
+    if (this.activeOrganization && this.activeProject) {
+      this.organizationProject.activeOrgIndex = this.activeOrgIndex;
+      this.organizationProject.activeOrganization = this.activeOrganization;
+      this.organizationProject.activeProject = this.activeProject;
       this.saveAction.next();
     }
   }
