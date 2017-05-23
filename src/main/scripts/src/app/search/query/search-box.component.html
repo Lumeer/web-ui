@@ -1,0 +1,15 @@
+<div>
+  <input #searchBox id="search-box" (focus)="suggestTypes()" (keyup)="suggest(searchBox.value)" [(ngModel)]="text"/>
+
+  <div class="types">
+    <div *ngFor="let type of types" (click)="selectType(type)" (click)="searchBox.focus()" class="type">
+      {{type}}
+    </div>
+  </div>
+  <div class="suggestions">
+    <div *ngFor="let suggestion of suggestions | async" (click)="complete(suggestion)" class="suggestion">
+      <span class="suggestion-text">{{suggestion.text}}</span>
+      <span class="suggestion-type">{{suggestion.type}}</span>
+    </div>
+  </div>
+</div>
