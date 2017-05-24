@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
-import {OrganizationProject} from '../../services/company-project.service';
+import {OrganizationProject} from '../../services/organization-project.service';
 
 @Component({
   selector: 'organization-chooser',
-  template: require('./company-chooser.component.html'),
-  styles: [require('./company-chooser.component.scss').toString()],
+  template: require('./organization-chooser.component.html'),
+  styles: [require('./organization-chooser.component.scss').toString()],
   animations: [
     trigger('animateHeight', [
       state('in', style({height: '*'})),
@@ -24,7 +24,7 @@ import {OrganizationProject} from '../../services/company-project.service';
     ])
   ]
 })
-export class CompanyChooser {
+export class OrganizationChooser {
 
   public readonly squareSize: number = 170;
   @ViewChild('comps') public companiesEl: any;

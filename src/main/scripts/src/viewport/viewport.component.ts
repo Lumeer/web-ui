@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import {KeycloakService} from '../services/keycloak.service';
 import {DocumentInfoService} from '../services/document-info.service';
 import {DocumentNavigationService} from '../services/document-navigation.service';
-import {OrganizationProject} from '../services/company-project.service';
+import {OrganizationProject} from '../services/organization-project.service';
 
 @Component({
   selector: 'view-port',

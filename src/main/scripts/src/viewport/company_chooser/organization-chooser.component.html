@@ -12,7 +12,7 @@
             <i class="fa" [ngClass]="organization.icon" [ngStyle]="{'color':organization.color}"></i>
           </div>
           <div class="row">
-            <span [ngStyle]="{'color':organization.color}">{{organization.id}}</span>
+            <span [ngStyle]="{'color':organization.color}">{{organization.code}}</span>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@
             <i class="fa" [ngClass]="project.icon" [ngStyle]="{'color':project.color}"></i>
           </div>
           <div class="row">
-            <span [ngStyle]="{'color':project.color}">{{project.id}}</span>
+            <span [ngStyle]="{'color':project.color}">{{project.code}}</span>
           </div>
         </div>
       </div>
@@ -57,7 +57,7 @@
         </div>
         <div class="icon">
           <i class="fa" [ngClass]="activeProject.icon" [ngStyle]="{'color':activeProject.color}"></i>
-          <span [ngStyle]="{'color':activeProject.color}">{{activeProject.id}}</span>
+          <span [ngStyle]="{'color':activeProject.color}">{{activeProject.code}}</span>
         </div>
       </div>
       <div class="pull-right submit-button">
