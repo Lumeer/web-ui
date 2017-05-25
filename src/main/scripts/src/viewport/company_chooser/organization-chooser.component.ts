@@ -65,7 +65,7 @@ export class OrganizationChooser {
     if (organization.projects) {
       this.projectsWidth = organization.projects.length * this.squareSize;
     } else {
-      this.organizationProject.fetchProjects(organization.id)
+      this.organizationProject.fetchProjects(organization.code)
         .subscribe(projects => {
           organization.projects = projects;
           this.projectsWidth = projects.length * this.squareSize;
