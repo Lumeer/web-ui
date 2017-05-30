@@ -18,11 +18,26 @@
  * -----------------------------------------------------------------------/
  */
 
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-import {AppModule} from './app/app.module';
-import {KeycloakService} from './services/keycloak.service';
+import {Component} from '@angular/core';
+import {WorkspaceService} from '../workspace.service';
 
-require('./styles/basic.scss');
+@Component({
+  selector: 'header',
+  template: require('./header.component.html'),
+  styles: [require('./header.component.scss').toString()]
+})
+export class HeaderComponent {
 
-KeycloakService.init()
-  .then(() => platformBrowserDynamic().bootstrapModule(AppModule));
+  private organization: string;
+  private project: string;
+
+  constructor(private workspaceService: WorkspaceService) {
+    this.updateProjectSelection();
+  }
+
+  public updateProjectSelection(): void {
+    this.organization = this.workspaceService.organization;
+    this.project = this.workspaceService.project;
+  }
+
+}

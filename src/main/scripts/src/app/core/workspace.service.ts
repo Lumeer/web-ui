@@ -17,12 +17,18 @@
  * limitations under the License.
  * -----------------------------------------------------------------------/
  */
+import {Injectable} from '@angular/core';
 
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-import {AppModule} from './app/app.module';
-import {KeycloakService} from './services/keycloak.service';
+@Injectable()
+export class WorkspaceService {
 
-require('./styles/basic.scss');
+  public organization: string;
+  public project: string;
 
-KeycloakService.init()
-  .then(() => platformBrowserDynamic().bootstrapModule(AppModule));
+  constructor() {
+    // TODO remove this in the future
+    this.organization = 'LMR';
+    this.project = 'devel';
+  }
+
+}
