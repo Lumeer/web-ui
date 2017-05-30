@@ -5,7 +5,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {SettingsModule, ViewsModule} from './components';
 import {FormsModule} from '@angular/forms';
 import {
-  KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp, CompanyProject,
+  KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp, OrganizationProject,
   KEYCLOAK_HTTP_PROVIDER
 } from './services';
 import {Ng2Webstorage} from 'ng2-webstorage';
@@ -16,7 +16,7 @@ import {QueryTagService} from './services/query-tags.service';
 import { DragScrollModule } from 'angular2-drag-scroll';
 import {DocumentNavigationService} from './services/document-navigation.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {CompanyChooser} from './viewport/company_chooser/company-chooser.component';
+import {OrganizationChooser} from './viewport/company_chooser/organization-chooser.component';
 import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 
 const appRoutes: Routes = [
@@ -37,7 +37,7 @@ const appRoutes: Routes = [
     PerfectScrollbarModule
   ],
   providers: [
-    CompanyProject,
+    OrganizationProject,
     SocketService,
     NavigationChildrenService,
     DocumentService,
@@ -54,7 +54,7 @@ const appRoutes: Routes = [
     ContentComponent,
     LeftPanelComponent,
     TopPanelComponent,
-    CompanyChooser,
+    OrganizationChooser,
     HomeComponent
   ],
   bootstrap: [ViewPortComponent]

@@ -3,7 +3,7 @@ import {Router} from '@angular/router';
 import {KeycloakService} from '../services/keycloak.service';
 import {DocumentInfoService} from '../services/document-info.service';
 import {DocumentNavigationService} from '../services/document-navigation.service';
-import {CompanyProject} from '../services/company-project.service';
+import {OrganizationProject} from '../services/organization-project.service';
 
 @Component({
   selector: 'view-port',
@@ -18,7 +18,7 @@ export class ViewPortComponent {
 
   constructor(private router: Router, private kc: KeycloakService,
               private documentInfoService: DocumentInfoService,
-              private companyProject: CompanyProject,
+              private companyProject: OrganizationProject,
               private documentNavigationService: DocumentNavigationService) {}
 
   public handleToggleCompany() {
@@ -39,7 +39,7 @@ export class ViewPortComponent {
   }
 
   public ngOnInit() {
-    this.companyProject.companyOrProjectSubject.subscribe(data => {
+    this.companyProject.organizationOrProjectSubject.subscribe(data => {
       this.checkCompanyAndProject();
     });
     this.documentNavigationService.handleItemSelect();
@@ -52,7 +52,7 @@ export class ViewPortComponent {
   }
 
   private checkCompanyAndProject() {
-    if (this.companyProject.activeProject && this.companyProject.activeCompany) {
+    if (this.companyProject.activeProject && this.companyProject.activeOrganization) {
       this.companyVisible = false;
     }
   }

@@ -1,6 +1,6 @@
 @import '../../styles/variables';
 
-company-chooser {
+organization-chooser {
   > div {
     padding-left: 5%;
     margin: 2% 8%;
@@ -36,7 +36,7 @@ company-chooser {
     }
   }
 
-  .companies {
+  .organization {
     height: 165px;
     > div {
       box-shadow: $default-shadow;
@@ -54,6 +54,9 @@ company-chooser {
         position: absolute;
       }
     }
+  }
+  .row{
+    margin-left: 0;
   }
 
   .pointer {

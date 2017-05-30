@@ -3,21 +3,22 @@ import {Http} from '@angular/http';
 import {Subject} from 'rxjs';
 
 @Injectable()
-export class CompanyProject {
-  public activeCompany: any;
+export class OrganizationProject {
+  public activeOrgIndex: number;
+  public activeOrganization: any;
   public activeProject: any;
-  public allCompanies: any;
-  public allProjects: any;
-  public companyOrProjectSubject: Subject<any> = new Subject();
+  public oganizations: any;
+  public organizationOrProjectSubject: Subject<any> = new Subject();
 
-  constructor(private http: Http) {}
+  constructor(private http: Http) {
+  }
 
   public fetchActiveCompany() {
     this.http.get(`${window['lumeer'].constants.publicPath}/data/activecompany.json`)
       .map(res => res.json())
       .subscribe(data => {
-        this.activeCompany = data;
-        this.companyOrProjectSubject.next(data);
+        this.activeOrganization = data;
+        this.organizationOrProjectSubject.next(data);
       });
   }
 
@@ -26,17 +27,17 @@ export class CompanyProject {
       .map(res => res.json())
       .subscribe(data => {
         this.activeProject = data;
-        this.companyOrProjectSubject.next(data);
+        this.organizationOrProjectSubject.next(data);
       });
   }
 
-  public fetchAllCompanies() {
-    return this.http.get(`${window['lumeer'].constants.publicPath}/data/companies.json`)
+  public fetchOrganizations() {
+    return this.http.get(`/lumeer-engine/rest/organizations`)
       .map(res => res.json());
   }
 
-  public fetchAllProjects() {
-    return this.http.get(`${window['lumeer'].constants.publicPath}/data/companies.json`)
+  public fetchProjects(organization: string) {
+    return this.http.get(`/lumeer-engine/rest/` + organization + `/projects`)
       .map(res => res.json());
   }
 }

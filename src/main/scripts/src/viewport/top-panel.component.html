@@ -8,7 +8,8 @@
     </div>
     <div class="col-sm-12 col-lg-8 lum-options pull-right row">
       <div class="col-lg-10 company-project" (click)="showCompanyChooser()">
-        <span>[{{companyProject.activeCompany}}@{{companyProject.activeProject}}]</span>
+        <span>[<span *ngIf="organizationProject.activeOrganization">{{organizationProject.activeOrganization.id}}</span>
+          @<span *ngIf="organizationProject.activeProject">{{organizationProject.activeProject.id}}</span>]</span>
       </div>
       <div class="col-lg-2 user-options row">
         <div class="col-lg-4">

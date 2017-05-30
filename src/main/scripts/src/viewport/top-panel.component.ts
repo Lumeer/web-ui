@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Output, Input, ElementRef} from '@angular/core';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
-import {CompanyProject} from '../services/company-project.service';
+import {OrganizationProject} from '../services/organization-project.service';
 @Component({
   host: {
     '(document:click)': 'onClick($event)',
@@ -33,11 +33,11 @@ export class TopPanelComponent {
   @Input() public activeCorp: any;
   @Input() public activeProject: any;
 
-  constructor(private elementRef: ElementRef, public companyProject: CompanyProject) {}
+  constructor(private elementRef: ElementRef, public organizationProject: OrganizationProject) {}
 
   public ngOnInit() {
-    this.companyProject.fetchActiveCompany();
-    this.companyProject.fetchActiveProject();
+    // this.organizationProject.fetchActiveCompany();
+    // this.organizationProject.fetchActiveProject();
   }
 
   public optionsVisible: boolean = false;

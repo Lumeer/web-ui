@@ -1,0 +1,68 @@
+<div>
+  <div class="horizontal-chooser company">
+    <div class="slide">
+      <a (click)="onScrollOrganizations(false)"><i class="fa fa-chevron-left"></i></a>
+    </div>
+    <perfect-scrollbar class="chooser" #comps [config]="{suppressScrollY: true}">
+      <div class="organization" [ngStyle]="{width: organizationsWidth + 'px'}">
+        <div *ngFor="let organization of organizationProject.oganizations; let i = index"
+             (click)="onOrganizationSelected(organization, i)"
+             [ngClass]="{active: organization.active}">
+          <div class="row">
+            <i class="fa" [ngClass]="organization.icon" [ngStyle]="{'color':organization.color}"></i>
+          </div>
+          <div class="row">
+            <span [ngStyle]="{'color':organization.color}">{{organization.code}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="pointer" [ngStyle]="{width: organizationsWidth + 'px'}" *ngIf="activeOrganization">
+        <div [ngStyle]="{width: 170 * activeOrgIndex + 60 + 'px'}"></div>
+        <div class="arrow-start"></div>
+        <div class="arrow-end"></div>
+        <div [ngStyle]="{width: 170 * (organizationProject.oganizations.length - activeOrgIndex) - 120 + 'px'}"></div>
+      </div>
+    </perfect-scrollbar>
+    <div class="slide">
+      <a (click)="onScrollOrganizations(true)"><i class="fa fa-chevron-right"></i></a>
+    </div>
+  </div>
+  <div class="horizontal-chooser project" *ngIf="activeOrganization && activeOrganization.projects">
+    <div class="slide">
+      <a (click)="onScrollProjects(false)"><i class="fa fa-chevron-left"></i></a>
+    </div>
+    <perfect-scrollbar class="chooser" #projs [config]="{suppressScrollY: true}">
+      <div class="organization" [ngStyle]="{width: projectsWidth + 'px'}">
+        <div *ngFor="let project of activeOrganization.projects; let i = index"
+             (click)="onProjectSelected(project, i)"
+             [ngClass]="{active: project.active}">
+          <div class="row">
+            <i class="fa" [ngClass]="project.icon" [ngStyle]="{'color':project.color}"></i>
+          </div>
+          <div class="row">
+            <span [ngStyle]="{'color':project.color}">{{project.code}}</span>
+          </div>
+        </div>
+      </div>
+    </perfect-scrollbar>
+    <div class="slide">
+      <a (click)="onScrollProjects(true)"><i class="fa fa-chevron-right"></i></a>
+    </div>
+    <div class="project-description" *ngIf="activeProject">
+      <div class="information">
+        <div class="description">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
+          finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue vel
+          augue.
+        </div>
+        <div class="icon">
+          <i class="fa" [ngClass]="activeProject.icon" [ngStyle]="{'color':activeProject.color}"></i>
+          <span [ngStyle]="{'color':activeProject.color}">{{activeProject.code}}</span>
+        </div>
+      </div>
+      <div class="pull-right submit-button">
+        <button type="button" class="btn btn-primary" (click)="saveActiveItems()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
