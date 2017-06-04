@@ -18,11 +18,18 @@
  * -----------------------------------------------------------------------/
  */
 
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-import {AppModule} from './app/app.module';
-import {KeycloakService} from './services/keycloak.service';
+import {WorkspaceComponent} from './settings/workspace/workspace.component';
+import {RouterModule, Routes} from '@angular/router';
+import {NgModule} from '@angular/core';
 
-require('./styles/basic.scss');
+const routes: Routes = [
+  {path: '', redirectTo: '/workspace', pathMatch: 'full'},
+  {path: 'workspace', component: WorkspaceComponent}
+];
 
-KeycloakService.init()
-  .then(() => platformBrowserDynamic().bootstrapModule(AppModule));
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {
+}

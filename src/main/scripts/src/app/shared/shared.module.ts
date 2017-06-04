@@ -18,11 +18,16 @@
  * -----------------------------------------------------------------------/
  */
 
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-import {AppModule} from './app/app.module';
-import {KeycloakService} from './services/keycloak.service';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-require('./styles/basic.scss');
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule
+  ]
+})
+export class SharedModule {
 
-KeycloakService.init()
-  .then(() => platformBrowserDynamic().bootstrapModule(AppModule));
+}

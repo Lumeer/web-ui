@@ -18,11 +18,13 @@
  * -----------------------------------------------------------------------/
  */
 
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-import {AppModule} from './app/app.module';
-import {KeycloakService} from './services/keycloak.service';
+import {Component} from '@angular/core';
 
-require('./styles/basic.scss');
+@Component({
+  selector: 'app',
+  template: require('./app.component.html'),
+  styles: [require('./app.component.scss').toString()]
+})
+export class AppComponent {
 
-KeycloakService.init()
-  .then(() => platformBrowserDynamic().bootstrapModule(AppModule));
+}

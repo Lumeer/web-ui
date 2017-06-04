@@ -18,11 +18,17 @@
  * -----------------------------------------------------------------------/
  */
 
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-import {AppModule} from './app/app.module';
-import {KeycloakService} from './services/keycloak.service';
+import {NgModule} from '@angular/core';
+import {WorkspaceComponent} from './workspace/workspace.component';
 
-require('./styles/basic.scss');
+@NgModule({
+  declarations: [
+    WorkspaceComponent
+  ],
+  exports: [
+    WorkspaceComponent
+  ]
+})
+export class SettingsModule {
 
-KeycloakService.init()
-  .then(() => platformBrowserDynamic().bootstrapModule(AppModule));
+}

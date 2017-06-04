@@ -18,11 +18,33 @@
  * -----------------------------------------------------------------------/
  */
 
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-import {AppModule} from './app/app.module';
-import {KeycloakService} from './services/keycloak.service';
+import {NgModule, Optional, SkipSelf} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {WorkspaceService} from './workspace.service';
+import {HeaderComponent} from './header/header.component';
 
-require('./styles/basic.scss');
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
+  declarations: [
+    HeaderComponent
+  ],
+  providers: [
+    WorkspaceService
+  ],
+  exports: [
+    HeaderComponent
+  ]
+})
+export class CoreModule {
 
-KeycloakService.init()
-  .then(() => platformBrowserDynamic().bootstrapModule(AppModule));
+  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
+    if (parentModule) {
+      throw new Error('CoreModule has already been loaded. Import Core modules in the AppModule only.');
+    }
+  }
+
+}

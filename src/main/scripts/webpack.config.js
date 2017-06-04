@@ -66,11 +66,6 @@ module.exports = {
       template: 'src/template-index.ejs',
       inject: 'body'
     }),
-    new HtmlWebpackPlugin({
-      filename: 'demo.html',
-      template: 'src/template-demo.ejs',
-      inject: 'head'
-    }),
     new CopyWebpackPlugin([
       {from: __dirname + '/img', to: 'img'},
       {from: __dirname + '/data', to: 'data'}
