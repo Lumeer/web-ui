@@ -1,0 +1,57 @@
+<div>
+  <div class="proj-header row">
+    <div class="col-sm-7 col-sm-offset-2">
+      <h3 class="headline">{{projCode ? 'Edit project' : 'Create project'}}</h3>
+    </div>
+    <div class="col-sm-3">
+      <i class="fa fa-trash pull-right text-danger icon" aria-hidden="true"
+         *ngIf="projCode" (click)="onDelete()"></i>
+    </div>
+  </div>
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label for="proj-org" class="col-sm-2 control-label">Organization</label>
+      <div class="col-sm-4">
+        <select class="form-control" [(ngModel)]="orgCode" id="proj-org" name="orgCode">
+          <option *ngFor="let org of organizations" [ngValue]="org.code">
+            {{org.code}} - {{org.name}}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="proj-code" class="col-sm-2 control-label">Code</label>
+      <div class="col-sm-4">
+        <input class="form-control" type="text" [(ngModel)]="project.code"
+               name="code" id="proj-code" placeholder="Code">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="proj-name" class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-4">
+        <input class="form-control" type="text" [(ngModel)]="project.name"
+               name="name" id="proj-name" placeholder="Name">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="proj-color" class="col-sm-2 control-label">Color</label>
+      <div class="col-sm-4">
+        <input class="form-control" type="text" [(ngModel)]="project.color"
+               name="color" id="proj-color" placeholder="Color">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="proj-icon" class="col-sm-2 control-label">Icon</label>
+      <div class="col-sm-4">
+        <input class="form-control" type="text" [(ngModel)]="project.icon"
+               name="icon" id="proj-icon" placeholder="Icon">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-4 col-sm-offset-2">
+        <button class="btn btn-primary btn-sm" (click)="onSave()">Save</button>
+        <button class="btn btn-warning btn-sm" (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+  </form>
+</div>

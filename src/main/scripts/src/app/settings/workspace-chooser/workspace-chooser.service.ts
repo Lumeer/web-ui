@@ -18,36 +18,29 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule, Optional, SkipSelf} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {Injectable} from '@angular/core';
+import {Http} from '@angular/http';
 
-import {WorkspaceService} from './workspace.service';
-import {HeaderComponent} from './header/header.component';
-import {HttpJson} from './http-json.service';
+import 'rxjs/add/operator/map';
+import {Observable} from 'rxjs/Observable';
+import {Organization} from '../../shared/organization';
+import {Project} from '../../shared/project';
 
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  declarations: [
-    HeaderComponent
-  ],
-  providers: [
-    HttpJson,
-    WorkspaceService
-  ],
-  exports: [
-    HeaderComponent
-  ]
-})
-export class CoreModule {
+@Injectable()
+export class WorkspaceChooserService {
 
-  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
-    if (parentModule) {
-      throw new Error('CoreModule has already been loaded. Import Core modules in the AppModule only.');
-    }
+  public oganizations: Organization[];
+
+  constructor(private http: Http) {
   }
 
+  public fetchOrganizations(): Observable<Organization[]> {
+    return this.http.get('/lumeer-engine/rest/organizations')
+      .map(response => response.json() as Organization[]);
+  }
+
+  public fetchProjects(organization: string): Observable<Project[]> {
+    return this.http.get('/lumeer-engine/rest/' + organization + '/projects')
+      .map(response => response.json() as Project[]);
+  }
 }

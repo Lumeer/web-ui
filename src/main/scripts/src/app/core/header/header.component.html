@@ -12,7 +12,9 @@
     </button>
   </div>
   <div class="project">
-    <a routeLink="/workspace">{{project}}@{{organization}}</a>
+    <a routeLink="/workspace">
+      <span *ngIf="workspaceService.organization && workspaceService.project">
+        {{workspaceService.organization.code}}@{{workspaceService.project.code}}</span></a>
   </div>
   <div class="notifications">0</div>
   <div class="profile"></div>

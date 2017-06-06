@@ -1,0 +1,87 @@
+<div>
+  <div *ngIf="workspaceChooserService.oganizations">
+    <h3>Organizations</h3>
+    <div class="horizontal-chooser">
+      <div class="slide">
+        <a (click)="onScrollOrganizations(false)"><i class="fa fa-chevron-left"></i></a>
+      </div>
+      <perfect-scrollbar class="chooser" #orgs [config]="{suppressScrollY: true}">
+        <div class="squares" [ngStyle]="{width: organizationsWidth + 'px'}">
+          <div class="square" (click)="onCreateOrganization()">
+            <div class="square-icon-full">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div class="square" *ngFor="let organization of workspaceChooserService.oganizations; let i = index"
+               (click)="onOrganizationSelected(organization, i)"
+               [ngClass]="{active: organization.active}">
+            <i class="fa fa-cog square-settings" aria-hidden="true"
+               (click)="$event.stopPropagation(); onOrganizationSettings(organization)"></i>
+            <div class="square-icon">
+              <i class="fa" [ngClass]="organization.icon" [ngStyle]="{'color':organization.color}"></i>
+            </div>
+            <span class="square-code" [ngStyle]="{'color':organization.color}">{{organization.code}}</span>
+            <span class="square-name" [ngStyle]="{'color':organization.color}">{{organization.name}}</span>
+          </div>
+        </div>
+        <div class="pointer" [ngStyle]="{width: organizationsWidth + 'px'}" *ngIf="activeOrganization">
+          <div [ngStyle]="{width: 170 * (activeOrganization.index +1 )+ 60 + 'px'}"></div>
+          <div class="arrow-start"></div>
+          <div class="arrow-end"></div>
+          <div
+            [ngStyle]="{width: 170 * (workspaceChooserService.oganizations.length - activeOrganization.index) - 120 + 'px'}"></div>
+        </div>
+      </perfect-scrollbar>
+      <div class="slide">
+        <a (click)="onScrollOrganizations(true)"><i class="fa fa-chevron-right"></i></a>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="activeOrganization && activeOrganization.projects">
+    <h3>Projects</h3>
+    <div class="horizontal-chooser">
+      <div class="slide">
+        <a (click)="onScrollProjects(false)"><i class="fa fa-chevron-left"></i></a>
+      </div>
+      <perfect-scrollbar class="chooser" #projs [config]="{suppressScrollY: true}">
+        <div class="squares" [ngStyle]="{width: projectsWidth + 'px'}">
+          <div class="square" (click)="onCreateProject()">
+            <div class="square-icon-full">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </div>
+          </div>
+          <div class="square" *ngFor="let project of activeOrganization.projects; let i = index"
+               (click)="onProjectSelected(project, i)"
+               [ngClass]="{active: project.active}">
+            <i class="fa fa-cog square-settings" aria-hidden="true"
+               (click)="$event.stopPropagation(); onProjectSettings(project)"></i>
+            <div class="square-icon">
+              <i class="fa" [ngClass]="project.icon" [ngStyle]="{'color':project.color}"></i>
+            </div>
+            <span class="square-code" [ngStyle]="{'color':project.color}">{{project.code}}</span>
+            <span class="square-name" [ngStyle]="{'color':project.color}">{{project.name}}</span>
+          </div>
+        </div>
+      </perfect-scrollbar>
+      <div class="slide">
+        <a (click)="onScrollProjects(true)"><i class="fa fa-chevron-right"></i></a>
+      </div>
+      <div class="project-description" *ngIf="activeProject">
+        <div class="information">
+          <div class="title">
+            <i class="fa" [ngClass]="activeProject.icon" [ngStyle]="{'color':activeProject.color}"></i>
+            <span [ngStyle]="{'color':activeProject.color}">{{activeProject.code}}</span>
+          </div>
+          <div class="description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
+            finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
+            vel augue.
+          </div>
+        </div>
+        <div class="pull-right submit-button">
+          <button type="button" class="btn btn-primary" (click)="onSaveActiveItems()">Choose</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

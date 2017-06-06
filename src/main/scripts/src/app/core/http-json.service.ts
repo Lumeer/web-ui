@@ -18,13 +18,26 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component} from '@angular/core';
+import {Injectable} from '@angular/core';
+import {Http, Headers, RequestOptions} from '@angular/http';
 
-@Component({
-  selector: 'workspace',
-  template: require('./workspace.component.html'),
-  styles: [require('./workspace.component.scss').toString()]
-})
-export class WorkspaceComponent {
+@Injectable()
+export class HttpJson {
+
+  constructor(private http: Http) {
+  }
+
+  public post(url, data) {
+    return this.http.post(url, data, HttpJson.options());
+  }
+
+  public put(url, data) {
+    return this.http.put(url, data, HttpJson.options());
+  }
+
+  private static options() {
+    let headers = new Headers({'Content-Type': 'application/json'});
+    return new RequestOptions({headers: headers});
+  }
 
 }

@@ -18,13 +18,20 @@
  * -----------------------------------------------------------------------/
  */
 
-import {WorkspaceComponent} from './settings/workspace/workspace.component';
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 
+import {WorkspaceChooserComponent} from './settings/workspace-chooser/workspace-chooser.component';
+import {OrganizationComponent} from './settings/organization/organization.component';
+import {ProjectComponent} from './settings/project/project.component';
+
 const routes: Routes = [
   {path: '', redirectTo: '/workspace', pathMatch: 'full'},
-  {path: 'workspace', component: WorkspaceComponent}
+  {path: 'workspace', component: WorkspaceChooserComponent},
+  {path: 'organization', component: OrganizationComponent},
+  {path: 'organization/:code', component: OrganizationComponent},
+  {path: 'organization/:orgCode/project', component: ProjectComponent},
+  {path: 'organization/:orgCode/project/:projCode', component: ProjectComponent}
 ];
 
 @NgModule({
