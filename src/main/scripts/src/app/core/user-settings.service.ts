@@ -19,25 +19,29 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Http, Headers, RequestOptions} from '@angular/http';
+import {Response} from '@angular/http';
+
+import {HttpClient} from './http-client.service';
+import {UserSettings} from '../shared/dto/user.settings';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
-export class HttpJson {
+export class UserSettingsService {
 
-  constructor(private http: Http) {
+  constructor(private httpClient: HttpClient) {
   }
 
-  public post(url, data) {
-    return this.http.post(url, data, HttpJson.options());
+  public getUserSettings(): Observable<UserSettings> {
+    return this.httpClient.get(UserSettingsService.apiPrefix())
+      .map(response => response.json() as UserSettings);
   }
 
-  public put(url, data) {
-    return this.http.put(url, data, HttpJson.options());
+  public updateUserSettings(userSettings: UserSettings): Observable<Response> {
+    return this.httpClient.put(UserSettingsService.apiPrefix(), JSON.stringify(userSettings));
   }
 
-  private static options() {
-    let headers = new Headers({'Content-Type': 'application/json'});
-    return new RequestOptions({headers: headers});
+  private static apiPrefix(): string {
+    return '/lumeer-engine/rest/settings/user';
   }
 
 }

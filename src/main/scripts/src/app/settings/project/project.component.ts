@@ -23,9 +23,7 @@ import {ProjectService} from './project.service';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 
-import {Project} from '../../shared/project';
-import {WorkspaceChooserService} from '../workspace-chooser/workspace-chooser.service';
-import {Organization} from '../../shared/organization';
+import {Project} from '../../shared/dto/project';
 
 @Component({
   selector: 'project',
@@ -34,20 +32,17 @@ import {Organization} from '../../shared/organization';
 })
 export class ProjectComponent implements OnInit {
 
-  private organizations: Organization[];
   private project: Project;
   private orgCode: string;
   private projCode: string;
 
   constructor(private projectService: ProjectService,
-              private workspaceChooserService: WorkspaceChooserService,
               private route: ActivatedRoute,
               private location: Location) {
   }
 
   public ngOnInit(): void {
     this.project = new Project();
-    this.organizations = this.workspaceChooserService.oganizations;
     this.route.params.subscribe(params => {
       this.orgCode = params['orgCode'];
       this.projCode = params['projCode'];
@@ -60,11 +55,20 @@ export class ProjectComponent implements OnInit {
 
   public onSave() {
     if (this.projCode) {
-      this.projectService.editProject(this.orgCode, this.projCode, this.project);
+      this.projectService.editProject(this.orgCode, this.projCode, this.project)
+        .subscribe(response => {
+          if (response.ok) {
+            this.location.back();
+          }
+        });
     } else {
-      this.projectService.createProject(this.orgCode, this.project);
+      this.projectService.createProject(this.orgCode, this.project)
+        .subscribe(response => {
+          if (response.ok) {
+            this.location.back();
+          }
+        });
     }
-    this.location.back();
   }
 
   public onCancel() {
@@ -72,8 +76,12 @@ export class ProjectComponent implements OnInit {
   }
 
   public onDelete() {
-    this.projectService.deleteProject(this.orgCode, this.projCode);
-    this.location.back();
+    this.projectService.deleteProject(this.orgCode, this.projCode)
+      .subscribe(response => {
+        if (response.ok) {
+          this.location.back();
+        }
+      });
   }
 
 }

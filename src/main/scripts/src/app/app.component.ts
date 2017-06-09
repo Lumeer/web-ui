@@ -18,13 +18,29 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+
+import {UserSettingsService} from './core/user-settings.service';
+import {WorkspaceService} from './core/workspace.service';
+import {UserSettings} from './shared/dto/user.settings';
 
 @Component({
   selector: 'app',
   template: require('./app.component.html'),
   styles: [require('./app.component.scss').toString()]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
+  constructor(private userSettingsService: UserSettingsService,
+              private workspaceService: WorkspaceService) {
+  }
+
+  public ngOnInit(): void {
+    this.userSettingsService.getUserSettings()
+      .subscribe((userSettings: UserSettings) => {
+        this.workspaceService.organizationCode = userSettings.defaultOrganization;
+        this.workspaceService.projectCode = userSettings.defaultProject;
+      });
+  }
 
 }

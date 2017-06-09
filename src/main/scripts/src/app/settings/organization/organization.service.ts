@@ -19,40 +19,42 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
+import {Response} from '@angular/http';
 
-import {Organization} from '../../shared/organization';
+import {Organization} from '../../shared/dto/organization';
 import {Observable} from 'rxjs/Observable';
-import {HttpJson} from '../../core/http-json.service';
+import {HttpClient} from '../../core/http-client.service';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class OrganizationService {
 
-  constructor(private http: Http,
-              private httpJson: HttpJson) {
+  constructor(private httpClient: HttpClient) {
+  }
+
+  public getOrganizations(): Observable<Organization[]> {
+    return this.httpClient.get(OrganizationService.apiPrefix())
+      .map(response => response.json() as Organization[]);
   }
 
   public getOrganization(code: string): Observable<Organization> {
-    return this.http.get(this.apiPrefix(code))
+    return this.httpClient.get(OrganizationService.apiPrefix(code))
       .map(response => response.json() as Organization);
   }
 
-  public deleteOrganization(code: string) {
-    this.http.delete(this.apiPrefix(code))
-      .subscribe();
+  public deleteOrganization(code: string): Observable<Response> {
+    return this.httpClient.delete(OrganizationService.apiPrefix(code));
   }
 
-  public createOrganization(organization: Organization) {
-    this.httpJson.post(this.apiPrefix(), JSON.stringify(organization))
-      .subscribe();
+  public createOrganization(organization: Organization): Observable<Response> {
+    return this.httpClient.post(OrganizationService.apiPrefix(), JSON.stringify(organization));
   }
 
-  public editOrganization(code: string, organization: Organization) {
-    this.httpJson.put(this.apiPrefix(code), JSON.stringify(organization))
-      .subscribe();
+  public editOrganization(code: string, organization: Organization): Observable<Response> {
+    return this.httpClient.put(OrganizationService.apiPrefix(code), JSON.stringify(organization));
   }
 
-  private apiPrefix(code?: string): string {
+  private static apiPrefix(code?: string): string {
     return '/lumeer-engine/rest/organizations' + (code ? '/' + code : '');
   }
 

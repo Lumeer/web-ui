@@ -32,7 +32,6 @@ import {SettingsModule} from './settings/settings.module';
     AppRoutingModule,
     BrowserModule,
     CoreModule,
-    HttpModule,
     SettingsModule
   ],
   declarations: [

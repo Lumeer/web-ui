@@ -25,7 +25,6 @@ import {RouterModule} from '@angular/router';
 
 import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
-import {WorkspaceChooserService} from './workspace-chooser/workspace-chooser.service';
 import {OrganizationComponent} from './organization/organization.component';
 import {OrganizationService} from './organization/organization.service';
 import {ProjectComponent} from './project/project.component';
@@ -45,8 +44,7 @@ import {ProjectService} from './project/project.service';
   ],
   providers: [
     OrganizationService,
-    ProjectService,
-    WorkspaceChooserService
+    ProjectService
   ],
   exports: [
     OrganizationComponent,

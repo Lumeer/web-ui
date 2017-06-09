@@ -20,13 +20,14 @@
 
 import {Injectable} from '@angular/core';
 
-import {Organization} from '../shared/organization';
-import {Project} from '../shared/project';
+import {Organization} from '../shared/dto/organization';
+import {Project} from '../shared/dto/project';
+import {HttpClient} from './http-client.service';
 
 @Injectable()
 export class WorkspaceService {
 
-  public organization: Organization;
-  public project: Project;
+  public organizationCode: string;
+  public projectCode: string;
 
 }

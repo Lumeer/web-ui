@@ -19,40 +19,42 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
+import {Response} from '@angular/http';
 
-import {Project} from '../../shared/project';
+import {Project} from '../../shared/dto/project';
 import {Observable} from 'rxjs/Observable';
-import {HttpJson} from '../../core/http-json.service';
+import {HttpClient} from '../../core/http-client.service';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ProjectService {
 
-  constructor(private http: Http,
-              private httpJson: HttpJson) {
+  constructor(private httpClient: HttpClient) {
+  }
+
+  public getProjects(orgCode: string): Observable<Project[]> {
+    return this.httpClient.get(ProjectService.apiPrefix(orgCode))
+      .map(response => response.json() as Project[]);
   }
 
   public getProject(orgCode: string, projCode: string): Observable<Project> {
-    return this.http.get(this.apiPrefix(orgCode, projCode))
+    return this.httpClient.get(ProjectService.apiPrefix(orgCode, projCode))
       .map(response => response.json() as Project);
   }
 
-  public deleteProject(orgCode: string, projCode: string) {
-    this.http.delete(this.apiPrefix(orgCode, projCode))
-      .subscribe();
+  public deleteProject(orgCode: string, projCode: string): Observable<Response> {
+    return this.httpClient.delete(ProjectService.apiPrefix(orgCode, projCode));
   }
 
-  public createProject(orgCode: string, project: Project) {
-    this.httpJson.post(this.apiPrefix(orgCode), JSON.stringify(project))
-      .subscribe();
+  public createProject(orgCode: string, project: Project): Observable<Response> {
+    return this.httpClient.post(ProjectService.apiPrefix(orgCode), JSON.stringify(project));
   }
 
-  public editProject(orgCode: string, projCode: string, project: Project) {
-    this.httpJson.put(this.apiPrefix(orgCode, projCode), JSON.stringify(project))
-      .subscribe();
+  public editProject(orgCode: string, projCode: string, project: Project): Observable<Response> {
+    return this.httpClient.put(ProjectService.apiPrefix(orgCode, projCode), JSON.stringify(project));
   }
 
-  private apiPrefix(orgCode: string, projCode?: string): string {
+  private static apiPrefix(orgCode: string, projCode?: string): string {
     return '/lumeer-engine/rest/' + orgCode + '/projects' + (projCode ? '/' + projCode : '');
   }
 

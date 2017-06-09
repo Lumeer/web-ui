@@ -13,8 +13,8 @@
   </div>
   <div class="project">
     <a routeLink="/workspace">
-      <span *ngIf="workspaceService.organization && workspaceService.project">
-        {{workspaceService.organization.code}}@{{workspaceService.project.code}}</span></a>
+      <span *ngIf="workspaceService.organizationCode && workspaceService.projectCode">
+        {{workspaceService.organizationCode}}@{{workspaceService.projectCode}}</span></a>
   </div>
   <div class="notifications">0</div>
   <div class="profile"></div>

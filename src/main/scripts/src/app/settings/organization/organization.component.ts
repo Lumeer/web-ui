@@ -23,7 +23,7 @@ import {OrganizationService} from './organization.service';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 
-import {Organization} from '../../shared/organization';
+import {Organization} from '../../shared/dto/organization';
 
 @Component({
   selector: 'organization',
@@ -53,11 +53,20 @@ export class OrganizationComponent implements OnInit {
 
   public onSave() {
     if (this.orgCode) {
-      this.organizationService.editOrganization(this.orgCode, this.organization);
+      this.organizationService.editOrganization(this.orgCode, this.organization)
+        .subscribe(response => {
+          if (response.ok) {
+            this.location.back();
+          }
+        });
     } else {
-      this.organizationService.createOrganization(this.organization);
+      this.organizationService.createOrganization(this.organization)
+        .subscribe(response => {
+          if (response.ok) {
+            this.location.back();
+          }
+        });
     }
-    this.location.back();
   }
 
   public onCancel() {
@@ -65,8 +74,12 @@ export class OrganizationComponent implements OnInit {
   }
 
   public onDelete() {
-    this.organizationService.deleteOrganization(this.orgCode);
-    this.location.back();
+    this.organizationService.deleteOrganization(this.orgCode)
+      .subscribe(response => {
+        if (response.ok) {
+          this.location.back();
+        }
+      });
   }
 
 }
