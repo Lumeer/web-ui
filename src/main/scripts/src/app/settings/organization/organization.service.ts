@@ -25,8 +25,6 @@ import {Organization} from '../../shared/dto/organization';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient} from '../../core/http-client.service';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
 
 @Injectable()
 export class OrganizationService {
@@ -36,41 +34,24 @@ export class OrganizationService {
 
   public getOrganizations(): Observable<Organization[]> {
     return this.httpClient.get(OrganizationService.apiPrefix())
-      .map(response => response.json() as Organization[])
-      .catch(this.handleError);
+      .map(response => response.json() as Organization[]);
   }
 
   public getOrganization(code: string): Observable<Organization> {
     return this.httpClient.get(OrganizationService.apiPrefix(code))
-      .map(response => response.json() as Organization)
-      .catch(this.handleError);
+      .map(response => response.json() as Organization);
   }
 
   public deleteOrganization(code: string): Observable<Response> {
-    return this.httpClient.delete(OrganizationService.apiPrefix(code))
-      .catch(this.handleError);
+    return this.httpClient.delete(OrganizationService.apiPrefix(code));
   }
 
   public createOrganization(organization: Organization): Observable<Response> {
-    return this.httpClient.post(OrganizationService.apiPrefix(), JSON.stringify(organization))
-      .catch(this.handleError);
+    return this.httpClient.post(OrganizationService.apiPrefix(), JSON.stringify(organization));
   }
 
   public editOrganization(code: string, organization: Organization): Observable<Response> {
-    return this.httpClient.put(OrganizationService.apiPrefix(code), JSON.stringify(organization))
-      .catch(this.handleError);
-  }
-
-  private handleError(error: Response | any) {
-    // In a real world app, you might use a remote logging infrastructure
-    let errMsg: string;
-    if (error instanceof Response) {
-      errMsg = `${error.statusText || 'Error!'}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-    console.error(errMsg);
-    return Observable.throw(errMsg);
+    return this.httpClient.put(OrganizationService.apiPrefix(code), JSON.stringify(organization));
   }
 
   private static apiPrefix(code?: string): string {
