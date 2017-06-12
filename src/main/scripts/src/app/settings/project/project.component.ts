@@ -24,6 +24,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 
 import {Project} from '../../shared/dto/project';
+import {WorkspaceService} from '../../core/workspace.service';
 
 @Component({
   selector: 'project',
@@ -35,8 +36,10 @@ export class ProjectComponent implements OnInit {
   private project: Project;
   private orgCode: string;
   private projCode: string;
+  private errorMessage: any;
 
   constructor(private projectService: ProjectService,
+              private workspaceService: WorkspaceService,
               private route: ActivatedRoute,
               private location: Location) {
   }
@@ -48,7 +51,10 @@ export class ProjectComponent implements OnInit {
       this.projCode = params['projCode'];
       if (this.projCode) {
         this.projectService.getProject(this.orgCode, this.projCode)
-          .subscribe((project: Project) => this.project = project);
+          .subscribe(
+            (project: Project) => this.project = project,
+            error => this.errorMessage = error
+          );
       }
     });
   }
@@ -56,18 +62,21 @@ export class ProjectComponent implements OnInit {
   public onSave() {
     if (this.projCode) {
       this.projectService.editProject(this.orgCode, this.projCode, this.project)
-        .subscribe(response => {
-          if (response.ok) {
+        .subscribe(
+          response => {
+            if (this.projCode === this.workspaceService.projectCode) {
+              this.workspaceService.projectCode = this.project.code;
+            }
             this.location.back();
-          }
-        });
+          },
+          error => this.errorMessage = error
+        );
     } else {
       this.projectService.createProject(this.orgCode, this.project)
-        .subscribe(response => {
-          if (response.ok) {
-            this.location.back();
-          }
-        });
+        .subscribe(
+          response => this.location.back(),
+          error => this.errorMessage = error
+        );
     }
   }
 
@@ -77,11 +86,10 @@ export class ProjectComponent implements OnInit {
 
   public onDelete() {
     this.projectService.deleteProject(this.orgCode, this.projCode)
-      .subscribe(response => {
-        if (response.ok) {
-          this.location.back();
-        }
-      });
+      .subscribe(
+        response => this.location.back(),
+        error => this.errorMessage = error
+      );
   }
 
 }

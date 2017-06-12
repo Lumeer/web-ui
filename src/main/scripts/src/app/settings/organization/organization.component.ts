@@ -24,6 +24,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 
 import {Organization} from '../../shared/dto/organization';
+import {WorkspaceService} from '../../core/workspace.service';
 
 @Component({
   selector: 'organization',
@@ -34,8 +35,10 @@ export class OrganizationComponent implements OnInit {
 
   private organization: Organization;
   private orgCode: string;
+  private errorMessage: any;
 
   constructor(private organizationService: OrganizationService,
+              private workspaceService: WorkspaceService,
               private route: ActivatedRoute,
               private location: Location) {
   }
@@ -46,7 +49,9 @@ export class OrganizationComponent implements OnInit {
       this.orgCode = params['code'];
       if (this.orgCode) {
         this.organizationService.getOrganization(this.orgCode)
-          .subscribe((organization: Organization) => this.organization = organization);
+          .subscribe((organization: Organization) => this.organization = organization,
+            error => this.errorMessage = error
+          );
       }
     });
   }
@@ -54,18 +59,21 @@ export class OrganizationComponent implements OnInit {
   public onSave() {
     if (this.orgCode) {
       this.organizationService.editOrganization(this.orgCode, this.organization)
-        .subscribe(response => {
-          if (response.ok) {
+        .subscribe(
+          response => {
+            if (this.orgCode === this.workspaceService.organizationCode) {
+              this.workspaceService.organizationCode = this.organization.code;
+            }
             this.location.back();
-          }
-        });
+          },
+          error => this.errorMessage = error
+        );
     } else {
       this.organizationService.createOrganization(this.organization)
-        .subscribe(response => {
-          if (response.ok) {
-            this.location.back();
-          }
-        });
+        .subscribe(
+          response => this.location.back(),
+          error => this.errorMessage = error
+        );
     }
   }
 
@@ -75,11 +83,10 @@ export class OrganizationComponent implements OnInit {
 
   public onDelete() {
     this.organizationService.deleteOrganization(this.orgCode)
-      .subscribe(response => {
-        if (response.ok) {
-          this.location.back();
-        }
-      });
+      .subscribe(
+        response => this.location.back(),
+        error => this.errorMessage = error
+      );
   }
 
 }

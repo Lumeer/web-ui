@@ -66,7 +66,7 @@ export class WorkspaceChooserComponent implements OnInit {
           );
           if (ix) {
             this.activeOrganization = this.organizations[ix];
-            this.activeOrganization.index = ix + 1;
+            this.activeOrganization.index = ix;
             this.activeOrganization.active = true;
 
             this.projectService.getProjects(this.activeOrganization.code)
