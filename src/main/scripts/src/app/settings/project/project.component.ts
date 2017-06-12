@@ -20,8 +20,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {ProjectService} from './project.service';
-import {ActivatedRoute} from '@angular/router';
-import {Location} from '@angular/common';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {Project} from '../../shared/dto/project';
 import {WorkspaceService} from '../../core/workspace.service';
@@ -41,7 +40,7 @@ export class ProjectComponent implements OnInit {
   constructor(private projectService: ProjectService,
               private workspaceService: WorkspaceService,
               private route: ActivatedRoute,
-              private location: Location) {
+              private router: Router) {
   }
 
   public ngOnInit(): void {
@@ -67,29 +66,33 @@ export class ProjectComponent implements OnInit {
             if (this.projCode === this.workspaceService.projectCode) {
               this.workspaceService.projectCode = this.project.code;
             }
-            this.location.back();
+            this.goBack();
           },
           error => this.errorMessage = error
         );
     } else {
       this.projectService.createProject(this.orgCode, this.project)
         .subscribe(
-          response => this.location.back(),
+          response => this.goBack(),
           error => this.errorMessage = error
         );
     }
   }
 
   public onCancel() {
-    this.location.back();
+    this.goBack();
   }
 
   public onDelete() {
     this.projectService.deleteProject(this.orgCode, this.projCode)
       .subscribe(
-        response => this.location.back(),
+        response => this.goBack(),
         error => this.errorMessage = error
       );
+  }
+
+  private goBack() {
+    this.router.navigate(['/workspace']);
   }
 
 }

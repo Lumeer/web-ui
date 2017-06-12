@@ -20,8 +20,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {OrganizationService} from './organization.service';
-import {ActivatedRoute} from '@angular/router';
-import {Location} from '@angular/common';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {Organization} from '../../shared/dto/organization';
 import {WorkspaceService} from '../../core/workspace.service';
@@ -40,7 +39,7 @@ export class OrganizationComponent implements OnInit {
   constructor(private organizationService: OrganizationService,
               private workspaceService: WorkspaceService,
               private route: ActivatedRoute,
-              private location: Location) {
+              private router: Router) {
   }
 
   public ngOnInit(): void {
@@ -64,29 +63,33 @@ export class OrganizationComponent implements OnInit {
             if (this.orgCode === this.workspaceService.organizationCode) {
               this.workspaceService.organizationCode = this.organization.code;
             }
-            this.location.back();
+            this.goBack();
           },
           error => this.errorMessage = error
         );
     } else {
       this.organizationService.createOrganization(this.organization)
         .subscribe(
-          response => this.location.back(),
+          response => this.goBack(),
           error => this.errorMessage = error
         );
     }
   }
 
   public onCancel() {
-    this.location.back();
+    this.goBack();
   }
 
   public onDelete() {
     this.organizationService.deleteOrganization(this.orgCode)
       .subscribe(
-        response => this.location.back(),
+        response => this.goBack(),
         error => this.errorMessage = error
       );
+  }
+
+  private goBack() {
+    this.router.navigate(['/workspace']);
   }
 
 }

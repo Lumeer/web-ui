@@ -33,37 +33,37 @@ export class HttpClient {
 
   public get(url: string, requestOptions?: RequestOptionsArgs): Observable<Response> {
     return this.http.get(url, requestOptions)
-      .catch(this.handleError);
+      .catch(HttpClient.handleError);
   }
 
   public post(url: string, body: any, requestOptions?: RequestOptionsArgs): Observable<Response> {
     return this.http.post(url, body, requestOptions ? requestOptions : HttpClient.options())
-      .catch(this.handleError);
+      .catch(HttpClient.handleError);
   }
 
   public put(url: string, body: any, requestOptions?: RequestOptionsArgs): Observable<Response> {
     return this.http.put(url, body, requestOptions ? requestOptions : HttpClient.options())
-      .catch(this.handleError);
+      .catch(HttpClient.handleError);
   }
 
   public delete(url: string, requestOptions?: RequestOptionsArgs): Observable<Response> {
     return this.http.delete(url, requestOptions)
-      .catch(this.handleError);
+      .catch(HttpClient.handleError);
   }
 
   public head(url: string, requestOptions?: RequestOptionsArgs): Observable<Response> {
     return this.http.head(url, requestOptions)
-      .catch(this.handleError);
+      .catch(HttpClient.handleError);
   }
 
   public patch(url: string, body: any, requestOptions?: RequestOptionsArgs): Observable<Response> {
     return this.http.patch(url, body, requestOptions ? requestOptions : HttpClient.options())
-      .catch(this.handleError);
+      .catch(HttpClient.handleError);
   }
 
   public request(url: string | Request, requestOptions?: RequestOptionsArgs): Observable<Response> {
     return this.http.request(url, requestOptions)
-      .catch(this.handleError);
+      .catch(HttpClient.handleError);
   }
 
   private static options() {
@@ -71,7 +71,7 @@ export class HttpClient {
     return new RequestOptions({headers: headers});
   }
 
-  private handleError(error: Response | any) {
+  private static handleError(error: Response | any) {
     // In a real world app, you might use a remote logging infrastructure
     let errMsg: string;
     if (error instanceof Response) {
