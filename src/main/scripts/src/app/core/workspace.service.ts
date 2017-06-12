@@ -17,18 +17,17 @@
  * limitations under the License.
  * -----------------------------------------------------------------------/
  */
+
 import {Injectable} from '@angular/core';
+
+import {Organization} from '../shared/dto/organization';
+import {Project} from '../shared/dto/project';
+import {HttpClient} from './http-client.service';
 
 @Injectable()
 export class WorkspaceService {
 
-  public organization: string;
-  public project: string;
-
-  constructor() {
-    // TODO remove this in the future
-    this.organization = 'LMR';
-    this.project = 'devel';
-  }
+  public organizationCode: string;
+  public projectCode: string;
 
 }

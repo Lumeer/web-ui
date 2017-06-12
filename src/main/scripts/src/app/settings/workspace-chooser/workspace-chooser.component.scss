@@ -1,0 +1,150 @@
+@import '../../../styles/variables';
+
+workspace-chooser {
+
+  .chooser {
+    display: inline-block;
+    max-width: calc(100% - 100px);
+    overflow-x: scroll;
+  }
+
+  .horizontal-chooser {
+
+    &.project .ps-content {
+      height: 170px;
+    }
+
+    .ps-scrollbar-x-rail {
+      top: 0;
+    }
+  }
+
+  .slide {
+    vertical-align: top;
+    margin-top: 55px;
+    display: inline-block;
+    font-size: 50px;
+
+    &:last-of-type {
+      margin-left: 10px;
+    }
+  }
+
+  .squares {
+    height: 165px;
+
+    .square {
+      box-shadow: $default-shadow;
+      cursor: pointer;
+      width: 150px;
+      height: 150px;
+      background: $secondary-color;
+      display: inline-block;
+      margin: 10px;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+      text-overflow: ellipsis;
+
+      &.active {
+        margin: 5px;
+        width: 155px;
+        height: 155px;
+        border: 5px solid $brand-danger;
+      }
+
+      .square-icon {
+        height: 65px;
+        font-size: 40px;
+      }
+
+      .square-settings {
+        position: absolute;
+        font-size: 15px;
+        padding: 10px;
+        right: 0;
+        top: 0;
+      }
+
+      .square-icon-full {
+        width: 150px;
+        height: 150px;
+        line-height: 150px;
+        font-size: 60px;
+      }
+
+      .square-code {
+        height: 60px;
+        font-size: 40px;
+        white-space: nowrap;
+        display: block;
+      }
+
+      .square-name {
+        height: 25px;
+        font-size: 15px;
+        white-space: nowrap;
+        display: block;
+      }
+    }
+  }
+
+  .pointer {
+    margin-top: 8px;
+    margin-left: 15px;
+
+    div {
+      display: inline-block;
+      height: 5px;
+      overflow: hidden;
+      margin: 5px 0;
+      background-color: $brand-primary;
+      transition: width 0.5s;
+
+      &.arrow-start {
+        width: 25px;
+        transform: rotate(-45deg) translate(0px, -10px);
+      }
+
+      &.arrow-end {
+        width: 25px;
+        transform: rotate(45deg) translate(-20px, 10px)
+      }
+
+      &:last-of-type {
+        transform: translateX(-30px);
+      }
+    }
+  }
+
+  .project-description {
+    > div {
+      display: inline-block;
+    }
+
+    .submit-button {
+      right: 55px;
+      position: relative;
+    }
+
+    .information {
+      box-shadow: $default-shadow;
+      width: 490px;
+      background: $secondary-color;
+      margin: 10px 55px;
+      padding: 10px;
+
+      .description {
+        width: 100%;
+        display: inline-block;
+      }
+
+      .title {
+        display: inline-block;
+        width: 100%;
+        text-align: start;
+        font-size: 40px;
+      }
+    }
+  }
+}

@@ -21,18 +21,25 @@
 import {NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import {HttpModule} from '@angular/http';
+
 import {WorkspaceService} from './workspace.service';
 import {HeaderComponent} from './header/header.component';
+import {HttpClient} from './http-client.service';
+import {UserSettingsService} from './user-settings.service';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    HttpModule
   ],
   declarations: [
     HeaderComponent
   ],
   providers: [
+    HttpClient,
+    UserSettingsService,
     WorkspaceService
   ],
   exports: [

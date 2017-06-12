@@ -18,13 +18,30 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component} from '@angular/core';
+import {Injectable} from '@angular/core';
+import {Response} from '@angular/http';
 
-@Component({
-  selector: 'workspace',
-  template: require('./workspace.component.html'),
-  styles: [require('./workspace.component.scss').toString()]
-})
-export class WorkspaceComponent {
+import {HttpClient} from './http-client.service';
+import {UserSettings} from '../shared/dto/user.settings';
+import {Observable} from 'rxjs/Observable';
+
+@Injectable()
+export class UserSettingsService {
+
+  constructor(private httpClient: HttpClient) {
+  }
+
+  public getUserSettings(): Observable<UserSettings> {
+    return this.httpClient.get(UserSettingsService.apiPrefix())
+      .map(response => response.json() as UserSettings);
+  }
+
+  public updateUserSettings(userSettings: UserSettings): Observable<Response> {
+    return this.httpClient.put(UserSettingsService.apiPrefix(), JSON.stringify(userSettings));
+  }
+
+  private static apiPrefix(): string {
+    return '/lumeer-engine/rest/settings/user';
+  }
 
 }
