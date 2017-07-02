@@ -29,7 +29,7 @@ import {WorkspaceService} from '../workspace.service';
 })
 export class HeaderComponent {
 
-  constructor(private workspaceService: WorkspaceService) {
+  constructor(public workspaceService: WorkspaceService) {
   }
 
 }
