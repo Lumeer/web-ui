@@ -69,6 +69,61 @@
 .profile {
   background-color: #eeeeee;
   border-radius: 25px;
-  height: 50px;
-  width: 50px;
+  height: 45px;
+  width: 45px;
+
+  > * {
+    cursor: default;
+    z-index: 999;
+  }
+
+  .arrow-up {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    position: relative;
+    border-bottom: 5px solid #cccccc;
+    top: 50px;
+    left: 17.5px;
+  }
+
+  ul {
+    min-width: 150px;
+    position: absolute;
+    background-color: #eeeeee;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    top: 57.5px;
+    overflow: hidden;
+    padding: 15px;
+
+    li {
+      line-height: 1.5;
+
+      a {
+        pointer-events: auto;
+        cursor: auto;
+        padding: 7.5px;
+      }
+
+      &.divider {
+        height: 1px;
+        overflow: hidden;
+        margin: 5px -15px;
+        background-color: #e5e5e5;
+      }
+
+      &:last-child {
+        pointer-events: none;
+        color: black;
+        margin-left: 7.5px;
+      }
+
+      &:hover {
+        background-color: #e2e2e2;
+        background-clip:content-box;
+      }
+    }
+  }
 }

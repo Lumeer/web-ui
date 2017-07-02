@@ -18,18 +18,58 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 
 import {WorkspaceService} from '../workspace.service';
+import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'header',
   template: require('./header.component.html'),
-  styles: [require('./header.component.scss').toString()]
+  styles: [require('./header.component.scss').toString()],
+  host: {
+    '(document:click)': 'toggleOptions($event)',
+  },
+  animations: [
+    trigger('animateHeight', [
+      state('in', style({height: '*'})),
+      transition('void => *', [
+        animate(100, keyframes([
+          style({height: 0, offset: 0}),
+          style({height: '*', offset: 1})
+        ]))
+      ]),
+      transition('* => void', [
+        animate(100, keyframes([
+          style({height: '*', offset: 0}),
+          style({height: 0, offset: 1})
+        ]))
+      ])
+    ])
+  ]
 })
+
 export class HeaderComponent {
+
+  @ViewChild('profile') private profile: ElementRef;
+  @ViewChild('options') private options: ElementRef;
 
   constructor(private workspaceService: WorkspaceService) {
   }
 
+  public optionsVisible = false;
+  public licence = 'trial';
+
+  public toggleOptions(event: MouseEvent) {
+    // profile click
+    if (this.profile.nativeElement === event.target) {
+      this.optionsVisible = !this.optionsVisible;
+      return;
+    }
+
+    // click outside options
+    if (!this.profile.nativeElement.contains(event.target)) {
+      this.optionsVisible = false;
+    }
+  }
 }
