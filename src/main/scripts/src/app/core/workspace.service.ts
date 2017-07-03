@@ -20,14 +20,14 @@
 
 import {Injectable} from '@angular/core';
 
-import {Organization} from '../shared/dto/organization';
-import {Project} from '../shared/dto/project';
-import {HttpClient} from './http-client.service';
-
 @Injectable()
 export class WorkspaceService {
 
   public organizationCode: string;
   public projectCode: string;
+
+  public isWorkspaceSet(): boolean {
+    return this.organizationCode && this.organizationCode !== '' && this.projectCode && this.projectCode !== '';
+  }
 
 }
