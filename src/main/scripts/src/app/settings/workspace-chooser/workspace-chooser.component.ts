@@ -33,8 +33,8 @@ const squareSize: number = 170;
 
 @Component({
   selector: 'workspace-chooser',
-  template: require('./workspace-chooser.component.html'),
-  styles: [require('./workspace-chooser.component.scss').toString()]
+  templateUrl: './workspace-chooser.component.html',
+  styleUrls: ['./workspace-chooser.component.scss']
 })
 export class WorkspaceChooserComponent implements OnInit {
 
