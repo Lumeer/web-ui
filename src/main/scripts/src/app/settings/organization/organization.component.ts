@@ -27,8 +27,8 @@ import {WorkspaceService} from '../../core/workspace.service';
 
 @Component({
   selector: 'organization',
-  template: require('./organization.component.html'),
-  styles: [require('./organization.component.scss').toString()]
+  templateUrl: './organization.component.html',
+  styleUrls: ['./organization.component.scss']
 })
 export class OrganizationComponent implements OnInit {
 
