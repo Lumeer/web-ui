@@ -24,8 +24,8 @@ import {WorkspaceService} from '../workspace.service';
 
 @Component({
   selector: 'header',
-  template: require('./header.component.html'),
-  styles: [require('./header.component.scss').toString()]
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
 
