@@ -37,7 +37,7 @@ export class OrganizationProject {
   }
 
   public fetchProjects(organization: string) {
-    return this.http.get(`/lumeer-engine/rest/` + organization + `/projects`)
+    return this.http.get(`/lumeer-engine/rest/organizations/` + organization + `/projects`)
       .map(res => res.json());
   }
 }
