@@ -20,22 +20,22 @@
 
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
+import {PageNotFoundComponent} from './core/page-not-found/page-not-found.component';
 
-import {WorkspaceChooserComponent} from './settings/workspace-chooser/workspace-chooser.component';
-import {OrganizationComponent} from './settings/organization/organization.component';
-import {ProjectComponent} from './settings/project/project.component';
-
-const routes: Routes = [
-  {path: '', redirectTo: '/workspace', pathMatch: 'full'},
-  {path: 'workspace', component: WorkspaceChooserComponent},
-  {path: 'organization', component: OrganizationComponent},
-  {path: 'organization/:code', component: OrganizationComponent},
-  {path: 'organization/:orgCode/project', component: ProjectComponent},
-  {path: 'organization/:orgCode/project/:projCode', component: ProjectComponent}
+const appRoutes: Routes = [
+  {
+    path: '',
+    redirectTo: '/workspace',
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent
+  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(appRoutes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

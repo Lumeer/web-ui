@@ -25,8 +25,11 @@ import {HttpModule} from '@angular/http';
 
 import {WorkspaceService} from './workspace.service';
 import {HeaderComponent} from './header/header.component';
-import {HttpClient} from './http-client.service';
-import {UserSettingsService} from './user-settings.service';
+import {HttpClient} from './rest/http-client.service';
+import {UserSettingsService} from './rest/user-settings.service';
+import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
+import {ProjectService} from './rest/project.service';
+import {OrganizationService} from './rest/organization.service';
 
 @NgModule({
   imports: [
@@ -35,22 +38,26 @@ import {UserSettingsService} from './user-settings.service';
     HttpModule
   ],
   declarations: [
-    HeaderComponent
+    HeaderComponent,
+    PageNotFoundComponent
   ],
   providers: [
     HttpClient,
+    OrganizationService,
+    ProjectService,
     UserSettingsService,
     WorkspaceService
   ],
   exports: [
-    HeaderComponent
+    HeaderComponent,
+    PageNotFoundComponent
   ]
 })
 export class CoreModule {
 
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
     if (parentModule) {
-      throw new Error('CoreModule has already been loaded. Import Core modules in the AppModule only.');
+      throw new Error('CoreModule has already been loaded. Import CoreModule only in the AppModule!');
     }
   }
 

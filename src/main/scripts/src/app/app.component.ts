@@ -20,9 +20,9 @@
 
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 
-import {UserSettingsService} from './core/user-settings.service';
+import {UserSettingsService} from './core/rest/user-settings.service';
 import {WorkspaceService} from './core/workspace.service';
-import {UserSettings} from './shared/dto/user.settings';
+import {UserSettings} from './core/dto/user.settings';
 
 @Component({
   selector: 'app',

@@ -20,20 +20,22 @@
 
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import {AppComponent} from './app.component';
 import {CoreModule} from './core/core.module';
 import {AppRoutingModule} from './app-routing.module';
-import {SettingsModule} from './settings/settings.module';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {WorkspaceModule} from './workspace/workspace.module';
+import {CollectionModule} from './collection/collection.module';
 
 @NgModule({
   imports: [
-    AppRoutingModule,
     BrowserModule,
+    BrowserAnimationsModule,
     CoreModule,
-    SettingsModule,
-    BrowserAnimationsModule
+    CollectionModule,
+    WorkspaceModule,
+    AppRoutingModule // needs to stay last
   ],
   declarations: [
     AppComponent

@@ -19,19 +19,25 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {RouterModule, Routes} from '@angular/router';
+
+const collectionRoutes: Routes = [
+  {
+    path: 'w/:organizationCode/:projectCode/collections',
+    children: [
+      // TODO specify all collection paths here
+    ]
+  }
+];
 
 @NgModule({
   imports: [
-    CommonModule,
-    FormsModule
+    RouterModule.forChild(collectionRoutes)
   ],
   exports: [
-    CommonModule,
-    FormsModule
+    RouterModule
   ]
 })
-export class SharedModule {
+export class CollectionRoutingModule {
 
 }

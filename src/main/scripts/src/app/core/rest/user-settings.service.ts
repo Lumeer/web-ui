@@ -22,7 +22,7 @@ import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
 
 import {HttpClient} from './http-client.service';
-import {UserSettings} from '../shared/dto/user.settings';
+import {UserSettings} from '../dto/user.settings';
 import {Observable} from 'rxjs/Observable';
 
 @Injectable()
