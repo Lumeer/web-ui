@@ -64,7 +64,7 @@ export class WorkspaceChooserComponent implements OnInit {
           let ix: number = this.organizations.findIndex(org =>
             org.code === this.workspaceService.organizationCode
           );
-          if (ix) {
+          if (ix >= 0) {
             this.activeOrganization = this.organizations[ix];
             this.activeOrganization.index = ix;
             this.activeOrganization.active = true;
@@ -78,7 +78,7 @@ export class WorkspaceChooserComponent implements OnInit {
                   let ixProj: number = this.activeOrganization.projects.findIndex(proj =>
                     proj.code === this.workspaceService.projectCode
                   );
-                  if (ixProj) {
+                  if (ixProj >= 0) {
                     this.activeProject = this.activeOrganization.projects[ixProj];
                     this.activeProject.active = true;
                   }

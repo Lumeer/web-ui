@@ -1,16 +1,13 @@
-organization {
+.org-header {
+  display: flex;
+  align-items: center;
 
-  .org-header {
-    display: flex;
-    align-items: center;
+  .headline {
+    margin: 20px 0 !important;
+  }
 
-    .headline{
-      margin: 20px 0 !important;
-    }
-
-    .icon {
-      cursor: pointer;
-      padding: 5px;
-    }
+  .icon {
+    cursor: pointer;
+    padding: 5px;
   }
 }
