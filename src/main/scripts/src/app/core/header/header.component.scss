@@ -67,62 +67,59 @@
 }
 
 .profile {
-  background-color: #eeeeee;
-  border-radius: 25px;
   height: 45px;
   width: 45px;
+  background-color: #eeeeee;
+  border-radius: 25px;
 
   > * {
     cursor: default;
     z-index: 999;
   }
 
+  &:hover, &:focus {
+    text-decoration: none;
+  }
+
   .arrow-up {
+    position: relative;
     width: 0;
     height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    position: relative;
-    border-bottom: 5px solid #cccccc;
     top: 50px;
     left: 17.5px;
+
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #cccccc;
   }
 
   ul {
-    min-width: 150px;
-    position: absolute;
-    background-color: #eeeeee;
+    min-width: 160px;
+    position: relative;
+    top: 50px;
+    right: 110px;
+
+    padding: 6px 0;
     border: 1px solid #cccccc;
     border-radius: 3px;
-    top: 57.5px;
     overflow: hidden;
-    padding: 15px;
+
+    color: black;
 
     li {
-      line-height: 1.5;
-
-      a {
-        pointer-events: auto;
-        cursor: auto;
-        padding: 7.5px;
-      }
+      padding: 6px 6px 6px 20px;
 
       &.divider {
         height: 1px;
         overflow: hidden;
-        margin: 5px -15px;
+        margin: 6px 0;
         background-color: #e5e5e5;
-      }
 
-      &:last-child {
-        pointer-events: none;
-        color: black;
-        margin-left: 7.5px;
+        padding: 0;
       }
 
       &:hover {
-        background-color: #e2e2e2;
-        background-clip:content-box;
+        background-color: #eeeeee;
       }
     }
   }

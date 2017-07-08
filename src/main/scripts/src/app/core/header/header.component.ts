@@ -25,8 +25,8 @@ import {animate, keyframes, state, style, transition, trigger} from '@angular/an
 
 @Component({
   selector: 'header',
-  template: require('./header.component.html'),
-  styles: [require('./header.component.scss').toString()],
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
   host: {
     '(document:click)': 'toggleOptions($event)',
   },
@@ -48,13 +48,11 @@ import {animate, keyframes, state, style, transition, trigger} from '@angular/an
     ])
   ]
 })
-
 export class HeaderComponent {
 
   @ViewChild('profile') private profile: ElementRef;
-  @ViewChild('options') private options: ElementRef;
 
-  constructor(private workspaceService: WorkspaceService) {
+  constructor(public workspaceService: WorkspaceService) {
   }
 
   public optionsVisible = false;
