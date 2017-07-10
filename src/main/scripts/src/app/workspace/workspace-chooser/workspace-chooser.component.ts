@@ -21,13 +21,13 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {Organization} from '../../shared/dto/organization';
-import {Project} from '../../shared/dto/project';
+import {Organization} from '../../core/dto/organization';
+import {Project} from '../../core/dto/project';
 import {WorkspaceService} from '../../core/workspace.service';
-import {OrganizationService} from '../organization/organization.service';
-import {ProjectService} from '../project/project.service';
-import {UserSettingsService} from '../../core/user-settings.service';
-import {UserSettings} from '../../shared/dto/user.settings';
+import {OrganizationService} from '../../core/rest/organization.service';
+import {ProjectService} from '../../core/rest/project.service';
+import {UserSettingsService} from '../../core/rest/user-settings.service';
+import {UserSettings} from '../../core/dto/user.settings';
 
 const squareSize: number = 170;
 
@@ -144,22 +144,22 @@ export class WorkspaceChooserComponent implements OnInit {
   }
 
   public onCreateOrganization() {
-    this.router.navigate(['/organization']);
+    this.router.navigate(['/organization/add']);
   }
 
   public onCreateProject() {
     if (this.activeOrganization) {
-      this.router.navigate(['/organization/' + this.activeOrganization.code + '/project']);
+      this.router.navigate(['/organization/' + this.activeOrganization.code + '/project/add']);
     }
   }
 
   public onOrganizationSettings(organization: Organization) {
-    this.router.navigate(['/organization/' + organization.code]);
+    this.router.navigate(['/organization/' + organization.code + '/edit']);
   }
 
   public onProjectSettings(project: Project) {
     if (this.activeOrganization) {
-      this.router.navigate(['/organization/' + this.activeOrganization.code + '/project/' + project.code]);
+      this.router.navigate(['/organization/' + this.activeOrganization.code + '/project/' + project.code + '/edit']);
     }
   }
 

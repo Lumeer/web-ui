@@ -18,40 +18,32 @@
  * -----------------------------------------------------------------------/
  */
 
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
 import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
 
 import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
-import {OrganizationComponent} from './organization/organization.component';
-import {OrganizationService} from './organization/organization.service';
-import {ProjectComponent} from './project/project.component';
-import {ProjectService} from './project/project.service';
+import {OrganizationEditComponent} from './organization-edit/organization-edit.component';
+import {ProjectEditComponent} from './project-edit/project-edit.component';
+import {WorkspaceRoutingModule} from './workspace-routing.module';
+import {SharedModule} from '../shared/shared.module';
 
 @NgModule({
   imports: [
-    CommonModule,
-    FormsModule,
     PerfectScrollbarModule,
-    RouterModule
+    SharedModule,
+    WorkspaceRoutingModule
   ],
   declarations: [
-    OrganizationComponent,
-    ProjectComponent,
+    OrganizationEditComponent,
+    ProjectEditComponent,
     WorkspaceChooserComponent
   ],
-  providers: [
-    OrganizationService,
-    ProjectService
-  ],
   exports: [
-    OrganizationComponent,
-    ProjectComponent,
+    OrganizationEditComponent,
+    ProjectEditComponent,
     WorkspaceChooserComponent
   ]
 })
-export class SettingsModule {
+export class WorkspaceModule {
 
 }

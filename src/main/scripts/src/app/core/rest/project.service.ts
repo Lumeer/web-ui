@@ -21,9 +21,9 @@
 import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
 
-import {Project} from '../../shared/dto/project';
+import {Project} from '../dto/project';
 import {Observable} from 'rxjs/Observable';
-import {HttpClient} from '../../core/http-client.service';
+import {HttpClient} from './http-client.service';
 import 'rxjs/add/operator/map';
 
 @Injectable()

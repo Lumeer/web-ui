@@ -1,11 +1,11 @@
 <div>
   <div class="proj-header row">
     <div class="col-sm-7 col-sm-offset-2">
-      <h3 class="headline">{{projCode ? 'Edit project' : 'Create project'}}</h3>
+      <h3 class="headline">{{projectCode ? 'Edit project' : 'Create project'}}</h3>
     </div>
     <div class="col-sm-3">
       <i class="fa fa-trash pull-right text-danger icon" aria-hidden="true"
-         *ngIf="projCode" (click)="onDelete()"></i>
+         *ngIf="projectCode" (click)="onDelete()"></i>
     </div>
   </div>
   <div class="alert alert-danger" *ngIf="errorMessage">

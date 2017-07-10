@@ -19,39 +19,36 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ProjectService} from './project.service';
-import {ActivatedRoute, Router} from '@angular/router';
+import {OrganizationService} from '../../core/rest/organization.service';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
-import {Project} from '../../shared/dto/project';
+import {Organization} from '../../core/dto/organization';
 import {WorkspaceService} from '../../core/workspace.service';
 
 @Component({
-  selector: 'project',
-  templateUrl: './project.component.html',
-  styleUrls: ['./project.component.scss']
+  selector: 'organization-edit',
+  templateUrl: './organization-edit.component.html',
+  styleUrls: ['./organization-edit.component.scss']
 })
-export class ProjectComponent implements OnInit {
+export class OrganizationEditComponent implements OnInit {
 
-  private project: Project;
-  private orgCode: string;
-  private projCode: string;
+  private organization: Organization;
+  private organizationCode: string;
   private errorMessage: any;
 
-  constructor(private projectService: ProjectService,
+  constructor(private organizationService: OrganizationService,
               private workspaceService: WorkspaceService,
               private route: ActivatedRoute,
               private router: Router) {
   }
 
   public ngOnInit(): void {
-    this.project = new Project();
-    this.route.params.subscribe(params => {
-      this.orgCode = params['orgCode'];
-      this.projCode = params['projCode'];
-      if (this.projCode) {
-        this.projectService.getProject(this.orgCode, this.projCode)
-          .subscribe(
-            (project: Project) => this.project = project,
+    this.organization = new Organization();
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.organizationCode = params.get('organizationCode');
+      if (this.organizationCode) {
+        this.organizationService.getOrganization(this.organizationCode)
+          .subscribe((organization: Organization) => this.organization = organization,
             error => this.errorMessage = error
           );
       }
@@ -59,19 +56,19 @@ export class ProjectComponent implements OnInit {
   }
 
   public onSave() {
-    if (this.projCode) {
-      this.projectService.editProject(this.orgCode, this.projCode, this.project)
+    if (this.organizationCode) {
+      this.organizationService.editOrganization(this.organizationCode, this.organization)
         .subscribe(
           response => {
-            if (this.projCode === this.workspaceService.projectCode) {
-              this.workspaceService.projectCode = this.project.code;
+            if (this.organizationCode === this.workspaceService.organizationCode) {
+              this.workspaceService.organizationCode = this.organization.code;
             }
             this.goBack();
           },
           error => this.errorMessage = error
         );
     } else {
-      this.projectService.createProject(this.orgCode, this.project)
+      this.organizationService.createOrganization(this.organization)
         .subscribe(
           response => this.goBack(),
           error => this.errorMessage = error
@@ -84,7 +81,7 @@ export class ProjectComponent implements OnInit {
   }
 
   public onDelete() {
-    this.projectService.deleteProject(this.orgCode, this.projCode)
+    this.organizationService.deleteOrganization(this.organizationCode)
       .subscribe(
         response => this.goBack(),
         error => this.errorMessage = error

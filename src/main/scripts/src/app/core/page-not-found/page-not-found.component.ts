@@ -18,20 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {Component} from '@angular/core';
 
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  exports: [
-    CommonModule,
-    FormsModule
-  ]
+@Component({
+  selector: 'page-not-found',
+  templateUrl: './page-not-found.component.html'
 })
-export class SharedModule {
+export class PageNotFoundComponent {
 
 }

@@ -19,19 +19,27 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {RouterModule, Routes} from '@angular/router';
+import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
+import {OrganizationEditComponent} from './organization-edit/organization-edit.component';
+import {ProjectEditComponent} from './project-edit/project-edit.component';
+
+const workspaceRoutes: Routes = [
+  {path: 'workspace', component: WorkspaceChooserComponent},
+  {path: 'organization/:organizationCode/project/:projectCode/edit', component: ProjectEditComponent},
+  {path: 'organization/:organizationCode/project/add', component: ProjectEditComponent},
+  {path: 'organization/:organizationCode/edit', component: OrganizationEditComponent},
+  {path: 'organization/add', component: OrganizationEditComponent}
+];
 
 @NgModule({
   imports: [
-    CommonModule,
-    FormsModule
+    RouterModule.forChild(workspaceRoutes)
   ],
   exports: [
-    CommonModule,
-    FormsModule
+    RouterModule
   ]
 })
-export class SharedModule {
+export class WorkspaceRoutingModule {
 
 }
