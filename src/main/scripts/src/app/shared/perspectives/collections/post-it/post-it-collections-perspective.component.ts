@@ -18,23 +18,23 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {Component, Input} from '@angular/core';
+import {CollectionService} from '../../../../core/rest/collection.service';
+import {Perspective} from '../../perspective';
 
-import {PerspectivesModule} from './perspectives/perspectives.module';
-
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  exports: [
-    CommonModule,
-    FormsModule,
-    PerspectivesModule
-  ]
+@Component({
+  selector: 'post-it-collections-perspective',
+  templateUrl: './post-it-collections-perspective.component.html'
 })
-export class SharedModule {
+export class PostItCollectionsPerspectiveComponent implements Perspective {
+
+  @Input()
+  public query: string;
+
+  @Input()
+  public editable: boolean;
+
+  constructor(private collectionService: CollectionService) {
+  }
 
 }

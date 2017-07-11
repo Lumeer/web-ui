@@ -19,22 +19,19 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-
-import {PerspectivesModule} from './perspectives/perspectives.module';
+import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
+import {PostItDocumentsPerspectiveComponent} from './post-it/post-it-documents-perspective.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
+  declarations: [
+    PostItDocumentsPerspectiveComponent,
+    TableDocumentsPerspectiveComponent
   ],
-  exports: [
-    CommonModule,
-    FormsModule,
-    PerspectivesModule
+  entryComponents: [
+    PostItDocumentsPerspectiveComponent,
+    TableDocumentsPerspectiveComponent
   ]
 })
-export class SharedModule {
+export class DocumentsPerspectivesModule {
 
 }

@@ -27,6 +27,7 @@ import {CoreModule} from './core/core.module';
 import {AppRoutingModule} from './app-routing.module';
 import {WorkspaceModule} from './workspace/workspace.module';
 import {CollectionModule} from './collection/collection.module';
+import {SearchModule} from './search/search.module';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import {CollectionModule} from './collection/collection.module';
     BrowserAnimationsModule,
     CoreModule,
     CollectionModule,
+    SearchModule,
     WorkspaceModule,
     AppRoutingModule // needs to stay last
   ],

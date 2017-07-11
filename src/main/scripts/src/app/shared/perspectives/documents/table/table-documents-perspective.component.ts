@@ -18,23 +18,23 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {Component, Input} from '@angular/core';
+import {DocumentService} from '../../../../core/rest/document.service';
+import {Perspective} from '../../perspective';
 
-import {PerspectivesModule} from './perspectives/perspectives.module';
-
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  exports: [
-    CommonModule,
-    FormsModule,
-    PerspectivesModule
-  ]
+@Component({
+  selector: 'table-documents-perspective',
+  templateUrl: './table-documents-perspective.component.html'
 })
-export class SharedModule {
+export class TableDocumentsPerspectiveComponent implements Perspective {
+
+  @Input()
+  public query: string;
+
+  @Input()
+  public editable: boolean;
+
+  constructor(private documentService: DocumentService) {
+  }
 
 }

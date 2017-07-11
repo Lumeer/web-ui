@@ -18,23 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {Component} from '@angular/core';
 
-import {PerspectivesModule} from './perspectives/perspectives.module';
-
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  exports: [
-    CommonModule,
-    FormsModule,
-    PerspectivesModule
-  ]
+@Component({
+  selector: 'collections-search',
+  templateUrl: './collections-search.component.html'
 })
-export class SharedModule {
+export class CollectionsSearchComponent {
 
 }

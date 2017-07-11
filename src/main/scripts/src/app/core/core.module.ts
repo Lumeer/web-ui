@@ -30,6 +30,8 @@ import {UserSettingsService} from './rest/user-settings.service';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ProjectService} from './rest/project.service';
 import {OrganizationService} from './rest/organization.service';
+import {CollectionService} from './rest/collection.service';
+import {DocumentService} from './rest/document.service';
 
 @NgModule({
   imports: [
@@ -42,6 +44,8 @@ import {OrganizationService} from './rest/organization.service';
     PageNotFoundComponent
   ],
   providers: [
+    CollectionService,
+    DocumentService,
     HttpClient,
     OrganizationService,
     ProjectService,
