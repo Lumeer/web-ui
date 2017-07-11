@@ -3,7 +3,6 @@ const webpack = require('webpack'),
   path = require('path'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
   CopyWebpackPlugin = require('copy-webpack-plugin');
-const { AotPlugin } = require('@ngtools/webpack');
 module.exports = {
   entry: {
     'vendor': './src/vendor',
@@ -39,7 +38,19 @@ module.exports = {
         use: ['awesome-typescript-loader', 'angular2-template-loader'],
         exclude: /node_modules/
       },
-      {test:/\.html$/, loader:'html-loader' },
+      {
+        test:/\.html$/,
+        use: [ {
+          loader: 'html-loader',
+          options: {
+            minimize: true,
+            removeAttributeQuotes: false,
+            caseSensitive: true,
+            customAttrSurround: [ [/#/, /(?:)/], [/\*/, /(?:)/], [/\[?\(?/, /(?:)/] ],
+            customAttrAssign: [ /\)?\]?=/ ]
+          }
+        }]
+      },
       {
         test: /\.scss$/,
         loaders: ['raw-loader', 'resolve-url-loader', 'sass-loader']
@@ -80,11 +91,6 @@ module.exports = {
       }
     }),
     new webpack.optimize.CommonsChunkPlugin({name: 'vendor', filename: 'js/vendor.bundle.js'}),
-    new AotPlugin({
-      'mainPath': 'boot.ts',
-      'tsConfigPath': 'src/tsconfig.app.json',
-      'skipCodeGeneration': true
-    })
   ],
   externals: {
     'jquery': 'jQuery',
