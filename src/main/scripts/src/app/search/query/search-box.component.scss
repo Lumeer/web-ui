@@ -1,0 +1,26 @@
+input {
+  border: 0;
+  width: 100%;
+}
+
+.suggestions {
+  background-color: #fff;
+  position: absolute;
+  width: 300px;
+  z-index: 10;
+}
+
+.suggestion {
+  clear: both;
+  margin: 10px;
+}
+
+.suggestion-text {
+  float: left;
+}
+
+.suggestion-type {
+  color: #999;
+  float: right;
+  text-transform: capitalize;
+}

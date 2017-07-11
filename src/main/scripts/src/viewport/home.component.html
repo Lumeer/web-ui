@@ -1,7 +1,7 @@
 <div>
   <div class="document-filter-nav">
     <div class="document-filter">
-      <filter-save (onChanged)="onFilterChanged($event)" [otherActions]="actions" (onActionClick)="actionClick($event)"></filter-save>
+      <search-box></search-box>
     </div>
     <div class="document-navigation row">
       <div *ngFor="let route of activeRoutes" class="col-lg-2" [ngClass]="{active: route.data.current}">

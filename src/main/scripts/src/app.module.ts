@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {LeftPanelComponent, ContentComponent, TopPanelComponent, ViewPortComponent, HomeComponent} from './viewport';
 import {RouterModule, Routes} from '@angular/router';
-import {SettingsModule, ViewsModule} from './components';
+import {ViewsModule} from './components';
 import {FormsModule} from '@angular/forms';
 import {
   KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp, OrganizationProject,
@@ -18,6 +18,8 @@ import {DocumentNavigationService} from './services/document-navigation.service'
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {OrganizationChooser} from './viewport/company_chooser/organization-chooser.component';
 import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
+import {SearchModule} from './app/search/search.module';
+import {SettingsModule} from './app/settings/settings.module';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: '/views/research', pathMatch: 'full'}
@@ -31,10 +33,11 @@ const appRoutes: Routes = [
     ViewsModule,
     FormsModule,
     Ng2Webstorage,
-    SettingsModule,
     BrowserAnimationsModule,
     CommonComponentsModule,
-    PerfectScrollbarModule
+    PerfectScrollbarModule,
+    SearchModule,
+    SettingsModule
   ],
   providers: [
     OrganizationProject,
