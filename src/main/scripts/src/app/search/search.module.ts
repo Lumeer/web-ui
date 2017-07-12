@@ -19,22 +19,25 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-
-import {PerspectivesModule} from './perspectives/perspectives.module';
+import {SharedModule} from '../shared/shared.module';
+import {SearchRoutingModule} from './search-routing.module';
+import {SearchComponent} from './search.component';
+import {SearchAllComponent} from './all/search-all.component';
+import {CollectionsSearchComponent} from './collections/collections-search.component';
+import {DocumentsSearchComponent} from './documents/documents-search.component';
 
 @NgModule({
   imports: [
-    CommonModule,
-    FormsModule
+    SharedModule,
+    SearchRoutingModule
   ],
-  exports: [
-    CommonModule,
-    FormsModule,
-    PerspectivesModule
+  declarations: [
+    SearchComponent,
+    SearchAllComponent,
+    CollectionsSearchComponent,
+    DocumentsSearchComponent
   ]
 })
-export class SharedModule {
+export class SearchModule {
 
 }

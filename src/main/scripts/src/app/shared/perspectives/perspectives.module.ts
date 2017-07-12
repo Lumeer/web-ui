@@ -19,22 +19,20 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-
-import {PerspectivesModule} from './perspectives/perspectives.module';
+import {PerspectiveDirective} from './perspective.directive';
+import {DocumentsPerspectivesModule} from './documents/documents-perspectives.module';
+import {CollectionsPerspectivesModule} from './collections/collections-perspectives.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
+  declarations: [
+    PerspectiveDirective
   ],
   exports: [
-    CommonModule,
-    FormsModule,
-    PerspectivesModule
+    DocumentsPerspectivesModule,
+    CollectionsPerspectivesModule,
+    PerspectiveDirective
   ]
 })
-export class SharedModule {
+export class PerspectivesModule {
 
 }

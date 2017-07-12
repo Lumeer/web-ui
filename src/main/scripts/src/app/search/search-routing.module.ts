@@ -19,22 +19,41 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {RouterModule, Routes} from '@angular/router';
+import {CollectionsSearchComponent} from './collections/collections-search.component';
+import {DocumentsSearchComponent} from './documents/documents-search.component';
+import {SearchComponent} from './search.component';
+import {SearchAllComponent} from './all/search-all.component';
 
-import {PerspectivesModule} from './perspectives/perspectives.module';
+const searchRoutes: Routes = [
+  {
+    path: 'w/:organizationCode/:projectCode/search',
+    component: SearchComponent,
+    children: [
+      {
+        path: 'all',
+        component: SearchAllComponent
+      },
+      {
+        path: 'collections',
+        component: CollectionsSearchComponent
+      },
+      {
+        path: 'documents',
+        component: DocumentsSearchComponent
+      }
+    ]
+  }
+];
 
 @NgModule({
   imports: [
-    CommonModule,
-    FormsModule
+    RouterModule.forChild(searchRoutes)
   ],
   exports: [
-    CommonModule,
-    FormsModule,
-    PerspectivesModule
+    RouterModule
   ]
 })
-export class SharedModule {
+export class SearchRoutingModule {
 
 }

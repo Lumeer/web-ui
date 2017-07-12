@@ -18,23 +18,14 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {Directive, ViewContainerRef} from '@angular/core';
 
-import {PerspectivesModule} from './perspectives/perspectives.module';
-
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  exports: [
-    CommonModule,
-    FormsModule,
-    PerspectivesModule
-  ]
+@Directive({
+  selector: '[perspective]'
 })
-export class SharedModule {
+export class PerspectiveDirective {
+
+  constructor(public viewContainerRef: ViewContainerRef) {
+  }
 
 }
