@@ -19,15 +19,15 @@
  */
 
 import {Component, ComponentFactoryResolver} from '@angular/core';
+import {DocumentsPerspectivePresenter} from '../../shared/perspectives/documents/documents-perspective-presenter';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 
-import {DocumentsPerspectivePresenter} from '../../shared/perspectives/documents/documents-perspective-presenter';
-
 @Component({
-  selector: 'documents-search',
-  templateUrl: './documents-search.component.html'
+  templateUrl: 'documents-list.component.html'
 })
-export class DocumentsSearchComponent extends DocumentsPerspectivePresenter {
+export class DocumentsListComponent extends DocumentsPerspectivePresenter {
+
+  public collectionCode: string;
 
   constructor(activatedRoute: ActivatedRoute,
               componentFactoryResolver: ComponentFactoryResolver) {
@@ -37,8 +37,9 @@ export class DocumentsSearchComponent extends DocumentsPerspectivePresenter {
   public ngOnInit() {
     super.ngOnInit();
 
-    this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
-      this.query = queryParams.get('query');
+    this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
+      this.collectionCode = params.get('collectionCode');
+      this.query = `(collection:${this.collectionCode})`;
     });
   }
 

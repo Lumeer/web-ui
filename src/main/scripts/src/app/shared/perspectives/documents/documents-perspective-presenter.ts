@@ -18,28 +18,21 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ComponentFactoryResolver} from '@angular/core';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {ComponentFactoryResolver} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
-import {DocumentsPerspectivePresenter} from '../../shared/perspectives/documents/documents-perspective-presenter';
+import {DocumentsPerspective} from './documents-perspective';
+import {PerspectivePresenter} from '../perspective-presenter';
 
-@Component({
-  selector: 'documents-search',
-  templateUrl: './documents-search.component.html'
-})
-export class DocumentsSearchComponent extends DocumentsPerspectivePresenter {
+export abstract class DocumentsPerspectivePresenter extends PerspectivePresenter {
 
-  constructor(activatedRoute: ActivatedRoute,
-              componentFactoryResolver: ComponentFactoryResolver) {
+  protected constructor(activatedRoute: ActivatedRoute,
+                        componentFactoryResolver: ComponentFactoryResolver) {
     super(activatedRoute, componentFactoryResolver);
   }
 
-  public ngOnInit() {
-    super.ngOnInit();
-
-    this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
-      this.query = queryParams.get('query');
-    });
+  public ngAfterViewInit() {
+    this.loadPerspectiveComponent(DocumentsPerspective.getPerspective(this.perspective).component);
   }
 
 }

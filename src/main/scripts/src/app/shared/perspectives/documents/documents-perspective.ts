@@ -37,6 +37,9 @@ export class DocumentsPerspective {
   public static defaultPerspective = DocumentsPerspective.PostIt;
 
   public static getPerspective(perspectiveId: string): DocumentsPerspective {
+    if (isNullOrUndefined(perspectiveId)) {
+      return DocumentsPerspective.defaultPerspective;
+    }
     let perspective = DocumentsPerspective.perspectives[perspectiveId.toLowerCase()];
     return !isNullOrUndefined(perspective) ? perspective : DocumentsPerspective.defaultPerspective;
   }
