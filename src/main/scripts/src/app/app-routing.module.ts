@@ -20,13 +20,15 @@
 
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
+
 import {PageNotFoundComponent} from './core/page-not-found/page-not-found.component';
+import {HomeComponent} from './core/home.component';
 
 const appRoutes: Routes = [
   {
     path: '',
-    redirectTo: '/workspace',
-    pathMatch: 'full'
+    pathMatch: 'full',
+    component: HomeComponent
   },
   {
     path: '**',

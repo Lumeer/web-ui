@@ -33,6 +33,7 @@ import {OrganizationService} from './rest/organization.service';
 import {CollectionService} from './rest/collection.service';
 import {DocumentService} from './rest/document.service';
 import {RolesService} from './rest/roles.service';
+import {HomeComponent} from './home.component';
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import {RolesService} from './rest/roles.service';
   ],
   declarations: [
     HeaderComponent,
+    HomeComponent,
     PageNotFoundComponent
   ],
   providers: [
@@ -56,6 +58,7 @@ import {RolesService} from './rest/roles.service';
   ],
   exports: [
     HeaderComponent,
+    HomeComponent,
     PageNotFoundComponent
   ]
 })
