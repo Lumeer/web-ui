@@ -32,6 +32,7 @@ import {ProjectService} from './rest/project.service';
 import {OrganizationService} from './rest/organization.service';
 import {CollectionService} from './rest/collection.service';
 import {DocumentService} from './rest/document.service';
+import {RolesService} from './rest/roles.service';
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import {DocumentService} from './rest/document.service';
     HttpClient,
     OrganizationService,
     ProjectService,
+    RolesService,
     UserSettingsService,
     WorkspaceService
   ],

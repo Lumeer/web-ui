@@ -1,0 +1,33 @@
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th *ngFor="let role of roles">{{role}}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let entity of entities">
+      <td>{{entity.name}}</td>
+      <td *ngFor="let role of roles" class="role">
+        <input type="checkbox" title="{{role}}" [attr.checked]="entity.roles.indexOf(role) > -1 ? '': null"/>
+      </td>
+      <td>
+        <button (click)="onRemove(entity.name)" class="btn btn-remove">Remove</button>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <select>
+          <option *ngFor="let otherEntity of otherEntities">{{otherEntity}}</option>
+        </select>
+      </td>
+      <td *ngFor="let role of roles" class="role">
+        <input type="checkbox" title="{{role}}"/>
+      </td>
+      <td>
+        <button (click)="onAdd()" class="btn btn-add">Add</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
