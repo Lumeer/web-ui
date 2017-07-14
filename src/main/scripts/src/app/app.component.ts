@@ -18,30 +18,14 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-
-import {UserSettingsService} from './core/rest/user-settings.service';
-import {WorkspaceService} from './core/workspace.service';
-import {UserSettings} from './core/dto/user.settings';
+import {Component, ViewEncapsulation} from '@angular/core';
 
 @Component({
   selector: 'app',
   templateUrl: './app.component.html',
-  styleUrls: ['../styles/basic.scss','./app.component.scss'],
+  styleUrls: ['../styles/basic.scss', './app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AppComponent implements OnInit {
-
-  constructor(private userSettingsService: UserSettingsService,
-              private workspaceService: WorkspaceService) {
-  }
-
-  public ngOnInit(): void {
-    this.userSettingsService.getUserSettings()
-      .subscribe((userSettings: UserSettings) => {
-        this.workspaceService.organizationCode = userSettings.defaultOrganization;
-        this.workspaceService.projectCode = userSettings.defaultProject;
-      });
-  }
+export class AppComponent {
 
 }
