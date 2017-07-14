@@ -18,30 +18,16 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {Component, Input} from '@angular/core';
 
-import {PerspectivesModule} from './perspectives/perspectives.module';
-import {PermissionsComponent} from './permissions/permissions.component';
-import {PermissionsTableComponent} from './permissions/table/permissions-table.component';
-
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  declarations: [
-    PermissionsComponent,
-    PermissionsTableComponent
-  ],
-  exports: [
-    CommonModule,
-    FormsModule,
-    PermissionsComponent,
-    PerspectivesModule
-  ]
+@Component({
+  selector: 'permissions',
+  templateUrl: './permissions.component.html',
+  styleUrls: ['./permissions.component.scss']
 })
-export class SharedModule {
+export class PermissionsComponent {
+
+  @Input()
+  public resourceType: string;
 
 }

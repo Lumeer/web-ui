@@ -18,30 +18,9 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+export interface Entity {
 
-import {PerspectivesModule} from './perspectives/perspectives.module';
-import {PermissionsComponent} from './permissions/permissions.component';
-import {PermissionsTableComponent} from './permissions/table/permissions-table.component';
-
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  declarations: [
-    PermissionsComponent,
-    PermissionsTableComponent
-  ],
-  exports: [
-    CommonModule,
-    FormsModule,
-    PermissionsComponent,
-    PerspectivesModule
-  ]
-})
-export class SharedModule {
+  name: string;
+  roles: string[];
 
 }

@@ -18,30 +18,20 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {Injectable} from '@angular/core';
+import {HttpClient} from './http-client.service';
+import {isUndefined} from 'util';
 
-import {PerspectivesModule} from './perspectives/perspectives.module';
-import {PermissionsComponent} from './permissions/permissions.component';
-import {PermissionsTableComponent} from './permissions/table/permissions-table.component';
+@Injectable()
+export class RolesService {
 
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  declarations: [
-    PermissionsComponent,
-    PermissionsTableComponent
-  ],
-  exports: [
-    CommonModule,
-    FormsModule,
-    PermissionsComponent,
-    PerspectivesModule
-  ]
-})
-export class SharedModule {
+  constructor(private http: HttpClient) {
+  }
+
+  // TODO communicate with SecurityService through REST API
+
+  private static apiPrefix(organizationCode: string): string {
+    return `/lumeer-engine/rest/roles/organizations/${organizationCode}/`;
+  }
 
 }
