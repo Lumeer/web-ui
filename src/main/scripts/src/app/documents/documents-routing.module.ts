@@ -18,28 +18,25 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ComponentFactoryResolver} from '@angular/core';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {DocumentsListComponent} from './list/documents-list.component';
 
-import {DocumentsPerspectivePresenter} from '../../shared/perspectives/documents/documents-perspective-presenter';
+const documentRoutes: Routes = [
+  {
+    path: 'w/:organizationCode/:projectCode/c/:collectionCode/documents',
+    component: DocumentsListComponent
+  }
+];
 
-@Component({
-  selector: 'documents-search',
-  templateUrl: './documents-search.component.html'
+@NgModule({
+  imports: [
+    RouterModule.forChild(documentRoutes)
+  ],
+  exports: [
+    RouterModule
+  ]
 })
-export class DocumentsSearchComponent extends DocumentsPerspectivePresenter {
-
-  constructor(activatedRoute: ActivatedRoute,
-              componentFactoryResolver: ComponentFactoryResolver) {
-    super(activatedRoute, componentFactoryResolver);
-  }
-
-  public ngOnInit() {
-    super.ngOnInit();
-
-    this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
-      this.query = queryParams.get('query');
-    });
-  }
+export class DocumentRoutingModule {
 
 }
