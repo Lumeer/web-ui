@@ -61,6 +61,7 @@
   background-color: #eeeeee;
   border-radius: 15px;
   color: #18bc9c;
+  flex-shrink: 0;
   height: 30px;
   width: 30px;
   line-height: 30px;
@@ -69,6 +70,7 @@
 }
 
 .profile {
+  flex-shrink: 0;
   height: 45px;
   width: 45px;
   background-color: #eeeeee;
@@ -97,6 +99,7 @@
 
   ul {
     box-shadow: $default-shadow;
+    background: $secondary-color;
     min-width: 160px;
     position: relative;
     top: 50px;
