@@ -24,7 +24,7 @@ import {ActivatedRoute, ParamMap} from '@angular/router';
 import {PerspectiveDirective} from './perspective.directive';
 import {Perspective} from './perspective';
 
-export abstract class PerspectivePresenter implements OnInit, AfterViewInit {
+export abstract class PerspectivePresenter implements OnInit {
 
   @ViewChild(PerspectiveDirective)
   private perspectiveDirective: PerspectiveDirective;
@@ -41,8 +41,6 @@ export abstract class PerspectivePresenter implements OnInit, AfterViewInit {
       this.perspective = queryParams.get('perspective');
     });
   }
-
-  public abstract ngAfterViewInit();
 
   protected loadPerspectiveComponent(perspectiveComponent: Type<any>) {
     let componentFactory = this.componentFactoryResolver.resolveComponentFactory(perspectiveComponent);
