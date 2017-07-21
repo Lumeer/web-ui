@@ -18,7 +18,10 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Router, RoutesRecognized} from '@angular/router';
+
+import {WorkspaceService} from './core/workspace.service';
 
 @Component({
   selector: 'app',
@@ -26,6 +29,25 @@ import {Component, ViewEncapsulation} from '@angular/core';
   styleUrls: ['../styles/basic.scss', './app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
+  constructor(private workspaceService: WorkspaceService,
+              private router: Router) {
+  }
+
+  public ngOnInit(): void {
+    this.router.events.subscribe(events => {
+      if (events instanceof RoutesRecognized) {
+        let params = events.state.root.firstChild.params;
+        let organizationCode = params['organizationCode'];
+        let projectCode = params['projectCode'];
+        if (organizationCode && projectCode) {
+          this.workspaceService.organizationCode = organizationCode;
+          this.workspaceService.projectCode = projectCode;
+        }
+      }
+    });
+
+  }
 
 }
