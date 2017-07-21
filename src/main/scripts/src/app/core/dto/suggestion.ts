@@ -17,34 +17,10 @@
  * limitations under the License.
  * -----------------------------------------------------------------------/
  */
+export interface Suggestion {
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-
-import {PerspectivesModule} from './perspectives/perspectives.module';
-import {PermissionsComponent} from './permissions/permissions.component';
-import {PermissionsTableComponent} from './permissions/table/permissions-table.component';
-import {SearchBoxComponent} from './search-box/search-box.component';
-
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  declarations: [
-    PermissionsComponent,
-    PermissionsTableComponent,
-    SearchBoxComponent
-  ],
-  exports: [
-    CommonModule,
-    FormsModule,
-    PermissionsComponent,
-    PerspectivesModule,
-    SearchBoxComponent
-  ]
-})
-export class SharedModule {
+  type: string;
+  text: string;
+  icon?: string;
 
 }

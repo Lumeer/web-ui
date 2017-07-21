@@ -18,17 +18,18 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, UrlSegment} from '@angular/router';
+import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
 import {WorkspaceService} from '../workspace.service';
-import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   host: {
-    '(document:click)': 'toggleOptions($event)',
+    '(document:click)': 'toggleOptions($event)'
   },
   animations: [
     trigger('animateHeight', [
@@ -48,15 +49,29 @@ import {animate, keyframes, state, style, transition, trigger} from '@angular/an
     ])
   ]
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
 
-  @ViewChild('profile') private profile: ElementRef;
-
-  constructor(public workspaceService: WorkspaceService) {
-  }
+  @ViewChild('profile')
+  private profile: ElementRef;
 
   public optionsVisible = false;
   public licence = 'trial';
+
+  public pageWithoutSearchBox = true;
+
+  constructor(private activatedRoute: ActivatedRoute,
+              public workspaceService: WorkspaceService) {
+  }
+
+  public ngOnInit() {
+    this.activatedRoute.url.subscribe((urlSegment: UrlSegment[]) => {
+      this.pageWithoutSearchBox = urlSegment[0].path.startsWith('workspace');
+    });
+  }
+
+  public isSearchBoxShown(): boolean {
+    return this.workspaceService.isWorkspaceSet() && !this.pageWithoutSearchBox;
+  }
 
   public toggleOptions(event: MouseEvent) {
     // profile click
