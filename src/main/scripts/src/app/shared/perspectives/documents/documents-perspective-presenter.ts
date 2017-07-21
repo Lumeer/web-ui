@@ -31,7 +31,7 @@ export abstract class DocumentsPerspectivePresenter extends PerspectivePresenter
     super(activatedRoute, componentFactoryResolver);
   }
 
-  public ngOnInit() {
+  public loadPerspective() {
     this.loadPerspectiveComponent(DocumentsPerspective.getPerspective(this.perspective).component);
   }
 

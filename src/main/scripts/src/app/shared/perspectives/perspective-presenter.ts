@@ -40,7 +40,10 @@ export abstract class PerspectivePresenter implements OnInit {
     this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
       this.perspective = queryParams.get('perspective');
     });
+    this.loadPerspective();
   }
+
+  public abstract loadPerspective();
 
   protected loadPerspectiveComponent(perspectiveComponent: Type<any>) {
     let componentFactory = this.componentFactoryResolver.resolveComponentFactory(perspectiveComponent);

@@ -36,9 +36,9 @@ export class AppComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.router.events.subscribe(val => {
-      if (val instanceof RoutesRecognized) {
-        let params = val.state.root.firstChild.params;
+    this.router.events.subscribe(events => {
+      if (events instanceof RoutesRecognized) {
+        let params = events.state.root.firstChild.params;
         let organizationCode = params['organizationCode'];
         let projectCode = params['projectCode'];
         if (organizationCode && projectCode) {
