@@ -20,6 +20,7 @@
 
 import {NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 
@@ -34,12 +35,16 @@ import {CollectionService} from './rest/collection.service';
 import {DocumentService} from './rest/document.service';
 import {RolesService} from './rest/roles.service';
 import {HomeComponent} from './home.component';
+import {SharedModule} from '../shared/shared.module';
+import {SearchService} from './rest/search.service';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    SharedModule,
+    HttpClientModule
   ],
   declarations: [
     HeaderComponent,
@@ -53,6 +58,7 @@ import {HomeComponent} from './home.component';
     OrganizationService,
     ProjectService,
     RolesService,
+    SearchService,
     UserSettingsService,
     WorkspaceService
   ],

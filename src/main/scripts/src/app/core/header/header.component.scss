@@ -2,8 +2,8 @@
 
 .header {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .logo {
@@ -20,36 +20,17 @@
 }
 
 .search {
-  display: flex;
-  flex-grow: 2;
-  justify-content: center;
   margin: 0 10px;
+  width: 60%;
+}
 
-  input {
-    background-color: #eeeeee;
-    border: 1px solid #cccccc;
-    border-radius: 3px;
-    height: 30px;
-    width: 100%;
-    padding: 5px;
-  }
-
-  button {
-    background: url("../../../img/search-button.png");
-    border: 0;
-    display: block;
-    height: 30px;
-    width: 30px;
-    margin: 0 10px;
-
-    span {
-      display: none;
-    }
-  }
+.menu {
+  display: flex;
 }
 
 .project {
   font-size: 22px;
+  line-height: 50px;
   margin: 0 10px;
 
   a:hover {
@@ -66,13 +47,13 @@
   width: 30px;
   line-height: 30px;
   text-align: center;
-  margin: 0 10px;
+  margin: 10px;
 }
 
 .profile {
   flex-shrink: 0;
-  height: 45px;
-  width: 45px;
+  height: 50px;
+  width: 50px;
   background-color: #eeeeee;
   border-radius: 25px;
 
@@ -90,7 +71,7 @@
     width: 0;
     height: 0;
     top: 50px;
-    left: 17.5px;
+    left: 20px;
 
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
