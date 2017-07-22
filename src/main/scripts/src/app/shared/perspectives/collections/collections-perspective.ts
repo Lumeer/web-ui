@@ -20,27 +20,24 @@
 
 import {Type} from '@angular/core';
 
-import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
-import {PostItDocumentsPerspectiveComponent} from './post-it/post-it-documents-perspective.component';
+import {PostItCollectionsPerspectiveComponent} from './post-it/post-it-collections-perspective.component';
 
-export class DocumentsPerspective {
+export class CollectionsPerspective {
 
-  public static PostIt = new DocumentsPerspective('Post-it', PostItDocumentsPerspectiveComponent);
-  public static Table = new DocumentsPerspective('Table', TableDocumentsPerspectiveComponent);
+  public static PostIt = new CollectionsPerspective('Post-it', PostItCollectionsPerspectiveComponent);
 
   public static perspectives = {
-    ['postit']: DocumentsPerspective.PostIt,
-    ['table']: DocumentsPerspective.Table
+    ['postit']: CollectionsPerspective.PostIt
   };
 
-  public static defaultPerspective = DocumentsPerspective.PostIt;
+  public static defaultPerspective = CollectionsPerspective.PostIt;
 
-  public static getPerspective(perspectiveId: string): DocumentsPerspective {
+  public static getPerspective(perspectiveId: string): CollectionsPerspective {
     if (!perspectiveId) {
-      return DocumentsPerspective.defaultPerspective;
+      return CollectionsPerspective.defaultPerspective;
     }
-    let perspective = DocumentsPerspective.perspectives[perspectiveId.toLowerCase()];
-    return perspective ? perspective : DocumentsPerspective.defaultPerspective;
+    let perspective = CollectionsPerspective.perspectives[perspectiveId.toLowerCase()];
+    return perspective ? perspective : CollectionsPerspective.defaultPerspective;
   }
 
   private constructor(public name: string, public component: Type<any>) {

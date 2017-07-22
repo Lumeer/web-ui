@@ -19,6 +19,7 @@
  */
 
 import {NgModule} from '@angular/core';
+
 import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
 import {PostItDocumentsPerspectiveComponent} from './post-it/post-it-documents-perspective.component';
 

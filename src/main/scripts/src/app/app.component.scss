@@ -11,7 +11,7 @@ header {
 }
 
 main {
-  width: 100vw;
-  padding: 0 5vw;
-  overflow-y: auto;
+  margin: 10px;
+  height: calc(100vh - 90px);
+  overflow: auto;
 }

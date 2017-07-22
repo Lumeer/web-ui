@@ -18,22 +18,21 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {SharedModule} from '../shared/shared.module';
-import {CollectionListComponent} from './list/collection-list.component';
-import {CollectionComponent} from './collection.component';
-import {CollectionRoutingModule} from './collection-routing.module';
+import {ComponentFactoryResolver} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
-@NgModule({
-  imports: [
-    SharedModule,
-    CollectionRoutingModule
-  ],
-  declarations: [
-    CollectionComponent,
-    CollectionListComponent
-  ]
-})
-export class CollectionModule {
+import {PerspectivePresenter} from '../perspective-presenter';
+import {CollectionsPerspective} from './collections-perspective';
+
+export abstract class CollectionsPerspectivePresenter extends PerspectivePresenter {
+
+  protected constructor(activatedRoute: ActivatedRoute,
+                        componentFactoryResolver: ComponentFactoryResolver) {
+    super(activatedRoute, componentFactoryResolver);
+  }
+
+  public loadPerspective() {
+    this.loadPerspectiveComponent(CollectionsPerspective.getPerspective(this.perspective).component);
+  }
 
 }
