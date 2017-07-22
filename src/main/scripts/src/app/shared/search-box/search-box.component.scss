@@ -2,7 +2,7 @@ $border-color: #bbbbbb;
 $item-height: 40px;
 $item-margin: 6px;
 
-.search-box {
+:host {
   background-color: #ffffff;
   border: 1px solid $border-color;
   border-radius: 3px;

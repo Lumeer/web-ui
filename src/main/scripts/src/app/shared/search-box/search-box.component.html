@@ -1,19 +1,17 @@
-<div class="search-box">
-  <div *ngFor="let queryItem of queryItems" class="query-item">{{queryItem}}</div>
+<div *ngFor="let queryItem of queryItems" class="query-item">{{queryItem}}</div>
 
-  <div class="input">
-    <input #searchBox [(ngModel)]="text" (keydown)="onKeyDown($event)" (keyup)="onKeyUp($event)" (focus)="suggest()" (blur)="hideSuggestions()" placeholder="Type anything you search for..."/>
-    <div class="relative-point" *ngIf="suggestions|async;let suggestionItems">
-      <ul class="suggestions" *ngIf="suggestionItems.length > 0">
-        <li *ngFor="let suggestion of suggestionItems" (click)="complete(suggestion)" class="suggestion">
-          <span class="suggestion-text">{{suggestion.text}}</span>
-          <span class="suggestion-type">{{suggestion.type}}</span>
-        </li>
-      </ul>
-    </div>
+<div class="input">
+  <input #searchBox [(ngModel)]="text" (keydown)="onKeyDown($event)" (keyup)="onKeyUp($event)" (focus)="suggest()" (blur)="hideSuggestions()" placeholder="Type anything you search for..."/>
+  <div class="relative-point" *ngIf="suggestions|async;let suggestionItems">
+    <ul class="suggestions" *ngIf="suggestionItems.length > 0">
+      <li *ngFor="let suggestion of suggestionItems" (click)="complete(suggestion)" class="suggestion">
+        <span class="suggestion-text">{{suggestion.text}}</span>
+        <span class="suggestion-type">{{suggestion.type}}</span>
+      </li>
+    </ul>
   </div>
-
-  <button (click)="onButtonClick()">
-    <span>Search</span>
-  </button>
 </div>
+
+<button (click)="onButtonClick()">
+  <span>Search</span>
+</button>
