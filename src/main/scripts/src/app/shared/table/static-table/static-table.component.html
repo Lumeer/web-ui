@@ -1,0 +1,10 @@
+<div>
+  <table-header [header]="data.header"
+                [color]="data.color"
+                class="static-header"></table-header>
+  <div class="static-rows">
+    <table-row *ngFor="let oneRow of data.rows"
+               [row]="oneRow"
+               class="static-row"></table-row>
+  </div>
+</div>

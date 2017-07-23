@@ -18,21 +18,13 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ViewChild} from '@angular/core';
-import {VirtualScrollComponent} from 'angular2-virtual-scroll/dist/virtual-scroll';
+import {Component, ViewChild, Input} from '@angular/core';
 
 @Component({
-  selector: 'virtual-table',
-  templateUrl: './virtual-table.component.html'
+  selector: 'table-row',
+  templateUrl: './table-row.component.html',
+  styleUrls: ['./table-row.component.scss']
 })
-export class VirtualTableComponent {
-  public items = ['Item1', 'Item2', 'Item3', 'Item3', 'Item3', 'Item3', 'Item3', 'Item3', 'Item3', 'Item3'];
-
-  @ViewChild(VirtualScrollComponent)
-  private virtualScroll: VirtualScrollComponent;
-
-  // call this function after resize + animation end
-  public afterResize() {
-    this.virtualScroll.refresh();
-  }
+export class TableRowComponent {
+  @Input() public row: any[];
 }

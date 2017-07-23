@@ -23,7 +23,10 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
 import {VirtualTableComponent} from './virtual-table/virtual-table.component';
-import {VirtualScrollModule} from 'angular2-virtual-scroll';
+import {StaticTableComponent} from './static-table/static-table.component';
+import {VirtualScrollModule} from 'angular2-virtual-scroll/dist/virtual-scroll';
+import {TableHeaderComponent} from './static-table/table-header.component';
+import {TableRowComponent} from './static-table/table-row.component';
 
 @NgModule({
   imports: [
@@ -32,10 +35,14 @@ import {VirtualScrollModule} from 'angular2-virtual-scroll';
     VirtualScrollModule
   ],
   declarations: [
-    VirtualTableComponent
+    VirtualTableComponent,
+    StaticTableComponent,
+    TableHeaderComponent,
+    TableRowComponent
   ],
   exports: [
-    VirtualTableComponent
+    VirtualTableComponent,
+    StaticTableComponent
   ]
 })
 export class TableModule {
