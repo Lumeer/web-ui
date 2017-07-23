@@ -21,6 +21,7 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { VirtualScrollModule } from 'angular2-virtual-scroll';
 
 import {AppComponent} from './app.component';
 import {CoreModule} from './core/core.module';
@@ -29,6 +30,7 @@ import {WorkspaceModule} from './workspace/workspace.module';
 import {CollectionModule} from './collection/collection.module';
 import {SearchModule} from './search/search.module';
 import {DocumentsModule} from './documents/documents.module';
+import {SharedModule} from './shared/shared.module';
 
 @NgModule({
   imports: [
@@ -39,6 +41,8 @@ import {DocumentsModule} from './documents/documents.module';
     DocumentsModule,
     SearchModule,
     WorkspaceModule,
+    VirtualScrollModule,
+    SharedModule,
     AppRoutingModule // needs to stay last
   ],
   declarations: [

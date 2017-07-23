@@ -22,31 +22,22 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
-import {PerspectivesModule} from './perspectives/perspectives.module';
-import {PermissionsComponent} from './permissions/permissions.component';
-import {PermissionsTableComponent} from './permissions/table/permissions-table.component';
-import {SearchBoxComponent} from './search-box/search-box.component';
-import {TableModule} from './table/table.module';
+import {VirtualTableComponent} from './virtual-table/virtual-table.component';
+import {VirtualScrollModule} from 'angular2-virtual-scroll';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    VirtualScrollModule
   ],
   declarations: [
-    PermissionsComponent,
-    PermissionsTableComponent,
-    SearchBoxComponent
+    VirtualTableComponent
   ],
   exports: [
-    CommonModule,
-    FormsModule,
-    PermissionsComponent,
-    PerspectivesModule,
-    SearchBoxComponent,
-    TableModule
+    VirtualTableComponent
   ]
 })
-export class SharedModule {
+export class TableModule {
 
 }
