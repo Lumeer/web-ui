@@ -1,7 +1,12 @@
 .header-item {
   display: table-cell;
-  padding: 2px 5px;
+  padding: 0 5px 2px 5px;
   border: 1px solid #888;
+
+  span[contenteditable] {
+    display: inline-block;
+    min-width: 20px;
+  }
 
   &.active {
     background-color: red !important;
@@ -9,10 +14,12 @@
 
   .placeholder {
     width: 22px;
+    height: 25px;
   }
 
   .dropdown, .placeholder {
     display: inline-block;
+    vertical-align: bottom;
 
     .dropdown-toggle {
       background: none;
@@ -22,4 +29,8 @@
       cursor: pointer;
     }
   }
+}
+
+[contenteditable]:focus {
+  outline: 0 solid transparent;
 }

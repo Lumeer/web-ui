@@ -9,9 +9,10 @@
   <div class="static-rows"
        (focusout)="onTableBlur()">
     <table-row *ngFor="let oneRow of data.rows; let i = index"
+               [settings]="{
+                isActive: i === data.activeRow, rowIndex: i, color: data.color, highlightColor: data.highlightColor
+               }"
                [row]="oneRow"
-               [rowIndex]="i"
-               [isActive]="i === data.activeRow"
                (itemHighlight)="onItemHighlight(i, $event)"
                (updateRow)="onUpdateRow(i, $event)"
                class="static-row"></table-row>

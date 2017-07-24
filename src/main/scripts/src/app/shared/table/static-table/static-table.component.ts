@@ -28,6 +28,7 @@ import {Component, ViewChild} from '@angular/core';
 export class StaticTableComponent {
   public data = {
     color: '#ccc',
+    highlightColor: '#F39C12',
     header: [{label: 'first', active: false}, {label: 'second', active: false}, {label: 'third', active: false}],
     rows: [
       [{label: 'one'}, {label: 'two'}, {label: 'three'}],

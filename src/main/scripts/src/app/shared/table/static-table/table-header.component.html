@@ -4,7 +4,10 @@
      [ngClass]="{active: headerItem.active}"
      (mouseover)="onHover(index)"
      class="header-item">
-  <span contenteditable="true" *ngIf="!headerItem.hidden">{{ headerItem.label || '&nbsp;'}}</span>
+  <span contenteditable="true"
+        *ngIf="!headerItem.hidden">
+    {{ headerItem.label || '&nbsp;'}}
+  </span>
   <div class="dropdown" *ngIf="index === hoverIndex">
     <button class="btn btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
       <span class="caret"></span>

@@ -1,4 +1,4 @@
-<div class="row-item row-index" [ngClass]="{active: isActive}">{{ rowIndex }}</div>
+<div class="row-item row-index" [ngClass]="{active: settings.isActive}">{{ settings.rowIndex }}</div>
 <div *ngFor="let item of row;let i=index"
      class="row-item">
   <span *ngIf="!item.hidden"
