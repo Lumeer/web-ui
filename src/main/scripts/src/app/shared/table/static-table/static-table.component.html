@@ -1,10 +1,21 @@
 <div>
   <table-header [header]="data.header"
                 [color]="data.color"
+                (newColumn)="onNewColumn()"
                 class="static-header"></table-header>
-  <div class="static-rows">
-    <table-row *ngFor="let oneRow of data.rows"
+  <div class="static-rows"
+       (focusout)="onTableBlur()">
+    <table-row *ngFor="let oneRow of data.rows; let i = index"
                [row]="oneRow"
+               [rowIndex]="i"
+               [isActive]="i === data.activeRow"
+               (itemHighlight)="onItemHighlight(i, $event)"
+               (updateRow)="onUpdateRow(i, $event)"
                class="static-row"></table-row>
   </div>
+  <button (click)="onNewRow()"
+          type="button"
+          class="btn btn-xs">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+  </button>
 </div>

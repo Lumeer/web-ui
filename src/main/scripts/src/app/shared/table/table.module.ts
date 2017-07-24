@@ -38,7 +38,7 @@ import {TableRowComponent} from './static-table/table-row.component';
     VirtualTableComponent,
     StaticTableComponent,
     TableHeaderComponent,
-    TableRowComponent
+    TableRowComponent,
   ],
   exports: [
     VirtualTableComponent,

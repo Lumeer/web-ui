@@ -1,3 +1,10 @@
-<div *ngFor="let item of row" class="row-item" contenteditable="true">
+<div class="row-item row-index" [ngClass]="{active: isActive}">{{ rowIndex }}</div>
+<div *ngFor="let item of row;let i=index"
+     (blur)="onEdit(model, i)"
+     (focus)="model = $event.target.innerText; onItemClicked(i)"
+     (input)="model = $event.target.innerText"
+     [textContent]="item"
+     class="row-item"
+     contenteditable="true">
   {{ item || '&nbsp;'}}
 </div>

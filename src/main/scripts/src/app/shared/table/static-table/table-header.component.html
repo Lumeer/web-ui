@@ -1,3 +1,13 @@
-<div *ngFor="let headerItem of header" class="header-item" [ngStyle]="{'background-color': color}">
-  {{ headerItem.label }}
+<div class="header-item" [ngStyle]="{'background-color': color}">#</div>
+<div *ngFor="let headerItem of header"
+     [ngStyle]="{'background-color': color}"
+     [ngClass]="{active: headerItem.active}"
+     class="header-item"
+     contenteditable="true">
+  {{ headerItem.label || '&nbsp;'}}
 </div>
+<button (click)="newColumn.next()"
+        type="button"
+        class="btn btn-xs">
+  <i class="fa fa-plus" aria-hidden="true"></i>
+</button>

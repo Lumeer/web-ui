@@ -4,4 +4,8 @@
   display: table-cell;
   padding: 2px 5px;
   border: 1px solid #888;
+
+  &.active.row-index {
+    background: red;
+  }
 }

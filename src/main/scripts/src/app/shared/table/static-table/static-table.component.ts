@@ -28,11 +28,44 @@ import {Component, ViewChild} from '@angular/core';
 export class StaticTableComponent {
   public data = {
     color: '#ccc',
-    header: [{label: 'first'}, {label: 'second'}, {label: 'third'}],
+    header: [{label: 'first', active: false}, {label: 'second', active: false}, {label: 'third', active: false}],
     rows: [
       ['one', 'two', 'three'],
       ['one', 'two', ''],
       ['one', '', 'three']
-    ]
+    ],
+    activeRow: -1
   };
+
+  public onNewColumn() {
+    this.data.header = [...this.data.header, {label: '', active: false}];
+    this.data.rows = this.data.rows.map(data => [...data, '']);
+  }
+
+  public onNewRow() {
+    this.data.rows = [...this.data.rows, StaticTableComponent.generateData(this.data.header)];
+  }
+
+  public onItemHighlight(index, data) {
+    this.data.activeRow = index;
+    this.data.header = StaticTableComponent.inactivateItems(this.data.header);
+    this.data.header[data.colIndex].active = true;
+  }
+
+  public onTableBlur() {
+    this.data.activeRow = -1;
+    this.data.header = StaticTableComponent.inactivateItems(this.data.header);
+  }
+
+  public onUpdateRow(rowIndex, dataPayload) {
+    this.data.rows[rowIndex][dataPayload.index] = dataPayload.data;
+  }
+
+  private static generateData(header) {
+    return header.map(data => '');
+  }
+
+  private static inactivateItems(items) {
+    return items.map(data => {data.active = false; return data;});
+  }
 }

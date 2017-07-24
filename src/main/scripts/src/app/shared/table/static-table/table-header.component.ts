@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ViewChild, Input} from '@angular/core';
+import {Component, ViewChild, Input, Output, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'table-header',
@@ -28,4 +28,6 @@ import {Component, ViewChild, Input} from '@angular/core';
 export class TableHeaderComponent {
   @Input() public header: any[];
   @Input() public color: any;
+  @Input() public fixed: boolean;
+  @Output() public newColumn: EventEmitter<any> = new EventEmitter();
 }

@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ViewChild, Input} from '@angular/core';
+import {Component, ViewChild, Input, Output, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'table-row',
@@ -27,4 +27,17 @@ import {Component, ViewChild, Input} from '@angular/core';
 })
 export class TableRowComponent {
   @Input() public row: any[];
+  @Input() public rowIndex: number;
+  @Input() public isActive: boolean;
+  @Output() public itemHighlight: EventEmitter<any> = new EventEmitter();
+  @Output() public updateRow: EventEmitter<any> = new EventEmitter();
+  public model: string;
+
+  public onEdit(item, index) {
+    this.updateRow.next({index: index, data: item});
+  }
+
+  public onItemClicked(index) {
+    this.itemHighlight.next({colIndex: index});
+  }
 }

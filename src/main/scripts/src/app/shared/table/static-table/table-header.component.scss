@@ -2,4 +2,8 @@
   display: table-cell;
   padding: 2px 5px;
   border: 1px solid #888;
+
+  &.active {
+    background-color: red !important;
+  }
 }
