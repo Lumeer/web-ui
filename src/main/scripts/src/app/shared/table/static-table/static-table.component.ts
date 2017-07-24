@@ -30,16 +30,16 @@ export class StaticTableComponent {
     color: '#ccc',
     header: [{label: 'first', active: false}, {label: 'second', active: false}, {label: 'third', active: false}],
     rows: [
-      ['one', 'two', 'three'],
-      ['one', 'two', ''],
-      ['one', '', 'three']
+      [{label: 'one'}, {label: 'two'}, {label: 'three'}],
+      [{label: 'one'}, {label: ''}, {label: 'three'}],
+      [{label: 'one'}, {label: 'two'}, {label: ''}],
     ],
     activeRow: -1
   };
 
   public onNewColumn() {
     this.data.header = [...this.data.header, {label: '', active: false}];
-    this.data.rows = this.data.rows.map(data => [...data, '']);
+    this.data.rows = this.data.rows.map(data => [...data, {label: ''}]);
   }
 
   public onNewRow() {
@@ -58,11 +58,21 @@ export class StaticTableComponent {
   }
 
   public onUpdateRow(rowIndex, dataPayload) {
-    this.data.rows[rowIndex][dataPayload.index] = dataPayload.data;
+    this.data.rows[rowIndex][dataPayload.index].label = dataPayload.data;
+  }
+
+  public onRemoveColumn(colIndex) {
+    this.data.header.splice(colIndex, 1);
+    this.data.rows = this.data.rows.map(oneRow => {oneRow.splice(colIndex, 1); return oneRow;});
+  }
+
+  public showHideColumn(colIndex, hidden: boolean) {
+    this.data.header[colIndex]['hidden'] = hidden;
+    this.data.rows = this.data.rows.map(oneRow => {oneRow[colIndex]['hidden'] = hidden; return oneRow;});
   }
 
   private static generateData(header) {
-    return header.map(data => '');
+    return header.map(data => {return {label: ''};});
   }
 
   private static inactivateItems(items) {

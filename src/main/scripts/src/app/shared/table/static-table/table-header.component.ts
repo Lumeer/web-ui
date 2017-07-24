@@ -29,5 +29,15 @@ export class TableHeaderComponent {
   @Input() public header: any[];
   @Input() public color: any;
   @Input() public fixed: boolean;
+
   @Output() public newColumn: EventEmitter<any> = new EventEmitter();
+  @Output() public removeColumn: EventEmitter<any> = new EventEmitter();
+  @Output() public hideColumn: EventEmitter<any> = new EventEmitter();
+  @Output() public showColumn: EventEmitter<any> = new EventEmitter();
+
+  public hoverIndex: number = -1;
+
+  public onHover(index) {
+    this.hoverIndex = index;
+  }
 }

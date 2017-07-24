@@ -1,10 +1,21 @@
 <div class="header-item" [ngStyle]="{'background-color': color}">#</div>
-<div *ngFor="let headerItem of header"
+<div *ngFor="let headerItem of header; let index = index"
      [ngStyle]="{'background-color': color}"
      [ngClass]="{active: headerItem.active}"
-     class="header-item"
-     contenteditable="true">
-  {{ headerItem.label || '&nbsp;'}}
+     (mouseover)="onHover(index)"
+     class="header-item">
+  <span contenteditable="true" *ngIf="!headerItem.hidden">{{ headerItem.label || '&nbsp;'}}</span>
+  <div class="dropdown" *ngIf="index === hoverIndex">
+    <button class="btn btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li (click)="removeColumn.next(index)">Remove</li>
+      <li (click)="hideColumn.next(index)" *ngIf="!headerItem.hidden">Hide</li>
+      <li (click)="showColumn.next(index)" *ngIf="headerItem.hidden">Show</li>
+    </ul>
+  </div>
+  <div class="placeholder" *ngIf="index !== hoverIndex"></div>
 </div>
 <button (click)="newColumn.next()"
         type="button"

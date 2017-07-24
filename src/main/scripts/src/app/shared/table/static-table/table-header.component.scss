@@ -6,4 +6,20 @@
   &.active {
     background-color: red !important;
   }
+
+  .placeholder {
+    width: 22px;
+  }
+
+  .dropdown, .placeholder {
+    display: inline-block;
+
+    .dropdown-toggle {
+      background: none;
+    }
+
+    li {
+      cursor: pointer;
+    }
+  }
 }

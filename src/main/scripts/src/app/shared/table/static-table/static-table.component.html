@@ -2,6 +2,9 @@
   <table-header [header]="data.header"
                 [color]="data.color"
                 (newColumn)="onNewColumn()"
+                (removeColumn)="onRemoveColumn($event)"
+                (hideColumn)="showHideColumn($event, true)"
+                (showColumn)="showHideColumn($event, false)"
                 class="static-header"></table-header>
   <div class="static-rows"
        (focusout)="onTableBlur()">
