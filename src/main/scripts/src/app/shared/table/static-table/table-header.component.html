@@ -1,6 +1,6 @@
 <div class="header-item" [ngStyle]="{'background-color': settings.color}">#</div>
 <div *ngFor="let headerItem of header; let index = index"
-     [ngStyle]="{'background-color': settings.color}"
+     [ngStyle]="{'background-color': settings.color, 'border-color': headerItem.active ? settings.highlightColor : '#888'}"
      [ngClass]="{active: headerItem.active}"
      (mouseover)="onHover(index)"
      class="header-item">

@@ -11,7 +11,7 @@
     <table-row *ngFor="let oneRow of data.rows; let index = index"
                [settings]="data.settings"
                [rowIndex]="index"
-               [isActive]="index === data.settings.activeRow"
+               [isActive]="index === data.activeRow"
                [row]="oneRow"
                (itemHighlight)="onItemHighlight(index, $event)"
                (updateRow)="onUpdateRow(index, $event)"

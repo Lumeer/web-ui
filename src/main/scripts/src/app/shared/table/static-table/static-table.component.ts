@@ -28,16 +28,16 @@ import {Component, ViewChild} from '@angular/core';
 export class StaticTableComponent {
   public data = {
     settings: {
-      color: '#ccc',
-      highlightColor: '#F39C12',
-      activeRow: -1
+      color: '#3498DB',
+      highlightColor: '#F39C12'
     },
     header: [{label: 'first', active: false}, {label: 'second', active: false}, {label: 'third', active: false}],
     rows: [
       [{label: 'one'}, {label: 'two'}, {label: 'three'}],
       [{label: 'one'}, {label: ''}, {label: 'three'}],
       [{label: 'one'}, {label: 'two'}, {label: ''}],
-    ]
+    ],
+    activeRow: -1
   };
 
   public onNewColumn() {
@@ -50,13 +50,13 @@ export class StaticTableComponent {
   }
 
   public onItemHighlight(index, data) {
-    this.data.settings.activeRow = index;
+    this.data.activeRow = index;
     this.data.header = StaticTableComponent.inactivateItems(this.data.header);
     this.data.header[data.colIndex].active = true;
   }
 
   public onTableBlur() {
-    this.data.settings.activeRow = -1;
+    this.data.activeRow = -1;
     this.data.header = StaticTableComponent.inactivateItems(this.data.header);
   }
 
