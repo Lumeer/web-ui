@@ -27,8 +27,7 @@ import {Component, ViewChild, Input, Output, EventEmitter} from '@angular/core';
 })
 export class TableHeaderComponent {
   @Input() public header: any[];
-  @Input() public color: any;
-  @Input() public fixed: boolean;
+  @Input() public settings: any;
 
   @Output() public newColumn: EventEmitter<any> = new EventEmitter();
   @Output() public removeColumn: EventEmitter<any> = new EventEmitter();

@@ -27,7 +27,9 @@ import {Component, ViewChild, Input, Output, EventEmitter} from '@angular/core';
 })
 export class TableRowComponent {
   @Input() public row: any[];
+  @Input() public rowIndex: number;
   @Input() public settings: any;
+  @Input() public isActive: boolean;
 
   @Output() public itemHighlight: EventEmitter<any> = new EventEmitter();
   @Output() public updateRow: EventEmitter<any> = new EventEmitter();
