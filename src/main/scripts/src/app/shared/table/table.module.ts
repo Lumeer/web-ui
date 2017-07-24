@@ -22,26 +22,21 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
-import {VirtualTableComponent} from './virtual-table/virtual-table.component';
 import {StaticTableComponent} from './static-table/static-table.component';
-import {VirtualScrollModule} from 'angular2-virtual-scroll/dist/virtual-scroll';
 import {TableHeaderComponent} from './static-table/table-header.component';
 import {TableRowComponent} from './static-table/table-row.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
-    VirtualScrollModule
+    FormsModule
   ],
   declarations: [
-    VirtualTableComponent,
     StaticTableComponent,
     TableHeaderComponent,
     TableRowComponent,
   ],
   exports: [
-    VirtualTableComponent,
     StaticTableComponent
   ]
 })
