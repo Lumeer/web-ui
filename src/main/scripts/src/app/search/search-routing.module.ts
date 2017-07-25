@@ -20,10 +20,12 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {CollectionsSearchComponent} from './collections/collections-search.component';
-import {DocumentsSearchComponent} from './documents/documents-search.component';
+import {CollectionsSearchResultsComponent} from './results/collections/collections-search-results.component';
+import {DocumentsSearchResultsComponent} from './results/documents/documents-search-results.component';
 import {SearchComponent} from './search.component';
-import {SearchAllComponent} from './all/search-all.component';
+import {AllSearchResultsComponent} from './results/all/all-search-results.component';
+import {SearchResultsComponent} from './results/search-results.component';
+import {SearchHomeComponent} from './home/search-home.component';
 
 const searchRoutes: Routes = [
   {
@@ -31,16 +33,30 @@ const searchRoutes: Routes = [
     component: SearchComponent,
     children: [
       {
-        path: 'all',
-        component: SearchAllComponent
+        path: '',
+        pathMatch: 'full',
+        component: SearchHomeComponent,
+        data: {
+          hideSearch: true
+        }
       },
       {
-        path: 'collections',
-        component: CollectionsSearchComponent
-      },
-      {
-        path: 'documents',
-        component: DocumentsSearchComponent
+        path: '',
+        component: SearchResultsComponent,
+        children: [
+          {
+            path: 'all',
+            component: AllSearchResultsComponent
+          },
+          {
+            path: 'collections',
+            component: CollectionsSearchResultsComponent
+          },
+          {
+            path: 'documents',
+            component: DocumentsSearchResultsComponent
+          }
+        ]
       }
     ]
   }

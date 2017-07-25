@@ -21,9 +21,8 @@
 import {Component} from '@angular/core';
 
 @Component({
-  selector: 'collections-search',
-  templateUrl: './collections-search.component.html'
+  templateUrl: './all-search-results.component.html'
 })
-export class CollectionsSearchComponent {
+export class AllSearchResultsComponent {
 
 }
