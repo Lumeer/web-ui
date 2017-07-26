@@ -19,8 +19,12 @@
  */
 
 import {Injectable} from '@angular/core';
+import {Response, RequestOptions, URLSearchParams} from '@angular/http';
 import {HttpClient} from './http-client.service';
 import {isUndefined} from 'util';
+
+import {Role} from '../dto/role';
+import {Observable} from 'rxjs/Observable';
 
 @Injectable()
 export class RolesService {
@@ -28,10 +32,59 @@ export class RolesService {
   constructor(private http: HttpClient) {
   }
 
-  // TODO communicate with SecurityService through REST API
+  public getOrganizationRoles(orgCode: string): Observable<Role[]> {
+    return this.http.get(RolesService.apiPrefix(orgCode))
+      .map(response => response.json() as Role[]);
+  }
 
-  private static apiPrefix(organizationCode: string): string {
-    return `/lumeer-engine/rest/roles/organizations/${organizationCode}/`;
+  public getProjectRoles(orgCode: string, projectCode: string): Observable<Role[]> {
+    return this.http.get(RolesService.apiPrefix(orgCode, projectCode))
+      .map(response => response.json() as Role[]);
+  }
+
+  public addOrganizationUsersGroupsRole(orgCode: string, role: string, users: string[], groups: string[]): Observable<Response> {
+    let params: URLSearchParams = this.setParameters(users, groups);
+    let options = new RequestOptions({search: params});
+    let resp = this.http.put(RolesService.apiPrefix(orgCode) + '/' + role, {}, options);
+    return resp;
+  }
+
+  public removeOrganizationUsersGroupsRole(orgCode: string, role: string, users: string[], groups: string[]): Observable<Response> {
+    let params: URLSearchParams = this.setParameters(users, groups);
+    let options = new RequestOptions({search: params});
+    return this.http.delete(RolesService.apiPrefix(orgCode) + '/' + role, options);
+  }
+
+  public addProjectUsersGroupsRole(orgCode: string, projectCode: string, role: string, users: string[], groups: string[]): Observable<Response> {
+    let params: URLSearchParams = this.setParameters(users, groups);
+    let options = new RequestOptions({search: params});
+    let resp = this.http.put(RolesService.apiPrefix(orgCode, projectCode) + '/' + role, {}, options);
+    return resp;
+  }
+
+  public removeProjectUsersGroupsRole(orgCode: string, projectCode: string, role: string, users: string[], groups: string[]): Observable<Response> {
+    let params: URLSearchParams = this.setParameters(users, groups);
+    let options = new RequestOptions({search: params});
+    return this.http.delete(RolesService.apiPrefix(orgCode, projectCode) + '/' + role, options);
+  }
+
+  private static apiPrefix(organizationCode: string, projCode?: string): string {
+    return `/lumeer-engine/rest/roles/organizations/${organizationCode}` + (projCode ? `/projects/` + projCode : ``) + `/roles`;
+  }
+
+  private setParameters(users: string[], groups: string[]): URLSearchParams {
+    let params: URLSearchParams = new URLSearchParams();
+    for (let u in users) {
+      if (users.hasOwnProperty(u)) {
+        params.append('users', users[u]);
+      }
+    }
+    for (let g in groups) {
+      if (groups.hasOwnProperty(g)) {
+        params.append('groups', groups[g]);
+      }
+    }
+    return params;
   }
 
 }
