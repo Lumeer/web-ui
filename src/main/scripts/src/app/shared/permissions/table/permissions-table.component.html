@@ -1,4 +1,4 @@
-<table>
+<table class="table table-striped table-bordered">
   <thead>
     <tr>
       <th></th>
@@ -7,26 +7,32 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let entity of entities">
+    <tr *ngFor="let entity of entities; let i = index" [attr.data-index]="i">
       <td>{{entity.name}}</td>
-      <td *ngFor="let role of roles" class="role">
-        <input type="checkbox" title="{{role}}" [attr.checked]="entity.roles.indexOf(role) > -1 ? '': null"/>
+      <td *ngFor="let role of roles"  class="role">
+        <div class="material-switch pull-left">
+          <input id="ch{{entity.name+role}}" type="checkbox" title="{{role}}" [attr.checked]="entity.roles.indexOf(role) > -1 ? '': null" (change)="changePermission(entity.name, role, $event)"/>
+          <label for="ch{{entity.name+role}}" class="label-primary"></label>
+        </div>
       </td>
       <td>
-        <button (click)="onRemove(entity.name)" class="btn btn-remove">Remove</button>
+        <button (click)="onRemove(i)" class="btn btn-danger">Remove</button>
       </td>
     </tr>
     <tr>
       <td>
-        <select>
-          <option *ngFor="let otherEntity of otherEntities">{{otherEntity}}</option>
+        <select class="form-control" #selectedEntityName>
+          <option *ngFor="let otherEntity of otherEntities" [value]="otherEntity">{{otherEntity}}</option>
         </select>
       </td>
       <td *ngFor="let role of roles" class="role">
-        <input type="checkbox" title="{{role}}"/>
+        <div class="material-switch pull-left">
+          <input id="ch{{'new'+role+entityType}}" type="checkbox" title="{{role}}" [checked]="rolesCheckbox[role]" (change)="updateCheckedRoles(role, $event)"/>
+          <label for="ch{{'new'+role+entityType}}" class="label-primary"></label>
+        </div>
       </td>
       <td>
-        <button (click)="onAdd()" class="btn btn-add">Add</button>
+        <button (click)="onAdd(selectedEntityName.value)" class="btn btn-success">Add</button>
       </td>
     </tr>
   </tbody>
