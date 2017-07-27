@@ -24,7 +24,6 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import {DocumentService} from '../../../../core/rest/document.service';
 import {WorkspaceService} from '../../../../core/workspace.service';
-import {LocalService} from '../../../../core/local.service';
 import {Perspective} from '../../perspective';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Collection} from '../../../../core/dto/collection';
@@ -64,54 +63,42 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
   public addButtonColor: string;
   public cursorOnAddButton: boolean;
 
-  public colors: string[];
-  public icons: string[];
   public documents: Document[];
 
   constructor(private documentService: DocumentService,
               private collectionService: CollectionService,
               private workspaceService: WorkspaceService,
-              private route: ActivatedRoute,
-              private localService: LocalService) {
+              private route: ActivatedRoute) {
   }
 
   public ngOnInit() {
-    // initialize workspace if needed
-    let setWorkspaceParams = (params: ParamMap) => {
-      this.workspaceService.projectCode = params.get('projectCode');
-      this.workspaceService.organizationCode = params.get('organizationCode');
-    };
+    this.initializeWorkspace();
+    this.fetchDocuments();
+  }
 
+  public initializeWorkspace(): void {
     if (!this.workspaceService.isWorkspaceSet()) {
-      this.route.paramMap.subscribe(setWorkspaceParams);
+      this.route.paramMap.subscribe((params: ParamMap) => {
+        this.workspaceService.projectCode = params.get('projectCode');
+        this.workspaceService.organizationCode = params.get('organizationCode');
+      });
     }
+  }
 
-    // get collection
+  public fetchDocuments(): void {
     this.route.paramMap
       .map(params => params.get('collectionCode'))
       .switchMap(collectionCode => this.collectionService.getCollection(collectionCode))
-      .subscribe(collection => {
+      .switchMap(collection => {
         this.collection = collection;
-
-        this.documentService.getDocuments(this.collection.code)
-          .subscribe(documents => this.documents = documents);
-      });
-
-    // fetch data
-    this.localService.getSomeIcons()
-      .subscribe((icons: string[]) => {
-        this.icons = icons;
-      });
-
-    this.localService.getColors()
-      .subscribe((colors: string[]) => {
-        this.colors = colors;
-      });
+        return this.documentService.getDocuments(collection.code);
+      })
+      .subscribe(documents => this.documents = documents);
   }
 
-  public getRandomElement = (array: any[]) => array[Math.floor(Math.random() * array.length)];
-
-  public hasText = (str: string) => str && str !== '';
+  public hasText(str: string): boolean {
+    return str && str !== '';
+  }
 
   public higherBy(base: string, ammount: number): string {
     let units: string = base.replace(/\d+/, '');

@@ -18,27 +18,26 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import {Observable} from 'rxjs/Observable';
+import {IconPickerComponent} from './icon-picker.component';
+import {ColorPaletteComponent} from './palette/color/color-palette.component';
+import {IconPaletteComponent} from './palette/icon/icon-palette.component';
 
-@Injectable()
-export class LocalService {
-
-  constructor(private httpClient: HttpClient) {
-  }
-
-  public getIcons(): Observable<string[]> {
-    return this.httpClient.get(`${window['lumeer'].constants.publicPath}/data/allicons.json`);
-  }
-
-  public getSomeIcons(): Observable<string[]> {
-    return this.httpClient.get(`${window['lumeer'].constants.publicPath}/data/someicons.json`);
-  }
-
-  public getColors(): Observable<string[]> {
-    return this.httpClient.get(`${window['lumeer'].constants.publicPath}/data/colors.json`);
-  }
+@NgModule({
+  imports: [
+    CommonModule
+  ],
+  declarations: [
+    IconPickerComponent,
+    ColorPaletteComponent,
+    IconPaletteComponent
+  ],
+  exports: [
+    IconPickerComponent
+  ]
+})
+export class IconPickerModule {
 
 }

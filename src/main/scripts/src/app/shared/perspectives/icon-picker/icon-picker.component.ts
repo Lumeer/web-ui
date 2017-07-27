@@ -19,8 +19,7 @@
  */
 
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {LocalService} from '../../../core/local.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'icon-picker',
@@ -44,7 +43,10 @@ import {LocalService} from '../../../core/local.service';
     ])
   ]
 })
-export class IconPickerComponent implements OnInit, OnDestroy {
+export class IconPickerComponent {
+
+  @Input()
+  public enabled: boolean;
 
   @Output()
   private colorChange: EventEmitter<string> = new EventEmitter();
@@ -52,124 +54,25 @@ export class IconPickerComponent implements OnInit, OnDestroy {
   @Input('color')
   public activeColor: string;
 
-  public selectedColor: string;
-
-  public previewColor(newColor: string): void {
-    this.activeColor = newColor;
-    newColor ? this.colorChange.emit(newColor) : this.colorChange.emit(this.selectedColor);
-  }
-
-  public selectColor(newColor: string): void {
-    this.selectedColor = newColor;
-    this.colorChange.emit(newColor);
-
-    this.change.emit(`selected ${newColor}`);
-  }
-
-  //=====================================================================
-
   @Output()
   private iconChange: EventEmitter<string> = new EventEmitter();
 
   @Input('icon')
   public activeIcon: string;
 
-  public selectedIcon: string;
-
-  public previewIcon(newIcon: string): void {
-    this.activeIcon = newIcon;
-    newIcon ? this.iconChange.emit(newIcon) : this.iconChange.emit(this.selectedIcon);
-  }
-
-  public selectIcon(newIcon: string): void {
-    this.selectedIcon = newIcon;
-    this.iconChange.emit(newIcon);
-
-    this.change.emit(`selected ${newIcon}`);
-  }
-
-  //=====================================================================
-
-  @Input()
-  public enabled: boolean;
-
   @Output()
-  public change: EventEmitter<string> = new EventEmitter();
+  private onSelected: EventEmitter<string> = new EventEmitter();
 
-  public icons: string[];
-
-  public colors: string[];
-
-  constructor(private localService: LocalService) {
+  public colorChangeEvent(event: string): void {
+    this.colorChange.emit(event);
   }
 
-  public ngOnInit(): void {
-    if (!this.activeColor) {
-      throw new Error('icon-picker: attribute [color] is required.');
-    }
-
-    if (!this.activeIcon) {
-      throw new Error('icon-picker: attribute [icon] is required.');
-    }
-
-    this.selectedColor = this.activeColor;
-    this.selectedIcon = this.activeIcon;
-
-    this.localService.getSomeIcons()
-      .subscribe((icons: string[]) => {
-        this.icons = icons;
-      });
-
-    this.localService.getColors()
-      .subscribe((colors: string[]) => {
-        this.colors = colors;
-      });
+  public iconChangeEvent(event: string): void {
+    this.iconChange.emit(event);
   }
 
-  public colorHighlight(color: string): string {
-    if (color === this.selectedColor) {
-      return this.darken(color, 80);
-    }
-
-    if (color === this.activeColor) {
-      return this.darken(color, 40);
-    }
-
-    return 'transparent';
-  }
-
-  public iconHighlight(icon: string): string {
-    if (icon === this.selectedIcon) {
-      return 'selected';
-    }
-
-    if (icon === this.activeIcon) {
-      return 'active';
-    }
-
-    return '';
-  }
-
-  public darken(color: string, ammount: number): string {
-    let hexToNumber = (start: number) => parseInt(color.substr(start, 2), 16);
-    let r: number = hexToNumber(1);
-
-    let g: number = hexToNumber(3);
-    let b: number = hexToNumber(5);
-
-    let positive = (num: number) => Math.max(num, 0);
-    let subtractAmmount = (num: number) => positive(num - ammount);
-
-    let darkR = subtractAmmount(r);
-    let darkG = subtractAmmount(g);
-    let darkB = subtractAmmount(b);
-
-    return `rgb(${(darkR)}, ${darkG}, ${darkB})`;
-  };
-
-  public ngOnDestroy(): void {
-    this.colorChange.emit(this.selectedColor);
-    this.iconChange.emit(this.selectedIcon);
+  public selectionEvent(event: string): void {
+    this.onSelected.emit(event);
   }
 
 }

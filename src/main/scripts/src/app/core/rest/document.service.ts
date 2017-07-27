@@ -48,7 +48,7 @@ export class DocumentService {
   }
 
   public updateDocument(collectionCode: string, document: Document): void {
-    this.http.put(`${this.apiPrefix(collectionCode)}/update/`, document.toJson())
+    this.http.put(`${this.apiPrefix(collectionCode)}`, document.toJson())
       .subscribe();
   }
 

@@ -1,0 +1,8 @@
+<div class="list">
+  <div class="color" *ngFor="let colorOption of colors"
+       [style.background]="colorOption"
+       [style.border-color]="colorHighlight(colorOption)"
+       (mouseenter)="preview(colorOption)"
+       (mouseleave)="preview(null)"
+       (click)='select(colorOption)'></div>
+</div>

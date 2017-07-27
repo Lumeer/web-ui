@@ -18,21 +18,33 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {IconPickerComponent} from './icon-picker/icon-picker.component';
-import {CommonModule} from '@angular/common';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-@NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: [
-    IconPickerComponent
-  ],
-  exports: [
-    IconPickerComponent
-  ]
+import * as Const from '../../../../const';
+import {PaletteComponent} from '../palette.component';
+
+@Component({
+  selector: 'icon-palette',
+  templateUrl: './icon-palette.component.html',
+  styleUrls: ['./icon-palette.component.scss']
 })
-export class PerspectivesSharedModule {
+export class IconPaletteComponent extends PaletteComponent {
+
+  @Input('icon')
+  public active: string;
+
+  public icons = Const.someIcons;
+
+  public iconHighlight(icon: string): string {
+    if (icon === this.selected) {
+      return 'selected';
+    }
+
+    if (icon === this.active) {
+      return 'active';
+    }
+
+    return '';
+  }
 
 }
