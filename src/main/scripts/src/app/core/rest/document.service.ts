@@ -19,11 +19,12 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 
 import {WorkspaceService} from '../workspace.service';
+import {Document} from '../dto/document';
 import {Observable} from 'rxjs/Observable';
-import {isNullOrUndefined} from 'util';
+import {isUndefined} from 'util';
 
 @Injectable()
 export class DocumentService {
@@ -31,18 +32,24 @@ export class DocumentService {
   constructor(private http: HttpClient, private workspaceService: WorkspaceService) {
   }
 
-  public getDocuments(collectionName: string, pageNumber?: number, pageSize?: number): Observable<any[]> {
-    let queryParams = new HttpParams();
-    if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
-      queryParams.set('page', pageNumber.toString())
-        .set('size', pageSize.toString());
-    }
-
-    return this.http.get<any[]>(this.apiPrefix(collectionName), queryParams);
+  public getDocuments(collectionCode: string): Observable<Document[]> {
+    return this.http.get(this.apiPrefix(collectionCode))
+      .map((jsonDocuments: object[]) => jsonDocuments.map(json => new Document(json)));
   }
 
-  public getDocument(collectionName: string, documentId: string): Observable<any> {
-    return this.http.get<any>(`${this.apiPrefix(collectionName)}/${documentId}`);
+  public getDocument(collectionCode: string, documentId: string): Observable<Document> {
+    return this.http.get(`${this.apiPrefix(collectionCode)}/${documentId}`)
+      .map((json: object) => new Document(json));
+  }
+
+  public createDocument(collectionCode: string, document: Document): void {
+    this.http.post(this.apiPrefix(collectionCode), document.toJson())
+      .subscribe();
+  }
+
+  public updateDocument(collectionCode: string, document: Document): void {
+    this.http.put(`${this.apiPrefix(collectionCode)}/update/`, document.toJson())
+      .subscribe();
   }
 
   private apiPrefix(collection: string): string {

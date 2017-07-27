@@ -1,0 +1,21 @@
+<div *ngIf="enabled" class="arrow-up"></div>
+<div *ngIf="enabled" class="stickerPicker" [@animateHeight]="'in'">
+  <div class="list">
+    <div class="color" *ngFor="let colorOption of colors"
+         [style.background]="colorOption"
+         [style.border-color]="colorHighlight(colorOption)"
+         (mouseenter)="previewColor(colorOption)"
+         (mouseleave)="previewColor(null)"
+         (click)='selectColor(colorOption)'></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="list">
+    <i *ngFor="let iconOption of icons"
+       class="fa fa-fw {{ iconOption }} {{ iconHighlight(iconOption) }}"
+       (mouseenter)="previewIcon(iconOption)"
+       (mouseleave)="previewIcon(null)"
+       (click)='selectIcon(iconOption)'></i>
+  </div>
+</div>

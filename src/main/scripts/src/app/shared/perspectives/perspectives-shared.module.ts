@@ -19,37 +19,20 @@
  */
 
 import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClientModule} from '@angular/common/http';
-
-import {AppComponent} from './app.component';
-import {CoreModule} from './core/core.module';
-import {AppRoutingModule} from './app-routing.module';
-import {WorkspaceModule} from './workspace/workspace.module';
-import {CollectionModule} from './collection/collection.module';
-import {SearchModule} from './search/search.module';
-import {DocumentsModule} from './documents/documents.module';
+import {IconPickerComponent} from './icon-picker/icon-picker.component';
+import {CommonModule} from '@angular/common';
 
 @NgModule({
   imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    CoreModule,
-    CollectionModule,
-    DocumentsModule,
-    SearchModule,
-    WorkspaceModule,
-    AppRoutingModule // needs to stay last
+    CommonModule
   ],
   declarations: [
-    AppComponent
+    IconPickerComponent
   ],
-  bootstrap: [
-    AppComponent
+  exports: [
+    IconPickerComponent
   ]
 })
-export class AppModule {
+export class PerspectivesSharedModule {
 
 }

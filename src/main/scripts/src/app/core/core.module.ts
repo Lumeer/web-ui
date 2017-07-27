@@ -37,6 +37,7 @@ import {RolesService} from './rest/roles.service';
 import {HomeComponent} from './home.component';
 import {SharedModule} from '../shared/shared.module';
 import {SearchService} from './rest/search.service';
+import {LocalService} from './local.service';
 
 @NgModule({
   imports: [
@@ -60,7 +61,8 @@ import {SearchService} from './rest/search.service';
     RolesService,
     SearchService,
     UserSettingsService,
-    WorkspaceService
+    WorkspaceService,
+    LocalService
   ],
   exports: [
     HeaderComponent,

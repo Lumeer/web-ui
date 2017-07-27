@@ -19,14 +19,26 @@
  */
 
 import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
 import {PostItDocumentsPerspectiveComponent} from './post-it/post-it-documents-perspective.component';
+import {AttributeTreeComponent} from './post-it/attribute-tree/attribute-tree.component';
+import {KeysPipe} from '../../../../components/views/pick_item/keys';
 
 @NgModule({
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule
+  ],
   declarations: [
     PostItDocumentsPerspectiveComponent,
-    TableDocumentsPerspectiveComponent
+    TableDocumentsPerspectiveComponent,
+    AttributeTreeComponent,
+    KeysPipe
   ],
   entryComponents: [
     PostItDocumentsPerspectiveComponent,
