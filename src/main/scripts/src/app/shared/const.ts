@@ -1,7 +1,3 @@
-export const defaultIcon = 'fa-book';
-export const defaultIconColor = '#000000';
-export const iconsPerPage = 36;
-export const collectionMinCharacters = 3;
 export const colors = [
   '#F44336', '#3F51B5', '#2196F3', '#009688', '#4CAF50', '#FFEB3B', '#FF9800', '#9E9E9E'
 ];

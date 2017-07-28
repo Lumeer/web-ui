@@ -68,10 +68,10 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   public editable: boolean;
 
   public placeholderTitle: string = 'Collection name';
-  public iconsPerPage: number = Const.iconsPerPage;
+  public iconsPerPage: number = 36;
+  public collectionMinCharacters = 3;
   public icons: string[] = Const.icons;
   public colors: string[] = Const.colors;
-  public collectionMinCharacters = Const.collectionMinCharacters;
   public newCollections: CollectionModel[] = [];
   public collections: Collection[];
   public numbers: any[];

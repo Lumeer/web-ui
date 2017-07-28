@@ -19,14 +19,16 @@
  */
 
 import {Collection} from '../dto/collection';
-import * as Const from '../../shared/const';
+
+export const defaultIcon = 'fa-book';
+export const defaultIconColor = '#000000';
 
 export class CollectionModel implements Collection {
 
   public code: string;
   public name: string = '';
-  public color: string = Const.defaultIconColor;
-  public icon: string = Const.defaultIcon;
+  public color: string = defaultIconColor;
+  public icon: string = defaultIcon;
   public documentCount: number;
   public pickerVisible: boolean = false;
 
