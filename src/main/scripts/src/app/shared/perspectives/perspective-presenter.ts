@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {AfterViewInit, ComponentFactoryResolver, OnInit, Type, ViewChild} from '@angular/core';
+import {ComponentFactoryResolver, OnInit, Type, ViewChild} from '@angular/core';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 
 import {PerspectiveDirective} from './perspective.directive';

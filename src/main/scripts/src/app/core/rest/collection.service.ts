@@ -19,10 +19,12 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient} from './http-client.service';
+import {HttpClient, HttpParams} from '@angular/common/http';
+
 import {WorkspaceService} from '../workspace.service';
 import {Observable} from 'rxjs/Observable';
-import {isUndefined} from 'util';
+import {Collection} from '../dto/collection';
+import {isNullOrUndefined} from 'util';
 
 @Injectable()
 export class CollectionService {
@@ -30,16 +32,27 @@ export class CollectionService {
   constructor(private http: HttpClient, private workspaceService: WorkspaceService) {
   }
 
-  public getCollections(pageNumber?: number, pageSize?: number): Observable<any[]> {
-    let queryParams = !isUndefined(pageNumber) && !isUndefined(pageSize) ? `?page=${pageNumber}&size=${pageSize}` : '';
+  public getCollections(pageNumber?: number, pageSize?: number): Observable<Collection[]> {
+    let queryParams = new HttpParams();
 
-    return this.http.get(this.apiPrefix() + queryParams)
-      .map(response => response.json());
+    if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
+      queryParams.set('page', pageNumber.toString())
+        .set('size', pageSize.toString());
+    }
+
+    return this.http.get<Collection[]>(this.apiPrefix(), queryParams);
   }
 
-  public getCollection(collectionCode: string): Observable<any> {
-    return this.http.get(`${this.apiPrefix()}/${collectionCode}`)
-      .map(response => response.json());
+  public createCollection(collection: Collection): Observable<string> {
+    return this.http.post(this.apiPrefix(), collection, {responseType: 'text'});
+  }
+
+  public updateCollection(collectionCode: String, collection: Collection): Observable<any> {
+    return this.http.put<any>(this.apiPrefix() + '/' + collectionCode, collection);
+  }
+
+  public getCollection(collectionCode: string): Observable<Collection> {
+    return this.http.get<Collection>(`${this.apiPrefix()}/${collectionCode}`);
   }
 
   private apiPrefix(): string {

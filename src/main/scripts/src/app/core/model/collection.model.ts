@@ -18,22 +18,28 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {SharedModule} from '../shared/shared.module';
-import {CollectionListComponent} from './list/collection-list.component';
-import {CollectionComponent} from './collection.component';
-import {CollectionRoutingModule} from './collection-routing.module';
+import {Collection} from '../dto/collection';
 
-@NgModule({
-  imports: [
-    SharedModule,
-    CollectionRoutingModule
-  ],
-  declarations: [
-    CollectionComponent,
-    CollectionListComponent
-  ]
-})
-export class CollectionModule {
+export const defaultIcon = 'fa-book';
+export const defaultIconColor = '#000000';
+
+export class CollectionModel implements Collection {
+
+  public code: string;
+  public name: string = '';
+  public color: string = defaultIconColor;
+  public icon: string = defaultIcon;
+  public documentCount: number;
+  public pickerVisible: boolean = false;
+
+  public toDto(): Collection {
+    return {
+      code: this.code,
+      name: this.name,
+      color: this.color,
+      icon: this.icon,
+      documentCount: this.documentCount
+    };
+  }
 
 }

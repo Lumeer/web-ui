@@ -37,12 +37,12 @@ export class HttpClient {
   }
 
   public post(url: string, body: any, requestOptions?: RequestOptionsArgs): Observable<Response> {
-    return this.http.post(url, body, requestOptions ? requestOptions : HttpClient.options())
+    return this.http.post(url, body, requestOptions ? HttpClient.appendContentType(requestOptions) : HttpClient.emptyOptions())
       .catch(HttpClient.handleError);
   }
 
   public put(url: string, body: any, requestOptions?: RequestOptionsArgs): Observable<Response> {
-    return this.http.put(url, body, requestOptions ? requestOptions : HttpClient.options())
+    return this.http.put(url, body, requestOptions ? HttpClient.appendContentType(requestOptions) : HttpClient.emptyOptions())
       .catch(HttpClient.handleError);
   }
 
@@ -57,7 +57,7 @@ export class HttpClient {
   }
 
   public patch(url: string, body: any, requestOptions?: RequestOptionsArgs): Observable<Response> {
-    return this.http.patch(url, body, requestOptions ? requestOptions : HttpClient.options())
+    return this.http.patch(url, body, requestOptions ? HttpClient.appendContentType(requestOptions) : HttpClient.emptyOptions())
       .catch(HttpClient.handleError);
   }
 
@@ -66,9 +66,20 @@ export class HttpClient {
       .catch(HttpClient.handleError);
   }
 
-  private static options() {
+  private static emptyOptions() {
     let headers = new Headers({'Content-Type': 'application/json'});
     return new RequestOptions({headers: headers});
+  }
+
+  private static appendContentType(requestOptions: RequestOptionsArgs) {
+    if (requestOptions.headers) {
+      if (!requestOptions.headers.has('Content-Type')) {
+        requestOptions.headers.append('Content-Type', 'application/json');
+      }
+    } else {
+      requestOptions.headers = new Headers({'Content-Type': 'application/json'});
+    }
+    return requestOptions;
   }
 
   private static handleError(error: Response | any) {

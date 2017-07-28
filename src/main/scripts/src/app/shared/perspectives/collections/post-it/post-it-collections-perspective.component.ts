@@ -18,15 +18,48 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {trigger, state, style, transition, animate, keyframes} from '@angular/animations';
+
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Perspective} from '../../perspective';
+import {Collection} from '../../../../core/dto/collection';
+import {CollectionModel} from '../../../../core/model/collection.model';
+import * as Const from '../../../const';
 
 @Component({
   selector: 'post-it-collections-perspective',
-  templateUrl: './post-it-collections-perspective.component.html'
+  templateUrl: './post-it-collections-perspective.component.html',
+  styleUrls: ['./post-it-collections-perspective.component.scss'],
+  animations: [
+    trigger('animateVisible', [
+      state('in', style({height: '*', width: '*', opacity: 1})),
+      transition('void => *', [
+        animate(200, keyframes([
+          style({height: 0, width: 0, opacity: 0, offset: 0}),
+          style({height: '*', width: '*', opacity: 1, offset: 1})
+        ]))
+      ]),
+      transition('* => void', [
+        animate(200, keyframes([
+          style({height: '*', width: '*', opacity: 1, offset: 0}),
+          style({height: 0, width: 0, opacity: 0, offset: 1})
+        ]))
+      ])
+    ]),
+    trigger('appear', [
+      transition(':enter', [
+        style({transform: 'scale(0)'}),
+        animate('0.25s ease-out', style({transform: 'scale(1)'})),
+      ]),
+      transition(':leave', [
+        style({transform: 'scale(1)'}),
+        animate('0.25s ease-out', style({transform: 'scale(0)'})),
+      ])
+    ])
+  ]
 })
-export class PostItCollectionsPerspectiveComponent implements Perspective {
+export class PostItCollectionsPerspectiveComponent implements Perspective, OnInit {
 
   @Input()
   public query: string;
@@ -34,7 +67,85 @@ export class PostItCollectionsPerspectiveComponent implements Perspective {
   @Input()
   public editable: boolean;
 
+  public placeholderTitle: string = 'Collection name';
+  public iconsPerPage: number = 36;
+  public collectionMinCharacters = 3;
+  public icons: string[] = Const.icons;
+  public colors: string[] = Const.colors;
+  public newCollections: CollectionModel[] = [];
+  public collections: Collection[];
+  public numbers: any[];
+  public cachedName: string;
+  public selectedIcon: string;
+  public selectedColor: string;
+
   constructor(private collectionService: CollectionService) {
+    this.numbers = Array.apply(null, {length: this.iconsPerPage}).map(Number.call, Number);
+  }
+
+  public ngOnInit(): void {
+    this.loadCollections();
+  }
+
+  public onNewCollection() {
+    this.newCollections.splice(0, 0, new CollectionModel());
+  }
+
+  public onRemoveNewCollection(ix: number) {
+    this.newCollections.splice(ix, 1);
+  }
+
+  public onNewIconAndColor(collectionModel: CollectionModel) {
+    collectionModel.icon = this.selectedIcon;
+    collectionModel.color = this.selectedColor;
+    collectionModel.pickerVisible = false;
+    if (collectionModel.code) {
+      this.updateCollection(collectionModel);
+    }
+  }
+
+  public togglePicker(collectionModel: CollectionModel) {
+    if (collectionModel.pickerVisible) {
+      collectionModel.pickerVisible = false;
+      return;
+    }
+    this.selectedColor = collectionModel.color;
+    this.selectedIcon = collectionModel.icon;
+    this.newCollections.forEach(coll => coll.pickerVisible = false);
+    collectionModel.pickerVisible = true;
+  }
+
+  public onFocusCollectionName(collectionModel: CollectionModel) {
+    if (collectionModel.code) {
+      this.cachedName = collectionModel.name;
+    }
+  }
+
+  public onBlurCollectionName(collectionModel: CollectionModel) {
+    if (collectionModel.code) {
+      if (collectionModel.name.length < this.collectionMinCharacters) {
+        collectionModel.name = this.cachedName;
+      } else if (collectionModel.name !== this.cachedName) {
+        this.updateCollection(collectionModel);
+      }
+    } else if (collectionModel.name.length >= this.collectionMinCharacters) {
+      this.createCollection(collectionModel);
+    }
+  }
+
+  private loadCollections() {
+    this.collectionService.getCollections()
+      .subscribe((collections: Collection[]) => this.collections = collections);
+  }
+
+  private updateCollection(collectionModel: CollectionModel) {
+    this.collectionService.updateCollection(collectionModel.code, collectionModel.toDto())
+      .subscribe();
+  }
+
+  private createCollection(collectionModel: CollectionModel) {
+    this.collectionService.createCollection(collectionModel.toDto())
+      .subscribe((code: string) => collectionModel.code = code);
   }
 
 }

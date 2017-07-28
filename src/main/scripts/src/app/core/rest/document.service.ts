@@ -19,10 +19,11 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient} from './http-client.service';
+import {HttpClient, HttpParams} from '@angular/common/http';
+
 import {WorkspaceService} from '../workspace.service';
 import {Observable} from 'rxjs/Observable';
-import {isUndefined} from 'util';
+import {isNullOrUndefined} from 'util';
 
 @Injectable()
 export class DocumentService {
@@ -31,15 +32,17 @@ export class DocumentService {
   }
 
   public getDocuments(collectionName: string, pageNumber?: number, pageSize?: number): Observable<any[]> {
-    let queryParams = !isUndefined(pageNumber) && !isUndefined(pageSize) ? `?page=${pageNumber}&size=${pageSize}` : '';
+    let queryParams = new HttpParams();
+    if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
+      queryParams.set('page', pageNumber.toString())
+        .set('size', pageSize.toString());
+    }
 
-    return this.http.get(this.apiPrefix(collectionName) + queryParams)
-      .map(response => response.json());
+    return this.http.get<any[]>(this.apiPrefix(collectionName), queryParams);
   }
 
   public getDocument(collectionName: string, documentId: string): Observable<any> {
-    return this.http.get(`${this.apiPrefix(collectionName)}/${documentId}`)
-      .map(response => response.json());
+    return this.http.get<any>(`${this.apiPrefix(collectionName)}/${documentId}`);
   }
 
   private apiPrefix(collection: string): string {

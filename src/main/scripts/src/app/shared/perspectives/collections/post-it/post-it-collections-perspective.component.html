@@ -1,1 +1,69 @@
-<p>This is post-it collections perspective!</p>
+<div class="col-lg-2 col-sm-3 col-xs-4 post-it create-collection" (click)="onNewCollection()">
+  <div class="name-icon">
+    <i class="fa fa-plus-circle fa-2x"></i>
+    <h4>Add collection</h4>
+  </div>
+</div>
+<div class="col-lg-2 col-sm-3 col-xs-4 post-it"
+     *ngFor="let newCollection of newCollections; let ix = index"
+     [@appear]="''"
+     [ngClass]="{'new-collection' : !newCollection.code }">
+  <div class="preview-icon"
+       (click)="togglePicker(newCollection)">
+    <i class="fa fa-pencil"></i>
+  </div>
+
+  <div class="remove-icon" *ngIf="!newCollection.code"
+       (click)="onRemoveNewCollection(ix)">
+    <i class="fa fa-trash"></i>
+  </div>
+
+  <div class="color-icon" *ngIf="newCollection.pickerVisible" [@animateVisible]="'in'">
+    <div class="color-picker">
+          <span *ngFor="let oneColor of colors"
+                [ngClass]="{active: oneColor === selectedColor}"
+                (click)="selectedColor = oneColor"
+                [ngStyle]="{'background': oneColor}"></span>
+    </div>
+    <div class="icon-picker">
+      <div class="icon-pager">
+        <ng-template ngFor let-oneIcon let-index="index" [ngForOf]="icons">
+          <div class="icon-page" *ngIf="index % 36 === 0">
+                <span *ngFor="let oneIndex of numbers"
+                      (click)="selectedIcon = icons[index + oneIndex]"
+                      [ngClass]="{active: icons[index + oneIndex] === selectedIcon}">
+                  <i class="fa" [ngClass]="icons[index + oneIndex]"></i>
+                </span>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <div class="confirm-ic">
+      <input type="button" value="Ok" (click)="onNewIconAndColor(newCollection)">
+    </div>
+  </div>
+
+  <form #f="ngForm" class="form-horizontal" (ngSubmit)="onSaveCollection(); f.resetForm()">
+    <div class="name-icon">
+      <i class="fa fa-2x" [ngClass]="newCollection.icon" [ngStyle]="{'color':newCollection.color}"></i>
+      <input name="name" placeholder={{placeholderTitle}}
+             (focus)="onFocusCollectionName(newCollection)"
+             (blur)="onBlurCollectionName(newCollection)"
+             id="name" [ngStyle]="{'color':newCollection.color}"
+             [(ngModel)]="newCollection.name" required minlength="{{collectionMinCharacters}}" #name="ngModel">
+    </div>
+    <small class="text-danger err-msg" [hidden]="name.valid || (name.pristine && !f.submitted)">
+      Minimum {{collectionMinCharacters}} characters
+    </small>
+  </form>
+</div>
+
+<div class="col-lg-2 col-sm-3 col-xs-4 post-it" *ngFor="let oneCollection of collections">
+  <div class="num-documents">{{oneCollection.documentCount}}
+    <i class="fa fa-file-text-o"></i>
+  </div>
+  <div class="name-icon">
+    <i class="fa fa-2x" [ngClass]="oneCollection.icon" [ngStyle]="{'color':oneCollection.color}"></i>
+    <h4 [ngStyle]="{'color':oneCollection.color}">{{oneCollection.name}}</h4>
+  </div>
+</div>

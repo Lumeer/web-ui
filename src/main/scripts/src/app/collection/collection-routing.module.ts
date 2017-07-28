@@ -21,11 +21,15 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
+import {CollectionListComponent} from './list/collection-list.component';
+import {CollectionComponent} from './collection.component';
+
 const collectionRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/collections',
+    component: CollectionComponent,
     children: [
-      // TODO specify all collection paths here
+      {path: '', component: CollectionListComponent}
     ]
   }
 ];
