@@ -18,12 +18,26 @@
  * -----------------------------------------------------------------------/
  */
 
-export interface Collection {
+import {Collection} from '../dto/collection';
+import * as Const from '../../shared/const';
 
-  code: string;
-  name: string;
-  color: string;
-  icon: string;
-  documentCount: number;
+export class CollectionModel implements Collection {
+
+  public code: string;
+  public name: string = '';
+  public color: string = Const.defaultIconColor;
+  public icon: string = Const.defaultIcon;
+  public documentCount: number;
+  public pickerVisible: boolean = false;
+
+  public toDto(): Collection {
+    return {
+      code: this.code,
+      name: this.name,
+      color: this.color,
+      icon: this.icon,
+      documentCount: this.documentCount
+    };
+  }
 
 }

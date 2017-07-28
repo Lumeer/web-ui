@@ -24,6 +24,7 @@ import {trigger, state, style, transition, animate, keyframes} from '@angular/an
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Perspective} from '../../perspective';
 import {Collection} from '../../../../core/dto/collection';
+import {CollectionModel} from '../../../../core/model/collection.model';
 import * as Const from '../../../const';
 
 @Component({
@@ -45,6 +46,16 @@ import * as Const from '../../../const';
           style({height: 0, width: 0, opacity: 0, offset: 1})
         ]))
       ])
+    ]),
+    trigger('appear', [
+      transition(':enter', [
+        style({transform: 'scale(0)'}),
+        animate('0.25s ease-out', style({transform: 'scale(1)'})),
+      ]),
+      transition(':leave', [
+        style({transform: 'scale(1)'}),
+        animate('0.25s ease-out', style({transform: 'scale(0)'})),
+      ])
     ])
   ]
 })
@@ -56,12 +67,12 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   @Input()
   public editable: boolean;
 
-  public placeholderTitle: string = Const.placeHolderNewCollection;
+  public placeholderTitle: string = 'Collection name';
   public iconsPerPage: number = Const.iconsPerPage;
   public icons: string[] = Const.icons;
   public colors: string[] = Const.colors;
   public collectionMinCharacters = Const.collectionMinCharacters;
-  public newCollections: Collection[] = [];
+  public newCollections: CollectionModel[] = [];
   public collections: Collection[];
   public numbers: any[];
   public cachedName: string;
@@ -77,48 +88,48 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public onNewCollection() {
-    this.newCollections.splice(0, 0, new Collection());
+    this.newCollections.splice(0, 0, new CollectionModel());
   }
 
   public onRemoveNewCollection(ix: number) {
     this.newCollections.splice(ix, 1);
   }
 
-  public onNewIconAndColor(collection: Collection) {
-    collection.icon = this.selectedIcon;
-    collection.color = this.selectedColor;
-    collection.pickerVisible = false;
-    if (collection.code) {
-      this.updateCollection(collection);
+  public onNewIconAndColor(collectionModel: CollectionModel) {
+    collectionModel.icon = this.selectedIcon;
+    collectionModel.color = this.selectedColor;
+    collectionModel.pickerVisible = false;
+    if (collectionModel.code) {
+      this.updateCollection(collectionModel);
     }
   }
 
-  public togglePicker(collection: Collection) {
-    if (collection.pickerVisible) {
-      collection.pickerVisible = false;
+  public togglePicker(collectionModel: CollectionModel) {
+    if (collectionModel.pickerVisible) {
+      collectionModel.pickerVisible = false;
       return;
     }
-    this.selectedColor = collection.color;
-    this.selectedIcon = collection.icon;
+    this.selectedColor = collectionModel.color;
+    this.selectedIcon = collectionModel.icon;
     this.newCollections.forEach(coll => coll.pickerVisible = false);
-    collection.pickerVisible = true;
+    collectionModel.pickerVisible = true;
   }
 
-  public onFocusCollectionName(collection: Collection) {
-    if (collection.code) {
-      this.cachedName = collection.name;
+  public onFocusCollectionName(collectionModel: CollectionModel) {
+    if (collectionModel.code) {
+      this.cachedName = collectionModel.name;
     }
   }
 
-  public onBlurCollectionName(collection: Collection) {
-    if (collection.code) {
-      if (collection.name.length < this.collectionMinCharacters) {
-        collection.name = this.cachedName;
-      } else if (collection.name !== this.cachedName) {
-        this.updateCollection(collection);
+  public onBlurCollectionName(collectionModel: CollectionModel) {
+    if (collectionModel.code) {
+      if (collectionModel.name.length < this.collectionMinCharacters) {
+        collectionModel.name = this.cachedName;
+      } else if (collectionModel.name !== this.cachedName) {
+        this.updateCollection(collectionModel);
       }
-    } else if (collection.name.length >= this.collectionMinCharacters) {
-      this.createCollection(collection);
+    } else if (collectionModel.name.length >= this.collectionMinCharacters) {
+      this.createCollection(collectionModel);
     }
   }
 
@@ -127,13 +138,14 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
       .subscribe((collections: Collection[]) => this.collections = collections);
   }
 
-  private updateCollection(collection: Collection) {
-    this.collectionService.updateCollection(collection.code, collection)
+  private updateCollection(collectionModel: CollectionModel) {
+    this.collectionService.updateCollection(collectionModel.code, collectionModel.toDto())
       .subscribe();
   }
 
-  private createCollection(collection: Collection) {
-    this.collectionService.createCollection(collection)
-      .subscribe((code: string) => collection.code = code);
+  private createCollection(collectionModel: CollectionModel) {
+    this.collectionService.createCollection(collectionModel.toDto())
+      .subscribe((code: string) => collectionModel.code = code);
   }
+
 }

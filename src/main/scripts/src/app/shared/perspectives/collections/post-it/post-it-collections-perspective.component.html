@@ -6,6 +6,7 @@
 </div>
 <div class="col-lg-2 col-sm-3 col-xs-4 post-it"
      *ngFor="let newCollection of newCollections; let ix = index"
+     [@appear]="''"
      [ngClass]="{'new-collection' : !newCollection.code }">
   <div class="preview-icon"
        (click)="togglePicker(newCollection)">
@@ -50,10 +51,10 @@
              (blur)="onBlurCollectionName(newCollection)"
              id="name" [ngStyle]="{'color':newCollection.color}"
              [(ngModel)]="newCollection.name" required minlength="{{collectionMinCharacters}}" #name="ngModel">
-      <small class="text-danger" [hidden]="name.valid || (name.pristine && !f.submitted)">
-        Minimum {{collectionMinCharacters}} characters
-      </small>
     </div>
+    <small class="text-danger err-msg" [hidden]="name.valid || (name.pristine && !f.submitted)">
+      Minimum {{collectionMinCharacters}} characters
+    </small>
   </form>
 </div>
 

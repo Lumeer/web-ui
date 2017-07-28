@@ -2,8 +2,8 @@
 
 .post-it {
   margin: 10px;
-  background: $secondary-color;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+  background-color: $secondary-color;
+  box-shadow: $default-shadow;
   padding: 10px;
   height: 150px;
   position: relative;
@@ -13,7 +13,8 @@
   .preview-icon {
     cursor: pointer;
     position: absolute;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+    background-color: $secondary-color;
+    box-shadow: $default-shadow;
     top: 10px;
     left: 10px;
     width: 24px;
@@ -36,7 +37,7 @@
     width: 320px;
     overflow: hidden;
     position: absolute;
-    background: $secondary-color;
+    background-color: $secondary-color;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
     padding-bottom: 5px;
 
@@ -107,16 +108,25 @@
     border: none;
     margin-top: 10px;
     margin-bottom: 10px;
-    background-color: transparent;
-    box-shadow: none;
     text-align: center;
+    background-color: $secondary-color;
     font-size: $font-size-h4;
+    box-shadow: $default-shadow;
+    transition: box-shadow 0.3s ease-in-out;
+
+    &:hover {
+      box-shadow: $default-shadow-up;
+    }
 
     &:focus {
-      border-bottom: 1px solid black;
+      box-shadow: $default-shadow-up;
       border-radius: 0 !important;
       outline: 0;
     }
+  }
+
+  .err-msg {
+    position: absolute;
   }
 
   .num-documents {

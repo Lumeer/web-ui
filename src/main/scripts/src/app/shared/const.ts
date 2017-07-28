@@ -1,4 +1,5 @@
-export const placeHolderNewCollection = 'Collection name';
+export const defaultIcon = 'fa-book';
+export const defaultIconColor = '#000000';
 export const iconsPerPage = 36;
 export const collectionMinCharacters = 3;
 export const colors = [
