@@ -18,8 +18,8 @@
  * -----------------------------------------------------------------------/
  */
 
- export class Users {
+ export class UsersGroups {
 
-     public map: Map<string, string[]>;
+     public usersGroups: Map<string, string[]>;
 
 }

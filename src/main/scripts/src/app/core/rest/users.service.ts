@@ -23,7 +23,7 @@ import {Response} from '@angular/http';
 import {HttpClient} from './http-client.service';
 import {isUndefined} from 'util';
 
-import {Users} from '../dto/users';
+import {UsersGroups} from '../dto/usersgroups';
 import {Observable} from 'rxjs/Observable';
 
 @Injectable()
@@ -32,9 +32,9 @@ export class UsersService {
   constructor(private http: HttpClient) {
   }
 
-  public getUsersAndGroups(orgCode: string): Observable<Users> {
+  public getUsersAndGroups(orgCode: string): Observable<UsersGroups> {
     return this.http.get(UsersService.apiPrefix(orgCode))
-      .map(response => response.json() as Users);
+      .map(response => response.json() as UsersGroups);
   }
 
   private static apiPrefix(organizationCode: string, projCode?: string): string {

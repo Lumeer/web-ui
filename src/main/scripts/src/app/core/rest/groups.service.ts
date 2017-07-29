@@ -36,7 +36,7 @@ export class GroupsService {
       .map(response => response.json() as string[]);
   }
 
-  private static apiPrefix(organizationCode: string, projCode?: string): string {
+  private static apiPrefix(organizationCode: string): string {
     return `/lumeer-engine/rest/organizations/${organizationCode}/groups`;
   }
 

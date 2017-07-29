@@ -26,7 +26,7 @@ import {RolesService} from '../../../core/rest/roles.service';
 import {GroupsService} from '../../../core/rest/groups.service';
 import {Entity} from '../entity';
 import {Role} from '../../../core/dto/role';
-import {Users} from '../../../core/dto/users';
+import {UsersGroups} from '../../../core/dto/usersgroups';
 
 const ROLES = {
   ['organization']: ['read', 'write', 'manage'],
@@ -52,7 +52,7 @@ export class PermissionsTableComponent implements OnInit {
   public entities: Entity[];
   public otherEntities: string[];
 
-  public rolesCheckbox;
+  public rolesCheckbox: {[roleName: string]: boolean};
 
   public constructor(private rolesService: RolesService,
                      private usersService: UsersService,
@@ -87,6 +87,13 @@ export class PermissionsTableComponent implements OnInit {
             this.otherEntities = this.getOtherEntities(this.entityType, orgCode, roles);
           });
         });
+        break;
+      case 'collection':
+        // TODO
+        break;
+      case 'view':
+        // TODO
+        break;
     }
   }
 
@@ -96,81 +103,95 @@ export class PermissionsTableComponent implements OnInit {
 
   public addOrganizationUsersGroupsRole(orgCode: string, role: string, users: string[], groups: string[]) {
     this.rolesService.addOrganizationUsersGroupsRole(orgCode, role, users, groups)
-      .subscribe(
-      response => {;}
-    );
+      .subscribe();
   }
 
   public removeOrganizationUsersGroupsRole(orgCode: string, role: string, users: string[], groups: string[]) {
     this.rolesService.removeOrganizationUsersGroupsRole(orgCode, role, users, groups)
-      .subscribe(
-      response => {;}
-    );
+      .subscribe();
   }
 
   public addProjectUsersGroupsRole(orgCode: string, projectCode: string, role: string, users: string[], groups: string[]) {
     this.rolesService.addProjectUsersGroupsRole(orgCode, projectCode, role, users, groups)
-      .subscribe(
-      response => {;}
-    );
+      .subscribe();
   }
 
   public removeProjectUsersGroupsRole(orgCode: string, projectCode: string, role: string, users: string[], groups: string[]) {
     this.rolesService.removeProjectUsersGroupsRole(orgCode, projectCode, role, users, groups)
-      .subscribe(
-      response => {;}
-    );
+      .subscribe();
+  }
+
+  private addOrganizationRoles(addedRoles: string[], name: string) {
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      let orgCode: string = params.get('organizationCode');
+      switch (this.entityType) {
+        case 'users':
+          for (let roleIdx in this.roles) {
+            if (this.rolesCheckbox[this.roles[roleIdx]] && this.roles.hasOwnProperty(roleIdx)) {
+              this.addOrganizationUsersGroupsRole(orgCode, this.roles[roleIdx], [name], []);
+              addedRoles.push(this.roles[roleIdx]);
+            }
+          }
+        break;
+        case 'groups':
+          for (let roleIdx in this.roles) {
+            if (this.rolesCheckbox[this.roles[roleIdx]] && this.roles.hasOwnProperty(roleIdx)) {
+              this.addOrganizationUsersGroupsRole(orgCode, this.roles[roleIdx], [], [name]);
+              addedRoles.push(this.roles[roleIdx]);
+            }
+          }
+          break;
+      }
+    });
+  }
+
+  private addProjectRoles(addedRoles: string[], name: string) {
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      let orgCode: string = params.get('organizationCode');
+      let proCode: string = params.get('projectCode');
+      switch (this.entityType) {
+        case 'users':
+          for (let roleIdx in this.roles) {
+            if (this.rolesCheckbox[this.roles[roleIdx]] && this.roles.hasOwnProperty(roleIdx)) {
+              this.addProjectUsersGroupsRole(orgCode, proCode, this.roles[roleIdx], [name], []);
+              addedRoles.push(this.roles[roleIdx]);
+            }
+          }
+        break;
+        case 'groups':
+          for (let roleIdx in this.roles) {
+            if (this.rolesCheckbox[this.roles[roleIdx]] && this.roles.hasOwnProperty(roleIdx)) {
+              this.addProjectUsersGroupsRole(orgCode, proCode, this.roles[roleIdx], [], [name]);
+              addedRoles.push(this.roles[roleIdx]);
+            }
+          }
+          break;
+      }
+    });
+  }
+
+  private addCollectionRoles(addedRoles: string[], name: string) {
+    // TODO
+  }
+
+  private addViewRoles(addedRoles: string[], name: string) {
+    // TODO
   }
 
   public onAdd(name: string) {
-    let addedRoles = [];
+    let addedRoles: string[] = [];
     switch (this.resourceType) {
       case 'organization':
-        this.route.paramMap.subscribe((params: ParamMap) => {
-          let orgCode: string = params.get('organizationCode');
-          switch (this.entityType) {
-            case 'users':
-              for (let r in this.roles) {
-                if (this.rolesCheckbox[this.roles[r]] && this.roles.hasOwnProperty(r)) {
-                  this.addOrganizationUsersGroupsRole(orgCode, this.roles[r], [name], []);
-                  addedRoles.push(this.roles[r]);
-                }
-              }
-            break;
-            case 'groups':
-              for (let r in this.roles) {
-                if (this.rolesCheckbox[this.roles[r]] && this.roles.hasOwnProperty(r)) {
-                  this.addOrganizationUsersGroupsRole(orgCode, this.roles[r], [], [name]);
-                  addedRoles.push(this.roles[r]);
-                }
-              }
-              break;
-          }
-        });
+        this.addOrganizationRoles(addedRoles, name);
         break;
       case 'project':
-        this.route.paramMap.subscribe((params: ParamMap) => {
-          let orgCode: string = params.get('organizationCode');
-          let proCode: string = params.get('projectCode');
-          switch (this.entityType) {
-            case 'users':
-              for (let r in this.roles) {
-                if (this.rolesCheckbox[this.roles[r]] && this.roles.hasOwnProperty(r)) {
-                  this.addProjectUsersGroupsRole(orgCode, proCode, this.roles[r], [name], []);
-                  addedRoles.push(this.roles[r]);
-                }
-              }
-            break;
-            case 'groups':
-              for (let r in this.roles) {
-                if (this.rolesCheckbox[this.roles[r]] && this.roles.hasOwnProperty(r)) {
-                  this.addProjectUsersGroupsRole(orgCode, proCode, this.roles[r], [], [name]);
-                  addedRoles.push(this.roles[r]);
-                }
-              }
-              break;
-          }
-        });
+        this.addProjectRoles(addedRoles, name);
+        break;
+      case 'collection':
+        this.addCollectionRoles(addedRoles, name);
+        break;
+      case 'view':
+        this.addViewRoles(addedRoles, name);
         break;
     }
     if (addedRoles.length !== 0) {
@@ -216,13 +237,20 @@ export class PermissionsTableComponent implements OnInit {
               break;
           }
         });
+        break;
+      case 'collection':
+        // TODO
+        break;
+      case 'view':
+        // TODO
+        break;
     }
     this.otherEntities.push(this.entities[index]['name']);
     this.entities.splice(index, 1);
   }
 
   public changePermission(entityName: string, role: string, event) {
-    let addPermision: boolean = event.target.checked;
+    let addPermision = event.target.checked;
     this.route.paramMap.subscribe((params: ParamMap) => {
       let orgCode: string = params.get('organizationCode');
       switch (this.resourceType) {
@@ -265,26 +293,32 @@ export class PermissionsTableComponent implements OnInit {
               }
           }
           break;
+        case 'collection':
+          // TODO
+          break;
+        case 'view':
+          // TODO
+          break;
       }
     });
   }
 
   private getEntitiesForUserOrGroup(userOrGroup: string, roles: Role[]): Entity[] {
-    let arr = [];
-    arr.push({});
-    roles.forEach(e => {
-      e[userOrGroup].forEach(u => {
-        if (arr[0][u] == null) {
-          arr[0][u] = [e['name']];
+    let entitiesHolder = [];
+    entitiesHolder.push({});
+    roles.forEach(role => {
+      role[userOrGroup].forEach(item => {
+        if (entitiesHolder[0][item] == null) {
+          entitiesHolder[0][item] = [role['name']];
         } else {
-          arr[0][u].push(e['name']);
+          entitiesHolder[0][item].push(role['name']);
         }
       });
     });
     let out = [];
-    for (let key in arr[0]) {
-      if (arr[0].hasOwnProperty(key)) {
-        out.push({name: key, roles: arr[0][key]});
+    for (let key in entitiesHolder[0]) {
+      if (entitiesHolder[0].hasOwnProperty(key)) {
+        out.push({name: key, roles: entitiesHolder[0][key]});
       }
     }
     return out;
@@ -307,15 +341,15 @@ export class PermissionsTableComponent implements OnInit {
         let out = [];
         out.push([]);
         this.usersService.getUsersAndGroups(orgCode)
-        .subscribe((users: Users) => {
-          for (let k in users) {
-            if (users.hasOwnProperty(k)) {
-              out[0].push(k);
+        .subscribe((usersGroups: UsersGroups) => {
+          for (let userGroups in usersGroups) {
+            if (usersGroups.hasOwnProperty(userGroups)) {
+              out[0].push(userGroups);
             }
           }
-          roles.forEach(e => {
-            e['users'].forEach(u => {
-              let index: number = out[0].indexOf(u, 0);
+          roles.forEach(role => {
+            role['users'].forEach(user => {
+              let index: number = out[0].indexOf(user, 0);
               if (index > -1) {
                 out[0].splice(index, 1);
               }
@@ -328,14 +362,14 @@ export class PermissionsTableComponent implements OnInit {
         out2.push([]);
         this.groupsService.getGroups(orgCode)
         .subscribe((groups: string[]) => {
-          for (let k in groups) {
-            if (groups.hasOwnProperty(k)) {
-              out2[0].push(groups[k]);
+          for (let group in groups) {
+            if (groups.hasOwnProperty(group)) {
+              out2[0].push(groups[group]);
             }
           }
-          roles.forEach(e => {
-            e['groups'].forEach(g => {
-              let index: number = out2[0].indexOf(g, 0);
+          roles.forEach(role => {
+            role['groups'].forEach(group => {
+              let index: number = out2[0].indexOf(group, 0);
               if (index > -1) {
                 out2[0].splice(index, 1);
               }
@@ -349,9 +383,9 @@ export class PermissionsTableComponent implements OnInit {
   }
 
   private emptyCheckboxes() {
-    for (let k in this.rolesCheckbox) {
-      if (this.rolesCheckbox.hasOwnProperty(k)) {
-        this.rolesCheckbox[k] = false;
+    for (let roleCheckbox in this.rolesCheckbox) {
+      if (this.rolesCheckbox.hasOwnProperty(roleCheckbox)) {
+        this.rolesCheckbox[roleCheckbox] = false;
       }
     }
   }
