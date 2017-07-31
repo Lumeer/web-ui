@@ -20,7 +20,7 @@
 
 import {animate, style, transition, trigger} from '@angular/animations';
 import {ActivatedRoute, ParamMap} from '@angular/router';
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
 
 import {DocumentService} from '../../../../core/rest/document.service';
 import {WorkspaceService} from '../../../../core/workspace.service';
@@ -28,11 +28,15 @@ import {Perspective} from '../../perspective';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Collection} from '../../../../core/dto/collection';
 import {Document} from '../../../../core/dto/document';
+import {isUndefined} from 'util';
 
 @Component({
   selector: 'post-it-documents-perspective',
   templateUrl: './post-it-documents-perspective.component.html',
   styleUrls: ['./post-it-documents-perspective.component.scss'],
+  host: {
+    '(document:click)': 'toggleEditing($event)'
+  },
   animations: [
     trigger('appear', [
       transition(':enter', [
@@ -51,11 +55,18 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
   @Input()
   public query: string;
 
+  // TODO REMOVE
   @Input()
-  public editable: boolean;
+  public editable: boolean = true;
 
   @Input()
   public height: string = '500px';
+
+  @ViewChildren('postItDocument')
+  public documentElements: QueryList<ElementRef>;
+
+  @ViewChildren('edit')
+  public editSwitches: QueryList<ElementRef>;
 
   public collection: Collection;
 
@@ -65,6 +76,11 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
   public documents: Document[];
 
+  public documentAttributes: string[];
+
+  public lastClickedDocument: number;
+  public currentlyClickedDocument: number;
+
   constructor(private documentService: DocumentService,
               private collectionService: CollectionService,
               private workspaceService: WorkspaceService,
@@ -73,7 +89,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
   public ngOnInit() {
     this.initializeWorkspace();
-    this.fetchDocuments();
+    this.fetchCollections();
   }
 
   public initializeWorkspace(): void {
@@ -85,7 +101,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
     }
   }
 
-  public fetchDocuments(): void {
+  public fetchCollections(): void {
     this.route.paramMap
       .map(params => params.get('collectionCode'))
       .switchMap(collectionCode => this.collectionService.getCollection(collectionCode))
@@ -96,10 +112,16 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
       .subscribe(documents => this.documents = documents);
   }
 
+  /**
+   * @returns {boolean} string is defined and not empty
+   */
   public hasText(str: string): boolean {
     return str && str !== '';
   }
 
+  /**
+   * @returns {string} Increases base (123px) by ammount (7) => 130px
+   */
   public higherBy(base: string, ammount: number): string {
     let units: string = base.replace(/\d+/, '');
     let height: number = Number(base.replace(/[^\d]+/, ''));
@@ -107,6 +129,9 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
     return `${height + ammount}${units}`;
   }
 
+  /**
+   * Increases height of the perspective by 450 pixels
+   */
   public increaseBlockHeight(): void {
     this.height = this.higherBy(this.height, 450);
   }
@@ -147,8 +172,90 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
     this.addDocumentAttribute = '';
   }
 
-  public saveDocument(changedDocument: Document): void {
+  public updateDocument(changedDocument: Document): void {
     this.documentService.updateDocument(this.collection.code, changedDocument);
   }
 
+  public appendAttribute(document: Document, key: string, value: any): void {
+    if (this.documentAttributes.indexOf(key) !== -1) {
+      this.documentAttributes.push(key);
+    }
+
+  }
+
+  public removeDocument(idx: number): void {
+    this.documents.splice(idx, 1);
+    this.documentService.removeDocument(this.collection.code, this.documents[idx]);
+  }
+
+  public getDocumentElement(idx: number): any {
+    return this.documentElements.toArray()[idx].nativeElement;
+  }
+
+  public getEditSwitch(idx: number): any {
+    return this.editSwitches.toArray()[idx].nativeElement;
+  }
+
+  /**
+   * Toggles edit menu on/ off
+   */
+  public toggleEditing(event: MouseEvent): void {
+    // havent selected document yet
+    if (isUndefined(this.currentlyClickedDocument)) {
+      return;
+    }
+
+    // dislable previous
+    if (this.lastClickedDocument) {
+      this.documents[this.lastClickedDocument].edited = false;
+    }
+
+    let document = this.documents[this.currentlyClickedDocument];
+
+    // if clicked on editSwitch
+    if (this.getEditSwitch(this.currentlyClickedDocument).contains(event.target)) {
+      document.edited = !document.edited;
+      return;
+    }
+
+    // if clicked on document
+    if (this.getDocumentElement(this.currentlyClickedDocument).contains(event.target)) {
+      return;
+    }
+
+    // click outside
+    document.edited = false;
+  }
+
+  /**
+   * Save indexes of currently and preciously clicked documents
+   */
+  public documentClick(idx: number): void {
+    if (idx === this.currentlyClickedDocument) {
+      return;
+    }
+
+    this.lastClickedDocument = this.currentlyClickedDocument;
+    this.currentlyClickedDocument = idx;
+  }
+
+  /**
+   * @returns {string} Color of background of edit button
+   */
+  public editBackground(document: Document): string {
+    if (document.edited) {
+      return '#E2E2E4';
+    }
+
+    if (document.underCursor) {
+      return '#EFEFEF';
+    }
+
+    return 'transparent';
+  }
+
+  // TODO remove
+  public log(s: string) {
+    console.log(s);
+  }
 }

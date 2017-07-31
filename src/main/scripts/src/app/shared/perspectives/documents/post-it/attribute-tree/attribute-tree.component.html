@@ -1,24 +1,13 @@
-<!--array-->
-<ng-container *ngIf="isArray(children)">
-
-  <span *ngIf="isStringArray(children)">
-    {{ children.join(', ') }}
-  </span>
-
-  <ul *ngIf="!isStringArray(children)">
-    <li *ngFor="let attribute of children" [ngClass]="{ 'root': root }">
+<ul>
+  <ng-container *ngFor="let attribute of children">
+    <li>
       <ng-container *ngIf="isString(attribute)">{{ attribute }}</ng-container>
-      <attribute-tree *ngIf="!isString(attribute)" [children]="attribute" [root]="false"></attribute-tree>
+      <attribute *ngIf="!isString(attribute)"
+                 [children]="attribute"
+                 [editable]="editable"
+                 (change)="event($event)"></attribute>
     </li>
-  </ul>
-</ng-container>
-
-<!--object-->
-<ul *ngIf="isObject(children)">
-  <li *ngFor="let attribute of children | keys" [ngClass]="{ 'root': root }">
-    <b>{{ attribute.key }}: </b>
-
-    <ng-container *ngIf="isString(attribute.value)">{{ attribute.value }}</ng-container>
-    <attribute-tree *ngIf="!isString(attribute.value)" [children]="attribute.value" [root]="false"></attribute-tree>
-  </li>
+    <div class="divider"></div>
+  </ng-container>
+  <li><input type="text" placeholder="New Attribute"/></li>
 </ul>

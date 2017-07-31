@@ -25,6 +25,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
 import {PostItDocumentsPerspectiveComponent} from './post-it/post-it-documents-perspective.component';
 import {AttributeTreeComponent} from './post-it/attribute-tree/attribute-tree.component';
+import {AttributeComponent} from './post-it/attribute-tree/attribute/attribute-tree-attribute.component';
 import {KeysPipe} from '../../../../components/views/pick_item/keys';
 
 @NgModule({
@@ -36,6 +37,7 @@ import {KeysPipe} from '../../../../components/views/pick_item/keys';
     PostItDocumentsPerspectiveComponent,
     TableDocumentsPerspectiveComponent,
     AttributeTreeComponent,
+    AttributeComponent,
     KeysPipe
   ],
   entryComponents: [

@@ -25,6 +25,8 @@ export class Document {
   public createdBy: string;
   public version: number;
   public attributes: object[] = [];
+  public edited: boolean = false;
+  public underCursor: boolean;
 
   constructor(documentJson?: object) {
     if (documentJson) {
@@ -58,7 +60,7 @@ export class Document {
     this.attributes.push(newAttributeObject);
   }
 
-  public toJson(): object {
+  public toDto(): object {
     let result = {};
 
     result['_id'] = this.id;

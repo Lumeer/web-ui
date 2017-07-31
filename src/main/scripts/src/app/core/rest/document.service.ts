@@ -43,12 +43,22 @@ export class DocumentService {
   }
 
   public createDocument(collectionCode: string, document: Document): void {
-    this.http.post(this.apiPrefix(collectionCode), document.toJson())
-      .subscribe();
+    this.http.post<string>(this.apiPrefix(collectionCode), document.toDto())
+      .subscribe(id => document.id = id);
   }
 
   public updateDocument(collectionCode: string, document: Document): void {
-    this.http.put(`${this.apiPrefix(collectionCode)}`, document.toJson())
+    this.http.put(`${this.apiPrefix(collectionCode)}`, document.toDto())
+      .subscribe();
+  }
+
+  public addDocumentAttribute(collectionCode: string, document: Document, key: string, value: any) {
+    this.http.post(`${this.apiPrefix(collectionCode)}/${document.id}/meta/${key}`, value)
+      .subscribe();
+  }
+
+  public removeDocument(collectionCode: string, document: Document): void {
+    this.http.delete(`${this.apiPrefix(collectionCode)}/${document.id}`)
       .subscribe();
   }
 

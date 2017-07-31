@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'attribute-tree',
@@ -31,14 +31,28 @@ export class AttributeTreeComponent {
   public children: object;
 
   @Input()
-  public root: boolean;
+  public editable: boolean;
 
-  public isArray = element => Array.isArray(element);
+  @Output()
+  public change: EventEmitter<string> = new EventEmitter();
 
-  public isString = element => typeof element === 'string';
+  public isArray(element: any) {
+    return Array.isArray(element);
+  }
 
-  public isStringArray = (element: object[]) => element.every(this.isString);
+  public isString(element: any) {
+    return typeof element === 'string';
+  }
 
-  public isObject = element => !this.isArray(element) && !this.isString(element);
+  public isStringArray(element: object[]) {
+    return element.every(this.isString);
+  }
 
+  public isObject(element: any) {
+    return !this.isArray(element) && !this.isString(element);
+  }
+
+  public event(event: string) {
+    this.change.emit(event);
+  }
 }

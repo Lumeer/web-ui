@@ -44,6 +44,41 @@ $border-radius-small: 3px;
     display: inline-block;
   }
 
+  .new-document {
+    color: #a0a1ad;
+    pointer-events: none;
+
+    input {
+      pointer-events: auto;
+      width: 100%;
+      border: 0;
+      padding-left: 10px;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-top: 5px;
+      margin-bottom: 3.5px;
+    }
+
+    input:hover {
+      background: #f7f7f7;
+    }
+
+    .delimiter {
+      width: 100%;
+      height: 1px;
+      background: #e5e5e5;
+    }
+
+    .plus {
+      font-size: 70px;
+      color: #e6e6e6;
+    }
+
+    .content {
+      text-align: center;
+    }
+  }
+
   .post-it {
     background: $secondary-color;
     box-shadow: $default-shadow;
@@ -56,39 +91,6 @@ $border-radius-small: 3px;
 
     border: 1px solid #cccccc;
     border-radius: $border-radius-large;
-
-    // Add post-it begin
-    .add {
-      margin-top: 35px;
-      font-size: 70px;
-      border-radius: 70px;
-      cursor: pointer;
-    }
-
-    .description {
-      font-size: large;
-      cursor: default;
-    }
-
-    .color-changing {
-      -webkit-transition: color 0.5s;
-      -moz-transition: color 0.5s;
-      -o-transition: color 0.5s;
-      transition: color 0.5s;
-
-      color: #cccccc;
-    }
-
-    .input-group {
-      width: 100%;
-
-      input {
-        border: 0;
-        border-bottom: 1px solid #e5e5e5;
-        font-size: larger;
-      }
-    }
-    // Add post-it end
 
     .header {
       overflow: hidden;
@@ -118,9 +120,39 @@ $border-radius-small: 3px;
 
     .editable {
       display: table-cell;
+      vertical-align: middle;
 
-      padding-right: 2px;
       font-size: medium;
+
+      & > * > * {
+        -webkit-transition: all 0.25s;
+        -moz-transition: all 0.25s;
+        -o-transition: all 0.25s;
+        transition: all 0.25s;
+      }
+
+      i {
+        top: 3px;
+        padding: 5px;
+        border-radius: $border-radius-small;
+
+        &.remove {
+          color: transparent;
+          position: absolute;
+          top: 15px;
+          z-index: -1;
+        }
+
+        &.edited {
+          background: #e5e5e5;
+        }
+      }
+
+      .delimiter {
+        position: absolute;
+        top: 15px;
+        right: 38px;
+      }
     }
 
     .content {
