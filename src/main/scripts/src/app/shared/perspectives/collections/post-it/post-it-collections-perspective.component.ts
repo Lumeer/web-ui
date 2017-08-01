@@ -19,7 +19,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {trigger, state, style, transition, animate, keyframes} from '@angular/animations';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Perspective} from '../../perspective';
@@ -32,21 +32,6 @@ import * as Const from '../../../const';
   templateUrl: './post-it-collections-perspective.component.html',
   styleUrls: ['./post-it-collections-perspective.component.scss'],
   animations: [
-    trigger('animateVisible', [
-      state('in', style({height: '*', width: '*', opacity: 1})),
-      transition('void => *', [
-        animate(200, keyframes([
-          style({height: 0, width: 0, opacity: 0, offset: 0}),
-          style({height: '*', width: '*', opacity: 1, offset: 1})
-        ]))
-      ]),
-      transition('* => void', [
-        animate(200, keyframes([
-          style({height: '*', width: '*', opacity: 1, offset: 0}),
-          style({height: 0, width: 0, opacity: 0, offset: 1})
-        ]))
-      ])
-    ]),
     trigger('appear', [
       transition(':enter', [
         style({transform: 'scale(0)'}),
@@ -80,7 +65,6 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   public selectedColor: string;
 
   constructor(private collectionService: CollectionService) {
-    this.numbers = Array.apply(null, {length: this.iconsPerPage}).map(Number.call, Number);
   }
 
   public ngOnInit(): void {

@@ -18,26 +18,33 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {CommonModule} from '@angular/common';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {PostItCollectionsPerspectiveComponent} from './post-it/post-it-collections-perspective.component';
-import {IconPickerModule} from '../icon-picker/icon-picker.module';
+import * as Const from '../../../../const';
+import {PaletteComponent} from '../palette.component';
 
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IconPickerModule
-  ],
-  declarations: [
-    PostItCollectionsPerspectiveComponent
-  ],
-  entryComponents: [
-    PostItCollectionsPerspectiveComponent
-  ]
+@Component({
+  selector: 'icon-palette',
+  templateUrl: './icon-palette.component.html',
+  styleUrls: ['./icon-palette.component.scss']
 })
-export class CollectionsPerspectivesModule {
+export class IconPaletteComponent extends PaletteComponent {
+
+  @Input('icon')
+  public active: string;
+
+  public icons = Const.someIcons;
+
+  public iconHighlight(icon: string): string {
+    if (icon === this.selected) {
+      return 'selected';
+    }
+
+    if (icon === this.active) {
+      return 'active';
+    }
+
+    return '';
+  }
 
 }

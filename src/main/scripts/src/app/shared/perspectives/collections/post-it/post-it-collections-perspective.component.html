@@ -18,30 +18,10 @@
     <i class="fa fa-trash"></i>
   </div>
 
-  <div class="color-icon" *ngIf="newCollection.pickerVisible" [@animateVisible]="'in'">
-    <div class="color-picker">
-          <span *ngFor="let oneColor of colors"
-                [ngClass]="{active: oneColor === selectedColor}"
-                (click)="selectedColor = oneColor"
-                [ngStyle]="{'background': oneColor}"></span>
-    </div>
-    <div class="icon-picker">
-      <div class="icon-pager">
-        <ng-template ngFor let-oneIcon let-index="index" [ngForOf]="icons">
-          <div class="icon-page" *ngIf="index % 36 === 0">
-                <span *ngFor="let oneIndex of numbers"
-                      (click)="selectedIcon = icons[index + oneIndex]"
-                      [ngClass]="{active: icons[index + oneIndex] === selectedIcon}">
-                  <i class="fa" [ngClass]="icons[index + oneIndex]"></i>
-                </span>
-          </div>
-        </ng-template>
-      </div>
-    </div>
-    <div class="confirm-ic">
-      <input type="button" value="Ok" (click)="onNewIconAndColor(newCollection)">
-    </div>
-  </div>
+  <icon-picker [enabled]="newCollection.pickerVisible"
+               [(color)]="newCollection.color"
+               [(icon)]="newCollection.icon"
+               (onSelected)="updateCollection(newCollection)"></icon-picker>
 
   <form #f="ngForm" class="form-horizontal" (ngSubmit)="onSaveCollection(); f.resetForm()">
     <div class="name-icon">

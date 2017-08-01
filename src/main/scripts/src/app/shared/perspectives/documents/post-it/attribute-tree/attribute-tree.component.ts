@@ -18,26 +18,27 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {CommonModule} from '@angular/common';
+import {Component, Input} from '@angular/core';
 
-import {PostItCollectionsPerspectiveComponent} from './post-it/post-it-collections-perspective.component';
-import {IconPickerModule} from '../icon-picker/icon-picker.module';
-
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IconPickerModule
-  ],
-  declarations: [
-    PostItCollectionsPerspectiveComponent
-  ],
-  entryComponents: [
-    PostItCollectionsPerspectiveComponent
-  ]
+@Component({
+  selector: 'attribute-tree',
+  templateUrl: './attribute-tree.component.html',
+  styleUrls: ['./attribute-tree.component.scss']
 })
-export class CollectionsPerspectivesModule {
+export class AttributeTreeComponent {
+
+  @Input()
+  public children: object;
+
+  @Input()
+  public root: boolean;
+
+  public isArray = element => Array.isArray(element);
+
+  public isString = element => typeof element === 'string';
+
+  public isStringArray = (element: object[]) => element.every(this.isString);
+
+  public isObject = element => !this.isArray(element) && !this.isString(element);
 
 }

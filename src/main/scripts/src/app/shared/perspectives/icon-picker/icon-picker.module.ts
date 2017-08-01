@@ -19,30 +19,25 @@
  */
 
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {BrowserModule} from '@angular/platform-browser';
+import {CommonModule} from '@angular/common';
 
-import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
-import {PostItDocumentsPerspectiveComponent} from './post-it/post-it-documents-perspective.component';
-import {AttributeTreeComponent} from './post-it/attribute-tree/attribute-tree.component';
-import {KeysPipe} from '../../../../components/views/pick_item/keys';
+import {IconPickerComponent} from './icon-picker.component';
+import {ColorPaletteComponent} from './palette/color/color-palette.component';
+import {IconPaletteComponent} from './palette/icon/icon-palette.component';
 
 @NgModule({
   imports: [
-    BrowserModule,
-    FormsModule
+    CommonModule
   ],
   declarations: [
-    PostItDocumentsPerspectiveComponent,
-    TableDocumentsPerspectiveComponent,
-    AttributeTreeComponent,
-    KeysPipe
+    IconPickerComponent,
+    ColorPaletteComponent,
+    IconPaletteComponent
   ],
-  entryComponents: [
-    PostItDocumentsPerspectiveComponent,
-    TableDocumentsPerspectiveComponent
+  exports: [
+    IconPickerComponent
   ]
 })
-export class DocumentsPerspectivesModule {
+export class IconPickerModule {
 
 }
