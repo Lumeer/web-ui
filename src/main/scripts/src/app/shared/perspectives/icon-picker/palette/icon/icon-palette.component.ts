@@ -18,17 +18,17 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 import * as Const from '../../../../const';
-import {PaletteComponent} from '../palette.component';
+import {Palette} from '../palette';
 
 @Component({
   selector: 'icon-palette',
   templateUrl: './icon-palette.component.html',
   styleUrls: ['./icon-palette.component.scss']
 })
-export class IconPaletteComponent extends PaletteComponent {
+export class IconPaletteComponent extends Palette {
 
   @Input('icon')
   public active: string;

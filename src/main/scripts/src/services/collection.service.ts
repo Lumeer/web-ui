@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {LocalStorage} from 'ng2-webstorage/dist/app';
 import {Http} from '@angular/http';
 
 @Injectable()

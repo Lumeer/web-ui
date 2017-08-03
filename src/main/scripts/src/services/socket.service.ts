@@ -1,7 +1,7 @@
-import { Observable } from 'rxjs/Observable';
+import {Observable} from 'rxjs/Observable';
 import * as io from 'socket.io-client';
-import { Injectable } from '@angular/core';
-import { Observer } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Observer} from 'rxjs';
 
 /**
  * Injectable websocket io.

@@ -1,8 +1,8 @@
-import {Component, Input, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import * as _ from 'lodash';
 import {Router} from '@angular/router';
 import {NavigationChildrenService} from '../services/navigation-children.service';
-import {trigger, state, style, transition, animate, keyframes} from '@angular/animations';
+import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'left-panel',

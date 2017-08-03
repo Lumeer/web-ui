@@ -1,7 +1,7 @@
 //Taken from:
 //https://goo.gl/Ygoa54
 import {Injectable} from '@angular/core';
-import {Router, RoutesRecognized, ActivatedRouteSnapshot} from '@angular/router';
+import {Router, RoutesRecognized} from '@angular/router';
 
 @Injectable()
 export class BreadcrumbService {
