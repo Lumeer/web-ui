@@ -1,4 +1,4 @@
-$border-radius-medium: 6px;
+@import "../../../../../../styles/variables";
 
 .list {
   padding-left: 6px;
@@ -9,7 +9,7 @@ $border-radius-medium: 6px;
   & > * {
     border: 2px solid transparent;
 
-    border-radius: $border-radius-medium;
+    border-radius: $border-radius-base;
     margin-right: 5px;
     margin-top: 5px;
 
