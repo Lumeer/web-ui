@@ -1,0 +1,34 @@
+<!--array-->
+<ng-container *ngIf="isArray(children)">
+
+  <span *ngIf="isStringArray(children)">
+    {{ children.join(', ') }}
+  </span>
+
+  <ul *ngIf="!isStringArray(children)">
+    <li *ngFor="let attribute of children">
+      <ng-container *ngIf="isLeaf(attribute)">{{ attribute }}</ng-container>
+      <attribute *ngIf="!isLeaf(attribute)"
+                 [children]="attribute"
+                 [editable]="editable"
+                 (change)="event($event)"></attribute>
+    </li>
+  </ul>
+</ng-container>
+
+<!--object-->
+<ul *ngIf="isObject(children)">
+  <ng-container *ngFor="let attribute of keys(children)">
+    <ng-container *ngIf="isDefined(children[attribute])">
+      <li>
+        <label>{{ attribute }}:</label>
+
+        <ng-container *ngIf="isLeaf(children[attribute])">{{ children[attribute] }}</ng-container>
+        <attribute *ngIf="!isLeaf(children[attribute])"
+                   [children]="children[attribute]"
+                   [editable]="editable"
+                   (change)="event($event)"></attribute>
+      </li>
+    </ng-container>
+  </ng-container>
+</ul>

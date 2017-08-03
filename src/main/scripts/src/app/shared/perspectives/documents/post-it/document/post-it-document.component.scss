@@ -1,0 +1,141 @@
+@import "../../../../../../styles/variables";
+
+.post-it {
+  -webkit-transition: all 0.25s;
+  -moz-transition: all 0.25s;
+  -o-transition: all 0.25s;
+  transition: all 0.25s;
+
+  background: $secondary-color;
+  box-shadow: $default-shadow-down;
+
+  position: relative;
+
+  margin: 7.5px;
+  padding: 10px;
+
+  border: 1px solid #cccccc;
+  border-radius: $border-radius-small;
+
+  .edit > span > a, .editable > a {
+    -webkit-transition: color 0.25s;
+    -moz-transition: color 0.25s;
+    -o-transition: color 0.25s;
+    transition: color 0.25s;
+
+    color: $secondary-color;
+  }
+
+  .header {
+    overflow: hidden;
+    /* white-space: nowrap; Enable this if you want document names on one line */
+
+    .icon {
+      padding: 7.5px;
+      display: table-cell;
+
+      i {
+        font-size: 20px;
+      }
+    }
+
+    .name {
+      width: 100%;
+      display: table-cell;
+      padding-left: 10px;
+      font-size: large;
+      letter-spacing: 0.5px;
+    }
+
+    .editable {
+      display: table-cell;
+      vertical-align: middle;
+
+      font-size: medium;
+
+      & > * > * {
+        -webkit-transition: all 0.25s;
+        -moz-transition: all 0.25s;
+        -o-transition: all 0.25s;
+        transition: all 0.25s;
+      }
+
+      i {
+        top: 3px;
+        padding: 5px;
+        border-radius: $border-radius-small;
+
+        &.remove {
+          color: transparent;
+          position: absolute;
+          top: 15px;
+          z-index: -1;
+        }
+
+        &.edited {
+          background: #e5e5e5;
+        }
+      }
+
+      .delimiter {
+        position: absolute;
+        top: 15px;
+        right: 38px;
+      }
+    }
+  }
+
+  .content {
+    min-height: 150px;
+    margin-top: 5px;
+    padding: 0;
+
+    border: 1px solid #e5e5e5;
+    border-radius: $border-radius-small;
+  }
+
+  .edit {
+    padding-top: 5px;
+    padding-left: 10px;
+    font-size: medium;
+
+    .secondary-edit {
+      float: right;
+    }
+  }
+
+  &:hover {
+    box-shadow: $default-shadow-up;
+    .edit > span > a, .editable > a {
+      color: $brand-success;
+    }
+  }
+}
+
+// Button effect after adding new post-it
+.ripple {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background: radial-gradient(circle, #ffffff 10%, transparent 1%) no-repeat 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform 0.5s, opacity 1.5s;
+  }
+
+  &:active:after {
+    transform: scale(0, 0);
+    opacity: 0.2;
+    transition: 0s;
+  }
+}

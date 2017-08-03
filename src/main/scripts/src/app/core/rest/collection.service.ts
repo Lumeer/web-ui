@@ -55,6 +55,10 @@ export class CollectionService {
     return this.http.get<Collection>(`${this.apiPrefix()}/${collectionCode}`);
   }
 
+  public getAttributes(collectionCode: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiPrefix()}/${collectionCode}/attributes`);
+  }
+
   private apiPrefix(): string {
     let organization = this.workspaceService.organizationCode;
     let project = this.workspaceService.projectCode;

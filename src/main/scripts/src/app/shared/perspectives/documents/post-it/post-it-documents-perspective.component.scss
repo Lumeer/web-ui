@@ -1,10 +1,5 @@
 @import "../../../../../styles/variables";
 
-$border-radius-large: 7px;
-$border-radius-medium: 6px;
-$border-radius-small: 3px;
-
-// All post-it's
 .perspective-block {
   position: relative;
   overflow: hidden;
@@ -28,13 +23,15 @@ $border-radius-small: 3px;
   }
 }
 
-// Perspective with "Show more"
 .perspective {
-  @media all and (max-width: 1024px) {
+  @media all and (max-width: 1023px) {
     column-width: 250px;
   }
-  @media all and (min-width: 1024px) {
+  @media all and (min-width: 1024px) and (max-width: 1499px) {
     column-count: 4;
+  }
+  @media all and (min-width: 1500px) {
+    column-count: 5;
   }
   column-gap: 0;
 
@@ -42,137 +39,6 @@ $border-radius-small: 3px;
   .post-it-block {
     width: 100%;
     display: inline-block;
-  }
-
-  .new-document {
-    color: #a0a1ad;
-    pointer-events: none;
-
-    input {
-      pointer-events: auto;
-      width: 100%;
-      border: 0;
-      padding-left: 10px;
-      font-weight: bold;
-      color: #2c3e50;
-      margin-top: 5px;
-      margin-bottom: 3.5px;
-    }
-
-    input:hover {
-      background: #f7f7f7;
-    }
-
-    .delimiter {
-      width: 100%;
-      height: 1px;
-      background: #e5e5e5;
-    }
-
-    .plus {
-      font-size: 70px;
-      color: #e6e6e6;
-    }
-
-    .content {
-      text-align: center;
-    }
-  }
-
-  .post-it {
-    background: $secondary-color;
-    box-shadow: $default-shadow;
-
-    position: relative;
-    min-height: 250px;
-
-    margin: 7.5px;
-    padding: 10px;
-
-    border: 1px solid #cccccc;
-    border-radius: $border-radius-large;
-
-    .header {
-      overflow: hidden;
-      /* white-space: nowrap; Enable this if you want document names on one line */
-
-      .icon {
-        padding: 7.5px;
-        display: table-cell;
-
-        i {
-          font-size: 20px;
-        }
-      }
-
-      .name {
-        width: 100%;
-        display: table-cell;
-        vertical-align: middle;
-        padding-left: 10px;
-        font-size: medium;
-
-        &:focus {
-          outline: 0;
-        }
-      }
-    }
-
-    .editable {
-      display: table-cell;
-      vertical-align: middle;
-
-      font-size: medium;
-
-      & > * > * {
-        -webkit-transition: all 0.25s;
-        -moz-transition: all 0.25s;
-        -o-transition: all 0.25s;
-        transition: all 0.25s;
-      }
-
-      i {
-        top: 3px;
-        padding: 5px;
-        border-radius: $border-radius-small;
-
-        &.remove {
-          color: transparent;
-          position: absolute;
-          top: 15px;
-          z-index: -1;
-        }
-
-        &.edited {
-          background: #e5e5e5;
-        }
-      }
-
-      .delimiter {
-        position: absolute;
-        top: 15px;
-        right: 38px;
-      }
-    }
-
-    .content {
-      min-height: 150px;
-      margin-top: 5px;
-      padding: 0;
-
-      border: 1px solid #e5e5e5;
-      border-radius: $border-radius-small;
-    }
-
-    .edit {
-      padding-top: 5px;
-      padding-left: 10px;
-      font-size: medium;
-
-      .secondary-edit {
-        float: right;
-      }
-    }
   }
 }
 
@@ -183,33 +49,5 @@ $border-radius-small: 3px;
 
   i {
     padding-left: 10px;
-  }
-}
-
-// Button effect after adding new post-it
-.ripple {
-  position: relative;
-  overflow: hidden;
-  min-width: 0;
-
-  &:after {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    background: radial-gradient(circle, #ffffff 10%, transparent 1%) no-repeat 50%;
-    transform: scale(10, 10);
-    opacity: 0;
-    transition: transform 0.5s, opacity 1.5s;
-  }
-
-  &:active:after {
-    transform: scale(0, 0);
-    opacity: 0.2;
-    transition: 0s;
   }
 }

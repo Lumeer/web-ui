@@ -1,13 +1,18 @@
 <ul>
-  <ng-container *ngFor="let attribute of children">
-    <li>
-      <ng-container *ngIf="isString(attribute)">{{ attribute }}</ng-container>
-      <attribute *ngIf="!isString(attribute)"
-                 [children]="attribute"
-                 [editable]="editable"
-                 (change)="event($event)"></attribute>
-    </li>
-    <div class="divider"></div>
+  <ng-container *ngFor="let attribute of keys(children)">
+    <ng-container *ngIf="isDefined(children[attribute])">
+      <li>
+        <label>{{ attribute }}:</label>
+        <ng-container *ngIf="isLeaf(children[attribute])">{{ children[attribute] }}</ng-container>
+        <attribute *ngIf="!isLeaf(children[attribute])"
+                   [children]="children[attribute]"
+                   [editable]="editable"
+                   (change)="event($event)"></attribute>
+      </li>
+
+      <div class="divider"></div>
+    </ng-container>
   </ng-container>
+
   <li><input type="text" placeholder="New Attribute"/></li>
 </ul>

@@ -20,13 +20,14 @@
 
 export class Document {
 
-  public id: string;
-  public creationDate: string;
-  public createdBy: string;
+  public _id: string;
+  public creation_date: string;
+  public created_by: string;
   public version: number;
-  public attributes: object[] = [];
-  public edited: boolean = false;
-  public underCursor: boolean;
+  public data: object = {};
+
+  public edited?: boolean;
+  public underCursor?: boolean;
 
   constructor(documentJson?: object) {
     if (documentJson) {
@@ -35,43 +36,34 @@ export class Document {
         .forEach(attribute => {
           switch (attribute) {
             case '_id':
-              this.id = documentJson['_id'];
+              this._id = documentJson['_id'];
               break;
             case '_meta-create-date':
-              this.creationDate = documentJson['_meta-create-date'];
+              this.creation_date = documentJson['_meta-create-date'];
               break;
             case '_meta-create-user':
-              this.createdBy = documentJson['_meta-create-user'];
+              this.created_by = documentJson['_meta-create-user'];
               break;
             case '_meta-version':
               this.version = documentJson['_meta-version'];
               break;
             default:
-              this.put(attribute, documentJson[attribute]);
+              this.data[attribute] = documentJson[attribute];
           }
         });
     }
   }
 
-  public put(key: any, value: any) {
-    let newAttributeObject = {};
-    newAttributeObject[key] = value;
-
-    this.attributes.push(newAttributeObject);
-  }
-
   public toDto(): object {
     let result = {};
 
-    result['_id'] = this.id;
-    result['_meta-create-date'] = this.creationDate;
-    result['_meta-create-user'] = this.createdBy;
+    result['_id'] = this._id;
+    result['_meta-create-date'] = this.creation_date;
+    result['_meta-create-user'] = this.created_by;
     result['_meta-version'] = this.version;
 
-    this.attributes.forEach(attributeObject => {
-      Object.keys(attributeObject)
-        .forEach(key => result[key] = attributeObject[key]);
-    });
+    Object.keys(this.data)
+      .forEach(attribute => result[attribute] = this.data[attribute]);
 
     return result;
   }

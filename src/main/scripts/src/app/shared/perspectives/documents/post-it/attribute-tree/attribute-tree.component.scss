@@ -4,7 +4,13 @@ ul {
 }
 
 li {
-  margin: 3.5px 0 ;
+  margin: 3.5px 0;
+  padding-left: 10px;
+
+  & > * {
+    margin: 0;
+    padding: 0;
+  }
 
   &:hover {
     background: #f7f7f7;
@@ -16,10 +22,6 @@ li {
   background: #e5e5e5;
 }
 
-a {
-  padding-left: 10px;
-}
-
 input {
   width: 100%;
   padding-left: 10px;
@@ -28,4 +30,8 @@ input {
 
   background: transparent;
   border: 0;
+
+  &:focus {
+    outline: auto;
+  }
 }

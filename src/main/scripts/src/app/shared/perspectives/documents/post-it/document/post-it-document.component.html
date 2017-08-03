@@ -1,0 +1,46 @@
+<div class="post-it">
+  <!-- icon and name -->
+  <div class="header">
+    <span class="icon" title="{{ collection.name }}">
+      <i class="fa fa-fw {{ collection.icon }}" [style.color]="collection.color"></i>
+    </span>
+    <label class="name">{{ collection.name }}</label>
+
+    <!-- Edit / delete button -->
+    <span class="editable" *ngIf="editable">
+      <a><i class="fa fa-times remove" title="Remove Document" aria-hidden="true"
+            [style.color]="document.edited ? 'red' : 'transparent' "
+            [style.z-index]="document.edited ? '3' : '-1' "
+            (click)="removeDocument(idx)"></i></a>
+      <span class="delimiter"
+            [style.color]="document.edited ? 'white' : 'transparent' "
+            [style.z-index]="document.edited ? '2' : '-1' ">|</span>
+      <a><i #edit class="fa fa-pencil ripple" title="Edit Document" aria-hidden="true"
+            [style.background]="editBackground(document)"
+            [style.padding-left]="document.edited ? '30px' : '4px'"
+            (mouseenter)="document.underCursor = true"
+            (mouseleave)="document.underCursor = false"
+            (click)="document.edited = !document.edited"></i></a>
+    </span>
+  </div>
+
+  <div class="content">
+    <attribute-tree [children]="document.data"
+                    [editable]="editable"
+                    (change)="log($event)"></attribute-tree>
+  </div>
+
+  <!-- additional buttons -->
+  <div class="edit">
+    <span class="primary-edit">
+      <a><i class="fa fa-search" aria-hidden="true" title="Details"></i></a>
+    </span>
+
+    <span class="secondary-edit">
+      <a><i class="fa fa-sign-in" aria-hidden="true" title="Incoming Links"></i></a>
+      <a><i class="fa fa-sign-out" aria-hidden="true" title="Outgoing Links"></i></a>
+      <a><i class="fa fa-history" aria-hidden="true" title="History"></i></a>
+      <a><i class="fa fa-users" aria-hidden="true" title="User Rights"></i></a>
+    </span>
+  </div>
+</div>

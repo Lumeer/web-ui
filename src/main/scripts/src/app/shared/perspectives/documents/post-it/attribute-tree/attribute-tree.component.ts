@@ -19,6 +19,7 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'attribute-tree',
@@ -36,20 +37,39 @@ export class AttributeTreeComponent {
   @Output()
   public change: EventEmitter<string> = new EventEmitter();
 
-  public isArray(element: any) {
+  /**
+   * Workaround because pipes were extremely slow
+   */
+  public keys(object: object): string[] {
+    return Object.keys(object);
+  }
+
+  public isArray(element: any): boolean {
     return Array.isArray(element);
   }
 
-  public isString(element: any) {
+  public isLeaf(element: any): boolean {
+    return this.isNumber(element) || this.isString(element);
+  }
+
+  public isString(element: any): boolean {
     return typeof element === 'string';
   }
 
-  public isStringArray(element: object[]) {
+  public isNumber(element: any): boolean {
+    return typeof element === 'number';
+  }
+
+  public isStringArray(element: object[]): boolean {
     return element.every(this.isString);
   }
 
-  public isObject(element: any) {
+  public isObject(element: any): boolean {
     return !this.isArray(element) && !this.isString(element);
+  }
+
+  public isDefined(element: any): boolean {
+    return !isNullOrUndefined(element);
   }
 
   public event(event: string) {
