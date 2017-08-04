@@ -82,9 +82,9 @@ button {
   width: 30px;
   margin: 0 $item-margin/2 $item-margin $item-margin/2;
   padding: 0px 2.5px 1px 4px;
-  font-size: 25px;
   margin-left: auto;
   color: $brand-success;
+  outline:none;
   span {
     display: none;
   }
