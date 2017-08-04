@@ -1,3 +1,5 @@
+@import '../../../styles/variables';
+
 $border-color: #bbbbbb;
 $item-height: 40px;
 $item-margin: 6px;
@@ -72,14 +74,17 @@ li.suggestion:hover {
 }
 
 button {
-  background: url("../../../img/search-button.png");
+  background: transparent;
   border: 0;
   display: block;
   flex-shrink: 0;
   height: 30px;
   width: 30px;
   margin: 0 $item-margin/2 $item-margin $item-margin/2;
-
+  padding: 0px 2.5px 1px 4px;
+  font-size: 25px;
+  margin-left: auto;
+  color: $brand-success;
   span {
     display: none;
   }
