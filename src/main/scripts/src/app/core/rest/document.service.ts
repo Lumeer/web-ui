@@ -43,7 +43,7 @@ export class DocumentService {
 
   public createDocument(collectionCode: string, document: Document): void {
     this.http.post(this.apiPrefix(collectionCode), document.toDto())
-      .subscribe((json: object) => document._id = json['_id']);
+      .subscribe((json: object) => document.id = json['_id']);
   }
 
   public updateDocument(collectionCode: string, document: Document): void {
@@ -52,12 +52,12 @@ export class DocumentService {
   }
 
   public addDocumentAttribute(collectionCode: string, document: Document, key: string, value: any) {
-    this.http.post(`${this.apiPrefix(collectionCode)}/${document._id}/meta/${key}`, value)
+    this.http.post(`${this.apiPrefix(collectionCode)}/${document.id}/meta/${key}`, value)
       .subscribe();
   }
 
   public removeDocument(collectionCode: string, document: Document): void {
-    this.http.delete(`${this.apiPrefix(collectionCode)}/${document._id}`)
+    this.http.delete(`${this.apiPrefix(collectionCode)}/${document.id}`)
       .subscribe();
   }
 

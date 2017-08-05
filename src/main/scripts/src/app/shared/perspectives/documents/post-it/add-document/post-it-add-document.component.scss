@@ -11,7 +11,6 @@
   box-shadow: $default-shadow-down;
 
   position: relative;
-  min-height: 250px;
 
   margin: 7.5px;
   padding: 10px;
@@ -19,7 +18,7 @@
   border: 1px solid #cccccc;
   border-radius: $border-radius-small;
 
-  .edit, .editable {
+  i {
     -webkit-transition: color 0.25s;
     -moz-transition: color 0.25s;
     -o-transition: color 0.25s;
@@ -30,20 +29,19 @@
 
   .header {
     overflow: hidden;
-    /* white-space: nowrap; Enable this if you want document names on one line */
 
-    .icon {
-      padding: 7.5px;
+    .collection-icon {
+      padding-left: 7.5px;
+      font-size: 20px;
       display: table-cell;
-      i {
-        font-size: 20px;
-      }
     }
 
     .name {
       width: 100%;
       display: table-cell;
       padding-left: 10px;
+
+      color: $brand-primary;
       font-size: large;
       letter-spacing: 0.5px;
     }
@@ -53,11 +51,12 @@
       vertical-align: middle;
 
       font-size: medium;
+      padding: 4px;
     }
   }
 
   .content {
-    min-height: 150px;
+    min-height: 100px;
     margin-top: 5px;
     padding: 0;
 
@@ -112,7 +111,7 @@
 
   .edit {
     padding-top: 5px;
-    padding-left: 10px;
+    padding-left: 7.5px;
     font-size: medium;
 
     .secondary-edit {
@@ -122,8 +121,8 @@
 
   &:hover {
     box-shadow: $default-shadow-up;
-    .editable, .edit {
-      color: #a0a1ad !important;
+    i {
+      color: #a0a1ad;
     }
   }
 }

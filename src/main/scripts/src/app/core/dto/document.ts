@@ -20,14 +20,13 @@
 
 export class Document {
 
-  public _id: string;
-  public creation_date: string;
-  public created_by: string;
+  public id: string;
+  public creationDate: string;
+  public updateDate: string;
+  public createdBy: string;
+  public updatedBy: string;
   public version: number;
   public data: object = {};
-
-  public edited?: boolean;
-  public underCursor?: boolean;
 
   constructor(documentJson?: object) {
     if (documentJson) {
@@ -36,16 +35,22 @@ export class Document {
         .forEach(attribute => {
           switch (attribute) {
             case '_id':
-              this._id = documentJson['_id'];
+              this.id = documentJson['_id'];
               break;
             case '_meta-create-date':
-              this.creation_date = documentJson['_meta-create-date'];
+              this.creationDate = documentJson['_meta-create-date'];
               break;
             case '_meta-create-user':
-              this.created_by = documentJson['_meta-create-user'];
+              this.createdBy = documentJson['_meta-create-user'];
               break;
             case '_meta-version':
               this.version = documentJson['_meta-version'];
+              break;
+            case '_meta-update-date':
+              this.updateDate = documentJson['_meta-update-date'];
+              break;
+            case '_meta-update-use':
+              this.updatedBy = documentJson['_meta-update-use'];
               break;
             default:
               this.data[attribute] = documentJson[attribute];
@@ -57,15 +62,23 @@ export class Document {
   public toDto(): object {
     let result = {};
 
-    result['_id'] = this._id;
-    result['_meta-create-date'] = this.creation_date;
-    result['_meta-create-user'] = this.created_by;
-    result['_meta-version'] = this.version;
+    this.addMetadata(result, '_id', this.id);
+    this.addMetadata(result, '_meta-create-date', this.creationDate);
+    this.addMetadata(result, '_meta-create-user', this.createdBy);
+    this.addMetadata(result, '_meta-version', this.version);
+    this.addMetadata(result, '_meta-update-date', this.updateDate);
+    this.addMetadata(result, '_meta-update-use', this.updatedBy);
 
     Object.keys(this.data)
       .forEach(attribute => result[attribute] = this.data[attribute]);
 
     return result;
+  }
+
+  private addMetadata(json: object, key: string, value: any) {
+    if (value) {
+      json[key] = value;
+    }
   }
 
 }

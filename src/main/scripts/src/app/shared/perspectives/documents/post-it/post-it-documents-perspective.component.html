@@ -6,17 +6,18 @@
       <post-it-add-document
         [attributes]="attributes"
         [collection]="collection"
-        (showDocument)="startPreview()"
-        (hideDocument)="stopPreview()"
-        (attributePreview)="attributePreview($event)"
-        (newAttributePreview)="newAttributePreview($event)"></post-it-add-document>
+        (createNewDocument)="createDocument()"
+        (deletePreviewedDocument)="removeDocument(0)"
+        (attributePreview)="addAttribute($event, documents[0])"
+        (newAttributePreview)="addNewAttribute($event, documents[0])"></post-it-add-document>
     </div>
 
     <!--Document post-its-->
-    <div class="post-it-block" [@appear]="''" *ngFor="let document of documents">
+    <div class="post-it-block" [@appear]="''" *ngFor="let document of documents; let idx = index">
       <post-it-document [collection]="collection"
                         [document]="document"
-                        [editable]="editable"></post-it-document>
+                        [editable]="editable"
+                        (onDelete)="removeDocument(idx)"></post-it-document>
     </div>
   </div>
 </div>

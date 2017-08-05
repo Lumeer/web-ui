@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {Collection} from '../../../../../core/dto/collection';
 import {Document} from '../../../../../core/dto/document';
@@ -39,62 +39,13 @@ export class PostItDocumentComponent {
   @Input()
   public editable: boolean;
 
-  // /**
-  //  * Toggles edit menu on/ off
-  //  */
-  // public toggleEditing(event: MouseEvent): void {
-  //   // havent selected document yet
-  //   if (isUndefined(this.currentlyClickedDocument)) {
-  //     return;
-  //   }
-  //
-  //   // dislable previous
-  //   if (this.lastClickedDocument) {
-  //     this.documents[this.lastClickedDocument].edited = false;
-  //   }
-  //
-  //   let document = this.documents[this.currentlyClickedDocument];
-  //
-  //   // if clicked on editSwitch
-  //   if (this.getEditSwitch(this.currentlyClickedDocument).contains(event.target)) {
-  //     document.edited = !document.edited;
-  //     return;
-  //   }
-  //
-  //   // if clicked on document
-  //   if (this.getDocumentElement(this.currentlyClickedDocument).contains(event.target)) {
-  //     return;
-  //   }
-  //
-  //   // click outside
-  //   document.edited = false;
-  // }
-  //
-  // /**
-  //  * Save indexes of currently and preciously clicked documents
-  //  */
-  // public documentClick(idx: number): void {
-  //   if (idx === this.currentlyClickedDocument) {
-  //     return;
-  //   }
-  //
-  //   this.lastClickedDocument = this.currentlyClickedDocument;
-  //   this.currentlyClickedDocument = idx;
-  // }
+  @Output()
+  public onDelete: EventEmitter<any> = new EventEmitter();
 
-  /**
-   * @returns {string} Color of background of edit button
-   */
-  public editBackground(document: Document): string {
-    if (document.edited) {
-      return '#E2E2E4';
+  public onRemoveDocumentClick(): void {
+    if (confirm('Deleting a document is irreversable. Delete anyway?')) {
+      this.onDelete.emit();
     }
-
-    if (document.underCursor) {
-      return '#EFEFEF';
-    }
-
-    return 'transparent';
   }
 
 }

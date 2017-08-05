@@ -28,8 +28,6 @@ import {Perspective} from '../../perspective';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Collection} from '../../../../core/dto/collection';
 import {Document} from '../../../../core/dto/document';
-import {isNullOrUndefined} from 'util';
-import Timer = NodeJS.Timer;
 
 @Component({
   selector: 'post-it-documents-perspective',
@@ -69,7 +67,8 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
   /**
    * To prevent sending data after each data change, the timer provides 'buffering', by waiting a while after each change before sending
    */
-  private restTimeout;
+  private restTimeout: number;
+  private timeoutFunction: () => void;
 
   constructor(private documentService: DocumentService,
               private collectionService: CollectionService,
@@ -136,51 +135,63 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
     this.height = this.higherBy(this.height, 450);
   }
 
-  public updateDocument(changedDocument: Document): void {
-    // to prevent sending document that hasn't received ID yet
-    if (isNullOrUndefined(changedDocument._id)) {
-      return;
-    }
+  public createDocument(): void {
+    this.flushTimer();
 
-    clearTimeout(this.restTimeout);
-    this.restTimeout = setTimeout(this.documentService.updateDocument(this.collection.code, changedDocument), 1500);
-  }
-
-  public removeDocument(idx: number): void {
-    clearTimeout(this.restTimeout);
-    this.documents.splice(idx, 1);
-
-    this.documentService.removeDocument(this.collection.code, this.documents[idx]);
-  }
-
-  public startPreview(): void {
     let newDocument = new Document;
-
-    clearTimeout(this.restTimeout);
     this.documents.unshift(newDocument);
-
     this.documentService.createDocument(this.collection.code, newDocument);
   }
 
-  public stopPreview(): void {
-    clearTimeout(this.restTimeout);
-    let deletedDocument = this.documents.shift();
+  public removeDocument(idx: number): void {
+    this.flushTimer();
+
+    let deletedDocument = this.documents[idx];
+    this.documents.splice(idx, 1);
     this.documentService.removeDocument(this.collection.code, deletedDocument);
   }
 
-  public attributePreview(attr: object): void {
-    let changedDocument = this.documents[0];
+  public addAttribute(attr: { attribute: string, value: any }, document: Document): void {
+    if (attr.value !== '') {
+      document.data[attr.attribute] = attr.value;
+    } else {
+      delete document.data[attr.attribute];
+    }
 
-    changedDocument.data[attr['attribute']] = attr['value'];
-    this.updateDocument(changedDocument);
+    this.updateDocument(document);
   }
 
-  public newAttributePreview(attr: object): void {
-    let changedDocument = this.documents[0];
+  public addNewAttribute(attr: { previousValue: string, value: string }, document: Document): void {
+    delete document.data[attr.previousValue];
 
-    delete changedDocument.data[attr['previousValue']];
-    changedDocument.data[attr['value']] = '';
-    this.updateDocument(changedDocument);
+    if (attr.value !== '') {
+      document.data[attr.value] = '';
+    } else {
+      delete document.data[attr.value];
+    }
+
+    this.updateDocument(document);
+  }
+
+  public updateDocument(document: Document): void {
+    clearTimeout(this.restTimeout);
+    this.timeoutFunction = () => {
+      document.version += 1;
+      this.documentService.updateDocument(this.collection.code, document);
+      this.timeoutFunction = null;
+    };
+    this.restTimeout = window.setTimeout(this.timeoutFunction, 3000);
+  }
+
+  /**
+   * Stops timer and executes it's function if it wasn't executed already
+   */
+  private flushTimer(): void {
+    if (this.timeoutFunction) {
+      clearTimeout(this.restTimeout);
+      this.timeoutFunction();
+      this.timeoutFunction = null;
+    }
   }
 
 }

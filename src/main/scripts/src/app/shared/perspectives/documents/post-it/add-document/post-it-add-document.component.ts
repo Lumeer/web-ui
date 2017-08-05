@@ -28,7 +28,7 @@ import {isUndefined} from 'util';
   templateUrl: './post-it-add-document.component.html',
   styleUrls: ['./post-it-add-document.component.scss'],
   host: {
-    '(document:click)': 'click($event.target)'
+    '(document:click)': 'onClick($event.target)'
   }
 })
 export class PostItAddDocumentComponent {
@@ -40,10 +40,10 @@ export class PostItAddDocumentComponent {
   public collection: Collection;
 
   @Output()
-  public showDocument: EventEmitter<any> = new EventEmitter();
+  public createNewDocument: EventEmitter<any> = new EventEmitter();
 
   @Output()
-  public hideDocument: EventEmitter<any> = new EventEmitter();
+  public deletePreviewedDocument: EventEmitter<any> = new EventEmitter();
 
   @Output()
   public newAttributePreview: EventEmitter<object> = new EventEmitter();
@@ -71,6 +71,14 @@ export class PostItAddDocumentComponent {
     return str && str !== '';
   }
 
+  public attributesAreEmpty(): boolean {
+    return isUndefined(this.inputElements.find(element => this.hasText(element.nativeElement.value)));
+  }
+
+  public newAttributeIsEmpty(): boolean {
+    return !this.hasText(this.newAttributeInputElement.nativeElement.value);
+  }
+
   public attributeChange(value: string, attribute: string): void {
     this.documentCheck();
     this.attributePreview.emit({value: value, attribute: attribute});
@@ -83,27 +91,33 @@ export class PostItAddDocumentComponent {
   }
 
   public documentCheck(): void {
-    let attributesAreEmpty = isUndefined(this.inputElements.find(element => this.hasText(element.nativeElement.value)));
-    let newAttributeIsEmpty = !this.hasText(this.newAttributeInputElement.nativeElement.value);
+    this.createNewDocumentCheck();
+    this.deletePreviewedDocumentCheck();
+  }
 
-    if (attributesAreEmpty && newAttributeIsEmpty) {
-      this.hideDocument.emit();
-      this.edited = false;
-      return;
-    }
-
+  public createNewDocumentCheck(): void {
     if (!this.edited) {
-      this.showDocument.emit();
+      this.createNewDocument.emit();
       this.edited = true;
     }
   }
 
-  public click(target: EventTarget): void {
-    // click outside component
-    if (!this.element.nativeElement.contains(target)) {
-      this.inputElements.forEach(element => element.nativeElement.value = '');
-      this.newAttributeInputElement.nativeElement.value = '';
+  public deletePreviewedDocumentCheck(): void {
+    if (this.edited && this.attributesAreEmpty() && this.newAttributeIsEmpty()) {
+      this.deletePreviewedDocument.emit();
       this.edited = false;
     }
+  }
+
+  public onClick(target: EventTarget): void {
+    if (!this.element.nativeElement.contains(target)) {
+      this.onClickOutsideComponent();
+    }
+  }
+
+  private onClickOutsideComponent() {
+    this.inputElements.forEach(element => element.nativeElement.value = '');
+    this.newAttributeInputElement.nativeElement.value = '';
+    this.edited = false;
   }
 }

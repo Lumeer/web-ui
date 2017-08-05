@@ -19,7 +19,7 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {isNullOrUndefined} from 'util';
+import {isArray, isNullOrUndefined, isNumber, isObject, isString} from 'util';
 
 @Component({
   selector: 'attribute-tree',
@@ -45,19 +45,22 @@ export class AttributeTreeComponent {
   }
 
   public isArray(element: any): boolean {
-    return Array.isArray(element);
+    return isArray(element);
   }
 
+  /**
+   * Element is at the end of attribute tree
+   */
   public isLeaf(element: any): boolean {
-    return this.isNumber(element) || this.isString(element);
+    return isNumber(element) || isString(element);
   }
 
   public isString(element: any): boolean {
-    return typeof element === 'string';
+    return isString(element);
   }
 
   public isNumber(element: any): boolean {
-    return typeof element === 'number';
+    return isNumber(element);
   }
 
   public isStringArray(element: object[]): boolean {
@@ -65,7 +68,7 @@ export class AttributeTreeComponent {
   }
 
   public isObject(element: any): boolean {
-    return !this.isArray(element) && !this.isString(element);
+    return !isArray(element) && !isString(element);
   }
 
   public isDefined(element: any): boolean {
