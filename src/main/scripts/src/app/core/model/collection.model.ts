@@ -29,7 +29,6 @@ export class CollectionModel implements Collection {
   public name: string = '';
   public color: string = defaultIconColor;
   public icon: string = defaultIcon;
-  public documentCount: number;
   public pickerVisible: boolean = false;
 
   public toDto(): Collection {
@@ -37,8 +36,7 @@ export class CollectionModel implements Collection {
       code: this.code,
       name: this.name,
       color: this.color,
-      icon: this.icon,
-      documentCount: this.documentCount
+      icon: this.icon
     };
   }
 

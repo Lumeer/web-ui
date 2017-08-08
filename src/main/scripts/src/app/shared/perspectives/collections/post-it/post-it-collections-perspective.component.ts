@@ -25,7 +25,7 @@ import {CollectionService} from '../../../../core/rest/collection.service';
 import {Perspective} from '../../perspective';
 import {Collection} from '../../../../core/dto/collection';
 import {CollectionModel} from '../../../../core/model/collection.model';
-import * as Const from '../../../const';
+import {Role} from '../../../permissions/role';
 
 @Component({
   selector: 'post-it-collections-perspective',
@@ -53,13 +53,9 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   public editable: boolean;
 
   public placeholderTitle: string = 'Collection name';
-  public iconsPerPage: number = 36;
   public collectionMinCharacters = 3;
-  public icons: string[] = Const.icons;
-  public colors: string[] = Const.colors;
   public newCollections: CollectionModel[] = [];
   public collections: Collection[];
-  public numbers: any[];
   public cachedName: string;
   public selectedIcon: string;
   public selectedColor: string;
@@ -79,10 +75,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     this.newCollections.splice(ix, 1);
   }
 
-  public onNewIconAndColor(collectionModel: CollectionModel) {
-    collectionModel.icon = this.selectedIcon;
-    collectionModel.color = this.selectedColor;
-    collectionModel.pickerVisible = false;
+  public onNewIconOrColor(collectionModel: CollectionModel) {
     if (collectionModel.code) {
       this.updateCollection(collectionModel);
     }
@@ -106,6 +99,10 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public onBlurCollectionName(collectionModel: CollectionModel) {
+    this.onSaveCollection(collectionModel);
+  }
+
+  public onSaveCollection(collectionModel: CollectionModel) {
     if (collectionModel.code) {
       if (collectionModel.name.length < this.collectionMinCharacters) {
         collectionModel.name = this.cachedName;
@@ -115,6 +112,34 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     } else if (collectionModel.name.length >= this.collectionMinCharacters) {
       this.createCollection(collectionModel);
     }
+  }
+
+  public hasWriteRole(collection: Collection) {
+    return collection.userRoles.indexOf(Role.write) !== -1;
+  }
+
+  public hasManageRole(collection: Collection) {
+    return collection.userRoles.indexOf(Role.manage) !== -1;
+  }
+
+  public onDetailClick(collectionCode: String) {
+    console.log('onDetailClick');
+  }
+
+  public onAttributesClick(collectionCode: String) {
+    console.log('onAttributesClick');
+  }
+
+  public onEditClick(collectionCode: String) {
+    console.log('onEditClick');
+  }
+
+  public onPermissionsClick(collectionCode: String) {
+    console.log('onPermissionsClick');
+  }
+
+  public onDeleteClick(collectionCode: String) {
+    console.log('onDeleteClick');
   }
 
   private loadCollections() {

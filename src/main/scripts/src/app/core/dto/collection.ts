@@ -24,6 +24,7 @@ export interface Collection {
   name: string;
   color: string;
   icon: string;
-  documentCount: number;
+  documentCount?: number;
+  userRoles?: string[];
 
 }
