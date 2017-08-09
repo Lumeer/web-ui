@@ -1,31 +1,30 @@
-<div class="post-it">
+<div class="header">
+  <i class="fa {{ collection.icon }} collection-icon" title="{{ collection.name }}" [style.color]="collection.color"></i>
+  <label class="name">{{ collection.name }}</label>
 
-  <div class="header">
-    <i class="fa {{ collection.icon }} collection-icon" title="{{ collection.name }}" [style.color]="collection.color"></i>
+  <ng-container *ngIf="editable">
+    <a class="fa fa-fw fa-pencil editable" title="Edit Document" aria-hidden="true"></a>
+    <a class="fa fa-fw fa-times editable" title="Remove Document" aria-hidden="true" (click)="onRemoveDocumentClick()"></a>
+  </ng-container>
+</div>
 
-    <ng-container *ngIf="editable">
-      <a><i class="fa fa-fw fa-pencil" title="Edit Document" aria-hidden="true"></i></a>
-      <a><i class="fa fa-fw fa-times" title="Remove Document" aria-hidden="true" (click)="onRemoveDocumentClick()"></i></a>
-    </ng-container>
-  </div>
+<div class="content">
+  <attribute-tree [children]="document.data"
+                  [editable]="editable"
+                  (newAttribute)="newAttributePreview.emit($event)"></attribute-tree>
+</div>
 
-  <div class="content">
-    <attribute-tree [children]="document.data"
-                    [editable]="editable"
-                    (change)="log($event)"></attribute-tree>
-  </div>
+<!-- additional buttons -->
+<div class="edit">
+  <span class="primary-edit">
+    <a class="fa fa-fw fa-search" aria-hidden="true" title="Details"></a>
+  </span>
 
-  <!-- additional buttons -->
-  <div class="edit">
-    <span class="primary-edit">
-      <a><i class="fa fa-fw fa-search" aria-hidden="true" title="Details"></i></a>
-    </span>
-
-    <span class="secondary-edit">
-      <a><i class="fa fa-fw fa-sign-in" aria-hidden="true" title="Incoming Links"></i></a>
-      <a><i class="fa fa-fw fa-sign-out" aria-hidden="true" title="Outgoing Links"></i></a>
-      <a><i class="fa fa-fw fa-history" aria-hidden="true" title="History"></i></a>
-      <a><i class="fa fa-fw fa-users" aria-hidden="true" title="User Rights"></i></a>
-    </span>
-  </div>
+  <span class="secondary-edit">
+    <!--the comments remove added space between icons-->
+    <a class="fa fa-fw fa-sign-in" aria-hidden="true" title="Incoming Links"></a><!--
+    --><a class="fa fa-fw fa-sign-out" aria-hidden="true" title="Outgoing Links"></a><!--
+    --><a class="fa fa-fw fa-history" aria-hidden="true" title="History"></a><!--
+    --><a class="fa fa-fw fa-users" aria-hidden="true" title="User Rights"></a>
+  </span>
 </div>

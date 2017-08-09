@@ -1,15 +1,14 @@
-<div [style.height]="height" class="perspective-block">
-  <div [style.height]="higherBy(height, 300)" class="perspective">
+<div [style.height]="height + 'px'" class="perspective-block">
+  <div [style.height]="height + PERSPECTIVE_OVERFLOW_BASE_HEIGHT + 'px'" class="perspective">
 
     <!--Add new document-->
     <div class="post-it-block" [@appear]="''" *ngIf="editable">
-      <post-it-add-document
+      <add-document
         [attributes]="attributes"
         [collection]="collection"
-        (createNewDocument)="createDocument()"
-        (deletePreviewedDocument)="removeDocument(0)"
-        (attributePreview)="addAttribute($event, documents[0])"
-        (newAttributePreview)="addNewAttribute($event, documents[0])"></post-it-add-document>
+        (createDocumentEvent)="createDocument()"
+        (deleteDocumentEvent)="removeDocument(0)"
+        (attributePreview)="addAttribute(documents[0], $event)"></add-document>
     </div>
 
     <!--Document post-its-->
@@ -17,7 +16,8 @@
       <post-it-document [collection]="collection"
                         [document]="document"
                         [editable]="editable"
-                        (onDelete)="removeDocument(idx)"></post-it-document>
+                        (onDelete)="removeDocument(idx)"
+                        (newAttributePreview)="addAttribute(documents[idx], $event)"></post-it-document>
     </div>
   </div>
 </div>

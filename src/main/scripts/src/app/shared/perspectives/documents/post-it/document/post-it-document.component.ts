@@ -42,6 +42,9 @@ export class PostItDocumentComponent {
   @Output()
   public onDelete: EventEmitter<any> = new EventEmitter();
 
+  @Output()
+  public newAttributePreview: EventEmitter<object> = new EventEmitter();
+
   public onRemoveDocumentClick(): void {
     if (confirm('Deleting a document is irreversable. Delete anyway?')) {
       this.onDelete.emit();

@@ -49,8 +49,8 @@ export class Document {
             case '_meta-update-date':
               this.updateDate = documentJson['_meta-update-date'];
               break;
-            case '_meta-update-use':
-              this.updatedBy = documentJson['_meta-update-use'];
+            case '_meta-update-user':
+              this.updatedBy = documentJson['_meta-update-user'];
               break;
             default:
               this.data[attribute] = documentJson[attribute];
@@ -67,7 +67,7 @@ export class Document {
     this.addMetadata(result, '_meta-create-user', this.createdBy);
     this.addMetadata(result, '_meta-version', this.version);
     this.addMetadata(result, '_meta-update-date', this.updateDate);
-    this.addMetadata(result, '_meta-update-use', this.updatedBy);
+    this.addMetadata(result, '_meta-update-user', this.updatedBy);
 
     Object.keys(this.data)
       .forEach(attribute => result[attribute] = this.data[attribute]);

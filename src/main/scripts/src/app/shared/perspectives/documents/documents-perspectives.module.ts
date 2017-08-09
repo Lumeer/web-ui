@@ -23,10 +23,10 @@ import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {PostItDocumentsPerspectiveComponent} from './post-it/post-it-documents-perspective.component';
-import {PostItAddDocumentComponent} from './post-it/add-document/post-it-add-document.component';
+import {PostItAddDocumentComponent} from './post-it/add-document/add-document.component';
 import {PostItDocumentComponent} from './post-it/document/post-it-document.component';
 import {AttributeTreeComponent} from './post-it/attribute-tree/attribute-tree.component';
-import {AttributeComponent} from './post-it/attribute-tree/attribute/attribute-tree-attribute.component';
+import {AttributeComponent} from './post-it/attribute-tree/attribute-value/attribute-value.component';
 import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
 
 @NgModule({

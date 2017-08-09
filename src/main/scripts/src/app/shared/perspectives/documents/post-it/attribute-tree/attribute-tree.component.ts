@@ -18,13 +18,17 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {isArray, isNullOrUndefined, isNumber, isObject, isString} from 'util';
 
 @Component({
   selector: 'attribute-tree',
   templateUrl: './attribute-tree.component.html',
-  styleUrls: ['./attribute-tree.component.scss']
+  styleUrls: ['./attribute-tree.component.scss'],
+  host: {
+    '(document:click)': 'onClick($event.target)',
+    '(document:keydown)': 'onKeypress($event)'
+  }
 })
 export class AttributeTreeComponent {
 
@@ -36,6 +40,14 @@ export class AttributeTreeComponent {
 
   @Output()
   public change: EventEmitter<string> = new EventEmitter();
+
+  @Output()
+  public newAttribute: EventEmitter<object> = new EventEmitter();
+
+  @ViewChild('newAttributeInput')
+  public newAttributeInput: ElementRef;
+
+  private previousNewAttribute = '';
 
   /**
    * Workaround because pipes were extremely slow
@@ -49,7 +61,7 @@ export class AttributeTreeComponent {
   }
 
   /**
-   * Element is at the end of attribute tree
+   * Element is at the end of attribute-value tree
    */
   public isLeaf(element: any): boolean {
     return isNumber(element) || isString(element);
@@ -78,4 +90,31 @@ export class AttributeTreeComponent {
   public event(event: string) {
     this.change.emit(event);
   }
+
+  public newAttributeChange(value: string): void {
+    this.newAttribute.emit({value: value, previousValue: this.previousNewAttribute});
+    this.previousNewAttribute = value;
+  }
+
+  public onClick(target: EventTarget): void {
+    if (!this.newAttributeInput.nativeElement.contains(target)) {
+      this.onClickOutsideNewAttributeInput();
+    }
+  }
+
+  private onClickOutsideNewAttributeInput() {
+    this.resetNewAttribute();
+  }
+
+  private onKeypress(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.resetNewAttribute();
+    }
+  }
+
+  public resetNewAttribute(): void {
+    this.newAttributeInput.nativeElement.value = '';
+    this.previousNewAttribute = '';
+  }
+
 }

@@ -24,10 +24,12 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import {DocumentService} from '../../../../core/rest/document.service';
 import {WorkspaceService} from '../../../../core/workspace.service';
-import {Perspective} from '../../perspective';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Collection} from '../../../../core/dto/collection';
 import {Document} from '../../../../core/dto/document';
+import {Attribute} from '../../../../core/dto/attribute';
+import {DocumentAttribute} from './document-attribute';
+import {Perspective} from '../../perspective';
 
 @Component({
   selector: 'post-it-documents-perspective',
@@ -48,6 +50,12 @@ import {Document} from '../../../../core/dto/document';
 })
 export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit {
 
+  public readonly PERSPECTIVE_SEE_MORE_ADDED_HEIGHT = 400;
+
+  public readonly PERSPECTIVE_OVERFLOW_BASE_HEIGHT = 200;
+
+  public readonly PERSPECTIVE_BASE_HEIGHT = 450;
+
   @Input()
   public query: string;
 
@@ -56,19 +64,24 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
   public editable: boolean = true;
 
   @Input()
-  public height: string = '500px';
+  public height = this.PERSPECTIVE_BASE_HEIGHT;
 
   public collection: Collection;
 
-  public attributes: string[];
+  public attributes = [] as Attribute[];
 
-  public documents: Document[];
+  public documents = [] as Document[];
 
   /**
    * To prevent sending data after each data change, the timer provides 'buffering', by waiting a while after each change before sending
    */
-  private restTimeout: number;
-  private timeoutFunction: () => void;
+  private updateTimer: number;
+
+  private sendDocumentUpdate: () => void;
+
+  private updatePending: boolean;
+
+  private previouslyEditedDocument: Document;
 
   constructor(private documentService: DocumentService,
               private collectionService: CollectionService,
@@ -82,7 +95,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
     this.fetchAttributes();
   }
 
-  public initializeWorkspace(): void {
+  private initializeWorkspace(): void {
     if (!this.workspaceService.isWorkspaceSet()) {
       this.route.paramMap.subscribe((params: ParamMap) => {
         this.workspaceService.projectCode = params.get('projectCode');
@@ -91,7 +104,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
     }
   }
 
-  public fetchCollections(): void {
+  private fetchCollections(): void {
     // fallback, before subscription response
     this.collection = {
       code: '',
@@ -111,32 +124,19 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
       .subscribe(documents => this.documents = documents);
   }
 
-  public fetchAttributes(): void {
+  private fetchAttributes(): void {
     this.route.paramMap
       .map(params => params.get('collectionCode'))
       .switchMap(collectionCode => this.collectionService.getAttributes(collectionCode))
       .subscribe(attributes => this.attributes = attributes);
   }
 
-  /**
-   * @returns {string} Increases base (123px) by ammount (7) => 130px
-   */
-  public higherBy(base: string, ammount: number): string {
-    let units: string = base.replace(/\d+/, '');
-    let height: number = Number(base.replace(/[^\d]+/, ''));
-
-    return `${height + ammount}${units}`;
-  }
-
-  /**
-   * Increases height of the perspective by 450 pixels
-   */
   public increaseBlockHeight(): void {
-    this.height = this.higherBy(this.height, 450);
+    this.height += this.PERSPECTIVE_SEE_MORE_ADDED_HEIGHT;
   }
 
   public createDocument(): void {
-    this.flushTimer();
+    this.flushUpdateTimer();
 
     let newDocument = new Document;
     this.documents.unshift(newDocument);
@@ -144,53 +144,56 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
   }
 
   public removeDocument(idx: number): void {
-    this.flushTimer();
+    this.flushUpdateTimer();
 
     let deletedDocument = this.documents[idx];
     this.documents.splice(idx, 1);
     this.documentService.removeDocument(this.collection.code, deletedDocument);
   }
 
-  public addAttribute(attr: { attribute: string, value: any }, document: Document): void {
-    if (attr.value !== '') {
-      document.data[attr.attribute] = attr.value;
+  public addAttribute(document: Document, attribute: DocumentAttribute): void {
+    delete document.data[attribute.previousName];
+
+    if (attribute.value !== '') {
+      document.data[attribute.name] = attribute.value;
     } else {
-      delete document.data[attr.attribute];
+      delete document.data[attribute.name];
     }
 
     this.updateDocument(document);
   }
 
-  public addNewAttribute(attr: { previousValue: string, value: string }, document: Document): void {
-    delete document.data[attr.previousValue];
+  private updateDocument(document: Document): void {
+    this.resetTimer(document);
 
-    if (attr.value !== '') {
-      document.data[attr.value] = '';
-    } else {
-      delete document.data[attr.value];
-    }
+    this.previouslyEditedDocument = document;
 
-    this.updateDocument(document);
+    this.updatePending = true;
+    this.sendDocumentUpdate = this.updateFunction(document);
+    this.updateTimer = window.setTimeout(this.sendDocumentUpdate, 4000);
   }
 
-  public updateDocument(document: Document): void {
-    clearTimeout(this.restTimeout);
-    this.timeoutFunction = () => {
-      document.version += 1;
+  private resetTimer(document: Document): void {
+    if (this.previouslyEditedDocument && this.previouslyEditedDocument !== document) {
+      this.flushUpdateTimer();
+    } else {
+      clearTimeout(this.updateTimer);
+    }
+  }
+
+  private updateFunction(document: Document): () => void {
+    return () => {
+      this.updatePending = false;
+
       this.documentService.updateDocument(this.collection.code, document);
-      this.timeoutFunction = null;
+      document.version += 1;
     };
-    this.restTimeout = window.setTimeout(this.timeoutFunction, 3000);
   }
 
-  /**
-   * Stops timer and executes it's function if it wasn't executed already
-   */
-  private flushTimer(): void {
-    if (this.timeoutFunction) {
-      clearTimeout(this.restTimeout);
-      this.timeoutFunction();
-      this.timeoutFunction = null;
+  private flushUpdateTimer(): void {
+    if (this.updatePending) {
+      clearTimeout(this.updateTimer);
+      this.sendDocumentUpdate();
     }
   }
 

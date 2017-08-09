@@ -1,5 +1,9 @@
 @import "../../../../../styles/variables";
 
+:host {
+  display: block;
+}
+
 .perspective-block {
   position: relative;
   overflow: hidden;
@@ -24,15 +28,7 @@
 }
 
 .perspective {
-  @media all and (max-width: 1023px) {
-    column-width: 250px;
-  }
-  @media all and (min-width: 1024px) and (max-width: 1499px) {
-    column-count: 4;
-  }
-  @media all and (min-width: 1500px) {
-    column-count: 5;
-  }
+  column-width: 300px;
   column-gap: 0;
 
   // Padding between post-its

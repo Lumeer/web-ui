@@ -24,8 +24,8 @@ import {AttributeTreeComponent} from '../attribute-tree.component';
 
 @Component({
   selector: 'attribute-value',
-  templateUrl: './attribute-tree-attribute.component.html',
-  styleUrls: ['./attribute-tree-attribute.component.scss']
+  templateUrl: './attribute-value.component.html',
+  styleUrls: ['./attribute-value.component.scss']
 })
 export class AttributeComponent extends AttributeTreeComponent {
 

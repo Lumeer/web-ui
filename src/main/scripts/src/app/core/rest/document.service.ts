@@ -51,11 +51,6 @@ export class DocumentService {
       .subscribe();
   }
 
-  public addDocumentAttribute(collectionCode: string, document: Document, key: string, value: any) {
-    this.http.post(`${this.apiPrefix(collectionCode)}/${document.id}/meta/${key}`, value)
-      .subscribe();
-  }
-
   public removeDocument(collectionCode: string, document: Document): void {
     this.http.delete(`${this.apiPrefix(collectionCode)}/${document.id}`)
       .subscribe();
