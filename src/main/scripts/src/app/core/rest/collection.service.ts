@@ -19,13 +19,17 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 
 import {WorkspaceService} from '../workspace.service';
 import {Collection} from '../dto/collection';
 import {Attribute} from '../dto/attribute';
 import {Observable} from 'rxjs/Observable';
 import {isNullOrUndefined} from 'util';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
+import {BadInputError} from '../error/bad-input.error';
+import {LumeerError} from '../error/lumeer.error';
 
 @Injectable()
 export class CollectionService {
@@ -45,11 +49,13 @@ export class CollectionService {
   }
 
   public createCollection(collection: Collection): Observable<string> {
-    return this.http.post(this.apiPrefix(), collection, {responseType: 'text'});
+    return this.http.post(this.apiPrefix(), collection, {responseType: 'text'})
+      .catch(CollectionService.handleError);
   }
 
   public updateCollection(collectionCode: String, collection: Collection): Observable<any> {
-    return this.http.put<any>(this.apiPrefix() + '/' + collectionCode, collection);
+    return this.http.put<any>(this.apiPrefix() + '/' + collectionCode, collection)
+      .catch(CollectionService.handleError);
   }
 
   public getCollection(collectionCode: string): Observable<Collection> {
@@ -65,6 +71,13 @@ export class CollectionService {
     let project = this.workspaceService.projectCode;
 
     return `/${API_URL}/rest/organizations/${organization}/projects/${project}/collections/`;
+  }
+
+  private static handleError(error: HttpErrorResponse) {
+    if (error.status === 400) {
+      return Observable.throw(new BadInputError('Name already exists'));
+    }
+    return Observable.throw(new LumeerError(error.message));
   }
 
 }

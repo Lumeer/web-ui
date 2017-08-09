@@ -26,6 +26,8 @@ import {Perspective} from '../../perspective';
 import {Collection} from '../../../../core/dto/collection';
 import {CollectionModel} from '../../../../core/model/collection.model';
 import {Role} from '../../../permissions/role';
+import {LumeerError} from '../../../../core/error/lumeer.error';
+import {BadInputError} from '../../../../core/error/bad-input.error';
 
 @Component({
   selector: 'post-it-collections-perspective',
@@ -59,6 +61,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   public cachedName: string;
   public selectedIcon: string;
   public selectedColor: string;
+  public errorMessage: string;
 
   constructor(private collectionService: CollectionService) {
   }
@@ -102,6 +105,12 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     this.onSaveCollection(collectionModel);
   }
 
+  public onInputChange() {
+    if (this.errorMessage) {
+      this.errorMessage = null;
+    }
+  }
+
   public onSaveCollection(collectionModel: CollectionModel) {
     if (collectionModel.code) {
       if (collectionModel.name.length < this.collectionMinCharacters) {
@@ -123,11 +132,11 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public onDetailClick(collectionCode: String) {
-    console.log('onDetailClick');
+    // TODO
   }
 
   public onAttributesClick(collectionCode: String) {
-    console.log('onAttributesClick');
+    // TODO
   }
 
   public onEditClick(collectionCode: String) {
@@ -135,11 +144,11 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public onPermissionsClick(collectionCode: String) {
-    console.log('onPermissionsClick');
+    // TODO
   }
 
   public onDeleteClick(collectionCode: String) {
-    console.log('onDeleteClick');
+    // TODO
   }
 
   private loadCollections() {
@@ -149,12 +158,30 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
 
   private updateCollection(collectionModel: CollectionModel) {
     this.collectionService.updateCollection(collectionModel.code, collectionModel.toDto())
-      .subscribe();
+      .subscribe(
+        null,
+        (error: LumeerError) => {
+          if (error instanceof BadInputError) {
+            this.errorMessage = error.reason;
+          } else {
+            throw error;
+          }
+        }
+      );
   }
 
   private createCollection(collectionModel: CollectionModel) {
     this.collectionService.createCollection(collectionModel.toDto())
-      .subscribe((code: string) => collectionModel.code = code);
+      .subscribe(
+        (code: string) => collectionModel.code = code,
+        (error: LumeerError) => {
+          if (error instanceof BadInputError) {
+            this.errorMessage = error.reason;
+          } else {
+            throw error;
+          }
+        }
+      );
   }
 
 }

@@ -4,7 +4,7 @@
     <h4>Add collection</h4>
   </div>
 </div>
-<div class="col-lg-2 col-sm-3 col-xs-4 post-it"
+<div class="col-lg-2 col-sm-3 col-xs-4 post-it shadow"
      *ngFor="let newCollection of newCollections; let ix = index"
      [@appear]="''"
      [ngClass]="{'new-collection' : !newCollection.code }">
@@ -29,12 +29,18 @@
       <input name="name" placeholder={{placeholderTitle}}
              (focus)="onFocusCollectionName(newCollection)"
              (blur)="onBlurCollectionName(newCollection)"
+             (ngModelChange)="onInputChange()"
              id="name" [ngStyle]="{'color':newCollection.color}"
              [(ngModel)]="newCollection.name" required minlength="{{collectionMinCharacters}}" #name="ngModel">
     </div>
-    <small class="text-danger err-msg" [hidden]="name.valid || (name.pristine && !f.submitted)">
-      Minimum {{collectionMinCharacters}} characters
-    </small>
+    <div class="err-msg">
+      <small class="text-danger" *ngIf="name.touched && !name.valid">
+        Minimum {{collectionMinCharacters}} characters
+      </small>
+      <small class="text-danger" *ngIf="errorMessage">
+        {{errorMessage}}
+      </small>
+    </div>
   </form>
 
   <div class="actions" *ngIf="newCollection.code">
@@ -46,7 +52,7 @@
   </div>
 </div>
 
-<div class="col-lg-2 col-sm-3 col-xs-4 post-it" *ngFor="let oneCollection of collections">
+<div class="col-lg-2 col-sm-3 col-xs-4 post-it shadow" *ngFor="let oneCollection of collections">
   <div class="num-documents">{{oneCollection.documentCount}}
     <i class="fa fa-file-text-o"></i>
   </div>
@@ -58,7 +64,9 @@
     <i class="fa fa-eye action" (click)="onDetailClick(oneCollection.code)"></i>
     <i class="fa fa-list-ul action" (click)="onAttributesClick(oneCollection.code)"></i>
     <i *ngIf="hasWriteRole(oneCollection)" class="fa fa-pencil action" (click)="onEditClick(oneCollection.code)"></i>
-    <i *ngIf="hasManageRole(oneCollection)" class="fa fa-users action" (click)="onPermissionsClick(oneCollection.code)"></i>
-    <i *ngIf="hasManageRole(oneCollection)" class="fa fa-trash action delete" (click)="onDeleteClick(oneCollection.code)"></i>
+    <i *ngIf="hasManageRole(oneCollection)" class="fa fa-users action"
+       (click)="onPermissionsClick(oneCollection.code)"></i>
+    <i *ngIf="hasManageRole(oneCollection)" class="fa fa-trash action delete"
+       (click)="onDeleteClick(oneCollection.code)"></i>
   </div>
 </div>
