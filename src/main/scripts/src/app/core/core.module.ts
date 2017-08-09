@@ -37,6 +37,7 @@ import {RolesService} from './rest/roles.service';
 import {HomeComponent} from './home.component';
 import {SharedModule} from '../shared/shared.module';
 import {SearchService} from './rest/search.service';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import {SearchService} from './rest/search.service';
     FormsModule,
     HttpModule,
     SharedModule,
-    HttpClientModule
+    HttpClientModule,
+    RouterModule
   ],
   declarations: [
     HeaderComponent,

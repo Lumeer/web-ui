@@ -10,7 +10,7 @@
 
 <div class="menu">
   <div class="project" *ngIf="workspaceService.isWorkspaceSet()">
-    <a routeLink="/workspace">
+    <a [routerLink]="['/workspace']">
       <span>{{workspaceService.projectCode}}@{{workspaceService.organizationCode}}</span>
     </a>
   </div>
