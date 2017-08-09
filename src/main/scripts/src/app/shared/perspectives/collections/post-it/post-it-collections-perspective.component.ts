@@ -124,14 +124,18 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public hasWriteRole(collection: Collection) {
-    return collection.userRoles.indexOf(Role.write) !== -1;
+    return collection.userRoles.some(role => role === Role.write);
   }
 
   public hasManageRole(collection: Collection) {
-    return collection.userRoles.indexOf(Role.manage) !== -1;
+    return collection.userRoles.some(role => role === Role.manage);
   }
 
   public onDetailClick(collectionCode: String) {
+    // TODO
+  }
+
+  public onDocumentsClick(collectionCode: String) {
     // TODO
   }
 
@@ -140,7 +144,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public onEditClick(collectionCode: String) {
-    console.log('onEditClick');
+    // TODO
   }
 
   public onPermissionsClick(collectionCode: String) {
