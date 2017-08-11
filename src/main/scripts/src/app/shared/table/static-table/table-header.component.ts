@@ -39,4 +39,8 @@ export class TableHeaderComponent {
   public onHover(index) {
     this.hoverIndex = index;
   }
+
+  public toggleColumn(index, hidden) {
+    hidden ? this.showColumn.next(index) : this.hideColumn.next(index);
+  }
 }

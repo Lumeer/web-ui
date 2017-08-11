@@ -29,7 +29,9 @@ export class StaticTableComponent {
   public data = {
     settings: {
       color: '#3498DB',
-      highlightColor: '#F39C12'
+      highlightColor: '#F39C12',
+      editable: true,
+      lineNumberColor: '#b4bcc2'
     },
     header: [{label: 'first', active: false}, {label: 'second', active: false}, {label: 'third', active: false}],
     rows: [
@@ -40,45 +42,58 @@ export class StaticTableComponent {
     activeRow: -1
   };
 
-  public onNewColumn() {
+  public onNewColumn(): void {
     this.data.header = [...this.data.header, {label: '', active: false}];
-    this.data.rows = this.data.rows.map(data => [...data, {label: ''}]);
+    this.data.rows.forEach((item) => {
+      item.push({label: ''});
+    });
   }
 
-  public onNewRow() {
+  public onNewRow(): void {
     this.data.rows = [...this.data.rows, StaticTableComponent.generateData(this.data.header)];
   }
 
-  public onItemHighlight(index, data) {
+  public onItemHighlight(index, data): void {
     this.data.activeRow = index;
     this.data.header = StaticTableComponent.inactivateItems(this.data.header);
     this.data.header[data.colIndex].active = true;
+    this.checkLastRowCol(index, data.colIndex);
   }
 
-  public onTableBlur() {
+  public onTableBlur(): void {
     this.data.activeRow = -1;
     this.data.header = StaticTableComponent.inactivateItems(this.data.header);
   }
 
-  public onUpdateRow(rowIndex, dataPayload) {
+  public onUpdateRow(rowIndex, dataPayload): void {
     this.data.rows[rowIndex][dataPayload.index].label = dataPayload.data;
   }
 
-  public onRemoveColumn(colIndex) {
+  public onRemoveColumn(colIndex): void {
     this.data.header.splice(colIndex, 1);
     this.data.rows = this.data.rows.map(oneRow => {oneRow.splice(colIndex, 1); return oneRow;});
   }
 
-  public showHideColumn(colIndex, hidden: boolean) {
+  public showHideColumn(colIndex: number, hidden: boolean): void {
     this.data.header[colIndex]['hidden'] = hidden;
     this.data.rows = this.data.rows.map(oneRow => {oneRow[colIndex]['hidden'] = hidden; return oneRow;});
   }
 
-  private static generateData(header) {
-    return header.map(data => {return {label: ''};});
+  public checkLastRowCol(index, colIndex) {
+    if (index === this.data.rows.length - 1) {
+      this.onNewRow();
+    }
+
+    if (colIndex === this.data.header.length - 1) {
+      this.onNewColumn();
+    }
   }
 
-  private static inactivateItems(items) {
+  private static generateData(header): any {
+    return header.map(() => {return {label: ''};});
+  }
+
+  private static inactivateItems(items): any {
     return items.map(data => {data.active = false; return data;});
   }
 }

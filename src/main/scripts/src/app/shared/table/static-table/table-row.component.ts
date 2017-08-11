@@ -35,11 +35,11 @@ export class TableRowComponent {
   @Output() public updateRow: EventEmitter<any> = new EventEmitter();
   public model: string;
 
-  public onEdit(item, index) {
+  public onEdit(item, index): void {
     this.updateRow.next({index: index, data: item});
   }
 
-  public onItemClicked(index) {
+  public onItemClicked(index): void {
     this.itemHighlight.next({colIndex: index});
   }
 }
