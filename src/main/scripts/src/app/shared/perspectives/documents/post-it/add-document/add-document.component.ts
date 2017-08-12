@@ -127,6 +127,10 @@ export class PostItAddDocumentComponent {
     let attribute = this.attributeInputs[index];
     this.attributePreview.emit(attribute);
     attribute.previousName = attribute.name;
+
+    if (!attribute.name) {
+      this.attributeInputs.splice(index, 1);
+    }
   }
 
   public newAttributeValue(key: string): void {

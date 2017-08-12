@@ -46,9 +46,26 @@ export class PostItDocumentComponent {
   public newAttributePreview: EventEmitter<object> = new EventEmitter();
 
   public onRemoveDocumentClick(): void {
-    if (confirm('Deleting a document is irreversable. Delete anyway?')) {
-      this.onDelete.emit();
-    }
+    let BootstrapDialog = window['BootstrapDialog'];
+
+    BootstrapDialog.show({
+      type: BootstrapDialog.TYPE_DANGER,
+      title: 'Delete Document?',
+      message: 'Deleting a document will permamently remove it from this collection.',
+      buttons: [{
+        label: 'No, Keep Document',
+        hotkey: 27, // Esc
+        action: dialog => dialog.close()
+      }, {
+        label: 'Yes, Delete Document',
+        cssClass: 'btn-danger',
+        hotkey: 13, // Enter
+        action: dialog => {
+          this.onDelete.emit();
+          dialog.close();
+        }
+      }]
+    });
   }
 
 }
