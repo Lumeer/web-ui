@@ -26,7 +26,6 @@ import {HttpModule} from '@angular/http';
 
 import {WorkspaceService} from './workspace.service';
 import {HeaderComponent} from './header/header.component';
-import {HttpClient} from './rest/http-client.service';
 import {UserSettingsService} from './rest/user-settings.service';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ProjectService} from './rest/project.service';
@@ -56,7 +55,6 @@ import {RouterModule} from '@angular/router';
   providers: [
     CollectionService,
     DocumentService,
-    HttpClient,
     OrganizationService,
     ProjectService,
     RolesService,

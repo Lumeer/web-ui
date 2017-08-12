@@ -20,8 +20,7 @@
 
 import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
-
-import {HttpClient} from './http-client.service';
+import {HttpClient} from '@angular/common/http';
 import {UserSettings} from '../dto/user.settings';
 import {Observable} from 'rxjs/Observable';
 
@@ -32,12 +31,11 @@ export class UserSettingsService {
   }
 
   public getUserSettings(): Observable<UserSettings> {
-    return this.httpClient.get(UserSettingsService.apiPrefix())
-      .map(response => response.json() as UserSettings);
+    return this.httpClient.get<UserSettings>(UserSettingsService.apiPrefix());
   }
 
   public updateUserSettings(userSettings: UserSettings): Observable<Response> {
-    return this.httpClient.put(UserSettingsService.apiPrefix(), JSON.stringify(userSettings));
+    return this.httpClient.put(UserSettingsService.apiPrefix(), userSettings);
   }
 
   private static apiPrefix(): string {

@@ -20,10 +20,9 @@
 
 import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
-
 import {Organization} from '../dto/organization';
 import {Observable} from 'rxjs/Observable';
-import {HttpClient} from './http-client.service';
+import {HttpClient} from '@angular/common/http';
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -33,13 +32,11 @@ export class OrganizationService {
   }
 
   public getOrganizations(): Observable<Organization[]> {
-    return this.httpClient.get(OrganizationService.apiPrefix())
-      .map(response => response.json() as Organization[]);
+    return this.httpClient.get<Organization[]>(OrganizationService.apiPrefix());
   }
 
   public getOrganization(code: string): Observable<Organization> {
-    return this.httpClient.get(OrganizationService.apiPrefix(code))
-      .map(response => response.json() as Organization);
+    return this.httpClient.get<Organization>(OrganizationService.apiPrefix(code));
   }
 
   public deleteOrganization(code: string): Observable<Response> {
@@ -47,11 +44,11 @@ export class OrganizationService {
   }
 
   public createOrganization(organization: Organization): Observable<Response> {
-    return this.httpClient.post(OrganizationService.apiPrefix(), JSON.stringify(organization));
+    return this.httpClient.post(OrganizationService.apiPrefix(), organization);
   }
 
   public editOrganization(code: string, organization: Organization): Observable<Response> {
-    return this.httpClient.put(OrganizationService.apiPrefix(code), JSON.stringify(organization));
+    return this.httpClient.put(OrganizationService.apiPrefix(code), organization);
   }
 
   private static apiPrefix(code?: string): string {

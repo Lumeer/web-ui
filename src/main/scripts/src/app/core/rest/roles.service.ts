@@ -19,8 +19,7 @@
  */
 
 import {Injectable} from '@angular/core';
-
-import {HttpClient} from './http-client.service';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable()
 export class RolesService {

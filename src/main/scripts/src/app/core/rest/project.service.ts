@@ -20,10 +20,9 @@
 
 import {Injectable} from '@angular/core';
 import {Response} from '@angular/http';
-
 import {Project} from '../dto/project';
 import {Observable} from 'rxjs/Observable';
-import {HttpClient} from './http-client.service';
+import {HttpClient} from '@angular/common/http';
 import 'rxjs/add/operator/map';
 
 @Injectable()
@@ -33,13 +32,11 @@ export class ProjectService {
   }
 
   public getProjects(orgCode: string): Observable<Project[]> {
-    return this.httpClient.get(ProjectService.apiPrefix(orgCode))
-      .map(response => response.json() as Project[]);
+    return this.httpClient.get<Project[]>(ProjectService.apiPrefix(orgCode));
   }
 
   public getProject(orgCode: string, projCode: string): Observable<Project> {
-    return this.httpClient.get(ProjectService.apiPrefix(orgCode, projCode))
-      .map(response => response.json() as Project);
+    return this.httpClient.get<Project>(ProjectService.apiPrefix(orgCode, projCode));
   }
 
   public deleteProject(orgCode: string, projCode: string): Observable<Response> {
@@ -47,11 +44,11 @@ export class ProjectService {
   }
 
   public createProject(orgCode: string, project: Project): Observable<Response> {
-    return this.httpClient.post(ProjectService.apiPrefix(orgCode), JSON.stringify(project));
+    return this.httpClient.post(ProjectService.apiPrefix(orgCode), project);
   }
 
   public editProject(orgCode: string, projCode: string, project: Project): Observable<Response> {
-    return this.httpClient.put(ProjectService.apiPrefix(orgCode, projCode), JSON.stringify(project));
+    return this.httpClient.put(ProjectService.apiPrefix(orgCode, projCode), project);
   }
 
   private static apiPrefix(orgCode: string, projCode?: string): string {
