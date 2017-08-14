@@ -19,18 +19,18 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {OrganizationService} from '../../core/rest/organization.service';
+import {OrganizationService} from '../../../core/rest/organization.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
-import {Organization} from '../../core/dto/organization';
-import {WorkspaceService} from '../../core/workspace.service';
+import {Organization} from '../../../core/dto/organization';
+import {WorkspaceService} from '../../../core/workspace.service';
 
 @Component({
-  selector: 'organization-edit',
-  templateUrl: './organization-edit.component.html',
-  styleUrls: ['./organization-edit.component.scss']
+  selector: 'organization-form',
+  templateUrl: './organization-form.component.html',
+  styleUrls: ['./organization-form.component.scss']
 })
-export class OrganizationEditComponent implements OnInit {
+export class OrganizationFormComponent implements OnInit {
 
   private organization: Organization;
   private organizationCode: string;

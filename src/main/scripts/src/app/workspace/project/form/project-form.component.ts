@@ -19,18 +19,18 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ProjectService} from '../../core/rest/project.service';
+import {ProjectService} from '../../../core/rest/project.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
-import {Project} from '../../core/dto/project';
-import {WorkspaceService} from '../../core/workspace.service';
+import {Project} from '../../../core/dto/project';
+import {WorkspaceService} from '../../../core/workspace.service';
 
 @Component({
-  selector: 'project-edit',
-  templateUrl: './project-edit.component.html',
-  styleUrls: ['./project-edit.component.scss']
+  selector: 'project-form',
+  templateUrl: './project-form.component.html',
+  styleUrls: ['./project-form.component.scss']
 })
-export class ProjectEditComponent implements OnInit {
+export class ProjectFormComponent implements OnInit {
 
   private project: Project;
   private organizationCode: string;

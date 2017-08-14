@@ -21,15 +21,15 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
-import {OrganizationEditComponent} from './organization-edit/organization-edit.component';
-import {ProjectEditComponent} from './project-edit/project-edit.component';
+import {OrganizationFormComponent} from './organization/form/organization-form.component';
+import {ProjectFormComponent} from './project/form/project-form.component';
 
 const workspaceRoutes: Routes = [
   {path: 'workspace', component: WorkspaceChooserComponent},
-  {path: 'organization/:organizationCode/project/:projectCode/edit', component: ProjectEditComponent},
-  {path: 'organization/:organizationCode/project/add', component: ProjectEditComponent},
-  {path: 'organization/:organizationCode/edit', component: OrganizationEditComponent},
-  {path: 'organization/add', component: OrganizationEditComponent}
+  {path: 'organization/:organizationCode/project/:projectCode/edit', component: ProjectFormComponent},
+  {path: 'organization/:organizationCode/project/add', component: ProjectFormComponent},
+  {path: 'organization/:organizationCode/edit', component: OrganizationFormComponent},
+  {path: 'organization/add', component: OrganizationFormComponent}
 ];
 
 @NgModule({
