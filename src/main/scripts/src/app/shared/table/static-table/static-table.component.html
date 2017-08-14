@@ -1,0 +1,25 @@
+<div class="static-table">
+  <table-header [header]="data.header"
+                [settings]="data.settings"
+                (newColumn)="onNewColumn()"
+                (removeColumn)="onRemoveColumn($event)"
+                (hideColumn)="showHideColumn($event, true)"
+                (showColumn)="showHideColumn($event, false)"
+                class="static-header"></table-header>
+  <div class="static-rows"
+       (focusout)="onTableBlur()">
+    <table-row *ngFor="let oneRow of data.rows; let index = index"
+               [settings]="data.settings"
+               [rowIndex]="index"
+               [isActive]="index === data.activeRow"
+               [row]="oneRow"
+               (itemHighlight)="onItemHighlight(index, $event)"
+               (updateRow)="onUpdateRow(index, $event)"
+               class="static-row"></table-row>
+  </div>
+  <button (click)="onNewRow()"
+          type="button"
+          class="btn btn-xs">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+  </button>
+</div>

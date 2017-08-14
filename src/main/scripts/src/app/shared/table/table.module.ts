@@ -22,11 +22,9 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
-import {PerspectivesModule} from './perspectives/perspectives.module';
-import {PermissionsComponent} from './permissions/permissions.component';
-import {PermissionsTableComponent} from './permissions/table/permissions-table.component';
-import {SearchBoxComponent} from './search-box/search-box.component';
-import {TableModule} from './table/table.module';
+import {StaticTableComponent} from './static-table/static-table.component';
+import {TableHeaderComponent} from './static-table/table-header.component';
+import {TableRowComponent} from './static-table/table-row.component';
 
 @NgModule({
   imports: [
@@ -34,19 +32,14 @@ import {TableModule} from './table/table.module';
     FormsModule
   ],
   declarations: [
-    PermissionsComponent,
-    PermissionsTableComponent,
-    SearchBoxComponent
+    StaticTableComponent,
+    TableHeaderComponent,
+    TableRowComponent,
   ],
   exports: [
-    CommonModule,
-    FormsModule,
-    PermissionsComponent,
-    PerspectivesModule,
-    SearchBoxComponent,
-    TableModule
+    StaticTableComponent
   ]
 })
-export class SharedModule {
+export class TableModule {
 
 }

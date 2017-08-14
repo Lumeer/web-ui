@@ -1,0 +1,14 @@
+.static-table {
+  border-collapse: collapse;
+}
+
+table-header {
+  display: table-header-group;
+}
+
+.static-rows {
+  display: table-row-group;
+  table-row {
+    display: table-row;
+  }
+}

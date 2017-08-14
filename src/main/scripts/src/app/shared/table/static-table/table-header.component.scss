@@ -1,0 +1,67 @@
+.header-item {
+  display: table-cell;
+  padding: 5px 5px 2px 5px;
+  border: 1px solid #888;
+
+  &.first {
+    vertical-align: top;
+  }
+
+  &.header-hidden {
+    padding: 5px 0 2px 0;
+    opacity: 0.5;
+  }
+
+  span[contenteditable] {
+    display: inline-block;
+    min-width: 20px;
+  }
+
+  &.active {
+    opacity: 0.8;
+  }
+
+  .header-title {
+    vertical-align: top;
+  }
+
+  .header-actions {
+    i {
+      cursor: pointer;
+    }
+
+    div:not(.placeholder) {
+      display: inline-block;
+      vertical-align: super;
+
+      &.dropdown button {
+        margin-top: -5px;
+      }
+    }
+  }
+
+  .header-title, .header-actions {
+    display: inline-block;
+  }
+
+  .placeholder {
+    width: 22px;
+    height: 15px;
+  }
+
+  .dropdown, .placeholder {
+    display: inline-block;
+
+    .dropdown-toggle {
+      background: none;
+    }
+
+    li {
+      cursor: pointer;
+    }
+  }
+}
+
+[contenteditable]:focus {
+  outline: 0 solid transparent;
+}

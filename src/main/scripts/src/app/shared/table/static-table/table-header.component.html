@@ -1,0 +1,40 @@
+<div class="header-item first" [ngStyle]="{'background-color': settings.color}">#</div>
+<div *ngFor="let headerItem of header; let index = index"
+     [ngStyle]="{
+       'background-color': settings.color,
+       'border-color': headerItem.active ? settings.highlightColor : '#888'
+     }"
+     [ngClass]="{active: headerItem.active, 'header-hidden': headerItem.hidden}"
+     (mouseover)="onHover(index)"
+     class="header-item">
+  <div class="header-title">
+    <span *ngIf="!headerItem.hidden"
+          [attr.contenteditable]="settings.editable">
+    {{ headerItem.label || '&nbsp;'}}
+  </span>
+  </div>
+  <div class="header-actions">
+    <div>
+      <i class="fa"
+         [ngClass]="{'fa-eye': headerItem.hidden, 'fa-eye-slash': !headerItem.hidden}"
+         [attr.title]="headerItem.hidden ? 'Show' : 'Hide'"
+         (click)="toggleColumn(index, headerItem.hidden)"></i>
+    </div>
+    <div class="dropdown" *ngIf="index === hoverIndex && !headerItem.hidden">
+      <button class="btn btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li (click)="removeColumn.next(index)">Remove</li>
+        <li (click)="hideColumn.next(index)" *ngIf="!headerItem.hidden">Hide</li>
+        <li (click)="showColumn.next(index)" *ngIf="headerItem.hidden">Show</li>
+      </ul>
+    </div>
+    <div class="placeholder" *ngIf="index !== hoverIndex && !headerItem.hidden"></div>
+  </div>
+</div>
+<button (click)="newColumn.next()"
+        type="button"
+        class="btn btn-xs">
+  <i class="fa fa-plus" aria-hidden="true"></i>
+</button>
