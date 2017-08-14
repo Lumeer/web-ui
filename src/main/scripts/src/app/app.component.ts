@@ -31,6 +31,14 @@ import {WorkspaceService} from './core/workspace.service';
 })
 export class AppComponent implements OnInit {
 
+  public notificationsOptions = {
+    position: ['top'],
+    timeOut: 5000,
+    showProgressBar: false,
+    animate: 'fromLeft',
+    lastOnBottom: true
+  };
+
   constructor(private workspaceService: WorkspaceService,
               private router: Router) {
   }
@@ -47,7 +55,6 @@ export class AppComponent implements OnInit {
         }
       }
     });
-
   }
 
 }

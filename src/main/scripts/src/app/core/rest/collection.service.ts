@@ -45,7 +45,8 @@ export class CollectionService {
         .set('size', pageSize.toString());
     }
 
-    return this.http.get<Collection[]>(this.apiPrefix(), queryParams);
+    return this.http.get<Collection[]>(this.apiPrefix(), queryParams)
+      .catch(CollectionService.handleGlobalError);
   }
 
   public createCollection(collection: Collection): Observable<string> {
@@ -59,7 +60,8 @@ export class CollectionService {
   }
 
   public getCollection(collectionCode: string): Observable<Collection> {
-    return this.http.get<Collection>(`${this.apiPrefix()}/${collectionCode}`);
+    return this.http.get<Collection>(`${this.apiPrefix()}/${collectionCode}`)
+      .catch(CollectionService.handleGlobalError);
   }
 
   public getAttributes(collectionCode: string): Observable<Attribute[]> {
@@ -77,6 +79,10 @@ export class CollectionService {
     if (error.status === 400) {
       return Observable.throw(new BadInputError('Name already exists'));
     }
+    return CollectionService.handleGlobalError(error);
+  }
+
+  private static handleGlobalError(error: HttpErrorResponse) {
     return Observable.throw(new LumeerError(error.message));
   }
 

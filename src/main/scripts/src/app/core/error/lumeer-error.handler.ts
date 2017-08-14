@@ -18,16 +18,24 @@
  * -----------------------------------------------------------------------/
  */
 
-import {ErrorHandler} from '@angular/core';
+import {ErrorHandler, Injectable} from '@angular/core';
+
+import {LumeerError} from './lumeer.error';
+import {NotificationsService} from 'angular2-notifications/dist';
 
 /**
  * This class provides handling unexpecting errors
  */
-export class LumeerErrorHandler implements ErrorHandler {
+@Injectable()
+export class LumeerErrorHandler extends ErrorHandler {
 
-  public handleError(error: any): void {
-    alert('An unexpected error occured');
+  constructor(private notificationService: NotificationsService) {
+    super(false);
+  }
+
+  public handleError(error: LumeerError): void {
     console.log(error);
+    this.notificationService.error('Error', error.reason);
   }
 
 }
