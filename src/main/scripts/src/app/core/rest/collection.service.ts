@@ -30,6 +30,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import {BadInputError} from '../error/bad-input.error';
 import {LumeerError} from '../error/lumeer.error';
+import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 
 @Injectable()
 export class CollectionService {
@@ -75,14 +76,14 @@ export class CollectionService {
     return `/${API_URL}/rest/organizations/${organization}/projects/${project}/collections/`;
   }
 
-  private static handleError(error: HttpErrorResponse) {
+  private static handleError(error: HttpErrorResponse): ErrorObservable {
     if (error.status === 400) {
       return Observable.throw(new BadInputError('Name already exists'));
     }
     return CollectionService.handleGlobalError(error);
   }
 
-  private static handleGlobalError(error: HttpErrorResponse) {
+  private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {
     return Observable.throw(new LumeerError(error.message));
   }
 
