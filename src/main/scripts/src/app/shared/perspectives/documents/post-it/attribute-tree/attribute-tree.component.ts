@@ -18,103 +18,164 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {isArray, isNullOrUndefined, isNumber, isObject, isString} from 'util';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {DocumentAttribute} from '../document-attribute';
+import {Attribute} from '../../../../../core/dto/attribute';
+import {AttributeInputElement} from './attribute-input-element';
 
 @Component({
   selector: 'attribute-tree',
   templateUrl: './attribute-tree.component.html',
-  styleUrls: ['./attribute-tree.component.scss'],
-  host: {
-    '(document:click)': 'onClick($event.target)',
-    '(document:keydown)': 'onKeypress($event)'
-  }
+  styleUrls: ['./attribute-tree.component.scss']
 })
 export class AttributeTreeComponent {
 
   @Input()
-  public children: object;
+  public index: number;
+
+  @Input()
+  public attributes: Attribute[];
+
+  @Input()
+  public set data(attributes: object) {
+    for (let key of Object.keys(attributes)) {
+
+      let value;
+      if (typeof attributes[key] === 'string') {
+        value = attributes[key];
+      } else {
+        value = JSON.stringify(attributes[key], undefined, 2);
+      }
+
+      this.attributeInputs.push({
+        name: key,
+        value: value,
+        previousName: value
+      });
+    }
+  }
 
   @Input()
   public editable: boolean;
 
   @Output()
-  public change: EventEmitter<string> = new EventEmitter();
+  public attributeChangeEvent = new EventEmitter<DocumentAttribute>();
 
-  @Output()
-  public newAttribute: EventEmitter<object> = new EventEmitter();
+  public attributeInputs = [] as DocumentAttribute[];
 
-  @ViewChild('newAttributeInput')
-  public newAttributeInput: ElementRef;
+  public newAttributeInput = {} as DocumentAttribute;
 
-  private previousNewAttribute = '';
+  private selectedInput = {} as AttributeInputElement;
 
-  /**
-   * Workaround because pipes were extremely slow
-   */
-  public keys(object: object): string[] {
-    return Object.keys(object);
+  public generateId(x: number, y: number) {
+    return `Input${this.index}[${x}, ${y}]`;
   }
 
-  public isArray(element: any): boolean {
-    return isArray(element);
+  public possibleAttributes(): string[] {
+    return this.attributes
+      .sort((a, b) => a.count > b.count ? -1 : a.count < b.count ? 1 : 0) // sort by frequency
+      .map(attribute => attribute.name);
   }
 
-  /**
-   * Element is at the end of attribute-value tree
-   */
-  public isLeaf(element: any): boolean {
-    return isNumber(element) || isString(element);
+  public onInputKey(event: KeyboardEvent): void {
+    this.checkSelectedInputChange(event);
   }
 
-  public isString(element: any): boolean {
-    return isString(element);
-  }
-
-  public isNumber(element: any): boolean {
-    return isNumber(element);
-  }
-
-  public isStringArray(element: object[]): boolean {
-    return element.every(this.isString);
-  }
-
-  public isObject(element: any): boolean {
-    return !isArray(element) && !isString(element);
-  }
-
-  public isDefined(element: any): boolean {
-    return !isNullOrUndefined(element);
-  }
-
-  public event(event: string) {
-    this.change.emit(event);
-  }
-
-  public newAttributeChange(value: string): void {
-    this.newAttribute.emit({value: value, previousValue: this.previousNewAttribute});
-    this.previousNewAttribute = value;
-  }
-
-  public onClick(target: EventTarget): void {
-    if (!this.newAttributeInput.nativeElement.contains(target)) {
-      this.onClickOutsideNewAttributeInput();
+  private checkSelectedInputChange(event: KeyboardEvent) {
+    switch(event.key) {
+      case 'ArrowUp':
+        this.selectAdjacentInput(0, -1, true);
+        break;
+      case 'ArrowDown':
+        this.selectAdjacentInput(0, 1, true);
+        break;
+      case 'ArrowLeft':
+        this.selectAdjacentInput(-1, 0, true);
+        break;
+      case 'ArrowRight':
+        this.selectAdjacentInput(1, 0, true);
+        break;
+      case 'Enter':
+        if (this.selectedInput.x === 1) {
+          this.selectAdjacentInput(-1, 1);
+        } else {
+          this.selectAdjacentInput(1, 0);
+        }
     }
   }
 
-  private onClickOutsideNewAttributeInput() {
-    this.resetNewAttribute();
-  }
+  private selectAdjacentInput(xChange: number, yChange: number, checkCursorOnEdge?: boolean) {
+    if (checkCursorOnEdge) {
+      if (xChange && !this.cursorOnTextEdge(xChange)) {
+        return;
+      }
+    }
 
-  private onKeypress(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
-      this.resetNewAttribute();
+    if (xChange || yChange) {
+      this.selectInput(this.selectedInput.x + xChange, this.selectedInput.y + yChange);
     }
   }
 
-  public resetNewAttribute(): void {
-    this.newAttributeInput.nativeElement.value = '';
-    this.previousNewAttribute = '';
+  public selectInput(x: number, y: number): void {
+    if (!this.outOfBounds(x, y)) {
+      this.selectedInput.x = x;
+      this.selectedInput.y = y;
+      this.selectedInput.id = this.generateId(x, y);
+      this.selectedInput.element = this.getInput(x, y);
+
+      this.selectedInput.element.focus();
+    }
   }
 
+  private cursorOnTextEdge(xDirection: number): boolean | undefined {
+    if (xDirection < 0) {
+      return this.selectedInput.element.selectionStart === 0;
+    }
+
+    if (xDirection > 0) {
+      return this.selectedInput.element.selectionEnd === this.selectedInput.element.value.length;
+    }
+
+    return undefined;
+  }
+
+  private outOfBounds(x: number, y: number): boolean {
+    if (x < 0 || x > 1) {
+      return true;
+    }
+    if (y < 0 || y > this.attributeInputs.length) {
+      return true;
+    }
+
+    return false;
+  }
+
+  private getInput(x: number, y: number): HTMLInputElement {
+    let elementId = this.generateId(x, y);
+    return document.getElementById(elementId) as HTMLInputElement;
+  }
+
+  public attributeChange(index: number): void {
+    let attribute = this.attributeInputs[index];
+    this.attributeChangeEvent.emit(attribute);
+    attribute.previousName = attribute.name;
+
+    if (!attribute.name) {
+      this.attributeInputs.splice(index, 1);
+    }
+  }
+
+  public newAttributeValue(key: string): void {
+    if (key.length === 1) {
+      this.newAttributeInput.value = key;
+      this.attributeInputs.push(this.newAttributeInput);
+
+      this.attributeChange(this.attributeInputs.length - 1);
+      window.setTimeout(() => {
+        this.selectInput(1, this.attributeInputs.length - 1);
+      }, 0);
+
+      this.newAttributeInput = {} as DocumentAttribute;
+    }
+  }
 }

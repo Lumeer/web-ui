@@ -26,7 +26,6 @@ import {PostItDocumentsPerspectiveComponent} from './post-it/post-it-documents-p
 import {PostItAddDocumentComponent} from './post-it/add-document/add-document.component';
 import {PostItDocumentComponent} from './post-it/document/post-it-document.component';
 import {AttributeTreeComponent} from './post-it/attribute-tree/attribute-tree.component';
-import {AttributeComponent} from './post-it/attribute-tree/attribute-value/attribute-value.component';
 import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
 
 @NgModule({
@@ -39,7 +38,6 @@ import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspe
     PostItAddDocumentComponent,
     PostItDocumentComponent,
     AttributeTreeComponent,
-    AttributeComponent,
     TableDocumentsPerspectiveComponent
   ],
   entryComponents: [

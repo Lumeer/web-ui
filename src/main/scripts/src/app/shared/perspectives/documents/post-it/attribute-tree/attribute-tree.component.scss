@@ -1,41 +1,53 @@
+@import "../../../../../../styles/variables";
+
 :host {
   display: block;
 }
 
-ul {
-  padding: 0;
-  margin-bottom: 0;
-}
+tr {
+  display: inline-flex;
+  padding: 3.5px 0;
 
-li {
-  margin: 3.5px 0;
-  padding-left: 10px;
+  border-bottom: 1px solid #e5e5e5;
 
-  & > * {
+  &:last-child {
+    border-bottom: none;
+  }
+
+  div {
+    display: inherit;
+    padding: 0 3px;
+
+    &:hover {
+      background: #f7f7f7;
+    }
+  }
+
+  td {
+    display: inline-flex;
+  }
+
+  label {
     margin: 0;
-    padding: 0;
   }
 
-  &:hover {
-    background: #f7f7f7;
+  input {
+    width: 100%;
+    border: 0;
+    padding-left: 6.5px;
+    background-color: transparent;
+
+    &:focus {
+      outline-color: #2c3e50;
+      outline-offset: -3px;
+      outline-width: medium;
+      outline-style: auto;
+      -moz-outline-radius: 4px;
+    }
   }
 }
 
-.divider {
-  height: 1px;
-  background: #e5e5e5;
-}
-
-input {
-  width: 100%;
-  padding-left: 10px;
-
+.attribute-column {
+  width: 125px;
   font-weight: bold;
-
-  background: transparent;
-  border: 0;
-
-  &:focus {
-    outline: auto;
-  }
 }

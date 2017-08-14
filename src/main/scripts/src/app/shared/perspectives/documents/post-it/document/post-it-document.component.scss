@@ -8,11 +8,11 @@
 
   background: $secondary-color;
   box-shadow: $default-shadow-down;
-  display: block;
-  position: relative;
+  display: inline-block;
+  width: 100%;
 
-  margin: 7.5px;
   padding: 6px 10px;
+  margin-bottom: 10px;
 
   border: 1px solid #cccccc;
   border-radius: $border-radius-small;

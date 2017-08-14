@@ -18,15 +18,11 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component} from '@angular/core';
+export interface AttributeInputElement {
 
-import {AttributeTreeComponent} from '../attribute-tree.component';
-
-@Component({
-  selector: 'attribute-value',
-  templateUrl: './attribute-value.component.html',
-  styleUrls: ['./attribute-value.component.scss']
-})
-export class AttributeComponent extends AttributeTreeComponent {
+  id: string;
+  x: number;
+  y: number;
+  element: HTMLInputElement;
 
 }

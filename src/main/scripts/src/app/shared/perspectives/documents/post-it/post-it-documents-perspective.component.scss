@@ -28,14 +28,8 @@
 }
 
 .perspective {
-  column-width: 300px;
-  column-gap: 0;
-
-  // Padding between post-its
-  .post-it-block {
-    width: 100%;
-    display: inline-block;
-  }
+  position: relative;
+  column-width: 275px;
 }
 
 .load-more {

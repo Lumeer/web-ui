@@ -170,7 +170,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
     this.updatePending = true;
     this.sendDocumentUpdate = this.updateFunction(document);
-    this.updateTimer = window.setTimeout(this.sendDocumentUpdate, 4000);
+    this.updateTimer = window.setTimeout(this.sendDocumentUpdate, 1500);
   }
 
   private resetTimer(document: Document): void {

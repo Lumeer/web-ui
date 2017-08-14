@@ -49,19 +49,19 @@ export class IconPickerComponent {
   public enabled: boolean;
 
   @Output()
-  private colorChange: EventEmitter<string> = new EventEmitter();
+  private colorChange = new EventEmitter<string>();
 
   @Input('color')
   public activeColor: string;
 
   @Output()
-  private iconChange: EventEmitter<string> = new EventEmitter();
+  private iconChange = new EventEmitter<string>();
 
   @Input('icon')
   public activeIcon: string;
 
   @Output()
-  private onSelected: EventEmitter<string> = new EventEmitter();
+  private onSelected = new EventEmitter<string>();
 
   public colorChangeEvent(event: string): void {
     this.colorChange.emit(event);

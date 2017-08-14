@@ -1,16 +1,48 @@
-<ng-container *ngFor="let attribute of keys(children)">
-  <ng-container *ngIf="isDefined(children[attribute])">
-    <li>
-      <label>{{ attribute }}:</label>
-      <ng-container *ngIf="isLeaf(children[attribute])">{{ children[attribute] }}</ng-container>
-      <attribute-value *ngIf="!isLeaf(children[attribute])"
-                       [children]="children[attribute]"
-                       [editable]="editable"
-                       (change)="event($event)"></attribute-value>
-    </li>
+<table>
+  <tr *ngFor="let attribute of attributeInputs; let idx = index">
+    <div>
+      <td class="attribute-column">
+        <!--IDs folow the sturcure: Input_index_[x, y]-->
+        <input type="text" list="attributes" [attr.id]="generateId(0, idx)"
+               [disabled]="!editable"
+               [(ngModel)]="attribute.name"
+               (ngModelChange)="attributeChange(idx)"
+               (keyup)="onInputKey($event)"
+               (click)="selectInput(0, idx)"/>
+        <label>:</label>
+      </td>
+      <td class="value-column">
+        <input [attr.id]="generateId(1, idx)"
+               [disabled]="!editable"
+               [(ngModel)]="attribute.value"
+               (ngModelChange)="attributeChange(idx)"
+               (keyup)="onInputKey($event)"
+               (click)="selectInput(1, idx)"/>
+      </td>
+    </div>
+  </tr>
 
-    <div class="divider"></div>
-  </ng-container>
-</ng-container>
+  <tr *ngIf="editable">
+    <div>
+      <td class="attribute-column">
+        <input type="text" placeholder="Attribute" list="attributes" [attr.id]="generateId(0, attributeInputs.length)"
+               [(ngModel)]="newAttributeInput.name"
+               (keyup)="onInputKey($event)"
+               (click)="selectInput(0, attributeInputs.length)"/>
+        <label>:</label>
+      </td>
+      <td class="value-column">
+        <input [attr.id]="generateId(1, attributeInputs.length)"
+               [disabled]="!newAttributeInput.name"
+               [(ngModel)]="newAttributeInput.value"
+               (keyup)="onInputKey($event); newAttributeValue($event.key);"
+               (click)="selectInput(1, attributeInputs.length)"/>
+      </td>
+    </div>
 
-<li><input type="text" #newAttributeInput placeholder="Attribute" (input)="newAttributeChange($event.target.value)"/></li>
+  </tr>
+</table>
+
+<datalist *ngIf="editable" id="attributes">
+  <option *ngFor="let attribute of possibleAttributes()" value="{{ attribute }}">
+</datalist>

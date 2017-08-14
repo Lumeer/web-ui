@@ -1,122 +1,38 @@
 @import "../../../../../../styles/variables";
 
 :host {
-  -webkit-transition: all 0.25s;
-  -moz-transition: all 0.25s;
-  -o-transition: all 0.25s;
-  transition: all 0.25s;
+  display: inline-block;
+  width: 100%;
 
-  display: block;
-  color: #a0a1ad;
-  background: $secondary-color;
-  box-shadow: $default-shadow-down;
-
-  position: relative;
-
-  margin: 7.5px;
-  padding: 10px;
-
-  border: 1px solid #cccccc;
-  border-radius: $border-radius-small;
-
-  .header {
-    overflow: hidden;
-
-    .collection-icon {
-      font-size: 20px;
-      &:hover {
-        background: transparent;
-      }
-    }
-
-    .name {
-      padding-left: 10px;
-      margin: 0;
-
-      font-size: large;
-      letter-spacing: 0.5px;
-    }
-
-    .editable {
-      float: right;
-      padding: 4px;
-    }
-  }
-
-  table {
-    display: block;
-    min-height: 100px;
-    margin-top: 5px;
-
-    color: $brand-primary;
-    border: 1px solid #e5e5e5;
-    border-radius: $border-radius-small;
-
-    tr {
-      display: inline-flex;
-      padding: 3.5px 0;
-
-      border-bottom: 1px solid #e5e5e5;
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      div {
-        display: inherit;
-        padding-left: 10px;
-
-        &:hover {
-          background: #f7f7f7;
-        }
-      }
-
-      td {
-        display: inline-flex;
-      }
-
-      label {
-        margin: 0;
-      }
-
-      input {
-        width: 100%;
-        font-weight: bold;
-        border: 0;
-        padding-left: 6.5px;
-        background-color: transparent;
-
-        &:focus {
-          outline: auto;
-        }
-      }
-    }
-
-  }
-
-  .edit {
-    padding-top: 5px;
-
-    .secondary-edit {
-      float: right;
-    }
-  }
-
-  &:hover {
-    box-shadow: $default-shadow-up;
-    i {
-      color: #a0a1ad;
-    }
-  }
+  padding-top: 57.5px;
+  height: 200px;
+  text-align: center;
 }
 
-i {
+a {
   -webkit-transition: color 0.25s;
   -moz-transition: color 0.25s;
   -o-transition: color 0.25s;
   transition: color 0.25s;
 
-  color: $secondary-color;
-  margin: 0 0 0 3px;
-  font-size: medium;
+  color: $brand-primary;
+  display: block;
+
+  margin: 0 80px;
+  border-radius: 20px;
+
+  &:hover {
+    color: $brand-success;
+  }
+}
+
+i {
+  font-size: 60px;
+  border-radius: 60px;
+}
+
+label {
+  display: block;
+  font-size: large;
+  pointer-events: none;
 }

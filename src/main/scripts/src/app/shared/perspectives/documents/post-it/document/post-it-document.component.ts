@@ -22,6 +22,8 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {Collection} from '../../../../../core/dto/collection';
 import {Document} from '../../../../../core/dto/document';
+import {Attribute} from '../../../../../core/dto/attribute';
+import {DocumentAttribute} from '../document-attribute';
 
 @Component({
   selector: 'post-it-document',
@@ -29,6 +31,12 @@ import {Document} from '../../../../../core/dto/document';
   styleUrls: ['./post-it-document.component.scss']
 })
 export class PostItDocumentComponent {
+
+  @Input()
+  public index: number;
+
+  @Input()
+  public attributes: Attribute[];
 
   @Input()
   public collection: Collection;
@@ -40,31 +48,33 @@ export class PostItDocumentComponent {
   public editable: boolean;
 
   @Output()
-  public onDelete: EventEmitter<any> = new EventEmitter();
+  public onDelete = new EventEmitter();
 
   @Output()
-  public newAttributePreview: EventEmitter<object> = new EventEmitter();
+  public attributeChange = new EventEmitter<DocumentAttribute>();
 
   public onRemoveDocumentClick(): void {
     let BootstrapDialog = window['BootstrapDialog'];
 
     BootstrapDialog.show({
-      type: BootstrapDialog.TYPE_DANGER,
+      type: 'type-success',
       title: 'Delete Document?',
       message: 'Deleting a document will permamently remove it from this collection.',
-      buttons: [{
-        label: 'No, Keep Document',
-        hotkey: 27, // Esc
-        action: dialog => dialog.close()
-      }, {
-        label: 'Yes, Delete Document',
-        cssClass: 'btn-danger',
-        hotkey: 13, // Enter
-        action: dialog => {
-          this.onDelete.emit();
-          dialog.close();
+      buttons: [
+        {
+          label: 'No, Keep Document',
+          action: dialog => dialog.close()
+        },
+        {
+          label: 'Yes, Delete Document',
+          cssClass: 'btn-success',
+          hotkey: 13, // Enter
+          action: dialog => {
+            this.onDelete.emit();
+            dialog.close();
+          }
         }
-      }]
+      ]
     });
   }
 
