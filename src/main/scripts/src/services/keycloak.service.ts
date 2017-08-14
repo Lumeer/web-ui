@@ -15,7 +15,8 @@ export class KeycloakService {
     });
 
     KeycloakService.auth.loggedIn = false;
-    KeycloakService.auth.isDisabled = kcSetting.disabled;
+    KeycloakService.auth.isDisabled = kcSetting.disabled || LUMEER_ENV === 'development';
+    kcSetting.disabled = kcSetting.disabled || LUMEER_ENV === 'development';
     return new Promise((resolve, reject) => {
       if (kcSetting.disabled) {
         resolve();
