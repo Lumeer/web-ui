@@ -84,6 +84,8 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
   private previouslyEditedDocument: Document;
 
+  private layout: any;
+
   constructor(private documentService: DocumentService,
               private collectionService: CollectionService,
               private workspaceService: WorkspaceService,
@@ -141,7 +143,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
   private initializeLayout() {
     window.setTimeout(() => {
-      $(`.${this.MASONRY_GRID}`)['masonry']({
+      this.layout = $(`.${this.MASONRY_GRID}`)['masonry']({
         gutter: 15,
         stamp: `.${this.MASONRY_GRID}-stamp`,
         itemSelector: `.${this.MASONRY_GRID}-item`,
@@ -149,6 +151,23 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
         percentPosition: true
       });
     }, 50);
+  }
+
+  private moveDocumentToTheFront(index: number) {
+    window.setTimeout(() => {
+      this.layout.masonry('prepended', $(`#${this.generateId(index)}`));
+    }, 0);
+  }
+
+  private removeFromLayout(index: number) {
+    window.setTimeout(() => {
+      this.layout.masonry('remove', $(`#${this.generateId(index)}`));
+      this.refreshLayout();
+    }, 0);
+  }
+
+  private refreshLayout() {
+    this.layout.masonry('layout');
   }
 
   public increaseBlockHeight(): void {
@@ -165,12 +184,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
     this.moveDocumentToTheFront(this.documents.length - 1);
   }
 
-  private moveDocumentToTheFront(index: number) {
-    window.setTimeout(() => {
-      $(`.${this.MASONRY_GRID}`)['masonry']('prepended', $(`#${this.generateId(index)}`));
-    }, 50);
-  }
-
   public removeDocument(index: number): void {
     this.flushUpdateTimer();
 
@@ -179,12 +192,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
     let deletedDocument = this.documents[index];
     this.documents.splice(index, 1);
     this.documentService.removeDocument(this.collection.code, deletedDocument);
-  }
-
-  private removeFromLayout(index: number) {
-    window.setTimeout(() => {
-      $(`.${this.MASONRY_GRID}`)['masonry']('remove', $(`#${this.generateId(index)}`)).masonry('layout');
-    }, 50);
   }
 
   public addAttribute(document: Document, attribute: DocumentAttribute): void {
@@ -196,6 +203,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
       delete document.data[attribute.name];
     }
 
+    this.refreshLayout();
     this.updateDocument(document);
   }
 
