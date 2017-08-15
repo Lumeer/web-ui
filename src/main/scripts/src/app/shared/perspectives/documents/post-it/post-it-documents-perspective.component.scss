@@ -29,7 +29,26 @@
 
 .perspective {
   position: relative;
-  column-width: 275px;
+
+  &grid:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+}
+
+.grid-item {
+  @media all and (max-width: 1023px) {
+    width: 300px;
+  }
+  @media all and (min-width: 1024px) and (max-width: 1499px) {
+    width: 24%;
+  }
+  @media all and (min-width: 1500px) {
+    width: 19.25%;
+  }
+
+  margin-bottom: 15px;
 }
 
 .load-more {

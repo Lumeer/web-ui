@@ -8,11 +8,9 @@
 
   background: $secondary-color;
   box-shadow: $default-shadow-down;
-  display: inline-block;
-  width: 100%;
+  display: block;
 
   padding: 6px 10px;
-  margin-bottom: 10px;
 
   border: 1px solid #cccccc;
   border-radius: $border-radius-small;
@@ -43,9 +41,7 @@
   }
 
   .content {
-    min-height: 100px;
     margin-top: 5px;
-
     border: 1px solid #e5e5e5;
     border-radius: $border-radius-small;
     overflow: hidden;

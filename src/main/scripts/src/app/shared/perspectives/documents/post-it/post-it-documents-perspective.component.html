@@ -1,12 +1,15 @@
-<div [style.height]="height + 'px'" class="perspective-block">
-  <div [style.height]="height + PERSPECTIVE_OVERFLOW_BASE_HEIGHT + 'px'" class="perspective">
+<div class="perspective-block"
+     [style.height]="height + 'px'">
 
-    <add-document class="post-it-block"
-                  *ngIf="editable"
+  <div class="perspective {{ MASONRY_GRID }}"
+       [style.height]="height + PERSPECTIVE_OVERFLOW_BASE_HEIGHT + 'px'">
+
+    <add-document *ngIf="editable" class="{{ MASONRY_GRID }}-item {{ MASONRY_GRID }}-stamp"
                   [@appear]="''"
                   (onCreate)="createDocument()"></add-document>
 
-    <post-it-document *ngFor="let document of documents; let idx = index"
+    <post-it-document *ngFor="let document of documents; let idx = index" class="{{ MASONRY_GRID }}-item"
+                      [attr.id]="generateId(idx)"
                       [@appear]="''"
                       [index]="idx"
                       [attributes]="attributes"
@@ -16,6 +19,7 @@
                       (onDelete)="removeDocument(idx)"
                       (attributeChange)="addAttribute(documents[idx], $event)">
     </post-it-document>
+
   </div>
 </div>
 

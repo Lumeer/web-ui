@@ -39,11 +39,11 @@ import {Perspective} from '../../perspective';
     trigger('appear', [
       transition(':enter', [
         style({transform: 'scale(0)'}),
-        animate('0.25s ease-out', style({transform: 'scale(1)'})),
+        animate('0.25s ease-out', style({transform: 'scale(1)'}))
       ]),
       transition(':leave', [
         style({transform: 'scale(1)'}),
-        animate('0.25s ease-out', style({transform: 'scale(0)'})),
+        animate('0.25s ease-out', style({transform: 'scale(0)'}))
       ])
     ])
   ]
@@ -56,21 +56,22 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
   public readonly PERSPECTIVE_BASE_HEIGHT = 450;
 
+  public readonly MASONRY_GRID = 'grid';
+
   @Input()
   public query: string;
 
-  // TODO REMOVE
   @Input()
-  public editable: boolean = true;
+  public editable: boolean;
 
   @Input()
   public height = this.PERSPECTIVE_BASE_HEIGHT;
 
   public collection: Collection;
 
-  public attributes = [] as Attribute[];
+  public attributes: Attribute[] = [];
 
-  public documents = [] as Document[];
+  public documents: Document[] = [];
 
   /**
    * To prevent sending data after each data change, the timer provides 'buffering', by waiting a while after each change before sending
@@ -87,6 +88,10 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
               private collectionService: CollectionService,
               private workspaceService: WorkspaceService,
               private route: ActivatedRoute) {
+  }
+
+  public generateId(index: number) {
+    return `Document${index}`;
   }
 
   public ngOnInit() {
@@ -121,7 +126,10 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
         this.collection = collection;
         return this.documentService.getDocuments(collection.code);
       })
-      .subscribe(documents => this.documents = documents);
+      .subscribe(documents => {
+        this.documents = documents;
+        this.initializeLayout();
+      });
   }
 
   private fetchAttributes(): void {
@@ -129,6 +137,18 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
       .map(params => params.get('collectionCode'))
       .switchMap(collectionCode => this.collectionService.getAttributes(collectionCode))
       .subscribe(attributes => this.attributes = attributes);
+  }
+
+  private initializeLayout() {
+    window.setTimeout(() => {
+      $(`.${this.MASONRY_GRID}`)['masonry']({
+        gutter: 15,
+        stamp: `.${this.MASONRY_GRID}-stamp`,
+        itemSelector: `.${this.MASONRY_GRID}-item`,
+        columnWidth: `.${this.MASONRY_GRID}-item`,
+        percentPosition: true
+      });
+    }, 50);
   }
 
   public increaseBlockHeight(): void {
@@ -139,16 +159,32 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
     this.flushUpdateTimer();
 
     let newDocument = new Document;
-    this.documents.unshift(newDocument);
+    this.documents.push(newDocument);
     this.documentService.createDocument(this.collection.code, newDocument);
+
+    this.moveDocumentToTheFront(this.documents.length - 1);
   }
 
-  public removeDocument(idx: number): void {
+  private moveDocumentToTheFront(index: number) {
+    window.setTimeout(() => {
+      $(`.${this.MASONRY_GRID}`)['masonry']('prepended', $(`#${this.generateId(index)}`));
+    }, 50);
+  }
+
+  public removeDocument(index: number): void {
     this.flushUpdateTimer();
 
-    let deletedDocument = this.documents[idx];
-    this.documents.splice(idx, 1);
+    this.removeFromLayout(index);
+
+    let deletedDocument = this.documents[index];
+    this.documents.splice(index, 1);
     this.documentService.removeDocument(this.collection.code, deletedDocument);
+  }
+
+  private removeFromLayout(index: number) {
+    window.setTimeout(() => {
+      $(`.${this.MASONRY_GRID}`)['masonry']('remove', $(`#${this.generateId(index)}`)).masonry('layout');
+    }, 50);
   }
 
   public addAttribute(document: Document, attribute: DocumentAttribute): void {
@@ -196,5 +232,4 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
       this.sendDocumentUpdate();
     }
   }
-
 }
