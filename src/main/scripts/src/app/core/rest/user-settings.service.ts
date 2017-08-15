@@ -39,7 +39,7 @@ export class UserSettingsService {
   }
 
   private static apiPrefix(): string {
-    return '/lumeer-engine/rest/settings/user';
+    return `/${API_URL}/rest/settings/user`;
   }
 
 }

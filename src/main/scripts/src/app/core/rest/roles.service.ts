@@ -30,7 +30,7 @@ export class RolesService {
   // TODO communicate with SecurityService through REST API
 
   private static apiPrefix(organizationCode: string): string {
-    return `/lumeer-engine/rest/roles/organizations/${organizationCode}/`;
+    return `/${API_URL}/rest/roles/organizations/${organizationCode}/`;
   }
 
 }

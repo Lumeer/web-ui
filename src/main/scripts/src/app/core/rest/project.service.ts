@@ -52,7 +52,7 @@ export class ProjectService {
   }
 
   private static apiPrefix(orgCode: string, projCode?: string): string {
-    return '/lumeer-engine/rest/organizations/' + orgCode + '/projects' + (projCode ? '/' + projCode : '');
+    return `/${API_URL}/rest/organizations/${orgCode}/projects${projCode ? `/${projCode}` : ''}`;
   }
 
 }
