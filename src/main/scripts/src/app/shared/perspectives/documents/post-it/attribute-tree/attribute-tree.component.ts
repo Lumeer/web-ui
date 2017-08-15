@@ -73,36 +73,31 @@ export class AttributeTreeComponent {
 
   public possibleAttributes(): string[] {
     return this.attributes
-      .sort((a, b) => a.count > b.count ? -1 : a.count < b.count ? 1 : 0) // sort by frequency
+      .sort((attribute1, attribute2) => {
+        if (attribute1.count > attribute2.count) {
+          return -1;
+        }
+
+        if (attribute1.count < attribute2.count) {
+          return 1;
+        }
+
+        return 0;
+      })
       .map(attribute => attribute.name);
   }
 
   public onInputKey(event: KeyboardEvent): void {
-    this.checkSelectedInputChange(event);
+    this.eventMapper.hasOwnProperty(event.key) && this.eventMapper[event.key]();
   }
 
-  private checkSelectedInputChange(event: KeyboardEvent) {
-    switch(event.key) {
-      case 'ArrowUp':
-        this.selectAdjacentInput(0, -1, true);
-        break;
-      case 'ArrowDown':
-        this.selectAdjacentInput(0, 1, true);
-        break;
-      case 'ArrowLeft':
-        this.selectAdjacentInput(-1, 0, true);
-        break;
-      case 'ArrowRight':
-        this.selectAdjacentInput(1, 0, true);
-        break;
-      case 'Enter':
-        if (this.selectedInput.x === 1) {
-          this.selectAdjacentInput(-1, 1);
-        } else {
-          this.selectAdjacentInput(1, 0);
-        }
-    }
-  }
+  private readonly eventMapper = {
+    ArrowUp: () => this.selectAdjacentInput(0, -1, true),
+    ArrowDown: () => this.selectAdjacentInput(0, 1, true),
+    ArrowLeft: () => this.selectAdjacentInput(-1, 0, true),
+    ArrowRight: () => this.selectAdjacentInput(1, 0, true),
+    Enter: () => this.selectedInput.x === 1 ? this.selectAdjacentInput(-1, 1) : this.selectAdjacentInput(1, 0)
+  };
 
   private selectAdjacentInput(xChange: number, yChange: number, checkCursorOnEdge?: boolean) {
     if (checkCursorOnEdge) {
@@ -173,7 +168,7 @@ export class AttributeTreeComponent {
       this.attributeChange(this.attributeInputs.length - 1);
       window.setTimeout(() => {
         this.selectInput(1, this.attributeInputs.length - 1);
-      }, 0);
+      });
 
       this.newAttributeInput = {} as DocumentAttribute;
     }

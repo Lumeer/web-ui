@@ -62,23 +62,17 @@ export class Document {
   public toDto(): object {
     let result = {};
 
-    this.addMetadata(result, '_id', this.id);
-    this.addMetadata(result, '_meta-create-date', this.creationDate);
-    this.addMetadata(result, '_meta-create-user', this.createdBy);
-    this.addMetadata(result, '_meta-version', this.version);
-    this.addMetadata(result, '_meta-update-date', this.updateDate);
-    this.addMetadata(result, '_meta-update-user', this.updatedBy);
+    this.id && (result['_id'] = this.id);
+    this.creationDate && (result['_meta-create-date'] = this.creationDate);
+    this.createdBy && (result['_meta-create-user'] = this.createdBy);
+    this.version && (result['_meta-version'] = this.version);
+    this.updateDate && (result['_meta-update-date'] = this.updateDate);
+    this.updatedBy && (result['_meta-update-user'] = this.updatedBy);
 
     Object.keys(this.data)
       .forEach(attribute => result[attribute] = this.data[attribute]);
 
     return result;
-  }
-
-  private addMetadata(json: object, key: string, value: any) {
-    if (value) {
-      json[key] = value;
-    }
   }
 
 }
