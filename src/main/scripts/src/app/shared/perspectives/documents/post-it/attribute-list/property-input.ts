@@ -18,11 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-export interface AttributeInputElement {
+export interface AttributePropertyInput {
 
   id: string;
-  x: number;
-  y: number;
+  propertyName: string;
+  inputTableX: number;
+  inputTableY: number;
   element: HTMLInputElement;
 
 }

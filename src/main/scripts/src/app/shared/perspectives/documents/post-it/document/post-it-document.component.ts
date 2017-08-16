@@ -23,7 +23,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Collection} from '../../../../../core/dto/collection';
 import {Document} from '../../../../../core/dto/document';
 import {Attribute} from '../../../../../core/dto/attribute';
-import {DocumentAttribute} from '../document-attribute';
+import {AttributePair} from '../document-attribute';
 
 @Component({
   selector: 'post-it-document',
@@ -48,10 +48,10 @@ export class PostItDocumentComponent {
   public editable: boolean;
 
   @Output()
-  public onDelete = new EventEmitter();
+  public removed = new EventEmitter();
 
   @Output()
-  public attributeChange = new EventEmitter<DocumentAttribute>();
+  public attributePairChange = new EventEmitter<AttributePair>();
 
   public onRemoveDocumentClick(): void {
     let BootstrapDialog = window['BootstrapDialog'];
@@ -70,7 +70,7 @@ export class PostItDocumentComponent {
           cssClass: 'btn-success',
           hotkey: 13, // Enter
           action: dialog => {
-            this.onDelete.emit();
+            this.removed.emit();
             dialog.close();
           }
         }

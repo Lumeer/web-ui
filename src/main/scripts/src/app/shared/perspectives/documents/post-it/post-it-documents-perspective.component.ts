@@ -19,17 +19,17 @@
  */
 
 import {animate, style, transition, trigger} from '@angular/animations';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {Component, Input, OnInit} from '@angular/core';
 
 import {DocumentService} from '../../../../core/rest/document.service';
-import {WorkspaceService} from '../../../../core/workspace.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Collection} from '../../../../core/dto/collection';
 import {Document} from '../../../../core/dto/document';
 import {Attribute} from '../../../../core/dto/attribute';
-import {DocumentAttribute} from './document-attribute';
+import {AttributePair} from './document-attribute';
 import {Perspective} from '../../perspective';
+import {Observable} from 'rxjs/Rx';
 
 @Component({
   selector: 'post-it-documents-perspective',
@@ -55,8 +55,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
   public readonly PERSPECTIVE_OVERFLOW_BASE_HEIGHT = 200;
 
   public readonly PERSPECTIVE_BASE_HEIGHT = 450;
-
-  public readonly MASONRY_GRID = 'grid';
 
   @Input()
   public query: string;
@@ -88,30 +86,31 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
   constructor(private documentService: DocumentService,
               private collectionService: CollectionService,
-              private workspaceService: WorkspaceService,
               private route: ActivatedRoute) {
   }
 
-  public generateId(index: number) {
+  public documentId(index: number) {
     return `Document${index}`;
   }
 
   public ngOnInit() {
-    this.initializeWorkspace();
-    this.fetchCollections();
-    this.fetchAttributes();
+    this.fetchData();
   }
 
-  private initializeWorkspace(): void {
-    if (!this.workspaceService.isWorkspaceSet()) {
-      this.route.paramMap.subscribe((params: ParamMap) => {
-        this.workspaceService.projectCode = params.get('projectCode');
-        this.workspaceService.organizationCode = params.get('organizationCode');
-      });
-    }
+  private fetchData() {
+    Observable.combineLatest(
+      this.getCollectionDocuments(),
+      this.getAttributes()
+    ).subscribe(data => {
+      const [documents, attributes] = data;
+
+      this.documents = documents;
+      this.attributes = attributes;
+      this.initializeLayout();
+    });
   }
 
-  private fetchCollections(): void {
+  private getCollectionDocuments(): Observable<Document[]> {
     // fallback, before subscription response
     this.collection = {
       code: '',
@@ -121,33 +120,28 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
       documentCount: 0
     };
 
-    this.route.paramMap
+    return this.route.paramMap
       .map(params => params.get('collectionCode'))
       .switchMap(collectionCode => this.collectionService.getCollection(collectionCode))
       .switchMap(collection => {
         this.collection = collection;
         return this.documentService.getDocuments(collection.code);
-      })
-      .subscribe(documents => {
-        this.documents = documents;
-        this.initializeLayout();
       });
   }
 
-  private fetchAttributes(): void {
-    this.route.paramMap
+  private getAttributes(): Observable<Attribute[]> {
+    return this.route.paramMap
       .map(params => params.get('collectionCode'))
-      .switchMap(collectionCode => this.collectionService.getAttributes(collectionCode))
-      .subscribe(attributes => this.attributes = attributes);
+      .switchMap(collectionCode => this.collectionService.getAttributes(collectionCode));
   }
 
   private initializeLayout() {
     window.setTimeout(() => {
-      this.layout = $(`.${this.MASONRY_GRID}`)['masonry']({
+      this.layout = $('.grid')['masonry']({
         gutter: 15,
-        stamp: `.${this.MASONRY_GRID}-stamp`,
-        itemSelector: `.${this.MASONRY_GRID}-item`,
-        columnWidth: `.${this.MASONRY_GRID}-item`,
+        stamp: '.grid-stamp',
+        itemSelector: '.grid-item',
+        columnWidth: '.grid-item',
         percentPosition: true
       });
     }, 50);
@@ -155,13 +149,13 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
   private moveDocumentToTheFront(index: number) {
     window.setTimeout(() => {
-      this.layout.masonry('prepended', $(`#${this.generateId(index)}`));
+      this.layout.masonry('prepended', $(`#${this.documentId(index)}`));
     }, 0);
   }
 
   private removeFromLayout(index: number) {
     window.setTimeout(() => {
-      this.layout.masonry('remove', $(`#${this.generateId(index)}`));
+      this.layout.masonry('remove', $(`#${this.documentId(index)}`));
       this.refreshLayout();
     }, 0);
   }
@@ -194,13 +188,13 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
     this.documentService.removeDocument(this.collection.code, deletedDocument);
   }
 
-  public addAttribute(document: Document, attribute: DocumentAttribute): void {
-    delete document.data[attribute.previousName];
+  public onAttributePairChange(document: Document, attributePair: AttributePair): void {
+    delete document.data[attributePair.previousAttributeName];
 
-    if (attribute.value !== '') {
-      document.data[attribute.name] = attribute.value;
+    if (attributePair.attribute) {
+      document.data[attributePair.attribute] = attributePair.value;
     } else {
-      delete document.data[attribute.name];
+      delete document.data[attributePair.attribute];
     }
 
     this.refreshLayout();

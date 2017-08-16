@@ -61,7 +61,7 @@ export class IconPickerComponent {
   public activeIcon: string;
 
   @Output()
-  private onSelected = new EventEmitter<string>();
+  private itemSelected = new EventEmitter<string>();
 
   public colorChangeEvent(event: string): void {
     this.colorChange.emit(event);
@@ -72,7 +72,7 @@ export class IconPickerComponent {
   }
 
   public selectionEvent(event: string): void {
-    this.onSelected.emit(event);
+    this.itemSelected.emit(event);
   }
 
 }

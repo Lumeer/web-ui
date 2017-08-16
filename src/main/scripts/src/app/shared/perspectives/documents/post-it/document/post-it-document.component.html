@@ -3,18 +3,18 @@
   <label class="name">{{ collection.name }}</label>
 
   <ng-container *ngIf="editable">
-    <a class="fa fa-fw fa-pencil editable" title="Edit Document" aria-hidden="true" (click)="attributeTree.selectInput(0, 0)"></a>
+    <a class="fa fa-fw fa-pencil editable" title="Edit Document" aria-hidden="true" (click)="attributeList.selectInput(0, 0)"></a>
     <a class="fa fa-fw fa-times editable" title="Remove Document" aria-hidden="true" (click)="onRemoveDocumentClick()"></a>
   </ng-container>
 </div>
 
 <div class="content">
-  <attribute-tree #attributeTree
+  <attribute-list #attributeList
                   [index]="index"
                   [attributes]="attributes"
                   [data]="document.data"
                   [editable]="editable"
-                  (attributeChangeEvent)="attributeChange.emit($event)"></attribute-tree>
+                  (attributePairChangeEvent)="attributePairChange.emit($event)"></attribute-list>
 </div>
 
 <!-- additional buttons -->

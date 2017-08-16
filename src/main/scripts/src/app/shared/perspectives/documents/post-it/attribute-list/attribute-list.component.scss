@@ -27,10 +27,6 @@ tr {
     display: inline-flex;
   }
 
-  label {
-    margin: 0;
-  }
-
   input {
     width: 100%;
     border: 0;
@@ -47,7 +43,7 @@ tr {
   }
 }
 
-.attribute-column {
+.name-column {
   width: 125px;
   font-weight: bold;
 }

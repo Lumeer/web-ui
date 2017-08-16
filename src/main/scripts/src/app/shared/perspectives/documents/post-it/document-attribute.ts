@@ -18,10 +18,10 @@
  * -----------------------------------------------------------------------/
  */
 
-export interface DocumentAttribute {
+export interface AttributePair {
 
-  name: string;
-  previousName: string;
+  attribute: string;
+  previousAttributeName: string;
   value: string;
 
 }
