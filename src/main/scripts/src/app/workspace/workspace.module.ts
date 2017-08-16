@@ -26,6 +26,10 @@ import {OrganizationFormComponent} from './organization/form/organization-form.c
 import {ProjectFormComponent} from './project/form/project-form.component';
 import {WorkspaceRoutingModule} from './workspace-routing.module';
 import {SharedModule} from '../shared/shared.module';
+import {OrganizationPermissionsComponent} from './organization/permissions/organization-permissions.component';
+import {ProjectPermissionsComponent} from './project/permissions/project-permissions.component';
+import {OrganizationSettingsComponent} from './organization/organization-settings.component';
+import {ProjectSettingsComponent} from './project/project-settings.component';
 
 @NgModule({
   imports: [
@@ -36,6 +40,10 @@ import {SharedModule} from '../shared/shared.module';
   declarations: [
     OrganizationFormComponent,
     ProjectFormComponent,
+    OrganizationPermissionsComponent,
+    ProjectPermissionsComponent,
+    OrganizationSettingsComponent,
+    ProjectSettingsComponent,
     WorkspaceChooserComponent
   ],
   exports: [

@@ -1,0 +1,13 @@
+.proj-header {
+  display: flex;
+  align-items: center;
+
+  .headline {
+    margin: 20px 0 !important;
+  }
+
+  .icon {
+    cursor: pointer;
+    padding: 5px;
+  }
+}

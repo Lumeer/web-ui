@@ -19,11 +19,11 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ProjectService} from '../../../core/rest/project.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
 import {Project} from '../../../core/dto/project';
 import {WorkspaceService} from '../../../core/workspace.service';
+import {ProjectService} from '../../../core/rest/project.service';
 
 @Component({
   selector: 'project-form',
@@ -49,13 +49,27 @@ export class ProjectFormComponent implements OnInit {
       this.organizationCode = params.get('organizationCode');
       this.projectCode = params.get('projectCode');
       if (this.projectCode) {
-        this.projectService.getProject(this.organizationCode, this.projectCode)
-          .subscribe(
-            (project: Project) => this.project = project,
-            error => this.errorMessage = error
-          );
+        this.getProject();
+      } else {
+        if (this.route.parent != null) {
+          this.route.parent.paramMap.subscribe((params: ParamMap) => {
+            this.organizationCode = params.get('organizationCode');
+            this.projectCode = params.get('projectCode');
+            if (this.projectCode) {
+              this.getProject();
+            }
+          });
+        }
       }
     });
+  }
+
+  public getProject(): void {
+    this.projectService.getProject(this.organizationCode, this.projectCode)
+      .subscribe(
+        (project: Project) => this.project = project,
+        error => this.errorMessage = error
+      );
   }
 
   public onSave() {
