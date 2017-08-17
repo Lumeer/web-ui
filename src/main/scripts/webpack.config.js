@@ -2,7 +2,10 @@
 const webpack = require('webpack'),
   path = require('path'),
   HtmlWebpackPlugin = require('html-webpack-plugin'),
-  CopyWebpackPlugin = require('copy-webpack-plugin');
+  CopyWebpackPlugin = require('copy-webpack-plugin'),
+  LUMEER_ENV = process.env.LUMEER_ENV || 'production',
+  LUMEER_ENGINE = process.env.LUMEER_ENGINE || 'lumeer-engine';
+
 module.exports = {
   entry: {
     'vendor': './src/vendor',
@@ -96,6 +99,10 @@ module.exports = {
       }
     }),
     new webpack.optimize.CommonsChunkPlugin({name: 'vendor', filename: 'js/vendor.bundle.js'}),
+    new webpack.DefinePlugin({
+      LUMEER_ENV: JSON.stringify(LUMEER_ENV),
+      API_URL: JSON.stringify(LUMEER_ENGINE)
+    })
   ],
   externals: {
     'jquery': 'jQuery',
@@ -108,9 +115,9 @@ module.exports = {
     historyApiFallback: true,
     port: 7000,
     proxy: {
-      '/lumeer-engine': {
-        target: 'http://127.0.0.1:8080/lumeer-engine',
-        pathRewrite: {'^/lumeer-engine' : ''}
+      ['/' + LUMEER_ENGINE]: {
+        target: 'http://127.0.0.1:8080/' + LUMEER_ENGINE,
+        pathRewrite: {['^/' + LUMEER_ENGINE] : ''}
       }
     }
   }

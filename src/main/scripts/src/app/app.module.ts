@@ -49,5 +49,4 @@ import {DocumentsModule} from './documents/documents.module';
   ]
 })
 export class AppModule {
-
 }

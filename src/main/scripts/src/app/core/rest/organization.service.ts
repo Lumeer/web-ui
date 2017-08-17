@@ -52,7 +52,7 @@ export class OrganizationService {
   }
 
   private static apiPrefix(code?: string): string {
-    return '/lumeer-engine/rest/organizations' + (code ? '/' + code : '');
+    return `/${API_URL}/rest/organizations${code ? `/${code}` : ''}`;
   }
 
 }

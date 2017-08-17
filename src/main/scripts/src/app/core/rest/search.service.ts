@@ -41,7 +41,7 @@ export class SearchService {
     let organization = this.workspaceService.organizationCode;
     let project = this.workspaceService.projectCode;
 
-    return `/lumeer-engine/rest/organizations/${organization}/projects/${project}/search`;
+    return `/${API_URL}/rest/organizations/${organization}/projects/${project}/search`;
   }
 
 }

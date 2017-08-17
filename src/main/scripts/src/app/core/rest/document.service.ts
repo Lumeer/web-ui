@@ -60,7 +60,7 @@ export class DocumentService {
     let organization = this.workspaceService.organizationCode;
     let project = this.workspaceService.projectCode;
 
-    return `/lumeer-engine/rest/organizations/${organization}/projects/${project}/collections/${collection}/documents`;
+    return `/${API_URL}/rest/organizations/${organization}/projects/${project}/collections/${collection}/documents`;
   }
 
 }
