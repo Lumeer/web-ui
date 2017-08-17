@@ -24,6 +24,7 @@ import {Collection} from '../../../../../core/dto/collection';
 import {Document} from '../../../../../core/dto/document';
 import {Attribute} from '../../../../../core/dto/attribute';
 import {AttributePair} from '../document-attribute';
+import {AttributePropertyInput} from '../attribute-list/attribute-property-input';
 
 @Component({
   selector: 'post-it-document',
@@ -46,6 +47,9 @@ export class PostItDocumentComponent {
 
   @Input()
   public editable: boolean;
+
+  @Input()
+  public selectedInput: AttributePropertyInput;
 
   @Output()
   public removed = new EventEmitter();

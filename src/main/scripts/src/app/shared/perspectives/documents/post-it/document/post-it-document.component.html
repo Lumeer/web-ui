@@ -1,6 +1,6 @@
 <div class="header">
   <i class="fa {{ collection.icon }} collection-icon" title="{{ collection.name }}" [style.color]="collection.color"></i>
-  <label class="name">{{ collection.name }}</label>
+  <label class="name" title="{{ collection.name }}" [style.color]="collection.color">{{ collection.name }}</label>
 
   <ng-container *ngIf="editable">
     <a class="fa fa-fw fa-pencil editable" title="Edit Document" aria-hidden="true" (click)="attributeList.selectInput(0, 0)"></a>
@@ -8,14 +8,13 @@
   </ng-container>
 </div>
 
-<div class="content">
-  <attribute-list #attributeList
-                  [index]="index"
-                  [attributes]="attributes"
-                  [data]="document.data"
-                  [editable]="editable"
-                  (attributePairChangeEvent)="attributePairChange.emit($event)"></attribute-list>
-</div>
+<attribute-list #attributeList class="content"
+                [index]="index"
+                [attributes]="attributes"
+                [data]="document.data"
+                [editable]="editable"
+                [selectedInput]="selectedInput"
+                (attributePairChangeEvent)="attributePairChange.emit($event)"></attribute-list>
 
 <!-- additional buttons -->
 <div class="edit">

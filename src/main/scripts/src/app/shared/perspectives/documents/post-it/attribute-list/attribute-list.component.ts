@@ -22,9 +22,8 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {Attribute} from '../../../../../core/dto/attribute';
 import {AttributePair} from '../document-attribute';
+import {AttributePropertyInput} from './attribute-property-input';
 import {isString} from 'util';
-import {AttributePropertyInput} from './property-input';
-import {asap} from 'rxjs/scheduler/asap';
 
 @Component({
   selector: 'attribute-list',
@@ -48,7 +47,7 @@ export class AttributeListComponent {
 
       this.attributePairs.push({
         attribute: attribute,
-        previousAttributeName: attribute,
+        previousAttributeName: '',
         value: value
       });
     }
@@ -57,6 +56,9 @@ export class AttributeListComponent {
   @Input()
   public editable: boolean;
 
+  @Input()
+  public selectedInput: AttributePropertyInput;
+
   @Output()
   public attributePairChangeEvent = new EventEmitter<AttributePair>();
 
@@ -64,105 +66,107 @@ export class AttributeListComponent {
 
   public newAttributePair = {} as AttributePair;
 
-  private selectedPropertyInput = {} as AttributePropertyInput;
+  private readonly propertyMapper = {
+    0: 'attribute',
+    1: 'value'
+  };
 
-  public inputId(x: number, y: number) {
-    return `Input${this.index}[${x}, ${y}]`;
+  private readonly eventMapper = {
+    ArrowUp: () => this.selectAdjacentInput(0, -1),
+    ArrowDown: () => this.selectAdjacentInput(0, 1),
+    ArrowLeft: () => this.selectAdjacentInput(-1, 0, true),
+    ArrowRight: () => this.selectAdjacentInput(1, 0, true),
+    Enter: () => this.selectedInput.column === 1 ? this.selectAdjacentInput(-1, 1) : this.selectAdjacentInput(1, 0)
+  };
+
+  private readonly selectionMapper = {
+    current: (x, y) => this.selectInput(x, y),
+    left: (x, y) => this.selectInput(1, y, this.index - 1),
+    right: (x, y) => this.selectInput(0, y, this.index + 1)
+  };
+
+  public inputId(x: number, y: number, index?: number) {
+    return `Input${index ? index : this.index}[${x}, ${y}]`;
   }
 
-  public suggsestedAttributes(): string[] {
+  public suggestedAttributes(): string[] {
     return this.attributes
-      .sort((attribute1, attribute2) => {
-        if (attribute1.count > attribute2.count) {
-          return -1;
-        }
+      .sort((attribute1, attribute2) => attribute2.count - attribute1.count)
+      .map(attribute => attribute.name)
+      .filter(attributeName => !this.usedAttributeName(attributeName));
+  }
 
-        if (attribute1.count < attribute2.count) {
-          return 1;
-        }
-
-        return 0;
-      })
-      .map(attribute => attribute.name);
+  private usedAttributeName(attributeName: string): boolean {
+    return this.attributePairs
+      .map(attributePair => attributePair.attribute)
+      .indexOf(attributeName) !== -1;
   }
 
   public onInputKey(event: KeyboardEvent): void {
     this.eventMapper.hasOwnProperty(event.key) && this.eventMapper[event.key]();
   }
 
-  private readonly eventMapper = {
-    ArrowUp: () => this.selectAdjacentInput(0, -1, true),
-    ArrowDown: () => this.selectAdjacentInput(0, 1, true),
-    ArrowLeft: () => this.selectAdjacentInput(-1, 0, true),
-    ArrowRight: () => this.selectAdjacentInput(1, 0, true),
-    Enter: () => this.selectedPropertyInput.inputTableX === 1 ? this.selectAdjacentInput(-1, 1) : this.selectAdjacentInput(1, 0)
-  };
-
-  private selectAdjacentInput(xChange: number, yChange: number, checkCursorOnEdge?: boolean) {
-    if (checkCursorOnEdge) {
-      if (xChange && !this.cursorOnTextEdge(xChange)) {
+  private selectAdjacentInput(xChange: number, yChange: number, checkCursorOnEdge?: boolean): void {
+    if (checkCursorOnEdge && !this.cursorOnTextEdge(xChange)) {
         return;
-      }
     }
 
     if (xChange || yChange) {
-      this.selectInput(this.selectedPropertyInput.inputTableX + xChange, this.selectedPropertyInput.inputTableY + yChange);
+      let xToSelect = this.selectedInput.column + xChange;
+      let yToSelect = this.selectedInput.row + yChange;
+
+      let documentToSelect = this.documentToSelect(xToSelect, yToSelect);
+      this.selectionMapper.hasOwnProperty(documentToSelect) && this.selectionMapper[documentToSelect](xToSelect, yToSelect);
     }
   }
 
-  public selectInput(x: number, y: number): void {
-    if (!this.outOfBounds(x, y)) {
-      this.selectedPropertyInput = {
-        id: this.inputId(x, y),
-        element: this.getInput(x, y),
-        inputTableX: x,
-        inputTableY: y,
-        propertyName: this.propertyMapper[x]
-      };
-
-      this.selectedPropertyInput.element.focus();
+  private documentToSelect(x: number, y: number): string {
+    if (x < 0) {
+      return 'left';
     }
+    if (x > 1) {
+      return 'right';
+    }
+    if (y < 0) {
+      return 'up';
+    }
+    if (y > this.attributePairs.length) {
+      return 'down';
+    }
+
+    return 'current';
   }
 
-  private readonly propertyMapper = {
-    0: 'attribute',
-    1: 'value'
-  };
-
-  private cursorOnTextEdge(xDirection: number): boolean | undefined {
-    if (xDirection < 0) {
-      return this.selectedPropertyInput.element.selectionStart === 0;
+  private cursorOnTextEdge(xChange: number): boolean {
+    if (xChange < 0) {
+      return this.selectedInput.element.selectionStart === 0;
     }
 
-    if (xDirection > 0) {
-      return this.selectedPropertyInput.element.selectionEnd === this.selectedPropertyInput.element.value.length;
-    }
-
-    return undefined;
-  }
-
-  private outOfBounds(x: number, y: number): boolean {
-    if (x < 0 || x > 1) {
-      return true;
-    }
-    if (y < 0 || y > this.attributePairs.length) {
-      return true;
+    if (xChange > 0) {
+      return this.selectedInput.element.selectionEnd === this.selectedInput.element.value.length;
     }
 
     return false;
   }
 
-  private getInput(x: number, y: number): HTMLInputElement {
-    let elementId = this.inputId(x, y);
-    return document.getElementById(elementId) as HTMLInputElement;
+  public selectInput(x: number, y: number, documentIndex?: number): void {
+    this.selectedInput.column = x;
+    this.selectedInput.row = y;
+    this.selectedInput.property = this.propertyMapper[x];
+    this.selectedInput.element = this.getInput(x, y, documentIndex);
+    this.selectedInput.element.focus();
+  }
+
+  private getInput(x: number, y: number, documentIndex?: number): HTMLInputElement {
+    return document.getElementById(this.inputId(x, y, documentIndex)) as HTMLInputElement;
   }
 
   public attributePairChange(attributePair: AttributePair, newPropertyValue: string): void {
-    if (this.selectedPropertyInput.propertyName === 'attribute') {
+    if (this.selectedInput.property === 'attribute') {
       attributePair.previousAttributeName = attributePair.attribute;
-      !newPropertyValue && this.attributePairs.splice(this.selectedPropertyInput.inputTableY, 1);
+      !newPropertyValue && this.attributePairs.splice(this.selectedInput.row, 1);
     }
-    attributePair[this.selectedPropertyInput.propertyName] = newPropertyValue;
+    attributePair[this.selectedInput.property] = newPropertyValue;
 
     this.attributePairChangeEvent.emit(attributePair);
   }
@@ -172,9 +176,9 @@ export class AttributeListComponent {
     this.attributePairs.push(this.newAttributePair);
     this.attributePairChangeEvent.emit(this.newAttributePair);
 
-    window.setTimeout(() => {
+    window.setImmediate(() => {
       this.newAttributePair = {} as AttributePair;
-      this.selectedPropertyInput.element.value = '';
+      this.selectedInput.element.value = '';
       this.selectInput(1, this.attributePairs.length - 1);
     });
   }

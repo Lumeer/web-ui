@@ -28,7 +28,10 @@ import {Collection} from '../../../../core/dto/collection';
 import {Document} from '../../../../core/dto/document';
 import {Attribute} from '../../../../core/dto/attribute';
 import {AttributePair} from './document-attribute';
+import {AttributePropertyInput} from './attribute-list/attribute-property-input';
 import {Perspective} from '../../perspective';
+import {MasonryLayout} from '../../../../utils/masonry-layout';
+import {Buffer} from '../../../../utils/buffer';
 import {Observable} from 'rxjs/Rx';
 
 @Component({
@@ -50,39 +53,28 @@ import {Observable} from 'rxjs/Rx';
 })
 export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit {
 
-  public readonly PERSPECTIVE_SEE_MORE_ADDED_HEIGHT = 400;
-
-  public readonly PERSPECTIVE_OVERFLOW_BASE_HEIGHT = 200;
-
-  public readonly PERSPECTIVE_BASE_HEIGHT = 450;
-
   @Input()
   public query: string;
 
   @Input()
-  public editable: boolean;
+  public editable: boolean = true;
 
   @Input()
-  public height = this.PERSPECTIVE_BASE_HEIGHT;
+  public height = 450;
 
   public collection: Collection;
 
-  public attributes: Attribute[] = [];
+  public attributes: Attribute[];
 
-  public documents: Document[] = [];
+  public documents: Document[];
 
-  /**
-   * To prevent sending data after each data change, the timer provides 'buffering', by waiting a while after each change before sending
-   */
-  private updateTimer: number;
+  public selectedInput: AttributePropertyInput;
 
-  private sendDocumentUpdate: () => void;
+  private updateBuffer: Buffer;
 
-  private updatePending: boolean;
+  private layout: MasonryLayout;
 
   private previouslyEditedDocument: Document;
-
-  private layout: any;
 
   constructor(private documentService: DocumentService,
               private collectionService: CollectionService,
@@ -93,25 +85,12 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
     return `Document${index}`;
   }
 
-  public ngOnInit() {
+  public ngOnInit(): void {
+    this.setFallbackData();
     this.fetchData();
   }
 
-  private fetchData() {
-    Observable.combineLatest(
-      this.getCollectionDocuments(),
-      this.getAttributes()
-    ).subscribe(data => {
-      const [documents, attributes] = data;
-
-      this.documents = documents;
-      this.attributes = attributes;
-      this.initializeLayout();
-    });
-  }
-
-  private getCollectionDocuments(): Observable<Document[]> {
-    // fallback, before subscription response
+  private setFallbackData(): void {
     this.collection = {
       code: '',
       name: 'No collection',
@@ -120,74 +99,55 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
       documentCount: 0
     };
 
-    return this.route.paramMap
-      .map(params => params.get('collectionCode'))
-      .switchMap(collectionCode => this.collectionService.getCollection(collectionCode))
-      .switchMap(collection => {
-        this.collection = collection;
-        return this.documentService.getDocuments(collection.code);
-      });
+    this.attributes = [];
+    this.documents = [];
+    this.selectedInput = {} as AttributePropertyInput;
   }
 
-  private getAttributes(): Observable<Attribute[]> {
-    return this.route.paramMap
-      .map(params => params.get('collectionCode'))
-      .switchMap(collectionCode => this.collectionService.getAttributes(collectionCode));
+  private fetchData(): void {
+    this.route.paramMap
+      .switchMap(paramMap => {
+        let collectionCode = paramMap.get('collectionCode');
+        return Observable.combineLatest(
+          this.collectionService.getCollection(collectionCode),
+          this.collectionService.getAttributes(collectionCode),
+          this.documentService.getDocuments(collectionCode)
+        );
+      }).subscribe(([collection, attributes, documents]) => {
+      this.collection = collection;
+      this.attributes = attributes;
+      this.documents = documents;
+      this.initializeLayout();
+    });
   }
 
-  private initializeLayout() {
-    window.setTimeout(() => {
-      this.layout = $('.grid')['masonry']({
-        gutter: 15,
-        stamp: '.grid-stamp',
-        itemSelector: '.grid-item',
-        columnWidth: '.grid-item',
-        percentPosition: true
-      });
-    }, 50);
-  }
-
-  private moveDocumentToTheFront(index: number) {
-    window.setTimeout(() => {
-      this.layout.masonry('prepended', $(`#${this.documentId(index)}`));
-    }, 0);
-  }
-
-  private removeFromLayout(index: number) {
-    window.setTimeout(() => {
-      this.layout.masonry('remove', $(`#${this.documentId(index)}`));
-      this.refreshLayout();
-    }, 0);
-  }
-
-  private refreshLayout() {
-    this.layout.masonry('layout');
-  }
-
-  public increaseBlockHeight(): void {
-    this.height += this.PERSPECTIVE_SEE_MORE_ADDED_HEIGHT;
+  private initializeLayout(): void {
+    window.setImmediate(() => this.layout = new MasonryLayout({
+      gutter: 15,
+      stamp: '.grid-stamp',
+      horizontalOrder: true,
+      percentPosition: true
+    }));
   }
 
   public createDocument(): void {
-    this.flushUpdateTimer();
+    this.updateBuffer && this.updateBuffer.flush();
 
     let newDocument = new Document;
-    this.documents.push(newDocument);
-    this.documentService.createDocument(this.collection.code, newDocument)
-      .subscribe((json: object) => newDocument.id = json['_id']);
+    this.documents.unshift(newDocument);
+    window.setImmediate(() => this.layout.prepend($(`#${this.documentId(0)}`)));
 
-    this.moveDocumentToTheFront(this.documents.length - 1);
+    this.documentService.createDocument(this.collection.code, newDocument);
   }
 
   public removeDocument(index: number): void {
-    this.flushUpdateTimer();
-
-    this.removeFromLayout(index);
+    this.updateBuffer && this.updateBuffer.flush();
 
     let deletedDocument = this.documents[index];
     this.documents.splice(index, 1);
-    this.documentService.removeDocument(this.collection.code, deletedDocument)
-      .subscribe();
+    window.setImmediate(() => this.layout.remove($(`#${this.documentId(index)}`)));
+
+    this.documentService.removeDocument(this.collection.code, deletedDocument);
   }
 
   public onAttributePairChange(document: Document, attributePair: AttributePair): void {
@@ -199,42 +159,26 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
       delete document.data[attributePair.attribute];
     }
 
-    this.refreshLayout();
+    window.setImmediate(() => this.layout.refresh());
     this.updateDocument(document);
   }
 
   private updateDocument(document: Document): void {
-    this.resetTimer(document);
+    if (this.lastEditedDocument(document)) {
+      this.updateBuffer.stageChanges();
+    } else {
+      this.updateBuffer && this.updateBuffer.flush();
+      this.updateBuffer = new Buffer(() => {
+        this.documentService.updateDocument(this.collection.code, document);
+        document.version += 1;
+      }, 2000);
+    }
 
     this.previouslyEditedDocument = document;
-
-    this.updatePending = true;
-    this.sendDocumentUpdate = this.updateFunction(document);
-    this.updateTimer = window.setTimeout(this.sendDocumentUpdate, 1500);
   }
 
-  private resetTimer(document: Document): void {
-    if (this.previouslyEditedDocument && this.previouslyEditedDocument !== document) {
-      this.flushUpdateTimer();
-    } else {
-      clearTimeout(this.updateTimer);
-    }
+  private lastEditedDocument(document: Document): boolean {
+    return this.previouslyEditedDocument && this.previouslyEditedDocument === document;
   }
 
-  private updateFunction(document: Document): () => void {
-    return () => {
-      this.updatePending = false;
-
-      this.documentService.updateDocument(this.collection.code, document)
-        .subscribe();
-      document.version += 1;
-    };
-  }
-
-  private flushUpdateTimer(): void {
-    if (this.updatePending) {
-      clearTimeout(this.updateTimer);
-      this.sendDocumentUpdate();
-    }
-  }
 }

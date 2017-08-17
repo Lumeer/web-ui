@@ -1,11 +1,6 @@
 @import "../../../../../../styles/variables";
 
 :host {
-  -webkit-transition: all 0.25s;
-  -moz-transition: all 0.25s;
-  -o-transition: all 0.25s;
-  transition: all 0.25s;
-
   background: $secondary-color;
   box-shadow: $default-shadow-down;
   display: block;
@@ -26,7 +21,7 @@
     }
 
     .name {
-      opacity: 0.5;
+      opacity: 0.75;
       padding-left: 10px;
       margin: 0;
 

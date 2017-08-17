@@ -20,10 +20,9 @@
 
 export interface AttributePropertyInput {
 
-  id: string;
-  propertyName: string;
-  inputTableX: number;
-  inputTableY: number;
+  property: string;
+  column: number;
+  row: number;
   element: HTMLInputElement;
 
 }
