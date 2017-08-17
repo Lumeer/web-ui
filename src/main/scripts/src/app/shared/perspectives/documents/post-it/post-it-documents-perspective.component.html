@@ -1,63 +1,25 @@
-<div [style.height]="height" class="perspective-block">
-  <div [style.height]="higherBy(height, 200)" class="perspective">
-    <!--Add new document-->
-    <div class="post-it-block" *ngIf="editable">
-      <div class="post-it text-center">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="First Attribute"
-                 [(ngModel)]="addDocumentAttribute"
-                 (ngModelChange)="checkAddButtonColor()"
-                 (keyup.enter)="createDocument()">
-        </div>
+<div class="perspective-block"
+     [style.height]="height + 'px'">
 
-        <i class="fa fa-plus-circle add color-changing ripple" aria-hidden="true"
-           (mouseenter)="setCursorOnAddButton(true)"
-           (mouseleave)="setCursorOnAddButton(false)"
-           [style.color]="addButtonColor"
-           (click)="createDocument()"></i>
-        <div class="description color-changing"
-             (mouseenter)="setCursorOnAddButton(true)"
-             (mouseleave)="setCursorOnAddButton(false)"
-             [style.color]="addButtonColor">
-          Add Document
-        </div>
-      </div>
-    </div>
+  <div class="perspective grid"
+       [style.height]="height + PERSPECTIVE_OVERFLOW_BASE_HEIGHT + 'px'">
 
-    <!--Document post-its-->
-    <div class="post-it-block" [@appear]="''" *ngFor="let document of documents; let idx = index">
-      <div class="post-it">
-        <!-- icon and name -->
-        <div class="header">
-          <span class="icon" title="{{ collection.name }}">
-            <i class="fa fa-fw {{ collection.icon }}" [style.color]="collection.color"></i>
-          </span>
-          <span class="name">{{ collection.name }}</span>
-          <span class="editable">
-            <a><i class="fa fa-pencil editable" title="Edit Document" *ngIf="editable" aria-hidden="true"></i></a>
-          </span>
-        </div>
+    <add-document *ngIf="editable" class="grid-item grid-stamp"
+                  [@appear]="''"
+                  (newDocument)="createDocument()"></add-document>
 
-        <!-- attributes -->
-        <div class="content">
-          <attribute-tree [children]="document.attributes" [root]="true"></attribute-tree>
-        </div>
+    <post-it-document *ngFor="let document of documents; let idx = index" class="grid-item"
+                      [@appear]="''"
+                      [attr.id]="documentId(idx)"
+                      [index]="idx"
+                      [attributes]="attributes"
+                      [collection]="collection"
+                      [document]="document"
+                      [editable]="editable"
+                      (removed)="removeDocument(idx)"
+                      (attributePairChange)="onAttributePairChange(document, $event)">
+    </post-it-document>
 
-        <!-- additional buttons -->
-        <div class="edit">
-          <span class="primary-edit">
-            <a><i class="fa fa-search" aria-hidden="true" title="Details"></i></a>
-          </span>
-
-          <span class="secondary-edit">
-            <a><i class="fa fa-sign-in" aria-hidden="true" title="Incoming Links"></i></a>
-            <a><i class="fa fa-sign-out" aria-hidden="true" title="Outgoing Links"></i></a>
-            <a><i class="fa fa-history" aria-hidden="true" title="History"></i></a>
-            <a><i class="fa fa-users" aria-hidden="true" title="User Rights"></i></a>
-          </span>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 

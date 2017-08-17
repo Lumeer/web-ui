@@ -18,27 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, Input} from '@angular/core';
+export interface AttributePropertyInput {
 
-@Component({
-  selector: 'attribute-tree',
-  templateUrl: './attribute-tree.component.html',
-  styleUrls: ['./attribute-tree.component.scss']
-})
-export class AttributeTreeComponent {
-
-  @Input()
-  public children: object;
-
-  @Input()
-  public root: boolean;
-
-  public isArray = element => Array.isArray(element);
-
-  public isString = element => typeof element === 'string';
-
-  public isStringArray = (element: object[]) => element.every(this.isString);
-
-  public isObject = element => !this.isArray(element) && !this.isString(element);
+  id: string;
+  propertyName: string;
+  inputTableX: number;
+  inputTableY: number;
+  element: HTMLInputElement;
 
 }

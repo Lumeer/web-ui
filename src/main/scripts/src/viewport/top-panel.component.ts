@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Output, Input, ElementRef} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 import {OrganizationProject} from '../services/organization-project.service';
+
 @Component({
   host: {
     '(document:click)': 'onClick($event)',

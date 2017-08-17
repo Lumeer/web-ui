@@ -1,7 +1,8 @@
 @import "../../../../styles/variables";
 
-$border-radius-medium: 6px;
-$border-radius-small: 3px;
+:host {
+  display: block;
+}
 
 .arrow-up {
   position: absolute;

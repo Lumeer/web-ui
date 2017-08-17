@@ -18,33 +18,11 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, Input} from '@angular/core';
+export interface Attribute {
 
-import * as Const from '../../../../const';
-import {Palette} from '../palette';
-
-@Component({
-  selector: 'icon-palette',
-  templateUrl: './icon-palette.component.html',
-  styleUrls: ['./icon-palette.component.scss']
-})
-export class IconPaletteComponent extends Palette {
-
-  @Input('icon')
-  public active: string;
-
-  public icons = Const.someIcons;
-
-  public iconHighlight(icon: string): string {
-    if (icon === this.selected) {
-      return 'selected';
-    }
-
-    if (icon === this.active) {
-      return 'active';
-    }
-
-    return '';
-  }
+  name: string;
+  fullName: string;
+  count: number;
+  constraints: object[];
 
 }

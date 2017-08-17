@@ -19,7 +19,7 @@
  */
 
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'icon-picker',
@@ -49,19 +49,19 @@ export class IconPickerComponent {
   public enabled: boolean;
 
   @Output()
-  private colorChange: EventEmitter<string> = new EventEmitter();
+  private colorChange = new EventEmitter<string>();
 
   @Input('color')
   public activeColor: string;
 
   @Output()
-  private iconChange: EventEmitter<string> = new EventEmitter();
+  private iconChange = new EventEmitter<string>();
 
   @Input('icon')
   public activeIcon: string;
 
   @Output()
-  private onSelected: EventEmitter<string> = new EventEmitter();
+  private itemSelected = new EventEmitter<string>();
 
   public colorChangeEvent(event: string): void {
     this.colorChange.emit(event);
@@ -72,7 +72,7 @@ export class IconPickerComponent {
   }
 
   public selectionEvent(event: string): void {
-    this.onSelected.emit(event);
+    this.itemSelected.emit(event);
   }
 
 }

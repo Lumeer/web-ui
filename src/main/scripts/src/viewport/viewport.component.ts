@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {KeycloakService} from '../services/keycloak.service';
 import {DocumentInfoService} from '../services/document-info.service';

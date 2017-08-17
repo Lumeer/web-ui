@@ -1,6 +1,6 @@
-$border-radius-medium: 6px;
+@import "../../../../../../styles/variables";
 
-.list {
+:host {
   padding-left: 6px;
 
   display: flex;
@@ -9,7 +9,7 @@ $border-radius-medium: 6px;
   & > * {
     border: 2px solid transparent;
 
-    border-radius: $border-radius-medium;
+    border-radius: $border-radius-base;
     margin-right: 5px;
     margin-top: 5px;
 
@@ -22,12 +22,12 @@ $border-radius-medium: 6px;
 
     &.selected {
       color: white;
-      background-color: #18bc9c;
+      background-color: $brand-success;
     }
 
     &.active {
       color: white;
-      background-color: #2c3e50;
+      background-color: $brand-primary;
     }
   }
 }

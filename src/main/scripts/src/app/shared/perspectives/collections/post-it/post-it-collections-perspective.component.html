@@ -21,7 +21,7 @@
   <icon-picker [enabled]="newCollection.pickerVisible"
                [(color)]="newCollection.color"
                [(icon)]="newCollection.icon"
-               (onSelected)="updateCollection(newCollection)"></icon-picker>
+               (itemSelected)="updateCollection(newCollection)"></icon-picker>
 
   <form #f="ngForm" class="form-horizontal" (ngSubmit)="onSaveCollection(); f.resetForm()">
     <div class="name-icon">

@@ -20,16 +20,16 @@
 
 import {EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 
-export abstract class PaletteComponent implements OnInit, OnDestroy {
+export abstract class Palette implements OnInit, OnDestroy {
 
   @Output()
-  private change: EventEmitter<string> = new EventEmitter();
+  private change = new EventEmitter<string>();
 
   @Input()
   public active: string;
 
   @Output()
-  private selection: EventEmitter<string> = new EventEmitter();
+  private selection = new EventEmitter<string>();
 
   public selected: string;
 

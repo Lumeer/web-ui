@@ -22,8 +22,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 
 import {WorkspaceService} from '../workspace.service';
-import {Observable} from 'rxjs/Observable';
 import {Collection} from '../dto/collection';
+import {Attribute} from '../dto/attribute';
+import {Observable} from 'rxjs/Observable';
 import {isNullOrUndefined} from 'util';
 
 @Injectable()
@@ -53,6 +54,10 @@ export class CollectionService {
 
   public getCollection(collectionCode: string): Observable<Collection> {
     return this.http.get<Collection>(`${this.apiPrefix()}/${collectionCode}`);
+  }
+
+  public getAttributes(collectionCode: string): Observable<Attribute[]> {
+    return this.http.get<Attribute[]>(`${this.apiPrefix()}/${collectionCode}/attributes`);
   }
 
   private apiPrefix(): string {

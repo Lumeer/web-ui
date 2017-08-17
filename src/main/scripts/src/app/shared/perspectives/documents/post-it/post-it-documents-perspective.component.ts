@@ -19,15 +19,17 @@
  */
 
 import {animate, style, transition, trigger} from '@angular/animations';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {Component, Input, OnInit} from '@angular/core';
 
 import {DocumentService} from '../../../../core/rest/document.service';
-import {WorkspaceService} from '../../../../core/workspace.service';
-import {Perspective} from '../../perspective';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Collection} from '../../../../core/dto/collection';
 import {Document} from '../../../../core/dto/document';
+import {Attribute} from '../../../../core/dto/attribute';
+import {AttributePair} from './document-attribute';
+import {Perspective} from '../../perspective';
+import {Observable} from 'rxjs/Rx';
 
 @Component({
   selector: 'post-it-documents-perspective',
@@ -37,16 +39,22 @@ import {Document} from '../../../../core/dto/document';
     trigger('appear', [
       transition(':enter', [
         style({transform: 'scale(0)'}),
-        animate('0.25s ease-out', style({transform: 'scale(1)'})),
+        animate('0.25s ease-out', style({transform: 'scale(1)'}))
       ]),
       transition(':leave', [
         style({transform: 'scale(1)'}),
-        animate('0.25s ease-out', style({transform: 'scale(0)'})),
+        animate('0.25s ease-out', style({transform: 'scale(0)'}))
       ])
     ])
   ]
 })
 export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit {
+
+  public readonly PERSPECTIVE_SEE_MORE_ADDED_HEIGHT = 400;
+
+  public readonly PERSPECTIVE_OVERFLOW_BASE_HEIGHT = 200;
+
+  public readonly PERSPECTIVE_BASE_HEIGHT = 450;
 
   @Input()
   public query: string;
@@ -55,100 +63,175 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
   public editable: boolean;
 
   @Input()
-  public height: string = '500px';
+  public height = this.PERSPECTIVE_BASE_HEIGHT;
 
   public collection: Collection;
 
-  public addDocumentAttribute: string;
-  public addButtonColor: string;
-  public cursorOnAddButton: boolean;
+  public attributes: Attribute[] = [];
 
-  public documents: Document[];
+  public documents: Document[] = [];
+
+  /**
+   * To prevent sending data after each data change, the timer provides 'buffering', by waiting a while after each change before sending
+   */
+  private updateTimer: number;
+
+  private sendDocumentUpdate: () => void;
+
+  private updatePending: boolean;
+
+  private previouslyEditedDocument: Document;
+
+  private layout: any;
 
   constructor(private documentService: DocumentService,
               private collectionService: CollectionService,
-              private workspaceService: WorkspaceService,
               private route: ActivatedRoute) {
   }
 
+  public documentId(index: number) {
+    return `Document${index}`;
+  }
+
   public ngOnInit() {
-    this.initializeWorkspace();
-    this.fetchDocuments();
+    this.fetchData();
   }
 
-  public initializeWorkspace(): void {
-    if (!this.workspaceService.isWorkspaceSet()) {
-      this.route.paramMap.subscribe((params: ParamMap) => {
-        this.workspaceService.projectCode = params.get('projectCode');
-        this.workspaceService.organizationCode = params.get('organizationCode');
-      });
-    }
+  private fetchData() {
+    Observable.combineLatest(
+      this.getCollectionDocuments(),
+      this.getAttributes()
+    ).subscribe(data => {
+      const [documents, attributes] = data;
+
+      this.documents = documents;
+      this.attributes = attributes;
+      this.initializeLayout();
+    });
   }
 
-  public fetchDocuments(): void {
-    this.route.paramMap
+  private getCollectionDocuments(): Observable<Document[]> {
+    // fallback, before subscription response
+    this.collection = {
+      code: '',
+      name: 'No collection',
+      color: '#cccccc',
+      icon: 'fa-question',
+      documentCount: 0
+    };
+
+    return this.route.paramMap
       .map(params => params.get('collectionCode'))
       .switchMap(collectionCode => this.collectionService.getCollection(collectionCode))
       .switchMap(collection => {
         this.collection = collection;
         return this.documentService.getDocuments(collection.code);
-      })
-      .subscribe(documents => this.documents = documents);
+      });
   }
 
-  public hasText(str: string): boolean {
-    return str && str !== '';
+  private getAttributes(): Observable<Attribute[]> {
+    return this.route.paramMap
+      .map(params => params.get('collectionCode'))
+      .switchMap(collectionCode => this.collectionService.getAttributes(collectionCode));
   }
 
-  public higherBy(base: string, ammount: number): string {
-    let units: string = base.replace(/\d+/, '');
-    let height: number = Number(base.replace(/[^\d]+/, ''));
+  private initializeLayout() {
+    window.setTimeout(() => {
+      this.layout = $('.grid')['masonry']({
+        gutter: 15,
+        stamp: '.grid-stamp',
+        itemSelector: '.grid-item',
+        columnWidth: '.grid-item',
+        percentPosition: true
+      });
+    }, 50);
+  }
 
-    return `${height + ammount}${units}`;
+  private moveDocumentToTheFront(index: number) {
+    window.setTimeout(() => {
+      this.layout.masonry('prepended', $(`#${this.documentId(index)}`));
+    }, 0);
+  }
+
+  private removeFromLayout(index: number) {
+    window.setTimeout(() => {
+      this.layout.masonry('remove', $(`#${this.documentId(index)}`));
+      this.refreshLayout();
+    }, 0);
+  }
+
+  private refreshLayout() {
+    this.layout.masonry('layout');
   }
 
   public increaseBlockHeight(): void {
-    this.height = this.higherBy(this.height, 450);
-  }
-
-  public setCursorOnAddButton(on: boolean): void {
-    this.cursorOnAddButton = on;
-    this.checkAddButtonColor();
-  };
-
-  public checkAddButtonColor() {
-    let activeColor = '#18bc9c';
-    let enabledColor = '#2c3e50';
-    let disabledColor = '#cccccc';
-
-    if (this.cursorOnAddButton && this.hasText(this.addDocumentAttribute)) {
-      this.addButtonColor = activeColor;
-      return;
-    }
-
-    if (this.hasText(this.addDocumentAttribute)) {
-      this.addButtonColor = enabledColor;
-      return;
-    }
-
-    this.addButtonColor = disabledColor;
+    this.height += this.PERSPECTIVE_SEE_MORE_ADDED_HEIGHT;
   }
 
   public createDocument(): void {
-    if (!this.hasText(this.addDocumentAttribute)) {
-      return;
+    this.flushUpdateTimer();
+
+    let newDocument = new Document;
+    this.documents.push(newDocument);
+    this.documentService.createDocument(this.collection.code, newDocument);
+
+    this.moveDocumentToTheFront(this.documents.length - 1);
+  }
+
+  public removeDocument(index: number): void {
+    this.flushUpdateTimer();
+
+    this.removeFromLayout(index);
+
+    let deletedDocument = this.documents[index];
+    this.documents.splice(index, 1);
+    this.documentService.removeDocument(this.collection.code, deletedDocument);
+  }
+
+  public onAttributePairChange(document: Document, attributePair: AttributePair): void {
+    delete document.data[attributePair.previousAttributeName];
+
+    if (attributePair.attribute) {
+      document.data[attributePair.attribute] = attributePair.value;
+    } else {
+      delete document.data[attributePair.attribute];
     }
 
-    let document = new Document();
-    document.put('New Attribute', this.addDocumentAttribute);
-
-    this.documents.unshift(document);
-    this.documentService.createDocument(this.collection.code, document);
-    this.addDocumentAttribute = '';
+    this.refreshLayout();
+    this.updateDocument(document);
   }
 
-  public saveDocument(changedDocument: Document): void {
-    this.documentService.updateDocument(this.collection.code, changedDocument);
+  private updateDocument(document: Document): void {
+    this.resetTimer(document);
+
+    this.previouslyEditedDocument = document;
+
+    this.updatePending = true;
+    this.sendDocumentUpdate = this.updateFunction(document);
+    this.updateTimer = window.setTimeout(this.sendDocumentUpdate, 1500);
   }
 
+  private resetTimer(document: Document): void {
+    if (this.previouslyEditedDocument && this.previouslyEditedDocument !== document) {
+      this.flushUpdateTimer();
+    } else {
+      clearTimeout(this.updateTimer);
+    }
+  }
+
+  private updateFunction(document: Document): () => void {
+    return () => {
+      this.updatePending = false;
+
+      this.documentService.updateDocument(this.collection.code, document);
+      document.version += 1;
+    };
+  }
+
+  private flushUpdateTimer(): void {
+    if (this.updatePending) {
+      clearTimeout(this.updateTimer);
+      this.sendDocumentUpdate();
+    }
+  }
 }

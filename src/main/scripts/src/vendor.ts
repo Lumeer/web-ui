@@ -7,20 +7,12 @@ import '@angular/http';
 import '@angular/router';
 import '@angular/forms';
 import '@angular/animations';
-// RxJS
-// import 'rxjs';
-
-// import 'html5shiv';
-
 import './js/custom.js';
-
+import 'socket.io-client';
+import 'angular2-drag-scroll';
+import 'ngx-perfect-scrollbar';
+import 'ng2-webstorage';
 // import 'core-js/es6';
 // import 'core-js/es7/reflect';
 // import 'zone.js/dist/zone';
-
-import 'socket.io-client';
-import 'angular2-drag-scroll';
-// import 'lodash';
-import 'ngx-perfect-scrollbar';
-import 'ng2-webstorage';
 window['Keycloak'] = require('./js/keycloak.js');

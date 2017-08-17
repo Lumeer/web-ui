@@ -24,7 +24,6 @@ import {HttpClient} from '@angular/common/http';
 import {WorkspaceService} from '../workspace.service';
 import {Document} from '../dto/document';
 import {Observable} from 'rxjs/Observable';
-import {isUndefined} from 'util';
 
 @Injectable()
 export class DocumentService {
@@ -43,12 +42,17 @@ export class DocumentService {
   }
 
   public createDocument(collectionCode: string, document: Document): void {
-    this.http.post(this.apiPrefix(collectionCode), document.toJson())
-      .subscribe();
+    this.http.post(this.apiPrefix(collectionCode), document.toDto())
+      .subscribe((json: object) => document.id = json['_id']);
   }
 
   public updateDocument(collectionCode: string, document: Document): void {
-    this.http.put(`${this.apiPrefix(collectionCode)}`, document.toJson())
+    this.http.put(`${this.apiPrefix(collectionCode)}`, document.toDto())
+      .subscribe();
+  }
+
+  public removeDocument(collectionCode: string, document: Document): void {
+    this.http.delete(`${this.apiPrefix(collectionCode)}/${document.id}`)
       .subscribe();
   }
 

@@ -20,10 +20,6 @@ import {FormsModule} from '@angular/forms';
 import {
   ResearchComponent,
   DocumentInfoComponent,
-  DocumentPreviewComponent,
-  DocumentPostItComponent,
-  DocumentVersionsComponent,
-  DocumentContentComponent
 } from './research';
 import {BrowserModule} from '@angular/platform-browser';
 import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
@@ -116,7 +112,6 @@ const viewsRoutes: Routes = [
     ActiveTableComponent,
     ContingencyTableComponent,
     DigitalAssistentComponent,
-    DocumentPreviewComponent,
     DocumentInfoComponent,
     DocumentDetailComponent,
     DocumentAttributesComponent,
@@ -124,9 +119,6 @@ const viewsRoutes: Routes = [
     DocumentRightsComponent,
     DocumentHistoryComponent,
     TabularResultComponent,
-    DocumentPostItComponent,
-    DocumentVersionsComponent,
-    DocumentContentComponent,
     KeysPipe,
     MetaKeysPipe,
     EmptyResultComponent

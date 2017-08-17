@@ -1,19 +1,16 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {LeftPanelComponent, ContentComponent, TopPanelComponent, ViewPortComponent, HomeComponent} from './viewport';
+import {ContentComponent, HomeComponent, LeftPanelComponent, TopPanelComponent, ViewPortComponent} from './viewport';
 import {RouterModule, Routes} from '@angular/router';
 import {SettingsModule, ViewsModule} from './components';
 import {FormsModule} from '@angular/forms';
-import {
-  KeycloakService, BreadcrumbService, SocketService, DocumentInfoService, KeycloakHttp, OrganizationProject,
-  KEYCLOAK_HTTP_PROVIDER
-} from './services';
+import {BreadcrumbService, DocumentInfoService, KEYCLOAK_HTTP_PROVIDER, KeycloakHttp, KeycloakService, OrganizationProject, SocketService} from './services';
 import {Ng2Webstorage} from 'ng2-webstorage';
 import {NavigationChildrenService} from './services/navigation-children.service';
 import {DocumentService} from './services/document.service';
 import {CommonComponentsModule} from './components/common/common-components.module';
 import {QueryTagService} from './services/query-tags.service';
-import { DragScrollModule } from 'angular2-drag-scroll';
+import {DragScrollModule} from 'angular2-drag-scroll';
 import {DocumentNavigationService} from './services/document-navigation.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {OrganizationChooser} from './viewport/company_chooser/organization-chooser.component';

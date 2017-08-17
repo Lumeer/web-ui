@@ -18,33 +18,16 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, Input} from '@angular/core';
-
-import * as Const from '../../../../const';
-import {Palette} from '../palette';
+import {Component, EventEmitter, Output} from '@angular/core';
 
 @Component({
-  selector: 'icon-palette',
-  templateUrl: './icon-palette.component.html',
-  styleUrls: ['./icon-palette.component.scss']
+  selector: 'add-document',
+  templateUrl: './add-document.component.html',
+  styleUrls: ['./add-document.component.scss']
 })
-export class IconPaletteComponent extends Palette {
+export class PostItAddDocumentComponent {
 
-  @Input('icon')
-  public active: string;
-
-  public icons = Const.someIcons;
-
-  public iconHighlight(icon: string): string {
-    if (icon === this.selected) {
-      return 'selected';
-    }
-
-    if (icon === this.active) {
-      return 'active';
-    }
-
-    return '';
-  }
+  @Output()
+  public newDocument = new EventEmitter();
 
 }

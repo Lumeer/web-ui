@@ -22,10 +22,11 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 
-import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
 import {PostItDocumentsPerspectiveComponent} from './post-it/post-it-documents-perspective.component';
-import {AttributeTreeComponent} from './post-it/attribute-tree/attribute-tree.component';
-import {KeysPipe} from '../../../../components/views/pick_item/keys';
+import {PostItAddDocumentComponent} from './post-it/add-document/add-document.component';
+import {PostItDocumentComponent} from './post-it/document/post-it-document.component';
+import {AttributeListComponent} from './post-it/attribute-list/attribute-list.component';
+import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
 
 @NgModule({
   imports: [
@@ -34,9 +35,10 @@ import {KeysPipe} from '../../../../components/views/pick_item/keys';
   ],
   declarations: [
     PostItDocumentsPerspectiveComponent,
-    TableDocumentsPerspectiveComponent,
-    AttributeTreeComponent,
-    KeysPipe
+    PostItAddDocumentComponent,
+    PostItDocumentComponent,
+    AttributeListComponent,
+    TableDocumentsPerspectiveComponent
   ],
   entryComponents: [
     PostItDocumentsPerspectiveComponent,

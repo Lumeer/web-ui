@@ -22,9 +22,11 @@ export class Document {
 
   public id: string;
   public creationDate: string;
+  public updateDate: string;
   public createdBy: string;
+  public updatedBy: string;
   public version: number;
-  public attributes: object[] = [];
+  public data: object = {};
 
   constructor(documentJson?: object) {
     if (documentJson) {
@@ -44,32 +46,31 @@ export class Document {
             case '_meta-version':
               this.version = documentJson['_meta-version'];
               break;
+            case '_meta-update-date':
+              this.updateDate = documentJson['_meta-update-date'];
+              break;
+            case '_meta-update-user':
+              this.updatedBy = documentJson['_meta-update-user'];
+              break;
             default:
-              this.put(attribute, documentJson[attribute]);
+              this.data[attribute] = documentJson[attribute];
           }
         });
     }
   }
 
-  public put(key: any, value: any) {
-    let newAttributeObject = {};
-    newAttributeObject[key] = value;
-
-    this.attributes.push(newAttributeObject);
-  }
-
-  public toJson(): object {
+  public toDto(): object {
     let result = {};
 
-    result['_id'] = this.id;
-    result['_meta-create-date'] = this.creationDate;
-    result['_meta-create-user'] = this.createdBy;
-    result['_meta-version'] = this.version;
+    this.id && (result['_id'] = this.id);
+    this.creationDate && (result['_meta-create-date'] = this.creationDate);
+    this.createdBy && (result['_meta-create-user'] = this.createdBy);
+    this.version && (result['_meta-version'] = this.version);
+    this.updateDate && (result['_meta-update-date'] = this.updateDate);
+    this.updatedBy && (result['_meta-update-user'] = this.updatedBy);
 
-    this.attributes.forEach(attributeObject => {
-      Object.keys(attributeObject)
-        .forEach(key => result[key] = attributeObject[key]);
-    });
+    Object.keys(this.data)
+      .forEach(attribute => result[attribute] = this.data[attribute]);
 
     return result;
   }

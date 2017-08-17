@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
-import {LocalStorage} from 'ng2-webstorage';
 import {Subject} from 'rxjs';
 
 @Injectable()

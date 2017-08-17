@@ -1,0 +1,48 @@
+<table>
+  <tr *ngFor="let attributePair of attributePairs; let idx = index">
+    <div>
+      <td class="name-column">
+        <!--IDs folow the sturcure: Input_documentIndex_[x, y]-->
+        <input type="text" list="suggested-attributes"
+               [attr.id]="inputId(0, idx)"
+               [disabled]="!editable"
+               [ngModel]="attributePair.attribute"
+               (ngModelChange)="attributePairChange(attributePair, $event)"
+               (keyup)="onInputKey($event)"
+               (click)="selectInput(0, idx)"/>
+      </td>
+      <td class="value-column">
+        <input [attr.id]="inputId(1, idx)"
+               [disabled]="!editable"
+               [ngModel]="attributePair.value"
+               (ngModelChange)="attributePairChange(attributePair, $event)"
+               (keyup)="onInputKey($event)"
+               (click)="selectInput(1, idx)"/>
+      </td>
+    </div>
+  </tr>
+
+  <tr *ngIf="editable">
+    <div>
+      <td class="name-column">
+        <input type="text" placeholder="Attribute" list="suggested-attributes"
+               [attr.id]="inputId(0, attributePairs.length)"
+               [(ngModel)]="newAttributePair.attribute"
+               (keyup)="onInputKey($event)"
+               (click)="selectInput(0, attributePairs.length)"/>
+      </td>
+      <td class="value-column">
+        <input [attr.id]="inputId(1, attributePairs.length)"
+               [disabled]="!newAttributePair.attribute"
+               (keydown)="$event.key.length === 1 && createAttributePair($event.key)"
+               (keyup)="onInputKey($event)"
+               (click)="selectInput(1, attributePairs.length)"/>
+      </td>
+    </div>
+  </tr>
+
+</table>
+
+<datalist *ngIf="editable" id="suggested-attributes">
+  <option *ngFor="let attribute of suggsestedAttributes()" value="{{ attribute }}">
+</datalist>

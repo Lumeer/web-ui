@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
-import {
-  Http, Request, XHRBackend, ConnectionBackend, RequestOptions, RequestOptionsArgs, Response, Headers
-} from '@angular/http';
+import {ConnectionBackend, Headers, Http, Request, RequestOptions, RequestOptionsArgs, Response, XHRBackend} from '@angular/http';
 
 import {KeycloakService} from './keycloak.service';
 import {Observable} from 'rxjs';

@@ -1,0 +1,36 @@
+@import "../../../../../../styles/variables";
+
+:host {
+  display: block;
+  padding-top: 57.5px;
+  height: 200px;
+  text-align: center;
+}
+
+a {
+  -webkit-transition: color 0.25s;
+  -moz-transition: color 0.25s;
+  -o-transition: color 0.25s;
+  transition: color 0.25s;
+
+  color: $brand-primary;
+  display: block;
+
+  margin: 0 80px;
+  border-radius: 20px;
+
+  &:hover {
+    color: $brand-success;
+  }
+}
+
+i {
+  font-size: 60px;
+  border-radius: 60px;
+}
+
+label {
+  display: block;
+  font-size: large;
+  pointer-events: none;
+}

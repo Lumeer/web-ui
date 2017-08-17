@@ -20,7 +20,7 @@
 
 import {Component, Input} from '@angular/core';
 
-import {PaletteComponent} from '../palette.component';
+import {Palette} from '../palette';
 import * as Const from '../../../../const';
 
 @Component({
@@ -28,7 +28,7 @@ import * as Const from '../../../../const';
   templateUrl: './color-palette.component.html',
   styleUrls: ['./color-palette.component.scss']
 })
-export class ColorPaletteComponent extends PaletteComponent {
+export class ColorPaletteComponent extends Palette {
 
   @Input('color')
   public active: string;

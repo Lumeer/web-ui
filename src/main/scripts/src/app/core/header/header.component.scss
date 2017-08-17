@@ -41,7 +41,7 @@
 .notifications {
   background-color: #eeeeee;
   border-radius: 15px;
-  color: #18bc9c;
+  color: $brand-success;
   flex-shrink: 0;
   height: 30px;
   width: 30px;
@@ -79,7 +79,7 @@
   }
 
   ul {
-    box-shadow: $default-shadow;
+    box-shadow: $default-shadow-down;
     background: $secondary-color;
     min-width: 160px;
     position: relative;
@@ -98,6 +98,7 @@
       > * {
         display: block;
         padding: 6px 6px 6px 20px;
+        letter-spacing: 0.5px;
       }
 
       &.divider {
