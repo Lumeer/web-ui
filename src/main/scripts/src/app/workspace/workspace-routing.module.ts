@@ -30,6 +30,10 @@ import {OrganizationPermissionsComponent} from './organization/permissions/organ
 
 const workspaceRoutes: Routes = [
   {
+    path: 'organization/:organizationCode/project/add',
+    component: ProjectFormComponent
+  },
+  {
     path: 'organization/:organizationCode/project/:projectCode',
     component: ProjectSettingsComponent,
     children: [
@@ -49,8 +53,8 @@ const workspaceRoutes: Routes = [
     ]
   },
   {
-    path: 'organization/:organizationCode/project/add',
-    component: ProjectFormComponent
+    path: 'organization/add',
+    component: OrganizationFormComponent
   },
   {
     path: 'organization/:organizationCode',
@@ -70,10 +74,6 @@ const workspaceRoutes: Routes = [
         pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: 'organization/add',
-    component: OrganizationFormComponent
   },
   {
     path: 'workspace',
