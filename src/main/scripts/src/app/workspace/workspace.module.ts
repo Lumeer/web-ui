@@ -47,8 +47,6 @@ import {ProjectSettingsComponent} from './project/project-settings.component';
     WorkspaceChooserComponent
   ],
   exports: [
-    OrganizationFormComponent,
-    ProjectFormComponent,
     WorkspaceChooserComponent
   ]
 })

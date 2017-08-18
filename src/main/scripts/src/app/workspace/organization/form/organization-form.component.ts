@@ -44,25 +44,15 @@ export class OrganizationFormComponent implements OnInit {
 
   public ngOnInit(): void {
     this.organization = new Organization();
-
-    this.route.paramMap.subscribe((params: ParamMap) => {
+    this.route.parent.paramMap.subscribe((params: ParamMap) => {
       this.organizationCode = params.get('organizationCode');
       if (this.organizationCode) {
         this.getOrganization();
-      } else {
-        if (this.route.parent != null) {
-          this.route.parent.paramMap.subscribe((params: ParamMap) => {
-            this.organizationCode = params.get('organizationCode');
-            if (this.organizationCode) {
-              this.getOrganization();
-            }
-          });
-        }
       }
     });
   }
 
-  public getOrganization(): void {
+  private getOrganization(): void {
     this.organizationService.getOrganization(this.organizationCode)
       .subscribe((organization: Organization) => this.organization = organization,
         error => this.errorMessage = error

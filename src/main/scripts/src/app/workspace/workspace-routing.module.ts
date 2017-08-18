@@ -29,23 +29,9 @@ import {ProjectPermissionsComponent} from './project/permissions/project-permiss
 import {OrganizationPermissionsComponent} from './organization/permissions/organization-permissions.component';
 
 const workspaceRoutes: Routes = [
-  {path: 'workspace', component: WorkspaceChooserComponent},
   {
-    path: 'organization/:organizationCode', component: OrganizationSettingsComponent,
-    children: [
-      {
-        path: 'settings',
-        component: OrganizationFormComponent
-      },
-      {
-        path: 'permissions',
-        component: OrganizationPermissionsComponent
-      },
-    ]
-  },
-  {path: 'organization/:organizationCode/project/add', component: ProjectFormComponent},
-  {
-    path: 'organization/:organizationCode/project/:projectCode', component: ProjectSettingsComponent,
+    path: 'organization/:organizationCode/project/:projectCode',
+    component: ProjectSettingsComponent,
     children: [
       {
         path: 'settings',
@@ -55,10 +41,44 @@ const workspaceRoutes: Routes = [
         path: 'permissions',
         component: ProjectPermissionsComponent
       },
+      {
+        path: '',
+        redirectTo: 'settings',
+        pathMatch: 'full'
+      }
     ]
   },
-
-  {path: 'organization/add', component: OrganizationFormComponent}
+  {
+    path: 'organization/:organizationCode/project/add',
+    component: ProjectFormComponent
+  },
+  {
+    path: 'organization/:organizationCode',
+    component: OrganizationSettingsComponent,
+    children: [
+      {
+        path: 'settings',
+        component: OrganizationFormComponent
+      },
+      {
+        path: 'permissions',
+        component: OrganizationPermissionsComponent
+      },
+      {
+        path: '',
+        redirectTo: 'settings',
+        pathMatch: 'full'
+      }
+    ]
+  },
+  {
+    path: 'organization/add',
+    component: OrganizationFormComponent
+  },
+  {
+    path: 'workspace',
+    component: WorkspaceChooserComponent
+  }
 ];
 
 @NgModule({

@@ -45,26 +45,16 @@ export class ProjectFormComponent implements OnInit {
 
   public ngOnInit(): void {
     this.project = new Project();
-    this.route.paramMap.subscribe((params: ParamMap) => {
+    this.route.parent.paramMap.subscribe((params: ParamMap) => {
       this.organizationCode = params.get('organizationCode');
       this.projectCode = params.get('projectCode');
       if (this.projectCode) {
         this.getProject();
-      } else {
-        if (this.route.parent != null) {
-          this.route.parent.paramMap.subscribe((params: ParamMap) => {
-            this.organizationCode = params.get('organizationCode');
-            this.projectCode = params.get('projectCode');
-            if (this.projectCode) {
-              this.getProject();
-            }
-          });
-        }
       }
     });
   }
 
-  public getProject(): void {
+  private getProject(): void {
     this.projectService.getProject(this.organizationCode, this.projectCode)
       .subscribe(
         (project: Project) => this.project = project,

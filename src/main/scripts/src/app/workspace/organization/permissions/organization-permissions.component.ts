@@ -18,92 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-
-import {Organization} from '../../../core/dto/organization';
-import {WorkspaceService} from '../../../core/workspace.service';
-import {OrganizationService} from '../../../core/rest/organization.service';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'organization-permission',
   templateUrl: './organization-permissions.component.html',
   styleUrls: ['./organization-permissions.component.scss']
 })
-export class OrganizationPermissionsComponent implements OnInit {
-
-  private organization: Organization;
-  private organizationCode: string;
-  private errorMessage: any;
-
-  constructor(private organizationService: OrganizationService,
-              private workspaceService: WorkspaceService,
-              private route: ActivatedRoute,
-              private router: Router) {
-  }
-
-  public ngOnInit(): void {
-    this.organization = new Organization();
-
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      this.organizationCode = params.get('organizationCode');
-      if (this.organizationCode) {
-        this.getOrganization();
-      } else {
-        if (this.route.parent != null) {
-          this.route.parent.paramMap.subscribe((params: ParamMap) => {
-            this.organizationCode = params.get('organizationCode');
-            if (this.organizationCode) {
-              this.getOrganization();
-            }
-          });
-        }
-      }
-    });
-  }
-
-  public getOrganization(): void {
-    this.organizationService.getOrganization(this.organizationCode)
-      .subscribe((organization: Organization) => this.organization = organization,
-        error => this.errorMessage = error
-      );
-  }
-
-  public onSave() {
-    if (this.organizationCode) {
-      this.organizationService.editOrganization(this.organizationCode, this.organization)
-        .subscribe(
-          response => {
-            if (this.organizationCode === this.workspaceService.organizationCode) {
-              this.workspaceService.organizationCode = this.organization.code;
-            }
-            this.goBack();
-          },
-          error => this.errorMessage = error
-        );
-    } else {
-      this.organizationService.createOrganization(this.organization)
-        .subscribe(
-          response => this.goBack(),
-          error => this.errorMessage = error
-        );
-    }
-  }
-
-  public onCancel() {
-    this.goBack();
-  }
-
-  public onDelete() {
-    this.organizationService.deleteOrganization(this.organizationCode)
-      .subscribe(
-        response => this.goBack(),
-        error => this.errorMessage = error
-      );
-  }
-
-  private goBack() {
-    this.router.navigate(['/workspace']);
-  }
-
+export class OrganizationPermissionsComponent {
 }

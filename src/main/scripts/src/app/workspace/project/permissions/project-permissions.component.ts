@@ -18,95 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-
-import {Project} from '../../../core/dto/project';
-import {WorkspaceService} from '../../../core/workspace.service';
-import {ProjectService} from '../../../core/rest/project.service';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'project-form',
   templateUrl: './project-permissions.component.html',
   styleUrls: ['./project-permissions.component.scss']
 })
-export class ProjectPermissionsComponent implements OnInit {
-
-  private project: Project;
-  private organizationCode: string;
-  private projectCode: string;
-  private errorMessage: any;
-
-  constructor(private projectService: ProjectService,
-              private workspaceService: WorkspaceService,
-              private route: ActivatedRoute,
-              private router: Router) {
-  }
-
-  public ngOnInit(): void {
-    this.project = new Project();
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      this.organizationCode = params.get('organizationCode');
-      this.projectCode = params.get('projectCode');
-      if (this.projectCode) {
-        this.getProject();
-      } else {
-        if (this.route.parent != null) {
-          this.route.parent.paramMap.subscribe((params: ParamMap) => {
-            this.organizationCode = params.get('organizationCode');
-            this.projectCode = params.get('projectCode');
-            if (this.projectCode) {
-              this.getProject();
-            }
-          });
-        }
-      }
-    });
-  }
-
-  public getProject(): void {
-    this.projectService.getProject(this.organizationCode, this.projectCode)
-      .subscribe(
-        (project: Project) => this.project = project,
-        error => this.errorMessage = error
-      );
-  }
-
-  public onSave() {
-    if (this.projectCode) {
-      this.projectService.editProject(this.organizationCode, this.projectCode, this.project)
-        .subscribe(
-          response => {
-            if (this.projectCode === this.workspaceService.projectCode) {
-              this.workspaceService.projectCode = this.project.code;
-            }
-            this.goBack();
-          },
-          error => this.errorMessage = error
-        );
-    } else {
-      this.projectService.createProject(this.organizationCode, this.project)
-        .subscribe(
-          response => this.goBack(),
-          error => this.errorMessage = error
-        );
-    }
-  }
-
-  public onCancel() {
-    this.goBack();
-  }
-
-  public onDelete() {
-    this.projectService.deleteProject(this.organizationCode, this.projectCode)
-      .subscribe(
-        response => this.goBack(),
-        error => this.errorMessage = error
-      );
-  }
-
-  private goBack() {
-    this.router.navigate(['/workspace']);
-  }
-
+export class ProjectPermissionsComponent {
 }
