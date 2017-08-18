@@ -154,12 +154,12 @@ export class WorkspaceChooserComponent implements OnInit {
   }
 
   public onOrganizationSettings(organization: Organization) {
-    this.router.navigate(['/organization/' + organization.code + '/edit']);
+    this.router.navigate(['/organization/' + organization.code]);
   }
 
   public onProjectSettings(project: Project) {
     if (this.activeOrganization) {
-      this.router.navigate(['/organization/' + this.activeOrganization.code + '/project/' + project.code + '/edit']);
+      this.router.navigate(['/organization/' + this.activeOrganization.code + '/project/' + project.code]);
     }
   }
 

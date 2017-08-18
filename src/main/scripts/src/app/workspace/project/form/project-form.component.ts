@@ -19,18 +19,18 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ProjectService} from '../../core/rest/project.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
-import {Project} from '../../core/dto/project';
-import {WorkspaceService} from '../../core/workspace.service';
+import {Project} from '../../../core/dto/project';
+import {WorkspaceService} from '../../../core/workspace.service';
+import {ProjectService} from '../../../core/rest/project.service';
 
 @Component({
-  selector: 'project-edit',
-  templateUrl: './project-edit.component.html',
-  styleUrls: ['./project-edit.component.scss']
+  selector: 'project-form',
+  templateUrl: './project-form.component.html',
+  styleUrls: ['./project-form.component.scss']
 })
-export class ProjectEditComponent implements OnInit {
+export class ProjectFormComponent implements OnInit {
 
   private project: Project;
   private organizationCode: string;
@@ -45,17 +45,21 @@ export class ProjectEditComponent implements OnInit {
 
   public ngOnInit(): void {
     this.project = new Project();
-    this.route.paramMap.subscribe((params: ParamMap) => {
+    this.route.parent.paramMap.subscribe((params: ParamMap) => {
       this.organizationCode = params.get('organizationCode');
       this.projectCode = params.get('projectCode');
       if (this.projectCode) {
-        this.projectService.getProject(this.organizationCode, this.projectCode)
-          .subscribe(
-            (project: Project) => this.project = project,
-            error => this.errorMessage = error
-          );
+        this.getProject();
       }
     });
+  }
+
+  private getProject(): void {
+    this.projectService.getProject(this.organizationCode, this.projectCode)
+      .subscribe(
+        (project: Project) => this.project = project,
+        error => this.errorMessage = error
+      );
   }
 
   public onSave() {

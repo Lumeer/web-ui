@@ -19,18 +19,18 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {OrganizationService} from '../../core/rest/organization.service';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
-import {Organization} from '../../core/dto/organization';
-import {WorkspaceService} from '../../core/workspace.service';
+import {Organization} from '../../../core/dto/organization';
+import {WorkspaceService} from '../../../core/workspace.service';
+import {OrganizationService} from '../../../core/rest/organization.service';
 
 @Component({
-  selector: 'organization-edit',
-  templateUrl: './organization-edit.component.html',
-  styleUrls: ['./organization-edit.component.scss']
+  selector: 'organization-form',
+  templateUrl: './organization-form.component.html',
+  styleUrls: ['./organization-form.component.scss']
 })
-export class OrganizationEditComponent implements OnInit {
+export class OrganizationFormComponent implements OnInit {
 
   private organization: Organization;
   private organizationCode: string;
@@ -44,15 +44,19 @@ export class OrganizationEditComponent implements OnInit {
 
   public ngOnInit(): void {
     this.organization = new Organization();
-    this.route.paramMap.subscribe((params: ParamMap) => {
+    this.route.parent.paramMap.subscribe((params: ParamMap) => {
       this.organizationCode = params.get('organizationCode');
       if (this.organizationCode) {
-        this.organizationService.getOrganization(this.organizationCode)
-          .subscribe((organization: Organization) => this.organization = organization,
-            error => this.errorMessage = error
-          );
+        this.getOrganization();
       }
     });
+  }
+
+  private getOrganization(): void {
+    this.organizationService.getOrganization(this.organizationCode)
+      .subscribe((organization: Organization) => this.organization = organization,
+        error => this.errorMessage = error
+      );
   }
 
   public onSave() {

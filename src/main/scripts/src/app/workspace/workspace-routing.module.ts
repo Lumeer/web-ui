@@ -21,15 +21,64 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
-import {OrganizationEditComponent} from './organization-edit/organization-edit.component';
-import {ProjectEditComponent} from './project-edit/project-edit.component';
+import {OrganizationFormComponent} from './organization/form/organization-form.component';
+import {ProjectFormComponent} from './project/form/project-form.component';
+import {OrganizationSettingsComponent} from './organization/organization-settings.component';
+import {ProjectSettingsComponent} from './project/project-settings.component';
+import {ProjectPermissionsComponent} from './project/permissions/project-permissions.component';
+import {OrganizationPermissionsComponent} from './organization/permissions/organization-permissions.component';
 
 const workspaceRoutes: Routes = [
-  {path: 'workspace', component: WorkspaceChooserComponent},
-  {path: 'organization/:organizationCode/project/:projectCode/edit', component: ProjectEditComponent},
-  {path: 'organization/:organizationCode/project/add', component: ProjectEditComponent},
-  {path: 'organization/:organizationCode/edit', component: OrganizationEditComponent},
-  {path: 'organization/add', component: OrganizationEditComponent}
+  {
+    path: 'organization/:organizationCode/project/add',
+    component: ProjectFormComponent
+  },
+  {
+    path: 'organization/:organizationCode/project/:projectCode',
+    component: ProjectSettingsComponent,
+    children: [
+      {
+        path: 'settings',
+        component: ProjectFormComponent
+      },
+      {
+        path: 'permissions',
+        component: ProjectPermissionsComponent
+      },
+      {
+        path: '',
+        redirectTo: 'settings',
+        pathMatch: 'full'
+      }
+    ]
+  },
+  {
+    path: 'organization/add',
+    component: OrganizationFormComponent
+  },
+  {
+    path: 'organization/:organizationCode',
+    component: OrganizationSettingsComponent,
+    children: [
+      {
+        path: 'settings',
+        component: OrganizationFormComponent
+      },
+      {
+        path: 'permissions',
+        component: OrganizationPermissionsComponent
+      },
+      {
+        path: '',
+        redirectTo: 'settings',
+        pathMatch: 'full'
+      }
+    ]
+  },
+  {
+    path: 'workspace',
+    component: WorkspaceChooserComponent
+  }
 ];
 
 @NgModule({

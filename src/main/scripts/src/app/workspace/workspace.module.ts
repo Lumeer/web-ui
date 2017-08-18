@@ -22,10 +22,14 @@ import {NgModule} from '@angular/core';
 
 import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
-import {OrganizationEditComponent} from './organization-edit/organization-edit.component';
-import {ProjectEditComponent} from './project-edit/project-edit.component';
+import {OrganizationFormComponent} from './organization/form/organization-form.component';
+import {ProjectFormComponent} from './project/form/project-form.component';
 import {WorkspaceRoutingModule} from './workspace-routing.module';
 import {SharedModule} from '../shared/shared.module';
+import {OrganizationPermissionsComponent} from './organization/permissions/organization-permissions.component';
+import {ProjectPermissionsComponent} from './project/permissions/project-permissions.component';
+import {OrganizationSettingsComponent} from './organization/organization-settings.component';
+import {ProjectSettingsComponent} from './project/project-settings.component';
 
 @NgModule({
   imports: [
@@ -34,13 +38,15 @@ import {SharedModule} from '../shared/shared.module';
     WorkspaceRoutingModule
   ],
   declarations: [
-    OrganizationEditComponent,
-    ProjectEditComponent,
+    OrganizationFormComponent,
+    ProjectFormComponent,
+    OrganizationPermissionsComponent,
+    ProjectPermissionsComponent,
+    OrganizationSettingsComponent,
+    ProjectSettingsComponent,
     WorkspaceChooserComponent
   ],
   exports: [
-    OrganizationEditComponent,
-    ProjectEditComponent,
     WorkspaceChooserComponent
   ]
 })
