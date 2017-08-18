@@ -20,14 +20,17 @@ $fade-size: 2em;
 }
 
 .grid-item {
-  @media all and (max-width: 1023px) {
-    width: 300px;
+  @media all and (max-width: 767px){
+    width: 99%; // 100% - gutter
   }
-  @media all and (min-width: 1024px) and (max-width: 1499px) {
-    width: 24%;
+  @media all and (min-width: 768px) and (max-width: 1023px) {
+    width: 49%; // 50% - gutter
   }
-  @media all and (min-width: 1500px) {
-    width: 19.25%;
+  @media all and (min-width: 1024px) and (max-width: 1279px) {
+    width: 32%; // 33% - gutter
+  }
+  @media all and (min-width: 1280px) {
+    width: 19%; // 20% - gutter
   }
 
   margin-bottom: 15px;

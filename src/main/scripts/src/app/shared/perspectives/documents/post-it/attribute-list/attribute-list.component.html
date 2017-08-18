@@ -2,13 +2,17 @@
   <tr *ngFor="let attributePair of attributePairs; let idx = index">
     <td class="name-column">
       <!--IDs folow the sturcure: Input_documentIndex_[x, y]-->
-      <input type="text"
-             [attr.id]="inputId(0, idx)"
-             [disabled]="!editable"
-             [ngModel]="attributePair.attribute"
-             (ngModelChange)="attributePairChange(attributePair, $event)"
-             (keydown)="onInputKey($event)"
-             (click)="selectInput(0, idx)"/>
+      <ng2-completer #attributeinput
+                     [inputId]="inputId(0, idx)"
+                     [datasource]="suggestedAttributes()"
+                     [minSearchLength]="0"
+                     [textNoResults]="''"
+                     [disableInput]="!editable"
+                     [ngModel]="attributePair.attribute"
+                     (ngModelChange)="attributePairChange(attributePair, $event)"
+                     (keydown)="!attributeinput.isOpen() && onInputKey($event)"
+                     (click)="selectInput(0, idx)">
+      </ng2-completer>
     </td>
     <td class="value-column">
       <input [attr.id]="inputId(1, idx)"
@@ -22,11 +26,17 @@
 
   <tr *ngIf="editable">
     <td class="name-column">
-      <input type="text" placeholder=" + "
-             [attr.id]="inputId(0, attributePairs.length)"
-             [(ngModel)]="newAttributePair.attribute"
-             (keydown)="onInputKey($event)"
-             (click)="selectInput(0, attributePairs.length)"/>
+      <ng2-completer #newattributeinput
+                     placeholder=" + "
+                     [inputId]="inputId(0, attributePairs.length)"
+                     [datasource]="suggestedAttributes()"
+                     [minSearchLength]="0"
+                     [textNoResults]="''"
+                     [disableInput]="!editable"
+                     [(ngModel)]="newAttributePair.attribute"
+                     (keydown)="!newattributeinput.isOpen() && onInputKey($event)"
+                     (click)="selectInput(0, attributePairs.length)">
+      </ng2-completer>
     </td>
     <td class="value-column">
       <input title="value"

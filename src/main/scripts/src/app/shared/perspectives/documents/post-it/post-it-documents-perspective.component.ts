@@ -60,7 +60,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
   public editable: boolean = true;
 
   @Input()
-  public height = 450;
+  public height = 500;
 
   public collection: Collection;
 

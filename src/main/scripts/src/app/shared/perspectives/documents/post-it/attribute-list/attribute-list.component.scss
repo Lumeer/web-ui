@@ -4,24 +4,15 @@
   display: block;
 }
 
+table {
+  width: 100%;
+}
+
 tr {
   border-bottom: 1px solid #e5e5e5;
 
   &:last-child {
     border-bottom: none;
-  }
-
-  input {
-    padding: 0 3px;
-    width: 100%;
-    border: 0;
-    background-color: transparent;
-
-    &:focus {
-      outline-offset: -3px;
-      outline: #2c3e50 auto medium;
-      -moz-outline-radius: 4px;
-    }
   }
 
   &:hover {
@@ -35,5 +26,43 @@ td {
   &.name-column {
     width: 40%;
     font-weight: bold;
+  }
+}
+
+/deep/ input {
+  padding: 0 3px;
+  width: 100%;
+  border: 0;
+  background-color: transparent;
+
+  &:focus {
+    outline-offset: -3px;
+    outline: #2c3e50 auto medium;
+    -moz-outline-radius: 4px;
+  }
+}
+
+/deep/ .completer-dropdown-holder {
+  position: relative;
+
+  .completer-dropdown {
+    border-color: #cccccc !important;
+    border-radius: $border-radius-small !important;
+    margin: 0 !important;
+    width: 100% !important;
+    padding: 4px 0 !important;
+  }
+
+  .completer-row {
+    padding: 1px 6px !important;
+    color: $brand-primary !important;
+    margin: 0 !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .completer-selected-row {
+    background-color: $brand-success !important;
+    color: $secondary-color !important;
   }
 }

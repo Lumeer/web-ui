@@ -1,5 +1,9 @@
 @import "../../../../styles/variables";
 
+:host {
+  display: block;
+}
+
 .arrow-up {
   position: absolute;
   left: 27.5px;

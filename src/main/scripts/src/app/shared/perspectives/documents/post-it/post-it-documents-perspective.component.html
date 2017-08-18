@@ -8,6 +8,7 @@
 
     <post-it-document *ngFor="let document of documents; let idx = index" class="grid-item"
                       [@appear]="''"
+                      [style.z-index]="documents.length - idx"
                       [attr.id]="documentId(idx)"
                       [index]="idx"
                       [attributes]="attributes"

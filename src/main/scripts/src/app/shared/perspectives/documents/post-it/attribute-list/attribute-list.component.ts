@@ -40,6 +40,7 @@ export class AttributeListComponent {
 
   @Input()
   public set data(attributePairs: object) {
+    this.attributePairs = [];
     let attributes = Object.keys(attributePairs);
     for (let i = 0; i < attributes.length; i++) {
       let attribute = attributes[i];
