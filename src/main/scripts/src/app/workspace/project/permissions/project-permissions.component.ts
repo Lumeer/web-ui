@@ -22,8 +22,7 @@ import {Component} from '@angular/core';
 
 @Component({
   selector: 'project-form',
-  templateUrl: './project-permissions.component.html',
-  styleUrls: ['./project-permissions.component.scss']
+  templateUrl: './project-permissions.component.html'
 })
 export class ProjectPermissionsComponent {
 }

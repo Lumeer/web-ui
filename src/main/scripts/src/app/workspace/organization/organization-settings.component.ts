@@ -21,8 +21,7 @@
 import {Component} from '@angular/core';
 
 @Component({
-  templateUrl: './organization-settings.component.html',
-  styleUrls: ['./organization-settings.component.scss']
+  templateUrl: './organization-settings.component.html'
 })
 export class OrganizationSettingsComponent {
 }

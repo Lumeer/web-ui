@@ -22,8 +22,7 @@ import {Component} from '@angular/core';
 
 @Component({
   selector: 'organization-permission',
-  templateUrl: './organization-permissions.component.html',
-  styleUrls: ['./organization-permissions.component.scss']
+  templateUrl: './organization-permissions.component.html'
 })
 export class OrganizationPermissionsComponent {
 }

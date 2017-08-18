@@ -21,8 +21,7 @@
 import {Component} from '@angular/core';
 
 @Component({
-  templateUrl: './project-settings.component.html',
-  styleUrls: ['./project-settings.component.scss']
+  templateUrl: './project-settings.component.html'
 })
 export class ProjectSettingsComponent {
 
