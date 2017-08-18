@@ -18,7 +18,8 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ViewChild, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {TableHeader} from '../model/table-header';
 
 @Component({
   selector: 'table-header',
@@ -26,21 +27,35 @@ import {Component, ViewChild, Input, Output, EventEmitter} from '@angular/core';
   styleUrls: ['./table-header.component.scss']
 })
 export class TableHeaderComponent {
-  @Input() public header: any[];
+  @Input() public header: TableHeader;
   @Input() public settings: any;
 
   @Output() public newColumn: EventEmitter<any> = new EventEmitter();
+  @Output() public headerChange: EventEmitter<any> = new EventEmitter();
   @Output() public removeColumn: EventEmitter<any> = new EventEmitter();
   @Output() public hideColumn: EventEmitter<any> = new EventEmitter();
   @Output() public showColumn: EventEmitter<any> = new EventEmitter();
 
+  public model: string;
   public hoverIndex: number = -1;
+
+  public headerExists(header: string): boolean {
+    return this.getAllColumnNames().some(value => value === header);
+  }
+
+  public onEdit(item, index): void {
+    this.headerChange.emit({colIndex: index, data: item});
+  }
 
   public onHover(index) {
     this.hoverIndex = index;
   }
 
   public toggleColumn(index, hidden) {
-    hidden ? this.showColumn.next(index) : this.hideColumn.next(index);
+    hidden ? this.showColumn.emit(index) : this.hideColumn.next(index);
+  }
+
+  private getAllColumnNames(): string[] {
+    return this.header.cells.map(cell => cell.label);
   }
 }

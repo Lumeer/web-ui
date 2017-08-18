@@ -18,11 +18,10 @@
  * -----------------------------------------------------------------------/
  */
 
-export interface Attribute {
+import {TableHeaderCell} from './table-header-cell';
 
-  name: string;
-  fullName: string;
-  count: number;
-  constraints: string[];
+export interface TableHeader {
+
+  cells: TableHeaderCell[];
 
 }

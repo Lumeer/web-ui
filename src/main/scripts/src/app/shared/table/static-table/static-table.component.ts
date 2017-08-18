@@ -18,7 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {TableHeader} from '../model/table-header';
+import {TableRow} from '../model/table-row';
+import {TableHeaderCell} from '../model/table-header-cell';
+import {TableRowCell} from '../model/table-row-cell';
+import {TableSettings} from '../model/table-settings';
 
 @Component({
   selector: 'static-table',
@@ -26,74 +31,126 @@ import {Component, ViewChild} from '@angular/core';
   styleUrls: ['./static-table.component.scss']
 })
 export class StaticTableComponent {
-  public data = {
-    settings: {
-      color: '#3498DB',
-      highlightColor: '#F39C12',
-      editable: true,
-      lineNumberColor: '#b4bcc2'
-    },
-    header: [{label: 'first', active: false}, {label: 'second', active: false}, {label: 'third', active: false}],
-    rows: [
-      [{label: 'one'}, {label: 'two'}, {label: 'three'}],
-      [{label: 'one'}, {label: ''}, {label: 'three'}],
-      [{label: 'one'}, {label: 'two'}, {label: ''}],
-    ],
-    activeRow: -1
-  };
+  @Input() public header: TableHeader;
+  @Input() public rows: TableRow[];
+  @Input() public settings: TableSettings;
+
+  @Output() public newValue: EventEmitter<any> = new EventEmitter();
+  @Output() public newColumn: EventEmitter<any> = new EventEmitter();
+  @Output() public newRow: EventEmitter<any> = new EventEmitter();
+  @Output() public valueChange: EventEmitter<any> = new EventEmitter();
+  @Output() public headerChange: EventEmitter<any> = new EventEmitter();
+  @Output() public removeColumn: EventEmitter<string> = new EventEmitter();
+  @Output() public dragColumn: EventEmitter<any> = new EventEmitter();
+  @Output() public hideColumn: EventEmitter<string> = new EventEmitter();
+  @Output() public showColumn: EventEmitter<string> = new EventEmitter();
+
+  private activeRow: number = -1;
 
   public onNewColumn(): void {
-    this.data.header = [...this.data.header, {label: '', active: false}];
-    this.data.rows.forEach((item) => {
-      item.push({label: ''});
+    this.header.cells.push(StaticTableComponent.createNewColumn(this.header));
+    this.rows.forEach((item) => {
+      item.cells.push({label: '', active: false, hidden: false, constraints: []});
     });
   }
 
   public onNewRow(): void {
-    this.data.rows = [...this.data.rows, StaticTableComponent.generateData(this.data.header)];
+    this.rows.push(StaticTableComponent.createNewRow(this.header, this.rows.length + 1));
   }
 
   public onItemHighlight(index, data): void {
-    this.data.activeRow = index;
-    this.data.header = StaticTableComponent.inactivateItems(this.data.header);
-    this.data.header[data.colIndex].active = true;
+    this.activeRow = index;
+    this.inactivateItems();
+    this.header.cells[data.colIndex].active = true;
     this.checkLastRowCol(index, data.colIndex);
   }
 
   public onTableBlur(): void {
-    this.data.activeRow = -1;
-    this.data.header = StaticTableComponent.inactivateItems(this.data.header);
+    this.activeRow = -1;
+    this.inactivateItems();
   }
 
   public onUpdateRow(rowIndex, dataPayload): void {
-    this.data.rows[rowIndex][dataPayload.index].label = dataPayload.data;
+    this.rows[rowIndex].cells[dataPayload.colIndex].label = dataPayload.data;
+    let header: string = this.header.cells[dataPayload.colIndex].label;
+    let value: any = {};
+    value[header] = dataPayload.data;
+    if (this.rows[rowIndex].id) {
+      value['id'] = this.rows[rowIndex].id;
+      this.valueChange.emit(value);
+    } else {
+      value['rowIndex'] = rowIndex;
+      this.newValue.emit(value);
+    }
   }
 
   public onRemoveColumn(colIndex): void {
-    this.data.header.splice(colIndex, 1);
-    this.data.rows = this.data.rows.map(oneRow => {oneRow.splice(colIndex, 1); return oneRow;});
+    let headerName: string = this.header.cells[colIndex].label;
+    this.header.cells.splice(colIndex, 1);
+    this.rows = this.rows.map(oneRow => {
+      oneRow.cells.splice(colIndex, 1);
+      return oneRow;
+    });
+    this.removeColumn.emit(headerName);
+  }
+
+  public onHeaderChange(dataPayload) {
+    let oldValue: string = this.header.cells[dataPayload.colIndex].label;
+    this.header.cells[dataPayload.colIndex].label = dataPayload.data;
+    this.headerChange.emit({oldValue: oldValue, newValue: dataPayload.data});
   }
 
   public showHideColumn(colIndex: number, hidden: boolean): void {
-    this.data.header[colIndex]['hidden'] = hidden;
-    this.data.rows = this.data.rows.map(oneRow => {oneRow[colIndex]['hidden'] = hidden; return oneRow;});
+    this.header.cells[colIndex]['hidden'] = hidden;
+    this.rows = this.rows.map(oneRow => {
+      oneRow.cells[colIndex]['hidden'] = hidden;
+      return oneRow;
+    });
   }
 
   public checkLastRowCol(index, colIndex) {
-    if (index === this.data.rows.length - 1) {
+    if (index === this.rows.length - 1) {
       this.onNewRow();
     }
 
-    if (colIndex === this.data.header.length - 1) {
+    if (colIndex === this.header.cells.length - 1) {
       this.onNewColumn();
     }
   }
 
-  private static generateData(header): any {
-    return header.map(() => {return {label: ''};});
+  public trackByFn(index, item) {
+    return item && item.id ? item.id : index;
   }
 
-  private static inactivateItems(items): any {
-    return items.map(data => {data.active = false; return data;});
+  private static createNewRow(header: TableHeader, rowNum: number): TableRow {
+    let cells = header.cells.map((header) => {
+      return <TableRowCell>{label: '', active: false, hidden: header.hidden, constraints: header.constraints};
+    });
+    return <TableRow> {id: null, cells: cells, active: false};
+  }
+
+  private static createNewColumn(header: TableHeader) {
+    return <TableHeaderCell> {
+      label: StaticTableComponent.generateHeaderLabel(header.cells.length + 1),
+      active: false,
+      hidden: false,
+      constraints: []
+    };
+  }
+
+  private inactivateItems() {
+    this.header.cells.forEach(data => {
+      data.active = false;
+    });
+  }
+
+  private static generateHeaderLabel(num: number): string {
+    let label: string = '';
+    while (num > 0) {
+      let numeric = (num - 1) % 26;
+      label = String.fromCharCode(65 + numeric) + label;
+      num = Math.floor((num - 1) / 26);
+    }
+    return label;
   }
 }

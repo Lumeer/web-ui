@@ -27,11 +27,13 @@ import {PostItAddDocumentComponent} from './post-it/add-document/add-document.co
 import {PostItDocumentComponent} from './post-it/document/post-it-document.component';
 import {AttributeListComponent} from './post-it/attribute-list/attribute-list.component';
 import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
+import {TableModule} from '../../table/table.module';
 
 @NgModule({
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    TableModule
   ],
   declarations: [
     PostItDocumentsPerspectiveComponent,

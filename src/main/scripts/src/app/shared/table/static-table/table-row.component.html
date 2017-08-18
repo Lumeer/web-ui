@@ -3,8 +3,9 @@
      [ngStyle]="{
        'background-color': settings.lineNumberColor,
        'border-color': isActive ? settings.highlightColor : '#888'
-     }">{{ rowIndex }}</div>
-<div *ngFor="let item of row;let i=index"
+     }">{{ rowIndex }}
+</div>
+<div *ngFor="let item of row.cells;let i=index"
      class="row-item">
   <span *ngIf="!item.hidden"
         (blur)="onEdit(model, i)"
