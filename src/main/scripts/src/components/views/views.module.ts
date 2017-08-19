@@ -1,20 +1,11 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
-import {WalkthroughComponent} from './walkthrough/walkthrough.component';
 import {
   PickItemComponent,
-  DocumentDetailComponent,
   TabularResultComponent,
-  DocumentHistoryComponent,
-  DocumentLinksComponent,
-  DocumentRightsComponent,
-  DocumentAttributesComponent,
   KeysPipe,
   MetaKeysPipe
 } from './pick_item';
-import {ActiveTableComponent} from './active_table/active-table.component';
-import {ContingencyTableComponent} from './contingency_table/contingency-table.component';
-import {DigitalAssistentComponent} from './digital_assistent/digital-assistent.component';
 import {CommonComponentsModule} from '../';
 import {FormsModule} from '@angular/forms';
 import {
@@ -24,7 +15,6 @@ import {
 import {BrowserModule} from '@angular/platform-browser';
 import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 import {DocumentInfoService} from '../../services/document-info.service';
-import {CollectionService} from '../../services/collection.service';
 import {EmptyResultComponent} from './research/empty-result.component';
 import { DragScrollModule } from 'angular2-drag-scroll';
 import {DocumentNavigationService} from '../../services/document-navigation.service';
@@ -57,7 +47,7 @@ const viewsRoutes: Routes = [
       },
       {
         path: 'walkthrough',
-        component: WalkthroughComponent,
+        //component: WalkthroughComponent,
         data: {
           id: 'walkthrough', title: 'Walkthrough', icon: 'fa-link'
         },
@@ -65,7 +55,7 @@ const viewsRoutes: Routes = [
       },
       {
         path: 'active_table',
-        component: ActiveTableComponent,
+        //component: ActiveTableComponent,
         data: {
           id: 'active_table', title: 'Active Table', icon: 'fa-table'
         },
@@ -73,7 +63,7 @@ const viewsRoutes: Routes = [
       },
       {
         path: 'contigency_table',
-        component: ContingencyTableComponent,
+       // component: ContingencyTableComponent,
         data: {
           id: 'contigency_table', title: 'Contingency Table', icon: 'fa-list-alt'
         },
@@ -81,7 +71,7 @@ const viewsRoutes: Routes = [
       },
       {
         path: 'digital_assistent',
-        component: DigitalAssistentComponent,
+        //component: DigitalAssistentComponent,
         data: {
           id: 'digital_assistent', title: 'Digital Assistant', icon: 'fa-user-secret'
         },
@@ -102,22 +92,12 @@ const viewsRoutes: Routes = [
   ],
   providers: [
     DocumentInfoService,
-    DocumentNavigationService,
-    CollectionService
+    DocumentNavigationService
   ],
   declarations: [
-    WalkthroughComponent,
     ResearchComponent,
     PickItemComponent,
-    ActiveTableComponent,
-    ContingencyTableComponent,
-    DigitalAssistentComponent,
     DocumentInfoComponent,
-    DocumentDetailComponent,
-    DocumentAttributesComponent,
-    DocumentLinksComponent,
-    DocumentRightsComponent,
-    DocumentHistoryComponent,
     TabularResultComponent,
     KeysPipe,
     MetaKeysPipe,

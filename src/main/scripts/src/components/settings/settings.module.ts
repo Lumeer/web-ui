@@ -1,8 +1,5 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
-import {CollectionsComponent} from './collections/collections.component';
-import {SystemComponent} from './system/system.component';
-import {ProfileComponent} from './profile/profile.component';
 
 const formsRoutes: Routes = [
   {
@@ -16,7 +13,7 @@ const formsRoutes: Routes = [
     children: [
       {
         path: 'collections',
-        component: CollectionsComponent,
+        //component: CollectionsComponent,
         data: {
           id: 'collections', title: 'Collections', icon: 'fa-server'
         },
@@ -24,7 +21,7 @@ const formsRoutes: Routes = [
       },
       {
         path: 'system',
-        component: SystemComponent,
+        //component: SystemComponent,
         data: {
           id: 'system', title: 'System', icon: 'fa-tachometer'
         },
@@ -33,7 +30,7 @@ const formsRoutes: Routes = [
       ,
       {
         path: 'profile',
-        component: ProfileComponent,
+        //component: ProfileComponent,
         data: {
           id: 'profile', title: 'Profile', icon: 'fa-folder'
         },
@@ -48,9 +45,6 @@ const formsRoutes: Routes = [
     RouterModule.forChild(formsRoutes)
   ],
   declarations: [
-    CollectionsComponent,
-    SystemComponent,
-    ProfileComponent
   ]
 })
 export class SettingsModule {

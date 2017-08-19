@@ -1,5 +1,4 @@
 import {Component,Input, ViewChildren, QueryList, ElementRef, Output, EventEmitter} from '@angular/core';
-import {DocumentService} from '../../../services/document.service';
 import {Router, ActivatedRoute} from '@angular/router';
 import {style, state, animate, transition, trigger, keyframes} from '@angular/animations';
 
@@ -37,7 +36,7 @@ export class DocumentInfoComponent {
   @Input() public document: any;
   @Output() public documentChange: any = new EventEmitter();
 
-  constructor(private documentService: DocumentService,
+  constructor(/*private documentService: DocumentService,*/
               private router: Router,
               private activatedRoute: ActivatedRoute) {
     if (window.innerWidth <= 360) {
@@ -48,7 +47,7 @@ export class DocumentInfoComponent {
   public onVersionsToggleClick() {
     this.versionsVisible = !this.versionsVisible;
     if(!this.document.versions) {
-      this.documentService.fetchDocumentVersions();
+      //this.documentService.fetchDocumentVersions();
     }
   }
 
@@ -83,8 +82,8 @@ export class DocumentInfoComponent {
   }
 
   public onEditLinksClick($event) {
-    this.documentService.fetchDocumentDetailFromId(10);
-    this.documentService.fetchFilterResultsFromFilter({});
+    //this.documentService.fetchDocumentDetailFromId(10);
+    //this.documentService.fetchFilterResultsFromFilter({});
     const parentData: any = this.activatedRoute.parent.snapshot.data;
     this.router.navigate([`/${parentData.id}`, LINK_ID]);
     if ($event) {

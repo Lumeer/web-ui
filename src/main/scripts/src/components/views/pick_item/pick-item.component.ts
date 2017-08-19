@@ -1,7 +1,6 @@
 import {DocumentInfoService} from '../../../services/document-info.service';
 import {Component} from '@angular/core';
 import * as _ from 'lodash';
-import {DocumentService} from '../../../services/document.service';
 import {style, state, animate, transition, trigger, keyframes} from '@angular/animations';
 
 @Component({
@@ -46,14 +45,14 @@ export class PickItemComponent {
   public actions: any[];
   private filterSubscribe: any;
   constructor(private documentInfoService: DocumentInfoService,
-              public documentService: DocumentService) {
+              /*public documentService: DocumentService*/) {
   }
 
   public ngOnInit() {
     this.filterSubscribe = this.documentInfoService.filterChangeSubject.subscribe(
       (payload) => this.onFilterChanged(payload)
     );
-    this.documentService.fetchFilterResultsFromFilter(this.documentInfoService.lastFilter);
+    //this.documentService.fetchFilterResultsFromFilter(this.documentInfoService.lastFilter);
     this.actions = [
       {
         id: 'history',
@@ -85,11 +84,11 @@ export class PickItemComponent {
   }
 
   public selectItem(document) {
-    this.documentService.fetchDocumentDetailFromId(document._id);
+    //this.documentService.fetchDocumentDetailFromId(document._id);
   }
 
   public onFilterChanged(dataPayload) {
-    this.documentService.fetchFilterResultsFromFilter(dataPayload);
+    //this.documentService.fetchFilterResultsFromFilter(dataPayload);
   }
 
   public ngOnDestroy(): void {

@@ -1,7 +1,5 @@
 import {Component, EventEmitter, Output, ViewChild} from '@angular/core';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
-import {OrganizationProject} from '../../services/organization-project.service';
-
 @Component({
   selector: 'organization-chooser',
   template: require('./organization-chooser.component.html'),
@@ -36,10 +34,10 @@ export class OrganizationChooser {
   public projectsWidth: number = 0;
   public activeOrgIndex: number;
 
-  constructor(public organizationProject: OrganizationProject) {
+  constructor(/*public organizationProject: OrganizationProject*/) {
   }
 
-  public ngOnInit() {
+  /*public ngOnInit() {
     if (this.organizationProject.oganizations) {
       this.organizationsWidth = this.organizationProject.oganizations.length * this.squareSize;
       this.projectsWidth = this.organizationProject.activeOrganization.projects.length * this.squareSize;
@@ -53,9 +51,9 @@ export class OrganizationChooser {
           this.organizationsWidth = this.organizationProject.oganizations.length * this.squareSize;
         });
     }
-  }
+  }*/
 
-  public onOrganizationSelected(organization: any, index: number) {
+  /*public onOrganizationSelected(organization: any, index: number) {
     this.organizationProject.oganizations.forEach((org: any) => org.active = false);
     organization.active = true;
     this.activeOrgIndex = index;
@@ -73,7 +71,7 @@ export class OrganizationChooser {
     }
     this.activeOrganization = organization;
     this.activeProject = undefined;
-  }
+  }*/
 
   public onProjectSelected(project: any, index: number) {
     this.activeOrganization.projects.forEach((oneProject: any) => oneProject.active = false);
@@ -97,12 +95,12 @@ export class OrganizationChooser {
     }
   }
 
-  public saveActiveItems() {
+  /*public saveActiveItems() {
     if (this.activeOrganization && this.activeProject) {
       this.organizationProject.activeOrgIndex = this.activeOrgIndex;
       this.organizationProject.activeOrganization = this.activeOrganization;
       this.organizationProject.activeProject = this.activeProject;
       this.saveAction.next();
     }
-  }
+  }*/
 }

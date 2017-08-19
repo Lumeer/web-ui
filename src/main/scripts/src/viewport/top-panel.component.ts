@@ -1,6 +1,5 @@
 import {Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
-import {OrganizationProject} from '../services/organization-project.service';
 
 @Component({
   host: {
@@ -34,7 +33,7 @@ export class TopPanelComponent {
   @Input() public activeCorp: any;
   @Input() public activeProject: any;
 
-  constructor(private elementRef: ElementRef, public organizationProject: OrganizationProject) {}
+  constructor(private elementRef: ElementRef/*, public organizationProject: OrganizationProject*/) {}
 
   public ngOnInit() {
     // this.organizationProject.fetchActiveCompany();
