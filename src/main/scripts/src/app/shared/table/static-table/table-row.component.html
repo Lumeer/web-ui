@@ -7,7 +7,9 @@
 </div>
 <div *ngFor="let item of row.cells;let i=index"
      class="row-item">
-  <span *ngIf="!item.hidden"
+  <span #rowCell
+        id="{{i}}"
+        *ngIf="!item.hidden"
         (blur)="onEdit(model, i)"
         (focus)="model = $event.target.innerText; onItemClicked(i)"
         (input)="model = $event.target.innerText"

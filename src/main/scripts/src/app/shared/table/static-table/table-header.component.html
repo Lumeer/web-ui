@@ -37,7 +37,7 @@
     <div class="placeholder" *ngIf="index !== hoverIndex && !headerItem.hidden"></div>
   </div>
 </div>
-<button (click)="newColumn.next()"
+<button (click)="newColumn.emit()"
         type="button"
         class="btn btn-xs">
   <i class="fa fa-plus"></i>

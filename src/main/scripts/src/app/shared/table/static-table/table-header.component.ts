@@ -20,6 +20,7 @@
 
 import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {TableHeader} from '../model/table-header';
+import {DataEvent} from '../event/data-event';
 
 @Component({
   selector: 'table-header',

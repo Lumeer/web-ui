@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ViewChildren, QueryList, ElementRef} from '@angular/core';
 import {TableRow} from '../model/table-row';
 
 @Component({
@@ -33,15 +33,24 @@ export class TableRowComponent {
   @Input() public isActive: boolean;
 
   @Output() public itemHighlight: EventEmitter<any> = new EventEmitter();
-  @Output() public updateRow: EventEmitter<any> = new EventEmitter();
+  @Output() public updateCell: EventEmitter<any> = new EventEmitter();
+
+  @ViewChildren('rowCell') private cells: QueryList<ElementRef>;
 
   public model: string;
+
+  public setCell(index, value) {
+    let element: ElementRef = this.cells.find(c => +c.nativeElement.id === index);
+    if (element) {
+      element.nativeElement.innerText = value;
+    }
+  }
 
   public onEdit(item, index): void {
     let oldValue: string = this.row.cells[index].label.toString().trim();
     let newValue: string = item.toString().trim();
     if (oldValue !== newValue) {
-      this.updateRow.emit({colIndex: index, data: newValue});
+      this.updateCell.emit({colIndex: index, data: newValue});
     }
   }
 

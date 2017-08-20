@@ -80,7 +80,7 @@ export class CollectionService {
     let organization = this.workspaceService.organizationCode;
     let project = this.workspaceService.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organization}/projects/${project}/collections/`;
+    return `/${API_URL}/rest/organizations/${organization}/projects/${project}/collections`;
   }
 
   private static handleError(error: HttpErrorResponse): ErrorObservable {

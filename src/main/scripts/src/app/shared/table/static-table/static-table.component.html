@@ -9,13 +9,13 @@
                 class="static-header"></table-header>
   <div class="static-rows"
        (focusout)="onTableBlur()">
-    <table-row *ngFor="let oneRow of rows; trackBy: trackByFn; let index = index;"
+    <table-row *ngFor="let oneRow of rows; trackBy: trackByFn; let index = index"
                [settings]="settings"
                [rowIndex]="index"
                [isActive]="index === activeRow"
                [row]="oneRow"
                (itemHighlight)="onItemHighlight(index, $event)"
-               (updateRow)="onUpdateRow(index, $event)"
+               (updateCell)="onUpdateCell(index, $event)"
                class="static-row"></table-row>
   </div>
   <button (click)="onNewRow()"

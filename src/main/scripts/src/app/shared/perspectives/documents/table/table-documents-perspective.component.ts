@@ -35,6 +35,7 @@ import {TableHeaderCell} from '../../../table/model/table-header-cell';
 import {Attribute} from '../../../../core/dto/attribute';
 import {Document} from '../../../../core/dto/document';
 import {TableRowCell} from '../../../table/model/table-row-cell';
+import {DataEvent} from '../../../table/event/data-event';
 
 @Component({
   selector: 'table-documents-perspective',
@@ -80,22 +81,19 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
     });
   }
 
-  public onNewValue(data: any) {
-    let copy = Object.assign({}, data);
-    let rowIndex: number = copy.rowIndex;
-    delete data.rowIndex;
-    this.documentService.createDocument(this.collection.code, this.convertTableDataToDocument(data))
-      .subscribe((json: object) => this.rows[rowIndex].id = json['_id']);
+  public onNewValue(dataEvent: DataEvent) {
+    this.documentService.createDocument(this.collection.code, this.convertDataEventToDocument(dataEvent))
+      .subscribe((json: object) => this.rows[dataEvent.rowIndex].id = json['_id']);
   }
 
-  public onValueChange(data: any) {
-    this.documentService.updateDocument(this.collection.code, this.convertTableDataToDocument(data))
+  public onValueChange(dataEvent: DataEvent) {
+    this.documentService.updateDocument(this.collection.code, this.convertDataEventToDocument(dataEvent))
       .subscribe();
   }
 
-  public onHeaderChange(data: any) {
-    let oldValue: string = data.oldValue;
-    let newValue: string = data.newValue;
+  public onHeaderChange(dataEvent: DataEvent) {
+    let oldValue: string = dataEvent.data.oldValue;
+    let newValue: string = dataEvent.data.newValue;
     this.collectionService.renameAttribute(this.collection.code, oldValue, newValue)
       .subscribe();
   }
@@ -117,29 +115,31 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
     // TODO
   }
 
-  private convertTableDataToDocument(data: any): Document {
+  private convertDataEventToDocument(dataEvent: DataEvent): Document {
     let document: Document = new Document();
-    Object.keys(data).forEach(key => {
-      if (key === 'id') {
-        document.id = data[key];
-      } else {
-        document.data[key] = data[key];
-      }
-    });
+    Object.keys(dataEvent.data).forEach(key => document.data[key] = dataEvent.data[key]);
+    document.id = dataEvent.id;
     return document;
   }
 
   private prepareTableData(attributes: Attribute[], documents: Document[]) {
-    let headerRows: TableHeaderCell[] = attributes.map(attr =>
-      <TableHeaderCell>{label: attr.name, active: false, hidden: false, constraints: attr.constraints});
+    let headerRows: TableHeaderCell[] = attributes.map(TableDocumentsPerspectiveComponent.convertAttributeToHeaderCell);
     this.header = <TableHeader> {cells: headerRows};
-    this.rows = documents.map(document => {
-      let rowCells: TableRowCell[] = this.header.cells.map(headerCell => {
-        let value: string = document.data[headerCell.label] ? document.data[headerCell.label] : '';
-        return <TableRowCell>{label: value, active: false, hidden: false, constraints: headerCell.constraints};
-      });
-      return <TableRow> {id: document.id, cells: rowCells, active: false};
-    });
+    this.rows = documents.map(document => TableDocumentsPerspectiveComponent.convertDocumentToRow(this.header, document));
+  }
+
+  private static convertAttributeToHeaderCell(attribute: Attribute): TableHeaderCell {
+    return <TableHeaderCell>{label: attribute.name, active: false, hidden: false, constraints: attribute.constraints};
+  }
+
+  private static convertDocumentToRow(header: TableHeader, document: Document): TableRow {
+    let rowCells: TableRowCell[] = header.cells.map(headerCell => TableDocumentsPerspectiveComponent.convertToRowCell(document, headerCell));
+    return <TableRow> {id: document.id, cells: rowCells, active: false};
+  }
+
+  private static convertToRowCell(document: Document, headerCell: TableHeaderCell): TableRowCell {
+    let value: string = document.data[headerCell.label] ? document.data[headerCell.label] : '';
+    return <TableRowCell>{label: value, active: false, hidden: false, constraints: headerCell.constraints};
   }
 
   private static createNewRow(header: TableHeader, rowNum: number): TableRow {

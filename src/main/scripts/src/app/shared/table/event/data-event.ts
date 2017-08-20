@@ -18,10 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-export interface TableRowCell {
 
-  label: string;
-  active: boolean;
-  hidden: boolean;
+export interface DataEvent {
+
+  id?: string;
+  rowIndex?: number;
+  colIndex: number;
+  data: any;
 
 }

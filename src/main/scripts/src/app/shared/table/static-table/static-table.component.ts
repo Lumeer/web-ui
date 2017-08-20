@@ -18,12 +18,14 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ChangeDetectorRef, ViewChildren, QueryList} from '@angular/core';
 import {TableHeader} from '../model/table-header';
 import {TableRow} from '../model/table-row';
 import {TableHeaderCell} from '../model/table-header-cell';
 import {TableRowCell} from '../model/table-row-cell';
 import {TableSettings} from '../model/table-settings';
+import {TableRowComponent} from './table-row.component';
+import {DataEvent} from '../event/data-event';
 
 @Component({
   selector: 'static-table',
@@ -35,22 +37,27 @@ export class StaticTableComponent {
   @Input() public rows: TableRow[];
   @Input() public settings: TableSettings;
 
-  @Output() public newValue: EventEmitter<any> = new EventEmitter();
+  @Output() public newValue: EventEmitter<DataEvent> = new EventEmitter();
   @Output() public newColumn: EventEmitter<any> = new EventEmitter();
   @Output() public newRow: EventEmitter<any> = new EventEmitter();
-  @Output() public valueChange: EventEmitter<any> = new EventEmitter();
-  @Output() public headerChange: EventEmitter<any> = new EventEmitter();
+  @Output() public valueChange: EventEmitter<DataEvent> = new EventEmitter();
+  @Output() public headerChange: EventEmitter<DataEvent> = new EventEmitter();
   @Output() public removeColumn: EventEmitter<string> = new EventEmitter();
   @Output() public dragColumn: EventEmitter<any> = new EventEmitter();
   @Output() public hideColumn: EventEmitter<string> = new EventEmitter();
   @Output() public showColumn: EventEmitter<string> = new EventEmitter();
 
+  @ViewChildren(TableRowComponent) private rowsComponents: QueryList<TableRowComponent>;
+
   private activeRow: number = -1;
+
+  constructor(private ref: ChangeDetectorRef) {
+  }
 
   public onNewColumn(): void {
     this.header.cells.push(StaticTableComponent.createNewColumn(this.header));
     this.rows.forEach((item) => {
-      item.cells.push({label: '', active: false, hidden: false, constraints: []});
+      item.cells.push({label: '', active: false, hidden: false});
     });
   }
 
@@ -63,6 +70,8 @@ export class StaticTableComponent {
     this.inactivateItems();
     this.header.cells[data.colIndex].active = true;
     this.checkLastRowCol(index, data.colIndex);
+    this.ref.markForCheck();
+    // TODO check for performance of manually triggered change detection
   }
 
   public onTableBlur(): void {
@@ -70,17 +79,29 @@ export class StaticTableComponent {
     this.inactivateItems();
   }
 
-  public onUpdateRow(rowIndex, dataPayload): void {
-    this.rows[rowIndex].cells[dataPayload.colIndex].label = dataPayload.data;
-    let header: string = this.header.cells[dataPayload.colIndex].label;
-    let value: any = {};
-    value[header] = dataPayload.data;
+  public onUpdateCell(rowIndex, dataPayload): void {
+    let colIndex: number = dataPayload.colIndex;
+    let newValue = dataPayload.data;
+    if (!this.isValueValid(colIndex, newValue)) {
+      let rowComponent: TableRowComponent = this.rowsComponents.find(component => component.rowIndex === rowIndex);
+      if (rowComponent) {
+        rowComponent.setCell(colIndex, this.rows[rowIndex].cells[colIndex].label);
+      }
+      return;
+    }
+    this.rows[rowIndex].cells[colIndex].label = newValue;
+    let header: string = this.header.cells[colIndex].label;
+    let data: any = {};
+    data[header] = newValue;
     if (this.rows[rowIndex].id) {
-      value['id'] = this.rows[rowIndex].id;
-      this.valueChange.emit(value);
+      this.valueChange.emit(<DataEvent> {
+        id: this.rows[rowIndex].id,
+        rowIndex: rowIndex,
+        colIndex: colIndex,
+        data: data
+      });
     } else {
-      value['rowIndex'] = rowIndex;
-      this.newValue.emit(value);
+      this.newValue.emit(<DataEvent> {rowIndex: rowIndex, colIndex: colIndex, data: data});
     }
   }
 
@@ -95,9 +116,12 @@ export class StaticTableComponent {
   }
 
   public onHeaderChange(dataPayload) {
-    let oldValue: string = this.header.cells[dataPayload.colIndex].label;
-    this.header.cells[dataPayload.colIndex].label = dataPayload.data;
-    this.headerChange.emit({oldValue: oldValue, newValue: dataPayload.data});
+    let colIndex: number = dataPayload.colIndex;
+    let oldValue: string = this.header.cells[colIndex].label;
+    let newValue: string = dataPayload.data;
+    this.header.cells[colIndex].label = newValue;
+    let data = {oldValue: oldValue, newValue: newValue};
+    this.headerChange.emit(<DataEvent> {colIndex: colIndex, data: data});
   }
 
   public showHideColumn(colIndex: number, hidden: boolean): void {
@@ -118,8 +142,16 @@ export class StaticTableComponent {
     }
   }
 
-  public trackByFn(index, item) {
+  public static trackByFn(index, item) {
     return item && item.id ? item.id : index;
+  }
+
+  private isValueValid(colIndex: number, value: any) {
+    let headerCell = this.header.cells[colIndex];
+    headerCell.constraints.forEach(constraint => {
+      // TODO check
+    });
+    return true;
   }
 
   private static createNewRow(header: TableHeader, rowNum: number): TableRow {
