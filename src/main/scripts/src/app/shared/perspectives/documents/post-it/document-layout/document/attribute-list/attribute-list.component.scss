@@ -1,4 +1,4 @@
-@import "../../../../../../styles/variables";
+@import "../../../../../../../../styles/variables";
 
 :host {
   display: block;
@@ -29,6 +29,10 @@ td {
   }
 }
 
+div:focus {
+  background-color: black;
+}
+
 /deep/ input {
   padding: 0 3px;
   width: 100%;
@@ -46,19 +50,24 @@ td {
   position: relative;
 
   .completer-dropdown {
+    overflow: hidden;
+
     border-color: #cccccc !important;
     border-radius: $border-radius-small !important;
-    margin: 0 !important;
+
     width: 100% !important;
+    margin: 0 !important;
     padding: 4px 0 !important;
   }
 
   .completer-row {
-    padding: 1px 6px !important;
     color: $brand-primary !important;
-    margin: 0 !important;
+
     display: block !important;
+
     width: 100% !important;
+    padding: 1px 6px !important;
+    margin: 0 !important;
   }
 
   .completer-selected-row {

@@ -20,11 +20,11 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Collection} from '../../../../../core/dto/collection';
-import {Document} from '../../../../../core/dto/document';
-import {Attribute} from '../../../../../core/dto/attribute';
-import {AttributePair} from '../document-attribute';
-import {AttributePropertyInput} from '../attribute-list/attribute-property-input';
+import {Collection} from '../../../../../../core/dto/collection';
+import {Document} from '../../../../../../core/dto/document';
+import {Attribute} from '../../../../../../core/dto/attribute';
+import {AttributePair} from '../../document-attribute';
+import {AttributePropertyInput} from './attribute-list/attribute-property-input';
 
 @Component({
   selector: 'post-it-document',
@@ -63,7 +63,7 @@ export class PostItDocumentComponent {
     BootstrapDialog.show({
       type: 'type-success',
       title: 'Delete Document?',
-      message: 'Deleting a document will permamently remove it from this collection.',
+      message: 'Deleting a document will permanently remove it from this collection.',
       buttons: [
         {
           label: 'No, Keep Document',

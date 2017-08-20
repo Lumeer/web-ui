@@ -19,23 +19,6 @@ $fade-size: 2em;
   transition: height 0.5s;
 }
 
-.grid-item {
-  @media all and (max-width: 767px){
-    width: 99%; // 100% - gutter
-  }
-  @media all and (min-width: 768px) and (max-width: 1023px) {
-    width: 49%; // 50% - gutter
-  }
-  @media all and (min-width: 1024px) and (max-width: 1279px) {
-    width: 32%; // 33% - gutter
-  }
-  @media all and (min-width: 1280px) {
-    width: 19%; // 20% - gutter
-  }
-
-  margin-bottom: 15px;
-}
-
 .fadeup {
   position: relative;
   z-index: 50;
@@ -53,7 +36,7 @@ $fade-size: 2em;
   background-image: linear-gradient(to top, rgba(255, 255, 255, 0), $secondary-color);
 }
 
-.load-more {
+.see-more {
   position: relative;
   font-size: x-large;
   float: right;

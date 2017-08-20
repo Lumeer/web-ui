@@ -1,0 +1,18 @@
+<add-document layout-item class="layout-item" *ngIf="editable"
+              [stamp]="true"
+              [@appear]="''"
+              (newDocument)="newDocument.emit()"></add-document>
+
+<post-it-document layout-item *ngFor="let document of documents; let idx = index" class="layout-item"
+                  [@appear]="''"
+                  [attr.index]="idx"
+                  [style.z-index]="documents.length - idx"
+                  [index]="idx"
+                  [attributes]="attributes"
+                  [collection]="collection"
+                  [document]="document"
+                  [editable]="editable"
+                  [selectedInput]="selectedInput"
+                  (removed)="removed.emit(idx)"
+                  (attributePairChange)="attributePairChange.emit({document: document, pair: $event}); refresh();">
+</post-it-document>

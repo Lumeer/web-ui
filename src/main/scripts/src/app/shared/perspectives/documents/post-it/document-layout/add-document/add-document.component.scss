@@ -1,4 +1,4 @@
-@import "../../../../../../styles/variables";
+@import "../../../../../../../styles/variables";
 
 :host {
   display: block;
@@ -14,9 +14,6 @@ a {
   transition: color 0.25s;
 
   color: $brand-primary;
-  display: block;
-
-  margin: 0 80px;
   border-radius: 20px;
 
   &:hover {
@@ -25,6 +22,7 @@ a {
 }
 
 i {
+  display: block;
   font-size: 60px;
   border-radius: 60px;
 }

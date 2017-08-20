@@ -20,8 +20,8 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Attribute} from '../../../../../core/dto/attribute';
-import {AttributePair} from '../document-attribute';
+import {Attribute} from '../../../../../../../core/dto/attribute';
+import {AttributePair} from '../../../document-attribute';
 import {AttributePropertyInput} from './attribute-property-input';
 import {isString} from 'util';
 
@@ -155,7 +155,7 @@ export class AttributeListComponent {
     this.selectedInput.row = y;
     this.selectedInput.property = this.propertyMapper[x];
     this.selectedInput.element = this.getInput(x, y, documentIndex);
-    this.selectedInput.element.focus();
+    this.selectedInput.editing ? this.selectedInput.element.focus() : this.selectedInput.element.parentElement.focus();
   }
 
   private getInput(x: number, y: number, documentIndex?: number): HTMLInputElement {
@@ -177,7 +177,7 @@ export class AttributeListComponent {
     this.attributePairs.push(this.newAttributePair);
     this.attributePairChangeEvent.emit(this.newAttributePair);
 
-    window.setImmediate(() => {
+    setTimeout(() => {
       this.newAttributePair = {} as AttributePair;
       this.selectedInput.element.value = '';
       this.selectInput(1, this.attributePairs.length - 1);

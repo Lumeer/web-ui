@@ -23,6 +23,7 @@ export interface AttributePropertyInput {
   property: string;
   column: number;
   row: number;
+  editing: boolean;
   element: HTMLInputElement;
 
 }

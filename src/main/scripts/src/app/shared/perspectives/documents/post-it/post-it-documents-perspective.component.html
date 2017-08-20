@@ -1,27 +1,16 @@
 <div class="fadedown"></div>
-<div class="perspective-block" [style.height]="height + 'px'">
-  <div class="grid">
-
-    <add-document *ngIf="editable" class="grid-item grid-stamp"
-                  [@appear]="''"
-                  (newDocument)="createDocument()"></add-document>
-
-    <post-it-document *ngFor="let document of documents; let idx = index" class="grid-item"
-                      [@appear]="''"
-                      [style.z-index]="documents.length - idx"
-                      [attr.id]="documentId(idx)"
-                      [index]="idx"
-                      [attributes]="attributes"
-                      [collection]="collection"
-                      [document]="document"
-                      [editable]="editable"
-                      [selectedInput]="selectedInput"
-                      (removed)="removeDocument(idx)"
-                      (attributePairChange)="onAttributePairChange(document, $event)">
-    </post-it-document>
-
-  </div>
+<div class="perspective-block" [style.height]="height + 'px'" #content>
+  <post-it-document-layout [editable]="editable"
+                           [collection]="collection"
+                           [attributes]="attributes"
+                           [documents]="documents"
+                           [selectedInput]="selectedInput"
+                           [options]="layoutOptions"
+                           (newDocument)="createDocument()"
+                           (removed)="removeDocument($event)"
+                           (attributePairChange)="onAttributePairChange($event.document, $event.pair)">
+  </post-it-document-layout>
 </div>
 <div class="fadeup"></div>
 
-<a class="load-more">See More<i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+<a (click)="onSeeMore(content)" class="see-more">See More<i class="fa fa-chevron-down" aria-hidden="true"></i></a>

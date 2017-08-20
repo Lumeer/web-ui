@@ -18,7 +18,6 @@
  * -----------------------------------------------------------------------/
  */
 
-import {animate, style, transition, trigger} from '@angular/animations';
 import {ActivatedRoute} from '@angular/router';
 import {Component, Input, OnInit} from '@angular/core';
 
@@ -28,28 +27,16 @@ import {Collection} from '../../../../core/dto/collection';
 import {Document} from '../../../../core/dto/document';
 import {Attribute} from '../../../../core/dto/attribute';
 import {AttributePair} from './document-attribute';
-import {AttributePropertyInput} from './attribute-list/attribute-property-input';
+import {AttributePropertyInput} from './document-layout/document/attribute-list/attribute-property-input';
+import {LayoutOptions} from './document-layout/layout-options';
 import {Perspective} from '../../perspective';
-import {MasonryLayout} from '../../../../utils/masonry-layout';
 import {Buffer} from '../../../../utils/buffer';
 import {Observable} from 'rxjs/Rx';
 
 @Component({
   selector: 'post-it-documents-perspective',
   templateUrl: './post-it-documents-perspective.component.html',
-  styleUrls: ['./post-it-documents-perspective.component.scss'],
-  animations: [
-    trigger('appear', [
-      transition(':enter', [
-        style({transform: 'scale(0)'}),
-        animate('0.25s ease-out', style({transform: 'scale(1)'}))
-      ]),
-      transition(':leave', [
-        style({transform: 'scale(1)'}),
-        animate('0.25s ease-out', style({transform: 'scale(0)'}))
-      ])
-    ])
-  ]
+  styleUrls: ['./post-it-documents-perspective.component.scss']
 })
 export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit {
 
@@ -72,7 +59,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
   private updateBuffer: Buffer;
 
-  private layout: MasonryLayout;
+  public layoutOptions: LayoutOptions;
 
   private previouslyEditedDocument: Document;
 
@@ -81,16 +68,12 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
               private route: ActivatedRoute) {
   }
 
-  public documentId(index: number) {
-    return `Document${index}`;
-  }
-
   public ngOnInit(): void {
-    this.setFallbackData();
+    this.initializeVariables();
     this.fetchData();
   }
 
-  private setFallbackData(): void {
+  private initializeVariables(): void {
     this.collection = {
       code: '',
       name: 'No collection',
@@ -99,9 +82,21 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
       documentCount: 0
     };
 
+    this.selectedInput = {
+      property: 'attribute',
+      row: 0,
+      column: 0,
+      editing: false,
+      element: null
+    };
+
+    this.layoutOptions = {
+      gutter: 15,
+      horizontalOrder: true
+    };
+
     this.attributes = [];
     this.documents = [];
-    this.selectedInput = {} as AttributePropertyInput;
   }
 
   private fetchData(): void {
@@ -117,17 +112,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
       this.collection = collection;
       this.attributes = attributes;
       this.documents = documents;
-      this.initializeLayout();
     });
-  }
-
-  private initializeLayout(): void {
-    window.setImmediate(() => this.layout = new MasonryLayout({
-      gutter: 15,
-      stamp: '.grid-stamp',
-      horizontalOrder: true,
-      percentPosition: true
-    }));
   }
 
   public createDocument(): void {
@@ -135,7 +120,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
     let newDocument = new Document;
     this.documents.unshift(newDocument);
-    window.setImmediate(() => this.layout.prepend($(`#${this.documentId(0)}`)));
 
     this.documentService.createDocument(this.collection.code, newDocument);
   }
@@ -145,7 +129,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
     let deletedDocument = this.documents[index];
     this.documents.splice(index, 1);
-    window.setImmediate(() => this.layout.remove($(`#${this.documentId(index)}`)));
 
     this.documentService.removeDocument(this.collection.code, deletedDocument);
   }
@@ -159,7 +142,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
       delete document.data[attributePair.attribute];
     }
 
-    window.setImmediate(() => this.layout.refresh());
     this.updateDocument(document);
   }
 
@@ -179,6 +161,12 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
   private lastEditedDocument(document: Document): boolean {
     return this.previouslyEditedDocument && this.previouslyEditedDocument === document;
+  }
+
+  public onSeeMore(content: HTMLDivElement): void {
+    $(content).animate({
+      scrollTop: content.scrollHeight
+    });
   }
 
 }

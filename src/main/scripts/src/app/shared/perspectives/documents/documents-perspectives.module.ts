@@ -25,10 +25,12 @@ import {BrowserModule} from '@angular/platform-browser';
 import {Ng2CompleterModule} from 'ng2-completer';
 
 import {PostItDocumentsPerspectiveComponent} from './post-it/post-it-documents-perspective.component';
-import {PostItAddDocumentComponent} from './post-it/add-document/add-document.component';
-import {PostItDocumentComponent} from './post-it/document/post-it-document.component';
-import {AttributeListComponent} from './post-it/attribute-list/attribute-list.component';
+import {PostItAddDocumentComponent} from './post-it/document-layout/add-document/add-document.component';
+import {PostItDocumentComponent} from './post-it/document-layout/document/post-it-document.component';
+import {AttributeListComponent} from './post-it/document-layout/document/attribute-list/attribute-list.component';
 import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
+import {PostItDocumentLayoutComponent} from './post-it/document-layout/post-it-document-layout.component';
+import {LayoutItemDirective} from './post-it/document-layout/layout-item.directive';
 
 @NgModule({
   imports: [
@@ -38,6 +40,8 @@ import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspe
   ],
   declarations: [
     PostItDocumentsPerspectiveComponent,
+    PostItDocumentLayoutComponent,
+    LayoutItemDirective,
     PostItAddDocumentComponent,
     PostItDocumentComponent,
     AttributeListComponent,
