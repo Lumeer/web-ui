@@ -19,16 +19,15 @@
  */
 
 import {ActivatedRoute} from '@angular/router';
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, Input, OnInit} from '@angular/core';
 
 import {DocumentService} from '../../../../core/rest/document.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Collection} from '../../../../core/dto/collection';
 import {Document} from '../../../../core/dto/document';
 import {Attribute} from '../../../../core/dto/attribute';
-import {AttributePair} from './document-attribute';
-import {AttributePropertyInput} from './document-layout/document/attribute-list/attribute-property-input';
-import {LayoutOptions} from './document-layout/layout-options';
+import {AttributePair} from './attribute/attribute-pair';
+import {AttributePropertyInput} from './attribute/attribute-property-input';
 import {Perspective} from '../../perspective';
 import {Buffer} from '../../../../utils/buffer';
 import {Observable} from 'rxjs/Rx';
@@ -38,7 +37,7 @@ import {Observable} from 'rxjs/Rx';
   templateUrl: './post-it-documents-perspective.component.html',
   styleUrls: ['./post-it-documents-perspective.component.scss']
 })
-export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit {
+export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit, AfterViewChecked {
 
   @Input()
   public query: string;
@@ -59,8 +58,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
   private updateBuffer: Buffer;
 
-  public layoutOptions: LayoutOptions;
-
   private previouslyEditedDocument: Document;
 
   constructor(private documentService: DocumentService,
@@ -70,6 +67,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
   public ngOnInit(): void {
     this.initializeVariables();
+    this.initializeLayout();
     this.fetchData();
   }
 
@@ -87,16 +85,16 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
       row: 0,
       column: 0,
       editing: false,
-      element: null
-    };
-
-    this.layoutOptions = {
-      gutter: 15,
-      horizontalOrder: true
+      inputElement: null,
+      blockElement: null,
     };
 
     this.attributes = [];
     this.documents = [];
+  }
+
+  private initializeLayout() {
+    window.addEventListener('resize', () => this.refreshLayout());
   }
 
   private fetchData(): void {
@@ -112,7 +110,21 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
       this.collection = collection;
       this.attributes = attributes;
       this.documents = documents;
+      this.attributes = attributes;
     });
+  }
+
+  public ngAfterViewChecked(): void {
+    this.refreshLayout();
+  }
+
+  private refreshLayout(): void {
+    let Minigrid = window['Minigrid'];
+    new Minigrid({
+      container: '.layout',
+      item: '.layout-item',
+      gutter: 15
+    }).mount();
   }
 
   public createDocument(): void {
@@ -163,9 +175,9 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
     return this.previouslyEditedDocument && this.previouslyEditedDocument === document;
   }
 
-  public onSeeMore(content: HTMLDivElement): void {
-    $(content).animate({
-      scrollTop: content.scrollHeight
+  public onSeeMore(layout: HTMLDivElement): void {
+    $(layout).animate({
+      scrollTop: layout.scrollHeight
     });
   }
 

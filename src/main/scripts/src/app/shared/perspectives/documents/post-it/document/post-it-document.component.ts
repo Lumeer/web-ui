@@ -18,19 +18,24 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-import {Attribute} from '../../../../../../../core/dto/attribute';
-import {AttributePair} from '../../../document-attribute';
-import {AttributePropertyInput} from './attribute-property-input';
+import {Collection} from '../../../../../core/dto/collection';
+import {Document} from '../../../../../core/dto/document';
+import {Attribute} from '../../../../../core/dto/attribute';
+import {AttributePair} from '../attribute/attribute-pair';
+import {AttributePropertyInput} from '../attribute/attribute-property-input';
 import {isString} from 'util';
 
 @Component({
-  selector: 'attribute-list',
-  templateUrl: './attribute-list.component.html',
-  styleUrls: ['./attribute-list.component.scss']
+  selector: 'post-it-document',
+  templateUrl: './post-it-document.component.html',
+  styleUrls: ['./post-it-document.component.scss']
 })
-export class AttributeListComponent {
+export class PostItDocumentComponent implements OnInit {
+
+  @Input()
+  public editable: boolean;
 
   @Input()
   public index: number;
@@ -39,33 +44,79 @@ export class AttributeListComponent {
   public attributes: Attribute[];
 
   @Input()
-  public set data(attributePairs: object) {
+  public collection: Collection;
+
+  @Input()
+  public document: Document;
+
+  @Input()
+  public selectedInput: AttributePropertyInput;
+
+  @Output()
+  public removed = new EventEmitter();
+
+  @Output()
+  public attributePairChange = new EventEmitter<AttributePair>();
+
+  public attributePairs: AttributePair[];
+
+  public newAttributePair: AttributePair;
+
+  public ngOnInit(): void {
+    this.initializeVariables();
+    this.readDocumentData();
+  }
+
+  private initializeVariables() {
     this.attributePairs = [];
-    let attributes = Object.keys(attributePairs);
-    for (let i = 0; i < attributes.length; i++) {
-      let attribute = attributes[i];
-      let value = isString(attributePairs[attribute]) ? attributePairs[attribute] : JSON.stringify(attributePairs[attribute], undefined, 2);
+
+    this.newAttributePair = {
+      attribute: '',
+      value: '',
+      previousAttributeName: ''
+    };
+  }
+
+  private readDocumentData(): void {
+    Object.keys(this.document.data).forEach(attribute => {
+      let value = this.document.data[attribute];
+      !isString(value) && (value = JSON.stringify(value, undefined, 2));
 
       this.attributePairs.push({
         attribute: attribute,
         previousAttributeName: '',
         value: value
       });
-    }
+    });
   }
 
-  @Input()
-  public editable: boolean;
+  public onRemoveDocumentClick(): void {
+    this.removeDocumentConfirm();
+  }
 
-  @Input()
-  public selectedInput: AttributePropertyInput;
-
-  @Output()
-  public attributePairChangeEvent = new EventEmitter<AttributePair>();
-
-  public attributePairs: AttributePair[] = [];
-
-  public newAttributePair = {} as AttributePair;
+  private removeDocumentConfirm(): void {
+    window['BootstrapDialog'].show({
+      type: 'type-success',
+      title: 'Delete Document?',
+      message: 'Deleting a document will permanently remove it from this collection.',
+      buttons:
+        [
+          {
+            label: 'No, Keep Document',
+            action: dialog => dialog.close()
+          },
+          {
+            label: 'Yes, Delete Document',
+            cssClass: 'btn-success',
+            hotkey: 13, // Enter
+            action: dialog => {
+              this.removed.emit();
+              dialog.close();
+            }
+          }
+        ]
+    });
+  }
 
   private readonly propertyMapper = {
     0: 'attribute',
@@ -92,7 +143,6 @@ export class AttributeListComponent {
 
   public suggestedAttributes(): string[] {
     return this.attributes
-      .sort((attribute1, attribute2) => attribute2.count - attribute1.count)
       .map(attribute => attribute.name)
       .filter(attributeName => !this.usedAttributeName(attributeName));
   }
@@ -109,7 +159,7 @@ export class AttributeListComponent {
 
   private selectAdjacentInput(xChange: number, yChange: number, checkCursorOnEdge?: boolean): void {
     if (checkCursorOnEdge && !this.cursorOnTextEdge(xChange)) {
-        return;
+      return;
     }
 
     if (xChange || yChange) {
@@ -140,11 +190,11 @@ export class AttributeListComponent {
 
   private cursorOnTextEdge(xChange: number): boolean {
     if (xChange < 0) {
-      return this.selectedInput.element.selectionStart === 0;
+      return this.selectedInput.inputElement.selectionStart === 0;
     }
 
     if (xChange > 0) {
-      return this.selectedInput.element.selectionEnd === this.selectedInput.element.value.length;
+      return this.selectedInput.inputElement.selectionEnd === this.selectedInput.inputElement.value.length;
     }
 
     return false;
@@ -154,32 +204,32 @@ export class AttributeListComponent {
     this.selectedInput.column = x;
     this.selectedInput.row = y;
     this.selectedInput.property = this.propertyMapper[x];
-    this.selectedInput.element = this.getInput(x, y, documentIndex);
-    this.selectedInput.editing ? this.selectedInput.element.focus() : this.selectedInput.element.parentElement.focus();
+    this.selectedInput.inputElement = this.getInput(x, y, documentIndex);
+    this.selectedInput.editing ? this.selectedInput.inputElement.focus() : this.selectedInput.inputElement.parentElement.focus();
   }
 
   private getInput(x: number, y: number, documentIndex?: number): HTMLInputElement {
     return document.getElementById(this.inputId(x, y, documentIndex)) as HTMLInputElement;
   }
 
-  public attributePairChange(attributePair: AttributePair, newPropertyValue: string): void {
+  public updateAttributePair(attributePair: AttributePair, newPropertyValue: string): void {
     if (this.selectedInput.property === 'attribute') {
       attributePair.previousAttributeName = attributePair.attribute;
       !newPropertyValue && this.attributePairs.splice(this.selectedInput.row, 1);
     }
     attributePair[this.selectedInput.property] = newPropertyValue;
 
-    this.attributePairChangeEvent.emit(attributePair);
+    this.attributePairChange.emit(attributePair);
   }
 
   public createAttributePair(newPairValue: string): void {
     this.newAttributePair.value = newPairValue;
     this.attributePairs.push(this.newAttributePair);
-    this.attributePairChangeEvent.emit(this.newAttributePair);
+    this.attributePairChange.emit(this.newAttributePair);
 
     setTimeout(() => {
       this.newAttributePair = {} as AttributePair;
-      this.selectedInput.element.value = '';
+      this.selectedInput.inputElement.value = '';
       this.selectInput(1, this.attributePairs.length - 1);
     });
   }

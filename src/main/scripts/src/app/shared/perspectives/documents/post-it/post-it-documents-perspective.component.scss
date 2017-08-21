@@ -6,7 +6,7 @@ $fade-size: 2em;
   display: block;
 }
 
-.perspective-block {
+.perspective {
   position: relative;
   bottom: $fade-size;
   padding-top: $fade-size / 2;
@@ -17,6 +17,15 @@ $fade-size: 2em;
   -moz-transition: height 0.5s;
   -o-transition: height 0.5s;
   transition: height 0.5s;
+}
+
+.layout {
+  margin: 0 auto;
+}
+
+.layout-item {
+  width: 290px;
+  margin-bottom: 15px;
 }
 
 .fadeup {

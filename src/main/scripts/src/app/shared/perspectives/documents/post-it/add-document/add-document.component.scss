@@ -1,4 +1,4 @@
-@import "../../../../../../../styles/variables";
+@import "../../../../../../styles/variables";
 
 :host {
   display: block;
@@ -29,6 +29,6 @@ i {
 
 label {
   display: block;
-  font-size: large;
+  font-size: 1.5em;
   pointer-events: none;
 }

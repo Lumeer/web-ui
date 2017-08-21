@@ -24,6 +24,7 @@ export interface AttributePropertyInput {
   column: number;
   row: number;
   editing: boolean;
-  element: HTMLInputElement;
+  inputElement: HTMLInputElement;
+  blockElement: HTMLDivElement;
 
 }

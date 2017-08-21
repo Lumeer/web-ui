@@ -1,0 +1,68 @@
+<div class="header">
+  <span [style.color]="collection.color" title="{{ collection.name }}">
+    <i class="fa {{ collection.icon }} collection-icon"></i>
+    <label class="name">{{ collection.name }}</label>
+  </span>
+
+  <ng-container *ngIf="editable">
+    <a class="fa fa-fw fa-pencil editable" title="Edit Document" (click)="selectInput(0, 0)"></a>
+    <a class="fa fa-fw fa-times editable" title="Remove Document" (click)="onRemoveDocumentClick()"></a>
+  </ng-container>
+</div>
+
+<ul class="content">
+  <li *ngFor="let attributePair of attributePairs; let idx = index">
+    <!--IDs follow the structure: Input_documentIndex_[x, y]-->
+    <ng2-completer #attributeinput
+                   [inputId]="inputId(0, idx)"
+                   [datasource]="suggestedAttributes()"
+                   [minSearchLength]="0"
+                   [textNoResults]="''"
+                   [disableInput]="!editable"
+                   [ngModel]="attributePair.attribute"
+                   (ngModelChange)="updateAttributePair(attributePair, $event)"
+                   (keydown)="!attributeinput.isOpen() && onInputKey($event)"
+                   (click)="selectInput(0, idx)">
+    </ng2-completer>
+    <input [attr.id]="inputId(1, idx)"
+           [disabled]="!editable"
+           [ngModel]="attributePair.value"
+           (ngModelChange)="updateAttributePair(attributePair, $event)"
+           (keydown)="onInputKey($event)"
+           (click)="selectInput(1, idx)"/>
+  </li>
+
+  <li *ngIf="editable">
+    <ng2-completer #newattributeinput
+                   placeholder=" + "
+                   [inputId]="inputId(0, attributePairs.length)"
+                   [datasource]="suggestedAttributes()"
+                   [minSearchLength]="0"
+                   [textNoResults]="''"
+                   [disableInput]="!editable"
+                   [(ngModel)]="newAttributePair.attribute"
+                   (keydown)="!newattributeinput.isOpen() && onInputKey($event)"
+                   (click)="selectInput(0, attributePairs.length)">
+    </ng2-completer>
+    <input title="value"
+           [attr.id]="inputId(1, attributePairs.length)"
+           [disabled]="!newAttributePair.attribute"
+           (keydown)="onInputKey($event); $event.key.length === 1 && createAttributePair($event.key)"
+           (click)="selectInput(1, attributePairs.length)"/>
+  </li>
+</ul>
+
+<!-- additional buttons -->
+<div class="edit">
+  <span class="primary-edit">
+    <a class="fa fa-fw fa-search" aria-hidden="true" title="Details"></a>
+  </span>
+
+  <span class="secondary-edit">
+    <!--the comments remove added space between icons-->
+    <a class="fa fa-fw fa-sign-in" aria-hidden="true" title="Incoming Links"></a><!--
+    --><a class="fa fa-fw fa-sign-out" aria-hidden="true" title="Outgoing Links"></a><!--
+    --><a class="fa fa-fw fa-history" aria-hidden="true" title="History"></a><!--
+    --><a class="fa fa-fw fa-users" aria-hidden="true" title="User Rights"></a>
+  </span>
+</div>

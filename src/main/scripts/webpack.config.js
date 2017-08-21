@@ -75,9 +75,7 @@ module.exports = {
     ),
     new webpack.ProvidePlugin({
       $: 'jquery',
-      jQuery: 'jquery',
-      BootstrapDialog: 'BootstrapDialog',
-      Masonry: 'Masonry'
+      jQuery: 'jquery'
     }),
     new HtmlWebpackPlugin({
       favicon: 'img/favicon.ico',
