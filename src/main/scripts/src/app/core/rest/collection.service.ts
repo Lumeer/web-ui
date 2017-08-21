@@ -45,7 +45,7 @@ export class CollectionService {
         .set('size', pageSize.toString());
     }
 
-    return this.http.get<Collection[]>(this.apiPrefix(), queryParams)
+    return this.http.get<Collection[]>(this.apiPrefix(), {params: queryParams})
       .catch(CollectionService.handleGlobalError);
   }
 
