@@ -166,7 +166,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
         null,
         (error: LumeerError) => {
           if (error instanceof BadInputError) {
-            this.errorMessage = error.reason;
+            this.errorMessage = error.message;
           } else {
             throw error;
           }
@@ -180,7 +180,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
         (code: string) => collectionModel.code = code,
         (error: LumeerError) => {
           if (error instanceof BadInputError) {
-            this.errorMessage = error.reason;
+            this.errorMessage = error.message;
           } else {
             throw error;
           }

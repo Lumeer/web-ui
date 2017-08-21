@@ -18,9 +18,10 @@
  * -----------------------------------------------------------------------/
  */
 
-export class LumeerError {
+export class LumeerError extends Error {
 
-  constructor(public reason?: string) {
+  constructor(public message: string) {
+    super(message);
   }
 
 }
