@@ -19,8 +19,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+
 import {UserSettings} from '../dto/user.settings';
 import {Observable} from 'rxjs/Observable';
 
@@ -34,8 +34,8 @@ export class UserSettingsService {
     return this.httpClient.get<UserSettings>(UserSettingsService.apiPrefix());
   }
 
-  public updateUserSettings(userSettings: UserSettings): Observable<Response> {
-    return this.httpClient.put(UserSettingsService.apiPrefix(), userSettings);
+  public updateUserSettings(userSettings: UserSettings): Observable<HttpResponse<object>> {
+    return this.httpClient.put(UserSettingsService.apiPrefix(), userSettings, {observe: 'response'});
   }
 
   private static apiPrefix(): string {
