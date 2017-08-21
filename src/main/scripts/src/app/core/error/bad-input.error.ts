@@ -18,26 +18,8 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Collection} from '../dto/collection';
+import {LumeerError} from './lumeer.error';
 
-export const defaultIcon = 'fa-book';
-export const defaultIconColor = '#000000';
-
-export class CollectionModel implements Collection {
-
-  public code: string;
-  public name: string = '';
-  public color: string = defaultIconColor;
-  public icon: string = defaultIcon;
-  public pickerVisible: boolean = false;
-
-  public toDto(): Collection {
-    return {
-      code: this.code,
-      name: this.name,
-      color: this.color,
-      icon: this.icon
-    };
-  }
+export class BadInputError extends LumeerError {
 
 }

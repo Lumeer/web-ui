@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule, Optional, SkipSelf} from '@angular/core';
+import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
@@ -37,6 +37,7 @@ import {HomeComponent} from './home.component';
 import {SharedModule} from '../shared/shared.module';
 import {SearchService} from './rest/search.service';
 import {RouterModule} from '@angular/router';
+import {LumeerErrorHandler} from './error/lumeer-error.handler';
 
 @NgModule({
   imports: [
@@ -60,7 +61,8 @@ import {RouterModule} from '@angular/router';
     RolesService,
     SearchService,
     UserSettingsService,
-    WorkspaceService
+    WorkspaceService,
+    {provide: ErrorHandler, useClass: LumeerErrorHandler}
   ],
   exports: [
     HeaderComponent,

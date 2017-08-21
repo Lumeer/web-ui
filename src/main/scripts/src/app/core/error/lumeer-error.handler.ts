@@ -18,26 +18,23 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Collection} from '../dto/collection';
+import {ErrorHandler, Injectable} from '@angular/core';
 
-export const defaultIcon = 'fa-book';
-export const defaultIconColor = '#000000';
+import {LumeerError} from './lumeer.error';
+import {NotificationsService} from 'angular2-notifications/dist';
 
-export class CollectionModel implements Collection {
+/**
+ * This class provides handling unexpecting errors
+ */
+@Injectable()
+export class LumeerErrorHandler implements ErrorHandler {
 
-  public code: string;
-  public name: string = '';
-  public color: string = defaultIconColor;
-  public icon: string = defaultIcon;
-  public pickerVisible: boolean = false;
+  constructor(private notificationService: NotificationsService) {
+  }
 
-  public toDto(): Collection {
-    return {
-      code: this.code,
-      name: this.name,
-      color: this.color,
-      icon: this.icon
-    };
+  public handleError(error: LumeerError): void {
+    console.error(error);
+    this.notificationService.error('Error', error.message);
   }
 
 }

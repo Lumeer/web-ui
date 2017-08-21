@@ -1,9 +1,24 @@
 @import '../../../../../styles/variables';
 
-.post-it {
-  margin: 10px;
+$anim-duration: 0.4s;
+
+.shadow{
   background-color: $secondary-color;
   box-shadow: $default-shadow;
+  transition: box-shadow $anim-duration ease-in-out;
+
+  &:hover {
+    box-shadow: $default-shadow-up;
+  }
+
+  &:hover .actions{
+    opacity: 1;
+  }
+
+}
+
+.post-it {
+  margin: 10px;
   padding: 10px;
   height: 150px;
   position: relative;
@@ -41,7 +56,10 @@
     background-color: $secondary-color;
     font-size: $font-size-h4;
     box-shadow: $default-shadow;
-    transition: box-shadow 0.3s ease-in-out;
+    transition: box-shadow $anim-duration ease-in-out;
+    -webkit-transition: box-shadow $anim-duration ease-in-out;
+    -moz-transition: box-shadow $anim-duration ease-in-out;
+    -o-transition: box-shadow $anim-duration ease-in-out;
 
     &:hover {
       box-shadow: $default-shadow-up;
@@ -63,6 +81,27 @@
     right: 10px;
     top: 10px;
     font-size: 12px;
+  }
+
+  .actions {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    font-size: 12px;
+    opacity: 0;
+    -webkit-transition: all $anim-duration ease-in-out;
+    -moz-transition: all $anim-duration ease-in-out;
+    -o-transition: all $anim-duration ease-in-out;
+    transition: all $anim-duration ease-in-out;
+
+    .action {
+      padding: 2px;
+      cursor: pointer;
+    }
+
+    .delete {
+      color: red !important;
+    }
   }
 
 }

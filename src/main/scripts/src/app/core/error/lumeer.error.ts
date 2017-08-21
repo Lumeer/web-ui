@@ -18,26 +18,10 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Collection} from '../dto/collection';
+export class LumeerError extends Error {
 
-export const defaultIcon = 'fa-book';
-export const defaultIconColor = '#000000';
-
-export class CollectionModel implements Collection {
-
-  public code: string;
-  public name: string = '';
-  public color: string = defaultIconColor;
-  public icon: string = defaultIcon;
-  public pickerVisible: boolean = false;
-
-  public toDto(): Collection {
-    return {
-      code: this.code,
-      name: this.name,
-      color: this.color,
-      icon: this.icon
-    };
+  constructor(public message: string) {
+    super(message);
   }
 
 }

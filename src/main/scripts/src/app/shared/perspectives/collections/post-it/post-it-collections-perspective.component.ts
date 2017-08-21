@@ -25,7 +25,9 @@ import {CollectionService} from '../../../../core/rest/collection.service';
 import {Perspective} from '../../perspective';
 import {Collection} from '../../../../core/dto/collection';
 import {CollectionModel} from '../../../../core/model/collection.model';
-import * as Const from '../../../const';
+import {Role} from '../../../permissions/role';
+import {LumeerError} from '../../../../core/error/lumeer.error';
+import {BadInputError} from '../../../../core/error/bad-input.error';
 
 @Component({
   selector: 'post-it-collections-perspective',
@@ -53,16 +55,13 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   public editable: boolean;
 
   public placeholderTitle: string = 'Collection name';
-  public iconsPerPage: number = 36;
   public collectionMinCharacters = 3;
-  public icons: string[] = Const.icons;
-  public colors: string[] = Const.colors;
   public newCollections: CollectionModel[] = [];
   public collections: Collection[];
-  public numbers: any[];
   public cachedName: string;
   public selectedIcon: string;
   public selectedColor: string;
+  public errorMessage: string;
 
   constructor(private collectionService: CollectionService) {
   }
@@ -79,10 +78,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     this.newCollections.splice(ix, 1);
   }
 
-  public onNewIconAndColor(collectionModel: CollectionModel) {
-    collectionModel.icon = this.selectedIcon;
-    collectionModel.color = this.selectedColor;
-    collectionModel.pickerVisible = false;
+  public onNewIconOrColor(collectionModel: CollectionModel) {
     if (collectionModel.code) {
       this.updateCollection(collectionModel);
     }
@@ -106,6 +102,16 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public onBlurCollectionName(collectionModel: CollectionModel) {
+    this.onSaveCollection(collectionModel);
+  }
+
+  public onInputChange() {
+    if (this.errorMessage) {
+      this.errorMessage = null;
+    }
+  }
+
+  public onSaveCollection(collectionModel: CollectionModel) {
     if (collectionModel.code) {
       if (collectionModel.name.length < this.collectionMinCharacters) {
         collectionModel.name = this.cachedName;
@@ -117,6 +123,38 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     }
   }
 
+  public hasWriteRole(collection: Collection) {
+    return collection.userRoles.some(role => role === Role.write);
+  }
+
+  public hasManageRole(collection: Collection) {
+    return collection.userRoles.some(role => role === Role.manage);
+  }
+
+  public onDetailClick(collectionCode: String) {
+    // TODO
+  }
+
+  public onDocumentsClick(collectionCode: String) {
+    // TODO
+  }
+
+  public onAttributesClick(collectionCode: String) {
+    // TODO
+  }
+
+  public onEditClick(collectionCode: String) {
+    // TODO
+  }
+
+  public onPermissionsClick(collectionCode: String) {
+    // TODO
+  }
+
+  public onDeleteClick(collectionCode: String) {
+    // TODO
+  }
+
   private loadCollections() {
     this.collectionService.getCollections()
       .subscribe((collections: Collection[]) => this.collections = collections);
@@ -124,12 +162,30 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
 
   private updateCollection(collectionModel: CollectionModel) {
     this.collectionService.updateCollection(collectionModel.code, collectionModel.toDto())
-      .subscribe();
+      .subscribe(
+        null,
+        (error: LumeerError) => {
+          if (error instanceof BadInputError) {
+            this.errorMessage = error.message;
+          } else {
+            throw error;
+          }
+        }
+      );
   }
 
   private createCollection(collectionModel: CollectionModel) {
     this.collectionService.createCollection(collectionModel.toDto())
-      .subscribe((code: string) => collectionModel.code = code);
+      .subscribe(
+        (code: string) => collectionModel.code = code,
+        (error: LumeerError) => {
+          if (error instanceof BadInputError) {
+            this.errorMessage = error.message;
+          } else {
+            throw error;
+          }
+        }
+      );
   }
 
 }

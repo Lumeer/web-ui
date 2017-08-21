@@ -4,7 +4,7 @@
     <h4>Add collection</h4>
   </div>
 </div>
-<div class="col-lg-2 col-sm-3 col-xs-4 post-it"
+<div class="col-lg-2 col-sm-3 col-xs-4 post-it shadow"
      *ngFor="let newCollection of newCollections; let ix = index"
      [@appear]="''"
      [ngClass]="{'new-collection' : !newCollection.code }">
@@ -21,29 +21,54 @@
   <icon-picker [enabled]="newCollection.pickerVisible"
                [(color)]="newCollection.color"
                [(icon)]="newCollection.icon"
-               (itemSelected)="updateCollection(newCollection)"></icon-picker>
+               (onSelected)="onNewIconOrColor(newCollection)"></icon-picker>
 
-  <form #f="ngForm" class="form-horizontal" (ngSubmit)="onSaveCollection(); f.resetForm()">
+  <form #f="ngForm" class="form-horizontal" (ngSubmit)="onSaveCollection(newCollection)">
     <div class="name-icon">
       <i class="fa fa-2x" [ngClass]="newCollection.icon" [ngStyle]="{'color':newCollection.color}"></i>
       <input name="name" placeholder={{placeholderTitle}}
              (focus)="onFocusCollectionName(newCollection)"
              (blur)="onBlurCollectionName(newCollection)"
+             (ngModelChange)="onInputChange()"
              id="name" [ngStyle]="{'color':newCollection.color}"
              [(ngModel)]="newCollection.name" required minlength="{{collectionMinCharacters}}" #name="ngModel">
     </div>
-    <small class="text-danger err-msg" [hidden]="name.valid || (name.pristine && !f.submitted)">
-      Minimum {{collectionMinCharacters}} characters
-    </small>
+    <div class="err-msg">
+      <small class="text-danger" *ngIf="name.touched && !name.valid">
+        Minimum {{collectionMinCharacters}} characters
+      </small>
+      <small class="text-danger" *ngIf="errorMessage">
+        {{errorMessage}}
+      </small>
+    </div>
   </form>
+
+  <div class="actions" *ngIf="newCollection.code">
+    <i class="fa fa-eye action" (click)="onDetailClick(newCollection.code)" title="Detail"></i>
+    <i class="fa fa-table action" (click)="onDocumentsClick(newCollection.code)" title="Documents"></i>
+    <i class="fa fa-list-ul action" (click)="onAttributesClick(newCollection.code)" title="Attributes"></i>
+    <i class="fa fa-pencil action" (click)="onEditClick(newCollection.code)" title="Edit"></i>
+    <i class="fa fa-users action" (click)="onPermissionsClick(newCollection.code)" title="Permissions"></i>
+    <i class="fa fa-trash action delete" (click)="onDeleteClick(newCollection.code)"  title="Delete"></i>
+  </div>
 </div>
 
-<div class="col-lg-2 col-sm-3 col-xs-4 post-it" *ngFor="let oneCollection of collections">
+<div class="col-lg-2 col-sm-3 col-xs-4 post-it shadow" *ngFor="let oneCollection of collections">
   <div class="num-documents">{{oneCollection.documentCount}}
     <i class="fa fa-file-text-o"></i>
   </div>
   <div class="name-icon">
     <i class="fa fa-2x" [ngClass]="oneCollection.icon" [ngStyle]="{'color':oneCollection.color}"></i>
     <h4 [ngStyle]="{'color':oneCollection.color}">{{oneCollection.name}}</h4>
+  </div>
+  <div class="actions">
+    <i class="fa fa-eye action" (click)="onDetailClick(oneCollection.code)" title="Detail"></i>
+    <i class="fa fa-table action" (click)="onDocumentsClick(newCollection.code)" title="Documents"></i>
+    <i class="fa fa-list-ul action" (click)="onAttributesClick(oneCollection.code)" title="Attributes"></i>
+    <i *ngIf="hasWriteRole(oneCollection)" class="fa fa-pencil action" (click)="onEditClick(oneCollection.code)" title="Edit"></i>
+    <i *ngIf="hasManageRole(oneCollection)" class="fa fa-users action"
+       (click)="onPermissionsClick(oneCollection.code)" title="Permissions"></i>
+    <i *ngIf="hasManageRole(oneCollection)" class="fa fa-trash action delete"
+       (click)="onDeleteClick(oneCollection.code)" title="Delete"></i>
   </div>
 </div>
