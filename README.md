@@ -20,19 +20,19 @@ To build application locally run
 $ npm run-script build
 ```
 
-To run and watch for changes run (server will listen on [http://localhost:7000/](http://localhost:7000/))
+To run and watch for changes run (server will listen on [http://localhost:7000/](http://localhost:7000/)) it will also set `lumeer-env` variable to `development` so you don't have to set keycloak.
 ```
 $ npm start
 ```
 
-This application is using typings for typescript references, you have to install it globally if you want to install new typings packages via command line
-```
-$ npm install -g typings
-```
 
 ## Development
 
-If you want to run the application locally on your machine during the development, you will need to add the following property to `keycloak.json` file:
-```json
-"disabled": true
-```
+If you want to run the application locally on your machine during the development, you have to run (lumeer engine server)[https://github.com/Lumeer/engine] and you have to set environment variable `LUMEER_ENGINE` to point web-ui where the engine is running (default value is `lumeer-engine`). 
+
+## Environment variables
+
+* LUMEER_ENV
+    * if you want to disable keycloak for web-ui set it to `development`. Example `$ LUMEER_ENV=development`
+* LUMEER_ENGINE
+    * to point web-ui where lumeer engine is running, no slashes at start or end. Example: `$ LUMEER_ENGINE=lumeer-engine` if server is running on `localhost:8080/lumeer-engine`
