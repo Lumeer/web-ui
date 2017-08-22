@@ -55,7 +55,7 @@ export class PostItDocumentComponent implements OnInit {
   public attributePairChange = new EventEmitter<AttributePair>();
 
   @Output()
-  public selectDocument = new EventEmitter<{ direction: string, row: number }>();
+  public selectDocument = new EventEmitter<{ direction: string, row: number, column: number }>();
 
   public suggestedAttributes: String[];
 
@@ -118,39 +118,49 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   public onKeyDown(event: KeyboardEvent): void {
-    if (!this.editingMode) {
-      this.keyMapper.hasOwnProperty(event.key) && this.keyMapper[event.key]();
+    if (this.editingMode) {
+      this.editModeOnKey.hasOwnProperty(event.key) && this.editModeOnKey[event.key]();
+    } else {
+      this.selectModeOnKey.hasOwnProperty(event.key) && this.selectModeOnKey[event.key]();
     }
   }
 
-  private readonly keyMapper = {
+  private readonly selectModeOnKey = {
     ArrowUp: () => this.moveSelection(0, -1),
     ArrowDown: () => this.moveSelection(0, 1),
     ArrowLeft: () => this.moveSelection(-1, 0),
     ArrowRight: () => this.moveSelection(1, 0),
-    Enter: () => this.selectedColumn === 1 ? this.moveSelection(-1, 1) : this.moveSelection(1, 0)
+    F2: () => this.switchEditMode(),
+    Enter: () => this.switchEditMode()
+  };
+
+  private readonly editModeOnKey = {
+    F2: () => this.switchEditMode(),
+    Escape: () => this.switchEditMode(),
+    Enter: () => {
+      this.selectedColumn === 1 ? this.moveSelection(-1, 1) : this.moveSelection(1, 0);
+      this.switchEditMode();
+    }
   };
 
   private moveSelection(columnChange: number, rowChange: number): void {
     let newColumn = this.selectedColumn + columnChange;
     let newRow = this.selectedRow + rowChange;
 
-    console.log(newColumn, newRow);
-
     if (newColumn < 0) {
-      this.selectDocument.emit({direction: 'Left', row: newRow});
+      this.selectDocument.emit({direction: 'Left', row: newRow, column: newColumn});
       return;
     }
-    if (newColumn > 1 || (newColumn === 1 && newRow === this.attributePairs.length)) {
-      this.selectDocument.emit({direction: 'Right', row: newRow});
+    if (newColumn > 1 || (this.selectedColumn === 0 && newColumn === 1 && newRow === this.attributePairs.length)) {
+      this.selectDocument.emit({direction: 'Right', row: newRow, column: newColumn});
       return;
     }
     if (newRow < 0) {
-      this.selectDocument.emit({direction: 'Up', row: Number.MAX_SAFE_INTEGER});
+      this.selectDocument.emit({direction: 'Up', row: newRow, column: newColumn});
       return;
     }
     if (newRow > this.attributePairs.length || (newRow === this.attributePairs.length && newColumn === 1)) {
-      this.selectDocument.emit({direction: 'Down', row: 0});
+      this.selectDocument.emit({direction: 'Down', row: newRow, column: newColumn});
       return;
     }
 
@@ -158,9 +168,14 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   public select(column: number, row: number): void {
+    if (column === this.selectedColumn && row === this.selectedRow) {
+      this.switchEditMode();
+      return;
+    }
+
     this.editingMode = false;
-    this.selectedRow = Math.min(this.attributePairs.length, row);
-    this.selectedColumn = this.selectedRow !== this.attributePairs.length ? column : 0;
+    this.selectedRow = Math.max(0, row <= this.attributePairs.length ? row : this.attributePairs.length - column);
+    this.selectedColumn = this.attributePairs ? column : 0;
 
     this.focusSelection();
   }

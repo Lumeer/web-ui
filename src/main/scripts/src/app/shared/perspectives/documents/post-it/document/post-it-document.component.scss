@@ -95,6 +95,7 @@ a {
 li {
   border-bottom: 1px solid #e5e5e5;
   display: inline-flex;
+  padding: 2px 1px;
   cursor: cell;
 
   &:last-child {
@@ -106,8 +107,19 @@ li {
   }
 }
 
-div:focus {
-  background: black;
+.attribute {
+  color: #404040;
+  width: 40%;
+  font-weight: bold;
+  font-variant: none;
+}
+
+div:focus, /deep/ input:focus {
+  outline: none;
+  background: $brand-success;
+  border-radius: $border-radius-small;
+
+  color: $secondary-color;
 }
 
 /deep/ input {
@@ -117,12 +129,6 @@ div:focus {
   background-color: transparent;
 
   pointer-events: none;
-
-  &:focus {
-    outline-offset: -3px;
-    outline: #2c3e50 auto medium;
-    -moz-outline-radius: 4px;
-  }
 }
 
 /deep/ .completer-holder {
@@ -154,9 +160,5 @@ div:focus {
       background-color: $brand-success !important;
       color: $secondary-color !important;
     }
-  }
-
-  input {
-    font-weight: bold;
   }
 }

@@ -19,7 +19,7 @@
  */
 
 import {ActivatedRoute} from '@angular/router';
-import {AfterViewChecked, Component, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 
 import {DocumentService} from '../../../../core/rest/document.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
@@ -47,6 +47,9 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
 
   @Input()
   public height = 500;
+
+  @ViewChild('layout')
+  public layout: ElementRef;
 
   @ViewChildren(PostItDocumentComponent)
   public documentComponents: QueryList<PostItDocumentComponent>;
@@ -120,14 +123,32 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
     }).mount();
   }
 
-  public selectDocument(direction: string, preferredRow: number, currentDocumentIndex: number): void {
-    this.selectionMapper.hasOwnProperty(direction) && this.selectionMapper[direction](currentDocumentIndex, preferredRow);
+  public selectDocument(direction: string, preferredRow: number, preferredColumn: number, currentDocumentIndex: number): void {
+    this.selectionMapper.hasOwnProperty(direction) && this.selectionMapper[direction](currentDocumentIndex, preferredRow, preferredColumn);
   }
 
   private readonly selectionMapper = {
-    Left: (index, row) => index > 0 && this.documentComponents.toArray()[index - 1].select(1, row),
-    Right: (index, row) => index < this.documents.length - 1 && this.documentComponents.toArray()[index + 1].select(0, row)
+    Left: (index, row, column) => {
+      let newIndex = index - 1;
+      newIndex >= 0 && this.documentComponents.toArray()[newIndex].select(1, row);
+    },
+    Right: (index, row, column) => {
+      let newIndex = index + 1;
+      newIndex < this.documents.length && this.documentComponents.toArray()[newIndex].select(0, row);
+    },
+    Up: (index, row, column) => {
+      let newIndex = index - this.documentsPerRow();
+      newIndex >= 0 && this.documentComponents.toArray()[newIndex].select(column, Number.MAX_SAFE_INTEGER);
+    },
+    Down: (index, row, column) => {
+      let newIndex = index + this.documentsPerRow();
+      newIndex < this.documents.length && this.documentComponents.toArray()[newIndex].select(column, 0);
+    }
   };
+
+  private documentsPerRow(): number {
+    return Math.floor(this.layout.nativeElement.clientWidth / (290 /*Post-it width*/ + 15 /*Gutter*/));
+  }
 
   public createDocument(): void {
     this.updateBuffer && this.updateBuffer.flush();
@@ -177,9 +198,9 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
     return this.previouslyEditedDocument && this.previouslyEditedDocument === document;
   }
 
-  public onSeeMore(layout: HTMLDivElement): void {
-    $(layout).animate({
-      scrollTop: layout.scrollHeight
+  public onSeeMore(): void {
+    $(this.layout.nativeElement).animate({
+      scrollTop: this.layout.nativeElement.scrollHeight
     });
   }
 
