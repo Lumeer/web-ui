@@ -11,7 +11,7 @@
                       [collection]="collection"
                       [document]="document"
                       [editable]="editable"
-                      [selectedInput]="selectedInput"
+                      (selectDocument)="selectDocument($event.direction, $event.row, idx)"
                       (removed)="removeDocument(idx)"
                       (attributePairChange)="onAttributePairChange(document, $event)">
     </post-it-document>
@@ -19,4 +19,4 @@
 </div>
 <div class="fadeup"></div>
 
-<a (click)="onSeeMore(layout)" class="see-more">See More<i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+<a (click)="onSeeMore(layout)" class="see-more">See More<i class="fa fa-chevron-down"></i></a>

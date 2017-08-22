@@ -18,13 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 import {Collection} from '../../../../../core/dto/collection';
 import {Document} from '../../../../../core/dto/document';
 import {Attribute} from '../../../../../core/dto/attribute';
-import {AttributePair} from '../attribute/attribute-pair';
-import {AttributePropertyInput} from '../attribute/attribute-property-input';
+import {AttributePair} from './attribute-pair';
 import {isString} from 'util';
 
 @Component({
@@ -49,44 +48,163 @@ export class PostItDocumentComponent implements OnInit {
   @Input()
   public document: Document;
 
-  @Input()
-  public selectedInput: AttributePropertyInput;
-
   @Output()
   public removed = new EventEmitter();
 
   @Output()
   public attributePairChange = new EventEmitter<AttributePair>();
 
+  @Output()
+  public selectDocument = new EventEmitter<{ direction: string, row: number }>();
+
+  public suggestedAttributes: String[];
+
   public attributePairs: AttributePair[];
 
   public newAttributePair: AttributePair;
 
-  public ngOnInit(): void {
-    this.initializeVariables();
-    this.readDocumentData();
+  private selectedRow: number;
+
+  private selectedColumn: number;
+
+  private editingMode: boolean;
+
+  constructor(private element: ElementRef) {
   }
 
-  private initializeVariables() {
-    this.attributePairs = [];
+  public ngOnInit(): void {
+    this.initializeVariables();
+    this.setEventListener();
+    this.readDocumentData();
+    this.refreshSuggestions();
+  }
 
+  private initializeVariables(): void {
+    this.attributePairs = [];
     this.newAttributePair = {
       attribute: '',
       value: '',
       previousAttributeName: ''
     };
+
+    this.editingMode = false;
+  }
+
+  private setEventListener(): void {
+    this.element.nativeElement.addEventListener('keydown', (key: KeyboardEvent) => {
+      // arrow keys
+      [37, 38, 39, 40].includes(key.keyCode) && key.preventDefault();
+    }, false);
   }
 
   private readDocumentData(): void {
-    Object.keys(this.document.data).forEach(attribute => {
-      let value = this.document.data[attribute];
-      !isString(value) && (value = JSON.stringify(value, undefined, 2));
-
+    Object.entries(this.document.data).forEach(([attribute, value]) => {
       this.attributePairs.push({
         attribute: attribute,
         previousAttributeName: '',
-        value: value
+        value: isString(value) ? value : JSON.stringify(value, undefined, 2)
       });
+    });
+  }
+
+  private refreshSuggestions(): void {
+    this.suggestedAttributes = this.attributes
+      .map(attribute => attribute.name)
+      .filter(attributeName => !this.usedAttributeName(attributeName));
+  }
+
+  private usedAttributeName(attributeName: string): boolean {
+    return this.attributePairs.map(pair => pair.attribute).includes(attributeName);
+  }
+
+  public onKeyDown(event: KeyboardEvent): void {
+    if (!this.editingMode) {
+      this.keyMapper.hasOwnProperty(event.key) && this.keyMapper[event.key]();
+    }
+  }
+
+  private readonly keyMapper = {
+    ArrowUp: () => this.moveSelection(0, -1),
+    ArrowDown: () => this.moveSelection(0, 1),
+    ArrowLeft: () => this.moveSelection(-1, 0),
+    ArrowRight: () => this.moveSelection(1, 0),
+    Enter: () => this.selectedColumn === 1 ? this.moveSelection(-1, 1) : this.moveSelection(1, 0)
+  };
+
+  private moveSelection(columnChange: number, rowChange: number): void {
+    let newColumn = this.selectedColumn + columnChange;
+    let newRow = this.selectedRow + rowChange;
+
+    console.log(newColumn, newRow);
+
+    if (newColumn < 0) {
+      this.selectDocument.emit({direction: 'Left', row: newRow});
+      return;
+    }
+    if (newColumn > 1 || (newColumn === 1 && newRow === this.attributePairs.length)) {
+      this.selectDocument.emit({direction: 'Right', row: newRow});
+      return;
+    }
+    if (newRow < 0) {
+      this.selectDocument.emit({direction: 'Up', row: Number.MAX_SAFE_INTEGER});
+      return;
+    }
+    if (newRow > this.attributePairs.length || (newRow === this.attributePairs.length && newColumn === 1)) {
+      this.selectDocument.emit({direction: 'Down', row: 0});
+      return;
+    }
+
+    this.select(newColumn, newRow);
+  }
+
+  public select(column: number, row: number): void {
+    this.editingMode = false;
+    this.selectedRow = Math.min(this.attributePairs.length, row);
+    this.selectedColumn = this.selectedRow !== this.attributePairs.length ? column : 0;
+
+    this.focusSelection();
+  }
+
+  private switchEditMode(): void {
+    this.editingMode = !this.editingMode;
+    this.focusSelection();
+  }
+
+  private focusSelection(): void {
+    let elementToFocus = document.getElementById(`AttributePair${ this.index }[${ this.selectedColumn }, ${ this.selectedRow }]`);
+
+    if (this.editingMode) {
+      elementToFocus = elementToFocus.getElementsByTagName('Input').item(0) as HTMLInputElement;
+    }
+
+    elementToFocus.focus();
+  }
+
+  public updateAttributePair(attributePair: AttributePair, newPropertyValue: string): void {
+    if (this.selectedColumn === 0) {
+      attributePair.previousAttributeName = attributePair.attribute;
+      !newPropertyValue && this.attributePairs.splice(this.selectedRow, 1);
+
+      attributePair.attribute = newPropertyValue;
+      this.refreshSuggestions();
+    } else {
+      attributePair.value = newPropertyValue;
+    }
+
+    this.attributePairChange.emit(attributePair);
+  }
+
+  public createAttributePair(newPairValue: string): void {
+    this.newAttributePair.value = newPairValue;
+    this.attributePairs.push(this.newAttributePair);
+    this.attributePairChange.emit(this.newAttributePair);
+
+    let selectedInput = document.activeElement as HTMLInputElement;
+
+    setTimeout(() => {
+      this.newAttributePair = {} as AttributePair;
+      selectedInput.value = '';
+      this.select(1, this.attributePairs.length - 1);
     });
   }
 
@@ -118,119 +236,4 @@ export class PostItDocumentComponent implements OnInit {
     });
   }
 
-  private readonly propertyMapper = {
-    0: 'attribute',
-    1: 'value'
-  };
-
-  private readonly eventMapper = {
-    ArrowUp: () => this.selectAdjacentInput(0, -1),
-    ArrowDown: () => this.selectAdjacentInput(0, 1),
-    ArrowLeft: () => this.selectAdjacentInput(-1, 0, true),
-    ArrowRight: () => this.selectAdjacentInput(1, 0, true),
-    Enter: () => this.selectedInput.column === 1 ? this.selectAdjacentInput(-1, 1) : this.selectAdjacentInput(1, 0)
-  };
-
-  private readonly selectionMapper = {
-    current: (x, y) => this.selectInput(x, y),
-    left: (x, y) => this.selectInput(1, y, this.index - 1),
-    right: (x, y) => this.selectInput(0, y, this.index + 1)
-  };
-
-  public inputId(x: number, y: number, index?: number) {
-    return `Input${index ? index : this.index}[${x}, ${y}]`;
-  }
-
-  public suggestedAttributes(): string[] {
-    return this.attributes
-      .map(attribute => attribute.name)
-      .filter(attributeName => !this.usedAttributeName(attributeName));
-  }
-
-  private usedAttributeName(attributeName: string): boolean {
-    return this.attributePairs
-      .map(attributePair => attributePair.attribute)
-      .indexOf(attributeName) !== -1;
-  }
-
-  public onInputKey(event: KeyboardEvent): void {
-    this.eventMapper.hasOwnProperty(event.key) && this.eventMapper[event.key]();
-  }
-
-  private selectAdjacentInput(xChange: number, yChange: number, checkCursorOnEdge?: boolean): void {
-    if (checkCursorOnEdge && !this.cursorOnTextEdge(xChange)) {
-      return;
-    }
-
-    if (xChange || yChange) {
-      let xToSelect = this.selectedInput.column + xChange;
-      let yToSelect = this.selectedInput.row + yChange;
-
-      let documentToSelect = this.documentToSelect(xToSelect, yToSelect);
-      this.selectionMapper.hasOwnProperty(documentToSelect) && this.selectionMapper[documentToSelect](xToSelect, yToSelect);
-    }
-  }
-
-  private documentToSelect(x: number, y: number): string {
-    if (x < 0) {
-      return 'left';
-    }
-    if (x > 1) {
-      return 'right';
-    }
-    if (y < 0) {
-      return 'up';
-    }
-    if (y > this.attributePairs.length) {
-      return 'down';
-    }
-
-    return 'current';
-  }
-
-  private cursorOnTextEdge(xChange: number): boolean {
-    if (xChange < 0) {
-      return this.selectedInput.inputElement.selectionStart === 0;
-    }
-
-    if (xChange > 0) {
-      return this.selectedInput.inputElement.selectionEnd === this.selectedInput.inputElement.value.length;
-    }
-
-    return false;
-  }
-
-  public selectInput(x: number, y: number, documentIndex?: number): void {
-    this.selectedInput.column = x;
-    this.selectedInput.row = y;
-    this.selectedInput.property = this.propertyMapper[x];
-    this.selectedInput.inputElement = this.getInput(x, y, documentIndex);
-    this.selectedInput.editing ? this.selectedInput.inputElement.focus() : this.selectedInput.inputElement.parentElement.focus();
-  }
-
-  private getInput(x: number, y: number, documentIndex?: number): HTMLInputElement {
-    return document.getElementById(this.inputId(x, y, documentIndex)) as HTMLInputElement;
-  }
-
-  public updateAttributePair(attributePair: AttributePair, newPropertyValue: string): void {
-    if (this.selectedInput.property === 'attribute') {
-      attributePair.previousAttributeName = attributePair.attribute;
-      !newPropertyValue && this.attributePairs.splice(this.selectedInput.row, 1);
-    }
-    attributePair[this.selectedInput.property] = newPropertyValue;
-
-    this.attributePairChange.emit(attributePair);
-  }
-
-  public createAttributePair(newPairValue: string): void {
-    this.newAttributePair.value = newPairValue;
-    this.attributePairs.push(this.newAttributePair);
-    this.attributePairChange.emit(this.newAttributePair);
-
-    setTimeout(() => {
-      this.newAttributePair = {} as AttributePair;
-      this.selectedInput.inputElement.value = '';
-      this.selectInput(1, this.attributePairs.length - 1);
-    });
-  }
 }

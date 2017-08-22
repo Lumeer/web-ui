@@ -95,6 +95,7 @@ a {
 li {
   border-bottom: 1px solid #e5e5e5;
   display: inline-flex;
+  cursor: cell;
 
   &:last-child {
     border-bottom: none;
@@ -105,8 +106,8 @@ li {
   }
 }
 
-.test {
-  display: table;
+div:focus {
+  background: black;
 }
 
 /deep/ input {
@@ -114,6 +115,8 @@ li {
   width: 100%;
   border: 0;
   background-color: transparent;
+
+  pointer-events: none;
 
   &:focus {
     outline-offset: -3px;

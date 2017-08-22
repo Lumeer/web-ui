@@ -19,18 +19,18 @@
  */
 
 import {ActivatedRoute} from '@angular/router';
-import {AfterViewChecked, Component, Input, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
 
 import {DocumentService} from '../../../../core/rest/document.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Collection} from '../../../../core/dto/collection';
 import {Document} from '../../../../core/dto/document';
 import {Attribute} from '../../../../core/dto/attribute';
-import {AttributePair} from './attribute/attribute-pair';
-import {AttributePropertyInput} from './attribute/attribute-property-input';
+import {AttributePair} from './document/attribute-pair';
 import {Perspective} from '../../perspective';
 import {Buffer} from '../../../../utils/buffer';
 import {Observable} from 'rxjs/Rx';
+import {PostItDocumentComponent} from './document/post-it-document.component';
 
 @Component({
   selector: 'post-it-documents-perspective',
@@ -48,13 +48,14 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   @Input()
   public height = 500;
 
+  @ViewChildren(PostItDocumentComponent)
+  public documentComponents: QueryList<PostItDocumentComponent>;
+
   public collection: Collection;
 
   public attributes: Attribute[];
 
   public documents: Document[];
-
-  public selectedInput: AttributePropertyInput;
 
   private updateBuffer: Buffer;
 
@@ -80,21 +81,13 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       documentCount: 0
     };
 
-    this.selectedInput = {
-      property: 'attribute',
-      row: 0,
-      column: 0,
-      editing: false,
-      inputElement: null,
-      blockElement: null,
-    };
-
     this.attributes = [];
     this.documents = [];
   }
 
   private initializeLayout() {
-    window.addEventListener('resize', () => this.refreshLayout());
+    let windowResizeRefreshBuffer = new Buffer(() => this.refreshLayout(), 200);
+    window.addEventListener('resize', () => windowResizeRefreshBuffer.stageChanges());
   }
 
   private fetchData(): void {
@@ -126,6 +119,15 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       gutter: 15
     }).mount();
   }
+
+  public selectDocument(direction: string, preferredRow: number, currentDocumentIndex: number): void {
+    this.selectionMapper.hasOwnProperty(direction) && this.selectionMapper[direction](currentDocumentIndex, preferredRow);
+  }
+
+  private readonly selectionMapper = {
+    Left: (index, row) => index > 0 && this.documentComponents.toArray()[index - 1].select(1, row),
+    Right: (index, row) => index < this.documents.length - 1 && this.documentComponents.toArray()[index + 1].select(0, row)
+  };
 
   public createDocument(): void {
     this.updateBuffer && this.updateBuffer.flush();

@@ -5,64 +5,76 @@
   </span>
 
   <ng-container *ngIf="editable">
-    <a class="fa fa-fw fa-pencil editable" title="Edit Document" (click)="selectInput(0, 0)"></a>
+    <a class="fa fa-fw fa-pencil editable" title="Edit Document" (click)="select(0, 0); switchEditMode()"></a>
     <a class="fa fa-fw fa-times editable" title="Remove Document" (click)="onRemoveDocumentClick()"></a>
   </ng-container>
 </div>
 
-<ul class="content">
-  <li *ngFor="let attributePair of attributePairs; let idx = index">
-    <!--IDs follow the structure: Input_documentIndex_[x, y]-->
-    <ng2-completer #attributeinput
-                   [inputId]="inputId(0, idx)"
-                   [datasource]="suggestedAttributes()"
-                   [minSearchLength]="0"
-                   [textNoResults]="''"
-                   [disableInput]="!editable"
-                   [ngModel]="attributePair.attribute"
-                   (ngModelChange)="updateAttributePair(attributePair, $event)"
-                   (keydown)="!attributeinput.isOpen() && onInputKey($event)"
-                   (click)="selectInput(0, idx)">
-    </ng2-completer>
-    <input [attr.id]="inputId(1, idx)"
-           [disabled]="!editable"
-           [ngModel]="attributePair.value"
-           (ngModelChange)="updateAttributePair(attributePair, $event)"
-           (keydown)="onInputKey($event)"
-           (click)="selectInput(1, idx)"/>
+<ul class="content" #content>
+  <li *ngFor="let attributePair of attributePairs; let row = index">
+
+    <!--IDs follow the structure AttributePair{{ documentIndex }}[column, row]-->
+    <div id="AttributePair{{ index }}[0, {{ row }}]" tabindex="-1"
+         (keydown)="onKeyDown($event)"
+         (click)="select(0, row)">
+
+      <ng2-completer [datasource]="suggestedAttributes"
+                     [minSearchLength]="0"
+                     [textNoResults]="''"
+                     [disableInput]="!editable"
+                     [ngModel]="attributePair.attribute"
+                     (ngModelChange)="updateAttributePair(attributePair, $event)">
+      </ng2-completer>
+    </div>
+
+    <div id="AttributePair{{ index }}[1, {{ row }}]" tabindex="-1"
+         (keydown)="onKeyDown($event)"
+         (click)="select(1, row)">
+
+      <input [disabled]="!editable"
+             [ngModel]="attributePair.value"
+             (ngModelChange)="updateAttributePair(attributePair, $event)"/>
+    </div>
+
   </li>
 
   <li *ngIf="editable">
-    <ng2-completer #newattributeinput
-                   placeholder=" + "
-                   [inputId]="inputId(0, attributePairs.length)"
-                   [datasource]="suggestedAttributes()"
-                   [minSearchLength]="0"
-                   [textNoResults]="''"
-                   [disableInput]="!editable"
-                   [(ngModel)]="newAttributePair.attribute"
-                   (keydown)="!newattributeinput.isOpen() && onInputKey($event)"
-                   (click)="selectInput(0, attributePairs.length)">
-    </ng2-completer>
-    <input title="value"
-           [attr.id]="inputId(1, attributePairs.length)"
-           [disabled]="!newAttributePair.attribute"
-           (keydown)="onInputKey($event); $event.key.length === 1 && createAttributePair($event.key)"
-           (click)="selectInput(1, attributePairs.length)"/>
+
+    <div id="AttributePair{{ index }}[0, {{ attributePairs.length }}]" tabindex="-1"
+         (keydown)="onKeyDown($event)"
+         (click)="select(0, attributePairs.length)">
+
+      <ng2-completer placeholder=" + "
+                     [datasource]="suggestedAttributes"
+                     [minSearchLength]="0"
+                     [textNoResults]="''"
+                     [disableInput]="!editable"
+                     [(ngModel)]="newAttributePair.attribute">
+      </ng2-completer>
+    </div>
+
+    <div id="AttributePair{{ index }}[1, {{ attributePairs.length }}]"
+         (keydown)="onKeyDown($event)"
+         (click)="select(1, attributePairs.length)">
+
+      <input [disabled]="!newAttributePair.attribute"
+             (keydown)="$event.key.length === 1 && createAttributePair($event.key)"/>
+    </div>
+
   </li>
 </ul>
 
 <!-- additional buttons -->
 <div class="edit">
   <span class="primary-edit">
-    <a class="fa fa-fw fa-search" aria-hidden="true" title="Details"></a>
+    <a class="fa fa-fw fa-search" title="Details"></a>
   </span>
 
   <span class="secondary-edit">
     <!--the comments remove added space between icons-->
-    <a class="fa fa-fw fa-sign-in" aria-hidden="true" title="Incoming Links"></a><!--
-    --><a class="fa fa-fw fa-sign-out" aria-hidden="true" title="Outgoing Links"></a><!--
-    --><a class="fa fa-fw fa-history" aria-hidden="true" title="History"></a><!--
-    --><a class="fa fa-fw fa-users" aria-hidden="true" title="User Rights"></a>
+    <a class="fa fa-fw fa-sign-in" title="Incoming Links"></a><!--
+    --><a class="fa fa-fw fa-sign-out" title="Outgoing Links"></a><!--
+    --><a class="fa fa-fw fa-history" title="History"></a><!--
+    --><a class="fa fa-fw fa-users" title="User Rights"></a>
   </span>
 </div>
