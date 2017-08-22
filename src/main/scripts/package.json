@@ -52,7 +52,7 @@
     "ts-loader": "2.0.3",
     "tslint": "^4.3.1",
     "tslint-loader": "^3.3.0",
-    "typescript": "~2.3.0",
+    "typescript": "~2.4.0",
     "typings": "2.1.0",
     "url-loader": "^0.5.7",
     "webpack": "^2.2.0",
@@ -78,7 +78,7 @@
     "ngx-perfect-scrollbar": "^4.0.0",
     "perfect-scrollbar": "^0.6.16",
     "respond": "^0.9.0",
-    "rxjs": "5.2.0",
+    "rxjs": "5.4.3",
     "socket.io-client": "^1.7.2",
     "zone.js": "^0.8.5"
   }
