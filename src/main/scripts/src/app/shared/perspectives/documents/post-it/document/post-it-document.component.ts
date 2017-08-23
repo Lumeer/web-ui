@@ -168,16 +168,34 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   public select(column: number, row: number): void {
-    if (column === this.selectedColumn && row === this.selectedRow) {
+    if (this.isSelectedInput(column, row)) {
       this.switchEditMode();
       return;
     }
 
     this.editingMode = false;
-    this.selectedRow = Math.max(0, row <= this.attributePairs.length ? row : this.attributePairs.length - column);
-    this.selectedColumn = this.attributePairs ? column : 0;
+    this.selectRow(row, column === 1);
+    this.selectColumn(column);
 
     this.focusSelection();
+  }
+
+  private selectRow(row: number, onValueColumn: boolean): void {
+    if (row <= this.attributePairs.length) {
+      this.selectedRow = row;
+    } else {
+      this.selectedRow = onValueColumn ? this.attributePairs.length - 1 : this.attributePairs.length;
+    }
+
+    this.selectedRow = Math.max(0, Math.min(this.attributePairs.length, this.selectedRow));
+  }
+
+  private selectColumn(column: number): void {
+    this.selectedColumn = this.attributePairs ? column : 0;
+  }
+
+  private isSelectedInput(column: number, row: number): boolean {
+    return column === this.selectedColumn && row === this.selectedRow;
   }
 
   private switchEditMode(): void {

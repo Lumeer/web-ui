@@ -5,15 +5,21 @@
   </span>
 
   <ng-container *ngIf="editable">
-    <a class="fa fa-fw fa-pencil editable" title="Edit Document" (click)="select(0, 0); switchEditMode()"></a>
+    <a class="fa fa-fw fa-pencil editable" title="Edit Document" (click)="select(0, 0) && switchEditMode()"></a>
     <a class="fa fa-fw fa-times editable" title="Remove Document" (click)="onRemoveDocumentClick()"></a>
   </ng-container>
 </div>
 
-<ul class="content" #content>
+<ul class="content" #content
+    [style.cursor]="editable ? 'cell' : ''">
   <li *ngFor="let attributePair of attributePairs; let row = index">
+
     <!--IDs follow the structure AttributePair{{ documentIndex }}[column, row]-->
-    <div id="AttributePair{{ index }}[0, {{ row }}]" class="attribute" tabindex="-1" (keydown)="onKeyDown($event)" (click)="select(0, row)">
+    <div id="AttributePair{{ index }}[0, {{ row }}]" class="attribute"
+         [attr.tabindex]="editable ? -1 : ''"
+         (keydown)="editable && onKeyDown($event)"
+         (click)="editable && select(0, row)">
+
       <ng2-completer [datasource]="suggestedAttributes"
                      [minSearchLength]="0"
                      [textNoResults]="null"
@@ -22,17 +28,29 @@
                      (ngModelChange)="updateAttributePair(attributePair, $event)"
                      (keydown)="onKeyDown($event)">
       </ng2-completer>
+
     </div>
 
-    <div id="AttributePair{{ index }}[1, {{ row }}]" tabindex="-1" (keydown)="onKeyDown($event)" (click)="select(1, row)">
+    <div id="AttributePair{{ index }}[1, {{ row }}]"
+         [attr.tabindex]="editable ? -1 : ''"
+         (keydown)="editable && onKeyDown($event)"
+         (click)="editable && select(1, row)">
+
       <input [disabled]="!editable"
              [ngModel]="attributePair.value"
              (ngModelChange)="updateAttributePair(attributePair, $event)"/>
+
     </div>
+
   </li>
 
   <li *ngIf="editable">
-    <div id="AttributePair{{ index }}[0, {{ attributePairs.length }}]" class="attribute" tabindex="-1" (keydown)="onKeyDown($event)" (click)="select(0, attributePairs.length)">
+
+    <div id="AttributePair{{ index }}[0, {{ attributePairs.length }}]" class="attribute"
+         [attr.tabindex]="editable ? -1 : ''"
+         (keydown)="editable && onKeyDown($event)"
+         (click)="editable && select(0, attributePairs.length)">
+
       <ng2-completer placeholder=" + "
                      [datasource]="suggestedAttributes"
                      [minSearchLength]="0"
@@ -41,11 +59,17 @@
                      [(ngModel)]="newAttributePair.attribute"
                      (keydown)="onKeyDown($event)">
       </ng2-completer>
+
     </div>
 
-    <div id="AttributePair{{ index }}[1, {{ attributePairs.length }}]" (keydown)="onKeyDown($event)" (click)="select(1, attributePairs.length)">
+    <div id="AttributePair{{ index }}[1, {{ attributePairs.length }}]"
+         [attr.tabindex]="editable ? -1 : ''"
+         (keydown)="editable && onKeyDown($event)"
+         (click)="editable && select(1, attributePairs.length)">
+
       <input [disabled]="!newAttributePair.attribute"
              (keydown)="$event.key.length === 1 && createAttributePair($event.key)"/>
+
     </div>
 
   </li>

@@ -43,7 +43,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   public query: string;
 
   @Input()
-  public editable: boolean = true;
+  public editable: boolean;
 
   @Input()
   public height = 500;
@@ -198,9 +198,9 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
     return this.previouslyEditedDocument && this.previouslyEditedDocument === document;
   }
 
-  public onSeeMore(): void {
-    $(this.layout.nativeElement).animate({
-      scrollTop: this.layout.nativeElement.scrollHeight
+  public onSeeMore(perspective: HTMLDivElement): void {
+    $(perspective).animate({
+      scrollTop: perspective.scrollHeight
     });
   }
 
