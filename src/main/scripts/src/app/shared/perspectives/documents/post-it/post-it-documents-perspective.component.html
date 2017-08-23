@@ -11,9 +11,11 @@
                       [collection]="collection"
                       [document]="document"
                       [editable]="editable"
-                      (selectDocument)="selectDocument($event.direction, $event.row, $event.column, idx)"
+                      [selection]="selection"
+                      [previousSelection]="previousSelection"
+                      (selectOther)="selectDocument($event)"
                       (removed)="removeDocument(idx)"
-                      (attributePairChange)="onAttributePairChange(document, $event)">
+                      (changes)="sendUpdate(document)">
     </post-it-document>
   </div>
 </div>

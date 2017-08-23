@@ -26,11 +26,11 @@ import {CollectionService} from '../../../../core/rest/collection.service';
 import {Collection} from '../../../../core/dto/collection';
 import {Document} from '../../../../core/dto/document';
 import {Attribute} from '../../../../core/dto/attribute';
-import {AttributePair} from './document/attribute-pair';
+import {PostItDocumentComponent} from './document/post-it-document.component';
 import {Perspective} from '../../perspective';
 import {Buffer} from '../../../../utils/buffer';
 import {Observable} from 'rxjs/Rx';
-import {PostItDocumentComponent} from './document/post-it-document.component';
+import {AttributePropertySelection} from './attribute/attribute-property-selection';
 
 @Component({
   selector: 'post-it-documents-perspective',
@@ -43,7 +43,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   public query: string;
 
   @Input()
-  public editable: boolean;
+  public editable: boolean = true;
 
   @Input()
   public height = 500;
@@ -60,9 +60,13 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
 
   public documents: Document[];
 
+  public selection: AttributePropertySelection;
+
+  public previousSelection: AttributePropertySelection;
+
   private updateBuffer: Buffer;
 
-  private previouslyEditedDocument: Document;
+  private updatingDocument: Document;
 
   constructor(private documentService: DocumentService,
               private collectionService: CollectionService,
@@ -82,6 +86,22 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       color: '#cccccc',
       icon: 'fa-question',
       documentCount: 0
+    };
+
+    this.selection = {
+      row: undefined,
+      column: undefined,
+      documentIdx: undefined,
+      direction: '',
+      editing: false,
+    };
+
+    this.previousSelection = {
+      row: undefined,
+      column: undefined,
+      documentIdx: undefined,
+      direction: '',
+      editing: false,
     };
 
     this.attributes = [];
@@ -106,7 +126,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       this.collection = collection;
       this.attributes = attributes;
       this.documents = documents;
-      this.attributes = attributes;
     });
   }
 
@@ -123,40 +142,39 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
     }).mount();
   }
 
-  public selectDocument(direction: string, preferredRow: number, preferredColumn: number, currentDocumentIndex: number): void {
-    this.selectionMapper.hasOwnProperty(direction) && this.selectionMapper[direction](currentDocumentIndex, preferredRow, preferredColumn);
-  }
+  public selectDocument(selector: AttributePropertySelection): void {
+    switch (selector.direction) {
+      case 'Left':
+        if (selector.documentIdx - 1 >= 0) {
+          this.documentComponents.toArray()[selector.documentIdx - 1].select(Number.MAX_SAFE_INTEGER, selector.row);
+        }
+        break;
 
-  private readonly selectionMapper = {
-    Left: (index, row, column) => {
-      if (index - 1 >= 0) {
-        this.documentComponents.toArray()[index - 1].select(Number.MAX_SAFE_INTEGER, row);
-      }
-    },
-    Right: (index, row, column) => {
-      if (index + 1 < this.documents.length) {
-        this.documentComponents.toArray()[index + 1].select(0, row);
-      }
-    },
-    Up: (index, row, column) => {
-      if (index - this.documentsPerRow() >= 0) {
-        this.documentComponents.toArray()[index - this.documentsPerRow()].select(column, Number.MAX_SAFE_INTEGER);
-      }
-    },
-    Down: (index, row, column) => {
-      if (index + this.documentsPerRow() < this.documents.length) {
-        this.documentComponents.toArray()[index + this.documentsPerRow()].select(column, 0);
-      }
+      case 'Right':
+        if (selector.documentIdx + 1 < this.documents.length) {
+          this.documentComponents.toArray()[selector.documentIdx + 1].select(0, selector.row);
+        }
+        break;
+
+      case 'Up':
+        if (selector.documentIdx - this.documentsPerRow() >= 0) {
+          this.documentComponents.toArray()[selector.documentIdx - this.documentsPerRow()].select(selector.column, Number.MAX_SAFE_INTEGER);
+        }
+        break;
+
+      case 'Down':
+        if (selector.documentIdx + this.documentsPerRow() < this.documents.length) {
+          this.documentComponents.toArray()[selector.documentIdx + this.documentsPerRow()].select(selector.column, 0);
+        }
+        break;
     }
-  };
+  }
 
   private documentsPerRow(): number {
     return Math.floor(this.layout.nativeElement.clientWidth / (290 /*Post-it width*/ + 15 /*Gutter*/));
   }
 
   public createDocument(): void {
-    this.updateBuffer && this.updateBuffer.flush();
-
     let newDocument = new Document;
     this.documents.unshift(newDocument);
 
@@ -164,42 +182,23 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   }
 
   public removeDocument(index: number): void {
-    this.updateBuffer && this.updateBuffer.flush();
-
     let deletedDocument = this.documents[index];
     this.documents.splice(index, 1);
 
     this.documentService.removeDocument(this.collection.code, deletedDocument);
   }
 
-  public onAttributePairChange(document: Document, attributePair: AttributePair): void {
-    delete document.data[attributePair.previousAttributeName];
-
-    if (attributePair.attribute) {
-      document.data[attributePair.attribute] = attributePair.value;
-    } else {
-      delete document.data[attributePair.attribute];
-    }
-
-    this.updateDocument(document);
-  }
-
-  private updateDocument(document: Document): void {
-    if (this.lastEditedDocument(document)) {
+  public sendUpdate(document: Document): void {
+    if (this.updatingDocument === document) {
       this.updateBuffer.stageChanges();
     } else {
-      this.updateBuffer && this.updateBuffer.flush();
+      this.updatingDocument = document;
       this.updateBuffer = new Buffer(() => {
-        this.documentService.updateDocument(this.collection.code, document);
+        // replace is used until a version using: update and dropDocumentAttribute is implemented
+        this.documentService.replaceDocument(this.collection.code, document);
         document.version += 1;
       }, 2000);
     }
-
-    this.previouslyEditedDocument = document;
-  }
-
-  private lastEditedDocument(document: Document): boolean {
-    return this.previouslyEditedDocument && this.previouslyEditedDocument === document;
   }
 
   public onSeeMore(perspective: HTMLDivElement): void {

@@ -18,13 +18,14 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
 import {Collection} from '../../../../../core/dto/collection';
 import {Document} from '../../../../../core/dto/document';
 import {Attribute} from '../../../../../core/dto/attribute';
-import {AttributePair} from './attribute-pair';
-import {isString} from 'util';
+import {AttributePair} from '../attribute/attribute-pair';
+import {AttributePropertySelection} from '../attribute/attribute-property-selection';
+import {isString, isUndefined} from 'util';
 
 @Component({
   selector: 'post-it-document',
@@ -48,31 +49,29 @@ export class PostItDocumentComponent implements OnInit {
   @Input()
   public document: Document;
 
+  @Input()
+  public selection: AttributePropertySelection;
+
+  @Input()
+  public previousSelection: AttributePropertySelection;
+
   @Output()
   public removed = new EventEmitter();
 
   @Output()
-  public attributePairChange = new EventEmitter<AttributePair>();
+  public selectOther = new EventEmitter<AttributePropertySelection>();
 
   @Output()
-  public selectDocument = new EventEmitter<{ direction: string, row: number, column: number }>();
+  public changes = new EventEmitter();
 
-  public suggestedAttributes: String[];
+  @ViewChild('content')
+  public content: ElementRef;
 
   public attributePairs: AttributePair[];
 
   public newAttributePair: AttributePair;
 
-  private selectedRow: number;
-
-  private selectedColumn: number;
-
-  private editingMode: boolean;
-
-  private isSelectedDoument: boolean;
-
-  constructor(private element: ElementRef) {
-  }
+  public suggestedAttributes: String[];
 
   public ngOnInit(): void {
     this.initializeVariables();
@@ -88,26 +87,32 @@ export class PostItDocumentComponent implements OnInit {
       value: '',
       previousAttributeName: ''
     };
-
-    this.editingMode = false;
   }
 
   private setEventListener(): void {
     // disable scrolling when navigating using keys
-    this.element.nativeElement.addEventListener('keydown', (key: KeyboardEvent) => {
-      // arrow keys
+    this.content.nativeElement.addEventListener('keydown', (key: KeyboardEvent) => {
       [37, 38, 39, 40].includes(key.keyCode) && key.preventDefault();
     }, false);
   }
 
   private readDocumentData(): void {
-    Object.entries(this.document.data).forEach(([attribute, value]) => {
-      this.attributePairs.push({
+    this.attributePairs = Object.entries(this.document.data).map(([attribute, value]) => {
+      return {
         attribute: attribute,
         previousAttributeName: '',
         value: isString(value) ? value : JSON.stringify(value, undefined, 2)
-      });
+      };
     });
+  }
+
+  public clickOnAttributePair(column: number, row: number): void {
+    this.setEditMode(this.previouslySelected(column, row));
+    this.select(column, row);
+  }
+
+  private previouslySelected(column: number, row: number): boolean {
+    return column === this.previousSelection.column && row === this.previousSelection.row && this.previousSelection.documentIdx === this.index;
   }
 
   private refreshSuggestions(): void {
@@ -121,7 +126,7 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   public onKeyDown(event: KeyboardEvent): void {
-    if (this.editingMode) {
+    if (this.selection.editing) {
       this.editModeOnKey.hasOwnProperty(event.key) && this.editModeOnKey[event.key]();
     } else {
       this.selectModeOnKey.hasOwnProperty(event.key) && this.selectModeOnKey[event.key]();
@@ -133,29 +138,56 @@ export class PostItDocumentComponent implements OnInit {
     ArrowDown: () => this.moveSelection(0, 1),
     ArrowLeft: () => this.moveSelection(-1, 0),
     ArrowRight: () => this.moveSelection(1, 0),
-    F2: () => this.switchEditMode(),
-    Enter: () => this.switchEditMode()
+    F2: () => {
+      this.setEditMode(true);
+      this.focusSelection();
+    },
+    Enter: () => {
+      this.setEditMode(true);
+      this.focusSelection();
+    }
   };
 
   private readonly editModeOnKey = {
-    F2: () => this.switchEditMode(),
-    Escape: () => this.switchEditMode(),
+    F2: () => {
+      this.setEditMode(false);
+      this.focusSelection();
+    },
+    Escape: () => {
+      this.setEditMode(false);
+      this.focusSelection();
+    },
     Enter: () => {
-      this.selectedColumn === 1 ? this.moveSelection(-1, 1) : this.moveSelection(1, 0);
-      this.switchEditMode();
+      if (this.attributeColumn(this.selection.column)) {
+        if (this.selection.row === this.attributePairs.length && !this.newAttributePair.attribute) {
+          this.moveSelection(Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER);
+        } else {
+          this.moveSelection(1, 0);
+        }
+      } else {
+        if (this.selection.row === this.attributePairs.length) {
+          this.moveSelection(Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER);
+        } else {
+          this.moveSelection(-1, 1);
+        }
+      }
     }
   };
 
   private moveSelection(columnChange: number, rowChange: number): void {
-    let newColumn = this.selectedColumn + columnChange;
-    let newRow = this.selectedRow + rowChange;
+    let newColumn = this.selection.column + columnChange;
+    let newRow = this.selection.row + rowChange;
 
-    let direction = this.selectedDocumentDirection(newColumn, newRow);
-    this.isSelectedDoument = !direction;
-    if (direction) {
-      this.selectDocument.emit({direction: direction, row: newRow, column: newColumn});
-    } else {
+    if (this.selectedDocumentDirection(newColumn, newRow) === '') {
       this.select(newColumn, newRow);
+    } else {
+      this.selectOther.emit({
+        row: newRow,
+        column: newColumn,
+        direction: this.selectedDocumentDirection(newColumn, newRow),
+        editing: false,
+        documentIdx: this.index
+      });
     }
   }
 
@@ -163,83 +195,97 @@ export class PostItDocumentComponent implements OnInit {
     if (newColumn < 0) {
       return 'Left';
     }
-    if (newColumn > 1 || (this.selectedColumn === 0 && newColumn === 1 && newRow === this.attributePairs.length)) {
+    if (newColumn > 1 || (this.onDisabledInput(newColumn, newRow) && this.attributeColumn(this.selection.column))) {
       return 'Right';
     }
     if (newRow < 0) {
       return 'Up';
     }
-    if (newRow > this.attributePairs.length || (newRow === this.attributePairs.length && newColumn === 1)) {
+    if (newRow > this.attributePairs.length || (this.onDisabledInput(newColumn, newRow) && this.selection.row === this.attributePairs.length - 1)) {
       return 'Down';
     }
 
     return '';
   }
 
+  private onDisabledInput(column: number, row: number): boolean {
+    return !this.newAttributePair.attribute && this.valueColumn(column) && row === this.attributePairs.length;
+  }
+
   public select(column: number, row: number): void {
-    if (this.isSelectedDoument && this.alreadySelectedInput(column, row)) {
-      this.switchEditMode();
-      return;
-    }
-
-    this.editingMode = false;
-    this.selectRow(row, column === 1);
-    this.selectColumn(column, row >= this.attributePairs.length);
+    this.selection.documentIdx = this.index;
+    this.selectRow(column, row);
+    this.selectColumn(column, row);
 
     this.focusSelection();
+    this.setPreviousSelection();
   }
 
-  private alreadySelectedInput(column: number, row: number): boolean {
-    return column === this.selectedColumn && row === this.selectedRow;
-  }
-
-  private selectRow(row: number, onValueColumn: boolean): void {
-    if (row <= this.attributePairs.length) {
-      this.selectedRow = row;
+  private selectRow(column: number, row: number): void {
+    if (row < this.attributePairs.length) {
+      this.selection.row = row;
     } else {
-      this.selectedRow = onValueColumn ? this.attributePairs.length - 1 : this.attributePairs.length;
+      this.selection.row = this.valueColumn(column) && !this.newAttributePair.attribute ? this.attributePairs.length - 1 : this.attributePairs.length;
     }
 
-    this.selectedRow = Math.max(0, Math.min(this.attributePairs.length, this.selectedRow));
+    this.selection.row = Math.max(0, Math.min(this.attributePairs.length, this.selection.row));
   }
 
-  private selectColumn(column: number, onLastRow: boolean): void {
-    this.selectedColumn = onLastRow ? 0 : column;
+  private selectColumn(column: number, row: number): void {
+    this.selection.column = !this.newAttributePair.attribute && column >= 1 && row === this.attributePairs.length ? 0 : column;
+    this.selection.column = Math.max(0, Math.min(this.selection.column, 1));
   }
 
-  private switchEditMode(): void {
-    this.editingMode = !this.editingMode;
-    this.focusSelection();
+  private setPreviousSelection(): void {
+    this.previousSelection.editing = this.selection.editing;
+    this.previousSelection.direction = this.selection.direction;
+    this.previousSelection.row = this.selection.row;
+    this.previousSelection.column = this.selection.column;
+    this.previousSelection.documentIdx = this.selection.documentIdx;
   }
 
   private focusSelection(): void {
-    let elementToFocus = document.getElementById(`AttributePair${ this.index }[${ this.selectedColumn }, ${ this.selectedRow }]`);
+    if (!isUndefined(this.selection.column) && !isUndefined(this.selection.row)) {
+      let elementToFocus = document.getElementById(`AttributePair${ this.index }[${ this.selection.column }, ${ this.selection.row }]`);
 
-    if (this.editingMode) {
-      elementToFocus = elementToFocus.getElementsByTagName('Input').item(0) as HTMLInputElement;
+      if (this.selection.editing) {
+        elementToFocus = elementToFocus.getElementsByTagName('Input').item(0) as HTMLInputElement;
+      }
+
+      elementToFocus.focus();
     }
-
-    elementToFocus.focus();
   }
 
-  public updateAttributePair(attributePair: AttributePair, newPropertyValue: string): void {
-    if (this.selectedColumn === 0) {
-      attributePair.previousAttributeName = attributePair.attribute;
-      !newPropertyValue && this.attributePairs.splice(this.selectedRow, 1);
+  private setEditMode(on: boolean): void {
+    this.selection.editing = on;
+  }
 
-      attributePair.attribute = newPropertyValue;
-      this.refreshSuggestions();
-    } else {
-      attributePair.value = newPropertyValue;
+  public updateAttribute(attributePair: AttributePair, newAttribute: string): void {
+    attributePair.previousAttributeName = attributePair.attribute;
+    attributePair.attribute = newAttribute;
+
+    delete this.document.data[attributePair.previousAttributeName];
+    this.document.data[newAttribute] = attributePair.value;
+
+    if (!newAttribute) {
+      this.attributePairs.splice(this.selection.row, 1);
+      delete this.document.data[attributePair.attribute];
     }
 
-    this.attributePairChange.emit(attributePair);
+    this.changes.emit();
+    this.refreshSuggestions();
+  }
+
+  public updateValue(attributePair: AttributePair, newValue: string): void {
+    attributePair.value = newValue;
+    this.document.data[attributePair.attribute] = newValue;
+
+    this.changes.emit();
   }
 
   public createAttributePair(newPairValue: string): void {
     this.newAttributePair.value = newPairValue;
     this.attributePairs.push(this.newAttributePair);
-    this.attributePairChange.emit(this.newAttributePair);
 
     let selectedInput = document.activeElement as HTMLInputElement;
 
@@ -248,13 +294,19 @@ export class PostItDocumentComponent implements OnInit {
       selectedInput.value = '';
       this.select(1, this.attributePairs.length - 1);
     });
+
+    this.changes.emit();
+  }
+
+  private attributeColumn(column: number): boolean {
+    return column === 0;
+  }
+
+  private valueColumn(column: number): boolean {
+    return column === 1;
   }
 
   public onRemoveDocumentClick(): void {
-    this.removeDocumentConfirm();
-  }
-
-  private removeDocumentConfirm(): void {
     window['BootstrapDialog'].show({
       type: 'type-success',
       title: 'Delete Document?',
