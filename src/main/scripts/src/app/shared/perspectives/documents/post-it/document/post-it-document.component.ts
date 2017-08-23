@@ -69,6 +69,8 @@ export class PostItDocumentComponent implements OnInit {
 
   private editingMode: boolean;
 
+  private isSelectedDoument: boolean;
+
   constructor(private element: ElementRef) {
   }
 
@@ -91,6 +93,7 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   private setEventListener(): void {
+    // disable scrolling when navigating using keys
     this.element.nativeElement.addEventListener('keydown', (key: KeyboardEvent) => {
       // arrow keys
       [37, 38, 39, 40].includes(key.keyCode) && key.preventDefault();
@@ -147,37 +150,47 @@ export class PostItDocumentComponent implements OnInit {
     let newColumn = this.selectedColumn + columnChange;
     let newRow = this.selectedRow + rowChange;
 
+    let direction = this.selectedDocumentDirection(newColumn, newRow);
+    this.isSelectedDoument = !direction;
+    if (direction) {
+      this.selectDocument.emit({direction: direction, row: newRow, column: newColumn});
+    } else {
+      this.select(newColumn, newRow);
+    }
+  }
+
+  private selectedDocumentDirection(newColumn: number, newRow: number): string {
     if (newColumn < 0) {
-      this.selectDocument.emit({direction: 'Left', row: newRow, column: newColumn});
-      return;
+      return 'Left';
     }
     if (newColumn > 1 || (this.selectedColumn === 0 && newColumn === 1 && newRow === this.attributePairs.length)) {
-      this.selectDocument.emit({direction: 'Right', row: newRow, column: newColumn});
-      return;
+      return 'Right';
     }
     if (newRow < 0) {
-      this.selectDocument.emit({direction: 'Up', row: newRow, column: newColumn});
-      return;
+      return 'Up';
     }
     if (newRow > this.attributePairs.length || (newRow === this.attributePairs.length && newColumn === 1)) {
-      this.selectDocument.emit({direction: 'Down', row: newRow, column: newColumn});
-      return;
+      return 'Down';
     }
 
-    this.select(newColumn, newRow);
+    return '';
   }
 
   public select(column: number, row: number): void {
-    if (this.isSelectedInput(column, row)) {
+    if (this.isSelectedDoument && this.alreadySelectedInput(column, row)) {
       this.switchEditMode();
       return;
     }
 
     this.editingMode = false;
     this.selectRow(row, column === 1);
-    this.selectColumn(column);
+    this.selectColumn(column, row >= this.attributePairs.length);
 
     this.focusSelection();
+  }
+
+  private alreadySelectedInput(column: number, row: number): boolean {
+    return column === this.selectedColumn && row === this.selectedRow;
   }
 
   private selectRow(row: number, onValueColumn: boolean): void {
@@ -190,12 +203,8 @@ export class PostItDocumentComponent implements OnInit {
     this.selectedRow = Math.max(0, Math.min(this.attributePairs.length, this.selectedRow));
   }
 
-  private selectColumn(column: number): void {
-    this.selectedColumn = this.attributePairs ? column : 0;
-  }
-
-  private isSelectedInput(column: number, row: number): boolean {
-    return column === this.selectedColumn && row === this.selectedRow;
+  private selectColumn(column: number, onLastRow: boolean): void {
+    this.selectedColumn = onLastRow ? 0 : column;
   }
 
   private switchEditMode(): void {

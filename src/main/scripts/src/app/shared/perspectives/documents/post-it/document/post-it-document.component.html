@@ -63,9 +63,9 @@
     </div>
 
     <div id="AttributePair{{ index }}[1, {{ attributePairs.length }}]"
-         [attr.tabindex]="editable ? -1 : ''"
+         [attr.tabindex]="newAttributePair.attribute && editable ? -1 : ''"
          (keydown)="editable && onKeyDown($event)"
-         (click)="editable && select(1, attributePairs.length)">
+         (click)="newAttributePair.attribute && editable && select(1, attributePairs.length)">
 
       <input [disabled]="!newAttributePair.attribute"
              (keydown)="$event.key.length === 1 && createAttributePair($event.key)"/>

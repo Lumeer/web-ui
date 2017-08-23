@@ -129,20 +129,24 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
 
   private readonly selectionMapper = {
     Left: (index, row, column) => {
-      let newIndex = index - 1;
-      newIndex >= 0 && this.documentComponents.toArray()[newIndex].select(1, row);
+      if (index - 1 >= 0) {
+        this.documentComponents.toArray()[index - 1].select(Number.MAX_SAFE_INTEGER, row);
+      }
     },
     Right: (index, row, column) => {
-      let newIndex = index + 1;
-      newIndex < this.documents.length && this.documentComponents.toArray()[newIndex].select(0, row);
+      if (index + 1 < this.documents.length) {
+        this.documentComponents.toArray()[index + 1].select(0, row);
+      }
     },
     Up: (index, row, column) => {
-      let newIndex = index - this.documentsPerRow();
-      newIndex >= 0 && this.documentComponents.toArray()[newIndex].select(column, Number.MAX_SAFE_INTEGER);
+      if (index - this.documentsPerRow() >= 0) {
+        this.documentComponents.toArray()[index - this.documentsPerRow()].select(column, Number.MAX_SAFE_INTEGER);
+      }
     },
     Down: (index, row, column) => {
-      let newIndex = index + this.documentsPerRow();
-      newIndex < this.documents.length && this.documentComponents.toArray()[newIndex].select(column, 0);
+      if (index + this.documentsPerRow() < this.documents.length) {
+        this.documentComponents.toArray()[index + this.documentsPerRow()].select(column, 0);
+      }
     }
   };
 
