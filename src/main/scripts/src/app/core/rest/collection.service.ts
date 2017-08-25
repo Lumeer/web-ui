@@ -68,11 +68,19 @@ export class CollectionService {
     return this.http.get<Attribute[]>(`${this.apiPrefix()}/${collectionCode}/attributes`);
   }
 
+  public renameAttribute(collectionCode: string, oldName: string, newName: string): Observable<any> {
+    return this.http.put<any>(`${this.apiPrefix()}/${collectionCode}/attributes/${oldName}/rename/${newName}`, {});
+  }
+
+  public dropAttribute(collectionCode: string, attributeName: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiPrefix()}/${collectionCode}/attributes/${attributeName}`);
+  }
+
   private apiPrefix(): string {
     let organization = this.workspaceService.organizationCode;
     let project = this.workspaceService.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organization}/projects/${project}/collections/`;
+    return `/${API_URL}/rest/organizations/${organization}/projects/${project}/collections`;
   }
 
   private static handleError(error: HttpErrorResponse): ErrorObservable {

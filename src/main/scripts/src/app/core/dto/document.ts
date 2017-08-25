@@ -61,13 +61,7 @@ export class Document {
 
   public toDto(): object {
     let result = {};
-
     this.id && (result['_id'] = this.id);
-    this.creationDate && (result['_meta-create-date'] = this.creationDate);
-    this.createdBy && (result['_meta-create-user'] = this.createdBy);
-    this.version && (result['_meta-version'] = this.version);
-    this.updateDate && (result['_meta-update-date'] = this.updateDate);
-    this.updatedBy && (result['_meta-update-user'] = this.updatedBy);
 
     Object.keys(this.data)
       .forEach(attribute => result[attribute] = this.data[attribute]);

@@ -18,11 +18,10 @@
  * -----------------------------------------------------------------------/
  */
 
-export interface Attribute {
+export interface TableRowCell {
 
-  name: string;
-  fullName: string;
-  count: number;
-  constraints: string[];
+  label: string;
+  active: boolean;
+  hidden: boolean;
 
 }

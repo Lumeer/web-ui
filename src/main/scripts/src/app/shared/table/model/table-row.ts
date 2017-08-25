@@ -18,11 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-export interface Attribute {
+import {TableRowCell} from './table-row-cell';
 
-  name: string;
-  fullName: string;
-  count: number;
-  constraints: string[];
+export interface TableRow {
+
+  id: string;
+  cells: TableRowCell[];
+  active: boolean;
 
 }

@@ -18,15 +18,30 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+
 import {DocumentService} from '../../../../core/rest/document.service';
 import {Perspective} from '../../perspective';
+import {CollectionService} from '../../../../core/rest/collection.service';
+import {Collection} from '../../../../core/dto/collection';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/switchMap';
+import {ActivatedRoute} from '@angular/router';
+import {TableRow} from '../../../table/model/table-row';
+import {TableHeader} from '../../../table/model/table-header';
+import {TableSettings} from '../../../table/model/table-settings';
+import {TableHeaderCell} from '../../../table/model/table-header-cell';
+import {Attribute} from '../../../../core/dto/attribute';
+import {Document} from '../../../../core/dto/document';
+import {TableRowCell} from '../../../table/model/table-row-cell';
+import {DataEvent} from '../../../table/event/data-event';
 
 @Component({
   selector: 'table-documents-perspective',
   templateUrl: './table-documents-perspective.component.html'
 })
-export class TableDocumentsPerspectiveComponent implements Perspective {
+export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
 
   @Input()
   public query: string;
@@ -34,7 +49,105 @@ export class TableDocumentsPerspectiveComponent implements Perspective {
   @Input()
   public editable: boolean;
 
-  constructor(private documentService: DocumentService) {
+  public collection: Collection;
+  public header: TableHeader;
+  public rows: TableRow[];
+
+  public settings = <TableSettings>{
+    color: '#3498DB',
+    highlightColor: '#F39C12',
+    editable: true,
+    lineNumberColor: '#b4bcc2'
+  };
+
+  constructor(private collectionService: CollectionService,
+              private documentService: DocumentService,
+              private route: ActivatedRoute) {
+  }
+
+  public ngOnInit(): void {
+    this.route.paramMap
+      .switchMap(params => {
+        let code: string = params.get('collectionCode');
+
+        return Observable.combineLatest([
+            this.collectionService.getCollection(code),
+            this.collectionService.getAttributes(code),
+            this.documentService.getDocuments(code)
+          ], (collection, attributes, documents) => ({collection, attributes, documents})
+        );
+      }).subscribe(({collection, attributes, documents}) => {
+      this.collection = collection;
+      this.prepareTableData(attributes, documents);
+    });
+  }
+
+  public onNewValue(dataEvent: DataEvent) {
+    this.documentService.createDocument(this.collection.code, this.convertDataEventToDocument(dataEvent))
+      .subscribe((json: object) => this.rows[dataEvent.rowIndex].id = json['_id']);
+  }
+
+  public onValueChange(dataEvent: DataEvent) {
+    this.documentService.updateDocument(this.collection.code, this.convertDataEventToDocument(dataEvent))
+      .subscribe();
+  }
+
+  public onHeaderChange(dataEvent: DataEvent) {
+    let oldValue: string = dataEvent.data.oldValue;
+    let newValue: string = dataEvent.data.newValue;
+    this.collectionService.renameAttribute(this.collection.code, oldValue, newValue)
+      .subscribe();
+  }
+
+  public onRemoveColumn(columnName: string) {
+    this.collectionService.dropAttribute(this.collection.code, columnName)
+      .subscribe();
+  }
+
+  public onDragColumn(data: any) {
+    // TODO
+  }
+
+  public onHideColumn(data: any) {
+    // TODO
+  }
+
+  public onShowColumn(data: any) {
+    // TODO
+  }
+
+  private convertDataEventToDocument(dataEvent: DataEvent): Document {
+    let document: Document = new Document();
+    Object.keys(dataEvent.data).forEach(key => document.data[key] = dataEvent.data[key]);
+    document.id = dataEvent.id;
+    return document;
+  }
+
+  private prepareTableData(attributes: Attribute[], documents: Document[]) {
+    let headerRows: TableHeaderCell[] = attributes.map(TableDocumentsPerspectiveComponent.convertAttributeToHeaderCell);
+    this.header = <TableHeader> {cells: headerRows};
+    this.rows = documents.map(document => TableDocumentsPerspectiveComponent.convertDocumentToRow(this.header, document));
+  }
+
+  private static convertAttributeToHeaderCell(attribute: Attribute): TableHeaderCell {
+    return <TableHeaderCell>{label: attribute.name, active: false, hidden: false, constraints: attribute.constraints};
+  }
+
+  private static convertDocumentToRow(header: TableHeader, document: Document): TableRow {
+    let rowCells: TableRowCell[] = header.cells.map(headerCell => TableDocumentsPerspectiveComponent.convertToRowCell(document, headerCell));
+    return <TableRow> {id: document.id, cells: rowCells, active: false};
+  }
+
+  private static convertToRowCell(document: Document, headerCell: TableHeaderCell): TableRowCell {
+    let value: string = document.data[headerCell.label] ? document.data[headerCell.label] : '';
+    return <TableRowCell>{label: value, active: false, hidden: false, constraints: headerCell.constraints};
+  }
+
+  private static createNewRow(header: TableHeader, rowNum: number): TableRow {
+    let cells = header.cells.map((header) => {
+      return <TableRowCell>{label: '', active: false, hidden: header.hidden, constraints: header.constraints};
+    });
+    return <TableRow> {id: null, cells: cells, active: false};
   }
 
 }

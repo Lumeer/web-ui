@@ -18,11 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-export interface Attribute {
 
-  name: string;
-  fullName: string;
-  count: number;
-  constraints: string[];
+export interface DataEvent {
+
+  id?: string;
+  rowIndex?: number;
+  colIndex: number;
+  data: any;
 
 }

@@ -33,7 +33,7 @@ export class DocumentsPerspective {
     ['table']: DocumentsPerspective.Table
   };
 
-  public static defaultPerspective = DocumentsPerspective.PostIt;
+  public static defaultPerspective = DocumentsPerspective.Table;
 
   public static getPerspective(perspectiveId: string): DocumentsPerspective {
     if (!perspectiveId) {

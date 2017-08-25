@@ -18,7 +18,8 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ViewChild, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ViewChildren, QueryList, ElementRef} from '@angular/core';
+import {TableRow} from '../model/table-row';
 
 @Component({
   selector: 'table-row',
@@ -26,20 +27,38 @@ import {Component, ViewChild, Input, Output, EventEmitter} from '@angular/core';
   styleUrls: ['./table-row.component.scss']
 })
 export class TableRowComponent {
-  @Input() public row: any[];
+  @Input() public row: TableRow;
   @Input() public rowIndex: number;
   @Input() public settings: any;
   @Input() public isActive: boolean;
 
   @Output() public itemHighlight: EventEmitter<any> = new EventEmitter();
-  @Output() public updateRow: EventEmitter<any> = new EventEmitter();
+  @Output() public updateCell: EventEmitter<any> = new EventEmitter();
+
+  @ViewChildren('rowCell') private cells: QueryList<ElementRef>;
+
   public model: string;
 
+  public setCell(index, value) {
+    let element: ElementRef = this.cells.find(c => +c.nativeElement.id === index);
+    if (element) {
+      element.nativeElement.innerText = value;
+    }
+  }
+
   public onEdit(item, index): void {
-    this.updateRow.next({index: index, data: item});
+    let oldValue: string = this.row.cells[index].label.toString().trim();
+    let newValue: string = item.toString().trim();
+    if (oldValue !== newValue) {
+      this.updateCell.emit({colIndex: index, data: newValue});
+    }
   }
 
   public onItemClicked(index): void {
-    this.itemHighlight.next({colIndex: index});
+    this.itemHighlight.emit({colIndex: index});
+  }
+
+  public highlightNext(event, i: number) {
+    // TODO??
   }
 }

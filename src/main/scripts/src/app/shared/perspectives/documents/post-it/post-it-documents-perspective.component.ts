@@ -173,7 +173,8 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
     let newDocument = new Document;
     this.documents.push(newDocument);
-    this.documentService.createDocument(this.collection.code, newDocument);
+    this.documentService.createDocument(this.collection.code, newDocument)
+      .subscribe((json: object) => newDocument.id = json['_id']);
 
     this.moveDocumentToTheFront(this.documents.length - 1);
   }
@@ -185,7 +186,8 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
     let deletedDocument = this.documents[index];
     this.documents.splice(index, 1);
-    this.documentService.removeDocument(this.collection.code, deletedDocument);
+    this.documentService.removeDocument(this.collection.code, deletedDocument)
+      .subscribe();
   }
 
   public onAttributePairChange(document: Document, attributePair: AttributePair): void {
@@ -223,7 +225,8 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
     return () => {
       this.updatePending = false;
 
-      this.documentService.updateDocument(this.collection.code, document);
+      this.documentService.updateDocument(this.collection.code, document)
+        .subscribe();
       document.version += 1;
     };
   }

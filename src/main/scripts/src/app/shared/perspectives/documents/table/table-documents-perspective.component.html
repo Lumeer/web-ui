@@ -1,1 +1,13 @@
-<p>This is table documents perspective showing query '{{query}}'.</p>
+<static-table
+  *ngIf="header && rows"
+  [header]="header"
+  [rows]="rows"
+  [settings]="settings"
+  (newValue)="onNewValue($event)"
+  (valueChange)="onValueChange($event)"
+  (headerChange)="onHeaderChange($event)"
+  (dragColumn)="onDragColumn($event)"
+  (hideColumn)="onHideColumn($event)"
+  (removeColumn)="onRemoveColumn($event)"
+  (showColumn)="onShowColumn($event)">
+</static-table>

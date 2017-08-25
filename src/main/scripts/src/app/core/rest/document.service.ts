@@ -41,19 +41,16 @@ export class DocumentService {
       .map((json: object) => new Document(json));
   }
 
-  public createDocument(collectionCode: string, document: Document): void {
-    this.http.post(this.apiPrefix(collectionCode), document.toDto())
-      .subscribe((json: object) => document.id = json['_id']);
+  public createDocument(collectionCode: string, document: Document): Observable<any>  {
+    return this.http.post(this.apiPrefix(collectionCode), document.toDto());
   }
 
-  public updateDocument(collectionCode: string, document: Document): void {
-    this.http.put(`${this.apiPrefix(collectionCode)}`, document.toDto())
-      .subscribe();
+  public updateDocument(collectionCode: string, document: Document): Observable<any>  {
+    return this.http.put(`${this.apiPrefix(collectionCode)}`, document.toDto());
   }
 
-  public removeDocument(collectionCode: string, document: Document): void {
-    this.http.delete(`${this.apiPrefix(collectionCode)}/${document.id}`)
-      .subscribe();
+  public removeDocument(collectionCode: string, document: Document): Observable<any> {
+    return this.http.delete(`${this.apiPrefix(collectionCode)}/${document.id}`);
   }
 
   private apiPrefix(collection: string): string {

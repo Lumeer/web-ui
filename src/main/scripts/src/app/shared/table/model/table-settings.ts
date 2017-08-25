@@ -18,11 +18,11 @@
  * -----------------------------------------------------------------------/
  */
 
-export interface Attribute {
+export interface TableSettings {
 
-  name: string;
-  fullName: string;
-  count: number;
-  constraints: string[];
+  color: string;
+  highlightColor: string;
+  editable: boolean;
+  lineNumberColor: string;
 
 }

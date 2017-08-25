@@ -1,14 +1,18 @@
 <div class="header-item first" [ngStyle]="{'background-color': settings.color}">#</div>
-<div *ngFor="let headerItem of header; let index = index"
+<div *ngFor="let headerItem of header.cells; let index = index"
      [ngStyle]="{
        'background-color': settings.color,
        'border-color': headerItem.active ? settings.highlightColor : '#888'
      }"
-     [ngClass]="{active: headerItem.active, 'header-hidden': headerItem.hidden}"
+     [ngClass]="{active: headerItem.active
+ , 'header-hidden': headerItem.hidden}"
      (mouseover)="onHover(index)"
      class="header-item">
   <div class="header-title">
     <span *ngIf="!headerItem.hidden"
+          (blur)="(headerExists(model)) ? $event.target.innerText = headerItem.label : onEdit(model, index)"
+          (focus)="model = $event.target.innerText"
+          (input)="model = $event.target.innerText"
           [attr.contenteditable]="settings.editable">
     {{ headerItem.label || '&nbsp;'}}
   </span>
@@ -33,8 +37,8 @@
     <div class="placeholder" *ngIf="index !== hoverIndex && !headerItem.hidden"></div>
   </div>
 </div>
-<button (click)="newColumn.next()"
+<button (click)="newColumn.emit()"
         type="button"
         class="btn btn-xs">
-  <i class="fa fa-plus" aria-hidden="true"></i>
+  <i class="fa fa-plus"></i>
 </button>
