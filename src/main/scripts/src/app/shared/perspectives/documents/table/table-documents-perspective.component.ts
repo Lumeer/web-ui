@@ -71,11 +71,12 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
         let code: string = params.get('collectionCode');
 
         return Observable.combineLatest([
-          this.collectionService.getCollection(code),
-          this.collectionService.getAttributes(code),
-          this.documentService.getDocuments(code)
-        ]);
-      }).subscribe(([collection, attributes, documents]) => {
+            this.collectionService.getCollection(code),
+            this.collectionService.getAttributes(code),
+            this.documentService.getDocuments(code)
+          ], (collection, attributes, documents) => ({collection, attributes, documents})
+        );
+      }).subscribe(({collection, attributes, documents}) => {
       this.collection = collection;
       this.prepareTableData(attributes, documents);
     });
