@@ -4,55 +4,54 @@ $fade-size: 2em;
 
 :host {
   display: block;
-}
 
-.perspective {
-  position: relative;
-  bottom: $fade-size;
-  padding-top: $fade-size / 2;
+  .perspective {
+    position: relative;
+    bottom: $fade-size;
+    padding-top: $fade-size / 2;
 
-  overflow: auto;
+    overflow: auto;
 
-  -webkit-transition: height 0.5s;
-  -moz-transition: height 0.5s;
-  -o-transition: height 0.5s;
-  transition: height 0.5s;
-}
+    -webkit-transition: height 0.5s;
+    -moz-transition: height 0.5s;
+    -o-transition: height 0.5s;
+    transition: height 0.5s;
+  }
 
-.layout {
-  margin: 0 auto;
-}
+  .layout {
+    margin: 0 auto;
+  }
 
-.layout-item {
-  width: 290px;
-  margin-bottom: 15px;
-}
+  .layout-item {
+    width: $post-it-width;
+  }
 
-.fadeup {
-  position: relative;
-  z-index: 50;
-  bottom: $fade-size * 2;
-  height: $fade-size;
-  pointer-events: none;
-  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), $secondary-color);
-}
+  .fadeup {
+    position: relative;
+    z-index: 50;
+    bottom: $fade-size * 2;
+    height: $fade-size;
+    pointer-events: none;
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), $secondary-color);
+  }
 
-.fadedown {
-  position: relative;
-  z-index: 50;
-  height: $fade-size;
-  pointer-events: none;
-  background-image: linear-gradient(to top, rgba(255, 255, 255, 0), $secondary-color);
-}
+  .fadedown {
+    position: relative;
+    z-index: 50;
+    height: $fade-size;
+    pointer-events: none;
+    background-image: linear-gradient(to top, rgba(255, 255, 255, 0), $secondary-color);
+  }
 
-.see-more {
-  position: relative;
-  font-size: x-large;
-  float: right;
-  bottom: $fade-size;
-  margin: 10px;
+  .see-more {
+    position: relative;
+    font-size: x-large;
+    float: right;
+    bottom: $fade-size;
+    margin: 10px;
 
-  i {
-    padding-left: 10px;
+    i {
+      padding-left: 10px;
+    }
   }
 }

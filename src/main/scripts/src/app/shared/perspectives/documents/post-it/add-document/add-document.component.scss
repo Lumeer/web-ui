@@ -5,30 +5,31 @@
   padding-top: 57.5px;
   height: 200px;
   text-align: center;
-}
 
-a {
-  -webkit-transition: color 0.25s;
-  -moz-transition: color 0.25s;
-  -o-transition: color 0.25s;
-  transition: color 0.25s;
+  a {
+    -webkit-transition: color 0.25s;
+    -moz-transition: color 0.25s;
+    -o-transition: color 0.25s;
+    transition: color 0.25s;
 
-  color: $brand-primary;
-  border-radius: 20px;
+    color: $brand-primary;
+    border-radius: 20px;
 
-  &:hover {
-    color: $brand-success;
+    &:hover {
+      color: $brand-success;
+    }
   }
-}
 
-i {
-  display: block;
-  font-size: 60px;
-  border-radius: 60px;
-}
+  i {
+    display: block;
+    font-size: 60px;
+    border-radius: 60px;
+  }
 
-label {
-  display: block;
-  font-size: 1.5em;
-  pointer-events: none;
+  label {
+    display: block;
+    font-size: 1.5em;
+    pointer-events: none;
+  }
+
 }

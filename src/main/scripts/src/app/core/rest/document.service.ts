@@ -49,6 +49,10 @@ export class DocumentService {
     return this.http.put(`${this.apiPrefix(collectionCode)}`, document.toDto());
   }
 
+  public replaceDocument(collectionCode: string, document: Document): Observable<any>  {
+    return this.http.put(`${this.apiPrefix(collectionCode)}/replace/`, document.toDto());
+  }
+
   public removeDocument(collectionCode: string, document: Document): Observable<any> {
     return this.http.delete(`${this.apiPrefix(collectionCode)}/${document.id}`);
   }

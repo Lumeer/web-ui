@@ -28,12 +28,14 @@ import {PostItDocumentsPerspectiveComponent} from './post-it/post-it-documents-p
 import {PostItAddDocumentComponent} from './post-it/add-document/add-document.component';
 import {PostItDocumentComponent} from './post-it/document/post-it-document.component';
 import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
+import {TableModule} from '../../table/table.module';
 
 @NgModule({
   imports: [
     BrowserModule,
     FormsModule,
-    Ng2CompleterModule
+    Ng2CompleterModule,
+    TableModule
   ],
   declarations: [
     PostItDocumentsPerspectiveComponent,

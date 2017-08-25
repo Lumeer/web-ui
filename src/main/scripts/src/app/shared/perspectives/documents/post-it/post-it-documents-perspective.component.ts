@@ -19,7 +19,7 @@
  */
 
 import {ActivatedRoute} from '@angular/router';
-import {AfterViewChecked, Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 
 import {DocumentService} from '../../../../core/rest/document.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
@@ -31,25 +31,26 @@ import {Perspective} from '../../perspective';
 import {Buffer} from '../../../../utils/buffer';
 import {Observable} from 'rxjs/Rx';
 import {AttributePropertySelection} from './attribute/attribute-property-selection';
+import {MasonryLayout} from '../../../../utils/masonry-layout';
 
 @Component({
   selector: 'post-it-documents-perspective',
   templateUrl: './post-it-documents-perspective.component.html',
   styleUrls: ['./post-it-documents-perspective.component.scss']
 })
-export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit, AfterViewChecked {
+export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit, AfterViewChecked, OnDestroy {
 
   @Input()
   public query: string;
 
   @Input()
-  public editable: boolean = true;
+  public editable: boolean;
 
   @Input()
   public height = 500;
 
   @ViewChild('layout')
-  public layout: ElementRef;
+  public layoutElement: ElementRef;
 
   @ViewChildren(PostItDocumentComponent)
   public documentComponents: QueryList<PostItDocumentComponent>;
@@ -68,6 +69,8 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
 
   private updatingDocument: Document;
 
+  private layout: MasonryLayout;
+
   constructor(private documentService: DocumentService,
               private collectionService: CollectionService,
               private route: ActivatedRoute) {
@@ -75,7 +78,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
 
   public ngOnInit(): void {
     this.initializeVariables();
-    this.initializeLayout();
     this.fetchData();
   }
 
@@ -104,13 +106,14 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       editing: false,
     };
 
+    this.layout = new MasonryLayout({
+      container: '.layout',
+      item: '.layout-item',
+      gutter: 15
+    });
+
     this.attributes = [];
     this.documents = [];
-  }
-
-  private initializeLayout() {
-    let windowResizeRefreshBuffer = new Buffer(() => this.refreshLayout(), 200);
-    window.addEventListener('resize', () => windowResizeRefreshBuffer.stageChanges());
   }
 
   private fetchData(): void {
@@ -130,16 +133,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   }
 
   public ngAfterViewChecked(): void {
-    this.refreshLayout();
-  }
-
-  private refreshLayout(): void {
-    let Minigrid = window['Minigrid'];
-    new Minigrid({
-      container: '.layout',
-      item: '.layout-item',
-      gutter: 15
-    }).mount();
+    this.layout.refresh();
   }
 
   public selectDocument(selector: AttributePropertySelection): void {
@@ -171,21 +165,23 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   }
 
   private documentsPerRow(): number {
-    return Math.floor(this.layout.nativeElement.clientWidth / (290 /*Post-it width*/ + 15 /*Gutter*/));
+    return Math.floor(this.layoutElement.nativeElement.clientWidth / (290 /*Post-it width*/ + 15 /*Gutter*/));
   }
 
   public createDocument(): void {
     let newDocument = new Document;
     this.documents.unshift(newDocument);
 
-    this.documentService.createDocument(this.collection.code, newDocument);
+    this.documentService.createDocument(this.collection.code, newDocument)
+      .subscribe((json: object) => newDocument.id = json['_id']);
   }
 
   public removeDocument(index: number): void {
     let deletedDocument = this.documents[index];
     this.documents.splice(index, 1);
 
-    this.documentService.removeDocument(this.collection.code, deletedDocument);
+    this.documentService.removeDocument(this.collection.code, deletedDocument)
+      .subscribe();
   }
 
   public sendUpdate(document: Document): void {
@@ -195,7 +191,8 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       this.updatingDocument = document;
       this.updateBuffer = new Buffer(() => {
         // replace is used until a version using: update and dropDocumentAttribute is implemented
-        this.documentService.replaceDocument(this.collection.code, document);
+        this.documentService.replaceDocument(this.collection.code, document)
+          .subscribe();
         document.version += 1;
       }, 2000);
     }
@@ -205,6 +202,10 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
     $(perspective).animate({
       scrollTop: perspective.scrollHeight
     });
+  }
+
+  public ngOnDestroy(): void {
+    this.layout.destroy();
   }
 
 }
