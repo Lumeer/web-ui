@@ -4,7 +4,8 @@
     <add-document class="layout-item" *ngIf="editable"
                   (newDocument)="createDocument()"></add-document>
 
-    <post-it-document *ngFor="let document of documents; let idx = index" class="layout-item"
+    <post-it-document *ngFor="let document of documents; let idx = index"
+                      class="layout-item {{ uninitialized[idx] ? 'uninitialized' : '' }}"
                       [style.z-index]="documents.length - idx"
                       [index]="idx"
                       [attributes]="attributes"
@@ -15,7 +16,7 @@
                       [previousSelection]="previousSelection"
                       (selectOther)="selectDocument($event)"
                       (removed)="removeDocument(idx)"
-                      (changes)="sendUpdate(document)">
+                      (changes)="sendUpdate(idx)">
     </post-it-document>
   </div>
 </div>

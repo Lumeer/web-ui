@@ -26,6 +26,10 @@ $fade-size: 2em;
     width: $post-it-width;
   }
 
+  .uninitialized {
+    background-color: #f5f5f5;
+  }
+
   .fadeup {
     position: relative;
     z-index: 50;

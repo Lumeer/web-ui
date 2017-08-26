@@ -21,17 +21,19 @@
 import {ActivatedRoute} from '@angular/router';
 import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 
-import {DocumentService} from '../../../../core/rest/document.service';
-import {CollectionService} from '../../../../core/rest/collection.service';
+import {NotificationsService} from 'angular2-notifications/dist';
+
+import {Perspective} from '../../perspective';
 import {Collection} from '../../../../core/dto/collection';
 import {Document} from '../../../../core/dto/document';
 import {Attribute} from '../../../../core/dto/attribute';
+import {DocumentService} from '../../../../core/rest/document.service';
+import {CollectionService} from '../../../../core/rest/collection.service';
 import {PostItDocumentComponent} from './document/post-it-document.component';
-import {Perspective} from '../../perspective';
-import {Buffer} from '../../../../utils/buffer';
-import {Observable} from 'rxjs/Rx';
 import {AttributePropertySelection} from './attribute/attribute-property-selection';
+import {Buffer} from '../../../../utils/buffer';
 import {MasonryLayout} from '../../../../utils/masonry-layout';
+import {Observable} from 'rxjs/Rx';
 
 @Component({
   selector: 'post-it-documents-perspective',
@@ -61,6 +63,8 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
 
   public documents: Document[];
 
+  public uninitialized: boolean[] = [];
+
   public selection: AttributePropertySelection;
 
   public previousSelection: AttributePropertySelection;
@@ -73,6 +77,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
 
   constructor(private documentService: DocumentService,
               private collectionService: CollectionService,
+              private notificationService: NotificationsService,
               private route: ActivatedRoute) {
   }
 
@@ -171,20 +176,23 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   public createDocument(): void {
     let newDocument = new Document;
     this.documents.unshift(newDocument);
-
-    this.documentService.createDocument(this.collection.code, newDocument)
-      .subscribe((json: object) => newDocument.id = json['_id']);
+    this.uninitialized.unshift(true);
   }
 
   public removeDocument(index: number): void {
     let deletedDocument = this.documents[index];
     this.documents.splice(index, 1);
+    this.uninitialized.splice(index, 1);
 
-    this.documentService.removeDocument(this.collection.code, deletedDocument)
-      .subscribe();
+    if (!this.uninitialized[index]) {
+      this.documentService.removeDocument(this.collection.code, deletedDocument)
+        .subscribe(_ => this.notificationService.success('Success', 'Document removed'));
+    }
   }
 
-  public sendUpdate(document: Document): void {
+  public sendUpdate(index: number): void {
+    let document = this.documents[index];
+
     if (this.updatingDocument === document) {
       this.updateBuffer.stageChanges();
     } else {
@@ -195,7 +203,22 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
           .subscribe();
         document.version += 1;
       }, 2000);
+
+      if (this.uninitialized[index]) {
+        this.initializeDocument(index);
+      }
     }
+  }
+
+  private initializeDocument(index: number): void {
+    let document = this.documents[index];
+    this.documentService.createDocument(this.collection.code, document)
+      .subscribe((json: object) => {
+        document.id = json['_id'];
+
+        this.uninitialized[index] = false;
+        this.notificationService.success('Success', 'Document Created');
+      });
   }
 
   public onSeeMore(perspective: HTMLDivElement): void {

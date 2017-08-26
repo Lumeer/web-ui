@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewChild} from '@angular/core';
 
 import {Collection} from '../../../../../core/dto/collection';
 import {Document} from '../../../../../core/dto/document';
@@ -26,6 +26,7 @@ import {Attribute} from '../../../../../core/dto/attribute';
 import {AttributePair} from '../attribute/attribute-pair';
 import {AttributePropertySelection} from '../attribute/attribute-property-selection';
 import {isString, isUndefined} from 'util';
+import {Popup} from '../../../../../utils/Popup';
 
 @Component({
   selector: 'post-it-document',
@@ -33,6 +34,9 @@ import {isString, isUndefined} from 'util';
   styleUrls: ['./post-it-document.component.scss']
 })
 export class PostItDocumentComponent implements OnInit {
+
+  @HostBinding('style.border-color')
+  private borderColor: string;
 
   @Input()
   public editable: boolean;
@@ -44,7 +48,16 @@ export class PostItDocumentComponent implements OnInit {
   public attributes: Attribute[];
 
   @Input()
-  public collection: Collection;
+  public get collection(): Collection {
+    return this._collection;
+  }
+
+  public set collection(newCollection: Collection) {
+    this.borderColor = newCollection.color;
+    this._collection = newCollection;
+  }
+
+  private _collection: Collection;
 
   @Input()
   public document: Document;
@@ -286,16 +299,12 @@ export class PostItDocumentComponent implements OnInit {
   public createAttributePair(newPairValue: string): void {
     this.newAttributePair.value = newPairValue;
     this.attributePairs.push(this.newAttributePair);
-
-    let selectedInput = document.activeElement as HTMLInputElement;
-
-    setTimeout(() => {
-      this.newAttributePair = {} as AttributePair;
-      selectedInput.value = '';
-      this.select(1, this.attributePairs.length - 1);
-    });
-
     this.changes.emit();
+
+    this.newAttributePair = {} as AttributePair;
+    document.activeElement['value'] = '';
+
+    setTimeout(() => this.select(1, this.attributePairs.length - 1));
   }
 
   private attributeColumn(column: number): boolean {
@@ -307,27 +316,9 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   public onRemoveDocumentClick(): void {
-    window['BootstrapDialog'].show({
-      type: 'type-success',
-      title: 'Delete Document?',
-      message: 'Deleting a document will permanently remove it from this collection.',
-      buttons:
-        [
-          {
-            label: 'No, Keep Document',
-            action: dialog => dialog.close()
-          },
-          {
-            label: 'Yes, Delete Document',
-            cssClass: 'btn-success',
-            hotkey: 13, // Enter
-            action: dialog => {
-              this.removed.emit();
-              dialog.close();
-            }
-          }
-        ]
-    });
+    Popup.confirm('Delete Document', 'Deleting a document will permanently remove it from this collection.',
+      'Keep Document', () => null,
+      'Delete Document', () => this.removed.emit());
   }
 
 }

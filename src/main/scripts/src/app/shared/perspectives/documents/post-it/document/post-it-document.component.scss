@@ -11,7 +11,7 @@
   -o-transition: all 0.4s;
   transition: all 0.4s;
 
-  border: 2px solid #cccccc;
+  border: 1px solid #cccccc;
   border-radius: $border-radius-small;
 
   .header {
@@ -40,6 +40,10 @@
       float: right;
       padding: 4px;
     }
+
+    .remove {
+      color: $brand-danger;
+    }
   }
 
   .content {
@@ -62,11 +66,7 @@
     box-shadow: $default-shadow-up;
 
     a {
-      color: $brand-success;
-    }
-
-    .fa-times {
-      color: $brand-danger;
+      opacity: 1;
     }
   }
 
@@ -77,7 +77,7 @@
     -o-transition: all 0.25s;
     transition: all 0.25s;
 
-    color: $secondary-color;
+    opacity: 0;
     font-size: medium;
 
     border-radius: $border-radius-small;
@@ -115,7 +115,7 @@
 
   div:focus, /deep/ input:focus {
     outline: none;
-    background: $brand-success;
+    background: $brand-primary;
     border-radius: $border-radius-small;
 
     color: $secondary-color;
