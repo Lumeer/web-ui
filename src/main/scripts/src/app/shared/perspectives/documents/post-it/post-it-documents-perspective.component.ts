@@ -59,11 +59,11 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
 
   public collection: Collection;
 
-  public attributes: Attribute[];
+  public attributes: Attribute[] = [];
 
-  public documents: Document[];
+  public documents: Document[] = [];
 
-  public uninitialized: boolean[] = [];
+  public initialized: boolean[] = [];
 
   public selection: AttributePropertySelection;
 
@@ -116,9 +116,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       item: '.layout-item',
       gutter: 15
     });
-
-    this.attributes = [];
-    this.documents = [];
   }
 
   private fetchData(): void {
@@ -134,6 +131,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       this.collection = collection;
       this.attributes = attributes;
       this.documents = documents;
+      this.initialized = new Array(documents.length).fill(true);
     });
   }
 
@@ -176,18 +174,19 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   public createDocument(): void {
     let newDocument = new Document;
     this.documents.unshift(newDocument);
-    this.uninitialized.unshift(true);
+    this.initialized.unshift(false);
   }
 
   public removeDocument(index: number): void {
     let deletedDocument = this.documents[index];
-    this.documents.splice(index, 1);
-    this.uninitialized.splice(index, 1);
 
-    if (!this.uninitialized[index]) {
+    if (this.initialized[index]) {
       this.documentService.removeDocument(this.collection.code, deletedDocument)
         .subscribe(_ => this.notificationService.success('Success', 'Document removed'));
     }
+
+    this.documents.splice(index, 1);
+    this.initialized.splice(index, 1);
   }
 
   public sendUpdate(index: number): void {
@@ -204,7 +203,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
         document.version += 1;
       }, 2000);
 
-      if (this.uninitialized[index]) {
+      if (!this.initialized[index]) {
         this.initializeDocument(index);
       }
     }
@@ -216,7 +215,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       .subscribe((json: object) => {
         document.id = json['_id'];
 
-        this.uninitialized[index] = false;
+        this.initialized[index] = true;
         this.notificationService.success('Success', 'Document Created');
       });
   }

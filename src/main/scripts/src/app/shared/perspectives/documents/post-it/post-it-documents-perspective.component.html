@@ -5,7 +5,7 @@
                   (newDocument)="createDocument()"></add-document>
 
     <post-it-document *ngFor="let document of documents; let idx = index"
-                      class="layout-item {{ uninitialized[idx] ? 'uninitialized' : '' }}"
+                      class="layout-item {{ !initialized[idx] ? 'uninitialized' : '' }}"
                       [style.z-index]="documents.length - idx"
                       [index]="idx"
                       [attributes]="attributes"
