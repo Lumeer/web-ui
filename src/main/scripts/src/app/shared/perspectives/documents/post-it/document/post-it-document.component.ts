@@ -26,7 +26,8 @@ import {Attribute} from '../../../../../core/dto/attribute';
 import {AttributePair} from '../attribute/attribute-pair';
 import {AttributePropertySelection} from '../attribute/attribute-property-selection';
 import {isString, isUndefined} from 'util';
-import {Popup} from '../../../../../utils/Popup';
+import {Popup} from '../../../utils/popup';
+import {Direction} from '../attribute/direction';
 
 @Component({
   selector: 'post-it-document',
@@ -191,7 +192,7 @@ export class PostItDocumentComponent implements OnInit {
     let newColumn = this.selection.column + columnChange;
     let newRow = this.selection.row + rowChange;
 
-    if (this.selectedDocumentDirection(newColumn, newRow) === '') {
+    if (this.selectedDocumentDirection(newColumn, newRow) === Direction.Self) {
       this.select(newColumn, newRow);
     } else {
       this.selectOther.emit({
@@ -204,21 +205,21 @@ export class PostItDocumentComponent implements OnInit {
     }
   }
 
-  private selectedDocumentDirection(newColumn: number, newRow: number): string {
+  private selectedDocumentDirection(newColumn: number, newRow: number): Direction {
     if (newColumn < 0) {
-      return 'Left';
+      return Direction.Left;
     }
     if (newColumn > 1 || (this.onDisabledInput(newColumn, newRow) && this.attributeColumn(this.selection.column))) {
-      return 'Right';
+      return Direction.Right;
     }
     if (newRow < 0) {
-      return 'Up';
+      return Direction.Up;
     }
     if (newRow > this.attributePairs.length || (this.onDisabledInput(newColumn, newRow) && this.selection.row === this.attributePairs.length - 1)) {
-      return 'Down';
+      return Direction.Down;
     }
 
-    return '';
+    return Direction.Self;
   }
 
   private onDisabledInput(column: number, row: number): boolean {
@@ -316,7 +317,7 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   public onRemoveDocumentClick(): void {
-    Popup.confirm('Delete Document', 'Deleting a document will permanently remove it from this collection.',
+    Popup.confirmDanger('Delete Document', 'Deleting a document will permanently remove it from this collection.',
       'Keep Document', () => null,
       'Delete Document', () => this.removed.emit());
   }

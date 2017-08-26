@@ -20,9 +20,9 @@
 
 export class Popup {
 
-  public static confirm(title: string, message: string, noLabel: string, onNo: () => void, yesLabel: string, onYes: () => void): void {
+  public static confirmDanger(title: string, message: string, noLabel: string, onNo: () => void, yesLabel: string, onYes: () => void): void {
     window['BootstrapDialog'].show({
-      type: 'type-success',
+      type: 'type-danger',
       title: `${title}?`,
       message: message,
       buttons:
@@ -36,7 +36,7 @@ export class Popup {
           },
           {
             label: `Yes, ${yesLabel}`,
-            cssClass: 'btn-success',
+            cssClass: 'btn-danger',
             hotkey: 13, // Enter
             action: dialog => {
               dialog.close();

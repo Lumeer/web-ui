@@ -24,15 +24,16 @@ import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, Query
 import {NotificationsService} from 'angular2-notifications/dist';
 
 import {Perspective} from '../../perspective';
-import {Collection} from '../../../../core/dto/collection';
+import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../../core/dto/collection';
 import {Document} from '../../../../core/dto/document';
 import {Attribute} from '../../../../core/dto/attribute';
 import {DocumentService} from '../../../../core/rest/document.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {PostItDocumentComponent} from './document/post-it-document.component';
 import {AttributePropertySelection} from './attribute/attribute-property-selection';
-import {Buffer} from '../../../../utils/buffer';
-import {MasonryLayout} from '../../../../utils/masonry-layout';
+import {Direction} from './attribute/direction';
+import {MasonryLayout} from '../../utils/masonry-layout';
+import {Buffer} from '../../utils/buffer';
 import {Observable} from 'rxjs/Rx';
 
 @Component({
@@ -46,7 +47,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   public query: string;
 
   @Input()
-  public editable: boolean;
+  public editable: boolean = true;
 
   @Input()
   public height = 500;
@@ -89,9 +90,9 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   private initializeVariables(): void {
     this.collection = {
       code: '',
-      name: 'No collection',
-      color: '#cccccc',
-      icon: 'fa-question',
+      name: '',
+      color: COLLECTION_NO_COLOR,
+      icon: COLLECTION_NO_ICON,
       documentCount: 0
     };
 
@@ -99,7 +100,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       row: undefined,
       column: undefined,
       documentIdx: undefined,
-      direction: '',
+      direction: Direction.Self,
       editing: false,
     };
 
@@ -107,7 +108,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       row: undefined,
       column: undefined,
       documentIdx: undefined,
-      direction: '',
+      direction: Direction.Self,
       editing: false,
     };
 
@@ -141,25 +142,25 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
 
   public selectDocument(selector: AttributePropertySelection): void {
     switch (selector.direction) {
-      case 'Left':
+      case Direction.Left:
         if (selector.documentIdx - 1 >= 0) {
           this.documentComponents.toArray()[selector.documentIdx - 1].select(Number.MAX_SAFE_INTEGER, selector.row);
         }
         break;
 
-      case 'Right':
+      case Direction.Right:
         if (selector.documentIdx + 1 < this.documents.length) {
           this.documentComponents.toArray()[selector.documentIdx + 1].select(0, selector.row);
         }
         break;
 
-      case 'Up':
+      case Direction.Up:
         if (selector.documentIdx - this.documentsPerRow() >= 0) {
           this.documentComponents.toArray()[selector.documentIdx - this.documentsPerRow()].select(selector.column, Number.MAX_SAFE_INTEGER);
         }
         break;
 
-      case 'Down':
+      case Direction.Down:
         if (selector.documentIdx + this.documentsPerRow() < this.documents.length) {
           this.documentComponents.toArray()[selector.documentIdx + this.documentsPerRow()].select(selector.column, 0);
         }

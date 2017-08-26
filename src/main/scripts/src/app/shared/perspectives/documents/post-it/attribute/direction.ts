@@ -18,24 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-/**
- * Caches function return values for each call with unique arguments
- * Skips calculation if function with such parameters was called already
- */
-export class CachedFunction {
+export enum Direction {
 
-  public static from(fun: (...params) => any): (...params) => any {
-    let callResults = {};
-
-    return function () {
-      let callArguments = JSON.stringify(arguments);
-
-      if (!(callArguments in callResults)) {
-        callResults[callArguments] = fun.apply(null, arguments);
-      }
-
-      return callResults[callArguments];
-    };
-  }
+  Up = 'Up',
+  Down = 'Down',
+  Left = 'Left',
+  Right = 'Right',
+  Self = ''
 
 }

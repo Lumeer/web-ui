@@ -18,9 +18,11 @@
  * -----------------------------------------------------------------------/
  */
 
+import {Direction} from './direction';
+
 export interface AttributePropertySelection {
 
-  direction: string;
+  direction: Direction;
   row: number;
   column: number;
   editing: boolean;
