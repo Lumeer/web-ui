@@ -12,10 +12,10 @@ $fade-size: 2em;
 
     overflow: auto;
 
-    -webkit-transition: height 0.5s;
-    -moz-transition: height 0.5s;
-    -o-transition: height 0.5s;
-    transition: height 0.5s;
+    transition: height $animation-duration-slow;
+    -webkit-transition: height $animation-duration-slow;
+    -moz-transition: height $animation-duration-slow;
+    -o-transition: height $animation-duration-slow;
   }
 
   .layout {
@@ -27,7 +27,7 @@ $fade-size: 2em;
   }
 
   .uninitialized {
-    background-color: #f5f5f5;
+    background-color: $new-item-color;
   }
 
   .fadeup {

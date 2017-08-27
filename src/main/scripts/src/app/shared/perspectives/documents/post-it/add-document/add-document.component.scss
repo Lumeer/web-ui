@@ -7,10 +7,10 @@
   text-align: center;
 
   a {
-    -webkit-transition: color 0.25s;
-    -moz-transition: color 0.25s;
-    -o-transition: color 0.25s;
-    transition: color 0.25s;
+    transition: color $animation-color-duration;
+    -webkit-transition: color $animation-color-duration;
+    -moz-transition: color $animation-color-duration;
+    -o-transition: color $animation-color-duration;
 
     color: $brand-primary;
     border-radius: 20px;
