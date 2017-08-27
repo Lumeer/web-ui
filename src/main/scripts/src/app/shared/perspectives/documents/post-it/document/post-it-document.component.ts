@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
 import {Collection} from '../../../../../core/dto/collection';
 import {Document} from '../../../../../core/dto/document';
@@ -36,9 +36,6 @@ import {Direction} from '../attribute/direction';
 })
 export class PostItDocumentComponent implements OnInit {
 
-  @HostBinding('style.border-color')
-  private borderColor: string;
-
   @Input()
   public editable: boolean;
 
@@ -49,16 +46,7 @@ export class PostItDocumentComponent implements OnInit {
   public attributes: Attribute[];
 
   @Input()
-  public get collection(): Collection {
-    return this._collection;
-  }
-
-  public set collection(newCollection: Collection) {
-    this.borderColor = newCollection.color;
-    this._collection = newCollection;
-  }
-
-  private _collection: Collection;
+  public collection: Collection;
 
   @Input()
   public document: Document;
