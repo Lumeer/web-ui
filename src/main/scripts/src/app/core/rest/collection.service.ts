@@ -54,14 +54,19 @@ export class CollectionService {
       .catch(CollectionService.handleError);
   }
 
-  public updateCollection(collectionCode: String, collection: Collection): Observable<any> {
-    return this.http.put<any>(this.apiPrefix() + '/' + collectionCode, collection)
+  public updateCollection(collection: Collection): Observable<any> {
+    return this.http.put<any>(`${this.apiPrefix()}/${collection.code}`, collection)
       .catch(CollectionService.handleError);
   }
 
   public getCollection(collectionCode: string): Observable<Collection> {
     return this.http.get<Collection>(`${this.apiPrefix()}/${collectionCode}`)
       .catch(CollectionService.handleGlobalError);
+  }
+
+  public dropCollection(collectionCode: String): Observable<any> {
+    return this.http.delete<any>(`${this.apiPrefix()}/${collectionCode}`)
+      .catch(CollectionService.handleError);
   }
 
   public getAttributes(collectionCode: string): Observable<Attribute[]> {

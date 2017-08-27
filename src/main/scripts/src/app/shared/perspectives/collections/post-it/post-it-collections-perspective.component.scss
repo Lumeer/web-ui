@@ -1,126 +1,183 @@
 @import '../../../../../styles/variables';
 
-$anim-duration: 0.4s;
+:host {
+  display: block;
 
-.shadow{
-  background-color: $secondary-color;
-  box-shadow: $default-shadow;
-  transition: box-shadow $anim-duration ease-in-out;
-
-  &:hover {
-    box-shadow: $default-shadow-up;
+  .layout {
+    margin: 0 auto;
   }
 
-  &:hover .actions{
-    opacity: 1;
+  .layout-item {
+    transition: all $animation-duration;
+    -webkit-transition: all $animation-duration;
+    -moz-transition: all $animation-duration;
+    -o-transition: all $animation-duration;
+
+    & > * {
+      transition: all $animation-color-duration;
+      -webkit-transition: all $animation-color-duration;
+      -moz-transition: all $animation-color-duration;
+      -o-transition: all $animation-color-duration;
+    }
+
+    width: $post-it-width;
+    height: 180px;
   }
 
-}
+  .post-it {
+    background: $secondary-color;
+    box-shadow: $shadow-none;
 
-.post-it {
-  margin: 10px;
-  padding: 10px;
-  height: 150px;
-  position: relative;
-  display: flex;
-  align-items: center;
+    border: 2px solid #cccccc;
+    border-radius: $border-radius-small;
 
-  .preview-icon {
-    cursor: pointer;
-    position: absolute;
-    background-color: $secondary-color;
-    box-shadow: $default-shadow;
-    top: 10px;
-    left: 10px;
-    width: 24px;
-    height: 24px;
+    padding: 15px;
+    align-items: center;
+
+    .document-count {
+      position: absolute;
+      right: 15px;
+      top: 10px;
+      font-size: large;
+
+      i {
+        margin-left: 5px;
+      }
+    }
+
+    .content {
+      text-align: center;
+      font-size: 3em;
+      margin-top: 7px;
+      margin-right: 15px;
+
+      i {
+        cursor: pointer;
+      }
+    }
+
+    .onIcon {
+      position: absolute;
+      top: 114px;
+      left: -80px;
+    }
+
+    .buttons {
+      opacity: 0;
+      display: grid;
+      position: absolute;
+      right: 6px;
+      top: 37px;
+    }
+
+    a {
+      font-size: large;
+      padding: 0 5px;
+      border-radius: $border-radius-small;
+
+      &:hover {
+        background: #f5f5f5;
+      }
+
+      i {
+        margin: 0;
+
+        &:before {
+          margin-left: 2px;
+        }
+      }
+    }
+
+    .remove-icon {
+      color: $brand-danger;
+    }
+
+    .ok-icon {
+      color: $brand-success;
+    }
+  }
+
+  .uninitialized {
+    background-color: $new-item-color;
+
+    .tutorial {
+      opacity: 0;
+      position: absolute;
+
+      top: 8px;
+      left: 10px;
+
+      padding: 0;
+      margin: 0;
+
+      i {
+        margin-right: 6px;
+      }
+    }
+
+    .newName {
+      color: $brand-primary;
+    }
+
+    a {
+      &:hover {
+        background: $secondary-color;
+      }
+    }
+  }
+
+  .post-it:hover, .selected {
+    box-shadow: $shadow-up;
+
+    & > * {
+      opacity: 1 !important;
+    }
+  }
+
+  .add-collection {
+    display: block;
     text-align: center;
-    border-radius: 25px;
-    z-index: 1;
-  }
+    margin: 45px 72px 0;
 
-  .remove-icon {
-    cursor: pointer;
-    position: absolute;
-    color: red;
-    right: 10px;
-    top: 10px;
-  }
-
-  form input {
-    width: 100%;
-    border: none;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    text-align: center;
-    background-color: $secondary-color;
-    font-size: $font-size-h4;
-    box-shadow: $default-shadow;
-    transition: box-shadow $anim-duration ease-in-out;
-    -webkit-transition: box-shadow $anim-duration ease-in-out;
-    -moz-transition: box-shadow $anim-duration ease-in-out;
-    -o-transition: box-shadow $anim-duration ease-in-out;
+    color: $brand-primary;
 
     &:hover {
-      box-shadow: $default-shadow-up;
+      color: $brand-success;
     }
 
-    &:focus {
-      box-shadow: $default-shadow-up;
-      border-radius: 0 !important;
-      outline: 0;
+    i {
+      display: block;
+      font-size: 60px;
+      border-radius: 60px;
+    }
+
+    label {
+      display: block;
+      font-size: 1.5em;
+      pointer-events: none;
     }
   }
 
-  .err-msg {
+  icon-picker {
     position: absolute;
+    top: 110px;
+    left: 50px;
   }
 
-  .num-documents {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    font-size: 12px;
+  i:focus, input:focus {
+    outline: none;
   }
 
-  .actions {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    font-size: 12px;
-    opacity: 0;
-    -webkit-transition: all $anim-duration ease-in-out;
-    -moz-transition: all $anim-duration ease-in-out;
-    -o-transition: all $anim-duration ease-in-out;
-    transition: all $anim-duration ease-in-out;
+  input {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
 
-    .action {
-      padding: 2px;
-      cursor: pointer;
-    }
+    background: transparent;
+    border: none;
 
-    .delete {
-      color: red !important;
-    }
-  }
-
-}
-
-.name-icon {
-  text-align: center;
-  width: 100%;
-}
-
-.create-collection {
-  cursor: pointer;
-  color: black;
-
-  &:hover {
-    color: green;
+    text-align: center;
+    font-weight: bold;
+    font-size: 23px;
   }
 }
-
-.new-collection {
-  background: $new-item-color;
-}
-
