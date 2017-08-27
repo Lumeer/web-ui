@@ -6,6 +6,9 @@
   display: flex;
   flex-wrap: wrap;
 
+  height: 215px;
+  overflow: auto;
+
   & > * {
     border: 2px solid transparent;
 
