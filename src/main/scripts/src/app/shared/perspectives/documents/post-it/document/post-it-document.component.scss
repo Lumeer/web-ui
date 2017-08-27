@@ -1,32 +1,34 @@
 @import "../../../../../../styles/variables";
 
 :host {
-  -webkit-transition: all 0.25s;
-  -moz-transition: all 0.25s;
-  -o-transition: all 0.25s;
-  transition: all 0.25s;
-
   background: $secondary-color;
   box-shadow: $default-shadow-down;
   display: block;
-
   padding: 6px 10px;
+
+  -webkit-transition: all 0.4s;
+  -moz-transition: all 0.4s;
+  -o-transition: all 0.4s;
+  transition: all 0.4s;
 
   border: 1px solid #cccccc;
   border-radius: $border-radius-small;
 
   .header {
     overflow: hidden;
+    margin-bottom: 5px;
 
     .collection-icon {
-      font-size: 20px;
+      padding-left: 4px;
+      font-size: 22px;
+
       &:hover {
         background: transparent;
       }
     }
 
     .name {
-      opacity: 0.5;
+      opacity: 0.75;
       padding-left: 10px;
       margin: 0;
 
@@ -38,13 +40,18 @@
       float: right;
       padding: 4px;
     }
+
+    .remove {
+      color: $brand-danger;
+    }
   }
 
   .content {
-    margin-top: 5px;
+    margin: 0;
+    padding: 0;
+
     border: 1px solid #e5e5e5;
     border-radius: $border-radius-small;
-    overflow: hidden;
   }
 
   .edit {
@@ -59,35 +66,99 @@
     box-shadow: $default-shadow-up;
 
     a {
-      color: $brand-success;
+      opacity: 1;
+    }
+  }
+
+
+  a {
+    -webkit-transition: all 0.25s;
+    -moz-transition: all 0.25s;
+    -o-transition: all 0.25s;
+    transition: all 0.25s;
+
+    opacity: 0;
+    font-size: medium;
+
+    border-radius: $border-radius-small;
+    padding: 4px 12px;
+
+    &:hover {
+      background: #e8e8e8;
     }
 
-    .fa-times {
-      color: $brand-danger;
+    &:before {
+      margin: -10px;
+    }
+  }
+
+  li {
+    border-bottom: 1px solid #e5e5e5;
+    display: inline-flex;
+    padding: 2px 1px;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: #f7f7f7;
+    }
+  }
+
+  .attribute {
+    color: #404040;
+    width: 40%;
+    font-weight: bold;
+    font-variant: none;
+  }
+
+  div:focus, /deep/ input:focus {
+    outline: none;
+    background: $brand-primary;
+    border-radius: $border-radius-small;
+
+    color: $secondary-color;
+  }
+
+  /deep/ input {
+    padding: 0 3px;
+    width: 100%;
+    border: 0;
+    background-color: transparent;
+
+    pointer-events: none;
+  }
+
+  /deep/ .completer-holder {
+    .completer-dropdown-holder {
+      position: relative;
+
+      .completer-dropdown {
+        overflow: hidden;
+
+        border-color: #cccccc !important;
+        border-radius: $border-radius-small !important;
+
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 4px 0 !important;
+      }
+
+      .completer-row {
+        color: $brand-primary !important;
+
+        display: block !important;
+
+        width: 100% !important;
+        padding: 1px 6px !important;
+        margin: 0 !important;
+      }
+
+      .completer-selected-row {
+        background-color: $brand-success !important;
+        color: $secondary-color !important;
+      }
     }
   }
 }
-
-a {
-  -webkit-transition: all 0.25s;
-  -moz-transition: all 0.25s;
-  -o-transition: all 0.25s;
-  transition: all 0.25s;
-
-  color: $secondary-color;
-  font-size: medium;
-
-  border-radius: $border-radius-small;
-  padding: 4px 12px;
-  margin: 0 0 0 3px;
-
-  &:hover {
-    background: #e8e8e8;
-  }
-
-  &:before {
-    margin: -10px;
-  }
-}
-
-

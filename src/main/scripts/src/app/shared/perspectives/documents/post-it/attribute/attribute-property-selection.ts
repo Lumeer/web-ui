@@ -18,12 +18,14 @@
  * -----------------------------------------------------------------------/
  */
 
-export interface AttributePropertyInput {
+import {Direction} from './direction';
 
-  id: string;
-  propertyName: string;
-  inputTableX: number;
-  inputTableY: number;
-  element: HTMLInputElement;
+export interface AttributePropertySelection {
+
+  direction: Direction;
+  row: number;
+  column: number;
+  editing: boolean;
+  documentIdx: number;
 
 }

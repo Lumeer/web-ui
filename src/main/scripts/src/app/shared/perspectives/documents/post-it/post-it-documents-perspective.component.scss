@@ -1,62 +1,61 @@
 @import "../../../../../styles/variables";
 
+$fade-size: 2em;
+
 :host {
   display: block;
-}
 
-.perspective-block {
-  position: relative;
-  overflow: hidden;
+  .perspective {
+    position: relative;
+    bottom: $fade-size;
+    padding-top: $fade-size / 2;
 
-  -webkit-transition: height 0.5s;
-  -moz-transition: height 0.5s;
-  -o-transition: height 0.5s;
-  transition: height 0.5s;
+    overflow: auto;
 
-  // Fadeout
-  &:after {
-    content: "";
-    position: absolute;
+    -webkit-transition: height 0.5s;
+    -moz-transition: height 0.5s;
+    -o-transition: height 0.5s;
+    transition: height 0.5s;
+  }
+
+  .layout {
+    margin: 0 auto;
+  }
+
+  .layout-item {
+    width: $post-it-width;
+  }
+
+  .uninitialized {
+    background-color: #f5f5f5;
+  }
+
+  .fadeup {
+    position: relative;
     z-index: 50;
-    bottom: 0;
-    left: 0;
+    bottom: $fade-size * 2;
+    height: $fade-size;
     pointer-events: none;
-    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), $secondary-color 100%);
-    width: 100%;
-    height: 4em;
-  }
-}
-
-.perspective {
-  position: relative;
-
-  &grid:after {
-    content: '';
-    display: block;
-    clear: both;
-  }
-}
-
-.grid-item {
-  @media all and (max-width: 1023px) {
-    width: 300px;
-  }
-  @media all and (min-width: 1024px) and (max-width: 1499px) {
-    width: 24%;
-  }
-  @media all and (min-width: 1500px) {
-    width: 19.25%;
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), $secondary-color);
   }
 
-  margin-bottom: 15px;
-}
+  .fadedown {
+    position: relative;
+    z-index: 50;
+    height: $fade-size;
+    pointer-events: none;
+    background-image: linear-gradient(to top, rgba(255, 255, 255, 0), $secondary-color);
+  }
 
-.load-more {
-  font-size: x-large;
-  float: right;
-  margin: 10px;
+  .see-more {
+    position: relative;
+    font-size: x-large;
+    float: right;
+    bottom: $fade-size;
+    margin: 10px;
 
-  i {
-    padding-left: 10px;
+    i {
+      padding-left: 10px;
+    }
   }
 }

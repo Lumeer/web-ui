@@ -1,26 +1,25 @@
-<div class="perspective-block"
-     [style.height]="height + 'px'">
-
-  <div class="perspective grid"
-       [style.height]="height + PERSPECTIVE_OVERFLOW_BASE_HEIGHT + 'px'">
-
-    <add-document *ngIf="editable" class="grid-item grid-stamp"
-                  [@appear]="''"
+<div class="fadedown"></div>
+<div class="perspective" [style.height]="height + 'px'" #perspective>
+  <div class="layout" #layout>
+    <add-document class="layout-item" *ngIf="editable"
                   (newDocument)="createDocument()"></add-document>
 
-    <post-it-document *ngFor="let document of documents; let idx = index" class="grid-item"
-                      [@appear]="''"
-                      [attr.id]="documentId(idx)"
+    <post-it-document *ngFor="let document of documents; let idx = index"
+                      class="layout-item {{ !initialized[idx] ? 'uninitialized' : '' }}"
+                      [style.z-index]="documents.length - idx"
                       [index]="idx"
                       [attributes]="attributes"
                       [collection]="collection"
                       [document]="document"
                       [editable]="editable"
+                      [selection]="selection"
+                      [previousSelection]="previousSelection"
+                      (selectOther)="selectDocument($event)"
                       (removed)="removeDocument(idx)"
-                      (attributePairChange)="onAttributePairChange(document, $event)">
+                      (changes)="sendUpdate(idx)">
     </post-it-document>
-
   </div>
 </div>
+<div class="fadeup"></div>
 
-<a (click)="increaseBlockHeight()" class="load-more">See More<i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+<a (click)="onSeeMore(perspective)" class="see-more">Scroll Down<i class="fa fa-chevron-down"></i></a>

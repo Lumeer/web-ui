@@ -18,16 +18,33 @@
  * -----------------------------------------------------------------------/
  */
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
-export const COLLECTION_NO_COLOR = '#cccccc';
+export class Popup {
 
-export interface Collection {
-
-  code: string;
-  name: string;
-  color: string;
-  icon: string;
-  documentCount?: number;
-  userRoles?: string[];
+  public static confirmDanger(title: string, message: string, noLabel: string, onNo: () => void, yesLabel: string, onYes: () => void): void {
+    window['BootstrapDialog'].show({
+      type: 'type-danger',
+      title: `${title}?`,
+      message: message,
+      buttons:
+        [
+          {
+            label: `No, ${noLabel}`,
+            action: dialog => {
+              dialog.close();
+              onNo();
+            }
+          },
+          {
+            label: `Yes, ${yesLabel}`,
+            cssClass: 'btn-danger',
+            hotkey: 13, // Enter
+            action: dialog => {
+              dialog.close();
+              onYes();
+            }
+          }
+        ]
+    });
+  }
 
 }

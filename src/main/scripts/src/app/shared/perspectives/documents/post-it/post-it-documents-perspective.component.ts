@@ -18,52 +18,45 @@
  * -----------------------------------------------------------------------/
  */
 
-import {animate, style, transition, trigger} from '@angular/animations';
 import {ActivatedRoute} from '@angular/router';
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 
-import {DocumentService} from '../../../../core/rest/document.service';
-import {CollectionService} from '../../../../core/rest/collection.service';
-import {Collection} from '../../../../core/dto/collection';
+import {NotificationsService} from 'angular2-notifications/dist';
+
+import {Perspective} from '../../perspective';
+import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../../core/dto/collection';
 import {Document} from '../../../../core/dto/document';
 import {Attribute} from '../../../../core/dto/attribute';
-import {AttributePair} from './document-attribute';
-import {Perspective} from '../../perspective';
+import {DocumentService} from '../../../../core/rest/document.service';
+import {CollectionService} from '../../../../core/rest/collection.service';
+import {PostItDocumentComponent} from './document/post-it-document.component';
+import {AttributePropertySelection} from './attribute/attribute-property-selection';
+import {Direction} from './attribute/direction';
+import {MasonryLayout} from '../../utils/masonry-layout';
+import {Buffer} from '../../utils/buffer';
 import {Observable} from 'rxjs/Rx';
 
 @Component({
   selector: 'post-it-documents-perspective',
   templateUrl: './post-it-documents-perspective.component.html',
-  styleUrls: ['./post-it-documents-perspective.component.scss'],
-  animations: [
-    trigger('appear', [
-      transition(':enter', [
-        style({transform: 'scale(0)'}),
-        animate('0.25s ease-out', style({transform: 'scale(1)'}))
-      ]),
-      transition(':leave', [
-        style({transform: 'scale(1)'}),
-        animate('0.25s ease-out', style({transform: 'scale(0)'}))
-      ])
-    ])
-  ]
+  styleUrls: ['./post-it-documents-perspective.component.scss']
 })
-export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit {
-
-  public readonly PERSPECTIVE_SEE_MORE_ADDED_HEIGHT = 400;
-
-  public readonly PERSPECTIVE_OVERFLOW_BASE_HEIGHT = 200;
-
-  public readonly PERSPECTIVE_BASE_HEIGHT = 450;
+export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit, AfterViewChecked, OnDestroy {
 
   @Input()
   public query: string;
 
   @Input()
-  public editable: boolean;
+  public editable: boolean = true;
 
   @Input()
-  public height = this.PERSPECTIVE_BASE_HEIGHT;
+  public height = 500;
+
+  @ViewChild('layout')
+  public layoutElement: ElementRef;
+
+  @ViewChildren(PostItDocumentComponent)
+  public documentComponents: QueryList<PostItDocumentComponent>;
 
   public collection: Collection;
 
@@ -71,170 +64,171 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit 
 
   public documents: Document[] = [];
 
-  /**
-   * To prevent sending data after each data change, the timer provides 'buffering', by waiting a while after each change before sending
-   */
-  private updateTimer: number;
+  public initialized: boolean[] = [];
 
-  private sendDocumentUpdate: () => void;
+  public selection: AttributePropertySelection;
 
-  private updatePending: boolean;
+  public previousSelection: AttributePropertySelection;
 
-  private previouslyEditedDocument: Document;
+  private updateBuffer: Buffer;
 
-  private layout: any;
+  private updatingDocument: Document;
+
+  private layout: MasonryLayout;
 
   constructor(private documentService: DocumentService,
               private collectionService: CollectionService,
+              private notificationService: NotificationsService,
               private route: ActivatedRoute) {
   }
 
-  public documentId(index: number) {
-    return `Document${index}`;
-  }
-
-  public ngOnInit() {
+  public ngOnInit(): void {
+    this.initializeVariables();
     this.fetchData();
   }
 
-  private fetchData() {
-    Observable.combineLatest(
-      this.getCollectionDocuments(),
-      this.getAttributes()
-    ).subscribe(data => {
-      const [documents, attributes] = data;
-
-      this.documents = documents;
-      this.attributes = attributes;
-      this.initializeLayout();
-    });
-  }
-
-  private getCollectionDocuments(): Observable<Document[]> {
-    // fallback, before subscription response
+  private initializeVariables(): void {
     this.collection = {
       code: '',
-      name: 'No collection',
-      color: '#cccccc',
-      icon: 'fa-question',
+      name: '',
+      color: COLLECTION_NO_COLOR,
+      icon: COLLECTION_NO_ICON,
       documentCount: 0
     };
 
-    return this.route.paramMap
-      .map(params => params.get('collectionCode'))
-      .switchMap(collectionCode => this.collectionService.getCollection(collectionCode))
-      .switchMap(collection => {
-        this.collection = collection;
-        return this.documentService.getDocuments(collection.code);
-      });
+    this.selection = {
+      row: undefined,
+      column: undefined,
+      documentIdx: undefined,
+      direction: Direction.Self,
+      editing: false,
+    };
+
+    this.previousSelection = {
+      row: undefined,
+      column: undefined,
+      documentIdx: undefined,
+      direction: Direction.Self,
+      editing: false,
+    };
+
+    this.layout = new MasonryLayout({
+      container: '.layout',
+      item: '.layout-item',
+      gutter: 15
+    });
   }
 
-  private getAttributes(): Observable<Attribute[]> {
-    return this.route.paramMap
-      .map(params => params.get('collectionCode'))
-      .switchMap(collectionCode => this.collectionService.getAttributes(collectionCode));
+  private fetchData(): void {
+    this.route.paramMap
+      .switchMap(paramMap => {
+        let collectionCode = paramMap.get('collectionCode');
+        return Observable.combineLatest(
+          this.collectionService.getCollection(collectionCode),
+          this.collectionService.getAttributes(collectionCode),
+          this.documentService.getDocuments(collectionCode)
+        );
+      }).subscribe(([collection, attributes, documents]) => {
+      this.collection = collection;
+      this.attributes = attributes;
+      this.documents = documents;
+      this.initialized = new Array(documents.length).fill(true);
+    });
   }
 
-  private initializeLayout() {
-    window.setTimeout(() => {
-      this.layout = $('.grid')['masonry']({
-        gutter: 15,
-        stamp: '.grid-stamp',
-        itemSelector: '.grid-item',
-        columnWidth: '.grid-item',
-        percentPosition: true
-      });
-    }, 50);
+  public ngAfterViewChecked(): void {
+    this.layout.refresh();
   }
 
-  private moveDocumentToTheFront(index: number) {
-    window.setTimeout(() => {
-      this.layout.masonry('prepended', $(`#${this.documentId(index)}`));
-    }, 0);
+  public selectDocument(selector: AttributePropertySelection): void {
+    switch (selector.direction) {
+      case Direction.Left:
+        if (selector.documentIdx - 1 >= 0) {
+          this.documentComponents.toArray()[selector.documentIdx - 1].select(Number.MAX_SAFE_INTEGER, selector.row);
+        }
+        break;
+
+      case Direction.Right:
+        if (selector.documentIdx + 1 < this.documents.length) {
+          this.documentComponents.toArray()[selector.documentIdx + 1].select(0, selector.row);
+        }
+        break;
+
+      case Direction.Up:
+        if (selector.documentIdx - this.documentsPerRow() >= 0) {
+          this.documentComponents.toArray()[selector.documentIdx - this.documentsPerRow()].select(selector.column, Number.MAX_SAFE_INTEGER);
+        }
+        break;
+
+      case Direction.Down:
+        if (selector.documentIdx + this.documentsPerRow() < this.documents.length) {
+          this.documentComponents.toArray()[selector.documentIdx + this.documentsPerRow()].select(selector.column, 0);
+        }
+        break;
+    }
   }
 
-  private removeFromLayout(index: number) {
-    window.setTimeout(() => {
-      this.layout.masonry('remove', $(`#${this.documentId(index)}`));
-      this.refreshLayout();
-    }, 0);
-  }
-
-  private refreshLayout() {
-    this.layout.masonry('layout');
-  }
-
-  public increaseBlockHeight(): void {
-    this.height += this.PERSPECTIVE_SEE_MORE_ADDED_HEIGHT;
+  private documentsPerRow(): number {
+    return Math.floor(this.layoutElement.nativeElement.clientWidth / (290 /*Post-it width*/ + 15 /*Gutter*/));
   }
 
   public createDocument(): void {
-    this.flushUpdateTimer();
-
     let newDocument = new Document;
-    this.documents.push(newDocument);
-    this.documentService.createDocument(this.collection.code, newDocument)
-      .subscribe((json: object) => newDocument.id = json['_id']);
-
-    this.moveDocumentToTheFront(this.documents.length - 1);
+    this.documents.unshift(newDocument);
+    this.initialized.unshift(false);
   }
 
   public removeDocument(index: number): void {
-    this.flushUpdateTimer();
-
-    this.removeFromLayout(index);
-
     let deletedDocument = this.documents[index];
+
+    if (this.initialized[index]) {
+      this.documentService.removeDocument(this.collection.code, deletedDocument)
+        .subscribe(_ => this.notificationService.success('Success', 'Document removed'));
+    }
+
     this.documents.splice(index, 1);
-    this.documentService.removeDocument(this.collection.code, deletedDocument)
-      .subscribe();
+    this.initialized.splice(index, 1);
   }
 
-  public onAttributePairChange(document: Document, attributePair: AttributePair): void {
-    delete document.data[attributePair.previousAttributeName];
+  public sendUpdate(index: number): void {
+    let document = this.documents[index];
 
-    if (attributePair.attribute) {
-      document.data[attributePair.attribute] = attributePair.value;
+    if (this.updatingDocument === document) {
+      this.updateBuffer.stageChanges();
     } else {
-      delete document.data[attributePair.attribute];
-    }
+      this.updatingDocument = document;
+      this.updateBuffer = new Buffer(() => {
+        // replace is used until a version using: update and dropDocumentAttribute is implemented
+        this.documentService.replaceDocument(this.collection.code, document)
+          .subscribe();
+        document.version += 1;
+      }, 2000);
 
-    this.refreshLayout();
-    this.updateDocument(document);
-  }
-
-  private updateDocument(document: Document): void {
-    this.resetTimer(document);
-
-    this.previouslyEditedDocument = document;
-
-    this.updatePending = true;
-    this.sendDocumentUpdate = this.updateFunction(document);
-    this.updateTimer = window.setTimeout(this.sendDocumentUpdate, 1500);
-  }
-
-  private resetTimer(document: Document): void {
-    if (this.previouslyEditedDocument && this.previouslyEditedDocument !== document) {
-      this.flushUpdateTimer();
-    } else {
-      clearTimeout(this.updateTimer);
+      if (!this.initialized[index]) {
+        this.initializeDocument(index);
+      }
     }
   }
 
-  private updateFunction(document: Document): () => void {
-    return () => {
-      this.updatePending = false;
+  private initializeDocument(index: number): void {
+    let document = this.documents[index];
+    this.documentService.createDocument(this.collection.code, document)
+      .subscribe((json: object) => {
+        document.id = json['_id'];
 
-      this.documentService.updateDocument(this.collection.code, document)
-        .subscribe();
-      document.version += 1;
-    };
+        this.initialized[index] = true;
+        this.notificationService.success('Success', 'Document Created');
+      });
   }
 
-  private flushUpdateTimer(): void {
-    if (this.updatePending) {
-      clearTimeout(this.updateTimer);
-      this.sendDocumentUpdate();
-    }
+  public onSeeMore(perspective: HTMLDivElement): void {
+    $(perspective).animate({
+      scrollTop: perspective.scrollHeight
+    });
   }
+
+  public ngOnDestroy(): void {
+    this.layout.destroy();
+  }
+
 }

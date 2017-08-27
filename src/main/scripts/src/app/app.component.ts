@@ -33,8 +33,8 @@ export class AppComponent implements OnInit {
 
   public notificationsOptions = {
     position: ['top'],
-    timeOut: 5000,
-    showProgressBar: false,
+    timeOut: 1500,
+    showProgressBar: true,
     animate: 'fromLeft',
     lastOnBottom: true
   };

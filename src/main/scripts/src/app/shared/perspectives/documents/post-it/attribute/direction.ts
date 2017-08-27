@@ -18,16 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
-export const COLLECTION_NO_COLOR = '#cccccc';
+export enum Direction {
 
-export interface Collection {
-
-  code: string;
-  name: string;
-  color: string;
-  icon: string;
-  documentCount?: number;
-  userRoles?: string[];
+  Up = 'Up',
+  Down = 'Down',
+  Left = 'Left',
+  Right = 'Right',
+  Self = ''
 
 }

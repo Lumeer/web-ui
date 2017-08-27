@@ -18,16 +18,28 @@
  * -----------------------------------------------------------------------/
  */
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
-export const COLLECTION_NO_COLOR = '#cccccc';
+import {Buffer} from './buffer';
 
-export interface Collection {
+/**
+ * Provides Pinterest-like layout using minigrid library http://minigrid.js.org/
+ */
+export class MasonryLayout {
 
-  code: string;
-  name: string;
-  color: string;
-  icon: string;
-  documentCount?: number;
-  userRoles?: string[];
+  private resizeListener;
+
+  constructor(private parameters: object) {
+    let windowResizeRefreshBuffer = new Buffer(() => this.refresh(), 300);
+    this.resizeListener = () => windowResizeRefreshBuffer.stageChanges();
+
+    window.addEventListener('resize', this.resizeListener);
+  }
+
+  public refresh(): void {
+    new window['Minigrid'](this.parameters).mount();
+  }
+
+  public destroy(): void {
+    window.removeEventListener('resize', this.resizeListener);
+  }
 
 }

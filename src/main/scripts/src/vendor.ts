@@ -16,4 +16,5 @@ import 'ng2-webstorage';
 // import 'core-js/es6';
 // import 'core-js/es7/reflect';
 // import 'zone.js/dist/zone';
+window['Minigrid'] = require('../node_modules/minigrid/dist/minigrid.min.js');
 window['Keycloak'] = require('./js/keycloak.js');

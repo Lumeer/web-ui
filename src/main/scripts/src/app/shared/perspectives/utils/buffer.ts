@@ -18,16 +18,41 @@
  * -----------------------------------------------------------------------/
  */
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
-export const COLLECTION_NO_COLOR = '#cccccc';
+/**
+ * Provides buffering by calling update function after a specified time passes without any changes made.
+ */
+export class Buffer {
 
-export interface Collection {
+  private timerId: number;
 
-  code: string;
-  name: string;
-  color: string;
-  icon: string;
-  documentCount?: number;
-  userRoles?: string[];
+  private bufferingTime: number;
+
+  private buffering: boolean;
+
+  private onFinish: () => void;
+
+  constructor(finishFunction: () => void, timeout: number) {
+    this.bufferingTime = timeout;
+
+    this.onFinish = () => {
+      this.buffering = false;
+      finishFunction();
+    };
+
+    this.stageChanges();
+  }
+
+  public stageChanges(): void {
+    this.buffering = true;
+    window.clearTimeout(this.timerId);
+    this.timerId = window.setTimeout(this.onFinish, this.bufferingTime);
+  }
+
+  public flush(): void {
+    if (this.buffering) {
+      window.clearTimeout(this.timerId);
+      this.onFinish();
+    }
+  }
 
 }

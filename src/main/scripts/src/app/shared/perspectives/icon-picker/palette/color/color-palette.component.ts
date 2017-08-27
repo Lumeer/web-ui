@@ -47,7 +47,7 @@ export class ColorPaletteComponent extends Palette {
     return 'transparent';
   }
 
-  public darken(color: string, ammount: number): string {
+  public darken(color: string, amount: number): string {
     let hexToNumber = (start: number) => parseInt(color.substr(start, 2), 16);
     let r: number = hexToNumber(1);
 
@@ -55,11 +55,11 @@ export class ColorPaletteComponent extends Palette {
     let b: number = hexToNumber(5);
 
     let positive = (num: number) => Math.max(num, 0);
-    let subtractAmmount = (num: number) => positive(num - ammount);
+    let subtractAmount = (num: number) => positive(num - amount);
 
-    let darkR = subtractAmmount(r);
-    let darkG = subtractAmmount(g);
-    let darkB = subtractAmmount(b);
+    let darkR = subtractAmount(r);
+    let darkG = subtractAmount(g);
+    let darkB = subtractAmount(b);
 
     return `rgb(${(darkR)}, ${darkG}, ${darkB})`;
   };
