@@ -32,6 +32,7 @@ import {ProjectService} from '../../../core/rest/project.service';
 })
 export class ProjectFormComponent implements OnInit {
 
+  private creation: boolean;
   private project: Project;
   private organizationCode: string;
   private projectCode: string;
@@ -45,12 +46,27 @@ export class ProjectFormComponent implements OnInit {
 
   public ngOnInit(): void {
     this.project = new Project();
+    this.route.data.subscribe((data: { creation: boolean }) => {
+      this.creation = data.creation;
+      if (this.creation) {
+        this.retrieveParamsFromRoute();
+      } else {
+        this.retrieveParamsFromParentRoute();
+      }
+    });
+  }
+
+  private retrieveParamsFromRoute() {
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.organizationCode = params.get('organizationCode');
+    });
+  }
+
+  private retrieveParamsFromParentRoute() {
     this.route.parent.paramMap.subscribe((params: ParamMap) => {
       this.organizationCode = params.get('organizationCode');
       this.projectCode = params.get('projectCode');
-      if (this.projectCode) {
-        this.getProject();
-      }
+      this.getProject();
     });
   }
 
@@ -63,24 +79,32 @@ export class ProjectFormComponent implements OnInit {
   }
 
   public onSave() {
-    if (this.projectCode) {
-      this.projectService.editProject(this.organizationCode, this.projectCode, this.project)
-        .subscribe(
-          response => {
-            if (this.projectCode === this.workspaceService.projectCode) {
-              this.workspaceService.projectCode = this.project.code;
-            }
-            this.goBack();
-          },
-          error => this.errorMessage = error
-        );
+    if (this.creation) {
+      this.createProject();
     } else {
-      this.projectService.createProject(this.organizationCode, this.project)
-        .subscribe(
-          response => this.goBack(),
-          error => this.errorMessage = error
-        );
+      this.updateProject();
     }
+  }
+
+  private createProject() {
+    this.projectService.createProject(this.organizationCode, this.project)
+      .subscribe(
+        response => this.goBack(),
+        error => this.errorMessage = error
+      );
+  }
+
+  private updateProject() {
+    this.projectService.editProject(this.organizationCode, this.projectCode, this.project)
+      .subscribe(
+        response => {
+          if (this.projectCode === this.workspaceService.projectCode) {
+            this.workspaceService.projectCode = this.project.code;
+          }
+          this.goBack();
+        },
+        error => this.errorMessage = error
+      );
   }
 
   public onCancel() {
