@@ -98,7 +98,8 @@
   }
 
   .uninitialized {
-    background-color: $new-item-color;
+    border-width: 3px;
+    border-style: dashed;
 
     .tutorial {
       opacity: 0;

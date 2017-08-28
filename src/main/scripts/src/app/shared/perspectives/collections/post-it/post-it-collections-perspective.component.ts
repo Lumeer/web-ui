@@ -105,7 +105,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   public onNewCollection(): void {
     this.collections.unshift({
       code: null,
-      name: 'Name',
+      name: '',
       color: COLLECTION_NO_COLOR,
       icon: COLLECTION_NO_ICON,
       userRoles: [],

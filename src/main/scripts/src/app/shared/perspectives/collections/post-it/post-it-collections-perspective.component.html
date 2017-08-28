@@ -57,7 +57,8 @@
 
       <div class="content" [style.color]="collection.color">
         <i class="fa fa-2x {{ collection.icon }}" title="Pick icon" (click)="togglePicker(idx)" #iconSwitch></i><!--
-      --><input class="newName" [(ngModel)]="collection.name"
+      --><input class="newName" placeholder="Name"
+                [(ngModel)]="collection.name"
                 (ngModelChange)="checkInitializedName(idx)"
                 (blur)="checkInitialization(idx)"
                 (keyup.enter)="checkInitialization(idx)"/>

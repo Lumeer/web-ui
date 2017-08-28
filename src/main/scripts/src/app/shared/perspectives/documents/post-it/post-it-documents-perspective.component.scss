@@ -27,7 +27,8 @@ $fade-size: 2em;
   }
 
   .uninitialized {
-    background-color: $new-item-color;
+    border-width: 1.5px;
+    border-style: dashed;
   }
 
   .fadeup {
