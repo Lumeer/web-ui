@@ -1,24 +1,17 @@
 export const colors: string[] = [
-  '#ffffff','#dfdfdf','#bfbfbf','#9f9f9f','#808080','#606060','#404040','#202020',
-  '#ff3333','#df2d2d','#bf2626','#9f2020','#801a1a','#601313','#400d0d','#200606',
-  '#ff9933','#df862d','#bf7326','#9f6020','#804d1a','#603913','#40260d','#201306',
-  '#ffff33','#dfdf2d','#bfbf26','#9f9f20','#80801a','#606013','#40400d','#202006',
-  '#99ff33','#86df2d','#73bf26','#609f20','#4d801a','#396013','#26400d','#132006',
-  '#33ff33','#2ddf2d','#26bf26','#209f20','#1a801a','#136013','#0d400d','#062006',
-  '#33ff99','#2ddf86','#26bf73','#209f60','#1a804d','#136039','#0d4026','#062013',
-  '#33ffff','#2ddfdf','#26bfbf','#209f9f','#1a8080','#136060','#0d4040','#062020',
-  '#3399ff','#2d86df','#2673bf','#20609f','#1a4d80','#133960','#0d2640','#061320',
-  '#3333ff','#2d2ddf','#2626bf','#20209f','#1a1a80','#131360','#0d0d40','#060620',
-  '#9933ff','#862ddf','#7326bf','#60209f','#4d1a80','#391360','#260d40','#130620',
-  '#ff33ff','#df2ddf','#bf26bf','#9f209f','#801a80','#601360','#400d40','#200620',
-  '#ff3399','#df2d86','#bf2673','#9f2060','#801a4d','#601339','#400d26','#200613'
-];
-
-export const someColors: string[] = [
-  '#ffffff','#dfdfdf','#bfbfbf','#9f9f9f','#808080','#606060','#404040','#202020',
-  '#ff3333','#df2d2d','#bf2626','#9f2020','#801a1a','#601313','#400d0d','#200606',
-  '#33ff33','#2ddf2d','#26bf26','#209f20','#1a801a','#136013','#0d400d','#062006',
-  '#3399ff','#2d86df','#2673bf','#20609f','#1a4d80','#133960','#0d2640','#061320',
+  '#ffffff', '#dfdfdf', '#bfbfbf', '#9f9f9f', '#808080', '#606060', '#404040', '#202020',
+  '#ff3333', '#df2d2d', '#bf2626', '#9f2020', '#801a1a', '#601313', '#400d0d', '#200606',
+  '#ff9933', '#df862d', '#bf7326', '#9f6020', '#804d1a', '#603913', '#40260d', '#201306',
+  '#ffff33', '#dfdf2d', '#bfbf26', '#9f9f20', '#80801a', '#606013', '#40400d', '#202006',
+  '#99ff33', '#86df2d', '#73bf26', '#609f20', '#4d801a', '#396013', '#26400d', '#132006',
+  '#33ff33', '#2ddf2d', '#26bf26', '#209f20', '#1a801a', '#136013', '#0d400d', '#062006',
+  '#33ff99', '#2ddf86', '#26bf73', '#209f60', '#1a804d', '#136039', '#0d4026', '#062013',
+  '#33ffff', '#2ddfdf', '#26bfbf', '#209f9f', '#1a8080', '#136060', '#0d4040', '#062020',
+  '#3399ff', '#2d86df', '#2673bf', '#20609f', '#1a4d80', '#133960', '#0d2640', '#061320',
+  '#3333ff', '#2d2ddf', '#2626bf', '#20209f', '#1a1a80', '#131360', '#0d0d40', '#060620',
+  '#9933ff', '#862ddf', '#7326bf', '#60209f', '#4d1a80', '#391360', '#260d40', '#130620',
+  '#ff33ff', '#df2ddf', '#bf26bf', '#9f209f', '#801a80', '#601360', '#400d40', '#200620',
+  '#ff3399', '#df2d86', '#bf2673', '#9f2060', '#801a4d', '#601339', '#400d26', '#200613'
 ];
 
 export const icons: string[] = ['fa-500px', 'fa-address-book', 'fa-address-book-o', 'fa-address-card', 'fa-address-card-o', 'fa-adjust',
@@ -45,7 +38,7 @@ export const icons: string[] = ['fa-500px', 'fa-address-book', 'fa-address-book-
   'fa-dashcube', 'fa-database', 'fa-deaf', 'fa-delicious', 'fa-desktop', 'fa-deviantart', 'fa-diamond', 'fa-digg', 'fa-dot-circle-o', 'fa-download',
   'fa-dribbble', 'fa-dropbox', 'fa-drupal', 'fa-edge', 'fa-eercast', 'fa-eject', 'fa-ellipsis-h', 'fa-ellipsis-v', 'fa-empire', 'fa-envelope', 'fa-envelope-o',
   'fa-envelope-open', 'fa-envelope-open-o', 'fa-envelope-square', 'fa-envira', 'fa-eraser', 'fa-etsy', 'fa-eur', 'fa-exchange', 'fa-exclamation',
-  'fa-exclamation-circle', 'fa-exclamation-triangle', 'fa-expand', 'fa-expeditedssl', 'fa-external-link', 'fa-external-link-square', 'fa-eye', 'fa-eye-slash',
+  'fa-exclamation-triangle', 'fa-expand', 'fa-expeditedssl', 'fa-external-link', 'fa-external-link-square', 'fa-eye', 'fa-eye-slash',
   'fa-eyedropper', 'fa-facebook', 'fa-facebook-official', 'fa-facebook-square', 'fa-fast-backward', 'fa-fast-forward', 'fa-fax', 'fa-female', 'fa-fighter-jet',
   'fa-file', 'fa-file-archive-o', 'fa-file-audio-o', 'fa-file-code-o', 'fa-file-excel-o', 'fa-file-image-o', 'fa-file-o', 'fa-file-pdf-o',
   'fa-file-powerpoint-o', 'fa-file-text', 'fa-file-text-o', 'fa-file-video-o', 'fa-file-word-o', 'fa-files-o', 'fa-film', 'fa-filter', 'fa-fire',
@@ -96,8 +89,3 @@ export const icons: string[] = ['fa-500px', 'fa-address-book', 'fa-address-book-
   'fa-wpexplorer', 'fa-wpforms', 'fa-wrench', 'fa-xing', 'fa-xing-square', 'fa-y-combinator', 'fa-yahoo', 'fa-yelp', 'fa-yoast', 'fa-youtube',
   'fa-youtube-play', 'fa-youtube-square'
 ];
-
-export const someIcons: string[] = ['fa-telegram','fa-envelope-open','fa-area-chart','fa-bar-chart','fa-usd','fa-shopping-cart','fa-archive','fa-cutlery',
-  'fa-beer','fa-bed','fa-wifi','fa-address-book','fa-id-badge','fa-child','fa-user','fa-comment','fa-microchip','fa-database','fa-desktop','fa-folder',
-  'fa-film','fa-industry','fa-truck','fa-plane','fa-globe','fa-podcast','fa-info-circle','fa-thermometer-three-quarters','fa-adjust','fa-book','fa-calculator',
-  'fa-briefcase','fa-university','fa-trophy','fa-bell','fa-flag','fa-android','fa-facebook-square','fa-twitter','fa-youtube-play','fa-music','fa-picture-o'];

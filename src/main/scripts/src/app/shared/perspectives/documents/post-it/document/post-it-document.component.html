@@ -1,7 +1,7 @@
 <div class="header">
   <span [style.color]="collection.color" title="{{ collection.name }}">
-    <i class="fa {{ collection.icon }} collection-icon"></i>
-    <label class="name">{{ collection.name }}</label>
+    <i class="fa {{ collection.icon }} collection-icon"></i><!--
+    --><label class="name">{{ collection.name }}</label>
   </span>
 
   <ng-container *ngIf="editable">
@@ -17,11 +17,11 @@
 
     <ng-template #editablePair>
       <div id="AttributePair{{ index }}[0, {{ row }}]" class="attribute" tabindex="-1"
-           title="{{ attributePair.attribute }}"
            (keydown)="onKeyDown($event)"
            (click)="clickOnAttributePair(0, row)">
 
-        <ng2-completer [datasource]="suggestedAttributes"
+        <ng2-completer title="{{ attributePair.attribute }}"
+                       [datasource]="suggestedAttributes"
                        [minSearchLength]="0"
                        [textNoResults]="null"
                        [ngModel]="attributePair.attribute"
@@ -35,18 +35,23 @@
            (keydown)="onKeyDown($event)"
            (click)="clickOnAttributePair(1, row)">
 
-        <input [ngModel]="attributePair.value"
-               (ngModelChange)="updateValue(attributePair, $event)"/>
+        <ng2-completer title="{{ attributePair.value }}"
+                       [datasource]="[]"
+                       [textNoResults]="null"
+                       [ngModel]="attributePair.value"
+                       (ngModelChange)="updateValue(attributePair, $event)"
+                       (keydown)="onKeyDown($event)">
+        </ng2-completer>
       </div>
     </ng-template>
 
     <ng-template #nonEditablePair>
-      <div class="attribute" title="{{ attributePair.attribute }}">
-        <input [disabled]="true" [ngModel]="attributePair.attribute">
+      <div class="attribute">
+        <input title="{{ attributePair.attribute }}" readonly [ngModel]="attributePair.attribute">
       </div>
 
-      <div title="{{ attributePair.value }}">
-        <input [disabled]="true" [ngModel]="attributePair.value">
+      <div>
+        <input title="{{ attributePair.value }}" readonly [ngModel]="attributePair.value">
       </div>
     </ng-template>
 
@@ -57,7 +62,8 @@
          (keydown)="onKeyDown($event)"
          (click)="clickOnAttributePair(0, attributePairs.length)">
 
-      <ng2-completer placeholder=" + "
+      <ng2-completer title="{{ newAttributePair.attribute }}"
+                     placeholder=" + "
                      [datasource]="suggestedAttributes"
                      [minSearchLength]="0"
                      [textNoResults]="null"
@@ -71,7 +77,8 @@
          (keydown)="onKeyDown($event)"
          (click)="newAttributePair.attribute && clickOnAttributePair(1, attributePairs.length)">
 
-      <input [disabled]="!newAttributePair.attribute"
+      <input title="{{ newAttributePair.value }}"
+             [disabled]="!newAttributePair.attribute"
              (keydown)="$event.key.length === 1 && createAttributePair($event.key)"/>
     </div>
 

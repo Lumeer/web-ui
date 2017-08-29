@@ -2,34 +2,36 @@
 
 :host {
   display: block;
-}
+  width: 263px;
+  z-index: 9999;
 
-.arrow-up {
-  position: absolute;
-  left: 27.5px;
+  .arrow-up {
+    position: absolute;
+    left: 210px;
 
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-bottom: 5px solid #cccccc;
-}
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #cccccc;
+  }
 
-.stickerPicker {
-  position: absolute;
-  margin-top: 5px;
-  z-index: 20;
+  .stickerPicker {
+    position: relative;
+    top: 5px;
 
-  box-shadow: $default-shadow;
-  background: $secondary-color;
+    box-shadow: $shadow-down;
+    background: $secondary-color;
 
-  padding: 6px 0;
-  border: 1px solid #cccccc;
-  border-radius: $border-radius-small;
-  overflow: hidden;
+    padding: 6px 0;
+    border: 1px solid #cccccc;
+    border-radius: $border-radius-small;
+    overflow: hidden;
 
-  .divider {
-    height: 1px;
-    margin: 6px 0;
-    background-color: #e5e5e5;
+    .divider {
+      height: 1px;
+      margin: 6px 0;
+      background-color: #e5e5e5;
+    }
+
   }
 
 }

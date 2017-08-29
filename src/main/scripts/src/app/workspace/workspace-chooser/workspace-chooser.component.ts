@@ -28,6 +28,7 @@ import {OrganizationService} from '../../core/rest/organization.service';
 import {ProjectService} from '../../core/rest/project.service';
 import {UserSettingsService} from '../../core/rest/user-settings.service';
 import {UserSettings} from '../../core/dto/user.settings';
+import {PerfectScrollbarComponent} from 'ngx-perfect-scrollbar';
 
 const squareSize: number = 170;
 
@@ -38,8 +39,11 @@ const squareSize: number = 170;
 })
 export class WorkspaceChooserComponent implements OnInit {
 
-  @ViewChild('orgs') public companiesEl: any;
-  @ViewChild('projs') public projectsEl: any;
+  @ViewChild('organizationScrollbar')
+  public organizationsElement: PerfectScrollbarComponent;
+
+  @ViewChild('projectScrollbar')
+  public projectsElement: PerfectScrollbarComponent;
 
   private organizationsWidth: number = 0;
   private projectsWidth: number = 0;
@@ -56,7 +60,7 @@ export class WorkspaceChooserComponent implements OnInit {
 
   public ngOnInit(): void {
     this.organizationService.getOrganizations()
-      .subscribe((organizations: Organization[]) => {
+      .subscribe(organizations => {
         this.organizations = organizations;
         this.organizationsWidth = (organizations.length + 1) * squareSize + 5;
 
@@ -89,7 +93,7 @@ export class WorkspaceChooserComponent implements OnInit {
       });
   }
 
-  public onOrganizationSelected(organization: Organization, index: number) {
+  public onOrganizationSelected(organization: Organization, index: number): void {
     this.organizations.forEach((org: Organization) => org.active = false);
     organization.active = true;
     organization.index = index;
@@ -107,30 +111,22 @@ export class WorkspaceChooserComponent implements OnInit {
     this.activeProject = undefined;
   }
 
-  public onProjectSelected(project: Project, index: number) {
+  public onProjectSelected(project: Project, index: number): void {
     this.activeOrganization.projects.forEach((oneProject: Project) => oneProject.active = false);
     project.active = true;
     project.index = index;
     this.activeProject = project;
   }
 
-  public onScrollOrganizations(toRight?: boolean) {
-    if (toRight) {
-      this.companiesEl.scrollToLeft(this.companiesEl.elementRef.nativeElement.scrollLeft + squareSize);
-    } else {
-      this.companiesEl.scrollToLeft(this.companiesEl.elementRef.nativeElement.scrollLeft - squareSize);
-    }
+  public onScrollOrganizations(direction: number): void {
+    this.organizationsElement.scrollToLeft(this.organizationsElement['elementRef'].nativeElement.scrollLeft + squareSize * direction);
   }
 
-  public onScrollProjects(toRight?: boolean) {
-    if (toRight) {
-      this.projectsEl.scrollToLeft(this.projectsEl.elementRef.nativeElement.scrollLeft + squareSize);
-    } else {
-      this.projectsEl.scrollToLeft(this.projectsEl.elementRef.nativeElement.scrollLeft - squareSize);
-    }
+  public onScrollProjects(direction: number): void {
+    this.projectsElement.scrollToLeft(this.projectsElement['elementRef'].nativeElement.scrollLeft + squareSize * direction);
   }
 
-  public onSaveActiveItems() {
+  public onSaveActiveItems(): void {
     if (this.activeOrganization && this.activeProject) {
       this.userSettingsService.updateUserSettings(
         new UserSettings(this.activeOrganization.code, this.activeProject.code)
@@ -138,28 +134,30 @@ export class WorkspaceChooserComponent implements OnInit {
         if (response.ok) {
           this.workspaceService.organizationCode = this.activeOrganization.code;
           this.workspaceService.projectCode = this.activeProject.code;
+
+          this.router.navigate(['w', this.activeOrganization.code, this.activeProject.code, 'collections']);
         }
       });
     }
   }
 
-  public onCreateOrganization() {
-    this.router.navigate(['/organization/add']);
+  public onCreateOrganization(): void {
+    this.router.navigate(['organization', 'add']);
   }
 
-  public onCreateProject() {
+  public onCreateProject(): void {
     if (this.activeOrganization) {
-      this.router.navigate(['/organization/' + this.activeOrganization.code + '/project/add']);
+      this.router.navigate(['organization', this.activeOrganization.code, 'project', 'add']);
     }
   }
 
-  public onOrganizationSettings(organization: Organization) {
-    this.router.navigate(['/organization/' + organization.code]);
+  public onOrganizationSettings(organization: Organization): void {
+    this.router.navigate(['organization', organization.code]);
   }
 
-  public onProjectSettings(project: Project) {
+  public onProjectSettings(project: Project): void {
     if (this.activeOrganization) {
-      this.router.navigate(['/organization/' + this.activeOrganization.code + '/project/' + project.code]);
+      this.router.navigate(['organization', this.activeOrganization.code, 'project', project.code]);
     }
   }
 

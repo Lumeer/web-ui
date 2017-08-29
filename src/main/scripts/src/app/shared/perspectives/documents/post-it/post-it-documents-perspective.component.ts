@@ -183,7 +183,9 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
 
     if (this.initialized[index]) {
       this.documentService.removeDocument(this.collection.code, deletedDocument)
-        .subscribe(_ => this.notificationService.success('Success', 'Document removed'));
+        .subscribe(
+          _ => this.notificationService.success('Success', 'Document removed'),
+          error => this.notificationService.error('Error', 'Failed removing document'));
     }
 
     this.documents.splice(index, 1);
@@ -200,7 +202,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       this.updateBuffer = new Buffer(() => {
         // replace is used until a version using: update and dropDocumentAttribute is implemented
         this.documentService.replaceDocument(this.collection.code, document)
-          .subscribe();
+          .subscribe(null, error => this.handleError(error, 'Failed updating document'));
         document.version += 1;
       }, 2000);
 
@@ -213,12 +215,20 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   private initializeDocument(index: number): void {
     let document = this.documents[index];
     this.documentService.createDocument(this.collection.code, document)
-      .subscribe((json: object) => {
-        document.id = json['_id'];
+      .subscribe(
+        (json: object) => {
+          document.id = json['_id'];
 
-        this.initialized[index] = true;
-        this.notificationService.success('Success', 'Document Created');
-      });
+          this.initialized[index] = true;
+          this.notificationService.success('Success', 'Document Created');
+        },
+        error => {
+          this.handleError(error, 'Failed creating document');
+        });
+  }
+
+  private handleError(error: Error, message?: string): void {
+    this.notificationService.error('Error', message ? message : error.message);
   }
 
   public onSeeMore(perspective: HTMLDivElement): void {

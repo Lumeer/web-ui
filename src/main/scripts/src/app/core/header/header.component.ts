@@ -55,6 +55,7 @@ export class HeaderComponent implements OnInit {
   private profile: ElementRef;
 
   public optionsVisible = false;
+
   public licence = 'trial';
 
   public pageWithoutSearchBox = true;

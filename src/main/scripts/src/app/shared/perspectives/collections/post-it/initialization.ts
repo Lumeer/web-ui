@@ -18,26 +18,22 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Collection} from '../dto/collection';
+export class Initialization {
 
-export const defaultIcon = 'fa-book';
-export const defaultIconColor = '#000000';
+  public onServer: boolean;
+  public icon: boolean;
+  public color: boolean;
+  public name: boolean;
 
-export class CollectionModel implements Collection {
+  constructor(initialized: boolean) {
+    this.onServer = initialized;
+    this.icon = initialized;
+    this.color = initialized;
+    this.name = initialized;
+  }
 
-  public code: string;
-  public name: string = '';
-  public color: string = defaultIconColor;
-  public icon: string = defaultIcon;
-  public pickerVisible: boolean = false;
-
-  public toDto(): Collection {
-    return {
-      code: this.code,
-      name: this.name,
-      color: this.color,
-      icon: this.icon
-    };
+  public get compulsory(): boolean {
+    return this.name;
   }
 
 }

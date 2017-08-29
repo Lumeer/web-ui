@@ -19,7 +19,7 @@
  */
 
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'icon-picker',
@@ -29,13 +29,13 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
     trigger('animateHeight', [
       state('in', style({height: '*'})),
       transition('void => *', [
-        animate(100, keyframes([
+        animate(150, keyframes([
           style({height: 0, offset: 0}),
           style({height: '*', offset: 1})
         ]))
       ]),
       transition('* => void', [
-        animate(100, keyframes([
+        animate(150, keyframes([
           style({height: '*', offset: 0}),
           style({height: 0, offset: 1})
         ]))
@@ -62,6 +62,9 @@ export class IconPickerComponent {
 
   @Output()
   private itemSelected = new EventEmitter<string>();
+
+  constructor(public element: ElementRef) {
+  }
 
   public colorChangeEvent(event: string): void {
     this.colorChange.emit(event);

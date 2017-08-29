@@ -18,174 +18,241 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {animate, style, transition, trigger} from '@angular/animations';
+import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 
+import {NotificationsService} from 'angular2-notifications/dist';
+
+import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../../core/dto/collection';
 import {CollectionService} from '../../../../core/rest/collection.service';
+import {IconPickerComponent} from '../../icon-picker/icon-picker.component';
+import {Initialization} from './initialization';
+import {MasonryLayout} from '../../utils/masonry-layout';
 import {Perspective} from '../../perspective';
-import {Collection} from '../../../../core/dto/collection';
-import {CollectionModel} from '../../../../core/model/collection.model';
 import {Role} from '../../../permissions/role';
-import {LumeerError} from '../../../../core/error/lumeer.error';
-import {BadInputError} from '../../../../core/error/bad-input.error';
+import {Buffer} from '../../utils/buffer';
+import {Popup} from '../../utils/popup';
+import {isUndefined} from 'util';
 
 @Component({
   selector: 'post-it-collections-perspective',
   templateUrl: './post-it-collections-perspective.component.html',
   styleUrls: ['./post-it-collections-perspective.component.scss'],
-  animations: [
-    trigger('appear', [
-      transition(':enter', [
-        style({transform: 'scale(0)'}),
-        animate('0.25s ease-out', style({transform: 'scale(1)'})),
-      ]),
-      transition(':leave', [
-        style({transform: 'scale(1)'}),
-        animate('0.25s ease-out', style({transform: 'scale(0)'})),
-      ])
-    ])
-  ]
+  host: {
+    '(document:click)': 'onClick($event)'
+  },
 })
-export class PostItCollectionsPerspectiveComponent implements Perspective, OnInit {
+export class PostItCollectionsPerspectiveComponent implements Perspective, OnInit, AfterViewChecked, OnDestroy {
 
   @Input()
   public query: string;
 
   @Input()
-  public editable: boolean;
+  public editable: boolean = true;
 
-  public placeholderTitle: string = 'Collection name';
-  public collectionMinCharacters = 3;
-  public newCollections: CollectionModel[] = [];
-  public collections: Collection[];
-  public cachedName: string;
-  public selectedIcon: string;
-  public selectedColor: string;
-  public errorMessage: string;
+  @ViewChildren(IconPickerComponent)
+  public iconPickers: QueryList<IconPickerComponent>;
 
-  constructor(private collectionService: CollectionService) {
+  @ViewChildren('iconSwitch')
+  public iconSwitches: QueryList<ElementRef>;
+
+  @ViewChildren('nonInitializedNameInput')
+  public newNameInputs: QueryList<ElementRef>;
+
+  public collections: Collection[] = [];
+
+  public pickerVisible: boolean[] = [];
+
+  public initialized: Initialization[] = [];
+
+  public transitions = true;
+
+  private layout: MasonryLayout;
+
+  private changeBuffer: Buffer;
+
+  private changedCollection: Collection;
+
+  private previousIconPicker: number;
+
+  constructor(private collectionService: CollectionService,
+              private notificationService: NotificationsService) {
   }
 
   public ngOnInit(): void {
     this.loadCollections();
-  }
-
-  public onNewCollection() {
-    this.newCollections.splice(0, 0, new CollectionModel());
-  }
-
-  public onRemoveNewCollection(ix: number) {
-    this.newCollections.splice(ix, 1);
-  }
-
-  public onNewIconOrColor(collectionModel: CollectionModel) {
-    if (collectionModel.code) {
-      this.updateCollection(collectionModel);
-    }
-  }
-
-  public togglePicker(collectionModel: CollectionModel) {
-    if (collectionModel.pickerVisible) {
-      collectionModel.pickerVisible = false;
-      return;
-    }
-    this.selectedColor = collectionModel.color;
-    this.selectedIcon = collectionModel.icon;
-    this.newCollections.forEach(coll => coll.pickerVisible = false);
-    collectionModel.pickerVisible = true;
-  }
-
-  public onFocusCollectionName(collectionModel: CollectionModel) {
-    if (collectionModel.code) {
-      this.cachedName = collectionModel.name;
-    }
-  }
-
-  public onBlurCollectionName(collectionModel: CollectionModel) {
-    this.onSaveCollection(collectionModel);
-  }
-
-  public onInputChange() {
-    if (this.errorMessage) {
-      this.errorMessage = null;
-    }
-  }
-
-  public onSaveCollection(collectionModel: CollectionModel) {
-    if (collectionModel.code) {
-      if (collectionModel.name.length < this.collectionMinCharacters) {
-        collectionModel.name = this.cachedName;
-      } else if (collectionModel.name !== this.cachedName) {
-        this.updateCollection(collectionModel);
-      }
-    } else if (collectionModel.name.length >= this.collectionMinCharacters) {
-      this.createCollection(collectionModel);
-    }
-  }
-
-  public hasWriteRole(collection: Collection) {
-    return collection.userRoles.some(role => role === Role.write);
-  }
-
-  public hasManageRole(collection: Collection) {
-    return collection.userRoles.some(role => role === Role.manage);
-  }
-
-  public onDetailClick(collectionCode: String) {
-    // TODO
-  }
-
-  public onDocumentsClick(collectionCode: String) {
-    // TODO
-  }
-
-  public onAttributesClick(collectionCode: String) {
-    // TODO
-  }
-
-  public onEditClick(collectionCode: String) {
-    // TODO
-  }
-
-  public onPermissionsClick(collectionCode: String) {
-    // TODO
-  }
-
-  public onDeleteClick(collectionCode: String) {
-    // TODO
+    this.initializeLayout();
   }
 
   private loadCollections() {
     this.collectionService.getCollections()
-      .subscribe((collections: Collection[]) => this.collections = collections);
+      .subscribe(
+        collections => {
+          this.collections = collections;
+          collections.forEach(_ => this.initialized.push(new Initialization(true)));
+        },
+        error => {
+          this.handleError(error, 'Failed fetching collections');
+        });
   }
 
-  private updateCollection(collectionModel: CollectionModel) {
-    this.collectionService.updateCollection(collectionModel.code, collectionModel.toDto())
-      .subscribe(
-        null,
-        (error: LumeerError) => {
-          if (error instanceof BadInputError) {
-            this.errorMessage = error.message;
-          } else {
-            throw error;
-          }
-        }
-      );
+  private initializeLayout(): void {
+    this.layout = new MasonryLayout({
+      container: '.layout',
+      item: '.layout-item',
+      gutter: 15
+    });
   }
 
-  private createCollection(collectionModel: CollectionModel) {
-    this.collectionService.createCollection(collectionModel.toDto())
+  public ngAfterViewChecked(): void {
+    this.layout.refresh();
+  }
+
+  public onNewCollection(): void {
+    this.collections.unshift({
+      code: null,
+      name: '',
+      color: COLLECTION_NO_COLOR,
+      icon: COLLECTION_NO_ICON
+    });
+    this.initialized.unshift(new Initialization(false));
+
+    setTimeout(() => this.newNameInputs.first.nativeElement.focus());
+  }
+
+  public checkInitialization(index: number): void {
+    if (this.initialized[index].compulsory) {
+      this.initializeCollection(index);
+    }
+  }
+
+  public checkInitializedName(index: number): void {
+    this.initialized[index].name = this.collections[index].name && this.collections[index].name !== 'Name';
+  }
+
+  public checkInitializedIcon(index: number): void {
+    this.initialized[index].icon = this.collections[index].icon !== COLLECTION_NO_ICON;
+  }
+
+  public checkInitializedColor(index: number): void {
+    this.initialized[index].color = this.collections[index].color !== COLLECTION_NO_COLOR;
+  }
+
+  public initializeCollection(index: number): void {
+    let collection = this.collections[index];
+    this.collectionService.createCollection(collection)
       .subscribe(
-        (code: string) => collectionModel.code = code,
-        (error: LumeerError) => {
-          if (error instanceof BadInputError) {
-            this.errorMessage = error.message;
-          } else {
-            throw error;
-          }
-        }
-      );
+        code => {
+          this.notificationService.success('Success', 'Collection created');
+          this.refreshCollection(code, index);
+          this.initialized[index].onServer = true;
+        },
+        error => {
+          this.handleError(error, 'Creating collection failed');
+        });
+  }
+
+  private refreshCollection(code: string, index: number): void {
+    this.collectionService.getCollection(code)
+      .subscribe(collection => {
+          this.transitions = false;
+          this.collections[index] = collection;
+          setTimeout(() => this.transitions = true, 400);
+        },
+        error => {
+          this.handleError(error, 'Refreshing new collection failed');
+        });
+  }
+
+  public updateCollection(collection: Collection): void {
+    if (this.changedCollection === collection) {
+      this.changeBuffer.stageChanges();
+    } else {
+      this.changedCollection = collection;
+      this.changeBuffer = new Buffer(() => {
+        this.collectionService.updateCollection(collection)
+          .subscribe(
+            null,
+            error => this.handleError(error, 'Failed updating collection'));
+      }, 1500);
+    }
+  }
+
+  public onDeleteClick(index: number): void {
+    Popup.confirmDanger('Delete Collection', 'Deleting a collection will permanently remove it from this project.\n' +
+      'All documents stored inside the collection will be lost.',
+      'Keep Collection', () => null,
+      'Delete Collection', () => this.removeCollection(index));
+  }
+
+  public hasWriteRole(collection: Collection): boolean {
+    return collection.userRoles && collection.userRoles.includes(Role.write);
+  }
+
+  public hasManageRole(collection: Collection): boolean {
+    return collection.userRoles && collection.userRoles.includes(Role.manage);
+  }
+
+  private removeCollection(index: number): void {
+    if (this.initialized[index].onServer) {
+      this.changeBuffer && this.changeBuffer.flush();
+      this.collectionService.dropCollection(this.collections[index].code)
+        .subscribe(
+          _ => this.notificationService.success('Success', 'Collection removed'),
+          error => this.handleError(error, 'Failed removing collection'));
+    }
+    this.collections.splice(index, 1);
+    this.initialized.splice(index, 1);
+  }
+
+  private handleError(error: Error, message?: string): void {
+    this.notificationService.error('Error', message ? message : error.message);
+  }
+
+  public onAttributesClick(collectionCode: String): void {
+    // TODO
+  }
+
+  public onPermissionsClick(collectionCode: String): void {
+    // TODO
+  }
+
+  public onDetailClick(collectionCode: String): void {
+    // TODO
+  }
+
+  public togglePicker(index: number): void {
+    this.pickerVisible[index] = !this.pickerVisible[index];
+    if (!isUndefined(this.previousIconPicker) && this.previousIconPicker !== index) {
+      this.pickerVisible[this.previousIconPicker] = false;
+    }
+
+    this.previousIconPicker = index;
+  }
+
+  private onClick(event: MouseEvent): void {
+    if (!this.clickOnSwitch(event, this.previousIconPicker) && !this.clickOnPicker(event, this.previousIconPicker)) {
+      this.pickerVisible[this.previousIconPicker] = false;
+    }
+  }
+
+  private clickOnSwitch(click: MouseEvent, index?: number): boolean {
+    if (!isUndefined(index)) {
+      return this.iconSwitches.toArray()[index].nativeElement.contains(click.target);
+    } else {
+      return !isUndefined(this.iconSwitches.find(iconSwitch => iconSwitch.nativeElement.contains(click.target)));
+    }
+  }
+
+  private clickOnPicker(click: MouseEvent, index?: number): boolean {
+    if (!isUndefined(index)) {
+      return this.iconPickers.toArray()[index].element.nativeElement.contains(click.target);
+    } else {
+      return !isUndefined(this.iconPickers.find(iconPicker => iconPicker.element.nativeElement.contains(click.target)));
+    }
+  }
+
+  public ngOnDestroy(): void {
+    this.layout.destroy();
   }
 
 }

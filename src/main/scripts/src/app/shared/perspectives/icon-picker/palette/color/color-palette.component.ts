@@ -33,7 +33,7 @@ export class ColorPaletteComponent extends Palette {
   @Input('color')
   public active: string;
 
-  public colors = Const.someColors;
+  public colors = Const.colors;
 
   public colorHighlight(color: string): string {
     if (color === this.selected) {

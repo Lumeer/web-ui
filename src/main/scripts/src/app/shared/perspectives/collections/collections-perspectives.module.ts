@@ -24,12 +24,14 @@ import {CommonModule} from '@angular/common';
 
 import {PostItCollectionsPerspectiveComponent} from './post-it/post-it-collections-perspective.component';
 import {IconPickerModule} from '../icon-picker/icon-picker.module';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    IconPickerModule
+    IconPickerModule,
+    RouterModule
   ],
   declarations: [
     PostItCollectionsPerspectiveComponent

@@ -2,14 +2,14 @@
 
 :host {
   background: $secondary-color;
-  box-shadow: $default-shadow-down;
+  box-shadow: $shadow-down;
   display: block;
   padding: 6px 10px;
 
-  -webkit-transition: all 0.4s;
-  -moz-transition: all 0.4s;
-  -o-transition: all 0.4s;
-  transition: all 0.4s;
+  transition: all $animation-duration;
+  -webkit-transition: all $animation-duration;
+  -moz-transition: all $animation-duration;
+  -o-transition: all $animation-duration;
 
   border: 1px solid #cccccc;
   border-radius: $border-radius-small;
@@ -32,7 +32,7 @@
       padding-left: 10px;
       margin: 0;
 
-      font-size: large;
+      font-size: 18px;
       font-weight: normal;
     }
 
@@ -63,22 +63,21 @@
   }
 
   &:hover {
-    box-shadow: $default-shadow-up;
+    box-shadow: $shadow-up;
 
     a {
       opacity: 1;
     }
   }
 
-
   a {
-    -webkit-transition: all 0.25s;
-    -moz-transition: all 0.25s;
-    -o-transition: all 0.25s;
-    transition: all 0.25s;
+    -webkit-transition: all $animation-color-duration;
+    -moz-transition: all $animation-color-duration;
+    -o-transition: all $animation-color-duration;
+    transition: all $animation-color-duration;
 
     opacity: 0;
-    font-size: medium;
+    font-size: 16px;
 
     border-radius: $border-radius-small;
     padding: 4px 12px;
@@ -107,7 +106,7 @@
   }
 
   .attribute {
-    color: #404040;
+    color: #475d73;
     width: 40%;
     font-weight: bold;
     font-variant: none;
@@ -119,6 +118,7 @@
     border-radius: $border-radius-small;
 
     color: $secondary-color;
+    pointer-events: all;
   }
 
   /deep/ input {
@@ -128,6 +128,15 @@
     background-color: transparent;
 
     pointer-events: none;
+  }
+
+  /deep/ input:read-only {
+    pointer-events: all;
+
+    &:focus {
+      background: inherit;
+      color: inherit;
+    }
   }
 
   /deep/ .completer-holder {

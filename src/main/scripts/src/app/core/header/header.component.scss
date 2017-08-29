@@ -4,114 +4,125 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-}
 
-.logo {
-  a {
-    background-image: url("../../../img/lumeer-logo.png");
-    display: block;
-    height: 50px;
-    width: 150px;
+  .logo {
+    padding-left: 10px;
 
-    span {
-      display: none;
+    a {
+      display: flex;
+
+      &:focus {
+        outline: none;
+        text-decoration: none;
+      }
+    }
+
+    label {
+      position: relative;
+      bottom: 3px;
+      pointer-events: none;
+      color: $brand-primary;
+      margin-bottom: 0;
+      margin-left: 7.5px;
+      font-size: 30px;
+      font-variant-caps: all-small-caps;
     }
   }
-}
 
-.search {
-  margin: 0 10px;
-  width: 60%;
-}
-
-.menu {
-  display: flex;
-}
-
-.project {
-  font-size: 22px;
-  line-height: 50px;
-  margin: 0 10px;
-
-  a:hover {
-    text-decoration: none;
-  }
-}
-
-.notifications {
-  background-color: #eeeeee;
-  border-radius: 15px;
-  color: $brand-success;
-  flex-shrink: 0;
-  height: 30px;
-  width: 30px;
-  line-height: 30px;
-  text-align: center;
-  margin: 10px;
-}
-
-.profile {
-  flex-shrink: 0;
-  height: 50px;
-  width: 50px;
-  background-color: #eeeeee;
-  border-radius: 25px;
-
-  > * {
-    cursor: default;
-    z-index: 999;
+  .search {
+    margin: 0 10px;
+    width: 60%;
   }
 
-  &:hover, &:focus {
-    text-decoration: none;
+  .menu {
+    display: flex;
   }
 
-  .arrow-up {
-    position: relative;
-    width: 0;
-    height: 0;
-    top: 50px;
-    left: 20px;
+  .project {
+    font-size: 22px;
+    line-height: 50px;
+    margin: 0 10px;
 
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
-    border-bottom: 5px solid #cccccc;
+    a:hover {
+      text-decoration: none;
+    }
   }
 
-  ul {
-    box-shadow: $default-shadow-down;
-    background: $secondary-color;
-    min-width: 160px;
-    position: relative;
-    top: 50px;
-    right: 110px;
+  .notifications {
+    background-color: #eeeeee;
+    border-radius: 15px;
+    color: $brand-success;
+    flex-shrink: 0;
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    text-align: center;
+    margin: 10px;
+  }
 
-    padding: 6px 0;
-    border: 1px solid #cccccc;
-    border-radius: 3px;
-    overflow: hidden;
+  .profile {
+    flex-shrink: 0;
+    height: 50px;
+    width: 50px;
+    background-color: #eeeeee;
+    border-radius: 25px;
 
-    color: black;
+    > * {
+      cursor: default;
+      z-index: 999;
+    }
 
-    li {
+    &:hover, &:focus {
+      text-decoration: none;
+    }
 
-      > * {
-        display: block;
-        padding: 6px 6px 6px 20px;
-        letter-spacing: 0.5px;
-      }
+    .arrow-up {
+      position: relative;
+      width: 0;
+      height: 0;
+      top: 50px;
+      left: 20px;
 
-      &.divider {
-        height: 1px;
-        overflow: hidden;
-        margin: 6px 0;
-        background-color: #e5e5e5;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 5px solid #cccccc;
+    }
 
-        padding: 0;
-      }
+    ul {
+      box-shadow: $shadow-down;
+      background: $secondary-color;
+      min-width: 160px;
+      position: relative;
+      top: 50px;
+      right: 110px;
 
-      &:hover {
-        background-color: #eeeeee;
+      padding: 6px 0;
+      border: 1px solid #cccccc;
+      border-radius: 3px;
+      overflow: hidden;
+
+      color: black;
+
+      li {
+
+        > * {
+          display: block;
+          padding: 6px 6px 6px 20px;
+          letter-spacing: 0.5px;
+        }
+
+        &.divider {
+          height: 1px;
+          overflow: hidden;
+          margin: 6px 0;
+          background-color: #e5e5e5;
+
+          padding: 0;
+        }
+
+        &:hover {
+          background-color: #eeeeee;
+        }
       }
     }
   }
