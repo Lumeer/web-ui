@@ -222,7 +222,9 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
           this.initialized[index] = true;
           this.notificationService.success('Success', 'Document Created');
         },
-        error => this.handleError(error, 'Failed creating document'));
+        error => {
+          this.handleError(error, 'Failed creating document');
+        });
   }
 
   private handleError(error: Error, message?: string): void {

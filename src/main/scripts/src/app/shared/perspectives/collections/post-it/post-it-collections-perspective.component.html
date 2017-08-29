@@ -10,7 +10,8 @@
   <div *ngFor="let collection of collections; let idx = index"
        class="post-it layout-item {{ pickerVisible[idx] ? 'selected' : ''}} {{ !initialized[idx].onServer ? 'uninitialized' : '' }}"
        [style.z-index]="collections.length - idx"
-       [style.border-color]="collection.color">
+       [style.border-color]="collection.color"
+       [style.transition]="!transitions ? 'all 0s' : ''">
 
     <ng-container *ngIf="initialized[idx].onServer; then initializedContent else nonInitializedContent"></ng-container>
 
