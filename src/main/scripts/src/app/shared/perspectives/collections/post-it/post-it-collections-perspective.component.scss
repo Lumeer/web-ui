@@ -38,11 +38,15 @@
       position: absolute;
       right: 15px;
       top: 10px;
-      font-size: large;
+      font-size: 18px;
 
       i {
         margin-left: 5px;
       }
+    }
+
+    .clickable {
+      cursor: pointer;
     }
 
     .content {
@@ -71,7 +75,7 @@
     }
 
     a {
-      font-size: large;
+      font-size: 18px;
       padding: 0 5px;
       border-radius: $border-radius-small;
 

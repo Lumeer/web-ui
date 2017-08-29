@@ -40,7 +40,7 @@ const squareSize: number = 170;
 export class WorkspaceChooserComponent implements OnInit {
 
   @ViewChild('organizationScrollbar')
-  public companiesElement: PerfectScrollbarComponent;
+  public organizationsElement: PerfectScrollbarComponent;
 
   @ViewChild('projectScrollbar')
   public projectsElement: PerfectScrollbarComponent;
@@ -119,15 +119,11 @@ export class WorkspaceChooserComponent implements OnInit {
   }
 
   public onScrollOrganizations(direction: number): void {
-    this.companiesElement.scrollToLeft(this.companiesElement['elementRef'].element.scrollLeft + squareSize * direction);
+    this.organizationsElement.scrollToLeft(this.organizationsElement['elementRef'].nativeElement.scrollLeft + squareSize * direction);
   }
 
-  public onScrollProjects(toRight?: boolean): void {
-    if (toRight) {
-      this.projectsElement.scrollToLeft(this.projectsElement['elementRef'].element.scrollLeft + squareSize);
-    } else {
-      this.projectsElement.scrollToLeft(this.projectsElement['elementRef'].element.scrollLeft - squareSize);
-    }
+  public onScrollProjects(direction: number): void {
+    this.projectsElement.scrollToLeft(this.projectsElement['elementRef'].nativeElement.scrollLeft + squareSize * direction);
   }
 
   public onSaveActiveItems(): void {

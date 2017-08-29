@@ -25,16 +25,22 @@ import {WorkspaceService} from '../workspace.service';
 import {Collection} from '../dto/collection';
 import {Attribute} from '../dto/attribute';
 import {Observable} from 'rxjs/Observable';
-import {isNullOrUndefined} from 'util';
-import 'rxjs/add/operator/catch';
 import {BadInputError} from '../error/bad-input.error';
 import {LumeerError} from '../error/lumeer.error';
+import {isNullOrUndefined} from 'util';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class CollectionService {
 
-  constructor(private http: HttpClient, private workspaceService: WorkspaceService) {
+  constructor(private httpClient: HttpClient,
+              private workspaceService: WorkspaceService) {
+  }
+
+  public createCollection(collection: Collection): Observable<string> {
+    return this.httpClient.post(this.apiPrefix(), collection, {responseType: 'text'})
+      .catch(CollectionService.handleError);
   }
 
   public getCollections(pageNumber?: number, pageSize?: number): Observable<Collection[]> {
@@ -45,47 +51,42 @@ export class CollectionService {
         .set('size', pageSize.toString());
     }
 
-    return this.http.get<Collection[]>(this.apiPrefix(), {params: queryParams})
+    return this.httpClient.get<Collection[]>(this.apiPrefix(), {params: queryParams})
       .catch(CollectionService.handleGlobalError);
   }
 
-  public createCollection(collection: Collection): Observable<string> {
-    return this.http.post(this.apiPrefix(), collection, {responseType: 'text'})
-      .catch(CollectionService.handleError);
-  }
-
   public updateCollection(collection: Collection): Observable<any> {
-    return this.http.put<any>(`${this.apiPrefix()}/${collection.code}`, collection)
+    return this.httpClient.put<any>(`${this.apiPrefix()}/${collection.code}`, collection)
       .catch(CollectionService.handleError);
   }
 
   public getCollection(collectionCode: string): Observable<Collection> {
-    return this.http.get<Collection>(`${this.apiPrefix()}/${collectionCode}`)
+    return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionCode}`)
       .catch(CollectionService.handleGlobalError);
   }
 
   public dropCollection(collectionCode: String): Observable<any> {
-    return this.http.delete<any>(`${this.apiPrefix()}/${collectionCode}`)
+    return this.httpClient.delete<any>(`${this.apiPrefix()}/${collectionCode}`)
       .catch(CollectionService.handleError);
   }
 
   public getAttributes(collectionCode: string): Observable<Attribute[]> {
-    return this.http.get<Attribute[]>(`${this.apiPrefix()}/${collectionCode}/attributes`);
+    return this.httpClient.get<Attribute[]>(`${this.apiPrefix()}/${collectionCode}/attributes`);
   }
 
   public renameAttribute(collectionCode: string, oldName: string, newName: string): Observable<any> {
-    return this.http.put<any>(`${this.apiPrefix()}/${collectionCode}/attributes/${oldName}/rename/${newName}`, {});
+    return this.httpClient.put<any>(`${this.apiPrefix()}/${collectionCode}/attributes/${oldName}/rename/${newName}`, {});
   }
 
   public dropAttribute(collectionCode: string, attributeName: string): Observable<any> {
-    return this.http.delete<any>(`${this.apiPrefix()}/${collectionCode}/attributes/${attributeName}`);
+    return this.httpClient.delete<any>(`${this.apiPrefix()}/${collectionCode}/attributes/${attributeName}`);
   }
 
   private apiPrefix(): string {
-    let organization = this.workspaceService.organizationCode;
-    let project = this.workspaceService.projectCode;
+    let organizationCode = this.workspaceService.organizationCode;
+    let projectCode = this.workspaceService.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organization}/projects/${project}/collections`;
+    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
   }
 
   private static handleError(error: HttpErrorResponse): ErrorObservable {

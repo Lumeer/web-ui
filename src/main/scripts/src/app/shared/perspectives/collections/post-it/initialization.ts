@@ -20,16 +20,20 @@
 
 export class Initialization {
 
-  public all: boolean;
+  public onServer: boolean;
   public icon: boolean;
   public color: boolean;
   public name: boolean;
 
   constructor(initialized: boolean) {
-    this.all = initialized;
+    this.onServer = initialized;
     this.icon = initialized;
     this.color = initialized;
     this.name = initialized;
+  }
+
+  public get compulsory(): boolean {
+    return this.name;
   }
 
 }

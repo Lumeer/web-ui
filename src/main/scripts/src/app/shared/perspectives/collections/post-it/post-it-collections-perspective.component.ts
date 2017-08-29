@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {AfterViewChecked, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
@@ -57,13 +57,14 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   @ViewChildren('iconSwitch')
   public iconSwitches: QueryList<ElementRef>;
 
-  public collections: Collection[];
+  @ViewChildren('nonInitializedNameInput')
+  public newNameInputs: QueryList<ElementRef>;
+
+  public collections: Collection[] = [];
 
   public pickerVisible: boolean[] = [];
 
   public initialized: Initialization[] = [];
-
-  public errorMessage: string;
 
   private layout: MasonryLayout;
 
@@ -74,7 +75,8 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   private previousIconPicker: number;
 
   constructor(private collectionService: CollectionService,
-              private notificationService: NotificationsService) {
+              private notificationService: NotificationsService,
+              private changeDetector: ChangeDetectorRef) {
   }
 
   public ngOnInit(): void {
@@ -84,10 +86,12 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
 
   private loadCollections() {
     this.collectionService.getCollections()
-      .subscribe(collections => {
-        this.collections = collections;
-        collections.forEach(_ => this.initialized.push(new Initialization(true)));
-      });
+      .subscribe(
+        collections => {
+          this.collections = collections;
+          collections.forEach(_ => this.initialized.push(new Initialization(true)));
+        },
+        error => this.handleError(error, 'Failed fetching collections'));
   }
 
   private initializeLayout(): void {
@@ -107,15 +111,15 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
       code: null,
       name: '',
       color: COLLECTION_NO_COLOR,
-      icon: COLLECTION_NO_ICON,
-      userRoles: [],
-      documentCount: 0
+      icon: COLLECTION_NO_ICON
     });
     this.initialized.unshift(new Initialization(false));
+
+    setTimeout(() => this.newNameInputs.first.nativeElement.focus());
   }
 
   public checkInitialization(index: number): void {
-    if (this.initialized[index].color && this.initialized[index].icon && this.initialized[index].name) {
+    if (this.initialized[index].compulsory) {
       this.initializeCollection(index);
     }
   }
@@ -136,19 +140,16 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     let collection = this.collections[index];
     this.collectionService.createCollection(collection)
       .subscribe(
-        (code: string) => {
+        code => {
           collection.code = code;
-          this.initialized[index].all = true;
+          this.initialized[index].onServer = true;
           this.notificationService.success('Success', 'Collection created');
+
+          // TODO get user rights instead of assuming all rights
+          collection.documentCount = 0;
+          collection.userRoles = [Role.share, Role.share, Role.clone, Role.read];
         },
-        (error: LumeerError) => {
-          if (error instanceof BadInputError) {
-            this.errorMessage = error.message;
-          } else {
-            throw error;
-          }
-        }
-      );
+        error => this.handleError(error, 'Creating collection failed'));
   }
 
   public updateCollection(collection: Collection): void {
@@ -160,13 +161,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
         this.collectionService.updateCollection(collection)
           .subscribe(
             null,
-            (error: LumeerError) => {
-              if (error instanceof BadInputError) {
-                this.errorMessage = error.message;
-              } else {
-                throw error;
-              }
-            });
+            error => this.handleError(error, 'Failed updating collection'));
       }, 1500);
     }
   }
@@ -179,29 +174,27 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public hasWriteRole(collection: Collection): boolean {
-    return collection.userRoles.some(role => role === Role.write);
+    return collection.userRoles && collection.userRoles.includes(Role.write);
   }
 
   public hasManageRole(collection: Collection): boolean {
-    return collection.userRoles.some(role => role === Role.manage);
+    return collection.userRoles && collection.userRoles.includes(Role.manage);
   }
 
   private removeCollection(index: number): void {
-    if (this.initialized[index].all) {
+    if (this.initialized[index].onServer) {
       this.changeBuffer && this.changeBuffer.flush();
       this.collectionService.dropCollection(this.collections[index].code)
         .subscribe(
           _ => this.notificationService.success('Success', 'Collection removed'),
-          (error: LumeerError) => {
-            if (error instanceof BadInputError) {
-              this.errorMessage = error.message;
-            } else {
-              throw error;
-            }
-          });
+          error => this.handleError(error, 'Failed removing collection'));
     }
     this.collections.splice(index, 1);
     this.initialized.splice(index, 1);
+  }
+
+  private handleError(error: Error, message?: string): void {
+    this.notificationService.error('Error', message ? message : error.message);
   }
 
   public onAttributesClick(collectionCode: String): void {

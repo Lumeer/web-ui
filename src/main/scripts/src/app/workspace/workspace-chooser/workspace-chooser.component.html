@@ -48,9 +48,11 @@
 <div *ngIf="activeOrganization">
   <h2>Projects</h2>
   <div class="horizontal-chooser">
+
     <div class="slide">
-      <a (click)="onScrollProjects(false)"><i class="fa fa-chevron-left"></i></a>
+      <a (click)="onScrollProjects(-1)"><i class="fa fa-chevron-left"></i></a>
     </div>
+
     <perfect-scrollbar class="chooser" #projectScrollbar [config]="{suppressScrollY: true}">
       <div class="squares" [ngStyle]="{width: projectsWidth + 'px'}">
 
@@ -75,9 +77,11 @@
 
       </div>
     </perfect-scrollbar>
+
     <div class="slide">
-      <a (click)="onScrollProjects(true)"><i class="fa fa-chevron-right"></i></a>
+      <a (click)="onScrollProjects(1)"><i class="fa fa-chevron-right"></i></a>
     </div>
+
     <div class="project-description" *ngIf="activeProject">
       <div class="information">
         <div class="title">

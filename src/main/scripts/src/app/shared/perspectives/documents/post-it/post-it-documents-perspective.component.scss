@@ -48,9 +48,9 @@ $fade-size: 2em;
     background-image: linear-gradient(to top, rgba(255, 255, 255, 0), $secondary-color);
   }
 
-  .see-more {
+  .scroll-down {
     position: relative;
-    font-size: x-large;
+    font-size: 24px;
     float: right;
     bottom: $fade-size;
     margin: 10px;
