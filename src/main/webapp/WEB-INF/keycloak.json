@@ -6,5 +6,6 @@
   "public-client": true,
   "disable-trust-manager": "false",
   "truststore": "${lumeer.keycloak.truststore}",
-  "truststore-password": "geheim"
+  "truststore-password": "geheim",
+  "enable-cors": true
 }
