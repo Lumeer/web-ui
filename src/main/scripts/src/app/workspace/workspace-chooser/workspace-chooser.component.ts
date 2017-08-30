@@ -128,16 +128,11 @@ export class WorkspaceChooserComponent implements OnInit {
 
   public onSaveActiveItems(): void {
     if (this.activeOrganization && this.activeProject) {
-      this.userSettingsService.updateUserSettings(
-        new UserSettings(this.activeOrganization.code, this.activeProject.code)
-      ).subscribe(response => {
-        if (response.ok) {
-          this.workspaceService.organizationCode = this.activeOrganization.code;
-          this.workspaceService.projectCode = this.activeProject.code;
+      // TODO save settings on the server using configuration service
+      this.workspaceService.organizationCode = this.activeOrganization.code;
+      this.workspaceService.projectCode = this.activeProject.code;
 
-          this.router.navigate(['w', this.activeOrganization.code, this.activeProject.code, 'collections']);
-        }
-      });
+      this.router.navigate(['w', this.activeOrganization.code, this.activeProject.code, 'collections']);
     }
   }
 

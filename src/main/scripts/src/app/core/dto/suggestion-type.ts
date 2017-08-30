@@ -18,20 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Attribute} from './attribute';
-import {Permissions} from './permissions';
+export enum SuggestionType {
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
-export const COLLECTION_NO_COLOR = '#cccccc';
-
-export interface Collection {
-
-  code?: string;
-  name: string;
-  icon: string;
-  color: string;
-  permissions?: Permissions;
-  attributes?: Attribute[];
-  documentsCount?: number;
+  All = 'all',
+  Attribute = 'attribute',
+  Collection = 'collection',
+  Link = 'link',
+  View = 'view'
 
 }

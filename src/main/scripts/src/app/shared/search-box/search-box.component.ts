@@ -29,10 +29,16 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/switchMap';
 
-import {Suggestion} from '../../core/dto/suggestion';
+import {Suggestions} from '../../core/dto/suggestions';
 import {SearchService} from '../../core/rest/search.service';
 import {WorkspaceService} from '../../core/workspace.service';
-import {Suggestions} from '../../core/dto/suggestions';
+import {QueryItem} from './query-item';
+import {FulltextQueryItem} from './query-item/fulltext-query-item';
+import {Query} from '../../core/dto/query';
+import {AttributeQueryItem} from './query-item/attribute-query-item';
+import {CollectionQueryItem} from './query-item/collection-query-item';
+import {SuggestionType} from '../../core/dto/suggestion-type';
+import {Collection} from '../../core/dto/collection';
 
 const BACKSPACE_KEY = 8;
 const ENTER_KEY = 13;
@@ -44,12 +50,14 @@ const ENTER_KEY = 13;
 })
 export class SearchBoxComponent {
 
-  public queryItems: string[] = [];
-  private type = 'All';
-  private text = '';
+  public queryItems: QueryItem[] = [];
+  public currentQueryItem: QueryItem = new FulltextQueryItem('');
 
   private searchTerms = new Subject<string>();
-  private suggestions: Observable<Suggestions | Suggestion[]>;
+  private suggestions: Observable<QueryItem[]>;
+
+  public text = '';
+  private type = SuggestionType.All;
 
   constructor(private router: Router,
               private searchService: SearchService,
@@ -61,11 +69,40 @@ export class SearchBoxComponent {
       .startWith('')
       .debounceTime(300)
       .distinctUntilChanged()
-      .switchMap(term => term ? this.searchService.suggest(term, this.type) : Observable.of<Suggestions | Suggestion[]>([]))
+      .switchMap(text => this.retrieveSuggestions(text))
+      .switchMap(suggestions => this.convertSuggestionsToQueryItems(suggestions))
+      .map(queryItems => this.filterUsedQueryItems(queryItems))
       .catch(error => {
         console.error(error); // TODO: add real error handling
-        return Observable.of<Suggestions | Suggestion[]>([]);
+        return Observable.of<QueryItem[]>();
       });
+  }
+
+  private retrieveSuggestions(text: string): Observable<Suggestions> {
+    return text ? this.searchService.suggest(text, this.type) : Observable.of<Suggestions>();
+  }
+
+  private convertSuggestionsToQueryItems(suggestions: Suggestions): Observable<QueryItem[]> {
+    let suggestedQueryItems: QueryItem[] = [];
+
+    suggestedQueryItems = suggestedQueryItems.concat(this.createCollectionQueryItems(suggestions.collections));
+    suggestedQueryItems = suggestedQueryItems.concat(this.createAttributeQueryItems(suggestions.attributes));
+    // TODO add views
+    suggestedQueryItems.push(new FulltextQueryItem(this.text));
+
+    return Observable.of(suggestedQueryItems);
+  }
+
+  private filterUsedQueryItems(queryItems: QueryItem[]): QueryItem[] {
+    return queryItems.filter(queryItem => !this.queryItems.find(usedItem => usedItem.value === queryItem.value));
+  }
+
+  private createAttributeQueryItems(collections: Collection[]): QueryItem[] {
+    return collections.map(collection => new AttributeQueryItem(collection));
+  }
+
+  private createCollectionQueryItems(collections: Collection[]): QueryItem[] {
+    return collections.map(collection => new CollectionQueryItem(collection));
   }
 
   public onKeyUp(event: KeyboardEvent) {
@@ -92,7 +129,7 @@ export class SearchBoxComponent {
   private removeItem() {
     if (this.text === '') {
       event.preventDefault();
-      this.text = this.queryItems.pop();
+      this.queryItems.pop();
     }
   }
 
@@ -102,7 +139,8 @@ export class SearchBoxComponent {
         this.search();
       }
     } else {
-      this.addQueryItem(this.text);
+      this.currentQueryItem.text = this.text;
+      this.addQueryItem(this.currentQueryItem);
     }
   }
 
@@ -114,14 +152,19 @@ export class SearchBoxComponent {
     this.searchTerms.next('');
   }
 
-  public complete(suggestion: Suggestion): void {
-    this.addQueryItem(suggestion.type + ':' + suggestion.text);
+  public onSuggestionClick(queryItem: QueryItem): void {
+    if (queryItem.isComplete()) {
+      this.addQueryItem(queryItem);
+    } else {
+      this.currentQueryItem = queryItem;
+    }
   }
 
   public onButtonClick() {
-    if (this.text.trim() !== '') {
-      this.addQueryItem(this.text);
+    if (this.currentQueryItem.isComplete()) {
+      this.addQueryItem(this.currentQueryItem);
     }
+    this.currentQueryItem = new FulltextQueryItem('');
     this.search();
   }
 
@@ -129,21 +172,33 @@ export class SearchBoxComponent {
     let organization = this.workspaceService.organizationCode;
     let project = this.workspaceService.projectCode;
 
-    this.router.navigate(['/w', organization, project, 'search', 'all'], {queryParams: {query: this.createQuery()}});
+    this.router.navigate(['/w', organization, project, 'search', 'collections'], {queryParams: {query: this.createQuery()}});
   }
 
-  private addQueryItem(queryItem: string) {
-    this.queryItems.push(queryItem.trim());
+  private addQueryItem(queryItem: QueryItem) {
+    this.queryItems.push(queryItem);
+    this.currentQueryItem = new FulltextQueryItem('');
     this.text = '';
     this.hideSuggestions();
   }
 
   private createQuery(): string {
-    let query = '';
-    for (let queryItem of this.queryItems) {
-      query += `(${queryItem})`;
-    }
-    return query;
+    let query: Query = {
+      collectionCodes: [],
+      filters: []
+    };
+
+    this.queryItems.forEach(queryItem => {
+      if (queryItem instanceof CollectionQueryItem) {
+        query.collectionCodes.push(queryItem.code);
+      } else if (queryItem instanceof AttributeQueryItem) {
+        query.filters.push(queryItem.value);
+      } else if (queryItem instanceof FulltextQueryItem) {
+        query.fulltext = queryItem.text;
+      }
+    });
+
+    return JSON.stringify(query);
   }
 
 }

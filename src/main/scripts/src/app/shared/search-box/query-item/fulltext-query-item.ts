@@ -18,20 +18,27 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Attribute} from './attribute';
-import {Permissions} from './permissions';
+import {QueryItem} from '../query-item';
+import {QueryItemType} from '../query-item-type';
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
-export const COLLECTION_NO_COLOR = '#cccccc';
+export class FulltextQueryItem implements QueryItem {
 
-export interface Collection {
+  public type = QueryItemType.Fulltext;
 
-  code?: string;
-  name: string;
-  icon: string;
-  color: string;
-  permissions?: Permissions;
-  attributes?: Attribute[];
-  documentsCount?: number;
+  public text: string;
+  public icon: string;
+  public color: string;
+
+  public constructor(text: string) {
+    this.text = text;
+  }
+
+  public get value(): string {
+    return this.text;
+  }
+
+  public isComplete(): boolean {
+    return this.text !== '';
+  }
 
 }

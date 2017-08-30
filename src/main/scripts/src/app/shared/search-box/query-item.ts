@@ -17,10 +17,18 @@
  * limitations under the License.
  * -----------------------------------------------------------------------/
  */
-export interface Suggestion {
 
-  type: string;
+import {QueryItemType} from './query-item-type';
+
+export interface QueryItem {
+
   text: string;
   icon?: string;
+  color?: string;
+
+  value: string;
+  type: QueryItemType;
+
+  isComplete(): boolean;
 
 }
