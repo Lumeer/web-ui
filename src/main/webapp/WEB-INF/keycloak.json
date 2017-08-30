@@ -5,6 +5,6 @@
   "resource": "engine",
   "public-client": true,
   "disable-trust-manager": "false",
-  "truststore": "${jboss.server.config.dir}/cacerts.jks",
+  "truststore": "${lumeer.keycloak.truststore}",
   "truststore-password": "geheim"
 }
