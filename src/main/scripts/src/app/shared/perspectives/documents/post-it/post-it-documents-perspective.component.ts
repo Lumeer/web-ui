@@ -18,7 +18,17 @@
  * -----------------------------------------------------------------------/
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 import {Perspective} from '../../perspective';
@@ -217,7 +227,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
             this.handleError(error, 'Failed updating document');
           });
       }, 750);
-
       if (!this.initialized[index]) {
         this.initializeDocument(index, document);
       }

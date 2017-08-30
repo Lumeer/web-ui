@@ -144,7 +144,7 @@
   .add-collection {
     display: block;
     text-align: center;
-    margin: 45px 72px 0;
+    margin: 45px 32px 0;
 
     color: $brand-primary;
 
@@ -163,6 +163,14 @@
       font-size: 1.5em;
       pointer-events: none;
     }
+  }
+
+  .import > input {
+    display: none;
+  }
+
+  .dragging {
+    color: $brand-success;
   }
 
   icon-picker {

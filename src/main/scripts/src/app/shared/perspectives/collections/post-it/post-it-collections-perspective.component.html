@@ -7,6 +7,21 @@
     </a>
   </div>
 
+  <div *ngIf="editable" class="layout-item import"
+       ondragover="return false;"
+       [ngClass]="{'dragging': dragging}"
+       (click)="fileInput.click()"
+       (drop)="handleDrop($event)"
+       (dragenter)="handleDragEnter()"
+       (dragleave)="handleDragLeave()">
+    <a class="add-collection">
+      <i class="fa fa-cloud-upload"></i>
+      <label>Import collection</label>
+    </a>
+    <input type="file" #fileInput (click)="$event.stopPropagation()" (change)="fileChange($event.target.files)"
+           accept=".csv, text/csv">
+  </div>
+
   <div *ngFor="let collection of collections; let idx = index"
        class="post-it layout-item {{ pickerVisible[idx] ? 'selected' : ''}} {{ !initialized[idx].onServer ? 'uninitialized' : '' }}"
        [style.border-color]="collection.color"
@@ -22,8 +37,8 @@
 
       <div class="content" [style.color]="collection.color">
         <i class="fa fa-2x {{ collection.icon }}" title="Go to documents"
-           [routerLink]="['..', 'c', collection.code, 'documents']"></i><!--
-      --><input [(ngModel)]="collection.name" (ngModelChange)="updateCollection(collection)"/>
+           [routerLink]="['..', 'c', collection.code, 'documents']"></i>
+        <input [(ngModel)]="collection.name" (ngModelChange)="updateCollection(collection)"/>
       </div>
 
       <icon-picker [enabled]="pickerVisible[idx]"
@@ -60,12 +75,12 @@
       </ul>
 
       <div class="content" [style.color]="collection.color">
-        <i class="fa fa-2x {{ collection.icon }}" title="Pick icon" (click)="togglePicker(idx)" #iconSwitch></i><!--
-      --><input class="newName" placeholder="Name" #nonInitializedNameInput
-                [(ngModel)]="collection.name"
-                (ngModelChange)="checkInitializedName(idx)"
-                (blur)="checkInitialization(idx)"
-                (keyup.enter)="checkInitialization(idx)"/>
+        <i class="fa fa-2x {{ collection.icon }}" title="Pick icon" (click)="togglePicker(idx)" #iconSwitch></i>
+        <input class="newName" placeholder="Name" #nonInitializedNameInput
+               [(ngModel)]="collection.name"
+               (ngModelChange)="checkInitializedName(idx)"
+               (blur)="checkInitialization(idx)"
+               (keyup.enter)="checkInitialization(idx)"/>
       </div>
 
       <icon-picker class="onIcon"
