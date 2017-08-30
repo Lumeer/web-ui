@@ -9,7 +9,6 @@
 
   <div *ngFor="let collection of collections; let idx = index"
        class="post-it layout-item {{ pickerVisible[idx] ? 'selected' : ''}} {{ !initialized[idx].onServer ? 'uninitialized' : '' }}"
-       [style.z-index]="collections.length - idx"
        [style.border-color]="collection.color"
        [style.transition]="!transitions ? 'all 0s' : ''">
 
@@ -30,7 +29,7 @@
       <icon-picker [enabled]="pickerVisible[idx]"
                    [(color)]="collection.color"
                    [(icon)]="collection.icon"
-                   (itemSelected)="updateCollection(collection)"></icon-picker>
+                   (itemSelected)="updateCollection(idx)"></icon-picker>
 
       <div class="buttons">
         <a (click)="onDetailClick(collection.code)" title="Detail"><i class="fa fa-fx fa-eye"></i></a>
@@ -80,4 +79,7 @@
       </div>
     </ng-template>
   </div>
+
+  <label *ngIf="!editable && !query" class="label-centered">No Search Query</label>
+  <label *ngIf="!editable && query && !collections" class="label-centered">Nothing To Show</label>
 </div>

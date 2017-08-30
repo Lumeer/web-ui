@@ -46,6 +46,7 @@
     }
 
     .clickable {
+      outline: none;
       cursor: pointer;
     }
 
@@ -132,6 +133,7 @@
   }
 
   .post-it:hover, .selected {
+    z-index: 100;
     box-shadow: $shadow-up;
 
     & > * {
@@ -184,5 +186,13 @@
     text-align: center;
     font-weight: bold;
     font-size: 23px;
+  }
+
+  .label-centered {
+    position: absolute;
+    font-size: 40px;
+    top: 150px;
+    width: 100%;
+    text-align: center;
   }
 }

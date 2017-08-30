@@ -1,9 +1,9 @@
 export class Role {
 
-  public static read = 'read';
-  public static manage = 'manage';
-  public static write = 'write';
-  public static share = 'share';
-  public static clone = 'clone';
+  public static read = 'READ';
+  public static manage = 'MANAGE';
+  public static write = 'WRITE';
+  public static share = 'SHARE';
+  public static clone = 'CLONE';
 
 }

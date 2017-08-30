@@ -59,4 +59,12 @@ $fade-size: 2em;
       padding-left: 10px;
     }
   }
+
+  .label-centered {
+    position: absolute;
+    font-size: 40px;
+    top: 150px;
+    width: 100%;
+    text-align: center;
+  }
 }

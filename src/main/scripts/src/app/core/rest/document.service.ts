@@ -19,49 +19,68 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse} from '@angular/common/http';
 
 import {WorkspaceService} from '../workspace.service';
 import {Document} from '../dto/document';
 import {Observable} from 'rxjs/Observable';
+import {isNullOrUndefined} from 'util';
+import {LumeerError} from '../error/lumeer.error';
+import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 
 @Injectable()
 export class DocumentService {
 
-  constructor(private http: HttpClient, private workspaceService: WorkspaceService) {
+  constructor(private httpClient: HttpClient,
+              private workspaceService: WorkspaceService) {
   }
 
-  public getDocuments(collectionCode: string): Observable<Document[]> {
-    return this.http.get(this.apiPrefix(collectionCode))
-      .map((jsonDocuments: object[]) => jsonDocuments.map(json => new Document(json)));
+  public createDocument(collectionCode: string, document: Document): Observable<HttpResponse<object>> {
+    return this.httpClient.post(this.apiPrefix(collectionCode), document, {observe: 'response'})
+      .catch(error => this.handleGlobalError(error));
+  }
+
+  public updateDocument(collectionCode: string, document: Document): Observable<Document> {
+    return this.httpClient.put<Document>(`${this.apiPrefix(collectionCode)}/${document.id}/data`, document.data)
+      .catch(error => this.handleGlobalError(error));
+  }
+
+  public patchDocument(collectionCode: string, document: Document): Observable<Document> {
+    return this.httpClient.patch<Document>(`${this.apiPrefix(collectionCode)}/${document.id}/data`, document.data)
+      .catch(error => this.handleGlobalError(error));
+  }
+
+  public removeDocument(collectionCode: string, document: Document): Observable<HttpResponse<object>> {
+    return this.httpClient.delete(`${this.apiPrefix(collectionCode)}/${document.id}`, {observe: 'response'})
+      .catch(error => this.handleGlobalError(error));
   }
 
   public getDocument(collectionCode: string, documentId: string): Observable<Document> {
-    return this.http.get(`${this.apiPrefix(collectionCode)}/${documentId}`)
-      .map((json: object) => new Document(json));
+    return this.httpClient.get<Document>(`${this.apiPrefix(collectionCode)}/${documentId}`)
+      .catch(error => this.handleGlobalError(error));
   }
 
-  public createDocument(collectionCode: string, document: Document): Observable<any>  {
-    return this.http.post(this.apiPrefix(collectionCode), document.toDto());
+  public getDocuments(collectionCode: string, pageNumber?: number, pageSize?: number): Observable<Document[]> {
+    let queryParams = new HttpParams();
+
+    if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
+      queryParams.set('page', pageNumber.toString())
+        .set('size', pageSize.toString());
+    }
+
+    return this.httpClient.get<Document[]>(this.apiPrefix(collectionCode), {params: queryParams})
+      .catch(error => this.handleGlobalError(error));
   }
 
-  public updateDocument(collectionCode: string, document: Document): Observable<any>  {
-    return this.http.put(`${this.apiPrefix(collectionCode)}`, document.toDto());
+  private apiPrefix(collectionCode: string): string {
+    let organizationCode = this.workspaceService.organizationCode;
+    let projectCode = this.workspaceService.projectCode;
+
+    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
   }
 
-  public replaceDocument(collectionCode: string, document: Document): Observable<any>  {
-    return this.http.put(`${this.apiPrefix(collectionCode)}/replace/`, document.toDto());
-  }
-
-  public removeDocument(collectionCode: string, document: Document): Observable<any> {
-    return this.http.delete(`${this.apiPrefix(collectionCode)}/${document.id}`);
-  }
-
-  private apiPrefix(collection: string): string {
-    let organization = this.workspaceService.organizationCode;
-    let project = this.workspaceService.projectCode;
-
-    return `/${API_URL}/rest/organizations/${organization}/projects/${project}/collections/${collection}/documents`;
+  private handleGlobalError(error: HttpErrorResponse): ErrorObservable {
+    throw new LumeerError(error.message);
   }
 
 }

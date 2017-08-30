@@ -7,17 +7,17 @@
     <post-it-document *ngFor="let document of documents; let idx = index"
                       class="layout-item {{ !initialized[idx] ? 'uninitialized' : '' }}"
                       [style.z-index]="documents.length - idx"
+                      [style.transition]="!transitions ? 'all 0s' : ''"
                       [index]="idx"
-                      [attributes]="attributes"
-                      [collection]="collection"
                       [document]="document"
-                      [editable]="editable"
                       [selection]="selection"
-                      [previousSelection]="previousSelection"
                       (selectOther)="selectDocument($event)"
-                      (removed)="removeDocument(idx)"
-                      (changes)="sendUpdate(idx)">
+                      (removed)="removeDocument(idx, document)"
+                      (changes)="sendUpdate(idx, document)">
     </post-it-document>
+
+    <label *ngIf="!editable && !query" class="label-centered">No Search Query</label>
+    <label *ngIf="!editable && query && !documents" class="label-centered">Nothing To Show</label>
   </div>
 </div>
 <div class="fadeup"></div>

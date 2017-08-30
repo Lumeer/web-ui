@@ -32,6 +32,7 @@ import 'rxjs/add/operator/switchMap';
 import {Suggestion} from '../../core/dto/suggestion';
 import {SearchService} from '../../core/rest/search.service';
 import {WorkspaceService} from '../../core/workspace.service';
+import {Suggestions} from '../../core/dto/suggestions';
 
 const BACKSPACE_KEY = 8;
 const ENTER_KEY = 13;
@@ -48,7 +49,7 @@ export class SearchBoxComponent {
   private text = '';
 
   private searchTerms = new Subject<string>();
-  private suggestions: Observable<Suggestion[]>;
+  private suggestions: Observable<Suggestions | Suggestion[]>;
 
   constructor(private router: Router,
               private searchService: SearchService,
@@ -60,10 +61,10 @@ export class SearchBoxComponent {
       .startWith('')
       .debounceTime(300)
       .distinctUntilChanged()
-      .switchMap(term => term ? this.searchService.suggest(term, this.type) : Observable.of<Suggestion[]>([]))
+      .switchMap(term => term ? this.searchService.suggest(term, this.type) : Observable.of<Suggestions | Suggestion[]>([]))
       .catch(error => {
         console.error(error); // TODO: add real error handling
-        return Observable.of<Suggestion[]>([]);
+        return Observable.of<Suggestions | Suggestion[]>([]);
       });
   }
 

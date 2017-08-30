@@ -35,10 +35,9 @@ export class DocumentsSearchComponent extends DocumentsPerspectivePresenter {
   }
 
   public ngOnInit() {
-    super.ngOnInit();
-
     this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
-      this.query = queryParams.get('query');
+      this.query = JSON.parse(queryParams.get('query'));
+      super.ngOnInit();
     });
   }
 

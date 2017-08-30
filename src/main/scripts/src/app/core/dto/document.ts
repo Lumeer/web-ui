@@ -21,52 +21,12 @@
 export class Document {
 
   public id: string;
+  public collectionCode: string;
   public creationDate: string;
   public updateDate: string;
   public createdBy: string;
   public updatedBy: string;
-  public version: number;
+  public dataVersion: number;
   public data: object = {};
-
-  constructor(documentJson?: object) {
-    if (documentJson) {
-
-      Object.keys(documentJson)
-        .forEach(attribute => {
-          switch (attribute) {
-            case '_id':
-              this.id = documentJson['_id'];
-              break;
-            case '_meta-create-date':
-              this.creationDate = documentJson['_meta-create-date'];
-              break;
-            case '_meta-create-user':
-              this.createdBy = documentJson['_meta-create-user'];
-              break;
-            case '_meta-version':
-              this.version = documentJson['_meta-version'];
-              break;
-            case '_meta-update-date':
-              this.updateDate = documentJson['_meta-update-date'];
-              break;
-            case '_meta-update-user':
-              this.updatedBy = documentJson['_meta-update-user'];
-              break;
-            default:
-              this.data[attribute] = documentJson[attribute];
-          }
-        });
-    }
-  }
-
-  public toDto(): object {
-    let result = {};
-    this.id && (result['_id'] = this.id);
-
-    Object.keys(this.data)
-      .forEach(attribute => result[attribute] = this.data[attribute]);
-
-    return result;
-  }
 
 }
