@@ -18,19 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Attribute} from './attribute';
-import {Permissions} from './permissions';
+export interface Query {
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
-export const COLLECTION_NO_COLOR = '#cccccc';
-
-export interface Collection {
-
-  code?: string;
-  name: string;
-  icon: string;
-  color: string;
-  permissions?: Permissions;
-  attributes?: Attribute[];
+  collectionCodes?: string[];
+  filters?: string[];
+  fulltext?: string;
+  page?: number;
+  pageSize?: number;
 
 }

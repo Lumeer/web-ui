@@ -23,6 +23,7 @@ import {ActivatedRoute, ParamMap} from '@angular/router';
 
 import {PerspectiveDirective} from './perspective.directive';
 import {Perspective} from './perspective';
+import {Query} from '../../core/dto/query';
 
 export abstract class PerspectivePresenter implements OnInit {
 
@@ -30,7 +31,7 @@ export abstract class PerspectivePresenter implements OnInit {
   private perspectiveDirective: PerspectiveDirective;
 
   protected perspective: string;
-  protected query: string;
+  protected query: Query = {};
 
   protected constructor(protected activatedRoute: ActivatedRoute,
                         private componentFactoryResolver: ComponentFactoryResolver) {

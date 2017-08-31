@@ -18,9 +18,11 @@
  * -----------------------------------------------------------------------/
  */
 
+import {Query} from '../../core/dto/query';
+
 export interface Perspective {
 
-  query: string;
+  query: Query;
   editable: boolean;
 
 }

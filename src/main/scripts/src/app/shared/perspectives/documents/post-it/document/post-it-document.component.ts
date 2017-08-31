@@ -20,14 +20,18 @@
 
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
-import {Collection} from '../../../../../core/dto/collection';
+import {NotificationsService} from 'angular2-notifications/dist';
+
+import {CollectionService} from '../../../../../core/rest/collection.service';
+import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../../../core/dto/collection';
 import {Document} from '../../../../../core/dto/document';
-import {Attribute} from '../../../../../core/dto/attribute';
 import {AttributePair} from '../attribute/attribute-pair';
 import {AttributePropertySelection} from '../attribute/attribute-property-selection';
-import {isString, isUndefined} from 'util';
-import {Popup} from '../../../utils/popup';
+import {Role} from '../../../../permissions/role';
 import {Direction} from '../attribute/direction';
+import {Popup} from '../../../utils/popup';
+import {Permission} from '../../../../../core/dto/permission';
+import {isString, isUndefined} from 'util';
 
 @Component({
   selector: 'post-it-document',
@@ -37,25 +41,13 @@ import {Direction} from '../attribute/direction';
 export class PostItDocumentComponent implements OnInit {
 
   @Input()
-  public editable: boolean;
-
-  @Input()
   public index: number;
-
-  @Input()
-  public attributes: Attribute[];
-
-  @Input()
-  public collection: Collection;
 
   @Input()
   public document: Document;
 
   @Input()
   public selection: AttributePropertySelection;
-
-  @Input()
-  public previousSelection: AttributePropertySelection;
 
   @Output()
   public removed = new EventEmitter();
@@ -69,20 +61,40 @@ export class PostItDocumentComponent implements OnInit {
   @ViewChild('content')
   public content: ElementRef;
 
+  public editable: boolean;
+
+  public collection: Collection;
+
   public attributePairs: AttributePair[];
 
   public newAttributePair: AttributePair;
 
   public suggestedAttributes: String[];
 
+  constructor(private collectionService: CollectionService,
+              private notificationService: NotificationsService) {
+  }
+
   public ngOnInit(): void {
     this.initializeVariables();
     this.setEventListener();
-    this.readDocumentData();
-    this.refreshSuggestions();
+    this.fetchCollection();
+    this.loadDocumentData();
+  }
+
+  public reload(): void {
+    this.fetchCollection();
   }
 
   private initializeVariables(): void {
+    this.collection = {
+      name: '',
+      code: this.document.collectionCode,
+      icon: COLLECTION_NO_ICON,
+      color: COLLECTION_NO_COLOR,
+      attributes: []
+    };
+
     this.attributePairs = [];
     this.newAttributePair = {
       attribute: '',
@@ -98,7 +110,31 @@ export class PostItDocumentComponent implements OnInit {
     }, false);
   }
 
-  private readDocumentData(): void {
+  private fetchCollection(): void {
+    this.collectionService.getCollection(this.document.collectionCode).subscribe(
+      collection => {
+        this.collection = collection;
+        this.refreshSuggestions();
+        this.editable = this.hasWriteRole();
+      },
+      error => {
+        this.notificationService.error('Error', 'Failed fetching document data');
+      }
+    );
+  }
+
+  public hasWriteRole(): boolean {
+    return this.hasRole(this.collection, Role.write);
+  }
+
+  private hasRole(collection: Collection, role: string) {
+    return collection.permissions && collection.permissions.users
+      .some((permission: Permission) => permission.roles.includes(role));
+  }
+
+  private loadDocumentData(): void {
+    delete this.document.data['_id']; // TODO remove after _id is no longer sent inside data
+
     this.attributePairs = Object.entries(this.document.data).map(([attribute, value]) => {
       return {
         attribute: attribute,
@@ -108,19 +144,19 @@ export class PostItDocumentComponent implements OnInit {
     });
   }
 
+  private refreshSuggestions(): void {
+    this.suggestedAttributes = this.collection.attributes
+      .map(attribute => attribute.name)
+      .filter(attributeName => !this.usedAttributeName(attributeName));
+  }
+
   public clickOnAttributePair(column: number, row: number): void {
     this.setEditMode(this.previouslySelected(column, row));
     this.select(column, row);
   }
 
   private previouslySelected(column: number, row: number): boolean {
-    return column === this.previousSelection.column && row === this.previousSelection.row && this.previousSelection.documentIdx === this.index;
-  }
-
-  private refreshSuggestions(): void {
-    this.suggestedAttributes = this.attributes
-      .map(attribute => attribute.name)
-      .filter(attributeName => !this.usedAttributeName(attributeName));
+    return column === this.selection.column && row === this.selection.row && this.selection.documentIdx === this.index;
   }
 
   private usedAttributeName(attributeName: string): boolean {
@@ -217,10 +253,9 @@ export class PostItDocumentComponent implements OnInit {
   public select(column: number, row: number): void {
     this.selection.documentIdx = this.index;
     this.selectRow(column, row);
-    this.selectColumn(column, row);
 
+    this.selectColumn(column, row);
     this.focusSelection();
-    this.setPreviousSelection();
   }
 
   private selectRow(column: number, row: number): void {
@@ -236,14 +271,6 @@ export class PostItDocumentComponent implements OnInit {
   private selectColumn(column: number, row: number): void {
     this.selection.column = !this.newAttributePair.attribute && column >= 1 && row === this.attributePairs.length ? 0 : column;
     this.selection.column = Math.max(0, Math.min(this.selection.column, 1));
-  }
-
-  private setPreviousSelection(): void {
-    this.previousSelection.editing = this.selection.editing;
-    this.previousSelection.direction = this.selection.direction;
-    this.previousSelection.row = this.selection.row;
-    this.previousSelection.column = this.selection.column;
-    this.previousSelection.documentIdx = this.selection.documentIdx;
   }
 
   private focusSelection(): void {
@@ -275,7 +302,6 @@ export class PostItDocumentComponent implements OnInit {
     }
 
     this.changes.emit();
-    this.refreshSuggestions();
   }
 
   public updateValue(attributePair: AttributePair, newValue: string): void {

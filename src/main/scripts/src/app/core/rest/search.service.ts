@@ -1,30 +1,16 @@
-/*
- * -----------------------------------------------------------------------\
- * Lumeer
- *
- * Copyright (C) since 2016 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * -----------------------------------------------------------------------/
- */
-
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
 import {WorkspaceService} from '../workspace.service';
-import {Suggestion} from '../dto/suggestion';
+import {Suggestions} from '../dto/suggestions';
+import {Query} from '../dto/query';
+import {Collection} from '../dto/collection';
+import {LumeerError} from '../error/lumeer.error';
+import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {Document} from '../dto/document';
+import {View} from '../dto/view';
 
 @Injectable()
 export class SearchService {
@@ -32,16 +18,35 @@ export class SearchService {
   constructor(private http: HttpClient, private workspaceService: WorkspaceService) {
   }
 
-  public suggest(text: string, type: string): Observable<Suggestion[]> {
-    return this.http.get<Suggestion[]>(`${this.searchPath()}/suggestion`,
+  public suggest(text: string, type: string): Observable<Suggestions> {
+    return this.http.get<Suggestions>(`${this.searchPath()}/suggestion`,
       {params: new HttpParams().set('text', text).set('type', type)});
   }
 
-  private searchPath(): string {
-    let organization = this.workspaceService.organizationCode;
-    let project = this.workspaceService.projectCode;
+  public searchCollections(query: Query): Observable<Collection[]> {
+    return this.http.post<Collection[]>(`${this.searchPath()}/collections`, query)
+      .catch(SearchService.handleError);
+  }
 
-    return `/${API_URL}/rest/organizations/${organization}/projects/${project}/search`;
+  public searchDocuments(query: Query): Observable<Document[]> {
+    return this.http.post<Document[]>(`${this.searchPath()}/documents`, query)
+      .catch(SearchService.handleError);
+  }
+
+  public searchViews(query: Query): Observable<View[]> {
+    return this.http.post<View[]>(`${this.searchPath()}/collections`, query)
+      .catch(SearchService.handleError);
+  }
+
+  private searchPath(): string {
+    let organizationCode = this.workspaceService.organizationCode;
+    let projectCode = this.workspaceService.projectCode;
+
+    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/search`;
+  }
+
+  private static handleError(error: HttpErrorResponse): ErrorObservable {
+    throw new LumeerError(error.message);
   }
 
 }

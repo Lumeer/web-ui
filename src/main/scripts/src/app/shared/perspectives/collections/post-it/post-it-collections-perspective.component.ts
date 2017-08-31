@@ -31,7 +31,9 @@ import {Perspective} from '../../perspective';
 import {Role} from '../../../permissions/role';
 import {Buffer} from '../../utils/buffer';
 import {Popup} from '../../utils/popup';
+import {Query} from '../../../../core/dto/query';
 import {isUndefined} from 'util';
+import {SearchService} from '../../../../core/rest/search.service';
 
 @Component({
   selector: 'post-it-collections-perspective',
@@ -44,7 +46,7 @@ import {isUndefined} from 'util';
 export class PostItCollectionsPerspectiveComponent implements Perspective, OnInit, AfterViewChecked, OnDestroy {
 
   @Input()
-  public query: string;
+  public query: Query;
 
   @Input()
   public editable: boolean = true;
@@ -75,6 +77,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   private previousIconPicker: number;
 
   constructor(private collectionService: CollectionService,
+              private searchService: SearchService,
               private notificationService: NotificationsService) {
   }
 
@@ -84,15 +87,16 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   private loadCollections() {
-    this.collectionService.getCollections()
-      .subscribe(
-        collections => {
-          this.collections = collections;
-          collections.forEach(_ => this.initialized.push(new Initialization(true)));
-        },
-        error => {
-          this.handleError(error, 'Failed fetching collections');
+    this.searchService.searchCollections(this.query).subscribe(
+      collections => {
+        this.collections = collections;
+        collections.forEach(_ => {
+          this.initialized.push(new Initialization(true));
         });
+      },
+      error => {
+        this.handleError(error, 'Failed fetching collections');
+      });
   }
 
   private initializeLayout(): void {
@@ -107,9 +111,21 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     this.layout.refresh();
   }
 
+  public hasWriteRole(collection: Collection): boolean {
+    return this.hasRole(collection, Role.write);
+  }
+
+  public hasManageRole(collection: Collection): boolean {
+    return this.hasRole(collection, Role.manage);
+  }
+
+  private hasRole(collection: Collection, role: string) {
+    return collection.permissions && collection.permissions.users
+      .some(permission => permission.roles.includes(role));
+  }
+
   public onNewCollection(): void {
     this.collections.unshift({
-      code: null,
       name: '',
       color: COLLECTION_NO_COLOR,
       icon: COLLECTION_NO_ICON
@@ -140,8 +156,8 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   public initializeCollection(index: number): void {
     let collection = this.collections[index];
     this.collectionService.createCollection(collection)
-      .subscribe(
-        code => {
+      .subscribe(response => {
+          let code = response.headers.get('Location').split('/').pop();
           this.notificationService.success('Success', 'Collection created');
           this.refreshCollection(code, index);
           this.initialized[index].onServer = true;
@@ -152,27 +168,32 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   private refreshCollection(code: string, index: number): void {
-    this.collectionService.getCollection(code)
-      .subscribe(collection => {
-          this.transitions = false;
-          this.collections[index] = collection;
-          setTimeout(() => this.transitions = true, 400);
-        },
-        error => {
-          this.handleError(error, 'Refreshing new collection failed');
-        });
+    this.collectionService.getCollection(code).subscribe(
+      collection => {
+        this.transitions = false;
+        this.collections[index] = collection;
+        setTimeout(() => this.transitions = true, 400);
+      },
+      error => {
+        this.handleError(error, 'Refreshing new collection failed');
+      });
   }
 
-  public updateCollection(collection: Collection): void {
-    if (this.changedCollection === collection) {
+  public updateCollection(index: number): void {
+    let collection = this.collections[index];
+
+    if (this.changedCollection === collection && this.changeBuffer) {
       this.changeBuffer.stageChanges();
     } else {
       this.changedCollection = collection;
       this.changeBuffer = new Buffer(() => {
-        this.collectionService.updateCollection(collection)
-          .subscribe(
-            null,
-            error => this.handleError(error, 'Failed updating collection'));
+        this.collectionService.updateCollection(collection).subscribe(
+          collection => {
+            // this.collections[index] = collection;
+          },
+          error => {
+            this.handleError(error, 'Failed updating collection');
+          });
       }, 1500);
     }
   }
@@ -184,21 +205,17 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
       'Delete Collection', () => this.removeCollection(index));
   }
 
-  public hasWriteRole(collection: Collection): boolean {
-    return collection.userRoles && collection.userRoles.includes(Role.write);
-  }
-
-  public hasManageRole(collection: Collection): boolean {
-    return collection.userRoles && collection.userRoles.includes(Role.manage);
-  }
-
   private removeCollection(index: number): void {
     if (this.initialized[index].onServer) {
       this.changeBuffer && this.changeBuffer.flush();
-      this.collectionService.dropCollection(this.collections[index].code)
-        .subscribe(
-          _ => this.notificationService.success('Success', 'Collection removed'),
-          error => this.handleError(error, 'Failed removing collection'));
+      this.collectionService.removeCollection(this.collections[index].code).subscribe(
+        _ => {
+          this.notificationService.success('Success', 'Collection removed');
+        },
+        error => {
+          this.handleError(error, 'Failed removing collection');
+        }
+      );
     }
     this.collections.splice(index, 1);
     this.initialized.splice(index, 1);

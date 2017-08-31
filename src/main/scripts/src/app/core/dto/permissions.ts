@@ -18,19 +18,11 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Attribute} from './attribute';
-import {Permissions} from './permissions';
+import {Permission} from './permission';
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
-export const COLLECTION_NO_COLOR = '#cccccc';
+export interface Permissions {
 
-export interface Collection {
-
-  code?: string;
-  name: string;
-  icon: string;
-  color: string;
-  permissions?: Permissions;
-  attributes?: Attribute[];
+  users: Permission[];
+  groups: Permission[];
 
 }

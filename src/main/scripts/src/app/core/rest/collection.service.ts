@@ -19,7 +19,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse} from '@angular/common/http';
 
 import {WorkspaceService} from '../workspace.service';
 import {Collection} from '../dto/collection';
@@ -30,6 +30,7 @@ import {LumeerError} from '../error/lumeer.error';
 import {isNullOrUndefined} from 'util';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import 'rxjs/add/operator/catch';
+import {Permissions} from '../dto/permissions';
 
 @Injectable()
 export class CollectionService {
@@ -38,9 +39,24 @@ export class CollectionService {
               private workspaceService: WorkspaceService) {
   }
 
-  public createCollection(collection: Collection): Observable<string> {
-    return this.httpClient.post(this.apiPrefix(), collection, {responseType: 'text'})
+  public createCollection(collection: Collection): Observable<HttpResponse<any>> {
+    return this.httpClient.post(this.apiPrefix(), collection, {observe: 'response'})
       .catch(CollectionService.handleError);
+  }
+
+  public updateCollection(collection: Collection): Observable<Collection> {
+    return this.httpClient.put(`${this.apiPrefix()}/${collection.code}`, collection)
+      .catch(CollectionService.handleError);
+  }
+
+  public removeCollection(collectionCode: String): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}`, {observe: 'response'})
+      .catch(CollectionService.handleError);
+  }
+
+  public getCollection(collectionCode: string): Observable<Collection> {
+    return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionCode}`)
+      .catch(CollectionService.handleGlobalError);
   }
 
   public getCollections(pageNumber?: number, pageSize?: number): Observable<Collection[]> {
@@ -55,31 +71,46 @@ export class CollectionService {
       .catch(CollectionService.handleGlobalError);
   }
 
-  public updateCollection(collection: Collection): Observable<any> {
-    return this.httpClient.put<any>(`${this.apiPrefix()}/${collection.code}`, collection)
-      .catch(CollectionService.handleError);
-  }
-
-  public getCollection(collectionCode: string): Observable<Collection> {
-    return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionCode}`)
+  /**
+   * @deprecated Get attributes from collection instead.
+   */
+  public getAttributes(collectionCode: string): Observable<Attribute[]> {
+    return this.httpClient.get<Attribute[]>(`${this.apiPrefix()}/${collectionCode}/attributes`)
       .catch(CollectionService.handleGlobalError);
   }
 
-  public dropCollection(collectionCode: String): Observable<any> {
-    return this.httpClient.delete<any>(`${this.apiPrefix()}/${collectionCode}`)
-      .catch(CollectionService.handleError);
+  public updateAttribute(collectionCode: string, fullName: string, attribute: Attribute): Observable<Attribute> {
+    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, attribute)
+      .catch(CollectionService.handleGlobalError);
   }
 
-  public getAttributes(collectionCode: string): Observable<Attribute[]> {
-    return this.httpClient.get<Attribute[]>(`${this.apiPrefix()}/${collectionCode}/attributes`);
+  public removeAttribute(collectionCode: string, fullName: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, {observe: 'response'});
   }
 
-  public renameAttribute(collectionCode: string, oldName: string, newName: string): Observable<any> {
-    return this.httpClient.put<any>(`${this.apiPrefix()}/${collectionCode}/attributes/${oldName}/rename/${newName}`, {});
+  public getPermissions(collectionCode: string): Observable<Permissions> {
+    return this.httpClient.get<Permissions>(`${this.apiPrefix()}/${collectionCode}/permissions`)
+      .catch(CollectionService.handleGlobalError);
   }
 
-  public dropAttribute(collectionCode: string, attributeName: string): Observable<any> {
-    return this.httpClient.delete<any>(`${this.apiPrefix()}/${collectionCode}/attributes/${attributeName}`);
+  public updateUserPermissions(collectionCode: string, userPermissions: Permissions): Observable<Permissions> {
+    return this.httpClient.put<Permissions>(`${this.apiPrefix()}/${collectionCode}/permissions/users`, userPermissions)
+      .catch(CollectionService.handleGlobalError);
+  }
+
+  public removeUserPermissions(collectionCode: string, user: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}/permissions/users/${user}`, {observe: 'response'})
+      .catch(CollectionService.handleGlobalError);
+  }
+
+  public updateGroupPermission(collectionCode: string, groupPermissions: Permissions): Observable<Permissions> {
+    return this.httpClient.put<Permissions>(`${this.apiPrefix()}/${collectionCode}/permissions/groups`, groupPermissions)
+      .catch(CollectionService.handleGlobalError);
+  }
+
+  public removeGroupPermission(collectionCode: string, group: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}/permissions/groups/${group}`, {observe: 'response'})
+      .catch(CollectionService.handleGlobalError);
   }
 
   private apiPrefix(): string {

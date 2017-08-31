@@ -22,7 +22,7 @@ export interface Attribute {
 
   name: string;
   fullName: string;
-  count: number;
   constraints: string[];
+  usageCount: number;
 
 }

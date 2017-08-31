@@ -25,8 +25,6 @@ import {Perspective} from '../../perspective';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Collection} from '../../../../core/dto/collection';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/switchMap';
 import {ActivatedRoute} from '@angular/router';
 import {TableRow} from '../../../table/model/table-row';
 import {TableHeader} from '../../../table/model/table-header';
@@ -36,6 +34,9 @@ import {Attribute} from '../../../../core/dto/attribute';
 import {Document} from '../../../../core/dto/document';
 import {TableRowCell} from '../../../table/model/table-row-cell';
 import {DataEvent} from '../../../table/event/data-event';
+import {Query} from '../../../../core/dto/query';
+import 'rxjs/add/observable/combineLatest';
+import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'table-documents-perspective',
@@ -44,7 +45,7 @@ import {DataEvent} from '../../../table/event/data-event';
 export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
 
   @Input()
-  public query: string;
+  public query: Query;
 
   @Input()
   public editable: boolean;
@@ -70,21 +71,22 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
       .switchMap(params => {
         let code: string = params.get('collectionCode');
 
-        return Observable.combineLatest([
-            this.collectionService.getCollection(code),
-            this.collectionService.getAttributes(code),
-            this.documentService.getDocuments(code)
-          ], (collection, attributes, documents) => ({collection, attributes, documents})
+        return Observable.combineLatest(
+          this.collectionService.getCollection(code),
+          this.documentService.getDocuments(code)
         );
-      }).subscribe(({collection, attributes, documents}) => {
+      }).subscribe(([collection, documents]) => {
       this.collection = collection;
-      this.prepareTableData(attributes, documents);
+      this.prepareTableData(collection.attributes, documents);
     });
   }
 
   public onNewValue(dataEvent: DataEvent) {
     this.documentService.createDocument(this.collection.code, this.convertDataEventToDocument(dataEvent))
-      .subscribe((json: object) => this.rows[dataEvent.rowIndex].id = json['_id']);
+      .subscribe(response => {
+        let id = response.headers.get('Location').split('/').pop();
+        this.rows[dataEvent.rowIndex].id = id;
+      });
   }
 
   public onValueChange(dataEvent: DataEvent) {
@@ -95,12 +97,17 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
   public onHeaderChange(dataEvent: DataEvent) {
     let oldValue: string = dataEvent.data.oldValue;
     let newValue: string = dataEvent.data.newValue;
-    this.collectionService.renameAttribute(this.collection.code, oldValue, newValue)
-      .subscribe();
+    // TODO use real attribute values
+    this.collectionService.updateAttribute(this.collection.code, oldValue, {
+      fullName: newValue,
+      name: newValue,
+      usageCount: null,
+      constraints: []
+    }).subscribe();
   }
 
   public onRemoveColumn(columnName: string) {
-    this.collectionService.dropAttribute(this.collection.code, columnName)
+    this.collectionService.removeAttribute(this.collection.code, columnName)
       .subscribe();
   }
 

@@ -17,20 +17,12 @@
  * limitations under the License.
  * -----------------------------------------------------------------------/
  */
+import {Collection} from './collection';
 
-import {Attribute} from './attribute';
-import {Permissions} from './permissions';
+export interface Suggestions {
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
-export const COLLECTION_NO_COLOR = '#cccccc';
-
-export interface Collection {
-
-  code?: string;
-  name: string;
-  icon: string;
-  color: string;
-  permissions?: Permissions;
-  attributes?: Attribute[];
+  attributes: Collection[];
+  collections: Collection[];
+  views: Document[];
 
 }
