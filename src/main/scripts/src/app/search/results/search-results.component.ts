@@ -18,20 +18,24 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Attribute} from './attribute';
-import {Permissions} from './permissions';
+import {Component} from '@angular/core';
+import {ActivatedRoute, ParamMap} from '@angular/router';
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
-export const COLLECTION_NO_COLOR = '#cccccc';
+@Component({
+  templateUrl: './search-results.component.html',
+  styleUrls: ['./search-results.component.scss']
+})
+export class SearchResultsComponent {
 
-export interface Collection {
+  public query: string;
 
-  code?: string;
-  name: string;
-  icon: string;
-  color: string;
-  permissions?: Permissions;
-  attributes?: Attribute[];
-  documentsCount?: number;
+  constructor(private activatedRoute: ActivatedRoute) {
+  }
+
+  public ngOnInit() {
+    this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
+      this.query = queryParams.get('query');
+    });
+  }
 
 }

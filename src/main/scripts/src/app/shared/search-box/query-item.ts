@@ -18,11 +18,17 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component} from '@angular/core';
+import {QueryItemType} from './query-item-type';
 
-@Component({
-  templateUrl: 'search-all.component.html'
-})
-export class SearchAllComponent {
+export interface QueryItem {
+
+  text: string;
+  icon?: string;
+  color?: string;
+
+  value: string;
+  type: QueryItemType;
+
+  isComplete(): boolean;
 
 }

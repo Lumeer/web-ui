@@ -18,20 +18,26 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Attribute} from './attribute';
-import {Permissions} from './permissions';
+import {Component, ComponentFactoryResolver} from '@angular/core';
+import {ActivatedRoute, ParamMap} from '@angular/router';
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
-export const COLLECTION_NO_COLOR = '#cccccc';
+import {DocumentsPerspectivePresenter} from '../../../shared/perspectives/documents/documents-perspective-presenter';
 
-export interface Collection {
+@Component({
+  templateUrl: './documents-search-results.component.html'
+})
+export class DocumentsSearchResultsComponent extends DocumentsPerspectivePresenter {
 
-  code?: string;
-  name: string;
-  icon: string;
-  color: string;
-  permissions?: Permissions;
-  attributes?: Attribute[];
-  documentsCount?: number;
+  constructor(activatedRoute: ActivatedRoute,
+              componentFactoryResolver: ComponentFactoryResolver) {
+    super(activatedRoute, componentFactoryResolver);
+  }
+
+  public ngOnInit() {
+    this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
+      this.query = JSON.parse(queryParams.get('query'));
+      super.ngOnInit();
+    });
+  }
 
 }

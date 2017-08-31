@@ -11,6 +11,7 @@ import {LumeerError} from '../error/lumeer.error';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {Document} from '../dto/document';
 import {View} from '../dto/view';
+import {SuggestionType} from '../dto/suggestion-type';
 
 @Injectable()
 export class SearchService {
@@ -18,7 +19,7 @@ export class SearchService {
   constructor(private http: HttpClient, private workspaceService: WorkspaceService) {
   }
 
-  public suggest(text: string, type: string): Observable<Suggestions> {
+  public suggest(text: string, type: SuggestionType): Observable<Suggestions> {
     return this.http.get<Suggestions>(`${this.searchPath()}/suggestions`,
       {params: new HttpParams().set('text', text).set('type', type)});
   }

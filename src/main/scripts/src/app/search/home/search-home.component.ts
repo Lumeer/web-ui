@@ -18,20 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Attribute} from './attribute';
-import {Permissions} from './permissions';
+import {Component} from '@angular/core';
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
-export const COLLECTION_NO_COLOR = '#cccccc';
-
-export interface Collection {
-
-  code?: string;
-  name: string;
-  icon: string;
-  color: string;
-  permissions?: Permissions;
-  attributes?: Attribute[];
-  documentsCount?: number;
+@Component({
+  templateUrl: './search-home.component.html',
+  styleUrls: ['./search-home.component.scss']
+})
+export class SearchHomeComponent {
 
 }

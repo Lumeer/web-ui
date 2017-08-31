@@ -18,12 +18,25 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component} from '@angular/core';
+import {Component, ComponentFactoryResolver} from '@angular/core';
+import {CollectionsPerspectivePresenter} from '../../../shared/perspectives/collections/collections-perspective-presenter';
+import {ActivatedRoute, ParamMap} from '@angular/router';
 
 @Component({
-  selector: 'collections-search',
-  templateUrl: './collections-search.component.html'
+  templateUrl: './collections-search-results.component.html'
 })
-export class CollectionsSearchComponent {
+export class CollectionsSearchResultsComponent extends CollectionsPerspectivePresenter {
+
+  constructor(activatedRoute: ActivatedRoute,
+              componentFactoryResolver: ComponentFactoryResolver) {
+    super(activatedRoute, componentFactoryResolver);
+  }
+
+  public ngOnInit() {
+    this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
+      this.query = JSON.parse(queryParams.get('query'));
+      super.ngOnInit();
+    });
+  }
 
 }

@@ -17,10 +17,13 @@
  * limitations under the License.
  * -----------------------------------------------------------------------/
  */
-export interface Suggestion {
 
-  type: string;
-  text: string;
-  icon?: string;
+export enum SuggestionType {
+
+  All = 'all',
+  Attribute = 'attribute',
+  Collection = 'collection',
+  Link = 'link',
+  View = 'view'
 
 }

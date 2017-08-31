@@ -18,27 +18,27 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ComponentFactoryResolver} from '@angular/core';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {QueryItem} from '../query-item';
+import {QueryItemType} from '../query-item-type';
 
-import {DocumentsPerspectivePresenter} from '../../shared/perspectives/documents/documents-perspective-presenter';
+export class FulltextQueryItem implements QueryItem {
 
-@Component({
-  selector: 'documents-search',
-  templateUrl: './documents-search.component.html'
-})
-export class DocumentsSearchComponent extends DocumentsPerspectivePresenter {
+  public type = QueryItemType.Fulltext;
 
-  constructor(activatedRoute: ActivatedRoute,
-              componentFactoryResolver: ComponentFactoryResolver) {
-    super(activatedRoute, componentFactoryResolver);
+  public text: string;
+  public icon: string;
+  public color: string;
+
+  public constructor(text: string) {
+    this.text = text;
   }
 
-  public ngOnInit() {
-    this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
-      this.query = JSON.parse(queryParams.get('query'));
-      super.ngOnInit();
-    });
+  public get value(): string {
+    return this.text;
+  }
+
+  public isComplete(): boolean {
+    return this.text !== '';
   }
 
 }

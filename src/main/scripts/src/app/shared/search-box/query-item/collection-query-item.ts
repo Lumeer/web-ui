@@ -18,20 +18,36 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Attribute} from './attribute';
-import {Permissions} from './permissions';
+import {QueryItem} from '../query-item';
+import {QueryItemType} from '../query-item-type';
+import {Collection} from '../../../core/dto/collection';
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
-export const COLLECTION_NO_COLOR = '#cccccc';
+export class CollectionQueryItem implements QueryItem {
 
-export interface Collection {
+  public type = QueryItemType.Collection;
 
-  code?: string;
-  name: string;
-  icon: string;
-  color: string;
-  permissions?: Permissions;
-  attributes?: Attribute[];
-  documentsCount?: number;
+  public code: string;
+  public name: string;
+  public icon: string;
+  public color: string;
+
+  public constructor(collection: Collection) {
+    this.code = collection.code;
+    this.name = collection.name;
+    this.icon = collection.icon;
+    this.color = collection.color;
+  }
+
+  public get text(): string {
+    return this.name;
+  }
+
+  public get value(): string {
+    return this.code;
+  }
+
+  public isComplete(): boolean {
+    return true; // TODO detect changes
+  }
 
 }

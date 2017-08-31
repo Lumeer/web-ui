@@ -19,10 +19,11 @@
  */
 
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, UrlSegment} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
 import {WorkspaceService} from '../workspace.service';
+import 'rxjs/add/operator/filter';
 
 @Component({
   selector: 'header',
@@ -58,20 +59,27 @@ export class HeaderComponent implements OnInit {
 
   public licence = 'trial';
 
-  public pageWithoutSearchBox = true;
+  public searchBoxHidden = false;
 
-  constructor(private activatedRoute: ActivatedRoute,
+  constructor(private router: Router,
               public workspaceService: WorkspaceService) {
   }
 
   public ngOnInit() {
-    this.activatedRoute.url.subscribe((urlSegment: UrlSegment[]) => {
-      this.pageWithoutSearchBox = urlSegment[0].path.startsWith('workspace');
-    });
+    this.router.events
+      .filter((event) => event instanceof NavigationEnd)
+      .subscribe((event: NavigationEnd) => {
+        this.searchBoxHidden = HeaderComponent.showOrHideSearchBox(event.url);
+      });
+  }
+
+  private static showOrHideSearchBox(url: string): boolean {
+    return url.endsWith('search') || url.endsWith('workspace');
+
   }
 
   public isSearchBoxShown(): boolean {
-    return this.workspaceService.isWorkspaceSet() && !this.pageWithoutSearchBox;
+    return this.workspaceService.isWorkspaceSet() && !this.searchBoxHidden;
   }
 
   public toggleOptions(event: MouseEvent) {

@@ -1,0 +1,9 @@
+<ul class="nav nav-tabs">
+  <li role="presentation" routerLinkActive="active"><a [routerLink]="['all']" [queryParams]="{query: query}">All</a></li>
+  <li role="presentation" routerLinkActive="active"><a [routerLink]="['collections']" [queryParams]="{query: query}">Collections</a></li>
+  <li role="presentation" routerLinkActive="active"><a [routerLink]="['documents']" [queryParams]="{query: query}">Documents</a></li>
+  <li role="presentation" routerLinkActive="active"><a [routerLink]="['links']" [queryParams]="{query: query}">Links</a></li>
+  <li role="presentation" routerLinkActive="active"><a [routerLink]="['views']" [queryParams]="{query: query}">Views</a></li>
+</ul>
+
+<router-outlet></router-outlet>

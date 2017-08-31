@@ -22,9 +22,11 @@ import {NgModule} from '@angular/core';
 import {SharedModule} from '../shared/shared.module';
 import {SearchRoutingModule} from './search-routing.module';
 import {SearchComponent} from './search.component';
-import {SearchAllComponent} from './all/search-all.component';
-import {CollectionsSearchComponent} from './collections/collections-search.component';
-import {DocumentsSearchComponent} from './documents/documents-search.component';
+import {AllSearchResultsComponent} from './results/all/all-search-results.component';
+import {CollectionsSearchResultsComponent} from './results/collections/collections-search-results.component';
+import {DocumentsSearchResultsComponent} from './results/documents/documents-search-results.component';
+import {SearchHomeComponent} from './home/search-home.component';
+import {SearchResultsComponent} from './results/search-results.component';
 
 @NgModule({
   imports: [
@@ -33,9 +35,11 @@ import {DocumentsSearchComponent} from './documents/documents-search.component';
   ],
   declarations: [
     SearchComponent,
-    SearchAllComponent,
-    CollectionsSearchComponent,
-    DocumentsSearchComponent
+    SearchHomeComponent,
+    SearchResultsComponent,
+    AllSearchResultsComponent,
+    CollectionsSearchResultsComponent,
+    DocumentsSearchResultsComponent
   ]
 })
 export class SearchModule {
