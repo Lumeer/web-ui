@@ -19,11 +19,23 @@
  */
 
 import {Component} from '@angular/core';
+import {ActivatedRoute, ParamMap} from '@angular/router';
 
 @Component({
   templateUrl: './search-results.component.html',
   styleUrls: ['./search-results.component.scss']
 })
 export class SearchResultsComponent {
+
+  public query: string;
+
+  constructor(private activatedRoute: ActivatedRoute) {
+  }
+
+  public ngOnInit() {
+    this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
+      this.query = queryParams.get('query');
+    });
+  }
 
 }
