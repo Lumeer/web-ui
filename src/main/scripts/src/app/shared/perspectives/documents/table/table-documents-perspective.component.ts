@@ -140,7 +140,11 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
 
   private createAttributesFromDocuments(documents: Document[]): Attribute[] {
     let set: Set<string> = new Set();
-    documents.forEach(document => Object.keys(document.data).forEach(key => set.add(key)));
+    documents.forEach(document => Object.keys(document.data).forEach(key => {
+      if (key !== '_id') {
+        set.add(key);
+      }
+    }));
     let attributes: Attribute[] = [];
     set.forEach(name => attributes.push({name: name, usageCount: 10, fullName: name, constraints: []}));
     return attributes;

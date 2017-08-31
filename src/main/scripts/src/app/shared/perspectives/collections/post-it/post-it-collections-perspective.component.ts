@@ -184,8 +184,10 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     if (files.length > 0) {
       let file = files[0];
       let reader = new FileReader();
+      let indexOfSuffix = file.name.lastIndexOf('.');
+      let name = indexOfSuffix !== -1 ? file.name.substring(0, indexOfSuffix) : file.name;
       reader.onloadend = () => {
-        this.importData(reader.result);
+        this.importData(reader.result, name, 'csv');
       };
       reader.readAsText(file);
     } else {
@@ -193,8 +195,8 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     }
   }
 
-  private importData(result: string) {
-    this.importService.importFile('csv', result)
+  private importData(result: string, name: string, format: string) {
+    this.importService.importFile(format, result, name)
       .subscribe(collection => {
           this.collections.unshift({
             code: collection.code,

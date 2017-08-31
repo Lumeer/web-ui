@@ -33,8 +33,8 @@ export class ImportService {
   constructor(private http: HttpClient, private workspaceService: WorkspaceService) {
   }
 
-  public importFile(format: string, data: string): Observable<Collection> {
-    let queryParams = new HttpParams().set('format', format);
+  public importFile(format: string, data: string, name: string): Observable<Collection> {
+    let queryParams = new HttpParams().set('format', format).set('name', name);
 
     return this.http.post<Collection>(this.apiPrefix(), data, {params: queryParams})
       .catch(ImportService.handleGlobalError);
