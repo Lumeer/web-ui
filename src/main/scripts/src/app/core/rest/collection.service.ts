@@ -49,7 +49,7 @@ export class CollectionService {
       .catch(CollectionService.handleError);
   }
 
-  public removeCollection(collectionCode: String): Observable<HttpResponse<any>> {
+  public removeCollection(collectionCode: string): Observable<HttpResponse<any>> {
     return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}`, {observe: 'response'})
       .catch(CollectionService.handleError);
   }
