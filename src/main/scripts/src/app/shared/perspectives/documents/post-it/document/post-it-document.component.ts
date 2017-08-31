@@ -69,7 +69,7 @@ export class PostItDocumentComponent implements OnInit {
 
   public newAttributePair: AttributePair;
 
-  public suggestedAttributes: String[];
+  public suggestedAttributes: string[];
 
   constructor(private collectionService: CollectionService,
               private notificationService: NotificationsService) {

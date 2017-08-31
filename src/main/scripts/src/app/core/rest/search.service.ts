@@ -19,7 +19,7 @@ export class SearchService {
   }
 
   public suggest(text: string, type: string): Observable<Suggestions> {
-    return this.http.get<Suggestions>(`${this.searchPath()}/suggestion`,
+    return this.http.get<Suggestions>(`${this.searchPath()}/suggestions`,
       {params: new HttpParams().set('text', text).set('type', type)});
   }
 
@@ -34,7 +34,7 @@ export class SearchService {
   }
 
   public searchViews(query: Query): Observable<View[]> {
-    return this.http.post<View[]>(`${this.searchPath()}/collections`, query)
+    return this.http.post<View[]>(`${this.searchPath()}/views`, query)
       .catch(SearchService.handleError);
   }
 

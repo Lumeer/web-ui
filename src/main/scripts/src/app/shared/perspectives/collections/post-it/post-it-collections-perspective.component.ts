@@ -225,15 +225,15 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     this.notificationService.error('Error', message ? message : error.message);
   }
 
-  public onAttributesClick(collectionCode: String): void {
+  public onAttributesClick(collectionCode: string): void {
     // TODO
   }
 
-  public onPermissionsClick(collectionCode: String): void {
+  public onPermissionsClick(collectionCode: string): void {
     // TODO
   }
 
-  public onDetailClick(collectionCode: String): void {
+  public onDetailClick(collectionCode: string): void {
     // TODO
   }
 
