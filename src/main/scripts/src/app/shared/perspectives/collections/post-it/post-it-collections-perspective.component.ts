@@ -18,16 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {
-  AfterViewChecked,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChildren
-} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
@@ -44,6 +35,7 @@ import {Query} from '../../../../core/dto/query';
 import {isUndefined} from 'util';
 import {SearchService} from '../../../../core/rest/search.service';
 import {ImportService} from '../../../../core/rest/import.service';
+import {WorkspaceService} from '../../../../core/workspace.service';
 
 @Component({
   selector: 'post-it-collections-perspective',
@@ -91,7 +83,8 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   constructor(private collectionService: CollectionService,
               private searchService: SearchService,
               private notificationService: NotificationsService,
-              private importService: ImportService) {
+              private importService: ImportService,
+              private workspaceService: WorkspaceService) {
   }
 
   public ngOnInit(): void {
@@ -325,6 +318,10 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     } else {
       return !isUndefined(this.iconPickers.find(iconPicker => iconPicker.element.nativeElement.contains(click.target)));
     }
+  }
+
+  public workspacePath(): string {
+    return `/w/${this.workspaceService.organizationCode}/${this.workspaceService.projectCode}`;
   }
 
   public ngOnDestroy(): void {
