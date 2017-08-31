@@ -38,6 +38,7 @@ import {SharedModule} from '../shared/shared.module';
 import {SearchService} from './rest/search.service';
 import {RouterModule} from '@angular/router';
 import {LumeerErrorHandler} from './error/lumeer-error.handler';
+import {ImportService} from './rest/import.service';
 
 @NgModule({
   imports: [
@@ -62,6 +63,7 @@ import {LumeerErrorHandler} from './error/lumeer-error.handler';
     SearchService,
     UserSettingsService,
     WorkspaceService,
+    ImportService,
     {provide: ErrorHandler, useClass: LumeerErrorHandler}
   ],
   exports: [

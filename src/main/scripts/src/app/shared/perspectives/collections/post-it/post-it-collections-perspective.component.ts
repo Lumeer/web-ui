@@ -18,7 +18,16 @@
  * -----------------------------------------------------------------------/
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
@@ -34,6 +43,7 @@ import {Popup} from '../../utils/popup';
 import {Query} from '../../../../core/dto/query';
 import {isUndefined} from 'util';
 import {SearchService} from '../../../../core/rest/search.service';
+import {ImportService} from '../../../../core/rest/import.service';
 
 @Component({
   selector: 'post-it-collections-perspective',
@@ -68,6 +78,8 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
 
   public transitions = true;
 
+  public dragging: boolean = false;
+
   private layout: MasonryLayout;
 
   private changeBuffer: Buffer;
@@ -78,7 +90,8 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
 
   constructor(private collectionService: CollectionService,
               private searchService: SearchService,
-              private notificationService: NotificationsService) {
+              private notificationService: NotificationsService,
+              private importService: ImportService) {
   }
 
   public ngOnInit(): void {
@@ -167,6 +180,52 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
         });
   }
 
+  public fileChange(files: FileList) {
+    if (files.length > 0) {
+      let file = files[0];
+      let reader = new FileReader();
+      let indexOfSuffix = file.name.lastIndexOf('.');
+      let name = indexOfSuffix !== -1 ? file.name.substring(0, indexOfSuffix) : file.name;
+      reader.onloadend = () => {
+        this.importData(reader.result, name, 'csv');
+      };
+      reader.readAsText(file);
+    } else {
+      this.handleError(null, 'File input is empty');
+    }
+  }
+
+  private importData(result: string, name: string, format: string) {
+    this.importService.importFile(format, result, name)
+      .subscribe(collection => {
+          this.collections.unshift({
+            code: collection.code,
+            name: collection.name,
+            color: COLLECTION_NO_COLOR,
+            icon: COLLECTION_NO_ICON
+          });
+          this.initialized.unshift(new Initialization(true));
+        },
+        error => {
+          this.handleError(error, 'Import failed');
+        }
+      );
+  }
+
+  public handleDragEnter() {
+    this.dragging = true;
+  }
+
+  public handleDragLeave() {
+    this.dragging = false;
+  }
+
+  public handleDrop(event) {
+    event.preventDefault();
+    this.dragging = false;
+    this.fileChange(event.dataTransfer.files);
+  }
+
   private refreshCollection(code: string, index: number): void {
     this.collectionService.getCollection(code).subscribe(
       collection => {
@@ -221,7 +280,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     this.initialized.splice(index, 1);
   }
 
-  private handleError(error: Error, message?: string): void {
+  private handleError(error?: Error, message?: string): void {
     this.notificationService.error('Error', message ? message : error.message);
   }
 

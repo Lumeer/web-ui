@@ -7,6 +7,21 @@
     </a>
   </div>
 
+  <div *ngIf="editable" class="layout-item import"
+       ondragover="return false;"
+       [ngClass]="{'dragging': dragging}"
+       (click)="fileInput.click()"
+       (drop)="handleDrop($event)"
+       (dragenter)="handleDragEnter()"
+       (dragleave)="handleDragLeave()">
+    <a class="add-collection">
+      <i class="fa fa-cloud-upload"></i>
+      <label>Import collection</label>
+    </a>
+    <input type="file" #fileInput (click)="$event.stopPropagation()" (change)="fileChange($event.target.files)"
+           accept=".csv, text/csv">
+  </div>
+
   <div *ngFor="let collection of collections; let idx = index"
        class="post-it layout-item {{ pickerVisible[idx] ? 'selected' : ''}} {{ !initialized[idx].onServer ? 'uninitialized' : '' }}"
        [style.border-color]="collection.color"

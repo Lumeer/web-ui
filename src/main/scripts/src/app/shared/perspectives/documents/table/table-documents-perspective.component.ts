@@ -90,7 +90,7 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
   }
 
   public onValueChange(dataEvent: DataEvent) {
-    this.documentService.updateDocument(this.collection.code, this.convertDataEventToDocument(dataEvent))
+    this.documentService.patchDocument(this.collection.code, this.convertDataEventToDocument(dataEvent))
       .subscribe();
   }
 
@@ -131,9 +131,23 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
   }
 
   private prepareTableData(attributes: Attribute[], documents: Document[]) {
+    // TODO remove after implementing attributes in backend
+    attributes = this.createAttributesFromDocuments(documents);
     let headerRows: TableHeaderCell[] = attributes.map(TableDocumentsPerspectiveComponent.convertAttributeToHeaderCell);
     this.header = <TableHeader> {cells: headerRows};
     this.rows = documents.map(document => TableDocumentsPerspectiveComponent.convertDocumentToRow(this.header, document));
+  }
+
+  private createAttributesFromDocuments(documents: Document[]): Attribute[] {
+    let set: Set<string> = new Set();
+    documents.forEach(document => Object.keys(document.data).forEach(key => {
+      if (key !== '_id') {
+        set.add(key);
+      }
+    }));
+    let attributes: Attribute[] = [];
+    set.forEach(name => attributes.push({name: name, usageCount: 10, fullName: name, constraints: []}));
+    return attributes;
   }
 
   private static convertAttributeToHeaderCell(attribute: Attribute): TableHeaderCell {
