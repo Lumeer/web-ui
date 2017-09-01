@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {QueryTag, STRING, NUMBER} from '../helpers/tag.interface';
-import {AutoCompleteOptions} from '../auto-complete/autocomplete.interface';
+//import {AutoCompleteOptions} from '../auto-complete/autocomplete.interface';
 import {ITagOptions, TagBuilder} from '../../views/research/query-tag.inteface';
 import * as _ from 'lodash';
 import {ActivatedRoute} from '@angular/router';
@@ -39,10 +39,10 @@ export class FilterComponent {
   public items: QueryTag[] = [];
   public tagOptions: ITagOptions;
 
-  public autocompleteOptions: AutoCompleteOptions = {
+  /*public autocompleteOptions: AutoCompleteOptions = {
     displayKey: 'text',
     filterFn: (item, currentValue) => this.filterValues(item, currentValue)
-  };
+  };*/
 
   private collectionItem = {colValue: 'Store', colName: 'Collection', readOnly: ['colName'],
     source: this.collections, type: STRING};
@@ -180,7 +180,7 @@ export class FilterComponent {
   private filterValues(oneItem, currentValue) {
     let currentData = currentValue.trim().toLowerCase();
     if (currentData !== '') {
-      return oneItem[this.autocompleteOptions.displayKey].toLowerCase().indexOf(currentData) !== -1;
+      //return oneItem[this.autocompleteOptions.displayKey].toLowerCase().indexOf(currentData) !== -1;
     }
     return true;
   }
