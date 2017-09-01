@@ -57,7 +57,7 @@ export class KeycloakService {
             reject('Failed to refresh token');
           });
       } else if (KeycloakService.auth.isDisabled) {
-        resolve();
+        resolve('KC is disabled!');
       } else {
         reject('Not loggen in');
       }

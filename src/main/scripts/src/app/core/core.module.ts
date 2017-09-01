@@ -20,9 +20,9 @@
 
 import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
-import {HttpModule} from '@angular/http';
+import {Http, HttpModule, RequestOptions, XHRBackend} from '@angular/http';
 
 import {WorkspaceService} from './workspace.service';
 import {HeaderComponent} from './header/header.component';
@@ -39,7 +39,8 @@ import {SearchService} from './rest/search.service';
 import {RouterModule} from '@angular/router';
 import {LumeerErrorHandler} from './error/lumeer-error.handler';
 import {ImportService} from './rest/import.service';
-import {KEYCLOAK_HTTP_PROVIDER, KeycloakHttp} from './keycloak/keycloak-http.service';
+import {KEYCLOAK_HTTP_PROVIDER, KeycloakInterceptor} from './keycloak/keycloak-http.service';
+import {KeycloakService} from './keycloak/keycloak.service';
 
 @NgModule({
   imports: [
@@ -65,8 +66,8 @@ import {KEYCLOAK_HTTP_PROVIDER, KeycloakHttp} from './keycloak/keycloak-http.ser
     UserSettingsService,
     WorkspaceService,
     ImportService,
+    KeycloakService,
     KEYCLOAK_HTTP_PROVIDER,
-    KeycloakHttp,
     {provide: ErrorHandler, useClass: LumeerErrorHandler}
   ],
   exports: [
