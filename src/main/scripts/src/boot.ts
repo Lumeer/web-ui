@@ -20,7 +20,7 @@
 
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {AppModule} from './app/app.module';
-import {KeycloakService} from './services/keycloak.service';
+import {KeycloakService} from './app/core/keycloak/keycloak.service';
 
 KeycloakService.init()
   .then(() => platformBrowserDynamic().bootstrapModule(AppModule));
