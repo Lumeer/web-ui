@@ -54,7 +54,7 @@ export class CollectionService extends PermissionService {
   }
 
   public getCollections(pageNumber?: number, pageSize?: number): Observable<Collection[]> {
-    let queryParams = new HttpParams();
+    const queryParams = new HttpParams();
 
     if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
       queryParams.set('page', pageNumber.toString())
@@ -89,8 +89,8 @@ export class CollectionService extends PermissionService {
   }
 
   private apiPrefix(): string {
-    let organizationCode = this.workspaceService.organizationCode;
-    let projectCode = this.workspaceService.projectCode;
+    const organizationCode = this.workspaceService.organizationCode;
+    const projectCode = this.workspaceService.projectCode;
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
   }

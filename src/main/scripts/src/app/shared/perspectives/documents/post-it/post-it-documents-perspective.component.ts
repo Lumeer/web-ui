@@ -37,7 +37,7 @@ import {Document} from '../../../../core/dto/document';
 import {DocumentService} from '../../../../core/rest/document.service';
 import {PostItDocumentComponent} from './document/post-it-document.component';
 import {AttributePropertySelection} from './attribute/attribute-property-selection';
-import {MasonryLayout} from '../../utils/masonry-layout';
+import {PostItLayout} from '../../utils/post-it-layout';
 import {Direction} from './attribute/direction';
 import {Buffer} from '../../utils/buffer';
 import {SearchService} from '../../../../core/rest/search.service';
@@ -79,7 +79,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
 
   private updatingDocument: Document;
 
-  private layout: MasonryLayout;
+  private layout: PostItLayout;
 
   constructor(private documentService: DocumentService,
               private searchService: SearchService,
@@ -104,7 +104,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   }
 
   private initializeLayout(): void {
-    this.layout = new MasonryLayout({
+    this.layout = new PostItLayout({
       container: '.layout',
       item: '.layout-item',
       gutter: 15
@@ -164,7 +164,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   }
 
   public createDocument(): void {
-    let newDocument = new Document;
+    const newDocument = new Document;
     newDocument.collectionCode = this.collectionCode;
 
     this.documents.unshift(newDocument);

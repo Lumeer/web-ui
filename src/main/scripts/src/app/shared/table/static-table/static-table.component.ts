@@ -80,18 +80,18 @@ export class StaticTableComponent {
   }
 
   public onUpdateCell(rowIndex, dataPayload): void {
-    let colIndex: number = dataPayload.colIndex;
-    let newValue = dataPayload.data;
+    const colIndex: number = dataPayload.colIndex;
+    const newValue = dataPayload.data;
     if (!this.isValueValid(colIndex, newValue)) {
-      let rowComponent: TableRowComponent = this.rowsComponents.find(component => component.rowIndex === rowIndex);
+      const rowComponent: TableRowComponent = this.rowsComponents.find(component => component.rowIndex === rowIndex);
       if (rowComponent) {
         rowComponent.setCell(colIndex, this.rows[rowIndex].cells[colIndex].label);
       }
       return;
     }
     this.rows[rowIndex].cells[colIndex].label = newValue;
-    let header: string = this.header.cells[colIndex].label;
-    let data: any = {};
+    const header: string = this.header.cells[colIndex].label;
+    const data: any = {};
     data[header] = newValue;
     if (this.rows[rowIndex].id) {
       this.valueChange.emit(<DataEvent> {
@@ -106,7 +106,7 @@ export class StaticTableComponent {
   }
 
   public onRemoveColumn(colIndex): void {
-    let headerName: string = this.header.cells[colIndex].label;
+    const headerName: string = this.header.cells[colIndex].label;
     this.header.cells.splice(colIndex, 1);
     this.rows = this.rows.map(oneRow => {
       oneRow.cells.splice(colIndex, 1);
@@ -116,11 +116,11 @@ export class StaticTableComponent {
   }
 
   public onHeaderChange(dataPayload) {
-    let colIndex: number = dataPayload.colIndex;
-    let oldValue: string = this.header.cells[colIndex].label;
-    let newValue: string = dataPayload.data;
+    const colIndex: number = dataPayload.colIndex;
+    const oldValue: string = this.header.cells[colIndex].label;
+    const newValue: string = dataPayload.data;
     this.header.cells[colIndex].label = newValue;
-    let data = {oldValue: oldValue, newValue: newValue};
+    const data = {oldValue: oldValue, newValue: newValue};
     this.headerChange.emit(<DataEvent> {colIndex: colIndex, data: data});
   }
 
@@ -147,7 +147,7 @@ export class StaticTableComponent {
   }
 
   private isValueValid(colIndex: number, value: any) {
-    let headerCell = this.header.cells[colIndex];
+    const headerCell = this.header.cells[colIndex];
     headerCell.constraints.forEach(constraint => {
       // TODO check
     });
@@ -155,7 +155,7 @@ export class StaticTableComponent {
   }
 
   private static createNewRow(header: TableHeader, rowNum: number): TableRow {
-    let cells = header.cells.map((header) => {
+    const cells = header.cells.map((header) => {
       return <TableRowCell>{label: '', active: false, hidden: header.hidden, constraints: header.constraints};
     });
     return <TableRow> {id: null, cells: cells, active: false};

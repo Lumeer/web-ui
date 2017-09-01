@@ -213,8 +213,8 @@ export class PostItDocumentComponent implements OnInit {
   };
 
   private moveSelection(columnChange: number, rowChange: number): void {
-    let newColumn = this.selection.column + columnChange;
-    let newRow = this.selection.row + rowChange;
+    const newColumn = this.selection.column + columnChange;
+    const newRow = this.selection.row + rowChange;
 
     if (this.selectedDocumentDirection(newColumn, newRow) === Direction.Self) {
       this.select(newColumn, newRow);

@@ -43,7 +43,7 @@ export class AttributeQueryItem implements QueryItem {
     this.icon = collection.icon;
     this.color = collection.color;
 
-    let attribute = collection.attributes[0];
+    const attribute = collection.attributes[0];
     this.attributeName = attribute.name;
     this.attributeFullName = attribute.fullName;
     this.constraints = attribute.constraints;

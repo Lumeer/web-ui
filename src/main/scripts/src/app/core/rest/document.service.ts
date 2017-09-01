@@ -61,7 +61,7 @@ export class DocumentService {
   }
 
   public getDocuments(collectionCode: string, pageNumber?: number, pageSize?: number): Observable<Document[]> {
-    let queryParams = new HttpParams();
+    const queryParams = new HttpParams();
 
     if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
       queryParams.set('page', pageNumber.toString())
@@ -73,8 +73,8 @@ export class DocumentService {
   }
 
   private apiPrefix(collectionCode: string): string {
-    let organizationCode = this.workspaceService.organizationCode;
-    let projectCode = this.workspaceService.projectCode;
+    const organizationCode = this.workspaceService.organizationCode;
+    const projectCode = this.workspaceService.projectCode;
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
   }

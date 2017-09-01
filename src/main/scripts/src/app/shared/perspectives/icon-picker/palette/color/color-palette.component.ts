@@ -48,20 +48,14 @@ export class ColorPaletteComponent extends Palette {
   }
 
   public darken(color: string, amount: number): string {
-    let hexToNumber = (start: number) => parseInt(color.substr(start, 2), 16);
-    let r: number = hexToNumber(1);
+    const hexToNumber = (start: number) => parseInt(color.substr(start, 2), 16);
+    const subtractAmount = (num: number) => Math.max(0, (num - amount));
 
-    let g: number = hexToNumber(3);
-    let b: number = hexToNumber(5);
+    const darkerColors: string = [hexToNumber(1), hexToNumber(3), hexToNumber(5)]
+      .map(subtractAmount)
+      .join(', ');
 
-    let positive = (num: number) => Math.max(num, 0);
-    let subtractAmount = (num: number) => positive(num - amount);
-
-    let darkR = subtractAmount(r);
-    let darkG = subtractAmount(g);
-    let darkB = subtractAmount(b);
-
-    return `rgb(${(darkR)}, ${darkG}, ${darkB})`;
+    return `rgb(${darkerColors})`;
   };
 
 }

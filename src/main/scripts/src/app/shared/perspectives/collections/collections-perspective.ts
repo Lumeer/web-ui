@@ -36,7 +36,7 @@ export class CollectionsPerspective {
     if (!perspectiveId) {
       return CollectionsPerspective.defaultPerspective;
     }
-    let perspective = CollectionsPerspective.perspectives[perspectiveId.toLowerCase()];
+    const perspective = CollectionsPerspective.perspectives[perspectiveId.toLowerCase()];
     return perspective ? perspective : CollectionsPerspective.defaultPerspective;
   }
 

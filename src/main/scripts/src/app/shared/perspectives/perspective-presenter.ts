@@ -47,12 +47,12 @@ export abstract class PerspectivePresenter implements OnInit {
   public abstract loadPerspective();
 
   protected loadPerspectiveComponent(perspectiveComponent: Type<any>) {
-    let componentFactory = this.componentFactoryResolver.resolveComponentFactory(perspectiveComponent);
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(perspectiveComponent);
 
-    let viewContainerRef = this.perspectiveDirective.viewContainerRef;
+    const viewContainerRef = this.perspectiveDirective.viewContainerRef;
     viewContainerRef.clear();
 
-    let componentRef = viewContainerRef.createComponent(componentFactory);
+    const componentRef = viewContainerRef.createComponent(componentFactory);
     (<Perspective>componentRef.instance).query = this.query;
   }
 

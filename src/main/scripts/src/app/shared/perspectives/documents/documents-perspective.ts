@@ -39,7 +39,7 @@ export class DocumentsPerspective {
     if (!perspectiveId) {
       return DocumentsPerspective.defaultPerspective;
     }
-    let perspective = DocumentsPerspective.perspectives[perspectiveId.toLowerCase()];
+    const perspective = DocumentsPerspective.perspectives[perspectiveId.toLowerCase()];
     return perspective ? perspective : DocumentsPerspective.defaultPerspective;
   }
 

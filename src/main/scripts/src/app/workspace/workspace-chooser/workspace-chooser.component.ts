@@ -27,7 +27,6 @@ import {WorkspaceService} from '../../core/workspace.service';
 import {OrganizationService} from '../../core/rest/organization.service';
 import {ProjectService} from '../../core/rest/project.service';
 import {UserSettingsService} from '../../core/rest/user-settings.service';
-import {UserSettings} from '../../core/dto/user.settings';
 import {PerfectScrollbarComponent} from 'ngx-perfect-scrollbar';
 
 const squareSize: number = 170;
@@ -53,7 +52,6 @@ export class WorkspaceChooserComponent implements OnInit {
 
   constructor(private organizationService: OrganizationService,
               private projectService: ProjectService,
-              private userSettingsService: UserSettingsService,
               private workspaceService: WorkspaceService,
               private router: Router) {
   }
@@ -65,7 +63,7 @@ export class WorkspaceChooserComponent implements OnInit {
         this.organizationsWidth = (organizations.length + 1) * squareSize + 5;
 
         if (this.workspaceService.organizationCode) {
-          let ix: number = this.organizations.findIndex(org =>
+          const ix: number = this.organizations.findIndex(org =>
             org.code === this.workspaceService.organizationCode
           );
           if (ix >= 0) {
@@ -79,7 +77,7 @@ export class WorkspaceChooserComponent implements OnInit {
                 this.projectsWidth = (projects.length + 1) * squareSize + 5;
 
                 if (this.workspaceService.projectCode) {
-                  let ixProj: number = this.activeOrganization.projects.findIndex(proj =>
+                  const ixProj: number = this.activeOrganization.projects.findIndex(proj =>
                     proj.code === this.workspaceService.projectCode
                   );
                   if (ixProj >= 0) {

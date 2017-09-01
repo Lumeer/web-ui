@@ -26,16 +26,16 @@ import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../../c
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {IconPickerComponent} from '../../icon-picker/icon-picker.component';
 import {Initialization} from './initialization';
-import {MasonryLayout} from '../../utils/masonry-layout';
+import {PostItLayout} from '../../utils/post-it-layout';
 import {Perspective} from '../../perspective';
 import {Role} from '../../../permissions/role';
 import {Buffer} from '../../utils/buffer';
 import {Popup} from '../../utils/popup';
 import {Query} from '../../../../core/dto/query';
-import {isUndefined} from 'util';
 import {SearchService} from '../../../../core/rest/search.service';
 import {ImportService} from '../../../../core/rest/import.service';
 import {WorkspaceService} from '../../../../core/workspace.service';
+import {isUndefined} from 'util';
 
 @Component({
   selector: 'post-it-collections-perspective',
@@ -72,7 +72,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
 
   public dragging: boolean = false;
 
-  private layout: MasonryLayout;
+  private layout: PostItLayout;
 
   private changeBuffer: Buffer;
 
@@ -106,7 +106,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   private initializeLayout(): void {
-    this.layout = new MasonryLayout({
+    this.layout = new PostItLayout({
       container: '.layout',
       item: '.layout-item',
       gutter: 15
@@ -160,10 +160,10 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public initializeCollection(index: number): void {
-    let collection = this.collections[index];
-    this.collectionService.createCollection(collection)
-      .subscribe(response => {
-          let code = response.headers.get('Location').split('/').pop();
+    const collection = this.collections[index];
+    this.collectionService.createCollection(collection).subscribe(
+      response => {
+          const code = response.headers.get('Location').split('/').pop();
           this.notificationService.success('Success', 'Collection created');
           this.refreshCollection(code, index);
           this.initialized[index].onServer = true;
@@ -174,11 +174,11 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public fileChange(files: FileList) {
-    if (files.length > 0) {
-      let file = files[0];
-      let reader = new FileReader();
-      let indexOfSuffix = file.name.lastIndexOf('.');
-      let name = indexOfSuffix !== -1 ? file.name.substring(0, indexOfSuffix) : file.name;
+    if (files.length) {
+      const file = files[0];
+      const reader = new FileReader();
+      const indexOfSuffix = file.name.lastIndexOf('.');
+      const name = indexOfSuffix !== -1 ? file.name.substring(0, indexOfSuffix) : file.name;
       reader.onloadend = () => {
         this.importData(reader.result, name, 'csv');
       };
@@ -232,7 +232,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public updateCollection(index: number): void {
-    let collection = this.collections[index];
+    const collection = this.collections[index];
 
     if (this.changedCollection === collection && this.changeBuffer) {
       this.changeBuffer.stageChanges();
@@ -241,7 +241,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
       this.changeBuffer = new Buffer(() => {
         this.collectionService.updateCollection(collection).subscribe(
           collection => {
-            // this.collections[index] = collection;
+            return null;
           },
           error => {
             this.handleError(error, 'Failed updating collection');
