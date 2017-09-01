@@ -43,7 +43,7 @@ import {isUndefined} from 'util';
   styleUrls: ['./post-it-collections-perspective.component.scss'],
   host: {
     '(document:click)': 'onClick($event)'
-  },
+  }
 })
 export class PostItCollectionsPerspectiveComponent implements Perspective, OnInit, AfterViewChecked, OnDestroy {
 
@@ -99,6 +99,8 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
         collections.forEach(_ => {
           this.initialized.push(new Initialization(true));
         });
+
+        setTimeout(() => this.layout.refresh(), 1000);
       },
       error => {
         this.handleError(error, 'Failed fetching collections');
@@ -163,14 +165,52 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     const collection = this.collections[index];
     this.collectionService.createCollection(collection).subscribe(
       response => {
-          const code = response.headers.get('Location').split('/').pop();
-          this.notificationService.success('Success', 'Collection created');
-          this.refreshCollection(code, index);
-          this.initialized[index].onServer = true;
+        const code = response.headers.get('Location').split('/').pop();
+
+        this.notificationService.success('Success', 'Collection created');
+        this.getCollection(code, index);
+        this.initialized[index].onServer = true;
+      },
+      error => {
+        this.handleError(error, 'Creating collection failed');
+      });
+  }
+
+  public updateCollection(index: number): void {
+    const collection = this.collections[index];
+
+    if (this.changedCollection === collection && this.changeBuffer) {
+      this.changeBuffer.stageChanges();
+      return;
+    }
+
+    this.changedCollection = collection;
+    this.changeBuffer = new Buffer(() => {
+      this.collectionService.updateCollection(collection).subscribe(
+        collection => {
+          this.swapCollectionOnIndex(collection, index);
         },
         error => {
-          this.handleError(error, 'Creating collection failed');
+          console.log(collection);
+          this.handleError(error, 'Failed updating collection');
         });
+    }, 500);
+  }
+
+  private getCollection(code: string, index: number): void {
+    this.collectionService.getCollection(code).subscribe(
+      collection => {
+        this.swapCollectionOnIndex(collection, index);
+      },
+      error => {
+        this.handleError(error, 'Failed updating collection');
+      });
+  }
+
+  private swapCollectionOnIndex(collection: Collection, index: number): void {
+    this.transitions = false;
+    this.collections[index] = collection;
+    setTimeout(() => this.transitions = true, 750);
   }
 
   public fileChange(files: FileList) {
@@ -219,37 +259,6 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     this.fileChange(event.dataTransfer.files);
   }
 
-  private refreshCollection(code: string, index: number): void {
-    this.collectionService.getCollection(code).subscribe(
-      collection => {
-        this.transitions = false;
-        this.collections[index] = collection;
-        setTimeout(() => this.transitions = true, 400);
-      },
-      error => {
-        this.handleError(error, 'Refreshing new collection failed');
-      });
-  }
-
-  public updateCollection(index: number): void {
-    const collection = this.collections[index];
-
-    if (this.changedCollection === collection && this.changeBuffer) {
-      this.changeBuffer.stageChanges();
-    } else {
-      this.changedCollection = collection;
-      this.changeBuffer = new Buffer(() => {
-        this.collectionService.updateCollection(collection).subscribe(
-          collection => {
-            return null;
-          },
-          error => {
-            this.handleError(error, 'Failed updating collection');
-          });
-      }, 1500);
-    }
-  }
-
   public onDeleteClick(index: number): void {
     Popup.confirmDanger('Delete Collection', 'Deleting a collection will permanently remove it from this project.\n' +
       'All documents stored inside the collection will be lost.',
@@ -261,7 +270,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     if (this.initialized[index].onServer) {
       this.changeBuffer && this.changeBuffer.flush();
       this.collectionService.removeCollection(this.collections[index].code).subscribe(
-        _ => {
+        response => {
           this.notificationService.success('Success', 'Collection removed');
         },
         error => {

@@ -133,12 +133,15 @@
   }
 
   .post-it:hover, .selected {
-    z-index: 100;
     box-shadow: $shadow-up;
 
     & > * {
       opacity: 1 !important;
     }
+  }
+
+  .selected {
+    z-index: 100;
   }
 
   .add-collection {

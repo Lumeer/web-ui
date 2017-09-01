@@ -34,12 +34,13 @@ import {PermissionService} from './permission.service';
 export class CollectionService extends PermissionService {
 
   public createCollection(collection: Collection): Observable<HttpResponse<any>> {
-    return this.httpClient.post(this.apiPrefix(), collection, {observe: 'response'})
+    return this.httpClient.post(this.apiPrefix(), this.toDto(collection), {observe: 'response'})
       .catch(this.handleError);
   }
 
   public updateCollection(collection: Collection): Observable<Collection> {
-    return this.httpClient.put(`${this.apiPrefix()}/${collection.code}`, collection)
+    return this.httpClient.put(`${this.apiPrefix()}/${collection.code}`, this.toDto(collection))
+      .map(this.toDto)
       .catch(this.handleError);
   }
 
@@ -62,6 +63,7 @@ export class CollectionService extends PermissionService {
     }
 
     return this.httpClient.get<Collection[]>(this.apiPrefix(), {params: queryParams})
+      .map(collections => collections.map(this.toDto))
       .catch(CollectionService.handleGlobalError);
   }
 
@@ -86,6 +88,17 @@ export class CollectionService extends PermissionService {
     let collectionCode = this.workspaceService.collectionCode;
 
     return `${this.apiPrefix()}/${collectionCode}`;
+  }
+
+  private toDto(collection: Collection): Collection {
+    return {
+      code: collection.code,
+      name: collection.name,
+      color: collection.color,
+      icon: collection.icon,
+      permissions: collection.permissions,
+      attributes: collection.attributes
+    };
   }
 
   private apiPrefix(): string {
