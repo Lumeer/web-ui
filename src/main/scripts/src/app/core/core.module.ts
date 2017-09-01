@@ -39,6 +39,7 @@ import {SearchService} from './rest/search.service';
 import {RouterModule} from '@angular/router';
 import {LumeerErrorHandler} from './error/lumeer-error.handler';
 import {ImportService} from './rest/import.service';
+import {KEYCLOAK_HTTP_PROVIDER, KeycloakHttp} from './keycloak/keycloak-http.service';
 
 @NgModule({
   imports: [
@@ -64,6 +65,8 @@ import {ImportService} from './rest/import.service';
     UserSettingsService,
     WorkspaceService,
     ImportService,
+    KEYCLOAK_HTTP_PROVIDER,
+    KeycloakHttp,
     {provide: ErrorHandler, useClass: LumeerErrorHandler}
   ],
   exports: [
