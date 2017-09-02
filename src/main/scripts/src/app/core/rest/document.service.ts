@@ -35,23 +35,23 @@ export class DocumentService {
               private workspaceService: WorkspaceService) {
   }
 
-  public createDocument(collectionCode: string, document: Document): Observable<HttpResponse<object>> {
-    return this.httpClient.post(this.apiPrefix(collectionCode), document, {observe: 'response'})
+  public createDocument(document: Document): Observable<HttpResponse<object>> {
+    return this.httpClient.post(this.apiPrefix(document.collectionCode), document, {observe: 'response'})
       .catch(error => this.handleGlobalError(error));
   }
 
-  public updateDocument(collectionCode: string, document: Document): Observable<Document> {
-    return this.httpClient.put<Document>(`${this.apiPrefix(collectionCode)}/${document.id}/data`, document.data)
+  public updateDocument(document: Document): Observable<Document> {
+    return this.httpClient.put<Document>(`${this.apiPrefix(document.collectionCode)}/${document.id}/data`, document.data)
       .catch(error => this.handleGlobalError(error));
   }
 
-  public patchDocument(collectionCode: string, document: Document): Observable<Document> {
-    return this.httpClient.patch<Document>(`${this.apiPrefix(collectionCode)}/${document.id}/data`, document.data)
+  public patchDocument(document: Document): Observable<Document> {
+    return this.httpClient.patch<Document>(`${this.apiPrefix(document.collectionCode)}/${document.id}/data`, document.data)
       .catch(error => this.handleGlobalError(error));
   }
 
-  public removeDocument(collectionCode: string, document: Document): Observable<HttpResponse<object>> {
-    return this.httpClient.delete(`${this.apiPrefix(collectionCode)}/${document.id}`, {observe: 'response'})
+  public removeDocument(document: Document): Observable<HttpResponse<object>> {
+    return this.httpClient.delete(`${this.apiPrefix(document.collectionCode)}/${document.id}`, {observe: 'response'})
       .catch(error => this.handleGlobalError(error));
   }
 

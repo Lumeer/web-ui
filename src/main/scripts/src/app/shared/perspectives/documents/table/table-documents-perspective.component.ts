@@ -82,7 +82,7 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
   }
 
   public onNewValue(dataEvent: DataEvent) {
-    this.documentService.createDocument(this.collection.code, this.convertDataEventToDocument(dataEvent))
+    this.documentService.createDocument(this.convertDataEventToDocument(dataEvent))
       .subscribe(response => {
         const id = response.headers.get('Location').split('/').pop();
         this.rows[dataEvent.rowIndex].id = id;
@@ -90,7 +90,7 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
   }
 
   public onValueChange(dataEvent: DataEvent) {
-    this.documentService.patchDocument(this.collection.code, this.convertDataEventToDocument(dataEvent))
+    this.documentService.patchDocument(this.convertDataEventToDocument(dataEvent))
       .subscribe();
   }
 
@@ -127,6 +127,7 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
     const document = new Document();
     Object.keys(dataEvent.data).forEach(key => document.data[key] = dataEvent.data[key]);
     document.id = dataEvent.id;
+    document.collectionCode = this.collection.code;
     return document;
   }
 

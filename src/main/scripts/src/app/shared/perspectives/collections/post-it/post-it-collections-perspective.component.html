@@ -97,5 +97,5 @@
   </div>
 
   <label *ngIf="!editable && !query" class="label-centered">No Search Query</label>
-  <label *ngIf="!editable && query && !collections" class="label-centered">Nothing To Show</label>
+  <label *ngIf="!editable && query && !collections.length" class="label-centered">Nothing To Show</label>
 </div>

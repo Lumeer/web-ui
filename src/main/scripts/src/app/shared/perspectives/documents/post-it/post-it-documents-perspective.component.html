@@ -1,25 +1,25 @@
 <div class="fadedown"></div>
 <div class="perspective" [style.height]="height + 'px'" #perspective>
   <div class="layout" #layout>
-    <add-document class="layout-item" *ngIf="editable"
-                  (newDocument)="createDocument()"></add-document>
 
-    <post-it-document *ngFor="let document of documents; let idx = index"
-                      class="layout-item {{ !initialized[idx] ? 'uninitialized' : '' }}"
-                      [style.z-index]="documents.length - idx"
-                      [style.transition]="!transitions ? 'all 0s' : ''"
-                      [index]="idx"
-                      [document]="document"
-                      [selection]="selection"
-                      (selectOther)="selectDocument($event)"
-                      (removed)="removeDocument(idx, document)"
-                      (changes)="sendUpdate(idx, document)">
-    </post-it-document>
+    <add-document class="layout-item" *ngIf="editable"
+                  (newDocument)="createDocument($event)"></add-document>
+
+    <ng-container *ngFor="let documentDataObject of documentDataObjects">
+      <post-it-document *ngIf="documentDataObject.collection"
+                        class="layout-item {{ !documentDataObject.initialized ? 'uninitialized' : '' }}"
+                        [style.z-index]="documentDataObjects.length - documentDataObject.index"
+                        [data]="documentDataObject"
+                        (selectOther)="selectDocument($event)"
+                        (removed)="removeDocument(documentDataObject)"
+                        (changes)="sendUpdate(documentDataObject)">
+      </post-it-document>
+    </ng-container>
 
     <label *ngIf="!editable && !query" class="label-centered">No Search Query</label>
-    <label *ngIf="!editable && query && !documents" class="label-centered">Nothing To Show</label>
+    <label *ngIf="!editable && query && !documentDataObjects.length" class="label-centered">Nothing To Show</label>
   </div>
 </div>
 <div class="fadeup"></div>
 
-<a (click)="onSeeMore(perspective)" class="scroll-down">Scroll Down<i class="fa fa-chevron-down"></i></a>
+<a (click)="onScrollDown(perspective)" class="scroll-down">Scroll Down<i class="fa fa-chevron-down"></i></a>

@@ -36,6 +36,7 @@ import {SearchService} from '../../../../core/rest/search.service';
 import {ImportService} from '../../../../core/rest/import.service';
 import {WorkspaceService} from '../../../../core/workspace.service';
 import {isUndefined} from 'util';
+import 'rxjs/add/operator/retry';
 
 @Component({
   selector: 'post-it-collections-perspective',
@@ -93,8 +94,10 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   private loadCollections() {
-    this.searchService.searchCollections(this.query).subscribe(
-      collections => {
+    this.searchService.searchCollections(this.query)
+      .retry(3)
+      .subscribe(
+        collections => {
         this.collections = collections;
         collections.forEach(_ => {
           this.initialized.push(new Initialization(true));
@@ -163,7 +166,9 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
 
   public initializeCollection(index: number): void {
     const collection = this.collections[index];
-    this.collectionService.createCollection(collection).subscribe(
+    this.collectionService.createCollection(collection)
+      .retry(3)
+      .subscribe(
       response => {
         const code = response.headers.get('Location').split('/').pop();
 
@@ -186,7 +191,9 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
 
     this.changedCollection = collection;
     this.changeBuffer = new Buffer(() => {
-      this.collectionService.updateCollection(collection).subscribe(
+      this.collectionService.updateCollection(collection)
+        .retry(3)
+        .subscribe(
         collection => {
           this.swapCollectionOnIndex(collection, index);
         },
@@ -198,7 +205,9 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   private getCollection(code: string, index: number): void {
-    this.collectionService.getCollection(code).subscribe(
+    this.collectionService.getCollection(code)
+      .retry(3)
+      .subscribe(
       collection => {
         this.swapCollectionOnIndex(collection, index);
       },
@@ -230,7 +239,9 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
 
   private importData(result: string, name: string, format: string) {
     this.importService.importFile(format, result, name)
-      .subscribe(collection => {
+      .retry(3)
+      .subscribe(
+        collection => {
           this.collections.unshift({
             code: collection.code,
             name: collection.name,
@@ -269,7 +280,9 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   private removeCollection(index: number): void {
     if (this.initialized[index].onServer) {
       this.changeBuffer && this.changeBuffer.flush();
-      this.collectionService.removeCollection(this.collections[index].code).subscribe(
+      this.collectionService.removeCollection(this.collections[index].code)
+        .retry(3)
+        .subscribe(
         response => {
           this.notificationService.success('Success', 'Collection removed');
         },

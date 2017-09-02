@@ -1,10 +1,10 @@
 <div class="header">
-  <span [style.color]="collection.color" title="{{ collection.name }}">
-    <i class="fa {{ collection.icon }} collection-icon"></i><!--
-    --><label class="name">{{ collection.name }}</label>
+  <span [style.color]="data.collection.color" title="{{ data.collection.name }}">
+    <i class="fa {{ data.collection.icon }} collection-icon"></i><!--
+    --><label class="name">{{ data.collection.name }}</label>
   </span>
 
-  <ng-container *ngIf="editable">
+  <ng-container *ngIf="data.writeRole">
     <a class="editable" title="Edit Document" (click)="setEditMode(true); select(0, 0)">
       <i class="fa fa-fw fa-pencil"></i>
     </a>
@@ -14,10 +14,10 @@
   </ng-container>
 </div>
 
-<ul class="content" [style.cursor]="editable ? 'cell' : ''" #content>
+<ul class="content" [style.cursor]="data.writeRole ? 'cell' : ''" #content>
   <li *ngFor="let attributePair of attributePairs; let row = index">
 
-    <ng-container *ngIf="editable; then editablePair else nonEditablePair"></ng-container>
+    <ng-container *ngIf="data.writeRole; then editablePair else nonEditablePair"></ng-container>
 
     <ng-template #editablePair>
       <div id="AttributePair{{ index }}[0, {{ row }}]" class="attribute" tabindex="-1"
@@ -25,7 +25,7 @@
            (click)="clickOnAttributePair(0, row)">
 
         <ng2-completer title="{{ attributePair.attribute }}"
-                       [datasource]="suggestedAttributes"
+                       [datasource]="data.attributes"
                        [minSearchLength]="0"
                        [textNoResults]="null"
                        [ngModel]="attributePair.attribute"
@@ -61,14 +61,14 @@
 
   </li>
 
-  <li *ngIf="editable">
+  <li *ngIf="data.writeRole">
     <div id="AttributePair{{ index }}[0, {{ attributePairs.length }}]" class="attribute" tabindex="-1"
          (keydown)="onKeyDown($event)"
          (click)="clickOnAttributePair(0, attributePairs.length)">
 
       <ng2-completer title="{{ newAttributePair.attribute }}"
                      placeholder=" + "
-                     [datasource]="suggestedAttributes"
+                     [datasource]="data.attributes"
                      [minSearchLength]="0"
                      [textNoResults]="null"
                      [(ngModel)]="newAttributePair.attribute"
