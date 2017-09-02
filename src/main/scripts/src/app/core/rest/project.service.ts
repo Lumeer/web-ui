@@ -19,41 +19,93 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpResponse} from '@angular/common/http';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpResponse, HttpErrorResponse} from '@angular/common/http';
 
 import {Project} from '../dto/project';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import {Permissions} from '../dto/permissions';
+import {Permission} from '../dto/permission';
+import {WorkspaceService} from '../workspace.service';
+import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {BadInputError} from '../error/bad-input.error';
+import {LumeerError} from '../error/lumeer.error';
 
 @Injectable()
 export class ProjectService {
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient,
+    private workspaceService: WorkspaceService) {
   }
 
   public getProjects(orgCode: string): Observable<Project[]> {
-    return this.httpClient.get<Project[]>(ProjectService.apiPrefix(orgCode));
+    return this.httpClient.get<Project[]>(this.apiPrefix(orgCode));
   }
 
   public getProject(orgCode: string, projCode: string): Observable<Project> {
-    return this.httpClient.get<Project>(ProjectService.apiPrefix(orgCode, projCode));
+    return this.httpClient.get<Project>(this.apiPrefix(orgCode, projCode));
   }
 
   public deleteProject(orgCode: string, projCode: string): Observable<HttpResponse<object>> {
-    return this.httpClient.delete(ProjectService.apiPrefix(orgCode, projCode), {observe: 'response'});
+    return this.httpClient.delete(this.apiPrefix(orgCode, projCode), {observe: 'response'});
   }
 
   public createProject(orgCode: string, project: Project): Observable<HttpResponse<object>> {
-    return this.httpClient.post(ProjectService.apiPrefix(orgCode), project, {observe: 'response'});
+    return this.httpClient.post(this.apiPrefix(orgCode), project, {observe: 'response'});
   }
 
   public editProject(orgCode: string, projCode: string, project: Project): Observable<HttpResponse<object>> {
-    return this.httpClient.put(ProjectService.apiPrefix(orgCode, projCode), project, {observe: 'response'});
+    return this.httpClient.put(this.apiPrefix(orgCode, projCode), project, {observe: 'response'});
   }
 
-  private static apiPrefix(orgCode: string, projCode?: string): string {
+  public getPermissions(): Observable<Permissions> {
+    let orgCode = this.workspaceService.actualOrganizationCode;
+    let projCode = this.workspaceService.actualProjectCode;
+    return this.httpClient.get<Permissions>(`${this.apiPrefix(orgCode, projCode)}/permissions`)
+      .catch(ProjectService.handleGlobalError);
+  }
+
+  public updateUserPermission(userPermissions: Permission): Observable<Permission> {
+    let code = this.workspaceService.actualOrganizationCode;
+    let projCode = this.workspaceService.actualProjectCode;
+    return this.httpClient.put<Permission>(`${this.apiPrefix(code, projCode)}/permissions/users`, userPermissions)
+      .catch(ProjectService.handleGlobalError);
+  }
+
+  public updateGroupPermission(userPermissions: Permission): Observable<Permission> {
+    let code = this.workspaceService.actualOrganizationCode;
+    let projCode = this.workspaceService.actualProjectCode;
+    return this.httpClient.put<Permission>(`${this.apiPrefix(code, projCode)}/permissions/groups`, userPermissions)
+      .catch(ProjectService.handleGlobalError);
+  }
+
+  public removeUserPermission(user: string): Observable<Permission> {
+    let code = this.workspaceService.actualOrganizationCode;
+    let projCode = this.workspaceService.actualProjectCode;
+    return this.httpClient.delete(`${this.apiPrefix(code, projCode)}/permissions/users/${user}`, {observe: 'response'})
+      .catch(ProjectService.handleGlobalError);
+  }
+
+  public removeGroupPermission(group: string): Observable<Permission> {
+    let code = this.workspaceService.actualOrganizationCode;
+    let projCode = this.workspaceService.actualProjectCode;
+    return this.httpClient.delete(`${this.apiPrefix(code, projCode)}/permissions/groups/${group}`, {observe: 'response'})
+      .catch(ProjectService.handleGlobalError);
+  }
+
+  private apiPrefix(orgCode: string, projCode?: string): string {
     return `/${API_URL}/rest/organizations/${orgCode}/projects${projCode ? `/${projCode}` : ''}`;
+  }
+
+  private static handleError(error: HttpErrorResponse): ErrorObservable {
+    if (error.status === 400) {
+      throw new BadInputError('Name already exists');
+    }
+    return ProjectService.handleGlobalError(error);
+  }
+
+  private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {
+    throw new LumeerError(error.message);
   }
 
 }

@@ -32,7 +32,6 @@ import {ProjectService} from './rest/project.service';
 import {OrganizationService} from './rest/organization.service';
 import {CollectionService} from './rest/collection.service';
 import {DocumentService} from './rest/document.service';
-import {RolesService} from './rest/roles.service';
 import {HomeComponent} from './home.component';
 import {SharedModule} from '../shared/shared.module';
 import {SearchService} from './rest/search.service';
@@ -61,7 +60,6 @@ import {KeycloakService} from './keycloak/keycloak.service';
     DocumentService,
     OrganizationService,
     ProjectService,
-    RolesService,
     SearchService,
     UserSettingsService,
     WorkspaceService,

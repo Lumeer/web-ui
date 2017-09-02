@@ -53,6 +53,10 @@ export class AppComponent implements OnInit {
           this.workspaceService.organizationCode = organizationCode;
           this.workspaceService.projectCode = projectCode;
         }
+        if (organizationCode) {
+          this.workspaceService.actualOrganizationCode = organizationCode;
+          this.workspaceService.actualProjectCode = projectCode;
+        }
       }
     });
   }

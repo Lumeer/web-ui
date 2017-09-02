@@ -19,15 +19,19 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
+import {ParamMap} from '@angular/router';
 
-import {RolesService} from '../../../core/rest/roles.service';
-import {Entity} from '../entity';
+import {OrganizationService} from '../../../core/rest/organization.service';
+import {ProjectService} from '../../../core/rest/project.service';
+import {Permissions} from '../../../core/dto/permissions';
+import {Permission} from '../../../core/dto/permission';
+import {Role} from '../role';
 
 const ROLES = {
-  ['organization']: ['read', 'write', 'manage'],
-  ['project']: ['read', 'write', 'manage'],
-  ['collection']: ['read', 'share', 'write', 'manage'],
-  ['view']: ['read', 'clone', 'manage']
+  ['organization']: [Role.read, Role.write, Role.manage],
+  ['project']: [Role.read, Role.write, Role.manage],
+  ['collection']: [Role.read, Role.share, Role.write, Role.manage],
+  ['view']: [Role.read, Role.clone, Role.manage]
 };
 
 @Component({
@@ -44,35 +48,52 @@ export class PermissionsTableComponent implements OnInit {
   public entityType: string;
 
   public roles: string[];
-  public entities: Entity[];
+  public entities: Permission[];
   public otherEntities: string[];
 
-  public constructor(private rolesService: RolesService) {
+  public addedRoles: string[] = [];
+  public rolesCheckbox;
+
+  public constructor(private organizationService: OrganizationService,
+    private projectService: ProjectService) {
   }
 
   public ngOnInit() {
+    this.setPermissionsForResource(this.resourceType);
+
     this.roles = ROLES[this.resourceType];
-    this.entities = this.getEntities(this.entityType);
-    this.otherEntities = this.getOtherEntities(this.entityType);
+
+    this.rolesCheckbox = {};
+    this.roles.forEach(r => {
+      this.rolesCheckbox[r] = false;
+    });
   }
 
-  private getEntities(entityType: string): Entity[] {
-    switch (entityType) {
-      case 'users':
-        // TODO get from rolesService instead
-        return [
-          {name: 'marvec', roles: ['read', 'share', 'write', 'manage']},
-          {name: 'livthomas', roles: ['read', 'share', 'write']}
-        ];
-      case 'groups':
-        // TODO get from rolesService instead
-        return [
-          {name: 'managers', roles: ['read', 'share', 'write', 'manage']},
-          {name: 'employees', roles: ['read', 'share']},
-          {name: 'contractors', roles: ['read']}
-        ];
-      default:
-        throw Error('unknown entity type');
+  private getEntities(entityType: string, permissions: Permissions): Permission[] {
+    let entities = permissions[entityType];
+    if (entities) {
+      return entities;
+    } else {
+      throw Error('unknown entity type');
+    }
+  }
+
+  private setPermissionsForResource(resourceType: string) {
+    let parent = this;
+    let getPermissionsFunctions = {
+      'organization': function() {return parent.organizationService.getPermissions();} ,
+      'project': function() {return parent.projectService.getPermissions();},
+      'collection': null, // TODO
+      'view': null // TODO
+    };
+    let getPermissions = getPermissionsFunctions[resourceType];
+    if (getPermissions) {
+      getPermissions().subscribe((permissions: Permissions) => {
+          this.entities = this.getEntities(this.entityType, permissions);
+          this.otherEntities = this.getOtherEntities(this.entityType);
+        });
+    } else {
+      throw Error('unknown resorce type');
     }
   }
 
@@ -80,21 +101,129 @@ export class PermissionsTableComponent implements OnInit {
     switch (entityType) {
       case 'users':
         // TODO get from usersService instead
-        return ['alicak', 'kubedo', 'jkotrady', 'kulexpipiens'];
+        let userEntities = ['alicak', 'kubedo', 'jkotrady', 'kulexpipiens'];
+        for (let entity of this.entities) {
+          let index = userEntities.indexOf(entity['name']);
+          if (index >= 0) {
+            userEntities.splice(index, 1);
+          }
+        }
+        return userEntities;
       case 'groups':
         // TODO get from groupsService instead
-        return ['directors', 'customers'];
+        let groupEntities = ['directors', 'customers'];
+        for (let entity of this.entities) {
+          let index = groupEntities.indexOf(entity['name']);
+          if (index >= 0) {
+            groupEntities.splice(index, 1);
+          }
+        }
+        return groupEntities;
       default:
         throw Error('unknown entity type');
     }
   }
 
-  public onAdd() {
-    // TODO call remote service
+  public onAdd(selectedName: string) {
+    if (this.addedRoles.length === 0 || selectedName === '') {
+      return;
+    }
+    let parent = this;
+    let resources = {
+      'organization': parent.organizationService,
+      'project': parent.projectService,
+      'collection': null, // TODO
+      'view': null // TODO
+    };
+    let resource = resources[this.resourceType];
+
+    let updatePermissionsFunctions = {
+      'users': function(permission: Permission) {return resource.updateUserPermission(permission);} ,
+      'groups': function(permission: Permission) {return resource.updateGroupPermission(permission);}
+    };
+
+    let updatePermissions = updatePermissionsFunctions[this.entityType];
+    if (updatePermissions) {
+      let permission: Permission = {name: selectedName, roles: this.addedRoles};
+      updatePermissions(permission).subscribe();
+      this.entities.push(permission);
+      this.otherEntities.splice(this.otherEntities.indexOf(selectedName), 1);
+      this.emptyCheckboxes();
+      this.addedRoles = [];
+    } else {
+      throw Error('unknown resource type');
+    }
   }
 
-  public onRemove(entity: string) {
-    // TODO call remote service
+  private emptyCheckboxes() {
+    for (let k in this.rolesCheckbox) {
+      if (this.rolesCheckbox.hasOwnProperty(k)) {
+        this.rolesCheckbox[k] = false;
+      }
+    }
+  }
+
+  public updateCheckedRoles(role: string, event) {
+    this.rolesCheckbox[role] = event.target.checked;
+    if (this.rolesCheckbox[role]) {
+      this.addedRoles.push(role);
+    } else {
+      this.addedRoles.splice(this.addedRoles.indexOf(role), 1);
+    }
+  }
+
+  public onRemove(entityName: string, index: number) {
+    let parent = this;
+    let resources = {
+      'organization': parent.organizationService,
+      'project': parent.projectService,
+      'collection': null, // TODO
+      'view': null // TODO
+    };
+    let resource = resources[this.resourceType];
+
+    let removePermissionsFunctions = {
+      'users': function(name: string) {return resource.removeUserPermission(name);} ,
+      'groups': function(name: string) {return resource.removeGroupPermission(name);}
+    };
+    let removePermissions = removePermissionsFunctions[this.entityType];
+    if (removePermissions) {
+      removePermissions(entityName).subscribe();
+      this.otherEntities.push(entityName);
+      this.entities.splice(index, 1);
+    } else {
+      throw Error('unknown resource type');
+    }
+  }
+
+  public changePermission(index: number, role: string, event) {
+    let addPermision: boolean = event.target.checked;
+    let parent = this;
+    let resources = {
+      'organization': parent.organizationService,
+      'project': parent.projectService,
+      'collection': null, // TODO
+      'view': null // TODO
+    };
+    let resource = resources[this.resourceType];
+
+    let updatePermissionsFunctions = {
+      'users': function(permission: Permission) {return resource.updateUserPermission(permission);} ,
+      'groups': function(permission: Permission) {return resource.updateGroupPermission(permission);}
+    };
+
+    let updatePermissions = updatePermissionsFunctions[this.entityType];
+    if (updatePermissions) {
+      if (addPermision) {
+        this.entities[index]['roles'].push(role);
+      } else {
+        this.entities[index]['roles'].splice(this.entities[index]['roles'].indexOf(role), 1);
+      }
+      let permission: Permission = {name: this.entities[index]['name'], roles: this.entities[index]['roles']};
+      updatePermissions(permission).subscribe();
+    } else {
+      throw Error('unknown resource type');
+    }
   }
 
 }

@@ -7,26 +7,26 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let entity of entities">
+    <tr *ngFor="let entity of entities; let idx = index">
       <td>{{entity.name}}</td>
       <td *ngFor="let role of roles" class="role">
-        <input type="checkbox" title="{{role}}" [attr.checked]="entity.roles.indexOf(role) > -1 ? '': null"/>
+        <input id="ch{{entity.name+role}}" type="checkbox" title="{{role}}" [attr.checked]="entity.roles.indexOf(role) > -1 ? '': null" (change)="changePermission(idx, role, $event)"/>
       </td>
       <td>
-        <button (click)="onRemove(entity.name)" class="btn btn-remove">Remove</button>
+        <button (click)="onRemove(entity.name, idx)" class="btn btn-danger">Remove</button>
       </td>
     </tr>
     <tr>
       <td>
-        <select>
+        <select class="form-control" #selectedEntityName>
           <option *ngFor="let otherEntity of otherEntities">{{otherEntity}}</option>
         </select>
       </td>
       <td *ngFor="let role of roles" class="role">
-        <input type="checkbox" title="{{role}}"/>
+        <input id="ch{{'new'+role+entityType}}" type="checkbox" title="{{role}}" [checked]="rolesCheckbox[role]"  (change)="updateCheckedRoles(role, $event)"/>
       </td>
       <td>
-        <button (click)="onAdd()" class="btn btn-add">Add</button>
+        <button (click)="onAdd(selectedEntityName.value)" class="btn btn-success">Add</button>
       </td>
     </tr>
   </tbody>

@@ -26,6 +26,9 @@ export class WorkspaceService {
   public organizationCode: string;
   public projectCode: string;
 
+  public actualOrganizationCode: string;
+  public actualProjectCode: string;
+
   public isWorkspaceSet(): boolean {
     return this.organizationCode && this.organizationCode !== '' && this.projectCode && this.projectCode !== '';
   }
