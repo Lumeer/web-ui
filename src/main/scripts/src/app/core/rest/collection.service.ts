@@ -40,7 +40,6 @@ export class CollectionService extends PermissionService {
 
   public updateCollection(collection: Collection): Observable<Collection> {
     return this.httpClient.put(`${this.apiPrefix()}/${collection.code}`, this.toDto(collection))
-      .map(this.toDto)
       .catch(this.handleError);
   }
 
@@ -63,7 +62,6 @@ export class CollectionService extends PermissionService {
     }
 
     return this.httpClient.get<Collection[]>(this.apiPrefix(), {params: queryParams})
-      .map(collections => collections.map(this.toDto))
       .catch(CollectionService.handleGlobalError);
   }
 
