@@ -184,13 +184,13 @@ export class SearchBoxComponent {
 
   private createQuery(): string {
     const query: Query = {
-      collectionCodes: [],
+      collections: [],
       filters: []
     };
 
     this.queryItems.forEach(queryItem => {
       if (queryItem instanceof CollectionQueryItem) {
-        query.collectionCodes.push(queryItem.code);
+        query.collections.push(queryItem.code);
       } else if (queryItem instanceof AttributeQueryItem) {
         query.filters.push(queryItem.value);
       } else if (queryItem instanceof FulltextQueryItem) {

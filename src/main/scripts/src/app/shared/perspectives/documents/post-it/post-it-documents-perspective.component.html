@@ -1,5 +1,5 @@
 <div class="fadedown"></div>
-<div class="perspective" [style.height]="height + 'px'" #perspective>
+<div class="perspective" #perspective (scroll)="loadMore(perspective)" [style.height]="height + 'px'">
   <div class="layout" #layout>
 
     <add-document class="layout-item" *ngIf="editable"
@@ -8,7 +8,6 @@
     <ng-container *ngFor="let documentDataObject of documentDataObjects">
       <post-it-document *ngIf="documentDataObject.collection"
                         class="layout-item {{ !documentDataObject.initialized ? 'uninitialized' : '' }}"
-                        [style.z-index]="documentDataObjects.length - documentDataObject.index"
                         [data]="documentDataObject"
                         (selectOther)="selectDocument($event)"
                         (removed)="removeDocument(documentDataObject)"

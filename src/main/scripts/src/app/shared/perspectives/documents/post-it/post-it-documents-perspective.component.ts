@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {AfterViewChecked, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
@@ -37,7 +37,7 @@ import {Buffer} from '../../utils/buffer';
 import {DocumentData} from './document-data/document-data';
 import {Role} from '../../../permissions/role';
 import {Permission} from '../../../../core/dto/permission';
-import {isNullOrUndefined, isUndefined} from 'util';
+import {isNullOrUndefined} from 'util';
 import 'rxjs/add/operator/retry';
 
 @Component({
@@ -74,6 +74,8 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
 
   private attributeSuggestions: { [collectionCode: string]: string[] } = {};
 
+  private page = 0;
+
   constructor(private collectionService: CollectionService,
               private documentService: DocumentService,
               private searchService: SearchService,
@@ -89,6 +91,10 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
     this.layout.refresh();
   }
 
+  private selectedAttributeProperty(): AttributePropertySelection {
+    return this.documentDataObjects[0] ? this.documentDataObjects[0].selectedInput : this.emptySelection();
+  }
+
   private emptySelection(): AttributePropertySelection {
     return {
       row: undefined,
@@ -97,10 +103,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       direction: Direction.Self,
       editing: false
     };
-  }
-
-  private selectedAttributeProperty(): AttributePropertySelection {
-    return this.documentDataObjects[0] ? this.documentDataObjects[0].selectedInput : this.emptySelection();
   }
 
   public selectDocument(selector: AttributePropertySelection): void {
@@ -143,11 +145,22 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
     });
   }
 
+  private queryPage(pageNumber: number): Query {
+    return {
+      pageSize: this.documentsPerRow() * 2,
+      page: pageNumber,
+      filters: this.query.filters,
+      fulltext: this.query.fulltext,
+      collections: this.query.collections
+    };
+  }
+
   private fetchData(): void {
-    this.searchService.searchDocuments(this.query)
+    this.searchService.searchDocuments(this.queryPage(this.page++))
       .retry(3)
       .subscribe(
         documents => {
+          documents = documents.slice(0, this.documentsPerRow() * 2); // TODO REMOVE
           this.initializeFetchedDocuments(documents);
         },
         error => {
@@ -157,22 +170,29 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   }
 
   private initializeFetchedDocuments(documents: Document[]): void {
-    const selection = this.emptySelection();
+    const selection = this.selectedAttributeProperty();
 
-    for (let i = 0; i < documents.length; i++) {
+    documents.forEach(docuent => {
       const documentData = new DocumentData;
-      documentData.index = i;
-      documentData.document = documents[i];
+      documentData.document = docuent;
       documentData.selectedInput = selection;
 
       this.fetchCollectionData(documentData);
       this.documentDataObjects.push(documentData);
-    }
+    });
+
+    this.refreshIndexes();
   }
 
   private fetchCollectionData(documentData: DocumentData): void {
     const collectionCode = documentData.document.collectionCode;
-    if (!isUndefined(this.collections[collectionCode])) {
+
+    if (this.collections[collectionCode]) {
+      this.initializeAttributeSuggestions(this.collections[collectionCode]);
+      return;
+    }
+
+    if (this.collections[collectionCode] === null) {
       return;
     }
 
@@ -191,11 +211,11 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   }
 
   private async initializeAttributeSuggestions(collection: Collection): Promise<void> {
-    await this.getAttributeSuggestions(collection.code);
-
-    // initialize all documentDataObjects with current collection only
-    // once collection and attributeSuggestions are already present
-    this.finalizeInitialization(collection);
+    if (await this.getAttributeSuggestions(collection.code)) {
+      // initialize all documentDataObjects with current collection only once
+      // collection and attributeSuggestions are already present
+      this.finalizeInitialization(collection);
+    }
   }
 
   private finalizeInitialization(collection: Collection): void {
@@ -215,11 +235,11 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
     newDocumentDataObject.collection = await this.getCollection(document.collectionCode);
     newDocumentDataObject.attributes = await this.getAttributeSuggestions(document.collectionCode);
     newDocumentDataObject.writeRole = this.hasWriteRole(newDocumentDataObject.collection);
-    newDocumentDataObject.index = this.documentDataObjects.length;
     newDocumentDataObject.selectedInput = this.selectedAttributeProperty();
     newDocumentDataObject.initialized = false;
 
     this.documentDataObjects.unshift(newDocumentDataObject);
+    this.refreshIndexes();
   }
 
   private async getCollection(collectionCode: string): Promise<Collection> {
@@ -241,6 +261,11 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       return this.attributeSuggestions[collectionCode];
     }
 
+    if (this.attributeSuggestions[collectionCode] === null) {
+      return null;
+    }
+
+    this.attributeSuggestions[collectionCode] = null;
     await this.getCollection(collectionCode).then(collection => {
       this.attributeSuggestions[collectionCode] = collection.attributes
         .sort((attribute1, attribute2) => attribute2.usageCount - attribute1.usageCount) // descending order
@@ -248,52 +273,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
     });
 
     return this.attributeSuggestions[collectionCode];
-  }
-
-  private initializeDocument(documentDataObject: DocumentData): void {
-    this.documentService.createDocument(documentDataObject.document)
-      .retry(3)
-      .subscribe(
-        response => {
-          documentDataObject.document.id = response.headers.get('Location').split('/').pop();
-
-          // this.refreshDocument(index, document);
-          documentDataObject.initialized = true;
-          this.notificationService.success('Success', 'Document Created');
-        },
-        error => {
-          this.handleError(error, 'Failed creating document');
-        });
-  }
-
-  // private refreshDocument(index: number, document: Document): void {
-  //   this.documentService.getDocument(document.collectionCode, document.id)
-  //     .retry(3)
-  //     .subscribe(
-  //       document => {
-  //         this.transitions = false;
-  //         this.documents[index] = document;
-  //         setTimeout(() => this.transitions = true, 400);
-  //       },
-  //       error => {
-  //         this.handleError(error, 'Refreshing document failed');
-  //       });
-  // }
-
-  public removeDocument(documentDataObject: DocumentData): void {
-    if (documentDataObject.initialized) {
-      this.documentService.removeDocument(documentDataObject.document)
-        .retry(3)
-        .subscribe(
-          _ => {
-            this.notificationService.success('Success', 'Document removed');
-          },
-          error => {
-            this.notificationService.error('Error', 'Failed removing document');
-          });
-    }
-
-    this.documentDataObjects.splice(documentDataObject.index, 1);
   }
 
   public sendUpdate(documentDataObject: DocumentData): void {
@@ -313,12 +292,63 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
         .retry(3)
         .subscribe(
           document => {
-            return null;
+            documentDataObject.document = document;
           },
           error => {
             this.handleError(error, 'Failed updating document');
           });
     }, 750);
+  }
+
+  private initializeDocument(documentDataObject: DocumentData): void {
+    this.documentService.createDocument(documentDataObject.document)
+      .retry(3)
+      .subscribe(
+        response => {
+          documentDataObject.document.id = response.headers.get('Location').split('/').pop();
+
+          this.refreshDocument(documentDataObject);
+          documentDataObject.initialized = true;
+          this.notificationService.success('Success', 'Document Created');
+        },
+        error => {
+          this.handleError(error, 'Failed creating document');
+        });
+  }
+
+  private refreshDocument(documentDataObject: DocumentData): void {
+    this.documentService.getDocument(documentDataObject.document.collectionCode, documentDataObject.document.id)
+      .retry(3)
+      .subscribe(
+        document => {
+          documentDataObject.document = document;
+        },
+        error => {
+          this.handleError(error, 'Refreshing document failed');
+        });
+  }
+
+  public removeDocument(documentDataObject: DocumentData): void {
+    if (documentDataObject.initialized) {
+      this.documentService.removeDocument(documentDataObject.document)
+        .retry(3)
+        .subscribe(
+          response => {
+            this.notificationService.success('Success', 'Document removed');
+          },
+          error => {
+            this.notificationService.error('Error', 'Failed removing document');
+          });
+    }
+
+    this.documentDataObjects.splice(documentDataObject.index, 1);
+    this.refreshIndexes();
+  }
+
+  private refreshIndexes(): void {
+    for (let i = 0; i < this.documentDataObjects.length; i++) {
+      this.documentDataObjects[i].index = i;
+    }
   }
 
   public hasWriteRole(collection: Collection): boolean {
@@ -332,6 +362,12 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
 
   private handleError(error: Error, message?: string): void {
     this.notificationService.error('Error', message ? message : error.message);
+  }
+
+  public loadMore(perspective: HTMLDivElement): void {
+    if (perspective.scrollHeight - perspective.scrollTop === perspective.clientHeight) {
+      this.fetchData();
+    }
   }
 
   public onScrollDown(perspective: HTMLDivElement): void {
