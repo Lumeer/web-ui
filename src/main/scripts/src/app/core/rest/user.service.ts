@@ -20,17 +20,12 @@
 
 import {Injectable} from '@angular/core';
 
+import {Observable} from 'rxjs/Observable';
+
 @Injectable()
-export class WorkspaceService {
+export class UserService {
 
-  public organizationCode: string;
-  public projectCode: string;
-
-  public currentlySelectedOrganizationCode: string;
-  public currentlySelectedProjectCode: string;
-
-  public isWorkspaceSet(): boolean {
-    return this.organizationCode && this.organizationCode !== '' && this.projectCode && this.projectCode !== '';
-  }
-
+    public getUsers(): Observable<string[]> {
+        return Observable.of(['alicak', 'kubedo', 'jkotrady', 'kulexpipiens']);
+    }
 }

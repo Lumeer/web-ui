@@ -59,37 +59,27 @@ export class ProjectService {
   }
 
   public getPermissions(): Observable<Permissions> {
-    let orgCode = this.workspaceService.actualOrganizationCode;
-    let projCode = this.workspaceService.actualProjectCode;
-    return this.httpClient.get<Permissions>(`${this.apiPrefix(orgCode, projCode)}/permissions`)
+    return this.httpClient.get<Permissions>(`${this.actualApiPrefix()}/permissions`)
       .catch(ProjectService.handleGlobalError);
   }
 
   public updateUserPermission(userPermissions: Permission): Observable<Permission> {
-    let code = this.workspaceService.actualOrganizationCode;
-    let projCode = this.workspaceService.actualProjectCode;
-    return this.httpClient.put<Permission>(`${this.apiPrefix(code, projCode)}/permissions/users`, userPermissions)
+    return this.httpClient.put<Permission>(`${this.actualApiPrefix()}/permissions/users`, userPermissions)
       .catch(ProjectService.handleGlobalError);
   }
 
   public updateGroupPermission(userPermissions: Permission): Observable<Permission> {
-    let code = this.workspaceService.actualOrganizationCode;
-    let projCode = this.workspaceService.actualProjectCode;
-    return this.httpClient.put<Permission>(`${this.apiPrefix(code, projCode)}/permissions/groups`, userPermissions)
+    return this.httpClient.put<Permission>(`${this.actualApiPrefix()}/permissions/groups`, userPermissions)
       .catch(ProjectService.handleGlobalError);
   }
 
-  public removeUserPermission(user: string): Observable<Permission> {
-    let code = this.workspaceService.actualOrganizationCode;
-    let projCode = this.workspaceService.actualProjectCode;
-    return this.httpClient.delete(`${this.apiPrefix(code, projCode)}/permissions/users/${user}`, {observe: 'response'})
+  public removeUserPermission(user: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(`${this.actualApiPrefix()}/permissions/users/${user}`, {observe: 'response'})
       .catch(ProjectService.handleGlobalError);
   }
 
-  public removeGroupPermission(group: string): Observable<Permission> {
-    let code = this.workspaceService.actualOrganizationCode;
-    let projCode = this.workspaceService.actualProjectCode;
-    return this.httpClient.delete(`${this.apiPrefix(code, projCode)}/permissions/groups/${group}`, {observe: 'response'})
+  public removeGroupPermission(group: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(`${this.actualApiPrefix()}/permissions/groups/${group}`, {observe: 'response'})
       .catch(ProjectService.handleGlobalError);
   }
 
@@ -97,11 +87,10 @@ export class ProjectService {
     return `/${API_URL}/rest/organizations/${orgCode}/projects${projCode ? `/${projCode}` : ''}`;
   }
 
-  private static handleError(error: HttpErrorResponse): ErrorObservable {
-    if (error.status === 400) {
-      throw new BadInputError('Name already exists');
-    }
-    return ProjectService.handleGlobalError(error);
+  private actualApiPrefix(): string {
+    let orgCode = this.workspaceService.currentlySelectedOrganizationCode;
+    let projCode = this.workspaceService.currentlySelectedProjectCode;
+    return `/${API_URL}/rest/organizations/${orgCode}/projects/${projCode}`;
   }
 
   private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {

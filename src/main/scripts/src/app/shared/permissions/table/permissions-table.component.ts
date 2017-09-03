@@ -26,6 +26,8 @@ import {ProjectService} from '../../../core/rest/project.service';
 import {Permissions} from '../../../core/dto/permissions';
 import {Permission} from '../../../core/dto/permission';
 import {Role} from '../role';
+import {UserService} from '../../../core/rest/user.service';
+import {GroupService} from '../../../core/rest/group.service';
 
 const ROLES = {
   ['organization']: [Role.read, Role.write, Role.manage],
@@ -55,7 +57,9 @@ export class PermissionsTableComponent implements OnInit {
   public rolesCheckbox;
 
   public constructor(private organizationService: OrganizationService,
-    private projectService: ProjectService) {
+    private projectService: ProjectService,
+    private usersService: UserService,
+    private groupService: GroupService) {
   }
 
   public ngOnInit() {
@@ -90,35 +94,41 @@ export class PermissionsTableComponent implements OnInit {
     if (getPermissions) {
       getPermissions().subscribe((permissions: Permissions) => {
           this.entities = this.getEntities(this.entityType, permissions);
-          this.otherEntities = this.getOtherEntities(this.entityType);
+          this.getOtherEntities(this.entityType);
         });
     } else {
       throw Error('unknown resorce type');
     }
   }
 
-  private getOtherEntities(entityType: string): string[] {
+  private getOtherEntities(entityType: string) {
     switch (entityType) {
       case 'users':
-        // TODO get from usersService instead
-        let userEntities = ['alicak', 'kubedo', 'jkotrady', 'kulexpipiens'];
-        for (let entity of this.entities) {
-          let index = userEntities.indexOf(entity['name']);
-          if (index >= 0) {
-            userEntities.splice(index, 1);
+        this.usersService.getUsers().subscribe(
+          (userEntities: string[]) => {
+            for (let entity of this.entities) {
+              let index = userEntities.indexOf(entity['name']);
+              if (index >= 0) {
+                userEntities.splice(index, 1);
+              }
+            }
+            this.otherEntities = userEntities;
           }
-        }
-        return userEntities;
+        );
+        break;
       case 'groups':
-        // TODO get from groupsService instead
-        let groupEntities = ['directors', 'customers'];
-        for (let entity of this.entities) {
-          let index = groupEntities.indexOf(entity['name']);
-          if (index >= 0) {
-            groupEntities.splice(index, 1);
+        this.groupService.getGroups().subscribe(
+          (groupEntities: string[]) => {
+            for (let entity of this.entities) {
+              let index = groupEntities.indexOf(entity['name']);
+              if (index >= 0) {
+                groupEntities.splice(index, 1);
+              }
+            }
+            this.otherEntities = groupEntities;
           }
-        }
-        return groupEntities;
+        );
+        break;
       default:
         throw Error('unknown entity type');
     }

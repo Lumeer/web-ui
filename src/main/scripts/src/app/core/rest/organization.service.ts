@@ -59,44 +59,37 @@ export class OrganizationService {
   }
 
   public getPermissions(): Observable<Permissions> {
-    let code = this.workspaceService.actualOrganizationCode;
-    return this.httpClient.get<Permissions>(`${this.apiPrefix(code)}/permissions`)
+    return this.httpClient.get<Permissions>(`${this.actualApiPrefix()}/permissions`)
       .catch(OrganizationService.handleGlobalError);
   }
 
   public updateUserPermission(userPermissions: Permission): Observable<Permission> {
-    let code = this.workspaceService.actualOrganizationCode;
-    return this.httpClient.put<Permission>(`${this.apiPrefix(code)}/permissions/users`, userPermissions)
+    return this.httpClient.put<Permission>(`${this.actualApiPrefix()}/permissions/users`, userPermissions)
       .catch(OrganizationService.handleGlobalError);
   }
 
   public updateGroupPermission(userPermissions: Permission): Observable<Permission> {
-    let code = this.workspaceService.actualOrganizationCode;
-    return this.httpClient.put<Permission>(`${this.apiPrefix(code)}/permissions/groups`, userPermissions)
+    return this.httpClient.put<Permission>(`${this.actualApiPrefix()}/permissions/groups`, userPermissions)
       .catch(OrganizationService.handleGlobalError);
   }
 
-  public removeUserPermission(user: string): Observable<Permission> {
-    let code = this.workspaceService.actualOrganizationCode;
-    return this.httpClient.delete(`${this.apiPrefix(code)}/permissions/users/${user}`, {observe: 'response'})
+  public removeUserPermission(user: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(`${this.actualApiPrefix()}/permissions/users/${user}`, {observe: 'response'})
       .catch(OrganizationService.handleGlobalError);
   }
 
-  public removeGroupPermission(group: string): Observable<Permission> {
-    let code = this.workspaceService.actualOrganizationCode;
-    return this.httpClient.delete(`${this.apiPrefix(code)}/permissions/groups/${group}`, {observe: 'response'})
+  public removeGroupPermission(group: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(`${this.actualApiPrefix()}/permissions/groups/${group}`, {observe: 'response'})
       .catch(OrganizationService.handleGlobalError);
+  }
+
+  private actualApiPrefix(): string {
+    let orgCode = this.workspaceService.currentlySelectedOrganizationCode;
+    return `/${API_URL}/rest/organizations/${orgCode}`;
   }
 
   private apiPrefix(code?: string): string {
     return `/${API_URL}/rest/organizations${code ? `/${code}` : ''}`;
-  }
-
-  private static handleError(error: HttpErrorResponse): ErrorObservable {
-    if (error.status === 400) {
-      throw new BadInputError('Name already exists');
-    }
-    return OrganizationService.handleGlobalError(error);
   }
 
   private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {
