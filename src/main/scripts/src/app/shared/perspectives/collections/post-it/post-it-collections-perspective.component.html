@@ -22,17 +22,20 @@
            accept=".csv, text/csv">
   </div>
 
-  <div *ngFor="let collection of collections; let idx = index"
-       class="post-it layout-item {{ pickerVisible[idx] ? 'selected' : ''}} {{ !initialized[idx].onServer ? 'uninitialized' : '' }}"
-       [style.border-color]="collection.color"
-       [style.transition]="!transitions ? 'all 0s' : ''">
+  <div *ngFor="let collectionData of collectionDataObjects"
+       class="post-it layout-item
+       {{ lastClickedCollectionData === collectionData ? 'selected' : ''}}
+       {{ !collectionData.initialized.onServer ? 'uninitialized' : '' }}"
+       [style.border-color]="collectionData.collection.color"
+       (click)="lastClickedCollectionData = collectionData">
 
-    <ng-container *ngIf="initialized[idx].onServer; then initializedContent else nonInitializedContent"></ng-container>
+    <ng-container
+      *ngIf="collectionData.initialized.onServer; then initializedContent else nonInitializedContent"></ng-container>
 
     <ng-template #initializedContent>
       <div class="document-count clickable" title="Document count"
-           [routerLink]="[workspacePath(), 'c', collection.code, 'documents']">
-        {{ collection.documentCount }}<i class="fal fa-file-alt"></i>
+           [routerLink]="[workspacePath(), 'c', collectionData.collection.code, 'documents']">
+        {{ collectionData.collection.documentsCount }}<i class="fa fa-file-text-o"></i>
       </div>
 
       <div class="content"
@@ -40,58 +43,70 @@
            [routerLink]="[workspacePath(), 'c', collection.code, 'documents']">
         <i class="fa fa-2x {{ collection.icon }}" title="Go to documents"></i><!--
       --><input [(ngModel)]="collection.name" (ngModelChange)="updateCollection(collection)"/>
+      <div class="content" [style.color]="collectionData.collection.color">
+        <i class="fa fa-2x {{ collectionData.collection.icon }}" title="Go to documents"
+           [routerLink]="[workspacePath(), 'c', collectionData.collection.code, 'documents']"></i><!--
+      --><input [(ngModel)]="collectionData.collection.name"
+                (ngModelChange)="updateCollection(collectionData)"/>
       </div>
 
-      <icon-picker [enabled]="pickerVisible[idx]"
-                   [(color)]="collection.color"
-                   [(icon)]="collection.icon"
-                   (itemSelected)="updateCollection(idx)"></icon-picker>
+      <icon-picker [enabled]="collectionData.pickerVisible"
+                   [(color)]="collectionData.collection.color"
+                   [(icon)]="collectionData.collection.icon"
+                   (itemSelected)="updateCollection(collectionData)"></icon-picker>
 
       <div class="buttons">
-        <a (click)="onDetailClick(collection.code)" title="Detail"><i class="fa fa-fx fa-eye"></i></a>
-        <a (click)="onAttributesClick(collection.code)" title="Attributes"><i class="fa fa-fx fa-list-ul"></i></a>
-        <a (click)="togglePicker(idx)" title="Icon picker" #iconSwitch><i class="fa fa-fx fa-eye-dropper"></i></a>
-        <a *ngIf="hasManageRole(collection)" (click)="onPermissionsClick(collection.code)" title="Permissions"><i
-          class="fa fa-fx fa-users"></i></a>
-        <a *ngIf="hasManageRole(collection)" (click)="onDeleteClick(idx)" title="Remove Collection"><i
-          class="fa fa-fx fa-times remove-icon"></i></a>
+        <a (click)="onDetailClick(collectionData.collection.code)" title="Detail">
+          <i class="fa fa-fx fa-eye"></i></a>
+        <a (click)="onAttributesClick(collectionData.collection.code)" title="Attributes">
+          <i class="fa fa-fx fa-list-ul"></i></a>
+        <a (click)="togglePicker(collectionData)" title="Icon picker" #iconSwitch>
+          <i class="fa fa-fx fa-eyedropper"></i></a>
+        <a *ngIf="hasManageRole(collectionData.collection)"
+           (click)="onPermissionsClick(collectionData.collection.code)" title="Permissions">
+          <i class="fa fa-fx fa-users"></i></a>
+        <a *ngIf="hasManageRole(collectionData.collection)" (click)="onDeleteClick(collectionData)"
+           title="Remove Collection">
+          <i class="fa fa-fx fa-times remove-icon"></i></a>
       </div>
     </ng-template>
 
     <ng-template #nonInitializedContent>
-      <div class="document-count" title="Document count">0<i class="fal fa-file-alt"></i>
+      <div class="document-count" title="Document count">0<i class="fa fa-file-text-o"></i>
       </div>
 
       <ul class="tutorial">
         <li title="Picked new color">
-          <i class="fa fa-fx fa-{{ initialized[idx].color ? 'check-' : '' }}square-o"></i>Color
+          <i class="fa fa-fx fa-{{ collectionData.initialized.color ? 'check-' : '' }}square-o"></i>Color
         </li>
         <li title="Picked new icon">
-          <i class="fa fa-fx fa-{{ initialized[idx].icon ? 'check-' : '' }}square-o"></i>Icon
+          <i class="fa fa-fx fa-{{ collectionData.initialized.icon ? 'check-' : '' }}square-o"></i>Icon
         </li>
         <li title="Picked new name">
-          <i class="fa fa-fx fa-{{ initialized[idx].name ? 'check-' : '' }}square-o
-          {{ initialized[idx].name ? 'ok' : 'remove' }}-icon"></i>Name
+          <i class="fa fa-fx fa-{{ collectionData.initialized.name ? 'check-' : '' }}square-o
+          {{ collectionData.initialized.name ? 'ok' : 'remove' }}-icon"></i>Name
         </li>
       </ul>
 
-      <div class="content" [style.color]="collection.color">
-        <i class="fa fa-2x {{ collection.icon }}" title="Pick icon" (click)="togglePicker(idx)" #iconSwitch></i><!--
+      <div class="content" [style.color]="collectionData.collection.color">
+        <i class="fa fa-2x {{ collectionData.collection.icon }}" title="Pick icon"
+           (click)="togglePicker(collectionData)" #iconSwitch></i><!--
       --><input class="newName" placeholder="Name" #nonInitializedNameInput
-                [(ngModel)]="collection.name"
-                (ngModelChange)="checkInitializedName(idx)"
-                (blur)="checkInitialization(idx)"
-                (keyup.enter)="checkInitialization(idx)"/>
+                [(ngModel)]="collectionData.collection.name"
+                (ngModelChange)="checkInitializedName(collectionData)"
+                (blur)="checkInitialization(collectionData)"
+                (keyup.enter)="checkInitialization(collectionData)"/>
       </div>
 
       <icon-picker class="onIcon"
-                   [enabled]="pickerVisible[idx]"
-                   [(color)]="collection.color"
-                   [(icon)]="collection.icon"
-                   (itemSelected)="checkInitializedColor(idx); checkInitializedIcon(idx)"></icon-picker>
+                   [enabled]="collectionData.pickerVisible"
+                   [(color)]="collectionData.collection.color"
+                   [(icon)]="collectionData.collection.icon"
+                   (itemSelected)="checkInitializedColor(collectionData); checkInitializedIcon(collectionData)"></icon-picker>
 
       <div class="buttons">
-        <a (click)="onDeleteClick(idx)" title="Remove Collection"><i class="fa fa-fx fa-times remove-icon"></i></a>
+        <a (click)="onDeleteClick(collectionData)" title="Remove Collection">
+          <i class="fa fa-fx fa-times remove-icon"></i></a>
       </div>
     </ng-template>
   </div>
