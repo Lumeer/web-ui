@@ -24,8 +24,8 @@
 
   <div *ngFor="let collectionData of collectionDataObjects"
        class="post-it layout-item
-       {{ lastClickedCollectionData === collectionData ? 'selected' : ''}}
-       {{ !collectionData.initialized.onServer ? 'uninitialized' : '' }}"
+       {{ lastClickedCollectionData === collectionData ? 'selected' : null}}
+       {{ !collectionData.initialized.onServer ? 'uninitialized' : null }}"
        [style.border-color]="collectionData.collection.color"
        (click)="lastClickedCollectionData = collectionData">
 
@@ -74,19 +74,6 @@
     <ng-template #nonInitializedContent>
       <div class="document-count" title="Document count">0<i class="fa fa-file-text-o"></i>
       </div>
-
-      <ul class="tutorial">
-        <li title="Picked new color">
-          <i class="fa fa-fx fa-{{ collectionData.initialized.color ? 'check-' : '' }}square-o"></i>Color
-        </li>
-        <li title="Picked new icon">
-          <i class="fa fa-fx fa-{{ collectionData.initialized.icon ? 'check-' : '' }}square-o"></i>Icon
-        </li>
-        <li title="Picked new name">
-          <i class="fa fa-fx fa-{{ collectionData.initialized.name ? 'check-' : '' }}square-o
-          {{ collectionData.initialized.name ? 'ok' : 'remove' }}-icon"></i>Name
-        </li>
-      </ul>
 
       <div class="content" [style.color]="collectionData.collection.color">
         <i class="fa fa-2x {{ collectionData.collection.icon }}" title="Pick icon"

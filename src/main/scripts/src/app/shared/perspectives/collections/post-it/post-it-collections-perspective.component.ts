@@ -98,7 +98,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     this.layout = new PostItLayout({
       container: '.layout',
       item: '.layout-item',
-      gutter: 15
+      gutter: 10
     });
   }
 

@@ -107,21 +107,15 @@
 
   .attribute {
     color: #475d73;
-    width: 40%;
     font-weight: bold;
     font-variant: none;
+
+    input {
+      width: 100px;
+    }
   }
 
-  div:focus, /deep/ input:focus {
-    outline: none;
-    background: $brand-primary;
-    border-radius: $border-radius-small;
-
-    color: $secondary-color;
-    pointer-events: all;
-  }
-
-  /deep/ input {
+  input {
     padding: 0 3px;
     width: 100%;
     border: 0;
@@ -130,44 +124,21 @@
     pointer-events: none;
   }
 
-  /deep/ input:read-only {
+  div:focus, input:focus {
+    outline: none;
+    background: $brand-primary;
+    border-radius: $border-radius-small;
+
+    color: $secondary-color;
+    pointer-events: all;
+  }
+
+  input:read-only {
     pointer-events: all;
 
     &:focus {
       background: inherit;
       color: inherit;
-    }
-  }
-
-  /deep/ .completer-holder {
-    .completer-dropdown-holder {
-      position: relative;
-
-      .completer-dropdown {
-        overflow: hidden;
-
-        border-color: #cccccc !important;
-        border-radius: $border-radius-small !important;
-
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 4px 0 !important;
-      }
-
-      .completer-row {
-        color: $brand-primary !important;
-
-        display: block !important;
-
-        width: 100% !important;
-        padding: 1px 6px !important;
-        margin: 0 !important;
-      }
-
-      .completer-selected-row {
-        background-color: $brand-success !important;
-        color: $secondary-color !important;
-      }
     }
   }
 }

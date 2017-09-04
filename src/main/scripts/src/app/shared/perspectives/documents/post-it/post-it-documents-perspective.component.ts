@@ -91,6 +91,10 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
     this.layout.refresh();
   }
 
+  public attributeSuggestionsEntries(): [string, string[]][] {
+    return Object.entries(this.attributeSuggestions);
+  }
+
   private selectedAttributeProperty(): AttributePropertySelection {
     return this.documentDataObjects[0] ? this.documentDataObjects[0].selectedInput : this.emptySelection();
   }
@@ -134,14 +138,14 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   }
 
   private documentsPerRow(): number {
-    return Math.floor(this.layoutElement.nativeElement.clientWidth / (290 /*Post-it width*/ + 15 /*Gutter*/));
+    return Math.floor(this.layoutElement.nativeElement.clientWidth / (260 /*Post-it width*/ + 10 /*Gutter*/));
   }
 
   private initializeLayout(): void {
     this.layout = new PostItLayout({
       container: '.layout',
       item: '.layout-item',
-      gutter: 15
+      gutter: 10
     });
   }
 
@@ -160,7 +164,6 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       .retry(3)
       .subscribe(
         documents => {
-          documents = documents.slice(0, this.documentsPerRow() * 2); // TODO REMOVE
           this.initializeFetchedDocuments(documents);
         },
         error => {
@@ -292,7 +295,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
         .retry(3)
         .subscribe(
           document => {
-            documentDataObject.document = document;
+            documentDataObject.document.data = document.data;
           },
           error => {
             this.handleError(error, 'Failed updating document');

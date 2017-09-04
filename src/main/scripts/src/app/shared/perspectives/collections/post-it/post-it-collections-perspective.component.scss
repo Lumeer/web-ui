@@ -64,7 +64,7 @@
     .onIcon {
       position: absolute;
       top: 114px;
-      left: -80px;
+      left: -96px;
     }
 
     .buttons {
@@ -96,30 +96,11 @@
     .remove-icon {
       color: $brand-danger;
     }
-
-    .ok-icon {
-      color: $brand-success;
-    }
   }
 
   .uninitialized {
     border-width: 3px;
     border-style: dashed;
-
-    .tutorial {
-      opacity: 0;
-      position: absolute;
-
-      top: 8px;
-      left: 10px;
-
-      padding: 0;
-      margin: 0;
-
-      svg {
-        margin-right: 6px;
-      }
-    }
 
     .newName {
       color: $brand-primary;
@@ -174,7 +155,7 @@
   icon-picker {
     position: absolute;
     top: 110px;
-    left: 50px;
+    left: 20px;
   }
 
   i:focus, input:focus {

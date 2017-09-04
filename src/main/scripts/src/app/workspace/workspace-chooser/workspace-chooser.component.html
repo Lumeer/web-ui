@@ -17,7 +17,7 @@
 
         <div class="square" *ngFor="let organization of organizations; let i = index"
              (click)="onOrganizationSelected(organization, i)"
-             [style.border-color]="organization.active ? organization.color : ''"
+             [style.border-color]="organization.active ? organization.color : null"
              [style.color]="organization.color">
           <i class="fa fa-cog square-settings"
              (click)="$event.stopPropagation(); onOrganizationSettings(organization)"></i>
@@ -64,7 +64,7 @@
 
         <div class="square" *ngFor="let project of activeOrganization.projects; let i = index"
              (click)="onProjectSelected(project, i)"
-             [style.border-color]="project.active ? project.color : ''"
+             [style.border-color]="project.active ? project.color : null"
              [style.color]="project.color">
           <i class="fa fa-cog square-settings"
              (click)="$event.stopPropagation(); onProjectSettings(project)"></i>

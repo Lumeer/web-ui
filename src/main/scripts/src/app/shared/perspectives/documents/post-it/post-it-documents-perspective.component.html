@@ -7,12 +7,19 @@
 
     <ng-container *ngFor="let documentDataObject of documentDataObjects">
       <post-it-document *ngIf="documentDataObject.collection"
-                        class="layout-item {{ !documentDataObject.initialized ? 'uninitialized' : '' }}"
+                        class="layout-item {{ !documentDataObject.initialized ? 'uninitialized' : null }}"
+                        [attr.z-index]="documentDataObject.selectedInput.documentIdx === documentDataObject.index ? 50 : null"
                         [data]="documentDataObject"
                         (selectOther)="selectDocument($event)"
                         (removed)="removeDocument(documentDataObject)"
                         (changes)="sendUpdate(documentDataObject)">
       </post-it-document>
+    </ng-container>
+
+    <ng-container *ngFor="let attributeSuggestionsEntry of attributeSuggestionsEntries()">
+      <datalist id="{{ attributeSuggestionsEntry[0] }}">
+        <option *ngFor="let suggestion of attributeSuggestionsEntry[1]">{{ suggestion }}</option>
+      </datalist>
     </ng-container>
 
     <label *ngIf="!editable && !query" class="label-centered">No Search Query</label>

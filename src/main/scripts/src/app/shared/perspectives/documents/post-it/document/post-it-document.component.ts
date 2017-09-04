@@ -118,10 +118,6 @@ export class PostItDocumentComponent implements OnInit {
       this.data.index === this.data.selectedInput.documentIdx;
   }
 
-  private usedAttributeName(attributeName: string): boolean {
-    return this.attributePairs.map(pair => pair.attribute).includes(attributeName);
-  }
-
   public onKeyDown(event: KeyboardEvent): void {
     if (this.data.selectedInput.editing) {
       this.editModeOnKey.hasOwnProperty(event.key) && this.editModeOnKey[event.key]();
@@ -216,8 +212,8 @@ export class PostItDocumentComponent implements OnInit {
   public select(column: number, row: number): void {
     this.data.selectedInput.documentIdx = this.data.index;
     this.selectRow(column, row);
-
     this.selectColumn(column, row);
+
     this.focusSelection();
   }
 
