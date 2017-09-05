@@ -67,9 +67,9 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   private setEventListener(): void {
-    // disable scrolling when navigating using keys
+    // disable scrolling when navigating using up and down keys
     this.content.nativeElement.addEventListener('keydown', (key: KeyboardEvent) => {
-      [37, 38, 39, 40].includes(key.keyCode) && key.preventDefault();
+      [38, 40].includes(key.keyCode) && key.preventDefault();
     }, false);
   }
 

@@ -124,7 +124,7 @@
     pointer-events: none;
   }
 
-  div:focus, input:focus {
+  span:focus, input:focus {
     outline: none;
     background: $brand-primary;
     border-radius: $border-radius-small;
