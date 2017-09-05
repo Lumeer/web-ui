@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {QueryTag, STRING, NUMBER} from '../helpers/tag.interface';
-import {QUERY_TAG_PLACEHOLDER} from '../helpers/constants';
-import {AutoCompleteOptions} from '../auto-complete/autocomplete.interface';
+//import {AutoCompleteOptions} from '../auto-complete/autocomplete.interface';
 import {ITagOptions, TagBuilder} from '../../views/research/query-tag.inteface';
 import * as _ from 'lodash';
 import {ActivatedRoute} from '@angular/router';
@@ -40,10 +39,10 @@ export class FilterComponent {
   public items: QueryTag[] = [];
   public tagOptions: ITagOptions;
 
-  public autocompleteOptions: AutoCompleteOptions = {
+  /*public autocompleteOptions: AutoCompleteOptions = {
     displayKey: 'text',
     filterFn: (item, currentValue) => this.filterValues(item, currentValue)
-  };
+  };*/
 
   private collectionItem = {colValue: 'Store', colName: 'Collection', readOnly: ['colName'],
     source: this.collections, type: STRING};
@@ -106,12 +105,12 @@ export class FilterComponent {
       .build();
   }
 
-  public placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
+  //public placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
 
   public deleteTag(tagIndex) {
     if (!this.items[tagIndex].sticky) {
       this.items.splice(tagIndex, 1);
-      this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
+      //this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
       this.tagOptions.values = this.colNames;
     }
     this.filterChanged.emit(this.items);
@@ -143,7 +142,7 @@ export class FilterComponent {
     this.items[this.items.length - 1].type = FilterComponent.getType(data);
     this.items[this.items.length - 1].operand = this.defaultOperand();
     this.items[this.items.length - 1].equality = this.defaultEquality(data);
-    this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
+    //this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.NAME;
     this.tagOptions.values = this.colNames;
   }
 
@@ -152,11 +151,11 @@ export class FilterComponent {
       let newCollection = _.cloneDeep(this.collectionItem);
       newCollection.colValue = '';
       this.items.push(newCollection);
-      this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.COLLECTION;
+      //this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.COLLECTION;
       this.tagOptions.values = newCollection.source;
     } else {
       this.items.push({colName: data, colValue: '', type: FilterComponent.getType(data)});
-      this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.VALUE;
+      //this.placeholder = QUERY_TAG_PLACEHOLDER.PREFIX + QUERY_TAG_PLACEHOLDER.VALUE;
       this.tagOptions.values = this.colValues;
     }
   }
@@ -181,7 +180,7 @@ export class FilterComponent {
   private filterValues(oneItem, currentValue) {
     let currentData = currentValue.trim().toLowerCase();
     if (currentData !== '') {
-      return oneItem[this.autocompleteOptions.displayKey].toLowerCase().indexOf(currentData) !== -1;
+      //return oneItem[this.autocompleteOptions.displayKey].toLowerCase().indexOf(currentData) !== -1;
     }
     return true;
   }

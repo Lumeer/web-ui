@@ -1,8 +1,8 @@
 import {
   Component, Input, SimpleChanges, Output, EventEmitter, ElementRef, Renderer, ContentChild} from '@angular/core';
 import {getActionToKey, filterItems, inactive} from './autocomplete-actions';
-import {AutoCompleteOptions} from './autocomplete.interface';
-import {EditableDirective} from './editable.directive';
+//import {AutoCompleteOptions} from './autocomplete.interface';
+//import {EditableDirective} from './editable.directive';
 import {style, state, animate, transition, trigger, keyframes} from '@angular/animations';
 
 @Component({
@@ -46,11 +46,11 @@ import {style, state, animate, transition, trigger, keyframes} from '@angular/an
 export class AutoCompleteComponent {
   @Input() public source: any[];
   @Input() public modelData: any;
-  @Input() public options: AutoCompleteOptions;
+  //@Input() public options: AutoCompleteOptions;
 
   @Output() public modelDataChange: any = new EventEmitter();
 
-  @ContentChild(EditableDirective) private editableContent: EditableDirective;
+  //@ContentChild(EditableDirective) private editableContent: EditableDirective;
 
   public pickerVisible = false;
   public filteredSource: any[];
@@ -75,18 +75,18 @@ export class AutoCompleteComponent {
   }
 
   private filterSource() {
-    this.options = this.options || {displayKey: ''};
+   /* this.options = this.options || {displayKey: ''};
     if (!this.options.filterFn) {
       this.options.filterFn = filterItems.bind(this);
-    }
+    }*/
     if (this.source) {
-      this.filteredSource = this.source.filter((item) => this.options.filterFn(item, this.modelData));
+      //this.filteredSource = this.source.filter((item) => this.options.filterFn(item, this.modelData));
     }
   }
 
   private updateData(item) {
     this.onHidePicker();
-    this.modelDataChange.emit(item[this.options.displayKey]);
+    //this.modelDataChange.emit(item[this.options.displayKey]);
   }
 
   public onKeyDown($event) {
@@ -100,9 +100,9 @@ export class AutoCompleteComponent {
   }
 
   protected ngOnInit() {
-    if (this.options.fetchResources) {
+    /*if (this.options.fetchResources) {
       this.source = this.options.fetchResources();
-    }
+    }*/
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -113,7 +113,7 @@ export class AutoCompleteComponent {
   }
 
   protected ngAfterContentInit() {
-    this.focusFunction = this.renderer.listen(this.editableContent.el.nativeElement, 'focus', (event) => {
+    /*this.focusFunction = this.renderer.listen(this.editableContent.el.nativeElement, 'focus', (event) => {
       this.onShowPicker();
     });
     this.blurFunction = this.renderer.listen(this.editableContent.el.nativeElement, 'blur', (event) => {
@@ -121,7 +121,7 @@ export class AutoCompleteComponent {
     });
     this.keydownFunction = this.renderer.listen(this.editableContent.el.nativeElement, 'keydown', (event) => {
       this.onKeyDown(event);
-    });
+    });*/
   }
 
   protected ngOnDestroy() {

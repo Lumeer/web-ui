@@ -1,5 +1,4 @@
 import {Component, Output, EventEmitter} from '@angular/core';
-import {CollectionService} from '../../../services/collection.service';
 import {trigger, state, style, transition, animate, keyframes} from '@angular/animations';
 
 @Component({
@@ -44,14 +43,14 @@ export class EmptyResultComponent {
   @Output() public onNewCollection: EventEmitter<any> = new EventEmitter();
   @Output() public onShowCollection: EventEmitter<any> = new EventEmitter();
 
-  constructor(public collectionService: CollectionService) {
+  constructor(/*public collectionService: CollectionService*/) {
     this.numbers = Array.apply(null, {length: this.ITEMS_PER_PAGE}).map(Number.call, Number);
     this.initColors();
     this.initIcons();
   }
 
   public ngOnInit() {
-    this.collectionService.getAllCollections();
+    //his.collectionService.getAllCollections();
   }
 
   public saveDocument() {
@@ -60,7 +59,7 @@ export class EmptyResultComponent {
   }
 
   public saveCollection(dataPayload) {
-    this.collectionService.allCollections.push(this.newCollection);
+    //this.collectionService.allCollections.push(this.newCollection);
     this.onNewCollection.emit(this.newCollection);
     this.newCollection = {
     };
@@ -93,6 +92,6 @@ export class EmptyResultComponent {
   }
 
   private initIcons() {
-    this.collectionService.getAllIcons();
+    //this.collectionService.getAllIcons();
   }
 }
