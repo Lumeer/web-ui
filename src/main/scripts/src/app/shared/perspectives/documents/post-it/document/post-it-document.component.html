@@ -5,8 +5,12 @@
   </span>
 
   <ng-container *ngIf="editable">
-    <a class="fa fa-fw fa-pencil editable fa-1x" title="Edit Document" (click)="setEditMode(true); select(0, 0)"></a>
-    <a class="fa fa-fw fa-times editable remove fa-1x" title="Remove Document" (click)="onRemoveDocumentClick()"></a>
+    <a class="editable" title="Edit Document" (click)="setEditMode(true); select(0, 0)">
+      <i class="fa fa-fw fa-pencil"></i>
+    </a>
+    <a class="editable remove" title="Remove Document" (click)="onRemoveDocumentClick()">
+      <i class="fa fa-fw fa-times"></i>
+    </a>
   </ng-container>
 </div>
 
@@ -88,14 +92,16 @@
 <!-- additional buttons -->
 <div class="edit">
   <span class="primary-edit">
-    <a class="fa fa-fw fa-search" title="Details"></a>
+    <a title="Details">
+      <i class="fa fa-fw fa-search"></i>
+    </a>
   </span>
 
   <span class="secondary-edit">
     <!--the comments remove added space between icons-->
-    <a class="fa fa-fw fa-sign-in" title="Incoming Links"></a><!--
-    --><a class="fa fa-fw fa-sign-out" title="Outgoing Links"></a><!--
-    --><a class="fa fa-fw fa-history" title="History"></a><!--
-    --><a class="fa fa-fw fa-users" title="User Rights"></a>
+    <a title="Incoming Links"><i class="fa fa-fw fa-sign-in"></i></a><!--
+    --><a title="Outgoing Links"><i class="fa fa-fw fa-sign-out"></i></a><!--
+    --><a title="History"><i class="fa fa-fw fa-history"></i></a><!--
+    --><a title="User Rights"><i class="fa fa-fw fa-users"></i></a>
   </span>
 </div>

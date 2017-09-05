@@ -21,5 +21,6 @@ import 'angular2-drag-scroll';
 import 'angular2-notifications';
 import 'ngx-perfect-scrollbar';
 import 'ng2-webstorage';
+
 window['Minigrid'] = require('../node_modules/minigrid/dist/minigrid.min.js');
 window['Keycloak'] = require('./js/keycloak.js');

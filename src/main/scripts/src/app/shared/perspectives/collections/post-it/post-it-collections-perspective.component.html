@@ -35,9 +35,10 @@
         {{ collection.documentCount }}<i class="fal fa-file-alt"></i>
       </div>
 
-      <div class="content" [style.color]="collection.color">
-        <i class="fa fa-2x {{ collection.icon }}" title="Go to documents"
-           [routerLink]="[workspacePath(), 'c', collection.code, 'documents']"></i><!--
+      <div class="content"
+           [style.color]="collection.color"
+           [routerLink]="[workspacePath(), 'c', collection.code, 'documents']">
+        <i class="fa fa-2x {{ collection.icon }}" title="Go to documents"></i><!--
       --><input [(ngModel)]="collection.name" (ngModelChange)="updateCollection(collection)"/>
       </div>
 
