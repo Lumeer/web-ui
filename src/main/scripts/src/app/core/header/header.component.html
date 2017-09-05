@@ -19,7 +19,10 @@
 
   <!-- User icon -->
   <a #profile class="profile">
+    <i class="fa fa-user profile-picture"></i>
+  </a>
 
+  <div class="profile-dropdown-menu">
     <div *ngIf="optionsVisible" class="arrow-up"></div>
     <ul *ngIf="optionsVisible" [@animateHeight]="'in'">
       <li><a title="Settings" href="javascript: void(0)" routerLink="/user/settings">
@@ -39,5 +42,5 @@
 
       <li><span>Licence: {{this.licence}}</span></li>
     </ul>
-  </a>
+  </div>
 </div>
