@@ -123,6 +123,10 @@
         &:hover {
           background-color: #eeeeee;
         }
+
+        a:focus {
+          text-decoration: none;
+        }
       }
     }
   }
