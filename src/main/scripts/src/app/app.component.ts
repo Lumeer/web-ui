@@ -26,7 +26,7 @@ import {WorkspaceService} from './core/workspace.service';
 @Component({
   selector: 'app',
   templateUrl: './app.component.html',
-  styleUrls: ['../styles/basic.scss', './app.component.scss'],
+  styleUrls: ['./shared/common.scss', './app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {
