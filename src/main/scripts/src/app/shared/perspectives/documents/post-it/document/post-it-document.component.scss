@@ -11,7 +11,7 @@
   -moz-transition: all $animation-duration;
   -o-transition: all $animation-duration;
 
-  border: 1px solid #cccccc;
+  border: 1px solid $grey-darker-color;
   border-radius: $border-radius-small;
 
   .header {

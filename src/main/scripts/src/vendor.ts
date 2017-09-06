@@ -9,6 +9,13 @@ import '@angular/forms';
 import '@angular/animations';
 
 import './js/custom.js';
+
+import './font-awesome/solid.min.js';
+import './font-awesome/regular.min.js';
+import './font-awesome/brands.min.js';
+import './font-awesome/light.min.js';
+import './font-awesome/fontawesome.min.js';
+
 import 'socket.io-client';
 import 'angular2-drag-scroll';
 import 'angular2-notifications';

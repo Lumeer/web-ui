@@ -22,6 +22,8 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+
 import {PostItDocumentsPerspectiveComponent} from './post-it/post-it-documents-perspective.component';
 import {PostItAddDocumentComponent} from './post-it/add-document/add-document.component';
 import {PostItDocumentComponent} from './post-it/document/post-it-document.component';
@@ -32,7 +34,8 @@ import {TableModule} from '../../table/table.module';
   imports: [
     BrowserModule,
     FormsModule,
-    TableModule
+    TableModule,
+    NgbModule
   ],
   declarations: [
     PostItDocumentsPerspectiveComponent,

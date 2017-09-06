@@ -1,15 +1,17 @@
+@import "../../../shared/lumeer-variables";
+
 table {
-  border: 1px solid #eeeeee;
+  border: 1px solid $grey-color;
   border-collapse: collapse;
 }
 
 th {
-  border: 1px solid #eeeeee;
+  border: 1px solid $grey-color;
   padding: 10px 20px;
 }
 
 td {
-  border: 1px solid #eeeeee;
+  border: 1px solid $grey-color;
   padding: 10px 20px;
 }
 

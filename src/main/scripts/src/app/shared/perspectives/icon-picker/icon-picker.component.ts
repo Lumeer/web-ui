@@ -18,35 +18,14 @@
  * -----------------------------------------------------------------------/
  */
 
-import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 import {Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'icon-picker',
   templateUrl: './icon-picker.component.html',
-  styleUrls: ['./icon-picker.component.scss'],
-  animations: [
-    trigger('animateHeight', [
-      state('in', style({height: '*'})),
-      transition('void => *', [
-        animate(150, keyframes([
-          style({height: 0, offset: 0}),
-          style({height: '*', offset: 1})
-        ]))
-      ]),
-      transition('* => void', [
-        animate(150, keyframes([
-          style({height: '*', offset: 0}),
-          style({height: 0, offset: 1})
-        ]))
-      ])
-    ])
-  ]
+  styleUrls: ['./icon-picker.component.scss']
 })
 export class IconPickerComponent {
-
-  @Input()
-  public enabled: boolean;
 
   @Output()
   private colorChange = new EventEmitter<string>();

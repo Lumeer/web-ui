@@ -21,6 +21,7 @@
 import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 import {Query} from '../../../../core/dto/query';
 import {Document} from '../../../../core/dto/document';
@@ -79,7 +80,8 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   constructor(private collectionService: CollectionService,
               private documentService: DocumentService,
               private searchService: SearchService,
-              private notificationService: NotificationsService) {
+              private notificationService: NotificationsService,
+              private modalService: NgbModal) {
   }
 
   public ngOnInit(): void {
@@ -138,7 +140,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   }
 
   private documentsPerRow(): number {
-    return Math.floor(this.layoutElement.nativeElement.clientWidth / (260 /*Post-it width*/ + 10 /*Gutter*/));
+    return Math.floor(this.layoutElement.nativeElement.clientWidth / (220 /*Post-it width*/ + 10 /*Gutter*/));
   }
 
   private initializeLayout(): void {
@@ -329,6 +331,16 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
         error => {
           this.handleError(error, 'Refreshing document failed');
         });
+  }
+
+  public removeClick(documentDataObject: DocumentData, popup: ElementRef) {
+    this.modalService.open(popup).result.then(
+      closed => {
+        this.removeDocument(documentDataObject);
+      }, dismissed => {
+        return null;
+      }
+    );
   }
 
   public removeDocument(documentDataObject: DocumentData): void {

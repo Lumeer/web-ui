@@ -22,7 +22,6 @@ import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} f
 import {AttributePair} from '../document-data/attribute-pair';
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
 import {Direction} from '../document-data/direction';
-import {Popup} from '../../../utils/popup';
 import {DocumentData} from '../document-data/document-data';
 import {isString, isUndefined} from 'util';
 
@@ -305,9 +304,7 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   public onRemoveDocumentClick(): void {
-    Popup.confirmDanger('Delete Document', 'Deleting a document will permanently remove it from this collection.',
-      'Keep Document', () => null,
-      'Delete Document', () => this.removed.emit());
+    this.removed.emit();
   }
 
 }

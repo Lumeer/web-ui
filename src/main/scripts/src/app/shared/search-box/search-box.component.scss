@@ -64,7 +64,7 @@ $item-margin: 6px;
   }
 
   li.suggestion:hover {
-    background-color: #eeeeee;
+    background-color: $grey-color;
   }
 
   .suggestion-type {
@@ -72,7 +72,7 @@ $item-margin: 6px;
     text-transform: capitalize;
   }
 
-  button {
+  a {
     background: transparent;
     border: 0;
     display: block;
@@ -84,11 +84,6 @@ $item-margin: 6px;
 
     span {
       display: none;
-    }
-
-    i {
-      font-size: 25px;
-      color: $brand-success;
     }
   }
 }

@@ -5,10 +5,10 @@
   </span>
 
   <ng-container *ngIf="data.writeRole">
-    <a class="editable" title="Edit Document" (click)="setEditMode(true); select(0, 0)">
+    <a tabindex class="editable" title="Edit Document" (click)="setEditMode(true); select(0, 0)">
       <i class="fa fa-fw fa-pencil"></i>
     </a>
-    <a class="editable remove" title="Remove Document" (click)="onRemoveDocumentClick()">
+    <a tabindex class="editable remove" title="Remove Document" (click)="onRemoveDocumentClick()">
       <i class="fa fa-fw fa-times"></i>
     </a>
   </ng-container>
@@ -21,19 +21,17 @@
   <ng-template #editableTable>
     <li *ngFor="let attributePair of attributePairs; let row = index">
       <span id="AttributePair{{ data.index }}[0, {{ row }}]" class="attribute" tabindex="-1"
-           (keydown)="onKeyDown($event)"
-           (click)="clickOnAttributePair(0, row)">
+            (keydown)="onKeyDown($event)"
+            (click)="clickOnAttributePair(0, row)">
 
-        <!-- the list refers to one of the attribute suggestion lists in document perspective -->
-        <input [attr.list]="data.document.collectionCode"
-               [ngModel]="attributePair.attribute"
+        <input [ngModel]="attributePair.attribute"
                (ngModelChange)="updateAttribute(attributePair, $event)">
       </span>
 
       <span id="AttributePair{{ data.index }}[1, {{ row }}]" tabindex="-1"
-           title="{{ attributePair.value }}"
-           (keydown)="onKeyDown($event)"
-           (click)="clickOnAttributePair(1, row)">
+            title="{{ attributePair.value }}"
+            (keydown)="onKeyDown($event)"
+            (click)="clickOnAttributePair(1, row)">
 
         <input [ngModel]="attributePair.value"
                (ngModelChange)="updateValue(attributePair, $event)">
@@ -42,8 +40,8 @@
 
     <li>
       <span id="AttributePair{{ data.index }}[0, {{ attributePairs.length }}]" class="attribute" tabindex="-1"
-           (keydown)="onKeyDown($event)"
-           (click)="clickOnAttributePair(0, attributePairs.length)">
+            (keydown)="onKeyDown($event)"
+            (click)="clickOnAttributePair(0, attributePairs.length)">
 
         <!-- the list refers to one of the attribute suggestion lists in document perspective -->
         <input placeholder=" + "
@@ -52,9 +50,9 @@
       </span>
 
       <span id="AttributePair{{ data.index }}[1, {{ attributePairs.length }}]"
-           [attr.tabindex]="newAttributePair.attribute ? -1 : null"
-           (keydown)="onKeyDown($event)"
-           (click)="newAttributePair.attribute && clickOnAttributePair(1, attributePairs.length)">
+            [attr.tabindex]="newAttributePair.attribute ? -1 : null"
+            (keydown)="onKeyDown($event)"
+            (click)="newAttributePair.attribute && clickOnAttributePair(1, attributePairs.length)">
 
         <input [disabled]="!newAttributePair.attribute"
                (keydown)="$event.key.length === 1 && createAttributePair($event.key)"/>
@@ -78,15 +76,15 @@
 
 <!-- additional buttons -->
 <div class="edit">
-  <a title="Details">
-      <i class="fa fa-fw fa-search"></i>
-    </a>
+  <a tabindex title="Details">
+    <i class="fa fa-fw fa-search"></i>
+  </a>
 
   <span class="secondary-edit">
     <!--the comments remove added space between icons-->
-    <a title="Incoming Links"><i class="fa fa-fw fa-sign-in"></i></a><!--
-    --><a title="Outgoing Links"><i class="fa fa-fw fa-sign-out"></i></a><!--
-    --><a title="History"><i class="fa fa-fw fa-history"></i></a><!--
-    --><a title="User Rights"><i class="fa fa-fw fa-users"></i></a>
+    <a tabindex title="Incoming Links"><i class="fa fa-fw fa-sign-in"></i></a><!--
+    --><a tabindex title="Outgoing Links"><i class="fa fa-fw fa-sign-out"></i></a><!--
+    --><a tabindex title="History"><i class="fa fa-fw fa-history"></i></a><!--
+    --><a tabindex title="User Rights"><i class="fa fa-fw fa-users"></i></a>
   </span>
 </div>

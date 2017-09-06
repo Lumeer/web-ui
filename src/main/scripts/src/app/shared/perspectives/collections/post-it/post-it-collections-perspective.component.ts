@@ -18,31 +18,46 @@
  * -----------------------------------------------------------------------/
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NotificationsService} from 'angular2-notifications/dist';
 
 import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../../core/dto/collection';
 import {CollectionService} from '../../../../core/rest/collection.service';
-import {IconPickerComponent} from '../../icon-picker/icon-picker.component';
-import {Initialization} from './collection-data/initialization';
 import {PostItLayout} from '../../utils/post-it-layout';
 import {Perspective} from '../../perspective';
 import {Role} from '../../../permissions/role';
 import {Buffer} from '../../utils/buffer';
-import {Popup} from '../../utils/popup';
 import {Query} from '../../../../core/dto/query';
-import {CollectionData} from './collection-data/collection-data';
+import {PostItCollectionData} from './post-it-collection-data';
 import {SearchService} from '../../../../core/rest/search.service';
 import {ImportService} from '../../../../core/rest/import.service';
 import {WorkspaceService} from '../../../../core/workspace.service';
-import {isUndefined} from 'util';
 import 'rxjs/add/operator/retry';
 
 @Component({
   selector: 'post-it-collections-perspective',
   templateUrl: './post-it-collections-perspective.component.html',
   styleUrls: ['./post-it-collections-perspective.component.scss'],
+  animations: [
+    trigger('animateHeight', [
+      state('in', style({height: '*'})),
+      transition('void => *', [
+        animate(150, keyframes([
+          style({height: 0, offset: 0}),
+          style({height: '*', offset: 1})
+        ]))
+      ]),
+      transition('* => void', [
+        animate(150, keyframes([
+          style({height: '*', offset: 0}),
+          style({height: 0, offset: 1})
+        ]))
+      ])
+    ])
+  ],
   host: {
     '(document:click)': 'onClick($event)'
   }
@@ -55,22 +70,17 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   @Input()
   public editable: boolean = true;
 
-  @ViewChildren(IconPickerComponent)
-  public iconPickers: QueryList<IconPickerComponent>;
+  @ViewChild('layout')
+  public layoutElement: ElementRef;
 
-  @ViewChildren('iconSwitch')
-  public iconSwitches: QueryList<ElementRef>;
+  @ViewChildren('postItElement')
+  public postItElements: QueryList<ElementRef>;
 
-  @ViewChildren('nonInitializedNameInput')
-  public newNameInputs: QueryList<ElementRef>;
+  public postIts: PostItCollectionData[] = [];
 
-  public collectionDataObjects: CollectionData[] = [];
+  private lastUpdatedPostIt: PostItCollectionData;
 
-  private lastUpdatedCollectionData: CollectionData;
-
-  private lastClickedIconPickerCollectionData: CollectionData;
-
-  public lastClickedCollectionData: CollectionData;
+  private lastClickedPostIt: PostItCollectionData;
 
   public dragging: boolean = false;
 
@@ -82,7 +92,12 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
               private searchService: SearchService,
               private notificationService: NotificationsService,
               private importService: ImportService,
-              private workspaceService: WorkspaceService) {
+              private workspaceService: WorkspaceService,
+              private modalService: NgbModal) {
+  }
+
+  public documentsPerRow(): number {
+    return Math.floor(this.layoutElement.nativeElement.clientWidth / (220 /*Post-it width*/ + 10 /*Gutter*/));
   }
 
   public ngOnInit(): void {
@@ -108,12 +123,11 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
       .subscribe(
         collections => {
           collections.forEach(collection => {
-            const newCollectionData = new CollectionData;
-            newCollectionData.collection = collection;
-            newCollectionData.initialized = new Initialization(true);
-            newCollectionData.pickerVisible = false;
+            const postIt = new PostItCollectionData;
+            postIt.collection = collection;
+            postIt.initialized = true;
 
-            this.collectionDataObjects.push(newCollectionData);
+            this.postIts.push(postIt);
           });
 
           setTimeout(() => this.layout.refresh(), 1000);
@@ -137,29 +151,28 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public onNewCollection(): void {
-    const newCollectionData = new CollectionData;
-    newCollectionData.pickerVisible = false;
-    newCollectionData.initialized = new Initialization(false);
-    newCollectionData.collection = {
+    const newPostIt = new PostItCollectionData;
+    newPostIt.initialized = false;
+    newPostIt.collection = {
       name: '',
       color: COLLECTION_NO_COLOR,
       icon: COLLECTION_NO_ICON
     };
 
-    this.collectionDataObjects.unshift(newCollectionData);
-    setTimeout(() => this.newNameInputs.first.nativeElement.focus());
+    this.postIts.push(newPostIt);
+    setTimeout(() => this.postItElements.last.nativeElement.getElementsByTagName('input').item(0).focus());
   }
 
-  public initializeCollection(collectionData: CollectionData): void {
-    this.collectionService.createCollection(collectionData.collection)
+  public initializeCollection(postIt: PostItCollectionData): void {
+    this.collectionService.createCollection(postIt.collection)
       .retry(3)
       .subscribe(
         response => {
           const code = response.headers.get('Location').split('/').pop();
 
-          collectionData.collection.code = code;
-          this.getCollection(collectionData);
-          collectionData.initialized.onServer = true;
+          postIt.collection.code = code;
+          postIt.initialized = true;
+          this.getCollection(postIt);
           this.notificationService.success('Success', 'Collection created');
         },
         error => {
@@ -167,49 +180,31 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
         });
   }
 
-  private getCollection(collectionData: CollectionData): void {
-    this.collectionService.getCollection(collectionData.collection.code)
+  private getCollection(postIt: PostItCollectionData): void {
+    this.collectionService.getCollection(postIt.collection.code)
       .retry(3)
       .subscribe(
         collection => {
-          collectionData.collection = collection;
+          postIt.collection = collection;
         },
         error => {
           this.handleError(error, 'Failed updating collection');
         });
   }
 
-  public checkInitialization(collectionData: CollectionData): void {
-    if (collectionData.initialized.compulsory) {
-      this.initializeCollection(collectionData);
-    }
-  }
-
-  public checkInitializedName(collectionData: CollectionData): void {
-    collectionData.initialized.name = collectionData.collection.name !== '';
-  }
-
-  public checkInitializedIcon(collectionData: CollectionData): void {
-    collectionData.initialized.icon = collectionData.collection.icon !== COLLECTION_NO_ICON;
-  }
-
-  public checkInitializedColor(collectionData: CollectionData): void {
-    collectionData.initialized.color = collectionData.collection.color !== COLLECTION_NO_COLOR;
-  }
-
-  public updateCollection(collectionData: CollectionData): void {
-    if (this.lastUpdatedCollectionData === collectionData && this.changeBuffer) {
+  public updateCollection(postIt: PostItCollectionData): void {
+    if (this.lastUpdatedPostIt === postIt && this.changeBuffer) {
       this.changeBuffer.stageChanges();
       return;
     }
 
-    this.lastUpdatedCollectionData = collectionData;
+    this.lastUpdatedPostIt = postIt;
     this.changeBuffer = new Buffer(() => {
-      this.collectionService.updateCollection(collectionData.collection)
+      this.collectionService.updateCollection(postIt.collection)
         .retry(3)
         .subscribe(
           collection => {
-            collectionData.collection = collection;
+            postIt.collection = collection;
           },
           error => {
             this.handleError(error, 'Failed updating collection');
@@ -237,10 +232,10 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
       .retry(3)
       .subscribe(
         collection => {
-          const newCollectionData = new CollectionData;
-          newCollectionData.pickerVisible = false;
-          newCollectionData.initialized = new Initialization(true);
-          newCollectionData.collection = collection;
+          const newPostIt = new PostItCollectionData;
+          newPostIt.initialized = true;
+          newPostIt.collection = collection;
+
           collection.color = COLLECTION_NO_COLOR;
           collection.icon = COLLECTION_NO_ICON;
         },
@@ -264,19 +259,20 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     this.fileChange(event.dataTransfer.files);
   }
 
-  public onDeleteClick(collectionData: CollectionData): void {
-    Popup.confirmDanger('Delete Collection', 'Deleting a collection will permanently remove it from this project.\n' +
-      'All documents stored inside the collection will be lost.',
-      'Keep Collection', () => null,
-      'Delete Collection', () => {
-        this.removeCollection(collectionData);
-      });
+  public onDeleteClick(postIt: PostItCollectionData, popup: ElementRef): void {
+    this.modalService.open(popup).result.then(
+      closed => {
+        this.removeCollection(postIt);
+      }, dismissed => {
+        return null;
+      }
+    );
   }
 
-  private removeCollection(collectionData: CollectionData): void {
-    if (collectionData.initialized.onServer) {
+  private removeCollection(postIt: PostItCollectionData): void {
+    if (postIt.initialized) {
       this.changeBuffer && this.changeBuffer.flush();
-      this.collectionService.removeCollection(collectionData.collection.code)
+      this.collectionService.removeCollection(postIt.collection.code)
         .retry(3)
         .subscribe(
           response => {
@@ -288,7 +284,7 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
         );
     }
 
-    this.collectionDataObjects.splice(this.collectionDataObjectIndex(collectionData), 1);
+    this.postIts.splice(this.collectionDataObjectIndex(postIt), 1);
   }
 
   public onAttributesClick(collectionCode: string): void {
@@ -303,40 +299,22 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     // TODO
   }
 
-  public togglePicker(collectionData: CollectionData): void {
-    collectionData.pickerVisible = !collectionData.pickerVisible;
-    if (!isUndefined(this.lastClickedIconPickerCollectionData) && this.lastClickedIconPickerCollectionData !== collectionData) {
-      this.lastClickedIconPickerCollectionData.pickerVisible = false;
-    }
+  public onClick(event: MouseEvent): void {
+    const clickedPostItIndex = this.clickedPostItIndex(event);
+    const clickedPostIt = this.postIts[clickedPostItIndex];
 
-    this.lastClickedIconPickerCollectionData = collectionData;
-  }
-
-  private onClick(event: MouseEvent): void {
-    const lastClickedPickerIndex = this.collectionDataObjectIndex(this.lastClickedIconPickerCollectionData);
-    if (!this.clickOnSwitch(event, lastClickedPickerIndex) && !this.clickOnPicker(event, lastClickedPickerIndex)) {
-      this.lastClickedIconPickerCollectionData && (this.lastClickedIconPickerCollectionData.pickerVisible = false);
+    if (clickedPostIt !== this.lastClickedPostIt) {
+      this.lastClickedPostIt && (this.lastClickedPostIt.pickerVisible = false);
+      this.lastClickedPostIt = clickedPostIt;
     }
   }
 
-  private clickOnSwitch(click: MouseEvent, index?: number): boolean {
-    if (!isUndefined(index)) {
-      return this.iconSwitches.toArray()[index].nativeElement.contains(click.target);
-    } else {
-      return !isUndefined(this.iconSwitches.find(iconSwitch => iconSwitch.nativeElement.contains(click.target)));
-    }
+  private clickedPostItIndex(event: MouseEvent): number {
+    return this.postItElements.toArray().findIndex(postIt => postIt.nativeElement.contains(event.target));
   }
 
-  private clickOnPicker(click: MouseEvent, index?: number): boolean {
-    if (!isUndefined(index)) {
-      return this.iconPickers.toArray()[index].element.nativeElement.contains(click.target);
-    } else {
-      return !isUndefined(this.iconPickers.find(iconPicker => iconPicker.element.nativeElement.contains(click.target)));
-    }
-  }
-
-  private collectionDataObjectIndex(collectionData: CollectionData): number {
-    const index = this.collectionDataObjects.findIndex(collectionDataObject => collectionDataObject === collectionData);
+  private collectionDataObjectIndex(collectionData: PostItCollectionData): number {
+    const index = this.postIts.findIndex(collectionDataObject => collectionDataObject === collectionData);
     return index === -1 ? undefined : index;
   }
 
