@@ -124,7 +124,7 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   public hasWriteRole(): boolean {
-    return this.hasRole(this.collection, Role.write);
+    return this.hasRole(this.collection, Role.Write);
   }
 
   private hasRole(collection: Collection, role: string) {

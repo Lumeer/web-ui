@@ -21,11 +21,23 @@
 import {Injectable} from '@angular/core';
 
 import {Observable} from 'rxjs/Observable';
+import {User} from '../dto/user';
+import {WorkspaceService} from '../workspace.service';
 
 @Injectable()
 export class UserService {
 
-    public getUsers(): Observable<string[]> {
-        return Observable.of(['alicak', 'kubedo', 'jkotrady', 'kulexpipiens']);
+  constructor(private workspaceService: WorkspaceService) {
+  }
+
+  public getUsers(organizationCode?: string): Observable<User[]> {
+    if (!organizationCode) {
+      organizationCode = this.workspaceService.organizationCode;
     }
+    return Observable.of([
+      {id: 'someId1', username: 'alicak', groups: []},
+      {id: 'someId2', username: 'kubedo', groups: []},
+      {id: 'someId3', username: 'jkotrady', groups: []},
+      {id: 'someId4', username: 'kulexpipiens', groups: []}]);
+  }
 }

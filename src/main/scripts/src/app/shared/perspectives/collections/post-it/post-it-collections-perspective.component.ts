@@ -118,11 +118,11 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public hasWriteRole(collection: Collection): boolean {
-    return this.hasRole(collection, Role.write);
+    return this.hasRole(collection, Role.Write);
   }
 
   public hasManageRole(collection: Collection): boolean {
-    return this.hasRole(collection, Role.manage);
+    return this.hasRole(collection, Role.Manage);
   }
 
   private hasRole(collection: Collection, role: string) {

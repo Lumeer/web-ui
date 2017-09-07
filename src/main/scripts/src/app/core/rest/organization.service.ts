@@ -19,24 +19,15 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import {HttpResponse} from '@angular/common/http';
 
 import {Organization} from '../dto/organization';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import {Permissions} from '../dto/permissions';
-import {Permission} from '../dto/permission';
-import {LumeerError} from '../error/lumeer.error';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {BadInputError} from '../error/bad-input.error';
-import {WorkspaceService} from '../workspace.service';
+import {PermissionService} from './permission.service';
 
 @Injectable()
-export class OrganizationService {
-
-  constructor(private httpClient: HttpClient,
-    private workspaceService: WorkspaceService) {
-  }
+export class OrganizationService extends PermissionService {
 
   public getOrganizations(): Observable<Organization[]> {
     return this.httpClient.get<Organization[]>(this.apiPrefix());
@@ -58,42 +49,14 @@ export class OrganizationService {
     return this.httpClient.put(this.apiPrefix(code), organization, {observe: 'response'});
   }
 
-  public getPermissions(): Observable<Permissions> {
-    return this.httpClient.get<Permissions>(`${this.actualApiPrefix()}/permissions`)
-      .catch(OrganizationService.handleGlobalError);
-  }
+  protected actualApiPrefix(): string {
+    let orgCode = this.workspaceService.organizationCode;
 
-  public updateUserPermission(userPermissions: Permission): Observable<Permission> {
-    return this.httpClient.put<Permission>(`${this.actualApiPrefix()}/permissions/users`, userPermissions)
-      .catch(OrganizationService.handleGlobalError);
-  }
-
-  public updateGroupPermission(userPermissions: Permission): Observable<Permission> {
-    return this.httpClient.put<Permission>(`${this.actualApiPrefix()}/permissions/groups`, userPermissions)
-      .catch(OrganizationService.handleGlobalError);
-  }
-
-  public removeUserPermission(user: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(`${this.actualApiPrefix()}/permissions/users/${user}`, {observe: 'response'})
-      .catch(OrganizationService.handleGlobalError);
-  }
-
-  public removeGroupPermission(group: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(`${this.actualApiPrefix()}/permissions/groups/${group}`, {observe: 'response'})
-      .catch(OrganizationService.handleGlobalError);
-  }
-
-  private actualApiPrefix(): string {
-    let orgCode = this.workspaceService.currentlySelectedOrganizationCode;
-    return `/${API_URL}/rest/organizations/${orgCode}`;
+    return this.apiPrefix(orgCode);
   }
 
   private apiPrefix(code?: string): string {
     return `/${API_URL}/rest/organizations${code ? `/${code}` : ''}`;
-  }
-
-  private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {
-    throw new LumeerError(error.message);
   }
 
 }

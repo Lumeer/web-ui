@@ -21,11 +21,19 @@
 import {Injectable} from '@angular/core';
 
 import {Observable} from 'rxjs/Observable';
+import {Group} from '../dto/group';
+import {WorkspaceService} from '../workspace.service';
 
 @Injectable()
 export class GroupService {
 
-    public getGroups(): Observable<string[]> {
-        return Observable.of(['directors', 'customers']);
+  constructor(private workspaceService: WorkspaceService) {
+  }
+
+  public getGroups(organizationCode?: string): Observable<Group[]> {
+    if (!organizationCode) {
+      organizationCode = this.workspaceService.organizationCode;
     }
+    return Observable.of([{name: 'directors'}, {name: 'customers'}]);
+  }
 }

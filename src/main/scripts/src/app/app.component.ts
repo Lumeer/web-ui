@@ -49,15 +49,21 @@ export class AppComponent implements OnInit {
         let params = events.state.root.firstChild.params;
         let organizationCode = params['organizationCode'];
         let projectCode = params['projectCode'];
-        if (organizationCode && projectCode) {
-          this.workspaceService.organizationCode = organizationCode;
-          this.workspaceService.projectCode = projectCode;
-        }
+        let collectionCode = params['collectionCode'];
+        let viewCode = params['viewCode'];
         if (organizationCode) {
-          this.workspaceService.currentlySelectedOrganizationCode = organizationCode;
+          this.workspaceService.organizationCode = organizationCode;
         }
         if (projectCode) {
-          this.workspaceService.currentlySelectedProjectCode = projectCode;
+          this.workspaceService.projectCode = projectCode;
+        }
+        if (collectionCode) {
+          // TODO: set collectionCode from URL
+          this.workspaceService.collectionCode = collectionCode;
+        }
+        if (viewCode) {
+          // TODO: set viewCode from URL
+          this.workspaceService.viewCode = viewCode;
         }
       }
     });

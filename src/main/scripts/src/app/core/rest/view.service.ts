@@ -19,17 +19,20 @@
  */
 
 import {Injectable} from '@angular/core';
+import {PermissionService} from './permission.service';
 
 @Injectable()
-export class WorkspaceService {
+export class ViewService extends PermissionService {
 
-  public organizationCode: string;
-  public projectCode: string;
-  public collectionCode: string;
-  public viewCode: string;
-
-  public isWorkspaceSet(): boolean {
-    return this.organizationCode && this.organizationCode !== '' && this.projectCode && this.projectCode !== '';
+  protected actualApiPrefix(): string {
+    let viewCode = this.workspaceService.viewCode;
+    return `${this.apiPrefix()}/${viewCode}`;
   }
 
+  private apiPrefix(): string {
+    let organizationCode = this.workspaceService.organizationCode;
+    let projectCode = this.workspaceService.projectCode;
+
+    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/views`;
+  }
 }

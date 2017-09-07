@@ -42,6 +42,7 @@ import {LumeerErrorHandler} from './error/lumeer-error.handler';
 import {ImportService} from './rest/import.service';
 import {KEYCLOAK_HTTP_PROVIDER, KeycloakInterceptor} from './keycloak/keycloak-http.service';
 import {KeycloakService} from './keycloak/keycloak.service';
+import {ViewService} from './rest/view.service';
 
 @NgModule({
   imports: [
@@ -69,6 +70,7 @@ import {KeycloakService} from './keycloak/keycloak.service';
     KeycloakService,
     UserService,
     GroupService,
+    ViewService,
     KEYCLOAK_HTTP_PROVIDER,
     {provide: ErrorHandler, useClass: LumeerErrorHandler}
   ],
