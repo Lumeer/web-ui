@@ -20,16 +20,24 @@
 
 import {Injectable} from '@angular/core';
 
+import {Observable} from 'rxjs/Observable';
+import {User} from '../dto/user';
+import {WorkspaceService} from '../workspace.service';
+
 @Injectable()
-export class WorkspaceService {
+export class UserService {
 
-  public organizationCode: string;
-  public projectCode: string;
-  public collectionCode: string;
-  public viewCode: string;
-
-  public isWorkspaceSet(): boolean {
-    return this.organizationCode && this.organizationCode !== '' && this.projectCode && this.projectCode !== '';
+  constructor(private workspaceService: WorkspaceService) {
   }
 
+  public getUsers(organizationCode?: string): Observable<User[]> {
+    if (!organizationCode) {
+      organizationCode = this.workspaceService.organizationCode;
+    }
+    return Observable.of([
+      {id: 'someId1', username: 'alicak', groups: []},
+      {id: 'someId2', username: 'kubedo', groups: []},
+      {id: 'someId3', username: 'jkotrady', groups: []},
+      {id: 'someId4', username: 'kulexpipiens', groups: []}]);
+  }
 }

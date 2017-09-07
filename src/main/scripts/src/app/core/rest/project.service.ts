@@ -20,40 +20,43 @@
 
 import {Injectable} from '@angular/core';
 import {HttpResponse} from '@angular/common/http';
-import {HttpClient} from '@angular/common/http';
 
 import {Project} from '../dto/project';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import {PermissionService} from './permission.service';
 
 @Injectable()
-export class ProjectService {
-
-  constructor(private httpClient: HttpClient) {
-  }
+export class ProjectService extends PermissionService {
 
   public getProjects(orgCode: string): Observable<Project[]> {
-    return this.httpClient.get<Project[]>(ProjectService.apiPrefix(orgCode));
+    return this.httpClient.get<Project[]>(this.apiPrefix(orgCode));
   }
 
   public getProject(orgCode: string, projCode: string): Observable<Project> {
-    return this.httpClient.get<Project>(ProjectService.apiPrefix(orgCode, projCode));
+    return this.httpClient.get<Project>(this.apiPrefix(orgCode, projCode));
   }
 
   public deleteProject(orgCode: string, projCode: string): Observable<HttpResponse<object>> {
-    return this.httpClient.delete(ProjectService.apiPrefix(orgCode, projCode), {observe: 'response'});
+    return this.httpClient.delete(this.apiPrefix(orgCode, projCode), {observe: 'response'});
   }
 
   public createProject(orgCode: string, project: Project): Observable<HttpResponse<object>> {
-    return this.httpClient.post(ProjectService.apiPrefix(orgCode), project, {observe: 'response'});
+    return this.httpClient.post(this.apiPrefix(orgCode), project, {observe: 'response'});
   }
 
   public editProject(orgCode: string, projCode: string, project: Project): Observable<HttpResponse<object>> {
-    return this.httpClient.put(ProjectService.apiPrefix(orgCode, projCode), project, {observe: 'response'});
+    return this.httpClient.put(this.apiPrefix(orgCode, projCode), project, {observe: 'response'});
   }
 
-  private static apiPrefix(orgCode: string, projCode?: string): string {
+  private apiPrefix(orgCode: string, projCode?: string): string {
     return `/${API_URL}/rest/organizations/${orgCode}/projects${projCode ? `/${projCode}` : ''}`;
   }
 
+  protected actualApiPrefix(): string {
+    let orgCode = this.workspaceService.organizationCode;
+    let projCode = this.workspaceService.projectCode;
+
+    return this.apiPrefix(orgCode, projCode);
+  }
 }

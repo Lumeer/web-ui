@@ -19,39 +19,43 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpResponse} from '@angular/common/http';
 
 import {Organization} from '../dto/organization';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import {PermissionService} from './permission.service';
 
 @Injectable()
-export class OrganizationService {
-
-  constructor(private httpClient: HttpClient) {
-  }
+export class OrganizationService extends PermissionService {
 
   public getOrganizations(): Observable<Organization[]> {
-    return this.httpClient.get<Organization[]>(OrganizationService.apiPrefix());
+    return this.httpClient.get<Organization[]>(this.apiPrefix());
   }
 
   public getOrganization(code: string): Observable<Organization> {
-    return this.httpClient.get<Organization>(OrganizationService.apiPrefix(code));
+    return this.httpClient.get<Organization>(this.apiPrefix(code));
   }
 
   public deleteOrganization(code: string): Observable<HttpResponse<object>> {
-    return this.httpClient.delete(OrganizationService.apiPrefix(code), {observe: 'response'});
+    return this.httpClient.delete(this.apiPrefix(code), {observe: 'response'});
   }
 
   public createOrganization(organization: Organization): Observable<HttpResponse<object>> {
-    return this.httpClient.post(OrganizationService.apiPrefix(), organization, {observe: 'response'});
+    return this.httpClient.post(this.apiPrefix(), organization, {observe: 'response'});
   }
 
   public editOrganization(code: string, organization: Organization): Observable<HttpResponse<object>> {
-    return this.httpClient.put(OrganizationService.apiPrefix(code), organization, {observe: 'response'});
+    return this.httpClient.put(this.apiPrefix(code), organization, {observe: 'response'});
   }
 
-  private static apiPrefix(code?: string): string {
+  protected actualApiPrefix(): string {
+    let orgCode = this.workspaceService.organizationCode;
+
+    return this.apiPrefix(orgCode);
+  }
+
+  private apiPrefix(code?: string): string {
     return `/${API_URL}/rest/organizations${code ? `/${code}` : ''}`;
   }
 

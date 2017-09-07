@@ -18,9 +18,9 @@
  * -----------------------------------------------------------------------/
  */
 
-export interface Entity {
-
-  name: string;
-  roles: string[];
-
+export const enum ResourceType {
+  Organization = 'organization',
+  Project = 'project',
+  Collection = 'collection',
+  View = 'view'
 }

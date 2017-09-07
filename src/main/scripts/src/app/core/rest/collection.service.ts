@@ -19,39 +19,33 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse} from '@angular/common/http';
+import {HttpErrorResponse, HttpParams, HttpResponse} from '@angular/common/http';
 
-import {WorkspaceService} from '../workspace.service';
 import {Collection} from '../dto/collection';
 import {Attribute} from '../dto/attribute';
 import {Observable} from 'rxjs/Observable';
 import {BadInputError} from '../error/bad-input.error';
-import {LumeerError} from '../error/lumeer.error';
 import {isNullOrUndefined} from 'util';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import 'rxjs/add/operator/catch';
-import {Permissions} from '../dto/permissions';
+import {PermissionService} from './permission.service';
 
 @Injectable()
-export class CollectionService {
-
-  constructor(private httpClient: HttpClient,
-              private workspaceService: WorkspaceService) {
-  }
+export class CollectionService extends PermissionService {
 
   public createCollection(collection: Collection): Observable<HttpResponse<any>> {
     return this.httpClient.post(this.apiPrefix(), collection, {observe: 'response'})
-      .catch(CollectionService.handleError);
+      .catch(this.handleError);
   }
 
   public updateCollection(collection: Collection): Observable<Collection> {
     return this.httpClient.put(`${this.apiPrefix()}/${collection.code}`, collection)
-      .catch(CollectionService.handleError);
+      .catch(this.handleError);
   }
 
   public removeCollection(collectionCode: string): Observable<HttpResponse<any>> {
     return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}`, {observe: 'response'})
-      .catch(CollectionService.handleError);
+      .catch(this.handleError);
   }
 
   public getCollection(collectionCode: string): Observable<Collection> {
@@ -88,29 +82,10 @@ export class CollectionService {
     return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, {observe: 'response'});
   }
 
-  public getPermissions(collectionCode: string): Observable<Permissions> {
-    return this.httpClient.get<Permissions>(`${this.apiPrefix()}/${collectionCode}/permissions`)
-      .catch(CollectionService.handleGlobalError);
-  }
+  protected actualApiPrefix() {
+    let collectionCode = this.workspaceService.collectionCode;
 
-  public updateUserPermissions(collectionCode: string, userPermissions: Permissions): Observable<Permissions> {
-    return this.httpClient.put<Permissions>(`${this.apiPrefix()}/${collectionCode}/permissions/users`, userPermissions)
-      .catch(CollectionService.handleGlobalError);
-  }
-
-  public removeUserPermissions(collectionCode: string, user: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}/permissions/users/${user}`, {observe: 'response'})
-      .catch(CollectionService.handleGlobalError);
-  }
-
-  public updateGroupPermission(collectionCode: string, groupPermissions: Permissions): Observable<Permissions> {
-    return this.httpClient.put<Permissions>(`${this.apiPrefix()}/${collectionCode}/permissions/groups`, groupPermissions)
-      .catch(CollectionService.handleGlobalError);
-  }
-
-  public removeGroupPermission(collectionCode: string, group: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}/permissions/groups/${group}`, {observe: 'response'})
-      .catch(CollectionService.handleGlobalError);
+    return `${this.apiPrefix()}/${collectionCode}`;
   }
 
   private apiPrefix(): string {
@@ -120,15 +95,11 @@ export class CollectionService {
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
   }
 
-  private static handleError(error: HttpErrorResponse): ErrorObservable {
+  private handleError(error: HttpErrorResponse): ErrorObservable {
     if (error.status === 400) {
       throw new BadInputError('Name already exists');
     }
     return CollectionService.handleGlobalError(error);
-  }
-
-  private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {
-    throw new LumeerError(error.message);
   }
 
 }

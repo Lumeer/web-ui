@@ -32,7 +32,8 @@ import {ProjectService} from './rest/project.service';
 import {OrganizationService} from './rest/organization.service';
 import {CollectionService} from './rest/collection.service';
 import {DocumentService} from './rest/document.service';
-import {RolesService} from './rest/roles.service';
+import {UserService} from './rest/user.service';
+import {GroupService} from './rest/group.service';
 import {HomeComponent} from './home.component';
 import {SharedModule} from '../shared/shared.module';
 import {SearchService} from './rest/search.service';
@@ -41,6 +42,7 @@ import {LumeerErrorHandler} from './error/lumeer-error.handler';
 import {ImportService} from './rest/import.service';
 import {KEYCLOAK_HTTP_PROVIDER, KeycloakInterceptor} from './keycloak/keycloak-http.service';
 import {KeycloakService} from './keycloak/keycloak.service';
+import {ViewService} from './rest/view.service';
 
 @NgModule({
   imports: [
@@ -61,12 +63,14 @@ import {KeycloakService} from './keycloak/keycloak.service';
     DocumentService,
     OrganizationService,
     ProjectService,
-    RolesService,
     SearchService,
     UserSettingsService,
     WorkspaceService,
     ImportService,
     KeycloakService,
+    UserService,
+    GroupService,
+    ViewService,
     KEYCLOAK_HTTP_PROVIDER,
     {provide: ErrorHandler, useClass: LumeerErrorHandler}
   ],

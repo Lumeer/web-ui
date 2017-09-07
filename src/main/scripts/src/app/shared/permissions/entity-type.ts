@@ -18,18 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Injectable} from '@angular/core';
-
-@Injectable()
-export class WorkspaceService {
-
-  public organizationCode: string;
-  public projectCode: string;
-  public collectionCode: string;
-  public viewCode: string;
-
-  public isWorkspaceSet(): boolean {
-    return this.organizationCode && this.organizationCode !== '' && this.projectCode && this.projectCode !== '';
-  }
-
+export const enum EntityType {
+  Users = 'users',
+  Groups = 'groups'
 }

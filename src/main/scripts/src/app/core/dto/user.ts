@@ -18,19 +18,8 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-
-@Injectable()
-export class RolesService {
-
-  constructor(private http: HttpClient) {
-  }
-
-  // TODO communicate with SecurityService through REST API
-
-  private static apiPrefix(organizationCode: string): string {
-    return `/${API_URL}/rest/roles/organizations/${organizationCode}/`;
-  }
-
+export interface User {
+  id: string;
+  username: string;
+  groups: string[];
 }
