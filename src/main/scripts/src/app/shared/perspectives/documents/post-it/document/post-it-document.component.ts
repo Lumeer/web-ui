@@ -23,6 +23,7 @@ import {AttributePair} from '../document-data/attribute-pair';
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
 import {Direction} from '../document-data/direction';
 import {DocumentData} from '../document-data/document-data';
+import {KeyCode} from '../../../../key-code';
 import {isString, isUndefined} from 'util';
 
 @Component({
@@ -66,32 +67,9 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   private setEventListener(): void {
-    // disable scrolling when navigating using up and down keys
     this.content.nativeElement.addEventListener('keydown', (key: KeyboardEvent) => {
-      [38, 40].includes(key.keyCode) && key.preventDefault();
+      [KeyCode.UpArrow, KeyCode.DownArrow].includes(key.keyCode) && key.preventDefault();
     }, false);
-  }
-
-  private fetchCollection(): void {
-    this.collectionService.getCollection(this.document.collectionCode).subscribe(
-      collection => {
-        this.collection = collection;
-        this.refreshSuggestions();
-        this.editable = this.hasWriteRole();
-      },
-      error => {
-        this.notificationService.error('Error', 'Failed fetching document data');
-      }
-    );
-  }
-
-  public hasWriteRole(): boolean {
-    return this.hasRole(this.collection, Role.Write);
-  }
-
-  private hasRole(collection: Collection, role: string) {
-    return collection.permissions && collection.permissions.users
-      .some((permission: Permission) => permission.roles.includes(role));
   }
 
   private loadDocumentData(): void {

@@ -37,7 +37,7 @@ export class DocumentsListComponent extends DocumentsPerspectivePresenter {
   public ngOnInit() {
     this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
       this.collectionCode = params.get('collectionCode');
-      this.query = {collections: [this.collectionCode]};
+      this.query = {collectionCodes: [this.collectionCode]};
 
       super.ngOnInit();
     });

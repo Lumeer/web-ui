@@ -3,4 +3,5 @@
 
 a {
   cursor: pointer;
+  transition: color $animation-color-duration;
 }

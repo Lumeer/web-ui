@@ -157,7 +157,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
       page: pageNumber,
       filters: this.query.filters,
       fulltext: this.query.fulltext,
-      collections: this.query.collections
+      collectionCodes: this.query.collectionCodes
     };
   }
 
@@ -367,7 +367,7 @@ export class PostItDocumentsPerspectiveComponent implements Perspective, OnInit,
   }
 
   public hasWriteRole(collection: Collection): boolean {
-    return this.hasRole(collection, Role.WRITE);
+    return this.hasRole(collection, Role.Write);
   }
 
   private hasRole(collection: Collection, role: string): boolean {

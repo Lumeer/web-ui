@@ -20,7 +20,7 @@
 
 export interface Query {
 
-  collections?: string[];
+  collectionCodes?: string[];
   filters?: string[];
   fulltext?: string;
   page?: number;
