@@ -66,22 +66,29 @@
     width: 50px;
     background-color: #eeeeee;
     border-radius: 25px;
+    text-align: center;
+    overflow: hidden;
 
-    > * {
-      cursor: default;
-      z-index: 999;
+    .profile-picture {
+      margin-top: 5px;
+      width: 45px;
+      height: 45px;
+      pointer-events: none;
     }
+  }
 
-    &:hover, &:focus {
-      text-decoration: none;
-    }
+  .profile-dropdown-menu {
+    position: absolute;
+    top: 62px;
+    right: 10px;
+    cursor: default;
+    z-index: 999;
 
     .arrow-up {
       position: relative;
       width: 0;
       height: 0;
-      top: 50px;
-      left: 20px;
+      left: 130px;
 
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
@@ -92,11 +99,8 @@
       box-shadow: $shadow-down;
       background: $secondary-color;
       min-width: 160px;
-      position: relative;
-      top: 50px;
-      right: 110px;
-
       padding: 6px 0;
+      margin-bottom: 0;
       border: 1px solid #cccccc;
       border-radius: 3px;
       overflow: hidden;
@@ -122,6 +126,10 @@
 
         &:hover {
           background-color: #eeeeee;
+        }
+
+        span {
+          letter-spacing: inherit;
         }
 
         a:focus {

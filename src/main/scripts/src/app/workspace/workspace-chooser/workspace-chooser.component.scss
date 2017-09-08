@@ -48,7 +48,7 @@
       display: inline-block;
       cursor: pointer;
 
-      border: 2px solid #cccccc;
+      border: 2px solid $grey-darker-color;
       border-radius: $border-radius-small;
 
       margin: 10px;
@@ -71,10 +71,8 @@
       }
 
       .square-icon-full {
-        width: 150px;
-        height: 150px;
-        line-height: 150px;
-        font-size: 60px;
+        text-align: center;
+        margin-top: 35px;
       }
 
       .square-code {

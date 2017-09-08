@@ -1,8 +1,10 @@
-<ng-container *ngIf="enabled">
-  <div class="arrow-up"></div>
-  <div class="stickerPicker" [@animateHeight]="'in'">
-    <color-palette [color]="activeColor" (change)="colorChangeEvent($event)" (selection)="selectionEvent($event)"></color-palette>
-    <div class="divider"></div>
-    <icon-palette [icon]="activeIcon" (change)="iconChangeEvent($event)" (selection)="selectionEvent($event)"></icon-palette>
-  </div>
-</ng-container>
+<div class="arrow-up"></div>
+<div class="stickerPicker">
+  <color-palette [color]="activeColor"
+                 (change)="colorChangeEvent($event)"
+                 (selection)="selectionEvent($event)"></color-palette>
+  <div class="divider"></div>
+  <icon-palette [icon]="activeIcon"
+                (change)="iconChangeEvent($event)"
+                (selection)="selectionEvent($event)"></icon-palette>
+</div>

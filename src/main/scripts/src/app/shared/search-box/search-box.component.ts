@@ -169,10 +169,10 @@ export class SearchBoxComponent {
   }
 
   public search(): void {
-    let organization = this.workspaceService.organizationCode;
-    let project = this.workspaceService.projectCode;
+    const organizationCode = this.workspaceService.organizationCode;
+    const projectCode = this.workspaceService.projectCode;
 
-    this.router.navigate(['/w', organization, project, 'search', 'collections'], {queryParams: {query: this.createQuery()}});
+    this.router.navigate(['/w', organizationCode, projectCode, 'search', 'collections'], {queryParams: {query: this.createQuery()}});
   }
 
   private addQueryItem(queryItem: QueryItem) {
@@ -183,7 +183,7 @@ export class SearchBoxComponent {
   }
 
   private createQuery(): string {
-    let query: Query = {
+    const query: Query = {
       collectionCodes: [],
       filters: []
     };

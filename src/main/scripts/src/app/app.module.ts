@@ -30,12 +30,14 @@ import {CollectionModule} from './collection/collection.module';
 import {SearchModule} from './search/search.module';
 import {DocumentsModule} from './documents/documents.module';
 import {SimpleNotificationsModule} from 'angular2-notifications/dist';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     SimpleNotificationsModule.forRoot(),
+    NgbModule.forRoot(),
     CoreModule,
     CollectionModule,
     DocumentsModule,

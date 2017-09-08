@@ -69,7 +69,7 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
   public ngOnInit(): void {
     this.route.paramMap
       .switchMap(params => {
-        let code: string = params.get('collectionCode');
+        const code: string = params.get('collectionCode');
 
         return Observable.combineLatest(
           this.collectionService.getCollection(code),
@@ -82,21 +82,21 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
   }
 
   public onNewValue(dataEvent: DataEvent) {
-    this.documentService.createDocument(this.collection.code, this.convertDataEventToDocument(dataEvent))
+    this.documentService.createDocument(this.convertDataEventToDocument(dataEvent))
       .subscribe(response => {
-        let id = response.headers.get('Location').split('/').pop();
+        const id = response.headers.get('Location').split('/').pop();
         this.rows[dataEvent.rowIndex].id = id;
       });
   }
 
   public onValueChange(dataEvent: DataEvent) {
-    this.documentService.patchDocument(this.collection.code, this.convertDataEventToDocument(dataEvent))
+    this.documentService.patchDocument(this.convertDataEventToDocument(dataEvent))
       .subscribe();
   }
 
   public onHeaderChange(dataEvent: DataEvent) {
-    let oldValue: string = dataEvent.data.oldValue;
-    let newValue: string = dataEvent.data.newValue;
+    const oldValue: string = dataEvent.data.oldValue;
+    const newValue: string = dataEvent.data.newValue;
     // TODO use real attribute values
     this.collectionService.updateAttribute(this.collection.code, oldValue, {
       fullName: newValue,
@@ -124,28 +124,29 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
   }
 
   private convertDataEventToDocument(dataEvent: DataEvent): Document {
-    let document: Document = new Document();
+    const document = new Document();
     Object.keys(dataEvent.data).forEach(key => document.data[key] = dataEvent.data[key]);
     document.id = dataEvent.id;
+    document.collectionCode = this.collection.code;
     return document;
   }
 
   private prepareTableData(attributes: Attribute[], documents: Document[]) {
     // TODO remove after implementing attributes in backend
     attributes = this.createAttributesFromDocuments(documents);
-    let headerRows: TableHeaderCell[] = attributes.map(TableDocumentsPerspectiveComponent.convertAttributeToHeaderCell);
+    const headerRows: TableHeaderCell[] = attributes.map(TableDocumentsPerspectiveComponent.convertAttributeToHeaderCell);
     this.header = <TableHeader> {cells: headerRows};
     this.rows = documents.map(document => TableDocumentsPerspectiveComponent.convertDocumentToRow(this.header, document));
   }
 
   private createAttributesFromDocuments(documents: Document[]): Attribute[] {
-    let set: Set<string> = new Set();
+    const set = new Set<string>();
     documents.forEach(document => Object.keys(document.data).forEach(key => {
       if (key !== '_id') {
         set.add(key);
       }
     }));
-    let attributes: Attribute[] = [];
+    const attributes: Attribute[] = [];
     set.forEach(name => attributes.push({name: name, usageCount: 10, fullName: name, constraints: []}));
     return attributes;
   }
@@ -155,17 +156,17 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
   }
 
   private static convertDocumentToRow(header: TableHeader, document: Document): TableRow {
-    let rowCells: TableRowCell[] = header.cells.map(headerCell => TableDocumentsPerspectiveComponent.convertToRowCell(document, headerCell));
+    const rowCells: TableRowCell[] = header.cells.map(headerCell => TableDocumentsPerspectiveComponent.convertToRowCell(document, headerCell));
     return <TableRow> {id: document.id, cells: rowCells, active: false};
   }
 
   private static convertToRowCell(document: Document, headerCell: TableHeaderCell): TableRowCell {
-    let value: string = document.data[headerCell.label] ? document.data[headerCell.label] : '';
+    const value: string = document.data[headerCell.label] ? document.data[headerCell.label] : '';
     return <TableRowCell>{label: value, active: false, hidden: false, constraints: headerCell.constraints};
   }
 
   private static createNewRow(header: TableHeader, rowNum: number): TableRow {
-    let cells = header.cells.map((header) => {
+    const cells = header.cells.map((header) => {
       return <TableRowCell>{label: '', active: false, hidden: header.hidden, constraints: header.constraints};
     });
     return <TableRow> {id: null, cells: cells, active: false};

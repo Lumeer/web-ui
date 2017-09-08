@@ -34,12 +34,12 @@ import {PermissionService} from './permission.service';
 export class CollectionService extends PermissionService {
 
   public createCollection(collection: Collection): Observable<HttpResponse<any>> {
-    return this.httpClient.post(this.apiPrefix(), collection, {observe: 'response'})
+    return this.httpClient.post(this.apiPrefix(), this.toDto(collection), {observe: 'response'})
       .catch(this.handleError);
   }
 
   public updateCollection(collection: Collection): Observable<Collection> {
-    return this.httpClient.put(`${this.apiPrefix()}/${collection.code}`, collection)
+    return this.httpClient.put(`${this.apiPrefix()}/${collection.code}`, this.toDto(collection))
       .catch(this.handleError);
   }
 
@@ -54,7 +54,7 @@ export class CollectionService extends PermissionService {
   }
 
   public getCollections(pageNumber?: number, pageSize?: number): Observable<Collection[]> {
-    let queryParams = new HttpParams();
+    const queryParams = new HttpParams();
 
     if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
       queryParams.set('page', pageNumber.toString())
@@ -88,9 +88,20 @@ export class CollectionService extends PermissionService {
     return `${this.apiPrefix()}/${collectionCode}`;
   }
 
+  private toDto(collection: Collection): Collection {
+    return {
+      code: collection.code,
+      name: collection.name,
+      color: collection.color,
+      icon: collection.icon,
+      permissions: collection.permissions,
+      attributes: collection.attributes
+    };
+  }
+
   private apiPrefix(): string {
-    let organizationCode = this.workspaceService.organizationCode;
-    let projectCode = this.workspaceService.projectCode;
+    const organizationCode = this.workspaceService.organizationCode;
+    const projectCode = this.workspaceService.projectCode;
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
   }

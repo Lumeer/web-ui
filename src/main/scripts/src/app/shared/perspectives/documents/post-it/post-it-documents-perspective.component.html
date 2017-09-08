@@ -1,25 +1,48 @@
 <div class="fadedown"></div>
-<div class="perspective" [style.height]="height + 'px'" #perspective>
+<div class="perspective" #perspective (scroll)="loadMore(perspective)" [style.height]="height + 'px'">
   <div class="layout" #layout>
-    <add-document class="layout-item" *ngIf="editable"
-                  (newDocument)="createDocument()"></add-document>
 
-    <post-it-document *ngFor="let document of documents; let idx = index"
-                      class="layout-item {{ !initialized[idx] ? 'uninitialized' : '' }}"
-                      [style.z-index]="documents.length - idx"
-                      [style.transition]="!transitions ? 'all 0s' : ''"
-                      [index]="idx"
-                      [document]="document"
-                      [selection]="selection"
-                      (selectOther)="selectDocument($event)"
-                      (removed)="removeDocument(idx, document)"
-                      (changes)="sendUpdate(idx, document)">
-    </post-it-document>
+    <add-document class="layout-item" *ngIf="editable"
+                  (newDocument)="createDocument($event)"></add-document>
+
+    <ng-container *ngFor="let documentDataObject of documentDataObjects">
+      <post-it-document *ngIf="documentDataObject.collection"
+                        class="layout-item {{ !documentDataObject.initialized ? 'uninitialized' : null }}"
+                        [attr.z-index]="documentDataObject.selectedInput.documentIdx === documentDataObject.index ? 50 : null"
+                        [data]="documentDataObject"
+                        (selectOther)="selectDocument($event)"
+                        (removed)="removeClick(documentDataObject, modal)"
+                        (changes)="sendUpdate(documentDataObject)">
+      </post-it-document>
+    </ng-container>
+
+    <ng-container *ngFor="let attributeSuggestionsEntry of attributeSuggestionsEntries()">
+      <datalist id="{{ attributeSuggestionsEntry[0] }}">
+        <option *ngFor="let suggestion of attributeSuggestionsEntry[1]">{{ suggestion }}</option>
+      </datalist>
+    </ng-container>
 
     <label *ngIf="!editable && !query" class="label-centered">No Search Query</label>
-    <label *ngIf="!editable && query && !documents" class="label-centered">Nothing To Show</label>
+    <label *ngIf="!editable && query && !documentDataObjects.length" class="label-centered">Nothing To Show</label>
   </div>
 </div>
 <div class="fadeup"></div>
 
-<a (click)="onSeeMore(perspective)" class="scroll-down">Scroll Down<i class="fa fa-chevron-down"></i></a>
+<a (click)="onScrollDown(perspective)" class="scroll-down">Scroll Down<i class="fa fa-chevron-down"></i></a>
+
+<!-- modal -->
+<ng-template #modal let-c="close" let-d="dismiss">
+  <div class="modal-header danger">
+    <h4 class="modal-title">Delete Document</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Close')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Deleting a document will permanently remove it from this collection.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="c('Delete')">Delete Document</button>
+    <button type="button" class="btn btn-secondary" (click)="d('Keep')">Keep Document</button>
+  </div>
+</ng-template>

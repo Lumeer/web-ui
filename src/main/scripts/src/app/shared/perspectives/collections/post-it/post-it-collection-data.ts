@@ -8,7 +8,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,22 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-export class Initialization {
+import {Collection} from '../../../../core/dto/collection';
 
-  public onServer: boolean;
-  public icon: boolean;
-  public color: boolean;
-  public name: boolean;
+export class PostItCollectionData {
 
-  constructor(initialized: boolean) {
-    this.onServer = initialized;
-    this.icon = initialized;
-    this.color = initialized;
-    this.name = initialized;
-  }
-
-  public get compulsory(): boolean {
-    return this.name;
-  }
+  public collection: Collection;
+  public initialized: boolean;
+  public pickerVisible = false;
 
 }

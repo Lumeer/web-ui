@@ -27,6 +27,6 @@ export class Document {
   public createdBy: string;
   public updatedBy: string;
   public dataVersion: number;
-  public data: object = {};
+  public data: {[attribute: string]: any} = {};
 
 }

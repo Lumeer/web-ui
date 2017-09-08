@@ -40,15 +40,15 @@ export class TableRowComponent {
   public model: string;
 
   public setCell(index, value) {
-    let element: ElementRef = this.cells.find(c => +c.nativeElement.id === index);
+    const element: ElementRef = this.cells.find(c => +c.nativeElement.id === index);
     if (element) {
       element.nativeElement.innerText = value;
     }
   }
 
   public onEdit(item, index): void {
-    let oldValue: string = this.row.cells[index].label.toString().trim();
-    let newValue: string = item.toString().trim();
+    const oldValue: string = this.row.cells[index].label.toString().trim();
+    const newValue: string = item.toString().trim();
     if (oldValue !== newValue) {
       this.updateCell.emit({colIndex: index, data: newValue});
     }

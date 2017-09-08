@@ -34,7 +34,7 @@ export class ImportService {
   }
 
   public importFile(format: string, data: string, name: string): Observable<Collection> {
-    let queryParams = new HttpParams().set('format', format).set('name', name);
+    const queryParams = new HttpParams().set('format', format).set('name', name);
 
     return this.http.post<Collection>(this.apiPrefix(), data, {params: queryParams})
       .catch(ImportService.handleGlobalError);
@@ -45,10 +45,10 @@ export class ImportService {
   }
 
   private apiPrefix(): string {
-    let organization = this.workspaceService.organizationCode;
-    let project = this.workspaceService.projectCode;
+    const organizationCode = this.workspaceService.organizationCode;
+    const projectCode = this.workspaceService.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organization}/projects/${project}/import`;
+    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/import`;
   }
 
 }

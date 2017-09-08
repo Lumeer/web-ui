@@ -55,6 +55,9 @@ export class HeaderComponent implements OnInit {
   @ViewChild('profile')
   private profile: ElementRef;
 
+  @ViewChild('dropdown')
+  private dropdown: ElementRef;
+
   public optionsVisible = false;
 
   public licence = 'trial';
@@ -84,13 +87,13 @@ export class HeaderComponent implements OnInit {
 
   public toggleOptions(event: MouseEvent) {
     // profile click
-    if (this.profile.nativeElement === event.target) {
+    if (this.profile.nativeElement.contains(event.target)) {
       this.optionsVisible = !this.optionsVisible;
       return;
     }
 
     // click outside options
-    if (!this.profile.nativeElement.contains(event.target)) {
+    if (!this.dropdown.nativeElement.contains(event.target)) {
       this.optionsVisible = false;
     }
   }

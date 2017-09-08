@@ -40,8 +40,8 @@ export class SearchService {
   }
 
   private searchPath(): string {
-    let organizationCode = this.workspaceService.organizationCode;
-    let projectCode = this.workspaceService.projectCode;
+    const organizationCode = this.workspaceService.organizationCode;
+    const projectCode = this.workspaceService.projectCode;
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/search`;
   }

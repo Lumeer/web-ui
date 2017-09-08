@@ -33,7 +33,7 @@ export class IconPaletteComponent extends Palette {
   @Input('icon')
   public active: string;
 
-  public icons = Const.icons.slice(0, 100);
+  public icons = Const.icons.slice(0, 50);
 
   public iconHighlight(icon: string): string {
     if (icon === this.selected) {

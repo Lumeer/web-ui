@@ -23,12 +23,12 @@ import {Buffer} from './buffer';
 /**
  * Provides Pinterest-like layout using minigrid library http://minigrid.js.org/
  */
-export class MasonryLayout {
+export class PostItLayout {
 
   private resizeListener;
 
   constructor(private parameters: object) {
-    let windowResizeRefreshBuffer = new Buffer(() => this.refresh(), 300);
+    const windowResizeRefreshBuffer = new Buffer(() => this.refresh(), 300);
     this.resizeListener = () => windowResizeRefreshBuffer.stageChanges();
 
     window.addEventListener('resize', this.resizeListener);

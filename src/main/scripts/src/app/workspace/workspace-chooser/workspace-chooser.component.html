@@ -3,24 +3,27 @@
   <div class="horizontal-chooser">
 
     <div class="slide">
-      <a class="fa fa-chevron-left" (click)="onScrollOrganizations(-1)"></a>
+      <a tabindex (click)="onScrollOrganizations(-1)">
+        <i class="fa fa-chevron-left"></i>
+      </a>
     </div>
 
-    <perfect-scrollbar class="chooser"  [config]="{suppressScrollY: true}" #organizationScrollbar>
-      <div class="squares" [ngStyle]="{width: organizationsWidth + 'px'}">
+    <perfect-scrollbar class="chooser" [config]="{suppressScrollY: true}" #organizationScrollbar>
+      <div class="squares" [style.width]="organizationsWidth + 'px'">
 
         <div class="square" (click)="onCreateOrganization()">
           <div class="square-icon-full">
-            <i class="fa fa-plus" aria-hidden="true"></i>
+            <i class="fa fa-plus fa-5x" aria-hidden="true"></i>
           </div>
         </div>
 
-        <div class="square" *ngFor="let organization of organizations; let i = index"
-             (click)="onOrganizationSelected(organization, i)"
-             [style.border-color]="organization.active ? organization.color : ''"
+        <div class="square" *ngFor="let organization of organizations; let idx = index"
+             (click)="onOrganizationSelected(organization, idx)"
+             [style.border-color]="organization.active ? organization.color : null"
              [style.color]="organization.color">
-          <i class="fa fa-cog square-settings"
-             (click)="$event.stopPropagation(); onOrganizationSettings(organization)"></i>
+          <div class="square-settings" (click)="$event.stopPropagation(); onOrganizationSettings(organization)">
+            <i class="fa fa-cog"></i>
+          </div>
           <div class="square-icon">
             <i class="fa {{ organization.icon }}"></i>
           </div>
@@ -30,16 +33,18 @@
 
       </div>
 
-      <div class="pointer" [ngStyle]="{width: organizationsWidth + 'px'}" *ngIf="activeOrganization">
-        <div [ngStyle]="{width: 170 * (activeOrganization.index +1 )+ 60 + 'px'}"></div><!--
+      <div class="pointer" [style.width]="organizationsWidth + 'px'" *ngIf="activeOrganization">
+        <div [style.width]="170 * (activeOrganization.index + 1 ) + 60 + 'px'"></div><!--
         --><div class="arrow-start"></div><!--
         --><div class="arrow-end"></div><!--
-        --><div [ngStyle]="{width: 170 * (organizations.length - activeOrganization.index) - 120 + 'px'}"></div>
+        --><div [style.width]="170 * (organizations.length - activeOrganization.index) - 120 + 'px'"></div>
       </div>
     </perfect-scrollbar>
 
     <div class="slide">
-      <a class="fa fa-chevron-right" (click)="onScrollOrganizations(1)"></a>
+      <a tabindex (click)="onScrollOrganizations(1)">
+        <i class="fa fa-chevron-right"></i>
+      </a>
     </div>
 
   </div>
@@ -50,24 +55,27 @@
   <div class="horizontal-chooser">
 
     <div class="slide">
-      <a (click)="onScrollProjects(-1)"><i class="fa fa-chevron-left"></i></a>
+      <a tabindex (click)="onScrollProjects(-1)">
+        <i class="fa fa-chevron-left"></i>
+      </a>
     </div>
 
     <perfect-scrollbar class="chooser" #projectScrollbar [config]="{suppressScrollY: true}">
-      <div class="squares" [ngStyle]="{width: projectsWidth + 'px'}">
+      <div class="squares" [style.width]="projectsWidth + 'px'">
 
         <div class="square" (click)="onCreateProject()">
           <div class="square-icon-full">
-            <i class="fa fa-plus" aria-hidden="true"></i>
+            <i class="fa fa-plus fa-5x" aria-hidden="true"></i>
           </div>
         </div>
 
-        <div class="square" *ngFor="let project of activeOrganization.projects; let i = index"
-             (click)="onProjectSelected(project, i)"
-             [style.border-color]="project.active ? project.color : ''"
+        <div class="square" *ngFor="let project of activeOrganization.projects; let idx = index"
+             (click)="onProjectSelected(project, idx)"
+             [style.border-color]="project.active ? project.color : null"
              [style.color]="project.color">
-          <i class="fa fa-cog square-settings"
-             (click)="$event.stopPropagation(); onProjectSettings(project)"></i>
+          <div class="square-settings" (click)="$event.stopPropagation(); onProjectSettings(project)">
+            <i class="fa fa-cog"></i>
+          </div>
           <div class="square-icon">
             <i class="fa {{ project.icon }}"></i>
           </div>
@@ -79,7 +87,9 @@
     </perfect-scrollbar>
 
     <div class="slide">
-      <a (click)="onScrollProjects(1)"><i class="fa fa-chevron-right"></i></a>
+      <a tabindex (click)="onScrollProjects(1)">
+        <i class="fa fa-chevron-right"></i>
+      </a>
     </div>
 
     <div class="project-description" *ngIf="activeProject">

@@ -18,33 +18,19 @@
  * -----------------------------------------------------------------------/
  */
 
-export class Popup {
+import {Document} from '../../../../../core/dto/document';
+import {Collection} from '../../../../../core/dto/collection';
+import {AttributePropertySelection} from './attribute-property-selection';
 
-  public static confirmDanger(title: string, message: string, noLabel: string, onNo: () => void, yesLabel: string, onYes: () => void): void {
-    window['BootstrapDialog'].show({
-      type: 'type-danger',
-      title: `${title}?`,
-      message: message,
-      buttons:
-        [
-          {
-            label: `No, ${noLabel}`,
-            action: dialog => {
-              dialog.close();
-              onNo();
-            }
-          },
-          {
-            label: `Yes, ${yesLabel}`,
-            cssClass: 'btn-danger',
-            hotkey: 13, // Enter
-            action: dialog => {
-              dialog.close();
-              onYes();
-            }
-          }
-        ]
-    });
-  }
+export class DocumentData {
+
+  public index: number;
+  public document: Document;
+  public collection: Collection;
+
+  public initialized: boolean;
+  public writeRole: boolean;
+  public selectedInput: AttributePropertySelection;
+  public attributes: string[];
 
 }

@@ -1,107 +1,90 @@
 <div class="header">
-  <span [style.color]="collection.color" title="{{ collection.name }}">
-    <i class="fa {{ collection.icon }} collection-icon"></i><!--
-    --><label class="name">{{ collection.name }}</label>
+  <span [style.color]="data.collection.color" title="{{ data.collection.name }}">
+    <i class="fa {{ data.collection.icon }} collection-icon"></i><!--
+    --><label class="name">{{ data.collection.name }}</label>
   </span>
 
-  <ng-container *ngIf="editable">
-    <a class="editable" title="Edit Document" (click)="setEditMode(true); select(0, 0)">
+  <ng-container *ngIf="data.writeRole">
+    <a tabindex class="editable" title="Edit Document" (click)="setEditMode(true); select(0, 0)">
       <i class="fa fa-fw fa-pencil"></i>
     </a>
-    <a class="editable remove" title="Remove Document" (click)="onRemoveDocumentClick()">
+    <a tabindex class="editable remove" title="Remove Document" (click)="onRemoveDocumentClick()">
       <i class="fa fa-fw fa-times"></i>
     </a>
   </ng-container>
 </div>
 
-<ul class="content" [style.cursor]="editable ? 'cell' : ''" #content>
-  <li *ngFor="let attributePair of attributePairs; let row = index">
+<ul class="content" [style.cursor]="data.writeRole ? 'cell' : null" #content>
 
-    <ng-container *ngIf="editable; then editablePair else nonEditablePair"></ng-container>
+  <ng-container *ngIf="data.writeRole; then editableTable else nonEditableTable"></ng-container>
 
-    <ng-template #editablePair>
-      <div id="AttributePair{{ index }}[0, {{ row }}]" class="attribute" tabindex="-1"
-           (keydown)="onKeyDown($event)"
-           (click)="clickOnAttributePair(0, row)">
+  <ng-template #editableTable>
+    <li *ngFor="let attributePair of attributePairs; let row = index">
+      <span id="AttributePair{{ data.index }}[0, {{ row }}]" class="attribute" tabindex="-1"
+            (keydown)="onKeyDown($event)"
+            (click)="clickOnAttributePair(0, row)">
 
-        <ng2-completer title="{{ attributePair.attribute }}"
-                       [datasource]="suggestedAttributes"
-                       [minSearchLength]="0"
-                       [textNoResults]="null"
-                       [ngModel]="attributePair.attribute"
-                       (ngModelChange)="updateAttribute(attributePair, $event)"
-                       (keydown)="onKeyDown($event)">
-        </ng2-completer>
-      </div>
+        <input [ngModel]="attributePair.attribute"
+               (ngModelChange)="updateAttribute(attributePair, $event)">
+      </span>
 
-      <div id="AttributePair{{ index }}[1, {{ row }}]" tabindex="-1"
-           title="{{ attributePair.value }}"
-           (keydown)="onKeyDown($event)"
-           (click)="clickOnAttributePair(1, row)">
+      <span id="AttributePair{{ data.index }}[1, {{ row }}]" tabindex="-1"
+            title="{{ attributePair.value }}"
+            (keydown)="onKeyDown($event)"
+            (click)="clickOnAttributePair(1, row)">
 
-        <ng2-completer title="{{ attributePair.value }}"
-                       [datasource]="[]"
-                       [textNoResults]="null"
-                       [ngModel]="attributePair.value"
-                       (ngModelChange)="updateValue(attributePair, $event)"
-                       (keydown)="onKeyDown($event)">
-        </ng2-completer>
-      </div>
-    </ng-template>
+        <input [ngModel]="attributePair.value"
+               (ngModelChange)="updateValue(attributePair, $event)">
+      </span>
+    </li>
 
-    <ng-template #nonEditablePair>
-      <div class="attribute">
-        <input title="{{ attributePair.attribute }}" readonly [ngModel]="attributePair.attribute">
-      </div>
+    <li>
+      <span id="AttributePair{{ data.index }}[0, {{ attributePairs.length }}]" class="attribute" tabindex="-1"
+            (keydown)="onKeyDown($event)"
+            (click)="clickOnAttributePair(0, attributePairs.length)">
 
-      <div>
+        <!-- the list refers to one of the attribute suggestion lists in document perspective -->
+        <input placeholder=" + "
+               [attr.list]="data.document.collectionCode"
+               [(ngModel)]="newAttributePair.attribute">
+      </span>
+
+      <span id="AttributePair{{ data.index }}[1, {{ attributePairs.length }}]"
+            [attr.tabindex]="newAttributePair.attribute ? -1 : null"
+            (keydown)="onKeyDown($event)"
+            (click)="newAttributePair.attribute && clickOnAttributePair(1, attributePairs.length)">
+
+        <input [disabled]="!newAttributePair.attribute"
+               (keydown)="$event.key.length === 1 && createAttributePair($event.key)"/>
+      </span>
+
+    </li>
+  </ng-template>
+
+  <ng-template #nonEditableTable>
+    <li *ngFor="let attributePair of attributePairs">
+      <span class="attribute">
+        <input readonly [ngModel]="attributePair.attribute">
+      </span>
+
+      <span>
         <input title="{{ attributePair.value }}" readonly [ngModel]="attributePair.value">
-      </div>
-    </ng-template>
-
-  </li>
-
-  <li *ngIf="editable">
-    <div id="AttributePair{{ index }}[0, {{ attributePairs.length }}]" class="attribute" tabindex="-1"
-         (keydown)="onKeyDown($event)"
-         (click)="clickOnAttributePair(0, attributePairs.length)">
-
-      <ng2-completer title="{{ newAttributePair.attribute }}"
-                     placeholder=" + "
-                     [datasource]="suggestedAttributes"
-                     [minSearchLength]="0"
-                     [textNoResults]="null"
-                     [(ngModel)]="newAttributePair.attribute"
-                     (keydown)="onKeyDown($event)">
-      </ng2-completer>
-    </div>
-
-    <div id="AttributePair{{ index }}[1, {{ attributePairs.length }}]"
-         [attr.tabindex]="newAttributePair.attribute ? -1 : ''"
-         (keydown)="onKeyDown($event)"
-         (click)="newAttributePair.attribute && clickOnAttributePair(1, attributePairs.length)">
-
-      <input title="{{ newAttributePair.value }}"
-             [disabled]="!newAttributePair.attribute"
-             (keydown)="$event.key.length === 1 && createAttributePair($event.key)"/>
-    </div>
-
-  </li>
+      </span>
+    </li>
+  </ng-template>
 </ul>
 
 <!-- additional buttons -->
 <div class="edit">
-  <span class="primary-edit">
-    <a title="Details">
-      <i class="fa fa-fw fa-search"></i>
-    </a>
-  </span>
+  <a tabindex title="Details">
+    <i class="fa fa-fw fa-search"></i>
+  </a>
 
   <span class="secondary-edit">
     <!--the comments remove added space between icons-->
-    <a title="Incoming Links"><i class="fa fa-fw fa-sign-in"></i></a><!--
-    --><a title="Outgoing Links"><i class="fa fa-fw fa-sign-out"></i></a><!--
-    --><a title="History"><i class="fa fa-fw fa-history"></i></a><!--
-    --><a title="User Rights"><i class="fa fa-fw fa-users"></i></a>
+    <a tabindex title="Incoming Links"><i class="fa fa-fw fa-sign-in"></i></a><!--
+    --><a tabindex title="Outgoing Links"><i class="fa fa-fw fa-sign-out"></i></a><!--
+    --><a tabindex title="History"><i class="fa fa-fw fa-history"></i></a><!--
+    --><a tabindex title="User Rights"><i class="fa fa-fw fa-users"></i></a>
   </span>
 </div>

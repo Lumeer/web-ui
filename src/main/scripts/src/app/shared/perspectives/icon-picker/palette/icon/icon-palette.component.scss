@@ -20,13 +20,17 @@
     height: 25px;
   }
 
-  .selected {
-    color: white;
-    background-color: $brand-success;
-  }
+  i {
+    line-height: 1.3;
 
-  .active {
-    color: white;
-    background-color: $brand-primary;
+    &.selected {
+      color: white;
+      background-color: $brand-success;
+    }
+
+    &.active {
+      color: white;
+      background-color: $brand-primary;
+    }
   }
 }
