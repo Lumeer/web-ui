@@ -1,0 +1,11 @@
+@import "../../shared/lumeer-variables";
+
+.profile-dropdown {
+  a {
+    color: $brand-success;
+
+    &:hover {
+      color: darken($brand-success, 15%);
+    }
+  }
+}

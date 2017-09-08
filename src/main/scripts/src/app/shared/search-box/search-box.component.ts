@@ -32,7 +32,7 @@ import 'rxjs/add/operator/switchMap';
 import {Suggestions} from '../../core/dto/suggestions';
 import {SearchService} from '../../core/rest/search.service';
 import {WorkspaceService} from '../../core/workspace.service';
-import {QueryItem} from './query-item';
+import {QueryItem} from './query-item/query-item';
 import {FulltextQueryItem} from './query-item/fulltext-query-item';
 import {Query} from '../../core/dto/query';
 import {AttributeQueryItem} from './query-item/attribute-query-item';
@@ -199,6 +199,10 @@ export class SearchBoxComponent {
     });
 
     return JSON.stringify(query);
+  }
+
+  public get placeholder(): string {
+    return this.queryItems.length === 0 ? 'Type anything you search for...' : '';
   }
 
 }

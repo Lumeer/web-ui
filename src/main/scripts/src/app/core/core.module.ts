@@ -25,7 +25,7 @@ import {FormsModule} from '@angular/forms';
 import {Http, HttpModule, RequestOptions, XHRBackend} from '@angular/http';
 
 import {WorkspaceService} from './workspace.service';
-import {HeaderComponent} from './header/header.component';
+import {TopPanelComponent} from './top-panel/top-panel.component';
 import {UserSettingsService} from './rest/user-settings.service';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ProjectService} from './rest/project.service';
@@ -54,7 +54,7 @@ import {ViewService} from './rest/view.service';
     RouterModule
   ],
   declarations: [
-    HeaderComponent,
+    TopPanelComponent,
     HomeComponent,
     PageNotFoundComponent
   ],
@@ -75,7 +75,7 @@ import {ViewService} from './rest/view.service';
     {provide: ErrorHandler, useClass: LumeerErrorHandler}
   ],
   exports: [
-    HeaderComponent,
+    TopPanelComponent,
     HomeComponent,
     PageNotFoundComponent
   ]

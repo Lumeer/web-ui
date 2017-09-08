@@ -1,6 +1,7 @@
 /**
  * Defines variables used directly in this application
  */
+@import url("https://fonts.googleapis.com/css?family=Lato:400,700,400italic&subset=latin-ext");
 
 $brand-primary: #2c3e50 !default;
 $brand-secondary: #868e96 !default;
@@ -14,6 +15,8 @@ $brand-dark: #343a40 !default;
 $border-radius-base: 4px !default;
 $border-radius-large: 6px !default;
 $border-radius-small: 3px !default;
+
+$font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 
 $primary-color: #f3f3f4;
 $secondary-color: #fff;

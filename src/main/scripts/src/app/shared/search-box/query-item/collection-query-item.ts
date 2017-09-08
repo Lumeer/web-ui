@@ -18,8 +18,8 @@
  * -----------------------------------------------------------------------/
  */
 
-import {QueryItem} from '../query-item';
-import {QueryItemType} from '../query-item-type';
+import {QueryItem} from './query-item';
+import {QueryItemType} from './query-item-type';
 import {Collection} from '../../../core/dto/collection';
 
 export class CollectionQueryItem implements QueryItem {
