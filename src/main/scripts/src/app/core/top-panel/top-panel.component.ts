@@ -18,47 +18,18 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
-import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
 import {WorkspaceService} from '../workspace.service';
 import 'rxjs/add/operator/filter';
 
 @Component({
-  selector: 'header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
-  host: {
-    '(document:click)': 'toggleOptions($event)'
-  },
-  animations: [
-    trigger('animateHeight', [
-      state('in', style({height: '*'})),
-      transition('void => *', [
-        animate(100, keyframes([
-          style({height: 0, offset: 0}),
-          style({height: '*', offset: 1})
-        ]))
-      ]),
-      transition('* => void', [
-        animate(100, keyframes([
-          style({height: '*', offset: 0}),
-          style({height: 0, offset: 1})
-        ]))
-      ])
-    ])
-  ]
+  selector: 'top-panel',
+  templateUrl: './top-panel.component.html',
+  styleUrls: ['./top-panel.component.scss']
 })
-export class HeaderComponent implements OnInit {
-
-  @ViewChild('profile')
-  private profile: ElementRef;
-
-  @ViewChild('dropdown')
-  private dropdown: ElementRef;
-
-  public optionsVisible = false;
+export class TopPanelComponent implements OnInit {
 
   public licence = 'trial';
 
@@ -72,29 +43,15 @@ export class HeaderComponent implements OnInit {
     this.router.events
       .filter((event) => event instanceof NavigationEnd)
       .subscribe((event: NavigationEnd) => {
-        this.searchBoxHidden = HeaderComponent.showOrHideSearchBox(event.url);
+        this.searchBoxHidden = TopPanelComponent.showOrHideSearchBox(event.url);
       });
   }
 
   private static showOrHideSearchBox(url: string): boolean {
-    return url.endsWith('search') || url.endsWith('workspace');
-
+    return url.endsWith('search') || url.endsWith('workspace') || url.includes('organization');
   }
 
   public isSearchBoxShown(): boolean {
     return this.workspaceService.isWorkspaceSet() && !this.searchBoxHidden;
-  }
-
-  public toggleOptions(event: MouseEvent) {
-    // profile click
-    if (this.profile.nativeElement.contains(event.target)) {
-      this.optionsVisible = !this.optionsVisible;
-      return;
-    }
-
-    // click outside options
-    if (!this.dropdown.nativeElement.contains(event.target)) {
-      this.optionsVisible = false;
-    }
   }
 }

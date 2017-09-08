@@ -1,0 +1,57 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="panel-item h4 col order-lg-1">
+      <a href="index.html" class="d-flex">
+        <img src="../../../img/lumeer-logo.png" height="48">
+        <div class="text-primary font-weight-bold text-uppercase pl-2">
+          Lumeer
+        </div>
+      </a>
+    </div>
+
+    <div class="d-flex justify-content-end col order-lg-3">
+      <div class="panel-item lead mr-2"
+           *ngIf="workspaceService.isWorkspaceSet()">
+        <a [routerLink]="['/workspace']"
+           title="Choose workspace">
+        <span>
+          {{workspaceService.projectCode}}@{{workspaceService.organizationCode}}
+        </span>
+        </a>
+      </div>
+
+      <div class="panel-item text-secondary mx-2" title="No new notifications">
+        <i class="fa fa-bell fa-lg"></i>
+      </div>
+
+      <div class="dropdown show ml-2">
+        <a href="#" role="button" id="profileDropdownLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="text-secondary">
+          <i class="fa fa-user-circle fa-3x"></i>
+        </a>
+
+        <div class="dropdown-menu profile-dropdown" aria-labelledby="profileDropdownLink">
+          <a class="dropdown-item" title="Settings" href="javascript: void(0)" routerLink="/user/settings">
+            <i class="fas fa-fx fa-cog" data-fa-transform="left-4" aria-hidden="true"></i>
+            Settings
+          </a>
+          <a class="dropdown-item" title="Account" href="https://auth.lumeer.io/auth/realms/lumeer/account">
+            <i class="fas fa-fx fa-user" data-fa-transform="left-4" aria-hidden="true"></i>
+            Account
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" title="Sign Out" href="https://auth.lumeer.io/auth/realms/lumeer/protocol/openid-connect/logout?redirect_uri=https%3A%2F%2Fwww.lumeer.io%2F">
+            <i class="fas fa-fx fa-sign-in" data-fa-transform="left-4" aria-hidden="true"></i>
+            Sign Out
+          </a>
+          <span class="dropdown-item">
+          Licence: {{this.licence}}
+        </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-7 order-lg-2 mt-1 mt-lg-1 mx-auto">
+      <search-box *ngIf="isSearchBoxShown()"></search-box>
+    </div>
+  </div>
+</div>

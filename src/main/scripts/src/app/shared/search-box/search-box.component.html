@@ -1,21 +1,36 @@
-<div *ngFor="let queryItem of queryItems" [style.background-color]="queryItem.color" class="query-item">
-  <i *ngIf="queryItem.icon" class="fa {{queryItem.icon}}" aria-hidden="true"></i>
-  {{queryItem.text}}
-</div>
+<div class="form-control d-flex w-100 p-0">
+  <div class="d-flex flex-wrap w-100 pb-1 pr-1">
+    <div class="query-item py-1 px-2 mt-1 ml-1"
+         *ngFor="let queryItem of queryItems"
+         [style.background-color]="queryItem.color">
+      <i *ngIf="queryItem.icon" class="fa {{queryItem.icon}}" aria-hidden="true"></i>
+      <span>{{queryItem.text}}</span>
+    </div>
 
-<div class="input">
-  <input #searchBox [(ngModel)]="text" (keydown)="onKeyDown($event)" (keyup)="onKeyUp($event)" (focus)="suggest()" (blur)="hideSuggestions()" placeholder="Type anything you search for..."/>
-  <div class="relative-point" *ngIf="suggestions|async;let suggestionItems">
-    <ul class="suggestions" *ngIf="text && suggestionItems.length > 0">
-      <li *ngFor="let suggestion of suggestionItems" (click)="onSuggestionClick(suggestion)" class="suggestion">
-        <span class="suggestion-text">{{suggestion.text}}</span>
-        <span class="suggestion-type">{{suggestion.type}}</span>
-      </li>
-    </ul>
+    <div class="dropdown" *ngIf="suggestions|async;let suggestionItems">
+      <div class="dropdown-menu show suggestions"
+           *ngIf="text && suggestionItems.length > 0">
+        <div class="dropdown-item d-flex justify-content-between"
+             *ngFor="let suggestion of suggestionItems"
+             (click)="onSuggestionClick(suggestion)">
+          <span>{{suggestion.text}}</span>
+          <span>{{suggestion.type}}</span>
+        </div>
+      </div>
+    </div>
+
+    <input class="search-input py-1 px-2 mt-1 ml-1"
+           #searchBox
+           [(ngModel)]="text"
+           (keydown)="onKeyDown($event)"
+           (keyup)="onKeyUp($event)"
+           (focus)="suggest()"
+           (blur)="hideSuggestions()"
+           placeholder="{{placeholder}}"/>
   </div>
-</div>
 
-<a tabindex (click)="onButtonClick()">
-  <i class="fa fa-search fa-2x" aria-hidden="true"></i>
-  <span>Search</span>
-</a>
+  <button (click)="onButtonClick()" type="button" class="btn search-button">
+    <i class="fa fa-search" aria-hidden="true"></i>
+    <span class="d-none">Search</span>
+  </button>
+</div>

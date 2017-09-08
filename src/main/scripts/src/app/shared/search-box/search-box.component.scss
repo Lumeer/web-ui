@@ -1,89 +1,34 @@
-@import "../../shared/lumeer-variables";
+@import "../lumeer-variables";
 
-$border-color: #bbbbbb;
-$item-height: 40px;
-$item-margin: 6px;
+.query-item {
+  background-color: #faeabb;
+  border-radius: $border-radius-base;
+  white-space: nowrap;
 
-:host {
-  background-color: #ffffff;
-  border: 1px solid $border-color;
-  border-radius: 3px;
-  display: flex;
-  flex-wrap: wrap;
-  padding: $item-margin $item-margin/2 0 $item-margin/2;
-  width: 100%;
-
-  .query-item {
-    background-color: #faeabb;
-    border-radius: 5px;
-    padding: 5px 10px;
-    margin: 0 $item-margin/2 $item-margin $item-margin/2;
-    vertical-align: middle;
-    white-space: nowrap;
+  span {
+    margin-left: 3px;
   }
+}
 
-  .input {
-    flex-grow: 2;
-    margin: 0 $item-margin/2 $item-margin $item-margin/2;
-  }
+.search-input {
+  border: 0;
+  flex-grow: 2;
 
-  input {
-    background-color: #ffffff;
-    border: 0;
-    height: 100%;
-    width: 100%;
-  }
-
-  input:focus {
+  &:focus {
     outline: none;
   }
+}
 
-  .relative-point {
-    position: relative;
-    height: 0;
-    width: 0;
-  }
+.suggestions {
+  min-width: 250px;
+}
 
-  ul.suggestions {
-    background-color: #ffffff;
-    border: 1px solid $border-color;
-    border-radius: 0 0 5px 5px;
-    overflow: hidden;
-    padding: 5px 0;
-    position: absolute;
-    top: $item-margin;
-    width: 300px;
-    z-index: 10;
-  }
+.search-button {
+  background: transparent;
+  border: 0;
+  color: $brand-success;
 
-  li.suggestion {
-    clear: both;
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 10px;
-  }
-
-  li.suggestion:hover {
-    background-color: $grey-color;
-  }
-
-  .suggestion-type {
-    color: #999;
-    text-transform: capitalize;
-  }
-
-  a {
-    background: transparent;
-    border: 0;
-    display: block;
-    flex-shrink: 0;
-    height: 30px;
-    width: 30px;
-    margin: 0 $item-margin/2 $item-margin $item-margin/2;
-    outline: none;
-
-    span {
-      display: none;
-    }
+  &:hover {
+    background-color: $brand-light;
   }
 }

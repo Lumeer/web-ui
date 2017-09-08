@@ -18,8 +18,8 @@
  * -----------------------------------------------------------------------/
  */
 
-import {QueryItem} from '../query-item';
-import {QueryItemType} from '../query-item-type';
+import {QueryItem} from './query-item';
+import {QueryItemType} from './query-item-type';
 
 export class FulltextQueryItem implements QueryItem {
 
