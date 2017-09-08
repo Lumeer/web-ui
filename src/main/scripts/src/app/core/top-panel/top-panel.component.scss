@@ -1,5 +1,10 @@
 @import "../../shared/lumeer-variables";
 
+.panel-item {
+  height: 48px;
+  line-height: 48px;
+}
+
 .profile-dropdown {
   a {
     color: $brand-success;

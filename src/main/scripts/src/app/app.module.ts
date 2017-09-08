@@ -29,7 +29,7 @@ import {WorkspaceModule} from './workspace/workspace.module';
 import {CollectionModule} from './collection/collection.module';
 import {SearchModule} from './search/search.module';
 import {DocumentsModule} from './documents/documents.module';
-import {SimpleNotificationsModule} from 'angular2-notifications/dist';
+import {SimpleNotificationsModule} from 'angular2-notifications';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({

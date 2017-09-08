@@ -1,24 +1,26 @@
 <div class="container-fluid">
   <div class="row">
-    <div class="logo h5 col order-lg-1">
+    <div class="panel-item h4 col order-lg-1">
       <a href="index.html" class="d-flex">
-        <img src="../../../img/lumeer-logo.png" height="40">
-        <div class="text-primary font-weight-bold text-uppercase p-2">
+        <img src="../../../img/lumeer-logo.png" height="48">
+        <div class="text-primary font-weight-bold text-uppercase pl-2">
           Lumeer
         </div>
       </a>
     </div>
 
     <div class="d-flex justify-content-end col order-lg-3">
-      <div class="h5 m-2" *ngIf="workspaceService.isWorkspaceSet()">
-        <a [routerLink]="['/workspace']" title="Choose workspace">
+      <div class="panel-item lead mr-2"
+           *ngIf="workspaceService.isWorkspaceSet()">
+        <a [routerLink]="['/workspace']"
+           title="Choose workspace">
         <span>
           {{workspaceService.projectCode}}@{{workspaceService.organizationCode}}
         </span>
         </a>
       </div>
 
-      <div class="text-secondary m-2" title="No new notifications">
+      <div class="panel-item text-secondary mx-2" title="No new notifications">
         <i class="fa fa-bell fa-lg"></i>
       </div>
 
@@ -48,7 +50,7 @@
       </div>
     </div>
 
-    <div class="col-lg-7 order-lg-2 mt-3 mt-lg-0">
+    <div class="col-lg-7 order-lg-2 mt-1 mt-lg-1 mx-auto">
       <search-box *ngIf="isSearchBoxShown()"></search-box>
     </div>
   </div>
