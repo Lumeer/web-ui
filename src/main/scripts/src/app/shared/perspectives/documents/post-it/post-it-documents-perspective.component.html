@@ -5,14 +5,14 @@
     <add-document class="layout-item" *ngIf="editable"
                   (newDocument)="createDocument($event)"></add-document>
 
-    <ng-container *ngFor="let documentDataObject of documentDataObjects">
-      <post-it-document *ngIf="documentDataObject.collection"
-                        class="layout-item {{ !documentDataObject.initialized ? 'uninitialized' : null }}"
-                        [attr.z-index]="documentDataObject.selectedInput.documentIdx === documentDataObject.index ? 50 : null"
-                        [data]="documentDataObject"
+    <ng-container *ngFor="let postIt of postIts">
+      <post-it-document *ngIf="postIt.collection"
+                        class="layout-item {{ !postIt.initialized ? 'uninitialized' : null }}"
+                        [attr.z-index]="postIt.selectedInput.documentIdx === postIt.index ? 50 : null"
+                        [data]="postIt"
                         (selectOther)="selectDocument($event)"
-                        (removed)="removeClick(documentDataObject, modal)"
-                        (changes)="sendUpdate(documentDataObject)">
+                        (removed)="confirmDeletion(postIt, modal)"
+                        (changes)="sendUpdate(postIt)">
       </post-it-document>
     </ng-container>
 
@@ -23,7 +23,7 @@
     </ng-container>
 
     <label *ngIf="!editable && !query" class="label-centered">No Search Query</label>
-    <label *ngIf="!editable && query && !documentDataObjects.length" class="label-centered">Nothing To Show</label>
+    <label *ngIf="!editable && query && !postIts.length" class="label-centered">Nothing To Show</label>
   </div>
 </div>
 <div class="fadeup"></div>
@@ -31,10 +31,10 @@
 <a (click)="onScrollDown(perspective)" class="scroll-down">Scroll Down<i class="fa fa-chevron-down"></i></a>
 
 <!-- modal -->
-<ng-template #modal let-c="close" let-d="dismiss">
-  <div class="modal-header danger">
-    <h4 class="modal-title">Delete Document</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d('Close')">
+<ng-template #modal>
+  <div class="modal-header bg-danger text-white">
+    <h5 class="modal-title">Delete Document?</h5>
+    <button type="button" class="close" aria-label="Close" (click)="deleteConfirm.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -42,7 +42,9 @@
     <p>Deleting a document will permanently remove it from this collection.</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="c('Delete')">Delete Document</button>
-    <button type="button" class="btn btn-secondary" (click)="d('Keep')">Keep Document</button>
+    <button type="button" class="btn btn-secondary" (click)="deleteConfirm.hide()">No, Keep Document</button>
+    <button type="button" class="btn btn-danger" (click)="deleteConfirm.hide(); removeDocument(postItToDelete)">
+      Yes, Delete Document
+    </button>
   </div>
 </ng-template>
