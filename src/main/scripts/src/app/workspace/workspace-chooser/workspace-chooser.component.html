@@ -25,7 +25,7 @@
             <i class="fa fa-cog"></i>
           </div>
           <div class="square-icon">
-            <i class="fa {{ organization.icon }}"></i>
+            <i class="{{ organization.icon }}"></i>
           </div>
           <span class="square-code">{{organization.code}}</span>
           <span class="square-name">{{organization.name}}</span>
@@ -77,7 +77,7 @@
             <i class="fa fa-cog"></i>
           </div>
           <div class="square-icon">
-            <i class="fa {{ project.icon }}"></i>
+            <i class="{{ project.icon }}"></i>
           </div>
           <span class="square-code">{{project.code}}</span>
           <span class="square-name">{{project.name}}</span>
@@ -95,7 +95,7 @@
     <div class="project-description" *ngIf="activeProject">
       <div class="information">
         <div class="title">
-          <i class="fa" [ngClass]="activeProject.icon" [ngStyle]="{'color':activeProject.color}"></i>
+          <i [ngClass]="activeProject.icon" [ngStyle]="{'color':activeProject.color}"></i>
           <span [ngStyle]="{'color':activeProject.color}">{{activeProject.code}}</span>
         </div>
         <div class="description">

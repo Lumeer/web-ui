@@ -1,127 +1,107 @@
-<div class="layout" #layout>
+<div class="container-fluid">
+  <div class="layout">
 
-  <!-- collection post-its -->
-  <div *ngFor="let postIt of postIts; let idx = index" #postItElement
-       class="post-it layout-item
-       {{ postIt === lastClickedPostIt ? 'selected' : null}}
-       {{ !postIt.initialized ? 'uninitialized' : null }}"
-       [style.border-color]="postIt.collection.color">
+    <!-- collection post-its -->
+    <div *ngFor="let postIt of postIts" #postItElement class="layout-item card post-it
+           {{ postIt === lastClickedPostIt ? 'selected' : null }}
+           {{ !postIt.initialized ? 'uninitialized' : null }}" [style.border-color]="postIt.collection.color">
 
-    <ng-container *ngIf="postIt.initialized; then initializedContent else nonInitializedContent"></ng-container>
-
-    <ng-template #initializedContent>
-      <div class="document-count clickable" title="Document count"
-           [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'documents']">
-        {{ postIt.collection.documentsCount }}&nbsp;<i class="far fa-file"></i>
-      </div>
-
-      <div class="content" [style.color]="postIt.collection.color">
-        <div title="Go to documents" class="clickable"
-             [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'documents']">
-          <i class="fa fa-2x {{ postIt.collection.icon }}"></i>
+      <div class="card-body text-center">
+        <a class="icon" [style.color]="postIt.collection.color"
+           title="{{ postIt.initialized ? 'Go to documents' : 'Pick icon' }}"
+           [routerLink]="postIt.initialized ? [workspacePath(), 'c', postIt.collection.code, 'documents'] : []"
+           data-toggle="dropdown"
+           (click)="lastClickedPostIt = postIt">
+          <i class="fa-6x {{ postIt.collection.icon }}" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <color-picker class="dropdown-item" [(color)]="postIt.collection.color"></color-picker>
+          <div class="dropdown-divider"></div>
+          <icon-picker class="dropdown-item" [(icon)]="postIt.collection.icon"></icon-picker>
         </div>
-        <input [(ngModel)]="postIt.collection.name"
-               (ngModelChange)="updateCollection(postIt)"/>
-      </div>
 
-      <icon-picker *ngIf="postIt.pickerVisible" class="{{ idx % documentsPerRow() === 0 ? 'flip' : null }}"
-                   [@animateHeight]="'in'"
-                   [(color)]="postIt.collection.color"
-                   [(icon)]="postIt.collection.icon"
-                   (itemSelected)="updateCollection(postIt); postIt.pickerVisible = false"></icon-picker>
-
-      <div class="buttons">
-        <a tabindex (click)="onDetailClick(postIt.collection.code)" title="Detail">
-          <i class="fa fa-fx fa-search"></i></a>
-        <a tabindex (click)="onAttributesClick(postIt.collection.code)" title="Attributes">
-          <i class="fa fa-fx fa-list-ul"></i></a>
-        <a tabindex title="Icon picker" (click)="postIt.pickerVisible = !postIt.pickerVisible">
-          <i class="fa fa-fx fa-eye-dropper"></i></a>
-        <a tabindex *ngIf="hasManageRole(postIt.collection)" (click)="onPermissionsClick(postIt.collection.code)"
-           title="Permissions">
-          <i class="fa fa-fx fa-users"></i></a>
-        <a tabindex *ngIf="hasManageRole(postIt.collection)" (click)="onDeleteClick(postIt, modal)" class="remove-icon"
-           title="Remove Collection">
-          <i class="fa fa-fx fa-times" data-fa-transform="right-3"></i></a>
-      </div>
-    </ng-template>
-
-    <ng-template #nonInitializedContent>
-      <div class="document-count" title="Document count">0&nbsp;<i class="far fa-file"></i>
-      </div>
-
-      <div class="content" [style.color]="postIt.collection.color">
-        <div title="Pick icon" class="clickable"
-             (click)="postIt.pickerVisible = !postIt.pickerVisible">
-          <i class="fa fa-2x {{ postIt.collection.icon }}"></i>
+        <div class="buttons d-flex flex-column">
+          <a *ngIf="postIt.initialized" (click)="onDetailClick(postIt.collection.code)" title="Detail"
+             class="rounded-left text-success"><i class="fa fa-fw fa-search" aria-hidden="true"></i></a>
+          <a *ngIf="postIt.initialized" (click)="onAttributesClick(postIt.collection.code)" title="Attributes"
+             class="rounded-left text-success"><i class="fa fa-fw fa-list-ul" aria-hidden="true"></i></a>
+          <a *ngIf="postIt.initialized" title="Icon picker" class="rounded-left text-success" data-toggle="dropdown"><i
+            class="fa fa-fw fa-eye-dropper" aria-hidden="true"></i></a>
+          <div class="dropdown-menu">
+            <color-picker class="dropdown-item" [(color)]="postIt.collection.color"
+                          (selectedChange)="updateCollection(postIt)"></color-picker>
+            <div class="dropdown-divider"></div>
+            <icon-picker class="dropdown-item" [(icon)]="postIt.collection.icon"
+                         (selectedChange)="updateCollection(postIt)"></icon-picker>
+          </div>
+          <a *ngIf="postIt.initialized && hasManageRole(postIt.collection)"
+             (click)="onPermissionsClick(postIt.collection.code)" title="Permissions"
+             class="rounded-left text-success"><i class="fa fa-fw fa-users" aria-hidden="true"></i></a>
+          <a *ngIf="!postIt.initialized || hasManageRole(postIt.collection)" (click)="confirmDeletion(postIt, modal)"
+             class="text-danger rounded-left"
+             title="Remove Collection"><i class="fa fa-fw fa-times" aria-hidden="true"></i></a>
         </div>
-        <input class="newName" placeholder="Name" #nonInitializedNameInput
-               [(ngModel)]="postIt.collection.name"
-               (focus)="nonInitializedNameInput.placeholder = ''"
-               (blur)="postIt.collection.name && initializeCollection(postIt);
-               nonInitializedNameInput.placeholder = 'Collection Name'"
-               (keyup.enter)="postIt.collection.name && initializeCollection(postIt)"/>
+
       </div>
 
-      <icon-picker *ngIf="postIt.pickerVisible" class="on-icon {{ idx % documentsPerRow() === 0 ? 'flip' : null }}"
-                   [@animateHeight]="'in'"
-                   [(color)]="postIt.collection.color"
-                   [(icon)]="postIt.collection.icon"
-                   (itemSelected)="postIt.pickerVisible = false"></icon-picker>
+      <div class="card-footer bg-transparent">
+        <div class="row">
+          <textarea class="col" #textArea rows="1" placeholder="Name" [(ngModel)]="postIt.collection.name"
+                    (ngModelChange)="updateToScrollbarHeight(textArea)" (blur)="onTextAreaBlur(postIt, textArea)"
+                    (focus)="textArea.placeholder = ''">
+              </textarea>
 
-      <div class="buttons">
-        <a tabindex (click)="onDeleteClick(postIt, modal)" class="remove-icon"
-           title="Remove Collection">
-          <i class="fa fa-fx fa-times" data-fa-transform="right-3"></i></a>
-        <a tabindex (click)="onDetailClick(postIt.collection.code)" title="Detail">
-          <i class="fa fa-fx fa-search"></i></a>
+          <div *ngIf="postIt.initialized" class="float-right document-count">
+            <a title="Document Count" [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'documents']">
+              {{ postIt.collection.documentsCount }}&nbsp;<i class="fal fa-file" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
       </div>
-    </ng-template>
+    </div>
+
+    <!-- add buttons -->
+    <ng-container *ngIf="editable">
+      <div class="layout-item card text-center add-post-it">
+        <div class="card-body" (click)="newPostIt()">
+          <i class="fa fa-plus-circle fa-6x"></i>
+        </div>
+        <div class="card-footer bg-transparent">Add collection</div>
+      </div>
+
+      <div class="layout-item card text-center add-post-it" ondragover="return false;"
+           [ngClass]="{'dragging': dragging}" (click)="fileInput.click()"
+           (drop)="handleDrop($event)" (dragenter)="handleDragEnter()" (dragleave)="handleDragLeave()">
+        <div class="card-body" (click)="newPostIt()">
+          <i class="fa fa-cloud-upload fa-6x"></i>
+        </div>
+        <div class="card-footer bg-transparent">Import collection</div>
+        <input hidden type="file" #fileInput (click)="$event.stopPropagation()"
+               (change)="fileChange($event.target.files)"
+               accept=".csv, text/csv">
+      </div>
+    </ng-container>
   </div>
-
-  <!-- add buttons -->
-  <ng-container *ngIf="editable">
-    <div class="layout-item">
-      <a class="add-collection" (click)="onNewCollection()">
-        <i class="fa fa-plus-circle fa-5x"></i>
-        <label>Add collection</label>
-      </a>
-    </div>
-
-    <div class="layout-item import"
-         ondragover="return false;"
-         [ngClass]="{'dragging': dragging}"
-         (click)="fileInput.click()"
-         (drop)="handleDrop($event)"
-         (dragenter)="handleDragEnter()"
-         (dragleave)="handleDragLeave()">
-      <a class="add-collection">
-        <i class="fa fa-cloud-upload fa-5x"></i>
-        <label>Import collection</label>
-      </a>
-      <input type="file" #fileInput (click)="$event.stopPropagation()" (change)="fileChange($event.target.files)"
-             accept=".csv, text/csv">
-    </div>
-  </ng-container>
-
-  <label *ngIf="!editable && !query" class="label-centered">No Search Query</label>
-  <label *ngIf="!editable && query && !collections.length" class="label-centered">Nothing To Show</label>
 </div>
 
 <!-- modal -->
-<ng-template #modal let-c="close" let-d="dismiss">
-  <div class="modal-header danger">
-    <h4 class="modal-title">Delete Collection</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d('Close')">
+<ng-template #modal>
+  <div class="modal-header bg-danger text-white rounded-top">
+    <h5 class="modal-title">Delete Collection?</h5>
+    <button type="button" class="close" aria-label="Close" (click)="deleteConfirm.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <p>Deleting a collection will permanently remove it from this project.</p>
-    <p>All documents stored inside the collection will be lost.</p>
+    <p>Deleting a collection will permanently remove it from this project. All documents stored inside the collection
+      will be
+      lost.
+    </p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-danger" (click)="c('Delete')">Delete Collection</button>
-    <button type="button" class="btn btn-secondary" (click)="d('Keep')">Keep Collection</button>
+    <button type="button" class="btn btn-secondary" (click)="deleteConfirm.hide()">No, Keep Collection</button>
+    <button type="button" class="btn btn-danger" (click)="deleteConfirm.hide(); removeCollection(postItToDelete)">
+      Yes, Delete Collection
+    </button>
   </div>
 </ng-template>

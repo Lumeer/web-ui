@@ -21,7 +21,7 @@
 import {Attribute} from './attribute';
 import {Permissions} from './permissions';
 
-export const COLLECTION_NO_ICON = 'fa-exclamation-circle';
+export const COLLECTION_NO_ICON = 'fa fa-exclamation-circle';
 export const COLLECTION_NO_COLOR = '#cccccc';
 
 export interface Collection {
