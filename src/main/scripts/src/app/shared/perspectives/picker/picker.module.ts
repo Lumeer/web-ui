@@ -20,24 +20,25 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-import {IconPickerComponent} from './icon-picker.component';
-import {ColorPaletteComponent} from './palette/color/color-palette.component';
-import {IconPaletteComponent} from './palette/icon/icon-palette.component';
+import {ColorPickerComponent} from './color-picker/color-picker.component';
+import {IconPickerComponent} from './icon-picker/icon-picker.component';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   declarations: [
     IconPickerComponent,
-    ColorPaletteComponent,
-    IconPaletteComponent
+    ColorPickerComponent
   ],
   exports: [
-    IconPickerComponent
+    IconPickerComponent,
+    ColorPickerComponent
   ]
 })
-export class IconPickerModule {
+export class PickerModule {
 
 }

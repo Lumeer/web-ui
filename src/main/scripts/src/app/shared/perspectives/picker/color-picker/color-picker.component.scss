@@ -1,0 +1,32 @@
+@import "../../../lumeer-variables";
+
+:host {
+  padding-left: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  height: 140px;
+  overflow: auto;
+  padding-right: 0;
+
+  &:active, &:hover {
+    background-color: inherit;
+    color: inherit;
+  }
+
+  div {
+    border: 2px solid transparent;
+    margin-right: 3px;
+    margin-top: 3px;
+    width: 22.5px;
+    height: 22.5px;
+  }
+
+  label {
+    transition: color $animation-color-duration;
+    margin: 5px 0 0;
+
+    &:hover {
+      color: $brand-success;
+    }
+  }
+}

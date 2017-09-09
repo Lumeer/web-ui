@@ -1,0 +1,5 @@
+<div class="rounded" *ngFor="let colorOption of colors" [style.background]="colorOption" [style.border-color]="colorHighlight(colorOption)"
+  (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
+
+<label for="customColorInput{{ id }}" class="w-100">Custom Color...</label>
+<input type="color" class="form-control" hidden id="customColorInput{{ id }}" [ngModel]="selected" (ngModelChange)="$event !== selected && select($event)"/>
