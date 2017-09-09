@@ -19,12 +19,15 @@ $border-radius-small: 3px !default;
 $font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 
 $primary-color: #f3f3f4;
-$secondary-color: #fff;
+$secondary-color: #ffffff;
 $grey-color: #eeeeee;
 $grey-darker-color: #cccccc;
 
 $mobile-width: 768px;
 $logo-height: 75px;
+
+$z-index-selected: 100;
+$z-index-hovered: 90;
 
 $shadow-default: 0 1px 5px 1px rgba(0, 0, 0, 0.2); // default shadow
 $shadow-up: 0 4px 8px 3px rgba(0, 0, 0, 0.11); // blurred shadow for 'higher' elements
