@@ -8,13 +8,14 @@ import '@angular/router';
 import '@angular/forms';
 import '@angular/animations';
 
-import './js/custom.js';
+// Font Awesome
+require('./font-awesome/font-awesome-core.css');
+require('./font-awesome/font-awesome-brands.css');
+require('./font-awesome/font-awesome-solid.css');
+require('./font-awesome/font-awesome-regular.css');
+require('./font-awesome/font-awesome-light.css');
 
-import './font-awesome/solid.min.js';
-import './font-awesome/regular.min.js';
-import './font-awesome/brands.min.js';
-import './font-awesome/light.min.js';
-import './font-awesome/fontawesome.min.js';
+import './js/custom.js';
 
 import 'socket.io-client';
 import 'angular2-drag-scroll';
