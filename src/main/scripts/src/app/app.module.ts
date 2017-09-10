@@ -22,6 +22,8 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
+import {ModalModule} from 'ngx-bootstrap/modal';
+
 import {AppComponent} from './app.component';
 import {CoreModule} from './core/core.module';
 import {AppRoutingModule} from './app-routing.module';
@@ -30,14 +32,13 @@ import {CollectionModule} from './collection/collection.module';
 import {SearchModule} from './search/search.module';
 import {DocumentsModule} from './documents/documents.module';
 import {SimpleNotificationsModule} from 'angular2-notifications';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     SimpleNotificationsModule.forRoot(),
-    NgbModule.forRoot(),
+    ModalModule.forRoot(),
     CoreModule,
     CollectionModule,
     DocumentsModule,

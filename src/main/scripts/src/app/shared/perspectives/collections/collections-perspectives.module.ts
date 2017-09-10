@@ -23,18 +23,15 @@ import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-
 import {PostItCollectionsPerspectiveComponent} from './post-it/post-it-collections-perspective.component';
-import {IconPickerModule} from '../icon-picker/icon-picker.module';
+import {PickerModule} from '../picker/picker.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    IconPickerModule,
-    RouterModule,
-    NgbModule
+    PickerModule,
+    RouterModule
   ],
   declarations: [
     PostItCollectionsPerspectiveComponent

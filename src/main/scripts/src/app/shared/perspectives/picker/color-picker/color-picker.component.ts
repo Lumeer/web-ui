@@ -18,29 +18,56 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-import {Palette} from '../palette';
-import * as Const from '../../../../const';
+import * as Const from '../../../const';
 
 @Component({
-  selector: 'color-palette',
-  templateUrl: './color-palette.component.html',
-  styleUrls: ['./color-palette.component.scss']
+  selector: 'color-picker',
+  templateUrl: './color-picker.component.html',
+  styleUrls: ['./color-picker.component.scss']
 })
-export class ColorPaletteComponent extends Palette {
+export class ColorPickerComponent implements OnInit {
 
-  @Input('color')
-  public active: string;
+  @Input()
+  public color: string;
+
+  @Output()
+  public colorChange = new EventEmitter<string>();
+
+  @Output()
+  public selectedChange = new EventEmitter<string>();
+
+  public selected: string;
+
+  public greyscaleColors = Const.greyscaleColors;
+
+  public saturatedColors = Const.saturatedColors;
 
   public colors = Const.colors;
+
+  public id = new Date().valueOf();
+
+  public ngOnInit(): void {
+    this.selected = this.color;
+  }
+
+  public preview(previewed?: string) {
+    this.colorChange.emit(previewed ? previewed : this.selected);
+  }
+
+  public select(selected: string) {
+    this.selected = selected;
+    this.selectedChange.emit(selected);
+    this.colorChange.emit(selected);
+  }
 
   public colorHighlight(color: string): string {
     if (color === this.selected) {
       return this.darken(color, 80);
     }
 
-    if (color === this.active) {
+    if (color === this.color) {
       return this.darken(color, 40);
     }
 

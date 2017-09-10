@@ -24,6 +24,5 @@ export class PostItCollectionData {
 
   public collection: Collection;
   public initialized: boolean;
-  public pickerVisible = false;
 
 }

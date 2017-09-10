@@ -3,171 +3,96 @@
 :host {
   display: block;
 
-  .layout {
-    margin: 0 auto;
-  }
-
   .layout-item {
-    transition: all $animation-duration;
-    -webkit-transition: all $animation-duration;
-    -moz-transition: all $animation-duration;
-    -o-transition: all $animation-duration;
-
-    & > * {
-      transition: all $animation-color-duration;
-      -webkit-transition: all $animation-color-duration;
-      -moz-transition: all $animation-color-duration;
-      -o-transition: all $animation-color-duration;
-    }
-
     width: $post-it-width;
-    height: 175px;
+    transition: transform $animation-duration;
   }
 
   .post-it {
-    background: $secondary-color;
-    box-shadow: $shadow-none;
-
-    border: 2px solid $grey-darker-color;
-    border-radius: $border-radius-small;
-
-    .document-count {
-      position: absolute;
-      right: 12px;
-      top: 5px;
-      font-size: 18px;
-    }
-
-    .clickable {
-      outline: none;
-      cursor: pointer;
-    }
-
-    .content {
-      text-align: center;
-      font-size: 3em;
-      margin-top: 20px;
-    }
-
-    .on-icon {
-      position: absolute;
-      top: 111px;
-      left: -109px;
-    }
-
-    .flip {
-      left: 75px;
-
-      /deep/ .arrow-up {
-        left: 100px;
-      }
-    }
-
-    .buttons {
-      opacity: 0;
-      display: grid;
-      position: absolute;
-      right: 0;
-      top: 31px;
-    }
-
-    a {
-      transition: background-position $animation-duration-slow;
-      -webkit-transition: background-position $animation-duration-slow;
-      -moz-transition: background-position $animation-duration-slow;
-      -o-transition: background-position $animation-duration-slow;
-
-      font-size: 18px;
-      padding: 0 6px 0 5px;
-      border-radius: $border-radius-small;
-
-      background: linear-gradient(to right, transparent 50%, #e8e8e8 50%);
-      background-size: 200% 100%;
-      background-position:left bottom;
-
-      &:hover {
-        background-position:right bottom;
-      }
-    }
-
-    .remove-icon {
-      color: $brand-danger;
-    }
-  }
-
-  .uninitialized {
-    border-width: 3px;
-    border-style: dashed;
+    transition: box-shadow $animation-duration;
   }
 
   .post-it:hover, .selected {
-    box-shadow: $shadow-up;
+    box-shadow: $shadow-default;
 
-    & > * {
-      opacity: 1 !important;
+    .document-count, .buttons {
+      opacity: 1;
     }
   }
 
-  .selected {
-    z-index: 100;
+  .post-it:hover {
+    z-index: $z-index-hovered;
   }
 
-  .add-collection {
-    display: block;
-    text-align: center;
-    margin: 35px 25px 0;
+  .selected {
+    z-index: $z-index-selected;
+  }
 
-    color: $brand-primary;
+  .add-post-it {
+    transition: transform $animation-duration, color $animation-color-duration;
+    background: transparent;
+    border-color: transparent;
 
     &:hover {
       color: $brand-success;
     }
+  }
 
-    label {
-      display: block;
-      padding-top: 20px;
-      font-size: 22px;
-      pointer-events: none;
+  .document-count {
+    transition: opacity $animation-color-duration;
+    opacity: 0;
+
+    position: absolute;
+    top: 3px;
+    right: 8px;
+  }
+
+  .uninitialized {
+    border-width: 1.75px;
+    border-style: dashed;
+  }
+
+  .buttons {
+    transition: opacity $animation-color-duration;
+    opacity: 0;
+
+    position: absolute;
+    width: 25px;
+    right: 0;
+
+    a {
+      transition: background-position $animation-color-duration;
+
+      background: linear-gradient(to right, transparent 50%, #e8e8e8 50%);
+      background-size: 200% 100%;
+      background-position: left bottom;
+
+      &:hover {
+        background-position: right bottom;
+      }
     }
   }
 
-  .import > input {
-    display: none;
+  .dropdown-menu {
+    width: 230px;
+
+    .dropdown-item {
+      padding-right: 0;
+    }
   }
 
-  .dragging {
-    color: $brand-success;
-  }
-
-  icon-picker {
-    overflow: hidden;
-    position: absolute;
-    top: 107px;
-    left: -10px;
-  }
-
-  input:focus {
-    outline: none;
-  }
-
-  input {
-    display: block;
-    width: 100%;
-    margin-top: 10px;
-
-    background: transparent;
+  .card-footer {
+    color: inherit;
+    font-size: 20px;
     border: none;
-
-    text-align: center;
-    font-weight: bold;
-    font-size: 22px;
+    padding-top: 0;
   }
 
-  .label-centered {
-    position: absolute;
-    font-size: 40px;
-    top: 150px;
-    width: 100%;
-    text-align: center;
+  textarea {
+    resize: none;
+    border: none;
+    outline: none;
+    overflow: hidden;
   }
+
 }

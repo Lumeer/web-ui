@@ -184,7 +184,7 @@ export class PermissionsTableComponent implements OnInit {
     if (event.target.checked) {
       this.checkRoles(role, this);
     } else {
-      this.addedRoles.splice(this.addedRoles.indexOf(role), 1);;
+      this.addedRoles.splice(this.addedRoles.indexOf(role), 1);
     }
   }
 
