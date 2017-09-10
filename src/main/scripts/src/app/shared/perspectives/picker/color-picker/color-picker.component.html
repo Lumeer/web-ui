@@ -1,3 +1,7 @@
+<div class="rounded" *ngFor="let colorOption of greyscaleColors" [style.background]="colorOption" [style.border-color]="colorHighlight(colorOption)"
+(mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
+<div class="rounded" *ngFor="let colorOption of saturatedColors" [style.background]="colorOption" [style.border-color]="colorHighlight(colorOption)"
+(mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div><hr/>
 <div class="rounded" *ngFor="let colorOption of colors" [style.background]="colorOption" [style.border-color]="colorHighlight(colorOption)"
   (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
 

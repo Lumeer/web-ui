@@ -40,6 +40,10 @@ export class ColorPickerComponent implements OnInit {
 
   public selected: string;
 
+  public greyscaleColors = Const.greyscaleColors;
+
+  public saturatedColors = Const.saturatedColors;
+
   public colors = Const.colors;
 
   public id = new Date().valueOf();
