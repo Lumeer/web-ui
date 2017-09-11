@@ -1,8 +1,16 @@
 @import "../../shared/lumeer-variables";
 
+$top-panel-height: 48px;
+
 .panel-item {
-  height: 48px;
-  line-height: 48px;
+  height: $top-panel-height;
+  line-height: $top-panel-height;
+}
+
+.logo {
+  height: $top-panel-height;
+  position: relative;
+  bottom: 3px;
 }
 
 .profile-dropdown {
