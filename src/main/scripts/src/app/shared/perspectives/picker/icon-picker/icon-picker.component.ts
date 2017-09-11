@@ -20,7 +20,7 @@
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-import * as Const from '../../../const';
+import * as Icons from './icons';
 
 @Component({
   selector: 'icon-picker',
@@ -40,7 +40,7 @@ export class IconPickerComponent implements OnInit {
 
   public selected: string;
 
-  public icons = Const.icons;
+  public icons = Icons.solid.concat(Icons.brand);
 
   public tab = 0;
 

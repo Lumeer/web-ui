@@ -20,7 +20,7 @@
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-import * as Const from '../../../const';
+import * as colors from './colors';
 
 @Component({
   selector: 'color-picker',
@@ -40,11 +40,11 @@ export class ColorPickerComponent implements OnInit {
 
   public selected: string;
 
-  public greyscaleColors = Const.greyscaleColors;
+  public greyscaleColors = colors.greyscale;
 
-  public saturatedColors = Const.saturatedColors;
+  public saturatedColors = colors.saturated;
 
-  public colors = Const.colors;
+  public colors = colors.palette;
 
   public id = new Date().valueOf();
 
