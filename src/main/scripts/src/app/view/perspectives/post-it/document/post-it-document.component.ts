@@ -22,7 +22,7 @@ import {AttributePair} from '../document-data/attribute-pair';
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
 import {Direction} from '../document-data/direction';
 import {DocumentData} from '../document-data/document-data';
-import {isString, isUndefined} from 'util';
+import {isString} from 'util';
 import {KeyCode} from '../../../../shared/key-code';
 
 @Component({
@@ -78,7 +78,7 @@ export class PostItDocumentComponent implements OnInit {
       return {
         attribute: attribute,
         previousAttributeName: '',
-        value: isString(value) ? value : JSON.stringify(value, undefined, 2)
+        value: isString(value) ? value : JSON.stringify(value, null, 2)
       };
     });
   }
@@ -218,7 +218,7 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   private focusSelection(): void {
-    if (isUndefined(this.data.selectedInput.column) || isUndefined(this.data.selectedInput.row)) {
+    if (this.data.selectedInput.column == null || this.data.selectedInput.row == null) {
       return;
     }
 

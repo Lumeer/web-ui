@@ -24,10 +24,10 @@ import {Collection} from '../dto/collection';
 import {Attribute} from '../dto/attribute';
 import {Observable} from 'rxjs/Observable';
 import {BadInputError} from '../error/bad-input.error';
+import {PermissionService} from './permission.service';
 import {isNullOrUndefined} from 'util';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import 'rxjs/add/operator/catch';
-import {PermissionService} from './permission.service';
 
 @Injectable()
 export class CollectionService extends PermissionService {

@@ -297,7 +297,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   private postItIndex(collectionData: PostItCollectionData): number {
     const index = this.postIts.findIndex(collectionDataObject => collectionDataObject === collectionData);
-    return index === -1 ? undefined : index;
+    return index === -1 ? null : index;
   }
 
   private handleError(error: Error, message?: string): void {
