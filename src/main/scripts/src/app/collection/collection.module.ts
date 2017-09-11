@@ -23,6 +23,7 @@ import {CollectionListComponent} from './list/collection-list.component';
 import {CollectionComponent} from './collection.component';
 import {CollectionRoutingModule} from './collection-routing.module';
 import {SimpleNotificationsModule} from 'angular2-notifications/dist';
+import {CollectionDetailComponent} from './detail/collection-detail.component';
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import {SimpleNotificationsModule} from 'angular2-notifications/dist';
   ],
   declarations: [
     CollectionComponent,
-    CollectionListComponent
+    CollectionListComponent,
+    CollectionDetailComponent
   ]
 })
 export class CollectionModule {

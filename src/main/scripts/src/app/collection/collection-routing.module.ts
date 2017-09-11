@@ -17,18 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
-import {CollectionListComponent} from './list/collection-list.component';
-import {CollectionComponent} from './collection.component';
+import { CollectionListComponent } from './list/collection-list.component';
+import { CollectionComponent } from './collection.component';
+import { CollectionDetailComponent } from './detail/collection-detail.component';
 
 const collectionRoutes: Routes = [
+  {
+    path: 'w/:organizationCode/:projectCode/c/:collectionCode/detail',
+    component: CollectionDetailComponent
+  },
   {
     path: 'w/:organizationCode/:projectCode/collections',
     component: CollectionComponent,
     children: [
-      {path: '', component: CollectionListComponent}
+      {
+        path: '',
+        component: CollectionListComponent
+      }
     ]
   }
 ];

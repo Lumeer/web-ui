@@ -57,11 +57,9 @@
             <i class="fa fa-fw fa-eye-dropper" aria-hidden="true"></i>
           </a>
           <div class="dropdown-menu">
-            <color-picker class="dropdown-item" [(color)]="postIt.collection.color"
-                          (selectedChange)="updateCollection(postIt)"></color-picker>
+            <color-picker class="dropdown-item" [(color)]="postIt.collection.color" (selectedChange)="updateCollection(postIt)"></color-picker>
             <div class="dropdown-divider"></div>
-            <icon-picker class="dropdown-item" [(icon)]="postIt.collection.icon"
-                         (selectedChange)="updateCollection(postIt)"></icon-picker>
+            <icon-picker class="dropdown-item" [(icon)]="postIt.collection.icon" (selectedChange)="updateCollection(postIt)"></icon-picker>
           </div>
           <a *ngIf="postIt.initialized && hasManageRole(postIt.collection)"
              (click)="onPermissionsClick(postIt.collection.code)"

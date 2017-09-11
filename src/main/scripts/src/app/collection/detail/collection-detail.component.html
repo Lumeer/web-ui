@@ -1,0 +1,50 @@
+<div class="container">
+  <div class="d-flex p-2">
+    <a (click)="location.back()">
+        <i class="fa-fw fas fa-arrow-alt-left"></i>        
+    </a>
+    <i class="fa-fw fa-2x {{ collection.icon }}"></i>
+    <h2>{{ collection.name }}</h2>
+    <a title="Document Count" class="float-right" [routerLink]="[workspacePath(), 'c', collection.code, 'documents']">
+      {{ collection.documentsCount }}&nbsp;<i class="far fa-file" aria-hidden="true"></i>
+    </a>
+  </div>
+
+  <div>
+    <h2>Description:</h2> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed metus non lacus semper fermentum
+    sed a risus. Praesent porttitor turpis enim, sagittis tempor nulla commodo at. Vestibulum ante ipsum primis in faucibus
+    orci luctus et ultrices posuere cubilia Curae; Morbi tincidunt viverra nulla, eu dapibus erat efficitur nec. Morbi elementum
+    congue ipsum, sed auctor nunc imperdiet vitae. Aliquam erat volutpat. Proin eget sem nisl. Pellentesque eros est, tincidunt
+    id varius ac, scelerisque sed purus. In tincidunt quis risus sed laoreet. Fusce ac nunc accumsan, facilisis libero ac,
+    interdum ipsum. Suspendisse tellus nisi, suscipit a pharetra quis, faucibus ut felis. Nulla facilisi. Donec eget dolor
+    vel purus tincidunt tincidunt. Aenean massa felis, dictum nec porta id, vulputate quis nisi. Ut id rhoncus orci, eu finibus
+    magna. Aenean dapibus, est et tempor porta, libero enim vulputate orci, in mollis eros massa ut lectus.
+  </div>
+
+  <div class="container">
+    <table class="table table-hover">
+      <thead class="thead-default">
+        <tr>
+          <th>&nbsp;</th>
+          <th>Attribute</th>
+          <th>Usage</th>
+          <th>Constraints</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let attribute of collection.attributes; let row = index">
+          <th scope="row">{{ row }}</th>
+          <td>{{ attribute.name }}</td>
+          <td>{{ attribute.usageCount }}</td>
+          <td><span *ngFor="let constraint of attribute.constraints">{{ constraint }}</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <h2>Access Rights</h2>
+    Owner:
+    <!-- <permissions [resourceType]="collection"></permissions> -->
+  </div>
+</div>
