@@ -22,7 +22,8 @@ import {ComponentFactoryResolver} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {PerspectivePresenter} from '../perspective-presenter';
-import {CollectionsPerspective} from './collections-perspective';
+import {PERSPECTIVES} from './collections-perspective';
+import {PerspectiveChoice} from '../perspective-choice';
 
 export abstract class CollectionsPerspectivePresenter extends PerspectivePresenter {
 
@@ -31,8 +32,8 @@ export abstract class CollectionsPerspectivePresenter extends PerspectivePresent
     super(activatedRoute, componentFactoryResolver);
   }
 
-  public loadPerspective() {
-    this.loadPerspectiveComponent(CollectionsPerspective.getPerspective(this.perspective).component);
+  public perspectives(): PerspectiveChoice[] {
+    return Object.values(PERSPECTIVES);
   }
 
 }

@@ -22,15 +22,24 @@ import {NgModule} from '@angular/core';
 import {PerspectiveDirective} from './perspective.directive';
 import {DocumentsPerspectivesModule} from './documents/documents-perspectives.module';
 import {CollectionsPerspectivesModule} from './collections/collections-perspectives.module';
+import {PerspectiveChooserComponent} from './shared/perspective-chooser/perspective-chooser.component';
+import {FormsModule} from '@angular/forms';
+import {BrowserModule} from '@angular/platform-browser';
 
 @NgModule({
+  imports: [
+    BrowserModule,
+    FormsModule
+  ],
   declarations: [
-    PerspectiveDirective
+    PerspectiveDirective,
+    PerspectiveChooserComponent
   ],
   exports: [
     DocumentsPerspectivesModule,
     CollectionsPerspectivesModule,
-    PerspectiveDirective
+    PerspectiveDirective,
+    PerspectiveChooserComponent
   ]
 })
 export class PerspectivesModule {

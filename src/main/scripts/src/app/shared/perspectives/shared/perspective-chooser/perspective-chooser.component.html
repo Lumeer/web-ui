@@ -1,0 +1,16 @@
+<form class="form-inline">
+  <label for="perspective-selector"
+         class="form-control-label mr-2 font-weight-bold">
+    Perspective:
+  </label>
+  <select #perspectiveSelector
+          id="perspective-selector"
+          class="form-control"
+          (change)="onSelectPerspective(perspectiveSelector.value)">
+    <option *ngFor="let perspective of perspectives"
+            [value]="perspective.id"
+            [attr.selected]="selectedPerspective === perspective ? '' : null">
+      {{perspective.name}}
+    </option>
+  </select>
+</form>

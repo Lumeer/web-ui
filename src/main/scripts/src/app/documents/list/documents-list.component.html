@@ -1,2 +1,8 @@
-<h2>Documents in {{collectionCode}}</h2>
+<div class="d-flex justify-content-between">
+  <h2>Documents in collection</h2>
+  <div>
+    <perspective-chooser [perspectives]="perspectives()" [selectedPerspective]="selectedPerspective"></perspective-chooser>
+  </div>
+</div>
+
 <ng-template perspective></ng-template>

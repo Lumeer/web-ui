@@ -19,9 +19,10 @@
  */
 
 import {Component, ComponentFactoryResolver} from '@angular/core';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
 import {DocumentsPerspectivePresenter} from '../../../shared/perspectives/documents/documents-perspective-presenter';
+import {DocumentsPerspective, PERSPECTIVES} from '../../../shared/perspectives/documents/documents-perspective';
 
 @Component({
   templateUrl: './documents-search-results.component.html'
@@ -29,14 +30,16 @@ import {DocumentsPerspectivePresenter} from '../../../shared/perspectives/docume
 export class DocumentsSearchResultsComponent extends DocumentsPerspectivePresenter {
 
   constructor(activatedRoute: ActivatedRoute,
-              componentFactoryResolver: ComponentFactoryResolver) {
+              componentFactoryResolver: ComponentFactoryResolver,
+              private router: Router) {
     super(activatedRoute, componentFactoryResolver);
   }
 
   public ngOnInit() {
     this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
-      this.query = JSON.parse(queryParams.get('query'));
-      super.ngOnInit();
+      const query = JSON.parse(queryParams.get('query'));
+      this.selectedPerspective = PERSPECTIVES[queryParams.get('perspective')] || DocumentsPerspective.PostIt; // TODO change to Search
+      this.loadPerspective(this.selectedPerspective, query);
     });
   }
 

@@ -18,22 +18,32 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Type} from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {PerspectiveChoice} from '../../perspective-choice';
+import {Router} from '@angular/router';
 
-import {PostItCollectionsPerspectiveComponent} from './post-it/post-it-collections-perspective.component';
-import {PerspectiveChoice} from '../perspective-choice';
+@Component({
+  selector: 'perspective-chooser',
+  templateUrl: './perspective-chooser.component.html'
+})
+export class PerspectiveChooserComponent {
 
-export class CollectionsPerspective implements PerspectiveChoice {
+  @Input()
+  public perspectives: PerspectiveChoice[];
 
-  public static PostIt = new CollectionsPerspective('postit', 'Post-it', PostItCollectionsPerspectiveComponent);
+  @Input()
+  public selectedPerspective: PerspectiveChoice;
 
-  private constructor(public id: string,
-                      public name: string,
-                      public component: Type<any>) {
+  constructor(private router: Router) {
+  }
+
+  public onSelectPerspective(perspectiveId: string) {
+    this.router.navigate([], {
+      queryParams: {
+        perspective: perspectiveId
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 
 }
-
-export const PERSPECTIVES = {
-  [CollectionsPerspective.PostIt.id]: CollectionsPerspective.PostIt
-};

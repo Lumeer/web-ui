@@ -50,6 +50,8 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
   @Input()
   public editable: boolean;
 
+  public displayable: boolean;
+
   public collection: Collection;
   public header: TableHeader;
   public rows: TableRow[];
@@ -67,15 +69,20 @@ export class TableDocumentsPerspectiveComponent implements Perspective, OnInit {
   }
 
   public ngOnInit(): void {
-    this.route.paramMap
-      .switchMap(params => {
-        const code: string = params.get('collectionCode');
+    this.displayable = this.query.collectionCodes.length === 1;
+    if (!this.displayable) {
+      return;
+    }
 
-        return Observable.combineLatest(
-          this.collectionService.getCollection(code),
-          this.documentService.getDocuments(code)
-        );
-      }).subscribe(([collection, documents]) => {
+    const collectionCode = this.query.collectionCodes.pop();
+    this.fetchData(collectionCode);
+  }
+
+  private fetchData(collectionCode: string): void {
+    Observable.combineLatest(
+      this.collectionService.getCollection(collectionCode),
+      this.documentService.getDocuments(collectionCode)
+    ).subscribe(([collection, documents]) => {
       this.collection = collection;
       this.prepareTableData(collection.attributes, documents);
     });

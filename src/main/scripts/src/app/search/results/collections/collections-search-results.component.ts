@@ -21,6 +21,7 @@
 import {Component, ComponentFactoryResolver} from '@angular/core';
 import {CollectionsPerspectivePresenter} from '../../../shared/perspectives/collections/collections-perspective-presenter';
 import {ActivatedRoute, ParamMap} from '@angular/router';
+import {CollectionsPerspective, PERSPECTIVES} from '../../../shared/perspectives/collections/collections-perspective';
 
 @Component({
   templateUrl: './collections-search-results.component.html'
@@ -34,8 +35,9 @@ export class CollectionsSearchResultsComponent extends CollectionsPerspectivePre
 
   public ngOnInit() {
     this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
-      this.query = JSON.parse(queryParams.get('query'));
-      super.ngOnInit();
+      const query = JSON.parse(queryParams.get('query'));
+      this.selectedPerspective = PERSPECTIVES[queryParams.get('perspective')] || CollectionsPerspective.PostIt;
+      this.loadPerspective(this.selectedPerspective, query);
     });
   }
 
