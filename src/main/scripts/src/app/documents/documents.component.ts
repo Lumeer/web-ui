@@ -18,23 +18,19 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
+import {Component} from '@angular/core';
+import {WorkspaceScoped} from '../shared/workspace-scoped';
+import {WorkspaceService} from '../core/workspace.service';
+import {ActivatedRoute} from '@angular/router';
 
-import {SharedModule} from '../shared/shared.module';
-import {DocumentRoutingModule} from './documents-routing.module';
-import {DocumentsListComponent} from './list/documents-list.component';
-import {DocumentsComponent} from './documents.component';
-
-@NgModule({
-  imports: [
-    SharedModule,
-    DocumentRoutingModule
-  ],
-  declarations: [
-    DocumentsComponent,
-    DocumentsListComponent
-  ]
+@Component({
+  template: '<router-outlet></router-outlet>'
 })
-export class DocumentsModule {
+export class DocumentsComponent extends WorkspaceScoped {
+
+  constructor(activatedRoute: ActivatedRoute,
+              workspaceService: WorkspaceService) {
+    super(activatedRoute, workspaceService);
+  }
 
 }

@@ -18,23 +18,22 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
+import {ActivatedRoute, ParamMap} from '@angular/router';
+import {WorkspaceService} from '../core/workspace.service';
 
-import {SharedModule} from '../shared/shared.module';
-import {DocumentRoutingModule} from './documents-routing.module';
-import {DocumentsListComponent} from './list/documents-list.component';
-import {DocumentsComponent} from './documents.component';
+export abstract class WorkspaceScoped {
 
-@NgModule({
-  imports: [
-    SharedModule,
-    DocumentRoutingModule
-  ],
-  declarations: [
-    DocumentsComponent,
-    DocumentsListComponent
-  ]
-})
-export class DocumentsModule {
+  constructor(protected activatedRoute: ActivatedRoute,
+              protected workspaceService: WorkspaceService) {
+  }
+
+  public ngOnInit(): void {
+    this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
+      this.workspaceService.organizationCode = params.get('organizationCode');
+      this.workspaceService.projectCode = params.get('projectCode');
+      this.workspaceService.collectionCode = params.get('collectionCode');
+      this.workspaceService.viewCode = params.get('viewCode');
+    });
+  }
 
 }

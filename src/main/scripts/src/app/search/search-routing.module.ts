@@ -37,7 +37,7 @@ const searchRoutes: Routes = [
         pathMatch: 'full',
         component: SearchHomeComponent,
         data: {
-          hideSearch: true
+          searchBoxHidden: true
         }
       },
       {
