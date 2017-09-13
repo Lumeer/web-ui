@@ -22,12 +22,39 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { CollectionListComponent } from './list/collection-list.component';
 import { CollectionComponent } from './collection.component';
-import { CollectionDetailComponent } from './detail/collection-detail.component';
+import { CollectionConfigComponent } from './config/collection-config.component';
+import { CollectionAttributesComponent } from './config/attributes/collection-attributes.component';
+import { CollectionEventsComponent } from './config/events/collection-events.component';
+import { CollectionAccessRightsComponent } from './config/access-rights/collection-access-rights.component';
+import { CollectionLinkTypesComponent } from './config/link-types/collection-link-types.component';
 
 const collectionRoutes: Routes = [
   {
-    path: 'w/:organizationCode/:projectCode/c/:collectionCode/detail',
-    component: CollectionDetailComponent
+    path: 'w/:organizationCode/:projectCode/c/:collectionCode',
+    component: CollectionConfigComponent,
+    children: [
+      {
+        path: 'attributes',
+        component: CollectionAttributesComponent
+      },
+      {
+        path: 'linktypes',
+        component: CollectionLinkTypesComponent
+      },
+      {
+        path: 'events',
+        component: CollectionEventsComponent
+      },
+      {
+        path: 'accessrights',
+        component: CollectionAccessRightsComponent
+      },
+      {
+        path: '',
+        redirectTo: 'attributes',
+        pathMatch: 'full'
+      }
+    ]
   },
   {
     path: 'w/:organizationCode/:projectCode/collections',

@@ -1,4 +1,3 @@
-<div class="fadedown"></div>
 <div class="perspective" #perspective (scroll)="loadMore(perspective)" [style.height]="height + 'px'">
   <div class="layout" #layout>
 
@@ -27,7 +26,6 @@
            i18n="@@document.list.empty">Nothing To Show</label>
   </div>
 </div>
-<div class="fadeup"></div>
 
 <a (click)="onScrollDown(perspective)" class="scroll-down">
   <span i18n="@@document.button.scroll.down">Scroll Down</span>

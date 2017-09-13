@@ -22,8 +22,12 @@ import {SharedModule} from '../shared/shared.module';
 import {CollectionListComponent} from './list/collection-list.component';
 import {CollectionComponent} from './collection.component';
 import {CollectionRoutingModule} from './collection-routing.module';
+import {CollectionConfigComponent} from './config/collection-config.component';
+import {CollectionLinkTypesComponent} from './config/link-types/collection-link-types.component';
+import {CollectionAttributesComponent} from './config/attributes/collection-attributes.component';
+import {CollectionAccessRightsComponent} from './config/access-rights/collection-access-rights.component';
+import {CollectionEventsComponent} from './config/events/collection-events.component';
 import {SimpleNotificationsModule} from 'angular2-notifications/dist';
-import {CollectionDetailComponent} from './detail/collection-detail.component';
 
 @NgModule({
   imports: [
@@ -33,7 +37,11 @@ import {CollectionDetailComponent} from './detail/collection-detail.component';
   declarations: [
     CollectionComponent,
     CollectionListComponent,
-    CollectionDetailComponent
+    CollectionConfigComponent,
+    CollectionAccessRightsComponent,
+    CollectionAttributesComponent,
+    CollectionEventsComponent,
+    CollectionLinkTypesComponent
   ]
 })
 export class CollectionModule {

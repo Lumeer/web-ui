@@ -267,19 +267,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     this.postIts.splice(this.postItIndex(postIt), 1);
   }
 
-  public onAttributesClick(collectionCode: string): void {
-    // TODO
-  }
-
-  public onPermissionsClick(collectionCode: string): void {
-    // TODO
-  }
-
-  public onDetailClick(collectionCode: string): void {
-    // TODO
-  }
-
-  public onTextAreaBlur(postIt: PostItCollectionData): void {
+  public onTextAreaBlur(postIt: PostItCollectionData, textArea: HTMLTextAreaElement): void {
     if (postIt.initialized) {
       this.updateCollection(postIt);
     } else {

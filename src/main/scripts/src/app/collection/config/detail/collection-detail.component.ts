@@ -25,9 +25,9 @@ import { Location } from '@angular/common';
 import { BsModalService } from 'ngx-bootstrap';
 import { NotificationsService } from 'angular2-notifications/dist';
 
-import { CollectionService } from '../../core/rest/collection.service';
-import { WorkspaceService } from '../../core/workspace.service';
-import { Collection, COLLECTION_NO_ICON, COLLECTION_NO_COLOR } from '../../core/dto/collection';
+import { Collection, COLLECTION_NO_ICON, COLLECTION_NO_COLOR } from '../../../core/dto/collection';
+import { CollectionService } from '../../../core/rest/collection.service';
+import { WorkspaceService } from '../../../core/workspace.service';
 import 'rxjs/add/operator/retry';
 
 @Component({
