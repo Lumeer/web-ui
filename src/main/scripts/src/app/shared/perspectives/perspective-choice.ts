@@ -20,20 +20,10 @@
 
 import {Type} from '@angular/core';
 
-import {PostItCollectionsPerspectiveComponent} from './post-it/post-it-collections-perspective.component';
-import {PerspectiveChoice} from '../perspective-choice';
+export interface PerspectiveChoice {
 
-export class CollectionsPerspective implements PerspectiveChoice {
-
-  public static PostIt = new CollectionsPerspective('postit', 'Post-it', PostItCollectionsPerspectiveComponent);
-
-  private constructor(public id: string,
-                      public name: string,
-                      public component: Type<any>) {
-  }
+  id: string;
+  name: string;
+  component: Type<any>;
 
 }
-
-export const PERSPECTIVES = {
-  [CollectionsPerspective.PostIt.id]: CollectionsPerspective.PostIt
-};

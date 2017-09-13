@@ -18,42 +18,37 @@
  * -----------------------------------------------------------------------/
  */
 
-import {ComponentFactoryResolver, OnInit, Type, ViewChild} from '@angular/core';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {ComponentFactoryResolver, ComponentRef, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
 import {PerspectiveDirective} from './perspective.directive';
 import {Perspective} from './perspective';
+import {PerspectiveChoice} from './perspective-choice';
 import {Query} from '../../core/dto/query';
 
 export abstract class PerspectivePresenter implements OnInit {
 
   @ViewChild(PerspectiveDirective)
-  private perspectiveDirective: PerspectiveDirective;
+  public perspectiveDirective: PerspectiveDirective;
 
-  protected perspective: string;
-  protected query: Query = {};
+  public selectedPerspective: PerspectiveChoice;
 
   protected constructor(protected activatedRoute: ActivatedRoute,
                         private componentFactoryResolver: ComponentFactoryResolver) {
   }
 
-  public ngOnInit() {
-    this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
-      this.perspective = queryParams.get('perspective');
-    });
-    this.loadPerspective();
-  }
+  public abstract ngOnInit();
 
-  public abstract loadPerspective();
+  public abstract perspectives(): PerspectiveChoice[];
 
-  protected loadPerspectiveComponent(perspectiveComponent: Type<any>) {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(perspectiveComponent);
+  protected loadPerspective(perspective: PerspectiveChoice, query: Query) {
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(perspective.component);
 
     const viewContainerRef = this.perspectiveDirective.viewContainerRef;
     viewContainerRef.clear();
 
-    const componentRef = viewContainerRef.createComponent(componentFactory);
-    (<Perspective>componentRef.instance).query = this.query;
+    const componentRef: ComponentRef<Perspective> = viewContainerRef.createComponent(componentFactory);
+    componentRef.instance.query = query ? query : {};
   }
 
 }

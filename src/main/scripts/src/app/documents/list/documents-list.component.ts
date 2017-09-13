@@ -19,15 +19,18 @@
  */
 
 import {Component, ComponentFactoryResolver} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/combineLatest';
+
 import {DocumentsPerspectivePresenter} from '../../shared/perspectives/documents/documents-perspective-presenter';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {DocumentsPerspective, PERSPECTIVES} from '../../shared/perspectives/documents/documents-perspective';
+import {PerspectiveChoice} from '../../shared/perspectives/perspective-choice';
 
 @Component({
   templateUrl: 'documents-list.component.html'
 })
 export class DocumentsListComponent extends DocumentsPerspectivePresenter {
-
-  public collectionCode: string;
 
   constructor(activatedRoute: ActivatedRoute,
               componentFactoryResolver: ComponentFactoryResolver) {
@@ -35,12 +38,19 @@ export class DocumentsListComponent extends DocumentsPerspectivePresenter {
   }
 
   public ngOnInit() {
-    this.activatedRoute.paramMap.subscribe((params: ParamMap) => {
-      this.collectionCode = params.get('collectionCode');
-      this.query = {collectionCodes: [this.collectionCode]};
+    Observable.combineLatest([
+      this.activatedRoute.paramMap,
+      this.activatedRoute.queryParamMap
+    ]).subscribe(([params, queryParams]) => {
+      const query = {collectionCodes: [params.get('collectionCode')]};
 
-      super.ngOnInit();
+      this.selectedPerspective = PERSPECTIVES[queryParams.get('perspective')] || DocumentsPerspective.PostIt; // TODO probably change to Table
+      this.loadPerspective(this.selectedPerspective, query);
     });
+  }
+
+  public perspectives(): PerspectiveChoice[] {
+    return super.perspectives().filter(p => p !== DocumentsPerspective.Search);
   }
 
 }

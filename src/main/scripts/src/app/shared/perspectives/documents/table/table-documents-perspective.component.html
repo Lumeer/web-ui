@@ -1,5 +1,5 @@
 <static-table
-  *ngIf="header && rows"
+  *ngIf="displayable && header && rows"
   [header]="header"
   [rows]="rows"
   [settings]="settings"
@@ -11,3 +11,7 @@
   (removeColumn)="onRemoveColumn($event)"
   (showColumn)="onShowColumn($event)">
 </static-table>
+
+<div *ngIf="!displayable" class="alert alert-warning" role="alert">
+  Given query results cannot be shown using table perspective. The query needs to specify exactly one collection.
+</div>

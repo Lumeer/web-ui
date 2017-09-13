@@ -21,8 +21,9 @@
 import {ComponentFactoryResolver} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
-import {DocumentsPerspective} from './documents-perspective';
+import {PERSPECTIVES} from './documents-perspective';
 import {PerspectivePresenter} from '../perspective-presenter';
+import {PerspectiveChoice} from '../perspective-choice';
 
 export abstract class DocumentsPerspectivePresenter extends PerspectivePresenter {
 
@@ -31,8 +32,8 @@ export abstract class DocumentsPerspectivePresenter extends PerspectivePresenter
     super(activatedRoute, componentFactoryResolver);
   }
 
-  public loadPerspective() {
-    this.loadPerspectiveComponent(DocumentsPerspective.getPerspective(this.perspective).component);
+  public perspectives(): PerspectiveChoice[] {
+    return Object.values(PERSPECTIVES);
   }
 
 }

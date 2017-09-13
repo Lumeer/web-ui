@@ -20,30 +20,26 @@
 
 import {Type} from '@angular/core';
 
-import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
 import {PostItDocumentsPerspectiveComponent} from './post-it/post-it-documents-perspective.component';
+import {PerspectiveChoice} from '../perspective-choice';
+import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
+import {SearchDocumentsPerspectiveComponent} from './search/search-documents-perspective.component';
 
-export class DocumentsPerspective {
+export class DocumentsPerspective implements PerspectiveChoice {
 
-  public static PostIt = new DocumentsPerspective('Post-it', PostItDocumentsPerspectiveComponent);
-  public static Table = new DocumentsPerspective('Table', TableDocumentsPerspectiveComponent);
+  public static PostIt = new DocumentsPerspective('postit', 'Post-it', PostItDocumentsPerspectiveComponent);
+  public static Search = new DocumentsPerspective('search', 'Search', SearchDocumentsPerspectiveComponent);
+  public static Table = new DocumentsPerspective('table', 'Table', TableDocumentsPerspectiveComponent);
 
-  public static perspectives = {
-    ['postit']: DocumentsPerspective.PostIt,
-    ['table']: DocumentsPerspective.Table
-  };
-
-  public static defaultPerspective = DocumentsPerspective.PostIt;
-
-  public static getPerspective(perspectiveId: string): DocumentsPerspective {
-    if (!perspectiveId) {
-      return DocumentsPerspective.defaultPerspective;
-    }
-    const perspective = DocumentsPerspective.perspectives[perspectiveId.toLowerCase()];
-    return perspective ? perspective : DocumentsPerspective.defaultPerspective;
-  }
-
-  private constructor(public name: string, public component: Type<any>) {
+  private constructor(public id: string,
+                      public name: string,
+                      public component: Type<any>) {
   }
 
 }
+
+export const PERSPECTIVES = {
+  [DocumentsPerspective.PostIt.id]: DocumentsPerspective.PostIt,
+  [DocumentsPerspective.Search.id]: DocumentsPerspective.Search,
+  [DocumentsPerspective.Table.id]: DocumentsPerspective.Table
+};

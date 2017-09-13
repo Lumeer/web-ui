@@ -27,6 +27,7 @@ import {PostItAddDocumentComponent} from './post-it/add-document/add-document.co
 import {PostItDocumentComponent} from './post-it/document/post-it-document.component';
 import {TableDocumentsPerspectiveComponent} from './table/table-documents-perspective.component';
 import {TableModule} from '../../table/table.module';
+import {SearchDocumentsPerspectiveComponent} from './search/search-documents-perspective.component';
 
 @NgModule({
   imports: [
@@ -38,10 +39,12 @@ import {TableModule} from '../../table/table.module';
     PostItDocumentsPerspectiveComponent,
     PostItAddDocumentComponent,
     PostItDocumentComponent,
+    SearchDocumentsPerspectiveComponent,
     TableDocumentsPerspectiveComponent
   ],
   entryComponents: [
     PostItDocumentsPerspectiveComponent,
+    SearchDocumentsPerspectiveComponent,
     TableDocumentsPerspectiveComponent
   ]
 })
