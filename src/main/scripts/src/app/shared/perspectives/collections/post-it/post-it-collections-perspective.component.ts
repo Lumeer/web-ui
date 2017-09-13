@@ -180,7 +180,6 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   }
 
   public updateCollection(postIt: PostItCollectionData): void {
-    // No idea why this gets called on deletion :/
     if (postIt === this.postItToDelete) {
       return;
     }
@@ -222,6 +221,8 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
 
         collection.color = COLLECTION_NO_COLOR;
         collection.icon = COLLECTION_NO_ICON;
+
+        this.postIts.push(newPostIt);
       },
       error => {
         this.handleError(error, 'Import failed');
