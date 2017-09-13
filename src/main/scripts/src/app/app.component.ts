@@ -19,7 +19,7 @@
  */
 
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {Router, RoutesRecognized} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, ParamMap, Router} from '@angular/router';
 
 import {WorkspaceService} from './core/workspace.service';
 
@@ -39,34 +39,40 @@ export class AppComponent implements OnInit {
     lastOnBottom: true
   };
 
-  constructor(private workspaceService: WorkspaceService,
-              private router: Router) {
+  constructor(private activatedRoute: ActivatedRoute,
+              private router: Router,
+              private workspaceService: WorkspaceService) {
   }
 
-  public ngOnInit(): void {
-    this.router.events.subscribe(events => {
-      if (events instanceof RoutesRecognized) {
-        const params = events.state.root.firstChild.params;
-        const organizationCode = params['organizationCode'];
-        const projectCode = params['projectCode'];
-        let collectionCode = params['collectionCode'];
-        let viewCode = params['viewCode'];
-        if (organizationCode) {
-          this.workspaceService.organizationCode = organizationCode;
-        }
-        if (projectCode) {
-          this.workspaceService.projectCode = projectCode;
-        }
-        if (collectionCode) {
-          // TODO: set collectionCode from URL
-          this.workspaceService.collectionCode = collectionCode;
-        }
-        if (viewCode) {
-          // TODO: set viewCode from URL
-          this.workspaceService.viewCode = viewCode;
-        }
+  public ngOnInit() {
+    this.processPathParams();
+  }
+
+  private processPathParams() {
+    this.router.events
+      .filter(event => event instanceof NavigationEnd)
+      .map(() => this.activatedRoute)
+      .map(route => AppComponent.getFirstChildRouteWithParams(route))
+      .filter(route => route.outlet === 'primary')
+      .mergeMap(route => route.paramMap)
+      .subscribe((params: ParamMap) => this.setWorkspace(params));
+  }
+
+  private setWorkspace(params: ParamMap) {
+    this.workspaceService.organizationCode = params.get('organizationCode');
+    this.workspaceService.projectCode = params.get('projectCode');
+    this.workspaceService.collectionCode = params.get('collectionCode');
+    this.workspaceService.viewCode = params.get('viewCode');
+  }
+
+  private static getFirstChildRouteWithParams(route: ActivatedRoute): ActivatedRoute {
+    while (route.firstChild) {
+      route = route.firstChild;
+      if (route.snapshot.paramMap.keys.length > 0) {
+        return route;
       }
-    });
+    }
+    return route;
   }
 
 }

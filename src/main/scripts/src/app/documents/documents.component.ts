@@ -19,18 +19,10 @@
  */
 
 import {Component} from '@angular/core';
-import {WorkspaceScoped} from '../shared/workspace-scoped';
-import {WorkspaceService} from '../core/workspace.service';
-import {ActivatedRoute} from '@angular/router';
 
 @Component({
   template: '<router-outlet></router-outlet>'
 })
-export class DocumentsComponent extends WorkspaceScoped {
-
-  constructor(activatedRoute: ActivatedRoute,
-              workspaceService: WorkspaceService) {
-    super(activatedRoute, workspaceService);
-  }
+export class DocumentsComponent {
 
 }
