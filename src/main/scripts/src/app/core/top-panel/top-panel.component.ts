@@ -19,7 +19,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 
 import {WorkspaceService} from '../workspace.service';
 import 'rxjs/add/operator/filter';
@@ -35,20 +35,32 @@ export class TopPanelComponent implements OnInit {
 
   public searchBoxHidden = false;
 
-  constructor(private router: Router,
+  constructor(private activatedRoute: ActivatedRoute,
+              private router: Router,
               public workspaceService: WorkspaceService) {
   }
 
   public ngOnInit() {
+    this.detectSearchBoxHiddenProperty();
+  }
+
+  private detectSearchBoxHiddenProperty() {
     this.router.events
-      .filter((event) => event instanceof NavigationEnd)
-      .subscribe((event: NavigationEnd) => {
-        this.searchBoxHidden = TopPanelComponent.showOrHideSearchBox(event.url);
+      .filter(event => event instanceof NavigationEnd)
+      .map(() => this.activatedRoute)
+      .map(route => TopPanelComponent.getDeepestChildRoute(route))
+      .filter(route => route.outlet === 'primary')
+      .mergeMap(route => route.data)
+      .subscribe((data: { searchBoxHidden: boolean }) => {
+        this.searchBoxHidden = Boolean(data.searchBoxHidden);
       });
   }
 
-  private static showOrHideSearchBox(url: string): boolean {
-    return url.endsWith('search') || url.endsWith('workspace') || url.includes('organization');
+  public static getDeepestChildRoute(route: ActivatedRoute) {
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+    return route;
   }
 
   public isSearchBoxShown(): boolean {

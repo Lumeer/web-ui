@@ -21,7 +21,7 @@
 import {Component} from '@angular/core';
 
 @Component({
-  templateUrl: './collection.component.html'
+  template: '<router-outlet></router-outlet>'
 })
 export class CollectionComponent {
 

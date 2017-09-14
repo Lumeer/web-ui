@@ -32,7 +32,9 @@ const workspaceRoutes: Routes = [
   {
     path: 'organization/:organizationCode/project/add',
     component: ProjectFormComponent,
-    data: {creation: true}
+    data: {
+      creation: true
+    }
   },
   {
     path: 'organization/:organizationCode/project/:projectCode',
@@ -41,7 +43,9 @@ const workspaceRoutes: Routes = [
       {
         path: 'settings',
         component: ProjectFormComponent,
-        data: {creation: false}
+        data: {
+          creation: false
+        }
       },
       {
         path: 'permissions',
@@ -79,7 +83,10 @@ const workspaceRoutes: Routes = [
   },
   {
     path: 'workspace',
-    component: WorkspaceChooserComponent
+    component: WorkspaceChooserComponent,
+    data: {
+      searchBoxHidden: true
+    }
   }
 ];
 
