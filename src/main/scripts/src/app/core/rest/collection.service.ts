@@ -27,6 +27,7 @@ import {BadInputError} from '../error/bad-input.error';
 import {PermissionService} from './permission.service';
 import {isNullOrUndefined} from 'util';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {ConfiguredAttribute} from '../../collection/config/attributes/configured-attribute';
 import 'rxjs/add/operator/catch';
 
 @Injectable()
@@ -73,7 +74,7 @@ export class CollectionService extends PermissionService {
   }
 
   public updateAttribute(collectionCode: string, fullName: string, attribute: Attribute): Observable<Attribute> {
-    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, attribute)
+    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, this.attributeToDto(attribute))
       .catch(CollectionService.handleGlobalError);
   }
 
@@ -82,7 +83,7 @@ export class CollectionService extends PermissionService {
   }
 
   protected actualApiPrefix() {
-    let collectionCode = this.workspaceService.collectionCode;
+    const collectionCode = this.workspaceService.collectionCode;
 
     return `${this.apiPrefix()}/${collectionCode}`;
   }
@@ -94,7 +95,16 @@ export class CollectionService extends PermissionService {
       color: collection.color,
       icon: collection.icon,
       permissions: collection.permissions,
-      attributes: collection.attributes
+      attributes: collection.attributes.map(this.attributeToDto)
+    };
+  }
+
+  private attributeToDto(attribute: Attribute | ConfiguredAttribute): Attribute {
+    return {
+      constraints: attribute.constraints,
+      fullName: attribute.fullName,
+      name: attribute.name,
+      usageCount: attribute.usageCount
     };
   }
 

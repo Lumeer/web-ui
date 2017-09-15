@@ -1,1 +1,56 @@
-attributes
+<div class="container">
+  <table class="table table-hover table-responsive">
+    <thead class="thead-default">
+    <tr>
+      <th colspan="1" class="first-row"></th>
+      <th colspan="4">Attribute</th>
+      <th colspan="4">Usage</th>
+      <th colspan="12" class="relative">Constraints
+        <div title="Search" class="search border rounded {{ activeSearch ? 'active-search' : null}}">
+          <input type="search" class="ml-2" #searchInput
+                 [(ngModel)]="searched"
+                 (focus)="activeSearch = true"
+                 (blur)="activeSearch = searched">
+          <i class="mr-2 text-success fa fa-search" (click)="searchInput.focus()"></i>
+        </div>
+        <img title="Lumeer suggestions" class="lumeer p-1 pt-0 rounded" src="../../../../img/lumeer-logo.png"/>
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngFor="let attribute of collection.attributes; let row = index">
+      <tr *ngIf="!activeSearch || matchesSearch(attribute)">
+        <th colspan="1" scope="row"
+            class="first-row {{ collection.defaultAttribute === attribute ? 'visible' : null }}">
+          <i *ngIf="collection.defaultAttribute === attribute"
+             class="fa fa-fw fa-dot-circle"
+             title="Default Attribute"></i>
+          <i *ngIf="collection.defaultAttribute !== attribute"
+             class="far fa-fw fa-circle"
+             title="Set Default Attribute"
+             (click)="setDefaultAttribute(attribute)"></i>
+        </th>
+        <td colspan="4" class="{{ collection.defaultAttribute === attribute ? 'font-weight-bold' : null }}">
+          <input type="text" [(ngModel)]="attribute.name" (blur)="updateAttribute(attribute)">
+        </td>
+        <td colspan="4">{{ formatNumber(attribute.usageCount) }}</td>
+        <td colspan="12">
+          <div class="d-flex flex-wrap">
+          <span class="constraint px-2 ml-1 rounded" *ngFor="let constraint of attribute.constraints; let idx = index"
+                [style.background-color]="darken(constraintColor(constraint), mouseOverConstraint === constraint ? 40 : 0)"
+                (mouseenter)="mouseOverConstraint = constraint"
+                (mouseleave)="mouseOverConstraint = null"
+                (click)="removeConstraint(attribute, idx)"
+                title="Remove Constraint">{{ constraint }}</span>
+            <input class="px-2 ml-1"
+                   [(ngModel)]="attribute.newConstraint"
+                   (keyup.enter)="addConstraint(attribute)"
+                   (keydown.backspace)="constraintBackspace(attribute)"
+                   placeholder="{{ attribute.constraints.length ? '...' : '+' }}"/>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,72 @@
+@import "../../../shared/_lumeer-variables";
+
+:host {
+
+  .relative {
+    position: relative;
+  }
+
+  .search {
+    transition: background-color $animation-color-duration, border-color $animation-color-duration;
+
+    position: absolute;
+    right: 48px;
+    top: 11px;
+  }
+
+  .active-search, .search:hover {
+    background-color: $secondary-color;
+    border-color: $brand-success !important;
+  }
+
+  .lumeer {
+    transition: background-color $animation-color-duration;
+
+    position: absolute;
+    right: 13px;
+    top: 8px;
+    height: 33px;
+
+    &:hover {
+      background-color: $secondary-color;
+    }
+  }
+
+  table {
+    table-layout: fixed;
+  }
+
+  tr {
+    .first-row {
+      transition: color $animation-color-duration;
+      opacity: 0;
+      background: $secondary-color;
+      border: none;
+
+      &:hover {
+        color: $brand-success;
+      }
+    }
+
+    &:hover {
+      .first-row {
+        opacity: 1;
+      }
+    }
+  }
+
+  .visible {
+    opacity: 1 !important;
+  }
+
+  .constraint {
+    transition: background-color $animation-color-duration;
+    white-space: nowrap;
+    color: $secondary-color;
+  }
+
+  input {
+    flex: 2;
+  }
+
+}

@@ -18,15 +18,10 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component} from '@angular/core';
+import {Attribute} from '../../../core/dto/attribute';
 
-import {CollectionTabComponent} from '../collection-tab.component';
+export interface ConfiguredAttribute extends Attribute {
 
-@Component({
-  selector: 'collection-link-types',
-  templateUrl: './collection-link-types.component.html',
-  styleUrls: ['./collection-link-types.component.scss']
-})
-export class CollectionLinkTypesComponent extends CollectionTabComponent  {
+  newConstraint: string;
 
 }

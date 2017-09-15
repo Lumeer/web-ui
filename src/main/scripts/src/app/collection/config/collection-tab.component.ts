@@ -18,33 +18,26 @@
  * -----------------------------------------------------------------------/
  */
 
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
-import { BsModalService } from 'ngx-bootstrap';
-import { NotificationsService } from 'angular2-notifications/dist';
+import {NotificationsService} from 'angular2-notifications/dist';
+import {BsModalService} from 'ngx-bootstrap';
 
-import { Collection, COLLECTION_NO_ICON, COLLECTION_NO_COLOR } from '../../../core/dto/collection';
-import { CollectionService } from '../../../core/rest/collection.service';
-import { WorkspaceService } from '../../../core/workspace.service';
-import 'rxjs/add/operator/retry';
+import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
+import {CollectionService} from '../../core/rest/collection.service';
+import {WorkspaceService} from '../../core/workspace.service';
 
-@Component({
-  selector: 'collection-detail',
-  templateUrl: './collection-detail.component.html',
-  styleUrls: ['./collection-detail.component.scss']
-})
-export class CollectionDetailComponent implements OnInit {
+@Component({})
+export abstract class CollectionTabComponent implements OnInit {
 
-  public collection: Collection;
+  protected collection: Collection;
 
-  constructor(private collectionService: CollectionService,
-    private route: ActivatedRoute,
-    private location: Location,
-    private notificationService: NotificationsService,
-    private workspaceService: WorkspaceService,
-    private modalService: BsModalService) {
+  constructor(protected collectionService: CollectionService,
+    protected route: ActivatedRoute,
+    protected notificationService: NotificationsService,
+    protected workspaceService: WorkspaceService,
+    protected modalService: BsModalService) {
   }
 
   public ngOnInit(): void {
@@ -54,7 +47,7 @@ export class CollectionDetailComponent implements OnInit {
       color: COLLECTION_NO_COLOR
     };
 
-    this.route.paramMap.subscribe(paramMap => {
+    this.route.parent.paramMap.subscribe(paramMap => {
       this.collectionService.getCollection(paramMap.get('collectionCode'))
         .retry(3)
         .subscribe(
@@ -64,7 +57,16 @@ export class CollectionDetailComponent implements OnInit {
     });
   }
 
-  public workspacePath(): string {
+  protected updateCollection(): void {
+    this.collectionService.updateCollection(this.collection)
+      .retry(3)
+      .subscribe(
+      collection => this.collection = collection,
+      error => this.notificationService.error('Error', 'Failed updating collection')
+      );
+  }
+
+  protected workspacePath(): string {
     return `/w/${this.workspaceService.organizationCode}/${this.workspaceService.projectCode}`;
   }
 

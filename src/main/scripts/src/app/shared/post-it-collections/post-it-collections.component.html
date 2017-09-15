@@ -99,7 +99,8 @@
         </div>
       </div>
 
-      <div class="layout-item card text-center add-post-it" ondragover="return false;" [ngClass]="{'dragging': dragging}" (click)="fileInput.click()"
+      <div class="layout-item card text-center add-post-it" ondragover="return false;"
+           [ngClass]="{'dragging': dragging}" (click)="fileInput.click()"
            (drop)="handleDrop($event)" (dragenter)="handleDragEnter()" (dragleave)="handleDragLeave()">
         <div class="card-body">
           <i class="fa fa-cloud-upload fa-6x" aria-hidden="true"></i>

@@ -22,11 +22,11 @@ import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 
 import {Organization} from '../dto/organization';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
 import {PermissionService} from './permission.service';
 import {FetchFailedError} from '../error/fetch-failed.error';
 import {NetworkError} from '../error/network.error';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class OrganizationService extends PermissionService {
@@ -53,9 +53,9 @@ export class OrganizationService extends PermissionService {
   }
 
   protected actualApiPrefix(): string {
-    let orgCode = this.workspaceService.organizationCode;
+    const organizationCode = this.workspaceService.organizationCode;
 
-    return this.apiPrefix(orgCode);
+    return this.apiPrefix(organizationCode);
   }
 
   private apiPrefix(code?: string): string {

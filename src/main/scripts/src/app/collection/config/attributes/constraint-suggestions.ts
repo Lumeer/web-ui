@@ -18,15 +18,10 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component} from '@angular/core';
+export interface ConstraintSuggestions {
 
-import {CollectionTabComponent} from '../collection-tab.component';
-
-@Component({
-  selector: 'collection-link-types',
-  templateUrl: './collection-link-types.component.html',
-  styleUrls: ['./collection-link-types.component.scss']
-})
-export class CollectionLinkTypesComponent extends CollectionTabComponent  {
+  type: string;
+  color: string;
+  list: string[];
 
 }

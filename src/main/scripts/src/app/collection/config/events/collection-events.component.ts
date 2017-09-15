@@ -18,13 +18,15 @@
  * -----------------------------------------------------------------------/
  */
 
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+
+import {CollectionTabComponent} from '../collection-tab.component';
 
 @Component({
   selector: 'collection-events',
   templateUrl: './collection-events.component.html',
   styleUrls: ['./collection-events.component.scss']
 })
-export class CollectionEventsComponent {
+export class CollectionEventsComponent extends CollectionTabComponent  {
 
 }

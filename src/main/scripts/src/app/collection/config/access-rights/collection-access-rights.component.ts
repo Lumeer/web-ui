@@ -18,13 +18,15 @@
  * -----------------------------------------------------------------------/
  */
 
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+
+import {CollectionTabComponent} from '../collection-tab.component';
 
 @Component({
   selector: 'collection-access-rights',
   templateUrl: './collection-access-rights.component.html',
   styleUrls: ['./collection-access-rights.component.scss']
 })
-export class CollectionAccessRightsComponent {
+export class CollectionAccessRightsComponent extends CollectionTabComponent {
 
 }

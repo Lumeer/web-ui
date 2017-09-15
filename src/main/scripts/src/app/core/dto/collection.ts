@@ -31,6 +31,7 @@ export interface Collection {
   color: string;
   permissions?: Permissions;
   attributes?: Attribute[];
+  defaultAttribute?: Attribute; // TODO implement on backend
   documentsCount?: number;
 
 }
