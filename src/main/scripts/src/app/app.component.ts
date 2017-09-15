@@ -22,6 +22,7 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, ParamMap, Router} from '@angular/router';
 
 import {WorkspaceService} from './core/workspace.service';
+import {RouteFinder} from './shared/utils/route-finder';
 
 @Component({
   selector: 'app',
@@ -52,7 +53,7 @@ export class AppComponent implements OnInit {
     this.router.events
       .filter(event => event instanceof NavigationEnd)
       .map(() => this.activatedRoute)
-      .map(route => AppComponent.getFirstChildRouteWithParams(route))
+      .map(route => RouteFinder.getFirstChildRouteWithParams(route))
       .filter(route => route.outlet === 'primary')
       .mergeMap(route => route.paramMap)
       .subscribe((params: ParamMap) => this.setWorkspace(params));
@@ -63,16 +64,6 @@ export class AppComponent implements OnInit {
     this.workspaceService.projectCode = params.get('projectCode');
     this.workspaceService.collectionCode = params.get('collectionCode');
     this.workspaceService.viewCode = params.get('viewCode');
-  }
-
-  private static getFirstChildRouteWithParams(route: ActivatedRoute): ActivatedRoute {
-    while (route.firstChild) {
-      route = route.firstChild;
-      if (route.snapshot.paramMap.keys.length > 0) {
-        return route;
-      }
-    }
-    return route;
   }
 
 }

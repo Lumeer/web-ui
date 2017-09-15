@@ -20,9 +20,12 @@
 
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
 
 import {WorkspaceService} from '../workspace.service';
-import 'rxjs/add/operator/filter';
+import {RouteFinder} from '../../shared/utils/route-finder';
 
 @Component({
   selector: 'top-panel',
@@ -48,19 +51,12 @@ export class TopPanelComponent implements OnInit {
     this.router.events
       .filter(event => event instanceof NavigationEnd)
       .map(() => this.activatedRoute)
-      .map(route => TopPanelComponent.getDeepestChildRoute(route))
+      .map(route => RouteFinder.getDeepestChildRoute(route))
       .filter(route => route.outlet === 'primary')
       .mergeMap(route => route.data)
       .subscribe((data: { searchBoxHidden: boolean }) => {
         this.searchBoxHidden = Boolean(data.searchBoxHidden);
       });
-  }
-
-  public static getDeepestChildRoute(route: ActivatedRoute) {
-    while (route.firstChild) {
-      route = route.firstChild;
-    }
-    return route;
   }
 
   public isSearchBoxShown(): boolean {

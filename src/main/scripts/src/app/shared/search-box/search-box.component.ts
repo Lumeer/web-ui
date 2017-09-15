@@ -18,8 +18,8 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -28,17 +28,22 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
 
 import {Suggestions} from '../../core/dto/suggestions';
 import {SearchService} from '../../core/rest/search.service';
 import {WorkspaceService} from '../../core/workspace.service';
 import {QueryItem} from './query-item/query-item';
 import {FulltextQueryItem} from './query-item/fulltext-query-item';
-import {Query} from '../../core/dto/query';
 import {AttributeQueryItem} from './query-item/attribute-query-item';
 import {CollectionQueryItem} from './query-item/collection-query-item';
 import {SuggestionType} from '../../core/dto/suggestion-type';
 import {Collection} from '../../core/dto/collection';
+import {QueryItemsConverter} from './query-item/query-items-converter';
+import {Query} from '../../core/dto/query';
+import {QueryConverter} from '../utils/query-converter';
 
 const BACKSPACE_KEY = 8;
 const ENTER_KEY = 13;
@@ -46,9 +51,10 @@ const ENTER_KEY = 13;
 @Component({
   selector: 'search-box',
   templateUrl: './search-box.component.html',
-  styleUrls: ['./search-box.component.scss']
+  styleUrls: ['./search-box.component.scss'],
+  providers: [QueryItemsConverter]
 })
-export class SearchBoxComponent {
+export class SearchBoxComponent implements OnInit {
 
   public queryItems: QueryItem[] = [];
   public currentQueryItem: QueryItem = new FulltextQueryItem('');
@@ -59,12 +65,30 @@ export class SearchBoxComponent {
   public text = '';
   private type = SuggestionType.All;
 
-  constructor(private router: Router,
+  constructor(private activatedRoute: ActivatedRoute,
+              private queryItemsConverter: QueryItemsConverter,
+              private router: Router,
               private searchService: SearchService,
               private workspaceService: WorkspaceService) {
   }
 
   public ngOnInit(): void {
+    this.parseQueryItemsFromQueryParams();
+    this.suggestQueryItems();
+  }
+
+  private parseQueryItemsFromQueryParams() {
+    this.activatedRoute.queryParamMap
+      .map((queryParams: ParamMap) => QueryConverter.fromString(queryParams.get('query')))
+      .switchMap((query: Query) => this.queryItemsConverter.fromQuery(query))
+      .subscribe(queryItems => {
+        if (this.queryItems.length === 0) {
+          this.queryItems = queryItems;
+        }
+      });
+  }
+
+  private suggestQueryItems() {
     this.suggestions = this.searchTerms
       .startWith('')
       .debounceTime(300)
@@ -172,7 +196,8 @@ export class SearchBoxComponent {
     const organizationCode = this.workspaceService.organizationCode;
     const projectCode = this.workspaceService.projectCode;
 
-    this.router.navigate(['/w', organizationCode, projectCode, 'search', 'collections'], {queryParams: {query: this.createQuery()}});
+    this.router.navigate(['/w', organizationCode, projectCode, 'search', 'collections'],
+      {queryParams: {query: this.queryItemsConverter.toQueryString(this.queryItems)}});
   }
 
   private addQueryItem(queryItem: QueryItem) {
@@ -180,25 +205,6 @@ export class SearchBoxComponent {
     this.currentQueryItem = new FulltextQueryItem('');
     this.text = '';
     this.hideSuggestions();
-  }
-
-  private createQuery(): string {
-    const query: Query = {
-      collectionCodes: [],
-      filters: []
-    };
-
-    this.queryItems.forEach(queryItem => {
-      if (queryItem instanceof CollectionQueryItem) {
-        query.collectionCodes.push(queryItem.code);
-      } else if (queryItem instanceof AttributeQueryItem) {
-        query.filters.push(queryItem.value);
-      } else if (queryItem instanceof FulltextQueryItem) {
-        query.fulltext = queryItem.text;
-      }
-    });
-
-    return JSON.stringify(query);
   }
 
   public get placeholder(): string {
