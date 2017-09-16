@@ -1,7 +1,6 @@
-<div class="header">
-  <span [style.color]="data.collection.color" title="{{ data.collection.name }}">
-    <i class="{{ data.collection.icon }} collection-icon"></i><!--
-    --><label class="name">{{ data.collection.name }}</label>
+<div class="card-header py-1">
+  <span [style.color]="data.collection.color">
+    <i class="icon {{ data.collection.icon }} mr-1"></i>{{ data.collection.name }}
   </span>
 
   <ng-container *ngIf="data.writeRole">
@@ -20,58 +19,99 @@
   </ng-container>
 </div>
 
-<ul class="content" [style.cursor]="data.writeRole ? 'cell' : null" #content>
+<div class="card-body p-2">
+  <ul class="m-0 p-0" #content>
 
-  <ng-container *ngIf="data.writeRole; then editableTable else nonEditableTable"></ng-container>
+    <ng-container *ngIf="data.writeRole">
+      <li *ngFor="let attributePair of attributePairs; let row = index">
+        <span id="AttributePair{{ data.index }}[0, {{ row }}]" class="attribute" tabindex="-1"
+              (keydown.ArrowLeft)="moveSelection(-1, 0)"
+              (keydown.ArrowRight)="moveSelection(1, 0)"
+              (keydown.ArrowUp)="moveSelection(0, -1)"
+              (keydown.ArrowDown)="moveSelection(0, 1)"
+              (keydown.F2)="setEditMode(true); focusSelection()"
+              (keydown.enter)="setEditMode(true); focusSelection()"
+              (click)="clickOnAttributePair(0, row)">
 
-  <ng-template #editableTable>
-    <li *ngFor="let attributePair of attributePairs; let row = index">
-      <span id="AttributePair{{ data.index }}[0, {{ row }}]" class="attribute" tabindex="-1"
-            (keydown)="onKeyDown($event)"
-            (click)="clickOnAttributePair(0, row)">
+          <input [(ngModel)]="attributePair.attribute"
+                 (keydown)="$event.stopPropagation()"
+                 (keydown.F2)="setEditMode(false); focusSelection()"
+                 (keydown.Escape)="setEditMode(false); focusSelection()"
+                 (keydown.enter)="onEditModeEnter()"
+                 (blur)="updateAttribute(attributePair)">
+        </span>
 
-        <input [ngModel]="attributePair.attribute"
-               (ngModelChange)="updateAttribute(attributePair, $event)">
-      </span>
+        <span id="AttributePair{{ data.index }}[1, {{ row }}]" tabindex="-1"
+              title="{{ attributePair.value }}"
+              (keydown.ArrowLeft)="moveSelection(-1, 0)"
+              (keydown.ArrowRight)="moveSelection(1, 0)"
+              (keydown.ArrowUp)="moveSelection(0, -1)"
+              (keydown.ArrowDown)="moveSelection(0, 1)"
+              (keydown.F2)="setEditMode(true); focusSelection()"
+              (keydown.enter)="setEditMode(true); focusSelection()"
+              (click)="clickOnAttributePair(1, row)">
 
-      <span id="AttributePair{{ data.index }}[1, {{ row }}]" tabindex="-1"
-            title="{{ attributePair.value }}"
-            (keydown)="onKeyDown($event)"
-            (click)="clickOnAttributePair(1, row)">
+        <input [(ngModel)]="attributePair.value"
+               (keydown)="$event.stopPropagation()"
+               (keydown.F2)="setEditMode(false); focusSelection()"
+               (keydown.Escape)="setEditMode(false); focusSelection()"
+               (keydown.enter)="onEditModeEnter()"
+               (blur)="updateValue(attributePair)">
+       </span>
+      </li>
 
-        <input [ngModel]="attributePair.value"
-               (ngModelChange)="updateValue(attributePair, $event)">
-      </span>
-    </li>
+      <li>
+        <span id="AttributePair{{ data.index }}[0, {{ attributePairs.length }}]" class="attribute" tabindex="-1"
+              (keydown.ArrowLeft)="moveSelection(-1, 0)"
+              (keydown.ArrowRight)="moveSelection(1, 0)"
+              (keydown.ArrowUp)="moveSelection(0, -1)"
+              (keydown.ArrowDown)="moveSelection(0, 1)"
+              (keydown.F2)="setEditMode(true); focusSelection()"
+              (keydown.enter)="setEditMode(true); focusSelection()"
+              (click)="clickOnAttributePair(0, attributePairs.length)">
 
-    <li>
-      <span id="AttributePair{{ data.index }}[0, {{ attributePairs.length }}]" class="attribute" tabindex="-1"
-            (keydown)="onKeyDown($event)"
-            (click)="clickOnAttributePair(0, attributePairs.length)">
+          <!-- the list refers to one of the attribute suggestion lists in document perspective -->
+          <input placeholder=" + "
+                 [attr.list]="data.document.collectionCode"
+                 [(ngModel)]="newAttributePair.attribute"
+                 (keydown)="$event.stopPropagation()"
+                 (keydown.F2)="setEditMode(false); focusSelection()"
+                 (keydown.Escape)="setEditMode(false); focusSelection()"
+                 (keydown.enter)="onEditModeEnter()">
+        </span>
 
-        <!-- the list refers to one of the attribute suggestion lists in document perspective -->
-        <input placeholder=" + "
-               [attr.list]="data.document.collectionCode"
-               [(ngModel)]="newAttributePair.attribute">
-      </span>
-
-      <span id="AttributePair{{ data.index }}[1, {{ attributePairs.length }}]"
-            [attr.tabindex]="newAttributePair.attribute ? -1 : null"
-            (keydown)="onKeyDown($event)"
-            (click)="newAttributePair.attribute && clickOnAttributePair(1, attributePairs.length)">
+        <span id="AttributePair{{ data.index }}[1, {{ attributePairs.length }}]"
+              [attr.tabindex]="newAttributePair.attribute ? -1 : null"
+              (keydown.ArrowLeft)="moveSelection(-1, 0)"
+              (keydown.ArrowRight)="moveSelection(1, 0)"
+              (keydown.ArrowUp)="moveSelection(0, -1)"
+              (keydown.ArrowDown)="moveSelection(0, 1)"
+              (keydown.F2)="setEditMode(true); focusSelection()"
+              (keydown.enter)="setEditMode(true); focusSelection()"
+              (click)="newAttributePair.attribute && clickOnAttributePair(1, attributePairs.length)">
 
         <input [disabled]="!newAttributePair.attribute"
-               (keydown)="$event.key.length === 1 && createAttributePair($event.key)"/>
-      </span>
+               (keydown)="$event.stopPropagation(); $event.key.length === 1 && createAttributePair($event.key)"
+               (keydown.F2)="setEditMode(false); focusSelection()"
+               (keydown.Escape)="setEditMode(false); focusSelection()"
+               (keydown.enter)="onEditModeEnter()"/>
+        </span>
+      </li>
+    </ng-container>
 
-    </li>
-  </ng-template>
+    <ng-container *ngIf="!data.writeRole">
+      <li *ngFor="let attributePair of attributePairs">
+        <span class="attribute">
+          <input readonly [ngModel]="attributePair.attribute">
+        </span>
 
-  <ng-template #nonEditableTable>
-    <li *ngFor="let attributePair of attributePairs">
-      <span class="attribute">
-        <input readonly [ngModel]="attributePair.attribute">
-      </span>
+        <span>
+          <input title="{{ attributePair.value }}" readonly [ngModel]="attributePair.value">
+        </span>
+      </li>
+    </ng-container>
+  </ul>
+</div>
 
       <span>
         <input title="{{ attributePair.value }}" readonly [ngModel]="attributePair.value">

@@ -5,11 +5,7 @@
 
   .perspective {
     overflow: auto;
-
     transition: height $animation-duration-slow;
-    -webkit-transition: height $animation-duration-slow;
-    -moz-transition: height $animation-duration-slow;
-    -o-transition: height $animation-duration-slow;
   }
 
   .layout {
@@ -18,6 +14,19 @@
 
   .layout-item {
     width: $post-it-width;
+    transition: transform $animation-duration, box-shadow $animation-duration;
+  }
+
+  .post-it:hover, .selected {
+    box-shadow: $shadow-default;
+  }
+
+  .post-it:hover {
+    z-index: $z-index-hovered;
+  }
+
+  .selected {
+    z-index: $z-index-selected;
   }
 
   .uninitialized {
@@ -26,7 +35,7 @@
   }
 
   .scroll-down {
-    position: relative;
+    cursor: auto;
     font-size: 24px;
     float: right;
     margin: 10px;
@@ -34,13 +43,5 @@
     i {
       padding-left: 10px;
     }
-  }
-
-  .label-centered {
-    position: absolute;
-    font-size: 40px;
-    top: 150px;
-    width: 100%;
-    text-align: center;
   }
 }

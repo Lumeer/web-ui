@@ -6,7 +6,9 @@
 
     <ng-container *ngFor="let postIt of postIts">
       <post-it-document *ngIf="postIt.collection"
-                        class="layout-item {{ !postIt.initialized ? 'uninitialized' : null }}"
+                        class="layout-item card post-it
+                        {{ !postIt.initialized ? 'uninitialized' : null }}
+                        {{ postIt === lastClickedPostIt ? 'selected' : null }}"
                         [attr.z-index]="postIt.selectedInput.documentIdx === postIt.index ? 50 : null"
                         [data]="postIt"
                         (selectOther)="selectDocument($event)"
@@ -18,7 +20,6 @@
     <ng-container *ngFor="let attributeSuggestionsEntry of attributeSuggestionsEntries()">
       <datalist id="{{ attributeSuggestionsEntry[0] }}">
         <option *ngFor="let suggestion of attributeSuggestionsEntry[1]">{{ suggestion }}</option>
-      </datalist>
     </ng-container>
 
     <label *ngIf="!editable && query && !postIts.length"
