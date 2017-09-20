@@ -27,7 +27,11 @@ export class QueryConverter {
   }
 
   public static fromString(query: string): Query {
-    return query ? JSON.parse(query) : {};
+    const queryObject = query ? JSON.parse(query) : {};
+    !queryObject.collectionCodes && (queryObject.collectionCodes = []);
+    !queryObject.filters && (queryObject.filters = []);
+
+    return queryObject;
   }
 
 }
