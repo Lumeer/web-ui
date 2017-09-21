@@ -1,14 +1,14 @@
-# EditorConfig is awesome: http://EditorConfig.org
+# Editor configuration, see http://editorconfig.org
+root = true
 
-# top-most EditorConfig file
-root= true
-
-# Unix-style newlines with a newline ending every file
 [*]
 end_of_line = lf
+charset = utf-8
+indent_style = space
+indent_size = 2
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{js,ts,html,less,css,json}]
-indent_style = space
-indent_size = 2
+[*.md]
+max_line_length = off
+trim_trailing_whitespace = false
