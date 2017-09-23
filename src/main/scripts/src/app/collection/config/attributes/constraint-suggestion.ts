@@ -18,10 +18,18 @@
  * -----------------------------------------------------------------------/
  */
 
-export interface LumeerConstraintSuggestion {
+import {Constraints} from './constraints';
 
-  type: string;
-  color: string;
-  name: string;
+export class ConstraintSuggestion {
+
+  public type: string;
+  public color: string;
+  public name: string;
+
+  constructor(constraint: Constraints, listSuggestion: string) {
+    this.type = constraint.type;
+    this.color = constraint.color;
+    this.name = listSuggestion;
+  }
 
 }

@@ -2,30 +2,23 @@
 
 :host {
 
-  .relative {
-    position: relative;
-  }
-
   .search {
     transition: background-color $animation-color-duration, border-color $animation-color-duration;
-
-    position: absolute;
-    right: 48px;
-    top: 11px;
+    background-color: $secondary-color;
   }
 
-  .active-search, .search:hover {
-    background-color: $secondary-color;
-    border-color: $brand-success !important;
+  .suggestion-list {
+    transform: none !important;
+    top: 32px !important;
+    left: -130px !important;
+    width: 100%;
+    overflow: hidden;
   }
 
   .lumeer {
     transition: background-color $animation-color-duration;
-
-    position: absolute;
-    right: 13px;
-    top: 8px;
-    height: 33px;
+    padding: 1px;
+    height: 27px;
 
     &:hover {
       background-color: $secondary-color;
@@ -39,23 +32,24 @@
   tr {
     .first-row {
       transition: color $animation-color-duration;
-      opacity: 0;
       background: $secondary-color;
       border: none;
+
+      i {
+        opacity: 0;
+      }
 
       &:hover {
         color: $brand-success;
       }
     }
 
-    &:hover {
-      .first-row {
+    &:hover .first-row i {
         opacity: 1;
-      }
     }
   }
 
-  .visible {
+  .visible i {
     opacity: 1 !important;
   }
 
@@ -65,8 +59,12 @@
     color: $secondary-color;
   }
 
-  input {
+  input, .no-shrink {
     flex: 2;
+  }
+
+  input {
+    min-width: 100px;
   }
 
 }

@@ -22,8 +22,9 @@ import {Component} from '@angular/core';
 
 import {CollectionTabComponent} from '../collection-tab.component';
 import {ConfiguredAttribute} from './configured-attribute';
-import * as Constraints from './constraints';
 import {isNullOrUndefined} from 'util';
+import {ConstraintSuggestion} from './constraint-suggestion';
+import * as Const from './constraints';
 
 @Component({
   selector: 'collection-attributes',
@@ -34,9 +35,19 @@ export class CollectionAttributesComponent extends CollectionTabComponent {
 
   public searched = '';
 
-  public activeSearch: boolean;
+  public activeSearch = false;
 
-  public editedConstraint: string;
+  public mouseOver = {attribute: null, constraint: ''};
+
+  public activeAttribute: ConfiguredAttribute = {
+    constraints: [],
+    name: '',
+    fullName: '',
+    newConstraint: '',
+    usageCount: 0
+  };
+
+  public suggestions: ConstraintSuggestion[] = [];
 
   public setDefaultAttribute(attribute: ConfiguredAttribute): void {
     this.collection.defaultAttribute = attribute;
@@ -60,9 +71,12 @@ export class CollectionAttributesComponent extends CollectionTabComponent {
     this.updateAttribute(attribute);
   }
 
-  public addConstraint(attribute: ConfiguredAttribute): void {
+  public addConstraint(attribute: ConfiguredAttribute, constraint: string): void {
+    constraint && (attribute.newConstraint = constraint);
+
     attribute.constraints.push(attribute.newConstraint);
     attribute.newConstraint = '';
+
     this.updateAttribute(attribute);
   }
 
@@ -78,14 +92,38 @@ export class CollectionAttributesComponent extends CollectionTabComponent {
       attribute.constraints.find(isSearched) !== undefined;
   }
 
-  public suggestions(): string[] {
-    // return Constraints.suggestions.filter(suggestion => this.editedConstraint);
-    return [];
+  public refreshSuggestions(): void {
+    const flattenSuggestion = (constraints, listSuggestion) => new ConstraintSuggestion(constraints, listSuggestion);
+    const flattenConstraints = constraints => constraints.list.reduce((array, current) => {
+      return array.concat(flattenSuggestion(constraints, current));
+    }, []);
+    const flatten = (flattenedList, currentList) => flattenedList.concat(currentList);
+
+    const nonNull = stringOrNull => stringOrNull ? stringOrNull : '';
+    const startsWith = (str, start) => nonNull(str).toLowerCase().startsWith(nonNull(start).toLowerCase());
+
+    this.suggestions = Const.constraints.map(flattenConstraints)
+      .reduce(flatten, [])
+      .filter(suggestion => startsWith(suggestion.name, this.activeAttribute.newConstraint))
+      .filter(suggestion => !this.activeAttribute.constraints.includes(suggestion.name))
+      .slice(0, 5);
   }
 
   //======= Visual functions =======//
+  public hexColorOpacity(hexColor: string, opacity: number): string {
+    const hexToNumber = (start: number) => parseInt(hexColor.substr(start, 2), 16);
+    const fadedColor = [hexToNumber(1), hexToNumber(3), hexToNumber(5), opacity].join(', ');
+
+    return `rgba(${fadedColor})`;
+  }
+
   public formatNumber(numberToFormat: number): string {
-    return String(numberToFormat).replace(/(?=(\d{3})+(?!\d))/g, ',').replace(/^,/, '');
+    const spaceBetweenEveryThreeDigits = /(?=(\d{3})+(?!\d))/g;
+    const optionalCommaAtTheStart = /^,/;
+
+    return String(numberToFormat)
+      .replace(spaceBetweenEveryThreeDigits, ',')
+      .replace(optionalCommaAtTheStart, '');
   }
 
   public constraintColor(constraint: string): string {
@@ -98,10 +136,12 @@ export class CollectionAttributesComponent extends CollectionTabComponent {
     const allSame = list => new Set(list).size === 1;
 
     const matching = (a, b) => allSame(makeComparable([a, b]));
-    const containsConstraint = suggestions => suggestions.list.find(suggestion => matching(suggestion, constraint)) !== undefined;
+    const containsConstraint = suggestions => suggestions.list.find(suggestion => {
+      return matching(suggestion, constraint);
+    }) !== undefined;
 
-    const constraintSuggestion = Constraints.suggestions.find(containsConstraint);
-    return constraintSuggestion ? constraintSuggestion.color : '#858585';
+    const constraintType = Const.constraints.find(containsConstraint);
+    return constraintType ? constraintType.color : '#858585';
   }
 
   public darken(color: string, amount: number): string {

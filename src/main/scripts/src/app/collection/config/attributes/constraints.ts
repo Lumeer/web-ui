@@ -18,9 +18,15 @@
  * -----------------------------------------------------------------------/
  */
 
-import {ConstraintSuggestions} from './constraint-suggestions';
+export interface Constraints {
 
-export const suggestions: ConstraintSuggestions[] = [
+  type: string;
+  color: string;
+  list: string[];
+
+}
+
+export const constraints: Constraints[] = [
   {
     type: 'numeric',
     color: '#5c93ff',

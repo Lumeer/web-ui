@@ -1,27 +1,45 @@
 <div class="container">
-  <table class="table table-hover table-responsive">
-    <thead class="thead-default">
+  <table class="table table-hover table-striped table-responsive">
+    <thead class="thead-default" [style.background-color]="hexColorOpacity(collection.color, 0.8)">
     <tr>
-      <th colspan="1" class="first-row"></th>
-      <th colspan="4">Attribute</th>
-      <th colspan="4">Usage</th>
-      <th colspan="12" class="relative">Constraints
-        <div title="Search" class="search border rounded {{ activeSearch ? 'active-search' : null}}">
+      <th style="width: 45px" class="bg-white border-0"></th>
+      <th style="width: 230px" class="bg-transparent align-baseline border-0">
+        Attribute
+      </th>
+      <th style="width: 100px" class="bg-transparent align-baseline border-0">
+        Usage
+      </th>
+      <th class="bg-transparent border-0 d-flex flex-wrap">
+        <span class="no-shrink">Constraints</span>
+
+        <div title="Search" class="search rounded">
           <input type="search" class="ml-2" #searchInput
                  [(ngModel)]="searched"
                  (focus)="activeSearch = true"
-                 (blur)="activeSearch = searched">
+                 (blur)="activeSearch = !!searched">
           <i class="mr-2 text-success fa fa-search" (click)="searchInput.focus()"></i>
         </div>
-        <img title="Lumeer suggestions" class="lumeer p-1 pt-0 rounded" src="../../../../img/lumeer-logo.png"/>
+
+        <div class="dropdown">
+          <img title="Lumeer suggestions" class="lumeer ml-2 rounded" src="../../../../img/lumeer-logo.png"
+               data-toggle="dropdown"/>
+
+          <div
+            class="dropdown-menu suggestion-list {{ activeAttribute.newConstraint && suggestions.length ? 'show' : null }}"
+            id="suggestions-dropdown">
+            <h6 class="dropdown-header">Lumeer suggests:</h6>
+            <span *ngFor="let suggestion of suggestions" class="dropdown-item"
+                  [style.color]="suggestion.color"
+                  (click)="addConstraint(activeAttribute, suggestion.name)">{{ suggestion.name }}</span>
+          </div>
+        </div>
       </th>
     </tr>
     </thead>
     <tbody>
     <ng-container *ngFor="let attribute of collection.attributes; let row = index">
       <tr *ngIf="!activeSearch || matchesSearch(attribute)">
-        <th colspan="1" scope="row"
-            class="first-row {{ collection.defaultAttribute === attribute ? 'visible' : null }}">
+        <th scope="row" class="first-row {{ collection.defaultAttribute === attribute ? 'visible' : null }}">
           <i *ngIf="collection.defaultAttribute === attribute"
              class="fa fa-fw fa-dot-circle"
              title="Default Attribute"></i>
@@ -30,20 +48,24 @@
              title="Set Default Attribute"
              (click)="setDefaultAttribute(attribute)"></i>
         </th>
-        <td colspan="4" class="{{ collection.defaultAttribute === attribute ? 'font-weight-bold' : null }}">
-          <input type="text" [(ngModel)]="attribute.name" (blur)="updateAttribute(attribute)">
+        <td>
+          <input type="text" class="{{ collection.defaultAttribute === attribute ? 'font-weight-bold' : null }}"
+                 [(ngModel)]="attribute.name"
+                 (blur)="updateAttribute(attribute)">
         </td>
-        <td colspan="4">{{ formatNumber(attribute.usageCount) }}</td>
-        <td colspan="12">
+        <td class="text-right">{{ formatNumber(attribute.usageCount) }}</td>
+        <td>
           <div class="d-flex flex-wrap">
           <span class="constraint px-2 ml-1 rounded" *ngFor="let constraint of attribute.constraints; let idx = index"
-                [style.background-color]="darken(constraintColor(constraint), mouseOverConstraint === constraint ? 40 : 0)"
-                (mouseenter)="mouseOverConstraint = constraint"
-                (mouseleave)="mouseOverConstraint = null"
+                [style.background-color]="darken(constraintColor(constraint), mouseOver.attribute === attribute && mouseOver.constraint === constraint ? 40 : 0)"
+                (mouseenter)="mouseOver = {attribute: attribute, constraint: constraint}"
+                (mouseleave)="mouseOver = {attribute: null, constraint: ''}"
                 (click)="removeConstraint(attribute, idx)"
                 title="Remove Constraint">{{ constraint }}</span>
             <input class="px-2 ml-1"
                    [(ngModel)]="attribute.newConstraint"
+                   (ngModelChange)="refreshSuggestions()"
+                   (focus)="activeAttribute = attribute"
                    (keyup.enter)="addConstraint(attribute)"
                    (keydown.backspace)="constraintBackspace(attribute)"
                    placeholder="{{ attribute.constraints.length ? '...' : '+' }}"/>
