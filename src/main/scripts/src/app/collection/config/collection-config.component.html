@@ -1,19 +1,33 @@
-<div class="container">
+<div class="container-fluid">
   <div class="d-flex p-2">
-    <a>
-        <i class="fa-fw fas fa-arrow-alt-left"></i>        
+    <a tabindex>
+      <i class="fa-fw fas fa-arrow-alt-left"></i>
     </a>
-    <i class="fa-fw fa-2x {{ collection.icon }}"></i>
-    <h2>{{ collection.name }}</h2>
-    <a title="Document Count" class="float-right" [routerLink]="[workspacePath(), 'c', collection.code, 'documents']">
+    <i class="fa-fw fa-2x {{ collection.icon }}" [style.color]="collection.color"></i>
+    <h2 [style.color]="collection.color">{{ collection.name }}</h2>
+    <a title="Document Count" style="position: absolute; right: 80px" [routerLink]="[workspacePath(), 'c', collection.code, 'documents']">
       {{ collection.documentsCount }}&nbsp;<i class="far fa-file" aria-hidden="true"></i>
     </a>
   </div>
 
   <div>
-    <h2>Description:</h2> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed metus non lacus semper fermentum
-    sed a risus. Praesent porttitor turpis enim, sagittis tempor nulla commodo at. Vestibulum ante ipsum primis in faucibus
-    orci luctus et ultrices posuere cubilia Curae.
+    <b>Description:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sed metus non lacus semper fermentum
   </div>
 </div>
-<router-outlet class="container"></router-outlet>
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" href="#">Attributes</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Link</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="#">Link</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link disabled" href="#">Disabled</a>
+  </li>
+</ul>
+
+<router-outlet class="container-fluid"></router-outlet>

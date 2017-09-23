@@ -29,7 +29,6 @@ import {CollectionService} from '../../core/rest/collection.service';
 import {WorkspaceService} from '../../core/workspace.service';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/switchMap';
 
 @Component({})
 export abstract class CollectionTabComponent implements OnInit {

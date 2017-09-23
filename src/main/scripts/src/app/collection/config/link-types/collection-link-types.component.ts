@@ -18,15 +18,91 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {CollectionTabComponent} from '../collection-tab.component';
+import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../core/dto/collection';
+import {LinkTypeService} from '../../../core/rest/link-type.service';
+import {LinkType} from '../../../core/dto/link-type';
+import {CollectionService} from '../../../core/rest/collection.service';
+import {ActivatedRoute} from '@angular/router';
+import {NotificationsService} from 'angular2-notifications/dist';
+import {WorkspaceService} from '../../../core/workspace.service';
+import {BsModalService} from 'ngx-bootstrap';
 
 @Component({
   selector: 'collection-link-types',
   templateUrl: './collection-link-types.component.html',
   styleUrls: ['./collection-link-types.component.scss']
 })
-export class CollectionLinkTypesComponent extends CollectionTabComponent  {
+export class CollectionLinkTypesComponent extends CollectionTabComponent implements OnInit {
+
+  public linkTypes: LinkType[];
+
+  public collections: { [collectionCode: string]: Collection } = {};
+
+  constructor(private linkTypeService: LinkTypeService,
+              collectionService: CollectionService,
+              route: ActivatedRoute,
+              notificationService: NotificationsService,
+              workspaceService: WorkspaceService,
+              modalService: BsModalService) {
+    super(collectionService, route, notificationService, workspaceService, modalService);
+  }
+
+  public ngOnInit(): void {
+    super.ngOnInit();
+    this.fetchData();
+  }
+
+  private async fetchData(): Promise<void> {
+    const linkTypes = await this.fetchCurrentCollectionLinkTypes();
+
+    const collectionCodes = linkTypes.map(linkType => linkType.toCollection);
+    await this.fetchAllCollections(collectionCodes);
+  }
+
+  private async fetchCurrentCollectionLinkTypes(): Promise<LinkType[]> {
+    this.linkTypes = await this.getLinkTypes(this.collection.code);
+    return this.linkTypes;
+  }
+
+  private async getLinkTypes(collectionCode: string): Promise<LinkType[]> {
+    return this.linkTypeService.getLinkTypes(collectionCode)
+      .take(1)
+      .toPromise()
+      .catch(error => {
+        this.notificationService.error('Error', 'Failed fetching Link Types');
+        return [];
+      });
+  }
+
+  private fetchAllCollections(collectionCodes: string[]): void {
+    collectionCodes.forEach(collectionCode => this.fetchCollection(collectionCode));
+  }
+
+  private async fetchCollection(collectionCode: string): Promise<Collection> {
+    if (!this.collections[collectionCode]) {
+      const emptyCollection: Collection = {
+        name: '',
+        color: COLLECTION_NO_COLOR,
+        icon: COLLECTION_NO_ICON
+      };
+
+      this.collections[collectionCode] = emptyCollection;
+      this.collections[collectionCode] = await super.getCollection(collectionCode);
+    }
+
+    return this.collections[collectionCode];
+  }
+
+  public formatNumber(numberToFormat: number): string {
+    const spaceBetweenEveryThreeDigits = /(?=(\d{3})+(?!\d))/g;
+    const optionalCommaAtTheStart = /^,/;
+
+    return String(numberToFormat)
+      .replace(spaceBetweenEveryThreeDigits, ',')
+      .replace(optionalCommaAtTheStart, '');
+  }
 
 }

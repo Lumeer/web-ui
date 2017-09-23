@@ -27,6 +27,8 @@ import {BsModalService} from 'ngx-bootstrap';
 import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
 import {CollectionService} from '../../core/rest/collection.service';
 import {WorkspaceService} from '../../core/workspace.service';
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/take';
 
 @Component({
   selector: 'collection-config',
@@ -51,14 +53,25 @@ export class CollectionConfigComponent implements OnInit {
       color: COLLECTION_NO_COLOR
     };
 
-    this.route.paramMap.subscribe(paramMap => {
-      this.collectionService.getCollection(paramMap.get('collectionCode'))
-        .retry(3)
-        .subscribe(
-          collection => this.collection = collection,
-          error => this.notificationService.error('Error', 'Failed fetching collection')
-        );
-    });
+    this.fetchData();
+  }
+
+  private async fetchData(): Promise<Collection> {
+    const collectionCode = await this.route.paramMap
+      .map(paramMap => paramMap.get('collectionCode'))
+      .take(1)
+      .toPromise();
+
+    this.collection = await this.collectionService.getCollection(collectionCode)
+      .retry(3)
+      .take(1)
+      .toPromise()
+      .catch(error => {
+        this.notificationService.error('Error', 'Failed fetching collection');
+        return null;
+      });
+
+    return this.collection;
   }
 
   public workspacePath(): string {

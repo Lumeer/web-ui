@@ -1,1 +1,30 @@
-Link Types
+<ul class="list-group px-4">
+  <li *ngFor="let linkType of linkTypes" class="list-group-item align-baseline py-3 d-flex">
+
+    <span class="start">
+      <i class="fa fa-caret-right" aria-hidden="true" title="Open"></i>
+      <i class="fa-fw {{ collection.icon }} first-collection"
+         title="{{ collection.name }}"
+         [style.color]="collection.color" aria-hidden="true"></i>
+      <i class="fa-fw {{ collections[linkType.toCollection].icon }} second-collection"
+         title="{{ collections[linkType.toCollection].name }}"
+         [style.color]="collections[linkType.toCollection].color" aria-hidden="true"></i>
+
+      <input class="ml-3 name" [(ngModel)]="linkType.name">
+      <span class="ml-3 instance-count" title="Instance count">
+        {{ formatNumber(linkType.instanceCount) }}
+      </span>
+    </span>
+
+    <span>
+      <button class="btn btn-outline-success" title="Show all searches of this attribute">
+        See all
+      </button>
+
+      <button class="btn btn-outline-success" title="Go to {{ collections[linkType.toCollection].name }}">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        <i class="fa-fw {{ collections[linkType.toCollection].icon }}" aria-hidden="true"></i>
+      </button>
+    </span>
+  </li>
+</ul>

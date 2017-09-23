@@ -1,0 +1,36 @@
+@import "../../../shared/_lumeer-variables";
+
+:host {
+  li {
+    align-items: baseline;
+  }
+
+  .start {
+    flex: 2;
+  }
+
+  .first-collection {
+    position: relative;
+    bottom: 10px;
+    left: 8px;
+    font-size: 22px;
+  }
+
+  .second-collection {
+    position: relative;
+    top: 10px;
+    font-size: 22px;
+  }
+
+  .name {
+    display: inline-flex;
+    width: 250px;
+  }
+
+  .instance-count {
+    display: inline-block;
+    width: 100px;
+    text-align: right;
+  }
+
+}
