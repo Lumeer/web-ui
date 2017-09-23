@@ -42,6 +42,7 @@ import {ImportService} from './rest/import.service';
 import {KEYCLOAK_HTTP_PROVIDER} from './keycloak/keycloak-http.service';
 import {KeycloakService} from './keycloak/keycloak.service';
 import {ViewService} from './rest/view.service';
+import {LinkTypeService} from './rest/link-type.service';
 import {SearchHomeComponent} from './search-home/search-home.component';
 import {Ng2Webstorage} from 'ng2-webstorage';
 
@@ -74,6 +75,7 @@ import {Ng2Webstorage} from 'ng2-webstorage';
     UserService,
     GroupService,
     ViewService,
+    LinkTypeService,
     KEYCLOAK_HTTP_PROVIDER,
     {provide: ErrorHandler, useClass: LumeerErrorHandler}
   ],
