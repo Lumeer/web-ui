@@ -27,6 +27,9 @@ import {BsModalService} from 'ngx-bootstrap';
 import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
 import {CollectionService} from '../../core/rest/collection.service';
 import {WorkspaceService} from '../../core/workspace.service';
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/switchMap';
 
 @Component({})
 export abstract class CollectionTabComponent implements OnInit {
@@ -34,35 +37,53 @@ export abstract class CollectionTabComponent implements OnInit {
   protected collection: Collection;
 
   constructor(protected collectionService: CollectionService,
-    protected route: ActivatedRoute,
-    protected notificationService: NotificationsService,
-    protected workspaceService: WorkspaceService,
-    protected modalService: BsModalService) {
+              protected route: ActivatedRoute,
+              protected notificationService: NotificationsService,
+              protected workspaceService: WorkspaceService,
+              protected modalService: BsModalService) {
   }
 
   public ngOnInit(): void {
+    this.getCurrentCollection();
+  }
+
+  private async getCurrentCollection(): Promise<void> {
     this.collection = {
-      name: '',
+      attributes: [],
       icon: COLLECTION_NO_ICON,
-      color: COLLECTION_NO_COLOR
+      color: COLLECTION_NO_COLOR,
+      name: ''
     };
 
-    this.route.parent.paramMap.subscribe(paramMap => {
-      this.collectionService.getCollection(paramMap.get('collectionCode'))
-        .retry(3)
-        .subscribe(
-        collection => this.collection = collection,
-        error => this.notificationService.error('Error', 'Failed fetching collection')
-        );
-    });
+    this.collection = await this.getCollectionFromParams();
+  }
+
+  private async getCollectionFromParams(): Promise<Collection> {
+    const collectionCode = await this.route.parent.paramMap
+      .map(paramMap => paramMap.get('collectionCode'))
+      .take(1)
+      .toPromise();
+
+    return await this.getCollection(collectionCode);
+  }
+
+  protected async getCollection(collectionCode: string): Promise<Collection> {
+    return this.collectionService.getCollection(collectionCode)
+      .retry(3)
+      .take(1)
+      .toPromise()
+      .catch(error => {
+        this.notificationService.error('Error', `Failed fetching collection ${collectionCode}`);
+        return null;
+      });
   }
 
   protected updateCollection(): void {
     this.collectionService.updateCollection(this.collection)
       .retry(3)
       .subscribe(
-      collection => this.collection = collection,
-      error => this.notificationService.error('Error', 'Failed updating collection')
+        collection => this.collection = collection,
+        error => this.notificationService.error('Error', 'Failed updating collection')
       );
   }
 
