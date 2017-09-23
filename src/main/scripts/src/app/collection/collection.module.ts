@@ -28,6 +28,7 @@ import {CollectionAttributesComponent} from './config/attributes/collection-attr
 import {CollectionAccessRightsComponent} from './config/access-rights/collection-access-rights.component';
 import {CollectionEventsComponent} from './config/events/collection-events.component';
 import {SimpleNotificationsModule} from 'angular2-notifications/dist';
+import {CollectionManageRoleGuard} from './collection-managed-role.guard';
 
 @NgModule({
   imports: [
@@ -42,6 +43,9 @@ import {SimpleNotificationsModule} from 'angular2-notifications/dist';
     CollectionAttributesComponent,
     CollectionEventsComponent,
     CollectionLinkTypesComponent
+  ],
+  providers: [
+    CollectionManageRoleGuard
   ]
 })
 export class CollectionModule {

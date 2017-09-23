@@ -17,16 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
-import { CollectionListComponent } from './list/collection-list.component';
-import { CollectionComponent } from './collection.component';
-import { CollectionConfigComponent } from './config/collection-config.component';
-import { CollectionAttributesComponent } from './config/attributes/collection-attributes.component';
-import { CollectionEventsComponent } from './config/events/collection-events.component';
-import { CollectionAccessRightsComponent } from './config/access-rights/collection-access-rights.component';
-import { CollectionLinkTypesComponent } from './config/link-types/collection-link-types.component';
+import {CollectionListComponent} from './list/collection-list.component';
+import {CollectionComponent} from './collection.component';
+import {CollectionConfigComponent} from './config/collection-config.component';
+import {CollectionAttributesComponent} from './config/attributes/collection-attributes.component';
+import {CollectionEventsComponent} from './config/events/collection-events.component';
+import {CollectionAccessRightsComponent} from './config/access-rights/collection-access-rights.component';
+import {CollectionLinkTypesComponent} from './config/link-types/collection-link-types.component';
+import {CollectionManageRoleGuard} from './collection-managed-role.guard';
 
 const collectionRoutes: Routes = [
   {
@@ -47,7 +48,8 @@ const collectionRoutes: Routes = [
       },
       {
         path: 'accessrights',
-        component: CollectionAccessRightsComponent
+        component: CollectionAccessRightsComponent,
+        canActivate: [CollectionManageRoleGuard]
       },
       {
         path: '',
