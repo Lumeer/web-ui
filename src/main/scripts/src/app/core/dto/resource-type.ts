@@ -18,11 +18,8 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Project} from './project';
-import {Resource} from './resource';
-
-export class Organization extends Resource {
-
-  public projects?: Project[];
-
+enum ResurceType {
+  ORGANIZATION = "Organization",
+  PROJECT = "Project",
+  COLLECTION = "Collection"
 }

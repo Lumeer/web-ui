@@ -1,4 +1,4 @@
-@import "../../shared/lumeer-variables";
+@import "../../../shared/lumeer-variables";
 
 $post-it-size: 170px;
 $post-it-margin: 15px;
@@ -13,6 +13,20 @@ $box-shadow-right: -4px -5px 5px 1px $box-shadow-color;
 .horizontal-container {
   height: $bookmark-height;
   position: relative;
+
+  .disabled {
+    color: $brand-secondary !important;
+    cursor: default !important;
+  }
+
+  .arrow {
+    color: $brand-success;
+    cursor: pointer;
+
+    &:hover {
+      color: $brand-info;
+    }
+  }
 
   .left-arrow {
     width: 40px;
@@ -95,6 +109,7 @@ $box-shadow-right: -4px -5px 5px 1px $box-shadow-color;
               right: 10px;
               top: 10px;
               opacity: 0;
+              color: black;
               transition: opacity $animation-duration;
 
               &:hover {

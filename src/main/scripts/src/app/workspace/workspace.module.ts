@@ -30,6 +30,7 @@ import {OrganizationPermissionsComponent} from './organization/permissions/organ
 import {ProjectPermissionsComponent} from './project/permissions/project-permissions.component';
 import {OrganizationSettingsComponent} from './organization/organization-settings.component';
 import {ProjectSettingsComponent} from './project/project-settings.component';
+import {ResourceChooserComponent} from './workspace-chooser/resource-chooser/resource-chooser.component';
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import {ProjectSettingsComponent} from './project/project-settings.component';
     ProjectPermissionsComponent,
     OrganizationSettingsComponent,
     ProjectSettingsComponent,
-    WorkspaceChooserComponent
+    WorkspaceChooserComponent,
+    ResourceChooserComponent
   ],
   exports: [
     WorkspaceChooserComponent
