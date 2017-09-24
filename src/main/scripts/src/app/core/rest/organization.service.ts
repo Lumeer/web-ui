@@ -19,18 +19,22 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpResponse} from '@angular/common/http';
+import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 
 import {Organization} from '../dto/organization';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {PermissionService} from './permission.service';
+import {FetchFailedError} from '../error/fetch-failed.error';
+import {NetworkError} from '../error/network.error';
+import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 
 @Injectable()
 export class OrganizationService extends PermissionService {
 
   public getOrganizations(): Observable<Organization[]> {
-    return this.httpClient.get<Organization[]>(this.apiPrefix());
+    return this.httpClient.get<Organization[]>(this.apiPrefix())
+      .catch(OrganizationService.catchGetCollectionsError);
   }
 
   public getOrganization(code: string): Observable<Organization> {
@@ -57,6 +61,14 @@ export class OrganizationService extends PermissionService {
 
   private apiPrefix(code?: string): string {
     return `/${API_URL}/rest/organizations${code ? `/${code}` : ''}`;
+  }
+
+  private static catchGetCollectionsError(error: HttpErrorResponse): ErrorObservable {
+    if (error instanceof Error) {
+      throw new NetworkError();
+    } else {
+      throw new FetchFailedError('Organizations');
+    }
   }
 
 }
