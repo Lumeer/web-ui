@@ -1,30 +1,51 @@
-<ul class="list-group px-4">
-  <li *ngFor="let linkType of linkTypes" class="list-group-item align-baseline py-3 d-flex">
+<ul class="list-group">
+  <li *ngFor="let linkType of linkTypes; let idx = index" class="list-group-item border-0 py-3"
+      [style.height]="expanded[idx] ? listHeight(linkType) : null">
+    <div class="d-flex align-baseline">
+        <span class="start">
+          <i class="fa fa-caret-right bigger expand {{ expanded[idx] ? 'fa-rotate-90' : null}}"
+             aria-hidden="true" title="Open" (click)="expanded[idx] = !expanded[idx]"></i>
+          <i class="fa-fw {{ collection.icon }} first-collection bigger"
+             title="{{ collection.name }}"
+             [style.color]="collection.color" aria-hidden="true"></i>
+          <i class="fa-fw {{ collections[linkType.toCollection].icon }} second-collection bigger"
+             title="{{ collections[linkType.toCollection].name }}"
+             [style.color]="collections[linkType.toCollection].color" aria-hidden="true"></i>
 
-    <span class="start">
-      <i class="fa fa-caret-right" aria-hidden="true" title="Open"></i>
-      <i class="fa-fw {{ collection.icon }} first-collection"
-         title="{{ collection.name }}"
-         [style.color]="collection.color" aria-hidden="true"></i>
-      <i class="fa-fw {{ collections[linkType.toCollection].icon }} second-collection"
-         title="{{ collections[linkType.toCollection].name }}"
-         [style.color]="collections[linkType.toCollection].color" aria-hidden="true"></i>
+          <input class="ml-3 name" [(ngModel)]="linkType.name" (blur)="updateLinkType()">
+          <span class="ml-3 instance-count" title="Instance count">
+            {{ formatNumber(linkType.instanceCount) }}
+          </span>
+        </span>
 
-      <input class="ml-3 name" [(ngModel)]="linkType.name">
-      <span class="ml-3 instance-count" title="Instance count">
-        {{ formatNumber(linkType.instanceCount) }}
+      <span>
+          <button [routerLink]="['']" class="btn btn-outline-success" title="Show all searches of this attribute">
+            See all
+          </button>
+
+          <button [routerLink]="[workspacePath(), 'c', collections[linkType.toCollection].code]"
+                  class="btn btn-outline-success"
+                  title="Go to {{ collections[linkType.toCollection].name }}">
+            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            <i class="fa-fw {{ collections[linkType.toCollection].icon }}" aria-hidden="true"></i>
+          </button>
+        </span>
+    </div>
+    <div>
+      <attribute-list
+        [collection]="collections[linkType.toCollection]"
+        [allowCreatingAttributes]="false"
+        [limit]="expanded[idx] ? 100 : 3"
+        [allowSettingPrimaryAttribute]="false"
+        [colored]="false"></attribute-list>
+    </div>
+  </li>
+  <li class="list-group-item border-0 py-3">
+    <div class="d-flex align-baseline expand">
+      <i class="fa fa-plus bigger" aria-hidden="true"></i>
+      <span class="ml-3">
+        Add link Type
       </span>
-    </span>
-
-    <span>
-      <button class="btn btn-outline-success" title="Show all searches of this attribute">
-        See all
-      </button>
-
-      <button class="btn btn-outline-success" title="Go to {{ collections[linkType.toCollection].name }}">
-        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-        <i class="fa-fw {{ collections[linkType.toCollection].icon }}" aria-hidden="true"></i>
-      </button>
-    </span>
+    </div>
   </li>
 </ul>

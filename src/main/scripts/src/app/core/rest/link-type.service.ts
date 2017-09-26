@@ -29,36 +29,46 @@ import {LinkType} from '../dto/link-type';
 @Injectable()
 export class LinkTypeService {
 
+  public static link1: LinkType = {
+    fromCollection: '',
+    toCollection: 'ord',
+    name: 'Clouds placement',
+    instanceCount: 38,
+    attributes: []
+  };
+
+  public static link2: LinkType = {
+    fromCollection: '',
+    toCollection: 'cmp',
+    name: 'Seasons in the Sun',
+    instanceCount: 12628,
+    attributes: []
+  };
+
+  public static link3: LinkType = {
+    fromCollection: '',
+    toCollection: 'emp',
+    name: 'Pollution clouds',
+    instanceCount: 364,
+    attributes: [],
+    automaticLinkFromAttribute: 'id',
+    automaticLinkToAttribute: 'pollution'
+  };
+
   constructor(private httpClient: HttpClient,
               private workspaceService: WorkspaceService) {
   }
 
   public getLinkTypes(collectionCode: string): Observable<LinkType[]> {
-    const link1: LinkType = {
-      fromCollection: collectionCode,
-      toCollection: 'ord',
-      name: 'Clouds placement',
-      instanceCount: 38,
-      attributes: []
-    };
-    const link2: LinkType = {
-      fromCollection: collectionCode,
-      toCollection: 'cmp',
-      name: 'Seasons in the Sun',
-      instanceCount: 12628,
-      attributes: []
-    };
-    const link3: LinkType = {
-      fromCollection: collectionCode,
-      toCollection: 'emp',
-      name: 'Pollution clouds',
-      instanceCount: 364,
-      attributes: [],
-      automaticLinkFromAttribute: 'id',
-      automaticLinkToAttribute: 'pollution'
-    };
+    LinkTypeService.link1.fromCollection = collectionCode;
+    LinkTypeService.link2.fromCollection = collectionCode;
+    LinkTypeService.link3.fromCollection = collectionCode;
 
-    return Observable.of([link1, link2, link3]);
+    return Observable.of([LinkTypeService.link1, LinkTypeService.link2, LinkTypeService.link3]);
+  }
+
+  public updateLinkType(collectionCode: string, linkType: LinkType): Observable<LinkType> {
+    return Observable.of(linkType);
   }
 
   private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {

@@ -1,0 +1,96 @@
+<table class="table table-hover {{ colored ? 'table-striped' : null }}">
+  <thead class="thead-default" [style.background-color]="colored && hexColorOpacity(collection.color, 0.8)">
+  <tr>
+    <th *ngIf="allowSettingPrimaryAttribute" style="width: 45px" class="bg-white border-0"></th>
+    <th style="width: 230px" class="bg-transparent align-baseline border-0">
+      Attribute
+    </th>
+    <th style="width: 100px" class="bg-transparent align-baseline border-0">
+      Usage
+    </th>
+    <th class="bg-transparent border-0">
+      <div class="d-flex flex-wrap">
+        <span class="no-shrink">Constraints</span>
+
+        <div title="Search" class="search rounded">
+          <input type="search" class="ml-2" #searchInput
+                 [(ngModel)]="searched"
+                 (focus)="activeSearch = true"
+                 (blur)="activeSearch = !!searched">
+          <i class="mr-2 text-success fa fa-search" (click)="searchInput.focus()"></i>
+        </div>
+
+        <div class="dropdown">
+          <img title="Lumeer suggestions" class="lumeer ml-2 rounded" src="../../../../img/lumeer-logo.png"
+               data-toggle="dropdown"/>
+
+          <div
+            class="dropdown-menu suggestion-list {{ activeAttribute.newConstraint && suggestions.length ? 'show' : null }}"
+            id="suggestions-dropdown">
+            <h6 class="dropdown-header">Lumeer suggests:</h6>
+            <span *ngFor="let suggestion of suggestions" class="dropdown-item"
+                  [style.color]="suggestion.color"
+                  (click)="addConstraint(activeAttribute, suggestion.name)">{{ suggestion.name }}</span>
+          </div>
+        </div>
+      </div>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <ng-container *ngFor="let attribute of attributes(); let row = index">
+    <tr *ngIf="!activeSearch || matchesSearch(attribute)">
+      <th *ngIf="allowSettingPrimaryAttribute" scope="row"
+          class="first-row {{ collection.defaultAttribute === attribute ? 'visible' : null }}">
+        <i *ngIf="collection.defaultAttribute === attribute"
+           class="fa fa-fw fa-dot-circle"
+           title="Default Attribute"></i>
+        <i *ngIf="collection.defaultAttribute !== attribute"
+           class="far fa-fw fa-circle"
+           title="Set Default Attribute"
+           (click)="setDefaultAttribute(attribute)"></i>
+      </th>
+      <td>
+        <input type="text" class="{{ collection.defaultAttribute === attribute ? 'font-weight-bold' : null }}"
+               [(ngModel)]="attribute.name"
+               (blur)="attribute.name ? updateAttribute(attribute) : removeAttribute(attribute, row)"
+               (keyup.enter)="!attribute.name && removeAttribute(attribute, row)"
+               (keyup.Escape)="!attribute.name && removeAttribute(attribute, row)">
+      </td>
+      <td class="text-right">{{ formatNumber(attribute.usageCount) }}</td>
+      <td>
+        <div class="d-flex flex-wrap">
+          <span class="constraint px-2 ml-1 rounded" *ngFor="let constraint of attribute.constraints; let idx = index"
+                [style.background-color]="darken(constraintColor(constraint), mouseOver.attribute === attribute && mouseOver.constraint === constraint ? 40 : 0)"
+                (mouseenter)="mouseOver = {attribute: attribute, constraint: constraint}"
+                (mouseleave)="mouseOver = {attribute: null, constraint: ''}"
+                (click)="removeConstraint(attribute, idx)"
+                title="Remove Constraint">{{ constraint }}</span>
+          <input class="px-2 ml-1"
+                 [(ngModel)]="attribute.newConstraint"
+                 (ngModelChange)="refreshSuggestions()"
+                 (focus)="activeAttribute = attribute"
+                 (keyup.enter)="addConstraint(attribute)"
+                 (keydown.backspace)="constraintBackspace(attribute)"
+                 placeholder="{{ attribute.constraints.length ? '...' : '+' }}"/>
+        </div>
+      </td>
+    </tr>
+  </ng-container>
+  <tr *ngIf="allowCreatingAttributes">
+    <th *ngIf="allowSettingPrimaryAttribute" scope="row" class="first-row"></th>
+    <td>
+      <input type="text"
+             [(ngModel)]="newAttributeName"
+             (blur)="newAttributeName && createAttribute(newAttributeName)"
+             (keyup.enter)="newAttributeName && createAttribute(newAttributeName)"
+             placeholder=" + ">
+    </td>
+    <td></td>
+    <td>
+      <div class="d-flex flex-wrap">
+      </div>
+    </td>
+  </tr>
+  </tbody>
+</table>

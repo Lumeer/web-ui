@@ -19,16 +19,16 @@
  */
 
 import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
-import {CollectionTabComponent} from '../collection-tab.component';
+import {NotificationsService} from 'angular2-notifications/dist';
+
 import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../core/dto/collection';
+import {CollectionTabComponent} from '../collection-tab.component';
 import {LinkTypeService} from '../../../core/rest/link-type.service';
 import {LinkType} from '../../../core/dto/link-type';
 import {CollectionService} from '../../../core/rest/collection.service';
-import {ActivatedRoute} from '@angular/router';
-import {NotificationsService} from 'angular2-notifications/dist';
 import {WorkspaceService} from '../../../core/workspace.service';
-import {BsModalService} from 'ngx-bootstrap';
 
 @Component({
   selector: 'collection-link-types',
@@ -37,7 +37,9 @@ import {BsModalService} from 'ngx-bootstrap';
 })
 export class CollectionLinkTypesComponent extends CollectionTabComponent implements OnInit {
 
-  public linkTypes: LinkType[];
+  public linkTypes: LinkType[] = [];
+
+  public expanded: boolean[] = [];
 
   public collections: { [collectionCode: string]: Collection } = {};
 
@@ -45,9 +47,8 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
               collectionService: CollectionService,
               route: ActivatedRoute,
               notificationService: NotificationsService,
-              workspaceService: WorkspaceService,
-              modalService: BsModalService) {
-    super(collectionService, route, notificationService, workspaceService, modalService);
+              workspaceService: WorkspaceService) {
+    super(collectionService, route, notificationService, workspaceService);
   }
 
   public ngOnInit(): void {
@@ -84,6 +85,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   private async fetchCollection(collectionCode: string): Promise<Collection> {
     if (!this.collections[collectionCode]) {
       const emptyCollection: Collection = {
+        attributes: [],
         name: '',
         color: COLLECTION_NO_COLOR,
         icon: COLLECTION_NO_ICON
@@ -94,6 +96,21 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     }
 
     return this.collections[collectionCode];
+  }
+
+  public updateLinkType(linkType: LinkType, index): void {
+    this.linkTypeService.updateLinkType(this.collection.code, linkType)
+      .retry(3)
+      .subscribe(
+        linkType => this.linkTypes[index] = linkType,
+        error => this.notificationService.error('Error', 'Failed updating link type')
+      );
+  }
+
+  public listHeight(linkType: LinkType): string {
+    const linkTypeheaderHeight = 40;
+    const tableRowHeight = 52;
+    return `${linkTypeheaderHeight + (this.collections[linkType.toCollection].attributes.length + 2) * tableRowHeight}px`;
   }
 
   public formatNumber(numberToFormat: number): string {

@@ -1,0 +1,70 @@
+@import "../../../shared/_lumeer-variables";
+
+:host {
+
+  .search {
+    transition: background-color $animation-color-duration, border-color $animation-color-duration;
+    background-color: $secondary-color;
+  }
+
+  .suggestion-list {
+    transform: none !important;
+    top: 32px !important;
+    left: -130px !important;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .lumeer {
+    transition: background-color $animation-color-duration;
+    padding: 1px;
+    height: 27px;
+
+    &:hover {
+      background-color: $secondary-color;
+    }
+  }
+
+  table {
+    table-layout: fixed;
+  }
+
+  tr {
+    .first-row {
+      transition: color $animation-color-duration;
+      background: $secondary-color;
+      border: none;
+
+      i {
+        opacity: 0;
+      }
+
+      &:hover {
+        color: $brand-success;
+      }
+    }
+
+    &:hover .first-row i {
+        opacity: 1;
+    }
+  }
+
+  .visible i {
+    opacity: 1 !important;
+  }
+
+  .constraint {
+    transition: background-color $animation-color-duration;
+    white-space: nowrap;
+    color: $secondary-color;
+  }
+
+  input, .no-shrink {
+    flex: 2;
+  }
+
+  input {
+    min-width: 100px;
+  }
+
+}

@@ -2,6 +2,9 @@
 
 :host {
   li {
+    transition: height $animation-duration;
+    overflow: hidden;
+    height: 165px;
     align-items: baseline;
   }
 
@@ -9,17 +12,27 @@
     flex: 2;
   }
 
+  .expand {
+    transition: color $animation-color-duration, transform $animation-color-duration;
+
+    &:hover {
+      color: $brand-success;
+    }
+  }
+
+  .bigger {
+    font-size: 22px;
+  }
+
   .first-collection {
     position: relative;
     bottom: 10px;
     left: 8px;
-    font-size: 22px;
   }
 
   .second-collection {
     position: relative;
     top: 10px;
-    font-size: 22px;
   }
 
   .name {

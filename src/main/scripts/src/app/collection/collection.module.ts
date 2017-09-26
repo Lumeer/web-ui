@@ -18,6 +18,7 @@
  */
 
 import {NgModule} from '@angular/core';
+
 import {SharedModule} from '../shared/shared.module';
 import {CollectionListComponent} from './list/collection-list.component';
 import {CollectionComponent} from './collection.component';
@@ -29,6 +30,7 @@ import {CollectionAccessRightsComponent} from './config/access-rights/collection
 import {CollectionEventsComponent} from './config/events/collection-events.component';
 import {SimpleNotificationsModule} from 'angular2-notifications/dist';
 import {CollectionManageRoleGuard} from './collection-managed-role.guard';
+import {AttributeListComponent} from './config/attribute-list/attribute-list.component';
 
 @NgModule({
   imports: [
@@ -36,6 +38,7 @@ import {CollectionManageRoleGuard} from './collection-managed-role.guard';
     CollectionRoutingModule
   ],
   declarations: [
+    AttributeListComponent,
     CollectionComponent,
     CollectionListComponent,
     CollectionConfigComponent,

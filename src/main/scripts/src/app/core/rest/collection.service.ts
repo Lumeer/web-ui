@@ -27,7 +27,7 @@ import {BadInputError} from '../error/bad-input.error';
 import {PermissionService} from './permission.service';
 import {isNullOrUndefined} from 'util';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {ConfiguredAttribute} from '../../collection/config/attributes/configured-attribute';
+import {ConfiguredAttribute} from '../../collection/config/attribute-list/configured-attribute';
 import 'rxjs/add/operator/catch';
 
 @Injectable()
