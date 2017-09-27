@@ -22,7 +22,6 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {NotificationsService} from 'angular2-notifications/dist';
-import {BsModalService} from 'ngx-bootstrap';
 
 import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
 import {CollectionService} from '../../core/rest/collection.service';
@@ -38,8 +37,7 @@ export abstract class CollectionTabComponent implements OnInit {
   constructor(protected collectionService: CollectionService,
               protected route: ActivatedRoute,
               protected notificationService: NotificationsService,
-              protected workspaceService: WorkspaceService,
-              protected modalService: BsModalService) {
+              protected workspaceService: WorkspaceService) {
   }
 
   public ngOnInit(): void {

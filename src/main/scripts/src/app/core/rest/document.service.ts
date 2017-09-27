@@ -27,6 +27,7 @@ import {isNullOrUndefined} from 'util';
 import {LumeerError} from '../error/lumeer.error';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 
+// TODO send data attribute without '_id'
 @Injectable()
 export class DocumentService {
 

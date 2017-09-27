@@ -18,36 +18,10 @@
  * -----------------------------------------------------------------------/
  */
 
-export interface Constraints {
+export interface Event {
 
-  type: string;
-  color: string;
-  list: string[];
+  fireWhen: string[];
+  callback: string;
+  parameters: string[];
 
 }
-
-export const constraints: Constraints[] = [
-  {
-    type: 'numeric',
-    color: '#5c93ff',
-    list: [
-      'Is Number', 'Number', '=', '>=', '<=', '<', '>', 'Rounded to', 'Is Decimal', 'Decimal', 'Is Odd', 'Odd',
-      'Is Even', 'Even', 'Less', 'Less Than', 'More', 'More Than'
-    ]
-  },
-  {
-    type: 'text',
-    color: '#ff513e',
-    list: [
-      'Is Word', 'Word', 'Shorter than', 'Shorter', 'Longer than', 'Longer ', 'Words', 'Contains Numbers', 'Uppercase',
-      'Lowercase', 'Camelcase'
-    ]
-  },
-  {
-    type: 'special',
-    color: '#6bf643',
-    list: [
-      'Full Name', 'Name', 'Date', 'Time', 'Money', 'One of', 'Gender'
-    ]
-  }
-];

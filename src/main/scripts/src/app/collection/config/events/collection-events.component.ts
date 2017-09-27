@@ -18,15 +18,49 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+
+import {NotificationsService} from 'angular2-notifications/dist';
 
 import {CollectionTabComponent} from '../collection-tab.component';
+import {EventsService} from '../../../core/rest/events.service';
+import {WorkspaceService} from '../../../core/workspace.service';
+import {CollectionService} from '../../../core/rest/collection.service';
+import {Event} from '../../../core/dto/Event';
 
 @Component({
   selector: 'collection-events',
   templateUrl: './collection-events.component.html',
   styleUrls: ['./collection-events.component.scss']
 })
-export class CollectionEventsComponent extends CollectionTabComponent  {
+export class CollectionEventsComponent extends CollectionTabComponent implements OnInit {
 
+  public events: Event[];
+
+  constructor(private eventsService: EventsService,
+              collectionService: CollectionService,
+              route: ActivatedRoute,
+              notificationService: NotificationsService,
+              workspaceService: WorkspaceService) {
+    super(collectionService, route, notificationService, workspaceService);
+  }
+
+  public ngOnInit(): void {
+    super.ngOnInit();
+    this.getEvents();
+  }
+
+  public join(str: string[]): string {
+    return str.join(', ');
+  }
+
+  public getEvents(): void {
+    this.eventsService.getEvents(this.collection.code)
+      .retry(3)
+      .subscribe(
+        events => this.events = events,
+        error => this.notificationService.error('Error', 'Failed fetching Events')
+      );
+  }
 }

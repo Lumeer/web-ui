@@ -16,17 +16,25 @@
 </div>
 
 <ul class="nav nav-tabs">
-  <li class="nav-item">
-    <a class="nav-link active" href="#">Attributes</a>
+  <li role="presentation" class="nav-item">
+    <a [routerLink]="['attributes']" routerLinkActive="active" class="nav-link">
+      Attributes
+    </a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#">Link</a>
+  <li role="presentation" class="nav-item">
+    <a [routerLink]="['linktypes']" routerLinkActive="active" class="nav-link">
+      Link Types
+    </a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link" href="#">Link</a>
+  <li role="presentation" class="nav-item">
+    <a [routerLink]="['events']" routerLinkActive="active" class="nav-link">
+      Events
+    </a>
   </li>
-  <li class="nav-item">
-    <a class="nav-link disabled" href="#">Disabled</a>
+  <li *ngIf="hasManageRole(collection)" role="presentation" class="nav-item">
+    <a [routerLink]="['accessrights']" routerLinkActive="active" class="nav-link">
+      Access Rights
+    </a>
   </li>
 </ul>
 

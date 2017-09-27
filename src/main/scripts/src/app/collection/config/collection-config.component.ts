@@ -27,6 +27,8 @@ import {BsModalService} from 'ngx-bootstrap';
 import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
 import {CollectionService} from '../../core/rest/collection.service';
 import {WorkspaceService} from '../../core/workspace.service';
+import {Role} from '../../shared/permissions/role';
+import {Permission} from '../../core/dto/permission';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/take';
 
@@ -72,6 +74,15 @@ export class CollectionConfigComponent implements OnInit {
       });
 
     return this.collection;
+  }
+
+  public hasManageRole(collection: Collection): boolean {
+    return this.hasRole(collection, Role.Manage);
+  }
+
+  private hasRole(collection: Collection, role: string): boolean {
+    return collection.permissions && collection.permissions.users
+      .some((permission: Permission) => permission.roles.includes(role));
   }
 
   public workspacePath(): string {

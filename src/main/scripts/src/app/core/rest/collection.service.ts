@@ -30,6 +30,7 @@ import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {ConfiguredAttribute} from '../../collection/config/attribute-list/configured-attribute';
 import 'rxjs/add/operator/catch';
 
+// TODO add add support for Default Attribute
 @Injectable()
 export class CollectionService extends PermissionService {
 

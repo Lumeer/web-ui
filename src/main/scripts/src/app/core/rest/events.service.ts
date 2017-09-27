@@ -20,67 +20,46 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {WorkspaceService} from '../workspace.service';
+
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {LumeerError} from '../error/lumeer.error';
+import {WorkspaceService} from '../workspace.service';
 import {Observable} from 'rxjs/Observable';
-import {LinkType} from '../dto/link-type';
+import {Event} from '../dto/Event';
 
 // TODO implement on backend
 @Injectable()
-export class LinkTypeService {
+export class EventsService {
 
-  public static link1: LinkType = {
-    fromCollection: '',
-    toCollection: 'ord',
-    name: 'Clouds placement',
-    instanceCount: 38,
-    attributes: []
+  public static event1: Event = {
+    fireWhen: ['New Document', 'Document Edit', 'Document Removal'],
+    callback: 'Update Automatic Links',
+    parameters: ['Document Stickyness = yes']
   };
 
-  public static link2: LinkType = {
-    fromCollection: '',
-    toCollection: 'cmp',
-    name: 'Seasons in the Sun',
-    instanceCount: 12628,
-    attributes: []
-  };
-
-  public static link3: LinkType = {
-    fromCollection: '',
-    toCollection: 'emp',
-    name: 'Pollution clouds',
-    instanceCount: 364,
-    attributes: [],
-    automaticLinkFromAttribute: 'id',
-    automaticLinkToAttribute: 'pollution'
+  public static event2: Event = {
+    fireWhen: ['New Document', 'Document Edit', 'Document Removal'],
+    callback: 'Update Automatic Links',
+    parameters: ['Document Stickyness = yes']
   };
 
   constructor(private httpClient: HttpClient,
               private workspaceService: WorkspaceService) {
   }
 
-  public getLinkTypes(collectionCode: string): Observable<LinkType[]> {
-    LinkTypeService.link1.fromCollection = collectionCode;
-    LinkTypeService.link2.fromCollection = collectionCode;
-    LinkTypeService.link3.fromCollection = collectionCode;
-
-    return Observable.of([LinkTypeService.link1, LinkTypeService.link2, LinkTypeService.link3]);
-  }
-
-  public updateLinkType(collectionCode: string, linkType: LinkType): Observable<LinkType> {
-    return Observable.of(linkType);
-  }
-
-  private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {
-    throw new LumeerError(error.message);
+  public getEvents(collectionCode: string): Observable<Event[]> {
+    return Observable.of([EventsService.event1, EventsService.event2]);
   }
 
   private apiPrefix(collectionCode: string): string {
     const organizationCode = this.workspaceService.organizationCode;
     const projectCode = this.workspaceService.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/c/${collectionCode}/linktypes`;
+    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
+  }
+
+  private handleGlobalError(error: HttpErrorResponse): ErrorObservable {
+    throw new LumeerError(error.message);
   }
 
 }
