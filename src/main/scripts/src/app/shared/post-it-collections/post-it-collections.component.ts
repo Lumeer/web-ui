@@ -18,32 +18,31 @@
  * -----------------------------------------------------------------------/
  */
 
-import { AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren} from '@angular/core';
 
-import { NotificationsService } from 'angular2-notifications/dist';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import {NotificationsService} from 'angular2-notifications/dist';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
-import { Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON } from '../../../../core/dto/collection';
-import { Query } from '../../../../core/dto/query';
-import { CollectionService } from '../../../../core/rest/collection.service';
-import { ImportService } from '../../../../core/rest/import.service';
-import { SearchService } from '../../../../core/rest/search.service';
-import { WorkspaceService } from '../../../../core/workspace.service';
-import { Role } from '../../../permissions/role';
-import { Perspective } from '../../perspective';
-import { PostItLayout } from '../../utils/post-it-layout';
-import { PostItCollectionData } from './post-it-collection-data';
+import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
+import {Query} from '../../core/dto/query';
+import {CollectionService} from '../../core/rest/collection.service';
+import {ImportService} from '../../core/rest/import.service';
+import {SearchService} from '../../core/rest/search.service';
+import {WorkspaceService} from '../../core/workspace.service';
+import {Role} from '../permissions/role';
+import {PostItLayout} from '../perspectives/utils/post-it-layout';
+import {PostItCollectionData} from './post-it-collection-data';
 import 'rxjs/add/operator/retry';
 
 @Component({
-  selector: 'post-it-collections-perspective',
-  templateUrl: './post-it-collections-perspective.component.html',
-  styleUrls: ['./post-it-collections-perspective.component.scss'],
+  selector: 'post-it-collections',
+  templateUrl: './post-it-collections.component.html',
+  styleUrls: ['./post-it-collections.component.scss'],
   host: {
     '(document:click)': 'onClick($event)'
   }
 })
-export class PostItCollectionsPerspectiveComponent implements Perspective, OnInit, AfterViewChecked, OnDestroy {
+export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   @Input()
   public query: Query;
@@ -70,11 +69,11 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
   private layout: PostItLayout;
 
   constructor(private collectionService: CollectionService,
-    private searchService: SearchService,
-    private notificationService: NotificationsService,
-    private importService: ImportService,
-    private workspaceService: WorkspaceService,
-    private modalService: BsModalService) {
+              private searchService: SearchService,
+              private notificationService: NotificationsService,
+              private importService: ImportService,
+              private workspaceService: WorkspaceService,
+              private modalService: BsModalService) {
   }
 
   public ngOnInit(): void {
@@ -98,20 +97,20 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     this.searchService.searchCollections(this.query)
       .retry(3)
       .subscribe(
-      collections => {
-        collections.forEach(collection => {
-          const postIt = new PostItCollectionData;
-          postIt.collection = collection;
-          postIt.initialized = true;
+        collections => {
+          collections.forEach(collection => {
+            const postIt = new PostItCollectionData;
+            postIt.collection = collection;
+            postIt.initialized = true;
 
-          this.postIts.push(postIt);
+            this.postIts.push(postIt);
+          });
+
+          this.reloadLayout();
+        },
+        error => {
+          this.handleError(error, 'Failed fetching collections');
         });
-
-        this.reloadLayout();
-      },
-      error => {
-        this.handleError(error, 'Failed fetching collections');
-      });
   }
 
   private reloadLayout(): void {
@@ -154,29 +153,29 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     this.collectionService.createCollection(postIt.collection)
       .retry(3)
       .subscribe(
-      response => {
-        const code = response.headers.get('Location').split('/').pop();
+        response => {
+          const code = response.headers.get('Location').split('/').pop();
 
-        postIt.collection.code = code;
-        postIt.initialized = true;
-        this.getCollection(postIt);
-        this.notificationService.success('Success', 'Collection created');
-      },
-      error => {
-        this.handleError(error, 'Creating collection failed');
-      });
+          postIt.collection.code = code;
+          postIt.initialized = true;
+          this.getCollection(postIt);
+          this.notificationService.success('Success', 'Collection created');
+        },
+        error => {
+          this.handleError(error, 'Creating collection failed');
+        });
   }
 
   private getCollection(postIt: PostItCollectionData): void {
     this.collectionService.getCollection(postIt.collection.code)
       .retry(3)
       .subscribe(
-      collection => {
-        postIt.collection = collection;
-      },
-      error => {
-        this.handleError(error, 'Refreshing collection failed');
-      });
+        collection => {
+          postIt.collection = collection;
+        },
+        error => {
+          this.handleError(error, 'Refreshing collection failed');
+        });
   }
 
   public updateCollection(postIt: PostItCollectionData): void {
@@ -187,12 +186,12 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     this.collectionService.updateCollection(postIt.collection)
       .retry(3)
       .subscribe(
-      collection => {
-        postIt.collection = collection;
-      },
-      error => {
-        this.handleError(error, 'Failed updating collection');
-      });
+        collection => {
+          postIt.collection = collection;
+        },
+        error => {
+          this.handleError(error, 'Failed updating collection');
+        });
   }
 
   public fileChange(files: FileList) {
@@ -214,19 +213,19 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
     this.importService.importFile(format, result, name)
       .retry(3)
       .subscribe(
-      collection => {
-        const newPostIt = new PostItCollectionData;
-        newPostIt.initialized = true;
-        newPostIt.collection = collection;
+        collection => {
+          const newPostIt = new PostItCollectionData;
+          newPostIt.initialized = true;
+          newPostIt.collection = collection;
 
-        collection.color = COLLECTION_NO_COLOR;
-        collection.icon = COLLECTION_NO_ICON;
+          collection.color = COLLECTION_NO_COLOR;
+          collection.icon = COLLECTION_NO_ICON;
 
-        this.postIts.push(newPostIt);
-      },
-      error => {
-        this.handleError(error, 'Import failed');
-      }
+          this.postIts.push(newPostIt);
+        },
+        error => {
+          this.handleError(error, 'Import failed');
+        }
       );
   }
 
@@ -254,13 +253,13 @@ export class PostItCollectionsPerspectiveComponent implements Perspective, OnIni
       this.collectionService.removeCollection(postIt.collection.code)
         .retry(3)
         .subscribe(
-        response => {
-          this.postItToDelete = null;
-          this.notificationService.success('Success', 'Collection removed');
-        },
-        error => {
-          this.handleError(error, 'Failed removing collection');
-        }
+          response => {
+            this.postItToDelete = null;
+            this.notificationService.success('Success', 'Collection removed');
+          },
+          error => {
+            this.handleError(error, 'Failed removing collection');
+          }
         );
     }
 

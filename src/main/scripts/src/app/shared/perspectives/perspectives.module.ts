@@ -21,7 +21,6 @@
 import {NgModule} from '@angular/core';
 import {PerspectiveDirective} from './perspective.directive';
 import {DocumentsPerspectivesModule} from './documents/documents-perspectives.module';
-import {CollectionsPerspectivesModule} from './collections/collections-perspectives.module';
 import {PerspectiveChooserComponent} from './shared/perspective-chooser/perspective-chooser.component';
 import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
@@ -37,7 +36,6 @@ import {BrowserModule} from '@angular/platform-browser';
   ],
   exports: [
     DocumentsPerspectivesModule,
-    CollectionsPerspectivesModule,
     PerspectiveDirective,
     PerspectiveChooserComponent
   ]

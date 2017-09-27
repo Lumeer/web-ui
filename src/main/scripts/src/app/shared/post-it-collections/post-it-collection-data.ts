@@ -8,7 +8,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,22 +18,11 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Type} from '@angular/core';
+import {Collection} from '../../core/dto/collection';
 
-import {PostItCollectionsPerspectiveComponent} from './post-it/post-it-collections-perspective.component';
-import {PerspectiveChoice} from '../perspective-choice';
+export class PostItCollectionData {
 
-export class CollectionsPerspective implements PerspectiveChoice {
-
-  public static PostIt = new CollectionsPerspective('postit', 'Post-it', PostItCollectionsPerspectiveComponent);
-
-  private constructor(public id: string,
-                      public name: string,
-                      public component: Type<any>) {
-  }
+  public collection: Collection;
+  public initialized: boolean;
 
 }
-
-export const PERSPECTIVES = {
-  [CollectionsPerspective.PostIt.id]: CollectionsPerspective.PostIt
-};

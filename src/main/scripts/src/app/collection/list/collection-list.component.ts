@@ -18,29 +18,13 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ComponentFactoryResolver} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-
-import {CollectionsPerspectivePresenter} from '../../shared/perspectives/collections/collections-perspective-presenter';
-import {CollectionsPerspective, PERSPECTIVES} from '../../shared/perspectives/collections/collections-perspective';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'collection-list',
   templateUrl: './collection-list.component.html',
   styleUrls: ['./collection-list.component.scss']
 })
-export class CollectionListComponent extends CollectionsPerspectivePresenter {
-
-  constructor(activatedRoute: ActivatedRoute,
-              componentFactoryResolver: ComponentFactoryResolver) {
-    super(activatedRoute, componentFactoryResolver);
-  }
-
-  public ngOnInit(): void {
-    this.activatedRoute.queryParamMap.subscribe(queryParams => {
-      this.selectedPerspective = PERSPECTIVES[queryParams.get('perspective')] || CollectionsPerspective.PostIt;
-      this.loadPerspective(this.selectedPerspective, {});
-    });
-  }
+export class CollectionListComponent {
 
 }

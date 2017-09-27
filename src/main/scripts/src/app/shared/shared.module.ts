@@ -27,15 +27,21 @@ import {PermissionsComponent} from './permissions/permissions.component';
 import {PermissionsTableComponent} from './permissions/table/permissions-table.component';
 import {SearchBoxComponent} from './search-box/search-box.component';
 import {TableModule} from './table/table.module';
+import {PostItCollectionsComponent} from './post-it-collections/post-it-collections.component';
+import {PickerModule} from './picker/picker.module';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    RouterModule,
+    PickerModule
   ],
   declarations: [
     PermissionsComponent,
     PermissionsTableComponent,
+    PostItCollectionsComponent,
     SearchBoxComponent
   ],
   exports: [
@@ -43,6 +49,7 @@ import {TableModule} from './table/table.module';
     FormsModule,
     PermissionsComponent,
     PerspectivesModule,
+    PostItCollectionsComponent,
     SearchBoxComponent,
     TableModule
   ]
