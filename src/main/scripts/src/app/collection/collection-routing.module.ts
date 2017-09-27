@@ -47,7 +47,7 @@ const collectionRoutes: Routes = [
         component: CollectionEventsComponent
       },
       {
-        path: 'accessrights',
+        path: 'permissions',
         component: CollectionAccessRightsComponent,
         canActivate: [CollectionManageRoleGuard]
       },

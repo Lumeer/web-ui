@@ -6,7 +6,7 @@
     transition: background $animation-color-duration, opacity $animation-color-duration;
 
     position: relative;
-    left: 24px;
+    left: 20px;
 
     &:hover {
       background: $grey-darker-color;

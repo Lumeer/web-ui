@@ -67,6 +67,8 @@
              class="rounded-left text-success">
             <i class="fa fa-fw fa-users" aria-hidden="true"></i>
           </a>
+          <ng-container *ngIf="postIt.initialized">
+          </ng-container>
           <a *ngIf="!postIt.initialized || hasManageRole(postIt.collection)" (click)="confirmDeletion(postIt, modal)"
              class="text-danger rounded-left"
              title="Remove Collection" i18n-title="@@collection.button.remove">

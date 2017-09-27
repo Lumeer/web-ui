@@ -32,10 +32,12 @@
     </a>
   </li>
   <li *ngIf="hasManageRole(collection)" role="presentation" class="nav-item">
-    <a [routerLink]="['accessrights']" routerLinkActive="active" class="nav-link">
+    <a [routerLink]="['permissions']" routerLinkActive="active" class="nav-link">
       Access Rights
     </a>
   </li>
 </ul>
 
-<router-outlet class="container-fluid"></router-outlet>
+<div class="container-fluid my-4">
+  <router-outlet></router-outlet>
+</div>
