@@ -199,7 +199,8 @@ export class SearchBoxComponent implements OnInit {
     this.router.navigate(['/w', organizationCode, projectCode, 'view'],      {
       queryParams: {
         query: this.queryItemsConverter.toQueryString(this.queryItems),
-        perspective: 'search'
+        perspective: 'search',
+        searchTab: 'collections' // TODO remove when `all` tab is implemented
       },
       queryParamsHandling: 'merge'
     });
