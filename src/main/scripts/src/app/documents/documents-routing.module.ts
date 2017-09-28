@@ -20,19 +20,12 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {DocumentsListComponent} from './list/documents-list.component';
 import {DocumentsComponent} from './documents.component';
 
 const documentRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/c/:collectionCode/documents',
-    component: DocumentsComponent,
-    children: [
-      {
-        path: '',
-        component: DocumentsListComponent
-      }
-    ]
+    component: DocumentsComponent
   }
 ];
 

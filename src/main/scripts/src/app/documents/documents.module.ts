@@ -22,7 +22,6 @@ import {NgModule} from '@angular/core';
 
 import {SharedModule} from '../shared/shared.module';
 import {DocumentRoutingModule} from './documents-routing.module';
-import {DocumentsListComponent} from './list/documents-list.component';
 import {DocumentsComponent} from './documents.component';
 
 @NgModule({
@@ -31,8 +30,7 @@ import {DocumentsComponent} from './documents.component';
     DocumentRoutingModule
   ],
   declarations: [
-    DocumentsComponent,
-    DocumentsListComponent
+    DocumentsComponent
   ]
 })
 export class DocumentsModule {

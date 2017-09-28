@@ -1,0 +1,29 @@
+@import "../../../../shared/lumeer-variables";
+
+:host {
+  display: block;
+  padding-top: 57.5px;
+  height: 200px;
+  text-align: center;
+
+  a {
+    transition: color $animation-color-duration;
+    -webkit-transition: color $animation-color-duration;
+    -moz-transition: color $animation-color-duration;
+    -o-transition: color $animation-color-duration;
+
+    color: $brand-primary;
+    border-radius: 20px;
+
+    &:hover {
+      color: $brand-success;
+    }
+  }
+
+  label {
+    display: block;
+    font-size: 1.5em;
+    pointer-events: none;
+  }
+
+}

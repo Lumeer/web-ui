@@ -30,9 +30,10 @@ import {ImportService} from '../../core/rest/import.service';
 import {SearchService} from '../../core/rest/search.service';
 import {WorkspaceService} from '../../core/workspace.service';
 import {Role} from '../permissions/role';
-import {PostItLayout} from '../perspectives/utils/post-it-layout';
+import {PostItLayout} from '../utils/post-it-layout';
 import {PostItCollectionData} from './post-it-collection-data';
 import 'rxjs/add/operator/retry';
+import {QueryConverter} from '../utils/query-converter';
 
 @Component({
   selector: 'post-it-collections',
@@ -289,6 +290,9 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   }
 
   public onClick(event: MouseEvent): void {
+    if (!this.postItElements) {
+      return;
+    }
     const clickedPostItIndex = this.postItElements.toArray().findIndex(postIt => postIt.nativeElement.contains(event.target));
     this.lastClickedPostIt = this.postIts[clickedPostItIndex];
   }
@@ -312,6 +316,13 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   }
 
   public ngOnDestroy(): void {
-    this.layout.destroy();
+    if (this.layout) {
+      this.layout.destroy();
+    }
+  }
+
+  public documentsQuery(collectionCode: string): string {
+    const query: Query = {collectionCodes: [collectionCode]};
+    return QueryConverter.toString(query);
   }
 }

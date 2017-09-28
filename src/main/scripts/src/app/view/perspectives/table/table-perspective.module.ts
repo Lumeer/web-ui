@@ -19,21 +19,25 @@
  */
 
 import {NgModule} from '@angular/core';
-import {SharedModule} from '../shared/shared.module';
-import {CollectionListComponent} from './list/collection-list.component';
-import {CollectionComponent} from './collection.component';
-import {CollectionRoutingModule} from './collection-routing.module';
+import {SharedModule} from '../../../shared/shared.module';
+import {RouterModule} from '@angular/router';
+import {TablePerspectiveComponent} from './table-perspective.component';
 
 @NgModule({
   imports: [
-    SharedModule,
-    CollectionRoutingModule
+    RouterModule,
+    SharedModule
   ],
   declarations: [
-    CollectionComponent,
-    CollectionListComponent
+    TablePerspectiveComponent
+  ],
+  entryComponents: [
+    TablePerspectiveComponent
+  ],
+  exports: [
+    TablePerspectiveComponent
   ]
 })
-export class CollectionModule {
+export class TablePerspectiveModule {
 
 }

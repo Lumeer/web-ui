@@ -18,22 +18,32 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {SharedModule} from '../shared/shared.module';
-import {CollectionListComponent} from './list/collection-list.component';
-import {CollectionComponent} from './collection.component';
-import {CollectionRoutingModule} from './collection-routing.module';
+import {Component, Input} from '@angular/core';
+import {PerspectiveChoice} from '../perspectives/perspective-choice';
+import {Router} from '@angular/router';
 
-@NgModule({
-  imports: [
-    SharedModule,
-    CollectionRoutingModule
-  ],
-  declarations: [
-    CollectionComponent,
-    CollectionListComponent
-  ]
+@Component({
+  selector: 'perspective-chooser',
+  templateUrl: './perspective-chooser.component.html'
 })
-export class CollectionModule {
+export class PerspectiveChooserComponent {
+
+  @Input()
+  public perspectives: PerspectiveChoice[];
+
+  @Input()
+  public selectedPerspective: PerspectiveChoice;
+
+  constructor(private router: Router) {
+  }
+
+  public onSelectPerspective(perspectiveId: string) {
+    this.router.navigate([], {
+      queryParams: {
+        perspective: perspectiveId
+      },
+      queryParamsHandling: 'merge'
+    });
+  }
 
 }

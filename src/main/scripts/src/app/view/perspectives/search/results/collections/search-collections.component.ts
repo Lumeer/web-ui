@@ -18,22 +18,24 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {SharedModule} from '../shared/shared.module';
-import {CollectionListComponent} from './list/collection-list.component';
-import {CollectionComponent} from './collection.component';
-import {CollectionRoutingModule} from './collection-routing.module';
+import {Component} from '@angular/core';
+import {ActivatedRoute, ParamMap} from '@angular/router';
+import {Query} from '../../../../../core/dto/query';
 
-@NgModule({
-  imports: [
-    SharedModule,
-    CollectionRoutingModule
-  ],
-  declarations: [
-    CollectionComponent,
-    CollectionListComponent
-  ]
+@Component({
+  templateUrl: './search-collections.component.html'
 })
-export class CollectionModule {
+export class SearchCollectionsComponent {
+
+  public query: Query = {};
+
+  constructor(private activatedRoute: ActivatedRoute) {
+  }
+
+  public ngOnInit() {
+    this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
+      this.query = JSON.parse(queryParams.get('query'));
+    });
+  }
 
 }

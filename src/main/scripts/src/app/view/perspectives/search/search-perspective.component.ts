@@ -18,22 +18,15 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {SharedModule} from '../shared/shared.module';
-import {CollectionListComponent} from './list/collection-list.component';
-import {CollectionComponent} from './collection.component';
-import {CollectionRoutingModule} from './collection-routing.module';
+import {Component} from '@angular/core';
+import {PerspectiveComponent} from '../perspective.component';
+import {Query} from '../../../core/dto/query';
 
-@NgModule({
-  imports: [
-    SharedModule,
-    CollectionRoutingModule
-  ],
-  declarations: [
-    CollectionComponent,
-    CollectionListComponent
-  ]
+@Component({
+  templateUrl: './search-perspective.component.html'
 })
-export class CollectionModule {
+export class SearchPerspectiveComponent implements PerspectiveComponent {
+
+  public query: Query;
 
 }

@@ -20,20 +20,32 @@
 
 import {NgModule} from '@angular/core';
 import {SharedModule} from '../shared/shared.module';
-import {CollectionListComponent} from './list/collection-list.component';
-import {CollectionComponent} from './collection.component';
-import {CollectionRoutingModule} from './collection-routing.module';
+import {ViewRoutingModule} from './view-routing.module';
+import {PerspectiveChooserComponent} from './perspective-chooser/perspective-chooser.component';
+import {PerspectiveDirective} from './perspectives/perspective.directive';
+import {FormsModule} from '@angular/forms';
+import {BrowserModule} from '@angular/platform-browser';
+import {SearchPerspectiveModule} from './perspectives/search/search-perspective.module';
+import {PostItPerspectiveModule} from './perspectives/post-it/post-it-perspective.module';
+import {ViewComponent} from './view.component';
+import {TablePerspectiveModule} from './perspectives/table/table-perspective.module';
 
 @NgModule({
   imports: [
+    BrowserModule,
+    FormsModule,
+    PostItPerspectiveModule,
+    SearchPerspectiveModule,
+    TablePerspectiveModule,
     SharedModule,
-    CollectionRoutingModule
+    ViewRoutingModule
   ],
   declarations: [
-    CollectionComponent,
-    CollectionListComponent
+    PerspectiveDirective,
+    PerspectiveChooserComponent,
+    ViewComponent
   ]
 })
-export class CollectionModule {
+export class ViewModule {
 
 }

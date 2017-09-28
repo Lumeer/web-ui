@@ -9,7 +9,8 @@
       <div class="card-body text-center">
         <a class="icon" [style.color]="postIt.collection.color"
            title="{{ postIt.initialized ? 'Go to documents' : 'Pick icon' }}"
-           [routerLink]="postIt.initialized ? [workspacePath(), 'c', postIt.collection.code, 'documents'] : []"
+           [routerLink]="postIt.initialized ? [workspacePath(), 'view'] : []"
+           [queryParams]="{ perspective: 'postit', query: documentsQuery(postIt.collection.code) }"
            data-toggle="dropdown"
            (click)="lastClickedPostIt = postIt">
           <i class="fa-6x {{ postIt.collection.icon }}" aria-hidden="true"></i>
@@ -21,7 +22,9 @@
         </div>
 
         <div *ngIf="postIt.initialized" class="float-right document-count">
-          <a title="Document Count" [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'documents']">
+          <a title="Document Count"
+             [routerLink]="[workspacePath(), 'view']"
+             [queryParams]="{ perspective: 'postit', query: documentsQuery(postIt.collection.code) }">
             {{ postIt.collection.documentsCount }}&nbsp;<i class="far fa-file" aria-hidden="true"></i>
           </a>
         </div>
@@ -50,10 +53,10 @@
 
       </div>
 
-      <textarea class="card-footer text-center font-weight-bold bg-transparent" #textArea rows="1" placeholder="Name" 
-                    [(ngModel)]="postIt.collection.name"
-                    (ngModelChange)="updateToScrollbarHeight(textArea)" (blur)="onTextAreaBlur(postIt, textArea)"
-                    (focus)="textArea.placeholder = ''">
+      <textarea class="card-footer text-center font-weight-bold bg-transparent" #textArea rows="1" placeholder="Name"
+                [(ngModel)]="postIt.collection.name"
+                (ngModelChange)="updateToScrollbarHeight(textArea)" (blur)="onTextAreaBlur(postIt, textArea)"
+                (focus)="textArea.placeholder = ''">
       </textarea>
     </div>
 
@@ -67,7 +70,7 @@
       </div>
 
       <div class="layout-item card text-center add-post-it" ondragover="return false;" [ngClass]="{'dragging': dragging}" (click)="fileInput.click()"
-        (drop)="handleDrop($event)" (dragenter)="handleDragEnter()" (dragleave)="handleDragLeave()">
+           (drop)="handleDrop($event)" (dragenter)="handleDragEnter()" (dragleave)="handleDragLeave()">
         <div class="card-body">
           <i class="fa fa-cloud-upload fa-6x" aria-hidden="true"></i>
         </div>

@@ -18,22 +18,14 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {SharedModule} from '../shared/shared.module';
-import {CollectionListComponent} from './list/collection-list.component';
-import {CollectionComponent} from './collection.component';
-import {CollectionRoutingModule} from './collection-routing.module';
+import {Directive, ViewContainerRef} from '@angular/core';
 
-@NgModule({
-  imports: [
-    SharedModule,
-    CollectionRoutingModule
-  ],
-  declarations: [
-    CollectionComponent,
-    CollectionListComponent
-  ]
+@Directive({
+  selector: '[search-results]'
 })
-export class CollectionModule {
+export class SearchResultsDirective {
+
+  constructor(public viewContainerRef: ViewContainerRef) {
+  }
 
 }

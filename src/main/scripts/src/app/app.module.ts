@@ -29,9 +29,9 @@ import {CoreModule} from './core/core.module';
 import {AppRoutingModule} from './app-routing.module';
 import {WorkspaceModule} from './workspace/workspace.module';
 import {CollectionModule} from './collection/collection.module';
-import {SearchModule} from './search/search.module';
 import {DocumentsModule} from './documents/documents.module';
 import {SimpleNotificationsModule} from 'angular2-notifications';
+import {ViewModule} from './view/view.module';
 
 @NgModule({
   imports: [
@@ -42,7 +42,7 @@ import {SimpleNotificationsModule} from 'angular2-notifications';
     CoreModule,
     CollectionModule,
     DocumentsModule,
-    SearchModule,
+    ViewModule,
     WorkspaceModule,
     AppRoutingModule // needs to stay last
   ],

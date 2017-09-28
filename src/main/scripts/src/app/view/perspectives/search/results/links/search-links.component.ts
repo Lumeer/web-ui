@@ -18,22 +18,11 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {SharedModule} from '../shared/shared.module';
-import {CollectionListComponent} from './list/collection-list.component';
-import {CollectionComponent} from './collection.component';
-import {CollectionRoutingModule} from './collection-routing.module';
+import {Component} from '@angular/core';
 
-@NgModule({
-  imports: [
-    SharedModule,
-    CollectionRoutingModule
-  ],
-  declarations: [
-    CollectionComponent,
-    CollectionListComponent
-  ]
+@Component({
+  templateUrl: './search-links.component.html'
 })
-export class CollectionModule {
+export class SearchLinksComponent {
 
 }

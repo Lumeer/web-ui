@@ -18,22 +18,19 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
-import {SharedModule} from '../shared/shared.module';
-import {CollectionListComponent} from './list/collection-list.component';
-import {CollectionComponent} from './collection.component';
-import {CollectionRoutingModule} from './collection-routing.module';
+import {Document} from '../../../../core/dto/document';
+import {Collection} from '../../../../core/dto/collection';
+import {AttributePropertySelection} from './attribute-property-selection';
 
-@NgModule({
-  imports: [
-    SharedModule,
-    CollectionRoutingModule
-  ],
-  declarations: [
-    CollectionComponent,
-    CollectionListComponent
-  ]
-})
-export class CollectionModule {
+export class DocumentData {
+
+  public index: number;
+  public document: Document;
+  public collection: Collection;
+
+  public initialized: boolean;
+  public writeRole: boolean;
+  public selectedInput: AttributePropertySelection;
+  public attributes: string[];
 
 }

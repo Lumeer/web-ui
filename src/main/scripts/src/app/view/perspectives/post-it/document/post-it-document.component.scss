@@ -1,0 +1,144 @@
+@import "../../../../shared/lumeer-variables";
+
+:host {
+  background: $secondary-color;
+  box-shadow: $shadow-down;
+  display: block;
+  padding: 6px 10px;
+
+  transition: all $animation-duration;
+  -webkit-transition: all $animation-duration;
+  -moz-transition: all $animation-duration;
+  -o-transition: all $animation-duration;
+
+  border: 1px solid $grey-darker-color;
+  border-radius: $border-radius-small;
+
+  .header {
+    overflow: hidden;
+    margin-bottom: 5px;
+
+    .collection-icon {
+      padding-left: 4px;
+      font-size: 22px;
+
+      &:hover {
+        background: transparent;
+      }
+    }
+
+    .name {
+      opacity: 0.75;
+      padding-left: 10px;
+      margin: 0;
+
+      font-size: 18px;
+      font-weight: normal;
+    }
+
+    .editable {
+      float: right;
+      padding: 4px;
+    }
+
+    .remove {
+      color: $brand-danger;
+    }
+  }
+
+  .content {
+    margin: 0;
+    padding: 0;
+
+    border: 1px solid #e5e5e5;
+    border-radius: $border-radius-small;
+  }
+
+  .edit {
+    margin-top: 3px;
+
+    .secondary-edit {
+      float: right;
+    }
+  }
+
+  &:hover {
+    box-shadow: $shadow-up;
+
+    a {
+      opacity: 1;
+    }
+  }
+
+  a {
+    -webkit-transition: all $animation-color-duration;
+    -moz-transition: all $animation-color-duration;
+    -o-transition: all $animation-color-duration;
+    transition: all $animation-color-duration;
+
+    opacity: 0;
+    font-size: 16px;
+
+    border-radius: $border-radius-small;
+    padding: 4px 12px;
+
+    &:hover {
+      background: #e8e8e8;
+    }
+
+    &:before {
+      margin: -10px;
+    }
+  }
+
+  li {
+    border-bottom: 1px solid #e5e5e5;
+    display: inline-flex;
+    padding: 2px 1px;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: #f7f7f7;
+    }
+  }
+
+  .attribute {
+    color: #475d73;
+    font-weight: bold;
+    font-variant: none;
+
+    input {
+      width: 100px;
+    }
+  }
+
+  input {
+    padding: 0 3px;
+    width: 100%;
+    border: 0;
+    background-color: transparent;
+
+    pointer-events: none;
+  }
+
+  span:focus, input:focus {
+    outline: none;
+    background: $brand-primary;
+    border-radius: $border-radius-small;
+
+    color: $secondary-color;
+    pointer-events: all;
+  }
+
+  input:read-only {
+    pointer-events: all;
+
+    &:focus {
+      background: inherit;
+      color: inherit;
+    }
+  }
+}
