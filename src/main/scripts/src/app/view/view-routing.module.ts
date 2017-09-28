@@ -18,21 +18,25 @@
  * -----------------------------------------------------------------------/
  */
 
+import {RouterModule, Routes} from '@angular/router';
+import {ViewComponent} from './view.component';
 import {NgModule} from '@angular/core';
 
-import {SharedModule} from '../shared/shared.module';
-import {DocumentRoutingModule} from './documents-routing.module';
-import {DocumentsComponent} from './documents.component';
+const searchRoutes: Routes = [
+  {
+    path: 'w/:organizationCode/:projectCode/view',
+    component: ViewComponent
+  }
+];
 
 @NgModule({
   imports: [
-    SharedModule,
-    DocumentRoutingModule
+    RouterModule.forChild(searchRoutes)
   ],
-  declarations: [
-    DocumentsComponent
+  exports: [
+    RouterModule
   ]
 })
-export class DocumentsModule {
+export class ViewRoutingModule {
 
 }

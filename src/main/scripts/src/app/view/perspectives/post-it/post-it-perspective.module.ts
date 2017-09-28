@@ -19,20 +19,27 @@
  */
 
 import {NgModule} from '@angular/core';
-
-import {SharedModule} from '../shared/shared.module';
-import {DocumentRoutingModule} from './documents-routing.module';
-import {DocumentsComponent} from './documents.component';
+import {SharedModule} from '../../../shared/shared.module';
+import {PostItPerspectiveComponent} from './post-it-perspective.component';
+import {PostItAddDocumentComponent} from './add-document/add-document.component';
+import {PostItDocumentComponent} from './document/post-it-document.component';
 
 @NgModule({
   imports: [
-    SharedModule,
-    DocumentRoutingModule
+    SharedModule
   ],
   declarations: [
-    DocumentsComponent
+    PostItAddDocumentComponent,
+    PostItDocumentComponent,
+    PostItPerspectiveComponent
+  ],
+  entryComponents: [
+    PostItPerspectiveComponent
+  ],
+  exports: [
+    PostItPerspectiveComponent
   ]
 })
-export class DocumentsModule {
+export class PostItPerspectiveModule {
 
 }

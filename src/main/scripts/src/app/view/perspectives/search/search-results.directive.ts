@@ -18,21 +18,14 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
+import {Directive, ViewContainerRef} from '@angular/core';
 
-import {SharedModule} from '../shared/shared.module';
-import {DocumentRoutingModule} from './documents-routing.module';
-import {DocumentsComponent} from './documents.component';
-
-@NgModule({
-  imports: [
-    SharedModule,
-    DocumentRoutingModule
-  ],
-  declarations: [
-    DocumentsComponent
-  ]
+@Directive({
+  selector: '[search-results]'
 })
-export class DocumentsModule {
+export class SearchResultsDirective {
+
+  constructor(public viewContainerRef: ViewContainerRef) {
+  }
 
 }

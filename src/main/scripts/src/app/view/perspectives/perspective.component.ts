@@ -18,21 +18,10 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
+import {Query} from '../../core/dto/query';
 
-import {SharedModule} from '../shared/shared.module';
-import {DocumentRoutingModule} from './documents-routing.module';
-import {DocumentsComponent} from './documents.component';
+export interface PerspectiveComponent {
 
-@NgModule({
-  imports: [
-    SharedModule,
-    DocumentRoutingModule
-  ],
-  declarations: [
-    DocumentsComponent
-  ]
-})
-export class DocumentsModule {
+  query: Query;
 
 }

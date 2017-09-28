@@ -18,21 +18,19 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
+import {Document} from '../../../../core/dto/document';
+import {Collection} from '../../../../core/dto/collection';
+import {AttributePropertySelection} from './attribute-property-selection';
 
-import {SharedModule} from '../shared/shared.module';
-import {DocumentRoutingModule} from './documents-routing.module';
-import {DocumentsComponent} from './documents.component';
+export class DocumentData {
 
-@NgModule({
-  imports: [
-    SharedModule,
-    DocumentRoutingModule
-  ],
-  declarations: [
-    DocumentsComponent
-  ]
-})
-export class DocumentsModule {
+  public index: number;
+  public document: Document;
+  public collection: Collection;
+
+  public initialized: boolean;
+  public writeRole: boolean;
+  public selectedInput: AttributePropertySelection;
+  public attributes: string[];
 
 }

@@ -1,0 +1,69 @@
+@import "../../../shared/lumeer-variables";
+
+$fade-size: 2em;
+
+:host {
+  display: block;
+
+  .perspective {
+    position: relative;
+    bottom: $fade-size;
+
+    overflow: auto;
+
+    transition: height $animation-duration-slow;
+    -webkit-transition: height $animation-duration-slow;
+    -moz-transition: height $animation-duration-slow;
+    -o-transition: height $animation-duration-slow;
+  }
+
+  .layout {
+    margin: 0 auto;
+  }
+
+  .layout-item {
+    width: $post-it-width;
+  }
+
+  .uninitialized {
+    border-width: 1.5px;
+    border-style: dashed;
+  }
+
+  .fadeup {
+    position: relative;
+    z-index: 50;
+    bottom: $fade-size * 2;
+    height: $fade-size;
+    pointer-events: none;
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), $secondary-color);
+  }
+
+  .fadedown {
+    position: relative;
+    z-index: 50;
+    height: $fade-size;
+    pointer-events: none;
+    background-image: linear-gradient(to top, rgba(255, 255, 255, 0), $secondary-color);
+  }
+
+  .scroll-down {
+    position: relative;
+    font-size: 24px;
+    float: right;
+    bottom: $fade-size;
+    margin: 10px;
+
+    i {
+      padding-left: 10px;
+    }
+  }
+
+  .label-centered {
+    position: absolute;
+    font-size: 40px;
+    top: 150px;
+    width: 100%;
+    text-align: center;
+  }
+}

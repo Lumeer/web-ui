@@ -19,39 +19,33 @@
  */
 
 import {NgModule} from '@angular/core';
+import {SharedModule} from '../shared/shared.module';
+import {ViewRoutingModule} from './view-routing.module';
+import {PerspectiveChooserComponent} from './perspective-chooser/perspective-chooser.component';
+import {PerspectiveDirective} from './perspectives/perspective.directive';
+import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-
-import {ModalModule} from 'ngx-bootstrap/modal';
-
-import {AppComponent} from './app.component';
-import {CoreModule} from './core/core.module';
-import {AppRoutingModule} from './app-routing.module';
-import {WorkspaceModule} from './workspace/workspace.module';
-import {CollectionModule} from './collection/collection.module';
-import {DocumentsModule} from './documents/documents.module';
-import {SimpleNotificationsModule} from 'angular2-notifications';
-import {ViewModule} from './view/view.module';
+import {SearchPerspectiveModule} from './perspectives/search/search-perspective.module';
+import {PostItPerspectiveModule} from './perspectives/post-it/post-it-perspective.module';
+import {ViewComponent} from './view.component';
+import {TablePerspectiveModule} from './perspectives/table/table-perspective.module';
 
 @NgModule({
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
-    SimpleNotificationsModule.forRoot(),
-    ModalModule.forRoot(),
-    CoreModule,
-    CollectionModule,
-    DocumentsModule,
-    ViewModule,
-    WorkspaceModule,
-    AppRoutingModule // needs to stay last
+    FormsModule,
+    PostItPerspectiveModule,
+    SearchPerspectiveModule,
+    TablePerspectiveModule,
+    SharedModule,
+    ViewRoutingModule
   ],
   declarations: [
-    AppComponent
-  ],
-  bootstrap: [
-    AppComponent
+    PerspectiveDirective,
+    PerspectiveChooserComponent,
+    ViewComponent
   ]
 })
-export class AppModule {
+export class ViewModule {
+
 }

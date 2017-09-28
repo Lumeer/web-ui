@@ -22,27 +22,32 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
-import {PerspectivesModule} from './perspectives/perspectives.module';
 import {PermissionsComponent} from './permissions/permissions.component';
 import {PermissionsTableComponent} from './permissions/table/permissions-table.component';
 import {SearchBoxComponent} from './search-box/search-box.component';
 import {TableModule} from './table/table.module';
+import {PostItCollectionsComponent} from './post-it-collections/post-it-collections.component';
+import {PickerModule} from './picker/picker.module';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    RouterModule,
+    PickerModule
   ],
   declarations: [
     PermissionsComponent,
     PermissionsTableComponent,
+    PostItCollectionsComponent,
     SearchBoxComponent
   ],
   exports: [
     CommonModule,
     FormsModule,
     PermissionsComponent,
-    PerspectivesModule,
+    PostItCollectionsComponent,
     SearchBoxComponent,
     TableModule
   ]

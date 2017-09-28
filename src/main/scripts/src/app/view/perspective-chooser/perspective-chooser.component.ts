@@ -18,21 +18,32 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {PerspectiveChoice} from '../perspectives/perspective-choice';
+import {Router} from '@angular/router';
 
-import {SharedModule} from '../shared/shared.module';
-import {DocumentRoutingModule} from './documents-routing.module';
-import {DocumentsComponent} from './documents.component';
-
-@NgModule({
-  imports: [
-    SharedModule,
-    DocumentRoutingModule
-  ],
-  declarations: [
-    DocumentsComponent
-  ]
+@Component({
+  selector: 'perspective-chooser',
+  templateUrl: './perspective-chooser.component.html'
 })
-export class DocumentsModule {
+export class PerspectiveChooserComponent {
+
+  @Input()
+  public perspectives: PerspectiveChoice[];
+
+  @Input()
+  public selectedPerspective: PerspectiveChoice;
+
+  constructor(private router: Router) {
+  }
+
+  public onSelectPerspective(perspectiveId: string) {
+    this.router.navigate([], {
+      queryParams: {
+        perspective: perspectiveId
+      },
+      queryParamsHandling: 'merge'
+    });
+  }
 
 }

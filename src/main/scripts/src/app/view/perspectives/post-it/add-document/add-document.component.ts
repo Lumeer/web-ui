@@ -18,11 +18,35 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+
+import {Document} from '../../../../core/dto/document';
 
 @Component({
-  template: ''
+  selector: 'add-document',
+  templateUrl: './add-document.component.html',
+  styleUrls: ['./add-document.component.scss']
 })
-export class DocumentsComponent {
+export class PostItAddDocumentComponent implements OnInit {
+
+  @Output()
+  public newDocument = new EventEmitter<Document>();
+
+  private collectionCode: string;
+
+  constructor(private route: ActivatedRoute) {
+  }
+
+  public ngOnInit(): void {
+    this.route.paramMap.subscribe(paramMap => this.collectionCode = paramMap.get('collectionCode'));
+  }
+
+  public onClick(): void {
+    const newDocument = new Document;
+    newDocument.collectionCode = this.collectionCode;
+
+    this.newDocument.emit(newDocument);
+  }
 
 }

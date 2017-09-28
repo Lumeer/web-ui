@@ -196,8 +196,14 @@ export class SearchBoxComponent implements OnInit {
     const organizationCode = this.workspaceService.organizationCode;
     const projectCode = this.workspaceService.projectCode;
 
-    this.router.navigate(['/w', organizationCode, projectCode, 'search', 'collections'],
-      {queryParams: {query: this.queryItemsConverter.toQueryString(this.queryItems)}});
+    this.router.navigate(['/w', organizationCode, projectCode, 'view'],      {
+      queryParams: {
+        query: this.queryItemsConverter.toQueryString(this.queryItems),
+        perspective: 'search',
+        searchTab: 'collections' // TODO remove when `all` tab is implemented
+      },
+      queryParamsHandling: 'merge'
+    });
   }
 
   private addQueryItem(queryItem: QueryItem) {

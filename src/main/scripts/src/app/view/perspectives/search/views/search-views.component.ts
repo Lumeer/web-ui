@@ -18,21 +18,11 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
+import {Component} from '@angular/core';
 
-import {SharedModule} from '../shared/shared.module';
-import {DocumentRoutingModule} from './documents-routing.module';
-import {DocumentsComponent} from './documents.component';
-
-@NgModule({
-  imports: [
-    SharedModule,
-    DocumentRoutingModule
-  ],
-  declarations: [
-    DocumentsComponent
-  ]
+@Component({
+  templateUrl: './search-views.component.html'
 })
-export class DocumentsModule {
+export class SearchViewsComponent {
 
 }

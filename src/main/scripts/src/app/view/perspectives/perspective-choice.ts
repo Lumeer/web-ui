@@ -18,21 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {NgModule} from '@angular/core';
+import {Type} from '@angular/core';
 
-import {SharedModule} from '../shared/shared.module';
-import {DocumentRoutingModule} from './documents-routing.module';
-import {DocumentsComponent} from './documents.component';
+export interface PerspectiveChoice {
 
-@NgModule({
-  imports: [
-    SharedModule,
-    DocumentRoutingModule
-  ],
-  declarations: [
-    DocumentsComponent
-  ]
-})
-export class DocumentsModule {
+  id: string;
+  name: string;
+  component: Type<any>; // TODO try to use generics (T extends PerspectiveComponent)
 
 }
