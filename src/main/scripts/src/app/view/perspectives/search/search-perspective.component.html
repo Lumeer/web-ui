@@ -1,2 +1,49 @@
-<search-home *ngIf="!query"></search-home>
-<search-results *ngIf="query"></search-results>
+<ul class="nav nav-tabs">
+  <li role="presentation" class="nav-item">
+    <a [routerLink]="[viewPath()]"
+       [queryParams]="{query: stringQuery, perspective: 'search', searchTab: 'all'}"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact: true}"
+       class="nav-link">
+      All
+    </a>
+  </li>
+  <li role="presentation" class="nav-item">
+    <a [routerLink]="[viewPath()]"
+       [queryParams]="{query: stringQuery, perspective: 'search', searchTab: 'collections'}"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact: true}"
+       class="nav-link">
+      Collections
+    </a>
+  </li>
+  <li role="presentation" class="nav-item">
+    <a [routerLink]="[viewPath()]"
+       [queryParams]="{query: stringQuery, perspective: 'search', searchTab: 'documents'}"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact: true}"
+       class="nav-link">
+      Documents
+    </a>
+  </li>
+  <li role="presentation" class="nav-item">
+    <a [routerLink]="[viewPath()]"
+       [queryParams]="{query: stringQuery, perspective: 'search', searchTab: 'links'}"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact: true}"
+       class="nav-link">
+      Links
+    </a>
+  </li>
+  <li role="presentation" class="nav-item">
+    <a [routerLink]="[viewPath()]"
+       [queryParams]="{query: stringQuery, perspective: 'search', searchTab: 'views'}"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact: true}"
+       class="nav-link">
+      Views
+    </a>
+  </li>
+</ul>
+
+<ng-template search-results></ng-template>

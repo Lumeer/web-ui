@@ -20,9 +20,9 @@
 
 import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
-import {Http, HttpModule, RequestOptions, XHRBackend} from '@angular/http';
+import {HttpModule} from '@angular/http';
 
 import {WorkspaceService} from './workspace.service';
 import {TopPanelComponent} from './top-panel/top-panel.component';
@@ -40,9 +40,10 @@ import {SearchService} from './rest/search.service';
 import {RouterModule} from '@angular/router';
 import {LumeerErrorHandler} from './error/lumeer-error.handler';
 import {ImportService} from './rest/import.service';
-import {KEYCLOAK_HTTP_PROVIDER, KeycloakInterceptor} from './keycloak/keycloak-http.service';
+import {KEYCLOAK_HTTP_PROVIDER} from './keycloak/keycloak-http.service';
 import {KeycloakService} from './keycloak/keycloak.service';
 import {ViewService} from './rest/view.service';
+import {SearchHomeComponent} from './search-home/search-home.component';
 
 @NgModule({
   imports: [
@@ -56,7 +57,8 @@ import {ViewService} from './rest/view.service';
   declarations: [
     TopPanelComponent,
     HomeComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    SearchHomeComponent
   ],
   providers: [
     CollectionService,
@@ -77,7 +79,8 @@ import {ViewService} from './rest/view.service';
   exports: [
     TopPanelComponent,
     HomeComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    SearchHomeComponent
   ]
 })
 export class CoreModule {

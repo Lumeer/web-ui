@@ -20,16 +20,14 @@
 
 import {NgModule} from '@angular/core';
 import {SharedModule} from '../../../shared/shared.module';
-import {SearchAllComponent} from './results/all/search-all.component';
-import {SearchHomeComponent} from './home/search-home.component';
-import {SearchResultsComponent} from './results/search-results.component';
+import {SearchAllComponent} from './all/search-all.component';
 import {SearchPerspectiveComponent} from './search-perspective.component';
-import {SearchCollectionsComponent} from './results/collections/search-collections.component';
-import {SearchDocumentsComponent} from './results/documents/search-documents.component';
-import {SearchResultsDirective} from './results/search-results.directive';
+import {SearchCollectionsComponent} from './collections/search-collections.component';
+import {SearchDocumentsComponent} from './documents/search-documents.component';
+import {SearchResultsDirective} from './search-results.directive';
 import {RouterModule} from '@angular/router';
-import {SearchLinksComponent} from './results/links/search-links.component';
-import {SearchViewsComponent} from './results/views/search-views.component';
+import {SearchLinksComponent} from './links/search-links.component';
+import {SearchViewsComponent} from './views/search-views.component';
 
 @NgModule({
   imports: [
@@ -40,10 +38,8 @@ import {SearchViewsComponent} from './results/views/search-views.component';
     SearchAllComponent,
     SearchCollectionsComponent,
     SearchDocumentsComponent,
-    SearchHomeComponent,
     SearchLinksComponent,
     SearchPerspectiveComponent,
-    SearchResultsComponent,
     SearchResultsDirective,
     SearchViewsComponent
   ],

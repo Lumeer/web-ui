@@ -23,8 +23,16 @@ import {NgModule} from '@angular/core';
 
 import {PageNotFoundComponent} from './core/page-not-found/page-not-found.component';
 import {HomeComponent} from './core/home.component';
+import {SearchHomeComponent} from './core/search-home/search-home.component';
 
 const appRoutes: Routes = [
+  {
+    path: 'w/:organizationCode/:projectCode/search',
+    component: SearchHomeComponent,
+    data: {
+      searchBoxHidden: true
+    }
+  },
   {
     path: '',
     pathMatch: 'full',

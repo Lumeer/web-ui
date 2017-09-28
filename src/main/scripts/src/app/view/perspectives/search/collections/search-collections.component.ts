@@ -20,7 +20,7 @@
 
 import {Component} from '@angular/core';
 import {ActivatedRoute, ParamMap} from '@angular/router';
-import {Query} from '../../../../../core/dto/query';
+import {Query} from '../../../../core/dto/query';
 
 @Component({
   templateUrl: './search-collections.component.html'
