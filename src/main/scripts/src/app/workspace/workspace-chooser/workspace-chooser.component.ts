@@ -28,7 +28,7 @@ import {WorkspaceService} from '../../core/workspace.service';
 import {OrganizationService} from '../../core/rest/organization.service';
 import {ProjectService} from '../../core/rest/project.service';
 import {isNullOrUndefined} from 'util';
-import {ResourceType} from '../../shared/permissions/resource-type';
+import {Role} from '../../shared/permissions/role';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
@@ -146,6 +146,11 @@ export class WorkspaceChooserComponent implements OnInit {
     // TODO save for selected project ix
   }
 
+  public hasManageRole(organization: Organization) {
+    return organization.permissions && organization.permissions.users.length === 1
+      && organization.permissions.users[0].roles.some(r => r === Role.Manage.toString());
+  }
+
   public onSaveActiveItems() {
     if (!isNullOrUndefined(this.activeOrgIx) && !isNullOrUndefined(this.activeProjIx)) {
       // TODO save settings on the server using configuration service
@@ -157,13 +162,4 @@ export class WorkspaceChooserComponent implements OnInit {
       this.router.navigate(['w', activeOrgCode, activeProjCode, 'collections']);
     }
   }
-
-  public organizationResourceType(): ResourceType {
-    return ResourceType.Organization;
-  }
-
-  public projectResourceType(): ResourceType {
-    return ResourceType.Project;
-  }
-
 }

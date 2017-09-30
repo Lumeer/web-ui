@@ -25,8 +25,8 @@ import {
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
 import {Resource} from '../../../core/dto/resource';
-import {ResourceType} from '../../../shared/permissions/resource-type';
 import {isNullOrUndefined} from 'util';
+import {Role} from '../../../shared/permissions/role';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
@@ -76,9 +76,10 @@ export class ResourceChooserComponent implements OnChanges {
   @ViewChild('resourceDescription')
   public resourceDescription: ElementRef;
 
-  @Input() public resourceType: ResourceType;
+  @Input() public header: string;
   @Input() public resources: Resource[];
   @Input() public initActiveIx: number;
+  @Input() public canCreateResource: boolean;
 
   @Output() public resourceSelect: EventEmitter<number> = new EventEmitter();
   @Output() public resourceNew: EventEmitter<any> = new EventEmitter();
@@ -113,7 +114,7 @@ export class ResourceChooserComponent implements OnChanges {
 
   private actualizeWidthAndCheck() {
     let resourceContentWidth = this.resourceContainer.nativeElement.clientWidth;
-    this.resourceWidth = Math.max((this.resources.length + 1) * squareSize, resourceContentWidth);
+    this.resourceWidth = Math.max((this.resources.length + (this.canCreateResource ? 1 : 0)) * squareSize, resourceContentWidth);
     this.checkForDisableResourceArrows(resourceContentWidth);
   }
 
@@ -170,7 +171,7 @@ export class ResourceChooserComponent implements OnChanges {
     const numVisible = this.numResourcesVisible();
     if (ix >= numVisible) {
       const numShouldScroll = ix - numVisible + Math.round(numVisible / 2);
-      const numMaxScroll = this.resources.length + 1 - numVisible;
+      const numMaxScroll = this.resources.length + (this.canCreateResource ? 1 : 0) - numVisible;
       const numToScroll = Math.min(numShouldScroll, numMaxScroll);
       this.resourceScroll = -numToScroll * squareSize;
       this.resourceCanScrollLeft = true;
@@ -202,11 +203,11 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private numResourcesVisible(): number {
-    return Math.min(Math.floor(this.resourceContentWidth / squareSize), this.resources.length + 1);
+    return Math.min(Math.floor(this.resourceContentWidth / squareSize), this.resources.length + (this.canCreateResource ? 1 : 0));
   }
 
   private numResourcesPotentiallyVisible(): number {
-    return this.resources.length + 1 - Math.abs(this.resourceScroll / squareSize);
+    return this.resources.length + (this.canCreateResource ? 1 : 0) - Math.abs(this.resourceScroll / squareSize);
   }
 
   private computeResourceLines(index: number) {
@@ -216,7 +217,7 @@ export class ResourceChooserComponent implements OnChanges {
     }
     this.resourceLineSizes[0] = index * squareSize;
     this.resourceLineSizes[1] = squareSize;
-    this.resourceLineSizes[2] = (this.resources.length - index) * squareSize;
+    this.resourceLineSizes[2] = (this.resources.length - index - (this.canCreateResource ? 0 : 1)) * squareSize;
   }
 
   public onCreateResource() {
@@ -225,6 +226,11 @@ export class ResourceChooserComponent implements OnChanges {
 
   public onResourceSettings(index: number) {
     this.resourceSettings.emit(index);
+  }
+
+  public hasManageRole(resource: Resource): boolean {
+    return resource.permissions && resource.permissions.users.length === 1
+      && resource.permissions.users[0].roles.some(r => r === Role.Manage.toString());
   }
 
 }

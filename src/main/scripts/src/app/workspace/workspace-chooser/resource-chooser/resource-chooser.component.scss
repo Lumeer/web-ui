@@ -11,7 +11,7 @@ $box-shadow-left: 4px -5px 5px 1px $box-shadow-color;
 $box-shadow-right: -4px -5px 5px 1px $box-shadow-color;
 
 .horizontal-container {
-  height: $bookmark-height;
+  height: $bookmark-height + 10px;
   position: relative;
 
   .disabled {
@@ -48,6 +48,7 @@ $box-shadow-right: -4px -5px 5px 1px $box-shadow-color;
 
     .horizontal-chooser {
       position: absolute;
+      margin-top: 10px;
       transition: left $animation-duration;
       -webkit-transition: left $animation-duration;
       -moz-transition: left $animation-duration;

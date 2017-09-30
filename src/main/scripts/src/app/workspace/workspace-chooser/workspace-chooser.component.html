@@ -1,7 +1,8 @@
-<div class="container-fluid">
+<div class="container-fluid container">
   <resource-chooser [initActiveIx]="activeOrgIx"
+                    [header]="'Organizations'"
                     [resources]="organizations"
-                    [resourceType]="organizationResourceType()"
+                    [canCreateResource]="true"
                     (resourceSelect)="onSelectOrganization($event)"
                     (resourceNew)="onCreateOrganization()"
                     (resourceSettings)="onOrganizationSettings($event)"
@@ -10,15 +11,19 @@
 
   <div class="pt-3" *ngIf="activeOrgIx >=0" [@animateOpacityFromUp]="'in'">
     <resource-chooser [initActiveIx]="activeProjIx"
+                      [header]="'Projects'"
                       [resources]="organizations[activeOrgIx].projects"
-                      [resourceType]="projectResourceType()"
+                      [canCreateResource]="hasManageRole(organizations[activeOrgIx])"
                       (resourceSelect)="onSelectProject($event)"
                       (resourceNew)="onCreateProject()"
                       (resourceSettings)="onProjectSettings($event)"
                       (resourceNewDescription)="onNewProjectDescription($event)">
     </resource-chooser>
   </div>
-  <div class="pt-2 d-flex justify-content-end" *ngIf="activeProjIx >=0" [@animateOpacityFromUp]="'in'">
-    <button type="button" class="btn btn-success" (click)="onSaveActiveItems()">Use project</button>
+  <div class="py-2 px-5 d-flex justify-content-end fixed-bottom container" *ngIf="activeProjIx >=0"
+       [@animateOpacityFromUp]="'in'">
+    <button type="button" class="btn btn-lg btn-success" (click)="onSaveActiveItems()">
+      <i class="fas fa fa-play px-2"></i>Use project
+    </button>
   </div>
 </div>
