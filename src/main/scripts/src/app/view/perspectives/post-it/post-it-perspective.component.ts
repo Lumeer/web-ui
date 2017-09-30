@@ -17,7 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren} from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  TemplateRef,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
@@ -36,10 +47,9 @@ import {Buffer} from '../../../shared/utils/buffer';
 import {DocumentData} from './document-data/document-data';
 import {Role} from '../../../shared/permissions/role';
 import {Permission} from '../../../core/dto/permission';
+import {PerspectiveComponent} from '../perspective.component';
 import {isNullOrUndefined} from 'util';
 import 'rxjs/add/operator/retry';
-import {PerspectiveComponent} from '../perspective.component';
-import * as $ from 'jquery';
 
 @Component({
   selector: 'post-it-perspective',

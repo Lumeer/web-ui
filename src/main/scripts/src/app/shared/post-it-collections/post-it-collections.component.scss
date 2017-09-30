@@ -5,11 +5,10 @@
 
   .layout-item {
     width: $post-it-width;
-    transition: transform $animation-duration;
   }
 
   .post-it {
-    transition: box-shadow $animation-duration;
+    transition: box-shadow $animation-duration, transform $animation-duration;
   }
 
   .post-it:hover, .selected {

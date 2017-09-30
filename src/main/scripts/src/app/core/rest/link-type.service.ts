@@ -19,12 +19,13 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpEvent} from '@angular/common/http';
+
 import {WorkspaceService} from '../workspace.service';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {LumeerError} from '../error/lumeer.error';
-import {Observable} from 'rxjs/Observable';
 import {LinkType} from '../dto/link-type';
+import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {Observable} from 'rxjs/Observable';
 
 // TODO implement on backend
 @Injectable()
@@ -65,11 +66,20 @@ export class LinkTypeService {
     LinkTypeService.link2.fromCollection = collectionCode;
     LinkTypeService.link3.fromCollection = collectionCode;
 
-    return Observable.of([LinkTypeService.link1, LinkTypeService.link2, LinkTypeService.link3]);
+    return Observable.of([LinkTypeService.link1, LinkTypeService.link2, LinkTypeService.link3]
+      .filter(linkType => linkType.toCollection !== collectionCode));
   }
 
-  public updateLinkType(collectionCode: string, linkType: LinkType): Observable<LinkType> {
+  public createLinkType(linkType: LinkType): Observable<LinkType> {
     return Observable.of(linkType);
+  }
+
+  public updateLinkType(collectionCode: string, linkTypeName: string, linkType: LinkType): Observable<LinkType> {
+    return Observable.of(linkType);
+  }
+
+  public removeLinkType(linkType: LinkType): Observable<HttpEvent<any>> {
+    return Observable.of(null);
   }
 
   private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {

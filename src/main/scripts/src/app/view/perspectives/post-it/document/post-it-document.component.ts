@@ -24,7 +24,7 @@ import {Direction} from '../document-data/direction';
 import {DocumentData} from '../document-data/document-data';
 import {isString} from 'util';
 import {KeyCode} from '../../../../shared/key-code';
-import {WorkspaceService} from '../../../../../core/workspace.service';
+import {WorkspaceService} from '../../../../core/workspace.service';
 
 @Component({
   selector: 'post-it-document',

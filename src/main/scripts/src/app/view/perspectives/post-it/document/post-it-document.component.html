@@ -33,7 +33,8 @@
               (keydown.enter)="setEditMode(true); focusSelection()"
               (click)="clickOnAttributePair(0, row)">
 
-          <input [(ngModel)]="attributePair.attribute"
+          <input class="border-0"
+                 [(ngModel)]="attributePair.attribute"
                  (keydown)="$event.stopPropagation()"
                  (keydown.F2)="setEditMode(false); focusSelection()"
                  (keydown.Escape)="setEditMode(false); focusSelection()"
@@ -51,7 +52,8 @@
               (keydown.enter)="setEditMode(true); focusSelection()"
               (click)="clickOnAttributePair(1, row)">
 
-        <input [(ngModel)]="attributePair.value"
+        <input class="border-0"
+               [(ngModel)]="attributePair.value"
                (keydown)="$event.stopPropagation()"
                (keydown.F2)="setEditMode(false); focusSelection()"
                (keydown.Escape)="setEditMode(false); focusSelection()"
@@ -71,7 +73,8 @@
               (click)="clickOnAttributePair(0, attributePairs.length)">
 
           <!-- the list refers to one of the attribute suggestion lists in document perspective -->
-          <input placeholder=" + "
+          <input class="border-0"
+                 placeholder=" + "
                  [attr.list]="data.document.collectionCode"
                  [(ngModel)]="newAttributePair.attribute"
                  (keydown)="$event.stopPropagation()"
@@ -90,7 +93,8 @@
               (keydown.enter)="setEditMode(true); focusSelection()"
               (click)="newAttributePair.attribute && clickOnAttributePair(1, attributePairs.length)">
 
-        <input [disabled]="!newAttributePair.attribute"
+        <input class="border-0"
+               [disabled]="!newAttributePair.attribute"
                (keydown)="$event.stopPropagation(); $event.key.length === 1 && createAttributePair($event.key)"
                (keydown.F2)="setEditMode(false); focusSelection()"
                (keydown.Escape)="setEditMode(false); focusSelection()"
@@ -102,11 +106,11 @@
     <ng-container *ngIf="!data.writeRole">
       <li *ngFor="let attributePair of attributePairs">
         <span class="attribute">
-          <input readonly [ngModel]="attributePair.attribute">
+          <input class="border-0" readonly [ngModel]="attributePair.attribute">
         </span>
 
         <span>
-          <input title="{{ attributePair.value }}" readonly [ngModel]="attributePair.value">
+          <input class="border-0" title="{{ attributePair.value }}" readonly [ngModel]="attributePair.value">
         </span>
       </li>
     </ng-container>

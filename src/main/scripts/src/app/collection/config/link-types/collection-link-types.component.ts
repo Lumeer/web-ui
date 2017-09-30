@@ -20,6 +20,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
@@ -41,9 +42,12 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   public expanded: boolean[] = [];
 
+  private initialName: { [collectionCode: string]: string } = {};
+
   public collections: { [collectionCode: string]: Collection } = {};
 
   constructor(private linkTypeService: LinkTypeService,
+              private sanitizer: DomSanitizer,
               collectionService: CollectionService,
               route: ActivatedRoute,
               notificationService: NotificationsService,
@@ -52,15 +56,21 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public ngOnInit(): void {
-    super.ngOnInit();
-    this.fetchData();
+    this.refreshOnCollectionChange();
+  }
+
+  private refreshOnCollectionChange(): void {
+    this.route.url.forEach(params => {
+      this.fetchData();
+    });
   }
 
   private async fetchData(): Promise<void> {
+    await super.getCurrentCollection();
     const linkTypes = await this.fetchCurrentCollectionLinkTypes();
 
     const collectionCodes = linkTypes.map(linkType => linkType.toCollection);
-    await this.fetchAllCollections(collectionCodes);
+    this.fetchAllCollections(collectionCodes);
   }
 
   private async fetchCurrentCollectionLinkTypes(): Promise<LinkType[]> {
@@ -70,6 +80,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   private async getLinkTypes(collectionCode: string): Promise<LinkType[]> {
     return this.linkTypeService.getLinkTypes(collectionCode)
+      .retry(3)
       .take(1)
       .toPromise()
       .catch(error => {
@@ -93,18 +104,66 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
       this.collections[collectionCode] = emptyCollection;
       this.collections[collectionCode] = await super.getCollection(collectionCode);
+      this.initialName[collectionCode] = this.collections[collectionCode].name;
     }
 
     return this.collections[collectionCode];
   }
 
-  public updateLinkType(linkType: LinkType, index): void {
-    this.linkTypeService.updateLinkType(this.collection.code, linkType)
+  public newLinkType(): void {
+    const emptyLinkType: LinkType = {
+      fromCollection: this.collection.code,
+      toCollection: '',
+      name: '',
+      attributes: [],
+      instanceCount: 0
+    };
+
+    this.linkTypeService.createLinkType(emptyLinkType)
       .retry(3)
       .subscribe(
-        linkType => this.linkTypes[index] = linkType,
+        linkType => this.linkTypes.push(linkType),
+        error => this.notificationService.error('Error', 'Failed creating link type')
+      );
+  }
+
+  public updateLinkType(linkType: LinkType, index: number): void {
+    this.linkTypeService.updateLinkType(this.collection.code, this.initialName[linkType.toCollection], linkType)
+      .retry(3)
+      .subscribe(
+        linkType => {
+          this.fetchCollection(linkType.toCollection);
+          this.linkTypes[index] = linkType;
+          this.initialName[linkType.toCollection] = linkType.name;
+        },
         error => this.notificationService.error('Error', 'Failed updating link type')
       );
+  }
+
+  public deleteLinkType(linkType: LinkType, idx: number): void {
+    this.linkTypeService.removeLinkType(linkType)
+      .retry(3)
+      .subscribe(
+        () => this.linkTypes.splice(idx, 1),
+        error => this.notificationService.error('Error', 'Failed removing link type')
+      );
+  }
+
+  public searchLinkTypesQueryParams(linkType: LinkType): object {
+    return {
+      query: JSON.stringify({linkNames: [linkType.name]})
+    };
+  }
+
+  public hexToRgb(hexColor: string, darken: number): string {
+    const hexToNumber = (start: number) => parseInt(hexColor.substr(start, 2), 16);
+    const subtractAmount = (num: number) => Math.max(0, Math.min(255, num - darken));
+
+    const colors = [hexToNumber(1), hexToNumber(3), hexToNumber(5)]
+      .map(subtractAmount)
+      .join(',');
+
+    return `rgb(${colors})`;
   }
 
   public listHeight(linkType: LinkType): string {
@@ -120,6 +179,18 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     return String(numberToFormat)
       .replace(spaceBetweenEveryThreeDigits, ',')
       .replace(optionalCommaAtTheStart, '');
+  }
+
+  public gradient(color1: string, color2: string): SafeStyle {
+    const startingColor = this.hexToRgb(color1, 0);
+    const middleStartingColor = this.hexToRgb(color1, -10);
+    const middleEndingColor = this.hexToRgb(color1, 10);
+    const endingColor = this.hexToRgb(color2, 0);
+
+    return this.sanitizer.bypassSecurityTrustStyle(
+      `linear-gradient(135deg,${startingColor} 0%,${middleStartingColor} 50%,
+      ${middleEndingColor} 51%,${endingColor} 100%)`
+    );
   }
 
 }

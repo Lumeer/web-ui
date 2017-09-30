@@ -1,11 +1,16 @@
 @import "../../../shared/_lumeer-variables";
 
 :host {
+
   li {
     transition: height $animation-duration;
     overflow: hidden;
-    height: 165px;
+    height: 115px;
     align-items: baseline;
+  }
+
+  .new-link-type {
+    height: auto;
   }
 
   .start {

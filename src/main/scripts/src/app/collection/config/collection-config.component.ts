@@ -22,7 +22,6 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {NotificationsService} from 'angular2-notifications/dist';
-import {BsModalService} from 'ngx-bootstrap';
 
 import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
 import {CollectionService} from '../../core/rest/collection.service';
@@ -44,18 +43,23 @@ export class CollectionConfigComponent implements OnInit {
   constructor(private collectionService: CollectionService,
               private route: ActivatedRoute,
               private notificationService: NotificationsService,
-              private workspaceService: WorkspaceService,
-              private modalService: BsModalService) {
+              private workspaceService: WorkspaceService) {
   }
 
   public ngOnInit(): void {
-    this.collection = {
-      name: '',
-      icon: COLLECTION_NO_ICON,
-      color: COLLECTION_NO_COLOR
-    };
+    this.refreshOnCollectionChange();
+  }
 
-    this.fetchData();
+  private refreshOnCollectionChange(): void {
+    this.route.params.forEach(params => {
+      this.collection = this.collection || {
+        name: '',
+        icon: COLLECTION_NO_ICON,
+        color: COLLECTION_NO_COLOR
+      };
+
+      this.fetchData();
+    });
   }
 
   private async fetchData(): Promise<Collection> {

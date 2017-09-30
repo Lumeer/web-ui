@@ -2,14 +2,23 @@
 
 :host {
 
-  .card-header .button {
-    transition: background $animation-color-duration, opacity $animation-color-duration;
+  .card-header {
+    .buttons {
+      position: absolute;
+      right: 8px;
+    }
 
-    position: relative;
-    left: 20px;
+    .fa-times {
+      position: relative;
+      top: 1.5px;
+    }
 
-    &:hover {
-      background: $grey-darker-color;
+    .button {
+      transition: background $animation-color-duration, opacity $animation-color-duration;
+
+      &:hover {
+        background: $grey-darker-color;
+      }
     }
   }
 

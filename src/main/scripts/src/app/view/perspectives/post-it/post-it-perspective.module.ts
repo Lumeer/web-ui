@@ -18,6 +18,8 @@
  */
 
 import {NgModule} from '@angular/core';
+import {RouterModule} from '@angular/router';
+
 import {SharedModule} from '../../../shared/shared.module';
 import {PostItPerspectiveComponent} from './post-it-perspective.component';
 import {PostItAddDocumentComponent} from './add-document/add-document.component';
@@ -25,7 +27,8 @@ import {PostItDocumentComponent} from './document/post-it-document.component';
 
 @NgModule({
   imports: [
-    SharedModule
+    SharedModule,
+    RouterModule
   ],
   declarations: [
     PostItAddDocumentComponent,

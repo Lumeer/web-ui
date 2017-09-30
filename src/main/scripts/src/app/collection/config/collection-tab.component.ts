@@ -44,8 +44,8 @@ export abstract class CollectionTabComponent implements OnInit {
     this.getCurrentCollection();
   }
 
-  private async getCurrentCollection(): Promise<void> {
-    this.collection = {
+  protected async getCurrentCollection(): Promise<void> {
+    this.collection = this.collection || {
       attributes: [],
       icon: COLLECTION_NO_ICON,
       color: COLLECTION_NO_COLOR,
