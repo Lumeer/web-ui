@@ -18,7 +18,7 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Constraints} from './constraints';
+import {Constraints} from '../constraints';
 
 export class ConstraintSuggestion {
 

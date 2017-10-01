@@ -44,35 +44,28 @@ export abstract class CollectionTabComponent implements OnInit {
     this.getCurrentCollection();
   }
 
-  protected async getCurrentCollection(): Promise<void> {
-    this.collection = this.collection || {
-      attributes: [],
-      icon: COLLECTION_NO_ICON,
-      color: COLLECTION_NO_COLOR,
-      name: ''
-    };
+  protected getCurrentCollection(): void {
+    if (!this.collection) {
+      this.collection = {
+        attributes: [],
+        icon: COLLECTION_NO_ICON,
+        color: COLLECTION_NO_COLOR,
+        name: ''
+      };
+    }
 
-    this.collection = await this.getCollectionFromParams();
+    this.getCollectionFromParams();
   }
 
-  private async getCollectionFromParams(): Promise<Collection> {
-    const collectionCode = await this.route.parent.paramMap
+  private getCollectionFromParams(): void {
+    this.route.parent.paramMap
       .map(paramMap => paramMap.get('collectionCode'))
-      .take(1)
-      .toPromise();
-
-    return await this.getCollection(collectionCode);
-  }
-
-  protected async getCollection(collectionCode: string): Promise<Collection> {
-    return this.collectionService.getCollection(collectionCode)
+      .switchMap(collectionCode => this.collectionService.getCollection(collectionCode))
       .retry(3)
-      .take(1)
-      .toPromise()
-      .catch(error => {
-        this.notificationService.error('Error', `Failed fetching collection ${collectionCode}`);
-        return null;
-      });
+      .subscribe(
+        collection => this.collection = collection,
+        error => this.notificationService.error('Error', `Failed fetching collection`)
+      );
   }
 
   protected updateCollection(): void {

@@ -31,23 +31,22 @@ export const constraints: Constraints[] = [
     type: 'numeric',
     color: '#5c93ff',
     list: [
-      'Is Number', 'Number', '=', '>=', '<=', '<', '>', 'Rounded to', 'Is Decimal', 'Decimal', 'Is Odd', 'Odd',
-      'Is Even', 'Even', 'Less', 'Less Than', 'More', 'More Than'
+      'IsNumber', '=', '>=', '<=', '<', '>', 'RoundedTo:', 'Decimal', 'Odd', 'Even', 'LessThan:', 'MoreThan:'
     ]
   },
   {
     type: 'text',
     color: '#ff513e',
     list: [
-      'Is Word', 'Word', 'Shorter than', 'Shorter', 'Longer than', 'Longer ', 'Words', 'Contains Numbers', 'Uppercase',
-      'Lowercase', 'Camelcase'
+      'IsWord', 'ShorterThan:', 'LongerThan:', 'HasWords:', 'WordCount:', 'ContainsNumbers:', 'Uppercase',
+      'Lowercase'
     ]
   },
   {
     type: 'special',
     color: '#6bf643',
     list: [
-      'Full Name', 'Name', 'Date', 'Time', 'Money', 'One of', 'Gender'
+      'IsFullName', 'IsName', 'IsDate', 'IsTime', 'IsMoney', 'OneOf:', 'IsGender'
     ]
   }
 ];

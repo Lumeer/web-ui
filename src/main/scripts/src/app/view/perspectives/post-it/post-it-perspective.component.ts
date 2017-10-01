@@ -251,7 +251,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
       });
   }
 
-  public async createDocument(document: Document) {
+  public async createDocument(document: Document): Promise<void> {
     const newPostIt = new DocumentData;
     newPostIt.document = document;
     newPostIt.collection = await this.getCollection(document.collectionCode);

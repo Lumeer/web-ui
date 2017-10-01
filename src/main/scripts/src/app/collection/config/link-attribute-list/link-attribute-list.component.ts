@@ -19,8 +19,10 @@
  */
 
 import {Component, Input} from '@angular/core';
+
 import {Collection} from '../../../core/dto/collection';
 import {Attribute} from '../../../core/dto/attribute';
+import * as Const from '../constraints';
 
 @Component({
   selector: 'link-attribute-list',
@@ -74,88 +76,32 @@ export class LinkAttributeListComponent {
   //       error => this.notificationService.error('Error', 'Failed removing attribute')
   //     );
   // }
-  //
-  // public addConstraint(attribute: Attribute, constraint: string): void {
-  //   constraint && (attribute.newConstraint = constraint);
-  //
-  //   attribute.constraints.push(attribute.newConstraint);
-  //   attribute.newConstraint = '';
-  //
-  //   this.updateAttribute(attribute);
-  // }
-  //
-  // public removeConstraint(attribute: Attribute, constraintIndex: number): void {
-  //   attribute.constraints.splice(constraintIndex, 1);
-  //   this.updateAttribute(attribute);
-  // }
-  //
-  // public constraintBackspace(attribute: Attribute): void {
-  //   !attribute.newConstraint && this.removeConstraint(attribute, attribute.constraints.length - 1);
-  // }
-  //
-  // public matchesSearch(attribute: Attribute): boolean {
-  //   const isSearched = str => str.toLowerCase().includes(this.searched);
-  //
-  //   return isSearched(attribute.name) ||
-  //     isSearched(this.formatNumber(attribute.usageCount)) ||
-  //     attribute.constraints.find(isSearched) !== undefined;
-  // }
-  //
-  // public refreshSuggestions(): void {
-  //   const flattenSuggestion = (constraints, listSuggestion) => new ConstraintSuggestion(constraints, listSuggestion);
-  //   const flattenConstraints = constraints => constraints.list.reduce((array, current) => {
-  //     return array.concat(flattenSuggestion(constraints, current));
-  //   }, []);
-  //   const flatten = (flattenedList, currentList) => flattenedList.concat(currentList);
-  //
-  //   const nonNull = stringOrNull => stringOrNull ? stringOrNull : '';
-  //   const startsWith = (str, start) => nonNull(str).toLowerCase().startsWith(nonNull(start).toLowerCase());
-  //
-  //   this.suggestions = Const.constraints.map(flattenConstraints)
-  //     .reduce(flatten, [])
-  //     .filter(suggestion => startsWith(suggestion.name, this.activeAttribute.newConstraint))
-  //     .filter(suggestion => !this.activeAttribute.constraints.includes(suggestion.name))
-  //     .slice(0, 5);
-  // }
-  //
-  // //======= Visual functions =======//
-  //
-  // public formatNumber(numberToFormat: number): string {
-  //   const spaceBetweenEveryThreeDigits = /(?=(\d{3})+(?!\d))/g;
-  //   const optionalCommaAtTheStart = /^,/;
-  //
-  //   return String(numberToFormat)
-  //     .replace(spaceBetweenEveryThreeDigits, ',')
-  //     .replace(optionalCommaAtTheStart, '');
-  // }
-  //
-  // public constraintColor(constraint: string): string {
-  //   const removeWhitespace = list => list.map(str => str.replace(/\s/g, ''));
-  //   const shortestLength = list => Math.min(...list.map(str => str.length));
-  //   const trimToShortest = list => list.map(str => str.substring(0, shortestLength(list)));
-  //   const toLowerCase = list => list.map(str => str.toLowerCase());
-  //
-  //   const makeComparable = list => toLowerCase(trimToShortest(removeWhitespace(list)));
-  //   const allSame = list => new Set(list).size === 1;
-  //
-  //   const matching = (a, b) => allSame(makeComparable([a, b]));
-  //   const containsConstraint = suggestions => suggestions.list.find(suggestion => {
-  //     return matching(suggestion, constraint);
-  //   }) !== undefined;
-  //
-  //   const constraintType = Const.constraints.find(containsConstraint);
-  //   return constraintType ? constraintType.color : '#858585';
-  // }
-  //
-  // public darken(color: string, amount: number): string {
-  //   const hexToNumber = (start: number) => parseInt(color.substr(start, 2), 16);
-  //   const subtractAmount = (num: number) => Math.max(0, (num - amount));
-  //
-  //   const darkerColors: string = [hexToNumber(1), hexToNumber(3), hexToNumber(5)]
-  //     .map(subtractAmount)
-  //     .join(', ');
-  //
-  //   return `rgb(${darkerColors})`;
-  // };
+
+  public formatNumber(numberToFormat: number): string {
+    const spaceBetweenEveryThreeDigits = /(?=(\d{3})+(?!\d))/g;
+    const optionalCommaAtTheStart = /^,/;
+
+    return String(numberToFormat)
+      .replace(spaceBetweenEveryThreeDigits, ',')
+      .replace(optionalCommaAtTheStart, '');
+  }
+
+  public constraintColor(constraint: string): string {
+    const removeWhitespace = list => list.map(str => str.replace(/\s/g, ''));
+    const shortestLength = list => Math.min(...list.map(str => str.length));
+    const trimToShortest = list => list.map(str => str.substring(0, shortestLength(list)));
+    const toLowerCase = list => list.map(str => str.toLowerCase());
+
+    const makeComparable = list => toLowerCase(trimToShortest(removeWhitespace(list)));
+    const allSame = list => new Set(list).size === 1;
+
+    const matching = (a, b) => allSame(makeComparable([a, b]));
+    const containsConstraint = suggestions => suggestions.list.find(suggestion => {
+      return matching(suggestion, constraint);
+    }) !== undefined;
+
+    const constraintType = Const.constraints.find(containsConstraint);
+    return constraintType ? constraintType.color : '#858585';
+  }
 
 }

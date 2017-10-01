@@ -31,6 +31,7 @@ import {CollectionEventsComponent} from './config/events/collection-events.compo
 import {SimpleNotificationsModule} from 'angular2-notifications/dist';
 import {CollectionManageRoleGuard} from './collection-managed-role.guard';
 import {AttributeListComponent} from './config/attribute-list/attribute-list.component';
+import {LinkAttributeListComponent} from './config/link-attribute-list/link-attribute-list.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import {AttributeListComponent} from './config/attribute-list/attribute-list.com
   ],
   declarations: [
     AttributeListComponent,
+    LinkAttributeListComponent,
     CollectionComponent,
     CollectionListComponent,
     CollectionConfigComponent,

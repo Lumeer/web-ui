@@ -23,7 +23,7 @@ import {ActivatedRoute} from '@angular/router';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
-import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
+import {Collection, COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
 import {CollectionService} from '../../core/rest/collection.service';
 import {WorkspaceService} from '../../core/workspace.service';
 import {Role} from '../../shared/permissions/role';
@@ -47,37 +47,35 @@ export class CollectionConfigComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.refreshOnCollectionChange();
+    this.refreshOnUrlChange();
   }
 
-  private refreshOnCollectionChange(): void {
-    this.route.params.forEach(params => {
-      this.collection = this.collection || {
+  private refreshOnUrlChange(): void {
+    this.route.params.forEach(params => this.refreshCollection());
+  }
+
+  private refreshCollection(): void {
+    if (!this.collection) {
+      this.collection = {
         name: '',
+        code: COLLECTION_NO_CODE,
         icon: COLLECTION_NO_ICON,
         color: COLLECTION_NO_COLOR
       };
+    }
 
-      this.fetchData();
-    });
+    this.getCollectionFromParams();
   }
 
-  private async fetchData(): Promise<Collection> {
-    const collectionCode = await this.route.paramMap
+  private getCollectionFromParams(): void {
+    this.route.paramMap
       .map(paramMap => paramMap.get('collectionCode'))
-      .take(1)
-      .toPromise();
-
-    this.collection = await this.collectionService.getCollection(collectionCode)
+      .switchMap(collectionCode => this.collectionService.getCollection(collectionCode))
       .retry(3)
-      .take(1)
-      .toPromise()
-      .catch(error => {
-        this.notificationService.error('Error', 'Failed fetching collection');
-        return null;
-      });
-
-    return this.collection;
+      .subscribe(
+        collection => this.collection = collection,
+        error => this.notificationService.error('Error', `Failed fetching collection`)
+      );
   }
 
   public hasManageRole(collection: Collection): boolean {

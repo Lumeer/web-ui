@@ -18,13 +18,13 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
+import {animate, style, transition, trigger} from '@angular/animations';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
-import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../core/dto/collection';
+import {Collection, COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../core/dto/collection';
 import {CollectionTabComponent} from '../collection-tab.component';
 import {LinkTypeService} from '../../../core/rest/link-type.service';
 import {LinkType} from '../../../core/dto/link-type';
@@ -34,9 +34,23 @@ import {WorkspaceService} from '../../../core/workspace.service';
 @Component({
   selector: 'collection-link-types',
   templateUrl: './collection-link-types.component.html',
-  styleUrls: ['./collection-link-types.component.scss']
+  styleUrls: ['./collection-link-types.component.scss'],
+  animations: [
+    trigger('height', [
+      transition('void => *', [
+        style({height: 0}),
+        animate(250, style({height: '*'}))
+      ]),
+      transition('* => void', [
+        animate(250, style({height: '0px'}))
+      ])
+    ])
+  ]
 })
 export class CollectionLinkTypesComponent extends CollectionTabComponent implements OnInit {
+
+  @ViewChildren('name')
+  public linkTypeNameInput: QueryList<ElementRef>;
 
   public linkTypes: LinkType[] = [];
 
@@ -47,7 +61,6 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   public collections: { [collectionCode: string]: Collection } = {};
 
   constructor(private linkTypeService: LinkTypeService,
-              private sanitizer: DomSanitizer,
               collectionService: CollectionService,
               route: ActivatedRoute,
               notificationService: NotificationsService,
@@ -56,64 +69,64 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public ngOnInit(): void {
-    this.refreshOnCollectionChange();
+    this.refreshOnUrlChange();
+    this.fetchAllCollections();
+    this.setUninitializedCollection();
   }
 
-  private refreshOnCollectionChange(): void {
-    this.route.url.forEach(params => {
-      this.fetchData();
+  private refreshOnUrlChange(): void {
+    this.route.url.forEach(async params => {
+      await super.getCurrentCollection(); // needs to wait for current collection code to update
+      this.fetchLinkTypes(this.collection.code);
     });
   }
 
-  private async fetchData(): Promise<void> {
-    await super.getCurrentCollection();
-    const linkTypes = await this.fetchCurrentCollectionLinkTypes();
-
-    const collectionCodes = linkTypes.map(linkType => linkType.toCollection);
-    this.fetchAllCollections(collectionCodes);
-  }
-
-  private async fetchCurrentCollectionLinkTypes(): Promise<LinkType[]> {
-    this.linkTypes = await this.getLinkTypes(this.collection.code);
-    return this.linkTypes;
-  }
-
-  private async getLinkTypes(collectionCode: string): Promise<LinkType[]> {
-    return this.linkTypeService.getLinkTypes(collectionCode)
+  private fetchAllCollections(): void {
+    this.collectionService.getCollections()
       .retry(3)
-      .take(1)
-      .toPromise()
-      .catch(error => {
-        this.notificationService.error('Error', 'Failed fetching Link Types');
-        return [];
-      });
+      .subscribe(
+        collections => collections.forEach(collection => this.collections[collection.code] = collection),
+        error => this.notificationService.error('Error', 'Failed fetching collections')
+      );
   }
 
-  private fetchAllCollections(collectionCodes: string[]): void {
-    collectionCodes.forEach(collectionCode => this.fetchCollection(collectionCode));
+  private setUninitializedCollection(): void {
+    this.collections[COLLECTION_NO_CODE] = {
+      code: COLLECTION_NO_CODE,
+      icon: COLLECTION_NO_ICON,
+      color: COLLECTION_NO_COLOR,
+      name: '',
+      attributes: []
+    };
   }
 
-  private async fetchCollection(collectionCode: string): Promise<Collection> {
-    if (!this.collections[collectionCode]) {
-      const emptyCollection: Collection = {
-        attributes: [],
-        name: '',
-        color: COLLECTION_NO_COLOR,
-        icon: COLLECTION_NO_ICON
-      };
+  private fetchLinkTypes(collectionCode: string): void {
+    this.linkTypes = [];
+    setTimeout(() => this.getLinkTypes(collectionCode), 250);
+  }
 
-      this.collections[collectionCode] = emptyCollection;
-      this.collections[collectionCode] = await super.getCollection(collectionCode);
-      this.initialName[collectionCode] = this.collections[collectionCode].name;
-    }
+  private getLinkTypes(collectionCode: string): void {
+    this.linkTypeService.getLinkTypes(collectionCode)
+      .retry(3)
+      .subscribe(
+        linkTypes => this.linkTypes = linkTypes,
+        error => this.notificationService.error('Error', 'Failed fetching Link Types')
+      );
+  }
 
-    return this.collections[collectionCode];
+  public allCollectionCodes(): string[] {
+    return Object.keys(this.collections)
+      .filter(collectionCode => collectionCode !== COLLECTION_NO_CODE);
+  }
+
+  public initialized(linkType: LinkType): boolean {
+    return linkType.name && linkType.toCollection !== COLLECTION_NO_CODE;
   }
 
   public newLinkType(): void {
     const emptyLinkType: LinkType = {
       fromCollection: this.collection.code,
-      toCollection: '',
+      toCollection: COLLECTION_NO_CODE,
       name: '',
       attributes: [],
       instanceCount: 0
@@ -122,7 +135,10 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     this.linkTypeService.createLinkType(emptyLinkType)
       .retry(3)
       .subscribe(
-        linkType => this.linkTypes.push(linkType),
+        linkType => {
+          this.linkTypes.push(linkType);
+          setTimeout(() => this.linkTypeNameInput.last.nativeElement.focus());
+        },
         error => this.notificationService.error('Error', 'Failed creating link type')
       );
   }
@@ -132,7 +148,6 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       .retry(3)
       .subscribe(
         linkType => {
-          this.fetchCollection(linkType.toCollection);
           this.linkTypes[index] = linkType;
           this.initialName[linkType.toCollection] = linkType.name;
         },
@@ -155,23 +170,6 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     };
   }
 
-  public hexToRgb(hexColor: string, darken: number): string {
-    const hexToNumber = (start: number) => parseInt(hexColor.substr(start, 2), 16);
-    const subtractAmount = (num: number) => Math.max(0, Math.min(255, num - darken));
-
-    const colors = [hexToNumber(1), hexToNumber(3), hexToNumber(5)]
-      .map(subtractAmount)
-      .join(',');
-
-    return `rgb(${colors})`;
-  }
-
-  public listHeight(linkType: LinkType): string {
-    const linkTypeheaderHeight = 40;
-    const tableRowHeight = 52;
-    return `${linkTypeheaderHeight + (this.collections[linkType.toCollection].attributes.length + 2) * tableRowHeight}px`;
-  }
-
   public formatNumber(numberToFormat: number): string {
     const spaceBetweenEveryThreeDigits = /(?=(\d{3})+(?!\d))/g;
     const optionalCommaAtTheStart = /^,/;
@@ -179,18 +177,6 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     return String(numberToFormat)
       .replace(spaceBetweenEveryThreeDigits, ',')
       .replace(optionalCommaAtTheStart, '');
-  }
-
-  public gradient(color1: string, color2: string): SafeStyle {
-    const startingColor = this.hexToRgb(color1, 0);
-    const middleStartingColor = this.hexToRgb(color1, -10);
-    const middleEndingColor = this.hexToRgb(color1, 10);
-    const endingColor = this.hexToRgb(color2, 0);
-
-    return this.sanitizer.bypassSecurityTrustStyle(
-      `linear-gradient(135deg,${startingColor} 0%,${middleStartingColor} 50%,
-      ${middleEndingColor} 51%,${endingColor} 100%)`
-    );
   }
 
 }

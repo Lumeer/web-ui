@@ -27,7 +27,7 @@ import {ConstraintSuggestion} from './constraint-suggestion';
 import {CollectionService} from '../../../core/rest/collection.service';
 import {Collection} from '../../../core/dto/collection';
 import {isNullOrUndefined} from 'util';
-import * as Const from './constraints';
+import * as Const from '../constraints';
 
 @Component({
   selector: 'attribute-list',
@@ -128,7 +128,14 @@ export class AttributeListComponent {
   public addConstraint(attribute: ConfiguredAttribute, constraint: string): void {
     constraint && (attribute.newConstraint = constraint);
 
-    attribute.constraints.push(attribute.newConstraint);
+    const toCamelCase = str => str
+      .trim()
+      .split(/\s+/)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join('')
+      .replace(':', ': ');
+
+    attribute.constraints.push(toCamelCase(attribute.newConstraint));
     attribute.newConstraint = '';
 
     this.updateAttribute(attribute);
