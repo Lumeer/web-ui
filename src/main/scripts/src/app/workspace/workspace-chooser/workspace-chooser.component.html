@@ -1,112 +1,29 @@
-<div>
-  <h2>Organizations</h2>
-  <div class="horizontal-chooser">
+<div class="container-fluid container">
+  <resource-chooser [initActiveIx]="activeOrgIx"
+                    [header]="'Organizations'"
+                    [resources]="organizations"
+                    [canCreateResource]="true"
+                    (resourceSelect)="onSelectOrganization($event)"
+                    (resourceNew)="onCreateOrganization()"
+                    (resourceSettings)="onOrganizationSettings($event)"
+                    (resourceNewDescription)="onNewOrganizationDescription($event)">
+  </resource-chooser>
 
-    <div class="slide">
-      <a tabindex (click)="onScrollOrganizations(-1)">
-        <i class="fa fa-chevron-left"></i>
-      </a>
-    </div>
-
-    <perfect-scrollbar class="chooser" [config]="{suppressScrollY: true}" #organizationScrollbar>
-      <div class="squares" [style.width]="organizationsWidth + 'px'">
-
-        <div class="square" (click)="onCreateOrganization()">
-          <div class="square-icon-full">
-            <i class="fa fa-plus fa-5x" aria-hidden="true"></i>
-          </div>
-        </div>
-
-        <div class="square" *ngFor="let organization of organizations; let idx = index"
-             (click)="onOrganizationSelected(organization, idx)"
-             [style.border-color]="organization.active ? organization.color : null"
-             [style.color]="organization.color">
-          <div class="square-settings" (click)="$event.stopPropagation(); onOrganizationSettings(organization)">
-            <i class="fa fa-cog"></i>
-          </div>
-          <div class="square-icon">
-            <i class="{{ organization.icon }}"></i>
-          </div>
-          <span class="square-code">{{organization.code}}</span>
-          <span class="square-name">{{organization.name}}</span>
-        </div>
-
-      </div>
-
-      <div class="pointer" [style.width]="organizationsWidth + 'px'" *ngIf="activeOrganization">
-        <div [style.width]="170 * (activeOrganization.index + 1 ) + 60 + 'px'"></div><!--
-        --><div class="arrow-start"></div><!--
-        --><div class="arrow-end"></div><!--
-        --><div [style.width]="170 * (organizations.length - activeOrganization.index) - 120 + 'px'"></div>
-      </div>
-    </perfect-scrollbar>
-
-    <div class="slide">
-      <a tabindex (click)="onScrollOrganizations(1)">
-        <i class="fa fa-chevron-right"></i>
-      </a>
-    </div>
-
+  <div class="pt-3" *ngIf="activeOrgIx >=0" [@animateOpacityFromUp]="'in'">
+    <resource-chooser [initActiveIx]="activeProjIx"
+                      [header]="'Projects'"
+                      [resources]="organizations[activeOrgIx].projects"
+                      [canCreateResource]="hasManageRole(organizations[activeOrgIx])"
+                      (resourceSelect)="onSelectProject($event)"
+                      (resourceNew)="onCreateProject()"
+                      (resourceSettings)="onProjectSettings($event)"
+                      (resourceNewDescription)="onNewProjectDescription($event)">
+    </resource-chooser>
   </div>
-</div>
-
-<div *ngIf="activeOrganization">
-  <h2>Projects</h2>
-  <div class="horizontal-chooser">
-
-    <div class="slide">
-      <a tabindex (click)="onScrollProjects(-1)">
-        <i class="fa fa-chevron-left"></i>
-      </a>
-    </div>
-
-    <perfect-scrollbar class="chooser" #projectScrollbar [config]="{suppressScrollY: true}">
-      <div class="squares" [style.width]="projectsWidth + 'px'">
-
-        <div class="square" (click)="onCreateProject()">
-          <div class="square-icon-full">
-            <i class="fa fa-plus fa-5x" aria-hidden="true"></i>
-          </div>
-        </div>
-
-        <div class="square" *ngFor="let project of activeOrganization.projects; let idx = index"
-             (click)="onProjectSelected(project, idx)"
-             [style.border-color]="project.active ? project.color : null"
-             [style.color]="project.color">
-          <div class="square-settings" (click)="$event.stopPropagation(); onProjectSettings(project)">
-            <i class="fa fa-cog"></i>
-          </div>
-          <div class="square-icon">
-            <i class="{{ project.icon }}"></i>
-          </div>
-          <span class="square-code">{{project.code}}</span>
-          <span class="square-name">{{project.name}}</span>
-        </div>
-
-      </div>
-    </perfect-scrollbar>
-
-    <div class="slide">
-      <a tabindex (click)="onScrollProjects(1)">
-        <i class="fa fa-chevron-right"></i>
-      </a>
-    </div>
-
-    <div class="project-description" *ngIf="activeProject">
-      <div class="information">
-        <div class="title">
-          <i [ngClass]="activeProject.icon" [ngStyle]="{'color':activeProject.color}"></i>
-          <span [ngStyle]="{'color':activeProject.color}">{{activeProject.code}}</span>
-        </div>
-        <div class="description">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
-          finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
-          vel augue.
-        </div>
-      </div>
-      <div class="pull-right submit-button">
-        <button type="button" class="btn btn-primary" (click)="onSaveActiveItems()">Choose</button>
-      </div>
-    </div>
+  <div class="py-2 px-5 d-flex justify-content-end fixed-bottom container" *ngIf="activeProjIx >=0"
+       [@animateOpacityFromUp]="'in'">
+    <button type="button" class="btn btn-lg btn-success" (click)="onSaveActiveItems()">
+      <i class="fas fa fa-play px-2"></i>Use project
+    </button>
   </div>
 </div>

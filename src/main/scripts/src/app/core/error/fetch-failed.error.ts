@@ -18,11 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Project} from './project';
-import {Resource} from './resource';
+import {LumeerError} from './lumeer.error';
 
-export class Organization extends Resource {
+export class FetchFailedError extends LumeerError {
 
-  public projects?: Project[];
+  public constructor(resourceType: string) {
+    super(`Can't fetch ${resourceType}`);
+  }
 
 }

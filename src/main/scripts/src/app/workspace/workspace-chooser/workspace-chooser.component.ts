@@ -18,37 +18,48 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
 import {Organization} from '../../core/dto/organization';
 import {Project} from '../../core/dto/project';
 import {WorkspaceService} from '../../core/workspace.service';
 import {OrganizationService} from '../../core/rest/organization.service';
 import {ProjectService} from '../../core/rest/project.service';
-import {UserSettingsService} from '../../core/rest/user-settings.service';
-import {PerfectScrollbarComponent} from 'ngx-perfect-scrollbar';
+import {isNullOrUndefined} from 'util';
+import {Role} from '../../shared/permissions/role';
 
-const squareSize: number = 170;
+const squareSize: number = 200;
+const arrowSize: number = 40;
 
 @Component({
   selector: 'workspace-chooser',
   templateUrl: './workspace-chooser.component.html',
-  styleUrls: ['./workspace-chooser.component.scss']
+  styleUrls: ['./workspace-chooser.component.scss'],
+  animations: [
+    trigger('animateOpacityFromUp', [
+      state('in', style({transform: 'translateY(0)', opacity: 1})),
+      transition('void => *', [
+        animate(300, keyframes([
+          style({transform: 'translateY(-50px)', opacity: 0, offset: 0}),
+          style({transform: 'translateY(0)', opacity: 1, offset: 1})
+        ]))
+      ]),
+      transition('* => void', [
+        animate(300, keyframes([
+          style({transform: 'translateY(0)', opacity: 1, offset: 0}),
+          style({transform: 'translateY(-50px)', opacity: 0, offset: 1})
+        ]))
+      ])
+    ])
+  ]
 })
 export class WorkspaceChooserComponent implements OnInit {
 
-  @ViewChild('organizationScrollbar')
-  public organizationsElement: PerfectScrollbarComponent;
-
-  @ViewChild('projectScrollbar')
-  public projectsElement: PerfectScrollbarComponent;
-
-  private organizationsWidth: number = 0;
-  private projectsWidth: number = 0;
-  private organizations: Organization[];
-  private activeOrganization: Organization;
-  private activeProject: Project;
+  public organizations: Organization[] = [];
+  public activeOrgIx: number;
+  public activeProjIx: number;
 
   constructor(private organizationService: OrganizationService,
               private projectService: ProjectService,
@@ -56,33 +67,30 @@ export class WorkspaceChooserComponent implements OnInit {
               private router: Router) {
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.organizationService.getOrganizations()
       .subscribe(organizations => {
         this.organizations = organizations;
-        this.organizationsWidth = (organizations.length + 1) * squareSize + 5;
 
         if (this.workspaceService.organizationCode) {
           const ix: number = this.organizations.findIndex(org =>
             org.code === this.workspaceService.organizationCode
           );
           if (ix >= 0) {
-            this.activeOrganization = this.organizations[ix];
-            this.activeOrganization.index = ix;
-            this.activeOrganization.active = true;
+            this.activeOrgIx = ix;
 
-            this.projectService.getProjects(this.activeOrganization.code)
+            const activeOrganization = this.organizations[this.activeOrgIx];
+            activeOrganization.projects = [];
+            this.projectService.getProjects(activeOrganization.code)
               .subscribe((projects: Project[]) => {
-                this.activeOrganization.projects = projects;
-                this.projectsWidth = (projects.length + 1) * squareSize + 5;
+                activeOrganization.projects = projects;
 
                 if (this.workspaceService.projectCode) {
-                  const ixProj: number = this.activeOrganization.projects.findIndex(proj =>
+                  const ixProj: number = activeOrganization.projects.findIndex(proj =>
                     proj.code === this.workspaceService.projectCode
                   );
                   if (ixProj >= 0) {
-                    this.activeProject = this.activeOrganization.projects[ixProj];
-                    this.activeProject.active = true;
+                    this.activeProjIx = ixProj;
                   }
                 }
               });
@@ -91,67 +99,67 @@ export class WorkspaceChooserComponent implements OnInit {
       });
   }
 
-  public onOrganizationSelected(organization: Organization, index: number): void {
-    this.organizations.forEach((org: Organization) => org.active = false);
-    organization.active = true;
-    organization.index = index;
-    if (organization.projects) {
-      organization.projects.forEach((project: Project) => project.active = false);
-      this.projectsWidth = (organization.projects.length + 1) * squareSize + 5;
-    } else {
-      this.projectService.getProjects(organization.code)
+  public onSelectOrganization(index: number) {
+    const selectedOrganization = this.organizations[index];
+    if (!selectedOrganization.projects) {
+      selectedOrganization.projects = [];
+      this.projectService.getProjects(selectedOrganization.code)
         .subscribe((projects: Project[]) => {
-          organization.projects = projects;
-          this.projectsWidth = (projects.length + 1 ) * squareSize + 5;
+          selectedOrganization.projects = projects;
         });
     }
-    this.activeOrganization = organization;
-    this.activeProject = undefined;
+
+    this.activeProjIx = undefined;
+    this.activeOrgIx = index;
   }
 
-  public onProjectSelected(project: Project, index: number): void {
-    this.activeOrganization.projects.forEach((oneProject: Project) => oneProject.active = false);
-    project.active = true;
-    project.index = index;
-    this.activeProject = project;
-  }
-
-  public onScrollOrganizations(direction: number): void {
-    this.organizationsElement.scrollToLeft(this.organizationsElement['elementRef'].nativeElement.scrollLeft + squareSize * direction);
-  }
-
-  public onScrollProjects(direction: number): void {
-    this.projectsElement.scrollToLeft(this.projectsElement['elementRef'].nativeElement.scrollLeft + squareSize * direction);
-  }
-
-  public onSaveActiveItems(): void {
-    if (this.activeOrganization && this.activeProject) {
-      // TODO save settings on the server using configuration service
-      this.workspaceService.organizationCode = this.activeOrganization.code;
-      this.workspaceService.projectCode = this.activeProject.code;
-
-      this.router.navigate(['w', this.activeOrganization.code, this.activeProject.code, 'collections']);
-    }
-  }
-
-  public onCreateOrganization(): void {
+  public onCreateOrganization() {
     this.router.navigate(['organization', 'add']);
   }
 
-  public onCreateProject(): void {
-    if (this.activeOrganization) {
-      this.router.navigate(['organization', this.activeOrganization.code, 'project', 'add']);
+  public onOrganizationSettings(index: number) {
+    this.router.navigate(['organization', this.organizations[index].code]);
+  }
+
+  public onNewOrganizationDescription(description: string) {
+    // TODO save for selected organization ix
+  }
+
+  public onSelectProject(index: number) {
+    this.activeProjIx = index;
+  }
+
+  public onCreateProject() {
+    if (!isNullOrUndefined(this.activeOrgIx)) {
+      this.router.navigate(['organization', this.organizations[this.activeOrgIx].code, 'project', 'add']);
     }
   }
 
-  public onOrganizationSettings(organization: Organization): void {
-    this.router.navigate(['organization', organization.code]);
-  }
-
-  public onProjectSettings(project: Project): void {
-    if (this.activeOrganization) {
-      this.router.navigate(['organization', this.activeOrganization.code, 'project', project.code]);
+  public onProjectSettings(index: number) {
+    if (!isNullOrUndefined(this.activeOrgIx)) {
+      const project = this.organizations[this.activeOrgIx].projects[index];
+      this.router.navigate(['organization', this.organizations[this.activeOrgIx].code, 'project', project.code]);
     }
   }
 
+  public onNewProjectDescription(description: string) {
+    // TODO save for selected project ix
+  }
+
+  public hasManageRole(organization: Organization) {
+    return organization.permissions && organization.permissions.users.length === 1
+      && organization.permissions.users[0].roles.some(r => r === Role.Manage.toString());
+  }
+
+  public onSaveActiveItems() {
+    if (!isNullOrUndefined(this.activeOrgIx) && !isNullOrUndefined(this.activeProjIx)) {
+      // TODO save settings on the server using configuration service
+      let activeOrgCode = this.organizations[this.activeOrgIx].code;
+      let activeProjCode = this.organizations[this.activeOrgIx].projects[this.activeProjIx].code;
+      this.workspaceService.organizationCode = activeOrgCode;
+      this.workspaceService.projectCode = activeProjCode;
+
+      this.router.navigate(['w', activeOrgCode, activeProjCode, 'collections']);
+    }
+  }
 }

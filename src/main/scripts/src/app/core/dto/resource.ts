@@ -18,11 +18,14 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Project} from './project';
-import {Resource} from './resource';
+import {Permissions} from './permissions';
 
-export class Organization extends Resource {
+export class Resource {
 
-  public projects?: Project[];
+  public code: string = '';
+  public name: string = '';
+  public color: string = '';
+  public icon: string = '';
+  public permissions?: Permissions;
 
 }

@@ -18,11 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Project} from './project';
-import {Resource} from './resource';
+import {LumeerError} from './lumeer.error';
 
-export class Organization extends Resource {
+export class NetworkError extends LumeerError {
 
-  public projects?: Project[];
+  public constructor() {
+    super('Network is unavailable');
+  }
 
 }

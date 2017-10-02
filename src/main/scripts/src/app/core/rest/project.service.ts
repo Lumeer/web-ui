@@ -19,18 +19,22 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpResponse} from '@angular/common/http';
+import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 
 import {Project} from '../dto/project';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {PermissionService} from './permission.service';
+import {FetchFailedError} from '../error/fetch-failed.error';
+import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {NetworkError} from '../error/network.error';
 
 @Injectable()
 export class ProjectService extends PermissionService {
 
   public getProjects(orgCode: string): Observable<Project[]> {
-    return this.httpClient.get<Project[]>(this.apiPrefix(orgCode));
+    return this.httpClient.get<Project[]>(this.apiPrefix(orgCode))
+      .catch(ProjectService.catchGetProjectsError);
   }
 
   public getProject(orgCode: string, projCode: string): Observable<Project> {
@@ -58,5 +62,13 @@ export class ProjectService extends PermissionService {
     let projCode = this.workspaceService.projectCode;
 
     return this.apiPrefix(orgCode, projCode);
+  }
+
+  private static catchGetProjectsError(error: HttpErrorResponse): ErrorObservable {
+    if (error instanceof Error) {
+      throw new NetworkError();
+    } else {
+      throw new FetchFailedError('Projects');
+    }
   }
 }
