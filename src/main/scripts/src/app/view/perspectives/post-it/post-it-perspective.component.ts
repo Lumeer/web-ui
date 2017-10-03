@@ -40,6 +40,7 @@ import {Permission} from '../../../core/dto/permission';
 import {isNullOrUndefined} from 'util';
 import 'rxjs/add/operator/retry';
 import {PerspectiveComponent} from '../perspective.component';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'post-it-perspective',
