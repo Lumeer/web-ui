@@ -21,8 +21,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {WorkspaceService} from './workspace.service';
-import {UserSettingsService} from './rest/user-settings.service';
-import {UserSettings} from './dto/user.settings';
+import {UserSettingsService} from './user-settings.service';
 
 @Component({
   template: ''
@@ -35,19 +34,15 @@ export class HomeComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.userSettingsService.getUserSettings()
-      .subscribe((userSettings: UserSettings) => {
-        this.workspaceService.organizationCode = userSettings.defaultOrganization;
-        this.workspaceService.projectCode = userSettings.defaultProject;
+    const userSettings = this.userSettingsService.getUserSettings();
+    this.workspaceService.organizationCode = userSettings.defaultOrganization;
+    this.workspaceService.projectCode = userSettings.defaultProject;
 
-        if (this.workspaceService.isWorkspaceSet()) {
-          this.router.navigate(['/w', userSettings.defaultOrganization, userSettings.defaultProject, 'search']);
-        } else {
-          this.router.navigate(['/workspace']);
-        }
-      }, error => {
-        this.router.navigate(['/workspace']);
-      });
+    if (this.workspaceService.isWorkspaceSet()) {
+      this.router.navigate(['/w', userSettings.defaultOrganization, userSettings.defaultProject, 'search']);
+    } else {
+      this.router.navigate(['/workspace']);
+    }
   }
 
 }

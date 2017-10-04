@@ -26,7 +26,7 @@ import {HttpModule} from '@angular/http';
 
 import {WorkspaceService} from './workspace.service';
 import {TopPanelComponent} from './top-panel/top-panel.component';
-import {UserSettingsService} from './rest/user-settings.service';
+import {UserSettingsService} from './user-settings.service';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ProjectService} from './rest/project.service';
 import {OrganizationService} from './rest/organization.service';
@@ -44,12 +44,14 @@ import {KEYCLOAK_HTTP_PROVIDER} from './keycloak/keycloak-http.service';
 import {KeycloakService} from './keycloak/keycloak.service';
 import {ViewService} from './rest/view.service';
 import {SearchHomeComponent} from './search-home/search-home.component';
+import {Ng2Webstorage} from 'ng2-webstorage';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     HttpModule,
+    Ng2Webstorage,
     SharedModule,
     HttpClientModule,
     RouterModule
