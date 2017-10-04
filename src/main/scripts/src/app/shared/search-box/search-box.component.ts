@@ -19,7 +19,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, ParamMap, Router} from '@angular/router';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -45,9 +45,7 @@ import {QueryItemsConverter} from './query-item/query-items-converter';
 import {Query} from '../../core/dto/query';
 import {QueryConverter} from '../utils/query-converter';
 import {ViewService} from '../../core/rest/view.service';
-
-const BACKSPACE_KEY = 8;
-const ENTER_KEY = 13;
+import {KeyCode} from '../key-code';
 
 @Component({
   selector: 'search-box',
@@ -95,7 +93,7 @@ export class SearchBoxComponent implements OnInit {
     this.activatedRoute.firstChild.paramMap
       .map((params: ParamMap) => params.get('viewCode'))
       .switchMap(viewCode => this.viewService.getView(viewCode))
-      .switchMap(view =>  view ? this.queryItemsConverter.fromQuery(view.query) : Observable.of([]))
+      .switchMap(view => view ? this.queryItemsConverter.fromQuery(view.query) : Observable.of([]))
       .subscribe(queryItems => {
         if (this.queryItems.length === 0) {
           this.queryItems = queryItems;
@@ -146,9 +144,9 @@ export class SearchBoxComponent implements OnInit {
 
   public onKeyUp(event: KeyboardEvent) {
     switch (event.keyCode) {
-      case ENTER_KEY:
+      case KeyCode.Enter:
         return;
-      case BACKSPACE_KEY:
+      case KeyCode.Backspace:
       default:
         this.suggest();
     }
@@ -156,10 +154,10 @@ export class SearchBoxComponent implements OnInit {
 
   public onKeyDown(event: KeyboardEvent) {
     switch (event.keyCode) {
-      case BACKSPACE_KEY:
+      case KeyCode.Backspace:
         this.removeItem();
         return;
-      case ENTER_KEY:
+      case KeyCode.Enter:
         this.addItemOrSearch();
         return;
     }

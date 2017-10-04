@@ -20,11 +20,10 @@
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {NotificationsService} from 'angular2-notifications/dist';
+
 import {UserService} from '../../../core/rest/user.service';
 import {User} from '../../../core/dto/user';
-
-const BACKSPACE_KEY = 8;
-const ENTER_KEY = 13;
+import {KeyCode} from '../../../shared/key-code';
 
 @Component({
   selector: 'share-dialog',
@@ -54,9 +53,9 @@ export class ShareDialogComponent implements OnInit {
 
   public onKeyUp(event: KeyboardEvent) {
     switch (event.keyCode) {
-      case ENTER_KEY:
+      case KeyCode.Enter:
         return;
-      case BACKSPACE_KEY:
+      case KeyCode.Backspace:
       default:
         this.suggest();
     }
@@ -64,10 +63,10 @@ export class ShareDialogComponent implements OnInit {
 
   public onKeyDown(event: KeyboardEvent) {
     switch (event.keyCode) {
-      case BACKSPACE_KEY:
+      case KeyCode.Backspace:
         this.removeItem();
         return;
-      case ENTER_KEY:
+      case KeyCode.Enter:
         this.addItemOrShare();
         return;
     }
