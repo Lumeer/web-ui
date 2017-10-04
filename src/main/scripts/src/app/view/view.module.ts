@@ -21,7 +21,6 @@
 import {NgModule} from '@angular/core';
 import {SharedModule} from '../shared/shared.module';
 import {ViewRoutingModule} from './view-routing.module';
-import {PerspectiveChooserComponent} from './perspective-chooser/perspective-chooser.component';
 import {PerspectiveDirective} from './perspectives/perspective.directive';
 import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
@@ -29,6 +28,8 @@ import {SearchPerspectiveModule} from './perspectives/search/search-perspective.
 import {PostItPerspectiveModule} from './perspectives/post-it/post-it-perspective.module';
 import {ViewComponent} from './view.component';
 import {TablePerspectiveModule} from './perspectives/table/table-perspective.module';
+import {ViewControlsComponent} from './view-controls/view-controls.component';
+import {ShareDialogComponent} from './view-controls/share-dialog/share-dialog.component';
 
 @NgModule({
   imports: [
@@ -42,8 +43,9 @@ import {TablePerspectiveModule} from './perspectives/table/table-perspective.mod
   ],
   declarations: [
     PerspectiveDirective,
-    PerspectiveChooserComponent,
-    ViewComponent
+    ShareDialogComponent,
+    ViewComponent,
+    ViewControlsComponent
   ]
 })
 export class ViewModule {

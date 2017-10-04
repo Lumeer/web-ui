@@ -1,0 +1,15 @@
+@import "../../../shared/lumeer-variables";
+
+.email {
+  background-color: #dddddd;
+  border-radius: $border-radius-base;
+  white-space: nowrap;
+
+  span {
+    margin-left: 3px;
+  }
+}
+
+.suggestions {
+  min-width: 250px;
+}

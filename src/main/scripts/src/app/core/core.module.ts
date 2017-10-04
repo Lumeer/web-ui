@@ -44,12 +44,14 @@ import {KEYCLOAK_HTTP_PROVIDER} from './keycloak/keycloak-http.service';
 import {KeycloakService} from './keycloak/keycloak.service';
 import {ViewService} from './rest/view.service';
 import {SearchHomeComponent} from './search-home/search-home.component';
+import {Ng2Webstorage} from 'ng2-webstorage';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     HttpModule,
+    Ng2Webstorage,
     SharedModule,
     HttpClientModule,
     RouterModule

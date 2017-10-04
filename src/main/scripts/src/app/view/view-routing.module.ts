@@ -24,6 +24,10 @@ import {NgModule} from '@angular/core';
 
 const searchRoutes: Routes = [
   {
+    path: 'w/:organizationCode/:projectCode/view/:viewCode',
+    component: ViewComponent
+  },
+  {
     path: 'w/:organizationCode/:projectCode/view',
     component: ViewComponent
   }

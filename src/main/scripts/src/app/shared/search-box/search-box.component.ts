@@ -19,7 +19,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, ParamMap, Router} from '@angular/router';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -44,6 +44,7 @@ import {Collection} from '../../core/dto/collection';
 import {QueryItemsConverter} from './query-item/query-items-converter';
 import {Query} from '../../core/dto/query';
 import {QueryConverter} from '../utils/query-converter';
+import {ViewService} from '../../core/rest/view.service';
 
 const BACKSPACE_KEY = 8;
 const ENTER_KEY = 13;
@@ -69,18 +70,32 @@ export class SearchBoxComponent implements OnInit {
               private queryItemsConverter: QueryItemsConverter,
               private router: Router,
               private searchService: SearchService,
+              private viewService: ViewService,
               private workspaceService: WorkspaceService) {
   }
 
   public ngOnInit(): void {
-    this.parseQueryItemsFromQueryParams();
+    this.getQueryItemsFromQueryParams();
+    this.getQueryItemsFromView();
     this.suggestQueryItems();
   }
 
-  private parseQueryItemsFromQueryParams() {
+  private getQueryItemsFromQueryParams() {
     this.activatedRoute.queryParamMap
       .map((queryParams: ParamMap) => QueryConverter.fromString(queryParams.get('query')))
       .switchMap((query: Query) => this.queryItemsConverter.fromQuery(query))
+      .subscribe(queryItems => {
+        if (this.queryItems.length === 0) {
+          this.queryItems = queryItems;
+        }
+      });
+  }
+
+  private getQueryItemsFromView() {
+    this.activatedRoute.firstChild.paramMap
+      .map((params: ParamMap) => params.get('viewCode'))
+      .switchMap(viewCode => this.viewService.getView(viewCode))
+      .switchMap(view =>  view ? this.queryItemsConverter.fromQuery(view.query) : Observable.of([]))
       .subscribe(queryItems => {
         if (this.queryItems.length === 0) {
           this.queryItems = queryItems;
@@ -196,7 +211,7 @@ export class SearchBoxComponent implements OnInit {
     const organizationCode = this.workspaceService.organizationCode;
     const projectCode = this.workspaceService.projectCode;
 
-    this.router.navigate(['/w', organizationCode, projectCode, 'view'],      {
+    this.router.navigate(['/w', organizationCode, projectCode, 'view'], {
       queryParams: {
         query: this.queryItemsConverter.toQueryString(this.queryItems),
         perspective: 'search',

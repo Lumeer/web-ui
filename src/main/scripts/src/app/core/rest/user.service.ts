@@ -35,9 +35,9 @@ export class UserService {
       organizationCode = this.workspaceService.organizationCode;
     }
     return Observable.of([
-      {id: 'someId1', username: 'alicak', groups: []},
-      {id: 'someId2', username: 'kubedo', groups: []},
-      {id: 'someId3', username: 'jkotrady', groups: []},
-      {id: 'someId4', username: 'kulexpipiens', groups: []}]);
+      {id: 'someId1', username: 'alicak@lumeer.io', groups: []},
+      {id: 'someId2', username: 'kubedo@lumeer.io', groups: []},
+      {id: 'someId3', username: 'jkotrady@lumeer.io', groups: []},
+      {id: 'someId4', username: 'kulexpipiens@lumeer.io', groups: []}]);
   }
 }

@@ -1,0 +1,45 @@
+<form class="form-inline d-flex">
+  <label for="perspectiveSelector"
+         class="form-control-label font-weight-bold">
+    Perspective:
+  </label>
+  <select #perspectiveSelector
+          id="perspectiveSelector"
+          class="form-control mx-3 d-block"
+          (change)="onSelectPerspective(perspectiveSelector.value)">
+    <option *ngFor="let perspective of perspectives"
+            [value]="perspective.id"
+            [attr.selected]="perspective === selectedPerspective ? '' : null">
+      {{perspective.name}}
+    </option>
+  </select>
+  <label for="viewName"
+         class="form-control-label font-weight-bold">
+    Name:
+  </label>
+  <input id="viewName" #viewName
+         class="form-control-lg border-0 font-italic flex-grow"
+         [value]="view ? view.name : ''"
+         placeholder="Untitled view"/>
+  <a title="Save"
+     class="view-button mx-1"
+     (click)="onSave(viewName.value)">
+    <i class="fa fa-save fa-lg fa-fw" aria-hidden="true"></i>
+    <i class="fal fa-save fa-lg fa-fw" aria-hidden="true"></i>
+  </a>
+  <a title="Copy"
+     class="view-button mx-1"
+     *ngIf="view"
+     (click)="onCopy()">
+    <i class="fa fa-copy fa-lg fa-fw" aria-hidden="true"></i>
+    <i class="fal fa-copy fa-lg fa-fw" aria-hidden="true"></i>
+  </a>
+  <button class="btn btn-outline-success ml-2"
+          (click)="showShareDialog(modal)">
+    Share
+  </button>
+</form>
+
+<ng-template #modal>
+  <share-dialog (closeDialog)="onCloseShareDialog()"></share-dialog>
+</ng-template>

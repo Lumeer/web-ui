@@ -4,19 +4,6 @@
   background-color: #faeabb;
   border-radius: $border-radius-base;
   white-space: nowrap;
-
-  span {
-    margin-left: 3px;
-  }
-}
-
-.search-input {
-  border: 0;
-  flex-grow: 2;
-
-  &:focus {
-    outline: none;
-  }
 }
 
 .suggestions {
