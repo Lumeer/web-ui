@@ -1,5 +1,5 @@
 <div class="modal-header bg-success text-white rounded-top">
-  <h5 class="modal-title">Share View</h5>
+  <h5 class="modal-title" i18n="@@view.share.dialog.title">Share View</h5>
   <button type="button" class="close" aria-label="Close" (click)="close()">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -13,13 +13,19 @@
 
     <div class="dropdown" *ngIf="text && suggestions.length > 0">
       <div class="dropdown-menu show suggestions">
-        <div class="dropdown-item d-flex justify-content-between"
+        <div class="dropdown-item"
              *ngFor="let suggestion of suggestions"
              (click)="onSuggestionClick(suggestion)">
-          <span>{{suggestion}}</span>
-          <span class="ml-4">User</span>
+          {{suggestion}}
         </div>
       </div>
+    </div>
+
+    <!-- TODO remove once Angular supports ICU messages in attributes -->
+    <div hidden>
+      <span #inputPlaceholder i18n="@@view.share.dialog.input.placeholder">
+        {queryItems.length, select, 0 {Enter user emails...} other {}}
+      </span>
     </div>
 
     <input class="border-0 flex-grow no-outline py-1 px-2 mt-1 ml-1"
@@ -27,14 +33,16 @@
            (keydown)="onKeyDown($event)"
            (keyup)="onKeyUp($event)"
            (focus)="suggest()"
-           placeholder="{{placeholder}}"/>
+           [placeholder]="removeHtmlComments(inputPlaceholder)"/>
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-secondary" (click)="close()">
-    Close
-  </button>
-  <button type="button" class="btn btn-success" (click)="share()">
-    Share
-  </button>
+  <button type="button"
+          class="btn btn-secondary"
+          (click)="close()"
+          i18n="@@view.share.dialog.button.close">Close</button>
+  <button type="button"
+          class="btn btn-success"
+          (click)="share()"
+          i18n="@@view.share.dialog.button.share">Share</button>
 </div>

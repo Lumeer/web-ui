@@ -19,6 +19,13 @@
       </div>
     </div>
 
+    <!-- TODO remove once Angular supports ICU messages in attributes -->
+    <div hidden>
+      <span #inputPlaceholder i18n="@@search.input.placeholder">
+        {queryItems.length, select, 0 {Type anything you search for...} other {}}
+      </span>
+    </div>
+
     <input class="border-0 flex-grow no-outline py-1 px-2 mt-1 ml-1"
            #searchBox
            [(ngModel)]="text"
@@ -26,11 +33,14 @@
            (keyup)="onKeyUp($event)"
            (focus)="suggest()"
            (blur)="hideSuggestions()"
-           placeholder="{{placeholder}}"/>
+           [placeholder]="removeHtmlComments(inputPlaceholder)"/>
   </div>
 
-  <button (click)="onButtonClick()" type="button" class="btn search-button">
+  <button class="btn search-button"
+          type="button"
+          title="Search" i18n-title="@@search.button"
+          (click)="onButtonClick()">
     <i class="fa fa-search" aria-hidden="true"></i>
-    <span class="d-none">Search</span>
+    <span class="d-none" i18n="@@search.button">Search</span>
   </button>
 </div>

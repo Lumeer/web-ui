@@ -76,7 +76,7 @@ export class ResourceChooserComponent implements OnChanges {
   @ViewChild('resourceDescription')
   public resourceDescription: ElementRef;
 
-  @Input() public header: string;
+  @Input() public resourceType: string;
   @Input() public resources: Resource[];
   @Input() public initActiveIx: number;
   @Input() public canCreateResource: boolean;

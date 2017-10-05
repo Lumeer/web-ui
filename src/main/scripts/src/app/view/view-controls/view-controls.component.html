@@ -1,7 +1,7 @@
 <form class="form-inline d-flex">
   <label for="perspectiveSelector"
          class="form-control-label font-weight-bold">
-    Perspective:
+    <span i18n="@@view.perspective">Perspective</span>:
   </label>
   <select #perspectiveSelector
           id="perspectiveSelector"
@@ -15,19 +15,19 @@
   </select>
   <label for="viewName"
          class="form-control-label font-weight-bold">
-    Name:
+    <span i18n="@@view.name">Name</span>:
   </label>
   <input id="viewName" #viewName
-         class="form-control-lg border-0 font-italic flex-grow"
+         class="form-control-lg border-0 font-italic flex-grow no-outline"
          [value]="view ? view.name : ''"
-         placeholder="Untitled view"/>
-  <a title="Save"
+         placeholder="Untitled view" i18n-placeholder="@@view.untitled"/>
+  <a title="Save" i18n-title="@@view.button.save"
      class="view-button mx-1"
      (click)="onSave(viewName.value)">
     <i class="fa fa-save fa-lg fa-fw" aria-hidden="true"></i>
     <i class="fal fa-save fa-lg fa-fw" aria-hidden="true"></i>
   </a>
-  <a title="Copy"
+  <a title="Copy" i18n-title="@@view.button.copy"
      class="view-button mx-1"
      *ngIf="view"
      (click)="onCopy()">
@@ -35,9 +35,8 @@
     <i class="fal fa-copy fa-lg fa-fw" aria-hidden="true"></i>
   </a>
   <button class="btn btn-outline-success ml-2"
-          (click)="showShareDialog(modal)">
-    Share
-  </button>
+          (click)="showShareDialog(modal)"
+          i18n="@@view.button.share">Share</button>
 </form>
 
 <ng-template #modal>

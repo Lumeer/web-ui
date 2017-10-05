@@ -1,21 +1,607 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file source-language="en" datatype="plaintext" original="ng2.template">
-    <body>
-      <trans-unit id="0add707baf7b167d0c0e9cdeb80f946aa1bd2223" datatype="html">
+<xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en">
+  <file original="ng.template" id="ngi18n">
+    <unit id="panel.notifications">
+      <notes>
+        <note category="location">app/core/top-panel/top-panel.component.ts:26,28</note>
+      </notes>
+      <segment>
+        <source>
+          <ph id="0" equiv="ICU" disp="{notifications, plural, =0 {...} =1 {...} =2 {...} =3 {...} =4 {...} other {...}}"/>
+        </source>
+      </segment>
+    </unit>
+    <unit id="3805256050767530443">
+      <notes>
+        <note category="location">app/core/top-panel/top-panel.component.ts:27</note>
+      </notes>
+      <segment>
+        <source>{VAR_PLURAL, plural, =0 {No new notifications} =1 {One new notification} =2 {2 new notifications} =3 {3 new notifications} =4 {4 new notifications} other {<ph id="0" equiv="INTERPOLATION" disp="{{notifications}}"/> new notifications} }</source>
+      </segment>
+    </unit>
+    <unit id="menu.settings">
+      <notes>
+        <note category="location">app/core/top-panel/top-panel.component.ts:49</note>
+        <note category="location">app/core/top-panel/top-panel.component.ts:46</note>
+      </notes>
+      <segment>
+        <source>Settings</source>
+      </segment>
+    </unit>
+    <unit id="menu.account">
+      <notes>
+        <note category="location">app/core/top-panel/top-panel.component.ts:55</note>
+        <note category="location">app/core/top-panel/top-panel.component.ts:52</note>
+      </notes>
+      <segment>
+        <source>Account</source>
+      </segment>
+    </unit>
+    <unit id="menu.signOut">
+      <notes>
+        <note category="location">app/core/top-panel/top-panel.component.ts:60</note>
+      </notes>
+      <segment>
+        <source>Sign Out</source>
+      </segment>
+    </unit>
+    <unit id="menu.licence">
+      <notes>
+        <note category="location">app/core/top-panel/top-panel.component.ts:63</note>
+      </notes>
+      <segment>
+        <source>Licence</source>
+      </segment>
+    </unit>
+    <unit id="page.not.found.header">
+      <notes>
+        <note category="location">app/core/page-not-found/page-not-found.component.ts:1</note>
+      </notes>
+      <segment>
+        <source>Page Not Found</source>
+      </segment>
+    </unit>
+    <unit id="permissions.groups.header">
+      <notes>
+        <note category="location">app/shared/permissions/permissions.component.ts:1</note>
+      </notes>
+      <segment>
+        <source>Groups</source>
+      </segment>
+    </unit>
+    <unit id="permissions.users.header">
+      <notes>
+        <note category="location">app/shared/permissions/permissions.component.ts:4</note>
+      </notes>
+      <segment>
+        <source>Users</source>
+      </segment>
+    </unit>
+    <unit id="permissions.role">
+      <notes>
+        <note category="location">app/shared/permissions/table/permissions-table.component.ts:6,8</note>
+      </notes>
+      <segment>
+        <source>
+        <ph id="0" equiv="ICU" disp="{role.toLowerCase(), select, clone {...} comment {...} manage {...} read {...} share {...} write {...}}"/>
+      </source>
+      </segment>
+    </unit>
+    <unit id="8422034757750046868">
+      <notes>
+        <note category="location">app/shared/permissions/table/permissions-table.component.ts:7</note>
+      </notes>
+      <segment>
+        <source>{VAR_SELECT, select, clone {clone} comment {comment} manage {manage} read {read} share {share} write {write} }</source>
+      </segment>
+    </unit>
+    <unit id="permissions.button.remove">
+      <notes>
+        <note category="location">app/shared/permissions/table/permissions-table.component.ts:21,22</note>
+      </notes>
+      <segment>
+        <source>Remove
+        </source>
+      </segment>
+    </unit>
+    <unit id="permissions.button.add">
+      <notes>
+        <note category="location">app/shared/permissions/table/permissions-table.component.ts:37,38</note>
+      </notes>
+      <segment>
+        <source>Add
+        </source>
+      </segment>
+    </unit>
+    <unit id="search.input.placeholder">
+      <notes>
+        <note category="location">app/shared/search-box/search-box.component.ts:24,26</note>
+      </notes>
+      <segment>
+        <source>
+        <ph id="0" equiv="ICU" disp="{queryItems.length, select, 0 {...} other {...}}"/>
+      </source>
+      </segment>
+    </unit>
+    <unit id="6432894227120745070">
+      <notes>
+        <note category="location">app/shared/search-box/search-box.component.ts:25</note>
+      </notes>
+      <segment>
+        <source>{VAR_SELECT, select, 0 {Type anything you search for...} other {} }</source>
+      </segment>
+    </unit>
+    <unit id="search.button">
+      <notes>
+        <note category="location">app/shared/search-box/search-box.component.ts:44</note>
+        <note category="location">app/shared/search-box/search-box.component.ts:41</note>
+      </notes>
+      <segment>
+        <source>Search</source>
+      </segment>
+    </unit>
+    <unit id="table.header.menu.remove">
+      <notes>
+        <note category="location">app/shared/table/static-table/table-header.component.ts:32</note>
+      </notes>
+      <segment>
+        <source>Remove</source>
+      </segment>
+    </unit>
+    <unit id="table.header.menu.hide">
+      <notes>
+        <note category="location">app/shared/table/static-table/table-header.component.ts:33</note>
+      </notes>
+      <segment>
+        <source>Hide</source>
+      </segment>
+    </unit>
+    <unit id="table.header.menu.show">
+      <notes>
+        <note category="location">app/shared/table/static-table/table-header.component.ts:34</note>
+      </notes>
+      <segment>
+        <source>Show</source>
+      </segment>
+    </unit>
+    <unit id="collection.icon.title">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:12,14</note>
+      </notes>
+      <segment>
+        <source>
+          <ph id="0" equiv="ICU" disp="{postIt.initialized, select, 1 {...} other {...}}"/>
+        </source>
+      </segment>
+    </unit>
+    <unit id="3170137125624446386">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:13</note>
+      </notes>
+      <segment>
+        <source>{VAR_SELECT, select, 1 {Go to documents} other {Pick icon} }</source>
+      </segment>
+    </unit>
+    <unit id="collection.document.count">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:33</note>
+      </notes>
+      <segment>
+        <source>Document Count</source>
+      </segment>
+    </unit>
+    <unit id="collection.button.detail">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:43</note>
+      </notes>
+      <segment>
+        <source>Detail</source>
+      </segment>
+    </unit>
+    <unit id="collection.button.attributes">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:49</note>
+      </notes>
+      <segment>
+        <source>Attributes</source>
+      </segment>
+    </unit>
+    <unit id="collection.button.icon">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:54</note>
+      </notes>
+      <segment>
+        <source>Icon picker</source>
+      </segment>
+    </unit>
+    <unit id="collection.button.permissions">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:68</note>
+      </notes>
+      <segment>
+        <source>Permissions</source>
+      </segment>
+    </unit>
+    <unit id="collection.button.remove">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:74</note>
+      </notes>
+      <segment>
+        <source>Remove Collection</source>
+      </segment>
+    </unit>
+    <unit id="collection.name.input.placeholder">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:83</note>
+      </notes>
+      <segment>
+        <source>Name</source>
+      </segment>
+    </unit>
+    <unit id="collection.button.add">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:100,101</note>
+      </notes>
+      <segment>
+        <source>Add collection
+        </source>
+      </segment>
+    </unit>
+    <unit id="collection.button.import">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:110,111</note>
+      </notes>
+      <segment>
+        <source>Import collection
+        </source>
+      </segment>
+    </unit>
+    <unit id="collection.delete.dialog.title">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:123</note>
+      </notes>
+      <segment>
+        <source>Delete Collection?</source>
+      </segment>
+    </unit>
+    <unit id="collection.delete.dialog.body">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:129</note>
+      </notes>
+      <segment>
+        <source>Deleting a collection will permanently remove it from this project. All documents stored inside the collection will be lost.</source>
+      </segment>
+    </unit>
+    <unit id="collection.delete.dialog.button.no">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:135,136</note>
+      </notes>
+      <segment>
+        <source>No, Keep Collection
+    </source>
+      </segment>
+    </unit>
+    <unit id="collection.delete.dialog.button.yes">
+      <notes>
+        <note category="location">app/shared/post-it-collections/post-it-collections.component.ts:140,141</note>
+      </notes>
+      <segment>
+        <source>Yes, Delete Collection
+    </source>
+      </segment>
+    </unit>
+    <unit id="picker.color.custom">
+      <notes>
+        <note category="location">app/shared/picker/color-picker/color-picker.component.ts:11</note>
+      </notes>
+      <segment>
+        <source>Custom Color...</source>
+      </segment>
+    </unit>
+    <unit id="search.favorites.header">
+      <notes>
+        <note category="location">app/core/search-home/search-home.component.ts:3</note>
+      </notes>
+      <segment>
         <source>Favorites</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/search/home/search-home.component.ts</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="55225973309e5ae5059bc94c67bbc0b20b600a74" datatype="html">
+      </segment>
+    </unit>
+    <unit id="search.recent.header">
+      <notes>
+        <note category="location">app/core/search-home/search-home.component.ts:5</note>
+      </notes>
+      <segment>
         <source>Recently used</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/search/home/search-home.component.ts</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit>
-    </body>
+      </segment>
+    </unit>
+    <unit id="workspace.button.apply">
+      <notes>
+        <note category="location">app/workspace/workspace-chooser/workspace-chooser.component.ts:27</note>
+      </notes>
+      <segment>
+        <source>Use project</source>
+      </segment>
+    </unit>
+    <unit id="resource.chooser.header">
+      <notes>
+        <note category="location">app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts:2,4</note>
+      </notes>
+      <segment>
+        <source>
+    <ph id="0" equiv="ICU" disp="{resourceType, select, organization {...} project {...}}"/>
+  </source>
+      </segment>
+    </unit>
+    <unit id="3990825396440427407">
+      <notes>
+        <note category="location">app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts:3</note>
+      </notes>
+      <segment>
+        <source>{VAR_SELECT, select, organization {Organizations} project {Projects} }</source>
+      </segment>
+    </unit>
+    <unit id="resource.chooser.empty">
+      <notes>
+        <note category="location">app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts:9,11</note>
+      </notes>
+      <segment>
+        <source>
+      There are no <ph id="0" equiv="ICU" disp="{resourceType, select, organization {...} project {...}}"/> and you are not allowed to create new ones.
+    </source>
+      </segment>
+    </unit>
+    <unit id="4232575044030897617">
+      <notes>
+        <note category="location">app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts:10</note>
+      </notes>
+      <segment>
+        <source>{VAR_SELECT, select, organization {organizations} project {projects} }</source>
+      </segment>
+    </unit>
+    <unit id="document.button.edit">
+      <notes>
+        <note category="location">app/view/perspectives/post-it/document/post-it-document.component.ts:10</note>
+      </notes>
+      <segment>
+        <source>Edit Document</source>
+      </segment>
+    </unit>
+    <unit id="document.button.remove">
+      <notes>
+        <note category="location">app/view/perspectives/post-it/document/post-it-document.component.ts:16</note>
+      </notes>
+      <segment>
+        <source>Remove Document</source>
+      </segment>
+    </unit>
+    <unit id="document.button.details">
+      <notes>
+        <note category="location">app/view/perspectives/post-it/document/post-it-document.component.ts:86</note>
+      </notes>
+      <segment>
+        <source>Details</source>
+      </segment>
+    </unit>
+    <unit id="document.button.links.incoming">
+      <notes>
+        <note category="location">app/view/perspectives/post-it/document/post-it-document.component.ts:93</note>
+      </notes>
+      <segment>
+        <source>Incoming Links</source>
+      </segment>
+    </unit>
+    <unit id="document.button.links.outgoing">
+      <notes>
+        <note category="location">app/view/perspectives/post-it/document/post-it-document.component.ts:98</note>
+      </notes>
+      <segment>
+        <source>Outgoing Links</source>
+      </segment>
+    </unit>
+    <unit id="document.button.history">
+      <notes>
+        <note category="location">app/view/perspectives/post-it/document/post-it-document.component.ts:103</note>
+      </notes>
+      <segment>
+        <source>History</source>
+      </segment>
+    </unit>
+    <unit id="document.list.empty">
+      <notes>
+        <note category="location">app/view/perspectives/post-it/post-it-perspective.component.ts:27</note>
+      </notes>
+      <segment>
+        <source>Nothing To Show</source>
+      </segment>
+    </unit>
+    <unit id="document.button.scroll.down">
+      <notes>
+        <note category="location">app/view/perspectives/post-it/post-it-perspective.component.ts:33</note>
+      </notes>
+      <segment>
+        <source>Scroll Down</source>
+      </segment>
+    </unit>
+    <unit id="document.delete.dialog.title">
+      <notes>
+        <note category="location">app/view/perspectives/post-it/post-it-perspective.component.ts:40</note>
+      </notes>
+      <segment>
+        <source>Delete Document?</source>
+      </segment>
+    </unit>
+    <unit id="document.delete.dialog.body">
+      <notes>
+        <note category="location">app/view/perspectives/post-it/post-it-perspective.component.ts:46</note>
+      </notes>
+      <segment>
+        <source>Deleting a document will permanently remove it from this collection.</source>
+      </segment>
+    </unit>
+    <unit id="document.delete.dialog.button.no">
+      <notes>
+        <note category="location">app/view/perspectives/post-it/post-it-perspective.component.ts:52,53</note>
+      </notes>
+      <segment>
+        <source>No, Keep Document
+    </source>
+      </segment>
+    </unit>
+    <unit id="document.delete.dialog.button.yes">
+      <notes>
+        <note category="location">app/view/perspectives/post-it/post-it-perspective.component.ts:57,58</note>
+      </notes>
+      <segment>
+        <source>Yes, Delete Document
+    </source>
+      </segment>
+    </unit>
+    <unit id="table.query.invalid">
+      <notes>
+        <note category="location">app/view/perspectives/table/table-perspective.component.ts:18,19</note>
+      </notes>
+      <segment>
+        <source>Given query results cannot be shown using table perspective. The query needs to specify exactly one collection.
+</source>
+      </segment>
+    </unit>
+    <unit id="search.tab.all">
+      <notes>
+        <note category="location">app/view/perspectives/search/search-perspective.component.ts:8</note>
+      </notes>
+      <segment>
+        <source>All</source>
+      </segment>
+    </unit>
+    <unit id="search.tab.collections">
+      <notes>
+        <note category="location">app/view/perspectives/search/search-perspective.component.ts:16</note>
+      </notes>
+      <segment>
+        <source>Collections</source>
+      </segment>
+    </unit>
+    <unit id="search.tab.documents">
+      <notes>
+        <note category="location">app/view/perspectives/search/search-perspective.component.ts:24</note>
+      </notes>
+      <segment>
+        <source>Documents</source>
+      </segment>
+    </unit>
+    <unit id="search.tab.links">
+      <notes>
+        <note category="location">app/view/perspectives/search/search-perspective.component.ts:32</note>
+      </notes>
+      <segment>
+        <source>Links</source>
+      </segment>
+    </unit>
+    <unit id="search.tab.views">
+      <notes>
+        <note category="location">app/view/perspectives/search/search-perspective.component.ts:40</note>
+      </notes>
+      <segment>
+        <source>Views</source>
+      </segment>
+    </unit>
+    <unit id="document.button.add">
+      <notes>
+        <note category="location">app/view/perspectives/post-it/add-document/add-document.component.ts:3</note>
+      </notes>
+      <segment>
+        <source>Add Document</source>
+      </segment>
+    </unit>
+    <unit id="view.perspective">
+      <notes>
+        <note category="location">app/view/view-controls/view-controls.component.ts:4</note>
+      </notes>
+      <segment>
+        <source>Perspective</source>
+      </segment>
+    </unit>
+    <unit id="view.name">
+      <notes>
+        <note category="location">app/view/view-controls/view-controls.component.ts:18</note>
+      </notes>
+      <segment>
+        <source>Name</source>
+      </segment>
+    </unit>
+    <unit id="view.untitled">
+      <notes>
+        <note category="location">app/view/view-controls/view-controls.component.ts:23</note>
+      </notes>
+      <segment>
+        <source>Untitled view</source>
+      </segment>
+    </unit>
+    <unit id="view.button.save">
+      <notes>
+        <note category="location">app/view/view-controls/view-controls.component.ts:24</note>
+      </notes>
+      <segment>
+        <source>Save</source>
+      </segment>
+    </unit>
+    <unit id="view.button.copy">
+      <notes>
+        <note category="location">app/view/view-controls/view-controls.component.ts:30</note>
+      </notes>
+      <segment>
+        <source>Copy</source>
+      </segment>
+    </unit>
+    <unit id="view.button.share">
+      <notes>
+        <note category="location">app/view/view-controls/view-controls.component.ts:39</note>
+      </notes>
+      <segment>
+        <source>Share</source>
+      </segment>
+    </unit>
+    <unit id="view.share.dialog.title">
+      <notes>
+        <note category="location">app/view/view-controls/share-dialog/share-dialog.component.ts:2</note>
+      </notes>
+      <segment>
+        <source>Share View</source>
+      </segment>
+    </unit>
+    <unit id="view.share.dialog.input.placeholder">
+      <notes>
+        <note category="location">app/view/view-controls/share-dialog/share-dialog.component.ts:26,28</note>
+      </notes>
+      <segment>
+        <source>
+        <ph id="0" equiv="ICU" disp="{queryItems.length, select, 0 {...} other {...}}"/>
+      </source>
+      </segment>
+    </unit>
+    <unit id="8110298456800659859">
+      <notes>
+        <note category="location">app/view/view-controls/share-dialog/share-dialog.component.ts:27</note>
+      </notes>
+      <segment>
+        <source>{VAR_SELECT, select, 0 {Enter user emails...} other {} }</source>
+      </segment>
+    </unit>
+    <unit id="view.share.dialog.button.close">
+      <notes>
+        <note category="location">app/view/view-controls/share-dialog/share-dialog.component.ts:43</note>
+      </notes>
+      <segment>
+        <source>Close</source>
+      </segment>
+    </unit>
+    <unit id="view.share.dialog.button.share">
+      <notes>
+        <note category="location">app/view/view-controls/share-dialog/share-dialog.component.ts:47</note>
+      </notes>
+      <segment>
+        <source>Share</source>
+      </segment>
+    </unit>
   </file>
 </xliff>

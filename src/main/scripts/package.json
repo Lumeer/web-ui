@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "ng": "ng",
-    "i18n": "ng xi18n --output-path src/i18n",
+    "i18n": "ng xi18n --output-path src/i18n --i18nFormat=xlf2",
     "start": "cross-env LUMEER_ENV=development webpack-dev-server",
     "build": "webpack",
     "test": "karma start ./karma.conf.js",

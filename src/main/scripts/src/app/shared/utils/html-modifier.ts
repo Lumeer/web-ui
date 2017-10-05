@@ -18,11 +18,10 @@
  * -----------------------------------------------------------------------/
  */
 
-export const enum Role {
-  Read = 'READ',
-  Manage = 'MANAGE',
-  Write = 'WRITE',
-  Share = 'SHARE',
-  Clone = 'CLONE',
-  Comment = 'COMMENT'
+export class HtmlModifier {
+
+  public static removeHtmlComments(html: HTMLElement): string {
+    return html.innerHTML.replace(/<!--[\s\S]*?-->/g, '').trim();
+  }
+
 }

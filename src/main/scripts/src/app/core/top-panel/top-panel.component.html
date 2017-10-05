@@ -20,8 +20,20 @@
         </a>
       </div>
 
-      <div class="panel-item text-secondary mx-2" title="No new notifications">
-        <i class="fa fa-bell fa-lg"></i>
+      <!-- TODO remove once Angular supports ICU messages in attributes -->
+      <div hidden>
+        <span #notificationsTitle
+              i18n="@@panel.notifications">
+          {notifications, plural, =0 {No new notifications} =1 {One new notification} =2 {2 new notifications} =3 {3 new notifications} =4 {4 new notifications} other { {{notifications}} new notifications}}
+        </span>
+      </div>
+
+      <div class="panel-item mx-2"
+           [title]="removeHtmlComments(notificationsTitle)">
+        <i *ngIf="notifications === 0"
+           class="fa fa-bell fa-lg text-secondary"></i>
+        <i *ngIf="notifications > 0"
+           class="fa fa-bell fa-lg text-warning"></i>
       </div>
 
       <div class="dropdown show ml-2">
@@ -30,21 +42,25 @@
         </a>
 
         <div class="dropdown-menu profile-dropdown" aria-labelledby="profileDropdownLink">
-          <a class="dropdown-item" title="Settings" routerLink="/user/settings">
+          <a class="dropdown-item"
+             title="Settings" i18n-title="@@menu.settings"
+             routerLink="/user/settings">
             <i class="fas fa-fw fa-cog" data-fa-transform="left-4" aria-hidden="true"></i>
-            Settings
+            <span i18n="@@menu.settings">Settings</span>
           </a>
-          <a class="dropdown-item" title="Account" href="https://auth.lumeer.io/auth/realms/lumeer/account">
+          <a class="dropdown-item"
+             title="Account" i18n-title="@@menu.account"
+             href="https://auth.lumeer.io/auth/realms/lumeer/account">
             <i class="fas fa-fw fa-user" data-fa-transform="left-4" aria-hidden="true"></i>
-            Account
+            <span i18n="@@menu.account">Account</span>
           </a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" title="Sign Out" href="https://auth.lumeer.io/auth/realms/lumeer/protocol/openid-connect/logout?redirect_uri=https%3A%2F%2Fwww.lumeer.io%2F">
             <i class="fas fa-fw fa-sign-in" data-fa-transform="left-4" aria-hidden="true"></i>
-            Sign Out
+            <span i18n="@@menu.signOut">Sign Out</span>
           </a>
           <span class="dropdown-item">
-          Licence: {{this.licence}}
+          <span i18n="@@menu.licence">Licence</span>: {{this.licence}}
         </span>
         </div>
       </div>

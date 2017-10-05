@@ -1,6 +1,6 @@
 <div class="container-fluid container">
   <resource-chooser [initActiveIx]="activeOrgIx"
-                    [header]="'Organizations'"
+                    [resourceType]="'organization'"
                     [resources]="organizations"
                     [canCreateResource]="true"
                     (resourceSelect)="onSelectOrganization($event)"
@@ -11,7 +11,7 @@
 
   <div class="pt-3" *ngIf="activeOrgIx >=0" [@animateOpacityFromUp]="'in'">
     <resource-chooser [initActiveIx]="activeProjIx"
-                      [header]="'Projects'"
+                      [resourceType]="'project'"
                       [resources]="organizations[activeOrgIx].projects"
                       [canCreateResource]="hasManageRole(organizations[activeOrgIx])"
                       (resourceSelect)="onSelectProject($event)"
@@ -23,7 +23,8 @@
   <div class="py-2 px-5 d-flex justify-content-end fixed-bottom container" *ngIf="activeProjIx >=0"
        [@animateOpacityFromUp]="'in'">
     <button type="button" class="btn btn-lg btn-success" (click)="onSaveActiveItems()">
-      <i class="fas fa fa-play px-2"></i>Use project
+      <i class="fas fa fa-play px-2"></i>
+      <span i18n="@@workspace.button.apply">Use project</span>
     </button>
   </div>
 </div>

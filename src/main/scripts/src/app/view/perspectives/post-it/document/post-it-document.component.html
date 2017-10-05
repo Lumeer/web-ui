@@ -5,10 +5,16 @@
   </span>
 
   <ng-container *ngIf="data.writeRole">
-    <a tabindex class="editable" title="Edit Document" (click)="setEditMode(true); select(0, 0)">
+    <a tabindex
+       class="editable"
+       title="Edit Document" i18n-title="@@document.button.edit"
+       (click)="setEditMode(true); select(0, 0)">
       <i class="fa fa-fw fa-pencil"></i>
     </a>
-    <a tabindex class="editable remove" title="Remove Document" (click)="onRemoveDocumentClick()">
+    <a tabindex
+       class="editable remove"
+       title="Remove Document" i18n-title="@@document.button.remove"
+       (click)="onRemoveDocumentClick()">
       <i class="fa fa-fw fa-times"></i>
     </a>
   </ng-container>
@@ -76,15 +82,26 @@
 
 <!-- additional buttons -->
 <div class="edit">
-  <a tabindex title="Details">
+  <a tabindex
+     title="Details" i18n-title="@@document.button.details">
     <i class="fa fa-fw fa-search"></i>
   </a>
 
-  <span class="secondary-edit">
-    <!--the comments remove added space between icons-->
-    <a tabindex title="Incoming Links"><i class="fa fa-fw fa-sign-in"></i></a><!--
-    --><a tabindex title="Outgoing Links"><i class="fa fa-fw fa-sign-out"></i></a><!--
-    --><a tabindex title="History"><i class="fa fa-fw fa-history"></i></a><!--
-    --><a tabindex title="User Rights"><i class="fa fa-fw fa-users"></i></a>
+  <span class="secondary-edit d-flex">
+    <a tabindex
+       class="d-block"
+       title="Incoming Links" i18n-title="@@document.button.links.incoming">
+      <i class="fa fa-fw fa-sign-in"></i>
+    </a>
+    <a tabindex
+       class="d-block"
+       title="Outgoing Links" i18n-title="@@document.button.links.outgoing">
+      <i class="fa fa-fw fa-sign-out"></i>
+    </a>
+    <a tabindex
+       class="d-block"
+       title="History" i18n-title="@@document.button.history">
+      <i class="fa fa-fw fa-history"></i>
+    </a>
   </span>
 </div>

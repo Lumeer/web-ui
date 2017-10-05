@@ -26,6 +26,7 @@ import 'rxjs/add/operator/mergeMap';
 
 import {WorkspaceService} from '../workspace.service';
 import {RouteFinder} from '../../shared/utils/route-finder';
+import {HtmlModifier} from '../../shared/utils/html-modifier';
 
 @Component({
   selector: 'top-panel',
@@ -37,6 +38,7 @@ export class TopPanelComponent implements OnInit {
   public licence = 'trial';
 
   public searchBoxHidden = false;
+  public notifications = 0;
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
@@ -61,5 +63,9 @@ export class TopPanelComponent implements OnInit {
 
   public isSearchBoxShown(): boolean {
     return this.workspaceService.isWorkspaceSet() && !this.searchBoxHidden;
+  }
+
+  public removeHtmlComments(html: HTMLElement): string {
+    return HtmlModifier.removeHtmlComments(html);
   }
 }

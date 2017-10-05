@@ -34,6 +34,7 @@ import {PostItLayout} from '../utils/post-it-layout';
 import {PostItCollectionData} from './post-it-collection-data';
 import 'rxjs/add/operator/retry';
 import {QueryConverter} from '../utils/query-converter';
+import {HtmlModifier} from '../utils/html-modifier';
 
 @Component({
   selector: 'post-it-collections',
@@ -279,14 +280,12 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     // TODO
   }
 
-  public onTextAreaBlur(postIt: PostItCollectionData, textArea: HTMLTextAreaElement): void {
+  public onTextAreaBlur(postIt: PostItCollectionData): void {
     if (postIt.initialized) {
       this.updateCollection(postIt);
     } else {
       postIt.collection.name && this.initializePostIt(postIt);
     }
-
-    textArea.placeholder = 'Collection Name';
   }
 
   public onClick(event: MouseEvent): void {
@@ -324,5 +323,9 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   public documentsQuery(collectionCode: string): string {
     const query: Query = {collectionCodes: [collectionCode]};
     return QueryConverter.toString(query);
+  }
+
+  public removeHtmlComments(html: HTMLElement): string {
+    return HtmlModifier.removeHtmlComments(html);
   }
 }
