@@ -29,6 +29,7 @@ import {OrganizationService} from '../../core/rest/organization.service';
 import {ProjectService} from '../../core/rest/project.service';
 import {isNullOrUndefined} from 'util';
 import {Role} from '../../shared/permissions/role';
+import {UserSettingsService} from '../../core/user-settings.service';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
@@ -63,6 +64,7 @@ export class WorkspaceChooserComponent implements OnInit {
 
   constructor(private organizationService: OrganizationService,
               private projectService: ProjectService,
+              private userSettingsService: UserSettingsService,
               private workspaceService: WorkspaceService,
               private router: Router) {
   }
@@ -153,13 +155,22 @@ export class WorkspaceChooserComponent implements OnInit {
 
   public onSaveActiveItems() {
     if (!isNullOrUndefined(this.activeOrgIx) && !isNullOrUndefined(this.activeProjIx)) {
-      // TODO save settings on the server using configuration service
       let activeOrgCode = this.organizations[this.activeOrgIx].code;
       let activeProjCode = this.organizations[this.activeOrgIx].projects[this.activeProjIx].code;
+
       this.workspaceService.organizationCode = activeOrgCode;
       this.workspaceService.projectCode = activeProjCode;
 
+      this.updateDefaultWorkspace(activeOrgCode, activeProjCode);
+
       this.router.navigate(['w', activeOrgCode, activeProjCode, 'collections']);
     }
+  }
+
+  private updateDefaultWorkspace(organizationCode: string, projectCode: string) {
+    let userSettings = this.userSettingsService.getUserSettings();
+    userSettings.defaultOrganization = organizationCode;
+    userSettings.defaultProject = projectCode;
+    this.userSettingsService.updateUserSettings(userSettings);
   }
 }

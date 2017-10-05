@@ -26,7 +26,7 @@ import {HttpModule} from '@angular/http';
 
 import {WorkspaceService} from './workspace.service';
 import {TopPanelComponent} from './top-panel/top-panel.component';
-import {UserSettingsService} from './rest/user-settings.service';
+import {UserSettingsService} from './user-settings.service';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {ProjectService} from './rest/project.service';
 import {OrganizationService} from './rest/organization.service';

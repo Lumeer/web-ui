@@ -19,27 +19,24 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpResponse} from '@angular/common/http';
 
-import {UserSettings} from '../dto/user.settings';
-import {Observable} from 'rxjs/Observable';
+import {UserSettings} from './dto/user.settings';
+import {LocalStorageService} from 'ng2-webstorage';
+
+const USER_SETTINGS = 'user-settings';
 
 @Injectable()
 export class UserSettingsService {
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private storageService: LocalStorageService) {
   }
 
-  public getUserSettings(): Observable<UserSettings> {
-    return this.httpClient.get<UserSettings>(UserSettingsService.apiPrefix());
+  public getUserSettings(): UserSettings {
+    return this.storageService.retrieve(USER_SETTINGS) || {};
   }
 
-  public updateUserSettings(userSettings: UserSettings): Observable<HttpResponse<object>> {
-    return this.httpClient.put(UserSettingsService.apiPrefix(), userSettings, {observe: 'response'});
-  }
-
-  private static apiPrefix(): string {
-    return `/${API_URL}/rest/settings/user`;
+  public updateUserSettings(userSettings: UserSettings) {
+    this.storageService.store(USER_SETTINGS, userSettings);
   }
 
 }
