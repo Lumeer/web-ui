@@ -18,6 +18,13 @@
  * -----------------------------------------------------------------------/
  */
 
+import {Query} from './query';
+
 export interface View {
+
+  code?: string;
+  name: string;
+  perspective: string;
+  query: Query;
 
 }

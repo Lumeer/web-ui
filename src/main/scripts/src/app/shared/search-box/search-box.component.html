@@ -3,7 +3,7 @@
     <div class="query-item py-1 px-2 mt-1 ml-1"
          *ngFor="let queryItem of queryItems"
          [style.background-color]="queryItem.color">
-      <i *ngIf="queryItem.icon" class="fa {{queryItem.icon}}" aria-hidden="true"></i>
+      <i *ngIf="queryItem.icon" class="fa {{queryItem.icon}} mr-1" aria-hidden="true"></i>
       <span>{{queryItem.text}}</span>
     </div>
 
@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <input class="search-input py-1 px-2 mt-1 ml-1"
+    <input class="border-0 flex-grow no-outline py-1 px-2 mt-1 ml-1"
            #searchBox
            [(ngModel)]="text"
            (keydown)="onKeyDown($event)"

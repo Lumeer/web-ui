@@ -5,3 +5,13 @@ a {
   cursor: pointer;
   transition: color $animation-color-duration;
 }
+
+.flex-grow {
+  flex-grow: 2;
+}
+
+.no-outline {
+  &:focus {
+    outline: none;
+  }
+}

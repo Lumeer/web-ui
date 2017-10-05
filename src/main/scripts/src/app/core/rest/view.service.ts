@@ -19,10 +19,43 @@
  */
 
 import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+
 import {PermissionService} from './permission.service';
+import {View} from '../dto/view';
+import {WorkspaceService} from '../workspace.service';
+import {HttpClient} from '@angular/common/http';
+import {LocalStorageService} from 'ng2-webstorage';
 
 @Injectable()
 export class ViewService extends PermissionService {
+
+  constructor(httpClient: HttpClient,
+              workspaceService: WorkspaceService,
+              private storageService: LocalStorageService) {
+    super(httpClient, workspaceService);
+  }
+
+  public createView(view: View): Observable<string> {
+    const views = this.storageService.retrieve('views') || {};
+    view.code = view.name.toLowerCase();
+    views[view.code] = view;
+    this.storageService.store('views', views);
+    return Observable.of(view.code);
+  }
+
+  public updateView(code: string, view: View): Observable<View> {
+    const views = this.storageService.retrieve('views') || {};
+    views[code] = null;
+    views[view.code] = view;
+    this.storageService.store('views', views);
+    return Observable.of(view);
+  }
+
+  public getView(code: string): Observable<View> {
+    const views = this.storageService.retrieve('views') || {};
+    return Observable.of(views[code]);
+  }
 
   protected actualApiPrefix(): string {
     let viewCode = this.workspaceService.viewCode;

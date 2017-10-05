@@ -1,0 +1,25 @@
+@import "../../shared/lumeer-variables";
+
+.view-button {
+  i {
+    color: $brand-success;
+  }
+}
+
+.view-button {
+  .fa {
+    display: none;
+  }
+  .fal {
+    display: inherit;
+  }
+}
+
+.view-button:hover {
+  .fa {
+    display: inherit;
+  }
+  .fal {
+    display: none;
+  }
+}
