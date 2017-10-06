@@ -7,7 +7,7 @@
     "ng": "ng",
     "i18n": "ng xi18n --output-path src/i18n",
     "start": "cross-env LUMEER_ENV=development webpack-dev-server",
-    "build": "webpack",
+    "build": "webpack -p",
     "test": "karma start ./karma.conf.js",
     "lint": "ng lint",
     "e2e": "protractor ./protractor.conf.js",

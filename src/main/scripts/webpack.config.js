@@ -17,6 +17,10 @@ const baseHref = "";
 const deployUrl = "";
 const LUMEER_ENV = process.env.LUMEER_ENV || 'production';
 const LUMEER_ENGINE = process.env.LUMEER_ENGINE || 'lumeer-engine';
+const OUTPUT_PATH = process.env.OUTPUT_PATH || 'dist';
+const I18N_PATH = process.env.I18N_PATH || 'src/i18n/messages.xlf';
+const I18N_FORMAT = process.env.I18N_FORMAT || 'xlf';
+const I18N_LOCALE = process.env.I18N_LOCALE || 'en';
 
 const devServer = {
   contentBase: path.join(__dirname, 'dist'),
@@ -61,7 +65,7 @@ module.exports = {
     ]
   },
   "output": {
-    "path": path.join(process.cwd(), "dist"),
+    "path": path.join(process.cwd(), OUTPUT_PATH),
     "filename": "[name].bundle.js",
     "chunkFilename": "[id].chunk.js",
     "publicPath": "/ui/"
@@ -316,6 +320,9 @@ module.exports = {
     }),
     new AotPlugin({
       "mainPath": "main.ts",
+      "i18nFile": I18N_PATH,
+      "i18nFormat": I18N_FORMAT,
+      "locale": I18N_LOCALE,
       "hostReplacementPaths": {
         "environments/environment.ts": "environments/environment.ts"
       },
