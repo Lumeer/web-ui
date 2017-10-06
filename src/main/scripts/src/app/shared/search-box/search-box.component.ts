@@ -90,6 +90,10 @@ export class SearchBoxComponent implements OnInit {
   }
 
   private getQueryItemsFromView() {
+    if (!this.activatedRoute.firstChild) {
+      return;
+    }
+
     this.activatedRoute.firstChild.paramMap
       .map((params: ParamMap) => params.get('viewCode'))
       .switchMap(viewCode => this.viewService.getView(viewCode))
