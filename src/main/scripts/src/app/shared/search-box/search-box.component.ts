@@ -46,6 +46,7 @@ import {Query} from '../../core/dto/query';
 import {QueryConverter} from '../utils/query-converter';
 import {ViewService} from '../../core/rest/view.service';
 import {KeyCode} from '../key-code';
+import {HtmlModifier} from '../utils/html-modifier';
 
 @Component({
   selector: 'search-box',
@@ -230,8 +231,8 @@ export class SearchBoxComponent implements OnInit {
     this.hideSuggestions();
   }
 
-  public get placeholder(): string {
-    return this.queryItems.length === 0 ? 'Type anything you search for...' : '';
+  public removeHtmlComments(html: HTMLElement): string {
+    return HtmlModifier.removeHtmlComments(html);
   }
 
 }

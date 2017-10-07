@@ -22,29 +22,39 @@
       </datalist>
     </ng-container>
 
-    <label *ngIf="!editable && !query" class="label-centered">No Search Query</label>
-    <label *ngIf="!editable && query && !postIts.length" class="label-centered">Nothing To Show</label>
+    <label *ngIf="!editable && query && !postIts.length"
+           class="label-centered"
+           i18n="@@document.list.empty">Nothing To Show</label>
   </div>
 </div>
 <div class="fadeup"></div>
 
-<a (click)="onScrollDown(perspective)" class="scroll-down">Scroll Down<i class="fa fa-chevron-down"></i></a>
+<a (click)="onScrollDown(perspective)" class="scroll-down">
+  <span i18n="@@document.button.scroll.down">Scroll Down</span>
+  <i class="fa fa-chevron-down"></i>
+</a>
 
 <!-- modal -->
 <ng-template #modal>
   <div class="modal-header bg-danger text-white">
-    <h5 class="modal-title">Delete Document?</h5>
+    <h5 class="modal-title" i18n="@@document.delete.dialog.title">Delete Document?</h5>
     <button type="button" class="close" aria-label="Close" (click)="deleteConfirm.hide()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <p>Deleting a document will permanently remove it from this collection.</p>
+    <p i18n="@@document.delete.dialog.body">Deleting a document will permanently remove it from this collection.</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="deleteConfirm.hide()">No, Keep Document</button>
-    <button type="button" class="btn btn-danger" (click)="deleteConfirm.hide(); removeDocument(postItToDelete)">
-      Yes, Delete Document
+    <button type="button"
+            class="btn btn-secondary"
+            (click)="deleteConfirm.hide()"
+            i18n="@@document.delete.dialog.button.no">No, Keep Document
+    </button>
+    <button type="button"
+            class="btn btn-danger"
+            (click)="deleteConfirm.hide(); removeDocument(postItToDelete)"
+            i18n="@@document.delete.dialog.button.yes">Yes, Delete Document
     </button>
   </div>
 </ng-template>

@@ -29,9 +29,9 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-        <li (click)="removeColumn.next(index)">Remove</li>
-        <li (click)="hideColumn.next(index)" *ngIf="!headerItem.hidden">Hide</li>
-        <li (click)="showColumn.next(index)" *ngIf="headerItem.hidden">Show</li>
+        <li (click)="removeColumn.next(index)" i18n="@@table.header.menu.remove">Remove</li>
+        <li (click)="hideColumn.next(index)" *ngIf="!headerItem.hidden" i18n="@@table.header.menu.hide">Hide</li>
+        <li (click)="showColumn.next(index)" *ngIf="headerItem.hidden" i18n="@@table.header.menu.show">Show</li>
       </ul>
     </div>
     <div class="placeholder" *ngIf="index !== hoverIndex && !headerItem.hidden"></div>

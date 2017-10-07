@@ -24,6 +24,7 @@ import {NotificationsService} from 'angular2-notifications/dist';
 import {UserService} from '../../../core/rest/user.service';
 import {User} from '../../../core/dto/user';
 import {KeyCode} from '../../../shared/key-code';
+import {HtmlModifier} from '../../../shared/utils/html-modifier';
 
 @Component({
   selector: 'share-dialog',
@@ -118,8 +119,8 @@ export class ShareDialogComponent implements OnInit {
     this.closeDialog.emit();
   }
 
-  public get placeholder(): string {
-    return this.emails.length === 0 ? 'Enter user emails...' : '';
+  public removeHtmlComments(html: HTMLElement): string {
+    return HtmlModifier.removeHtmlComments(html);
   }
 
 }

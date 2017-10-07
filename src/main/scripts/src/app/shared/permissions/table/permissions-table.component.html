@@ -2,7 +2,10 @@
   <thead>
     <tr>
       <th></th>
-      <th *ngFor="let role of roles">{{role}}</th>
+      <th *ngFor="let role of roles"
+          i18n="@@permissions.role">
+        {role.toLowerCase(), select, clone {clone} comment {comment} manage {manage} read {read} share {share} write {write}}
+      </th>
       <th></th>
     </tr>
   </thead>
@@ -13,7 +16,10 @@
         <input id="ch{{entity.name+role}}" type="checkbox" title="{{role}}" [attr.checked]="entity.roles.indexOf(role) > -1 ? '': null" (change)="changePermission(idx, role, $event)"/>
       </td>
       <td>
-        <button (click)="onRemove(entity.name, idx)" class="btn btn-danger">Remove</button>
+        <button (click)="onRemove(entity.name, idx)"
+                class="btn btn-danger"
+                i18n="@@permissions.button.remove">Remove
+        </button>
       </td>
     </tr>
     <tr>
@@ -23,10 +29,13 @@
         </select>
       </td>
       <td *ngFor="let role of roles" class="role">
-        <input id="ch{{'new'+role+entityType}}" type="checkbox" title="{{role}}" [checked]="rolesCheckbox[role]"  (change)="updateCheckedRoles(role, $event)"/>
+        <input id="ch{{'new'+role+entityType}}" type="checkbox" title="{{role}}" [checked]="rolesCheckbox[role]" (change)="updateCheckedRoles(role, $event)"/>
       </td>
       <td>
-        <button (click)="onAdd(selectedEntityName.value)" class="btn btn-success">Add</button>
+        <button (click)="onAdd(selectedEntityName.value)"
+                class="btn btn-success"
+                i18n="@@permissions.button.add">Add
+        </button>
       </td>
     </tr>
   </tbody>

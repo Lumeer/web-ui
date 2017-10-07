@@ -1,10 +1,13 @@
 <div class="row">
-  <h3 class="w-100 d-flex">{{header}}</h3>
+  <h3 class="w-100 d-flex" i18n="@@resource.chooser.header">
+    {resourceType, select, organization {Organizations} project {Projects}}
+  </h3>
 
   <div class="horizontal-container w-100" #resourceContainer>
 
-    <div *ngIf="resources.length == 0 && !canCreateResource">
-      There are no {{header.toLowerCase()}} and you are not allowed to create new ones.
+    <div *ngIf="resources.length == 0 && !canCreateResource"
+         i18n="@@resource.chooser.empty">
+      There are no {resourceType, select, organization {organizations} project {projects}} and you are not allowed to create new ones.
     </div>
 
     <div class="left-arrow d-flex h-100" *ngIf="resourceVisibleArrows">
