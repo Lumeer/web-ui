@@ -215,8 +215,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin([
       {from: __dirname + '/img', to: 'img'},
-      {from: __dirname + '/src/assets/img', to: 'img'},
-      {from: __dirname + '/data', to: 'data'}
+      {from: __dirname + '/src/assets/img', to: 'img'}
     ]),
     new NoEmitOnErrorsPlugin(),
     new GlobCopyWebpackPlugin({
