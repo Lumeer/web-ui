@@ -51,11 +51,13 @@
            (click)="setDefaultAttribute(attribute)"></i>
       </th>
       <td>
-        <input type="text" class="{{ collection.defaultAttribute === attribute ? 'font-weight-bold' : null }} border-0"
+        <input #attributeName
+               type="text"
+               class="{{ collection.defaultAttribute === attribute ? 'font-weight-bold' : null }} border-0"
                [(ngModel)]="attribute.name"
                (blur)="attribute.name ? updateAttribute(attribute) : removeAttribute(attribute, row)"
-               (keyup.enter)="!attribute.name && removeAttribute(attribute, row)"
-               (keyup.Escape)="!attribute.name && removeAttribute(attribute, row)">
+               (keyup.enter)="attributeName.blur()"
+               (keyup.Escape)="attributeName.blur()">
       </td>
       <td class="text-right">{{ formatNumber(attribute.usageCount) }}</td>
       <td>
@@ -80,11 +82,12 @@
   <tr *ngIf="allowCreatingAttributes">
     <th *ngIf="allowSettingPrimaryAttribute" scope="row" class="first-row"></th>
     <td colspan="3">
-      <input class="border-0"
+      <input #newAttrubute
+             class="border-0"
              type="text"
              [(ngModel)]="newAttributeName"
              (blur)="newAttributeName && createAttribute(newAttributeName)"
-             (keyup.enter)="newAttributeName && createAttribute(newAttributeName)"
+             (keyup.enter)="newAttrubute.blur()"
              placeholder=" + ">
     </td>
   </tr>

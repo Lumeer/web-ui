@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {Document} from '../../../../core/dto/document';
+import {Query} from '../../../../core/dto/query';
 
 @Component({
   selector: 'add-document',
@@ -28,6 +29,9 @@ import {Document} from '../../../../core/dto/document';
   styleUrls: ['./add-document.component.scss']
 })
 export class PostItAddDocumentComponent implements OnInit {
+
+  @Input()
+  public query: Query;
 
   @Output()
   public newDocument = new EventEmitter<Document>();
@@ -43,7 +47,7 @@ export class PostItAddDocumentComponent implements OnInit {
 
   public onClick(): void {
     const newDocument = new Document;
-    newDocument.collectionCode = this.collectionCode;
+    newDocument.collectionCode = this.collectionCode || this.query.collectionCodes[0];
 
     this.newDocument.emit(newDocument);
   }

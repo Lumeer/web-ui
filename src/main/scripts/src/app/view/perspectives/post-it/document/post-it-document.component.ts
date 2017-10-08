@@ -22,9 +22,9 @@ import {AttributePair} from '../document-data/attribute-pair';
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
 import {Direction} from '../document-data/direction';
 import {DocumentData} from '../document-data/document-data';
-import {isString} from 'util';
-import {KeyCode} from '../../../../shared/key-code';
 import {WorkspaceService} from '../../../../core/workspace.service';
+import {KeyCode} from '../../../../shared/key-code';
+import {isString} from 'util';
 
 @Component({
   selector: 'post-it-document',
@@ -52,8 +52,9 @@ export class PostItDocumentComponent implements OnInit {
 
   public newAttributePair: AttributePair;
 
-  constructor(public element: ElementRef,
-              private workspaceService: WorkspaceService) {
+  constructor(
+    public element: ElementRef,
+    private workspaceService: WorkspaceService) {
   }
 
   public ngOnInit(): void {

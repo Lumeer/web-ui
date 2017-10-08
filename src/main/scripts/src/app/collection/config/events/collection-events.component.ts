@@ -51,10 +51,6 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
     this.getEvents();
   }
 
-  public join(str: string[]): string {
-    return str.join(', ');
-  }
-
   public getEvents(): void {
     this.eventsService.getEvents(this.collection.code)
       .retry(3)
@@ -63,4 +59,5 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
         error => this.notificationService.error('Error', 'Failed fetching Events')
       );
   }
+
 }

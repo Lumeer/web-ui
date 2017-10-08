@@ -28,8 +28,6 @@ import {CollectionService} from '../../core/rest/collection.service';
 import {WorkspaceService} from '../../core/workspace.service';
 import {Role} from '../../shared/permissions/role';
 import {Permission} from '../../core/dto/permission';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/take';
 
 @Component({
   selector: 'collection-config',

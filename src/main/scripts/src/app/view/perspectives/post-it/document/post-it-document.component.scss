@@ -2,33 +2,22 @@
 
 :host {
 
-  .card-header {
-    .buttons {
-      position: absolute;
-      right: 8px;
-    }
+  .card-header .button {
+    transition: background $animation-color-duration, opacity $animation-color-duration;
 
-    .fa-times {
-      position: relative;
-      top: 1.5px;
-    }
-
-    .button {
-      transition: background $animation-color-duration, opacity $animation-color-duration;
-
-      &:hover {
-        background: $grey-darker-color;
-      }
+    &:hover {
+      background: $grey-darker-color;
     }
   }
 
   .remove-document {
-    top: 2px;
+    margin-top: 3px;
     padding: 1px 4px;
     font-size: 18px;
   }
 
   .edit-document {
+    margin-top: 3px;
     font-size: 14px;
     padding: 3px;
   }

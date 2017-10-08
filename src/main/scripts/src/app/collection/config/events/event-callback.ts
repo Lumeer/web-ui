@@ -18,15 +18,25 @@
  * -----------------------------------------------------------------------/
  */
 
-import {EventFireReason} from '../../collection/config/events/event-fire-reason';
-import {EventCallback} from '../../collection/config/events/event-callback';
-import {EventParameter} from '../../collection/config/events/event-parameter';
+export interface EventCallback {
 
-export interface Event {
-
-  fireWhen: EventFireReason[];
-  callback: EventCallback;
-  parameters: EventParameter[];
-  automatic?: boolean;
+  name: string;
+  hasValue: boolean;
+  value?: string;
 
 }
+
+export const updateAutomaticLinks: EventCallback = {
+  name: 'update automatic links',
+  hasValue: false
+};
+
+export const sortByAttribute: EventCallback = {
+  name: 'sort by attribute',
+  hasValue: true
+};
+
+export const notify: EventCallback = {
+  name: 'notify',
+  hasValue: true
+};

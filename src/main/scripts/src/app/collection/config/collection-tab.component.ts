@@ -29,7 +29,7 @@ import {WorkspaceService} from '../../core/workspace.service';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/take';
 
-@Component({})
+@Component({template: ''})
 export abstract class CollectionTabComponent implements OnInit {
 
   protected collection: Collection;
@@ -44,7 +44,7 @@ export abstract class CollectionTabComponent implements OnInit {
     this.getCurrentCollection();
   }
 
-  protected getCurrentCollection(): void {
+  protected getCurrentCollection(): Promise<Collection> {
     if (!this.collection) {
       this.collection = {
         attributes: [],
@@ -54,18 +54,21 @@ export abstract class CollectionTabComponent implements OnInit {
       };
     }
 
-    this.getCollectionFromParams();
+    return this.getCollectionFromParams();
   }
 
-  private getCollectionFromParams(): void {
-    this.route.parent.paramMap
+  private getCollectionFromParams(): Promise<Collection> {
+    return this.route.parent.paramMap
       .map(paramMap => paramMap.get('collectionCode'))
       .switchMap(collectionCode => this.collectionService.getCollection(collectionCode))
       .retry(3)
-      .subscribe(
-        collection => this.collection = collection,
-        error => this.notificationService.error('Error', `Failed fetching collection`)
-      );
+      .take(1)
+      .toPromise()
+      .then(collection => this.collection = collection)
+      .catch(error => {
+        this.notificationService.error('Error', `Failed fetching collection`);
+        return null;
+      });
   }
 
   protected updateCollection(): void {

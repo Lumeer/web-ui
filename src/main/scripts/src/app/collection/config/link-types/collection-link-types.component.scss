@@ -1,6 +1,7 @@
 @import "../../../shared/_lumeer-variables";
 
 :host {
+  display: block;
 
   li {
     transition: height $animation-duration;

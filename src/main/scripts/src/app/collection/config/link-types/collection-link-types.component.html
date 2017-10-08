@@ -1,69 +1,73 @@
-<ul class="list-group">
+<ul class="list-group mx-5">
   <li *ngFor="let linkType of linkTypes; let idx = index"
-      class="list-group-item py-2 {{ !initialized(linkType) ? 'uninitialized' : null }}"
-      [@height]="'in'"
+      class="list-group-item pt-2 {{ !initialized(linkType) ? 'uninitialized' : 'pb-0' }}"
       [style.border-color]="collection.color">
-    <div class="d-flex align-baseline py-1">
-        <span class="start">
-          <i class="p-2 fa fa-caret-right bigger expand {{ expanded[idx] ? 'fa-rotate-90' : null}}"
-             aria-hidden="true"
-             title="Open"
-             [style.visibility]="!initialized(linkType) ? 'hidden' : null"
-             (click)="expanded[idx] = !expanded[idx]"></i>
-          <i class="fa-fw {{ collection.icon }} first-collection bigger"
-             title="{{ collection.name }}"
-             [style.color]="collection.color"
-             aria-hidden="true"></i>
-          <i class="fa-fw {{ collections[linkType.toCollection].icon }} second-collection bigger"
-             title="{{ initialized(linkType) ? collections[linkType.toCollection].name : 'Pick collection to link'}}"
-             [style.color]="collections[linkType.toCollection].color"
-             data-toggle="dropdown"
-             aria-hidden="true"></i>
-          <div class="dropdown-menu">
-            <span *ngFor="let collectionCode of allCollectionCodes()"
-                  class="dropdown-item"
-                  [style.color]="collections[collectionCode].color">
-              <i class="mr-1 fa-fw {{ collections[collectionCode].icon }}" aria-hidden="true"></i>
-              {{ collections[collectionCode].name }}
+    <ng-container *ngIf="collections[linkType.toCollection]">
+        <div class="d-flex align-baseline py-1">
+          <span class="start">
+            <i class="p-2 fa fa-caret-right bigger expand {{ expanded[idx] ? 'fa-rotate-90' : null}}"
+              aria-hidden="true"
+              title="Open"
+              [style.visibility]="!initialized(linkType) ? 'hidden' : null"
+              (click)="expanded[idx] = !expanded[idx]"></i>
+            <i class="fa-fw {{ collection.icon }} first-collection bigger"
+              title="{{ collection.name }}"
+              [style.color]="collection.color"
+              aria-hidden="true"></i>
+            <i class="fa-fw {{ collections[linkType.toCollection].icon }} second-collection bigger"
+              title="{{ initialized(linkType) ? collections[linkType.toCollection].name : 'Pick collection to link'}}"
+              [style.color]="collections[linkType.toCollection].color"
+              data-toggle="dropdown"
+              aria-hidden="true"></i>
+            <div class="dropdown-menu">
+              <span *ngFor="let collectionCode of possibleToCollectionCodes(linkType)"
+                    class="dropdown-item"
+                    [style.color]="collections[collectionCode].color"
+                    (click)="linkType.toCollection = collectionCode; updateLinkType(linkType, idx)">
+                <i class="mr-1 fa-fw {{ collections[collectionCode].icon }}" aria-hidden="true"></i>
+                {{ collections[collectionCode].name }}
+              </span>
+            </div>
+
+            <input #name
+                  class="ml-3 border-0 name"
+                  placeholder="Link Type Name"
+                  title="rename"
+                  [(ngModel)]="linkType.name"
+                  (keyup.enter)="name.blur()"
+                  (blur)="linkType.name || linkType.toCollection === 'NO_COLLECTION_CODE' ?
+                  updateLinkType(linkType, idx) : deleteLinkType(linkType, idx)">
+            <span *ngIf="initialized(linkType)"
+                  class="ml-3 pr-1 border-dark instance-count rounded border"
+                  title="Instance count">
+              {{ formatNumber(instanceCount(linkType)) }}
             </span>
-          </div>
-
-          <input #name
-                 class="ml-3 border-0 name"
-                 placeholder="Link Type Name"
-                 title="rename"
-                 [(ngModel)]="linkType.name"
-                 (keyup.enter)="name.blur()"
-                 (blur)="linkType.name || linkType.toCollection === 'NO_COLLECTION_CODE' ?
-                 updateLinkType(linkType, idx) : deleteLinkType(linkType, idx)">
-          <span *ngIf="initialized(linkType)"
-                class="ml-3 pr-1 border-dark instance-count rounded border"
-                title="Instance count">
-            {{ formatNumber(linkType.instanceCount) }}
           </span>
-        </span>
 
-      <span *ngIf="initialized(linkType)">
-          <a [routerLink]="[workspacePath(), 'search', 'links']"
-             [queryParams]="searchLinkTypesQueryParams(linkType)"
-             class="btn btn-outline-primary mr-1"
-             title="Show all searches of this attribute">
-            See all
-          </a>
+          <span *ngIf="initialized(linkType)">
+            <a [routerLink]="[workspacePath(), 'search', 'links']"
+              [queryParams]="searchLinkTypesQueryParams(linkType)"
+              class="btn btn-outline-success mr-1"
+              title="Show all searches of this attribute">
+              See all
+            </a>
 
-          <a [routerLink]="[workspacePath(), 'c', collections[linkType.toCollection].code, 'linktypes']"
-             class="btn btn-outline-primary {{ !initialized(linkType) ? 'disabled' : null }}"
-             title="Go to {{ collections[linkType.toCollection].name }}">
-            <i class="fa fa-arrow-right" aria-hidden="true"></i>
-            <i class="fa-fw {{ collections[linkType.toCollection].icon }}" aria-hidden="true"></i>
-          </a>
-        </span>
-    </div>
-    <div>
-      <link-attribute-list
-        [collection]="collections[linkType.toCollection]"
-        [limit]="expanded[idx] ? 100 : 1"></link-attribute-list>
-    </div>
+            <a [routerLink]="[workspacePath(), 'c', linkType.toCollection, 'linktypes']"
+              class="btn btn-outline-success {{ !initialized(linkType) ? 'disabled' : null }}"
+              title="Go to {{ collections[linkType.toCollection].name }}">
+              <i class="fa fa-arrow-right" aria-hidden="true"></i>
+              <i class="fa-fw {{ collections[linkType.toCollection].icon }}" aria-hidden="true"></i>
+            </a>
+          </span>
+      </div>
+      <div *ngIf="initialized(linkType)"
+          (click)="expanded[idx] = !expanded[idx]">
+        <link-attribute-list
+          [linkedAttributes]="linkType.linkedAttributes"
+          [limit]="expanded[idx] ? 9999 : 1"></link-attribute-list>
+      </div>
+
+    </ng-container>
   </li>
   <li class="list-group-item py-3 new-link-type expand"
       [style.border-color]="collection.color"

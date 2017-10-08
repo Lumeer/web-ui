@@ -18,15 +18,22 @@
  * -----------------------------------------------------------------------/
  */
 
-import {EventFireReason} from '../../collection/config/events/event-fire-reason';
-import {EventCallback} from '../../collection/config/events/event-callback';
-import {EventParameter} from '../../collection/config/events/event-parameter';
+export interface EventParameter {
 
-export interface Event {
-
-  fireWhen: EventFireReason[];
-  callback: EventCallback;
-  parameters: EventParameter[];
-  automatic?: boolean;
+  name: string;
+  value: any;
+  possibleValues: any[];
 
 }
+
+export const documentStickyness: EventParameter = {
+  name: 'document stickyness',
+  value: 'yes',
+  possibleValues: ['yes', 'no']
+};
+
+export const ascending: EventParameter = {
+  name: 'ascending',
+  value: true,
+  possibleValues: [true, false]
+};

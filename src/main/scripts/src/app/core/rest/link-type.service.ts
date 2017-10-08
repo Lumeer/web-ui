@@ -35,24 +35,21 @@ export class LinkTypeService {
     fromCollection: '',
     toCollection: 'ord',
     name: 'Clouds placement',
-    instanceCount: 38,
-    attributes: []
+    linkedAttributes: []
   };
 
   public static link2: LinkType = {
     fromCollection: '',
     toCollection: 'cmp',
     name: 'Seasons in the Sun',
-    instanceCount: 12628,
-    attributes: []
+    linkedAttributes: []
   };
 
   public static link3: LinkType = {
     fromCollection: '',
     toCollection: 'emp',
     name: 'Pollution clouds',
-    instanceCount: 364,
-    attributes: [],
+    linkedAttributes: [],
     automaticLinkFromAttribute: 'id',
     automaticLinkToAttribute: 'pollution'
   };

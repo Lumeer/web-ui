@@ -121,7 +121,7 @@ export class AttributeListComponent {
       .retry(3)
       .subscribe(
         () => this.collection.attributes.splice(index, 1),
-        error => this.notificationService.error('Error', 'Failed removing attribute')
+        error => console.error(error)
       );
   }
 

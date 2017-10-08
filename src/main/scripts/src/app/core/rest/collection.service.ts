@@ -80,7 +80,13 @@ export class CollectionService extends PermissionService {
   }
 
   public removeAttribute(collectionCode: string, fullName: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, {observe: 'response'});
+    return this.httpClient.delete(
+      `${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`,
+      {
+        observe: 'response',
+        responseType: 'text'
+      }
+    );
   }
 
   protected actualApiPrefix() {

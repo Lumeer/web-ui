@@ -25,8 +25,7 @@ export interface LinkType {
   fromCollection: string;
   toCollection: string;
   name: string;
-  instanceCount: number;
-  attributes: Attribute[];
+  linkedAttributes: Attribute[];
   automaticLinkFromAttribute?: string;
   automaticLinkToAttribute?: string;
 

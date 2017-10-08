@@ -1,21 +1,17 @@
-<div class="card-header py-1">
-  <span [style.color]="data.collection.color">
-    <i class="icon {{ data.collection.icon }} mr-1"></i>{{ data.collection.name }}
+<div class="card-header d-flex py-1">
+  <span class="flex-grow"
+        [style.color]="data.collection.color">
+    <i class="icon {{ data.collection.icon }} mr-1"></i>
+    {{ data.collection.name }}
   </span>
 
   <ng-container *ngIf="data.writeRole">
-    <a tabindex
-       class="editable"
-       title="Edit Document" i18n-title="@@document.button.edit"
-       (click)="setEditMode(true); select(0, 0)">
-      <i class="fa fa-fw fa-pencil"></i>
-    </a>
-    <a tabindex
-       class="editable remove"
+    <i class="button text-danger remove-document fa fa-times rounded"
        title="Remove Document" i18n-title="@@document.button.remove"
-       (click)="onRemoveDocumentClick()">
-      <i class="fa fa-fw fa-times"></i>
-    </a>
+       (click)="onRemoveDocumentClick()"></i>
+    <i class="button text-success edit-document fa fa-pencil rounded"
+       title="Edit Document" i18n-title="@@document.button.edit"
+       (click)="setEditMode(true); select(0, 0)"></i>
   </ng-container>
 </div>
 
@@ -24,7 +20,8 @@
 
     <ng-container *ngIf="data.writeRole">
       <li *ngFor="let attributePair of attributePairs; let row = index">
-        <span id="AttributePair{{ data.index }}[0, {{ row }}]" class="attribute" tabindex="-1"
+        <span id="AttributePair{{ data.index }}[0, {{ row }}]" class="attribute"
+              tabindex="-1"
               (keydown.ArrowLeft)="moveSelection(-1, 0)"
               (keydown.ArrowRight)="moveSelection(1, 0)"
               (keydown.ArrowUp)="moveSelection(0, -1)"
@@ -63,7 +60,8 @@
       </li>
 
       <li>
-        <span id="AttributePair{{ data.index }}[0, {{ attributePairs.length }}]" class="attribute" tabindex="-1"
+        <span id="AttributePair{{ data.index }}[0, {{ attributePairs.length }}]"
+              class="attribute" tabindex="-1"
               (keydown.ArrowLeft)="moveSelection(-1, 0)"
               (keydown.ArrowRight)="moveSelection(1, 0)"
               (keydown.ArrowUp)="moveSelection(0, -1)"
@@ -106,46 +104,46 @@
     <ng-container *ngIf="!data.writeRole">
       <li *ngFor="let attributePair of attributePairs">
         <span class="attribute">
-          <input class="border-0" readonly [ngModel]="attributePair.attribute">
+          <input class="border-0"
+                 readonly
+                 [ngModel]="attributePair.attribute">
         </span>
 
         <span>
-          <input class="border-0" title="{{ attributePair.value }}" readonly [ngModel]="attributePair.value">
+          <input class="border-0"
+                 title="{{ attributePair.value }}"
+                 readonly
+                 [ngModel]="attributePair.value">
         </span>
       </li>
     </ng-container>
   </ul>
 </div>
 
-      <span>
-        <input title="{{ attributePair.value }}" readonly [ngModel]="attributePair.value">
-      </span>
-    </li>
-  </ng-template>
-</ul>
-
-<!-- additional buttons -->
-<div class="edit">
-  <a tabindex
-     title="Details" i18n-title="@@document.button.details">
-    <i class="fa fa-fw fa-search"></i>
-  </a>
-
-  <span class="secondary-edit d-flex">
-    <a tabindex
-       class="d-block"
-       title="Incoming Links" i18n-title="@@document.button.links.incoming">
-      <i class="fa fa-fw fa-sign-in"></i>
+<div *ngIf="data.initialized" class="card-footer px-4 py-0">
+  <div class="buttons d-flex align-content-center">
+    <a [routerLink]="[configPrefix(), 'details']"
+       class="px-2"
+       title="Details" i18n-title="@@document.button.links.details">
+      <i class="fa fa-fw fa-search"></i>
     </a>
-    <a tabindex
-       class="d-block"
-       title="Outgoing Links" i18n-title="@@document.button.links.outgoing">
+
+    <a [routerLink]="[configPrefix(), 'linktypes']"
+       class="px-2"
+       title="Link Types" i18n-title="@@document.button.link.types">
       <i class="fa fa-fw fa-sign-out"></i>
     </a>
-    <a tabindex
-       class="d-block"
-       title="History" i18n-title="@@document.button.history">
+
+    <a [routerLink]="[configPrefix(), 'history']"
+       class="px-2"
+       title="History" i18n-title="@@document.button.links.history">
       <i class="fa fa-fw fa-history"></i>
     </a>
-  </span>
+
+    <a [routerLink]="[configPrefix(), 'permissions']"
+       class="px-2"
+       title="User Rights" i18n-title="@@document.button.links.permissions">
+      <i class="fa fa-fw fa-users"></i>
+    </a>
+  </div>
 </div>

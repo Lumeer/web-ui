@@ -109,10 +109,6 @@ export class WorkspaceChooserComponent implements OnInit {
           selectedOrganization.projects = projects;
         });
     }
-    this.activeOrganization = organization;
-    this.activeProject = null;
-  }
-
     this.activeProjIx = undefined;
     this.activeOrgIx = index;
   }

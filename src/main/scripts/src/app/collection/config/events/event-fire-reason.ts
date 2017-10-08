@@ -18,15 +18,14 @@
  * -----------------------------------------------------------------------/
  */
 
-import {EventFireReason} from '../../collection/config/events/event-fire-reason';
-import {EventCallback} from '../../collection/config/events/event-callback';
-import {EventParameter} from '../../collection/config/events/event-parameter';
+export enum EventFireReason {
 
-export interface Event {
+  documentCreate = 'new document',
+  documentEdit = 'document edit',
+  documentRemove = 'document removal',
 
-  fireWhen: EventFireReason[];
-  callback: EventCallback;
-  parameters: EventParameter[];
-  automatic?: boolean;
+  attributeCreate = 'new attribute',
+  attributeEdit = 'attribute edit',
+  attributeRemove = 'attribute removal'
 
 }

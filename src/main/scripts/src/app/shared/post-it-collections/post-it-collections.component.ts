@@ -17,12 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren} from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  TemplateRef,
+  ViewChildren
+} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
-import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
+import {
+  Collection,
+  COLLECTION_NO_COLOR,
+  COLLECTION_NO_ICON
+} from '../../core/dto/collection';
 import {Query} from '../../core/dto/query';
 import {CollectionService} from '../../core/rest/collection.service';
 import {ImportService} from '../../core/rest/import.service';
@@ -31,9 +45,9 @@ import {WorkspaceService} from '../../core/workspace.service';
 import {Role} from '../permissions/role';
 import {PostItLayout} from '../utils/post-it-layout';
 import {PostItCollectionData} from './post-it-collection-data';
-import 'rxjs/add/operator/retry';
 import {QueryConverter} from '../utils/query-converter';
 import {HtmlModifier} from '../utils/html-modifier';
+import 'rxjs/add/operator/retry';
 
 @Component({
   selector: 'post-it-collections',
@@ -313,6 +327,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   }
 
   public removeHtmlComments(html: HTMLElement): string {
-    return HtmlModifier.removeHtmlComments(html);
+    if (html) {
+      return HtmlModifier.removeHtmlComments(html);
+    }
   }
 }

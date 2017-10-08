@@ -2,6 +2,12 @@
 
 :host {
 
+  display: block;
+
+  input {
+    outline: none;
+  }
+
   .search {
     transition: background-color $animation-color-duration, border-color $animation-color-duration;
     background-color: $secondary-color;

@@ -238,7 +238,7 @@
         <source>Permissions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.button.remove" datatype="html">
@@ -268,21 +268,21 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.delete.dialog.title" datatype="html">
         <source>Delete Collection?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">124</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.delete.dialog.body" datatype="html">
         <source>Deleting a collection will permanently remove it from this project. All documents stored inside the collection will be lost.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">130</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.delete.dialog.button.no" datatype="html">
@@ -290,7 +290,7 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collection.delete.dialog.button.yes" datatype="html">
@@ -298,7 +298,7 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">141</context>
         </context-group>
       </trans-unit>
       <trans-unit id="picker.color.custom" datatype="html">
@@ -476,56 +476,60 @@
         <source>Edit Document</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document.component.ts</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="document.button.remove" datatype="html">
         <source>Remove Document</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document.component.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="document.button.details" datatype="html">
         <source>Details</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document.component.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">125</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="document.button.links.incoming" datatype="html">
-        <source>Incoming Links</source>
+      <trans-unit id="document.button.link.types" datatype="html">
+        <source>Link Types</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document.component.ts</context>
-          <context context-type="linenumber">93</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="document.button.links.outgoing" datatype="html">
-        <source>Outgoing Links</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document.component.ts</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">129</context>
         </context-group>
       </trans-unit>
       <trans-unit id="document.button.history" datatype="html">
         <source>History</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document.component.ts</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="document.button.permissions" datatype="html">
+        <source>User Rights</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document.component.ts</context>
+          <context context-type="linenumber">138</context>
         </context-group>
       </trans-unit>
       <trans-unit id="document.list.empty" datatype="html">
         <source>Nothing To Show</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/post-it/post-it-perspective.component.ts</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="document.button.scroll.down" datatype="html">
-        <source>Scroll Down</source>
+      <trans-unit id="document.button.show.more" datatype="html">
+        <source>Show More<x id="START_ITALIC_TEXT" ctype="x-i"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/post-it/post-it-perspective.component.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
       <trans-unit id="document.delete.dialog.title" datatype="html">
@@ -605,7 +609,7 @@
         <source>Add Document</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/post-it/add-document/add-document.component.ts</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit>
       <trans-unit id="view.perspective" datatype="html">

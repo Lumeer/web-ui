@@ -25,6 +25,9 @@ import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {LumeerError} from '../error/lumeer.error';
 import {WorkspaceService} from '../workspace.service';
 import {Observable} from 'rxjs/Observable';
+import {EventFireReason} from '../../collection/config/events/event-fire-reason';
+import {sortByAttribute, updateAutomaticLinks} from '../../collection/config/events/event-callback';
+import {ascending, documentStickyness} from '../../collection/config/events/event-parameter';
 import {Event} from '../dto/Event';
 
 // TODO implement on backend
@@ -32,15 +35,24 @@ import {Event} from '../dto/Event';
 export class EventsService {
 
   public static event1: Event = {
-    fireWhen: ['New Document', 'Document Edit', 'Document Removal'],
-    callback: 'Update Automatic Links',
-    parameters: ['Document Stickyness = yes']
+    fireWhen: [EventFireReason.documentCreate, EventFireReason.documentEdit, EventFireReason.documentRemove],
+    callback: updateAutomaticLinks,
+    parameters: [documentStickyness],
+    automatic: true
   };
 
   public static event2: Event = {
-    fireWhen: ['New Document', 'Document Edit', 'Document Removal'],
-    callback: 'Update Automatic Links',
-    parameters: ['Document Stickyness = yes']
+    fireWhen: [EventFireReason.documentEdit],
+    callback: {
+      name: sortByAttribute.name,
+      hasValue: sortByAttribute.hasValue,
+      value: 'dateoforder'
+    },
+    parameters: [ascending, {
+      name: documentStickyness.name,
+      value: documentStickyness.possibleValues[1],
+      possibleValues: documentStickyness.possibleValues
+    }]
   };
 
   constructor(private httpClient: HttpClient,

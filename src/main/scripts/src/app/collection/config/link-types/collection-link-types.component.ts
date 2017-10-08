@@ -18,13 +18,24 @@
  * -----------------------------------------------------------------------/
  */
 
-import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {animate, style, transition, trigger} from '@angular/animations';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
-import {Collection, COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../core/dto/collection';
+import {
+  Collection,
+  COLLECTION_NO_ICON,
+  COLLECTION_NO_CODE,
+  COLLECTION_NO_COLOR
+} from '../../../core/dto/collection';
 import {CollectionTabComponent} from '../collection-tab.component';
 import {LinkTypeService} from '../../../core/rest/link-type.service';
 import {LinkType} from '../../../core/dto/link-type';
@@ -34,18 +45,7 @@ import {WorkspaceService} from '../../../core/workspace.service';
 @Component({
   selector: 'collection-link-types',
   templateUrl: './collection-link-types.component.html',
-  styleUrls: ['./collection-link-types.component.scss'],
-  animations: [
-    trigger('height', [
-      transition('void => *', [
-        style({height: 0}),
-        animate(250, style({height: '*'}))
-      ]),
-      transition('* => void', [
-        animate(250, style({height: '0px'}))
-      ])
-    ])
-  ]
+  styleUrls: ['./collection-link-types.component.scss']
 })
 export class CollectionLinkTypesComponent extends CollectionTabComponent implements OnInit {
 
@@ -75,9 +75,9 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   private refreshOnUrlChange(): void {
-    this.route.url.forEach(async params => {
-      await super.getCurrentCollection(); // needs to wait for current collection code to update
-      this.fetchLinkTypes(this.collection.code);
+    this.route.url.forEach(params => {
+      this.getCurrentCollection()
+        .then(collection => collection && this.fetchLinkTypes(collection.code));
     });
   }
 
@@ -102,21 +102,31 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   private fetchLinkTypes(collectionCode: string): void {
     this.linkTypes = [];
-    setTimeout(() => this.getLinkTypes(collectionCode), 250);
+    this.getLinkTypes(collectionCode);
   }
 
   private getLinkTypes(collectionCode: string): void {
     this.linkTypeService.getLinkTypes(collectionCode)
       .retry(3)
       .subscribe(
-        linkTypes => this.linkTypes = linkTypes,
+        linkTypes => {
+          // linkTypes.forEach(linkType => {
+          //   // const collection =
+          //   const firstAttributes = this.collections[linkType.toCollection].attributes.slice(0, linkType.toCollection.length);
+          //   linkType.linkedAttributes =
+          // });
+          this.linkTypes = linkTypes;
+        },
         error => this.notificationService.error('Error', 'Failed fetching Link Types')
       );
   }
 
-  public allCollectionCodes(): string[] {
-    return Object.keys(this.collections)
-      .filter(collectionCode => collectionCode !== COLLECTION_NO_CODE);
+  public possibleToCollectionCodes(linkType: LinkType): string[] {
+    const excludedCodes = [COLLECTION_NO_CODE, linkType.toCollection, linkType.fromCollection];
+
+    return Object
+      .keys(this.collections)
+      .filter(collectionCode => !excludedCodes.includes(collectionCode));
   }
 
   public initialized(linkType: LinkType): boolean {
@@ -128,8 +138,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       fromCollection: this.collection.code,
       toCollection: COLLECTION_NO_CODE,
       name: '',
-      attributes: [],
-      instanceCount: 0
+      linkedAttributes: []
     };
 
     this.linkTypeService.createLinkType(emptyLinkType)
@@ -168,6 +177,12 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     return {
       query: JSON.stringify({linkNames: [linkType.name]})
     };
+  }
+
+  public instanceCount(linkType: LinkType): number {
+    return linkType.linkedAttributes
+      .map(attribute => attribute.usageCount)
+      .reduce((sum, current) => sum + current, 0);
   }
 
   public formatNumber(numberToFormat: number): string {

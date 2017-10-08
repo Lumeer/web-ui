@@ -32,50 +32,14 @@ import * as Const from '../constraints';
 export class LinkAttributeListComponent {
 
   @Input()
-  public collection: Collection;
+  public linkedAttributes: Attribute[];
 
   @Input()
   public limit = Number.MAX_SAFE_INTEGER;
 
   public attributes(): Attribute[] {
-    return this.collection.attributes.slice(0, this.limit);
+    return this.linkedAttributes.slice(0, this.limit);
   }
-
-  // public createAttribute(newAttributeName: string): void {
-  //   this.newAttributeName = '';
-  //   const newAttribute = this.emptyAttribute();
-  //   newAttribute.fullName = newAttributeName;
-  //   newAttribute.name = newAttributeName;
-  //
-  //   this.collectionService.updateAttribute(this.collection.code, newAttributeName, newAttribute)
-  //     .retry(3)
-  //     .subscribe(
-  //       attribute => this.collection.attributes.push(attribute),
-  //       error => this.notificationService.error('Error', 'Failed creating attribute')
-  //     );
-  // }
-  //
-  // public updateAttribute(attribute: Attribute, index?: number): void {
-  //   const previousFullName = attribute.fullName;
-  //   attribute.fullName = attribute.name;
-  //
-  //   this.collectionService.updateAttribute(this.collection.code, previousFullName, attribute)
-  //     .retry(3)
-  //     .subscribe(
-  //       attribute => !isNullOrUndefined(index) && (this.collection.attributes[index] = attribute),
-  //       error => this.notificationService.error('Error', 'Failed updating attribute')
-  //     );
-  // }
-  //
-  // public removeAttribute(attribute: Attribute, index?: number): void {
-  //   const removed = this.collection.attributes[index];
-  //   this.collectionService.removeAttribute(this.collection.code, removed.fullName)
-  //     .retry(3)
-  //     .subscribe(
-  //       () => this.collection.attributes.splice(index, 1),
-  //       error => this.notificationService.error('Error', 'Failed removing attribute')
-  //     );
-  // }
 
   public formatNumber(numberToFormat: number): string {
     const spaceBetweenEveryThreeDigits = /(?=(\d{3})+(?!\d))/g;
