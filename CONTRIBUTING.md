@@ -1,6 +1,6 @@
 # Contributing Guide
 
-If you want to contribute to Lumeer engine, read this document in order to save both your time and the time of developers who maintain this project.
+If you want to contribute to Lumeer, read this document in order to save both your time and the time of the developers who maintain this project.
 
 ## Technologies
 The project is using [Angular 4](https://angular.io/) framework with
@@ -49,12 +49,7 @@ Add the following license header at the beginning of every TypeScript file you a
 Look at [How To Contribute](https://github.com/Lumeer/engine/wiki/How-To-Contribute#pull-requests) wiki page describing the workflow of creating a pull request to our repositories.
 
 ## Angular
-Put all component CSS under `:host` selector, to prevent styles being applied
-globally.
-
-Use exact values (`16px`, `18px`, `30px`) for sizes, instead of 
-`medium`, `large`, `x-large` to keep the look consistent no matter the 
-user's browser font size.
+Here are some Angular-specific recommendations when working on this project.
 
 ### Localization
 
@@ -125,6 +120,12 @@ instead of
 ```angular2html
 routerLink="/start/child"
 ```
+
+### CSS sizes
+
+Use exact values (`16px`, `18px`, `30px`) for sizes, instead of 
+`medium`, `large`, `x-large` to keep the look consistent no matter the 
+user's browser font size.
 
 ### SCSS Variables
 Prefer using SCSS variables, as it keeps the style consistent, readable, 
