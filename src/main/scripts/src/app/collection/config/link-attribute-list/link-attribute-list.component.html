@@ -1,7 +1,18 @@
-<table class="table table-sm table-hover mt-1" style="width: 475px">
+<table *ngIf="!linkedAttributes.length" class="table table-sm table-hover mt-1" style="width: 475px">
+  <thead class="add"
+         (click)="addLinkedAttribute()">
+  <tr>
+    <th class="border-0">
+      <span>No Attributes</span>
+      <i class="fa fa-fw fa-plus"></i>
+    </th>
+  </tr>
+  </thead>
+</table>
+<table *ngIf="linkedAttributes.length >= 1" class="table table-sm table-hover mt-1" style="width: 475px">
   <thead>
   <tr>
-    <th class="border-0 attrbute-row">
+    <th class="border-0 attribute-row">
       Attribute
     </th>
     <th class="border-0 count-row">

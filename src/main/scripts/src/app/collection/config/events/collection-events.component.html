@@ -3,26 +3,26 @@
         class="list-group-item py-3">
       <div class="d-flex">
         <span class="flex-grow">
-          <span class="mr-2">On</span>
+          <span class="mr-2" i18n="@@collection.config.tab.events.on">On</span>
           <ng-container *ngFor="let on of event.fireWhen; let idx = index">
             <span class="text-success">{{ on }}</span>
             <span *ngIf="idx !== event.fireWhen.length - 1">, </span>
           </ng-container>
         </span>
-        <span *ngIf="event.automatic">
+        <span *ngIf="event.automatic" i18n="@@collection.config.tab.events.automatic">
           automatic
         </span>
       </div>
 
       <div>
-        <span class="mr-2">Do</span>
+        <span class="mr-2" i18n="@@collection.config.tab.events.do">Do</span>
         <span class="text-success">{{ event.callback.name }}</span>
         <span *ngIf="event.callback.hasValue">:</span>
         <span *ngIf="event.callback.value">{{ event.callback.value }}</span>
       </div>
 
       <div>
-        <span class="mr-2">Parameters</span>
+        <span class="mr-2" i18n="@@collection.config.tab.events.parameters">Parameters</span>
         <ng-container *ngFor="let parameter of event.parameters">
           <div class="text-success">{{ parameter.name }}</div>
         </ng-container>
@@ -31,6 +31,6 @@
 
   <li class="py-3 list-group-item">
       <i class="fa fa-plus bigger text-success" aria-hidden="true"></i>
-      <span class="ml-2">Add Event</span>
+      <span class="ml-2" i18n="@@collection.config.tab.events.add">Add Event</span>
   </li>
 </ul>

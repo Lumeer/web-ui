@@ -19,8 +19,6 @@
  */
 
 import {Component, Input} from '@angular/core';
-
-import {Collection} from '../../../core/dto/collection';
 import {Attribute} from '../../../core/dto/attribute';
 import * as Const from '../constraints';
 
@@ -37,8 +35,19 @@ export class LinkAttributeListComponent {
   @Input()
   public limit = Number.MAX_SAFE_INTEGER;
 
+  public uninitialized: boolean[];
+
   public attributes(): Attribute[] {
     return this.linkedAttributes.slice(0, this.limit);
+  }
+
+  public addLinkedAttribute(): void {
+    this.linkedAttributes.push({
+      name: '',
+      fullName: '',
+      usageCount: 0,
+      constraints: []
+    });
   }
 
   public formatNumber(numberToFormat: number): string {

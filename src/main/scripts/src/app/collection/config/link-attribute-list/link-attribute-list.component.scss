@@ -3,7 +3,14 @@
 :host {
   display: block;
 
-  .attrbute-row {
+  .add {
+    transition: color $animation-color-duration;
+    &:hover {
+      color: $brand-success;
+    }
+  }
+
+  .attribute-row {
     width: 175px;
   }
 

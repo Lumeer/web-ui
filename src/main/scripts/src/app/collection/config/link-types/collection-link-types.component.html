@@ -3,22 +3,23 @@
       class="list-group-item pt-2 {{ !initialized(linkType) ? 'uninitialized' : 'pb-0' }}"
       [style.border-color]="collection.color">
     <ng-container *ngIf="collections[linkType.toCollection]">
-        <div class="d-flex align-baseline py-1">
+      <div class="d-flex align-baseline py-1">
           <span class="start">
             <i class="p-2 fa fa-caret-right bigger expand {{ expanded[idx] ? 'fa-rotate-90' : null}}"
-              aria-hidden="true"
-              title="Open"
-              [style.visibility]="!initialized(linkType) ? 'hidden' : null"
-              (click)="expanded[idx] = !expanded[idx]"></i>
+               aria-hidden="true"
+               title="Open"
+               i18n-title="@@collection.config.tab.link.types.open"
+               [style.visibility]="!initialized(linkType) ? 'hidden' : null"
+               (click)="expanded[idx] = !expanded[idx]"></i>
             <i class="fa-fw {{ collection.icon }} first-collection bigger"
-              title="{{ collection.name }}"
-              [style.color]="collection.color"
-              aria-hidden="true"></i>
+               title="{{ collection.name }}"
+               [style.color]="collection.color"
+               aria-hidden="true"></i>
             <i class="fa-fw {{ collections[linkType.toCollection].icon }} second-collection bigger"
-              title="{{ initialized(linkType) ? collections[linkType.toCollection].name : 'Pick collection to link'}}"
-              [style.color]="collections[linkType.toCollection].color"
-              data-toggle="dropdown"
-              aria-hidden="true"></i>
+               title="{{ initialized(linkType) ? collections[linkType.toCollection].name : 'Pick collection to link'}}"
+               [style.color]="collections[linkType.toCollection].color"
+               data-toggle="dropdown"
+               aria-hidden="true"></i>
             <div class="dropdown-menu">
               <span *ngFor="let collectionCode of possibleToCollectionCodes(linkType)"
                     class="dropdown-item"
@@ -30,43 +31,63 @@
             </div>
 
             <input #name
-                  class="ml-3 border-0 name"
-                  placeholder="Link Type Name"
-                  title="rename"
-                  [(ngModel)]="linkType.name"
-                  (keyup.enter)="name.blur()"
-                  (blur)="linkType.name || linkType.toCollection === 'NO_COLLECTION_CODE' ?
+                   class="ml-3 border-0 name"
+                   placeholder="Link Type Name"
+                   title="rename"
+                   i18n-title="@@collection.config.tab.link.types.rename"
+                   [(ngModel)]="linkType.name"
+                   (keyup.enter)="name.blur()"
+                   (blur)="linkType.name || linkType.toCollection === 'NO_COLLECTION_CODE' ?
                   updateLinkType(linkType, idx) : deleteLinkType(linkType, idx)">
             <span *ngIf="initialized(linkType)"
                   class="ml-3 pr-1 border-dark instance-count rounded border"
-                  title="Instance count">
+                  title="Instance count"
+                  i18n-title="@@collection.config.tab.link.types.instance.count">
               {{ formatNumber(instanceCount(linkType)) }}
             </span>
           </span>
 
-          <span *ngIf="initialized(linkType)">
+        <span *ngIf="initialized(linkType)">
             <a [routerLink]="[workspacePath(), 'search', 'links']"
-              [queryParams]="searchLinkTypesQueryParams(linkType)"
-              class="btn btn-outline-success mr-1"
-              title="Show all searches of this attribute">
+               [queryParams]="searchLinkTypesQueryParams(linkType)"
+               class="btn btn-outline-success mr-1"
+               title="Show all searches of this attribute"
+               i18n-title="@@collection.config.tab.link.types.show.all"
+               i18n="@@collection.config.tab.link.types.show.all.text">
               See all
             </a>
 
             <a [routerLink]="[workspacePath(), 'c', linkType.toCollection, 'linktypes']"
-              class="btn btn-outline-success {{ !initialized(linkType) ? 'disabled' : null }}"
-              title="Go to {{ collections[linkType.toCollection].name }}">
+               class="btn btn-outline-success {{ !initialized(linkType) ? 'disabled' : null }}"
+               title="Go to {{ collections[linkType.toCollection].name }}"
+               i18n-title="@@collection.config.tab.link.types.go.to">
               <i class="fa fa-arrow-right" aria-hidden="true"></i>
               <i class="fa-fw {{ collections[linkType.toCollection].icon }}" aria-hidden="true"></i>
             </a>
           </span>
       </div>
       <div *ngIf="initialized(linkType)"
-          (click)="expanded[idx] = !expanded[idx]">
+           (click)="expanded[idx] = true">
+        <div *ngIf="linkType.automaticLinkFromAttribute && linkType.automaticLinkToAttribute">
+          <span i18n="@@collection.config.link.types.automatic.link">
+            Automatic Link:
+          </span>
+          <span>
+            <i class="fa-fw {{ collection.icon }}"
+               [style.color]="collection.color"></i>
+            <span>{{ linkType.automaticLinkFromAttribute }}</span>
+          </span>
+          <i class="fa fa-arrows-h" aria-hidden="true"></i>
+          <span>
+            <i class="fa-fw {{ collections[linkType.toCollection].icon }}"
+               [style.color]="collections[linkType.toCollection].color"></i>
+            <span>{{ linkType.automaticLinkToAttribute }}</span>
+          </span>
+        </div>
         <link-attribute-list
           [linkedAttributes]="linkType.linkedAttributes"
           [limit]="expanded[idx] ? 9999 : 1"></link-attribute-list>
       </div>
-
     </ng-container>
   </li>
   <li class="list-group-item py-3 new-link-type expand"
@@ -74,7 +95,7 @@
       (click)="newLinkType()">
     <div class="d-flex align-baseline">
       <i class="fa fa-plus bigger" aria-hidden="true"></i>
-      <span class="ml-3">
+      <span class="ml-3" i18n="@@collection.config.tab.link.types.add">
         Add link Type
       </span>
     </div>

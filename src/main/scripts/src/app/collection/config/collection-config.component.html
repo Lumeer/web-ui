@@ -5,7 +5,9 @@
     </a>
     <i class="fa-fw fa-2x {{ collection.icon }}" [style.color]="collection.color"></i>
     <h2 [style.color]="collection.color">{{ collection.name }}</h2>
-    <a title="Document Count" style="position: absolute; right: 80px" [routerLink]="[workspacePath(), 'c', collection.code, 'documents']">
+    <a title="Document Count"
+       i18n-title="@@collection.config.tab.document.count"
+       style="position: absolute; right: 80px" [routerLink]="[workspacePath(), 'c', collection.code, 'documents']">
       {{ collection.documentsCount }}&nbsp;<i class="far fa-file" aria-hidden="true"></i>
     </a>
   </div>
@@ -17,22 +19,34 @@
 
 <ul class="nav nav-tabs px-5">
   <li role="presentation" class="nav-item">
-    <a [routerLink]="['attributes']" routerLinkActive="active" class="nav-link">
+    <a [routerLink]="['attributes']"
+       routerLinkActive="active"
+       class="nav-link"
+       i18n="@@collection.config.tab.attributes">
       Attributes
     </a>
   </li>
   <li role="presentation" class="nav-item">
-    <a [routerLink]="['linktypes']" routerLinkActive="active" class="nav-link">
+    <a [routerLink]="['linktypes']"
+       routerLinkActive="active"
+       class="nav-link"
+       i18n="@@collection.config.tab.link.types">
       Link Types
     </a>
   </li>
   <li role="presentation" class="nav-item">
-    <a [routerLink]="['events']" routerLinkActive="active" class="nav-link">
+    <a [routerLink]="['events']"
+       routerLinkActive="active"
+       class="nav-link"
+       i18n="@@collection.config.tab.events">
       Events
     </a>
   </li>
   <li *ngIf="hasManageRole(collection)" role="presentation" class="nav-item">
-    <a [routerLink]="['permissions']" routerLinkActive="active" class="nav-link">
+    <a [routerLink]="['permissions']"
+       routerLinkActive="active"
+       class="nav-link"
+       i18n="@@collection.config.tab.permissions">
       Access Rights
     </a>
   </li>

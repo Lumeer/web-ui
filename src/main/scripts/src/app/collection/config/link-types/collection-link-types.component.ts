@@ -18,24 +18,12 @@
  * -----------------------------------------------------------------------/
  */
 
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  QueryList,
-  ViewChildren
-} from '@angular/core';
+import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {animate, style, transition, trigger} from '@angular/animations';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
-import {
-  Collection,
-  COLLECTION_NO_ICON,
-  COLLECTION_NO_CODE,
-  COLLECTION_NO_COLOR
-} from '../../../core/dto/collection';
+import {Collection, COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../core/dto/collection';
 import {CollectionTabComponent} from '../collection-tab.component';
 import {LinkTypeService} from '../../../core/rest/link-type.service';
 import {LinkType} from '../../../core/dto/link-type';
@@ -110,11 +98,14 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       .retry(3)
       .subscribe(
         linkTypes => {
-          // linkTypes.forEach(linkType => {
-          //   // const collection =
-          //   const firstAttributes = this.collections[linkType.toCollection].attributes.slice(0, linkType.toCollection.length);
-          //   linkType.linkedAttributes =
-          // });
+          // TODO remove after service implemented on backend
+          const linkType = linkTypes[1]
+          setTimeout(() => {
+            const collection = this.collections[linkType.toCollection];
+            const firstAttributes = collection.attributes.slice(0, linkType.toCollection.length + 3);
+            linkType.linkedAttributes = firstAttributes;
+          }, 250);
+
           this.linkTypes = linkTypes;
         },
         error => this.notificationService.error('Error', 'Failed fetching Link Types')

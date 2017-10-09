@@ -2,17 +2,21 @@
   <thead class="thead-default" [style.background-color]="colored && hexColorOpacity(collection.color, 0.8)">
   <tr>
     <th *ngIf="allowSettingPrimaryAttribute" style="width: 45px" class="bg-white border-0"></th>
-    <th style="width: 230px" class="bg-transparent align-baseline border-0">
+    <th style="width: 230px"
+        class="bg-transparent align-baseline border-0"
+        i18n="@@collection.config.tab.attributes.attribute">
       Attribute
     </th>
-    <th style="width: 100px" class="bg-transparent align-baseline border-0">
+    <th style="width: 100px"
+        class="bg-transparent align-baseline border-0"
+        i18n="@@collection.config.tab.attributes.usage">
       Usage
     </th>
     <th class="bg-transparent border-0">
       <div class="d-flex flex-wrap">
-        <span class="no-shrink">Constraints</span>
+        <span class="no-shrink" i18n="@@collection.config.tab.attributes.constraints">Constraints</span>
 
-        <div title="Search" class="search rounded">
+        <div title="Search" i18n-title="@@collection.config.tab.attributes.search" class="search rounded">
           <input type="search" class="ml-2 border-0" #searchInput
                  [(ngModel)]="searched"
                  (focus)="activeSearch = true"
@@ -21,7 +25,10 @@
         </div>
 
         <div class="dropdown">
-          <img title="Lumeer suggestions" class="lumeer ml-2 rounded" src="../../../../img/lumeer-logo.png"
+          <img title="Lumeer suggestions"
+               i18n-title="@@collection.config.tab.attributes.suggestions"
+               class="lumeer ml-2 rounded"
+               src="../../../../img/lumeer-logo.png"
                data-toggle="dropdown"/>
 
           <div
@@ -44,10 +51,12 @@
           class="first-row {{ collection.defaultAttribute === attribute ? 'visible' : null }}">
         <i *ngIf="collection.defaultAttribute === attribute"
            class="fa fa-fw fa-dot-circle"
-           title="Default Attribute"></i>
+           title="Default Attribute"
+           i18n-title="@@collection.config.tab.attributes.default.attribute"></i>
         <i *ngIf="collection.defaultAttribute !== attribute"
            class="far fa-fw fa-circle"
            title="Set Default Attribute"
+           i18n-title="@@collection.config.tab.default.attribute.set"
            (click)="setDefaultAttribute(attribute)"></i>
       </th>
       <td>
@@ -67,7 +76,8 @@
                 (mouseenter)="mouseOver = {attribute: attribute, constraint: constraint}"
                 (mouseleave)="mouseOver = {attribute: null, constraint: ''}"
                 (click)="removeConstraint(attribute, idx)"
-                title="Remove Constraint">{{ constraint }}</span>
+                title="Remove Constraint"
+                i18n="@@collection.config.tab.attributes.constraint.remove">{{ constraint }}</span>
           <input class="px-2 ml-1 border-0"
                  [(ngModel)]="attribute.newConstraint"
                  (ngModelChange)="refreshSuggestions()"
