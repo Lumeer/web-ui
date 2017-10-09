@@ -141,7 +141,7 @@ export class StaticTableComponent {
     }
   }
 
-  public static trackByFn(index, item) {
+  public trackByFn(index, item) {
     return item && item.id ? item.id : index;
   }
 

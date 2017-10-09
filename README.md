@@ -40,6 +40,36 @@ $ LUMEER_ENV=development
 ```
 $ LUMEER_ENGINE=lumeer-engine
 ```
+* AOT - To turn off or on AOT generation. Default is false.
+```
+$ AOT=true
+```
+* OUTPUT_PATH - Where should the build app should be placed. Good for different language mutations. Default to `dist/`.
+```
+$ OUTPUT_PATH=dist/
+```
+* I18N_FORMAT - File format of i18n file. Default is `xlf`.
+```
+$ I18N_FORMAT=xlf
+```
+* I18N_LOCALE - Language to which app should be translated. Default to `en`.
+```
+$ I18N_LOCALE=en
+```
+* I18N_PATH - Location to translate file. Default to `src/i18n/messages.I18_NLOCALE.I18N_FORMAT`.
+```
+$ I18N_PATH=src/messages.xlf
+```
+
+#### Translate settings
+If you want to translate app into different language, use command `npm run i18n` which will generate `src/i18n/messages.xlf` file.
+Copy this file and change name of it based on the language (for example to translate messages to French name it `src/i18n/messages.fr.xlf`).
+
+Add translation to this file (you can add `<target>...</target>` bellow `<source>...</source>` to apply changes, or use some program to it).
+
+Set environment variable to desired language (`I18N_LOCALE=fr`) and run either `npm start` or `npm run build` (if you want to make some code changes or just build the app).
+
+You will find your translated application in `dist/` folder. If you want to translate to multiple languages set `OUTPUT_PATH=dist/I18N_LOCALE` to store app in different folders. 
 
 ## How To Contribute
 

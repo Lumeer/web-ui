@@ -31,9 +31,9 @@ import {OrganizationService} from '../../../core/rest/organization.service';
 })
 export class OrganizationFormComponent implements OnInit {
 
-  private organization: Organization;
-  private organizationCode: string;
-  private errorMessage: any;
+  public organization: Organization;
+  public organizationCode: string;
+  public errorMessage: any;
 
   constructor(private organizationService: OrganizationService,
               private workspaceService: WorkspaceService,

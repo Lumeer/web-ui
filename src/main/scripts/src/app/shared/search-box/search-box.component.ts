@@ -59,7 +59,7 @@ export class SearchBoxComponent implements OnInit {
   public currentQueryItem: QueryItem = new FulltextQueryItem('');
 
   private searchTerms = new Subject<string>();
-  private suggestions: Observable<QueryItem[]>;
+  public suggestions: Observable<QueryItem[]>;
 
   public text = '';
   private type = SuggestionType.All;
