@@ -67,7 +67,7 @@ Copy this file and change name of it based on the language (for example to trans
 
 Add translation to this file (you can add `<target>...</target>` bellow `<source>...</source>` to apply changes, or use some program to it).
 
-Set environment variable to desired language (`I18N_LOCALE=fr`) and run either `npm start` or `npm run build` (if you want to make some code changes or just build the app).
+Set environment variable to desired language (`I18N_LOCALE=fr`), set AOT variable to true `AOT=true` (sadly only AOT apps can be translated) and run either `npm start` or `npm run build` (if you want to make some code changes or just build the app).
 
 You will find your translated application in `dist/` folder. If you want to translate to multiple languages set `OUTPUT_PATH=dist/I18N_LOCALE` to store app in different folders. 
 

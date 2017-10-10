@@ -41,8 +41,6 @@ export class ShareDialogComponent implements OnInit {
   public users: User[] = [];
   public suggestions: string[];
 
-  public queryItems: any;
-
   public constructor(private notificationService: NotificationsService,
                      private userService: UserService) {
   }
