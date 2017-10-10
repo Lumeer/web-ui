@@ -22,10 +22,12 @@ import {SharedModule} from '../shared/shared.module';
 import {CollectionListComponent} from './list/collection-list.component';
 import {CollectionComponent} from './collection.component';
 import {CollectionRoutingModule} from './collection-routing.module';
+import {SimpleNotificationsModule} from 'angular2-notifications/dist';
 
 @NgModule({
   imports: [
     SharedModule,
+    SimpleNotificationsModule,
     CollectionRoutingModule
   ],
   declarations: [
