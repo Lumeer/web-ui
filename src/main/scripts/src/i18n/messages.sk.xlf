@@ -344,6 +344,9 @@
         <source>
           <x id="ICU"/>
         </source>
+        <target>
+          <x id="ICU"/>
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
           <context context-type="linenumber">2</context>

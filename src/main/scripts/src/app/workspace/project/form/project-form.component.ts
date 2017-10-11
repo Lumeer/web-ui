@@ -32,10 +32,10 @@ import {ProjectService} from '../../../core/rest/project.service';
 export class ProjectFormComponent implements OnInit {
 
   private creation: boolean;
-  private project: Project;
-  private organizationCode: string;
-  private projectCode: string;
-  private errorMessage: any;
+  public project: Project;
+  public organizationCode: string;
+  public projectCode: string;
+  public errorMessage: any;
 
   constructor(private projectService: ProjectService,
               private workspaceService: WorkspaceService,

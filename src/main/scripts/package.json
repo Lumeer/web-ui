@@ -7,7 +7,7 @@
     "ng": "ng",
     "i18n": "ng xi18n --output-path src/i18n",
     "start": "cross-env LUMEER_ENV=development webpack-dev-server",
-    "build": "webpack",
+    "build": "webpack -p",
     "test": "karma start ./karma.conf.js",
     "lint": "ng lint",
     "e2e": "protractor ./protractor.conf.js",
@@ -37,7 +37,6 @@
     "angular2-drag-scroll": "^1.4.0-rc.6",
     "angular2-notifications": "^0.7.7",
     "bootstrap": "4.0.0-beta",
-    "copy-webpack-plugin": "^4.0.1",
     "core-js": "^2.4.1",
     "ng2-webstorage": "^1.8.0",
     "ngx-bootstrap": "^1.9.3",
@@ -53,7 +52,7 @@
     "tslint": "^4.3.1"
   },
   "devDependencies": {
-    "@angular/cli": "^1.4.4",
+    "@angular/cli": "^1.4.5",
     "@angular/compiler-cli": "^4.0.0",
     "@types/jasmine": "2.5.38",
     "@types/jquery": "^3.2.12",
@@ -106,8 +105,8 @@
     "typescript": "~2.4.0",
     "typings": "2.1.0",
     "url-loader": "^0.5.7",
-    "webpack": "^3.6.0",
     "webpack-dev-server": "~2.9.1",
-    "webpack-node-externals": "^1.6.0"
+    "webpack-node-externals": "^1.6.0",
+    "webpack": "~3.6.0"
   }
 }
