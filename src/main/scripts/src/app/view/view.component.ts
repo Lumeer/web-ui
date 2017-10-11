@@ -37,8 +37,6 @@ export class ViewComponent implements OnInit {
   @ViewChild(PerspectiveDirective)
   public perspectiveDirective: PerspectiveDirective;
 
-  public selectedPerspective: PerspectiveChoice;
-  public query: Query;
   public view: View;
 
   constructor(private activatedRoute: ActivatedRoute,
@@ -53,34 +51,44 @@ export class ViewComponent implements OnInit {
     ).subscribe(([params, queryParams]) => {
       const perspective = queryParams.get('perspective');
       if (params.has('viewCode')) {
-        this.loadView(params.get('viewCode'), perspective);
+        const viewCode = params.get('viewCode');
+        this.loadView(viewCode, perspective);
       } else {
-        this.query = QueryConverter.fromString(queryParams.get('query'));
-        this.loadQuery(this.query, perspective);
+        const query = QueryConverter.fromString(queryParams.get('query'));
+        this.loadQuery(query, perspective);
       }
     });
   }
 
   private loadView(code: string, perspective: string) {
     this.viewService.getView(code).subscribe((view: View) => {
+      view.perspective = perspective ? perspective : view.perspective;
       this.view = view;
-      this.loadQuery(view.query, perspective ? perspective : view.perspective);
+      this.loadPerspective(view.perspective);
     });
   }
 
   private loadQuery(query: Query, perspective: string) {
-    this.selectedPerspective = PERSPECTIVES[perspective] || Perspective.Search;
-    this.loadPerspective(this.selectedPerspective, query);
+    this.view = {
+      name: '',
+      query: query,
+      perspective: perspective,
+      config: {}
+    };
+
+    this.loadPerspective(perspective);
   }
 
-  private loadPerspective(perspective: PerspectiveChoice, query: Query) {
+  private loadPerspective(perspectiveId: string) {
+    const perspective = PERSPECTIVES[perspectiveId] || Perspective.Search;
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(perspective.component);
 
     const viewContainerRef = this.perspectiveDirective.viewContainerRef;
     viewContainerRef.clear();
 
     const componentRef: ComponentRef<PerspectiveComponent> = viewContainerRef.createComponent(componentFactory);
-    componentRef.instance.query = query ? query : {};
+    componentRef.instance.query = this.view.query ? this.view.query : {};
+    componentRef.instance.config = this.view.config ? this.view.config : {};
   }
 
 }

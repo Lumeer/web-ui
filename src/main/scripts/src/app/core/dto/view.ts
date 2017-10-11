@@ -25,5 +25,6 @@ export interface View {
   name: string;
   perspective: string;
   query: Query;
+  config: any;
 
 }

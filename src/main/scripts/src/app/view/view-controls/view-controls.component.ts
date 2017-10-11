@@ -23,7 +23,6 @@ import {ViewService} from '../../core/rest/view.service';
 import {Router} from '@angular/router';
 import {WorkspaceService} from '../../core/workspace.service';
 import {PerspectiveChoice} from '../perspectives/perspective-choice';
-import {Query} from '../../core/dto/query';
 import {PERSPECTIVES} from '../perspectives/perspective';
 import {QueryConverter} from '../../shared/utils/query-converter';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
@@ -39,12 +38,6 @@ export class ViewControlsComponent {
   @Input()
   public view: View;
 
-  @Input()
-  public selectedPerspective: PerspectiveChoice;
-
-  @Input()
-  public query: Query;
-
   public shareDialog: BsModalRef;
 
   constructor(private modalService: BsModalService,
@@ -56,7 +49,7 @@ export class ViewControlsComponent {
 
   public onSelectPerspective(perspectiveId: string) {
     const path = ['w', this.workspaceService.organizationCode, this.workspaceService.projectCode, 'view'];
-    if (this.view) {
+    if (this.view.code) {
       path.push(this.view.code);
     }
 
@@ -68,29 +61,23 @@ export class ViewControlsComponent {
     });
   }
 
-  public onSave(name: string) {
+  public onSave() {
     // TODO validation
-    if (this.view) {
-      this.updateView(name);
+    if (this.view.code) {
+      this.updateView();
     } else {
-      this.createView(name);
+      this.createView();
     }
   }
 
-  private createView(name: string) {
-    const view = {
-      name: name,
-      perspective: this.selectedPerspective.id,
-      query: this.query
-    };
-    this.viewService.createView(view).subscribe((code: string) => {
+  private createView() {
+    this.viewService.createView(this.view).subscribe((code: string) => {
       this.router.navigate(['w', this.workspaceService.organizationCode, this.workspaceService.projectCode, 'view', code]);
       this.notificationService.success('Success', 'View has been created');
     });
   }
 
-  private updateView(name: string) {
-    this.view.name = name;
+  private updateView() {
     this.viewService.updateView(this.view.code, this.view).subscribe(() => {
       this.notificationService.success('Success', 'View has been updated');
     });

@@ -22,5 +22,6 @@ import {Query} from '../../core/dto/query';
 export interface PerspectiveComponent {
 
   query: Query;
+  config: any;
 
 }
