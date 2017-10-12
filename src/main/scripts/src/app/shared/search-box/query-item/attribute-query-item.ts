@@ -20,6 +20,7 @@
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {Collection} from '../../../core/dto/collection';
+import {CollectionQueryItem} from './collection-query-item';
 
 export class AttributeQueryItem implements QueryItem {
 
@@ -48,8 +49,12 @@ export class AttributeQueryItem implements QueryItem {
     this.constraints = attribute.constraints;
   }
 
-  public get text() {
+  public get fullText() {
     return this.collectionName + ':' + this.attributeFullName;
+  }
+
+  public get text() {
+    return this.attributeFullName;
   }
 
   public get value() {
@@ -58,6 +63,15 @@ export class AttributeQueryItem implements QueryItem {
 
   public isComplete(): boolean {
     return this.condition !== '';
+  }
+
+  public toCollectionQueryItem(): CollectionQueryItem {
+    return new CollectionQueryItem({
+      code: this.collectionCode,
+      name: this.collectionName,
+      icon: this.icon,
+      color: this.color
+    });
   }
 
 }

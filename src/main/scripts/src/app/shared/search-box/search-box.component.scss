@@ -4,10 +4,40 @@
   background-color: #faeabb;
   border-radius: $border-radius-base;
   white-space: nowrap;
+
+  &:hover .remove {
+    opacity: 1;
+  }
+
+  .remove {
+    opacity: 0;
+    cursor: pointer;
+    color: black;
+    transition: opacity $animation-duration;
+
+    &:hover {
+      color: $brand-success;
+    }
+  }
 }
 
 .suggestions {
-  min-width: 250px;
+  min-width: 300px;
+
+  .icon-container {
+    width: 30px;
+
+    .icon {
+      width: 100%;
+      font-size: 15px;
+      text-align: center;
+    }
+  }
+
+}
+
+.selected {
+  background-color: $brand-light;
 }
 
 .search-button {

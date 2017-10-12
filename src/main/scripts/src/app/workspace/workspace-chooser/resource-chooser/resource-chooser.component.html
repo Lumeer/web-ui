@@ -76,6 +76,7 @@
   <div class="description d-inline-flex pt-3" *ngIf="resourceActiveIx >= 0" [@animateOpacityFromUp]="'in'">
     <i class="fas fa-2x fa-quote-right pr-2"></i>
     <div class="text" [attr.contenteditable]="resourceDescriptionEditable"
+         [attr.spellcheck]="false"
          (blur)="onResourceDescriptionBlur(resourceDescription.textContent)"
          #resourceDescription>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,

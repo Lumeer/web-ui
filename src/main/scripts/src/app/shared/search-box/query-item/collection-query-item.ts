@@ -37,6 +37,10 @@ export class CollectionQueryItem implements QueryItem {
     this.color = collection.color;
   }
 
+  public get fullText(): string {
+    return this.name;
+  }
+
   public get text(): string {
     return this.name;
   }

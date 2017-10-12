@@ -32,7 +32,6 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/mergeMap';
 
 import {Suggestions} from '../../core/dto/suggestions';
-import {SearchService} from '../../core/rest/search.service';
 import {WorkspaceService} from '../../core/workspace.service';
 import {QueryItem} from './query-item/query-item';
 import {FulltextQueryItem} from './query-item/fulltext-query-item';
@@ -46,6 +45,8 @@ import {QueryConverter} from '../utils/query-converter';
 import {ViewService} from '../../core/rest/view.service';
 import {KeyCode} from '../key-code';
 import {HtmlModifier} from '../utils/html-modifier';
+import {SearchMockService} from '../../core/rest/search-mock.service';
+import {QueryItemType} from './query-item/query-item-type';
 
 @Component({
   selector: 'search-box',
@@ -59,15 +60,17 @@ export class SearchBoxComponent implements OnInit {
   public currentQueryItem: QueryItem = new FulltextQueryItem('');
 
   private searchTerms = new Subject<string>();
-  public suggestions: Observable<QueryItem[]>;
+  private suggestionItems: QueryItem[] = [];
 
+  private selectedSuggestion = -1;
+  private textCopy = '';
   public text = '';
   private type = SuggestionType.All;
 
   constructor(private activatedRoute: ActivatedRoute,
               private queryItemsConverter: QueryItemsConverter,
               private router: Router,
-              private searchService: SearchService,
+              private searchService: SearchMockService,
               private viewService: ViewService,
               private workspaceService: WorkspaceService) {
   }
@@ -106,7 +109,7 @@ export class SearchBoxComponent implements OnInit {
   }
 
   private suggestQueryItems() {
-    this.suggestions = this.searchTerms
+    this.searchTerms
       .startWith('')
       .debounceTime(300)
       .distinctUntilChanged()
@@ -116,11 +119,23 @@ export class SearchBoxComponent implements OnInit {
       .catch(error => {
         console.error(error); // TODO: add real error handling
         return Observable.of<QueryItem[]>();
-      });
+      }).subscribe(items => {
+      this.selectedSuggestion = -1;
+      this.suggestionItems = items;
+    });
   }
 
   private retrieveSuggestions(text: string): Observable<Suggestions> {
-    return text ? this.searchService.suggest(text, this.type) : Observable.of<Suggestions>();
+    if (text) {
+      let searchForCollections = false;
+      let textToSearch = text;
+      if (this.queryItems.length > 0 && this.queryItems[this.queryItems.length - 1].type === QueryItemType.Collection) {
+        searchForCollections = true;
+        textToSearch = this.queryItems[this.queryItems.length - 1].text + ':' + textToSearch;
+      }
+      return this.searchService.suggest(textToSearch, searchForCollections);
+    }
+    return Observable.of<Suggestions>();
   }
 
   private convertSuggestionsToQueryItems(suggestions: Suggestions): Observable<QueryItem[]> {
@@ -129,7 +144,9 @@ export class SearchBoxComponent implements OnInit {
     suggestedQueryItems = suggestedQueryItems.concat(this.createCollectionQueryItems(suggestions.collections));
     suggestedQueryItems = suggestedQueryItems.concat(this.createAttributeQueryItems(suggestions.attributes));
     // TODO add views
-    suggestedQueryItems.push(new FulltextQueryItem(this.text));
+    if (!this.isFullTextQueryPresented()) {
+      suggestedQueryItems.push(new FulltextQueryItem(this.text));
+    }
 
     return Observable.of(suggestedQueryItems);
   }
@@ -146,9 +163,20 @@ export class SearchBoxComponent implements OnInit {
     return collections.map(collection => new CollectionQueryItem(collection));
   }
 
+  public onRemoveQueryItem(index: number) {
+    let spliceCount = 1;
+    if (this.queryItems[index].type == QueryItemType.Collection && index + 1 < this.queryItems.length &&
+      this.queryItems[index + 1].type == QueryItemType.Attribute) {
+      spliceCount++;
+    }
+    this.queryItems.splice(index, spliceCount);
+  }
+
   public onKeyUp(event: KeyboardEvent) {
     switch (event.keyCode) {
       case KeyCode.Enter:
+      case KeyCode.UpArrow:
+      case KeyCode.DownArrow:
         return;
       case KeyCode.Backspace:
       default:
@@ -164,6 +192,38 @@ export class SearchBoxComponent implements OnInit {
       case KeyCode.Enter:
         this.addItemOrSearch();
         return;
+      case KeyCode.DownArrow:
+        this.incSelectedSuggestion();
+        return;
+      case KeyCode.UpArrow:
+        this.decSelectedSuggestion();
+        return;
+    }
+  }
+
+  private incSelectedSuggestion() {
+    if (this.selectedSuggestion + 1 >= this.suggestionItems.length) {
+      this.selectedSuggestion = this.suggestionItems.length - 1;
+      return;
+    }
+    if (this.selectedSuggestion == -1) {
+      this.textCopy = this.text;
+    }
+    this.selectedSuggestion++;
+    this.text = this.suggestionItems[this.selectedSuggestion].fullText;
+  }
+
+  private decSelectedSuggestion() {
+    if (this.selectedSuggestion <= -1) {
+      this.selectedSuggestion = -1;
+      return;
+    }
+    if (this.selectedSuggestion == 0) {
+      this.selectedSuggestion = -1;
+      this.text = this.textCopy;
+    } else {
+      this.selectedSuggestion--;
+      this.text = this.suggestionItems[this.selectedSuggestion].fullText;
     }
   }
 
@@ -175,13 +235,10 @@ export class SearchBoxComponent implements OnInit {
   }
 
   private addItemOrSearch() {
-    if (this.text.trim() === '') {
-      if (this.queryItems.length > 0) {
-        this.search();
-      }
+    if (this.selectedSuggestion >= 0 && this.selectedSuggestion < this.suggestionItems.length) {
+      this.addQueryItem(this.suggestionItems[this.selectedSuggestion]);
     } else {
-      this.currentQueryItem.text = this.text;
-      this.addQueryItem(this.currentQueryItem);
+      this.search();
     }
   }
 
@@ -190,7 +247,7 @@ export class SearchBoxComponent implements OnInit {
   }
 
   public hideSuggestions(): void {
-    this.searchTerms.next('');
+    this.suggestionItems = [];
   }
 
   public onSuggestionClick(queryItem: QueryItem): void {
@@ -224,14 +281,32 @@ export class SearchBoxComponent implements OnInit {
   }
 
   private addQueryItem(queryItem: QueryItem) {
+    if (queryItem.type == QueryItemType.Attribute) {
+      const collectionItem = (queryItem as AttributeQueryItem).toCollectionQueryItem();
+      if (!this.isEqualToLastItem(collectionItem)) {
+        this.queryItems.push();
+      }
+    }
     this.queryItems.push(queryItem);
     this.currentQueryItem = new FulltextQueryItem('');
     this.text = '';
     this.hideSuggestions();
   }
 
+  private isEqualToLastItem(queryItem: CollectionQueryItem): boolean {
+    if (this.queryItems.length > 0) {
+      const item = this.queryItems[this.queryItems.length - 1];
+      return item.type === QueryItemType.Collection && item.value === queryItem.value;
+    }
+    return false;
+  }
+
   public removeHtmlComments(html: HTMLElement): string {
     return HtmlModifier.removeHtmlComments(html);
+  }
+
+  private isFullTextQueryPresented(): boolean {
+    return this.queryItems.some(item => item.type === QueryItemType.Fulltext);
   }
 
 }
