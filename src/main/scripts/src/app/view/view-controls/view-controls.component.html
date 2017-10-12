@@ -9,7 +9,7 @@
           (change)="onSelectPerspective(perspectiveSelector.value)">
     <option *ngFor="let perspective of perspectives"
             [value]="perspective.id"
-            [attr.selected]="perspective === selectedPerspective ? '' : null">
+            [attr.selected]="perspective.id === view.perspective ? '' : null">
       {{perspective.name}}
     </option>
   </select>
@@ -17,13 +17,14 @@
          class="form-control-label font-weight-bold">
     <span i18n="@@view.name">Name</span>:
   </label>
-  <input id="viewName" #viewName
+  <input id="viewName"
+         name="viewName"
+         [(ngModel)]="view.name"
          class="form-control-lg border-0 font-italic flex-grow no-outline"
-         [value]="view ? view.name : ''"
          placeholder="Untitled view" i18n-placeholder="@@view.untitled"/>
   <a title="Save" i18n-title="@@view.button.save"
      class="view-button mx-1"
-     (click)="onSave(viewName.value)">
+     (click)="onSave()">
     <i class="fa fa-save fa-lg fa-fw" aria-hidden="true"></i>
     <i class="fal fa-save fa-lg fa-fw" aria-hidden="true"></i>
   </a>

@@ -47,6 +47,9 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
   public query: Query;
 
   @Input()
+  public config: any;
+
+  @Input()
   public editable: boolean;
 
   public displayable: boolean;

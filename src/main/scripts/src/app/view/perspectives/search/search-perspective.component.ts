@@ -49,6 +49,8 @@ export class SearchPerspectiveComponent implements PerspectiveComponent {
 
   public query: Query = {};
 
+  public config: any;
+
   constructor(private activatedRoute: ActivatedRoute,
               private componentFactoryResolver: ComponentFactoryResolver,
               private workspaceService: WorkspaceService) {
