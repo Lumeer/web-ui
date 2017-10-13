@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output, ChangeDetectorRef, ViewChildren, QueryList} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ChangeDetectorRef, ViewChildren, QueryList, OnInit} from '@angular/core';
 import {TableHeader} from '../model/table-header';
 import {TableRow} from '../model/table-row';
 import {TableHeaderCell} from '../model/table-header-cell';
@@ -31,7 +31,8 @@ import {DataEvent} from '../event/data-event';
   templateUrl: './static-table.component.html',
   styleUrls: ['./static-table.component.scss']
 })
-export class StaticTableComponent {
+export class StaticTableComponent implements OnInit {
+
   @Input() public header: TableHeader;
   @Input() public rows: TableRow[];
   @Input() public settings: TableSettings;
@@ -51,6 +52,15 @@ export class StaticTableComponent {
   private activeRow: number = -1;
 
   constructor(private ref: ChangeDetectorRef) {
+  }
+
+  public ngOnInit() {
+    if (this.rows.length === 0) {
+      this.onNewRow();
+    }
+    if (this.header.cells.length === 0) {
+      this.onNewColumn();
+    }
   }
 
   public onNewColumn(): void {

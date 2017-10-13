@@ -10,6 +10,10 @@
   (hideColumn)="onHideColumn($event)"
   (removeColumn)="onRemoveColumn($event)"
   (showColumn)="onShowColumn($event)">
+  <div class="caption">
+    <i class="{{collection.icon}}" [style.color]="collection.color"></i>
+    {{collection.name}}
+  </div>
 </static-table>
 
 <div *ngIf="!displayable"

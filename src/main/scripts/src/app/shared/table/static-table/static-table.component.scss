@@ -12,3 +12,8 @@ table-header {
     display: table-row;
   }
 }
+
+.table-caption {
+  display: table-caption;
+  white-space: nowrap;
+}

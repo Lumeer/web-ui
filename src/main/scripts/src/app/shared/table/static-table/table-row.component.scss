@@ -5,10 +5,6 @@
   padding: 2px 5px;
   border: 1px solid #888;
 
-  &.active.row-index {
-    opacity: 0.8;
-  }
-
   span {
     display: block;
   }
@@ -17,4 +13,3 @@
 [contenteditable]:focus {
   outline: 0 solid transparent;
 }
-
