@@ -1,4 +1,7 @@
 <div class="static-table">
+  <div class="table-caption">
+    <ng-content select=".caption"></ng-content>
+  </div>
   <table-header [header]="header"
                 [settings]="settings"
                 (newColumn)="onNewColumn()"
@@ -18,9 +21,4 @@
                (updateCell)="onUpdateCell(index, $event)"
                class="static-row"></table-row>
   </div>
-  <button (click)="onNewRow()"
-          type="button"
-          class="btn btn-xs">
-    <i class="fa fa-plus"></i>
-  </button>
 </div>

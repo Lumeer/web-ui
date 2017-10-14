@@ -1,18 +1,25 @@
-<div class="row-item row-index"
-     [ngClass]="{active: isActive}"
-     [ngStyle]="{
-       'background-color': settings.lineNumberColor,
-       'border-color': isActive ? settings.highlightColor : '#888'
-     }">{{ rowIndex }}
+<div class="row-item row-index border-0 text-secondary"
+     [ngClass]="{'font-weight-bold': isActive}">
+  {{ rowIndex + 1 }}
 </div>
 <div *ngFor="let item of row.cells;let i=index"
-     class="row-item">
+     class="row-item"
+     [ngClass]="{'bg-light': rowIndex % 2}">
   <span #rowCell
         id="{{i}}"
         *ngIf="!item.hidden"
         (blur)="onEdit(model, i)"
         (focus)="model = $event.target.innerText; onItemClicked(i)"
         (input)="model = $event.target.innerText"
-        (keypress)="highlightNext($event, i)"
-        [attr.contenteditable]="settings.editable">{{ item.label || '&nbsp;'}}</span>
+        (keydown)="onKeyDown($event, i)"
+        [attr.contenteditable]="settings.editable">{{ item.label || ''}}</span>
+</div>
+<div class="row-item border-0 align-middle">
+  <a *ngIf="isActive"
+     title="Delete row" i18n-title="@@table.row.button.delete">
+    <i class="fa fa-fw fa-times text-danger"></i>
+  </a>
+  <i *ngIf="!isActive"
+     class="fa fa-fw fa-times text-white"
+     aria-hidden="true"></i>
 </div>

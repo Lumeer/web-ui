@@ -17,8 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, Output, EventEmitter, ViewChildren, QueryList, ElementRef} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, Output, QueryList, ViewChildren} from '@angular/core';
 import {TableRow} from '../model/table-row';
+import {KeyCode} from '../../key-code';
 
 @Component({
   selector: 'table-row',
@@ -33,6 +34,9 @@ export class TableRowComponent {
 
   @Output() public itemHighlight: EventEmitter<any> = new EventEmitter();
   @Output() public updateCell: EventEmitter<any> = new EventEmitter();
+
+  @Output()
+  public moveCursor: EventEmitter<[number, number]> = new EventEmitter();
 
   @ViewChildren('rowCell') private cells: QueryList<ElementRef>;
 
@@ -57,7 +61,23 @@ export class TableRowComponent {
     this.itemHighlight.emit({colIndex: index});
   }
 
-  public highlightNext(event, i: number) {
-    // TODO??
+  public onKeyDown(event: KeyboardEvent, columnIndex: number) {
+    switch (event.keyCode) {
+      case KeyCode.UpArrow:
+        this.moveCursor.emit([columnIndex, this.rowIndex - 1]);
+        return;
+      case KeyCode.DownArrow:
+        this.moveCursor.emit([columnIndex, this.rowIndex + 1]);
+        return;
+      case KeyCode.LeftArrow:
+        this.moveCursor.emit([columnIndex - 1, this.rowIndex]);
+        return;
+      case KeyCode.RightArrow:
+        this.moveCursor.emit([columnIndex + 1, this.rowIndex]);
+        return;
+      case KeyCode.Enter:
+        event.preventDefault();
+        return;
+    }
   }
 }

@@ -76,7 +76,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
       return;
     }
 
-    const collectionCode = this.query.collectionCodes.pop();
+    const collectionCode = this.query.collectionCodes[0];
     this.fetchData(collectionCode);
   }
 
@@ -87,6 +87,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
     ).subscribe(([collection, documents]) => {
       this.collection = collection;
       this.prepareTableData(collection.attributes, documents);
+      this.settings.color = collection.color;
     });
   }
 
