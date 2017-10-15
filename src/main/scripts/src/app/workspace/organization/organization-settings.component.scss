@@ -1,0 +1,85 @@
+@import '../../shared/lumeer-variables';
+
+.icon{
+  margin-right: 20px;
+}
+
+.dropdown-menu {
+  width: 230px;
+  .dropdown-item {
+    padding-right: 0;
+  }
+}
+
+.flex-row {
+  align-items: center;
+}
+
+.name {
+  border: none;
+  background-color: transparent;
+  outline: none;
+  font-size: 30px;
+  width: 300px;
+}
+
+.code {
+  border: none;
+  background-color: transparent;
+  outline: none;
+  font-size: 20px;
+  width: 300px;
+  font-style: italic;
+  margin-left: 10px;
+}
+
+.orgIcon {
+  font-size: 30px;
+  margin-right: 10px;
+
+}
+
+.fa-arrow-left {
+  font-size: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.color-class {
+  transition: color $animation-color-duration;
+}
+
+.fa-file {
+  font-size: 20px;
+  margin-right: 15px;
+  margin-left: auto;
+  }
+
+  .count{
+    font-size: 20px;
+  }
+
+.description {
+
+  &:hover .edit {
+    opacity: 100;
+  }
+
+  .text {
+    font-size: 17px;
+    outline-color: $brand-success;
+    margin-right: 20px;
+    overflow: hidden;
+    height: 50px;
+  }
+
+  .edit {
+    opacity: 0;
+    transition: opacity $animation-duration;
+    margin-right: 5px;
+
+    &:hover {
+      color: $brand-success;
+    }
+  }
+}

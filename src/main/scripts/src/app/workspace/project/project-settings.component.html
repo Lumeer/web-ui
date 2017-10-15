@@ -1,13 +1,95 @@
-<ul class="nav nav-tabs">
-  <li role="presentation" class="nav-item">
-    <a routerLink="settings" routerLinkActive="active" class="nav-link">
-      Basic Settings
+<div class="d-flex flex-row justify-content-start">
+  <a class="fa fa-arrow-left " [routerLink]="['/workspace']  "></a>
+  <i class="color-class fa-fw {{ project.icon }} orgIcon " [style.color]="project.color"
+     data-toggle="dropdown"></i>
+  <div class="dropdown-menu">
+    <color-picker class="dropdown-item" [(color)]="project.color"
+                  (selectedChange)="updateProject()"></color-picker>
+    <div class="dropdown-divider"></div>
+    <icon-picker class="dropdown-item" [(icon)]="project.icon"
+                 (selectedChange)="updateProject()"></icon-picker>
+  </div>
+
+  <input class="color-class name" [(ngModel)]="project.name" (blur)="updateProject()"
+         [style.color]="project.color" title="Edit name of the project">
+
+  <div class="float-right document-count color-class ml-auto">
+    <a class="count" title="Number of collections in this project" [style.color]="project.color">
+      {{ collectionsCount }}
+      <i class="far fa-file" aria-hidden="true"></i>
     </a>
-  </li>
+  </div>
+
+</div>
+
+<div class="d-flex flex-row justify-content-start">
+
+  <input class="color-class code" [(ngModel)]="project.code" (blur)="updateProjectCode()"
+         [style.color]="project.color" title="Edit code of the project">
+
+  <i class="fa fa-times pull-right text-danger icon ml-auto" aria-hidden="true" title="Remove project"
+     *ngIf="projectCode" (click)="onDelete()"></i>
+
+</div>
+<!--<i class="{{ project.icon }}">-->
+<!--<i> {{ project.name }}</i>-->
+<!--<i> {{ project.code }}</i>-->
+
+<!--<i _ngcontent-c11="" aria-hidden="true" class="far fa-file" {{getNumberOfCollections()}}></i>-->
+
+<div class="description d-inline-flex pt-3">
+  <!--<div class="description d-inline-flex pt-3" *ngIf="resourceActiveIx >= 0" [@animateOpacityFromUp]="'in'">-->
+  <!--<i class="fas fa-2x fa-quote-right pr-2"></i>-->
+  <div class="pl-2">
+    <i class="fas fa fa-pencil edit"
+       (click)="onProjectDescriptionEdit()"></i>
+  </div>
+  <div class="text" [attr.contenteditable]="projectDescriptionEditable"
+       (blur)="onProjectDescriptionBlur(projectDescription.textContent)"
+       #projectDescription>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
+    finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
+    vel augue.
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
+    finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
+    vel augue.
+  </div>
+
+</div>
+
+<ul class="nav nav-tabs">
+  <!--<li role="presentation" class="nav-item">-->
+  <!--<a routerLink="settings" routerLinkActive="active" class="nav-link">-->
+  <!--Basic Settings-->
+  <!--</a>-->
+  <!--</li>-->
   <li role="presentation" class="nav-item">
     <a routerLink="permissions" routerLinkActive="active" class="nav-link">
       Permissions
     </a>
   </li>
 </ul>
+
 <router-outlet></router-outlet>
+
+<!-- modal -->
+<ng-template #modal>
+  <div class="modal-header bg-danger text-white rounded-top">
+    <h5 class="modal-title">Delete Organization?</h5>
+    <button type="button" class="close" aria-label="Close" (click)="deleteConfirm.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>Deleting a collection will permanently remove it from this project. All documents stored inside the collection
+      will be
+      lost.
+    </p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="deleteConfirm.hide()">No, Keep Organization</button>
+    <button type="button" class="btn btn-danger" (click)="deleteConfirm.hide(); removeCollection(postItToDelete)">
+      Yes, Delete Organization
+    </button>
+  </div>
+</ng-template>

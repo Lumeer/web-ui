@@ -40,8 +40,8 @@ export class OrganizationService extends PermissionService {
     return this.httpClient.get<Organization>(this.apiPrefix(code));
   }
 
-  public deleteOrganization(code: string): Observable<HttpResponse<object>> {
-    return this.httpClient.delete(this.apiPrefix(code), {observe: 'response'});
+  public deleteOrganization(code: string): Observable<string> {
+    return this.httpClient.delete(this.apiPrefix(code), {responseType:'text'});
   }
 
   public createOrganization(organization: Organization): Observable<HttpResponse<object>> {

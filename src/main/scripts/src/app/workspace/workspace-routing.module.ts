@@ -40,19 +40,12 @@ const workspaceRoutes: Routes = [
     component: ProjectSettingsComponent,
     children: [
       {
-        path: 'settings',
-        component: ProjectFormComponent,
-        data: {
-          creation: false
-        }
-      },
-      {
         path: 'permissions',
         component: ProjectPermissionsComponent
       },
       {
         path: '',
-        redirectTo: 'settings',
+        redirectTo: 'permissions',
         pathMatch: 'full'
       }
     ]
@@ -66,16 +59,12 @@ const workspaceRoutes: Routes = [
     component: OrganizationSettingsComponent,
     children: [
       {
-        path: 'settings',
-        component: OrganizationFormComponent
-      },
-      {
         path: 'permissions',
         component: OrganizationPermissionsComponent
       },
       {
         path: '',
-        redirectTo: 'settings',
+        redirectTo: 'permissions',
         pathMatch: 'full'
       }
     ]
