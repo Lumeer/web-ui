@@ -27,7 +27,6 @@ import {SimpleNotificationsModule} from 'angular2-notifications/dist';
 @NgModule({
   imports: [
     SharedModule,
-    SimpleNotificationsModule,
     CollectionRoutingModule
   ],
   declarations: [

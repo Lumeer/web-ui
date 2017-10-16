@@ -21,11 +21,11 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
 import {Project} from '../../core/dto/project';
-import {WorkspaceService} from '../../core/workspace.service';
 import {ProjectService} from '../../core/rest/project.service';
 import {HttpResponse} from '@angular/common/http';
 import {CollectionService} from '../../core/rest/collection.service';
 import {Collection} from "../../core/dto/collection";
+import {NotificationsService} from 'angular2-notifications/dist';
 
 @Component({
   templateUrl: './project-settings.component.html',
@@ -37,7 +37,6 @@ export class ProjectSettingsComponent implements OnInit {
   private project: Project;
   private organizationCode: string;
   private projectCode: string;
-  private errorMessage: any;
   private originalProjectCode: string;
   private collectionsCount: number;
   private projectDescriptionEditable: boolean = false;
@@ -46,21 +45,23 @@ export class ProjectSettingsComponent implements OnInit {
   public projectDescription: ElementRef;
 
   constructor(private projectService: ProjectService,
-              private workspaceService: WorkspaceService,
               private route: ActivatedRoute,
               private router: Router,
-              private collectionService: CollectionService) {
+              private collectionService: CollectionService,
+              private notificationService: NotificationsService) {
   }
 
   public ngOnInit(): void {
+    //this.project = {
+    //code: null,
+    //name: "noname",
+    //icon: "fa fa-exclamation-circle",
+    //color: '#cccccc'
+    //};
     this.project = new Project();
     this.route.data.subscribe((data: { creation: boolean }) => {
       this.creation = data.creation;
-      if (this.creation) {
-        this.retrieveParamsFromRoute();
-      } else {
-        this.retrieveParamsFromRoute();
-      }
+      this.retrieveParamsFromRoute();
     });
   }
 
@@ -80,22 +81,27 @@ export class ProjectSettingsComponent implements OnInit {
           this.project = project;
           this.getNumberOfCollections();
         },
-        error => this.errorMessage = error
-      );
+        error => {
+          this.notificationService.error('Error', 'Error getting project');
+        }
+      )
+    ;
   }
 
   public updateProject(): void {
     this.projectService.editProject(this.organizationCode, this.projectCode, this.project).subscribe();
-    console.log('Updated?');
   }
 
   public updateProjectCode() {
     this.projectService.editProject(this.organizationCode, this.originalProjectCode, this.project).subscribe((response: HttpResponse<Object>) => {
-      this.originalProjectCode = this.project.code;
-      this.projectCode = this.project.code;
-      this.router.navigate([`/organization/${this.organizationCode}/project/${this.project.code}`]);
-      error => this.errorMessage = error;
-    });
+        this.originalProjectCode = this.project.code;
+        this.projectCode = this.project.code;
+        this.router.navigate([`/organization/${this.organizationCode}/project/${this.project.code}`]);
+      },
+      error => {
+        this.notificationService.error('Error', 'Error updating project\'s code');
+      }
+    );
   }
 
   private goBack(): void {
@@ -107,7 +113,7 @@ export class ProjectSettingsComponent implements OnInit {
       .subscribe(
         text => this.goBack(),
         error => {
-          return this.errorMessage = error;
+          this.notificationService.error('Error', 'An error occurred during deletion of the organization');
         }
       );
   }
@@ -126,5 +132,13 @@ export class ProjectSettingsComponent implements OnInit {
     setTimeout(() => {
       this.projectDescription.nativeElement.focus();
     }, 50);
+  }
+
+  public workspacePath(): string {
+    return `/w/${this.organizationCode}/${this.project.code}`;
+  }
+
+  public initialized(): boolean {
+    return this.project.code != '' && this.project.name != '';
   }
 }

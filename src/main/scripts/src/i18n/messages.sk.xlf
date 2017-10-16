@@ -626,6 +626,62 @@
           <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="header.organization.name" datatype="html">
+              <source>Edit name of the organization</source>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+                <context context-type="linenumber">16</context>
+              </context-group>
+            </trans-unit>
+            <trans-unit id="organization.projects.count" datatype="html">
+              <source>Number of projects in this organization</source>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+                <context context-type="linenumber">19</context>
+              </context-group>
+            </trans-unit>
+            <trans-unit id="header.organization.code" datatype="html">
+              <source>Edit code of the organization</source>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+                <context context-type="linenumber">33</context>
+              </context-group>
+            </trans-unit>
+            <trans-unit id="header.organization.remove" datatype="html">
+              <source>Remove organization</source>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+                <context context-type="linenumber">36</context>
+              </context-group>
+            </trans-unit>
+            <trans-unit id="header.project.name" datatype="html">
+              <source>Edit name of the project</source>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+                <context context-type="linenumber">15</context>
+              </context-group>
+            </trans-unit>
+            <trans-unit id="collections.count" datatype="html">
+              <source>Number of collections in this project</source>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+                <context context-type="linenumber">18</context>
+              </context-group>
+            </trans-unit>
+            <trans-unit id="header.project.code" datatype="html">
+              <source>Edit code of the project</source>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+                <context context-type="linenumber">30</context>
+              </context-group>
+            </trans-unit>
+            <trans-unit id="project.remove" datatype="html">
+              <source>Remove project</source>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+                <context context-type="linenumber">33</context>
+              </context-group>
+            </trans-unit>
     </body>
   </file>
 </xliff>

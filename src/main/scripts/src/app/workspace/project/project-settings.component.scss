@@ -28,21 +28,20 @@
   background-color: transparent;
   outline: none;
   font-size: 20px;
-  width: 300px;
   font-style: italic;
-  margin-left: 10px;
+  margin-left: 38px;
+  width: 300px;
 }
 
-.orgIcon {
+.project-icon {
   font-size: 30px;
   margin-right: 10px;
-
+  margin-left: 10px;
 }
 
 .fa-arrow-left {
   font-size: 20px;
   margin-left: 10px;
-  margin-right: 10px;
 }
 
 .color-class {
@@ -82,4 +81,8 @@
       color: $brand-success;
     }
   }
+}
+
+.whole {
+  transition: opacity $animation-duration;
 }

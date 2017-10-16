@@ -17,15 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
+import {Component, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
 import {Organization} from '../../core/dto/organization';
-import {WorkspaceService} from '../../core/workspace.service';
 import {OrganizationService} from '../../core/rest/organization.service';
 import {HttpResponse} from '@angular/common/http';
 import {ProjectService} from '../../core/rest/project.service';
 import {Project} from "../../core/dto/project";
+import {NotificationsService} from 'angular2-notifications/dist';
 
 @Component({
   templateUrl: './organization-settings.component.html',
@@ -35,7 +35,7 @@ export class OrganizationSettingsComponent implements OnInit {
 
   private organization: Organization;
   private organizationCode: string;
-  private errorMessage: any;
+
   private originalOrganizationCode: string;
   private projectsCount: number;
   private organizationDescriptionEditable: boolean = false;
@@ -44,20 +44,24 @@ export class OrganizationSettingsComponent implements OnInit {
   public organizationDescription: ElementRef;
 
   constructor(private organizationService: OrganizationService,
-              private workspaceService: WorkspaceService,
               private route: ActivatedRoute,
               private router: Router,
-              private projectService: ProjectService) {
+              private projectService: ProjectService,
+              private notificationService: NotificationsService) {
   }
 
   public ngOnInit(): void {
     this.organization = new Organization();
     this.route.paramMap.subscribe((params: ParamMap) => {
-      this.organizationCode = params.get('organizationCode');
-      if (this.organizationCode) {
-        this.getOrganization();
+        this.organizationCode = params.get('organizationCode');
+        if (this.organizationCode) {
+          this.getOrganization();
+        }
+      },
+      error => {
+        this.notificationService.error('Error', 'Error loading organization ');
       }
-    });
+    );
 
   }
 
@@ -68,7 +72,9 @@ export class OrganizationSettingsComponent implements OnInit {
           this.organization = organization;
           this.getNumberOfProjects();
         },
-        error => this.errorMessage = error
+        error => {
+          this.notificationService.error('Error', 'Error getting the organization ');
+        }
       );
   }
 
@@ -80,14 +86,13 @@ export class OrganizationSettingsComponent implements OnInit {
 
     this.organizationService.editOrganization(this.originalOrganizationCode, this.organization)
       .subscribe((response: HttpResponse<Object>) => {
-        this.originalOrganizationCode = this.organization.code;
-        this.organizationCode = this.organization.code;
-        this.router.navigate([`/organization/${this.organization.code}`]);
+          this.originalOrganizationCode = this.organization.code;
+          this.organizationCode = this.organization.code;
+          this.router.navigate([`/organization/${this.organization.code}`]);
+        },
         error => {
-          return this.errorMessage = error;
-        };
-      });
-
+          this.notificationService.error('Error', 'Error editing the organization ');
+        });
   }
 
   private goBack(): void {
@@ -99,7 +104,7 @@ export class OrganizationSettingsComponent implements OnInit {
       .subscribe(
         text => this.goBack(),
         error => {
-          return this.errorMessage = error;
+          this.notificationService.error('Error', 'An error occurred during deletion of the organization');
         }
       );
   }
@@ -118,5 +123,9 @@ export class OrganizationSettingsComponent implements OnInit {
     setTimeout(() => {
       this.organizationDescription.nativeElement.focus();
     }, 50);
+  }
+
+  public initialized(): boolean {
+    return this.organization.code != '' && this.organization.name != '';
   }
 }

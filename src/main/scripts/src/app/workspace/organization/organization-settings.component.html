@@ -1,73 +1,68 @@
-<div class="d-flex flex-row justify-content-start">
-  <a class="fa fa-arrow-left " [routerLink]="['/workspace']  "></a>
-  <i class="color-class fa-fw {{ organization.icon }} orgIcon " [style.color]="organization.color"
-     data-toggle="dropdown"></i>
-  <div class="dropdown-menu">
-    <color-picker class="dropdown-item" [(color)]="organization.color"
-                  (selectedChange)="updateOrganization()"></color-picker>
-    <div class="dropdown-divider"></div>
-    <icon-picker class="dropdown-item" [(icon)]="organization.icon"
-                 (selectedChange)="updateOrganization()"></icon-picker>
+<div class="whole" [style.opacity]="initialized() ? '1' : '0'">
+  <div class="d-flex flex-row justify-content-start">
+    <a class="fa fa-arrow-left " [routerLink]="['/workspace']  "></a>
+    <i class="color-class fa-fw {{ organization.icon }} organization-icon " [style.color]="organization.color"
+       data-toggle="dropdown"></i>
+    <div class="dropdown-menu">
+      <color-picker class="dropdown-item" [(color)]="organization.color"
+                    (selectedChange)="updateOrganization()"></color-picker>
+      <div class="dropdown-divider"></div>
+      <icon-picker class="dropdown-item" [(icon)]="organization.icon"
+                   (selectedChange)="updateOrganization()"></icon-picker>
+    </div>
+
+    <input class="color-class name" [(ngModel)]="organization.name" (blur)="updateOrganization()"
+           [style.color]="organization.color" i18n-title="@@header.organization.name"
+           title="Edit name of the organization">
+
+    <div class="float-right document-count color-class ml-auto">
+      <a i18n-title="@@organization.projects.count" class="count" title="Number of projects in this organization"
+         [style.color]="organization.color" [routerLink]="['/workspace']">
+        <span>{{ projectsCount }}</span>
+        <i class="far fa-file" aria-hidden="true"></i>
+      </a>
+
+    </div>
+
   </div>
 
-  <input class="color-class name" [(ngModel)]="organization.name" (blur)="updateOrganization()"
-         [style.color]="organization.color" title="Edit name of the organization">
+  <div class="d-flex flex-row justify-content-start">
 
-  <div class="float-right document-count color-class ml-auto">
-    <a class = "count" title="Number of projects in this organization" [style.color]="organization.color">
-      {{ projectsCount }}
-      <i class="far fa-file" aria-hidden="true"></i>
-    </a>
+    <input class="color-class code" [(ngModel)]="organization.code" (blur)="updateOrganizationCode()"
+           [style.color]="organization.color" i18n-title="@@header.organization.code"
+           title="Edit code of the organization">
+
+    <i class="fa fa-times pull-right text-danger icon ml-auto" aria-hidden="true"
+       i18n-title="@@header.organization.remove" title="Remove organization"
+       *ngIf="organizationCode" (click)="onDelete()"></i>
+
   </div>
 
+  <div class="description d-inline-flex py-3">
+    <div class="pl-2">
+      <i class="fas fa fa-pencil edit"
+         (click)="onOrganizationDescriptionEdit()"></i>
+    </div>
+    <div class="text" [attr.contenteditable]="organizationDescriptionEditable"
+         (blur)="onOrganizationDescriptionBlur(organizationDescription.textContent)"
+         #organizationDescription>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
+      finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
+      vel augue.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
+      finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
+      vel augue.
+    </div>
+
+  </div>
+
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="nav-item">
+      <a routerLink="permissions" routerLinkActive="active" class="nav-link">
+        Permissions
+      </a>
+    </li>
+  </ul>
+
+  <router-outlet></router-outlet>
 </div>
-
-<div class="d-flex flex-row justify-content-start">
-
-  <input class="color-class code" [(ngModel)]="organization.code" (blur)="updateOrganizationCode()"
-         [style.color]="organization.color" title="Edit code of the organization">
-
-  <i class="fa fa-times pull-right text-danger icon ml-auto" aria-hidden="true" title="Remove organization"
-     *ngIf="organizationCode" (click)="onDelete()"></i>
-
-</div>
-<!--<i class="{{ organization.icon }}">-->
-<!--<i> {{ organization.name }}</i>-->
-<!--<i> {{ organization.code }}</i>-->
-
-<!--<i _ngcontent-c11="" aria-hidden="true" class="far fa-file" {{getNumberOfCollections()}}></i>-->
-
-<div class="description d-inline-flex pt-3">
-  <!--<div class="description d-inline-flex pt-3" *ngIf="resourceActiveIx >= 0" [@animateOpacityFromUp]="'in'">-->
-  <!--<i class="fas fa-2x fa-quote-right pr-2"></i>-->
-  <div class="pl-2">
-    <i class="fas fa fa-pencil edit"
-       (click)="onOrganizationDescriptionEdit()"></i>
-  </div>
-  <div class="text" [attr.contenteditable]="organizationDescriptionEditable"
-       (blur)="onOrganizationDescriptionBlur(organizationDescription.textContent)"
-       #organizationDescription>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
-    finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
-    vel augue.
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
-    finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
-    vel augue.
-  </div>
-
-</div>
-
-<ul class="nav nav-tabs">
-  <!--<li role="presentation" class="nav-item">-->
-  <!--<a routerLink="settings" routerLinkActive="active" class="nav-link">-->
-  <!--Basic Settings-->
-  <!--</a>-->
-  <!--</li>-->
-  <li role="presentation" class="nav-item">
-    <a routerLink="permissions" routerLinkActive="active" class="nav-link">
-      Permissions
-    </a>
-  </li>
-</ul>
-
-<router-outlet></router-outlet>

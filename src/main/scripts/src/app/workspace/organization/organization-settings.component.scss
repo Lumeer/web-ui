@@ -30,13 +30,12 @@
   font-size: 20px;
   width: 300px;
   font-style: italic;
-  margin-left: 10px;
+  margin-left: 38px;
 }
 
-.orgIcon {
+.organization-icon {
   font-size: 30px;
   margin-right: 10px;
-
 }
 
 .fa-arrow-left {
@@ -82,4 +81,7 @@
       color: $brand-success;
     }
   }
+}
+.whole {
+  transition: opacity $animation-duration;
 }
