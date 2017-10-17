@@ -19,7 +19,7 @@ const LUMEER_ENV = process.env.LUMEER_ENV || 'production';
 const LUMEER_ENGINE = process.env.LUMEER_ENGINE || 'lumeer-engine';
 const OUTPUT_PATH = process.env.OUTPUT_PATH || 'dist/';
 const I18N_FORMAT = process.env.I18N_FORMAT || 'xlf';
-const I18N_LOCALE = process.env.I18N_LOCALE || 'en';
+const I18N_LOCALE = process.env.I18N_LOCALE;
 const AOT = process.env.AOT || false;
 const I18N_PATH = process.env.I18N_PATH || 'src/i18n/messages.' + I18N_LOCALE + '.' + I18N_FORMAT;
 
@@ -321,8 +321,8 @@ module.exports = {
     }),
     new AotPlugin({
       "mainPath": "main.ts",
-      "i18nFile": I18N_PATH,
-      "i18nFormat": I18N_FORMAT,
+      "i18nFile": I18N_LOCALE ? I18N_PATH : null,
+      "i18nFormat": I18N_LOCALE ? I18N_FORMAT : null,
       "locale": I18N_LOCALE,
       "replaceExport": false,
       "hostReplacementPaths": {

@@ -4,4 +4,4 @@ node_js:
 before_install:
   - "cd src/main/scripts"
 script:
-  - "AOT=true I18N_LOCALE=sk npm run build"
+  - "AOT=true npm run build"
