@@ -28,10 +28,10 @@ import {CollectionLinkTypesComponent} from './config/link-types/collection-link-
 import {CollectionAttributesComponent} from './config/attributes/collection-attributes.component';
 import {CollectionAccessRightsComponent} from './config/access-rights/collection-access-rights.component';
 import {CollectionEventsComponent} from './config/events/collection-events.component';
-import {SimpleNotificationsModule} from 'angular2-notifications/dist';
 import {CollectionManageRoleGuard} from './collection-managed-role.guard';
-import {AttributeListComponent} from './config/attribute-list/attribute-list.component';
 import {LinkAttributeListComponent} from './config/link-attribute-list/link-attribute-list.component';
+import {AttributeListComponent} from './config/attribute-list/attribute-list.component';
+import {CollectionTabComponent} from './config/collection-tab.component';
 
 @NgModule({
   imports: [
@@ -42,6 +42,7 @@ import {LinkAttributeListComponent} from './config/link-attribute-list/link-attr
     AttributeListComponent,
     LinkAttributeListComponent,
     CollectionComponent,
+    CollectionTabComponent,
     CollectionListComponent,
     CollectionConfigComponent,
     CollectionAccessRightsComponent,

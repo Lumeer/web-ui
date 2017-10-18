@@ -33,6 +33,15 @@
     }
   }
 
+  .greyed-out {
+    transition: opacity $animation-color-duration;
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1 !important;
+    }
+  }
+
   .bigger {
     font-size: 22px;
   }

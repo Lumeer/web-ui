@@ -1,21 +1,20 @@
 /*
- * -----------------------------------------------------------------------\
- * Lumeer
+ * Lumeer: Modern Data Definition and Processing Platform
  *
- * Copyright (C) since 2016 the original author or authors.
+ * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * -----------------------------------------------------------------------/
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
@@ -29,6 +28,7 @@ import {LinkTypeService} from '../../../core/rest/link-type.service';
 import {LinkType} from '../../../core/dto/link-type';
 import {CollectionService} from '../../../core/rest/collection.service';
 import {WorkspaceService} from '../../../core/workspace.service';
+import {LinkedAttribute} from '../../../core/dto/linked-attribute';
 
 @Component({
   selector: 'collection-link-types',
@@ -98,12 +98,27 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       .retry(3)
       .subscribe(
         linkTypes => {
-          // TODO remove after service implemented on backend
-          const linkType = linkTypes[1]
+          // TODO remove this whole block after service gets implemented on backend
+
+          if (!linkTypes[1]) {
+            return;
+          }
+
+          const linkType = linkTypes[1];
           setTimeout(() => {
-            const collection = this.collections[linkType.toCollection];
-            const firstAttributes = collection.attributes.slice(0, linkType.toCollection.length + 3);
-            linkType.linkedAttributes = firstAttributes;
+            const toCollection = this.collections[linkType.toCollection];
+            const fromCollection = this.collections[linkType.fromCollection];
+
+            const toFirstAttributes = toCollection.attributes.slice(0, 3);
+            const toLinkedAttributes = toFirstAttributes.map(attribute => attribute as LinkedAttribute);
+            toLinkedAttributes.forEach(linkedAttribute => linkedAttribute.collectionCode = toCollection.code);
+
+            const fromFirstAttributes = fromCollection.attributes.slice(0, 2);
+            const fromLinkedAttributes = fromFirstAttributes.map(attribute => attribute as LinkedAttribute);
+            fromLinkedAttributes.forEach(linkedAttribute => linkedAttribute.collectionCode = fromCollection.code);
+
+            linkType.linkedAttributes = fromLinkedAttributes.concat(toLinkedAttributes);
+
           }, 250);
 
           this.linkTypes = linkTypes;
@@ -112,16 +127,59 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       );
   }
 
-  public possibleToCollectionCodes(linkType: LinkType): string[] {
-    const excludedCodes = [COLLECTION_NO_CODE, linkType.toCollection, linkType.fromCollection];
+  public possibleToCollectionCodes(linkType?: LinkType): string[] {
+    const excludedCodes = [COLLECTION_NO_CODE];
+
+    if (linkType) {
+      excludedCodes.push(linkType.toCollection);
+      excludedCodes.push(linkType.fromCollection);
+    }
 
     return Object
       .keys(this.collections)
       .filter(collectionCode => !excludedCodes.includes(collectionCode));
   }
 
+  public linkTypeAttributes(linkType: LinkType): LinkedAttribute[] {
+    let attributes;
+
+    if (this.collections[linkType.toCollection] && this.collections[linkType.fromCollection]) {
+      const fromAttributes = this
+        .collections[linkType.fromCollection]
+        .attributes
+        .map(attribute => attribute as LinkedAttribute);
+      fromAttributes.forEach(linkedAttribute => linkedAttribute.collectionCode = linkType.fromCollection);
+
+      const toAttributes = this
+        .collections[linkType.toCollection]
+        .attributes
+        .map(attribute => attribute as LinkedAttribute);
+      toAttributes.forEach(linkedAttribute => linkedAttribute.collectionCode = linkType.toCollection);
+
+      attributes = fromAttributes.concat(toAttributes);
+    } else {
+      attributes = [];
+    }
+
+    return attributes
+  }
+
   public initialized(linkType: LinkType): boolean {
     return linkType.name && linkType.toCollection !== COLLECTION_NO_CODE;
+  }
+
+  public isAutomatic(linkType: LinkType): boolean {
+    return !!(linkType.automaticLinkToAttribute && linkType.automaticLinkFromAttribute);
+  }
+
+  public canBecomeAutomatic(linkType: LinkType): boolean {
+    return !this.isAutomatic(linkType) &&
+      linkType.linkedAttributes.length === 2 &&
+      linkType.linkedAttributes[0].collectionCode !== linkType.linkedAttributes[1].collectionCode;
+  }
+
+  public makeAutomatic(linkType: LinkType): void {
+
   }
 
   public newLinkType(): void {
@@ -132,7 +190,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       linkedAttributes: []
     };
 
-    this.linkTypeService.createLinkType(emptyLinkType)
+    this.linkTypeService.createLinkType(this.collection.code, emptyLinkType)
       .retry(3)
       .subscribe(
         linkType => {
@@ -156,7 +214,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public deleteLinkType(linkType: LinkType, idx: number): void {
-    this.linkTypeService.removeLinkType(linkType)
+    this.linkTypeService.removeLinkType(this.collection.code, linkType)
       .retry(3)
       .subscribe(
         () => this.linkTypes.splice(idx, 1),
