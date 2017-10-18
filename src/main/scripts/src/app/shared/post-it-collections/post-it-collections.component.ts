@@ -17,26 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewChecked,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  TemplateRef,
-  ViewChildren
-} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
-import {
-  Collection,
-  COLLECTION_NO_COLOR,
-  COLLECTION_NO_ICON
-} from '../../core/dto/collection';
+import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
 import {Query} from '../../core/dto/query';
 import {CollectionService} from '../../core/rest/collection.service';
 import {ImportService} from '../../core/rest/import.service';
@@ -47,7 +33,6 @@ import {PostItLayout} from '../utils/post-it-layout';
 import {PostItCollectionData} from './post-it-collection-data';
 import {QueryConverter} from '../utils/query-converter';
 import {HtmlModifier} from '../utils/html-modifier';
-import 'rxjs/add/operator/retry';
 
 @Component({
   selector: 'post-it-collections',
@@ -110,7 +95,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   private loadCollections() {
     this.searchService.searchCollections(this.query)
-      .retry(3)
       .subscribe(
         collections => {
           collections.forEach(collection => {
@@ -166,7 +150,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   public initializePostIt(postIt: PostItCollectionData): void {
     this.collectionService.createCollection(postIt.collection)
-      .retry(3)
       .subscribe(
         response => {
           const code = response.headers.get('Location').split('/').pop();
@@ -183,7 +166,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   private getCollection(postIt: PostItCollectionData): void {
     this.collectionService.getCollection(postIt.collection.code)
-      .retry(3)
       .subscribe(
         collection => {
           postIt.collection = collection;
@@ -199,7 +181,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     }
 
     this.collectionService.updateCollection(postIt.collection)
-      .retry(3)
       .subscribe(
         collection => {
           postIt.collection = collection;
@@ -226,7 +207,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   private importData(result: string, name: string, format: string) {
     this.importService.importFile(format, result, name)
-      .retry(3)
       .subscribe(
         collection => {
           const newPostIt = new PostItCollectionData;
@@ -266,7 +246,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   private removeCollection(postIt: PostItCollectionData): void {
     if (postIt.initialized) {
       this.collectionService.removeCollection(postIt.collection.code)
-        .retry(3)
         .subscribe(
           response => {
             this.postItToDelete = null;

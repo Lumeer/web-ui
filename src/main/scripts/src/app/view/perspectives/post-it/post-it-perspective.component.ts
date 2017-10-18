@@ -37,7 +37,6 @@ import {Permission} from 'app/core/dto/permission';
 import {Role} from '../../../shared/permissions/role';
 import {PerspectiveComponent} from '../perspective.component';
 import {isNullOrUndefined} from 'util';
-import 'rxjs/add/operator/retry';
 
 @Component({
   selector: 'post-it-perspective',
@@ -172,7 +171,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   private fetchData(): void {
     this.searchService.searchDocuments(this.queryPage(this.page++))
-      .retry(3)
       .subscribe(
         documents => {
           this.initializePostIts(documents);
@@ -212,7 +210,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
     this.collections[collectionCode] = null;
     this.collectionService.getCollection(collectionCode)
-      .retry(3)
       .subscribe(
         collection => {
           this.collections[collectionCode] = collection;
@@ -296,7 +293,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
     }
 
     this.documentService.updateDocument(postIt.document)
-      .retry(3)
       .subscribe(
         document => {
           delete document.data['_id']; // TODO remove after _id is no longer sent inside data
@@ -309,7 +305,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   private initializePostIt(postIt: DocumentData): void {
     this.documentService.createDocument(postIt.document)
-      .retry(3)
       .subscribe(
         response => {
           postIt.document.id = response.headers.get('Location').split('/').pop();
@@ -325,7 +320,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   private refreshDocument(postIt: DocumentData): void {
     this.documentService.getDocument(postIt.document.collectionCode, postIt.document.id)
-      .retry(3)
       .subscribe(
         document => {
           delete document.data['_id']; // TODO remove after _id is no longer sent inside data
@@ -344,7 +338,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   public removeDocument(postIt: DocumentData): void {
     if (postIt.initialized) {
       this.documentService.removeDocument(postIt.document)
-        .retry(3)
         .subscribe(
           response => {
             this.notificationService.success('Success', 'Document removed');

@@ -1,21 +1,20 @@
 /*
- * -----------------------------------------------------------------------\
- * Lumeer
+ * Lumeer: Modern Data Definition and Processing Platform
  *
- * Copyright (C) since 2016 the original author or authors.
+ * Copyright (C) since 2017 Answer Institute, s.r.o. and/or its affiliates.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * -----------------------------------------------------------------------/
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 import {Component, Input} from '@angular/core';
@@ -96,7 +95,6 @@ export class AttributeListComponent {
     newAttribute.name = newAttributeName;
 
     this.collectionService.updateAttribute(this.collection.code, newAttributeName, newAttribute)
-      .retry(3)
       .subscribe(
         attribute => this.collection.attributes.push(attribute),
         error => this.notificationService.error('Error', 'Failed creating attribute')
@@ -108,7 +106,6 @@ export class AttributeListComponent {
     attribute.fullName = attribute.name;
 
     this.collectionService.updateAttribute(this.collection.code, previousFullName, attribute)
-      .retry(3)
       .subscribe(
         attribute => !isNullOrUndefined(index) && (this.collection.attributes[index] = attribute),
         error => this.notificationService.error('Error', 'Failed updating attribute')
@@ -118,7 +115,6 @@ export class AttributeListComponent {
   public removeAttribute(attribute: ConfiguredAttribute, index?: number): void {
     const removed = this.collection.attributes[index];
     this.collectionService.removeAttribute(this.collection.code, removed.fullName)
-      .retry(3)
       .subscribe(
         () => this.collection.attributes.splice(index, 1),
         error => console.error(error)
