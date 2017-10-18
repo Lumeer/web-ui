@@ -27,7 +27,7 @@ export class PostItLayout {
   private resizeListener;
 
   constructor(private parameters: object) {
-    const windowResizeRefreshBuffer = new Buffer(() => this.refresh(), 300);
+    const windowResizeRefreshBuffer = new Buffer(() => this.refresh(), 500);
     this.resizeListener = () => windowResizeRefreshBuffer.stageChanges();
 
     window.addEventListener('resize', this.resizeListener);

@@ -1,4 +1,4 @@
-<div class="perspective" #perspective (scroll)="loadMore(perspective)" [style.height]="height + 'px'">
+<div class="perspective" #perspective [style.height]="height + 'px'">
   <div class="layout" #layout>
 
     <add-document *ngIf="editable && query.collectionCodes.length < 2"

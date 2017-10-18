@@ -17,18 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewChecked,
-  Component,
-  ElementRef,
-  Input,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  TemplateRef,
-  ViewChild,
-  ViewChildren
-} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
@@ -37,7 +26,6 @@ import {PostItDocumentComponent} from './document/post-it-document.component';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
 import {Direction} from './document-data/direction';
 import {DocumentData} from './document-data/document-data';
-import {Perspective} from 'app/view/perspectives/perspective';
 import {Query} from '../../../core/dto/query';
 import {PostItLayout} from '../../../shared/utils/post-it-layout';
 import {Collection} from '../../../core/dto/collection';
@@ -72,6 +60,9 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   @Input()
   public height = 500;
+
+  @ViewChild('perspective')
+  public perspective: ElementRef;
 
   @ViewChild('layout')
   public layoutElement: ElementRef;
@@ -386,18 +377,14 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
     this.notificationService.error('Error', message ? message : error.message);
   }
 
-  public loadMore(perspective: HTMLDivElement): void {
-    if (perspective.scrollHeight - perspective.scrollTop === perspective.clientHeight) {
-      this.fetchData();
-    }
-  }
-
   public showMore(perspective: HTMLDivElement): void {
     perspective.scroll({
       top: perspective.scrollHeight,
       left: 0,
       behavior: 'smooth'
     });
+
+    this.fetchData();
   }
 
   public onClick(event: MouseEvent): void {
