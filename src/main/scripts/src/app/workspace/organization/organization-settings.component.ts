@@ -126,6 +126,6 @@ export class OrganizationSettingsComponent implements OnInit {
   }
 
   public initialized(): boolean {
-    return this.organization.code != '' && this.organization.name != '';
+    return !(this.organization.code == '' && this.organization.name == '' && this.organization.icon == '' && this.organization.color == '');
   }
 }

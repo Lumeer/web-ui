@@ -35,24 +35,6 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="org-color" class="col-sm-2 control-label">Color</label>
-      <div class="col-sm-4">
-        <input class="form-control" type="text" minlength="7" maxlength="7"
-               [(ngModel)]="organization.color" name="color" id="org-color"
-               placeholder="Color" #color="ngModel">
-        <small [hidden]="color.valid || (color.pristine && !f.submitted)" class="text-danger">
-          Color must contain 7 characters (# + 6 hex numbers).
-        </small>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="org-icon" class="col-sm-2 control-label">Icon</label>
-      <div class="col-sm-4">
-        <input class="form-control" type="text" [(ngModel)]="organization.icon"
-               name="icon" id="org-icon" placeholder="Icon">
-      </div>
-    </div>
-    <div class="form-group">
       <div class="col-sm-4 col-sm-offset-2">
         <button class="btn btn-primary btn-sm" type="submit" [disabled]="!f.form.valid">Save</button>
         <button class="btn btn-warning btn-sm" (click)="onCancel()">Cancel</button>

@@ -52,12 +52,6 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    //this.project = {
-    //code: null,
-    //name: "noname",
-    //icon: "fa fa-exclamation-circle",
-    //color: '#cccccc'
-    //};
     this.project = new Project();
     this.route.data.subscribe((data: { creation: boolean }) => {
       this.creation = data.creation;
@@ -139,6 +133,6 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public initialized(): boolean {
-    return this.project.code != '' && this.project.name != '';
+    return this.project.code !== '' && this.project.name !== '' && this.project.icon !== '' && this.project.color !== '';
   }
 }

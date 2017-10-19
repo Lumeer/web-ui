@@ -1,65 +1,70 @@
-<div class="whole"  [style.opacity]="initialized() ? '1' : '0'">
-<div class="d-flex flex-row justify-content-start">
-  <a class="fa fa-arrow-left " [routerLink]="['/workspace']  "></a>
-  <i class="color-class fa-fw {{ project.icon }} project-icon " [style.color]="project.color"
-     data-toggle="dropdown"></i>
-  <div class="dropdown-menu">
-    <color-picker class="dropdown-item" [(color)]="project.color"
-                  (selectedChange)="updateProject()"></color-picker>
-    <div class="dropdown-divider"></div>
-    <icon-picker class="dropdown-item" [(icon)]="project.icon"
-                 (selectedChange)="updateProject()"></icon-picker>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col"></div>
+    <div class="whole" [style.opacity]="initialized() ? '1' : '0'">
+      <div class="d-flex flex-row justify-content-start">
+        <a class="fa fa-arrow-left " [routerLink]="['/workspace']  "></a>
+        <i class="color-class fa-fw {{ project.icon }} project-icon " [style.color]="project.color"
+           data-toggle="dropdown"></i>
+        <div class="dropdown-menu">
+          <color-picker class="dropdown-item" [(color)]="project.color"
+                        (selectedChange)="updateProject()"></color-picker>
+          <div class="dropdown-divider"></div>
+          <icon-picker class="dropdown-item" [(icon)]="project.icon"
+                       (selectedChange)="updateProject()"></icon-picker>
+        </div>
+
+        <input class="color-class name" [(ngModel)]="project.name" (blur)="updateProject()"
+               [style.color]="project.color" i18n-title="@@header.project.name" title="Edit name of the project">
+
+        <div class="float-right document-count color-class ml-auto">
+          <a class="count" i18n-title="@@collections.count" title="Number of collections in this project"
+             [style.color]="project.color" [routerLink]="[workspacePath(),'collections']">
+            <span>{{ collectionsCount }}</span>
+            <i class="far fa-file" aria-hidden="true"></i>
+          </a>
+        </div>
+
+      </div>
+
+      <div class="d-flex flex-row justify-content-start">
+
+        <input class="color-class code" [(ngModel)]="project.code" (blur)="updateProjectCode()"
+               [style.color]="project.color" i18n-title="@@header.project.code" title="Edit code of the project">
+
+        <i class="fa fa-times pull-right text-danger icon ml-auto" aria-hidden="true" i18n-title="@@project.remove"
+           title="Remove project"
+           *ngIf="projectCode" (click)="onDelete()"></i>
+
+      </div>
+
+      <div class="description d-inline-flex py-3">
+        <div class="pl-2">
+          <i class="fas fa fa-pencil edit"
+             (click)="onProjectDescriptionEdit()"></i>
+        </div>
+        <div class="text" [attr.contenteditable]="projectDescriptionEditable"
+             (blur)="onProjectDescriptionBlur(projectDescription.textContent)"
+             #projectDescription>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
+          finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
+          vel augue.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
+          finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
+          vel augue.
+        </div>
+      </div>
+
+      <ul class="nav nav-tabs">
+        <li role="presentation" class="nav-item">
+          <a routerLink="permissions" routerLinkActive="active" class="nav-link">
+            Permissions
+          </a>
+        </li>
+      </ul>
+      <router-outlet></router-outlet>
+
+    </div>
+    <div class="col"></div>
   </div>
-
-  <input class="color-class name" [(ngModel)]="project.name" (blur)="updateProject()"
-         [style.color]="project.color" i18n-title="@@header.project.name" title="Edit name of the project">
-
-  <div class="float-right document-count color-class ml-auto">
-    <a class="count" i18n-title="@@collections.count" title="Number of collections in this project"
-       [style.color]="project.color" [routerLink]="[workspacePath(),'collections']">
-      <span>{{ collectionsCount }}</span>
-      <i class="far fa-file" aria-hidden="true"></i>
-    </a>
-  </div>
-
-</div>
-
-<div class="d-flex flex-row justify-content-start">
-
-  <input class="color-class code" [(ngModel)]="project.code" (blur)="updateProjectCode()"
-         [style.color]="project.color" i18n-title="@@header.project.code" title="Edit code of the project">
-
-  <i class="fa fa-times pull-right text-danger icon ml-auto" aria-hidden="true" i18n-title="@@project.remove"
-     title="Remove project"
-     *ngIf="projectCode" (click)="onDelete()"></i>
-
-</div>
-
-<div class="description d-inline-flex py-3">
-  <div class="pl-2">
-    <i class="fas fa fa-pencil edit"
-       (click)="onProjectDescriptionEdit()"></i>
-  </div>
-  <div class="text" [attr.contenteditable]="projectDescriptionEditable"
-       (blur)="onProjectDescriptionBlur(projectDescription.textContent)"
-       #projectDescription>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
-    finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
-    vel augue.
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
-    finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
-    vel augue.
-  </div>
-
-</div>
-
-<ul class="nav nav-tabs">
-  <li role="presentation" class="nav-item">
-    <a routerLink="permissions" routerLinkActive="active" class="nav-link">
-      Permissions
-    </a>
-  </li>
-</ul>
-
-<router-outlet></router-outlet>
 </div>

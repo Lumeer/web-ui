@@ -86,6 +86,8 @@ export class ProjectFormComponent implements OnInit {
   }
 
   private createProject() {
+    this.project.color = '#cccccc';
+    this.project.icon = 'fa fa-exclamation-circle';
     this.projectService.createProject(this.organizationCode, this.project)
       .subscribe(
         response => this.goBack(),

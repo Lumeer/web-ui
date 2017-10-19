@@ -1,6 +1,6 @@
 @import '../../shared/lumeer-variables';
 
-.icon{
+.icon {
   margin-right: 20px;
 }
 
@@ -52,16 +52,16 @@
   font-size: 20px;
   margin-right: 15px;
   margin-left: auto;
-  }
+}
 
-  .count{
-    font-size: 20px;
-  }
+.count {
+  font-size: 20px;
+}
 
 .description {
 
   &:hover .edit {
-    opacity: 100;
+    opacity: 1;
   }
 
   .text {
@@ -82,6 +82,7 @@
     }
   }
 }
+
 .whole {
   transition: opacity $animation-duration;
 }
