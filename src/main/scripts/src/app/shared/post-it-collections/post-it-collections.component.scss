@@ -1,4 +1,4 @@
-@import "../lumeer-variables";
+@import "../variables";
 
 :host {
   display: block;
@@ -34,7 +34,7 @@
     border-color: transparent;
 
     &:hover {
-      color: $brand-success;
+      color: $success;
     }
   }
 
