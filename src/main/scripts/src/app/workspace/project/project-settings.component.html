@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col"></div>
-    <div class="whole" [style.opacity]="initialized() ? '1' : '0'">
+    <div class="whole col-sm-9 col-md-10 col-lg-11" [style.opacity]="initialized() ? '1' : '0'">
       <div class="d-flex flex-row justify-content-start">
         <a class="fa fa-arrow-left " [routerLink]="['/workspace']  "></a>
         <i class="color-class fa-fw {{ project.icon }} project-icon " [style.color]="project.color"
@@ -54,17 +54,16 @@
           vel augue.
         </div>
       </div>
-
-      <ul class="nav nav-tabs">
-        <li role="presentation" class="nav-item">
-          <a routerLink="permissions" routerLinkActive="active" class="nav-link">
-            Permissions
-          </a>
-        </li>
-      </ul>
-      <router-outlet></router-outlet>
-
     </div>
     <div class="col"></div>
   </div>
 </div>
+
+<ul class="nav nav-tabs pl-1">
+  <li role="presentation" class="nav-item">
+    <a routerLink="permissions" routerLinkActive="active" class="nav-link">
+      Permissions
+    </a>
+  </li>
+</ul>
+<router-outlet></router-outlet>

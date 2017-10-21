@@ -40,12 +40,12 @@ export class ProjectService extends PermissionService {
     return this.httpClient.get<Project>(this.apiPrefix(orgCode, projCode));
   }
 
-  public deleteProject(orgCode: string, projCode: string): Observable<string> {
-    return this.httpClient.delete(this.apiPrefix(orgCode, projCode), {responseType: 'text'});
+  public deleteProject(orgCode: string, projCode: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(this.apiPrefix(orgCode, projCode), {observe: 'response', responseType: 'text'});
   }
 
-  public createProject(orgCode: string, project: Project): Observable<string> {
-    return this.httpClient.post(this.apiPrefix(orgCode), project, {responseType: 'text'});
+  public createProject(orgCode: string, project: Project): Observable<HttpResponse<any>> {
+    return this.httpClient.post(this.apiPrefix(orgCode), project, {observe: 'response', responseType: 'text'});
   }
 
   public editProject(orgCode: string, projCode: string, project: Project): Observable<HttpResponse<object>> {
