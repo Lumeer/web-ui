@@ -1,4 +1,4 @@
-@import '../../shared/lumeer-variables';
+@import '../../shared/variables';
 
 .icon {
   margin-right: 20px;
@@ -61,12 +61,12 @@
 .description {
 
   &:hover .edit {
-    opacity: 1;
+    opacity: 100;
   }
 
   .text {
     font-size: 17px;
-    outline-color: $brand-success;
+    outline-color: $success;
     margin-right: 20px;
     overflow: hidden;
     height: 50px;
@@ -78,7 +78,7 @@
     margin-right: 5px;
 
     &:hover {
-      color: $brand-success;
+      color: $success;
     }
   }
 }
