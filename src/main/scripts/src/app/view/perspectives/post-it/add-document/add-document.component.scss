@@ -1,4 +1,4 @@
-@import "../../../../shared/lumeer-variables";
+@import "../../../../shared/variables";
 
 :host {
   display: block;
@@ -12,11 +12,11 @@
     -moz-transition: color $animation-color-duration;
     -o-transition: color $animation-color-duration;
 
-    color: $brand-primary;
+    color: $primary;
     border-radius: 20px;
 
     &:hover {
-      color: $brand-success;
+      color: $success;
     }
   }
 

@@ -1,4 +1,4 @@
-@import "../lumeer-variables";
+@import "../variables";
 
 .query-item {
   background-color: #faeabb;
@@ -13,9 +13,10 @@
 .search-button {
   background: transparent;
   border: 0;
-  color: $brand-success;
+  color: $success;
 
   &:hover {
-    background-color: $brand-light;
+    background-color: $success;
+    color: $white;
   }
 }

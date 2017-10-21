@@ -1,4 +1,4 @@
-@import "../../../shared/lumeer-variables";
+@import "../../../shared/variables";
 
 $post-it-size: 170px;
 $post-it-margin: 15px;
@@ -15,16 +15,16 @@ $box-shadow-right: -4px -5px 5px 1px $box-shadow-color;
   position: relative;
 
   .disabled {
-    color: $brand-secondary !important;
+    color: $secondary;
     cursor: default !important;
   }
 
   .arrow {
-    color: $brand-success;
+    color: $success;
     cursor: pointer;
 
     &:hover {
-      color: $brand-info;
+      color: $info;
     }
   }
 
@@ -114,7 +114,7 @@ $box-shadow-right: -4px -5px 5px 1px $box-shadow-color;
               transition: opacity $animation-duration;
 
               &:hover {
-                color: $brand-success;
+                color: $success;
               }
             }
 
@@ -142,7 +142,7 @@ $box-shadow-right: -4px -5px 5px 1px $box-shadow-color;
         color: black;
 
         &:hover {
-          color: $brand-success;
+          color: $success;
         }
       }
 
@@ -193,7 +193,7 @@ $box-shadow-right: -4px -5px 5px 1px $box-shadow-color;
     transition: opacity $animation-duration;
 
     &:hover {
-      color: $brand-success;
+      color: $success;
     }
   }
 }

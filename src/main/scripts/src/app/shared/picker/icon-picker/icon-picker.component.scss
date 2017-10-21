@@ -1,4 +1,4 @@
-@import "../../lumeer-variables";
+@import "../../variables";
 
 :host {
   padding: 0;
@@ -25,12 +25,12 @@
 
       &.selected {
         color: white;
-        background-color: $brand-success;
+        background-color: $success;
       }
 
       &.active {
         color: white;
-        background-color: $brand-primary;
+        background-color: $primary;
       }
     }
   }

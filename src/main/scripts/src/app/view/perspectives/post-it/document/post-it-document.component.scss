@@ -1,4 +1,4 @@
-@import "../../../../shared/lumeer-variables";
+@import "../../../../shared/variables";
 
 :host {
   background: $secondary-color;
@@ -42,7 +42,7 @@
     }
 
     .remove {
-      color: $brand-danger;
+      color: $danger;
     }
   }
 
@@ -126,7 +126,7 @@
 
   span:focus, input:focus {
     outline: none;
-    background: $brand-primary;
+    background: $primary;
     border-radius: $border-radius-small;
 
     color: $secondary-color;

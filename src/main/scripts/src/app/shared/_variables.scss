@@ -1,22 +1,29 @@
-/**
- * Defines variables used directly in this application
- */
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700,400italic&subset=latin-ext");
 
-$brand-primary: #2c3e50 !default;
-$brand-secondary: #868e96 !default;
-$brand-success: #18BC9C !default;
-$brand-info: #17a2b8 !default;
-$brand-warning: #ffc107 !default;
-$brand-danger: #dc3545 !default;
-$brand-light: #f8f9fa !default;
-$brand-dark: #343a40 !default;
+// Bootstrap variables
+
+$enable-gradients: true;
+
+$primary: #2c3e50;
+$success: #18bc9c;
+$light: #e9ecef;
+
+$body-color: $primary;
+
+$font-family-base: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+$link-color: $success;
+$link-hover-decoration: none;
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+// Application-specific variables
 
 $border-radius-base: 4px !default;
 $border-radius-large: 6px !default;
 $border-radius-small: 3px !default;
-
-$font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
 
 $primary-color: #f3f3f4;
 $secondary-color: #ffffff;

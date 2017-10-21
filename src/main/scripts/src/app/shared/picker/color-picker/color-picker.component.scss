@@ -1,4 +1,4 @@
-@import "../../lumeer-variables";
+@import "../../variables";
 
 :host {
   padding-left: 6px;
@@ -30,7 +30,7 @@
     margin: 5px 0 0;
 
     &:hover {
-      color: $brand-success;
+      color: $success;
     }
   }
 }
