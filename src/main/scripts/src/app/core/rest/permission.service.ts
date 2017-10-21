@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
 
 import {Permissions} from '../dto/permissions';
 import {Permission} from '../dto/permission';
@@ -49,14 +49,18 @@ export abstract class PermissionService {
       .catch(PermissionService.handleGlobalError);
   }
 
-  public removeUserPermission(user: string): Observable<string> {
-    return this.httpClient.delete(`${this.actualApiPrefix()}/permissions/users/${user}`, {responseType:'text'})
-      .catch(PermissionService.handleGlobalError);
+  public removeUserPermission(user: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(
+      `${this.actualApiPrefix()}/permissions/users/${user}`,
+      {observe: 'response', responseType: 'text'}
+      ).catch(PermissionService.handleGlobalError);
   }
 
-  public removeGroupPermission(group: string): Observable<string> {
-    return this.httpClient.delete(`${this.actualApiPrefix()}/permissions/groups/${group}`, {responseType:'text'})
-      .catch(PermissionService.handleGlobalError);
+  public removeGroupPermission(group: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(
+      `${this.actualApiPrefix()}/permissions/groups/${group}`,
+      {observe: 'response', responseType: 'text'}
+    ).catch(PermissionService.handleGlobalError);
   }
 
   protected static handleGlobalError(error: HttpErrorResponse): ErrorObservable {

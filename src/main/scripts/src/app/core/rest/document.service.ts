@@ -50,10 +50,10 @@ export class DocumentService {
       .catch(error => this.handleGlobalError(error));
   }
 
-  public removeDocument(document: Document): Observable<string> {
+  public removeDocument(document: Document): Observable<HttpResponse<any>> {
     return this.httpClient.delete(
       `${this.apiPrefix(document.collectionCode)}/${document.id}`,
-      {responseType: 'text'}
+      {observe: 'response', responseType: 'text'}
     ).catch(error => this.handleGlobalError(error));
   }
 

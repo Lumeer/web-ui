@@ -35,7 +35,7 @@ export class PostItLayout {
 
   private locked = false;
 
-  private readonly REQUEST_LOCK_LIMIT = 15;
+  private readonly REQUEST_LOCK_LIMIT = 20;
 
   private readonly UPDATE_LOCK_TIME = 2000;
 

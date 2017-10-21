@@ -28,6 +28,8 @@ import {CollectionService} from '../../core/rest/collection.service';
 import {WorkspaceService} from '../../core/workspace.service';
 import {Role} from '../../shared/permissions/role';
 import {Permission} from '../../core/dto/permission';
+import {QueryConverter} from '../../shared/utils/query-converter';
+import {Query} from '../../core/dto/query';
 
 @Component({
   selector: 'collection-config',
@@ -36,11 +38,28 @@ import {Permission} from '../../core/dto/permission';
 })
 export class CollectionConfigComponent implements OnInit {
 
-  public collection: Collection;
+  public static configCollection: Collection = {
+    code: COLLECTION_NO_CODE,
+    icon: COLLECTION_NO_ICON,
+    color: COLLECTION_NO_COLOR,
+    description: 'Tasty collection data',
+    name: '',
+    attributes: []
+  };
+
+  get collection(): Collection {
+    return CollectionConfigComponent.configCollection;
+  }
+
+  set collection(value: Collection) {
+    CollectionConfigComponent.configCollection = value;
+  }
 
   public initialCollectionCode: string;
 
   public deleteConfirm: BsModalRef;
+
+  public collectionDescriptionEditable: boolean;
 
   constructor(private collectionService: CollectionService,
               private route: ActivatedRoute,
@@ -59,16 +78,6 @@ export class CollectionConfigComponent implements OnInit {
   }
 
   private refreshCollection(): void {
-    if (!this.collection) {
-      this.collection = {
-        name: '',
-        description: 'Tasty collection data',
-        code: COLLECTION_NO_CODE,
-        icon: COLLECTION_NO_ICON,
-        color: COLLECTION_NO_COLOR
-      };
-    }
-
     this.getCollectionFromParams();
   }
 
@@ -78,7 +87,15 @@ export class CollectionConfigComponent implements OnInit {
       .switchMap(collectionCode => this.collectionService.getCollection(collectionCode))
       .subscribe(
         collection => {
-          this.collection = collection;
+          this.collection.name = collection.name;
+          this.collection.code = collection.code;
+          this.collection.color = collection.color;
+          this.collection.icon = collection.icon;
+          this.collection.description = collection.description;
+          this.collection.permissions = collection.permissions;
+          this.collection.attributes = collection.attributes;
+          this.collection.defaultAttribute = collection.defaultAttribute;
+          this.collection.documentsCount = collection.documentsCount;
           this.initialCollectionCode = collection.code;
         },
         error => this.notificationService.error('Error', 'Failed fetching collection')
@@ -123,8 +140,16 @@ export class CollectionConfigComponent implements OnInit {
     this.deleteConfirm = this.modalService.show(modal);
   }
 
+  public documentsQuery(collectionCode: string): string {
+    const query: Query = {collectionCodes: [collectionCode]};
+    return QueryConverter.toString(query);
+  }
+
   public workspacePath(): string {
     return `/w/${this.workspaceService.organizationCode}/${this.workspaceService.projectCode}`;
   }
 
+  public onCollectionDescriptionEdit(): void {
+    this.collectionDescriptionEditable = true;
+  }
 }

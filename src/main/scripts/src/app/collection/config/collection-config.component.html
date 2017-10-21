@@ -1,7 +1,8 @@
-<div class="whole" [style.opacity]="collection ? '1' : '0'">
+<div class="container-fluid px-5 whole"
+     [style.opacity]="collection ? '1' : '0'">
   <div class="d-flex flex-row justify-content-start">
-    <a class="fa fa-arrow-left" (click)="goToCollectionsPage()"></a>
-    <i class="color-class fa-fw {{ collection.icon }} organization-icon"
+    <a class="fa fa-arrow-left text-success" (click)="goToCollectionsPage()"></a>
+    <i class="color-class fa-fw {{ collection.icon }} collection-icon"
        [style.color]="collection.color"
        data-toggle="dropdown"></i>
     <div class="dropdown-menu">
@@ -19,7 +20,7 @@
     <input class="color-class name"
            [(ngModel)]="collection.name"
            (blur)="updateCollection()"
-           [style.color]="collectionCodes.color"
+           [style.color]="collection.color"
            i18n-title="@@header.collection.name"
            title="Edit name of the collection">
 
@@ -29,7 +30,7 @@
          title="Number of documents in this collection"
          [style.color]="collection.color"
          [routerLink]="[workspacePath(), 'view']"
-         [queryParams]="{ perspective: 'postit', query: documentsQuery(postIt.collection.code) }">
+         [queryParams]="{ perspective: 'postit', query: documentsQuery(collection.code) }">
         <span>{{ collection.documentsCount }}</span>
         <i class="far fa-file" aria-hidden="true"></i>
       </a>
@@ -50,7 +51,7 @@
        aria-hidden="true"
        i18n-title="@@header.collection.remove"
        title="Remove collection"
-       *ngIf="organizationCode"
+       *ngIf="collection"
        (click)="confirmDeletion(modal)"></i>
   </div>
 

@@ -22,11 +22,12 @@ import {ActivatedRoute} from '@angular/router';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
-import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
+import {Collection} from '../../core/dto/collection';
 import {CollectionService} from '../../core/rest/collection.service';
 import {WorkspaceService} from '../../core/workspace.service';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/take';
+import {CollectionConfigComponent} from './collection-config.component';
 
 // Class can't be abstract because of an issue with compiler https://github.com/angular/angular/issues/13590
 @Component({template: ''})
@@ -41,42 +42,7 @@ export class CollectionTabComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.getCurrentCollection();
-  }
-
-  protected getCurrentCollection(): Promise<Collection> {
-    if (!this.collection) {
-      this.collection = {
-        attributes: [],
-        description: '',
-        icon: COLLECTION_NO_ICON,
-        color: COLLECTION_NO_COLOR,
-        name: ''
-      };
-    }
-
-    return this.getCollectionFromParams();
-  }
-
-  private getCollectionFromParams(): Promise<Collection> {
-    return this.route.parent.paramMap
-      .map(paramMap => paramMap.get('collectionCode'))
-      .switchMap(collectionCode => this.collectionService.getCollection(collectionCode))
-      .take(1)
-      .toPromise()
-      .then(collection => this.collection = collection)
-      .catch(error => {
-        this.notificationService.error('Error', `Failed fetching collection`);
-        return null;
-      });
-  }
-
-  protected updateCollection(): void {
-    this.collectionService.updateCollection(this.collection)
-      .subscribe(
-        collection => this.collection = collection,
-        error => this.notificationService.error('Error', 'Failed updating collection')
-      );
+    this.collection = CollectionConfigComponent.configCollection;
   }
 
   protected workspacePath(): string {

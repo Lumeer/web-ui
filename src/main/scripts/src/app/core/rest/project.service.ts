@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpErrorResponse} from '@angular/common/http';
+import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 
 import {Project} from '../dto/project';
 import {Observable} from 'rxjs/Observable';
@@ -48,8 +48,8 @@ export class ProjectService extends PermissionService {
     return this.httpClient.post(this.apiPrefix(orgCode), project, {observe: 'response', responseType: 'text'});
   }
 
-  public editProject(orgCode: string, projCode: string, project: Project): Observable<string> {
-    return this.httpClient.put(this.apiPrefix(orgCode, projCode), project, {responseType:'text'});
+  public editProject(orgCode: string, projCode: string, project: Project): Observable<HttpResponse<any>> {
+    return this.httpClient.put(this.apiPrefix(orgCode, projCode), project, {observe: 'response', responseType: 'text'});
   }
 
   private apiPrefix(orgCode: string, projCode?: string): string {

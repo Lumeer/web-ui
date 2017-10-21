@@ -35,8 +35,10 @@ import 'rxjs/add/operator/catch';
 export class CollectionService extends PermissionService {
 
   public createCollection(collection: Collection): Observable<HttpResponse<any>> {
-    return this.httpClient.post(this.apiPrefix(), this.toDto(collection), {observe: 'response', responseType: 'text'})
-      .catch(this.handleError);
+    return this.httpClient.post(
+      this.apiPrefix(), this.toDto(collection),
+      {observe: 'response', responseType: 'text'}
+      ).catch(this.handleError);
   }
 
   public updateCollection(collection: Collection, collectionCode?: string): Observable<Collection> {
@@ -48,9 +50,11 @@ export class CollectionService extends PermissionService {
       .catch(this.handleError);
   }
 
-  public removeCollection(collectionCode: string): Observable<string> {
-    return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}`, {responseType: 'text'})
-      .catch(this.handleError);
+  public removeCollection(collectionCode: string): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(
+      `${this.apiPrefix()}/${collectionCode}`,
+      {observe: 'response', responseType: 'text'}
+      ).catch(this.handleError);
   }
 
   public getCollection(collectionCode: string): Observable<Collection> {
@@ -83,10 +87,10 @@ export class CollectionService extends PermissionService {
       .catch(CollectionService.handleGlobalError);
   }
 
-  public removeAttribute(collectionCode: string, fullName: string): Observable<string> {
+  public removeAttribute(collectionCode: string, fullName: string): Observable<HttpResponse<any>> {
     return this.httpClient.delete(
       `${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`,
-      {responseType: 'text'}
+      {observe: 'response', responseType: 'text'}
     );
   }
 

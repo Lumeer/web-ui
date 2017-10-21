@@ -35,6 +35,10 @@
     table-layout: fixed;
   }
 
+  thead {
+    transition: background-color $animation-color-duration;
+  }
+
   tr {
     .first-row {
       transition: color $animation-color-duration;

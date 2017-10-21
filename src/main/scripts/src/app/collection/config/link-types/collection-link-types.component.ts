@@ -57,16 +57,12 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public ngOnInit(): void {
-    this.refreshOnUrlChange();
+    super.ngOnInit();
     this.fetchAllCollections();
     this.setUninitializedCollection();
-  }
 
-  private refreshOnUrlChange(): void {
-    this.route.url.forEach(params => {
-      this.getCurrentCollection()
-        .then(collection => collection && this.fetchLinkTypes(collection.code));
-    });
+    // TODO wait for collection to get fetched
+    this.fetchLinkTypes(this.collection.code);
   }
 
   private fetchAllCollections(): void {

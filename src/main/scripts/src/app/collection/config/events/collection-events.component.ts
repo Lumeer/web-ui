@@ -38,8 +38,8 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
   public events: Event[];
 
   constructor(private eventsService: EventsService,
-              collectionService: CollectionService,
               route: ActivatedRoute,
+              collectionService: CollectionService,
               notificationService: NotificationsService,
               workspaceService: WorkspaceService) {
     super(collectionService, route, notificationService, workspaceService);
