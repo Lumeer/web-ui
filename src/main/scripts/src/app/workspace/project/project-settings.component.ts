@@ -34,12 +34,12 @@ import {NotificationsService} from 'angular2-notifications/dist';
 export class ProjectSettingsComponent implements OnInit {
 
   private creation: boolean;
-  private project: Project;
+  public project: Project;
   private organizationCode: string;
-  private projectCode: string;
+  public projectCode: string;
   private originalProjectCode: string;
-  private collectionsCount: number;
-  private projectDescriptionEditable: boolean = false;
+  public collectionsCount: number;
+  public projectDescriptionEditable: boolean = false;
 
   @ViewChild('projectDescription')
   public projectDescription: ElementRef;

@@ -628,6 +628,7 @@
       </trans-unit>
       <trans-unit id="header.organization.name" datatype="html">
               <source>Edit name of the organization</source>
+              <target>Upraviť meno organizácie </target>
               <context-group purpose="location">
                 <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
                 <context context-type="linenumber">16</context>
@@ -635,6 +636,7 @@
             </trans-unit>
             <trans-unit id="organization.projects.count" datatype="html">
               <source>Number of projects in this organization</source>
+              <target>Počet projektov v tejto organizácii</target>
               <context-group purpose="location">
                 <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
                 <context context-type="linenumber">19</context>
@@ -642,6 +644,7 @@
             </trans-unit>
             <trans-unit id="header.organization.code" datatype="html">
               <source>Edit code of the organization</source>
+              <target>Upraviť kód organizácie </target>
               <context-group purpose="location">
                 <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
                 <context context-type="linenumber">33</context>
@@ -649,6 +652,7 @@
             </trans-unit>
             <trans-unit id="header.organization.remove" datatype="html">
               <source>Remove organization</source>
+              <target>Odstrániť organizáciu </target>
               <context-group purpose="location">
                 <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
                 <context context-type="linenumber">36</context>
@@ -656,6 +660,7 @@
             </trans-unit>
             <trans-unit id="header.project.name" datatype="html">
               <source>Edit name of the project</source>
+              <target>Upraviť meno projektu</target>
               <context-group purpose="location">
                 <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
                 <context context-type="linenumber">15</context>
@@ -663,6 +668,7 @@
             </trans-unit>
             <trans-unit id="collections.count" datatype="html">
               <source>Number of collections in this project</source>
+              <target>Počet kolekcií v tomto projekte</target>
               <context-group purpose="location">
                 <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
                 <context context-type="linenumber">18</context>
@@ -670,6 +676,7 @@
             </trans-unit>
             <trans-unit id="header.project.code" datatype="html">
               <source>Edit code of the project</source>
+              <target>Upraviť kód projektu</target>
               <context-group purpose="location">
                 <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
                 <context context-type="linenumber">30</context>
@@ -677,6 +684,7 @@
             </trans-unit>
             <trans-unit id="project.remove" datatype="html">
               <source>Remove project</source>
+              <target>Odstrániť projekt</target>
               <context-group purpose="location">
                 <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
                 <context context-type="linenumber">33</context>

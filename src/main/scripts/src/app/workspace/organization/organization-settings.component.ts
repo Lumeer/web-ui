@@ -33,12 +33,12 @@ import {NotificationsService} from 'angular2-notifications/dist';
 })
 export class OrganizationSettingsComponent implements OnInit {
 
-  private organization: Organization;
-  private organizationCode: string;
+  public organization: Organization;
+  public organizationCode: string;
 
   private originalOrganizationCode: string;
-  private projectsCount: number;
-  private organizationDescriptionEditable: boolean = false;
+  public projectsCount: number;
+  public organizationDescriptionEditable: boolean = false;
 
   @ViewChild('organizationDescription')
   public organizationDescription: ElementRef;

@@ -8,9 +8,6 @@
          *ngIf="projectCode" (click)="onDelete()"></i>
     </div>
   </div>
-  <div class="alert alert-danger" *ngIf="errorMessage">
-    <strong>Error!</strong> {{errorMessage}}
-  </div>
   <form #f="ngForm" class="form-horizontal" (ngSubmit)="onSave()">
     <div class="form-group">
       <label for="proj-code" class="col-sm-2 control-label">Code</label>
