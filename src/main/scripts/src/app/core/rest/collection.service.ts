@@ -35,17 +35,21 @@ import 'rxjs/add/operator/catch';
 export class CollectionService extends PermissionService {
 
   public createCollection(collection: Collection): Observable<HttpResponse<any>> {
-    return this.httpClient.post(this.apiPrefix(), this.toDto(collection), {observe: 'response'})
+    return this.httpClient.post(this.apiPrefix(), this.toDto(collection), {observe: 'response', responseType: 'text'})
       .catch(this.handleError);
   }
 
-  public updateCollection(collection: Collection): Observable<Collection> {
-    return this.httpClient.put(`${this.apiPrefix()}/${collection.code}`, this.toDto(collection))
+  public updateCollection(collection: Collection, collectionCode?: string): Observable<Collection> {
+    if (!collectionCode) {
+      collectionCode = collection.code;
+    }
+
+    return this.httpClient.put(`${this.apiPrefix()}/${collectionCode}`, this.toDto(collection))
       .catch(this.handleError);
   }
 
-  public removeCollection(collectionCode: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}`, {observe: 'response'})
+  public removeCollection(collectionCode: string): Observable<string> {
+    return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}`, {responseType: 'text'})
       .catch(this.handleError);
   }
 
@@ -79,13 +83,10 @@ export class CollectionService extends PermissionService {
       .catch(CollectionService.handleGlobalError);
   }
 
-  public removeAttribute(collectionCode: string, fullName: string): Observable<HttpResponse<any>> {
+  public removeAttribute(collectionCode: string, fullName: string): Observable<string> {
     return this.httpClient.delete(
       `${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`,
-      {
-        observe: 'response',
-        responseType: 'text'
-      }
+      {responseType: 'text'}
     );
   }
 
@@ -96,13 +97,19 @@ export class CollectionService extends PermissionService {
   }
 
   private toDto(collection: Collection): Collection {
+    let dtoAttributes = [];
+    if (collection.attributes) {
+      dtoAttributes = collection.attributes.map(this.attributeToDto);
+    }
+
+    // TODO send desctiption to the server too
     return {
       code: collection.code,
       name: collection.name,
       color: collection.color,
       icon: collection.icon,
       permissions: collection.permissions,
-      attributes: collection.attributes.map(this.attributeToDto)
+      attributes: dtoAttributes
     };
   }
 

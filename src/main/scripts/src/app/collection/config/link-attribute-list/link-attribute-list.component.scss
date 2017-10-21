@@ -1,4 +1,4 @@
-@import "../../../shared/_lumeer-variables";
+@import "../../../shared/variables";
 
 :host {
   display: block;
@@ -18,10 +18,10 @@
 
   .hover-darken-text-danger {
     transition: color $animation-color-duration;
-    color: $brand-danger;
+    color: $danger;
 
     &:hover {
-      color: darken($brand-danger, 25);
+      color: darken($danger, 25);
     }
   }
 
@@ -29,7 +29,7 @@
     transition: color $animation-color-duration;
 
     &:hover {
-      color: $brand-success;
+      color: $success;
     }
   }
 

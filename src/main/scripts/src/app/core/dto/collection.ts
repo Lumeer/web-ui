@@ -30,6 +30,7 @@ export interface Collection {
   name: string;
   icon: string;
   color: string;
+  description?: string; // TODO implement on backend and make compulsory
   permissions?: Permissions;
   attributes?: Attribute[];
   defaultAttribute?: Attribute; // TODO implement on backend

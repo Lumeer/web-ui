@@ -32,11 +32,13 @@ import {CollectionManageRoleGuard} from './collection-managed-role.guard';
 import {LinkAttributeListComponent} from './config/link-attribute-list/link-attribute-list.component';
 import {AttributeListComponent} from './config/attribute-list/attribute-list.component';
 import {CollectionTabComponent} from './config/collection-tab.component';
+import {PickerModule} from '../shared/picker/picker.module';
 
 @NgModule({
   imports: [
     SharedModule,
-    CollectionRoutingModule
+    CollectionRoutingModule,
+    PickerModule
   ],
   declarations: [
     AttributeListComponent,

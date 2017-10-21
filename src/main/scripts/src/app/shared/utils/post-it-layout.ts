@@ -18,6 +18,7 @@
  */
 
 import {Buffer} from './buffer';
+import {NgZone} from '@angular/core';
 
 /**
  * Provides Pinterest-like layout using minigrid library http://minigrid.js.org/
@@ -26,7 +27,19 @@ export class PostItLayout {
 
   private resizeListener;
 
-  constructor(private parameters: object) {
+  /**
+   * Lock making sure that at most only a few refresh request are sent..
+   * if the requests get too frequent, the updating locks for a certain time
+   */
+  private requestLock = 0;
+
+  private locked = false;
+
+  private readonly REQUEST_LOCK_LIMIT = 15;
+
+  private readonly UPDATE_LOCK_TIME = 2000;
+
+  constructor(private parameters: object, private zone?: NgZone) {
     const windowResizeRefreshBuffer = new Buffer(() => this.refresh(), 500);
     this.resizeListener = () => windowResizeRefreshBuffer.stageChanges();
 
@@ -34,7 +47,28 @@ export class PostItLayout {
   }
 
   public refresh(): void {
+    if (this.locked) {
+      return;
+    }
+
+    if (this.zone && this.requestLock > this.REQUEST_LOCK_LIMIT) {
+      this.zone.runOutsideAngular(() => {
+        window.setTimeout(() => this.locked = false, this.UPDATE_LOCK_TIME);
+      });
+
+      this.locked = true;
+      return;
+    }
+
     new window['Minigrid'](this.parameters).mount();
+
+    if (this.zone) {
+      this.requestLock++;
+
+      this.zone.runOutsideAngular(() =>
+        window.setTimeout(() => this.requestLock--, 750)
+      );
+    }
   }
 
   public destroy(): void {

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
@@ -73,6 +73,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
               private notificationService: NotificationsService,
               private importService: ImportService,
               private workspaceService: WorkspaceService,
+              private zone: NgZone,
               private modalService: BsModalService) {
   }
 
@@ -90,7 +91,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
       container: '.layout',
       item: '.layout-item',
       gutter: 10
-    });
+    }, this.zone);
   }
 
   private loadCollections() {
@@ -140,6 +141,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     newPostIt.initialized = false;
     newPostIt.collection = {
       name: '',
+      description: '',
       color: COLLECTION_NO_COLOR,
       icon: COLLECTION_NO_ICON
     };
@@ -310,4 +312,5 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
       return HtmlModifier.removeHtmlComments(html);
     }
   }
+
 }

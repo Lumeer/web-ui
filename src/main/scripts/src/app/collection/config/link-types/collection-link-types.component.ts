@@ -71,7 +71,6 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   private fetchAllCollections(): void {
     this.collectionService.getCollections()
-      .retry(3)
       .subscribe(
         collections => collections.forEach(collection => this.collections[collection.code] = collection),
         error => this.notificationService.error('Error', 'Failed fetching collections')
@@ -83,6 +82,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       code: COLLECTION_NO_CODE,
       icon: COLLECTION_NO_ICON,
       color: COLLECTION_NO_COLOR,
+      description: '',
       name: '',
       attributes: []
     };
@@ -95,7 +95,6 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   private getLinkTypes(collectionCode: string): void {
     this.linkTypeService.getLinkTypes(collectionCode)
-      .retry(3)
       .subscribe(
         linkTypes => {
           // TODO remove this whole block after service gets implemented on backend
@@ -191,7 +190,6 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     };
 
     this.linkTypeService.createLinkType(this.collection.code, emptyLinkType)
-      .retry(3)
       .subscribe(
         linkType => {
           this.linkTypes.push(linkType);
@@ -203,7 +201,6 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   public updateLinkType(linkType: LinkType, index: number): void {
     this.linkTypeService.updateLinkType(this.collection.code, this.initialName[linkType.toCollection], linkType)
-      .retry(3)
       .subscribe(
         linkType => {
           this.linkTypes[index] = linkType;
@@ -215,7 +212,6 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   public deleteLinkType(linkType: LinkType, idx: number): void {
     this.linkTypeService.removeLinkType(this.collection.code, linkType)
-      .retry(3)
       .subscribe(
         () => this.linkTypes.splice(idx, 1),
         error => this.notificationService.error('Error', 'Failed removing link type')

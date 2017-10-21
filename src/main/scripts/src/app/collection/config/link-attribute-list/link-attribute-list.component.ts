@@ -80,7 +80,6 @@ export class LinkAttributeListComponent {
       this.linkType.linkedAttributes.push(newAttribute);
 
       this.linkTypeService.updateLinkType(this.linkType.fromCollection, this.linkType.name, this.linkType)
-        .retry(3)
         .subscribe(
           linkType => {
             this.linkType = linkType;
@@ -110,7 +109,6 @@ export class LinkAttributeListComponent {
     }
 
     this.linkTypeService.updateLinkType(this.linkType.fromCollection, this.linkType.name, this.linkType)
-      .retry(3)
       .subscribe(
         linkType => {
           this.linkType = linkType;

@@ -48,6 +48,7 @@ export class CollectionTabComponent implements OnInit {
     if (!this.collection) {
       this.collection = {
         attributes: [],
+        description: '',
         icon: COLLECTION_NO_ICON,
         color: COLLECTION_NO_COLOR,
         name: ''

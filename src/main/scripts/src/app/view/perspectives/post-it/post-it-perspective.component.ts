@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
@@ -89,6 +89,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
               private documentService: DocumentService,
               private searchService: SearchService,
               private notificationService: NotificationsService,
+              private zone: NgZone,
               private modalService: BsModalService) {
   }
 
@@ -148,7 +149,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   }
 
   private documentsPerRow(): number {
-    return Math.floor(this.layoutElement.nativeElement.clientWidth / (220 /*Post-it width*/ + 10 /*Gutter*/));
+    return Math.floor(this.layoutElement.nativeElement.clientWidth / (215 /*Post-it width*/ + 10 /*Gutter*/));
   }
 
   private initializeLayout(): void {
@@ -156,7 +157,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
       container: '.layout',
       item: '.layout-item',
       gutter: 10
-    });
+    }, this.zone);
   }
 
   private queryPage(pageNumber: number): Query {
@@ -371,13 +372,13 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   }
 
   public showMore(perspective: HTMLDivElement): void {
+    this.fetchData();
+
     perspective.scroll({
       top: perspective.scrollHeight,
       left: 0,
       behavior: 'smooth'
     });
-
-    this.fetchData();
   }
 
   public onClick(event: MouseEvent): void {

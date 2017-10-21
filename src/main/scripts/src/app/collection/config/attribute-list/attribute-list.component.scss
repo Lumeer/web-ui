@@ -1,4 +1,4 @@
-@import "../../../shared/_lumeer-variables";
+@import "../../../shared/variables";
 
 :host {
 
@@ -46,7 +46,7 @@
       }
 
       &:hover {
-        color: $brand-success;
+        color: $success;
       }
     }
 

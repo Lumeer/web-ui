@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Component, OnInit, TemplateRef} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {NotificationsService} from 'angular2-notifications/dist';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
 import {Collection, COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
 import {CollectionService} from '../../core/rest/collection.service';
@@ -37,10 +38,16 @@ export class CollectionConfigComponent implements OnInit {
 
   public collection: Collection;
 
+  public initialCollectionCode: string;
+
+  public deleteConfirm: BsModalRef;
+
   constructor(private collectionService: CollectionService,
               private route: ActivatedRoute,
               private notificationService: NotificationsService,
-              private workspaceService: WorkspaceService) {
+              private workspaceService: WorkspaceService,
+              private router: Router,
+              private modalService: BsModalService) {
   }
 
   public ngOnInit(): void {
@@ -55,6 +62,7 @@ export class CollectionConfigComponent implements OnInit {
     if (!this.collection) {
       this.collection = {
         name: '',
+        description: 'Tasty collection data',
         code: COLLECTION_NO_CODE,
         icon: COLLECTION_NO_ICON,
         color: COLLECTION_NO_COLOR
@@ -69,9 +77,33 @@ export class CollectionConfigComponent implements OnInit {
       .map(paramMap => paramMap.get('collectionCode'))
       .switchMap(collectionCode => this.collectionService.getCollection(collectionCode))
       .subscribe(
-        collection => this.collection = collection,
-        error => this.notificationService.error('Error', `Failed fetching collection`)
+        collection => {
+          this.collection = collection;
+          this.initialCollectionCode = collection.code;
+        },
+        error => this.notificationService.error('Error', 'Failed fetching collection')
       );
+  }
+
+  public updateCollection(): void {
+    this.collectionService.updateCollection(this.collection).subscribe(
+      collection => this.collection = collection,
+      error => this.notificationService.error('Error', 'Failed updating collection')
+    );
+  }
+
+  public updateCollectionCode(): void {
+    this.collectionService.updateCollection(this.collection, this.initialCollectionCode).subscribe(
+      collection => this.collection = collection,
+      error => this.notificationService.error('Error', 'Failed updating collection code')
+    );
+  }
+
+  public removeCollection(): void {
+    this.collectionService.removeCollection(this.collection.code).subscribe(
+      _ => this.goToCollectionsPage(),
+      error => this.notificationService.error('Error', 'Failed removing collection')
+    );
   }
 
   public hasManageRole(collection: Collection): boolean {
@@ -81,6 +113,14 @@ export class CollectionConfigComponent implements OnInit {
   private hasRole(collection: Collection, role: string): boolean {
     return collection.permissions && collection.permissions.users
       .some((permission: Permission) => permission.roles.includes(role));
+  }
+
+  public goToCollectionsPage(): void {
+    this.router.navigate([this.workspacePath(), 'collections']);
+  }
+
+  public confirmDeletion(modal: TemplateRef<any>): void {
+    this.deleteConfirm = this.modalService.show(modal);
   }
 
   public workspacePath(): string {

@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {HttpErrorResponse} from '@angular/common/http';
 
 import {Organization} from '../dto/organization';
 import {Observable} from 'rxjs/Observable';
@@ -48,8 +48,8 @@ export class OrganizationService extends PermissionService {
     return this.httpClient.post(this.apiPrefix(), organization, {observe: 'response', responseType: 'text'});
   }
 
-  public editOrganization(code: string, organization: Organization): Observable<HttpResponse<object>> {
-    return this.httpClient.put(this.apiPrefix(code), organization, {observe: 'response'});
+  public editOrganization(code: string, organization: Organization): Observable<string> {
+    return this.httpClient.put(this.apiPrefix(code), organization, {responseType:'text'});
   }
 
   protected actualApiPrefix(): string {
