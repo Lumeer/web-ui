@@ -36,6 +36,7 @@ export class AttributeQueryItem implements QueryItem {
   public constraints: string[];
 
   public condition = '';
+  public conditionValue = '';
 
   public constructor(collection: Collection) {
     this.collectionCode = collection.code;
@@ -49,20 +50,23 @@ export class AttributeQueryItem implements QueryItem {
     this.constraints = attribute.constraints;
   }
 
-  public get fullText() {
-    return this.collectionName + ':' + this.attributeFullName;
-  }
-
   public get text() {
     return this.attributeFullName;
   }
 
   public get value() {
-    return this.collectionCode + ':' + this.attributeFullName;
+    return `${this.collectionCode}:${this.attributeFullName}:${this.condition}:${this.conditionValue}`;
   }
 
   public isComplete(): boolean {
-    return this.condition !== '';
+    return this.condition !== '' && this.conditionValue != '';
+  }
+
+  public get fullCondition() {
+    if (this.conditionValue !== '') {
+      return `${this.condition} ${this.conditionValue}`
+    }
+    return this.condition;
   }
 
   public toCollectionQueryItem(): CollectionQueryItem {

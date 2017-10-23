@@ -32,10 +32,6 @@ export class FulltextQueryItem implements QueryItem {
     this.text = text;
   }
 
-  public get fullText(): string {
-    return this.text;
-  }
-
   public get value(): string {
     return this.text;
   }

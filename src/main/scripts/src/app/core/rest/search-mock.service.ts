@@ -44,6 +44,8 @@ export class SearchMockService {
   private attributeNames = ['Name', 'Title', 'Description', 'Valid', 'Created',
     'Modified', 'Subject', 'Valid From', 'Noise', 'Decrement', 'Nanana'];
 
+  private conditions = ['=', '!=', '<', '>', '~'];
+
   public suggest(text: string, shouldSearchForCollections: boolean = false): Observable<Suggestions> {
     const suggestText = text.toLowerCase();
     if (suggestText.includes(':')) {
@@ -52,7 +54,7 @@ export class SearchMockService {
       const attributeName = split[1].trim();
       let collections: Collection[] = [];
       if (shouldSearchForCollections) {
-        collections = this.getCollections(collectionName);
+        collections = this.getCollections(attributeName);
       }
       return Observable.of<Suggestions>({
         attributes: this.getAttributes(this.getCollection(collectionName), attributeName),
@@ -65,6 +67,34 @@ export class SearchMockService {
       collections: this.getCollections(suggestText),
       views: []
     });
+  }
+
+  public searchCollections(codes: string[]): Collection[] {
+    return this.collections.filter(collection => codes.find(code => code === collection.code));
+  }
+
+  public suggestConditions(): Observable<string[]> {
+    return Observable.of(this.conditions);
+  }
+
+  public parseCondition(text: string): string[]{
+    const trimmed = text.trim();
+    const prefixLength = this.conditionPrefixLength(trimmed);
+    if(prefixLength > 0 && trimmed.length > prefixLength){
+      const condition = trimmed.substring(0, prefixLength);
+      const value = trimmed.substring(prefixLength, trimmed.length).trim();
+      return [condition,value];
+    }
+    return [trimmed, ''];
+  }
+
+  private conditionPrefixLength(text: string): number {
+    for (let condition of this.conditions) {
+      if (text.startsWith(condition)) {
+        return condition.length;
+      }
+    }
+    return -1;
   }
 
   private getCollection(text: string): Collection {

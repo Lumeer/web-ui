@@ -4,6 +4,7 @@
   background-color: #faeabb;
   border-radius: $border-radius-base;
   white-space: nowrap;
+  border: 2px solid;
 
   &:hover .remove {
     opacity: 1;
@@ -14,11 +15,12 @@
     cursor: pointer;
     color: black;
     transition: opacity $animation-duration;
-
-    &:hover {
-      color: $brand-success;
-    }
   }
+
+}
+
+[contenteditable]:focus {
+  outline: 0 solid transparent;
 }
 
 .suggestions {
@@ -37,7 +39,7 @@
 }
 
 .selected {
-  background-color: $brand-light;
+  background-color: $light;
 }
 
 .search-button {

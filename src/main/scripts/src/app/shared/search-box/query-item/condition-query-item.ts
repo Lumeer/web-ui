@@ -17,14 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {until} from 'selenium-webdriver';
+import {QueryItem} from './query-item';
+import {QueryItemType} from './query-item-type';
 
-export enum QueryItemType {
+export class ConditionQueryItem implements QueryItem{
 
-  Attribute = 'Attribute',
-  Collection = 'Collection',
-  Fulltext = 'Fulltext',
-  View = 'View',
-  Condition = 'Condition'
+  public text: string;
+  public value: string;
+  public type: QueryItemType = QueryItemType.Condition;
+
+  public constructor(condition: string){
+    this.text = condition;
+    this.value = condition;
+  }
+
+  public isComplete(): boolean {
+    return true;
+  }
 
 }
