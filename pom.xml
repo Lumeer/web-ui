@@ -66,6 +66,9 @@
                         <argument>build</argument>
                      </arguments>
                      <workingDirectory>${basedir}/src/main/scripts</workingDirectory>
+                     <environmentVariables>
+                        <AOT>true</AOT>
+                     </environmentVariables>
                   </configuration>
                   <goals>
                      <goal>exec</goal>
