@@ -22,13 +22,14 @@ import {ActivatedRoute} from '@angular/router';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
-import {Collection, COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../core/dto/collection';
+import {Collection, COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../../core/dto/collection';
 import {CollectionTabComponent} from '../collection-tab.component';
-import {LinkTypeService} from '../../../core/rest/link-type.service';
-import {LinkType} from '../../../core/dto/link-type';
-import {CollectionService} from '../../../core/rest/collection.service';
-import {WorkspaceService} from '../../../core/workspace.service';
-import {LinkedAttribute} from '../../../core/dto/linked-attribute';
+import {LinkTypeService} from '../../../../core/rest/link-type.service';
+import {LinkType} from '../../../../core/dto/link-type';
+import {CollectionService} from '../../../../core/rest/collection.service';
+import {WorkspaceService} from '../../../../core/workspace.service';
+import {LinkedAttribute} from '../../../../core/dto/linked-attribute';
+import {CollectionSelectService} from '../../../service/collection-select.service';
 
 @Component({
   selector: 'collection-link-types',
@@ -49,11 +50,18 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   public collections: { [collectionCode: string]: Collection } = {};
 
   constructor(private linkTypeService: LinkTypeService,
-              collectionService: CollectionService,
-              route: ActivatedRoute,
-              notificationService: NotificationsService,
-              workspaceService: WorkspaceService) {
-    super(collectionService, route, notificationService, workspaceService);
+              protected collectionService: CollectionService,
+              protected collectionSelectService: CollectionSelectService,
+              protected route: ActivatedRoute,
+              protected notificationService: NotificationsService,
+              protected workspaceService: WorkspaceService) {
+    super(
+      collectionService,
+      collectionSelectService,
+      route,
+      notificationService,
+      workspaceService
+    );
   }
 
   public ngOnInit(): void {

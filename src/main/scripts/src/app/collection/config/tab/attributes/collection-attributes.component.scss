@@ -1,12 +1,8 @@
-@import "../../../shared/variables";
+@import "../../../../shared/variables";
 
 :host {
 
   display: block;
-
-  input {
-    outline: none;
-  }
 
   .search {
     transition: background-color $animation-color-duration, border-color $animation-color-duration;
@@ -33,10 +29,6 @@
 
   table {
     table-layout: fixed;
-  }
-
-  thead {
-    transition: background-color $animation-color-duration;
   }
 
   tr {

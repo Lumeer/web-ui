@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute} from '../../../core/dto/attribute';
+import {Attribute} from '../../../../core/dto/attribute';
 
 export interface ConfiguredAttribute extends Attribute {
 

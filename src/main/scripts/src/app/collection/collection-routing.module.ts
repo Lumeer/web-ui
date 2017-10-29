@@ -23,10 +23,10 @@ import {RouterModule, Routes} from '@angular/router';
 import {CollectionListComponent} from './list/collection-list.component';
 import {CollectionComponent} from './collection.component';
 import {CollectionConfigComponent} from './config/collection-config.component';
-import {CollectionAttributesComponent} from './config/attributes/collection-attributes.component';
-import {CollectionEventsComponent} from './config/events/collection-events.component';
-import {CollectionAccessRightsComponent} from './config/access-rights/collection-access-rights.component';
-import {CollectionLinkTypesComponent} from './config/link-types/collection-link-types.component';
+import {CollectionAttributesComponent} from './config/tab/attributes/collection-attributes.component';
+import {CollectionEventsComponent} from './config/tab/events/collection-events.component';
+import {CollectionAccessRightsComponent} from './config/tab/access-rights/collection-access-rights.component';
+import {CollectionLinkTypesComponent} from './config/tab/link-types/collection-link-types.component';
 import {CollectionManageRoleGuard} from './collection-managed-role.guard';
 
 const collectionRoutes: Routes = [

@@ -18,12 +18,12 @@
  */
 
 import {Component, Input} from '@angular/core';
-import {LinkType} from '../../../core/dto/link-type';
+import {LinkType} from '../../../../core/dto/link-type';
 import {NotificationsService} from 'angular2-notifications/dist';
-import {LinkTypeService} from '../../../core/rest/link-type.service';
-import {LinkedAttribute} from '../../../core/dto/linked-attribute';
+import {LinkTypeService} from '../../../../core/rest/link-type.service';
+import {LinkedAttribute} from '../../../../core/dto/linked-attribute';
 import * as Const from '../constraints';
-import {Collection} from '../../../core/dto/collection';
+import {Collection} from '../../../../core/dto/collection';
 
 @Component({
   selector: 'link-attribute-list',
@@ -53,7 +53,6 @@ export class LinkAttributeListComponent {
 
   constructor(private notificationService: NotificationsService,
               private linkTypeService: LinkTypeService) {
-
   }
 
   public attributes(): LinkedAttribute[] {

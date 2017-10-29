@@ -24,9 +24,9 @@ import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {LumeerError} from '../error/lumeer.error';
 import {WorkspaceService} from '../workspace.service';
 import {Observable} from 'rxjs/Observable';
-import {EventFireReason} from '../../collection/config/events/event-fire-reason';
-import {sortByAttribute, updateAutomaticLinks} from '../../collection/config/events/event-callback';
-import {ascending, documentStickyness} from '../../collection/config/events/event-parameter';
+import {EventFireReason} from '../../collection/config/tab/events/event-fire-reason';
+import {sortByAttribute, updateAutomaticLinks} from '../../collection/config/tab/events/event-callback';
+import {ascending, documentStickyness} from '../../collection/config/tab/events/event-parameter';
 import {Event} from '../dto/Event';
 
 // TODO implement on backend

@@ -18,15 +18,17 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
 import {CollectionTabComponent} from '../collection-tab.component';
-import {EventsService} from '../../../core/rest/events.service';
-import {WorkspaceService} from '../../../core/workspace.service';
-import {CollectionService} from '../../../core/rest/collection.service';
-import {Event} from '../../../core/dto/Event';
+import {EventsService} from '../../../../core/rest/events.service';
+import {WorkspaceService} from '../../../../core/workspace.service';
+import {CollectionService} from '../../../../core/rest/collection.service';
+import {Event} from '../../../../core/dto/Event';
+import {CollectionSelectService} from "../../../service/collection-select.service";
+import {BsModalService} from "ngx-bootstrap";
 
 @Component({
   selector: 'collection-events',
@@ -38,11 +40,18 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
   public events: Event[];
 
   constructor(private eventsService: EventsService,
-              route: ActivatedRoute,
-              collectionService: CollectionService,
-              notificationService: NotificationsService,
-              workspaceService: WorkspaceService) {
-    super(collectionService, route, notificationService, workspaceService);
+              protected collectionService: CollectionService,
+              protected collectionSelectService: CollectionSelectService,
+              protected route: ActivatedRoute,
+              protected notificationService: NotificationsService,
+              protected workspaceService: WorkspaceService) {
+    super(
+      collectionService,
+      collectionSelectService,
+      route,
+      notificationService,
+      workspaceService
+    );
   }
 
   public ngOnInit(): void {
@@ -56,6 +65,10 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
         events => this.events = events,
         error => this.notificationService.error('Error', 'Failed fetching Events')
       );
+  }
+
+  public removeFireWhenFromEvent(event, on): void {
+
   }
 
 }

@@ -1,5 +1,6 @@
 <div class="container-fluid px-5 whole"
-     [style.opacity]="collection ? '1' : '0'">
+     [style.opacity]="collection ? '1' : '0'"
+     *ngIf="collection">
   <div class="d-flex flex-row justify-content-start">
     <a class="fa fa-arrow-left text-success" (click)="goToCollectionsPage()"></a>
     <i class="color-class fa-fw {{ collection.icon }} collection-icon"
@@ -69,7 +70,7 @@
   </div>
 </div>
 
-<ul class="nav nav-tabs px-5">
+<ul class="nav nav-tabs px-5" *ngIf="collection">
   <li role="presentation" class="nav-item">
     <a [routerLink]="['attributes']"
        routerLinkActive="active"
@@ -105,7 +106,7 @@
 </ul>
 
 <div class="container-fluid my-4">
-  <router-outlet></router-outlet>
+  <router-outlet *ngIf="collection"></router-outlet>
 </div>
 
 <!-- modal -->

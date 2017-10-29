@@ -61,7 +61,7 @@ export class LinkTypeService {
     LinkTypeService.link3.fromCollection = collectionCode;
 
     return Observable.of([LinkTypeService.link1, LinkTypeService.link2, LinkTypeService.link3]
-      .filter(linkType => linkType.toCollection !== collectionCode));
+      .filter(linkType => collectionCode !== linkType.toCollection));
   }
 
   public createLinkType(collectionCode: string, linkType: LinkType): Observable<LinkType> {

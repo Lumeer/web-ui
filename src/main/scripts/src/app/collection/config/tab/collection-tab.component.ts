@@ -22,12 +22,10 @@ import {ActivatedRoute} from '@angular/router';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
-import {Collection} from '../../core/dto/collection';
-import {CollectionService} from '../../core/rest/collection.service';
-import {WorkspaceService} from '../../core/workspace.service';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/take';
-import {CollectionConfigComponent} from './collection-config.component';
+import {Collection} from '../../../core/dto/collection';
+import {CollectionService} from '../../../core/rest/collection.service';
+import {WorkspaceService} from '../../../core/workspace.service';
+import {CollectionSelectService} from '../../service/collection-select.service';
 
 // Class can't be abstract because of an issue with compiler https://github.com/angular/angular/issues/13590
 @Component({template: ''})
@@ -36,13 +34,14 @@ export class CollectionTabComponent implements OnInit {
   public collection: Collection;
 
   constructor(protected collectionService: CollectionService,
+              protected collectionSelectService: CollectionSelectService,
               protected route: ActivatedRoute,
               protected notificationService: NotificationsService,
               protected workspaceService: WorkspaceService) {
   }
 
   public ngOnInit(): void {
-    this.collection = CollectionConfigComponent.configCollection;
+    this.collection = this.collectionSelectService.getSelected();
   }
 
   protected workspacePath(): string {

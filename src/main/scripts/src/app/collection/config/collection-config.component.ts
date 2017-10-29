@@ -23,13 +23,15 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationsService} from 'angular2-notifications/dist';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
-import {Collection, COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
+import {Collection} from '../../core/dto/collection';
 import {CollectionService} from '../../core/rest/collection.service';
 import {WorkspaceService} from '../../core/workspace.service';
 import {Role} from '../../shared/permissions/role';
 import {Permission} from '../../core/dto/permission';
 import {QueryConverter} from '../../shared/utils/query-converter';
 import {Query} from '../../core/dto/query';
+import {CollectionSelectService} from '../service/collection-select.service';
+import 'rxjs/add/operator/do';
 
 @Component({
   selector: 'collection-config',
@@ -38,22 +40,7 @@ import {Query} from '../../core/dto/query';
 })
 export class CollectionConfigComponent implements OnInit {
 
-  public static configCollection: Collection = {
-    code: COLLECTION_NO_CODE,
-    icon: COLLECTION_NO_ICON,
-    color: COLLECTION_NO_COLOR,
-    description: 'Tasty collection data',
-    name: '',
-    attributes: []
-  };
-
-  get collection(): Collection {
-    return CollectionConfigComponent.configCollection;
-  }
-
-  set collection(value: Collection) {
-    CollectionConfigComponent.configCollection = value;
-  }
+  public collection: Collection;
 
   public initialCollectionCode: string;
 
@@ -62,6 +49,7 @@ export class CollectionConfigComponent implements OnInit {
   public collectionDescriptionEditable: boolean;
 
   constructor(private collectionService: CollectionService,
+              private collectionSelectService: CollectionSelectService,
               private route: ActivatedRoute,
               private notificationService: NotificationsService,
               private workspaceService: WorkspaceService,
@@ -78,40 +66,35 @@ export class CollectionConfigComponent implements OnInit {
   }
 
   private refreshCollection(): void {
-    this.getCollectionFromParams();
-  }
-
-  private getCollectionFromParams(): void {
     this.route.paramMap
       .map(paramMap => paramMap.get('collectionCode'))
-      .switchMap(collectionCode => this.collectionService.getCollection(collectionCode))
+      .switchMap(collectionCode => this.collectionSelectService.select(collectionCode))
+      .do(collection => this.collection = collection)
       .subscribe(
-        collection => {
-          this.collection.name = collection.name;
-          this.collection.code = collection.code;
-          this.collection.color = collection.color;
-          this.collection.icon = collection.icon;
-          this.collection.description = collection.description;
-          this.collection.permissions = collection.permissions;
-          this.collection.attributes = collection.attributes;
-          this.collection.defaultAttribute = collection.defaultAttribute;
-          this.collection.documentsCount = collection.documentsCount;
-          this.initialCollectionCode = collection.code;
-        },
-        error => this.notificationService.error('Error', 'Failed fetching collection')
+        collection => this.initialCollectionCode = collection.code,
+        error => {this.notificationService.error('Error', 'Failed fetching collection'); console.log(error);}
       );
   }
 
   public updateCollection(): void {
-    this.collectionService.updateCollection(this.collection).subscribe(
-      collection => this.collection = collection,
-      error => this.notificationService.error('Error', 'Failed updating collection')
-    );
+    this.collectionService.updateCollection(this.collection)
+      .switchMap(collection => this.collectionSelectService.selectCollection(collection))
+      .subscribe(
+        collection => this.initialCollectionCode = collection.code,
+        error => this.notificationService.error('Error', 'Failed updating collection')
+      );
   }
 
   public updateCollectionCode(): void {
-    this.collectionService.updateCollection(this.collection, this.initialCollectionCode).subscribe(
-      collection => this.collection = collection,
+    this.collectionService.updateCollection(this.collection, this.initialCollectionCode)
+      .switchMap(collection => this.collectionSelectService.selectCollection(collection))
+      .subscribe(
+      collection => {
+        const newPath = this.router.url.replace(this.initialCollectionCode, this.collection.code);
+        this.router.navigate([newPath]);
+
+        this.initialCollectionCode = collection.code;
+      },
       error => this.notificationService.error('Error', 'Failed updating collection code')
     );
   }
@@ -152,4 +135,5 @@ export class CollectionConfigComponent implements OnInit {
   public onCollectionDescriptionEdit(): void {
     this.collectionDescriptionEditable = true;
   }
+
 }

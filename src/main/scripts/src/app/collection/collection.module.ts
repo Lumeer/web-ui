@@ -24,15 +24,16 @@ import {CollectionListComponent} from './list/collection-list.component';
 import {CollectionComponent} from './collection.component';
 import {CollectionRoutingModule} from './collection-routing.module';
 import {CollectionConfigComponent} from './config/collection-config.component';
-import {CollectionLinkTypesComponent} from './config/link-types/collection-link-types.component';
-import {CollectionAttributesComponent} from './config/attributes/collection-attributes.component';
-import {CollectionAccessRightsComponent} from './config/access-rights/collection-access-rights.component';
-import {CollectionEventsComponent} from './config/events/collection-events.component';
+import {CollectionLinkTypesComponent} from './config/tab/link-types/collection-link-types.component';
+import {CollectionAttributesComponent} from './config/tab/attributes/collection-attributes.component';
+import {CollectionAccessRightsComponent} from './config/tab/access-rights/collection-access-rights.component';
+import {CollectionEventsComponent} from './config/tab/events/collection-events.component';
 import {CollectionManageRoleGuard} from './collection-managed-role.guard';
-import {LinkAttributeListComponent} from './config/link-attribute-list/link-attribute-list.component';
-import {AttributeListComponent} from './config/attribute-list/attribute-list.component';
-import {CollectionTabComponent} from './config/collection-tab.component';
+import {LinkAttributeListComponent} from './config/tab/link-attribute-list/link-attribute-list.component';
+import {AttributeListComponent} from './config/tab/attribute-list/attribute-list.component';
+import {CollectionTabComponent} from './config/tab/collection-tab.component';
 import {PickerModule} from '../shared/picker/picker.module';
+import {CollectionSelectService} from './service/collection-select.service';
 
 @NgModule({
   imports: [
@@ -53,7 +54,8 @@ import {PickerModule} from '../shared/picker/picker.module';
     CollectionLinkTypesComponent
   ],
   providers: [
-    CollectionManageRoleGuard
+    CollectionManageRoleGuard,
+    CollectionSelectService
   ]
 })
 export class CollectionModule {

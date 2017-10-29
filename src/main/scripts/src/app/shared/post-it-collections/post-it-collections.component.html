@@ -49,7 +49,7 @@
             <a *ngIf="hasManageRole(postIt.collection)"
                title="Access Rights" i18n-title="@@collection.button.permissions"
                class="rounded-left text-success"
-               [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'accessrights']">
+               [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'permissions']">
               <i class="fa fa-fw fa-users" aria-hidden="true"></i></a>
 
             <a title="Icon picker" i18n-title="@@collection.button.icon"
