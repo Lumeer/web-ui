@@ -17,22 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, TemplateRef} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-
 import {Project} from '../../core/dto/project';
 import {ProjectService} from '../../core/rest/project.service';
 import {HttpResponse} from '@angular/common/http';
 import {CollectionService} from '../../core/rest/collection.service';
-import {Collection} from "../../core/dto/collection";
+import {Collection} from '../../core/dto/collection';
 import {NotificationsService} from 'angular2-notifications/dist';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
 @Component({
   templateUrl: './project-settings.component.html',
   styleUrls: ['./project-settings.component.scss']
 })
 export class ProjectSettingsComponent implements OnInit {
-
+  public deleteConfirm: BsModalRef;
   private creation: boolean;
   public project: Project;
   private organizationCode: string;
@@ -43,12 +43,14 @@ export class ProjectSettingsComponent implements OnInit {
 
   @ViewChild('projectDescription')
   public projectDescription: ElementRef;
+  private originalProjectName: string;
 
   constructor(private projectService: ProjectService,
               private route: ActivatedRoute,
               private router: Router,
               private collectionService: CollectionService,
-              private notificationService: NotificationsService) {
+              private notificationService: NotificationsService,
+              private modalService: BsModalService) {
   }
 
   public ngOnInit(): void {
@@ -64,7 +66,7 @@ export class ProjectSettingsComponent implements OnInit {
       this.organizationCode = params.get('organizationCode');
       this.projectCode = params.get('projectCode');
       this.getProject();
-      this.originalProjectCode = this.projectCode;
+      this.originalProjectCode = this.projectCode
     });
   }
 
@@ -74,6 +76,7 @@ export class ProjectSettingsComponent implements OnInit {
         (project: Project) => {
           this.project = project;
           this.getNumberOfCollections();
+          this.originalProjectName =this.project.name;
         },
         error => {
           this.notificationService.error('Error', 'Error getting project');
@@ -83,10 +86,32 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public updateProject(): void {
-    this.projectService.editProject(this.organizationCode, this.projectCode, this.project).subscribe();
+    this.projectService.editProject(this.organizationCode, this.projectCode, this.project).subscribe(success => this.notificationService
+        .success('Success', 'Project was successfully updated'),
+      error => {
+        this.notificationService.error('Error', 'Error updating project');
+      });
+  }
+
+  public updateProjectName(): void {
+    if (this.project.name === this.originalProjectName) {
+      return;
+    }
+    this.projectService.editProject(this.organizationCode, this.projectCode, this.project)
+      .subscribe(success => {
+          this.notificationService
+            .success('Success', 'Project\'s name was successfully updated');
+          this.originalProjectName = this.project.name;
+        },
+        error => {
+          this.notificationService.error('Error', 'Error updating project ');
+        });
   }
 
   public updateProjectCode() {
+    if (this.projectCode === this.originalProjectCode) {
+      return;
+    }
     this.projectService.editProject(this.organizationCode, this.originalProjectCode, this.project).subscribe((response: HttpResponse<Object>) => {
         this.originalProjectCode = this.project.code;
         this.projectCode = this.project.code;
@@ -94,7 +119,9 @@ export class ProjectSettingsComponent implements OnInit {
       },
       error => {
         this.notificationService.error('Error', 'Error updating project\'s code');
-      }
+      },
+      () => this.notificationService
+        .success('Success', 'Project\'s code was successfully updated')
     );
   }
 
@@ -133,6 +160,10 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public initialized(): boolean {
-    return this.project.code !== '' && this.project.name !== '' && this.project.icon !== '' && this.project.color !== '';
+    return !(this.project.code === '' && this.project.name === '' && this.project.icon === '' && this.project.color === '');
+  }
+
+  public confirmDeletion(modal: TemplateRef<any>): void {
+    this.deleteConfirm = this.modalService.show(modal);
   }
 }

@@ -1,21 +1,27 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col"></div>
-    <div class="whole col-sm-9 col-md-10 col-lg-11" [style.opacity]="initialized() ? '1' : '0'">
+    <div class="whole col-12 col-lg-11 col-xl-10" [style.opacity]="initialized() ? '1' : '0'">
       <div class="d-flex flex-row justify-content-start">
         <a class="fa fa-arrow-left " [routerLink]="['/workspace']  "></a>
         <i class="color-class fa-fw {{ project.icon }} project-icon " [style.color]="project.color"
            data-toggle="dropdown"></i>
-        <div class="dropdown-menu">
-          <color-picker class="dropdown-item" [(color)]="project.color"
+        <div  *ngIf="initialized()" class="dropdown-menu">
+          <color-picker  class="dropdown-item" [(color)]="project.color"
                         (selectedChange)="updateProject()"></color-picker>
           <div class="dropdown-divider"></div>
           <icon-picker class="dropdown-item" [(icon)]="project.icon"
                        (selectedChange)="updateProject()"></icon-picker>
         </div>
 
-        <input class="color-class name" [(ngModel)]="project.name" (blur)="updateProject()"
-               [style.color]="project.color" i18n-title="@@header.project.name" title="Edit name of the project">
+        <input class="color-class name" [(ngModel)]="project.name" (blur)="name.valid && updateProjectName()"
+               name="name"
+               [style.color]="project.color" i18n-title="@@header.project.name" title="Edit name of the project"
+               #name="ngModel" required minlength="3" maxlength="24">
+
+        <small class="text-danger" [hidden]="name.valid || (name.pristine  )">
+          Name is required (from 3 to 24 characters).
+        </small>
 
         <div class="float-right document-count color-class ml-auto">
           <a class="count" i18n-title="@@collections.count" title="Number of collections in this project"
@@ -24,26 +30,34 @@
             <i class="far fa-file" aria-hidden="true"></i>
           </a>
         </div>
-
       </div>
 
       <div class="d-flex flex-row justify-content-start">
 
-        <input class="color-class code" [(ngModel)]="project.code" (blur)="updateProjectCode()"
-               [style.color]="project.color" i18n-title="@@header.project.code" title="Edit code of the project">
+        <input class="color-class code" [(ngModel)]="project.code"
+               name="code"
+               (blur)=" code.valid && updateProjectCode()"
+               [style.color]="project.color" i18n-title="@@header.project.code" title="Edit code of the project"
+               #code="ngModel" required minlength="3" maxlength="6">
 
-        <i class="fa fa-times pull-right text-danger icon ml-auto" aria-hidden="true" i18n-title="@@project.remove"
-           title="Remove project"
-           *ngIf="projectCode" (click)="onDelete()"></i>
+        <small class="text-danger" [hidden]="code.valid || (code.pristine  )">
+          Code is required (from 3 to 6 characters).
+        </small>
+
+        <a (click)="confirmDeletion(modal)"
+           class="text-danger rounded-left ml-auto"
+           title="Remove organization">
+          <i class="fa fa-fw fa-times" aria-hidden="true"></i>
+        </a>
 
       </div>
 
-      <div class="description d-inline-flex py-3">
-        <div class="pl-2">
+      <div class="description d-flex py-3">
+        <div>
           <i class="fas fa fa-pencil edit"
              (click)="onProjectDescriptionEdit()"></i>
         </div>
-        <div class="text" [attr.contenteditable]="projectDescriptionEditable"
+        <div class="text flex-grow" [attr.contenteditable]="projectDescriptionEditable"
              (blur)="onProjectDescriptionBlur(projectDescription.textContent)"
              #projectDescription>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
@@ -67,3 +81,35 @@
   </li>
 </ul>
 <router-outlet></router-outlet>
+
+<ng-template #modal>
+  <div class="modal-header bg-danger text-white rounded-top">
+    <h5 class="modal-title"
+        i18n="@@project.delete.dialog.title">Delete Project?</h5>
+    <button type="button" class="close" aria-label="Close" (click)="deleteConfirm.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p i18n="@@project.delete.dialog.body">Deleting an project will permanently remove it. All projects stored
+      inside the project will be lost.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-secondary"
+            (click)="deleteConfirm.hide()"
+            i18n="@@project.delete.dialog.button.no">No, Keep Project
+    </button>
+    <button type="button"
+            class="btn btn-danger"
+            (click)="deleteConfirm.hide(); onDelete()"
+            i18n="@@project.delete.dialog.button.yes">Yes, Delete Project
+    </button>
+  </div>
+</ng-template>
+
+<a (click)="confirmDeletion(modal)"
+   class="text-danger rounded-left"
+   title="Remove project" i18n-title="@@project.button.remove">
+  <i class="fa fa-fw fa-times" aria-hidden="true"></i>
+</a>

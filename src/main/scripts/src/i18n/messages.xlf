@@ -333,56 +333,111 @@
         <source>Edit name of the organization</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="organization.projects.count" datatype="html">
         <source>Number of projects in this organization</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="header.organization.code" datatype="html">
         <source>Edit code of the organization</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="header.organization.remove" datatype="html">
-        <source>Remove organization</source>
+      <trans-unit id="organization.delete.dialog.title" datatype="html">
+        <source>Delete Organization?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="organization.delete.dialog.body" datatype="html">
+        <source>Deleting an organization will permanently remove it. All projects stored
+      inside the organization will be lost.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+          <context context-type="linenumber">96</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="organization.delete.dialog.button.no" datatype="html">
+        <source>No, Keep Organization
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+          <context context-type="linenumber">103</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="organization.delete.dialog.button.yes" datatype="html">
+        <source>Yes, Delete Organization
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit id="header.project.name" datatype="html">
         <source>Edit name of the project</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="collections.count" datatype="html">
         <source>Number of collections in this project</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
       <trans-unit id="header.project.code" datatype="html">
         <source>Edit code of the project</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="project.remove" datatype="html">
+      <trans-unit id="project.delete.dialog.title" datatype="html">
+        <source>Delete Project?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+          <context context-type="linenumber">88</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="project.delete.dialog.body" datatype="html">
+        <source>Deleting an project will permanently remove it. All projects stored
+      inside the project will be lost.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+          <context context-type="linenumber">94</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="project.delete.dialog.button.no" datatype="html">
+        <source>No, Keep Project
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="project.delete.dialog.button.yes" datatype="html">
+        <source>Yes, Delete Project
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+          <context context-type="linenumber">106</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="project.button.remove" datatype="html">
         <source>Remove project</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.chooser.header" datatype="html">
