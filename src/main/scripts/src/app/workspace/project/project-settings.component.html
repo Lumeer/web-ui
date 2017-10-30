@@ -6,8 +6,8 @@
         <a class="fa fa-arrow-left " [routerLink]="['/workspace']  "></a>
         <i class="color-class fa-fw {{ project.icon }} project-icon " [style.color]="project.color"
            data-toggle="dropdown"></i>
-        <div  *ngIf="initialized()" class="dropdown-menu">
-          <color-picker  class="dropdown-item" [(color)]="project.color"
+        <div *ngIf="initialized()" class="dropdown-menu">
+          <color-picker class="dropdown-item" [(color)]="project.color"
                         (selectedChange)="updateProject()"></color-picker>
           <div class="dropdown-divider"></div>
           <icon-picker class="dropdown-item" [(icon)]="project.icon"
@@ -46,7 +46,7 @@
 
         <a (click)="confirmDeletion(modal)"
            class="text-danger rounded-left ml-auto"
-           title="Remove organization">
+           title="Remove project">
           <i class="fa fa-fw fa-times" aria-hidden="true"></i>
         </a>
 
@@ -68,19 +68,18 @@
           vel augue.
         </div>
       </div>
+      <ul class="nav nav-tabs">
+        <li role="presentation" class="nav-item">
+          <a routerLink="permissions" routerLinkActive="active" class="nav-link">
+            Permissions
+          </a>
+        </li>
+      </ul>
+      <router-outlet></router-outlet>
     </div>
     <div class="col"></div>
   </div>
 </div>
-
-<ul class="nav nav-tabs pl-1">
-  <li role="presentation" class="nav-item">
-    <a routerLink="permissions" routerLinkActive="active" class="nav-link">
-      Permissions
-    </a>
-  </li>
-</ul>
-<router-outlet></router-outlet>
 
 <ng-template #modal>
   <div class="modal-header bg-danger text-white rounded-top">
@@ -107,9 +106,3 @@
     </button>
   </div>
 </ng-template>
-
-<a (click)="confirmDeletion(modal)"
-   class="text-danger rounded-left"
-   title="Remove project" i18n-title="@@project.button.remove">
-  <i class="fa fa-fw fa-times" aria-hidden="true"></i>
-</a>
