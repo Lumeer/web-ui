@@ -1,20 +1,37 @@
 <div class="form-control d-flex w-100 p-0">
   <div class="d-flex flex-wrap w-100 pb-1 pr-1">
-    <div class="query-item py-1 px-2 mt-1 ml-1"
-         *ngFor="let queryItem of queryItems"
-         [style.background-color]="queryItem.color">
-      <i *ngIf="queryItem.icon" class="fa {{queryItem.icon}} mr-1" aria-hidden="true"></i>
-      <span>{{queryItem.text}}</span>
+    <div class="d-inline-flex query-item py-1 px-2 mt-1 ml-1 align-items-center"
+         *ngFor="let queryItem of queryItems; let ix = index"
+         [style.border-color]="queryItem.isComplete() ? 'transparent' : 'red'"
+         [ngStyle]="{'background-color': queryItem.color}">
+      <i *ngIf="queryItem.icon" class="{{queryItem.icon}} mr-1" aria-hidden="true"></i>
+      <span class="mr-1" [class.font-weight-bold]="isCollectionItem(queryItem)">{{queryItem.text}}</span>
+      <div #queryItemCondition id="{{ix}}"
+           class="mr-1 text-nowrap d-inline-flex"
+           *ngIf="queryItem.condition != undefined && queryItem.condition != null"
+           (keydown)="onKeyDownCondition($event, ix)"
+           (focus)="showSuggestions()"
+           [textContent]="queryItem.condition" (input)="queryItem.condition=$event.target.textContent"
+           (blur)="onConditionBlur()"
+           contenteditable="true">
+      </div>
+      <i class="fas fa fa-times remove" (click)="onRemoveQueryItem(ix)" aria-hidden="true"></i>
     </div>
 
-    <div class="dropdown" *ngIf="suggestions|async;let suggestionItems">
-      <div class="dropdown-menu show suggestions"
-           *ngIf="text && suggestionItems.length > 0">
+    <div class="dropdown" *ngIf="shouldShowSuggestions && suggestionItems.length > 0">
+      <div class="dropdown-menu show suggestions">
         <div class="dropdown-item d-flex justify-content-between"
-             *ngFor="let suggestion of suggestionItems"
-             (click)="onSuggestionClick(suggestion)">
-          <span>{{suggestion.text}}</span>
-          <span>{{suggestion.type}}</span>
+             *ngFor="let suggestion of suggestionItems; let ix = index"
+             [class.selected]="ix == selectedSuggestion"
+             (mousedown)="onSuggestionClick(suggestion)">
+          <div class="d-inline-flex" [class.font-weight-bold]="isCollectionItem(suggestion)">
+            <div class="icon-container">
+              <i *ngIf="suggestion.icon" [style.color]="suggestion.color"
+                 class="{{suggestion.icon}} icon"
+                 aria-hidden="true"></i></div>
+            {{suggestion.text}}
+          </div>
+          <span class="font-weight-light font-italic">{{suggestion.type}}</span>
         </div>
       </div>
     </div>

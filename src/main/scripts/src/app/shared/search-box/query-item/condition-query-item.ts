@@ -17,18 +17,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 
-export interface QueryItem {
+export class ConditionQueryItem implements QueryItem {
 
-  text: string;
-  icon?: string;
-  color?: string;
-  condition?: string;
+  public static conditions = ['=', '!=', '<', '>', '~'];
+  public text: string;
+  public value: string;
+  public type: QueryItemType = QueryItemType.Condition;
 
-  value: string;
-  type: QueryItemType;
+  public constructor(condition: string) {
+    this.text = condition;
+    this.value = condition;
+  }
 
-  isComplete(): boolean;
+  public isComplete(): boolean {
+    return true;
+  }
+
+  public static isComplete(text: string): boolean {
+    const trimmed = text.trim();
+    const prefixLength = this.conditionPrefixLength(trimmed);
+    return prefixLength > 0 && trimmed.length > prefixLength;
+  }
+
+  private static conditionPrefixLength(text: string): number {
+    for (let condition of this.conditions) {
+      if (text.startsWith(condition)) {
+        return condition.length;
+      }
+    }
+    return -1;
+  }
 
 }

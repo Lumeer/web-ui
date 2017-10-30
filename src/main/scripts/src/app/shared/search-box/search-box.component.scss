@@ -4,10 +4,42 @@
   background-color: #faeabb;
   border-radius: $border-radius-base;
   white-space: nowrap;
+  border: 2px solid;
+
+  &:hover .remove {
+    opacity: 1;
+  }
+
+  .remove {
+    opacity: 0;
+    cursor: pointer;
+    color: black;
+    transition: opacity $animation-duration;
+  }
+
+}
+
+[contenteditable]:focus {
+  outline: 0 solid transparent;
 }
 
 .suggestions {
-  min-width: 250px;
+  min-width: 300px;
+
+  .icon-container {
+    width: 30px;
+
+    .icon {
+      width: 100%;
+      font-size: 15px;
+      text-align: center;
+    }
+  }
+
+}
+
+.selected {
+  background-color: $light;
 }
 
 .search-button {

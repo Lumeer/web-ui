@@ -22,6 +22,7 @@ import {CommonModule} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
+import {RouterModule} from '@angular/router';
 
 import {WorkspaceService} from './workspace.service';
 import {TopPanelComponent} from './top-panel/top-panel.component';
@@ -36,7 +37,6 @@ import {GroupService} from './rest/group.service';
 import {HomeComponent} from './home.component';
 import {SharedModule} from '../shared/shared.module';
 import {SearchService} from './rest/search.service';
-import {RouterModule} from '@angular/router';
 import {LumeerErrorHandler} from './error/lumeer-error.handler';
 import {ImportService} from './rest/import.service';
 import {KEYCLOAK_HTTP_PROVIDER} from './keycloak/keycloak-http.service';

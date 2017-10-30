@@ -23,10 +23,10 @@ import {CollectionQueryItem} from './collection-query-item';
 import {AttributeQueryItem} from './attribute-query-item';
 import {FulltextQueryItem} from './fulltext-query-item';
 import {Injectable} from '@angular/core';
-import {SearchService} from '../../../core/rest/search.service';
 import {Observable} from 'rxjs/Observable';
 import {Collection} from '../../../core/dto/collection';
 import {QueryConverter} from '../../utils/query-converter';
+import {SearchService} from '../../../core/rest/search.service';
 
 @Injectable()
 export class QueryItemsConverter {
@@ -42,11 +42,11 @@ export class QueryItemsConverter {
 
     queryItems.forEach(queryItem => {
       if (queryItem instanceof CollectionQueryItem) {
-        query.collectionCodes.push(queryItem.code);
+        query.collectionCodes.push(queryItem.value);
       } else if (queryItem instanceof AttributeQueryItem) {
         query.filters.push(queryItem.value);
       } else if (queryItem instanceof FulltextQueryItem) {
-        query.fulltext = queryItem.text;
+        query.fulltext = queryItem.value;
       }
     });
 
@@ -65,28 +65,36 @@ export class QueryItemsConverter {
 
     if (collectionCodes) {
       return this.searchService.searchCollections({
-        collectionCodes: query.collectionCodes
+        collectionCodes: collectionCodes
       });
     }
 
-    return Observable.of([]);
+    return Observable.of<Collection[]>([]);
   }
 
-  private static convertToCollectionsMap(collections: Collection[]): any {
-    let collectionsMap: any = {};
+  private static convertToCollectionsMap(collections: Collection[]): { [key: string]: Collection } {
+    let collectionsMap: { [key: string]: Collection } = {};
     collections.forEach(collection => collectionsMap[collection.code] = collection);
     return collectionsMap;
   }
 
   private static createQueryItems(collectionsMap: any, query: Query): QueryItem[] {
-    let queryItems: QueryItem[] = QueryItemsConverter.createCollectionQueryItems(collectionsMap, query);
+    let collectionItems: QueryItem[] = QueryItemsConverter.createCollectionQueryItems(collectionsMap, query);
+    let attributeItems: QueryItem[] = QueryItemsConverter.createAttributeQueryItems(collectionsMap, query);
 
-    queryItems = queryItems.concat(QueryItemsConverter.createAttributeQueryItems(collectionsMap, query));
+    let queryItems: QueryItem[] = [];
+    for (let collItem of collectionItems) {
+      queryItems.push(collItem);
+      for (let attrItem of attributeItems) {
+        if (attrItem.value.startsWith(collItem.value)) {
+          queryItems.push(attrItem);
+        }
+      }
+    }
 
     if (query.fulltext) {
       queryItems.push(new FulltextQueryItem(query.fulltext));
     }
-
     return queryItems;
   }
 
@@ -101,12 +109,14 @@ export class QueryItemsConverter {
 
   private static createAttributeQueryItems(collectionsMap: any, query: Query): QueryItem[] {
     return query.filters.map(filter => {
-      let filterParts = filter.split(':', 2);
+      let filterParts = filter.split(':', 3);
       let collectionCode = filterParts[0];
-      let condition = filterParts[1];
+      let attribute = filterParts[1];
+      let condition = filterParts[2];
 
-      let collection = collectionsMap[collectionCode];
-      if (collection) {
+      let collection: Collection = collectionsMap[collectionCode];
+      if (collection && attribute && condition) {
+        collection.attributes = [{name: attribute, fullName: attribute, constraints: [], usageCount: 0}];
         let queryItem = new AttributeQueryItem(collection);
         queryItem.condition = condition;
         return queryItem;
