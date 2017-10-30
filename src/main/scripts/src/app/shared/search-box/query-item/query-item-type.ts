@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {until} from 'selenium-webdriver';
-
 export enum QueryItemType {
 
   Attribute = 'Attribute',

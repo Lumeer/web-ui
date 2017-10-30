@@ -26,12 +26,12 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Collection} from '../../../core/dto/collection';
 import {QueryConverter} from '../../utils/query-converter';
-import {SearchMockService} from '../../../core/rest/search-mock.service';
+import {SearchService} from '../../../core/rest/search.service';
 
 @Injectable()
 export class QueryItemsConverter {
 
-  constructor(private searchService: SearchMockService) {
+  constructor(private searchService: SearchService) {
   }
 
   public toQueryString(queryItems: QueryItem[]): string {
@@ -64,7 +64,9 @@ export class QueryItemsConverter {
     collectionCodes = collectionCodes.concat(query.collectionCodes);
 
     if (collectionCodes) {
-      return Observable.of<Collection[]>(this.searchService.searchCollections(collectionCodes));
+      return this.searchService.searchCollections({
+        collectionCodes: collectionCodes
+      });
     }
 
     return Observable.of<Collection[]>([]);
@@ -107,18 +109,16 @@ export class QueryItemsConverter {
 
   private static createAttributeQueryItems(collectionsMap: any, query: Query): QueryItem[] {
     return query.filters.map(filter => {
-      let filterParts = filter.split(':', 4);
+      let filterParts = filter.split(':', 3);
       let collectionCode = filterParts[0];
       let attribute = filterParts[1];
       let condition = filterParts[2];
-      let conditionValue = filterParts[3];
 
       let collection: Collection = collectionsMap[collectionCode];
-      if (collection && attribute && condition && conditionValue) {
+      if (collection && attribute && condition) {
         collection.attributes = [{name: attribute, fullName: attribute, constraints: [], usageCount: 0}];
         let queryItem = new AttributeQueryItem(collection);
         queryItem.condition = condition;
-        queryItem.conditionValue = conditionValue;
         return queryItem;
       }
     });

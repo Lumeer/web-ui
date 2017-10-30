@@ -19,8 +19,6 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
 
 import {WorkspaceService} from '../workspace.service';
 import {Suggestions} from '../dto/suggestions';
@@ -31,6 +29,8 @@ import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {Document} from '../dto/document';
 import {View} from '../dto/view';
 import {SuggestionType} from '../dto/suggestion-type';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class SearchService {
@@ -40,7 +40,7 @@ export class SearchService {
 
   public suggest(text: string, type: SuggestionType): Observable<Suggestions> {
     return this.http.get<Suggestions>(`${this.searchPath()}/suggestions`,
-      {params: new HttpParams().set('text', text).set('type', type)});
+      {params: new HttpParams().set('text', text).set('type', type.toString())});
   }
 
   public searchCollections(query: Query): Observable<Collection[]> {

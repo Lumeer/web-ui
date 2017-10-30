@@ -21,6 +21,7 @@ import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {Collection} from '../../../core/dto/collection';
 import {CollectionQueryItem} from './collection-query-item';
+import {ConditionQueryItem} from './condition-query-item';
 
 export class AttributeQueryItem implements QueryItem {
 
@@ -36,7 +37,6 @@ export class AttributeQueryItem implements QueryItem {
   public constraints: string[];
 
   public condition = '';
-  public conditionValue = '';
 
   public constructor(collection: Collection) {
     this.collectionCode = collection.code;
@@ -55,18 +55,11 @@ export class AttributeQueryItem implements QueryItem {
   }
 
   public get value() {
-    return `${this.collectionCode}:${this.attributeFullName}:${this.condition}:${this.conditionValue}`;
+    return `${this.collectionCode}:${this.attributeFullName}:${this.condition}`;
   }
 
   public isComplete(): boolean {
-    return this.condition !== '' && this.conditionValue != '';
-  }
-
-  public get fullCondition() {
-    if (this.conditionValue !== '') {
-      return `${this.condition} ${this.conditionValue}`
-    }
-    return this.condition;
+    return ConditionQueryItem.isComplete(this.condition);
   }
 
   public toCollectionQueryItem(): CollectionQueryItem {

@@ -44,7 +44,6 @@ import {KeycloakService} from './keycloak/keycloak.service';
 import {ViewService} from './rest/view.service';
 import {SearchHomeComponent} from './search-home/search-home.component';
 import {Ng2Webstorage} from 'ng2-webstorage';
-import {SearchMockService} from './rest/search-mock.service';
 
 @NgModule({
   imports: [
@@ -68,7 +67,6 @@ import {SearchMockService} from './rest/search-mock.service';
     OrganizationService,
     ProjectService,
     SearchService,
-    SearchMockService,
     UserSettingsService,
     WorkspaceService,
     ImportService,

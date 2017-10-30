@@ -47,9 +47,10 @@ import {QueryConverter} from '../utils/query-converter';
 import {ViewService} from '../../core/rest/view.service';
 import {KeyCode} from '../key-code';
 import {HtmlModifier} from '../utils/html-modifier';
-import {SearchMockService} from '../../core/rest/search-mock.service';
 import {QueryItemType} from './query-item/query-item-type';
 import {ConditionQueryItem} from './query-item/condition-query-item';
+import {SearchService} from '../../core/rest/search.service';
+import {SuggestionType} from '../../core/dto/suggestion-type';
 
 @Component({
   selector: 'search-box',
@@ -80,7 +81,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   constructor(private activatedRoute: ActivatedRoute,
               private queryItemsConverter: QueryItemsConverter,
               private router: Router,
-              private searchService: SearchMockService,
+              private searchService: SearchService,
               private viewService: ViewService,
               private workspaceService: WorkspaceService,
               private ref: ChangeDetectorRef) {
@@ -96,11 +97,9 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     this.conditions.changes.subscribe(change => {
       if (this.shouldFocusCondition && change.last) {
         this.shouldFocusCondition = false;
-        change.last.nativeElement.focus();
+        setTimeout(() => change.last.nativeElement.focus());
         this.selectedQueryItem = change.last.nativeElement.id;
-        this.searchService.suggestConditions().subscribe(conditions =>
-          this.suggestionItems = conditions.map(condition => new ConditionQueryItem(condition))
-        );
+        this.suggestionItems = ConditionQueryItem.conditions.map(condition => new ConditionQueryItem(condition))
         this.ref.detectChanges();
       }
     });
@@ -137,7 +136,6 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     this.searchTerms
       .startWith('')
       .debounceTime(300)
-      .distinctUntilChanged()
       .switchMap(text => this.retrieveSuggestions(text))
       .switchMap(suggestions => this.convertSuggestionsToQueryItems(suggestions))
       .map(queryItems => this.filterUsedQueryItems(queryItems))
@@ -152,22 +150,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   private retrieveSuggestions(text: string): Observable<Suggestions> {
     if (text) {
-      let searchForCollections = false;
-      let textToSearch = text;
-      if (this.queryItems.length > 0) {
-        let lastCollectionIndex = -1;
-        for (let i = this.queryItems.length - 1; i >= 0; i--) {
-          if (this.queryItems[i].type === QueryItemType.Collection) {
-            lastCollectionIndex = i;
-            break;
-          }
-        }
-        if (lastCollectionIndex >= 0) {
-          searchForCollections = true;
-          textToSearch = this.queryItems[lastCollectionIndex].text + ':' + textToSearch;
-        }
-      }
-      return this.searchService.suggest(textToSearch, searchForCollections);
+      return this.searchService.suggest(text.toLowerCase(), SuggestionType.All);
     }
     return Observable.of<Suggestions>();
   }
@@ -229,6 +212,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
         this.removeItem();
         return;
       case KeyCode.Enter:
+        event.preventDefault();
         this.addItemOrSearch();
         return;
       case KeyCode.DownArrow:
@@ -240,7 +224,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public onKeyDownCondition(event, id: number) {
+  public onKeyDownCondition(event: KeyboardEvent, id: number) {
     switch (event.keyCode) {
       case KeyCode.Enter:
         event.preventDefault();
@@ -259,18 +243,15 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public onConditionBlur(text: string, queryItem: AttributeQueryItem) {
-    const parsedCondition: string[] = this.searchService.parseCondition(text);
-    queryItem.condition = parsedCondition[0];
-    queryItem.conditionValue = parsedCondition[1];
-    this.hideSuggestions();
+  public onConditionBlur() {
+    this.clearSuggestions();
     this.selectedQueryItem = -1;
   }
 
   private addCondition(ix: number) {
-    this.queryItems[ix].condition = this.suggestionItems[this.selectedSuggestion].value;
+    this.queryItems[ix].condition = this.suggestionItems[this.selectedSuggestion].text;
+    this.findConditionElementAndFocus(ix);
     this.clearSuggestions();
-    this.selectedSuggestion = -1;
   }
 
   private incSelectedSuggestion() {
@@ -335,8 +316,8 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
       this.clearSuggestions();
     } else {
       this.showSuggestions();
-      this.searchTerms.next(this.text);
     }
+    this.searchTerms.next(this.text);
   }
 
   public showSuggestions() {
@@ -380,13 +361,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     if (queryItem.type == QueryItemType.Condition) {
       if (this.selectedQueryItem >= 0 && this.queryItems[this.selectedQueryItem].type == QueryItemType.Attribute) {
         (this.queryItems[this.selectedQueryItem] as AttributeQueryItem).condition = queryItem.text;
-        const conditionElement = this.findConditionElement(this.selectedQueryItem);
-        if (conditionElement) {
-          setTimeout(() => {
-            conditionElement.nativeElement.focus()
-          }, 200);
-        }
-        this.selectedSuggestion = -1;
+        this.findConditionElementAndFocus(this.selectedQueryItem);
       }
     } else {
       if (queryItem.type === QueryItemType.Attribute) {
@@ -400,6 +375,16 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
       this.text = '';
     }
     this.clearSuggestions();
+  }
+
+  private findConditionElementAndFocus(id: number) {
+    const conditionElement = this.findConditionElement(id);
+    if (conditionElement) {
+      setTimeout(() => {
+        conditionElement.nativeElement.focus();
+        SearchBoxComponent.setCursorAtTextContentEnd(conditionElement.nativeElement);
+      });
+    }
   }
 
   private findConditionElement(id: number): ElementRef {
@@ -431,12 +416,14 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     return queryItem.type === QueryItemType.Collection;
   }
 
-  public hex2rgba(hex: string, opacity: number): string {
-    hex = hex.replace('#', '');
-    let r = parseInt(hex.substring(0, 2), 16);
-    let g = parseInt(hex.substring(2, 4), 16);
-    let b = parseInt(hex.substring(4, 6), 16);
-    return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
+  public static setCursorAtTextContentEnd(element: HTMLElement) {
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    range.collapse(false);
+
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
   }
 
 }
