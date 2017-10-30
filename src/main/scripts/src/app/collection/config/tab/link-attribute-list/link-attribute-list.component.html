@@ -42,10 +42,8 @@
 
   <tr>
     <td class="attrbute-row" colspan="3">
-      <!-- the list refers to the list of attributes of linkType inside collection link type tab -->
       <input #newAttribute
              [(ngModel)]="newAttributeName"
-             [attr.list]="linkType.fromCollection + ' ' + linkType.toCollection"
              (keyup.enter)="newAttribute.blur()"
              (blur)="addLinkedAttribute()"
              placeholder="{{ !linkType.linkedAttributes.length ? 'No attributes' : null }} + "
@@ -56,7 +54,3 @@
   </tr>
   </tbody>
 </table>
-
-<datalist id="{{ linkType.fromCollection }} {{ linkType.toCollection }}">
-  <option *ngFor="let attribute of possibleAttributes()">{{ attribute.name }} ({{ attribute.collectionCode }})</option>
-</datalist>

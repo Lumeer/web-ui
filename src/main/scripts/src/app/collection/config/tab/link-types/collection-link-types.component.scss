@@ -3,6 +3,10 @@
 :host {
   display: block;
 
+  .color-transition {
+    transition: color $animation-color-duration, border-color $animation-color-duration;
+  }
+
   li {
     transition: height $animation-duration;
     align-items: baseline;
@@ -17,7 +21,7 @@
     border-right-style: dashed;
   }
 
-  .uninitialized  ~ .uninitialized { // all but first with this class
+  .uninitialized ~ .uninitialized { // all but first with this class
     border-top-style: dashed;
   }
 
@@ -25,12 +29,8 @@
     flex: 2;
   }
 
-  .expand {
-    transition: color $animation-color-duration, transform $animation-color-duration;
-
-    &:hover {
-      color: $success;
-    }
+  .expand:hover {
+    color: $success;
   }
 
   .greyed-out {

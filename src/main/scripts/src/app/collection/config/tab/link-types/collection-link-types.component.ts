@@ -18,7 +18,7 @@
  */
 
 import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
@@ -50,6 +50,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   public collections: { [collectionCode: string]: Collection } = {};
 
   constructor(private linkTypeService: LinkTypeService,
+              private router: Router,
               protected collectionService: CollectionService,
               protected collectionSelectService: CollectionSelectService,
               protected route: ActivatedRoute,
@@ -68,9 +69,14 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     super.ngOnInit();
     this.fetchAllCollections();
     this.setUninitializedCollection();
-
-    // TODO wait for collection to get fetched
     this.fetchLinkTypes(this.collection.code);
+  }
+
+  public changeCollection(toCollection: string): void {
+    this.collectionSelectService.select(toCollection)
+      .switchMap(collection => this.router.navigate([this.workspacePath(), 'c', collection.code, 'linktypes']))
+      .do(navigated => this.fetchAllCollections())
+      .subscribe(navigated => this.fetchLinkTypes(this.collection.code));
   }
 
   private fetchAllCollections(): void {
@@ -164,7 +170,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       attributes = [];
     }
 
-    return attributes
+    return attributes;
   }
 
   public initialized(linkType: LinkType): boolean {
@@ -182,7 +188,8 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public makeAutomatic(linkType: LinkType): void {
-
+    linkType.automaticLinkFromAttribute = linkType.linkedAttributes[0].name;
+    linkType.automaticLinkToAttribute = linkType.linkedAttributes[1].name;
   }
 
   public newLinkType(): void {

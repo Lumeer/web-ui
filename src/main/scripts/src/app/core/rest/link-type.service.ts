@@ -25,54 +25,48 @@ import {LumeerError} from '../error/lumeer.error';
 import {LinkType} from '../dto/link-type';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {Observable} from 'rxjs/Observable';
+import {CollectionService} from "./collection.service";
 
 // TODO implement on backend
 @Injectable()
 export class LinkTypeService {
 
-  public static link1: LinkType = {
-    fromCollection: '',
-    toCollection: 'ord',
-    name: 'Clouds placement',
-    linkedAttributes: []
-  };
+  public links: LinkType[] = [];
 
-  public static link2: LinkType = {
-    fromCollection: '',
-    toCollection: 'cmp',
-    name: 'Seasons in the Sun',
-    linkedAttributes: []
-  };
-
-  public static link3: LinkType = {
-    fromCollection: '',
-    toCollection: 'emp',
-    name: 'Pollution clouds',
-    linkedAttributes: []
-  };
+  private names = ['Clouds placement', 'Seasons in the Sun', 'Pollution clouds'];
 
   constructor(private httpClient: HttpClient,
-              private workspaceService: WorkspaceService) {
+              private workspaceService: WorkspaceService,
+              private collectionService: CollectionService /* Remove when after backend implementation*/) {
+    this.collectionService.getCollections().subscribe(
+      collections => this.links = collections.map(collection => {
+        return {
+          fromCollection: '',
+          toCollection: collection.code,
+          name: this.names[collection.name.length % this.names.length],
+          linkedAttributes: []
+        };
+      })
+    );
   }
 
   public getLinkTypes(collectionCode: string): Observable<LinkType[]> {
-    LinkTypeService.link1.fromCollection = collectionCode;
-    LinkTypeService.link2.fromCollection = collectionCode;
-    LinkTypeService.link3.fromCollection = collectionCode;
-
-    return Observable.of([LinkTypeService.link1, LinkTypeService.link2, LinkTypeService.link3]
+    return Observable.of(this.links.map(link => (link.fromCollection = collectionCode) && link)
       .filter(linkType => collectionCode !== linkType.toCollection));
   }
 
   public createLinkType(collectionCode: string, linkType: LinkType): Observable<LinkType> {
+    this.links.push(linkType);
     return Observable.of(linkType);
   }
 
   public updateLinkType(collectionCode: string, initialName: string, linkType: LinkType): Observable<LinkType> {
+    this.links[this.links.findIndex(link => link.name === initialName)] = linkType;
     return Observable.of(linkType);
   }
 
   public removeLinkType(collectionCode: string, linkType: LinkType): Observable<HttpEvent<any>> {
+    this.links = this.links.filter(link => link.name !== linkType.name)
     return Observable.of(null);
   }
 
@@ -86,4 +80,5 @@ export class LinkTypeService {
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/c/${collectionCode}/linktypes`;
   }
+
 }

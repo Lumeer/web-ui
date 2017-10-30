@@ -56,12 +56,12 @@
        (click)="confirmDeletion(modal)"></i>
   </div>
 
-  <div class="description d-inline-flex py-3">
+  <div class="description d-flex py-3">
     <div class="pl-2">
       <i class="fas fa fa-pencil edit"
          (click)="onCollectionDescriptionEdit()"></i>
     </div>
-    <div class="text"
+    <div class="text flex-grow"
          [attr.contenteditable]="collectionDescriptionEditable"
          (blur)="updateCollection()">
       {{ collection.description }}
