@@ -23,4 +23,14 @@ export class HtmlModifier {
     return html.innerHTML.replace(/<!--[\s\S]*?-->/g, '').trim();
   }
 
+  public static setCursorAtTextContentEnd(element: HTMLElement) {
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    range.collapse(false);
+
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
 }

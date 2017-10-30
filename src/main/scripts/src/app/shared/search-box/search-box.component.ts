@@ -382,7 +382,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     if (conditionElement) {
       setTimeout(() => {
         conditionElement.nativeElement.focus();
-        SearchBoxComponent.setCursorAtTextContentEnd(conditionElement.nativeElement);
+        HtmlModifier.setCursorAtTextContentEnd(conditionElement.nativeElement);
       });
     }
   }
@@ -414,16 +414,6 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   public isCollectionItem(queryItem: QueryItem): boolean {
     return queryItem.type === QueryItemType.Collection;
-  }
-
-  public static setCursorAtTextContentEnd(element: HTMLElement) {
-    const range = document.createRange();
-    range.selectNodeContents(element);
-    range.collapse(false);
-
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
   }
 
 }
