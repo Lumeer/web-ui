@@ -67,15 +67,15 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   public input: ElementRef;
 
   public queryItems: QueryItem[] = [];
+  public suggestionItems: QueryItem[] = [];
 
   private searchTerms = new Subject<string>();
-  private suggestionItems: QueryItem[] = [];
 
   public text: string = '';
   public shouldShowSuggestions: boolean = false;
+  public selectedSuggestion: number = -1;
   private shouldFocusCondition: boolean = false;
   private selectedQueryItem: number = -1;
-  private selectedSuggestion: number = -1;
   private textCopy: string = '';
 
   constructor(private activatedRoute: ActivatedRoute,
