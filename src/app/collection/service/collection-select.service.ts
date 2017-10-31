@@ -19,8 +19,9 @@
 
 import {Injectable} from '@angular/core';
 
+import {COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from 'app/collection/constants';
 import {CollectionService} from '../../core/rest/collection.service';
-import {Collection, COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
+import {Collection} from '../../core/dto/collection';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 
