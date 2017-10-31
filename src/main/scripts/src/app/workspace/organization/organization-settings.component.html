@@ -1,14 +1,109 @@
-<ul class="nav nav-tabs">
-  <li role="presentation" class="nav-item">
-    <a routerLink="settings" routerLinkActive="active" class="nav-link">
-      Basic Settings
-    </a>
-  </li>
-  <li role="presentation" class="nav-item">
-    <a routerLink="permissions" routerLinkActive="active" class="nav-link">
-      Permissions
-    </a>
-  </li>
-</ul>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col"></div>
+    <div class="whole col-12 col-lg-11 col-xl-10" [style.opacity]="initialized() ? '1' : '0'">
+      <div class="d-flex flex-row justify-content-start">
+        <a class="fa fa-arrow-left " [routerLink]="['/workspace']  "></a>
+        <i class="color-class fa-fw {{ organization.icon }} organization-icon " [style.color]="organization.color"
+           data-toggle="dropdown"></i>
+        <div *ngIf="initialized()" class="dropdown-menu">
+          <color-picker class="dropdown-item" [(color)]="organization.color"
+                        (selectedChange)="updateOrganization()"></color-picker>
+          <div class="dropdown-divider"></div>
+          <icon-picker class="dropdown-item" [(icon)]="organization.icon"
+                       (selectedChange)="updateOrganization()"></icon-picker>
+        </div>
 
-<router-outlet></router-outlet>
+        <input class="color-class name" [(ngModel)]="organization.name" (blur)="name.valid && updateOrganizationName()"
+               name="name"
+               [style.color]="organization.color" i18n-title="@@header.organization.name"
+               title="Edit name of the organization"
+               #name="ngModel" required minlength="3" maxlength="24">
+
+        <small class="text-danger" [hidden]="name.valid || (name.pristine  )">
+          Name is required (from 3 to 24 characters).
+        </small>
+
+        <div class="float-right document-count color-class ml-auto">
+          <a i18n-title="@@organization.projects.count" class="count" title="Number of projects in this organization"
+             [style.color]="organization.color" [routerLink]="['/workspace']">
+            <span>{{ projectsCount }}</span>
+            <i class="far fa-file" aria-hidden="true"></i>
+          </a>
+
+        </div>
+      </div>
+
+      <div class="d-flex flex-row justify-content-start">
+        <input class="color-class code" [(ngModel)]="organization.code"
+               name="code"
+               (blur)=" code.valid && updateOrganizationCode()"
+               [style.color]="organization.color" i18n-title="@@header.organization.code"
+               title="Edit code of the organization"
+               #code="ngModel" required minlength="3" maxlength="6">
+
+        <small class="text-danger" [hidden]="code.valid || (code.pristine  )">
+          Code is required (from 3 to 6 characters).
+        </small>
+
+        <a (click)="confirmDeletion(modal)"
+           class="text-danger rounded-left ml-auto"
+           title="Remove organization">
+          <i class="fa fa-fw fa-times" aria-hidden="true"></i>
+        </a>
+      </div>
+
+      <div class="description d-flex py-3">
+        <div>
+          <i class="fas fa fa-pencil edit"
+             (click)="onOrganizationDescriptionEdit()"></i>
+        </div>
+        <div class="text flex-grow" [attr.contenteditable]="organizationDescriptionEditable"
+             (blur)="onOrganizationDescriptionBlur(organizationDescription.textContent)"
+             #organizationDescription>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
+          finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
+          vel augue.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
+          finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
+          vel augue.
+        </div>
+      </div>
+      <ul class="nav nav-tabs ">
+        <li role="presentation" class="nav-item ">
+          <a routerLink="permissions" routerLinkActive="active" class="nav-link">
+            Permissions
+          </a>
+        </li>
+      </ul>
+      <router-outlet></router-outlet>
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
+
+<ng-template #modal>
+  <div class="modal-header bg-danger text-white rounded-top">
+    <h5 class="modal-title"
+        i18n="@@organization.delete.dialog.title">Delete Organization?</h5>
+    <button type="button" class="close" aria-label="Close" (click)="deleteConfirm.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p i18n="@@organization.delete.dialog.body">Deleting an organization will permanently remove it. All projects stored
+      inside the organization will be lost.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-secondary"
+            (click)="deleteConfirm.hide()"
+            i18n="@@organization.delete.dialog.button.no">No, Keep Organization
+    </button>
+    <button type="button"
+            class="btn btn-danger"
+            (click)="deleteConfirm.hide(); onDelete()"
+            i18n="@@organization.delete.dialog.button.yes">Yes, Delete Organization
+    </button>
+  </div>
+</ng-template>

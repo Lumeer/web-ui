@@ -17,10 +17,149 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {Component, OnInit, ViewChild, ElementRef, TemplateRef} from '@angular/core';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {Organization} from '../../core/dto/organization';
+import {OrganizationService} from '../../core/rest/organization.service';
+import {HttpResponse} from '@angular/common/http';
+import {ProjectService} from '../../core/rest/project.service';
+import {Project} from '../../core/dto/project';
+import {NotificationsService} from 'angular2-notifications/dist';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
 @Component({
-  templateUrl: './organization-settings.component.html'
+  templateUrl: './organization-settings.component.html',
+  styleUrls: ['./organization-settings.component.scss']
 })
-export class OrganizationSettingsComponent {
+export class OrganizationSettingsComponent implements OnInit {
+  public originalOrganizationName: string;
+  public deleteConfirm: BsModalRef;
+  public organization: Organization;
+  public organizationCode: string;
+  private originalOrganizationCode: string;
+  public projectsCount: number;
+  public organizationDescriptionEditable: boolean = false;
+
+  @ViewChild('organizationDescription')
+  public organizationDescription: ElementRef;
+
+  constructor(private organizationService: OrganizationService,
+              private route: ActivatedRoute,
+              private router: Router,
+              private projectService: ProjectService,
+              private notificationService: NotificationsService,
+              private modalService: BsModalService) {
+  }
+
+  public ngOnInit(): void {
+    this.organization = new Organization();
+    this.route.paramMap.subscribe((params: ParamMap) => {
+        this.organizationCode = params.get('organizationCode');
+        if (this.organizationCode) {
+          this.getOrganization();
+        }
+      },
+      error => {
+        this.notificationService.error('Error', 'Error loading organization ');
+      }
+    );
+  }
+
+  private getOrganization(): void {
+    this.organizationService.getOrganization(this.organizationCode)
+      .subscribe((organization: Organization) => {
+          this.originalOrganizationCode = organization.code;
+          this.organization = organization;
+          this.getNumberOfProjects();
+          this.originalOrganizationName = this.organization.name;
+        },
+        error => {
+          this.notificationService.error('Error', 'Error getting the organization ');
+        }
+      );
+  }
+
+  public updateOrganization(): void {
+    this.organizationService.editOrganization(this.organizationCode, this.organization)
+      .subscribe(success => this.notificationService
+          .success('Success', 'Organization was successfully updated'),
+        error => {
+          this.notificationService.error('Error', 'Error updating organization ');
+        });
+  }
+
+  public updateOrganizationName(): void {
+    if (this.organization.name === this.originalOrganizationName) {
+      return;
+    }
+    this.organizationService.editOrganization(this.organizationCode, this.organization)
+      .subscribe(success => {
+          this.notificationService
+            .success('Success', 'Organization\'s name was successfully updated');
+          this.originalOrganizationName = this.organization.name
+        },
+        error => {
+          this.notificationService.error('Error', 'Error updating organization ');
+        });
+  }
+
+  public updateOrganizationCode(): void {
+    if (this.organizationCode === this.originalOrganizationCode) {
+      return;
+    }
+    this.organizationService.editOrganization(this.originalOrganizationCode, this.organization)
+      .subscribe((response: HttpResponse<Object>) => {
+          this.originalOrganizationCode = this.organization.code;
+          this.organizationCode = this.organization.code;
+          this.router.navigate([`/organization/${this.organization.code}`]);
+        },
+        error => {
+          this.notificationService.error('Error', 'Error editing the organization ');
+        },
+        () => this.notificationService
+          .success('Success', 'Organization\'s code was successfully updated')
+      );
+  }
+
+  private goBack(): void {
+    this.router.navigate(['/workspace']);
+  }
+
+  public onDelete(): void {
+    this.organizationService.deleteOrganization(this.organizationCode)
+      .subscribe(
+        text => this.goBack(),
+        error => {
+          this.notificationService.error('Error', 'An error occurred during deletion of the organization');
+        }
+      );
+  }
+
+  public delete(): void {
+    this.onDelete();
+  }
+
+  public getNumberOfProjects(): void {
+    this.projectService.getProjects(this.organizationCode).subscribe((projects: Project[]) =>
+      (this.projectsCount = projects.length));
+  }
+
+  public onOrganizationDescriptionBlur(description: string) {
+    this.organizationDescriptionEditable = false;
+  }
+
+  public onOrganizationDescriptionEdit() {
+    this.organizationDescriptionEditable = true;
+    setTimeout(() => {
+      this.organizationDescription.nativeElement.focus();
+    }, 50);
+  }
+
+  public initialized(): boolean {
+    return !(this.organization.code === '' && this.organization.name === '' && this.organization.icon === '' && this.organization.color === '');
+  }
+
+  public confirmDeletion(modal: TemplateRef<any>): void {
+    this.deleteConfirm = this.modalService.show(modal);
+  }
 }

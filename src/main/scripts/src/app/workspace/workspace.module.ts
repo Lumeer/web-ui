@@ -30,12 +30,14 @@ import {ProjectPermissionsComponent} from './project/permissions/project-permiss
 import {OrganizationSettingsComponent} from './organization/organization-settings.component';
 import {ProjectSettingsComponent} from './project/project-settings.component';
 import {ResourceChooserComponent} from './workspace-chooser/resource-chooser/resource-chooser.component';
+import {PickerModule} from '../shared/picker/picker.module';
 
 @NgModule({
   imports: [
     PerfectScrollbarModule,
     SharedModule,
-    WorkspaceRoutingModule
+    WorkspaceRoutingModule,
+    PickerModule
   ],
   declarations: [
     OrganizationFormComponent,

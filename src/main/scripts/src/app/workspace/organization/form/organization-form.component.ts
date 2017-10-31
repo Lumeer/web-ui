@@ -23,6 +23,7 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Organization} from '../../../core/dto/organization';
 import {WorkspaceService} from '../../../core/workspace.service';
 import {OrganizationService} from '../../../core/rest/organization.service';
+import {NotificationsService} from 'angular2-notifications/dist';
 
 @Component({
   selector: 'organization-form',
@@ -33,12 +34,12 @@ export class OrganizationFormComponent implements OnInit {
 
   public organization: Organization;
   public organizationCode: string;
-  public errorMessage: any;
 
   constructor(private organizationService: OrganizationService,
               private workspaceService: WorkspaceService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private notificationsService: NotificationsService) {
   }
 
   public ngOnInit(): void {
@@ -54,7 +55,7 @@ export class OrganizationFormComponent implements OnInit {
   private getOrganization(): void {
     this.organizationService.getOrganization(this.organizationCode)
       .subscribe((organization: Organization) => this.organization = organization,
-        error => this.errorMessage = error
+        error => this.notificationsService.error('Error', 'Error getting the organization')
       );
   }
 
@@ -68,13 +69,15 @@ export class OrganizationFormComponent implements OnInit {
             }
             this.goBack();
           },
-          error => this.errorMessage = error
+          error => this.notificationsService.error('Error', 'Error saving the organization')
         );
     } else {
+      this.organization.color = '#cccccc';
+      this.organization.icon = 'fa fa-exclamation-circle';
       this.organizationService.createOrganization(this.organization)
         .subscribe(
           response => this.goBack(),
-          error => this.errorMessage = error
+          error => this.notificationsService.error('Error', 'Error creating the organization')
         );
     }
   }
@@ -87,7 +90,7 @@ export class OrganizationFormComponent implements OnInit {
     this.organizationService.deleteOrganization(this.organizationCode)
       .subscribe(
         response => this.goBack(),
-        error => this.errorMessage = error
+        error => this.notificationsService.error('Error', 'Error deleting the organization')
       );
   }
 

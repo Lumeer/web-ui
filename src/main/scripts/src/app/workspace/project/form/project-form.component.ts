@@ -23,6 +23,7 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Project} from '../../../core/dto/project';
 import {WorkspaceService} from '../../../core/workspace.service';
 import {ProjectService} from '../../../core/rest/project.service';
+import {NotificationsService} from 'angular2-notifications/dist';
 
 @Component({
   selector: 'project-form',
@@ -35,12 +36,12 @@ export class ProjectFormComponent implements OnInit {
   public project: Project;
   public organizationCode: string;
   public projectCode: string;
-  public errorMessage: any;
 
   constructor(private projectService: ProjectService,
               private workspaceService: WorkspaceService,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private notificationsService:NotificationsService) {
   }
 
   public ngOnInit(): void {
@@ -73,7 +74,7 @@ export class ProjectFormComponent implements OnInit {
     this.projectService.getProject(this.organizationCode, this.projectCode)
       .subscribe(
         (project: Project) => this.project = project,
-        error => this.errorMessage = error
+        error => this.notificationsService.error('Error', 'Error getting the project')
       );
   }
 
@@ -86,10 +87,12 @@ export class ProjectFormComponent implements OnInit {
   }
 
   private createProject() {
+    this.project.color = '#cccccc';
+    this.project.icon = 'fa fa-exclamation-circle';
     this.projectService.createProject(this.organizationCode, this.project)
       .subscribe(
         response => this.goBack(),
-        error => this.errorMessage = error
+        error => this.notificationsService.error('Error', 'Error creating the project')
       );
   }
 
@@ -102,7 +105,7 @@ export class ProjectFormComponent implements OnInit {
           }
           this.goBack();
         },
-        error => this.errorMessage = error
+        error => this.notificationsService.error('Error', 'Error updating the project')
       );
   }
 
@@ -114,7 +117,7 @@ export class ProjectFormComponent implements OnInit {
     this.projectService.deleteProject(this.organizationCode, this.projectCode)
       .subscribe(
         response => this.goBack(),
-        error => this.errorMessage = error
+        error => this.notificationsService.error('Error', 'Error deleting the organization')
       );
   }
 

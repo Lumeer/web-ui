@@ -626,6 +626,134 @@
           <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="header.organization.name" datatype="html">
+              <source>Edit name of the organization</source>
+              <target>Upraviť meno organizácie </target>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+                <context context-type="linenumber">16</context>
+              </context-group>
+            </trans-unit>
+            <trans-unit id="organization.projects.count" datatype="html">
+              <source>Number of projects in this organization</source>
+              <target>Počet projektov v tejto organizácii</target>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+                <context context-type="linenumber">19</context>
+              </context-group>
+            </trans-unit>
+            <trans-unit id="header.organization.code" datatype="html">
+              <source>Edit code of the organization</source>
+              <target>Upraviť kód organizácie </target>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+                <context context-type="linenumber">33</context>
+              </context-group>
+            </trans-unit>
+            <trans-unit id="header.project.name" datatype="html">
+              <source>Edit name of the project</source>
+              <target>Upraviť meno projektu</target>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+                <context context-type="linenumber">15</context>
+              </context-group>
+            </trans-unit>
+            <trans-unit id="collections.count" datatype="html">
+              <source>Number of collections in this project</source>
+              <target>Počet kolekcií v tomto projekte</target>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+                <context context-type="linenumber">18</context>
+              </context-group>
+            </trans-unit>
+            <trans-unit id="header.project.code" datatype="html">
+              <source>Edit code of the project</source>
+              <target>Upraviť kód projektu</target>
+              <context-group purpose="location">
+                <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+                <context context-type="linenumber">30</context>
+              </context-group>
+            </trans-unit>
+
+            <trans-unit id="organization.delete.dialog.title" datatype="html">
+                    <source>Delete Organization?</source>
+                    <target>Vymazať organizáciu?</target>
+                    <context-group purpose="location">
+                      <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+                      <context context-type="linenumber">90</context>
+                    </context-group>
+                  </trans-unit>
+                  <trans-unit id="organization.delete.dialog.body" datatype="html">
+                    <source>Deleting an organization will permanently remove it. All projects stored
+                  inside the organization will be lost.</source>
+                  <target>Vymazanie organizácie je nezvratné. Všetky jej projekty budú navždy vymazané.</target>
+                    <context-group purpose="location">
+                      <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+                      <context context-type="linenumber">96</context>
+                    </context-group>
+                  </trans-unit>
+                  <trans-unit id="organization.delete.dialog.button.no" datatype="html">
+                    <source>No, Keep Organization
+                </source>
+                <target>Nie, nemazať organizáciu</target>
+                    <context-group purpose="location">
+                      <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+                      <context context-type="linenumber">103</context>
+                    </context-group>
+                  </trans-unit>
+                  <trans-unit id="organization.delete.dialog.button.yes" datatype="html">
+                    <source>Yes, Delete Organization
+                </source>
+                <target>Áno, vymazať organizáciu</target>
+                    <context-group purpose="location">
+                      <context context-type="sourcefile">app/workspace/organization/organization-settings.component.ts</context>
+                      <context context-type="linenumber">108</context>
+                    </context-group>
+                  </trans-unit>
+
+                  <trans-unit id="project.delete.dialog.title" datatype="html">
+                          <source>Delete Project?</source>
+                          <target>Vymazať projekt?</target>
+                          <context-group purpose="location">
+                            <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+                            <context context-type="linenumber">88</context>
+                          </context-group>
+                        </trans-unit>
+                        <trans-unit id="project.delete.dialog.body" datatype="html">
+                          <source>Deleting an project will permanently remove it. All projects stored
+                        inside the project will be lost.</source>
+                        <target>Vymazanie projektu je nezvratné. Všetky jej kolekcie budú navždy vymazané.</target>
+                          <context-group purpose="location">
+                            <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+                            <context context-type="linenumber">94</context>
+                          </context-group>
+                        </trans-unit>
+                        <trans-unit id="project.delete.dialog.button.no" datatype="html">
+                          <source>No, Keep Project
+                      </source>
+                      <target>Nie, nemazať projekt</target>
+                          <context-group purpose="location">
+                            <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+                            <context context-type="linenumber">101</context>
+                          </context-group>
+                        </trans-unit>
+                        <trans-unit id="project.delete.dialog.button.yes" datatype="html">
+                          <source>Yes, Delete Project
+                      </source>
+                      <target>Áno, vymazať projekt</target>
+                          <context-group purpose="location">
+                            <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+                            <context context-type="linenumber">106</context>
+                          </context-group>
+                        </trans-unit>
+                        <trans-unit id="project.button.remove" datatype="html">
+                          <source>Remove project</source>
+                          <target>Vymazať projekt</target>
+                          <context-group purpose="location">
+                            <context context-type="sourcefile">app/workspace/project/project-settings.component.ts</context>
+                            <context context-type="linenumber">113</context>
+                          </context-group>
+                        </trans-unit>
     </body>
   </file>
 </xliff>
