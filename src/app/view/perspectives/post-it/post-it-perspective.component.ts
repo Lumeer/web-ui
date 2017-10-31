@@ -17,7 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren} from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  TemplateRef,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
@@ -37,6 +49,8 @@ import {Permission} from 'app/core/dto/permission';
 import {Role} from '../../../shared/permissions/role';
 import {PerspectiveComponent} from '../perspective.component';
 import {isNullOrUndefined} from 'util';
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/finally';
 
 @Component({
   selector: 'post-it-perspective',
@@ -288,6 +302,10 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   }
 
   public sendUpdate(postIt: DocumentData): void {
+    if (postIt.initializing) {
+      return;
+    }
+
     if (!postIt.initialized) {
       this.initializePostIt(postIt);
       return;
@@ -305,13 +323,16 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   }
 
   private initializePostIt(postIt: DocumentData): void {
+    postIt.initializing = true;
+
     this.documentService.createDocument(postIt.document)
+      ._finally(() => postIt.initializing = false)
       .subscribe(
         response => {
-          postIt.document.id = response.headers.get('Location').split('/').pop();
-
-          this.refreshDocument(postIt);
           postIt.initialized = true;
+
+          postIt.document.id = response.headers.get('Location').split('/').pop();
+          this.refreshDocument(postIt);
           this.notificationService.success('Success', 'Document Created');
         },
         error => {

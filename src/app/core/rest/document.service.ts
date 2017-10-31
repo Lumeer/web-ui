@@ -36,7 +36,7 @@ export class DocumentService {
   }
 
   public createDocument(document: Document): Observable<HttpResponse<object>> {
-    return this.httpClient.post(this.apiPrefix(document.collectionCode), document, {observe: 'response'})
+    return this.httpClient.post(this.apiPrefix(document.collectionCode), document, {observe: 'response', responseType: 'text'})
       .catch(error => this.handleGlobalError(error));
   }
 
