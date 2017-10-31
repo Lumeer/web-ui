@@ -1,13 +1,16 @@
-<div class="fadedown"></div>
-<div class="perspective" #perspective (scroll)="loadMore(perspective)" [style.height]="height + 'px'">
+<div class="perspective" #perspective [style.height]="height + 'px'">
   <div class="layout" #layout>
 
-    <add-document class="layout-item" *ngIf="editable"
+    <add-document *ngIf="editable && query.collectionCodes.length < 2"
+                  class="layout-item"
+                  [query]="query"
                   (newDocument)="createDocument($event)"></add-document>
 
     <ng-container *ngFor="let postIt of postIts">
       <post-it-document *ngIf="postIt.collection"
-                        class="layout-item {{ !postIt.initialized ? 'uninitialized' : null }}"
+                        class="layout-item card post-it
+                        {{ !postIt.initialized ? 'uninitialized' : null }}
+                        {{ postIt === lastClickedPostIt ? 'selected' : null }}"
                         [attr.z-index]="postIt.selectedInput.documentIdx === postIt.index ? 50 : null"
                         [data]="postIt"
                         (selectOther)="selectDocument($event)"
@@ -16,27 +19,28 @@
       </post-it-document>
     </ng-container>
 
-    <ng-container *ngFor="let attributeSuggestionsEntry of attributeSuggestionsEntries()">
-      <datalist id="{{ attributeSuggestionsEntry[0] }}">
-        <option *ngFor="let suggestion of attributeSuggestionsEntry[1]">{{ suggestion }}</option>
-      </datalist>
-    </ng-container>
+    <datalist *ngFor="let attributeSuggestionsEntry of attributeSuggestionsEntries()"
+              id="{{ attributeSuggestionsEntry[0] }}">
+      <option *ngFor="let suggestion of attributeSuggestionsEntry[1]">{{ suggestion }}</option>
+    </datalist>
 
     <label *ngIf="!editable && query && !postIts.length"
            class="label-centered"
            i18n="@@document.list.empty">Nothing To Show</label>
   </div>
 </div>
-<div class="fadeup"></div>
 
-<a (click)="onScrollDown(perspective)" class="scroll-down">
-  <span i18n="@@document.button.scroll.down">Scroll Down</span>
+<a tabindex
+   (click)="showMore(perspective)"
+   class="scroll-down"
+   i18n="@@document.button.show.more">
+  Show More
   <i class="fa fa-chevron-down"></i>
 </a>
 
 <!-- modal -->
 <ng-template #modal>
-  <div class="modal-header bg-danger text-white">
+  <div class="modal-header bg-danger text-white rounded-top">
     <h5 class="modal-title" i18n="@@document.delete.dialog.title">Delete Document?</h5>
     <button type="button" class="close" aria-label="Close" (click)="deleteConfirm.hide()">
       <span aria-hidden="true">&times;</span>

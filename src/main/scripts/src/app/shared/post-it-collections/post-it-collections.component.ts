@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
@@ -31,7 +31,6 @@ import {WorkspaceService} from '../../core/workspace.service';
 import {Role} from '../permissions/role';
 import {PostItLayout} from '../utils/post-it-layout';
 import {PostItCollectionData} from './post-it-collection-data';
-import 'rxjs/add/operator/retry';
 import {QueryConverter} from '../utils/query-converter';
 import {HtmlModifier} from '../utils/html-modifier';
 
@@ -74,6 +73,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
               private notificationService: NotificationsService,
               private importService: ImportService,
               private workspaceService: WorkspaceService,
+              private zone: NgZone,
               private modalService: BsModalService) {
   }
 
@@ -91,12 +91,11 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
       container: '.layout',
       item: '.layout-item',
       gutter: 10
-    });
+    }, this.zone);
   }
 
   private loadCollections() {
     this.searchService.searchCollections(this.query)
-      .retry(3)
       .subscribe(
         collections => {
           collections.forEach(collection => {
@@ -142,6 +141,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     newPostIt.initialized = false;
     newPostIt.collection = {
       name: '',
+      description: '',
       color: COLLECTION_NO_COLOR,
       icon: COLLECTION_NO_ICON
     };
@@ -152,7 +152,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   public initializePostIt(postIt: PostItCollectionData): void {
     this.collectionService.createCollection(postIt.collection)
-      .retry(3)
       .subscribe(
         response => {
           const code = response.headers.get('Location').split('/').pop();
@@ -169,7 +168,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   private getCollection(postIt: PostItCollectionData): void {
     this.collectionService.getCollection(postIt.collection.code)
-      .retry(3)
       .subscribe(
         collection => {
           postIt.collection = collection;
@@ -185,7 +183,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     }
 
     this.collectionService.updateCollection(postIt.collection)
-      .retry(3)
       .subscribe(
         collection => {
           postIt.collection = collection;
@@ -212,7 +209,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   private importData(result: string, name: string, format: string) {
     this.importService.importFile(format, result, name)
-      .retry(3)
       .subscribe(
         collection => {
           const newPostIt = new PostItCollectionData;
@@ -252,7 +248,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   private removeCollection(postIt: PostItCollectionData): void {
     if (postIt.initialized) {
       this.collectionService.removeCollection(postIt.collection.code)
-        .retry(3)
         .subscribe(
           response => {
             this.postItToDelete = null;
@@ -267,19 +262,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     this.postIts.splice(this.postItIndex(postIt), 1);
   }
 
-  public onAttributesClick(collectionCode: string): void {
-    // TODO
-  }
-
-  public onPermissionsClick(collectionCode: string): void {
-    // TODO
-  }
-
-  public onDetailClick(collectionCode: string): void {
-    // TODO
-  }
-
-  public onTextAreaBlur(postIt: PostItCollectionData): void {
+  public onTextAreaBlur(postIt: PostItCollectionData, textArea: HTMLTextAreaElement): void {
     if (postIt.initialized) {
       this.updateCollection(postIt);
     } else {
@@ -297,7 +280,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   private postItIndex(collectionData: PostItCollectionData): number {
     const index = this.postIts.findIndex(collectionDataObject => collectionDataObject === collectionData);
-    return index === -1 ? undefined : index;
+    return index === -1 ? null : index;
   }
 
   private handleError(error: Error, message?: string): void {
@@ -325,6 +308,9 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   }
 
   public removeHtmlComments(html: HTMLElement): string {
-    return HtmlModifier.removeHtmlComments(html);
+    if (html) {
+      return HtmlModifier.removeHtmlComments(html);
+    }
   }
+
 }

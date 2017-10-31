@@ -17,34 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren} from '@angular/core';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
-import {Query} from '../../../core/dto/query';
-import {Document} from '../../../core/dto/document';
-import {Collection} from '../../../core/dto/collection';
-import {DocumentService} from '../../../core/rest/document.service';
-import {CollectionService} from '../../../core/rest/collection.service';
 import {PostItDocumentComponent} from './document/post-it-document.component';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
 import {Direction} from './document-data/direction';
-import {SearchService} from '../../../core/rest/search.service';
-import {PostItLayout} from '../../../shared/utils/post-it-layout';
-import {Buffer} from '../../../shared/utils/buffer';
 import {DocumentData} from './document-data/document-data';
+import {Query} from '../../../core/dto/query';
+import {PostItLayout} from '../../../shared/utils/post-it-layout';
+import {Collection} from '../../../core/dto/collection';
+import {DocumentService} from 'app/core/rest/document.service';
+import {SearchService} from 'app/core/rest/search.service';
+import {CollectionService} from '../../../core/rest/collection.service';
+import {Document} from '../../../core/dto/document';
+import {Permission} from 'app/core/dto/permission';
 import {Role} from '../../../shared/permissions/role';
-import {Permission} from '../../../core/dto/permission';
-import {isNullOrUndefined} from 'util';
-import 'rxjs/add/operator/retry';
 import {PerspectiveComponent} from '../perspective.component';
-import * as $ from 'jquery';
+import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'post-it-perspective',
   templateUrl: './post-it-perspective.component.html',
-  styleUrls: ['./post-it-perspective.component.scss']
+  styleUrls: ['./post-it-perspective.component.scss'],
+  host: {
+    '(document:click)': 'onClick($event)'
+  }
 })
 export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit, AfterViewChecked, OnDestroy {
 
@@ -60,6 +60,9 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   @Input()
   public height = 500;
 
+  @ViewChild('perspective')
+  public perspective: ElementRef;
+
   @ViewChild('layout')
   public layoutElement: ElementRef;
 
@@ -72,11 +75,9 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   public postIts: DocumentData[] = [];
 
-  private updatedPostIt: DocumentData;
-
-  private updateBuffer: Buffer;
-
   private layout: PostItLayout;
+
+  public lastClickedPostIt: DocumentData;
 
   private collections: { [collectionCode: string]: Collection } = {};
 
@@ -88,6 +89,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
               private documentService: DocumentService,
               private searchService: SearchService,
               private notificationService: NotificationsService,
+              private zone: NgZone,
               private modalService: BsModalService) {
   }
 
@@ -110,9 +112,9 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   private emptySelection(): AttributePropertySelection {
     return {
-      row: undefined,
-      column: undefined,
-      documentIdx: undefined,
+      row: null,
+      column: null,
+      documentIdx: null,
       direction: Direction.Self,
       editing: false
     };
@@ -147,7 +149,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   }
 
   private documentsPerRow(): number {
-    return Math.floor(this.layoutElement.nativeElement.clientWidth / (220 /*Post-it width*/ + 10 /*Gutter*/));
+    return Math.floor(this.layoutElement.nativeElement.clientWidth / (215 /*Post-it width*/ + 10 /*Gutter*/));
   }
 
   private initializeLayout(): void {
@@ -155,7 +157,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
       container: '.layout',
       item: '.layout-item',
       gutter: 10
-    });
+    }, this.zone);
   }
 
   private queryPage(pageNumber: number): Query {
@@ -170,7 +172,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   private fetchData(): void {
     this.searchService.searchDocuments(this.queryPage(this.page++))
-      .retry(3)
       .subscribe(
         documents => {
           this.initializePostIts(documents);
@@ -210,7 +211,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
     this.collections[collectionCode] = null;
     this.collectionService.getCollection(collectionCode)
-      .retry(3)
       .subscribe(
         collection => {
           this.collections[collectionCode] = collection;
@@ -288,33 +288,24 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   }
 
   public sendUpdate(postIt: DocumentData): void {
-    if (this.updatedPostIt === postIt) {
-      this.updateBuffer.stageChanges();
-      return;
-    }
-
     if (!postIt.initialized) {
       this.initializePostIt(postIt);
       return;
     }
 
-    this.updatedPostIt = postIt;
-    this.updateBuffer = new Buffer(() => {
-      this.documentService.updateDocument(postIt.document)
-        .retry(3)
-        .subscribe(
-          document => {
-            postIt.document.data = document.data;
-          },
-          error => {
-            this.handleError(error, 'Failed updating document');
-          });
-    }, 750);
+    this.documentService.updateDocument(postIt.document)
+      .subscribe(
+        document => {
+          delete document.data['_id']; // TODO remove after _id is no longer sent inside data
+          postIt.document.data = document.data;
+        },
+        error => {
+          this.handleError(error, 'Failed updating document');
+        });
   }
 
   private initializePostIt(postIt: DocumentData): void {
     this.documentService.createDocument(postIt.document)
-      .retry(3)
       .subscribe(
         response => {
           postIt.document.id = response.headers.get('Location').split('/').pop();
@@ -330,9 +321,9 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   private refreshDocument(postIt: DocumentData): void {
     this.documentService.getDocument(postIt.document.collectionCode, postIt.document.id)
-      .retry(3)
       .subscribe(
         document => {
+          delete document.data['_id']; // TODO remove after _id is no longer sent inside data
           postIt.document = document;
         },
         error => {
@@ -348,7 +339,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   public removeDocument(postIt: DocumentData): void {
     if (postIt.initialized) {
       this.documentService.removeDocument(postIt.document)
-        .retry(3)
         .subscribe(
           response => {
             this.notificationService.success('Success', 'Document removed');
@@ -381,16 +371,21 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
     this.notificationService.error('Error', message ? message : error.message);
   }
 
-  public loadMore(perspective: HTMLDivElement): void {
-    if (perspective.scrollHeight - perspective.scrollTop === perspective.clientHeight) {
-      this.fetchData();
-    }
+  public showMore(perspective: HTMLDivElement): void {
+    this.fetchData();
+
+    perspective.scroll({
+      top: perspective.scrollHeight,
+      left: 0,
+      behavior: 'smooth'
+    });
   }
 
-  public onScrollDown(perspective: HTMLDivElement): void {
-    $(perspective).animate({
-      scrollTop: perspective.scrollHeight
-    });
+  public onClick(event: MouseEvent): void {
+    const clickedPostItIndex = this.documentComponents
+      .toArray()
+      .findIndex(postIt => postIt.element.nativeElement.contains(event.target));
+    this.lastClickedPostIt = this.postIts[clickedPostItIndex];
   }
 
   public ngOnDestroy(): void {

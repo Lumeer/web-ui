@@ -48,8 +48,8 @@ export class ProjectService extends PermissionService {
     return this.httpClient.post(this.apiPrefix(orgCode), project, {observe: 'response', responseType: 'text'});
   }
 
-  public editProject(orgCode: string, projCode: string, project: Project): Observable<HttpResponse<object>> {
-    return this.httpClient.put(this.apiPrefix(orgCode, projCode), project, {observe: 'response'});
+  public editProject(orgCode: string, projCode: string, project: Project): Observable<HttpResponse<any>> {
+    return this.httpClient.put(this.apiPrefix(orgCode, projCode), project, {observe: 'response', responseType: 'text'});
   }
 
   private apiPrefix(orgCode: string, projCode?: string): string {

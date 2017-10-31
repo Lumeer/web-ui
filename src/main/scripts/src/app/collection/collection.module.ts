@@ -18,20 +18,44 @@
  */
 
 import {NgModule} from '@angular/core';
+
 import {SharedModule} from '../shared/shared.module';
 import {CollectionListComponent} from './list/collection-list.component';
 import {CollectionComponent} from './collection.component';
 import {CollectionRoutingModule} from './collection-routing.module';
-import {SimpleNotificationsModule} from 'angular2-notifications/dist';
+import {CollectionConfigComponent} from './config/collection-config.component';
+import {CollectionLinkTypesComponent} from './config/tab/link-types/collection-link-types.component';
+import {CollectionAttributesComponent} from './config/tab/attributes/collection-attributes.component';
+import {CollectionAccessRightsComponent} from './config/tab/access-rights/collection-access-rights.component';
+import {CollectionEventsComponent} from './config/tab/events/collection-events.component';
+import {CollectionManageRoleGuard} from './collection-managed-role.guard';
+import {LinkAttributeListComponent} from './config/tab/link-attribute-list/link-attribute-list.component';
+import {AttributeListComponent} from './config/tab/attribute-list/attribute-list.component';
+import {CollectionTabComponent} from './config/tab/collection-tab.component';
+import {PickerModule} from '../shared/picker/picker.module';
+import {CollectionSelectService} from './service/collection-select.service';
 
 @NgModule({
   imports: [
     SharedModule,
-    CollectionRoutingModule
+    CollectionRoutingModule,
+    PickerModule
   ],
   declarations: [
+    AttributeListComponent,
+    LinkAttributeListComponent,
     CollectionComponent,
-    CollectionListComponent
+    CollectionTabComponent,
+    CollectionListComponent,
+    CollectionConfigComponent,
+    CollectionAccessRightsComponent,
+    CollectionAttributesComponent,
+    CollectionEventsComponent,
+    CollectionLinkTypesComponent
+  ],
+  providers: [
+    CollectionManageRoleGuard,
+    CollectionSelectService
   ]
 })
 export class CollectionModule {

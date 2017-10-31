@@ -24,27 +24,37 @@ import {Collection} from '../dto/collection';
 import {Attribute} from '../dto/attribute';
 import {Observable} from 'rxjs/Observable';
 import {BadInputError} from '../error/bad-input.error';
+import {PermissionService} from './permission.service';
 import {isNullOrUndefined} from 'util';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {ConfiguredAttribute} from '../../collection/config/tab/attribute-list/configured-attribute';
 import 'rxjs/add/operator/catch';
-import {PermissionService} from './permission.service';
 
+// TODO add add support for Default Attribute
 @Injectable()
 export class CollectionService extends PermissionService {
 
   public createCollection(collection: Collection): Observable<HttpResponse<any>> {
-    return this.httpClient.post(this.apiPrefix(), this.toDto(collection), {observe: 'response'})
-      .catch(this.handleError);
+    return this.httpClient.post(
+      this.apiPrefix(), this.toDto(collection),
+      {observe: 'response', responseType: 'text'}
+      ).catch(this.handleError);
   }
 
-  public updateCollection(collection: Collection): Observable<Collection> {
-    return this.httpClient.put(`${this.apiPrefix()}/${collection.code}`, this.toDto(collection))
+  public updateCollection(collection: Collection, collectionCode?: string): Observable<Collection> {
+    if (!collectionCode) {
+      collectionCode = collection.code;
+    }
+
+    return this.httpClient.put(`${this.apiPrefix()}/${collectionCode}`, this.toDto(collection))
       .catch(this.handleError);
   }
 
   public removeCollection(collectionCode: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}`, {observe: 'response'})
-      .catch(this.handleError);
+    return this.httpClient.delete(
+      `${this.apiPrefix()}/${collectionCode}`,
+      {observe: 'response', responseType: 'text'}
+      ).catch(this.handleError);
   }
 
   public getCollection(collectionCode: string): Observable<Collection> {
@@ -73,28 +83,46 @@ export class CollectionService extends PermissionService {
   }
 
   public updateAttribute(collectionCode: string, fullName: string, attribute: Attribute): Observable<Attribute> {
-    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, attribute)
+    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, this.attributeToDto(attribute))
       .catch(CollectionService.handleGlobalError);
   }
 
   public removeAttribute(collectionCode: string, fullName: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, {observe: 'response'});
+    return this.httpClient.delete(
+      `${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`,
+      {observe: 'response', responseType: 'text'}
+    );
   }
 
   protected actualApiPrefix() {
-    let collectionCode = this.workspaceService.collectionCode;
+    const collectionCode = this.workspaceService.collectionCode;
 
     return `${this.apiPrefix()}/${collectionCode}`;
   }
 
   private toDto(collection: Collection): Collection {
+    let dtoAttributes = [];
+    if (collection.attributes) {
+      dtoAttributes = collection.attributes.map(this.attributeToDto);
+    }
+
+    // TODO send desctiption to the server too
     return {
       code: collection.code,
       name: collection.name,
       color: collection.color,
       icon: collection.icon,
       permissions: collection.permissions,
-      attributes: collection.attributes
+      attributes: dtoAttributes
+    };
+  }
+
+  private attributeToDto(attribute: Attribute | ConfiguredAttribute): Attribute {
+    return {
+      constraints: attribute.constraints,
+      fullName: attribute.fullName,
+      name: attribute.name,
+      usageCount: attribute.usageCount
     };
   }
 

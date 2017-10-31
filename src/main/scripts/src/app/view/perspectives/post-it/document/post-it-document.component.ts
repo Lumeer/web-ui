@@ -22,8 +22,9 @@ import {AttributePair} from '../document-data/attribute-pair';
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
 import {Direction} from '../document-data/direction';
 import {DocumentData} from '../document-data/document-data';
-import {isString, isUndefined} from 'util';
+import {WorkspaceService} from '../../../../core/workspace.service';
 import {KeyCode} from '../../../../shared/key-code';
+import {isString} from 'util';
 
 @Component({
   selector: 'post-it-document',
@@ -51,6 +52,11 @@ export class PostItDocumentComponent implements OnInit {
 
   public newAttributePair: AttributePair;
 
+  constructor(
+    public element: ElementRef,
+    private workspaceService: WorkspaceService) {
+  }
+
   public ngOnInit(): void {
     this.initializeVariables();
     this.setEventListener();
@@ -77,8 +83,8 @@ export class PostItDocumentComponent implements OnInit {
     this.attributePairs = Object.entries(this.data.document.data).map(([attribute, value]) => {
       return {
         attribute: attribute,
-        previousAttributeName: '',
-        value: isString(value) ? value : JSON.stringify(value, undefined, 2)
+        previousAttributeName: attribute,
+        value: isString(value) ? value : JSON.stringify(value, null, 2)
       };
     });
   }
@@ -94,54 +100,21 @@ export class PostItDocumentComponent implements OnInit {
       this.data.index === this.data.selectedInput.documentIdx;
   }
 
-  public onKeyDown(event: KeyboardEvent): void {
-    if (this.data.selectedInput.editing) {
-      this.editModeOnKey.hasOwnProperty(event.key) && this.editModeOnKey[event.key]();
-    } else {
-      this.selectModeOnKey.hasOwnProperty(event.key) && this.selectModeOnKey[event.key]();
-    }
-  }
-
-  private readonly selectModeOnKey = {
-    ArrowUp: () => this.moveSelection(0, -1),
-    ArrowDown: () => this.moveSelection(0, 1),
-    ArrowLeft: () => this.moveSelection(-1, 0),
-    ArrowRight: () => this.moveSelection(1, 0),
-    F2: () => {
-      this.setEditMode(true);
-      this.focusSelection();
-    },
-    Enter: () => {
-      this.setEditMode(true);
-      this.focusSelection();
-    }
-  };
-
-  private readonly editModeOnKey = {
-    F2: () => {
-      this.setEditMode(false);
-      this.focusSelection();
-    },
-    Escape: () => {
-      this.setEditMode(false);
-      this.focusSelection();
-    },
-    Enter: () => {
-      if (this.attributeColumn(this.data.selectedInput.column)) {
-        if (this.data.selectedInput.row === this.attributePairs.length && !this.newAttributePair.attribute) {
-          this.moveSelection(Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER);
-        } else {
-          this.moveSelection(1, 0);
-        }
+  public onEditModeEnter(): void {
+    if (this.attributeColumn(this.data.selectedInput.column)) {
+      if (this.data.selectedInput.row === this.attributePairs.length && !this.newAttributePair.attribute) {
+        this.moveSelection(Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER);
       } else {
-        if (this.data.selectedInput.row === this.attributePairs.length) {
-          this.moveSelection(Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER);
-        } else {
-          this.moveSelection(-1, 1);
-        }
+        this.moveSelection(1, 0);
+      }
+    } else {
+      if (this.data.selectedInput.row === this.attributePairs.length) {
+        this.moveSelection(Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER);
+      } else {
+        this.moveSelection(-1, 1);
       }
     }
-  };
+  }
 
   private moveSelection(columnChange: number, rowChange: number): void {
     const newColumn = this.data.selectedInput.column + columnChange;
@@ -218,7 +191,7 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   private focusSelection(): void {
-    if (isUndefined(this.data.selectedInput.column) || isUndefined(this.data.selectedInput.row)) {
+    if (this.data.selectedInput.column == null || this.data.selectedInput.row == null) {
       return;
     }
 
@@ -239,25 +212,21 @@ export class PostItDocumentComponent implements OnInit {
     this.data.selectedInput.editing = on;
   }
 
-  public updateAttribute(attributePair: AttributePair, newAttribute: string): void {
-    attributePair.previousAttributeName = attributePair.attribute;
-    attributePair.attribute = newAttribute;
-
+  public updateAttribute(attributePair: AttributePair): void {
     delete this.data.document.data[attributePair.previousAttributeName];
-    this.data.document.data[newAttribute] = attributePair.value;
+    attributePair.previousAttributeName = attributePair.attribute;
 
-    if (!newAttribute) {
+    if (attributePair.attribute) {
+      this.data.document.data[attributePair.attribute] = attributePair.value;
+    } else {
       this.attributePairs.splice(this.data.selectedInput.row, 1);
-      delete this.data.document.data[attributePair.attribute];
     }
 
     this.changes.emit();
   }
 
-  public updateValue(attributePair: AttributePair, newValue: string): void {
-    attributePair.value = newValue;
-    this.data.document.data[attributePair.attribute] = newValue;
-
+  public updateValue(attributePair: AttributePair): void {
+    this.data.document.data[attributePair.attribute] = attributePair.value;
     this.changes.emit();
   }
 
@@ -282,6 +251,10 @@ export class PostItDocumentComponent implements OnInit {
 
   public onRemoveDocumentClick(): void {
     this.removed.emit();
+  }
+
+  public configPrefix(): string {
+    return `/w/${this.workspaceService.organizationCode}/${this.workspaceService.projectCode}/c/${this.data.collection.code}/d/${this.data.document.id}`;
   }
 
 }

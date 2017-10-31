@@ -1,0 +1,48 @@
+@import "../../../../shared/variables";
+
+:host {
+  display: block;
+
+  // hide arrow on suggestions
+  input::-webkit-calendar-picker-indicator {
+    display: none;
+  }
+
+  .appear:hover .appearing {
+    opacity: 1 !important;
+  }
+
+  .appearing {
+    opacity: 0;
+  }
+
+  .hover-darken-text-danger {
+    transition: color $animation-color-duration;
+    color: $danger;
+
+    &:hover {
+      color: darken($danger, 25);
+    }
+  }
+
+  .add {
+    transition: color $animation-color-duration;
+
+    &:hover {
+      color: $success;
+    }
+  }
+
+  .attribute-row {
+    width: 175px;
+  }
+
+  .count-row {
+    width: 50px;
+  }
+
+  .constraints-row {
+    width: 250px;
+  }
+
+}

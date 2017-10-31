@@ -1,0 +1,56 @@
+<table class="table table-sm table-hover mt-1" style="width: 475px">
+  <thead>
+  <tr>
+    <th class="border-0 attribute-row" i18n="@@collection.config.link.types.list.attribute">
+      Attribute
+    </th>
+    <th class="border-0 count-row" i18n="@@collection.config.link.types.list.usage">
+      Usage
+    </th>
+    <th class="border-0 constraints-row" i18n="@@collection.config.link.types.list.constraints">
+      Constraints
+    </th>
+    <th class="border-0">
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+
+  <tr *ngFor="let attribute of attributes(); let row = index"
+      class="appear">
+    <td class="attrbute-row">
+      <i class="fa-fw mx-1 align-self-center {{ collections[attribute.collectionCode].icon }}"
+         [style.color]="collections[attribute.collectionCode].color"
+         aria-hidden="true"></i>
+      <span>{{ attribute.name }}</span>
+    </td>
+    <td class="text-right count-row">{{ formatNumber(attribute.usageCount) }}</td>
+    <td class="constraints-row">
+      <div class="d-flex flex-wrap">
+            <span class="constraint px-2 ml-1 rounded"
+                  *ngFor="let constraint of attribute.constraints; let idx = index">{{ constraint }}</span>
+      </div>
+    </td>
+    <td class="border-0 px-1 bg-white appearing">
+      <i class="fa fa-fw fa-times hover-darken-text-danger"
+         aria-hidden="true"
+         title="Remove Link"
+         i18n-title="@@collection.config.link.types.list.remove.link"
+         (click)="$event.preventDefault(); removeLinkAttribute(linkType, attribute);"></i>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="attrbute-row" colspan="3">
+      <input #newAttribute
+             [(ngModel)]="newAttributeName"
+             (keyup.enter)="newAttribute.blur()"
+             (blur)="addLinkedAttribute()"
+             placeholder="{{ !linkType.linkedAttributes.length ? 'No attributes' : null }} + "
+             class="border-0">
+    </td>
+    <td class="border-0 px-3 bg-white">
+    </td>
+  </tr>
+  </tbody>
+</table>

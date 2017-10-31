@@ -6,14 +6,6 @@
            {{ postIt === lastClickedPostIt ? 'selected' : null }}
            {{ !postIt.initialized ? 'uninitialized' : null }}" [style.border-color]="postIt.collection.color">
 
-      <!-- TODO remove once Angular supports ICU messages in attributes -->
-      <div hidden>
-        <span #iconTitle
-              i18n="@@collection.icon.title">
-          {postIt.initialized, select, 1 {Go to documents} other {Pick icon}}
-        </span>
-      </div>
-
       <div class="card-body text-center">
         <a class="icon" [style.color]="postIt.collection.color"
            [title]="removeHtmlComments(iconTitle)"
@@ -37,39 +29,43 @@
           </a>
         </div>
 
-        <div class="buttons d-flex flex-column" [style.top]="postIt.initialized ? '38px' : '5px'">
-          <a *ngIf="postIt.initialized"
-             (click)="onDetailClick(postIt.collection.code)"
-             title="Detail" i18n-title="@@collection.button.detail"
-             class="rounded-left text-success">
-            <i class="fa fa-fw fa-search" aria-hidden="true"></i>
-          </a>
-          <a *ngIf="postIt.initialized"
-             (click)="onAttributesClick(postIt.collection.code)"
-             title="Attributes" i18n-title="@@collection.button.attributes"
-             class="rounded-left text-success">
-            <i class="fa fa-fw fa-list-ul" aria-hidden="true"></i>
-          </a>
-          <a *ngIf="postIt.initialized"
-             title="Icon picker" i18n-title="@@collection.button.icon"
-             class="rounded-left text-success"
-             data-toggle="dropdown">
-            <i class="fa fa-fw fa-eye-dropper" aria-hidden="true"></i>
-          </a>
-          <div class="dropdown-menu">
-            <color-picker class="dropdown-item" [(color)]="postIt.collection.color"
-                          (selectedChange)="updateCollection(postIt)"></color-picker>
-            <div class="dropdown-divider"></div>
-            <icon-picker class="dropdown-item" [(icon)]="postIt.collection.icon"
-                         (selectedChange)="updateCollection(postIt)"></icon-picker>
-          </div>
-          <a *ngIf="postIt.initialized && hasManageRole(postIt.collection)"
-             (click)="onPermissionsClick(postIt.collection.code)"
-             title="Permissions" i18n-title="@@collection.button.permissions"
-             class="rounded-left text-success">
-            <i class="fa fa-fw fa-users" aria-hidden="true"></i>
-          </a>
-          <a *ngIf="!postIt.initialized || hasManageRole(postIt.collection)" (click)="confirmDeletion(postIt, modal)"
+        <div class="buttons d-flex flex-column" [style.top]="postIt.initialized ? '28px' : '5px'">
+          <ng-container *ngIf="postIt.initialized">
+            <a title="Attributes" i18n-title="@@collection.button.attributes"
+               class="rounded-left text-success"
+               [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'attributes']">
+              <i class="fa fa-fw fa-list-ul" aria-hidden="true"></i></a>
+
+            <a title="Link Types" i18n-title="@@collection.button.link.types"
+               class="rounded-left text-success"
+               [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'linktypes']">
+              <i class="fa fa-fw fa-link" aria-hidden="true"></i></a>
+
+            <a title="Events" i18n-title="@@collection.button.events"
+               class="rounded-left text-success"
+               [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'events']">
+              <i class="fa fa-fw fa-bullseye" aria-hidden="true"></i></a>
+
+            <a *ngIf="hasManageRole(postIt.collection)"
+               title="Access Rights" i18n-title="@@collection.button.permissions"
+               class="rounded-left text-success"
+               [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'permissions']">
+              <i class="fa fa-fw fa-users" aria-hidden="true"></i></a>
+
+            <a title="Icon picker" i18n-title="@@collection.button.icon"
+               class="rounded-left text-success" data-toggle="dropdown">
+              <i class="fa fa-fw fa-eye-dropper" aria-hidden="true"></i></a>
+            <div class="dropdown-menu">
+              <color-picker class="dropdown-item" [(color)]="postIt.collection.color"
+                            (selectedChange)="updateCollection(postIt)"></color-picker>
+              <div class="dropdown-divider"></div>
+              <icon-picker class="dropdown-item" [(icon)]="postIt.collection.icon"
+                           (selectedChange)="updateCollection(postIt)"></icon-picker>
+            </div>
+          </ng-container>
+
+          <a *ngIf="!postIt.initialized || hasManageRole(postIt.collection)"
+             (click)="confirmDeletion(postIt, modal)"
              class="text-danger rounded-left"
              title="Remove Collection" i18n-title="@@collection.button.remove">
             <i class="fa fa-fw fa-times" aria-hidden="true"></i>
@@ -83,9 +79,12 @@
         <span #inputPlaceholder i18n="@@collection.name.input.placeholder">Name</span>
       </div>
 
-      <textarea class="card-footer text-center font-weight-bold bg-transparent" #textArea rows="1"
+      <textarea class="card-footer text-center font-weight-bold bg-transparent" #textArea
+                rows="1"
                 [(ngModel)]="postIt.collection.name"
-                (ngModelChange)="updateToScrollbarHeight(textArea)" (blur)="onTextAreaBlur(postIt); textArea.placeholder = removeHtmlComments(inputPlaceholder)"
+                (ngModelChange)="updateToScrollbarHeight(textArea)"
+                (blur)="onTextAreaBlur(postIt, textArea);
+                textArea.placeholder = removeHtmlComments(inputPlaceholder)"
                 (focus)="textArea.placeholder = ''">
       </textarea>
     </div>
@@ -101,7 +100,8 @@
         </div>
       </div>
 
-      <div class="layout-item card text-center add-post-it" ondragover="return false;" [ngClass]="{'dragging': dragging}" (click)="fileInput.click()"
+      <div class="layout-item card text-center add-post-it" ondragover="return false;"
+           [ngClass]="{'dragging': dragging}" (click)="fileInput.click()"
            (drop)="handleDrop($event)" (dragenter)="handleDragEnter()" (dragleave)="handleDragLeave()">
         <div class="card-body">
           <i class="fa fa-cloud-upload fa-6x" aria-hidden="true"></i>
@@ -110,8 +110,7 @@
              i18n="@@collection.button.import">Import collection
         </div>
         <input hidden type="file" #fileInput (click)="$event.stopPropagation()"
-               (change)="fileChange($event.target.files)"
-               accept=".csv, text/csv">
+               (change)="fileChange($event.target.files)" accept=".csv, text/csv">
       </div>
     </ng-container>
   </div>

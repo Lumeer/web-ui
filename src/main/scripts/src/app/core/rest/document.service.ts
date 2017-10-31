@@ -27,6 +27,7 @@ import {isNullOrUndefined} from 'util';
 import {LumeerError} from '../error/lumeer.error';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 
+// TODO send data attribute without '_id'
 @Injectable()
 export class DocumentService {
 
@@ -49,9 +50,11 @@ export class DocumentService {
       .catch(error => this.handleGlobalError(error));
   }
 
-  public removeDocument(document: Document): Observable<HttpResponse<object>> {
-    return this.httpClient.delete(`${this.apiPrefix(document.collectionCode)}/${document.id}`, {observe: 'response'})
-      .catch(error => this.handleGlobalError(error));
+  public removeDocument(document: Document): Observable<HttpResponse<any>> {
+    return this.httpClient.delete(
+      `${this.apiPrefix(document.collectionCode)}/${document.id}`,
+      {observe: 'response', responseType: 'text'}
+    ).catch(error => this.handleGlobalError(error));
   }
 
   public getDocument(collectionCode: string, documentId: string): Observable<Document> {

@@ -22,13 +22,50 @@ import {RouterModule, Routes} from '@angular/router';
 
 import {CollectionListComponent} from './list/collection-list.component';
 import {CollectionComponent} from './collection.component';
+import {CollectionConfigComponent} from './config/collection-config.component';
+import {CollectionAttributesComponent} from './config/tab/attributes/collection-attributes.component';
+import {CollectionEventsComponent} from './config/tab/events/collection-events.component';
+import {CollectionAccessRightsComponent} from './config/tab/access-rights/collection-access-rights.component';
+import {CollectionLinkTypesComponent} from './config/tab/link-types/collection-link-types.component';
+import {CollectionManageRoleGuard} from './collection-managed-role.guard';
 
 const collectionRoutes: Routes = [
+  {
+    path: 'w/:organizationCode/:projectCode/c/:collectionCode',
+    component: CollectionConfigComponent,
+    children: [
+      {
+        path: 'attributes',
+        component: CollectionAttributesComponent
+      },
+      {
+        path: 'linktypes',
+        component: CollectionLinkTypesComponent
+      },
+      {
+        path: 'events',
+        component: CollectionEventsComponent
+      },
+      {
+        path: 'permissions',
+        component: CollectionAccessRightsComponent,
+        canActivate: [CollectionManageRoleGuard]
+      },
+      {
+        path: '',
+        redirectTo: 'attributes',
+        pathMatch: 'full'
+      }
+    ]
+  },
   {
     path: 'w/:organizationCode/:projectCode/collections',
     component: CollectionComponent,
     children: [
-      {path: '', component: CollectionListComponent}
+      {
+        path: '',
+        component: CollectionListComponent
+      }
     ]
   }
 ];

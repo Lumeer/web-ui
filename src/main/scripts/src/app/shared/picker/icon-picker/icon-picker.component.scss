@@ -1,6 +1,8 @@
 @import "../../variables";
 
 :host {
+  background: $secondary-color !important;
+
   padding: 0;
   display: block;
   height: 140px;

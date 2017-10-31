@@ -1,0 +1,135 @@
+<div class="container-fluid px-5 whole"
+     [style.opacity]="collection ? '1' : '0'"
+     *ngIf="collection">
+  <div class="d-flex flex-row justify-content-start">
+    <a class="fa fa-arrow-left text-success" (click)="goToCollectionsPage()"></a>
+    <i class="color-class fa-fw {{ collection.icon }} collection-icon"
+       [style.color]="collection.color"
+       data-toggle="dropdown"></i>
+    <div class="dropdown-menu">
+      <color-picker class="dropdown-item"
+                    [(color)]="collection.color"
+                    (selectedChange)="updateCollection()">
+      </color-picker>
+      <div class="dropdown-divider"></div>
+      <icon-picker class="dropdown-item"
+                   [(icon)]="collection.icon"
+                   (selectedChange)="updateCollection()">
+      </icon-picker>
+    </div>
+
+    <input class="color-class name"
+           [(ngModel)]="collection.name"
+           (blur)="updateCollection()"
+           [style.color]="collection.color"
+           i18n-title="@@header.collection.name"
+           title="Edit name of the collection">
+
+    <div class="float-right document-count color-class ml-auto">
+      <a i18n-title="@@header.collection.documents.count"
+         class="count"
+         title="Number of documents in this collection"
+         [style.color]="collection.color"
+         [routerLink]="[workspacePath(), 'view']"
+         [queryParams]="{ perspective: 'postit', query: documentsQuery(collection.code) }">
+        <span>{{ collection.documentsCount }}</span>
+        <i class="far fa-file" aria-hidden="true"></i>
+      </a>
+
+    </div>
+
+  </div>
+
+  <div class="d-flex flex-row justify-content-start">
+    <input class="color-class code"
+           [(ngModel)]="collection.code"
+           (blur)="updateCollectionCode()"
+           [style.color]="collection.color"
+           i18n-title="@@header.collection.code"
+           title="Edit code of the collection">
+
+    <i class="fa fa-times pull-right text-danger icon ml-auto"
+       aria-hidden="true"
+       i18n-title="@@header.collection.remove"
+       title="Remove collection"
+       *ngIf="collection"
+       (click)="confirmDeletion(modal)"></i>
+  </div>
+
+  <div class="description d-flex py-3">
+    <div class="pl-2">
+      <i class="fas fa fa-pencil edit"
+         (click)="onCollectionDescriptionEdit()"></i>
+    </div>
+    <div class="text flex-grow"
+         [attr.contenteditable]="collectionDescriptionEditable"
+         (blur)="updateCollection()">
+      {{ collection.description }}
+    </div>
+
+  </div>
+</div>
+
+<ul class="nav nav-tabs px-5" *ngIf="collection">
+  <li role="presentation" class="nav-item">
+    <a [routerLink]="['attributes']"
+       routerLinkActive="active"
+       class="nav-link"
+       i18n="@@collection.config.tab.attributes">
+      Attributes
+    </a>
+  </li>
+  <li role="presentation" class="nav-item">
+    <a [routerLink]="['linktypes']"
+       routerLinkActive="active"
+       class="nav-link"
+       i18n="@@collection.config.tab.link.types">
+      Link Types
+    </a>
+  </li>
+  <li role="presentation" class="nav-item">
+    <a [routerLink]="['events']"
+       routerLinkActive="active"
+       class="nav-link"
+       i18n="@@collection.config.tab.events">
+      Events
+    </a>
+  </li>
+  <li *ngIf="hasManageRole(collection)" role="presentation" class="nav-item">
+    <a [routerLink]="['permissions']"
+       routerLinkActive="active"
+       class="nav-link"
+       i18n="@@collection.config.tab.permissions">
+      Access Rights
+    </a>
+  </li>
+</ul>
+
+<div class="container-fluid my-4">
+  <router-outlet *ngIf="collection"></router-outlet>
+</div>
+
+<!-- modal -->
+<ng-template #modal>
+  <div class="modal-header bg-danger text-white rounded-top">
+    <h5 class="modal-title" i18n="@@collection.delete.dialog.title">Delete Collection?</h5>
+    <button type="button" class="close" aria-label="Close" (click)="deleteConfirm.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p i18n="@@collection.delete.dialog.body">Deleting a collection will permanently remove it from this project. All documents stored inside the collection will be lost.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-secondary"
+            (click)="deleteConfirm.hide()"
+            i18n="@@collection.delete.dialog.button.no">No, Keep Collection
+    </button>
+    <button type="button"
+            class="btn btn-danger"
+            (click)="deleteConfirm.hide(); removeCollection()"
+            i18n="@@collection.delete.dialog.button.yes">Yes, Delete Collection
+    </button>
+  </div>
+</ng-template>

@@ -23,10 +23,13 @@ import {ViewRoutingModule} from './view-routing.module';
 import {PerspectiveDirective} from './perspectives/perspective.directive';
 import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
+import {RouterModule} from '@angular/router';
+
 import {SearchPerspectiveModule} from './perspectives/search/search-perspective.module';
 import {PostItPerspectiveModule} from './perspectives/post-it/post-it-perspective.module';
 import {ViewComponent} from './view.component';
 import {TablePerspectiveModule} from './perspectives/table/table-perspective.module';
+import {TableModule} from '../shared/table/table.module';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ShareDialogComponent} from './view-controls/share-dialog/share-dialog.component';
 
@@ -34,6 +37,8 @@ import {ShareDialogComponent} from './view-controls/share-dialog/share-dialog.co
   imports: [
     BrowserModule,
     FormsModule,
+    TableModule,
+    RouterModule,
     PostItPerspectiveModule,
     SearchPerspectiveModule,
     TablePerspectiveModule,

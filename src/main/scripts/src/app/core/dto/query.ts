@@ -22,6 +22,7 @@ export interface Query {
   collectionCodes?: string[];
   filters?: string[];
   fulltext?: string;
+  linkNames?: string[]; // TODO implement on backend
   page?: number;
   pageSize?: number;
 

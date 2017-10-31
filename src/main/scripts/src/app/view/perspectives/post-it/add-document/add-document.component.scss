@@ -2,15 +2,11 @@
 
 :host {
   display: block;
-  padding-top: 57.5px;
-  height: 200px;
-  text-align: center;
 
-  a {
-    transition: color $animation-color-duration;
-    -webkit-transition: color $animation-color-duration;
-    -moz-transition: color $animation-color-duration;
-    -o-transition: color $animation-color-duration;
+  .add-post-it {
+    transition: transform $animation-duration, color $animation-color-duration;
+    background: transparent;
+    border-color: transparent;
 
     color: $primary;
     border-radius: 20px;
@@ -20,10 +16,11 @@
     }
   }
 
-  label {
-    display: block;
-    font-size: 1.5em;
-    pointer-events: none;
+  .card-footer {
+    color: inherit;
+    font-size: 20px;
+    border: none;
+    padding-top: 0;
   }
 
 }
