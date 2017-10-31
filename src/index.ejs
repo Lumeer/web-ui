@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base href="<%= htmlWebpackPlugin.options.publicPath %>">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <!-- Enable ngx-bootstrap bootstrap 4 theme  -->
+    <script>
+      window.__theme = 'bs4';
+    </script>
+    <script type="text/javascript">
+      var lumeer = {
+        constants: {
+          publicPath: '/ui'
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <app></app>
+    <script src="https://unpkg.com/@reactivex/rxjs@5.4.3/dist/global/Rx.min.js"></script>
+
+    <!-- Bootstrap related Javascripts -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+    <!-- Angular related Javascript's libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js" integrity="sha256-3Jy/GbSLrg0o9y5Z5n1uw0qxZECH7C6OQpVBgNFYa0g=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/shim.min.js" integrity="sha256-PDno41dJ0mluJo7N9g7Yvud2DFit+B4HnFtnw6gdFog=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zone.js/0.8.5/zone.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reflect-metadata/0.1.8/Reflect.min.js" integrity="sha256-rKcebKVvRtSWiAw7TSQXCo6n4ETBl/kxdZXqeY04OvY=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.41/system.src.js" integrity="sha256-66/PZVXLikewAmZD3L6BXE6Zk97p4WGjeyZugpT/Ah4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.2/lodash.min.js" integrity="sha256-Cv5v4i4SuYvwRYzIONifZjoc99CkwfncROMSWat1cVA=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations.min.js" integrity="sha256-D/TFw0ZJwHrDxeDSLmQUKR7zRZ0Bl/7tlkcw4dDBozI=" crossorigin="anonymous"></script>
+  </body>
+</html>

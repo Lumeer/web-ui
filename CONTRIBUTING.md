@@ -17,9 +17,8 @@ Before you start working on this project, you will need to set up your Git repos
 
 ## Code style
 Before committing check if your code is compliant with our [TSLint](https://palantir.github.io/tslint/) and [EditorConfig](http://editorconfig.org/) rules.
-Configuration files for both can be found inside `src/main/scripts`.
-If you are using recommended IDE from JetBrains, rules are configured and 
-checked automatically.
+Configuration files for both can be found in the root directory.
+If you are using recommended IDE from JetBrains, rules are configured and checked automatically.
 
 ## License
 Add the following license header at the beginning of every TypeScript file you add to Lumeer engine repository:

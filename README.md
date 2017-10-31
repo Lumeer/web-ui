@@ -5,11 +5,6 @@ This repository holds all data required for lumeer UI
 This repository is using Node.js® as run tool, if you want to run it, you have to install it, there are numerous ways of installing it, please refer to [node.js](https://nodejs.org/en/download/) on how to install it for your system
 
 ## Installation
-Change directory
-```bash
-$ cd /src/main/scripts
-```
-
 Before running any run script install dependencies
 ```bash
 $ npm install

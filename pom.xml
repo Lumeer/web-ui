@@ -32,7 +32,7 @@
             <configuration>
                <webResources>
                   <resource>
-                     <directory>src/main/scripts/dist</directory>
+                     <directory>dist</directory>
                   </resource>
                </webResources>
             </configuration>
@@ -50,7 +50,7 @@
                      <arguments>
                         <argument>install</argument>
                      </arguments>
-                     <workingDirectory>${basedir}/src/main/scripts</workingDirectory>
+                     <workingDirectory>${basedir}</workingDirectory>
                   </configuration>
                   <goals>
                      <goal>exec</goal>
@@ -65,7 +65,7 @@
                         <argument>run</argument>
                         <argument>build</argument>
                      </arguments>
-                     <workingDirectory>${basedir}/src/main/scripts</workingDirectory>
+                     <workingDirectory>${basedir}</workingDirectory>
                      <environmentVariables>
                         <AOT>true</AOT>
                      </environmentVariables>
