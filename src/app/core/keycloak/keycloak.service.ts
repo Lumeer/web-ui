@@ -7,7 +7,7 @@ export class KeycloakService {
   public static auth: any = {};
 
   public static init(): Promise<any> {
-    let kcSetting = require('../../../../../webapp/WEB-INF/keycloak.json');
+    let kcSetting = require('../../../main/webapp/WEB-INF/keycloak.json');
     const keycloakAuth: any = Keycloak({
       url: kcSetting['auth-server-url'],
       realm: kcSetting.realm,
