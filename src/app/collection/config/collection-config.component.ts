@@ -32,6 +32,9 @@ import {QueryConverter} from '../../shared/utils/query-converter';
 import {Query} from '../../core/dto/query';
 import {CollectionSelectService} from '../service/collection-select.service';
 import 'rxjs/add/operator/combineLatest';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/do';
 
 @Component({
   selector: 'collection-config',

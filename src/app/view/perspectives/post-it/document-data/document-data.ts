@@ -27,6 +27,7 @@ export class DocumentData {
   public document: Document;
   public collection: Collection;
 
+  public initializing: boolean;
   public initialized: boolean;
   public writeRole: boolean;
   public selectedInput: AttributePropertySelection;
