@@ -22,7 +22,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 
-import {Collection, COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../../core/dto/collection';
+import {COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../constants';
+import {Collection} from '../../../../core/dto/collection';
 import {CollectionTabComponent} from '../collection-tab.component';
 import {LinkTypeService} from '../../../../core/rest/link-type.service';
 import {LinkType} from '../../../../core/dto/link-type';

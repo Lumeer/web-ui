@@ -17,19 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute} from './attribute';
-import {Permissions} from './permissions';
+export const COLLECTION_NO_ICON = 'fa fa-exclamation-circle';
 
-export interface Collection {
+export const COLLECTION_NO_COLOR = '#cccccc';
 
-  code?: string;
-  name: string;
-  icon: string;
-  color: string;
-  description?: string; // TODO implement on backend and make compulsory
-  permissions?: Permissions;
-  attributes?: Attribute[];
-  defaultAttribute?: Attribute; // TODO implement on backend
-  documentsCount?: number;
-
-}
+export const COLLECTION_NO_CODE = '';

@@ -22,7 +22,8 @@ import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnIni
 import {NotificationsService} from 'angular2-notifications/dist';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
-import {Collection, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../core/dto/collection';
+import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../collection/constants';
+import {Collection} from '../../core/dto/collection';
 import {Query} from '../../core/dto/query';
 import {CollectionService} from '../../core/rest/collection.service';
 import {ImportService} from '../../core/rest/import.service';
