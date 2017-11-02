@@ -21,6 +21,7 @@ import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/c
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {NotificationsService} from 'angular2-notifications/dist';
+import {switchMap, tap} from 'rxjs/operators';
 
 import {COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../constants';
 import {Collection} from '../../../../core/dto/collection';
@@ -74,10 +75,10 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public changeCollection(toCollection: string): void {
-    this.collectionSelectService.select(toCollection)
-      .switchMap(collection => this.router.navigate([this.workspacePath(), 'c', collection.code, 'linktypes']))
-      .do(navigated => this.fetchAllCollections())
-      .subscribe(navigated => this.fetchLinkTypes(this.collection.code));
+    this.collectionSelectService.select(toCollection).pipe(
+      switchMap(collection => this.router.navigate([this.workspacePath(), 'c', collection.code, 'linktypes'])),
+      tap(navigated => this.fetchAllCollections())
+    ).subscribe(navigated => this.fetchLinkTypes(this.collection.code));
   }
 
   private fetchAllCollections(): void {

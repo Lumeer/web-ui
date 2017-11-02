@@ -25,6 +25,7 @@ import {Observable} from 'rxjs/Observable';
 import {Collection} from '../dto/collection';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {LumeerError} from '../error/lumeer.error';
+import {catchError} from 'rxjs/operators';
 
 @Injectable()
 export class ImportService {
@@ -36,7 +37,7 @@ export class ImportService {
     const queryParams = new HttpParams().set('format', format).set('name', name);
 
     return this.http.post<Collection>(this.apiPrefix(), data, {params: queryParams})
-      .catch(ImportService.handleGlobalError);
+      .pipe(catchError(ImportService.handleGlobalError));
   }
 
   private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {

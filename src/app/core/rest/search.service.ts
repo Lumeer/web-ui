@@ -30,7 +30,7 @@ import {Document} from '../dto/document';
 import {View} from '../dto/view';
 import {SuggestionType} from '../dto/suggestion-type';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import {catchError} from 'rxjs/operators';
 
 @Injectable()
 export class SearchService {
@@ -45,17 +45,17 @@ export class SearchService {
 
   public searchCollections(query: Query): Observable<Collection[]> {
     return this.http.post<Collection[]>(`${this.searchPath()}/collections`, query)
-      .catch(SearchService.handleError);
+      .pipe(catchError(SearchService.handleError));
   }
 
   public searchDocuments(query: Query): Observable<Document[]> {
     return this.http.post<Document[]>(`${this.searchPath()}/documents`, query)
-      .catch(SearchService.handleError);
+      .pipe(catchError(SearchService.handleError));
   }
 
   public searchViews(query: Query): Observable<View[]> {
     return this.http.post<View[]>(`${this.searchPath()}/views`, query)
-      .catch(SearchService.handleError);
+      .pipe(catchError(SearchService.handleError));
   }
 
   private searchPath(): string {

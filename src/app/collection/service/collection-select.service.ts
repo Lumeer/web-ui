@@ -23,7 +23,8 @@ import {COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from 'app/c
 import {CollectionService} from '../../core/rest/collection.service';
 import {Collection} from '../../core/dto/collection';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/do';
+import {map, tap} from 'rxjs/operators';
+import 'rxjs/add/observable/of';
 
 @Injectable()
 export class CollectionSelectService {
@@ -41,9 +42,10 @@ export class CollectionSelectService {
   }
 
   public select(collectionCode: string): Observable<Collection> {
-    return this.collectionService.getCollection(collectionCode)
-      .do(collection => this.copyCollection(collection, this.selection))
-      .map(collection => this.selection);
+    return this.collectionService.getCollection(collectionCode).pipe(
+      tap(collection => this.copyCollection(collection, this.selection)),
+      map(collection => this.selection)
+    );
   }
 
   public selectCollection(collection: Collection): Observable<Collection> {

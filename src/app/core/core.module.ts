@@ -21,7 +21,6 @@ import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
-import {HttpModule} from '@angular/http';
 import {RouterModule} from '@angular/router';
 
 import {WorkspaceService} from './workspace.service';
@@ -45,14 +44,11 @@ import {ViewService} from './rest/view.service';
 import {LinkTypeService} from './rest/link-type.service';
 import {EventsService} from './rest/events.service';
 import {SearchHomeComponent} from './search-home/search-home.component';
-import {Ng2Webstorage} from 'ng2-webstorage';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    HttpModule,
-    Ng2Webstorage,
     SharedModule,
     HttpClientModule,
     RouterModule

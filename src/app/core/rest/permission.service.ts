@@ -26,6 +26,7 @@ import {Observable} from 'rxjs/Observable';
 import {WorkspaceService} from '../workspace.service';
 import {LumeerError} from '../error/lumeer.error';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {catchError} from 'rxjs/operators';
 
 @Injectable()
 export abstract class PermissionService {
@@ -36,31 +37,31 @@ export abstract class PermissionService {
 
   public getPermissions(): Observable<Permissions> {
     return this.httpClient.get<Permissions>(`${this.actualApiPrefix()}/permissions`)
-      .catch(PermissionService.handleGlobalError);
+      .pipe(catchError(PermissionService.handleGlobalError));
   }
 
   public updateUserPermission(userPermissions: Permission): Observable<Permission> {
     return this.httpClient.put<Permission>(`${this.actualApiPrefix()}/permissions/users`, userPermissions)
-      .catch(PermissionService.handleGlobalError);
+      .pipe(catchError(PermissionService.handleGlobalError));
   }
 
   public updateGroupPermission(userPermissions: Permission): Observable<Permission> {
     return this.httpClient.put<Permission>(`${this.actualApiPrefix()}/permissions/groups`, userPermissions)
-      .catch(PermissionService.handleGlobalError);
+      .pipe(catchError(PermissionService.handleGlobalError));
   }
 
   public removeUserPermission(user: string): Observable<HttpResponse<any>> {
     return this.httpClient.delete(
       `${this.actualApiPrefix()}/permissions/users/${user}`,
       {observe: 'response', responseType: 'text'}
-      ).catch(PermissionService.handleGlobalError);
+    ).pipe(catchError(PermissionService.handleGlobalError));
   }
 
   public removeGroupPermission(group: string): Observable<HttpResponse<any>> {
     return this.httpClient.delete(
       `${this.actualApiPrefix()}/permissions/groups/${group}`,
       {observe: 'response', responseType: 'text'}
-    ).catch(PermissionService.handleGlobalError);
+    ).pipe(catchError(PermissionService.handleGlobalError));
   }
 
   protected static handleGlobalError(error: HttpErrorResponse): ErrorObservable {

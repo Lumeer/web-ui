@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit, TemplateRef} from '@angular/core';
-import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {NotificationsService} from 'angular2-notifications/dist';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
@@ -31,10 +31,7 @@ import {Permission} from '../../core/dto/permission';
 import {QueryConverter} from '../../shared/utils/query-converter';
 import {Query} from '../../core/dto/query';
 import {CollectionSelectService} from '../service/collection-select.service';
-import 'rxjs/add/operator/combineLatest';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/do';
+import {combineLatest, map, switchMap, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'collection-config',
@@ -61,37 +58,37 @@ export class CollectionConfigComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.route.paramMap
-      .map(paramMap => paramMap.get('collectionCode'))
-      .switchMap(collectionCode => this.collectionSelectService.select(collectionCode))
-      .do(collection => this.collection = collection)
-      .subscribe(
-        collection => this.initialCollectionCode = collection.code,
-        error => this.notificationService.error('Error', 'Failed fetching collection')
-      );
+    this.route.paramMap.pipe(
+      map(paramMap => paramMap.get('collectionCode')),
+      switchMap(collectionCode => this.collectionSelectService.select(collectionCode)),
+      tap(collection => this.collection = collection)
+    ).subscribe(
+      collection => this.initialCollectionCode = collection.code,
+      error => this.notificationService.error('Error', 'Failed fetching collection')
+    );
   }
 
   public updateCollection(): void {
-    this.collectionService.updateCollection(this.collection)
-      .switchMap(collection => this.collectionSelectService.selectCollection(collection))
-      .subscribe(
-        collection => this.initialCollectionCode = collection.code,
-        error => this.notificationService.error('Error', 'Failed updating collection')
-      );
+    this.collectionService.updateCollection(this.collection).pipe(
+      switchMap(collection => this.collectionSelectService.selectCollection(collection))
+    ).subscribe(
+      collection => this.initialCollectionCode = collection.code,
+      error => this.notificationService.error('Error', 'Failed updating collection')
+    );
   }
 
   public updateCollectionCode(): void {
-    this.collectionService.updateCollection(this.collection, this.initialCollectionCode)
-      .switchMap(collection => this.collectionSelectService.selectCollection(collection))
-      .do(collection => this.initialCollectionCode = collection.code)
-      .map(collection => [this.workspacePath(), 'c', collection.code])
-      .combineLatest(this.route.children[0].url.map(urlSegments => urlSegments.map(segment => segment.path)))
-      .map(([currentPath, childPath]) => currentPath.concat(childPath))
-      .switchMap(segments => this.router.navigate(segments))
-      .subscribe(
-        _ => null,
-        error => this.notificationService.error('Error', 'Failed updating collection code')
-      );
+    this.collectionService.updateCollection(this.collection, this.initialCollectionCode).pipe(
+      switchMap(collection => this.collectionSelectService.selectCollection(collection)),
+      tap(collection => this.initialCollectionCode = collection.code),
+      map(collection => [this.workspacePath(), 'c', collection.code]),
+      combineLatest(this.route.children[0].url.map(urlSegments => urlSegments.map(segment => segment.path))),
+      map(([currentPath, childPath]) => currentPath.concat(childPath)),
+      switchMap(segments => this.router.navigate(segments))
+    ).subscribe(
+      _ => null,
+      error => this.notificationService.error('Error', 'Failed updating collection code')
+    );
   }
 
   public removeCollection(): void {

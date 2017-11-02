@@ -26,6 +26,7 @@ import {Observable} from 'rxjs/Observable';
 import {isNullOrUndefined} from 'util';
 import {LumeerError} from '../error/lumeer.error';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {catchError} from 'rxjs/operators';
 
 // TODO send data attribute without '_id'
 @Injectable()
@@ -37,29 +38,29 @@ export class DocumentService {
 
   public createDocument(document: Document): Observable<HttpResponse<object>> {
     return this.httpClient.post(this.apiPrefix(document.collectionCode), document, {observe: 'response', responseType: 'text'})
-      .catch(error => this.handleGlobalError(error));
+      .pipe(catchError(error => this.handleGlobalError(error)));
   }
 
   public updateDocument(document: Document): Observable<Document> {
     return this.httpClient.put<Document>(`${this.apiPrefix(document.collectionCode)}/${document.id}/data`, document.data)
-      .catch(error => this.handleGlobalError(error));
+      .pipe(catchError(error => this.handleGlobalError(error)));
   }
 
   public patchDocument(document: Document): Observable<Document> {
     return this.httpClient.patch<Document>(`${this.apiPrefix(document.collectionCode)}/${document.id}/data`, document.data)
-      .catch(error => this.handleGlobalError(error));
+      .pipe(catchError(error => this.handleGlobalError(error)));
   }
 
   public removeDocument(document: Document): Observable<HttpResponse<any>> {
     return this.httpClient.delete(
       `${this.apiPrefix(document.collectionCode)}/${document.id}`,
       {observe: 'response', responseType: 'text'}
-    ).catch(error => this.handleGlobalError(error));
+    ).pipe(catchError(error => this.handleGlobalError(error)));
   }
 
   public getDocument(collectionCode: string, documentId: string): Observable<Document> {
     return this.httpClient.get<Document>(`${this.apiPrefix(collectionCode)}/${documentId}`)
-      .catch(error => this.handleGlobalError(error));
+      .pipe(catchError(error => this.handleGlobalError(error)));
   }
 
   public getDocuments(collectionCode: string, pageNumber?: number, pageSize?: number): Observable<Document[]> {
@@ -71,7 +72,7 @@ export class DocumentService {
     }
 
     return this.httpClient.get<Document[]>(this.apiPrefix(collectionCode), {params: queryParams})
-      .catch(error => this.handleGlobalError(error));
+      .pipe(catchError(error => this.handleGlobalError(error)));
   }
 
   private apiPrefix(collectionCode: string): string {

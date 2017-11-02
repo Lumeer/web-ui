@@ -17,23 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
+/**
+ * Wrapper around Window.localStorage of WebStorage API
+ */
+export class LocalStorage {
 
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import {Group} from '../dto/group';
-import {WorkspaceService} from '../workspace.service';
-
-@Injectable()
-export class GroupService {
-
-  constructor(private workspaceService: WorkspaceService) {
+  public static get(key: string): any {
+    const data: string = localStorage.getItem(key);
+    return data ? JSON.parse(data) : null;
   }
 
-  public getGroups(organizationCode?: string): Observable<Group[]> {
-    if (!organizationCode) {
-      organizationCode = this.workspaceService.organizationCode;
-    }
-    return Observable.of([{name: 'directors'}, {name: 'customers'}]);
+  public static set(key: string, data: any) {
+    localStorage.setItem(key, JSON.stringify(data));
   }
+
+  public static remove(key: string) {
+    localStorage.removeItem(key);
+  }
+
 }

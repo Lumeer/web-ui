@@ -19,9 +19,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
+import {filter, map, mergeMap} from 'rxjs/operators';
 
 import {WorkspaceService} from '../workspace.service';
 import {RouteFinder} from '../../shared/utils/route-finder';
@@ -49,15 +47,15 @@ export class TopPanelComponent implements OnInit {
   }
 
   private detectSearchBoxHiddenProperty() {
-    this.router.events
-      .filter(event => event instanceof NavigationEnd)
-      .map(() => this.activatedRoute)
-      .map(route => RouteFinder.getDeepestChildRoute(route))
-      .filter(route => route.outlet === 'primary')
-      .mergeMap(route => route.data)
-      .subscribe((data: { searchBoxHidden: boolean }) => {
-        this.searchBoxHidden = Boolean(data.searchBoxHidden);
-      });
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(() => this.activatedRoute),
+      map(route => RouteFinder.getDeepestChildRoute(route)),
+      filter(route => route.outlet === 'primary'),
+      mergeMap(route => route.data)
+    ).subscribe((data: { searchBoxHidden: boolean }) => {
+      this.searchBoxHidden = Boolean(data.searchBoxHidden);
+    });
   }
 
   public isSearchBoxShown(): boolean {

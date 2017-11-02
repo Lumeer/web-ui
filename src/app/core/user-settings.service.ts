@@ -20,22 +20,19 @@
 import {Injectable} from '@angular/core';
 
 import {UserSettings} from './dto/user.settings';
-import {LocalStorageService} from 'ng2-webstorage';
+import {LocalStorage} from '../shared/utils/local-storage';
 
 const USER_SETTINGS = 'user-settings';
 
 @Injectable()
 export class UserSettingsService {
 
-  constructor(private storageService: LocalStorageService) {
-  }
-
   public getUserSettings(): UserSettings {
-    return this.storageService.retrieve(USER_SETTINGS) || {};
+    return LocalStorage.get(USER_SETTINGS) || {};
   }
 
   public updateUserSettings(userSettings: UserSettings) {
-    this.storageService.store(USER_SETTINGS, userSettings);
+    LocalStorage.set(USER_SETTINGS, userSettings);
   }
 
 }

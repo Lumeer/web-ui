@@ -20,6 +20,7 @@
 import {Injectable} from '@angular/core';
 
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 import {User} from '../dto/user';
 import {WorkspaceService} from '../workspace.service';
 
