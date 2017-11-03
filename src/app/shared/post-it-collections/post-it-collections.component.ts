@@ -34,6 +34,7 @@ import {PostItLayout} from '../utils/post-it-layout';
 import {PostItCollectionData} from './post-it-collection-data';
 import {QueryConverter} from '../utils/query-converter';
 import {HtmlModifier} from '../utils/html-modifier';
+import 'rxjs/add/operator/finally';
 
 @Component({
   selector: 'post-it-collections',
@@ -152,7 +153,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   }
 
   public initializePostIt(postIt: PostItCollectionData): void {
+    postIt.initializing = true;
+
     this.collectionService.createCollection(postIt.collection)
+      ._finally(() => postIt.initializing = false)
       .subscribe(
         response => {
           const code = response.headers.get('Location').split('/').pop();
@@ -264,6 +268,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   }
 
   public onTextAreaBlur(postIt: PostItCollectionData, textArea: HTMLTextAreaElement): void {
+    if (postIt.initializing) {
+      return;
+    }
+
     if (postIt.initialized) {
       this.updateCollection(postIt);
     } else {
