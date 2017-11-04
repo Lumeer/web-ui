@@ -30,6 +30,9 @@
       }
     }
   ],
+  "styles": [
+    "../node_modules/ng-snotify/styles/material.css"
+  ],
   "e2e": {
     "protractor": {
       "config": "./protractor.conf.js"

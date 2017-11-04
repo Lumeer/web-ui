@@ -20,6 +20,8 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, ParamMap, Router} from '@angular/router';
 
+import {SnotifyPosition, SnotifyService} from 'ng-snotify';
+
 import {WorkspaceService} from './core/workspace.service';
 import {RouteFinder} from './shared/utils/route-finder';
 
@@ -31,21 +33,15 @@ import {RouteFinder} from './shared/utils/route-finder';
 })
 export class AppComponent implements OnInit {
 
-  public notificationsOptions = {
-    position: ['top'],
-    timeOut: 1500,
-    showProgressBar: true,
-    animate: 'fromLeft',
-    lastOnBottom: true
-  };
-
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
-              private workspaceService: WorkspaceService) {
+              private workspaceService: WorkspaceService,
+              private notificationService: SnotifyService) {
   }
 
   public ngOnInit() {
     this.processPathParams();
+    this.setNotificationStyle();
   }
 
   private processPathParams() {
@@ -63,6 +59,16 @@ export class AppComponent implements OnInit {
     this.workspaceService.projectCode = params.get('projectCode');
     this.workspaceService.collectionCode = params.get('collectionCode');
     this.workspaceService.viewCode = params.get('viewCode');
+  }
+
+  public setNotificationStyle(): void {
+    this.notificationService.setDefaults({
+      toast: {
+        pauseOnHover: false,
+        showProgressBar: false,
+        position: SnotifyPosition.leftTop
+      }
+    });
   }
 
 }

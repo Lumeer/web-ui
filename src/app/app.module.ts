@@ -21,7 +21,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
-import {ModalModule} from 'ngx-bootstrap/modal';
+import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 
 import {AppComponent} from './app.component';
 import {CoreModule} from './core/core.module';
@@ -29,7 +29,6 @@ import {AppRoutingModule} from './app-routing.module';
 import {WorkspaceModule} from './workspace/workspace.module';
 import {CollectionModule} from './collection/collection.module';
 import {DocumentsModule} from './documents/documents.module';
-import {SimpleNotificationsModule} from 'angular2-notifications';
 import {ViewModule} from './view/view.module';
 import {ContextMenuModule} from 'ngx-contextmenu';
 
@@ -37,15 +36,18 @@ import {ContextMenuModule} from 'ngx-contextmenu';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    SimpleNotificationsModule.forRoot(),
-    ModalModule.forRoot(),
     ContextMenuModule.forRoot({useBootstrap4: true}),
     CoreModule,
     CollectionModule,
     DocumentsModule,
     ViewModule,
     WorkspaceModule,
+    SnotifyModule,
     AppRoutingModule // needs to stay last
+  ],
+  providers: [
+    { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
+    SnotifyService
   ],
   declarations: [
     AppComponent
