@@ -18,12 +18,14 @@
  */
 
 import {Component, Input} from '@angular/core';
+
+import {SnotifyService} from 'ng-snotify';
+
 import {LinkType} from '../../../../core/dto/link-type';
-import {NotificationsService} from 'angular2-notifications';
 import {LinkTypeService} from '../../../../core/rest/link-type.service';
 import {LinkedAttribute} from '../../../../core/dto/linked-attribute';
-import * as Const from '../constraints';
 import {Collection} from '../../../../core/dto/collection';
+import * as Const from '../constraints';
 
 @Component({
   selector: 'link-attribute-list',
@@ -51,7 +53,7 @@ export class LinkAttributeListComponent {
 
   public newAttributeName = '';
 
-  constructor(private notificationService: NotificationsService,
+  constructor(private notificationService: SnotifyService,
               private linkTypeService: LinkTypeService) {
   }
 
@@ -83,13 +85,13 @@ export class LinkAttributeListComponent {
           linkType => {
             this.linkType = linkType;
           },
-          error => this.notificationService.error('Error', 'Adding attribute failed')
+          error => this.notificationService.error('Adding attribute failed', 'Error')
         );
 
       this.newAttributeName = '';
 
     } else {
-      this.notificationService.info('Oops', 'You need to use attribute from selection to create a link');
+      this.notificationService.info('You need to use attribute from selection to create a link', 'Oops');
     }
 
   }
@@ -112,7 +114,7 @@ export class LinkAttributeListComponent {
         linkType => {
           this.linkType = linkType;
         },
-        error => this.notificationService.error('Error', 'Removing attribute failed')
+        error => this.notificationService.error('Removing attribute failed', 'Error')
       );
   }
 

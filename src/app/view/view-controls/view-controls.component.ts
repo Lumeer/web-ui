@@ -17,14 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output, TemplateRef} from '@angular/core';
-import {View} from '../../core/dto/view';
 import {Router} from '@angular/router';
+import {Component, EventEmitter, Input, Output, TemplateRef} from '@angular/core';
+
+import {SnotifyService} from 'ng-snotify';
+
+import {PERSPECTIVES} from '../perspectives/perspective';
+import {View} from '../../core/dto/view';
+import {ViewService} from '../../core/rest/view.service';
 import {WorkspaceService} from '../../core/workspace.service';
 import {PerspectiveChoice} from '../perspectives/perspective-choice';
-import {PERSPECTIVES} from '../perspectives/perspective';
 import {QueryConverter} from '../../shared/utils/query-converter';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
 @Component({
   selector: 'view-controls',
@@ -39,9 +42,7 @@ export class ViewControlsComponent {
   @Output()
   public save = new EventEmitter();
 
-  public shareDialog: BsModalRef;
-
-  constructor(private modalService: BsModalService,
+  constructor(private notificationService: SnotifyService,
               private router: Router,
               private workspaceService: WorkspaceService) {
   }

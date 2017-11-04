@@ -19,9 +19,7 @@
 
 import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren} from '@angular/core';
 
-import {NotificationsService} from 'angular2-notifications';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap';
-import {finalize} from 'rxjs/operators';
+import {SnotifyService} from 'ng-snotify';
 
 import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../collection/constants';
 import {Collection} from '../../core/dto/collection';
@@ -35,6 +33,7 @@ import {PostItLayout} from '../utils/post-it-layout';
 import {PostItCollectionData} from './post-it-collection-data';
 import {QueryConverter} from '../utils/query-converter';
 import {HtmlModifier} from '../utils/html-modifier';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'post-it-collections',
@@ -58,8 +57,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   @ViewChildren('postItElement')
   public postItElements: QueryList<ElementRef>;
 
-  public deleteConfirm: BsModalRef;
-
   public postItToDelete: PostItCollectionData;
 
   public postIts: PostItCollectionData[] = [];
@@ -72,11 +69,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   constructor(private collectionService: CollectionService,
               private searchService: SearchService,
-              private notificationService: NotificationsService,
+              private notificationService: SnotifyService,
               private importService: ImportService,
               private workspaceService: WorkspaceService,
-              private zone: NgZone,
-              private modalService: BsModalService) {
+              private zone: NgZone) {
   }
 
   public ngOnInit(): void {
@@ -164,7 +160,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
           postIt.collection.code = code;
           postIt.initialized = true;
           this.getCollection(postIt);
-          this.notificationService.success('Success', 'Collection created');
+          this.notificationService.success('Collection created', 'Success');
         },
         error => {
           this.handleError(error, 'Creating collection failed');
@@ -256,7 +252,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
         .subscribe(
           response => {
             this.postItToDelete = null;
-            this.notificationService.success('Success', 'Collection removed');
+            this.notificationService.success('Collection removed', 'Success');
           },
           error => {
             this.handleError(error, 'Failed removing collection');
@@ -293,7 +289,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   }
 
   private handleError(error: Error, message?: string): void {
-    this.notificationService.error('Error', message ? message : error.message);
+    this.notificationService.error(message ? message : error.message, 'Error');
   }
 
   public updateToScrollbarHeight(textArea: HTMLTextAreaElement): void {

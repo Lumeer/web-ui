@@ -19,7 +19,7 @@
 
 import {Component, Input} from '@angular/core';
 
-import {NotificationsService} from 'angular2-notifications';
+import {SnotifyService} from 'ng-snotify';
 
 import {ConfiguredAttribute} from './configured-attribute';
 import {ConstraintSuggestion} from './constraint-suggestion';
@@ -63,8 +63,7 @@ export class AttributeListComponent {
   public suggestions: ConstraintSuggestion[] = [];
 
   constructor(private collectionService: CollectionService,
-              private notificationService: NotificationsService) {
-
+              private notificationService: SnotifyService) {
   }
 
   private emptyAttribute(): ConfiguredAttribute {
@@ -97,7 +96,7 @@ export class AttributeListComponent {
     this.collectionService.updateAttribute(this.collection.code, newAttributeName, newAttribute)
       .subscribe(
         attribute => this.collection.attributes.push(attribute),
-        error => this.notificationService.error('Error', 'Failed creating attribute')
+        error => this.notificationService.error('Failed creating attribute', 'Error')
       );
   }
 
@@ -108,7 +107,7 @@ export class AttributeListComponent {
     this.collectionService.updateAttribute(this.collection.code, previousFullName, attribute)
       .subscribe(
         attribute => !isNullOrUndefined(index) && (this.collection.attributes[index] = attribute),
-        error => this.notificationService.error('Error', 'Failed updating attribute')
+        error => this.notificationService.error('Failed updating attribute', 'Error')
       );
   }
 

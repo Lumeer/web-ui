@@ -20,8 +20,7 @@
 import {Component, OnInit, TemplateRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {NotificationsService} from 'angular2-notifications';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap';
+import {SnotifyService} from 'ng-snotify';
 
 import {Collection} from '../../core/dto/collection';
 import {CollectionService} from '../../core/rest/collection.service';
@@ -44,17 +43,14 @@ export class CollectionConfigComponent implements OnInit {
 
   public initialCollectionCode: string;
 
-  public deleteConfirm: BsModalRef;
-
   public collectionDescriptionEditable: boolean;
 
   constructor(private collectionService: CollectionService,
               private collectionSelectService: CollectionSelectService,
               private route: ActivatedRoute,
-              private notificationService: NotificationsService,
+              private notificationService: SnotifyService,
               private workspaceService: WorkspaceService,
-              private router: Router,
-              private modalService: BsModalService) {
+              private router: Router) {
   }
 
   public ngOnInit(): void {
@@ -64,7 +60,7 @@ export class CollectionConfigComponent implements OnInit {
       tap(collection => this.collection = collection)
     ).subscribe(
       collection => this.initialCollectionCode = collection.code,
-      error => this.notificationService.error('Error', 'Failed fetching collection')
+      error => this.notificationService.error('Failed fetching collection', 'Error')
     );
   }
 
@@ -73,7 +69,7 @@ export class CollectionConfigComponent implements OnInit {
       switchMap(collection => this.collectionSelectService.selectCollection(collection))
     ).subscribe(
       collection => this.initialCollectionCode = collection.code,
-      error => this.notificationService.error('Error', 'Failed updating collection')
+      error => this.notificationService.error('Failed updating collection', 'Error')
     );
   }
 
@@ -87,14 +83,14 @@ export class CollectionConfigComponent implements OnInit {
       switchMap(segments => this.router.navigate(segments))
     ).subscribe(
       _ => null,
-      error => this.notificationService.error('Error', 'Failed updating collection code')
+      error => this.notificationService.error('Failed updating collection code', 'Error')
     );
   }
 
   public removeCollection(): void {
     this.collectionService.removeCollection(this.collection.code).subscribe(
       _ => this.goToCollectionsPage(),
-      error => this.notificationService.error('Error', 'Failed removing collection')
+      error => this.notificationService.error('Failed removing collection', 'Error')
     );
   }
 

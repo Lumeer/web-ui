@@ -18,17 +18,16 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 
-import {NotificationsService} from 'angular2-notifications';
+import {SnotifyService} from 'ng-snotify';
 
 import {CollectionTabComponent} from '../collection-tab.component';
 import {EventsService} from '../../../../core/rest/events.service';
 import {WorkspaceService} from '../../../../core/workspace.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Event} from '../../../../core/dto/Event';
-import {CollectionSelectService} from "../../../service/collection-select.service";
-import {BsModalService} from "ngx-bootstrap";
+import {CollectionSelectService} from '../../../service/collection-select.service';
 
 @Component({
   selector: 'collection-events',
@@ -43,7 +42,7 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
               protected collectionService: CollectionService,
               protected collectionSelectService: CollectionSelectService,
               protected route: ActivatedRoute,
-              protected notificationService: NotificationsService,
+              protected notificationService: SnotifyService,
               protected workspaceService: WorkspaceService) {
     super(
       collectionService,
@@ -63,7 +62,7 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
     this.eventsService.getEvents(this.collection.code)
       .subscribe(
         events => this.events = events,
-        error => this.notificationService.error('Error', 'Failed fetching Events')
+        error => this.notificationService.error('Failed fetching Events', 'Error')
       );
   }
 

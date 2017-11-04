@@ -20,7 +20,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
-import {NotificationsService} from 'angular2-notifications';
+import {SnotifyService} from 'ng-snotify';
 
 import {Collection} from '../../../core/dto/collection';
 import {CollectionService} from '../../../core/rest/collection.service';
@@ -36,7 +36,7 @@ export class CollectionTabComponent implements OnInit {
   constructor(protected collectionService: CollectionService,
               protected collectionSelectService: CollectionSelectService,
               protected route: ActivatedRoute,
-              protected notificationService: NotificationsService,
+              protected notificationService: SnotifyService,
               protected workspaceService: WorkspaceService) {
   }
 

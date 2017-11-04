@@ -18,7 +18,8 @@
  */
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {NotificationsService} from 'angular2-notifications';
+
+import {SnotifyService} from 'ng-snotify';
 
 import {UserService} from '../../../core/rest/user.service';
 import {User} from '../../../core/dto/user';
@@ -41,7 +42,7 @@ export class ShareDialogComponent implements OnInit {
   public users: User[] = [];
   public suggestions: string[];
 
-  public constructor(private notificationService: NotificationsService,
+  public constructor(private notificationService: SnotifyService,
                      private userService: UserService) {
   }
 
@@ -111,7 +112,7 @@ export class ShareDialogComponent implements OnInit {
 
   public share() {
     this.close();
-    this.notificationService.success('View shared', 'View has been shared with the selected users');
+    this.notificationService.success('View has been shared with the selected users', 'View shared');
   }
 
   public close() {
