@@ -19,7 +19,7 @@
 
 import {Component, Input} from '@angular/core';
 
-import {SnotifyService} from 'ng-snotify';
+import {NotificationsService} from 'angular2-notifications';
 
 import {LinkType} from '../../../../core/dto/link-type';
 import {LinkTypeService} from '../../../../core/rest/link-type.service';
@@ -41,15 +41,10 @@ export class LinkAttributeListComponent {
   public linkType: LinkType;
 
   @Input()
-  public allAttributes: LinkedAttribute[];
-
-  @Input()
   public addEnabled: boolean;
 
   @Input()
   public limit = Number.MAX_SAFE_INTEGER;
-
-  public uninitialized: boolean[];
 
   public newAttributeName = '';
 
@@ -61,65 +56,51 @@ export class LinkAttributeListComponent {
     return this.linkType.linkedAttributes.slice(0, this.limit);
   }
 
-  public addLinkedAttribute(): void {
-    if (!this.newAttributeName) {
-      return;
-    }
+  public attributesToAdd(currentAttribute: string): LinkedAttribute[] {
+    const fillWithCollection = (result, collectionCode) => {
+      const collection = this.collections[collectionCode];
+      collection.attributes
+        .filter(attribute => attribute.name.includes(currentAttribute))
+        .forEach(attribute => result.push({value: attribute, collection: collection}));
+    };
 
-    // 'attributeName (collectionCode)'
-    const newAttributeName = this.newAttributeName.substring(0, this.newAttributeName.lastIndexOf('(') - 2);
-    const newAttributeCollection = this.newAttributeName.substring(
-      this.newAttributeName.lastIndexOf('('),
-      this.newAttributeName.length - 1
-    );
+    let result: LinkedAttribute[] = [];
+    fillWithCollection(result, this.linkType.fromCollection);
+    fillWithCollection(result, this.linkType.toCollection);
 
-    const newAttribute = this.possibleAttributes().find(possibleAttribute => {
-      return possibleAttribute.name === newAttributeName && possibleAttribute.collectionCode === newAttributeCollection;
-    });
-
-    if (newAttribute) {
-      this.linkType.linkedAttributes.push(newAttribute);
-
-      this.linkTypeService.updateLinkTypeDeprecated(this.linkType.fromCollection, this.linkType.name, this.linkType)
-        .subscribe(
-          linkType => {
-            this.linkType = linkType;
-          },
-          error => this.notificationService.error('Adding attribute failed')
-        );
-
-      this.newAttributeName = '';
-
-    } else {
-      this.notificationService.info('You need to use attribute from selection to create a link');
-    }
-
+    const comparableUsedAttributes = this.linkType.linkedAttributes.map(linkedAttribute => JSON.stringify(linkedAttribute));
+    result = result.filter(linkedAttribute => !comparableUsedAttributes.includes(JSON.stringify(linkedAttribute)));
+    return result;
   }
 
-  public removeLinkAttribute(linkType: LinkType, attribute: LinkedAttribute) {
-    this.linkType.linkedAttributes = this.linkType.linkedAttributes.filter(linkedAttribute => {
-      return linkedAttribute !== attribute;
-    });
+  public addAttribute(linkedAttribute: LinkedAttribute): void {
+    this.linkType.linkedAttributes.push(linkedAttribute);
 
-    if (this.linkType.automaticLinkFromAttribute === attribute.name) {
+    this.linkTypeService.updateLinkTypeDeprecated(this.linkType.fromCollection, this.linkType.name, this.linkType)
+      .subscribe(
+        linkType => this.linkType = linkType,
+        error => this.notificationService.error('Adding attribute failed')
+      );
+
+    this.newAttributeName = '';
+  }
+
+  public removeAttribute(removedAttribute: LinkedAttribute) {
+    this.linkType.linkedAttributes = this.linkType.linkedAttributes.filter(linkedAttribute => removedAttribute !== linkedAttribute);
+
+    // check if was part of automatic link
+    if (this.linkType.automaticLinkFromAttribute === removedAttribute.value.name) {
       this.linkType.automaticLinkFromAttribute = null;
     }
-
-    if (this.linkType.automaticLinkToAttribute === attribute.name) {
+    if (this.linkType.automaticLinkToAttribute === removedAttribute.value.name) {
       this.linkType.automaticLinkToAttribute = null;
     }
 
     this.linkTypeService.updateLinkTypeDeprecated(this.linkType.fromCollection, this.linkType.name, this.linkType)
       .subscribe(
-        linkType => {
-          this.linkType = linkType;
-        },
+        linkType => this.linkType = linkType,
         error => this.notificationService.error('Removing attribute failed')
       );
-  }
-
-  public possibleAttributes(): LinkedAttribute[] {
-    return this.allAttributes.filter(attribute => !this.linkType.linkedAttributes.includes(attribute));
   }
 
   public formatNumber(numberToFormat: number): string {

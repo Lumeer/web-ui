@@ -69,8 +69,8 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   public ngOnInit(): void {
     super.ngOnInit();
 
+    this.collections[COLLECTION_NO_CODE] = this.uninitializedCollection();
     this.fetchAllCollections();
-    this.setUninitializedCollection();
     this.fetchLinkTypes(this.collection.code);
   }
 
@@ -89,14 +89,23 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       );
   }
 
-  private setUninitializedCollection(): void {
-    this.collections[COLLECTION_NO_CODE] = {
+  private uninitializedCollection(): Collection {
+    return {
       code: COLLECTION_NO_CODE,
       icon: COLLECTION_NO_ICON,
       color: COLLECTION_NO_COLOR,
       description: '',
       name: '',
       attributes: []
+    };
+  }
+
+  public emptyLinkType(): LinkType {
+    return {
+      fromCollection: this.collection.code,
+      toCollection: COLLECTION_NO_CODE,
+      name: '',
+      linkedAttributes: []
     };
   }
 
@@ -110,27 +119,26 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       .subscribe(
         linkTypes => {
           // TODO remove this whole block after service gets implemented on backend
-          if (!linkTypes[1]) {
-            return;
+          if (linkTypes[1]) {
+            setTimeout(() => {
+              const linkType = linkTypes[1];
+
+              const randomIndex = list => Math.floor(Math.random() * list.length);
+              const insertCollectionAttributes = (result, collectionCode) => {
+                const collection = this.collections[collectionCode];
+                collection.attributes
+                  .slice(0, randomIndex(collection.attributes))
+                  .forEach(attribute => result.push({collection: collection, value: attribute}));
+              };
+
+              const linkedAttributes: LinkedAttribute[] = [];
+              insertCollectionAttributes(linkedAttributes, linkType.fromCollection);
+              insertCollectionAttributes(linkedAttributes, linkType.toCollection);
+
+              linkType.linkedAttributes = linkedAttributes;
+
+            }, 250);
           }
-
-          const linkType = linkTypes[1];
-          setTimeout(() => {
-            const toCollection = this.collections[linkType.toCollection];
-            const fromCollection = this.collections[linkType.fromCollection];
-
-            const toFirstAttributes = toCollection.attributes.slice(0, 3);
-            const toLinkedAttributes = toFirstAttributes.map(attribute => attribute as LinkedAttribute);
-            toLinkedAttributes.forEach(linkedAttribute => linkedAttribute.collectionCode = toCollection.code);
-
-            const fromFirstAttributes = fromCollection.attributes.slice(0, 2);
-            const fromLinkedAttributes = fromFirstAttributes.map(attribute => attribute as LinkedAttribute);
-            fromLinkedAttributes.forEach(linkedAttribute => linkedAttribute.collectionCode = fromCollection.code);
-
-            linkType.linkedAttributes = fromLinkedAttributes.concat(toLinkedAttributes);
-
-          }, 250);
-          // delete up to here
 
           this.linkTypes = linkTypes;
         },
@@ -138,71 +146,8 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       );
   }
 
-  public possibleToCollectionCodes(linkType?: LinkType): string[] {
-    const excludedCodes = [COLLECTION_NO_CODE];
-
-    if (linkType) {
-      excludedCodes.push(linkType.toCollection);
-      excludedCodes.push(linkType.fromCollection);
-    }
-
-    return Object
-      .keys(this.collections)
-      .filter(collectionCode => !excludedCodes.includes(collectionCode));
-  }
-
-  public linkTypeAttributes(linkType: LinkType): LinkedAttribute[] {
-    let attributes;
-
-    if (this.collections[linkType.toCollection] && this.collections[linkType.fromCollection]) {
-      const fromAttributes = this
-        .collections[linkType.fromCollection]
-        .attributes
-        .map(attribute => attribute as LinkedAttribute);
-      fromAttributes.forEach(linkedAttribute => linkedAttribute.collectionCode = linkType.fromCollection);
-
-      const toAttributes = this
-        .collections[linkType.toCollection]
-        .attributes
-        .map(attribute => attribute as LinkedAttribute);
-      toAttributes.forEach(linkedAttribute => linkedAttribute.collectionCode = linkType.toCollection);
-
-      attributes = fromAttributes.concat(toAttributes);
-    } else {
-      attributes = [];
-    }
-
-    return attributes;
-  }
-
-  public initialized(linkType: LinkType): boolean {
-    return linkType.name && linkType.toCollection !== COLLECTION_NO_CODE;
-  }
-
-  public isAutomatic(linkType: LinkType): boolean {
-    return !!(linkType.automaticLinkToAttribute && linkType.automaticLinkFromAttribute);
-  }
-
-  public canBecomeAutomatic(linkType: LinkType): boolean {
-    return !this.isAutomatic(linkType) &&
-      linkType.linkedAttributes.length === 2 &&
-      linkType.linkedAttributes[0].collectionCode !== linkType.linkedAttributes[1].collectionCode;
-  }
-
-  public makeAutomatic(linkType: LinkType): void {
-    linkType.automaticLinkFromAttribute = linkType.linkedAttributes[0].name;
-    linkType.automaticLinkToAttribute = linkType.linkedAttributes[1].name;
-  }
-
   public newLinkType(): void {
-    const emptyLinkType: LinkType = {
-      fromCollection: this.collection.code,
-      toCollection: COLLECTION_NO_CODE,
-      name: '',
-      linkedAttributes: []
-    };
-
-    this.linkTypeService.createLinkTypeDeprecated(this.collection.code, emptyLinkType)
+    this.linkTypeService.createLinkTypeDeprecated(this.collection.code, this.emptyLinkType())
       .subscribe(
         linkType => {
           this.linkTypes.push(linkType);
@@ -231,15 +176,41 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       );
   }
 
-  public searchLinkTypesQueryParams(linkType: LinkType): object {
-    return {
-      query: JSON.stringify({linkNames: [linkType.name]})
-    };
+  public possibleToCollectionCodes(linkType?: LinkType): string[] {
+    const excludedCodes = [COLLECTION_NO_CODE];
+
+    if (linkType) {
+      excludedCodes.push(linkType.toCollection);
+      excludedCodes.push(linkType.fromCollection);
+    }
+
+    return Object
+      .keys(this.collections)
+      .filter(collectionCode => !excludedCodes.includes(collectionCode));
+  }
+
+  public initialized(linkType: LinkType): boolean {
+    return linkType.name && linkType.toCollection !== COLLECTION_NO_CODE;
+  }
+
+  public isAutomatic(linkType: LinkType): boolean {
+    return !!(linkType.automaticLinkToAttribute && linkType.automaticLinkFromAttribute);
+  }
+
+  public canBecomeAutomatic(linkType: LinkType): boolean {
+    return !this.isAutomatic(linkType) &&
+      linkType.linkedAttributes.length === 2 &&
+      linkType.linkedAttributes[0].collection.code !== linkType.linkedAttributes[1].collection.code;
+  }
+
+  public makeAutomatic(linkType: LinkType): void {
+    linkType.automaticLinkFromAttribute = linkType.linkedAttributes[0].value.name;
+    linkType.automaticLinkToAttribute = linkType.linkedAttributes[1].value.name;
   }
 
   public instanceCount(linkType: LinkType): number {
     return linkType.linkedAttributes
-      .map(attribute => attribute.usageCount)
+      .map(linkedAttribute => linkedAttribute.value.usageCount)
       .reduce((sum, current) => sum + current, 0);
   }
 
@@ -250,6 +221,12 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     return String(numberToFormat)
       .replace(spaceBetweenEveryThreeDigits, ',')
       .replace(optionalCommaAtTheStart, '');
+  }
+
+  public searchLinkTypesQueryParams(linkType: LinkType): object {
+    return {
+      query: JSON.stringify({linkNames: [linkType.name]})
+    };
   }
 
 }

@@ -18,9 +18,11 @@
  */
 
 import {Attribute} from './attribute';
+import {Collection} from './collection';
 
-export interface LinkedAttribute extends Attribute {
+export interface LinkedAttribute {
 
-  collectionCode: string;
+  value: Attribute;
+  collection: Collection;
 
 }
