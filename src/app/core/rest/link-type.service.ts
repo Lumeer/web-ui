@@ -30,33 +30,46 @@ import {CollectionService} from './collection.service';
 import {LocalStorage} from '../../shared/utils/local-storage';
 
 const LINK_TYPES = 'linkTypes';
+import {CollectionService} from './collection.service';
+import {map, tap} from 'rxjs/operators';
 
 // TODO implement on backend
 @Injectable()
 export class LinkTypeService {
 
-  public links: LinkType[] = [];
+  public links: LinkType[];
 
   private names = ['Clouds placement', 'Seasons in the Sun', 'Pollution clouds'];
 
   constructor(private httpClient: HttpClient,
               private workspaceService: WorkspaceService,
               private collectionService: CollectionService /* Remove when after backend implementation*/) {
-    this.collectionService.getCollections().subscribe(
-      collections => this.links = collections.map(collection => {
-        return {
-          fromCollection: '',
-          toCollection: collection.code,
-          name: this.names[collection.name.length % this.names.length],
-          linkedAttributes: []
-        };
-      })
+  }
+
+  private getInitialLinks(): Observable<LinkType[]> {
+    return this.collectionService.getCollections().pipe(
+      map(collections => collections.map(collection => {
+          const converted: LinkType = {
+            fromCollection: '',
+            toCollection: collection.code,
+            name: this.names[collection.name.length % this.names.length],
+            linkedAttributes: []
+          };
+
+          return converted;
+        })
+      ),
+      tap(linkTypes => this.links = linkTypes)
     );
   }
 
   public getLinkTypesDeprecated(collectionCode: string): Observable<LinkType[]> {
-    return Observable.of(this.links.map(link => (link.fromCollection = collectionCode) && link)
-      .filter(linkType => collectionCode !== linkType.toCollection));
+    const links = this.links ? Observable.of(this.links) : this.getInitialLinks();
+
+    return links.pipe(
+      tap(linkTypes => linkTypes.forEach(linkType => linkType.fromCollection = collectionCode)),
+      map(linkTypes => linkTypes.filter(linkType => collectionCode !== linkType.toCollection))
+    );
   }
 
   public createLinkTypeDeprecated(collectionCode: string, linkType: LinkType): Observable<LinkType> {

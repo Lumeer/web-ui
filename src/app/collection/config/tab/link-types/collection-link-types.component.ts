@@ -68,6 +68,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   public ngOnInit(): void {
     super.ngOnInit();
+
     this.fetchAllCollections();
     this.setUninitializedCollection();
     this.fetchLinkTypes(this.collection.code);
@@ -109,7 +110,6 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       .subscribe(
         linkTypes => {
           // TODO remove this whole block after service gets implemented on backend
-
           if (!linkTypes[1]) {
             return;
           }
@@ -130,6 +130,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
             linkType.linkedAttributes = fromLinkedAttributes.concat(toLinkedAttributes);
 
           }, 250);
+          // delete up to here
 
           this.linkTypes = linkTypes;
         },
