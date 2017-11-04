@@ -19,48 +19,63 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {LumeerError} from '../error/lumeer.error';
 import {WorkspaceService} from '../workspace.service';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import {EventFireReason} from '../../collection/config/tab/events/event-fire-reason';
-import {sortByAttribute, updateAutomaticLinks} from '../../collection/config/tab/events/event-callback';
-import {ascending, documentStickyness} from '../../collection/config/tab/events/event-parameter';
 import {Event} from '../dto/Event';
+import {Observable} from 'rxjs/Observable';
+import {LocalStorage} from '../../shared/utils/local-storage';
+
+const EVENTS_KEY = 'events';
 
 // TODO implement on backend
 @Injectable()
-export class EventsService {
-
-  public static event1: Event = {
-    fireWhen: [EventFireReason.documentCreate, EventFireReason.documentEdit, EventFireReason.documentRemove],
-    callback: updateAutomaticLinks,
-    parameters: [documentStickyness],
-    automatic: true
-  };
-
-  public static event2: Event = {
-    fireWhen: [EventFireReason.documentEdit],
-    callback: {
-      name: sortByAttribute.name,
-      hasValue: sortByAttribute.hasValue,
-      value: 'dateoforder'
-    },
-    parameters: [ascending, {
-      name: documentStickyness.name,
-      value: documentStickyness.possibleValues[1],
-      possibleValues: documentStickyness.possibleValues
-    }]
-  };
+export class EventService {
 
   constructor(private httpClient: HttpClient,
               private workspaceService: WorkspaceService) {
   }
 
+  public createEvent(collectionCode: string, event: Event): Observable<string> {
+    const collectionKey = `${collectionCode}_${EVENTS_KEY}`;
+    const events = LocalStorage.get(collectionKey) || [];
+
+    event.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
+    events.push(event);
+
+    LocalStorage.set(collectionKey, events);
+
+    return Observable.of(event.id);
+  }
+
+  public updateEvent(collectionCode: string, id: string, event: Event): Observable<Event> {
+    const collectionKey = `${collectionCode}_${EVENTS_KEY}`;
+    const events = LocalStorage.get(collectionKey) || [];
+
+    const updatedEventIndex = events.findIndex(event => id === event.id);
+    events[updatedEventIndex] = event;
+
+    LocalStorage.set(collectionKey, events);
+
+    return Observable.of(event);
+  }
+
+  public deleteEvent(collectionCode: string, id: string): Observable<void> {
+    const collectionKey = `${collectionCode}_${EVENTS_KEY}`;
+    const events = LocalStorage.get(collectionKey) || [];
+
+    const deletedEventIndex = events.findIndex(event => id === event.id);
+    events.splice(deletedEventIndex, 1);
+
+    LocalStorage.set(collectionKey, events);
+
+    return Observable.empty();
+  }
+
   public getEvents(collectionCode: string): Observable<Event[]> {
-    return Observable.of([EventsService.event1, EventsService.event2]);
+    const collectionKey = `${collectionCode}_${EVENTS_KEY}`;
+    const events = LocalStorage.get(collectionKey) || [];
+
+    return Observable.of(events);
   }
 
   private apiPrefix(collectionCode: string): string {
@@ -70,8 +85,8 @@ export class EventsService {
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
   }
 
-  private handleGlobalError(error: HttpErrorResponse): ErrorObservable {
-    throw new LumeerError(error.message);
-  }
+  private handleGlobalError(error: HttpErrorResponse): LumeerError {
+  throw new LumeerError(error.message);
+}
 
 }

@@ -21,11 +21,12 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {CollectionTabComponent} from '../collection-tab.component';
-import {EventsService} from '../../../../core/rest/events.service';
+import {EventService} from '../../../../core/rest/events.service';
 import {WorkspaceService} from '../../../../core/workspace.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Event} from '../../../../core/dto/Event';
 import {CollectionSelectService} from '../../../service/collection-select.service';
+import {EventFireReason} from './event-fire-reason';
 import {NotificationService} from '../../../../notifications/notification.service';
 
 @Component({
@@ -37,7 +38,7 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
 
   public events: Event[];
 
-  constructor(private eventsService: EventsService,
+  constructor(private eventService: EventService,
               protected collectionService: CollectionService,
               protected collectionSelectService: CollectionSelectService,
               protected route: ActivatedRoute,
@@ -58,15 +59,16 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
   }
 
   public getEvents(): void {
-    this.eventsService.getEvents(this.collection.code)
+    this.eventService.getEvents(this.collection.code)
       .subscribe(
         events => this.events = events,
         error => this.notificationService.error('Failed fetching Events')
       );
   }
 
-  public removeFireWhenFromEvent(event, on): void {
-
+  public removeFireWhenFromEvent(event: Event, removedFireReason: EventFireReason): void {
+    event.fireWhen = event.fireWhen.filter(fireReason => fireReason !== removedFireReason);
+    this.eventService.getEvents()
   }
 
 }
