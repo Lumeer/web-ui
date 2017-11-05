@@ -187,10 +187,6 @@ export class WorkspaceChooserComponent implements OnInit {
     this.store.dispatch(new ProjectsAction.Select({projectCode: null}));
   }
 
-  public onCreateOrganization() {
-    this.router.navigate(['organization', 'add']);
-  }
-
   public onOrganizationSettings(index: number) {
     this.router.navigate(['organization', this.organizations[index].code]);
   }
@@ -206,12 +202,6 @@ export class WorkspaceChooserComponent implements OnInit {
     const activeProject = activeOrganization.projects[index];
 
     this.store.dispatch(new ProjectsAction.Select({projectCode: activeProject.code}));
-  }
-
-  public onCreateProject() {
-    if (!isNullOrUndefined(this.activeOrgIx)) {
-      this.router.navigate(['organization', this.organizations[this.activeOrgIx].code, 'project', 'add']);
-    }
   }
 
   public onProjectSettings(index: number) {
