@@ -20,7 +20,7 @@
 import {Component, OnInit, TemplateRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {NotificationsService} from 'angular2-notifications/dist';
+import {NotificationsService} from 'angular2-notifications';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
 import {Collection} from '../../core/dto/collection';

@@ -19,7 +19,7 @@
 
 import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren} from '@angular/core';
 
-import {NotificationsService} from 'angular2-notifications/dist';
+import {NotificationsService} from 'angular2-notifications';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
 import {PostItDocumentComponent} from './document/post-it-document.component';

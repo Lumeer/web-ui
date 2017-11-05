@@ -20,7 +20,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {NotificationsService} from 'angular2-notifications/dist';
+import {NotificationsService} from 'angular2-notifications';
 
 import {CollectionTabComponent} from '../collection-tab.component';
 import {EventsService} from '../../../../core/rest/events.service';

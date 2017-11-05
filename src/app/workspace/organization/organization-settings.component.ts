@@ -24,7 +24,7 @@ import {OrganizationService} from '../../core/rest/organization.service';
 import {HttpResponse} from '@angular/common/http';
 import {ProjectService} from '../../core/rest/project.service';
 import {Project} from '../../core/dto/project';
-import {NotificationsService} from 'angular2-notifications/dist';
+import {NotificationsService} from 'angular2-notifications';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
 @Component({

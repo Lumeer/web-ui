@@ -23,7 +23,7 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Organization} from '../../../core/dto/organization';
 import {WorkspaceService} from '../../../core/workspace.service';
 import {OrganizationService} from '../../../core/rest/organization.service';
-import {NotificationsService} from 'angular2-notifications/dist';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'organization-form',
