@@ -34,7 +34,6 @@ import {TableRowCell} from '../../../shared/table/model/table-row-cell';
 import {DataEvent} from '../../../shared/table/event/data-event';
 import {Query} from '../../../core/dto/query';
 import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/switchMap';
 import {PerspectiveComponent} from '../perspective.component';
 
 @Component({

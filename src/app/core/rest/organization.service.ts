@@ -26,14 +26,15 @@ import {PermissionService} from './permission.service';
 import {FetchFailedError} from '../error/fetch-failed.error';
 import {NetworkError} from '../error/network.error';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import 'rxjs/add/operator/map';
+import {catchError} from 'rxjs/operators';
 
 @Injectable()
 export class OrganizationService extends PermissionService {
 
   public getOrganizations(): Observable<Organization[]> {
-    return this.httpClient.get<Organization[]>(this.apiPrefix())
-      .catch(OrganizationService.catchGetCollectionsError);
+    return this.httpClient.get<Organization[]>(this.apiPrefix()).pipe(
+      catchError(OrganizationService.catchGetCollectionsError)
+    );
   }
 
   public getOrganization(code: string): Observable<Organization> {
@@ -41,18 +42,18 @@ export class OrganizationService extends PermissionService {
   }
 
   public deleteOrganization(code: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(this.apiPrefix(code), {observe: 'response',responseType:'text'});
+    return this.httpClient.delete(this.apiPrefix(code), {observe: 'response', responseType: 'text'});
   }
 
   public createOrganization(organization: Organization): Observable<HttpResponse<any>> {
-    return this.httpClient.post(this.apiPrefix(), organization, {observe: 'response',responseType:'text'});
+    return this.httpClient.post(this.apiPrefix(), organization, {observe: 'response', responseType: 'text'});
   }
 
   public editOrganization(code: string, organization: Organization): Observable<HttpResponse<any>> {
     return this.httpClient.put(
       this.apiPrefix(code), organization,
       {observe: 'response', responseType: 'text'}
-      );
+    );
   }
 
   protected actualApiPrefix(): string {

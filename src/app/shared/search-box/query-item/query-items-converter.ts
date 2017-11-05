@@ -24,6 +24,7 @@ import {AttributeQueryItem} from './attribute-query-item';
 import {FulltextQueryItem} from './fulltext-query-item';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 import {Collection} from '../../../core/dto/collection';
 import {QueryConverter} from '../../utils/query-converter';
 import {SearchService} from '../../../core/rest/search.service';

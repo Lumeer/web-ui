@@ -19,8 +19,9 @@
 
 import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren} from '@angular/core';
 
-import {NotificationsService} from 'angular2-notifications/dist';
+import {NotificationsService} from 'angular2-notifications';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
+import {finalize} from 'rxjs/operators';
 
 import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../collection/constants';
 import {Collection} from '../../core/dto/collection';
@@ -34,7 +35,6 @@ import {PostItLayout} from '../utils/post-it-layout';
 import {PostItCollectionData} from './post-it-collection-data';
 import {QueryConverter} from '../utils/query-converter';
 import {HtmlModifier} from '../utils/html-modifier';
-import 'rxjs/add/operator/finally';
 
 @Component({
   selector: 'post-it-collections',
@@ -156,7 +156,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     postIt.initializing = true;
 
     this.collectionService.createCollection(postIt.collection)
-      ._finally(() => postIt.initializing = false)
+      .pipe(finalize(() => postIt.initializing = false))
       .subscribe(
         response => {
           const code = response.headers.get('Location').split('/').pop();

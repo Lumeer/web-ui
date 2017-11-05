@@ -29,7 +29,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {WorkspaceModule} from './workspace/workspace.module';
 import {CollectionModule} from './collection/collection.module';
 import {DocumentsModule} from './documents/documents.module';
-import {SimpleNotificationsModule} from 'angular2-notifications/dist';
+import {SimpleNotificationsModule} from 'angular2-notifications';
 import {ViewModule} from './view/view.module';
 
 @NgModule({

@@ -24,6 +24,7 @@ import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {LumeerError} from '../error/lumeer.error';
 import {WorkspaceService} from '../workspace.service';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 import {EventFireReason} from '../../collection/config/tab/events/event-fire-reason';
 import {sortByAttribute, updateAutomaticLinks} from '../../collection/config/tab/events/event-callback';
 import {ascending, documentStickyness} from '../../collection/config/tab/events/event-parameter';

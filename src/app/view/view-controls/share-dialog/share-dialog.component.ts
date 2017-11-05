@@ -18,7 +18,7 @@
  */
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {NotificationsService} from 'angular2-notifications/dist';
+import {NotificationsService} from 'angular2-notifications';
 
 import {UserService} from '../../../core/rest/user.service';
 import {User} from '../../../core/dto/user';

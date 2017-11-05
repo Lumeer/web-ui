@@ -23,7 +23,7 @@ import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Project} from '../../../core/dto/project';
 import {WorkspaceService} from '../../../core/workspace.service';
 import {ProjectService} from '../../../core/rest/project.service';
-import {NotificationsService} from 'angular2-notifications/dist';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'project-form',

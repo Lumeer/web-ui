@@ -66,7 +66,3 @@ window['Keycloak'] = require('./assets/js/keycloak.js');
 import './assets/js/custom.js';
 
 import 'socket.io-client';
-import 'angular2-drag-scroll';
-import 'angular2-notifications';
-import 'ngx-perfect-scrollbar';
-import 'ng2-webstorage';

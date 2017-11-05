@@ -17,22 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild,
-  ViewChildren
-} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
+import {catchError, debounceTime, map, startWith, switchMap} from 'rxjs/operators';
 
 import {Suggestions} from '../../core/dto/suggestions';
 import {WorkspaceService} from '../../core/workspace.service';
@@ -99,21 +89,21 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
         this.shouldFocusCondition = false;
         setTimeout(() => change.last.nativeElement.focus());
         this.selectedQueryItem = change.last.nativeElement.id;
-        this.suggestionItems = ConditionQueryItem.conditions.map(condition => new ConditionQueryItem(condition))
+        this.suggestionItems = ConditionQueryItem.conditions.map(condition => new ConditionQueryItem(condition));
         this.ref.detectChanges();
       }
     });
   }
 
   private getQueryItemsFromQueryParams() {
-    this.activatedRoute.queryParamMap
-      .map((queryParams: ParamMap) => QueryConverter.fromString(queryParams.get('query')))
-      .switchMap((query: Query) => this.queryItemsConverter.fromQuery(query))
-      .subscribe(queryItems => {
-        if (this.queryItems.length === 0) {
-          this.queryItems = queryItems;
-        }
-      });
+    this.activatedRoute.queryParamMap.pipe(
+      map((queryParams: ParamMap) => QueryConverter.fromString(queryParams.get('query'))),
+      switchMap((query: Query) => this.queryItemsConverter.fromQuery(query))
+    ).subscribe(queryItems => {
+      if (this.queryItems.length === 0) {
+        this.queryItems = queryItems;
+      }
+    });
   }
 
   private getQueryItemsFromView() {
@@ -121,28 +111,29 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.activatedRoute.firstChild.paramMap
-      .map((params: ParamMap) => params.get('viewCode'))
-      .switchMap(viewCode => this.viewService.getView(viewCode))
-      .switchMap(view => view ? this.queryItemsConverter.fromQuery(view.query) : Observable.of([]))
-      .subscribe(queryItems => {
-        if (this.queryItems.length === 0) {
-          this.queryItems = queryItems;
-        }
-      });
+    this.activatedRoute.firstChild.paramMap.pipe(
+      map((params: ParamMap) => params.get('viewCode')),
+      switchMap(viewCode => this.viewService.getView(viewCode)),
+      switchMap(view => view ? this.queryItemsConverter.fromQuery(view.query) : Observable.of([]))
+    ).subscribe(queryItems => {
+      if (this.queryItems.length === 0) {
+        this.queryItems = queryItems;
+      }
+    });
   }
 
   private suggestQueryItems() {
-    this.searchTerms
-      .startWith('')
-      .debounceTime(300)
-      .switchMap(text => this.retrieveSuggestions(text))
-      .switchMap(suggestions => this.convertSuggestionsToQueryItems(suggestions))
-      .map(queryItems => this.filterUsedQueryItems(queryItems))
-      .catch(error => {
+    this.searchTerms.pipe(
+      startWith(''),
+      debounceTime(300),
+      switchMap(text => this.retrieveSuggestions(text)),
+      switchMap(suggestions => this.convertSuggestionsToQueryItems(suggestions)),
+      map(queryItems => this.filterUsedQueryItems(queryItems)),
+      catchError(error => {
         console.error(error); // TODO: add real error handling
         return Observable.of<QueryItem[]>();
-      }).subscribe(items => {
+      })
+    ).subscribe(items => {
       this.selectedSuggestion = -1;
       this.suggestionItems = items;
     });

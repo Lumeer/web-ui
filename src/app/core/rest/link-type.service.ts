@@ -25,6 +25,7 @@ import {LumeerError} from '../error/lumeer.error';
 import {LinkType} from '../dto/link-type';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 import {CollectionService} from "./collection.service";
 
 // TODO implement on backend

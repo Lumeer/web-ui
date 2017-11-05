@@ -28,7 +28,7 @@ import {PermissionService} from './permission.service';
 import {isNullOrUndefined} from 'util';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {ConfiguredAttribute} from '../../collection/config/tab/attribute-list/configured-attribute';
-import 'rxjs/add/operator/catch';
+import {catchError} from 'rxjs/operators';
 
 // TODO add add support for Default Attribute
 @Injectable()
@@ -38,7 +38,9 @@ export class CollectionService extends PermissionService {
     return this.httpClient.post(
       this.apiPrefix(), this.toDto(collection),
       {observe: 'response', responseType: 'text'}
-      ).catch(this.handleError);
+    ).pipe(
+      catchError(this.handleError)
+    );
   }
 
   public updateCollection(collection: Collection, collectionCode?: string): Observable<Collection> {
@@ -46,20 +48,24 @@ export class CollectionService extends PermissionService {
       collectionCode = collection.code;
     }
 
-    return this.httpClient.put(`${this.apiPrefix()}/${collectionCode}`, this.toDto(collection))
-      .catch(this.handleError);
+    return this.httpClient.put(`${this.apiPrefix()}/${collectionCode}`, this.toDto(collection)).pipe(
+      catchError(this.handleError)
+    );
   }
 
   public removeCollection(collectionCode: string): Observable<HttpResponse<any>> {
     return this.httpClient.delete(
       `${this.apiPrefix()}/${collectionCode}`,
       {observe: 'response', responseType: 'text'}
-      ).catch(this.handleError);
+    ).pipe(
+      catchError(this.handleError)
+    );
   }
 
   public getCollection(collectionCode: string): Observable<Collection> {
-    return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionCode}`)
-      .catch(CollectionService.handleGlobalError);
+    return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionCode}`).pipe(
+      catchError(CollectionService.handleGlobalError)
+    );
   }
 
   public getCollections(pageNumber?: number, pageSize?: number): Observable<Collection[]> {
@@ -70,21 +76,24 @@ export class CollectionService extends PermissionService {
         .set('size', pageSize.toString());
     }
 
-    return this.httpClient.get<Collection[]>(this.apiPrefix(), {params: queryParams})
-      .catch(CollectionService.handleGlobalError);
+    return this.httpClient.get<Collection[]>(this.apiPrefix(), {params: queryParams}).pipe(
+      catchError(CollectionService.handleGlobalError)
+    );
   }
 
   /**
    * @deprecated Get attributes from collection instead.
    */
   public getAttributes(collectionCode: string): Observable<Attribute[]> {
-    return this.httpClient.get<Attribute[]>(`${this.apiPrefix()}/${collectionCode}/attributes`)
-      .catch(CollectionService.handleGlobalError);
+    return this.httpClient.get<Attribute[]>(`${this.apiPrefix()}/${collectionCode}/attributes`).pipe(
+      catchError(CollectionService.handleGlobalError)
+    );
   }
 
   public updateAttribute(collectionCode: string, fullName: string, attribute: Attribute): Observable<Attribute> {
-    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, this.attributeToDto(attribute))
-      .catch(CollectionService.handleGlobalError);
+    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, this.attributeToDto(attribute)).pipe(
+      catchError(CollectionService.handleGlobalError)
+    );
   }
 
   public removeAttribute(collectionCode: string, fullName: string): Observable<HttpResponse<any>> {

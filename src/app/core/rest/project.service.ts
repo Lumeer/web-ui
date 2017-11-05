@@ -22,18 +22,19 @@ import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 
 import {Project} from '../dto/project';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
 import {PermissionService} from './permission.service';
 import {FetchFailedError} from '../error/fetch-failed.error';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {NetworkError} from '../error/network.error';
+import {catchError} from 'rxjs/operators';
 
 @Injectable()
 export class ProjectService extends PermissionService {
 
   public getProjects(orgCode: string): Observable<Project[]> {
-    return this.httpClient.get<Project[]>(this.apiPrefix(orgCode))
-      .catch(ProjectService.catchGetProjectsError);
+    return this.httpClient.get<Project[]>(this.apiPrefix(orgCode)).pipe(
+      catchError(ProjectService.catchGetProjectsError)
+    );
   }
 
   public getProject(orgCode: string, projCode: string): Observable<Project> {

@@ -19,7 +19,6 @@
 
 import {NgModule} from '@angular/core';
 
-import {PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
 import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
 import {OrganizationFormComponent} from './organization/form/organization-form.component';
 import {ProjectFormComponent} from './project/form/project-form.component';
@@ -34,7 +33,6 @@ import {PickerModule} from '../shared/picker/picker.module';
 
 @NgModule({
   imports: [
-    PerfectScrollbarModule,
     SharedModule,
     WorkspaceRoutingModule,
     PickerModule

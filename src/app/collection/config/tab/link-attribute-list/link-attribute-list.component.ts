@@ -19,7 +19,7 @@
 
 import {Component, Input} from '@angular/core';
 import {LinkType} from '../../../../core/dto/link-type';
-import {NotificationsService} from 'angular2-notifications/dist';
+import {NotificationsService} from 'angular2-notifications';
 import {LinkTypeService} from '../../../../core/rest/link-type.service';
 import {LinkedAttribute} from '../../../../core/dto/linked-attribute';
 import * as Const from '../constraints';

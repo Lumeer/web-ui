@@ -26,7 +26,7 @@ import {PerspectiveChoice} from '../perspectives/perspective-choice';
 import {PERSPECTIVES} from '../perspectives/perspective';
 import {QueryConverter} from '../../shared/utils/query-converter';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
-import {NotificationsService} from 'angular2-notifications/dist';
+import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'view-controls',

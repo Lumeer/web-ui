@@ -19,7 +19,7 @@
 
 import {Component, Input} from '@angular/core';
 
-import {NotificationsService} from 'angular2-notifications/dist';
+import {NotificationsService} from 'angular2-notifications';
 
 import {ConfiguredAttribute} from './configured-attribute';
 import {ConstraintSuggestion} from './constraint-suggestion';
