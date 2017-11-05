@@ -22,6 +22,7 @@ import {Collection} from '../../core/dto/collection';
 export class PostItCollectionData {
 
   public collection: Collection;
+  public initializing: boolean;
   public initialized: boolean;
 
 }
