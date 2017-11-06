@@ -22,18 +22,55 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import {Group} from '../dto/group';
-import {WorkspaceService} from '../workspace.service';
+import {LocalStorage} from '../../shared/utils/local-storage';
+
+const GROUPS_KEY = 'groups';
 
 @Injectable()
 export class GroupService {
 
-  constructor(private workspaceService: WorkspaceService) {
+  public createGroup(group: Group): Observable<string> {
+    const groups = LocalStorage.get(GROUPS_KEY) || {};
+
+    group.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
+    groups[group.id] = group;
+
+    LocalStorage.set(GROUPS_KEY, groups);
+
+    return Observable.of(group.id);
   }
 
-  public getGroups(organizationCode?: string): Observable<Group[]> {
-    if (!organizationCode) {
-      organizationCode = this.workspaceService.organizationCode;
-    }
-    return Observable.of([{name: 'directors'}, {name: 'customers'}]);
+  public updateGroup(id: string, group: Group): Observable<Group> {
+    const groups = LocalStorage.get(GROUPS_KEY) || {};
+
+    delete groups[id];
+    groups[group.id] = group;
+
+    LocalStorage.set(GROUPS_KEY, groups);
+
+    return Observable.of(group);
   }
+
+  public deleteGroup(id: string): Observable<void> {
+    const groups = LocalStorage.get(GROUPS_KEY) || {};
+
+    delete groups[id];
+
+    LocalStorage.set(GROUPS_KEY, groups);
+
+    return Observable.empty();
+  }
+
+  public getGroupById(id: string): Observable<Group> {
+    const groups = LocalStorage.get(GROUPS_KEY) || {};
+
+    return Observable.of(groups[id]);
+  }
+
+  public getGroups(): Observable<Group[]> {
+    const groups: { [id: string]: Group } = LocalStorage.get(GROUPS_KEY) || {};
+
+    return Observable.of(Object.values(groups));
+  }
+
 }
