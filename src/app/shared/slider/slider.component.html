@@ -1,0 +1,14 @@
+<div class="box" [style.width]="componentWidth + 'px'">
+  <div class="d-flex captions">
+    <div *ngFor="let size of sizes" class="col text-center align-self-center p-0">
+      {{size}}
+    </div>
+  </div>
+  <div class="d-flex slider" #slider (click)="onSliderClick($event)">
+    <div class="line align-self-center"
+         [style.width]="(componentWidth - step) + 'px'"
+         [style.margin-left]="step/2+'px'"
+         [style.margin-right]="step/2+'px'"></div>
+    <div class="circle align-self-center" [style.left]="circlePosition+'px'"></div>
+  </div>
+</div>

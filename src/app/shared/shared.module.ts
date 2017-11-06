@@ -29,6 +29,7 @@ import {PickerModule} from './picker/picker.module';
 import {RouterModule} from '@angular/router';
 import {HighlightPipe} from './highlight.pipe';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
+import {SliderComponent} from './slider/slider.component';
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
     PermissionsComponent,
     PermissionsTableComponent,
     PostItCollectionsComponent,
-    SearchBoxComponent
+    SearchBoxComponent,
+    SliderComponent
   ],
   exports: [
     CommonModule,
@@ -52,7 +54,8 @@ import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
     HighlightPipe,
     PermissionsComponent,
     PostItCollectionsComponent,
-    SearchBoxComponent
+    SearchBoxComponent,
+    SliderComponent
   ]
 })
 export class SharedModule {

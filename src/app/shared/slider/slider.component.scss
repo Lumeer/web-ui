@@ -1,0 +1,51 @@
+@import "../variables";
+
+$width: 200px;
+
+$line-color: black;
+$line-size: 2px;
+
+$circle-size: 20px;
+$circle-border-color: black;
+$circle-color: black;
+
+$text-size: 14px;
+$text-margin-tb: 10px;
+
+.box {
+
+  height: $circle-size + $text-size + 2*$text-margin-tb;
+
+  .captions {
+    font-size: $text-size;
+    height: $text-size + 2*$text-margin-tb;;
+  }
+
+  .slider {
+    height: $circle-size;
+    cursor: pointer;
+
+    .line {
+      height: $line-size;
+      background: $line-color;
+      position: absolute;
+    }
+
+    .circle {
+      position: relative;
+      height: $circle-size;
+      width: $circle-size;
+      background: $circle-color;
+      -moz-border-radius: 50%;
+      -webkit-border-radius: 50%;
+      transition: left $animation-duration;
+      -webkit-transition: left $animation-duration;
+      -moz-transition: left $animation-duration;
+      -o-transition: left $animation-duration;
+      border-radius: 50%;
+      border: 1px solid $circle-border-color;
+    }
+  }
+
+}
+

@@ -30,9 +30,6 @@ import {isNullOrUndefined} from 'util';
 import {Role} from '../../shared/permissions/role';
 import {UserSettingsService} from '../../core/user-settings.service';
 
-const squareSize: number = 200;
-const arrowSize: number = 40;
-
 @Component({
   selector: 'workspace-chooser',
   templateUrl: './workspace-chooser.component.html',

@@ -1,0 +1,22 @@
+@import "../../../../shared/variables";
+
+$margin-left: 20px;
+
+.toggle-detail {
+  width: $margin-left;
+  cursor: pointer;
+}
+
+
+.icon {
+  cursor: pointer;
+
+  &:hover {
+    color: $success !important;
+  }
+}
+
+.content {
+  margin-left: $margin-left;
+}
+
