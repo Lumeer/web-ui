@@ -22,22 +22,55 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import {User} from '../dto/user';
-import {WorkspaceService} from '../workspace.service';
+import {LocalStorage} from '../../shared/utils/local-storage';
+
+const USERS_KEY = 'users';
 
 @Injectable()
 export class UserService {
 
-  constructor(private workspaceService: WorkspaceService) {
+  public createUser(user: User): Observable<string> {
+    const users = LocalStorage.get(USERS_KEY) || {};
+
+    user.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
+    users[user.id] = user;
+
+    LocalStorage.set(USERS_KEY, users);
+
+    return Observable.of(user.id);
   }
 
-  public getUsers(organizationCode?: string): Observable<User[]> {
-    if (!organizationCode) {
-      organizationCode = this.workspaceService.organizationCode;
-    }
-    return Observable.of([
-      {id: 'someId1', username: 'alicak@lumeer.io', groups: []},
-      {id: 'someId2', username: 'kubedo@lumeer.io', groups: []},
-      {id: 'someId3', username: 'jkotrady@lumeer.io', groups: []},
-      {id: 'someId4', username: 'kulexpipiens@lumeer.io', groups: []}]);
+  public updateUser(id: string, user: User): Observable<User> {
+    const users = LocalStorage.get(USERS_KEY) || {};
+
+    delete users[id];
+    users[user.id] = user;
+
+    LocalStorage.set(USERS_KEY, users);
+
+    return Observable.of(user);
   }
+
+  public deleteUser(id: string): Observable<void> {
+    const users = LocalStorage.get(USERS_KEY) || {};
+
+    delete users[id];
+
+    LocalStorage.set(USERS_KEY, users);
+
+    return Observable.empty();
+  }
+
+  public getUserById(id: string): Observable<User[]> {
+    const users = LocalStorage.get(USERS_KEY) || {};
+
+    return Observable.of(users[id]);
+  }
+
+  public getUsers(): Observable<User[]> {
+    const users: { [id: string]: User } = LocalStorage.get(USERS_KEY) || {};
+
+    return Observable.of(Object.values(users));
+  }
+
 }
