@@ -1,42 +1,65 @@
-<table>
-  <thead>
-    <tr>
-      <th></th>
-      <th *ngFor="let role of roles"
-          i18n="@@permissions.role">
-        {role.toLowerCase(), select, clone {clone} comment {comment} manage {manage} read {read} share {share} write {write}}
-      </th>
-      <th></th>
-    </tr>
+<table class="table table-sm">
+  <thead class="font-italic">
+  <tr>
+    <th class="border-0">{{ entityType }}</th>
+    <th *ngFor="let role of roles"
+        class="border-0 font-weight-normal"
+        i18n="@@permissions.role">
+      {role.toLowerCase(), select, clone {clone} comment {comment} manage {manage} read {read} share {share} write
+      {write}}
+    </th>
+    <th class="border-0 font-weight-normal"></th>
+  </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let entity of entities; let idx = index">
-      <td>{{entity.name}}</td>
-      <td *ngFor="let role of roles" class="role">
-        <input id="ch{{entity.name+role}}" type="checkbox" title="{{role}}" [attr.checked]="entity.roles.indexOf(role) > -1 ? '': null" (change)="changePermission(idx, role, $event)"/>
-      </td>
-      <td>
-        <button (click)="onRemove(entity.name, idx)"
-                class="btn btn-danger"
-                i18n="@@permissions.button.remove">Remove
-        </button>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <select class="form-control" #selectedEntityName>
-          <option *ngFor="let otherEntity of otherEntities">{{otherEntity}}</option>
-        </select>
-      </td>
-      <td *ngFor="let role of roles" class="role">
-        <input id="ch{{'new'+role+entityType}}" type="checkbox" title="{{role}}" [checked]="rolesCheckbox[role]" (change)="updateCheckedRoles(role, $event)"/>
-      </td>
-      <td>
-        <button (click)="onAdd(selectedEntityName.value)"
-                class="btn btn-success"
-                i18n="@@permissions.button.add">Add
-        </button>
-      </td>
-    </tr>
+  <tr *ngFor="let entity of entities; let idx = index">
+    <td class="border-0">{{entity.name}}</td>
+    <td *ngFor="let role of roles"
+        class="role border-0">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox"
+               class="custom-control-input"
+               id="ch{{entity.name+role}}"
+               title="{{role}}"
+               [attr.checked]="entity.roles.indexOf(role) > -1 ? '': null"
+               (change)="changePermission(idx, role, $event)">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </td>
+    <td class="border-0">
+      <i (click)="onRemove(entity.name, idx)"
+         class="fa fa-fx fa-times text-danger"
+         title="Remove"
+         i18n-title="@@permissions.entity.remove"></i>
+    </td>
+  </tr>
+  <tr>
+    <td class="border-0">
+      <select #selectedEntityName
+              title="{{ entityType }} to add"
+              i18n-title="@@permissions.entity.type"
+              class="custom-select">
+        <option *ngFor="let possibleEntity of possibleEntities">{{possibleEntity}}</option>
+      </select>
+    </td>
+    <td *ngFor="let role of roles"
+        class="role border-0">
+      <label class="custom-control custom-checkbox">
+        <input type="checkbox"
+               class="custom-control-input"
+               id="ch{{'new'+role+entityType}}"
+               title="{{role}}"
+               [checked]="rolesCheckbox[role]"
+               (change)="updateCheckedRoles(role, $event)">
+        <span class="custom-control-indicator"></span>
+      </label>
+    </td>
+    <td class="border-0">
+      <i (click)="onAdd(selectedEntityName.value)"
+         class="fa fa-fx fa-plus-circle text-success"
+         title="Add"
+         i18n-title="@@permissions.entity.add"></i>
+    </td>
+  </tr>
   </tbody>
 </table>
