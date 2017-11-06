@@ -24,7 +24,7 @@ import {EventParameter} from '../../collection/config/tab/events/event-parameter
 export interface Event {
 
   id: string;
-  fireWhen: EventFireReason[];
+  fireReasons: EventFireReason[];
   callback: EventCallback;
   parameters: EventParameter[];
   automatic?: boolean;

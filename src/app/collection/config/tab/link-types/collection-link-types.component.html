@@ -5,7 +5,7 @@
     <ng-container *ngIf="collections[linkType.toCollection]">
       <div class="d-flex align-baseline py-1">
           <span class="start">
-            <i class="p-2 fa fa-caret-right bigger expand {{ expanded[idx] ? 'fa-rotate-90' : null}}"
+            <i class="p-2 fa fa-caret-right bigger expand green-on-hover {{ expanded[idx] ? 'fa-rotate-90' : null}}"
                aria-hidden="true"
                title="Open"
                i18n-title="@@collection.config.tab.link.types.open"
@@ -95,7 +95,9 @@
       </div>
     </ng-container>
   </li>
-  <li class="list-group-item py-3 new-link-type color-transition"
+  <li i18n-title="@@collection.config.tab.link.types.add.title"
+      title="Add new link Type"
+      class="list-group-item py-3 new-link-type color-transition green-on-hover"
       [style.border-color]="collection.color"
       (click)="newLinkType()">
     <div class="d-flex align-baseline">

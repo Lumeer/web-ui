@@ -4,17 +4,17 @@
     <div class="d-flex">
         <span class="flex-grow-2">
           <span class="mr-2" i18n="@@collection.config.tab.events.on">On</span>
-          <ng-container *ngFor="let on of event.fireWhen; let idx = index">
+          <ng-container *ngFor="let fireReason of event.fireReasons; let idx = index">
             <span class="text-success"
-                  (click)="removeFireWhenFromEvent(event, on)"
+                  (click)="removeFireReasonFromEvent(event, fireReason)"
                   title="Remove event fire reason"
-                  i18n.title="@@collection.config.tab.events.remove.event.fire.reason">{{ on }}</span>
-            <span *ngIf="idx !== event.fireWhen.length - 1">, </span>
+                  i18n.title="@@collection.config.tab.events.remove.event.fire.reason">{{ fireReason }}</span>
+            <span *ngIf="idx !== event.fireReasons.length - 1">, </span>
           </ng-container>
         </span>
       <span *ngIf="event.automatic" i18n="@@collection.config.tab.events.automatic">
           automatic
-        </span>
+      </span>
     </div>
 
     <div>

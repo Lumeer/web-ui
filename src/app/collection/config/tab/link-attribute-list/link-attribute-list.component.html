@@ -18,7 +18,7 @@
 
   <tr *ngFor="let attribute of attributes(); let row = index"
       class="appear">
-    <td class="attrbute-row">
+    <td class="attrbute-row" title="{{ attribute.collection.name }} {{ attribute.value.name }}">
       <i class="fa-fw mx-1 align-self-center {{ attribute.collection.icon }}"
          [style.color]="attribute.collection.color"
          aria-hidden="true"></i>

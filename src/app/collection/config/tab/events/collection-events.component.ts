@@ -66,8 +66,8 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
       );
   }
 
-  public removeFireWhenFromEvent(event: Event, removedFireReason: EventFireReason): void {
-    event.fireWhen = event.fireWhen.filter(fireReason => fireReason !== removedFireReason);
+  public removeFireReasonFromEvent(event: Event, removedFireReason: EventFireReason): void {
+    event.fireReasons = event.fireReasons.filter(fireReason => fireReason !== removedFireReason);
     this.eventService.getEvents()
   }
 

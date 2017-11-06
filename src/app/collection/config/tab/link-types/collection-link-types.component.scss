@@ -29,8 +29,12 @@
     flex: 2;
   }
 
-  .expand:hover {
+  .green-on-hover:hover {
     color: $success;
+  }
+
+  .expand {
+    transition: all $animation-color-duration;
   }
 
   .greyed-out {
