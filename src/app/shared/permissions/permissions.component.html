@@ -1,5 +1,4 @@
-<h3 i18n="@@permissions.groups.header">Groups</h3>
-<permissions-table [entityType]="'groups'" [resourceType]="resourceType"></permissions-table>
-
-<h3 i18n="@@permissions.users.header">Users</h3>
-<permissions-table [entityType]="'users'" [resourceType]="resourceType"></permissions-table>
+<div class="d-flex flex-wrap justify-content-center py-3">
+  <permissions-table class="mx-2 flex-grow" [entityType]="'groups'" [resourceType]="resourceType"></permissions-table>
+  <permissions-table class="mx-2 flex-grow" [entityType]="'users'" [resourceType]="resourceType"></permissions-table>
+</div>
