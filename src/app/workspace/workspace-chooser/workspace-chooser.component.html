@@ -1,16 +1,18 @@
 <div class="container-fluid container">
-  <resource-chooser [initActiveIx]="activeOrgIx"
+  <resource-chooser *ngIf="organizations"
+                    [initActiveIx]="activeOrgIx"
                     [resourceType]="'organization'"
                     [resources]="organizations"
                     [canCreateResource]="true"
                     (resourceSelect)="onSelectOrganization($event)"
-                    (resourceNew)="onCreateOrganization()"
+                    (resourceNew)="getOrganizations()"
                     (resourceSettings)="onOrganizationSettings($event)"
                     (resourceNewDescription)="onNewOrganizationDescription($event)">
   </resource-chooser>
 
   <div class="pt-3" *ngIf="activeOrgIx >=0" [@animateOpacityFromUp]="'in'">
-    <resource-chooser [initActiveIx]="activeProjIx"
+    <resource-chooser *ngIf="organizations[activeOrgIx].projects"
+                      [initActiveIx]="activeProjIx"
                       [resourceType]="'project'"
                       [resources]="organizations[activeOrgIx].projects"
                       [canCreateResource]="hasManageRole(organizations[activeOrgIx])"

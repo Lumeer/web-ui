@@ -27,7 +27,7 @@
            [style.width]="resourceWidth + 'px'">
 
         <div class="tab d-flex" *ngFor="let resource of resources; let ix = index"
-             (click)="onResourceSelected(ix)">
+             (click)="isInitialized(resource) && onResourceSelected(ix) && resources[ix]">
           <div class="post-it align-self-center">
             <div class="card square"></div>
             <div class="card text-center content border-0" [style.color]="resource.color">
@@ -42,12 +42,14 @@
               <textarea class="card-footer text-center font-weight-bold bg-transparent" #textArea
                         rows="1"
                         [(ngModel)]="resource.name" [(ngModel)]="resource.code"
-                        (blur)="!isInitialized(resource) && initializeResource(resource)">
+                        (blur)="!isInitialized(resource) && initializeResource(resource) ">
               </textarea>
             </div>
           </div>
           <div class="align-self-stretch border border-bottom-0 rounded-top bookmark"
                *ngIf="ix === resourceActiveIx" [@animateVisible]="'in'"></div>
+               *ngIf=" !isAnyResourceInitializing() && (ix === resourceActiveIx)  " [@animateVisible]="'in'"></div>
+
         </div>
 
         <div class="tab d-flex new-resource" *ngIf="canCreateResource">
@@ -62,6 +64,8 @@
 
         <div class="d-flex flex-row align-items-end justify-content-end pointer"
              *ngIf="resourceActiveIx >= 0" [style.width]="linesWidth + 'px'">
+        <div class="d-flex flex-row align-items-end justify-content-end pointer"
+             *ngIf="!isAnyResourceInitializing() && (resourceActiveIx >= 0)  ">
           <div class="line mr-auto" [style.width]="resourceLineSizes[0]+'px'"></div>
           <div class="empty-line" [style.width]="resourceLineSizes[1]+'px'"></div>
           <div class="line"

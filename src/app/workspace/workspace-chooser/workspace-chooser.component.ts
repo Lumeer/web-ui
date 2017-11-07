@@ -165,6 +165,14 @@ export class WorkspaceChooserComponent implements OnInit {
     return this.projectService.getProjects(organization.code);
   }
 
+  public getOrganizations(): void {
+    this.organizationService.getOrganizations()
+      .subscribe(organizations => {
+        console.log('got', organizations);
+        this.organizations = organizations;
+      });
+  }
+
   public onSelectOrganization(index: number) {
     const selectedOrganization = this.organizations[index];
     if (!selectedOrganization.projects) {

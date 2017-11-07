@@ -40,6 +40,7 @@ import {NotificationsService} from 'angular2-notifications/dist';
 import {Organization} from "../../../core/dto/organization";
 import {WorkspaceService} from '../../../core/workspace.service';
 import {Project} from '../../../core/dto/project';
+import {finalize} from "rxjs/operators";
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
@@ -110,10 +111,8 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceLineSizes = [0, 0, 0];
   public resourceVisibleArrows = false;
   public newResource;
-
   public newOrganization: Organization = new Organization();
-
-  public uninitializedResources: Set<Resource> = new Set();
+  public uninitializedResources: Set<Resource> = new Set<Resource>();
 
   constructor(private organizationService: OrganizationService,
               private projectService: ProjectService,
@@ -144,6 +143,7 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   public onResourceSelected(index: number) {
+
     this.resourceActiveIx = index;
     this.computeResourceLines(index);
     this.resourceSelect.emit(index);
@@ -257,21 +257,22 @@ export class ResourceChooserComponent implements OnChanges {
       && resource.permissions.users[0].roles.some(r => r === Role.Manage.toString());
   }
 
-  public onCreateOrganization(organization: Organization): boolean {
-    this.organizationService.createOrganization(organization).subscribe(response => {
-      this.notificationsService
-        .success('Success', 'Organization created');
-      // const code = response.headers.get('Location').split('/').pop();
-      // organization.code = code;
-      // console.log(response);
-      return true;
-    }, error => {
-      this.notificationsService
-        .error('Error', 'Error creating organization');
-      // console.log(error);
-      return false;
-    });
-    return false;
+  public onCreateOrganization(organization: Organization, resource: Resource): void {
+    this.organizationService.createOrganization(organization)
+      .pipe(finalize(() => this.uninitializedResources.delete(resource)))
+      .subscribe(response => {
+        this.notificationsService
+          .success('Success', 'Organization created');
+        // const code = response.headers.get('Location').split('/').pop();
+        // organization.code = code;
+        // console.log(response);
+        this.resourceNew.emit();
+
+      }, error => {
+        this.notificationsService
+          .error('Error', 'Error creating organization');
+        // console.log(error);
+      });
   }
 
   public onCreateProject(orgCode: string, project: Project): void {
@@ -284,19 +285,17 @@ export class ResourceChooserComponent implements OnChanges {
 
 
   public initializeResource(resource: Resource): void {
+
     switch (this.resourceType) {
       case 'organization':
         this.newOrganization = {
-          code: 'newcode',
+          code: 'newcode2',
           name: resource.name,
           color: resource.color,
           icon: resource.icon
         };
-        let created: boolean = this.onCreateOrganization(this.newOrganization);
-        if (created) {
-          this.uninitializedResources.delete(resource);
-        }
-        break;
+        this.onCreateOrganization(this.newOrganization, resource);
+
 
       case 'project':
         this.onCreateProject(this.workspaceService.organizationCode, resource);
@@ -305,8 +304,12 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   public isInitialized(resource: Resource): boolean {
+    console.log('I am initialized ' + !this.uninitializedResources.has(resource));
     return !this.uninitializedResources.has(resource);
   }
 
+  public isAnyResourceInitializing(): boolean {
+    return (this.uninitializedResources.size > 0);
+  }
 
 }
