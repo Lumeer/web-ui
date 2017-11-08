@@ -24,7 +24,9 @@ import {SnotifyService} from 'ng-snotify';
 @Component({
   selector: 'lmr-app',
   templateUrl: './app.component.html',
-  styleUrls: ['./shared/common.scss', './app.component.scss'],
+  styleUrls: [
+    './shared/common.scss',
+    './app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {

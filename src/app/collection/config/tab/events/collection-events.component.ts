@@ -30,7 +30,6 @@ import {EventModel} from './model/EventModel';
 import {EventFireReason} from './model/event-fire-reason';
 import {finalize} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
-
 @Component({
   selector: 'collection-events',
   templateUrl: './collection-events.component.html',

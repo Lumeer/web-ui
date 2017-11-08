@@ -87,6 +87,6 @@ export class ColorPickerComponent implements OnInit {
       .join(', ');
 
     return `rgb(${darkerColors})`;
-  };
+  }
 
 }
