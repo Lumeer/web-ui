@@ -1,0 +1,55 @@
+<ng-template #tableRow let-row let-rowNumber="rowNumber">
+  <ng-container *ngIf="row.rowNumber === rowNumber">
+    <td *ngFor="let attribute of row.part.shownAttributes"
+        [attr.rowspan]="row.countRows()"
+        class="data-cell">
+      <table-body-cell [row]="row"
+                       [attribute]="attribute"
+                       (expand)="onLinkExpand(row.previousLinkedRow)"
+                       (moveCursor)="onMoveCursor($event)"
+                       (dataChange)="onDataChange($event)"
+                       (deleteDocument)="onDeleteDocument($event)"
+                       (createLinkInstance)="onCreateLinkInstance($event)"
+                       (deleteLinkInstance)="onDeleteLinkInstance($event)"
+                       [(editedCell)]="editedCell"
+                       [(selectedCell)]="selectedCell">
+      </table-body-cell>
+    </td>
+    <td *ngIf="row.part.hiddenAttributes.length > 0"
+        [attr.rowspan]="row.countRows()">
+    </td>
+  </ng-container>
+
+  <ng-container *ngIf="row.nextLinkedRows.length > 0">
+    <td *ngIf="row.rowNumber === rowNumber"
+        [attr.rowspan]="row.countRows()"
+        class="link-cell">
+      <a *ngIf="row.nextLinkedRows.length === 1 && row.nextLinkedRows[0].documents.length > 1 && row.documents.length === 1"
+         (click)="onLinkExpand(row)"
+         (keyup.enter)="onLinkExpand(row)"
+         title="Expand" i18n-title="@@table.link.expand"
+         class="d-flex h-100 m-0">
+        <i class="fa fa-expand m-auto"></i>
+      </a>
+      <a *ngIf="row.nextLinkedRows.length > 1"
+         (click)="onLinkCollapse(row)"
+         (keyup.enter)="onLinkCollapse(row)"
+         title="Collapse" i18n-title="@@table.link.collapse"
+         class="d-flex h-100 m-0">
+        <i class="fa fa-compress m-auto"></i>
+      </a>
+    </td>
+    <ng-container *ngTemplateOutlet="tableRow; context:{ $implicit: findRowNumber(row.nextLinkedRows, rowNumber), rowNumber: rowNumber }"></ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-container *ngFor="let row of getPrimaryRows(); odd as isPrimaryOdd">
+  <tr *ngFor="let rowOffset of rowOffsets(row); first as isFirst; last as isLast; odd as isOdd"
+      [class.stripe]="isPrimaryOdd || (!isFirst && !isLast && isOdd)">
+    <td class="line-number">
+      <div>{{row.rowNumber + rowOffset}}</div>
+    </td>
+
+    <ng-container *ngTemplateOutlet="tableRow; context: {$implicit: row, rowNumber: row.rowNumber + rowOffset}"></ng-container>
+  </tr>
+</ng-container>

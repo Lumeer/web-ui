@@ -1,0 +1,140 @@
+<div *ngIf="part.sorting && part.sorting.attributeId === attribute.fullName"
+     class="sort-symbol">
+  <a (click)="onSort(!part.sorting.descending)">
+    <i class="fa fa-fw"
+       [class.fa-sort-down]="!part.sorting.descending"
+       [class.fa-sort-up]="part.sorting.descending">
+    </i>
+  </a>
+</div>
+
+<div #attributeNameInput
+     [attr.contenteditable]="editMode"
+     [class.pl-4]="part.sorting && part.sorting.attributeId === attribute.fullName"
+     [class.uninitialized]="!attribute.fullName"
+     [contextMenu]="contextMenu"
+     [style.cursor]="editMode ? 'text' : 'default'"
+     [textContent]="attribute.name"
+     (blur)="onBlur()"
+     (focus)="onFocus()"
+     (dblclick)="onDoubleClick()"
+     (keydown)="onKeyDown($event)"
+     (keyup)="onKeyUp($event)"
+     class="attribute-name"
+     tabindex="0">
+</div>
+
+<div class="dropdown">
+  <div *ngIf="editMode && attribute.name && !attribute.fullName"
+       class="dropdown-menu show">
+    <div class="dropdown-header"
+         i18n="@@table.header.suggestion.attribute.new">Create new attribute
+    </div>
+    <a (mousedown)="createNewAttribute()"
+       class="dropdown-item">
+      <i class="{{part.collection.icon}} fa-fw mr-1" [style.color]="part.collection.color"></i>
+      <span>{{attributeName}}</span>
+    </a>
+
+    <ng-container *ngIf="!part.nextPart">
+      <div class="dropdown-divider"></div>
+      <div class="dropdown-header"
+           i18n="@@table.header.suggestion.link.existing">Use existing link
+      </div>
+      <a *ngFor="let linkCollectionAttribute of suggestExistingLinks(attributeName)"
+         (mousedown)="useExistingLink(linkCollectionAttribute)"
+         class="dropdown-item">
+        <i class="{{linkCollectionAttribute[1].icon}} fa-fw mr-1" [style.color]="linkCollectionAttribute[1].color"></i>
+        <span>{{linkCollectionAttribute[1].name}}.</span><span [innerHtml]="linkCollectionAttribute[2].name | highlight: attributeName"></span>
+        <small class="text-secondary ml-1">({{linkCollectionAttribute[0].name}})</small>
+      </a>
+
+      <div class="dropdown-divider"></div>
+      <div class="dropdown-header"
+           i18n="@@table.header.suggestion.link.new">Create new link
+      </div>
+      <a *ngFor="let collectionAttribute of suggestNewLinks(attributeName)"
+         (mousedown)="createNewLink(collectionAttribute)"
+           class="dropdown-item">
+        <i class="{{collectionAttribute[0].icon}} fa-fw mr-1" [style.color]="collectionAttribute[0].color"></i>
+        <span>{{collectionAttribute[0].name}}.</span><span [innerHtml]="collectionAttribute[1].name | highlight: attributeName"></span>
+      </a>
+    </ng-container>
+  </div>
+</div>
+
+<context-menu #contextMenu>
+  <ng-template *ngIf="part.index === 0"
+               contextMenuItem
+               (execute)="onSort(false)">
+    <i class="fa fa-fw fa-sort-alpha-down mr-1" aria-hidden="true"></i>
+    <span i18n="@@table.header.menu.sort.ascending">Sort ascending</span>
+  </ng-template>
+  <ng-template *ngIf="part.index === 0"
+               contextMenuItem
+               (execute)="onSort(true)">
+    <i class="fa fa-fw fa-sort-alpha-up mr-1" aria-hidden="true"></i>
+    <span i18n="@@table.header.menu.sort.descending">Sort descending</span>
+  </ng-template>
+  <ng-template *ngIf="part.index === 0"
+               contextMenuItem
+               divider="true"></ng-template>
+  <ng-template [enabled]="false"
+               contextMenuItem>
+    <i class="fa fa-fw fa-cog mr-1" aria-hidden="true"></i>
+    <span i18n="@@table.header.menu.config">Configuration</span>
+  </ng-template>
+  <ng-template contextMenuItem
+               divider="true"></ng-template>
+  <ng-template contextMenuItem
+               (execute)="onHideColumn()">
+    <i class="fa fa-fw fa-eye-slash mr-1" aria-hidden="true"></i>
+    <span i18n="@@table.header.menu.hide">Hide column</span>
+  </ng-template>
+  <ng-template (execute)="onRemoveColumn()"
+               contextMenuItem>
+    <i class="fa fa-fw fa-times text-danger mr-1" aria-hidden="true"></i>
+    <span i18n="@@table.header.menu.remove">Remove column</span>
+  </ng-template>
+  <ng-template contextMenuItem
+               divider="true"></ng-template>
+  <ng-template (execute)="onAddColumn()"
+               contextMenuItem>
+    <i class="fa fa-fw fa-plus-circle text-success mr-1" aria-hidden="true"></i>
+    <span i18n="@@table.header.menu.add.column">Add new column</span>
+  </ng-template>
+  <ng-template *ngIf="part.index === 0"
+               [enabled]="false"
+               (execute)="onAddSubColumn()"
+               contextMenuItem>
+    <i class="fa fa-fw fa-columns text-success mr-1" aria-hidden="true"></i>
+    <span i18n="@@table.header.menu.add.subcolumn">Add subcolumn</span>
+  </ng-template>
+</context-menu>
+
+<ng-template #modal>
+  <div class="modal-header bg-danger text-white rounded-top">
+    <h5 class="modal-title" i18n="@@table.column.delete.dialog.title">Delete this column?</h5>
+    <button type="button"
+            class="close"
+            aria-label="Close"
+            (click)="removeModal.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p i18n="@@table.column.delete.dialog.body">Deleting a column will permanently remove the attribute from the collection. The data in the documents containing this attribute will be lost as well.</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-secondary"
+            (click)="removeModal.hide()"
+            i18n="@@table.column.delete.dialog.button.no">No, keep the attribute
+    </button>
+    <button type="button"
+            class="btn btn-danger"
+            (click)="removeModal.hide(); onDeleteAttribute()"
+            i18n="@@table.column.delete.dialog.button.yes">Yes, delete the attribute
+    </button>
+  </div>
+</ng-template>

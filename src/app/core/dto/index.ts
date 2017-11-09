@@ -17,12 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TableRowCell} from './table-row-cell';
-
-export interface TableRow {
-
-  id: string;
-  cells: TableRowCell[];
-  active: boolean;
-
-}
+export {Attribute} from './attribute';
+export {Collection} from './collection';
+export {Document} from './document';
+export {Event} from './Event';
+export {Group} from './group';
+export {LinkInstance} from './link-instance';
+export {LinkType} from './link-type';
+export {LinkedAttribute} from './linked-attribute';
+export {Organization} from './organization';
+export {Permission} from './permission';
+export {Permissions} from './permissions';
+export {Project} from './project';
+export {Query} from './query';
+export {Resource} from './resource';
+export {SuggestionType} from './suggestion-type';
+export {Suggestions} from './suggestions';
+export {UserSettings} from './user.settings';
+export {User} from './user';
+export {View} from './view';

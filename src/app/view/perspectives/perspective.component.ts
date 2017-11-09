@@ -24,4 +24,6 @@ export interface PerspectiveComponent {
   query: Query;
   config: any;
 
+  extractConfig(): any;
+
 }

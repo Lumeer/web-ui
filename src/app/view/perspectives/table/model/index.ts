@@ -17,10 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TableHeaderCell} from './table-header-cell';
-
-export interface TableHeader {
-
-  cells: TableHeaderCell[];
-
-}
+export {TableConfig} from './table-config';
+export {TablePart} from './table-part';
+export {TableRow} from './table-row';

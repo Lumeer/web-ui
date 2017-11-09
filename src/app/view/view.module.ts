@@ -29,7 +29,6 @@ import {SearchPerspectiveModule} from './perspectives/search/search-perspective.
 import {PostItPerspectiveModule} from './perspectives/post-it/post-it-perspective.module';
 import {ViewComponent} from './view.component';
 import {TablePerspectiveModule} from './perspectives/table/table-perspective.module';
-import {TableModule} from '../shared/table/table.module';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ShareDialogComponent} from './view-controls/share-dialog/share-dialog.component';
 
@@ -37,7 +36,6 @@ import {ShareDialogComponent} from './view-controls/share-dialog/share-dialog.co
   imports: [
     BrowserModule,
     FormsModule,
-    TableModule,
     RouterModule,
     PostItPerspectiveModule,
     SearchPerspectiveModule,

@@ -1,23 +1,20 @@
-<static-table
-  *ngIf="displayable && header && rows"
-  [header]="header"
-  [rows]="rows"
-  [settings]="settings"
-  (newValue)="onNewValue($event)"
-  (valueChange)="onValueChange($event)"
-  (headerChange)="onHeaderChange($event)"
-  (dragColumn)="onDragColumn($event)"
-  (hideColumn)="onHideColumn($event)"
-  (removeColumn)="onRemoveColumn($event)"
-  (showColumn)="onShowColumn($event)">
-  <div class="caption">
-    <i class="{{collection.icon}}" [style.color]="collection.color"></i>
-    {{collection.name}}
-  </div>
-</static-table>
-
-<div *ngIf="!displayable"
+<div *ngIf="!isDisplayable()"
      class="alert alert-warning"
      role="alert"
      i18n="@@table.query.invalid">Given query results cannot be shown using table perspective. The query needs to specify exactly one collection.
 </div>
+
+<table *ngIf="isDisplayable()">
+  <table-header [parts]="parts"
+                (createAttribute)="onCreateAttribute($event)"
+                (renameAttribute)="onRenameAttribute($event)"
+                (deleteAttribute)="onDeleteAttribute($event)"
+                (addLinkedPart)="onAddLinkedPart($event)">
+  </table-header>
+  <table-body [parts]="parts"
+              (dataChange)="onDataChange($event)"
+              (deleteDocument)="onDeleteDocument($event)"
+              (createLinkInstance)="onCreateLinkInstance($event)"
+              (deleteLinkInstance)="onDeleteLinkInstance($event)">
+  </table-body>
+</table>

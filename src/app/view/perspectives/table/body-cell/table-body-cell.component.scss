@@ -1,0 +1,19 @@
+@import "../../../../shared/variables";
+
+div.data-cell {
+  height: 100%;
+  padding: 3px 5px;
+  user-select: none;
+
+  &:focus {
+    outline: $primary solid 2px;
+  }
+}
+
+div.data-cell[contenteditable=true]:focus {
+  outline: $success solid 2px;
+}
+
+div.data-cell.highlighted {
+  outline: $warning solid 2px;
+}

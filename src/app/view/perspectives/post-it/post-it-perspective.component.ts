@@ -38,6 +38,7 @@ import {Role} from '../../../shared/permissions/role';
 import {PerspectiveComponent} from '../perspective.component';
 import {isNullOrUndefined} from 'util';
 import {finalize} from 'rxjs/operators';
+import {Perspective} from '../perspective';
 
 @Component({
   selector: 'post-it-perspective',
@@ -101,6 +102,11 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   public ngAfterViewChecked(): void {
     this.layout.refresh();
+  }
+
+  public extractConfig(): any {
+    this.config[Perspective.PostIt.id] = null; // TODO save configuration
+    return this.config;
   }
 
   public attributeSuggestionsEntries(): [string, string[]][] {
@@ -314,11 +320,10 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
     this.documentService.createDocument(postIt.document).pipe(
       finalize(() => postIt.initializing = false)
-    ).subscribe(
-      response => {
+    ).subscribe((id: string) => {
         postIt.initialized = true;
 
-        postIt.document.id = response.headers.get('Location').split('/').pop();
+        postIt.document.id = id;
         this.refreshDocument(postIt);
         this.notificationService.success('Success', 'Document Created');
       },

@@ -22,23 +22,30 @@ import {Component, Input, OnInit} from '@angular/core';
 import {DocumentService} from '../../../core/rest/document.service';
 import {CollectionService} from '../../../core/rest/collection.service';
 import {Collection} from '../../../core/dto/collection';
-import {Observable} from 'rxjs/Observable';
-import {ActivatedRoute} from '@angular/router';
-import {TableRow} from '../../../shared/table/model/table-row';
-import {TableHeader} from '../../../shared/table/model/table-header';
-import {TableSettings} from '../../../shared/table/model/table-settings';
-import {TableHeaderCell} from '../../../shared/table/model/table-header-cell';
 import {Attribute} from '../../../core/dto/attribute';
-import {Document} from '../../../core/dto/document';
-import {TableRowCell} from '../../../shared/table/model/table-row-cell';
-import {DataEvent} from '../../../shared/table/event/data-event';
 import {Query} from '../../../core/dto/query';
 import 'rxjs/add/observable/combineLatest';
 import {PerspectiveComponent} from '../perspective.component';
+import {TableConfig} from './model/table-config';
+import {LinkType} from '../../../core/dto/link-type';
+import {TablePart} from './model/table-part';
+import {LinkInstance} from '../../../core/dto/link-instance';
+import {DataChangeEvent} from './event/data-change-event';
+import {AttributeHelper} from 'app/shared/utils/attribute-helper';
+import {NotificationsService} from 'angular2-notifications';
+import {TableLinkEvent} from './event/table-link-event';
+import {TableManagerService} from './util/table-manager.service';
+import {LinkInstanceService} from '../../../core/rest/link-instance.service';
+import {LinkTypeService} from '../../../core/rest/link-type.service';
+import {Perspective} from '../perspective';
+import {AttributeChangeEvent} from './event/attribute-change-event';
+import {LinkInstanceEvent} from './event/link-instance-event';
+import {Document} from '../../../core/dto/document';
 
 @Component({
   selector: 'table-perspective',
-  templateUrl: './table-perspective.component.html'
+  templateUrl: './table-perspective.component.html',
+  styleUrls: ['./table-perspective.component.scss']
 })
 export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
 
@@ -46,139 +53,179 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
   public query: Query;
 
   @Input()
-  public config: any;
+  public config: { table?: TableConfig };
 
   @Input()
   public editable: boolean;
 
-  public displayable: boolean;
-
-  public collection: Collection;
-  public header: TableHeader;
-  public rows: TableRow[];
-
-  public settings = <TableSettings>{
-    color: '#3498DB',
-    highlightColor: '#F39C12',
-    editable: true,
-    lineNumberColor: '#b4bcc2'
-  };
-
   constructor(private collectionService: CollectionService,
               private documentService: DocumentService,
-              private route: ActivatedRoute) {
+              private linkInstanceService: LinkInstanceService,
+              private linkTypeService: LinkTypeService,
+              private notificationService: NotificationsService,
+              private tableManagerService: TableManagerService) {
   }
 
-  public ngOnInit(): void {
-    this.displayable = this.query.collectionCodes.length === 1;
-    if (!this.displayable) {
+  public parts: TablePart[] = [];
+
+  public ngOnInit() {
+    if (!this.isDisplayable()) {
       return;
     }
 
-    const collectionCode = this.query.collectionCodes[0];
-    this.fetchData(collectionCode);
+    this.createDefaultConfigFromQuery();
+    this.fetchDataAndCreateTable();
   }
 
-  private fetchData(collectionCode: string): void {
-    Observable.combineLatest(
-      this.collectionService.getCollection(collectionCode),
-      this.documentService.getDocuments(collectionCode)
-    ).subscribe(([collection, documents]) => {
-      this.collection = collection;
-      this.prepareTableData(collection.attributes, documents);
-      this.settings.color = collection.color;
-    });
+  private createDefaultConfigFromQuery() {
+    if (!this.config.table) {
+      this.config.table = {
+        parts: [
+          {
+            collectionCode: this.query.collectionCodes[0],
+            attributeIds: []
+          }
+        ]
+      };
+    }
   }
 
-  public onNewValue(dataEvent: DataEvent) {
-    this.documentService.createDocument(this.convertDataEventToDocument(dataEvent))
-      .subscribe(response => {
-        const id = response.headers.get('Location').split('/').pop();
-        this.rows[dataEvent.rowIndex].id = id;
+  private fetchDataAndCreateTable() {
+    this.tableManagerService.createTableFromConfig(this.config.table)
+      .subscribe(parts => this.parts = parts);
+  }
+
+  public isDisplayable(): boolean {
+    return this.query.collectionCodes.length === 1;
+  }
+
+  public extractConfig(): any {
+    this.config[Perspective.Table.id] = this.tableManagerService.extractTableConfig();
+    return this.config;
+  }
+
+  public onDataChange(event: DataChangeEvent) {
+    if (!event.attribute.fullName) {
+      this.createAttribute(event.collection, event.attribute);
+    }
+
+    const doc = event.document;
+    doc.data[event.attribute.fullName] = event.value;
+
+    if (doc.id) {
+      this.updateDocument(doc);
+    } else {
+      this.createDocument(doc, () => {
+        if (event.linkedDocument) {
+          this.createLinkInstance(event.linkType, [doc, event.linkedDocument]);
+        }
       });
+    }
   }
 
-  public onValueChange(dataEvent: DataEvent) {
-    this.documentService.patchDocument(this.convertDataEventToDocument(dataEvent))
-      .subscribe();
-  }
+  private createDocument(doc: Document, successCallback: () => void) {
+    this.documentService.createDocument(doc).subscribe((id: string) => {
+      doc.id = id;
+      this.tableManagerService.documents.push(doc);
+      this.notificationService.success('Record created', 'Record has been successfully created!');
 
-  public onHeaderChange(dataEvent: DataEvent) {
-    const oldValue: string = dataEvent.data.oldValue;
-    const newValue: string = dataEvent.data.newValue;
-    // TODO use real attribute values
-    this.collectionService.updateAttribute(this.collection.code, oldValue, {
-      fullName: newValue,
-      name: newValue,
-      usageCount: null,
-      constraints: []
-    }).subscribe();
-  }
-
-  public onRemoveColumn(columnName: string) {
-    this.collectionService.removeAttribute(this.collection.code, columnName)
-      .subscribe();
-  }
-
-  public onDragColumn(data: any) {
-    // TODO
-  }
-
-  public onHideColumn(data: any) {
-    // TODO
-  }
-
-  public onShowColumn(data: any) {
-    // TODO
-  }
-
-  private convertDataEventToDocument(dataEvent: DataEvent): Document {
-    const document = new Document();
-    Object.keys(dataEvent.data).forEach(key => document.data[key] = dataEvent.data[key]);
-    document.id = dataEvent.id;
-    document.collectionCode = this.collection.code;
-    return document;
-  }
-
-  private prepareTableData(attributes: Attribute[], documents: Document[]) {
-    // TODO remove after implementing attributes in backend
-    attributes = this.createAttributesFromDocuments(documents);
-    const headerRows: TableHeaderCell[] = attributes.map(TablePerspectiveComponent.convertAttributeToHeaderCell);
-    this.header = <TableHeader> {cells: headerRows};
-    this.rows = documents.map(document => TablePerspectiveComponent.convertDocumentToRow(this.header, document));
-  }
-
-  private createAttributesFromDocuments(documents: Document[]): Attribute[] {
-    const set = new Set<string>();
-    documents.forEach(document => Object.keys(document.data).forEach(key => {
-      if (key !== '_id') {
-        set.add(key);
-      }
-    }));
-    const attributes: Attribute[] = [];
-    set.forEach(name => attributes.push({name: name, usageCount: 10, fullName: name, constraints: []}));
-    return attributes;
-  }
-
-  private static convertAttributeToHeaderCell(attribute: Attribute): TableHeaderCell {
-    return <TableHeaderCell>{label: attribute.name, active: false, hidden: false, constraints: attribute.constraints};
-  }
-
-  private static convertDocumentToRow(header: TableHeader, document: Document): TableRow {
-    const rowCells: TableRowCell[] = header.cells.map(headerCell => TablePerspectiveComponent.convertToRowCell(document, headerCell));
-    return <TableRow> {id: document.id, cells: rowCells, active: false};
-  }
-
-  private static convertToRowCell(document: Document, headerCell: TableHeaderCell): TableRowCell {
-    const value: string = document.data[headerCell.label] ? document.data[headerCell.label] : '';
-    return <TableRowCell>{label: value, active: false, hidden: false, constraints: headerCell.constraints};
-  }
-
-  private static createNewRow(header: TableHeader, rowNum: number): TableRow {
-    const cells = header.cells.map((header) => {
-      return <TableRowCell>{label: '', active: false, hidden: header.hidden, constraints: header.constraints};
+      successCallback();
     });
-    return <TableRow> {id: null, cells: cells, active: false};
+  }
+
+  private updateDocument(doc: Document) {
+    this.documentService.patchDocument(doc).subscribe(() => {
+      this.notificationService.success('Record updated', 'Record has been successfully updated!');
+    });
+  }
+
+  public onDeleteDocument(doc: Document) {
+    this.documentService.removeDocument(doc).subscribe(() => {
+      this.notificationService.success('Record deleted', 'Record has been successfully deleted!');
+    });
+  }
+
+  public onCreateAttribute(event: AttributeChangeEvent) {
+    this.createAttribute(event.collection, event.attribute);
+  }
+
+  public onRenameAttribute(event: AttributeChangeEvent) {
+    if (event.attribute.fullName) {
+      this.updateAttribute(event.collection, event.attribute);
+    } else {
+      this.createAttribute(event.collection, event.attribute);
+    }
+  }
+
+  public onDeleteAttribute(event: AttributeChangeEvent) {
+    this.deleteAttribute(event.collection, event.attribute);
+  }
+
+  private createAttribute(collection: Collection, attribute: Attribute) {
+    attribute.fullName = AttributeHelper.generateAttributeId(attribute.name);
+
+    this.collectionService.updateAttribute(collection.code, attribute.fullName, attribute).subscribe(() => {
+      collection.attributes.push(attribute);
+      this.notificationService.success(`'${attribute.name}' created`, 'Attribute has been successfully created!');
+    });
+  }
+
+  private updateAttribute(collection: Collection, attribute: Attribute) {
+    this.collectionService.updateAttribute(collection.code, attribute.fullName, attribute).subscribe(() => {
+      this.notificationService.success(`'${attribute.name}' updated`, 'Attribute has been successfully updated!');
+    });
+  }
+
+  private deleteAttribute(collection: Collection, attribute: Attribute) {
+    this.collectionService.removeAttribute(collection.code, attribute.fullName).subscribe(() => {
+      AttributeHelper.removeAttributeFromArray(attribute, collection.attributes);
+      this.notificationService.success(`'${attribute.name}' removed`, 'Attribute has been successfully deleted!');
+    });
+  }
+
+  public onAddLinkedPart(event: TableLinkEvent) {
+    if (!event.linkType) {
+      event.linkType = this.createLinkType(event.collection);
+    }
+
+    this.tableManagerService.addTablePart(event.linkType, event.collection, event.attribute);
+  }
+
+  private createLinkType(collection: Collection): LinkType {
+    const lastCollection = this.parts[this.parts.length - 1].collection;
+
+    const linkType: LinkType = {
+      name: lastCollection.name + '-' + collection.name, // TODO input from user
+      collectionCodes: [lastCollection.code, collection.code]
+    };
+
+    this.linkTypeService.createLinkType(linkType);
+    this.tableManagerService.linkTypes.push(linkType);
+
+    return linkType;
+  }
+
+  public onCreateLinkInstance(event: LinkInstanceEvent) {
+    this.createLinkInstance(event.linkType, event.documents);
+  }
+
+  public onDeleteLinkInstance(linkInstanceId: string) {
+    this.linkInstanceService.deleteLinkInstance(linkInstanceId).subscribe(() => {
+      this.notificationService.success('Record unlinked', 'Link has been successfully deleted!');
+    });
+  }
+
+  private createLinkInstance(linkType: LinkType, documents: [Document, Document]) {
+    const linkInstance: LinkInstance = {
+      linkTypeId: linkType.id,
+      documentIds: [documents[0].id, documents[1].id],
+      data: {}
+    };
+
+    this.linkInstanceService.createLinkInstance(linkInstance).subscribe((id: string) => {
+      linkInstance.id = id;
+      this.notificationService.success('Record linked', 'Link has been successfully created!');
+    });
   }
 
 }

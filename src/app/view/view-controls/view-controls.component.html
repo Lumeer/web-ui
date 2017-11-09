@@ -20,24 +20,25 @@
   <input id="viewName"
          name="viewName"
          [(ngModel)]="view.name"
-         class="form-control-lg border-0 font-italic flex-grow no-outline"
+         class="form-control-lg border-0 font-italic flex-grow-2 no-outline"
          placeholder="Untitled view" i18n-placeholder="@@view.untitled"/>
-  <a title="Save" i18n-title="@@view.button.save"
+  <button title="Save" i18n-title="@@view.button.save"
      class="view-button mx-1"
      (click)="onSave()">
-    <i class="fa fa-save fa-lg fa-fw" aria-hidden="true"></i>
-    <i class="fal fa-save fa-lg fa-fw" aria-hidden="true"></i>
-  </a>
-  <a title="Copy" i18n-title="@@view.button.copy"
+    <i class="fa fa-save fa-lg fa-fw"></i>
+    <i class="fal fa-save fa-lg fa-fw"></i>
+  </button>
+  <button title="Copy" i18n-title="@@view.button.copy"
      class="view-button mx-1"
      *ngIf="view"
      (click)="onCopy()">
-    <i class="fa fa-copy fa-lg fa-fw" aria-hidden="true"></i>
-    <i class="fal fa-copy fa-lg fa-fw" aria-hidden="true"></i>
-  </a>
+    <i class="fa fa-copy fa-lg fa-fw"></i>
+    <i class="fal fa-copy fa-lg fa-fw"></i>
+  </button>
   <button class="btn btn-outline-success ml-2"
           (click)="showShareDialog(modal)"
-          i18n="@@view.button.share">Share</button>
+          i18n="@@view.button.share">Share
+  </button>
 </form>
 
 <ng-template #modal>

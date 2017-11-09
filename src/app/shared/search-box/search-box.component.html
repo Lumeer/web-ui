@@ -2,8 +2,8 @@
   <div class="d-flex flex-wrap w-100 pb-1 pr-1">
     <div class="d-inline-flex query-item py-1 px-2 mt-1 ml-1 align-items-center"
          *ngFor="let queryItem of queryItems; let ix = index"
-         [style.border-color]="queryItem.isComplete() ? 'transparent' : 'red'"
-         [ngStyle]="{'background-color': queryItem.color}">
+         [style.background-color]="lightenColor(queryItem.color)"
+         [style.border-color]="queryItem.isComplete() ? 'transparent' : 'red'">
       <i *ngIf="queryItem.icon" class="{{queryItem.icon}} mr-1" aria-hidden="true"></i>
       <span class="mr-1" [class.font-weight-bold]="isCollectionItem(queryItem)">{{queryItem.text}}</span>
       <div #queryItemCondition id="{{ix}}"
@@ -43,7 +43,7 @@
       </span>
     </div>
 
-    <input class="border-0 flex-grow no-outline py-1 px-2 mt-1 ml-1"
+    <input class="border-0 flex-grow-2 no-outline py-1 px-2 mt-1 ml-1"
            #searchBox
            [(ngModel)]="text"
            (keydown)="onKeyDown($event)"

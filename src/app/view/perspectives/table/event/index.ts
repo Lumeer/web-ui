@@ -17,28 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-
-import {StaticTableComponent} from './static-table/static-table.component';
-import {TableHeaderComponent} from './static-table/table-header.component';
-import {TableRowComponent} from './static-table/table-row.component';
-
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  declarations: [
-    StaticTableComponent,
-    TableHeaderComponent,
-    TableRowComponent,
-  ],
-  exports: [
-    StaticTableComponent
-  ]
-})
-export class TableModule {
-
-}
+export {AttributeChangeEvent} from './attribute-change-event';
+export {DataChangeEvent} from './data-change-event';
+export {LinkInstanceEvent} from './link-instance-event';
+export {TableCursorEvent} from './table-cursor-event';
+export {TableLinkEvent} from './table-link-event';

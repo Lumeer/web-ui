@@ -17,10 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface TableRowCell {
+import {Pipe, PipeTransform} from '@angular/core';
 
-  label: string;
-  active: boolean;
-  hidden: boolean;
+@Pipe({
+  name: 'highlight'
+})
+export class HighlightPipe implements PipeTransform {
+
+  public transform(value: string, prefix: string): string {
+    if (!value.startsWith(prefix)) {
+      return value;
+    }
+    return value.replace(prefix, `<span class="text-success">${prefix}</span>`);
+  }
 
 }

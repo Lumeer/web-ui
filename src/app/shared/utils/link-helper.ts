@@ -17,11 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface TableSettings {
+import {LinkType} from '../../core/dto/link-type';
+import {Collection} from '../../core/dto/collection';
 
-  color: string;
-  highlightColor: string;
-  editable: boolean;
-  lineNumberColor: string;
+export class LinkHelper {
+
+  public static filterRelatedLinkTypes(collection: Collection, linkTypes: LinkType[]): LinkType[] {
+    return linkTypes.filter(linkType => linkType.collectionCodes.includes(collection.code));
+  }
+
+  public static getOtherCollectionCode(linkType: LinkType, collectionCode: string): string {
+    return linkType.collectionCodes[0] === collectionCode ? linkType.collectionCodes[1] : linkType.collectionCodes[0];
+  }
 
 }

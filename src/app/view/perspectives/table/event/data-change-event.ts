@@ -17,12 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Attribute, Collection, Document, LinkType} from '../../../../core/dto';
 
-export interface DataEvent {
+export interface DataChangeEvent {
 
-  id?: string;
-  rowIndex?: number;
-  colIndex: number;
-  data: any;
+  collection: Collection;
+  document: Document;
+  attribute: Attribute;
+  value: any;
+
+  linkedDocument: Document;
+  linkType: LinkType;
 
 }

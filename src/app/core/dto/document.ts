@@ -21,11 +21,11 @@ export class Document {
 
   public id: string;
   public collectionCode: string;
-  public creationDate: string;
-  public updateDate: string;
-  public createdBy: string;
-  public updatedBy: string;
-  public dataVersion: number;
+  public creationDate?: string;
+  public updateDate?: string;
+  public createdBy?: string;
+  public updatedBy?: string;
+  public dataVersion?: number;
   public data: {[attribute: string]: any} = {};
 
 }

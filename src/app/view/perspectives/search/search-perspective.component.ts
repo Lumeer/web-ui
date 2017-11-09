@@ -30,6 +30,7 @@ import {SearchViewsComponent} from './views/search-views.component';
 import {SearchLinksComponent} from './links/search-links.component';
 import {SearchDocumentsComponent} from './documents/search-documents.component';
 import {SearchCollectionsComponent} from './collections/search-collections.component';
+import {Perspective} from '../perspective';
 
 const COMPONENTS = {
   ['all']: SearchAllComponent,
@@ -73,6 +74,11 @@ export class SearchPerspectiveComponent implements PerspectiveComponent {
 
     const componentRef: ComponentRef<any> = viewContainerRef.createComponent(componentFactory);
     componentRef.instance.query = query ? query : {};
+  }
+
+  public extractConfig(): any {
+    this.config[Perspective.Search.id] = null; // TODO save configuration
+    return this.config;
   }
 
   public viewPath(): string {

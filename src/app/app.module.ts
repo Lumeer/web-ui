@@ -31,6 +31,7 @@ import {CollectionModule} from './collection/collection.module';
 import {DocumentsModule} from './documents/documents.module';
 import {SimpleNotificationsModule} from 'angular2-notifications';
 import {ViewModule} from './view/view.module';
+import {ContextMenuModule} from 'ngx-contextmenu';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import {ViewModule} from './view/view.module';
     BrowserAnimationsModule,
     SimpleNotificationsModule.forRoot(),
     ModalModule.forRoot(),
+    ContextMenuModule.forRoot({useBootstrap4: true}),
     CoreModule,
     CollectionModule,
     DocumentsModule,
