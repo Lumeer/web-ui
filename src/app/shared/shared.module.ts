@@ -28,13 +28,15 @@ import {PostItCollectionsComponent} from './post-it-collections/post-it-collecti
 import {PickerModule} from './picker/picker.module';
 import {RouterModule} from '@angular/router';
 import {HighlightPipe} from './highlight.pipe';
+import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     RouterModule,
-    PickerModule
+    PickerModule,
+    DragAndDropModule
   ],
   declarations: [
     HighlightPipe,
@@ -45,6 +47,7 @@ import {HighlightPipe} from './highlight.pipe';
   ],
   exports: [
     CommonModule,
+    DragAndDropModule,
     FormsModule,
     HighlightPipe,
     PermissionsComponent,

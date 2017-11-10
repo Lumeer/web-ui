@@ -13,6 +13,7 @@
      [class.pl-4]="part.sorting && part.sorting.attributeId === attribute.fullName"
      [class.uninitialized]="!attribute.fullName"
      [contextMenu]="contextMenu"
+     [lmrDraggable]="{enabled: editable, data: part.shownAttributes.indexOf(attribute), zone: part.index}"
      [style.cursor]="editMode ? 'text' : 'default'"
      [textContent]="attribute.name"
      (blur)="onBlur()"

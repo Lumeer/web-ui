@@ -457,4 +457,9 @@ export class TableManagerService {
     return 0;
   }
 
+  public moveColumn(part: TablePart, previousIndex: number, nextIndex: number) {
+    const attribute: Attribute = part.shownAttributes.splice(previousIndex, 1)[0];
+    part.shownAttributes.splice(nextIndex, 0, attribute);
+  }
+
 }

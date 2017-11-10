@@ -24,6 +24,7 @@ import {HtmlModifier} from '../../../../shared/utils/html-modifier';
 import {TablePart} from '../model/table-part';
 import {TableLinkEvent} from '../event/table-link-event';
 import {AttributeChangeEvent} from '../event/attribute-change-event';
+import {TableManagerService} from '../util/table-manager.service';
 
 @Component({
   selector: 'table-header',
@@ -51,6 +52,9 @@ export class TableHeaderComponent {
   public addLinkedPart = new EventEmitter<TableLinkEvent>();
 
   public maxAttributeDepth = 1;
+
+  constructor(private tableManagerService: TableManagerService) {
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.hasOwnProperty('parts')) {
@@ -136,6 +140,10 @@ export class TableHeaderComponent {
 
   public onAddLinkedPart(event: TableLinkEvent) {
     this.addLinkedPart.emit(event);
+  }
+
+  public onDropColumn(part: TablePart, draggedIndex: number, droppedAttribute: Attribute) {
+    this.tableManagerService.moveColumn(part, draggedIndex, part.shownAttributes.indexOf(droppedAttribute));
   }
 
 }

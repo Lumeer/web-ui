@@ -27,12 +27,14 @@ import {TableBodyCellComponent} from './body-cell/table-body-cell.component';
 import {TableHeaderCellComponent} from './header-cell/table-header-cell.component';
 import {ContextMenuModule} from 'ngx-contextmenu';
 import {TableManagerService} from './util/table-manager.service';
+import {DragAndDropModule} from '../../../shared/drag-and-drop/drag-and-drop.module';
 
 @NgModule({
   imports: [
     RouterModule,
     SharedModule,
-    ContextMenuModule
+    ContextMenuModule,
+    DragAndDropModule
   ],
   declarations: [
     TablePerspectiveComponent,
