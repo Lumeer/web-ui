@@ -44,6 +44,7 @@ import {ViewService} from './rest/view.service';
 import {LinkTypeService} from './rest/link-type.service';
 import {EventsService} from './rest/events.service';
 import {SearchHomeComponent} from './search-home/search-home.component';
+import {LinkInstanceService} from './rest/link-instance.service';
 
 @NgModule({
   imports: [
@@ -72,6 +73,7 @@ import {SearchHomeComponent} from './search-home/search-home.component';
     UserService,
     GroupService,
     ViewService,
+    LinkInstanceService,
     LinkTypeService,
     EventsService,
     KEYCLOAK_HTTP_PROVIDER,

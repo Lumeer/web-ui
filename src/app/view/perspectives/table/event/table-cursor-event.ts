@@ -17,12 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TableRowCell} from './table-row-cell';
+import {Direction} from '../../post-it/document-data/direction';
+import {TableRow} from '../model/table-row';
+import {Attribute} from '../../../../core/dto/attribute';
 
-export interface TableRow {
+export interface TableCursorEvent {
 
-  id: string;
-  cells: TableRowCell[];
-  active: boolean;
+  direction: Direction;
+  row: TableRow;
+  attribute: Attribute;
 
 }

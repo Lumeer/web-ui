@@ -17,11 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface TableHeaderCell {
-
-  label: string;
-  active: boolean;
-  hidden: boolean;
-  constraints: string[];
-
-}
+export {AttributeChangeEvent} from './attribute-change-event';
+export {DataChangeEvent} from './data-change-event';
+export {LinkInstanceEvent} from './link-instance-event';
+export {TableCursorEvent} from './table-cursor-event';
+export {TableLinkEvent} from './table-link-event';

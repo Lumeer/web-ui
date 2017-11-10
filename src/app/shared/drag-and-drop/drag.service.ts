@@ -17,28 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {Injectable} from '@angular/core';
 
-import {StaticTableComponent} from './static-table/static-table.component';
-import {TableHeaderComponent} from './static-table/table-header.component';
-import {TableRowComponent} from './static-table/table-row.component';
+@Injectable()
+export class DragService {
 
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  declarations: [
-    StaticTableComponent,
-    TableHeaderComponent,
-    TableRowComponent,
-  ],
-  exports: [
-    StaticTableComponent
-  ]
-})
-export class TableModule {
+  private zone: string;
 
+  startDrag(zone: string) {
+    this.zone = zone;
+  }
+
+  accepts(zone: string): boolean {
+    return zone == this.zone;
+  }
 }

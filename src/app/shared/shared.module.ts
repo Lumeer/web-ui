@@ -24,19 +24,22 @@ import {FormsModule} from '@angular/forms';
 import {PermissionsComponent} from './permissions/permissions.component';
 import {PermissionsTableComponent} from './permissions/table/permissions-table.component';
 import {SearchBoxComponent} from './search-box/search-box.component';
-import {TableModule} from './table/table.module';
 import {PostItCollectionsComponent} from './post-it-collections/post-it-collections.component';
 import {PickerModule} from './picker/picker.module';
 import {RouterModule} from '@angular/router';
+import {HighlightPipe} from './highlight.pipe';
+import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     RouterModule,
-    PickerModule
+    PickerModule,
+    DragAndDropModule
   ],
   declarations: [
+    HighlightPipe,
     PermissionsComponent,
     PermissionsTableComponent,
     PostItCollectionsComponent,
@@ -44,11 +47,12 @@ import {RouterModule} from '@angular/router';
   ],
   exports: [
     CommonModule,
+    DragAndDropModule,
     FormsModule,
+    HighlightPipe,
     PermissionsComponent,
     PostItCollectionsComponent,
-    SearchBoxComponent,
-    TableModule
+    SearchBoxComponent
   ]
 })
 export class SharedModule {

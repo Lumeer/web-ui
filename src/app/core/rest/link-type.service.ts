@@ -26,7 +26,10 @@ import {LinkType} from '../dto/link-type';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import {CollectionService} from "./collection.service";
+import {CollectionService} from './collection.service';
+import {LocalStorage} from '../../shared/utils/local-storage';
+
+const LINK_TYPES = 'linkTypes';
 
 // TODO implement on backend
 @Injectable()
@@ -51,23 +54,23 @@ export class LinkTypeService {
     );
   }
 
-  public getLinkTypes(collectionCode: string): Observable<LinkType[]> {
+  public getLinkTypesDeprecated(collectionCode: string): Observable<LinkType[]> {
     return Observable.of(this.links.map(link => (link.fromCollection = collectionCode) && link)
       .filter(linkType => collectionCode !== linkType.toCollection));
   }
 
-  public createLinkType(collectionCode: string, linkType: LinkType): Observable<LinkType> {
+  public createLinkTypeDeprecated(collectionCode: string, linkType: LinkType): Observable<LinkType> {
     this.links.push(linkType);
     return Observable.of(linkType);
   }
 
-  public updateLinkType(collectionCode: string, initialName: string, linkType: LinkType): Observable<LinkType> {
+  public updateLinkTypeDeprecated(collectionCode: string, initialName: string, linkType: LinkType): Observable<LinkType> {
     this.links[this.links.findIndex(link => link.name === initialName)] = linkType;
     return Observable.of(linkType);
   }
 
-  public removeLinkType(collectionCode: string, linkType: LinkType): Observable<HttpEvent<any>> {
-    this.links = this.links.filter(link => link.name !== linkType.name)
+  public removeLinkTypeDeprecated(collectionCode: string, linkType: LinkType): Observable<HttpEvent<any>> {
+    this.links = this.links.filter(link => link.name !== linkType.name);
     return Observable.of(null);
   }
 
@@ -80,6 +83,52 @@ export class LinkTypeService {
     const projectCode = this.workspaceService.projectCode;
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/c/${collectionCode}/linktypes`;
+  }
+
+  // --- NEW METHODS ---
+
+  public createLinkType(linkType: LinkType): Observable<string> {
+    const linkTypes = LocalStorage.get(LINK_TYPES) || {};
+
+    linkType.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
+    linkTypes[linkType.id] = linkType;
+
+    LocalStorage.set(LINK_TYPES, linkTypes);
+
+    return Observable.of(linkType.id);
+  }
+
+  public updateLinkType(id: string, linkType: LinkType): Observable<LinkType> {
+    const linkTypes = LocalStorage.get(LINK_TYPES) || {};
+
+    linkTypes[id] = linkType;
+
+    LocalStorage.set(LINK_TYPES, linkTypes);
+
+    return Observable.of(linkType);
+  }
+
+  public deleteLinkType(id: string): Observable<any> {
+    const linkTypes = LocalStorage.get(LINK_TYPES) || {};
+
+    delete linkTypes[id];
+
+    LocalStorage.set(LINK_TYPES, linkTypes);
+
+    return Observable.of({});
+  }
+
+  public getLinkTypeById(id: string): Observable<LinkType> {
+    const linkTypes = LocalStorage.get(LINK_TYPES) || {};
+
+    return Observable.of(linkTypes[id]);
+  }
+
+  public getLinkTypesByCollections(...collectionCodes: string[]): Observable<LinkType[]> {
+    const linkTypes: { [id: string]: LinkType } = LocalStorage.get(LINK_TYPES) || {};
+
+    const results = Object.values(linkTypes).filter(linkType => collectionCodes.includes(linkType.collectionCodes[0]) || collectionCodes.includes(linkType.collectionCodes[1]));
+    return Observable.of(results);
   }
 
 }

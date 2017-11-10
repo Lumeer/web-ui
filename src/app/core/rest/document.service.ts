@@ -26,7 +26,7 @@ import {Observable} from 'rxjs/Observable';
 import {isNullOrUndefined} from 'util';
 import {LumeerError} from '../error/lumeer.error';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {catchError} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 
 // TODO send data attribute without '_id'
 @Injectable()
@@ -36,9 +36,11 @@ export class DocumentService {
               private workspaceService: WorkspaceService) {
   }
 
-  public createDocument(document: Document): Observable<HttpResponse<object>> {
-    return this.httpClient.post(this.apiPrefix(document.collectionCode), document, {observe: 'response', responseType: 'text'})
-      .pipe(catchError(error => this.handleGlobalError(error)));
+  public createDocument(document: Document): Observable<string> {
+    return this.httpClient.post(this.apiPrefix(document.collectionCode), document, {observe: 'response', responseType: 'text'}).pipe(
+      catchError(error => this.handleGlobalError(error)),
+      map(response => response.headers.get('Location').split('/').pop())
+    );
   }
 
   public updateDocument(document: Document): Observable<Document> {

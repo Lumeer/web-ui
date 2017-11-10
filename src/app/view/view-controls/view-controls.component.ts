@@ -17,16 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, TemplateRef} from '@angular/core';
+import {Component, EventEmitter, Input, Output, TemplateRef} from '@angular/core';
 import {View} from '../../core/dto/view';
-import {ViewService} from '../../core/rest/view.service';
 import {Router} from '@angular/router';
 import {WorkspaceService} from '../../core/workspace.service';
 import {PerspectiveChoice} from '../perspectives/perspective-choice';
 import {PERSPECTIVES} from '../perspectives/perspective';
 import {QueryConverter} from '../../shared/utils/query-converter';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
-import {NotificationsService} from 'angular2-notifications';
 
 @Component({
   selector: 'view-controls',
@@ -38,12 +36,13 @@ export class ViewControlsComponent {
   @Input()
   public view: View;
 
+  @Output()
+  public save = new EventEmitter();
+
   public shareDialog: BsModalRef;
 
   constructor(private modalService: BsModalService,
-              private notificationService: NotificationsService,
               private router: Router,
-              private viewService: ViewService,
               private workspaceService: WorkspaceService) {
   }
 
@@ -63,24 +62,7 @@ export class ViewControlsComponent {
 
   public onSave() {
     // TODO validation
-    if (this.view.code) {
-      this.updateView();
-    } else {
-      this.createView();
-    }
-  }
-
-  private createView() {
-    this.viewService.createView(this.view).subscribe((code: string) => {
-      this.router.navigate(['w', this.workspaceService.organizationCode, this.workspaceService.projectCode, 'view', code]);
-      this.notificationService.success('Success', 'View has been created');
-    });
-  }
-
-  private updateView() {
-    this.viewService.updateView(this.view.code, this.view).subscribe(() => {
-      this.notificationService.success('Success', 'View has been updated');
-    });
+    this.save.emit();
   }
 
   public onCopy() {
@@ -89,7 +71,7 @@ export class ViewControlsComponent {
         query: QueryConverter.toString(this.view.query),
         perspective: this.view.perspective
       }
-    });
+    }); // TODO transfer config somehow
   }
 
   public showShareDialog(modal: TemplateRef<any>) {

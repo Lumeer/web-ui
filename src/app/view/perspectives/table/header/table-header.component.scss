@@ -1,0 +1,18 @@
+@import "../../../../shared/variables";
+
+$font-size: 16px;
+
+:host {
+  display: table-header-group;
+}
+
+th {
+  border: 1px solid $table-border-color;
+  font-weight: normal;
+
+  height: $font-size * $line-height-base;
+}
+
+.link-cell {
+  width: 30px;
+}

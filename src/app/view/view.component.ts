@@ -18,8 +18,7 @@
  */
 
 import {Component, ComponentFactoryResolver, ComponentRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {PerspectiveChoice} from './perspectives/perspective-choice';
+import {ActivatedRoute, Router} from '@angular/router';
 import {PerspectiveDirective} from './perspectives/perspective.directive';
 import {Query} from '../core/dto/query';
 import {Perspective, PERSPECTIVES} from './perspectives/perspective';
@@ -28,6 +27,8 @@ import {Observable} from 'rxjs/Observable';
 import {QueryConverter} from '../shared/utils/query-converter';
 import {ViewService} from '../core/rest/view.service';
 import {View} from '../core/dto/view';
+import {NotificationsService} from 'angular2-notifications';
+import {WorkspaceService} from '../core/workspace.service';
 
 @Component({
   templateUrl: './view.component.html'
@@ -39,9 +40,14 @@ export class ViewComponent implements OnInit {
 
   public view: View;
 
+  private perspectiveComponent: PerspectiveComponent;
+
   constructor(private activatedRoute: ActivatedRoute,
               private componentFactoryResolver: ComponentFactoryResolver,
-              private viewService: ViewService) {
+              private notificationService: NotificationsService,
+              private router: Router,
+              private viewService: ViewService,
+              private workspaceService: WorkspaceService) {
   }
 
   public ngOnInit() {
@@ -87,8 +93,32 @@ export class ViewComponent implements OnInit {
     viewContainerRef.clear();
 
     const componentRef: ComponentRef<PerspectiveComponent> = viewContainerRef.createComponent(componentFactory);
-    componentRef.instance.query = this.view.query ? this.view.query : {};
-    componentRef.instance.config = this.view.config ? this.view.config : {};
+    this.perspectiveComponent = componentRef.instance;
+    this.perspectiveComponent.query = this.view.query ? this.view.query : {};
+    this.perspectiveComponent.config = this.view.config ? this.view.config : {};
+  }
+
+  public onSave() {
+    this.view.config = this.perspectiveComponent.extractConfig();
+
+    if (this.view.code) {
+      this.updateView();
+    } else {
+      this.createView();
+    }
+  }
+
+  private createView() {
+    this.viewService.createView(this.view).subscribe((code: string) => {
+      this.router.navigate(['w', this.workspaceService.organizationCode, this.workspaceService.projectCode, 'view', code]);
+      this.notificationService.success('View created', 'View has been successfully created');
+    });
+  }
+
+  private updateView() {
+    this.viewService.updateView(this.view.code, this.view).subscribe(() => {
+      this.notificationService.success('View updated', 'View has been successfully updated');
+    });
   }
 
 }

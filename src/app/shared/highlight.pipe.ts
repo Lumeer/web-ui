@@ -17,12 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Pipe, PipeTransform} from '@angular/core';
 
-export interface DataEvent {
+@Pipe({
+  name: 'highlight'
+})
+export class HighlightPipe implements PipeTransform {
 
-  id?: string;
-  rowIndex?: number;
-  colIndex: number;
-  data: any;
+  public transform(value: string, prefix: string): string {
+    if (!value.startsWith(prefix)) {
+      return value;
+    }
+    return value.replace(prefix, `<span class="text-success">${prefix}</span>`);
+  }
 
 }

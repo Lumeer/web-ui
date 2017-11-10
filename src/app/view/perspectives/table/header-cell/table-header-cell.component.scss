@@ -1,0 +1,37 @@
+@import "../../../../shared/variables";
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.attribute-name {
+  height: 100%;
+  min-width: 50px;
+  padding: 3px 5px;
+
+  &:focus {
+    outline: $primary solid 2px;
+  }
+
+  &:after {
+    content: "\00a0";
+  }
+}
+
+[contenteditable=true]:focus {
+  outline: $success solid 2px;
+}
+
+.uninitialized {
+  background-color: $white;
+  outline: $secondary dashed 2px;
+}
+
+.sort-symbol {
+  position: absolute;
+
+  a {
+    margin: 3px;
+  }
+}

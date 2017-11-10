@@ -78,7 +78,7 @@ export class LinkAttributeListComponent {
     if (newAttribute) {
       this.linkType.linkedAttributes.push(newAttribute);
 
-      this.linkTypeService.updateLinkType(this.linkType.fromCollection, this.linkType.name, this.linkType)
+      this.linkTypeService.updateLinkTypeDeprecated(this.linkType.fromCollection, this.linkType.name, this.linkType)
         .subscribe(
           linkType => {
             this.linkType = linkType;
@@ -107,7 +107,7 @@ export class LinkAttributeListComponent {
       this.linkType.automaticLinkToAttribute = null;
     }
 
-    this.linkTypeService.updateLinkType(this.linkType.fromCollection, this.linkType.name, this.linkType)
+    this.linkTypeService.updateLinkTypeDeprecated(this.linkType.fromCollection, this.linkType.name, this.linkType)
       .subscribe(
         linkType => {
           this.linkType = linkType;

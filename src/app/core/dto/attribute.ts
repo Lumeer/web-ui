@@ -20,8 +20,11 @@
 export interface Attribute {
 
   name: string;
-  fullName: string;
+  fullName: string; // TODO rename to 'id'
   constraints: string[];
   usageCount: number;
+
+  intermediate?: boolean;
+  depth?: number;
 
 }

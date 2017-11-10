@@ -21,14 +21,30 @@ import {NgModule} from '@angular/core';
 import {SharedModule} from '../../../shared/shared.module';
 import {RouterModule} from '@angular/router';
 import {TablePerspectiveComponent} from './table-perspective.component';
+import {TableBodyComponent} from './body/table-body.component';
+import {TableHeaderComponent} from './header/table-header.component';
+import {TableBodyCellComponent} from './body-cell/table-body-cell.component';
+import {TableHeaderCellComponent} from './header-cell/table-header-cell.component';
+import {ContextMenuModule} from 'ngx-contextmenu';
+import {TableManagerService} from './util/table-manager.service';
+import {DragAndDropModule} from '../../../shared/drag-and-drop/drag-and-drop.module';
 
 @NgModule({
   imports: [
     RouterModule,
-    SharedModule
+    SharedModule,
+    ContextMenuModule,
+    DragAndDropModule
   ],
   declarations: [
-    TablePerspectiveComponent
+    TablePerspectiveComponent,
+    TableBodyComponent,
+    TableBodyCellComponent,
+    TableHeaderComponent,
+    TableHeaderCellComponent
+  ],
+  providers: [
+    TableManagerService
   ],
   entryComponents: [
     TablePerspectiveComponent

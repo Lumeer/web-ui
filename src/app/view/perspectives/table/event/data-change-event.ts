@@ -17,10 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TableHeaderCell} from './table-header-cell';
+import {Attribute, Collection, Document, LinkType} from '../../../../core/dto';
 
-export interface TableHeader {
+export interface DataChangeEvent {
 
-  cells: TableHeaderCell[];
+  collection: Collection;
+  document: Document;
+  attribute: Attribute;
+  value: any;
+
+  linkedDocument: Document;
+  linkType: LinkType;
 
 }

@@ -16,15 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import {LinkedAttribute} from './linked-attribute';
 
 export interface LinkType {
 
-  fromCollection: string;
-  toCollection: string;
+  id?: string; // TODO make compulsory
   name: string;
-  linkedAttributes: LinkedAttribute[];
-  automaticLinkFromAttribute?: string;
-  automaticLinkToAttribute?: string;
+
+  collectionCodes?: [string, string]; // TODO make compulsory
+  fromCollection?: string; // TODO remove
+  toCollection?: string; // TODO remove
+
+  attributes?: string[]; // TODO use complex object
+  linkedAttributes?: LinkedAttribute[]; // TODO remove
+  automaticLinkFromAttribute?: string; // TODO remove
+  automaticLinkToAttribute?: string; // TODO remove
 
 }

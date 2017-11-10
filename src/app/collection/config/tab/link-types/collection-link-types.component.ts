@@ -106,7 +106,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   private getLinkTypes(collectionCode: string): void {
-    this.linkTypeService.getLinkTypes(collectionCode)
+    this.linkTypeService.getLinkTypesDeprecated(collectionCode)
       .subscribe(
         linkTypes => {
           // TODO remove this whole block after service gets implemented on backend
@@ -202,7 +202,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       linkedAttributes: []
     };
 
-    this.linkTypeService.createLinkType(this.collection.code, emptyLinkType)
+    this.linkTypeService.createLinkTypeDeprecated(this.collection.code, emptyLinkType)
       .subscribe(
         linkType => {
           this.linkTypes.push(linkType);
@@ -213,7 +213,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public updateLinkType(linkType: LinkType, index: number): void {
-    this.linkTypeService.updateLinkType(this.collection.code, this.initialName[linkType.toCollection], linkType)
+    this.linkTypeService.updateLinkTypeDeprecated(this.collection.code, this.initialName[linkType.toCollection], linkType)
       .subscribe(
         linkType => {
           this.linkTypes[index] = linkType;
@@ -224,7 +224,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public deleteLinkType(linkType: LinkType, idx: number): void {
-    this.linkTypeService.removeLinkType(this.collection.code, linkType)
+    this.linkTypeService.removeLinkTypeDeprecated(this.collection.code, linkType)
       .subscribe(
         () => this.linkTypes.splice(idx, 1),
         error => this.notificationService.error('Error', 'Failed removing link type')

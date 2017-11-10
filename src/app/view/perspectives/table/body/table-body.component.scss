@@ -1,0 +1,56 @@
+@import "../../../../shared/variables";
+
+$font-size: 16px;
+
+:host {
+  display: table-row-group;
+}
+
+td {
+  border: 1px solid $table-border-color;
+  vertical-align: top;
+  padding: 0;
+
+  height: $font-size * $line-height-base;
+
+  & > table-body-cell {
+    display: block;
+    height: 100%;
+  }
+}
+
+.line-number {
+  border: 0;
+  background-color: #ffffff;
+  color: $secondary;
+  padding: 3px 5px;
+  text-align: right;
+}
+
+.link-cell {
+  color: $light;
+
+  &:hover {
+    color: $success;
+  }
+}
+
+tr.stripe {
+  background-color: $light;
+
+  .link-cell {
+    color: $white;
+
+    &:hover {
+      color: $success;
+    }
+  }
+}
+
+input {
+  background-color: transparent;
+  border: 0;
+  color: $primary;
+  height: 100%;
+  width: 100%;
+}

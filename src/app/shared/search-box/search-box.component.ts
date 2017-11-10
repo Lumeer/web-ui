@@ -407,4 +407,8 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     return queryItem.type === QueryItemType.Collection;
   }
 
+  public lightenColor(color: string): string {
+    return color ? HtmlModifier.shadeColor(color, .5) : '#faeabb';
+  }
+
 }
