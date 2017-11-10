@@ -80,6 +80,11 @@
   <ng-template *ngIf="part.index === 0"
                contextMenuItem
                divider="true"></ng-template>
+  <ng-template (execute)="switchEditMode(true)"
+               contextMenuItem>
+    <i class="fa fa-fw fa-edit mr-1" aria-hidden="true"></i>
+    <span i18n="@@table.header.menu.edit">Edit name</span>
+  </ng-template>
   <ng-template [enabled]="false"
                contextMenuItem>
     <i class="fa fa-fw fa-cog mr-1" aria-hidden="true"></i>

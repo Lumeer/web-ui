@@ -96,6 +96,7 @@ export class TableHeaderCellComponent {
     this.editMode = editMode;
 
     if (editMode) {
+      this.attributeNameInput.nativeElement.focus();
       HtmlModifier.setCursorAtTextContentEnd(this.attributeNameInput.nativeElement);
     } else {
       this.saveAttributeChanges();
