@@ -1,5 +1,5 @@
 <ng-template #tableRow let-row let-rowNumber="rowNumber">
-  <ng-container *ngIf="row.rowNumber === rowNumber">
+  <ng-container *ngIf="row.rowNumber() === rowNumber">
     <td *ngFor="let attribute of row.part.shownAttributes"
         [attr.rowspan]="row.countRows()"
         class="data-cell">
@@ -21,7 +21,7 @@
   </ng-container>
 
   <ng-container *ngIf="row.nextLinkedRows.length > 0">
-    <td *ngIf="row.rowNumber === rowNumber"
+    <td *ngIf="row.rowNumber() === rowNumber"
         [attr.rowspan]="row.countRows()"
         class="link-cell">
       <a *ngIf="row.nextLinkedRows.length === 1 && row.nextLinkedRows[0].documents.length > 1 && row.documents.length === 1"
@@ -47,9 +47,9 @@
   <tr *ngFor="let rowOffset of rowOffsets(row); first as isFirst; last as isLast; odd as isOdd"
       [class.stripe]="isPrimaryOdd || (!isFirst && !isLast && isOdd)">
     <td class="line-number">
-      <div>{{row.rowNumber + rowOffset}}</div>
+      <div>{{row.rowNumber() + rowOffset}}</div>
     </td>
 
-    <ng-container *ngTemplateOutlet="tableRow; context: {$implicit: row, rowNumber: row.rowNumber + rowOffset}"></ng-container>
+    <ng-container *ngTemplateOutlet="tableRow; context: {$implicit: row, rowNumber: row.rowNumber() + rowOffset}"></ng-container>
   </tr>
 </ng-container>

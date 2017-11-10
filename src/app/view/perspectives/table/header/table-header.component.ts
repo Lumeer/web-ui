@@ -121,9 +121,7 @@ export class TableHeaderComponent {
   }
 
   public unplugPart(part: TablePart) {
-    this.parts[part.index - 1].rows.forEach(row => row.nextLinkedRows = []);
-    this.parts.splice(part.index);
-    this.parts[this.parts.length - 1].nextPart = null;
+    this.tableManagerService.removeTablePart(part);
   }
 
   public onCreateAttribute(collection: Collection, attribute: Attribute) {

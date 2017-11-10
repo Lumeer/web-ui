@@ -213,6 +213,16 @@ export class TableManagerService {
     });
   }
 
+  public removeTablePart(part: TablePart) {
+    this.documents = this.documents.filter(doc => doc.collectionCode !== part.collection.code);
+    this.linkInstances = this.linkInstances.filter(linkInstance => linkInstance.linkTypeId !== part.linkType.id);
+
+    this.parts[part.index - 1].rows.forEach(row => row.nextLinkedRows = []);
+
+    this.parts.splice(part.index);
+    this.parts[this.parts.length - 1].nextPart = null;
+  }
+
   private removeUninitializedColumns() {
     this.parts.forEach(part => part.shownAttributes.filter(attr => !attr.fullName)
       .forEach(attr => this.removeColumn(part, attr))
@@ -293,6 +303,11 @@ export class TableManagerService {
   }
 
   public removeRow(row: TableRow) {
+    if (row.previousLinkedRow && row.previousLinkedRow.nextLinkedRows.length === 1) {
+      this.removeLastRow(row);
+      return;
+    }
+
     if (row.previousLinkedRow) {
       const linkedRows = row.previousLinkedRow.nextLinkedRows;
       const index = linkedRows.indexOf(row);
@@ -307,6 +322,44 @@ export class TableManagerService {
 
     const rows = row.part.rows;
     rows.splice(rows.indexOf(row), 1);
+  }
+
+  private removeLastRow(row: TableRow) {
+    const emptyRow = new TableRow();
+    emptyRow.part = row.part;
+    emptyRow.rowOffset = 0;
+    emptyRow.documents = [this.emptyDocument(row.part.collection.code)];
+    emptyRow.previousLinkedRow = row.previousLinkedRow;
+
+    const rows = row.part.rows;
+    rows.splice(rows.indexOf(row), 1, emptyRow);
+
+    if (row.previousLinkedRow) {
+      const linkedRows = row.previousLinkedRow.nextLinkedRows;
+      const index = linkedRows.indexOf(row);
+      linkedRows.splice(index, 1, emptyRow);
+    }
+  }
+
+  private emptyDocument(collectionCode: string) {
+    const emptyDocument = new Document();
+    emptyDocument.collectionCode = collectionCode;
+    emptyDocument.data = {};
+    return emptyDocument;
+  }
+
+  public removeDocumentFromRows(part: TablePart, doc: Document) {
+    part.rows.forEach((row) => {
+      const index = row.documents.indexOf(doc);
+      if (index >= 0) {
+        if (row.documents.length > 1) {
+          row.documents.splice(index, 1);
+        } else {
+          row.documents.splice(index, 1, this.emptyDocument(doc.collectionCode));
+        }
+      }
+    });
+    // TODO remove empty rows when multiple linked
   }
 
   private removeRows(rows: TableRow[]): TableRow {

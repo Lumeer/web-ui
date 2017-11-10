@@ -141,6 +141,8 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
 
   public onDeleteDocument(doc: Document) {
     this.documentService.removeDocument(doc).subscribe(() => {
+      const index = this.tableManagerService.documents.indexOf(doc);
+      this.tableManagerService.documents.splice(index, 1);
       this.notificationService.success('Record deleted', 'Record has been successfully deleted!');
     });
   }
@@ -224,6 +226,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
 
     this.linkInstanceService.createLinkInstance(linkInstance).subscribe((id: string) => {
       linkInstance.id = id;
+      this.tableManagerService.linkInstances.push(linkInstance);
       this.notificationService.success('Record linked', 'Link has been successfully created!');
     });
   }

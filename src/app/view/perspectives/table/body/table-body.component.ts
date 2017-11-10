@@ -65,7 +65,7 @@ export class TableBodyComponent {
       return;
     }
 
-    const part = rows.find(row => row.rowNumber === rowNumber);
+    const part = rows.find(row => row.rowNumber() === rowNumber);
     if (part) {
       return part;
     }

@@ -31,11 +31,8 @@ export class TableRow {
 
   rowOffset: number;
 
-  public get rowNumber(): number {
-    if (this.previousLinkedRow) {
-      return this.previousLinkedRow.rowNumber + this.rowOffset;
-    }
-    return this.rowAbove ? this.rowAbove.rowNumber + this.rowAbove.countRows() : 1;
+  public rowNumber(): number {
+    return this.rowAbove ? this.rowAbove.rowNumber() + this.rowAbove.countRows() : 1;
   }
 
   public get rowAbove(): TableRow {

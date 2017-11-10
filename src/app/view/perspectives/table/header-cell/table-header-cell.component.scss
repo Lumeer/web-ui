@@ -13,6 +13,10 @@
   &:focus {
     outline: $primary solid 2px;
   }
+
+  &:after {
+    content: "\00a0";
+  }
 }
 
 [contenteditable=true]:focus {

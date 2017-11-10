@@ -224,6 +224,7 @@ export class TableBodyCellComponent implements OnChanges {
 
   public addNewRow() {
     const newRow = this.tableManagerService.addRow(this.row);
+    console.log(newRow);
     setTimeout(() => this.selectedCellChange.emit({row: newRow, attribute: newRow.part.shownAttributes[0]}));
   }
 
@@ -263,8 +264,10 @@ export class TableBodyCellComponent implements OnChanges {
   }
 
   public onDeleteDocument() {
+    const doc = this.row.documents[0];
     this.tableManagerService.removeRow(this.row);
-    this.deleteDocument.emit(this.row.documents[0]);
+    this.tableManagerService.removeDocumentFromRows(this.row.part, doc);
+    this.deleteDocument.emit(doc);
   }
 
   public onExpand() {

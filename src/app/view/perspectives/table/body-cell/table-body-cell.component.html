@@ -46,7 +46,7 @@
     <i class="fa fa-fw fa-edit mr-1" aria-hidden="true"></i>
     <span i18n="@@table.body.row.edit">Edit value</span>
   </ng-template>
-  <ng-template *ngIf="row.documents.length === 1"
+  <ng-template *ngIf="row.documents.length === 1 && row.documents[0].id"
                contextMenuItem
                divider="true"></ng-template>
   <ng-template *ngIf="row.part.index > 0 && row.documents.length === 1 && row.documents[0].id"
@@ -55,7 +55,7 @@
     <i class="fa fa-fw fa-unlink text-warning mr-1" aria-hidden="true"></i>
     <span i18n="@@table.body.row.unlink">Unlink row</span>
   </ng-template>
-  <ng-template *ngIf="row.documents.length === 1"
+  <ng-template *ngIf="row.documents.length === 1 && row.documents[0].id"
                (execute)="onRemoveRow()"
                contextMenuItem>
     <i class="fa fa-fw fa-times text-danger mr-1" aria-hidden="true"></i>
