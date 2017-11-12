@@ -42,9 +42,9 @@ import {KEYCLOAK_HTTP_PROVIDER} from './keycloak/keycloak-http.service';
 import {KeycloakService} from './keycloak/keycloak.service';
 import {ViewService} from './rest/view.service';
 import {LinkTypeService} from './rest/link-type.service';
-import {EventService} from './rest/events.service';
 import {SearchHomeComponent} from './search-home/search-home.component';
 import {LinkInstanceService} from './rest/link-instance.service';
+import {EventService} from 'app/core/rest';
 
 @NgModule({
   imports: [

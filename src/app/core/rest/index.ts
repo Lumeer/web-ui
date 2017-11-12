@@ -19,7 +19,7 @@
 
 export {CollectionService} from './collection.service';
 export {DocumentService} from './document.service';
-export {EventsService} from './events.service';
+export {EventService} from './event.service';
 export {GroupService} from './group.service';
 export {ImportService} from './import.service';
 export {LinkInstanceService} from './link-instance.service';

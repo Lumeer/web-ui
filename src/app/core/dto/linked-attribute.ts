@@ -20,9 +20,14 @@
 import {Attribute} from './attribute';
 import {Collection} from './collection';
 
-export interface LinkedAttribute {
+export class LinkedAttribute {
 
-  value: Attribute;
-  collection: Collection;
+  public value: Attribute;
+  public collection: Collection;
+
+  constructor(attribute: Attribute, collection: Collection) {
+    this.value = attribute;
+    this.collection = collection;
+  }
 
 }

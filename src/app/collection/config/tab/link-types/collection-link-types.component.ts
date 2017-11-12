@@ -21,16 +21,16 @@ import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/c
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../constants';
+import {NotificationsService} from 'angular2-notifications';
 import {Collection} from '../../../../core/dto/collection';
 import {CollectionTabComponent} from '../collection-tab.component';
 import {LinkTypeService} from '../../../../core/rest/link-type.service';
-import {LinkType} from '../../../../core/dto/link-type';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {WorkspaceService} from '../../../../core/workspace.service';
-import {LinkedAttribute} from '../../../../core/dto/linked-attribute';
 import {CollectionSelectService} from '../../../service/collection-select.service';
+import {LinkTypeModel} from './LinkTypeModel';
 import {NotificationService} from '../../../../notifications/notification.service';
-import {switchMap, tap} from 'rxjs/operators';
+import {finalize, map, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'collection-link-types',
@@ -42,11 +42,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   @ViewChildren('name')
   public linkTypeNameInput: QueryList<ElementRef>;
 
-  public linkTypes: LinkType[] = [];
-
-  public expanded: boolean[] = [];
-
-  private initialName: { [collectionCode: string]: string } = {};
+  public linkTypes: LinkTypeModel[] = [];
 
   public collections: { [collectionCode: string]: Collection } = {};
 
@@ -69,119 +65,125 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   public ngOnInit(): void {
     super.ngOnInit();
 
-    this.collections[COLLECTION_NO_CODE] = this.uninitializedCollection();
-    this.fetchAllCollections();
-    this.fetchLinkTypes(this.collection.code);
+    this.collectionService.getCollections().subscribe(
+      collections => {
+        collections.forEach(collection => this.collections[collection.code] = collection);
+        this.initializeLinkTypes();
+      },
+      error => {
+        this.notificationService.error('Failed fetching collections');
+      }
+    );
   }
 
-  public changeCollection(toCollection: string): void {
-    this.collectionSelectService.select(toCollection).pipe(
-      switchMap(collection => this.router.navigate([this.workspacePath(), 'c', collection.code, 'linktypes'])),
-      tap(navigated => this.fetchAllCollections())
-    ).subscribe(navigated => this.fetchLinkTypes(this.collection.code));
-  }
-
-  private fetchAllCollections(): void {
-    this.collectionService.getCollections()
-      .subscribe(
-        collections => collections.forEach(collection => this.collections[collection.code] = collection),
-        error => this.notificationService.error('Failed fetching collections')
-      );
-  }
-
-  private uninitializedCollection(): Collection {
-    return {
-      code: COLLECTION_NO_CODE,
-      icon: COLLECTION_NO_ICON,
-      color: COLLECTION_NO_COLOR,
-      description: '',
-      name: '',
-      attributes: []
-    };
-  }
-
-  public emptyLinkType(): LinkType {
-    return {
-      fromCollection: this.collection.code,
-      toCollection: COLLECTION_NO_CODE,
-      name: '',
-      linkedAttributes: []
-    };
-  }
-
-  private fetchLinkTypes(collectionCode: string): void {
+  private initializeLinkTypes(): void {
     this.linkTypes = [];
-    this.getLinkTypes(collectionCode);
+    this.linkTypeService.getLinkTypesByCollections(this.collection.code).pipe(
+      map(linkTypes => linkTypes.filter(linkType => linkType.collectionCodes[0] === this.collection.code))
+    ).subscribe(
+      linkTypes => this.linkTypes = linkTypes.map(linkType => new LinkTypeModel(linkType)),
+      error => this.notificationService.error('Failed fetching LinkTypes')
+    );
   }
 
-  private getLinkTypes(collectionCode: string): void {
-    this.linkTypeService.getLinkTypesDeprecated(collectionCode)
+  public changeCollection(collectionCode: string): void {
+    this.collectionSelectService
+      .select(collectionCode).pipe(
+      switchMap(collection => this.router.navigate([this.workspacePath(), 'c', collection.code, 'linktypes']))
+    ).subscribe(
+      navigated => this.initializeLinkTypes(),
+      error => this.notificationService.error('Failed switching collection')
+    );
+  }
+
+  public emptyLinkType(): LinkTypeModel {
+    return new LinkTypeModel(null, this.collection.code);
+  }
+
+  public addLinkType(): void {
+    const newLinkType = this.emptyLinkType();
+    this.linkTypes.push(newLinkType);
+    setTimeout(() => this.linkTypeNameInput.last.nativeElement.focus());
+  }
+
+  public createLinkType(linkTypeModel: LinkTypeModel): void {
+    console.log('ceating', linkTypeModel);
+    if (linkTypeModel.initialized) {
+      throw new Error(`Link Type Model ${linkTypeModel} already initialized`);
+    }
+
+    if (linkTypeModel.initializing) {
+      return;
+    }
+
+    linkTypeModel.initializing = true;
+    this.linkTypeService.createLinkType(linkTypeModel.data)
+      .pipe(
+        finalize(() => linkTypeModel.initializing = false)
+      )
       .subscribe(
-        linkTypes => {
-          // TODO remove this whole block after service gets implemented on backend
-          if (linkTypes[1]) {
-            setTimeout(() => {
-              const linkType = linkTypes[1];
-
-              const randomIndex = list => Math.floor(Math.random() * list.length);
-              const insertCollectionAttributes = (result, collectionCode) => {
-                const collection = this.collections[collectionCode];
-                collection.attributes
-                  .slice(0, randomIndex(collection.attributes))
-                  .forEach(attribute => result.push({collection: collection, value: attribute}));
-              };
-
-              const linkedAttributes: LinkedAttribute[] = [];
-              insertCollectionAttributes(linkedAttributes, linkType.fromCollection);
-              insertCollectionAttributes(linkedAttributes, linkType.toCollection);
-
-              linkType.linkedAttributes = linkedAttributes;
-
-            }, 250);
-          }
-
-          this.linkTypes = linkTypes;
+        id => {
+          linkTypeModel.initialized = true;
+          linkTypeModel.data.id = id;
         },
-        error => this.notificationService.error('Failed fetching Link Types')
+        error => {
+          this.notificationService.error('Failed creating link type');
+        }
       );
   }
 
-  public newLinkType(): void {
-    this.linkTypeService.createLinkTypeDeprecated(this.collection.code, this.emptyLinkType())
-      .subscribe(
-        linkType => {
-          this.linkTypes.push(linkType);
-          setTimeout(() => this.linkTypeNameInput.last.nativeElement.focus());
-        },
-        error => this.notificationService.error('Failed creating link type')
-      );
+  public updateLinkType(linkTypeModel: LinkTypeModel): void {
+    this.linkTypeService.updateLinkType(linkTypeModel.data.id, linkTypeModel.data).subscribe(
+      linkType => linkTypeModel.data = linkType,
+      error => this.notificationService.error('Error', 'Failed updating link type')
+    );
   }
 
-  public updateLinkType(linkType: LinkType, index: number): void {
-    this.linkTypeService.updateLinkTypeDeprecated(this.collection.code, this.initialName[linkType.toCollection], linkType)
-      .subscribe(
-        linkType => {
-          this.linkTypes[index] = linkType;
-          this.initialName[linkType.toCollection] = linkType.name;
-        },
-        error => this.notificationService.error('Failed updating link type')
-      );
+  public changeToCollection(linkTypeModel: LinkTypeModel, collectionCode: string): void {
+    // TODO replace confirm with new notifications
+    if (confirm('Are you sure you want to change linked collection?\nThis will result in loss of all link data')) {
+      linkTypeModel.changeLinkedCollection(collectionCode);
+      this.updateLinkType(linkTypeModel);
+    }
   }
 
-  public deleteLinkType(linkType: LinkType, idx: number): void {
-    this.linkTypeService.removeLinkTypeDeprecated(this.collection.code, linkType)
-      .subscribe(
-        () => this.linkTypes.splice(idx, 1),
-        error => this.notificationService.error('Failed removing link type')
+  public deleteLinkType(linkTypeModel: LinkTypeModel): void {
+    // TODO replace confirm with new notifications
+    if (confirm('Are you sure you want to delete link type?')) {
+      this.linkTypeService.deleteLinkType(linkTypeModel.data.id).subscribe(
+        () => this.removeLinkType(linkTypeModel),
+        error => this.notificationService.error('Error', 'Failed removing link type')
       );
+    }
   }
 
-  public possibleToCollectionCodes(linkType?: LinkType): string[] {
-    const excludedCodes = [COLLECTION_NO_CODE];
+  public removeLinkType(removedLinkTypeModel: LinkTypeModel): void {
+    const index = this.linkTypes.findIndex(linkTypeModel => linkTypeModel === removedLinkTypeModel);
+    if (index !== -1) {
+      this.linkTypes.splice(index, 1);
+    }
+  }
 
-    if (linkType) {
-      excludedCodes.push(linkType.toCollection);
-      excludedCodes.push(linkType.fromCollection);
+  public getLinkedCollection(linkTypeModel: LinkTypeModel): Collection {
+    if (linkTypeModel.initialized) {
+      return this.collections[linkTypeModel.data.collectionCodes[1]];
+    } else {
+      return {
+        code: COLLECTION_NO_CODE,
+        icon: COLLECTION_NO_ICON,
+        color: COLLECTION_NO_COLOR,
+        name: '',
+        description: '',
+        attributes: []
+      };
+    }
+  }
+
+  public possibleToCollectionCodes(linkTypeModel: LinkTypeModel): string[] {
+    const excludedCodes = [this.collection.code];
+
+    if (linkTypeModel.initialized) {
+      excludedCodes.push(linkTypeModel.data.collectionCodes[1]);
     }
 
     return Object
@@ -189,27 +191,23 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       .filter(collectionCode => !excludedCodes.includes(collectionCode));
   }
 
-  public initialized(linkType: LinkType): boolean {
-    return linkType.name && linkType.toCollection !== COLLECTION_NO_CODE;
+  public isAutomatic(linkTypeModel: LinkTypeModel): boolean {
+    return linkTypeModel.data.automaticallyLinked && linkTypeModel.data.automaticallyLinked.length === 2;
   }
 
-  public isAutomatic(linkType: LinkType): boolean {
-    return !!(linkType.automaticLinkToAttribute && linkType.automaticLinkFromAttribute);
+  public canBecomeAutomatic(linkTypeModel: LinkTypeModel): boolean {
+    return !this.isAutomatic(linkTypeModel) &&
+      linkTypeModel.data.linkedAttributes.length === 2 &&
+      linkTypeModel.data.linkedAttributes[0].collection.code !== linkTypeModel.data.linkedAttributes[1].collection.code;
   }
 
-  public canBecomeAutomatic(linkType: LinkType): boolean {
-    return !this.isAutomatic(linkType) &&
-      linkType.linkedAttributes.length === 2 &&
-      linkType.linkedAttributes[0].collection.code !== linkType.linkedAttributes[1].collection.code;
+  public makeAutomatic(linkTypeModel: LinkTypeModel): void {
+    linkTypeModel.data.automaticallyLinked = [linkTypeModel.data.linkedAttributes[0], linkTypeModel.data.linkedAttributes[1]];
+    this.updateLinkType(linkTypeModel);
   }
 
-  public makeAutomatic(linkType: LinkType): void {
-    linkType.automaticLinkFromAttribute = linkType.linkedAttributes[0].value.name;
-    linkType.automaticLinkToAttribute = linkType.linkedAttributes[1].value.name;
-  }
-
-  public instanceCount(linkType: LinkType): number {
-    return linkType.linkedAttributes
+  public instanceCount(linkTypeModel: LinkTypeModel): number {
+    return linkTypeModel.data.linkedAttributes
       .map(linkedAttribute => linkedAttribute.value.usageCount)
       .reduce((sum, current) => sum + current, 0);
   }
@@ -223,9 +221,9 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       .replace(optionalCommaAtTheStart, '');
   }
 
-  public searchLinkTypesQueryParams(linkType: LinkType): object {
+  public searchLinkTypesQueryParams(linkTypeModel: LinkTypeModel): object {
     return {
-      query: JSON.stringify({linkNames: [linkType.name]})
+      query: JSON.stringify({linkNames: [linkTypeModel.data.name]})
     };
   }
 

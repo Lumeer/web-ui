@@ -25,12 +25,9 @@ export interface LinkType {
   name: string;
 
   collectionCodes?: [string, string]; // TODO make compulsory
-  fromCollection?: string; // TODO remove
-  toCollection?: string; // TODO remove
 
   attributes?: string[]; // TODO use complex object
   linkedAttributes?: LinkedAttribute[]; // TODO remove
-  automaticLinkFromAttribute?: string; // TODO remove
-  automaticLinkToAttribute?: string; // TODO remove
+  automaticallyLinked?: [LinkedAttribute, LinkedAttribute];
 
 }

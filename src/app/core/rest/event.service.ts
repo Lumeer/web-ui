@@ -86,7 +86,7 @@ export class EventService {
   }
 
   private handleGlobalError(error: HttpErrorResponse): LumeerError {
-  throw new LumeerError(error.message);
-}
+    throw new LumeerError(error.message);
+  }
 
 }

@@ -21,7 +21,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {CollectionTabComponent} from '../collection-tab.component';
-import {EventService} from '../../../../core/rest/events.service';
+import {EventService} from '../../../../core/rest/event.service';
 import {WorkspaceService} from '../../../../core/workspace.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Event} from '../../../../core/dto/Event';
@@ -68,7 +68,7 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
 
   public removeFireReasonFromEvent(event: Event, removedFireReason: EventFireReason): void {
     event.fireReasons = event.fireReasons.filter(fireReason => fireReason !== removedFireReason);
-    this.eventService.getEvents()
+    // this.eventService.getEvents()
   }
 
 }

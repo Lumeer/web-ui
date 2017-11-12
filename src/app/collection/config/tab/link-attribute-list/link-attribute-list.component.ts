@@ -17,12 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
-
-import {NotificationsService} from 'angular2-notifications';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {LinkType} from '../../../../core/dto/link-type';
-import {LinkTypeService} from '../../../../core/rest/link-type.service';
 import {LinkedAttribute} from '../../../../core/dto/linked-attribute';
 import {Collection} from '../../../../core/dto/collection';
 import * as Const from '../constraints';
@@ -46,6 +43,9 @@ export class LinkAttributeListComponent {
   @Input()
   public limit = Number.MAX_SAFE_INTEGER;
 
+  @Output()
+  public update = new EventEmitter<void>();
+
   public newAttributeName = '';
 
   constructor(private notificationService: SnotifyService,
@@ -57,50 +57,30 @@ export class LinkAttributeListComponent {
   }
 
   public attributesToAdd(currentAttribute: string): LinkedAttribute[] {
-    const fillWithCollection = (result, collectionCode) => {
-      const collection = this.collections[collectionCode];
-      collection.attributes
-        .filter(attribute => attribute.name.includes(currentAttribute))
-        .forEach(attribute => result.push({value: attribute, collection: collection}));
-    };
+    const usedAttributes = this.linkType.linkedAttributes.map(linkedAttribute => JSON.stringify(linkedAttribute));
 
-    let result: LinkedAttribute[] = [];
-    fillWithCollection(result, this.linkType.fromCollection);
-    fillWithCollection(result, this.linkType.toCollection);
-
-    const comparableUsedAttributes = this.linkType.linkedAttributes.map(linkedAttribute => JSON.stringify(linkedAttribute));
-    result = result.filter(linkedAttribute => !comparableUsedAttributes.includes(JSON.stringify(linkedAttribute)));
-    return result;
+    return this.linkType.collectionCodes
+      .map(collectionCode => this.collections[collectionCode])
+      .map(collection => collection.attributes.map(attribute => new LinkedAttribute(attribute, collection)))
+      .reduce((flattened: LinkedAttribute[], current: LinkedAttribute[]) => flattened.concat(current), [])
+      .filter(linkedAttribute => linkedAttribute.value.name.includes(currentAttribute))
+      .filter(linkedAttribute => !usedAttributes.includes(JSON.stringify(linkedAttribute)));
   }
 
   public addAttribute(linkedAttribute: LinkedAttribute): void {
     this.linkType.linkedAttributes.push(linkedAttribute);
-
-    this.linkTypeService.updateLinkTypeDeprecated(this.linkType.fromCollection, this.linkType.name, this.linkType)
-      .subscribe(
-        linkType => this.linkType = linkType,
-        error => this.notificationService.error('Adding attribute failed')
-      );
-
     this.newAttributeName = '';
+    this.update.emit();
   }
 
   public removeAttribute(removedAttribute: LinkedAttribute) {
     this.linkType.linkedAttributes = this.linkType.linkedAttributes.filter(linkedAttribute => removedAttribute !== linkedAttribute);
 
-    // check if was part of automatic link
-    if (this.linkType.automaticLinkFromAttribute === removedAttribute.value.name) {
-      this.linkType.automaticLinkFromAttribute = null;
-    }
-    if (this.linkType.automaticLinkToAttribute === removedAttribute.value.name) {
-      this.linkType.automaticLinkToAttribute = null;
+    if (this.linkType.automaticallyLinked.includes(removedAttribute)) {
+      this.linkType.automaticallyLinked = null;
     }
 
-    this.linkTypeService.updateLinkTypeDeprecated(this.linkType.fromCollection, this.linkType.name, this.linkType)
-      .subscribe(
-        linkType => this.linkType = linkType,
-        error => this.notificationService.error('Removing attribute failed')
-      );
+    this.update.emit();
   }
 
   public formatNumber(numberToFormat: number): string {

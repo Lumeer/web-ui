@@ -18,87 +18,25 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpEvent} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 
 import {WorkspaceService} from '../workspace.service';
 import {LumeerError} from '../error/lumeer.error';
 import {LinkType} from '../dto/link-type';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import {CollectionService} from './collection.service';
 import {LocalStorage} from '../../shared/utils/local-storage';
+import 'rxjs/add/observable/of';
 
 const LINK_TYPES = 'linkTypes';
-import {CollectionService} from './collection.service';
-import {map, tap} from 'rxjs/operators';
 
 // TODO implement on backend
 @Injectable()
 export class LinkTypeService {
 
-  public links: LinkType[];
-
-  private names = ['Clouds placement', 'Seasons in the Sun', 'Pollution clouds'];
-
   constructor(private httpClient: HttpClient,
-              private workspaceService: WorkspaceService,
-              private collectionService: CollectionService /* Remove when after backend implementation*/) {
+              private workspaceService: WorkspaceService) {
   }
-
-  private getInitialLinks(): Observable<LinkType[]> {
-    return this.collectionService.getCollections().pipe(
-      map(collections => collections.map(collection => {
-          const converted: LinkType = {
-            fromCollection: '',
-            toCollection: collection.code,
-            name: this.names[collection.name.length % this.names.length],
-            linkedAttributes: []
-          };
-
-          return converted;
-        })
-      ),
-      tap(linkTypes => this.links = linkTypes)
-    );
-  }
-
-  public getLinkTypesDeprecated(collectionCode: string): Observable<LinkType[]> {
-    const links = this.links ? Observable.of(this.links) : this.getInitialLinks();
-
-    return links.pipe(
-      tap(linkTypes => linkTypes.forEach(linkType => linkType.fromCollection = collectionCode)),
-      map(linkTypes => linkTypes.filter(linkType => collectionCode !== linkType.toCollection))
-    );
-  }
-
-  public createLinkTypeDeprecated(collectionCode: string, linkType: LinkType): Observable<LinkType> {
-    this.links.push(linkType);
-    return Observable.of(linkType);
-  }
-
-  public updateLinkTypeDeprecated(collectionCode: string, initialName: string, linkType: LinkType): Observable<LinkType> {
-    this.links[this.links.findIndex(link => link.name === initialName)] = linkType;
-    return Observable.of(linkType);
-  }
-
-  public removeLinkTypeDeprecated(collectionCode: string, linkType: LinkType): Observable<HttpEvent<any>> {
-    this.links = this.links.filter(link => link.name !== linkType.name);
-    return Observable.of(null);
-  }
-
-  private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {
-    throw new LumeerError(error.message);
-  }
-
-  private apiPrefix(collectionCode: string): string {
-    const organizationCode = this.workspaceService.organizationCode;
-    const projectCode = this.workspaceService.projectCode;
-
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/c/${collectionCode}/linktypes`;
-  }
-
-  // --- NEW METHODS ---
 
   public createLinkType(linkType: LinkType): Observable<string> {
     const linkTypes = LocalStorage.get(LINK_TYPES) || {};
@@ -140,8 +78,20 @@ export class LinkTypeService {
   public getLinkTypesByCollections(...collectionCodes: string[]): Observable<LinkType[]> {
     const linkTypes: { [id: string]: LinkType } = LocalStorage.get(LINK_TYPES) || {};
 
-    const results = Object.values(linkTypes).filter(linkType => collectionCodes.includes(linkType.collectionCodes[0]) || collectionCodes.includes(linkType.collectionCodes[1]));
+    const results = Object.values(linkTypes)
+      .filter(linkType => collectionCodes.includes(linkType.collectionCodes[0]) || collectionCodes.includes(linkType.collectionCodes[1]));
     return Observable.of(results);
+  }
+
+  private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {
+    throw new LumeerError(error.message);
+  }
+
+  private apiPrefix(collectionCode: string): string {
+    const organizationCode = this.workspaceService.organizationCode;
+    const projectCode = this.workspaceService.projectCode;
+
+    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/c/${collectionCode}/linktypes`;
   }
 
 }
