@@ -28,6 +28,8 @@ import {Event} from '../../../../core/dto/Event';
 import {CollectionSelectService} from '../../../service/collection-select.service';
 import {EventFireReason} from './event-fire-reason';
 import {NotificationService} from '../../../../notifications/notification.service';
+import {EventModel} from './model/EventModel';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'collection-events',
@@ -36,7 +38,7 @@ import {NotificationService} from '../../../../notifications/notification.servic
 })
 export class CollectionEventsComponent extends CollectionTabComponent implements OnInit {
 
-  public events: Event[];
+  public events: EventModel[];
 
   constructor(private eventService: EventService,
               protected collectionService: CollectionService,
@@ -59,11 +61,38 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
   }
 
   public getEvents(): void {
-    this.eventService.getEvents(this.collection.code)
-      .subscribe(
-        events => this.events = events,
-        error => this.notificationService.error('Failed fetching Events')
-      );
+    this.eventService.getEvents(this.collection.code).subscribe(
+      events => this.events = events.map(event => new EventModel(event)),
+      error => this.notificationService.error('Failed fetching Events')
+    );
+  }
+
+  public addModel(): void {
+    const newEvent = new EventModel();
+    this.events.push(newEvent);
+  }
+
+  public createEvent(eventModel: EventModel): void {
+    if (eventModel.initialized) {
+      throw new Error(`Event model ${eventModel}, was already created`);
+    }
+
+    if (eventModel.initializing) {
+      return;
+    }
+
+    eventModel.initializing = true;
+    this.eventService.createEvent(this.collection.code, eventModel.data).pipe(
+      finalize(() => eventModel.initializing = false)
+    ).subscribe(
+      id => {
+        eventModel.data.id = id;
+        eventModel.initialized = true;
+      },
+      error => {
+        this.notificationService.error('Failed creating event');
+      }
+    );
   }
 
   public removeFireReasonFromEvent(event: Event, removedFireReason: EventFireReason): void {

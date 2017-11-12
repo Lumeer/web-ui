@@ -20,7 +20,7 @@
 export interface EventCallback {
 
   name: string;
-  hasValue: boolean;
+  hasValue?: boolean;
   value?: string;
 
 }

@@ -17,16 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {EventFireReason} from '../../collection/config/tab/events/model/event-fire-reason';
-import {EventCallback} from '../../collection/config/tab/events/model/event-callback';
-import {EventParameter} from '../../collection/config/tab/events/model/event-parameter';
+import {Event} from '../../../../../core/dto/Event';
 
-export interface Event {
+export class EventModel {
 
-  id?: string;
-  fireReasons: EventFireReason[];
-  callback: EventCallback;
-  parameters: EventParameter[];
-  automatic?: boolean;
+  public initialized = true;
+  public initializing = false;
+  public data: Event;
+
+  constructor(event?: Event) {
+    if (event) {
+      this.data = event;
+
+    } else {
+      this.initialized = false;
+      this.data = {
+        fireReasons: [],
+        parameters: [],
+        callback: {name: ''}
+      };
+    }
+  }
 
 }
