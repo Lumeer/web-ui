@@ -92,6 +92,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   }
 
   private loadCollections() {
+    delete this.query.linkIds; // TODO delete when link will be implemented in backend
     this.searchService.searchCollections(this.query)
       .subscribe(
         collections => {

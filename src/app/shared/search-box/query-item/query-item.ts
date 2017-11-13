@@ -23,7 +23,9 @@ export interface QueryItem {
 
   text: string;
   icon?: string;
+  icon2?: string;
   color?: string;
+  color2?: string;
   condition?: string;
 
   value: string;

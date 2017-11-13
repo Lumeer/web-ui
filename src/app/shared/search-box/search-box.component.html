@@ -4,7 +4,12 @@
          *ngFor="let queryItem of queryItems; let ix = index"
          [style.background-color]="lightenColor(queryItem.color)"
          [style.border-color]="queryItem.isComplete() ? 'transparent' : 'red'">
-      <i *ngIf="queryItem.icon" class="{{queryItem.icon}} mr-1" aria-hidden="true"></i>
+      <div class="icon-container" *ngIf="queryItem.icon && queryItem.icon2">
+        <i class="{{queryItem.icon}} icon-left" [style.color]="queryItem.color" aria-hidden="true"></i>
+        <i class="{{queryItem.icon2}} icon-right" [style.color]="queryItem.color2" aria-hidden="true"></i>
+      </div>
+      <i *ngIf="queryItem.icon && !queryItem.icon2" class="{{queryItem.icon}} mr-1"
+         [style.color]="queryItem.color" aria-hidden="true"></i>
       <span class="mr-1" [class.font-weight-bold]="isCollectionItem(queryItem)">{{queryItem.text}}</span>
       <div #queryItemCondition id="{{ix}}"
            class="mr-1 text-nowrap d-inline-flex"
@@ -26,9 +31,12 @@
              (mousedown)="onSuggestionClick(suggestion)">
           <div class="d-inline-flex" [class.font-weight-bold]="isCollectionItem(suggestion)">
             <div class="icon-container">
-              <i *ngIf="suggestion.icon" [style.color]="suggestion.color"
-                 class="{{suggestion.icon}} icon"
-                 aria-hidden="true"></i></div>
+              <i class="{{suggestion.icon}}" *ngIf="suggestion.icon"
+                 [ngClass]="suggestion.icon2 ? 'icon-left' : 'icon'"
+                 [style.color]="suggestion.color" aria-hidden="true"></i>
+              <i class="{{suggestion.icon2}} icon-right" *ngIf="suggestion.icon2"
+                 [style.color]="suggestion.color2" aria-hidden="true"></i>
+            </div>
             {{suggestion.text}}
           </div>
           <span class="font-weight-light font-italic">{{suggestion.type}}</span>

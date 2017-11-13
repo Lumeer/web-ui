@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
@@ -41,6 +50,9 @@ import {QueryItemType} from './query-item/query-item-type';
 import {ConditionQueryItem} from './query-item/condition-query-item';
 import {SearchService} from '../../core/rest/search.service';
 import {SuggestionType} from '../../core/dto/suggestion-type';
+import {LinkType} from '../../core/dto/link-type';
+import {MOCK_COLLECTIONS, MOCK_LINK_TYPES} from '../../view/perspectives/table/mock-data';
+import {LinkQueryItem} from './query-item/link-query-item';
 
 @Component({
   selector: 'search-box',
@@ -151,6 +163,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
     suggestedQueryItems = suggestedQueryItems.concat(this.createCollectionQueryItems(suggestions.collections));
     suggestedQueryItems = suggestedQueryItems.concat(this.createAttributeQueryItems(suggestions.attributes));
+    suggestedQueryItems = suggestedQueryItems.concat(this.createLinkQueryItems(suggestions.links));
     // TODO add views
     if (!this.isFullTextQueryPresented()) {
       suggestedQueryItems.push(new FulltextQueryItem(this.text));
@@ -169,6 +182,20 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   private createCollectionQueryItems(collections: Collection[]): QueryItem[] {
     return collections.map(collection => new CollectionQueryItem(collection));
+  }
+
+  private createLinkQueryItems(links: LinkType[]): QueryItem[] {
+    let items: QueryItem[] = [];
+    for (let link of MOCK_LINK_TYPES) {
+      if (link.name.toLowerCase().startsWith(this.text)) {
+        const collection1: Collection = MOCK_COLLECTIONS.find(col => link.collectionCodes[0] === col.code);
+        const collection2: Collection = MOCK_COLLECTIONS.find(col => link.collectionCodes[1] === col.code);
+        if(collection1 && collection2){
+          items.push(new LinkQueryItem(link, collection1, collection2));
+        }
+      }
+    }
+    return items;
   }
 
   public onRemoveQueryItem(index: number) {

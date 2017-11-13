@@ -23,6 +23,7 @@ export enum QueryItemType {
   Collection = 'Collection',
   Fulltext = 'Fulltext',
   View = 'View',
-  Condition = 'Condition'
+  Condition = 'Condition',
+  Link = 'Link'
 
 }

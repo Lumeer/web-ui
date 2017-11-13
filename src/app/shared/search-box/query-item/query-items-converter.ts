@@ -19,15 +19,19 @@
 
 import {Injectable} from '@angular/core';
 import {QueryItem} from './query-item';
+import {Injectable} from '@angular/core';
+
 import {Query} from '../../../core/dto/query';
 import {CollectionQueryItem} from './collection-query-item';
 import {AttributeQueryItem} from './attribute-query-item';
 import {FulltextQueryItem} from './fulltext-query-item';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 import {Collection} from '../../../core/dto/collection';
 import {QueryConverter} from '../../utils/query-converter';
 import {SearchService} from '../../../core/rest/search.service';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
+import {LinkQueryItem} from './link-query-item';
+import {MOCK_COLLECTIONS, MOCK_LINK_TYPES} from '../../../view/perspectives/table/mock-data';
 import {map} from 'rxjs/operators';
 
 @Injectable()
@@ -39,7 +43,8 @@ export class QueryItemsConverter {
   public toQueryString(queryItems: QueryItem[]): string {
     const query: Query = {
       collectionCodes: [],
-      filters: []
+      filters: [],
+      linkIds: []
     };
 
     queryItems.forEach(queryItem => {
@@ -49,6 +54,8 @@ export class QueryItemsConverter {
         query.filters.push(queryItem.value);
       } else if (queryItem instanceof FulltextQueryItem) {
         query.fulltext = queryItem.value;
+      } else if (queryItem instanceof LinkQueryItem) {
+        query.linkIds.push(queryItem.value);
       }
     });
 
@@ -94,11 +101,25 @@ export class QueryItemsConverter {
         }
       }
     }
+    queryItems = queryItems.concat(QueryItemsConverter.createLinkQueryItems(query));
 
     if (query.fulltext) {
       queryItems.push(new FulltextQueryItem(query.fulltext));
     }
     return queryItems;
+  }
+
+  private static createLinkQueryItems(query: Query): QueryItem[]{
+    return query.linkIds.map(id => {
+      const link = MOCK_LINK_TYPES.find(l => l.id === id);
+      if(link){
+        const collection1: Collection = MOCK_COLLECTIONS.find(col => link.collectionCodes[0] === col.code);
+        const collection2: Collection = MOCK_COLLECTIONS.find(col => link.collectionCodes[1] === col.code);
+        if(collection1 && collection2){
+          return new LinkQueryItem(link, collection1, collection2);
+        }
+      }
+    });
   }
 
   private static createCollectionQueryItems(collectionsMap: any, query: Query): QueryItem[] {
