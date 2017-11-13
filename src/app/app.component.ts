@@ -65,7 +65,7 @@ export class AppComponent implements OnInit {
   public setNotificationStyle(): void {
     this.notificationService.setDefaults({
       toast: {
-        titleMaxLength: 15,
+        titleMaxLength: 20,
         backdrop: -1,
         position: SnotifyPosition.leftTop,
         timeout: 3000,
