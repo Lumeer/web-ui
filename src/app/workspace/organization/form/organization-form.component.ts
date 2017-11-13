@@ -89,8 +89,13 @@ export class OrganizationFormComponent implements OnInit {
   public onDelete() {
     this.organizationService.deleteOrganization(this.organizationCode)
       .subscribe(
-        response => this.goBack(),
-        error => this.notificationsService.error('Error deleting the organization')
+        response => {
+          this.goBack();
+          this.notificationsService.success(`Organization ${this.organization.name} deleted`);
+        },
+        error => {
+          this.notificationsService.error('Error deleting the organization');
+        }
       );
   }
 

@@ -116,8 +116,13 @@ export class ProjectFormComponent implements OnInit {
   public onDelete() {
     this.projectService.deleteProject(this.organizationCode, this.projectCode)
       .subscribe(
-        response => this.goBack(),
-        error => this.notificationsService.error('Error deleting the organization')
+        response => {
+          this.goBack();
+          this.notificationsService.success(`Project ${this.project.name} deleted`);
+        },
+        error => {
+          this.notificationsService.error('Error deleting the project');
+        }
       );
   }
 
