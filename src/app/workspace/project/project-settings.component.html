@@ -44,7 +44,7 @@
           Code is required (from 3 to 6 characters).
         </small>
 
-        <a (click)="confirmDeletion(modal)"
+        <a (click)="confirmDeletion()"
            class="text-danger rounded-left ml-auto"
            title="Remove project">
           <i class="fa fa-fw fa-times" aria-hidden="true"></i>
@@ -57,7 +57,7 @@
           <i class="fas fa fa-pencil edit"
              (click)="onProjectDescriptionEdit()"></i>
         </div>
-        <div class="text flex-grow" [attr.contenteditable]="projectDescriptionEditable"
+        <div class="text flex-grow-2" [attr.contenteditable]="projectDescriptionEditable"
              (blur)="onProjectDescriptionBlur(projectDescription.textContent)"
              #projectDescription>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
@@ -80,29 +80,3 @@
     <div class="col"></div>
   </div>
 </div>
-
-<ng-template #modal>
-  <div class="modal-header bg-danger text-white rounded-top">
-    <h5 class="modal-title"
-        i18n="@@project.delete.dialog.title">Delete Project?</h5>
-    <button type="button" class="close" aria-label="Close" (click)="deleteConfirm.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <p i18n="@@project.delete.dialog.body">Deleting an project will permanently remove it. All projects stored
-      inside the project will be lost.</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button"
-            class="btn btn-secondary"
-            (click)="deleteConfirm.hide()"
-            i18n="@@project.delete.dialog.button.no">No, Keep Project
-    </button>
-    <button type="button"
-            class="btn btn-danger"
-            (click)="deleteConfirm.hide(); onDelete()"
-            i18n="@@project.delete.dialog.button.yes">Yes, Delete Project
-    </button>
-  </div>
-</ng-template>

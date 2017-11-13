@@ -53,7 +53,7 @@
        i18n-title="@@header.collection.remove"
        title="Remove collection"
        *ngIf="collection"
-       (click)="confirmDeletion(modal)"></i>
+       (click)="confirmDeletion()"></i>
   </div>
 
   <div class="description d-flex py-3">
@@ -61,7 +61,7 @@
       <i class="fas fa fa-pencil edit"
          (click)="onCollectionDescriptionEdit()"></i>
     </div>
-    <div class="text flex-grow"
+    <div class="text flex-grow-2"
          [attr.contenteditable]="collectionDescriptionEditable"
          (blur)="updateCollection()">
       {{ collection.description }}
@@ -108,28 +108,3 @@
 <div class="container-fluid my-4">
   <router-outlet *ngIf="collection"></router-outlet>
 </div>
-
-<!-- modal -->
-<ng-template #modal>
-  <div class="modal-header bg-danger text-white rounded-top">
-    <h5 class="modal-title" i18n="@@collection.delete.dialog.title">Delete Collection?</h5>
-    <button type="button" class="close" aria-label="Close" (click)="deleteConfirm.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <p i18n="@@collection.delete.dialog.body">Deleting a collection will permanently remove it from this project. All documents stored inside the collection will be lost.</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button"
-            class="btn btn-secondary"
-            (click)="deleteConfirm.hide()"
-            i18n="@@collection.delete.dialog.button.no">No, Keep Collection
-    </button>
-    <button type="button"
-            class="btn btn-danger"
-            (click)="deleteConfirm.hide(); removeCollection()"
-            i18n="@@collection.delete.dialog.button.yes">Yes, Delete Collection
-    </button>
-  </div>
-</ng-template>

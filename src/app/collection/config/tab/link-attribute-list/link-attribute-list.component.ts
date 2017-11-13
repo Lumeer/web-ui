@@ -85,13 +85,13 @@ export class LinkAttributeListComponent {
           linkType => {
             this.linkType = linkType;
           },
-          error => this.notificationService.error('Adding attribute failed', 'Error')
+          error => this.notificationService.error('Adding attribute failed')
         );
 
       this.newAttributeName = '';
 
     } else {
-      this.notificationService.info('You need to use attribute from selection to create a link', 'Oops');
+      this.notificationService.info('You need to use attribute from selection to create a link');
     }
 
   }
@@ -114,7 +114,7 @@ export class LinkAttributeListComponent {
         linkType => {
           this.linkType = linkType;
         },
-        error => this.notificationService.error('Removing attribute failed', 'Error')
+        error => this.notificationService.error('Removing attribute failed')
       );
   }
 

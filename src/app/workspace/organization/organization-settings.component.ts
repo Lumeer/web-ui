@@ -17,16 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ViewChild, ElementRef, TemplateRef} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {HttpResponse} from '@angular/common/http';
-
-import {SnotifyService} from 'ng-snotify';
 
 import {Organization} from '../../core/dto/organization';
 import {OrganizationService} from '../../core/rest/organization.service';
 import {ProjectService} from '../../core/rest/project.service';
 import {Project} from '../../core/dto/project';
+import {NotificationService} from '../../notifications/notification.service';
 
 @Component({
   templateUrl: './organization-settings.component.html',
@@ -48,7 +47,7 @@ export class OrganizationSettingsComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               private projectService: ProjectService,
-              private notificationService: SnotifyService) {
+              private notificationService: NotificationService) {
   }
 
   public ngOnInit(): void {
@@ -60,7 +59,7 @@ export class OrganizationSettingsComponent implements OnInit {
         }
       },
       error => {
-        this.notificationService.error('Error loading organization', 'Error');
+        this.notificationService.error('Error loading organization');
       }
     );
   }
@@ -74,16 +73,16 @@ export class OrganizationSettingsComponent implements OnInit {
           this.originalOrganizationName = this.organization.name;
         },
         error => {
-          this.notificationService.error('Error getting the organization', 'Error');
+          this.notificationService.error('Error getting the organization');
         }
       );
   }
 
   public updateOrganization(): void {
     this.organizationService.editOrganization(this.organizationCode, this.organization)
-      .subscribe(success => this.notificationService.success('Organization was successfully updated', 'Success'),
+      .subscribe(success => this.notificationService.success('Organization was successfully updated'),
         error => {
-          this.notificationService.error('Error updating organization', 'Error');
+          this.notificationService.error('Error updating organization');
         });
   }
 
@@ -93,11 +92,11 @@ export class OrganizationSettingsComponent implements OnInit {
     }
     this.organizationService.editOrganization(this.organizationCode, this.organization)
       .subscribe(success => {
-          this.notificationService.success('Organization\'s name was successfully updated', 'Success');
+          this.notificationService.success('Organization\'s name was successfully updated');
           this.originalOrganizationName = this.organization.name;
         },
         error => {
-          this.notificationService.error('Error updating organization', 'Error');
+          this.notificationService.error('Error updating organization');
         });
   }
 
@@ -107,13 +106,13 @@ export class OrganizationSettingsComponent implements OnInit {
     }
     this.organizationService.editOrganization(this.originalOrganizationCode, this.organization)
       .subscribe((response: HttpResponse<Object>) => {
-          this.notificationService.success( 'Organization\'s code was successfully updated', 'Success');
+          this.notificationService.success( 'Organization\'s code was successfully updated');
           this.originalOrganizationCode = this.organization.code;
           this.organizationCode = this.organization.code;
           this.router.navigate(['/organization', this.organization.code]);
         },
         error => {
-          this.notificationService.error('Error editing the organization', 'Error');
+          this.notificationService.error('Error editing the organization');
         }
       );
   }
@@ -127,7 +126,7 @@ export class OrganizationSettingsComponent implements OnInit {
       .subscribe(
         text => this.goBack(),
         error => {
-          this.notificationService.error('An error occurred during deletion of the organization', 'Error');
+          this.notificationService.error('An error occurred during deletion of the organization');
         }
       );
   }
@@ -155,7 +154,15 @@ export class OrganizationSettingsComponent implements OnInit {
     return !(this.organization.code === '' && this.organization.name === '' && this.organization.icon === '' && this.organization.color === '');
   }
 
-  public confirmDeletion(modal: TemplateRef<any>): void {
-    this.deleteConfirm = this.modalService.show(modal);
+  public confirmDeletion(): void {
+    this.notificationService.confirm(
+      'Deleting an organization will permanently remove it.',
+      'Delete Organization?',
+      [
+        {text: 'Yes', action: () => this.onDelete(), bold: false},
+        {text: 'No'}
+      ]
+    );
   }
+
 }

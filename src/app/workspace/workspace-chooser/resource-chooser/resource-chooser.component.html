@@ -34,7 +34,7 @@
                 <i class="fas fa fa-cog settings" *ngIf="hasManageRole(resource)"
                    (click)="onResourceSettings(ix); $event.stopPropagation()"
                    [style.opacity]="ix === resourceActiveIx ? 1 : 0"></i>
-                <i class="fas fa-3x {{resource.icon}}" aria-hidden="true"></i>
+                <i class="fa-3x {{resource.icon}}" aria-hidden="true"></i>
                 <div class="card-title code">{{resource.code}}</div>
                 <div class="card-subtitle name">{{resource.name}}</div>
               </div>

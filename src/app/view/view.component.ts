@@ -19,6 +19,7 @@
 
 import {Component, ComponentFactoryResolver, ComponentRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+
 import {PerspectiveDirective} from './perspectives/perspective.directive';
 import {Query} from '../core/dto/query';
 import {Perspective, PERSPECTIVES} from './perspectives/perspective';
@@ -27,8 +28,9 @@ import {Observable} from 'rxjs/Observable';
 import {QueryConverter} from '../shared/utils/query-converter';
 import {ViewService} from '../core/rest/view.service';
 import {View} from '../core/dto/view';
-import {NotificationsService} from 'angular2-notifications';
 import {WorkspaceService} from '../core/workspace.service';
+import {NotificationService} from 'app/notifications/notification.service';
+import 'rxjs/add/observable/combineLatest';
 
 @Component({
   templateUrl: './view.component.html'
@@ -44,7 +46,7 @@ export class ViewComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
               private componentFactoryResolver: ComponentFactoryResolver,
-              private notificationService: NotificationsService,
+              private notificationService: NotificationService,
               private router: Router,
               private viewService: ViewService,
               private workspaceService: WorkspaceService) {
@@ -111,13 +113,13 @@ export class ViewComponent implements OnInit {
   private createView() {
     this.viewService.createView(this.view).subscribe((code: string) => {
       this.router.navigate(['w', this.workspaceService.organizationCode, this.workspaceService.projectCode, 'view', code]);
-      this.notificationService.success('View created', 'View has been successfully created');
+      this.notificationService.success('View has been created');
     });
   }
 
   private updateView() {
     this.viewService.updateView(this.view.code, this.view).subscribe(() => {
-      this.notificationService.success('View updated', 'View has been successfully updated');
+      this.notificationService.success('View has been updated');
     });
   }
 

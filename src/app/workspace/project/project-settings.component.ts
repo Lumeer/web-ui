@@ -17,16 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, OnInit, ViewChild, TemplateRef} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {HttpResponse} from '@angular/common/http';
-
-import {SnotifyService} from 'ng-snotify';
 
 import {Project} from '../../core/dto/project';
 import {ProjectService} from '../../core/rest/project.service';
 import {CollectionService} from '../../core/rest/collection.service';
 import {Collection} from '../../core/dto/collection';
+import {NotificationService} from '../../notifications/notification.service';
 
 @Component({
   templateUrl: './project-settings.component.html',
@@ -50,7 +49,7 @@ export class ProjectSettingsComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               private collectionService: CollectionService,
-              private notificationService: SnotifyService) {
+              private notificationService: NotificationService) {
   }
 
   public ngOnInit(): void {
@@ -79,7 +78,7 @@ export class ProjectSettingsComponent implements OnInit {
           this.originalProjectName = this.project.name;
         },
         error => {
-          this.notificationService.error('Error getting project', 'Error');
+          this.notificationService.error('Error getting project');
         }
       )
     ;
@@ -87,9 +86,9 @@ export class ProjectSettingsComponent implements OnInit {
 
   public updateProject(): void {
     this.projectService.editProject(this.organizationCode, this.projectCode, this.project).subscribe(
-      success => this.notificationService.success('Project was successfully updated', 'Success'),
+      success => this.notificationService.success('Project was successfully updated'),
       error => {
-        this.notificationService.error('Error updating project', 'Error');
+        this.notificationService.error('Error updating project');
       });
   }
 
@@ -99,11 +98,11 @@ export class ProjectSettingsComponent implements OnInit {
     }
     this.projectService.editProject(this.organizationCode, this.projectCode, this.project)
       .subscribe(success => {
-          this.notificationService.success('Project\'s name was successfully updated', 'Success');
+          this.notificationService.success('Project\'s name was successfully updated');
           this.originalProjectName = this.project.name;
         },
         error => {
-          this.notificationService.error('Error updating project', 'Error');
+          this.notificationService.error('Error updating project');
         });
   }
 
@@ -113,13 +112,13 @@ export class ProjectSettingsComponent implements OnInit {
     }
     this.projectService.editProject(this.organizationCode, this.originalProjectCode, this.project).subscribe(
       (response: HttpResponse<Object>) => {
-        this.notificationService.success('Project\'s code was successfully updated', 'Success');
+        this.notificationService.success('Project\'s code was successfully updated');
         this.originalProjectCode = this.project.code;
         this.projectCode = this.project.code;
         this.router.navigate(['/organization', this.organizationCode, 'project', this.project.code]);
       },
       error => {
-        this.notificationService.error('Error updating project\'s code', 'Error');
+        this.notificationService.error('Error updating project\'s code');
       }
     );
   }
@@ -133,7 +132,7 @@ export class ProjectSettingsComponent implements OnInit {
       .subscribe(
         text => this.goBack(),
         error => {
-          this.notificationService.error('An error occurred during deletion of the organization', 'Error');
+          this.notificationService.error('An error occurred during deletion of the organization');
         }
       );
   }
@@ -162,7 +161,14 @@ export class ProjectSettingsComponent implements OnInit {
     return !(this.project.code === '' && this.project.name === '' && this.project.icon === '' && this.project.color === '');
   }
 
-  public confirmDeletion(modal: TemplateRef<any>): void {
-    this.deleteConfirm = this.modalService.show(modal);
+  public confirmDeletion(): void {
+    this.notificationService.confirm(
+      'Deleting an project will permanently remove it.',
+      'Delete Project?',
+      [
+        {text: 'Yes', action: () => this.onDelete(), bold: false},
+        {text: 'No'}
+      ]
+    );
   }
 }

@@ -20,8 +20,6 @@
 import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {SnotifyService} from 'ng-snotify';
-
 import {COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../constants';
 import {Collection} from '../../../../core/dto/collection';
 import {CollectionTabComponent} from '../collection-tab.component';
@@ -31,6 +29,7 @@ import {CollectionService} from '../../../../core/rest/collection.service';
 import {WorkspaceService} from '../../../../core/workspace.service';
 import {LinkedAttribute} from '../../../../core/dto/linked-attribute';
 import {CollectionSelectService} from '../../../service/collection-select.service';
+import {NotificationService} from '../../../../notifications/notification.service';
 import {switchMap, tap} from 'rxjs/operators';
 
 @Component({
@@ -56,7 +55,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
               protected collectionService: CollectionService,
               protected collectionSelectService: CollectionSelectService,
               protected route: ActivatedRoute,
-              protected notificationService: SnotifyService,
+              protected notificationService: NotificationService,
               protected workspaceService: WorkspaceService) {
     super(
       collectionService,
@@ -85,7 +84,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     this.collectionService.getCollections()
       .subscribe(
         collections => collections.forEach(collection => this.collections[collection.code] = collection),
-        error => this.notificationService.error('Failed fetching collections', 'Error')
+        error => this.notificationService.error('Failed fetching collections')
       );
   }
 
@@ -134,7 +133,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
           this.linkTypes = linkTypes;
         },
-        error => this.notificationService.error('Failed fetching Link Types', 'Error')
+        error => this.notificationService.error('Failed fetching Link Types')
       );
   }
 
@@ -208,7 +207,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
           this.linkTypes.push(linkType);
           setTimeout(() => this.linkTypeNameInput.last.nativeElement.focus());
         },
-        error => this.notificationService.error('Failed creating link type', 'Error')
+        error => this.notificationService.error('Failed creating link type')
       );
   }
 
@@ -219,7 +218,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
           this.linkTypes[index] = linkType;
           this.initialName[linkType.toCollection] = linkType.name;
         },
-        error => this.notificationService.error('Failed updating link type', 'Error')
+        error => this.notificationService.error('Failed updating link type')
       );
   }
 
@@ -227,7 +226,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     this.linkTypeService.removeLinkTypeDeprecated(this.collection.code, linkType)
       .subscribe(
         () => this.linkTypes.splice(idx, 1),
-        error => this.notificationService.error('Failed removing link type', 'Error')
+        error => this.notificationService.error('Failed removing link type')
       );
   }
 

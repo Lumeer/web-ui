@@ -18,13 +18,10 @@
  */
 
 import {Router} from '@angular/router';
-import {Component, EventEmitter, Input, Output, TemplateRef} from '@angular/core';
-
-import {SnotifyService} from 'ng-snotify';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {PERSPECTIVES} from '../perspectives/perspective';
 import {View} from '../../core/dto/view';
-import {ViewService} from '../../core/rest/view.service';
 import {WorkspaceService} from '../../core/workspace.service';
 import {PerspectiveChoice} from '../perspectives/perspective-choice';
 import {QueryConverter} from '../../shared/utils/query-converter';
@@ -42,8 +39,7 @@ export class ViewControlsComponent {
   @Output()
   public save = new EventEmitter();
 
-  constructor(private notificationService: SnotifyService,
-              private router: Router,
+  constructor(private router: Router,
               private workspaceService: WorkspaceService) {
   }
 
@@ -73,14 +69,6 @@ export class ViewControlsComponent {
         perspective: this.view.perspective
       }
     }); // TODO transfer config somehow
-  }
-
-  public showShareDialog(modal: TemplateRef<any>) {
-    this.shareDialog = this.modalService.show(modal);
-  }
-
-  public onCloseShareDialog() {
-    this.shareDialog.hide();
   }
 
   public get perspectives(): PerspectiveChoice[] {

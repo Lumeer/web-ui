@@ -1,48 +1,54 @@
-<div class="modal-header bg-success text-white rounded-top">
-  <h5 class="modal-title" i18n="@@view.share.dialog.title">Share View</h5>
-  <button type="button" class="close" aria-label="Close" (click)="close()">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-<div class="modal-body">
-  <div class="d-flex flex-wrap w-100 pb-1 pr-1">
-    <div class="email py-1 px-2 mt-1 ml-1"
-         *ngFor="let email of emails">
-      {{email}}
-    </div>
-
-    <div class="dropdown" *ngIf="text && suggestions.length > 0">
-      <div class="dropdown-menu show suggestions">
-        <div class="dropdown-item"
-             *ngFor="let suggestion of suggestions"
-             (click)="onSuggestionClick(suggestion)">
-          {{suggestion}}
-        </div>
+<div class="modal fade" id="shareDialogModal" tabindex="-1" role="dialog" aria-labelledby="shareDialogModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white rounded-top">
+        <h5 class="modal-title" i18n="@@view.share.dialog.title">Share View</h5>
+        <button type="button" class="close" aria-label="Close" (click)="close()">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-    </div>
+      <div class="modal-body">
+        <div class="d-flex flex-wrap w-100 pb-1 pr-1">
+          <div class="email py-1 px-2 mt-1 ml-1"
+               *ngFor="let email of emails">
+            {{email}}
+          </div>
 
-    <!-- TODO remove once Angular supports ICU messages in attributes -->
-    <div hidden>
+          <div class="dropdown" *ngIf="text && suggestions.length > 0">
+            <div class="dropdown-menu show suggestions">
+              <div class="dropdown-item"
+                   *ngFor="let suggestion of suggestions"
+                   (click)="onSuggestionClick(suggestion)">
+                {{suggestion}}
+              </div>
+            </div>
+          </div>
+
+          <!-- TODO remove once Angular supports ICU messages in attributes -->
+          <div hidden>
       <span #inputPlaceholder i18n="@@view.share.dialog.input.placeholder">
         {emails.length, select, 0 {Enter user emails...} other {}}
       </span>
-    </div>
+          </div>
 
-    <input class="border-0 flex-grow-2 no-outline py-1 px-2 mt-1 ml-1"
-           [(ngModel)]="text"
-           (keydown)="onKeyDown($event)"
-           (keyup)="onKeyUp($event)"
-           (focus)="suggest()"
-           [placeholder]="removeHtmlComments(inputPlaceholder)"/>
+          <input class="border-0 flex-grow-2 no-outline py-1 px-2 mt-1 ml-1"
+                 [(ngModel)]="text"
+                 (keydown)="onKeyDown($event)"
+                 (keyup)="onKeyUp($event)"
+                 (focus)="suggest()"
+                 [placeholder]="removeHtmlComments(inputPlaceholder)"/>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+                i18n="@@view.share.dialog.button.close">Close</button>
+        <button type="button"
+                class="btn btn-success"
+                (click)="share()"
+                i18n="@@view.share.dialog.button.share">Share</button>
+      </div>
+    </div>
   </div>
-</div>
-<div class="modal-footer">
-  <button type="button"
-          class="btn btn-secondary"
-          (click)="close()"
-          i18n="@@view.share.dialog.button.close">Close</button>
-  <button type="button"
-          class="btn btn-success"
-          (click)="share()"
-          i18n="@@view.share.dialog.button.share">Share</button>
 </div>

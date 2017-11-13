@@ -17,9 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren} from '@angular/core';
-
-import {SnotifyService} from 'ng-snotify';
+import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 
 import {PostItDocumentComponent} from './document/post-it-document.component';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
@@ -34,10 +32,11 @@ import {CollectionService} from '../../../core/rest/collection.service';
 import {Document} from '../../../core/dto/document';
 import {Permission} from 'app/core/dto/permission';
 import {Role} from '../../../shared/permissions/role';
+import {NotificationService} from '../../../notifications/notification.service';
 import {PerspectiveComponent} from '../perspective.component';
+import {Perspective} from '../perspective';
 import {isNullOrUndefined} from 'util';
 import {finalize} from 'rxjs/operators';
-import {Perspective} from '../perspective';
 
 @Component({
   selector: 'post-it-perspective',
@@ -70,8 +69,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   @ViewChildren(PostItDocumentComponent)
   public documentComponents: QueryList<PostItDocumentComponent>;
 
-  public postItToDelete: DocumentData;
-
   public postIts: DocumentData[] = [];
 
   private layout: PostItLayout;
@@ -87,7 +84,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   constructor(private collectionService: CollectionService,
               private documentService: DocumentService,
               private searchService: SearchService,
-              private notificationService: SnotifyService,
+              private notificationService: NotificationService,
               private zone: NgZone) {
   }
 
@@ -321,7 +318,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
         postIt.document.id = id;
         this.refreshDocument(postIt);
-        this.notificationService.success('Document Created', 'Success');
+        this.notificationService.success('Document Created');
       },
       error => {
         this.handleError(error, 'Failed creating document');
@@ -340,17 +337,12 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
         });
   }
 
-  public confirmDeletion(postIt: DocumentData, modal: TemplateRef<any>): void {
-    this.postItToDelete = postIt;
-    this.deleteConfirm = this.modalService.show(modal);
-  }
-
   public removeDocument(postIt: DocumentData): void {
     if (postIt.initialized) {
       this.documentService.removeDocument(postIt.document)
         .subscribe(
           response => {
-            this.notificationService.success('Document removed', 'Success');
+            this.notificationService.success('Document removed');
           },
           error => {
             this.handleError(error, 'Failed removing document');
@@ -367,6 +359,13 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
     }
   }
 
+  public confirmDeletion(postIt: DocumentData): void {
+    this.notificationService.confirm('Are you sure you want to remove the document?', 'Delete?', [
+      {text: 'Yes', action: () => this.removeDocument(postIt), bold: false},
+      {text: 'No'}
+    ]);
+  }
+
   public hasWriteRole(collection: Collection): boolean {
     return this.hasRole(collection, Role.Write);
   }
@@ -377,7 +376,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   }
 
   private handleError(error: Error, message?: string): void {
-    this.notificationService.error(message ? message : error.message, 'Error');
+    this.notificationService.error(message ? message : error.message);
   }
 
   public showMore(perspective: HTMLDivElement): void {

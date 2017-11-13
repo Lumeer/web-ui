@@ -17,10 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, TemplateRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-
-import {SnotifyService} from 'ng-snotify';
 
 import {Collection} from '../../core/dto/collection';
 import {CollectionService} from '../../core/rest/collection.service';
@@ -30,6 +28,7 @@ import {Permission} from '../../core/dto/permission';
 import {QueryConverter} from '../../shared/utils/query-converter';
 import {Query} from '../../core/dto/query';
 import {CollectionSelectService} from '../service/collection-select.service';
+import {NotificationService} from '../../notifications/notification.service';
 import {combineLatest, map, switchMap, tap} from 'rxjs/operators';
 
 @Component({
@@ -48,7 +47,7 @@ export class CollectionConfigComponent implements OnInit {
   constructor(private collectionService: CollectionService,
               private collectionSelectService: CollectionSelectService,
               private route: ActivatedRoute,
-              private notificationService: SnotifyService,
+              private notificationService: NotificationService,
               private workspaceService: WorkspaceService,
               private router: Router) {
   }
@@ -60,7 +59,7 @@ export class CollectionConfigComponent implements OnInit {
       tap(collection => this.collection = collection)
     ).subscribe(
       collection => this.initialCollectionCode = collection.code,
-      error => this.notificationService.error('Failed fetching collection', 'Error')
+      error => this.notificationService.error('Failed fetching collection')
     );
   }
 
@@ -69,7 +68,7 @@ export class CollectionConfigComponent implements OnInit {
       switchMap(collection => this.collectionSelectService.selectCollection(collection))
     ).subscribe(
       collection => this.initialCollectionCode = collection.code,
-      error => this.notificationService.error('Failed updating collection', 'Error')
+      error => this.notificationService.error('Failed updating collection')
     );
   }
 
@@ -83,15 +82,22 @@ export class CollectionConfigComponent implements OnInit {
       switchMap(segments => this.router.navigate(segments))
     ).subscribe(
       _ => null,
-      error => this.notificationService.error('Failed updating collection code', 'Error')
+      error => this.notificationService.error('Failed updating collection code')
     );
   }
 
   public removeCollection(): void {
     this.collectionService.removeCollection(this.collection.code).subscribe(
-      _ => this.goToCollectionsPage(),
-      error => this.notificationService.error('Failed removing collection', 'Error')
+      () => this.goToCollectionsPage(),
+      error => this.notificationService.error('Failed removing collection')
     );
+  }
+
+  public confirmDeletion(): void {
+    this.notificationService.confirm('Are you sure you want to remove the collection?', 'Delete?', [
+      {text: 'Yes', action: () => this.removeCollection(), bold: false},
+      {text: 'No'}
+    ]);
   }
 
   public hasManageRole(collection: Collection): boolean {
@@ -105,10 +111,6 @@ export class CollectionConfigComponent implements OnInit {
 
   public goToCollectionsPage(): void {
     this.router.navigate([this.workspacePath(), 'collections']);
-  }
-
-  public confirmDeletion(modal: TemplateRef<any>): void {
-    this.deleteConfirm = this.modalService.show(modal);
   }
 
   public documentsQuery(collectionCode: string): string {

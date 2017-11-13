@@ -19,9 +19,8 @@
 
 import {ErrorHandler, Injectable} from '@angular/core';
 
-import {SnotifyService} from 'ng-snotify';
-
 import {LumeerError} from './lumeer.error';
+import {NotificationService} from '../../notifications/notification.service';
 
 /**
  * This class provides handling unexpecting errors
@@ -29,12 +28,12 @@ import {LumeerError} from './lumeer.error';
 @Injectable()
 export class LumeerErrorHandler implements ErrorHandler {
 
-  constructor(private notificationService: SnotifyService) {
+  constructor(private notificationService: NotificationService) {
   }
 
   public handleError(error: LumeerError): void {
     console.error(error);
-    this.notificationService.error(error.message, 'Error');
+    this.notificationService.error(error.message);
   }
 
 }

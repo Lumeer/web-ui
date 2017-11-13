@@ -20,11 +20,10 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 
-import {SnotifyService} from 'ng-snotify';
-
 import {Project} from '../../../core/dto/project';
 import {WorkspaceService} from '../../../core/workspace.service';
 import {ProjectService} from '../../../core/rest/project.service';
+import {NotificationService} from '../../../notifications/notification.service';
 
 @Component({
   selector: 'project-form',
@@ -42,7 +41,7 @@ export class ProjectFormComponent implements OnInit {
               private workspaceService: WorkspaceService,
               private route: ActivatedRoute,
               private router: Router,
-              private notificationsService: SnotifyService) {
+              private notificationsService: NotificationService) {
   }
 
   public ngOnInit(): void {
@@ -75,7 +74,7 @@ export class ProjectFormComponent implements OnInit {
     this.projectService.getProject(this.organizationCode, this.projectCode)
       .subscribe(
         (project: Project) => this.project = project,
-        error => this.notificationsService.error('Error getting the project', 'Error')
+        error => this.notificationsService.error('Error getting the project')
       );
   }
 
@@ -93,7 +92,7 @@ export class ProjectFormComponent implements OnInit {
     this.projectService.createProject(this.organizationCode, this.project)
       .subscribe(
         response => this.goBack(),
-        error => this.notificationsService.error('Error creating the project', 'Error')
+        error => this.notificationsService.error('Error creating the project')
       );
   }
 
@@ -106,7 +105,7 @@ export class ProjectFormComponent implements OnInit {
           }
           this.goBack();
         },
-        error => this.notificationsService.error('Error updating the project', 'Error')
+        error => this.notificationsService.error('Error updating the project')
       );
   }
 
@@ -118,7 +117,7 @@ export class ProjectFormComponent implements OnInit {
     this.projectService.deleteProject(this.organizationCode, this.projectCode)
       .subscribe(
         response => this.goBack(),
-        error => this.notificationsService.error('Error deleting the organization', 'Error')
+        error => this.notificationsService.error('Error deleting the organization')
       );
   }
 

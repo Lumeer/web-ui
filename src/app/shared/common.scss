@@ -32,3 +32,19 @@ ul {
 input {
   background: transparent;
 }
+
+.snotify-success, .snotify-confirm, .snotify-prompt {
+  background-color: $success;
+}
+
+.snotify-info, .snotify-async  {
+  background-color: $info;
+}
+
+.snotify-warning {
+  background-color: $warning;
+}
+
+.snotify-error {
+  background-color: $danger;
+}

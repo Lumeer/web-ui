@@ -31,7 +31,8 @@
     }
   ],
   "styles": [
-    "../node_modules/ng-snotify/styles/material.css"
+    "../node_modules/ng-snotify/styles/material.css",
+    "styles.css"
   ],
   "e2e": {
     "protractor": {

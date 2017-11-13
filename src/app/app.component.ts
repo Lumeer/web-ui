@@ -24,6 +24,7 @@ import {SnotifyPosition, SnotifyService} from 'ng-snotify';
 
 import {WorkspaceService} from './core/workspace.service';
 import {RouteFinder} from './shared/utils/route-finder';
+import {filter, map, mergeMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app',
@@ -45,13 +46,13 @@ export class AppComponent implements OnInit {
   }
 
   private processPathParams() {
-    this.router.events
-      .filter(event => event instanceof NavigationEnd)
-      .map(() => this.activatedRoute)
-      .map(route => RouteFinder.getFirstChildRouteWithParams(route))
-      .filter(route => route.outlet === 'primary')
-      .mergeMap(route => route.paramMap)
-      .subscribe((params: ParamMap) => this.setWorkspace(params));
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(() => this.activatedRoute),
+      map(route => RouteFinder.getFirstChildRouteWithParams(route)),
+      filter(route => route.outlet === 'primary'),
+      mergeMap(route => route.paramMap),
+    ).subscribe((params: ParamMap) => this.setWorkspace(params));
   }
 
   private setWorkspace(params: ParamMap) {
@@ -64,9 +65,13 @@ export class AppComponent implements OnInit {
   public setNotificationStyle(): void {
     this.notificationService.setDefaults({
       toast: {
-        pauseOnHover: false,
+        titleMaxLength: 15,
+        backdrop: -1,
+        position: SnotifyPosition.leftTop,
+        timeout: 3000,
         showProgressBar: false,
-        position: SnotifyPosition.leftTop
+        closeOnClick: true,
+        pauseOnHover: false
       }
     });
   }

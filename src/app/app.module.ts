@@ -31,6 +31,7 @@ import {CollectionModule} from './collection/collection.module';
 import {DocumentsModule} from './documents/documents.module';
 import {ViewModule} from './view/view.module';
 import {ContextMenuModule} from 'ngx-contextmenu';
+import {NotificationService} from './notifications/notification.service';
 
 @NgModule({
   imports: [
@@ -47,7 +48,8 @@ import {ContextMenuModule} from 'ngx-contextmenu';
   ],
   providers: [
     { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
-    SnotifyService
+    SnotifyService,
+    NotificationService
   ],
   declarations: [
     AppComponent

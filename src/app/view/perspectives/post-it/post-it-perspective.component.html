@@ -14,7 +14,7 @@
                         [attr.z-index]="postIt.selectedInput.documentIdx === postIt.index ? 50 : null"
                         [data]="postIt"
                         (selectOther)="selectDocument($event)"
-                        (removed)="confirmDeletion(postIt, modal)"
+                        (removed)="confirmDeletion(postIt)"
                         (changes)="sendUpdate(postIt)">
       </post-it-document>
     </ng-container>
@@ -37,28 +37,3 @@
   Show More
   <i class="fa fa-chevron-down"></i>
 </a>
-
-<!-- modal -->
-<ng-template #modal>
-  <div class="modal-header bg-danger text-white rounded-top">
-    <h5 class="modal-title" i18n="@@document.delete.dialog.title">Delete Document?</h5>
-    <button type="button" class="close" aria-label="Close" (click)="deleteConfirm.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <p i18n="@@document.delete.dialog.body">Deleting a document will permanently remove it from this collection.</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button"
-            class="btn btn-secondary"
-            (click)="deleteConfirm.hide()"
-            i18n="@@document.delete.dialog.button.no">No, Keep Document
-    </button>
-    <button type="button"
-            class="btn btn-danger"
-            (click)="deleteConfirm.hide(); removeDocument(postItToDelete)"
-            i18n="@@document.delete.dialog.button.yes">Yes, Delete Document
-    </button>
-  </div>
-</ng-template>

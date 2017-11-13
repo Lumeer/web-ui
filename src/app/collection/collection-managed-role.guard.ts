@@ -23,6 +23,7 @@ import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular
 import {CollectionService} from '../core/rest/collection.service';
 import {Role} from '../shared/permissions/role';
 import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class CollectionManageRoleGuard implements CanActivate {
@@ -36,8 +37,7 @@ export class CollectionManageRoleGuard implements CanActivate {
     const hasMangeRole = collection => collection.permissions && collection.permissions.users
       .some(permission => permission.roles.includes(Role.Manage));
 
-    return this.collectionService.getCollection(collectionCode)
-      .map(hasMangeRole);
+    return this.collectionService.getCollection(collectionCode).pipe(map(hasMangeRole));
   }
 
 }

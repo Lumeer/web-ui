@@ -20,14 +20,13 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
-import {SnotifyService} from 'ng-snotify';
-
 import {CollectionTabComponent} from '../collection-tab.component';
 import {EventsService} from '../../../../core/rest/events.service';
 import {WorkspaceService} from '../../../../core/workspace.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Event} from '../../../../core/dto/Event';
 import {CollectionSelectService} from '../../../service/collection-select.service';
+import {NotificationService} from '../../../../notifications/notification.service';
 
 @Component({
   selector: 'collection-events',
@@ -42,7 +41,7 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
               protected collectionService: CollectionService,
               protected collectionSelectService: CollectionSelectService,
               protected route: ActivatedRoute,
-              protected notificationService: SnotifyService,
+              protected notificationService: NotificationService,
               protected workspaceService: WorkspaceService) {
     super(
       collectionService,
@@ -62,7 +61,7 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
     this.eventsService.getEvents(this.collection.code)
       .subscribe(
         events => this.events = events,
-        error => this.notificationService.error('Failed fetching Events', 'Error')
+        error => this.notificationService.error('Failed fetching Events')
       );
   }
 
