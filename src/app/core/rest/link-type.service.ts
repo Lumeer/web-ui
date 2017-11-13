@@ -69,10 +69,10 @@ export class LinkTypeService {
     return Observable.of({});
   }
 
-  public getLinkTypeById(id: string): Observable<LinkType> {
+  public getLinkTypeById(id: string): LinkType {
     const linkTypes = LocalStorage.get(LINK_TYPES) || {};
 
-    return Observable.of(linkTypes[id]);
+    return linkTypes[id];
   }
 
   public getLinkTypesByCollections(...collectionCodes: string[]): Observable<LinkType[]> {

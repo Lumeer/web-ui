@@ -35,13 +35,13 @@ export class LinkQueryItem implements QueryItem {
   public icon2: string;
   public color2: string;
 
-  public constructor(linkType: LinkType, collection1: Collection, collection2: Collection) {
+  public constructor(linkType: LinkType) {
     this.id = linkType.id;
     this.name = linkType.name;
-    this.icon = collection1.icon;
-    this.color = collection1.color;
-    this.icon2 = collection2.icon;
-    this.color2 = collection2.color;
+    this.icon = linkType.from.icon;
+    this.color = linkType.from.color;
+    this.icon2 = linkType.to.icon;
+    this.color2 = linkType.to.color;
   }
 
   public get text(): string {

@@ -51,8 +51,8 @@ import {ConditionQueryItem} from './query-item/condition-query-item';
 import {SearchService} from '../../core/rest/search.service';
 import {SuggestionType} from '../../core/dto/suggestion-type';
 import {LinkType} from '../../core/dto/link-type';
-import {MOCK_COLLECTIONS, MOCK_LINK_TYPES} from '../../view/perspectives/table/mock-data';
 import {LinkQueryItem} from './query-item/link-query-item';
+import {LinkTypeService} from '../../core/rest/link-type.service';
 
 @Component({
   selector: 'search-box',
@@ -86,6 +86,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
               private searchService: SearchService,
               private viewService: ViewService,
               private workspaceService: WorkspaceService,
+              private linkTypeService: LinkTypeService,
               private ref: ChangeDetectorRef) {
   }
 
@@ -139,6 +140,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
       startWith(''),
       debounceTime(300),
       switchMap(text => this.retrieveSuggestions(text)),
+      switchMap(suggestions => this.searchLinkTypes(suggestions)),
       switchMap(suggestions => this.convertSuggestionsToQueryItems(suggestions)),
       map(queryItems => this.filterUsedQueryItems(queryItems)),
       catchError(error => {
@@ -149,6 +151,18 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
       this.selectedSuggestion = -1;
       this.suggestionItems = items;
     });
+  }
+
+  private searchLinkTypes(suggestions: Suggestions): Observable<Suggestions> {
+    suggestions.links = [];
+    for (let link of this.linkTypeService.getLinkTypes()) {
+      console.log(link);
+      if (link.name.toLowerCase().startsWith(this.text)) {
+        suggestions.links.push(link);
+      }
+    }
+    console.log(suggestions);
+    return Observable.of(suggestions);
   }
 
   private retrieveSuggestions(text: string): Observable<Suggestions> {
@@ -185,17 +199,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   private createLinkQueryItems(links: LinkType[]): QueryItem[] {
-    let items: QueryItem[] = [];
-    for (let link of MOCK_LINK_TYPES) {
-      if (link.name.toLowerCase().startsWith(this.text)) {
-        const collection1: Collection = MOCK_COLLECTIONS.find(col => link.collectionCodes[0] === col.code);
-        const collection2: Collection = MOCK_COLLECTIONS.find(col => link.collectionCodes[1] === col.code);
-        if(collection1 && collection2){
-          items.push(new LinkQueryItem(link, collection1, collection2));
-        }
-      }
-    }
-    return items;
+    return links.map(link => new LinkQueryItem(link));
   }
 
   public onRemoveQueryItem(index: number) {
@@ -436,6 +440,14 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   public lightenColor(color: string): string {
     return color ? HtmlModifier.shadeColor(color, .5) : '#faeabb';
+  }
+
+  public background(queryItem: QueryItem): string {
+    if (queryItem.color && queryItem.color2) {
+      return `linear-gradient(${this.lightenColor(queryItem.color)},${this.lightenColor(queryItem.color2)})`;
+    } else {
+      return this.lightenColor(queryItem.color);
+    }
   }
 
 }
