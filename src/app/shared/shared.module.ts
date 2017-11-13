@@ -30,6 +30,8 @@ import {RouterModule} from '@angular/router';
 import {HighlightPipe} from './highlight.pipe';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 import {SliderComponent} from './slider/slider.component';
+import {CommentsComponent} from './comments/comments.component';
+import {LinksComponent} from './links/links.component';
 
 @NgModule({
   imports: [
@@ -45,7 +47,9 @@ import {SliderComponent} from './slider/slider.component';
     PermissionsTableComponent,
     PostItCollectionsComponent,
     SearchBoxComponent,
-    SliderComponent
+    SliderComponent,
+    CommentsComponent,
+    LinksComponent
   ],
   exports: [
     CommonModule,
@@ -55,7 +59,9 @@ import {SliderComponent} from './slider/slider.component';
     PermissionsComponent,
     PostItCollectionsComponent,
     SearchBoxComponent,
-    SliderComponent
+    SliderComponent,
+    CommentsComponent,
+    LinksComponent
   ]
 })
 export class SharedModule {

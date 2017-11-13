@@ -7,9 +7,9 @@ $margin-left: 20px;
   cursor: pointer;
 }
 
-
 .icon {
   cursor: pointer;
+  font-size: 12px;
 
   &:hover {
     color: $success !important;
@@ -18,5 +18,7 @@ $margin-left: 20px;
 
 .content {
   margin-left: $margin-left;
+
+  transition: all 0.5s;
 }
 

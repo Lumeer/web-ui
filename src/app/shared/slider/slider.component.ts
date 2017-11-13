@@ -34,9 +34,9 @@ export class SliderComponent implements OnInit {
   @Input() public defaultSize: SizeType;
   @Output() public newSize: EventEmitter<SizeType> = new EventEmitter();
 
-  public sizes: SizeType[] = [SizeType.XS, SizeType.S, SizeType.M, SizeType.L, SizeType.XL];
-  public componentWidth = 200;
-  public circleSize = 20;
+  public sizes: SizeType[] = [SizeType.S, SizeType.M, SizeType.L, SizeType.XL];
+  public componentWidth = 160;
+  public circleSize = 15;
   public circlePosition: number = 0;
   public step = this.componentWidth / this.sizes.length;
 
@@ -46,7 +46,7 @@ export class SliderComponent implements OnInit {
   }
 
   public onSliderClick(event) {
-    const position = event.clientX - this.slider.nativeElement.offsetLeft;
+    const position = event.clientX - this.offsetLeft();
     const index = Math.floor(position / this.step);
     const newCirclePosition = this.calculateSliderLeft(index);
     if (newCirclePosition != this.circlePosition) {
@@ -58,6 +58,17 @@ export class SliderComponent implements OnInit {
   private calculateSliderLeft(index: number) {
     const middleStart = this.step / 2 - this.circleSize / 2;
     return middleStart + index * this.step;
+  }
+
+  private offsetLeft(): number {
+    let offset = this.slider.nativeElement.offsetLeft;
+    let parent = this.slider.nativeElement.offsetParent;
+    while (parent) {
+      offset += parent.offsetLeft;
+      parent = parent.offsetParent;
+    }
+
+    return offset;
   }
 
 }

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {SizeType} from '../../../../shared/slider/size-type';
@@ -27,14 +27,15 @@ import {SearchDocument} from './search-document';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Collection} from '../../../../core/dto/collection';
 import {map, switchMap} from 'rxjs/operators';
+import {isArray, isObject} from 'util';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   templateUrl: './search-documents.component.html',
   styleUrls: ['./search-documents.component.scss']
 })
-export class SearchDocumentsComponent implements OnInit {
+export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
-  @ViewChild('xsTemplate') xsTempl: TemplateRef<any>;
   @ViewChild('sTemplate') sTempl: TemplateRef<any>;
   @ViewChild('mTemplate') mTempl: TemplateRef<any>;
   @ViewChild('lTemplate') lTempl: TemplateRef<any>;
@@ -42,6 +43,7 @@ export class SearchDocumentsComponent implements OnInit {
 
   public size: SizeType = SizeType.M;
   public documents: SearchDocument[] = [];
+  private routerSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private searchService: SearchService,
@@ -49,10 +51,16 @@ export class SearchDocumentsComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.route.queryParamMap.pipe(
+    this.routerSubscription = this.route.queryParamMap.pipe(
       map(paramMap => JSON.parse(paramMap.get('query'))),
       switchMap(query => this.searchService.searchDocuments(query)),
     ).subscribe(documents => this.initDocuments(documents));
+  }
+
+  public ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
   }
 
   public onSizeChange(newSize: SizeType) {
@@ -64,8 +72,6 @@ export class SearchDocumentsComponent implements OnInit {
       return this.xlTempl;
     }
     switch (this.size) {
-      case SizeType.XS:
-        return this.xsTempl;
       case SizeType.S:
         return this.sTempl;
       case SizeType.M:
@@ -77,6 +83,10 @@ export class SearchDocumentsComponent implements OnInit {
       default:
         return this.mTempl;
     }
+  }
+
+  public isXlTemplatePresented(): boolean {
+    return this.size === SizeType.XL;
   }
 
   private initDocuments(documents: Document[]) {
@@ -104,29 +114,106 @@ export class SearchDocumentsComponent implements OnInit {
     }
   }
 
-  public getDefaultAttribute(document: SearchDocument) {
+  public createDefaultAttributeHtml(document: SearchDocument): string {
     const data = document.document.data;
-    return Object.values(data)[0];
+    return this.valueHtml(Object.values(data)[0]);
   }
 
   public toggleDocument(document: SearchDocument) {
     document.opened = !document.opened;
   }
 
-  public onLinkClicked(document: SearchDocument) {
+  public onLinkClick(document: SearchDocument) {
     // TODO
   }
 
-  public onCommentClicked(document: SearchDocument) {
+  public onCommentClick(document: SearchDocument) {
     // TODO
   }
 
-  public onDetailClicked(document: SearchDocument) {
+  public onDetailClick(document: SearchDocument) {
     // TODO
   }
 
-  public getValues(document: SearchDocument): string[]{
-    return Object.values(document.document.data);
+  public createValuesHtml(document: SearchDocument): string {
+    const values: string[] = this.getValues(document);
+    let html = '';
+    for (let i = 0; i < values.length; i++) {
+      html += `<b>${values[i]}</b>`;
+      if (i != values.length - 1) {
+        html += ', ';
+      }
+    }
+    return html;
+  }
+
+  private getValues(document: SearchDocument): string[] {
+    return this.getValuesFromArray(Object.values(document.document.data));
+  }
+
+  private getValuesFromAny(value: any): string[] | string {
+    if (isArray(value)) {
+      return this.getValuesFromArray(value as any[]);
+    } else if (isObject(value)) {
+      return this.getValuesFromObject(value as Object)
+    } else {
+      return value as string;
+    }
+  }
+
+  private getValuesFromArray(array: any[]): string[] {
+    let values: string[] = [];
+    for (let value of array) {
+      values = values.concat(this.getValuesFromAny(value));
+    }
+    return values;
+  }
+
+  private getValuesFromObject(object: Object): string[] {
+    return this.getValuesFromArray(Object.values(object));
+  }
+
+  public createEntriesHtml(document: SearchDocument) {
+    return this.entriesHtml(this.getEntriesForObject(document.document.data));
+  }
+
+  private getEntriesForObject(object: any): { key: string, value: any }[] {
+    return Object.keys(object).map(key => {
+      return {key: key, value: object[key]}
+    });
+  }
+
+  private entriesHtml(entries: { key: string, value: any }[]): string {
+    let html = '';
+    for (let i = 0; i < entries.length; i++) {
+      html += `<i>${entries[i].key}</i>: `;
+      html += this.valueHtml(entries[i].value);
+      if (i != entries.length - 1) {
+        html += ', ';
+      }
+    }
+    return html;
+  }
+
+  private valueHtml(value: any): string {
+    if (isArray(value)) {
+      return `[${this.arrayHtml(value as any[])}]`;
+    } else if (isObject(value)) {
+      return `{${this.entriesHtml(this.getEntriesForObject(value))}}`;
+    } else {
+      return `<b>${value.toString()}</b>`;
+    }
+  }
+
+  private arrayHtml(array: any[]): string {
+    let html = '';
+    for (let i = 0; i < array.length; i++) {
+      html += this.valueHtml(array[i]);
+      if (i != array.length - 1) {
+        html += ', ';
+      }
+    }
+    return html;
   }
 
 }

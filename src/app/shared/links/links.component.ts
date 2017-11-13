@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum SizeType {
+import {Component} from '@angular/core';
 
-  S = "S",
-  M = "M",
-  L = "L",
-  XL = "XL"
+@Component({
+  selector: 'links',
+  templateUrl: './links.component.html'
+})
+export class LinksComponent {
 
 }
