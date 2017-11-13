@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {SizeType} from '../../shared/slider/size-type';
 
-export interface UserSettings {
+import {Component} from '@angular/core';
 
-  defaultOrganization: string;
-  defaultProject: string;
-  searchSize: SizeType;
+@Component({
+  selector: 'comments',
+  templateUrl: './comments.component.html'
+})
+export class CommentsComponent {
 
 }

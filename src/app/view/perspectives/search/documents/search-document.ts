@@ -16,12 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {SizeType} from '../../shared/slider/size-type';
 
-export interface UserSettings {
+import {Document} from '../../../../core/dto/document';
 
-  defaultOrganization: string;
-  defaultProject: string;
-  searchSize: SizeType;
+export interface SearchDocument {
+
+  document: Document;
+  collectionName?: string;
+  collectionIcon?: string;
+  collectionColor?: string;
+  opened: boolean;
 
 }

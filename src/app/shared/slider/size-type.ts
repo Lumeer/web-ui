@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {SizeType} from '../../shared/slider/size-type';
 
-export interface UserSettings {
+export enum SizeType {
 
-  defaultOrganization: string;
-  defaultProject: string;
-  searchSize: SizeType;
+  S = "S",
+  M = "M",
+  L = "L",
+  XL = "XL"
 
 }
