@@ -1,6 +1,6 @@
 <div>
-  <slider class="d-flex justify-content-end"
-          [defaultSize]="size" (newSize)="onSizeChange($event)"></slider>
+  <size-slider class="d-flex justify-content-end"
+          [defaultSize]="size" (newSize)="onSizeChange($event)"></size-slider>
   <div *ngFor="let document of documents">
     <ng-container *ngTemplateOutlet="header; context: { $implicit: document}"></ng-container>
     <div class="content">
@@ -22,13 +22,13 @@
 
 <ng-template #xlTemplate let-document>
   <ng-container *ngTemplateOutlet="lTemplate; context: { $implicit: document}"></ng-container>
-  <comments></comments>
   <links></links>
+  <comments></comments>
 </ng-template>
 
 <ng-template #header let-document>
   <div class="d-flex flex-row pt-3">
-    <div class="toggle-detail d-flex" (click)="toggleDocument(document)">
+    <div class="toggle-detail d-flex icon" (click)="toggleDocument(document)">
       <i class="fas m-auto"
          [ngClass]="(document.opened || isXlTemplatePresented()) ? 'fa-caret-down':'fa-caret-right'"
          aria-hidden="true"></i>
@@ -39,9 +39,9 @@
     <span class="ml-1" *ngIf="document.collectionName" [style.color]="document.collectionColor">{{document.collectionName}}</span>
     <div class="ml-3" [innerHTML]="createDefaultAttributeHtml(document)"></div>
     <div class="ml-auto">
-      <span class="icon" (click)="onLinkClick(document)"><i class="fas fa-link" aria-hidden="true">10</i></span>
+      <span class="icon" (click)="onLinkClick(document)"><i class="fas fa-link" aria-hidden="true"><span class="ml-1">10</span></i></span>
       <span class="icon ml-2" (click)="onCommentClick(document)"><i class="fas fa-comment"
-                                                                    aria-hidden="true">30</i></span>
+                                                                    aria-hidden="true"><span class="ml-1">30</span></i></span>
       <span class="icon ml-2" (click)="onDetailClick(document)"><i class="fas fa-eye" aria-hidden="true"></i></span>
     </div>
   </div>

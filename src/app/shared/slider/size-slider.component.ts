@@ -22,11 +22,11 @@ import {SizeType} from './size-type';
 
 
 @Component({
-  selector: 'slider',
-  templateUrl: './slider.component.html',
-  styleUrls: ['./slider.component.scss']
+  selector: 'size-slider',
+  templateUrl: './size-slider.component.html',
+  styleUrls: ['./size-slider.component.scss']
 })
-export class SliderComponent implements OnInit {
+export class SizeSliderComponent implements OnInit {
 
   @ViewChild('slider')
   public slider: ElementRef;

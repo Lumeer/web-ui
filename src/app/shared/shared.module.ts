@@ -29,7 +29,7 @@ import {PickerModule} from './picker/picker.module';
 import {RouterModule} from '@angular/router';
 import {HighlightPipe} from './highlight.pipe';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
-import {SliderComponent} from './slider/slider.component';
+import {SizeSliderComponent} from './slider/size-slider.component';
 import {CommentsComponent} from './comments/comments.component';
 import {LinksComponent} from './links/links.component';
 
@@ -47,7 +47,7 @@ import {LinksComponent} from './links/links.component';
     PermissionsTableComponent,
     PostItCollectionsComponent,
     SearchBoxComponent,
-    SliderComponent,
+    SizeSliderComponent,
     CommentsComponent,
     LinksComponent
   ],
@@ -59,7 +59,7 @@ import {LinksComponent} from './links/links.component';
     PermissionsComponent,
     PostItCollectionsComponent,
     SearchBoxComponent,
-    SliderComponent,
+    SizeSliderComponent,
     CommentsComponent,
     LinksComponent
   ]

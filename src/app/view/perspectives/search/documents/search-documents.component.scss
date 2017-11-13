@@ -4,15 +4,14 @@ $margin-left: 20px;
 
 .toggle-detail {
   width: $margin-left;
-  cursor: pointer;
 }
 
 .icon {
   cursor: pointer;
-  font-size: 12px;
+  color: $link-color;
 
   &:hover {
-    color: $success !important;
+    color: $link-hover-color;
   }
 }
 
