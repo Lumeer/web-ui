@@ -156,12 +156,10 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   private searchLinkTypes(suggestions: Suggestions): Observable<Suggestions> {
     suggestions.links = [];
     for (let link of this.linkTypeService.getLinkTypes()) {
-      console.log(link);
       if (link.name.toLowerCase().startsWith(this.text)) {
         suggestions.links.push(link);
       }
     }
-    console.log(suggestions);
     return Observable.of(suggestions);
   }
 
@@ -438,16 +436,16 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     return queryItem.type === QueryItemType.Collection;
   }
 
-  public lightenColor(color: string): string {
-    return color ? HtmlModifier.shadeColor(color, .5) : '#faeabb';
-  }
-
-  public background(queryItem: QueryItem): string {
+  public queryItemBackground(queryItem: QueryItem): string {
     if (queryItem.color && queryItem.color2) {
       return `linear-gradient(${this.lightenColor(queryItem.color)},${this.lightenColor(queryItem.color2)})`;
     } else {
       return this.lightenColor(queryItem.color);
     }
+  }
+
+  private lightenColor(color: string): string {
+    return color ? HtmlModifier.shadeColor(color, .5) : '#faeabb';
   }
 
 }

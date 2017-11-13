@@ -2,7 +2,7 @@
   <div class="d-flex flex-wrap w-100 pb-1 pr-1">
     <div class="d-inline-flex query-item py-1 px-2 mt-1 ml-1 align-items-center"
          *ngFor="let queryItem of queryItems; let ix = index"
-         [ngStyle]="{'background': background(queryItem)}"
+         [ngStyle]="{'background': queryItemBackground(queryItem)}"
          [style.box-shadow]="queryItem.isComplete() ? '0px 0px 0px 0px #f00 inset' : '0px 0px 0px 2px #f00 inset'">
       <div class="icon-container" *ngIf="queryItem.icon && queryItem.icon2">
         <i class="{{queryItem.icon}} icon-left" [style.color]="queryItem.color" aria-hidden="true"></i>
