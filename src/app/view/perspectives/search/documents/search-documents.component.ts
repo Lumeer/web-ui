@@ -29,6 +29,7 @@ import {Collection} from '../../../../core/dto/collection';
 import {map, switchMap} from 'rxjs/operators';
 import {isArray, isObject} from 'util';
 import {Subscription} from 'rxjs/Subscription';
+import {UserSettingsService} from '../../../../core/user-settings.service';
 
 @Component({
   templateUrl: './search-documents.component.html',
@@ -41,16 +42,19 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   @ViewChild('lTemplate') lTempl: TemplateRef<any>;
   @ViewChild('xlTemplate') xlTempl: TemplateRef<any>;
 
-  public size: SizeType = SizeType.M;
+  public size: SizeType;
   public documents: SearchDocument[] = [];
   private routerSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private searchService: SearchService,
-              private collectionService: CollectionService) {
+              private collectionService: CollectionService,
+              private userSettingsService: UserSettingsService) {
   }
 
   public ngOnInit() {
+    let userSettings = this.userSettingsService.getUserSettings();
+    this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
     this.routerSubscription = this.route.queryParamMap.pipe(
       map(paramMap => JSON.parse(paramMap.get('query'))),
       switchMap(query => this.searchService.searchDocuments(query)),
@@ -65,6 +69,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   public onSizeChange(newSize: SizeType) {
     this.size = newSize;
+    let userSettings = this.userSettingsService.getUserSettings();
+    userSettings.searchSize = newSize;
+    this.userSettingsService.updateUserSettings(userSettings);
   }
 
   public getTemplate(document: SearchDocument): TemplateRef<any> {
