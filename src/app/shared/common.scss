@@ -38,10 +38,21 @@ input {
   color: $primary !important;
 }
 
-.snotify-success, .snotify-confirm, .snotify-prompt, .snotify-info, .snotify-async, .snotify-warning, .snotify-error {
+.snotifyToast {
   border: 2px solid;
   box-shadow: $shadow-up;
   background: $secondary-color;
+  cursor: default !important;
+}
+
+// modal-like background
+.snotify-confirm:before, .snotify-prompt:before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .snotify-success, .snotify-prompt {
