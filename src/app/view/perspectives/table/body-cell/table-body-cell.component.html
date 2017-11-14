@@ -50,7 +50,7 @@
                contextMenuItem
                divider="true"></ng-template>
   <ng-template *ngIf="row.part.index > 0 && row.documents.length === 1 && row.documents[0].id"
-               (execute)="showUnlinkRowModal()"
+               (execute)="confirmUnlink()"
                contextMenuItem>
     <i class="fa fa-fw fa-unlink text-warning mr-1" aria-hidden="true"></i>
     <span i18n="@@table.body.row.unlink">Unlink row</span>
@@ -85,57 +85,3 @@
     <span i18n="@@table.body.row.expand">Expand</span>
   </ng-template>
 </context-menu>
-
-<ng-template #unlinkRowModal>
-  <div class="modal-header bg-warning text-white rounded-top">
-    <h5 class="modal-title" i18n="@@table.row.unlink.dialog.title">Delete this link?</h5>
-    <button type="button"
-            class="close"
-            aria-label="Close"
-            (click)="hideUnlinkRowModal()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <p i18n="@@table.row.unlink.dialog.body">Unlinking a row will permanently delete the link between the data records. However, the data itself will not be deleted.</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button"
-            class="btn btn-secondary"
-            (click)="hideUnlinkRowModal()"
-            i18n="@@table.row.unlink.dialog.button.no">No, keep the link
-    </button>
-    <button type="button"
-            class="btn btn-warning"
-            (click)="hideUnlinkRowModal(); onUnlinkRow()"
-            i18n="@@table.row.unlink.dialog.button.yes">Yes, delete the link
-    </button>
-  </div>
-</ng-template>
-
-<ng-template #removeRowModal>
-  <div class="modal-header bg-danger text-white rounded-top">
-    <h5 class="modal-title" i18n="@@table.row.remove.dialog.title">Delete this record?</h5>
-    <button type="button"
-            class="close"
-            aria-label="Close"
-            (click)="hideRemoveRowModal()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <p i18n="@@table.row.remove.dialog.body">Deleting a row will permanently remove the record from the collection.</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button"
-            class="btn btn-secondary"
-            (click)="hideRemoveRowModal()"
-            i18n="@@table.row.remove.dialog.button.no">No, keep the record
-    </button>
-    <button type="button"
-            class="btn btn-danger"
-            (click)="hideRemoveRowModal(); onDeleteDocument()"
-            i18n="@@table.row.remove.dialog.button.yes">Yes, delete the record
-    </button>
-  </div>
-</ng-template>

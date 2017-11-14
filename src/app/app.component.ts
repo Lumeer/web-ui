@@ -20,8 +20,11 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, ParamMap, Router} from '@angular/router';
 
+import {SnotifyPosition, SnotifyService} from 'ng-snotify';
+
 import {WorkspaceService} from './core/workspace.service';
 import {RouteFinder} from './shared/utils/route-finder';
+import {filter, map, mergeMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app',
@@ -31,31 +34,25 @@ import {RouteFinder} from './shared/utils/route-finder';
 })
 export class AppComponent implements OnInit {
 
-  public notificationsOptions = {
-    position: ['top'],
-    timeOut: 1500,
-    showProgressBar: true,
-    animate: 'fromLeft',
-    lastOnBottom: true
-  };
-
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
-              private workspaceService: WorkspaceService) {
+              private workspaceService: WorkspaceService,
+              private notificationService: SnotifyService) {
   }
 
   public ngOnInit() {
     this.processPathParams();
+    this.setNotificationStyle();
   }
 
   private processPathParams() {
-    this.router.events
-      .filter(event => event instanceof NavigationEnd)
-      .map(() => this.activatedRoute)
-      .map(route => RouteFinder.getFirstChildRouteWithParams(route))
-      .filter(route => route.outlet === 'primary')
-      .mergeMap(route => route.paramMap)
-      .subscribe((params: ParamMap) => this.setWorkspace(params));
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(() => this.activatedRoute),
+      map(route => RouteFinder.getFirstChildRouteWithParams(route)),
+      filter(route => route.outlet === 'primary'),
+      mergeMap(route => route.paramMap),
+    ).subscribe((params: ParamMap) => this.setWorkspace(params));
   }
 
   private setWorkspace(params: ParamMap) {
@@ -63,6 +60,20 @@ export class AppComponent implements OnInit {
     this.workspaceService.projectCode = params.get('projectCode');
     this.workspaceService.collectionCode = params.get('collectionCode');
     this.workspaceService.viewCode = params.get('viewCode');
+  }
+
+  public setNotificationStyle(): void {
+    this.notificationService.setDefaults({
+      toast: {
+        titleMaxLength: 20,
+        backdrop: -1,
+        position: SnotifyPosition.leftTop,
+        timeout: 3000,
+        showProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false
+      }
+    });
   }
 
 }

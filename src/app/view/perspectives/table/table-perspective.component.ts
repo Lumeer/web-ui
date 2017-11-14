@@ -24,7 +24,6 @@ import {CollectionService} from '../../../core/rest/collection.service';
 import {Collection} from '../../../core/dto/collection';
 import {Attribute} from '../../../core/dto/attribute';
 import {Query} from '../../../core/dto/query';
-import 'rxjs/add/observable/combineLatest';
 import {PerspectiveComponent} from '../perspective.component';
 import {TableConfig} from './model/table-config';
 import {LinkType} from '../../../core/dto/link-type';
@@ -32,7 +31,6 @@ import {TablePart} from './model/table-part';
 import {LinkInstance} from '../../../core/dto/link-instance';
 import {DataChangeEvent} from './event/data-change-event';
 import {AttributeHelper} from 'app/shared/utils/attribute-helper';
-import {NotificationsService} from 'angular2-notifications';
 import {TableLinkEvent} from './event/table-link-event';
 import {TableManagerService} from './util/table-manager.service';
 import {LinkInstanceService} from '../../../core/rest/link-instance.service';
@@ -41,6 +39,7 @@ import {Perspective} from '../perspective';
 import {AttributeChangeEvent} from './event/attribute-change-event';
 import {LinkInstanceEvent} from './event/link-instance-event';
 import {Document} from '../../../core/dto/document';
+import {NotificationService} from '../../../notifications/notification.service';
 
 @Component({
   selector: 'table-perspective',
@@ -62,7 +61,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
               private documentService: DocumentService,
               private linkInstanceService: LinkInstanceService,
               private linkTypeService: LinkTypeService,
-              private notificationService: NotificationsService,
+              private notificationService: NotificationService,
               private tableManagerService: TableManagerService) {
   }
 
@@ -127,7 +126,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
     this.documentService.createDocument(doc).subscribe((id: string) => {
       doc.id = id;
       this.tableManagerService.documents.push(doc);
-      this.notificationService.success('Record created', 'Record has been successfully created!');
+      this.notificationService.success('Record has been created!');
 
       successCallback();
     });
@@ -135,7 +134,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
 
   private updateDocument(doc: Document) {
     this.documentService.patchDocument(doc).subscribe(() => {
-      this.notificationService.success('Record updated', 'Record has been successfully updated!');
+      this.notificationService.success('Record has been updated!');
     });
   }
 
@@ -143,7 +142,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
     this.documentService.removeDocument(doc).subscribe(() => {
       const index = this.tableManagerService.documents.indexOf(doc);
       this.tableManagerService.documents.splice(index, 1);
-      this.notificationService.success('Record deleted', 'Record has been successfully deleted!');
+      this.notificationService.success('Record has been deleted!');
     });
   }
 
@@ -168,20 +167,20 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
 
     this.collectionService.updateAttribute(collection.code, attribute.fullName, attribute).subscribe(() => {
       collection.attributes.push(attribute);
-      this.notificationService.success(`'${attribute.name}' created`, 'Attribute has been successfully created!');
+      this.notificationService.success('Attribute has been created!');
     });
   }
 
   private updateAttribute(collection: Collection, attribute: Attribute) {
     this.collectionService.updateAttribute(collection.code, attribute.fullName, attribute).subscribe(() => {
-      this.notificationService.success(`'${attribute.name}' updated`, 'Attribute has been successfully updated!');
+      this.notificationService.success('Attribute has been updated!');
     });
   }
 
   private deleteAttribute(collection: Collection, attribute: Attribute) {
     this.collectionService.removeAttribute(collection.code, attribute.fullName).subscribe(() => {
       AttributeHelper.removeAttributeFromArray(attribute, collection.attributes);
-      this.notificationService.success(`'${attribute.name}' removed`, 'Attribute has been successfully deleted!');
+      this.notificationService.success('Attribute has been deleted!');
     });
   }
 
@@ -213,7 +212,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
 
   public onDeleteLinkInstance(linkInstanceId: string) {
     this.linkInstanceService.deleteLinkInstance(linkInstanceId).subscribe(() => {
-      this.notificationService.success('Record unlinked', 'Link has been successfully deleted!');
+      this.notificationService.success('Link has been deleted!');
     });
   }
 
@@ -227,7 +226,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
     this.linkInstanceService.createLinkInstance(linkInstance).subscribe((id: string) => {
       linkInstance.id = id;
       this.tableManagerService.linkInstances.push(linkInstance);
-      this.notificationService.success('Record linked', 'Link has been successfully created!');
+      this.notificationService.success('Link has been created!');
     });
   }
 

@@ -17,23 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ViewChild, ElementRef, TemplateRef} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {HttpResponse} from '@angular/common/http';
+
 import {Organization} from '../../core/dto/organization';
 import {OrganizationService} from '../../core/rest/organization.service';
-import {HttpResponse} from '@angular/common/http';
 import {ProjectService} from '../../core/rest/project.service';
 import {Project} from '../../core/dto/project';
-import {NotificationsService} from 'angular2-notifications';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap';
+import {NotificationService} from '../../notifications/notification.service';
 
 @Component({
   templateUrl: './organization-settings.component.html',
   styleUrls: ['./organization-settings.component.scss']
 })
 export class OrganizationSettingsComponent implements OnInit {
+
   public originalOrganizationName: string;
-  public deleteConfirm: BsModalRef;
   public organization: Organization;
   public organizationCode: string;
   private originalOrganizationCode: string;
@@ -47,8 +47,7 @@ export class OrganizationSettingsComponent implements OnInit {
               private route: ActivatedRoute,
               private router: Router,
               private projectService: ProjectService,
-              private notificationService: NotificationsService,
-              private modalService: BsModalService) {
+              private notificationService: NotificationService) {
   }
 
   public ngOnInit(): void {
@@ -60,7 +59,7 @@ export class OrganizationSettingsComponent implements OnInit {
         }
       },
       error => {
-        this.notificationService.error('Error', 'Error loading organization ');
+        this.notificationService.error('Error loading organization');
       }
     );
   }
@@ -74,17 +73,16 @@ export class OrganizationSettingsComponent implements OnInit {
           this.originalOrganizationName = this.organization.name;
         },
         error => {
-          this.notificationService.error('Error', 'Error getting the organization ');
+          this.notificationService.error('Error getting the organization');
         }
       );
   }
 
   public updateOrganization(): void {
     this.organizationService.editOrganization(this.organizationCode, this.organization)
-      .subscribe(success => this.notificationService
-          .success('Success', 'Organization was successfully updated'),
+      .subscribe(success => this.notificationService.success('Organization was successfully updated'),
         error => {
-          this.notificationService.error('Error', 'Error updating organization ');
+          this.notificationService.error('Error updating organization');
         });
   }
 
@@ -94,12 +92,11 @@ export class OrganizationSettingsComponent implements OnInit {
     }
     this.organizationService.editOrganization(this.organizationCode, this.organization)
       .subscribe(success => {
-          this.notificationService
-            .success('Success', 'Organization\'s name was successfully updated');
-          this.originalOrganizationName = this.organization.name
+          this.notificationService.success('Organization\'s name was successfully updated');
+          this.originalOrganizationName = this.organization.name;
         },
         error => {
-          this.notificationService.error('Error', 'Error updating organization ');
+          this.notificationService.error('Error updating organization');
         });
   }
 
@@ -109,15 +106,14 @@ export class OrganizationSettingsComponent implements OnInit {
     }
     this.organizationService.editOrganization(this.originalOrganizationCode, this.organization)
       .subscribe((response: HttpResponse<Object>) => {
+          this.notificationService.success( 'Organization\'s code was successfully updated');
           this.originalOrganizationCode = this.organization.code;
           this.organizationCode = this.organization.code;
-          this.router.navigate([`/organization/${this.organization.code}`]);
+          this.router.navigate(['/organization', this.organization.code]);
         },
         error => {
-          this.notificationService.error('Error', 'Error editing the organization ');
-        },
-        () => this.notificationService
-          .success('Success', 'Organization\'s code was successfully updated')
+          this.notificationService.error('Error editing the organization');
+        }
       );
   }
 
@@ -130,7 +126,7 @@ export class OrganizationSettingsComponent implements OnInit {
       .subscribe(
         text => this.goBack(),
         error => {
-          this.notificationService.error('Error', 'An error occurred during deletion of the organization');
+          this.notificationService.error('An error occurred during deletion of the organization');
         }
       );
   }
@@ -140,8 +136,7 @@ export class OrganizationSettingsComponent implements OnInit {
   }
 
   public getNumberOfProjects(): void {
-    this.projectService.getProjects(this.organizationCode).subscribe((projects: Project[]) =>
-      (this.projectsCount = projects.length));
+    this.projectService.getProjects(this.organizationCode).subscribe((projects: Project[]) => (this.projectsCount = projects.length));
   }
 
   public onOrganizationDescriptionBlur(description: string) {
@@ -159,7 +154,15 @@ export class OrganizationSettingsComponent implements OnInit {
     return !(this.organization.code === '' && this.organization.name === '' && this.organization.icon === '' && this.organization.color === '');
   }
 
-  public confirmDeletion(modal: TemplateRef<any>): void {
-    this.deleteConfirm = this.modalService.show(modal);
+  public confirmDeletion(): void {
+    this.notificationService.confirm(
+      'Deleting an organization will permanently remove it.',
+      'Delete Organization?',
+      [
+        {text: 'Yes', action: () => this.onDelete(), bold: false},
+        {text: 'No'}
+      ]
+    );
   }
+
 }

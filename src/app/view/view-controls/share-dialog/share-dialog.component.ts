@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {NotificationsService} from 'angular2-notifications';
+import {Component, OnInit} from '@angular/core';
 
 import {UserService} from '../../../core/rest/user.service';
 import {User} from '../../../core/dto/user';
 import {KeyCode} from '../../../shared/key-code';
 import {HtmlModifier} from '../../../shared/utils/html-modifier';
+import {NotificationService} from '../../../notifications/notification.service';
 
 @Component({
   selector: 'share-dialog',
@@ -32,16 +32,13 @@ import {HtmlModifier} from '../../../shared/utils/html-modifier';
 })
 export class ShareDialogComponent implements OnInit {
 
-  @Output()
-  public closeDialog: EventEmitter<void> = new EventEmitter();
-
   public emails: string[] = [];
   public text = '';
 
   public users: User[] = [];
   public suggestions: string[];
 
-  public constructor(private notificationService: NotificationsService,
+  public constructor(private notificationService: NotificationService,
                      private userService: UserService) {
   }
 
@@ -110,12 +107,7 @@ export class ShareDialogComponent implements OnInit {
   }
 
   public share() {
-    this.close();
-    this.notificationService.success('View shared', 'View has been shared with the selected users');
-  }
-
-  public close() {
-    this.closeDialog.emit();
+    this.notificationService.success('View has been shared with the selected users');
   }
 
   public removeHtmlComments(html: HTMLElement): string {

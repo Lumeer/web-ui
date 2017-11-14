@@ -36,11 +36,11 @@
     <i class="fal fa-copy fa-lg fa-fw"></i>
   </button>
   <button class="btn btn-outline-success ml-2"
-          (click)="showShareDialog(modal)"
+          type="button"
+          data-toggle="modal"
+          data-target="#shareDialogModal"
           i18n="@@view.button.share">Share
   </button>
 </form>
 
-<ng-template #modal>
-  <share-dialog (closeDialog)="onCloseShareDialog()"></share-dialog>
-</ng-template>
+<share-dialog></share-dialog>

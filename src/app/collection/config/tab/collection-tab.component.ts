@@ -20,12 +20,11 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
-import {NotificationsService} from 'angular2-notifications';
-
 import {Collection} from '../../../core/dto/collection';
 import {CollectionService} from '../../../core/rest/collection.service';
 import {WorkspaceService} from '../../../core/workspace.service';
 import {CollectionSelectService} from '../../service/collection-select.service';
+import {NotificationService} from '../../../notifications/notification.service';
 
 // Class can't be abstract because of an issue with compiler https://github.com/angular/angular/issues/13590
 @Component({template: ''})
@@ -36,7 +35,7 @@ export class CollectionTabComponent implements OnInit {
   constructor(protected collectionService: CollectionService,
               protected collectionSelectService: CollectionSelectService,
               protected route: ActivatedRoute,
-              protected notificationService: NotificationsService,
+              protected notificationService: NotificationService,
               protected workspaceService: WorkspaceService) {
   }
 

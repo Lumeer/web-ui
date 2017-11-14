@@ -17,11 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren} from '@angular/core';
-
-import {NotificationsService} from 'angular2-notifications';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap';
-import {finalize} from 'rxjs/operators';
+import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 
 import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../collection/constants';
 import {Collection} from '../../core/dto/collection';
@@ -35,6 +31,8 @@ import {PostItLayout} from '../utils/post-it-layout';
 import {PostItCollectionData} from './post-it-collection-data';
 import {QueryConverter} from '../utils/query-converter';
 import {HtmlModifier} from '../utils/html-modifier';
+import {NotificationService} from '../../notifications/notification.service';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'post-it-collections',
@@ -58,8 +56,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   @ViewChildren('postItElement')
   public postItElements: QueryList<ElementRef>;
 
-  public deleteConfirm: BsModalRef;
-
   public postItToDelete: PostItCollectionData;
 
   public postIts: PostItCollectionData[] = [];
@@ -72,11 +68,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   constructor(private collectionService: CollectionService,
               private searchService: SearchService,
-              private notificationService: NotificationsService,
+              private notificationService: NotificationService,
               private importService: ImportService,
               private workspaceService: WorkspaceService,
-              private zone: NgZone,
-              private modalService: BsModalService) {
+              private zone: NgZone) {
   }
 
   public ngOnInit(): void {
@@ -164,7 +159,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
           postIt.collection.code = code;
           postIt.initialized = true;
           this.getCollection(postIt);
-          this.notificationService.success('Success', 'Collection created');
+          this.notificationService.success('Collection created');
         },
         error => {
           this.handleError(error, 'Creating collection failed');
@@ -245,18 +240,13 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     this.fileChange(event.dataTransfer.files);
   }
 
-  public confirmDeletion(postIt: PostItCollectionData, modal: TemplateRef<any>): void {
-    this.postItToDelete = postIt;
-    this.deleteConfirm = this.modalService.show(modal);
-  }
-
   private removeCollection(postIt: PostItCollectionData): void {
     if (postIt.initialized) {
       this.collectionService.removeCollection(postIt.collection.code)
         .subscribe(
           response => {
             this.postItToDelete = null;
-            this.notificationService.success('Success', 'Collection removed');
+            this.notificationService.success('Collection removed');
           },
           error => {
             this.handleError(error, 'Failed removing collection');
@@ -279,6 +269,13 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     }
   }
 
+  public confirmDeletion(postIt: PostItCollectionData): void {
+    this.notificationService.confirm('Are you sure you want to remove the collection?', 'Delete?', [
+      {text: 'Yes', action: () => this.removeCollection(postIt), bold: false},
+      {text: 'No'}
+    ]);
+  }
+
   public onClick(event: MouseEvent): void {
     if (!this.postItElements) {
       return;
@@ -293,7 +290,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   }
 
   private handleError(error: Error, message?: string): void {
-    this.notificationService.error('Error', message ? message : error.message);
+    this.notificationService.error(message ? message : error.message);
   }
 
   public updateToScrollbarHeight(textArea: HTMLTextAreaElement): void {

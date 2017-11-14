@@ -17,17 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Injectable} from '@angular/core';
 import {QueryItem} from './query-item';
 import {Query} from '../../../core/dto/query';
 import {CollectionQueryItem} from './collection-query-item';
 import {AttributeQueryItem} from './attribute-query-item';
 import {FulltextQueryItem} from './fulltext-query-item';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
 import {Collection} from '../../../core/dto/collection';
 import {QueryConverter} from '../../utils/query-converter';
 import {SearchService} from '../../../core/rest/search.service';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class QueryItemsConverter {
@@ -55,9 +56,10 @@ export class QueryItemsConverter {
   }
 
   public fromQuery(query: Query): Observable<QueryItem[]> {
-    return this.loadNeededCollections(query)
-      .map((collections: Collection[]) => QueryItemsConverter.convertToCollectionsMap(collections))
-      .map(collectionsMap => QueryItemsConverter.createQueryItems(collectionsMap, query));
+    return this.loadNeededCollections(query).pipe(
+      map((collections: Collection[]) => QueryItemsConverter.convertToCollectionsMap(collections)),
+      map(collectionsMap => QueryItemsConverter.createQueryItems(collectionsMap, query))
+    );
   }
 
   private loadNeededCollections(query: Query): Observable<Collection[]> {

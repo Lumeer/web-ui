@@ -2,7 +2,7 @@
   <li *ngFor="let event of events"
       class="list-group-item py-3">
     <div class="d-flex">
-        <span class="flex-grow">
+        <span class="flex-grow-2">
           <span class="mr-2" i18n="@@collection.config.tab.events.on">On</span>
           <ng-container *ngFor="let on of event.fireWhen; let idx = index">
             <span class="text-success"

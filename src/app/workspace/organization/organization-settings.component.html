@@ -46,7 +46,7 @@
           Code is required (from 3 to 6 characters).
         </small>
 
-        <a (click)="confirmDeletion(modal)"
+        <a (click)="confirmDeletion()"
            class="text-danger rounded-left ml-auto"
            title="Remove organization">
           <i class="fa fa-fw fa-times" aria-hidden="true"></i>
@@ -58,7 +58,7 @@
           <i class="fas fa fa-pencil edit"
              (click)="onOrganizationDescriptionEdit()"></i>
         </div>
-        <div class="text flex-grow" [attr.contenteditable]="organizationDescriptionEditable"
+        <div class="text flex-grow-2" [attr.contenteditable]="organizationDescriptionEditable"
              (blur)="onOrganizationDescriptionBlur(organizationDescription.textContent)"
              #organizationDescription>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
@@ -81,29 +81,3 @@
     <div class="col"></div>
   </div>
 </div>
-
-<ng-template #modal>
-  <div class="modal-header bg-danger text-white rounded-top">
-    <h5 class="modal-title"
-        i18n="@@organization.delete.dialog.title">Delete Organization?</h5>
-    <button type="button" class="close" aria-label="Close" (click)="deleteConfirm.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <p i18n="@@organization.delete.dialog.body">Deleting an organization will permanently remove it. All projects stored
-      inside the organization will be lost.</p>
-  </div>
-  <div class="modal-footer">
-    <button type="button"
-            class="btn btn-secondary"
-            (click)="deleteConfirm.hide()"
-            i18n="@@organization.delete.dialog.button.no">No, Keep Organization
-    </button>
-    <button type="button"
-            class="btn btn-danger"
-            (click)="deleteConfirm.hide(); onDelete()"
-            i18n="@@organization.delete.dialog.button.yes">Yes, Delete Organization
-    </button>
-  </div>
-</ng-template>

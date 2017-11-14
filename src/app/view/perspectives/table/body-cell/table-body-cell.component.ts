@@ -18,14 +18,15 @@
  */
 
 import {Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
+
 import {TableRow} from '../model/table-row';
 import {Direction} from '../../post-it/document-data/direction';
 import {DataChangeEvent, LinkInstanceEvent, TableCursorEvent} from '../event';
 import {KeyCode} from '../../../../shared/key-code';
 import {HtmlModifier} from '../../../../shared/utils/html-modifier';
 import {Attribute, Document} from '../../../../core/dto';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {TableManagerService} from '../util/table-manager.service';
+import {NotificationService} from '../../../../notifications/notification.service';
 
 @Component({
   selector: 'table-body-cell',
@@ -73,18 +74,10 @@ export class TableBodyCellComponent implements OnChanges {
   @ViewChild('dataCell')
   public dataCell: ElementRef;
 
-  @ViewChild('unlinkRowModal')
-  private unlinkModalElement: ElementRef;
-  private unlinkModal: BsModalRef;
-
-  @ViewChild('removeRowModal')
-  private removeModalElement: ElementRef;
-  private removeModal: BsModalRef;
-
   public editMode = false;
   public highlighted = false;
 
-  public constructor(private modalService: BsModalService,
+  public constructor(private notificationService: NotificationService,
                      private tableManagerService: TableManagerService) {
   }
 
@@ -233,20 +226,26 @@ export class TableBodyCellComponent implements OnChanges {
     setTimeout(() => this.selectedCell = {row: newRow, attribute: newRow.part.shownAttributes[0]});
   }
 
-  public showUnlinkRowModal() {
-    this.unlinkModal = this.modalService.show(this.unlinkModalElement);
+  public confirmUnlink() {
+    this.notificationService.confirm(
+      'Unlinking a row will permanently delete the link between the data records.',
+      'Delete this link?',
+      [
+        {text: 'Yes', action: () => this.onUnlinkRow(), bold: false},
+        {text: 'No'}
+      ]
+    );
   }
 
-  public hideUnlinkRowModal() {
-    this.unlinkModal.hide();
-  }
-
-  public showRemoveRowModal() {
-    this.removeModal = this.modalService.show(this.removeModalElement);
-  }
-
-  public hideRemoveRowModal() {
-    this.removeModal.hide();
+  public confirmRemove() {
+    this.notificationService.confirm(
+      'Deleting a row will permanently remove the record from the collection',
+      'Delete this record?',
+      [
+        {text: 'Yes', action: () => this.onDeleteDocument(), bold: false},
+        {text: 'No'}
+      ]
+    );
   }
 
   public onUnlinkRow() {
@@ -257,7 +256,7 @@ export class TableBodyCellComponent implements OnChanges {
 
   public onRemoveRow() {
     if (this.row.documents[0].id) {
-      return this.showRemoveRowModal();
+      return this.confirmRemove();
     }
 
     this.tableManagerService.removeRow(this.row);

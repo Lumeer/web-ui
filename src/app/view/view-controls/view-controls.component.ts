@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output, TemplateRef} from '@angular/core';
-import {View} from '../../core/dto/view';
 import {Router} from '@angular/router';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+
+import {PERSPECTIVES} from '../perspectives/perspective';
+import {View} from '../../core/dto/view';
 import {WorkspaceService} from '../../core/workspace.service';
 import {PerspectiveChoice} from '../perspectives/perspective-choice';
-import {PERSPECTIVES} from '../perspectives/perspective';
 import {QueryConverter} from '../../shared/utils/query-converter';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 
 @Component({
   selector: 'view-controls',
@@ -39,10 +39,7 @@ export class ViewControlsComponent {
   @Output()
   public save = new EventEmitter();
 
-  public shareDialog: BsModalRef;
-
-  constructor(private modalService: BsModalService,
-              private router: Router,
+  constructor(private router: Router,
               private workspaceService: WorkspaceService) {
   }
 
@@ -72,14 +69,6 @@ export class ViewControlsComponent {
         perspective: this.view.perspective
       }
     }); // TODO transfer config somehow
-  }
-
-  public showShareDialog(modal: TemplateRef<any>) {
-    this.shareDialog = this.modalService.show(modal);
-  }
-
-  public onCloseShareDialog() {
-    this.shareDialog.hide();
   }
 
   public get perspectives(): PerspectiveChoice[] {

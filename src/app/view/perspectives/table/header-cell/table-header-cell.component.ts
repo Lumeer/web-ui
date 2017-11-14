@@ -18,17 +18,18 @@
  */
 
 import {Component, ElementRef, EventEmitter, Input, Output, SimpleChanges, ViewChild} from '@angular/core';
+
 import {TablePart} from '../model/table-part';
 import {Attribute} from '../../../../core/dto/attribute';
 import {HtmlModifier} from '../../../../shared/utils/html-modifier';
 import {KeyCode} from '../../../../shared/key-code';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {Collection} from '../../../../core/dto/collection';
 import {LinkType} from '../../../../core/dto/link-type';
 import {LinkHelper} from '../../../../shared/utils/link-helper';
 import {AttributeHelper} from '../../../../shared/utils/attribute-helper';
 import {TableLinkEvent} from '../event/table-link-event';
 import {TableManagerService} from '../util/table-manager.service';
+import {NotificationService} from '../../../../notifications/notification.service';
 
 @Component({
   selector: 'table-header-cell',
@@ -59,15 +60,10 @@ export class TableHeaderCellComponent {
   public attributeNameInput: ElementRef;
   public attributeName = '';
 
-  @ViewChild('modal')
-  public modal: ElementRef;
-
-  public removeModal: BsModalRef;
-
   public editable = true;
   public editMode = false;
 
-  constructor(private modalService: BsModalService,
+  constructor(private notificationService: NotificationService,
               private tableManagerService: TableManagerService) {
   }
 
@@ -171,14 +167,21 @@ export class TableHeaderCellComponent {
 
   public onRemoveColumn() {
     if (AttributeHelper.isAttributeInitialized(this.attribute)) {
-      this.showDeleteAttributeDialog();
+      this.confrimRemove();
     } else {
       this.tableManagerService.removeColumn(this.part, this.attribute);
     }
   }
 
-  public showDeleteAttributeDialog() {
-    this.removeModal = this.modalService.show(this.modal);
+  public confrimRemove() {
+    this.notificationService.confirm(
+      'Deleting a column will permanently remove the attribute from the collection.',
+      'Delete this column?',
+      [
+        {text: 'Yes', action: () => this.onDeleteAttribute(), bold: false},
+        {text: 'No'}
+      ]
+    );
   }
 
   public onDeleteAttribute() {
