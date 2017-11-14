@@ -26,6 +26,13 @@
            title="Edit name of the collection">
 
     <div class="float-right document-count color-class ml-auto">
+      <i class="fa fa-times pull-right text-danger icon ml-auto"
+         aria-hidden="true"
+         i18n-title="@@header.collection.remove"
+         title="Remove collection"
+         *ngIf="collection"
+         (click)="confirmDeletion(modal)"></i>
+
       <a i18n-title="@@header.collection.documents.count"
          class="count"
          title="Number of documents in this collection"
