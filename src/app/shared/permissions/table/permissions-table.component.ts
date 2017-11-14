@@ -270,12 +270,4 @@ export class PermissionsTableComponent implements OnInit {
     updatePermissions(permission).subscribe();
   }
 
-  public capitalizeFirstLetter(str: string): string {
-    if (!str) {
-      return str;
-    }
-
-    return `${str[0].toLocaleUpperCase()}${str.substr(1)}`;
-  }
-
 }

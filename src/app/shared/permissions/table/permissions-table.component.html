@@ -1,7 +1,7 @@
 <table class="table table-sm">
   <thead class="font-italic">
   <tr>
-    <th class="border-0">{{ capitalizeFirstLetter(entityType) }}</th>
+    <th class="border-0">{{ entityType | titlecase }}</th>
     <th *ngFor="let role of roles"
         class="border-0 font-weight-normal"
         i18n="@@permissions.role">
