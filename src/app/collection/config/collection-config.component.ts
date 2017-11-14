@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {Collection} from '../../core/dto/collection';
@@ -29,20 +29,23 @@ import {QueryConverter} from '../../shared/utils/query-converter';
 import {Query} from '../../core/dto/query';
 import {CollectionSelectService} from '../service/collection-select.service';
 import {NotificationService} from '../../notifications/notification.service';
-import {combineLatest, map, switchMap, tap} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
+import {map, switchMap, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'collection-config',
   templateUrl: './collection-config.component.html',
   styleUrls: ['./collection-config.component.scss']
 })
-export class CollectionConfigComponent implements OnInit {
+export class CollectionConfigComponent implements OnInit, OnDestroy {
 
   public collection: Collection;
 
   public initialCollectionCode: string;
 
   public collectionDescriptionEditable: boolean;
+
+  private routeSubscription: Subscription;
 
   constructor(private collectionService: CollectionService,
               private collectionSelectService: CollectionSelectService,
@@ -53,12 +56,12 @@ export class CollectionConfigComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.route.paramMap.pipe(
+    this.routeSubscription = this.route.paramMap.pipe(
       map(paramMap => paramMap.get('collectionCode')),
       switchMap(collectionCode => this.collectionSelectService.select(collectionCode)),
       tap(collection => this.collection = collection)
     ).subscribe(
-      collection => this.initialCollectionCode = collection.code,
+      collection => null,
       error => this.notificationService.error('Failed fetching collection')
     );
   }
@@ -67,22 +70,8 @@ export class CollectionConfigComponent implements OnInit {
     this.collectionService.updateCollection(this.collection).pipe(
       switchMap(collection => this.collectionSelectService.selectCollection(collection))
     ).subscribe(
-      collection => this.initialCollectionCode = collection.code,
+      collection => null,
       error => this.notificationService.error('Failed updating collection')
-    );
-  }
-
-  public updateCollectionCode(): void {
-    this.collectionService.updateCollection(this.collection, this.initialCollectionCode).pipe(
-      switchMap(collection => this.collectionSelectService.selectCollection(collection)),
-      tap(collection => this.initialCollectionCode = collection.code),
-      map(collection => [this.workspacePath(), 'c', collection.code]),
-      combineLatest(this.route.children[0].url.map(urlSegments => urlSegments.map(segment => segment.path))),
-      map(([currentPath, childPath]) => currentPath.concat(childPath)),
-      switchMap(segments => this.router.navigate(segments))
-    ).subscribe(
-      _ => null,
-      error => this.notificationService.error('Failed updating collection code')
     );
   }
 
@@ -124,6 +113,10 @@ export class CollectionConfigComponent implements OnInit {
 
   public onCollectionDescriptionEdit(): void {
     this.collectionDescriptionEditable = true;
+  }
+
+  public ngOnDestroy(): void {
+    this.routeSubscription.unsubscribe();
   }
 
 }

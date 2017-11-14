@@ -80,7 +80,7 @@ export class OrganizationSettingsComponent implements OnInit {
 
   public updateOrganization(): void {
     this.organizationService.editOrganization(this.organizationCode, this.organization)
-      .subscribe(success => this.notificationService.success('Organization was successfully updated'),
+      .subscribe(success => null,
         error => {
           this.notificationService.error('Error updating organization');
         });
@@ -92,7 +92,6 @@ export class OrganizationSettingsComponent implements OnInit {
     }
     this.organizationService.editOrganization(this.organizationCode, this.organization)
       .subscribe(success => {
-          this.notificationService.success('Organization\'s name was successfully updated');
           this.originalOrganizationName = this.organization.name;
         },
         error => {

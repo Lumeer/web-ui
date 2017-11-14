@@ -30,7 +30,7 @@ export const constraints: Constraints[] = [
     type: 'numeric',
     color: '#5c93ff',
     list: [
-      'IsNumber', '=', '>=', '<=', '<', '>', 'RoundedTo:', 'Decimal', 'Odd', 'Even', 'LessThan:', 'MoreThan:'
+      'IsNumber', '=', '>=', '<=', '<', '>', 'RoundedTo:', 'Decimal', 'Odd', 'Even', 'LessThan:', 'MoreThan:', 'IsPrime', 'MultipleOf:'
     ]
   },
   {
@@ -38,14 +38,14 @@ export const constraints: Constraints[] = [
     color: '#ff513e',
     list: [
       'IsWord', 'ShorterThan:', 'LongerThan:', 'HasWords:', 'WordCount:', 'ContainsNumbers:', 'Uppercase',
-      'Lowercase'
+      'Lowercase', 'StartsWith:', 'EndsWith:', 'NoPunctuation'
     ]
   },
   {
     type: 'special',
     color: '#6bf643',
     list: [
-      'IsFullName', 'IsName', 'IsDate', 'IsTime', 'IsMoney', 'OneOf:', 'IsGender'
+      'IsFullName', 'IsName', 'IsDate', 'IsTime', 'IsMoney', 'OneOf:', 'IsGender', 'IsPerson', 'Address', 'IsEmail', 'IsPhone', 'IsFax'
     ]
   }
 ];

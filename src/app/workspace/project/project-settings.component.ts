@@ -65,7 +65,7 @@ export class ProjectSettingsComponent implements OnInit {
       this.organizationCode = params.get('organizationCode');
       this.projectCode = params.get('projectCode');
       this.getProject();
-      this.originalProjectCode = this.projectCode
+      this.originalProjectCode = this.projectCode;
     });
   }
 
@@ -86,7 +86,7 @@ export class ProjectSettingsComponent implements OnInit {
 
   public updateProject(): void {
     this.projectService.editProject(this.organizationCode, this.projectCode, this.project).subscribe(
-      success => this.notificationService.success('Project was successfully updated'),
+      success => null,
       error => {
         this.notificationService.error('Error updating project');
       });

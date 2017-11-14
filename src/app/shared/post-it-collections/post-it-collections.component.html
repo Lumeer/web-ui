@@ -29,28 +29,12 @@
           </a>
         </div>
 
-        <div class="buttons d-flex flex-column" [style.top]="postIt.initialized ? '28px' : '5px'">
+        <div class="buttons d-flex flex-column" [style.top]="postIt.initialized ? '50px' : '5px'">
           <ng-container *ngIf="postIt.initialized">
-            <a title="Attributes" i18n-title="@@collection.button.attributes"
+            <a title="Configure" i18n-title="@@collection.button.configure"
                class="rounded-left text-success"
                [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'attributes']">
-              <i class="fa fa-fw fa-list-ul" aria-hidden="true"></i></a>
-
-            <a title="Link Types" i18n-title="@@collection.button.link.types"
-               class="rounded-left text-success"
-               [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'linktypes']">
-              <i class="fa fa-fw fa-link" aria-hidden="true"></i></a>
-
-            <a title="Events" i18n-title="@@collection.button.events"
-               class="rounded-left text-success"
-               [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'events']">
-              <i class="fa fa-fw fa-bullseye" aria-hidden="true"></i></a>
-
-            <a *ngIf="hasManageRole(postIt.collection)"
-               title="Access Rights" i18n-title="@@collection.button.permissions"
-               class="rounded-left text-success"
-               [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'permissions']">
-              <i class="fa fa-fw fa-users" aria-hidden="true"></i></a>
+              <i class="fa fa-fw fa-cog" aria-hidden="true"></i></a>
 
             <a title="Icon picker" i18n-title="@@collection.button.icon"
                class="rounded-left text-success" data-toggle="dropdown">
