@@ -53,12 +53,12 @@ export class PermissionsTableComponent implements OnInit {
   @Input()
   public entityType: string;
 
-  public roles: string[];
-  public entities: Permission[];
-  public otherEntities: string[];
+  public roles: string[] = [];
+  public entities: Permission[] = [];
+  public possibleEntities: string[] = [];
 
   public addedRoles: string[] = [];
-  public rolesCheckbox;
+  public rolesCheckbox: { [role: string]: boolean };
 
   public constructor(private organizationService: OrganizationService,
                      private projectService: ProjectService,
@@ -74,37 +74,42 @@ export class PermissionsTableComponent implements OnInit {
     this.roles = ROLES[this.resourceType];
 
     this.rolesCheckbox = {};
-    this.roles.forEach(r => {
-      this.rolesCheckbox[r] = false;
-    });
+    this.roles.forEach(role => this.rolesCheckbox[role] = false);
+  }
+
+  public allEntities(): string[] {
+    return this.entities
+      .map(entity => entity.name)
+      .concat(this.possibleEntities);
   }
 
   private getEntities(entityType: string, permissions: Permissions): Permission[] {
-    let entities = permissions[entityType];
-    if (entities) {
-      return entities;
-    } else {
+    const entities = permissions[entityType];
+
+    if (!entities) {
       throw Error('unknown entity type');
     }
+
+    return entities;
   }
 
   private setPermissionsForResource(resourceType: string) {
-    let parent = this;
-    let getPermissionsFunctions = {
-      [ResourceType.Organization]: function() {return parent.organizationService.getPermissions();} ,
-      [ResourceType.Project]: function() {return parent.projectService.getPermissions();},
-      [ResourceType.Collection]: function() {return parent.collectionService.getPermissions();},
-      [ResourceType.View]: function() {return parent.viewService.getPermissions();},
+    const getPermissionsFunctions = {
+      [ResourceType.Organization]: () => this.organizationService.getPermissions(),
+      [ResourceType.Project]: () => this.projectService.getPermissions(),
+      [ResourceType.Collection]: () => this.collectionService.getPermissions(),
+      [ResourceType.View]: () => this.viewService.getPermissions(),
     };
-    let getPermissions = getPermissionsFunctions[resourceType];
-    if (getPermissions) {
-      getPermissions().subscribe((permissions: Permissions) => {
-          this.entities = this.getEntities(this.entityType, permissions);
-          this.getOtherEntities(this.entityType);
-        });
-    } else {
+
+    const getPermissions = getPermissionsFunctions[resourceType];
+    if (!getPermissions) {
       throw Error('unknown resorce type');
     }
+
+    getPermissions().subscribe((permissions: Permissions) => {
+      this.entities = this.getEntities(this.entityType, permissions);
+      this.getOtherEntities(this.entityType);
+    });
   }
 
   private getOtherEntities(entityType: string) {
@@ -112,27 +117,29 @@ export class PermissionsTableComponent implements OnInit {
       case EntityType.Users:
         this.usersService.getUsers().subscribe(
           (userEntities: User[]) => {
-            this.otherEntities = this.getNotUsedEntities(userEntities, 'username');
+            this.possibleEntities = this.getNotUsedEntities(userEntities, 'username');
           }
         );
         break;
+
       case EntityType.Groups:
         this.groupService.getGroups().subscribe(
           (groupEntities: Group[]) => {
-            this.otherEntities = this.getNotUsedEntities(groupEntities, 'name');
+            this.possibleEntities = this.getNotUsedEntities(groupEntities, 'name');
           }
         );
         break;
+
       default:
         throw Error('unknown entity type');
     }
   }
 
   private getNotUsedEntities(entities: Object[], propertyName: string) {
-    let tmpEntities = entities.map(group => group[propertyName]);
-    for (let entity of this.entities) {
-      let index = tmpEntities.indexOf(entity['name']);
-      if (index >= 0) {
+    const tmpEntities = entities.map(group => group[propertyName]);
+    for (const entity of this.entities) {
+      const index = tmpEntities.indexOf(entity.name);
+      if (index !== -1) {
         tmpEntities.splice(index, 1);
       }
     }
@@ -141,125 +148,126 @@ export class PermissionsTableComponent implements OnInit {
   }
 
   public onAdd(selectedName: string) {
-    if (this.addedRoles.length === 0 || selectedName === '') {
+    if (!this.addedRoles.length || !selectedName) {
       return;
     }
-    let parent = this;
-    let resources = {
-      [ResourceType.Organization]: parent.organizationService,
-      [ResourceType.Project]: parent.projectService,
-      [ResourceType.Collection]: parent.collectionService,
-      [ResourceType.View]: parent.viewService
-    };
-    let resource = resources[this.resourceType];
 
-    let updatePermissionsFunctions = {
-      [EntityType.Users]: function(permission: Permission) {return resource.updateUserPermission(permission);},
-      [EntityType.Groups]: function(permission: Permission) {return resource.updateGroupPermission(permission);}
+    const resources = {
+      [ResourceType.Organization]: this.organizationService,
+      [ResourceType.Project]: this.projectService,
+      [ResourceType.Collection]: this.collectionService,
+      [ResourceType.View]: this.viewService
     };
 
-    let updatePermissions = updatePermissionsFunctions[this.entityType];
-    if (updatePermissions) {
-      let permission: Permission = {name: selectedName, roles: this.addedRoles};
-      updatePermissions(permission).subscribe();
-      this.entities.push(permission);
-      this.otherEntities.splice(this.otherEntities.indexOf(selectedName), 1);
-      this.emptyCheckboxes();
-      this.addedRoles = [];
-    } else {
+    const resource = resources[this.resourceType];
+
+    const updatePermissionsFunctions = {
+      [EntityType.Users]: (permission: Permission) => resource.updateUserPermission(permission),
+      [EntityType.Groups]: (permission: Permission) => resource.updateGroupPermission(permission)
+    };
+
+    const updatePermissions = updatePermissionsFunctions[this.entityType];
+
+    if (!updatePermissions) {
       throw Error('unknown resource type');
     }
+
+    const permission: Permission = {name: selectedName, roles: this.addedRoles};
+    updatePermissions(permission).subscribe();
+    this.entities.push(permission);
+    this.possibleEntities.splice(this.possibleEntities.indexOf(selectedName), 1);
+    this.emptyCheckboxes();
+    this.addedRoles = [];
   }
 
   private emptyCheckboxes() {
-    for (let k in this.rolesCheckbox) {
-      if (this.rolesCheckbox.hasOwnProperty(k)) {
-        this.rolesCheckbox[k] = false;
-      }
-    }
+    Object.keys(this.rolesCheckbox).forEach(role => this.rolesCheckbox[role] = false);
   }
 
   public updateCheckedRoles(role: string, event) {
     if (event.target.checked) {
-      this.checkRoles(role, this);
+      this.checkRoles(role);
     } else {
       this.addedRoles.splice(this.addedRoles.indexOf(role), 1);
     }
   }
 
-  private checkRoles(role: string, parent) {
+  private checkRoles(role: string) {
     switch (role) {
       case Role.Manage:
-        parent.rolesCheckbox[Role.Manage] = true;
-        parent.addedRoles.push(Role.Manage);
+        this.rolesCheckbox[Role.Manage] = true;
+        this.addedRoles.push(Role.Manage);
       /* falls through */
       case Role.Write:
-        parent.rolesCheckbox[Role.Write] = true;
-        parent.addedRoles.push(Role.Write);
+        this.rolesCheckbox[Role.Write] = true;
+        this.addedRoles.push(Role.Write);
       /* falls through */
       case Role.Read:
-        parent.rolesCheckbox[Role.Read] = true;
-        parent.addedRoles.push(Role.Read);
+        this.rolesCheckbox[Role.Read] = true;
+        this.addedRoles.push(Role.Read);
         break;
       default:
-        parent.rolesCheckbox[role] = true;
+        this.rolesCheckbox[role] = true;
         this.addedRoles.push(role);
         break;
     }
   }
 
   public onRemove(entityName: string, index: number) {
-    let parent = this;
-    let resources = {
-      [ResourceType.Organization]: parent.organizationService,
-      [ResourceType.Project]: parent.projectService,
-      [ResourceType.Collection]: parent.collectionService,
-      [ResourceType.View]: parent.viewService
+    const resources = {
+      [ResourceType.Organization]: this.organizationService,
+      [ResourceType.Project]: this.projectService,
+      [ResourceType.Collection]: this.collectionService,
+      [ResourceType.View]: this.viewService
     };
-    let resource = resources[this.resourceType];
+    const resource = resources[this.resourceType];
 
-    let removePermissionsFunctions = {
-      [EntityType.Users]: function(name: string) {return resource.removeUserPermission(name);} ,
-      [EntityType.Groups]: function(name: string) {return resource.removeGroupPermission(name);}
+    const removePermissionsFunctions = {
+      [EntityType.Users]: (name: string) => resource.removeUserPermission(name),
+      [EntityType.Groups]: (name: string) => resource.removeGroupPermission(name)
     };
-    let removePermissions = removePermissionsFunctions[this.entityType];
-    if (removePermissions) {
-      removePermissions(entityName).subscribe();
-      this.otherEntities.push(entityName);
-      this.entities.splice(index, 1);
-    } else {
+
+    const removePermissions = removePermissionsFunctions[this.entityType];
+
+    if (!removePermissions) {
       throw Error('unknown resource type');
     }
+
+    removePermissions(entityName).subscribe();
+    this.possibleEntities.push(entityName);
+    this.entities.splice(index, 1);
   }
 
   public changePermission(index: number, role: string, event) {
-    let addPermision: boolean = event.target.checked;
-    let parent = this;
-    let resources = {
-      [ResourceType.Organization]: parent.organizationService,
-      [ResourceType.Project]: parent.projectService,
-      [ResourceType.Collection]: parent.collectionService,
-      [ResourceType.View]: parent.viewService
-    };
-    let resource = resources[this.resourceType];
+    const addPermision: boolean = event.target.checked;
 
-    let updatePermissionsFunctions = {
-      [EntityType.Users]: function(permission: Permission) {return resource.updateUserPermission(permission);} ,
-      [EntityType.Groups]: function(permission: Permission) {return resource.updateGroupPermission(permission);}
+    const resources = {
+      [ResourceType.Organization]: this.organizationService,
+      [ResourceType.Project]: this.projectService,
+      [ResourceType.Collection]: this.collectionService,
+      [ResourceType.View]: this.viewService
     };
 
-    let updatePermissions = updatePermissionsFunctions[this.entityType];
-    if (updatePermissions) {
-      if (addPermision) {
-        this.entities[index]['roles'].push(role);
-      } else {
-        this.entities[index]['roles'].splice(this.entities[index]['roles'].indexOf(role), 1);
-      }
-      let permission: Permission = {name: this.entities[index]['name'], roles: this.entities[index]['roles']};
-      updatePermissions(permission).subscribe();
-    } else {
+    const resource = resources[this.resourceType];
+
+    const updatePermissionsFunctions = {
+      [EntityType.Users]: (permission: Permission) => resource.updateUserPermission(permission),
+      [EntityType.Groups]: (permission: Permission) => resource.updateGroupPermission(permission)
+    };
+
+    const updatePermissions = updatePermissionsFunctions[this.entityType];
+
+    if (!updatePermissions) {
       throw Error('unknown resource type');
     }
+
+    if (addPermision) {
+      this.entities[index].roles.push(role);
+    } else {
+      this.entities[index].roles.splice(this.entities[index].roles.indexOf(role), 1);
+    }
+    const permission: Permission = {name: this.entities[index].name, roles: this.entities[index].roles};
+    updatePermissions(permission).subscribe();
   }
 
 }
