@@ -61,6 +61,8 @@ export class AttributeListComponent {
 
   public suggestions: ConstraintSuggestion[] = [];
 
+  public lumeerSuggestions: ConstraintSuggestion[] = [];
+
   constructor(private collectionService: CollectionService,
               private notificationService: NotificationService) {
   }
@@ -167,6 +169,16 @@ export class AttributeListComponent {
       .filter(suggestion => startsWith(suggestion.name, this.activeAttribute.newConstraint))
       .filter(suggestion => !this.activeAttribute.constraints.includes(suggestion.name))
       .slice(0, 5);
+
+    const usedColors = this.activeAttribute.constraints.map(constraint => this.constraintColor(constraint));
+    const uniqueUsedColors = new Set(usedColors);
+    const suggestionNames = this.suggestions.map(suggestion => suggestion.name);
+
+    this.lumeerSuggestions = Const.constraints.map(flattenConstraints)
+      .reduce(flatten, [])
+      .filter(suggestion => this.activeAttribute.newConstraint.includes(suggestion.name))
+      .filter(suggestion => uniqueUsedColors.has(suggestion.color))
+      .filter(suggestion => !suggestionNames.includes(suggestion.name));
   }
 
   //======= Visual functions =======//

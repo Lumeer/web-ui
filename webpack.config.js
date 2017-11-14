@@ -6,7 +6,7 @@ const autoprefixer = require('autoprefixer');
 const postcssUrl = require('postcss-url');
 
 const {NoEmitOnErrorsPlugin, LoaderOptionsPlugin, DefinePlugin, ProvidePlugin} = require('webpack');
-const {GlobCopyWebpackPlugin, BaseHrefWebpackPlugin} = require('@angular/cli/plugins/webpack');
+const {BaseHrefWebpackPlugin} = require('@angular/cli/plugins/webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const {CommonsChunkPlugin} = require('webpack').optimize;
 const {AngularCompilerPlugin} = require('@ngtools/webpack');
@@ -219,21 +219,9 @@ module.exports = {
       API_URL: JSON.stringify(LUMEER_ENGINE)
     }),
     new CopyWebpackPlugin([
-      {from: __dirname + '/img', to: 'img'},
-      {from: __dirname + '/src/assets/img', to: 'img'}
+      {from: __dirname + '/img', to: 'img'}
     ]),
     new NoEmitOnErrorsPlugin(),
-    new GlobCopyWebpackPlugin({
-      "patterns": [
-        "assets",
-        "favicon.ico"
-      ],
-      "globOptions": {
-        "cwd": "/home/karel/Documents/git/lumeer/web-ui/src/main/lumeer-ui/src",
-        "dot": true,
-        "ignore": "**/.gitkeep"
-      }
-    }),
     new ProgressPlugin(),
     new HtmlWebpackPlugin({
       "favicon": "img/favicon.ico",

@@ -28,16 +28,15 @@
           <img title="Lumeer suggestions"
                i18n-title="@@collection.config.tab.attributes.suggestions"
                class="lumeer ml-2 rounded"
-               src="../../../../img/lumeer-logo.png"
-               data-toggle="dropdown"/>
+               src="../../../../../ui/img/lumeer-logo.png"/>
 
-          <div
-            class="dropdown-menu suggestion-list {{ activeAttribute.newConstraint && suggestions.length ? 'show' : null }}"
-            id="suggestions-dropdown">
+          <div *ngIf="activeAttribute.newConstraint && lumeerSuggestions.length"
+               class="dropdown-menu suggestion-list show"
+               id="suggestions-dropdown">
             <h6 class="dropdown-header">Lumeer suggests:</h6>
-            <span *ngFor="let suggestion of suggestions" class="dropdown-item"
-                  [style.color]="suggestion.color"
-                  (click)="addConstraint(activeAttribute, suggestion.name)">{{ suggestion.name }}</span>
+            <span *ngFor="let lumeerSuggestion of lumeerSuggestions" class="dropdown-item"
+                  [style.color]="lumeerSuggestion.color"
+                  (click)="addConstraint(activeAttribute, lumeerSuggestion.name)">{{ lumeerSuggestion.name }}</span>
           </div>
         </div>
       </div>
@@ -70,8 +69,9 @@
       </td>
       <td class="text-right">{{ formatNumber(attribute.usageCount) }}</td>
       <td>
-        <div class="d-flex flex-wrap">
-          <span class="constraint px-2 ml-1 rounded" *ngFor="let constraint of attribute.constraints; let idx = index"
+        <div class="d-flex flex-wrap position-relative">
+          <span class="constraint px-2 ml-1 rounded"
+                *ngFor="let constraint of attribute.constraints; let idx = index"
                 [style.background-color]="darken(constraintColor(constraint), mouseOver.attribute === attribute && mouseOver.constraint === constraint ? 40 : 0)"
                 (mouseenter)="mouseOver = {attribute: attribute, constraint: constraint}"
                 (mouseleave)="mouseOver = {attribute: null, constraint: ''}"
@@ -85,6 +85,12 @@
                  (keyup.enter)="addConstraint(attribute)"
                  (keydown.backspace)="constraintBackspace(attribute)"
                  placeholder="{{ attribute.constraints.length ? '...' : '+' }}"/>
+          <div *ngIf="attribute.newConstraint && suggestions.length"
+               class="dropdown-menu show">
+            <span *ngFor="let suggestion of suggestions" class="dropdown-item"
+                  [style.color]="suggestion.color"
+                  (click)="addConstraint(attribute, suggestion.name)">{{ suggestion.name }}</span>
+          </div>
         </div>
       </td>
     </tr>
