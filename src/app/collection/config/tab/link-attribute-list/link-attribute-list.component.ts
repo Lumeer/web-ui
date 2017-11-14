@@ -22,6 +22,8 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {LinkType} from '../../../../core/dto/link-type';
 import {LinkedAttribute} from '../../../../core/dto/linked-attribute';
 import {Collection} from '../../../../core/dto/collection';
+import {NotificationService} from '../../../../notifications/notification.service';
+import {LinkTypeService} from '../../../../core/rest/link-type.service';
 import * as Const from '../constraints';
 
 @Component({
@@ -48,7 +50,7 @@ export class LinkAttributeListComponent {
 
   public newAttributeName = '';
 
-  constructor(private notificationService: SnotifyService,
+  constructor(private notificationService: NotificationService,
               private linkTypeService: LinkTypeService) {
   }
 
@@ -69,6 +71,11 @@ export class LinkAttributeListComponent {
 
   public addAttribute(linkedAttribute: LinkedAttribute): void {
     this.linkType.linkedAttributes.push(linkedAttribute);
+
+    if (this.linkType.automaticallyLinked && this.linkType.automaticallyLinked.length === 2) {
+      this.linkType.automaticallyLinked = null;
+    }
+
     this.newAttributeName = '';
     this.update.emit();
   }
@@ -76,7 +83,7 @@ export class LinkAttributeListComponent {
   public removeAttribute(removedAttribute: LinkedAttribute) {
     this.linkType.linkedAttributes = this.linkType.linkedAttributes.filter(linkedAttribute => removedAttribute !== linkedAttribute);
 
-    if (this.linkType.automaticallyLinked.includes(removedAttribute)) {
+    if (this.linkType.automaticallyLinked && this.linkType.automaticallyLinked.includes(removedAttribute)) {
       this.linkType.automaticallyLinked = null;
     }
 

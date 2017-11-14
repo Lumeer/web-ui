@@ -42,34 +42,17 @@
         <span>{{ collection.documentsCount }}</span>
         <i class="far fa-file" aria-hidden="true"></i>
       </a>
-
     </div>
-
-  </div>
-
-  <div class="d-flex flex-row justify-content-start">
-    <input class="color-class code"
-           [(ngModel)]="collection.code"
-           (blur)="updateCollectionCode()"
-           [style.color]="collection.color"
-           i18n-title="@@header.collection.code"
-           title="Edit code of the collection">
-
-    <i class="fa fa-times pull-right text-danger icon ml-auto"
-       aria-hidden="true"
-       i18n-title="@@header.collection.remove"
-       title="Remove collection"
-       *ngIf="collection"
-       (click)="confirmDeletion()"></i>
   </div>
 
   <div class="description d-flex py-3">
     <div class="pl-2">
-      <i class="fas fa fa-pencil edit"
-         (click)="onCollectionDescriptionEdit()"></i>
+      <i class="fas fa fa-pencil edit pr-1"
+         (click)="description.focus()"></i>
     </div>
-    <div class="text flex-grow-2"
-         [attr.contenteditable]="collectionDescriptionEditable"
+    <div #description
+         class="text flex-grow-2"
+         contenteditable="true"
          (blur)="updateCollection()">
       {{ collection.description }}
     </div>

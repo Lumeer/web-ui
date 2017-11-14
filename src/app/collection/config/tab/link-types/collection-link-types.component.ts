@@ -21,7 +21,6 @@ import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/c
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../constants';
-import {NotificationsService} from 'angular2-notifications';
 import {Collection} from '../../../../core/dto/collection';
 import {CollectionTabComponent} from '../collection-tab.component';
 import {LinkTypeService} from '../../../../core/rest/link-type.service';
@@ -107,7 +106,6 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public createLinkType(linkTypeModel: LinkTypeModel): void {
-    console.log('ceating', linkTypeModel);
     if (linkTypeModel.initialized) {
       throw new Error(`Link Type Model ${linkTypeModel} already initialized`);
     }
@@ -135,26 +133,38 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   public updateLinkType(linkTypeModel: LinkTypeModel): void {
     this.linkTypeService.updateLinkType(linkTypeModel.data.id, linkTypeModel.data).subscribe(
       linkType => linkTypeModel.data = linkType,
-      error => this.notificationService.error('Error', 'Failed updating link type')
+      error => this.notificationService.error('Failed updating link type')
     );
   }
 
   public changeToCollection(linkTypeModel: LinkTypeModel, collectionCode: string): void {
-    // TODO replace confirm with new notifications
-    if (confirm('Are you sure you want to change linked collection?\nThis will result in loss of all link data')) {
-      linkTypeModel.changeLinkedCollection(collectionCode);
-      this.updateLinkType(linkTypeModel);
-    }
+    this.notificationService.confirm('Are you sure you want to change linked collection?', 'Delete?', [
+      {
+        text: 'Yes', action: () => {
+        linkTypeModel.changeLinkedCollection(collectionCode);
+        this.updateLinkType(linkTypeModel);
+      }, bold: false
+      },
+      {
+        text: 'No'
+      }
+    ]);
   }
 
   public deleteLinkType(linkTypeModel: LinkTypeModel): void {
-    // TODO replace confirm with new notifications
-    if (confirm('Are you sure you want to delete link type?')) {
-      this.linkTypeService.deleteLinkType(linkTypeModel.data.id).subscribe(
-        () => this.removeLinkType(linkTypeModel),
-        error => this.notificationService.error('Error', 'Failed removing link type')
-      );
-    }
+    this.notificationService.confirm('Are you sure you want to delete link type?', 'Delete?', [
+      {
+        text: 'Yes', action: () => {
+        this.linkTypeService.deleteLinkType(linkTypeModel.data.id).subscribe(
+          () => this.removeLinkType(linkTypeModel),
+          error => this.notificationService.error('Failed removing link type')
+        );
+      }, bold: false
+      },
+      {
+        text: 'No'
+      }
+    ]);
   }
 
   public removeLinkType(removedLinkTypeModel: LinkTypeModel): void {
