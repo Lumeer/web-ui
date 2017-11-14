@@ -1,11 +1,11 @@
 <div class="card-header d-flex py-1">
   <span class="mr-auto"
-        [style.color]="data.collection.color">
-    <i class="icon {{ data.collection.icon }} mr-1"></i>
-    {{ data.collection.name }}
+        [style.color]="collection.color">
+    <i class="icon {{ collection.icon }} mr-1"></i>
+    {{ collection.name }}
   </span>
 
-  <ng-container *ngIf="data.writeRole">
+  <ng-container *ngIf="hasWriteRole()">
     <i class="button text-danger fa fa-times rounded align-self-center p-1"
        title="Remove Document" i18n-title="@@document.button.remove"
        (click)="onRemoveDocumentClick()"></i>
@@ -24,7 +24,7 @@
 <div class="card-body p-2">
   <ul class="m-0 p-0" #content>
 
-    <ng-container *ngIf="data.writeRole">
+    <ng-container *ngIf="hasWriteRole()">
       <li *ngFor="let attributePair of attributePairs; let row = index">
         <span id="AttributePair{{ data.index }}[0, {{ row }}]" class="attribute"
               tabindex="-1"
@@ -107,7 +107,7 @@
       </li>
     </ng-container>
 
-    <ng-container *ngIf="!data.writeRole">
+    <ng-container *ngIf="!hasWriteRole()">
       <li *ngFor="let attributePair of attributePairs">
         <span class="attribute">
           <input class="border-0"

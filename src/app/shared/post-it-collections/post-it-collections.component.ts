@@ -17,17 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewChecked,
-  Component,
-  ElementRef,
-  Input,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChildren
-} from '@angular/core';
+import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../collection/constants';
@@ -55,7 +45,7 @@ import {selectWorkspace} from '../../core/store/navigation/navigation.state';
     '(document:click)': 'onClick($event)'
   }
 })
-export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   @Input()
   public query: Query;
@@ -95,10 +85,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     this.loadCollections();
   }
 
-  public ngAfterViewChecked(): void {
-    this.layout.refresh();
-  }
-
   private initializeLayout(): void {
     this.layout = new PostItLayout({
       container: '.parent',
@@ -108,33 +94,29 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   }
 
   private loadCollections() {
-    this.searchService.searchCollections(QueryConverter.removeLinksFromQuery(this.query))
-      .subscribe(
-        collections => {
-          this.postIts = [];
-          collections.forEach(collection => {
-            const postIt = new PostItCollectionData;
-            postIt.collection = collection;
-            postIt.initialized = true;
+    this.searchService.searchCollections(QueryConverter.removeLinksFromQuery(this.query)).subscribe(
+      collections => {
+        this.postIts = collections.map(collection => this.collectionToPostIt(collection, true));
+        this.reloadLayout();
+      },
+      error => {
+        this.notificationService.error('Failed fetching collections');
+      });
+  }
 
-            this.postIts.push(postIt);
-          });
+  private collectionToPostIt(collection: Collection, initialized: boolean): PostItCollectionData {
+    const postIt = new PostItCollectionData;
+    postIt.collection = collection;
+    postIt.initialized = initialized;
 
-          this.reloadLayout();
-        },
-        error => {
-          this.handleError(error, 'Failed fetching collections');
-        });
+    return postIt;
   }
 
   private reloadLayout(): void {
     setTimeout(() => {
       this.nameInputs.forEach(nameInput => this.updateToScrollbarHeight(nameInput.nativeElement));
-    }, 500);
-
-    setTimeout(() => {
       this.layout.refresh();
-    }, 1000);
+    });
   }
 
   public toggleFavorite(collection: Collection) {
@@ -171,6 +153,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
     this.postIts.push(newPostIt);
     setTimeout(() => this.postItElements.last.nativeElement.getElementsByTagName('textarea').item(0).focus());
+    this.layout.refresh();
   }
 
   public initializePostIt(postIt: PostItCollectionData): void {
@@ -186,7 +169,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
           this.notificationService.success('Collection created');
         },
         error => {
-          this.handleError(error, 'Creating collection failed');
+          this.notificationService.error('Creating collection failed');
         });
   }
 
@@ -195,9 +178,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
       .subscribe(
         collection => {
           postIt.collection = collection;
+          this.layout.refresh();
         },
         error => {
-          this.handleError(error, 'Refreshing collection failed');
+          this.notificationService.error('Refreshing collection failed');
         });
   }
 
@@ -210,9 +194,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
       .subscribe(
         collection => {
           postIt.collection = collection;
+          this.layout.refresh();
         },
         error => {
-          this.handleError(error, 'Failed updating collection');
+          this.notificationService.error('Failed updating collection');
         });
   }
 
@@ -227,7 +212,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
       };
       reader.readAsText(file);
     } else {
-      this.handleError(null, 'File input is empty');
+      this.notificationService.error('File input is empty');
     }
   }
 
@@ -243,9 +228,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
           collection.icon = COLLECTION_NO_ICON;
 
           this.postIts.push(newPostIt);
+          this.layout.refresh();
         },
         error => {
-          this.handleError(error, 'Import failed');
+          this.notificationService.error('Import failed');
         }
       );
   }
@@ -273,12 +259,13 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
             this.notificationService.success('Collection removed');
           },
           error => {
-            this.handleError(error, 'Failed removing collection');
+            this.notificationService.error('Failed removing collection');
           }
         );
     }
 
     this.postIts.splice(this.postItIndex(postIt), 1);
+    this.layout.refresh();
   }
 
   public onTextAreaBlur(postIt: PostItCollectionData, textArea: HTMLTextAreaElement): void {
@@ -304,8 +291,9 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     if (!this.postItElements) {
       return;
     }
+
     const clickedPostItIndex = this.postItElements.toArray().findIndex(postIt => postIt.nativeElement.contains(event.target));
-    if (clickedPostItIndex != -1) {
+    if (clickedPostItIndex !== -1) {
       this.lastClickedPostIt = this.postIts[clickedPostItIndex];
     }
   }
@@ -313,10 +301,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   private postItIndex(collectionData: PostItCollectionData): number {
     const index = this.postIts.findIndex(collectionDataObject => collectionDataObject === collectionData);
     return index === -1 ? null : index;
-  }
-
-  private handleError(error: Error, message?: string): void {
-    this.notificationService.error(message ? message : error.message);
   }
 
   public updateToScrollbarHeight(textArea: HTMLTextAreaElement): void {
@@ -329,9 +313,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   }
 
   public ngOnDestroy(): void {
-    if (this.layout) {
-      this.layout.destroy();
-    }
+    this.layout.destroy();
   }
 
   public emptyQuery(): boolean {

@@ -28,6 +28,9 @@ import {KeyCode} from '../../../../shared/key-code';
 import {isString} from 'util';
 import {AppState} from '../../../../core/store/app.state';
 import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {Collection} from '../../../../core/dto/collection';
+import {Role} from '../../../../shared/permissions/role';
+import {Permission} from '../../../../core/dto/permission';
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 
 @Component({
@@ -39,6 +42,12 @@ export class PostItDocumentComponent implements OnInit {
 
   @Input()
   public data: DocumentData;
+
+  @Input()
+  public collection: Collection;
+
+  @Input()
+  public attributeSuggestions: string[];
 
   @Output()
   public removed = new EventEmitter();
@@ -267,8 +276,17 @@ export class PostItDocumentComponent implements OnInit {
     this.removed.emit();
   }
 
+  public hasWriteRole(): boolean {
+    return this.hasRole(Role.Write);
+  }
+
+  private hasRole(role: string): boolean {
+    return this.collection.permissions && this.collection.permissions.users
+      .some((permission: Permission) => permission.roles.includes(role));
+  }
+
   public configPrefix(): string {
-    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}/c/${this.data.collection.code}/d/${this.data.document.id}`;
+    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}/c/${this.collection.code}/d/${this.data.document.id}`;
   }
 
 }

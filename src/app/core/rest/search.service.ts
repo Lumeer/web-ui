@@ -29,10 +29,11 @@ import {Document} from '../dto/document';
 import {View} from '../dto/view';
 import {SuggestionType} from '../dto/suggestion-type';
 import {Observable} from 'rxjs/Observable';
-import {catchError, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {Workspace} from '../store/navigation/workspace.model';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
+import {isNullOrUndefined} from 'util';
 import {HomePageService} from './home-page.service';
 
 @Injectable()
@@ -61,10 +62,15 @@ export class SearchService {
 
   public searchDocuments(query: Query): Observable<Document[]> {
     return this.http.post<Document[]>(`${this.searchPath()}/documents`, query)
-      .pipe(
-        catchError(SearchService.handleError),
-        switchMap(documents => this.homePageService.checkFavoriteDocuments(documents))
-      );
+      .pipe(// TODO remove after backend supports pagination
+      map(documents => {
+        if (isNullOrUndefined(query.page) || isNullOrUndefined(query.pageSize)) {
+          return documents;
+        }
+
+        return documents.slice(query.page * query.pageSize, (query.page + 1) * query.pageSize);
+      }),catchError(SearchService.handleError),
+        switchMap(documents => this.homePageService.checkFavoriteDocuments(documents)));
   }
 
   public searchViews(query: Query): Observable<View[]> {
