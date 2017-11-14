@@ -17,8 +17,8 @@
                       [resources]="organizations[activeOrgIx].projects"
                       [canCreateResource]="hasManageRole(organizations[activeOrgIx])"
                       (resourceSelect)="onSelectProject($event)"
-                      (resourceNew)="onCreateProject()"
                       (resourceSettings)="onProjectSettings($event)"
+                      (resourceNew)="getProjectsOfOrganization($event)"
                       (resourceNewDescription)="onNewProjectDescription($event)">
     </resource-chooser>
   </div>

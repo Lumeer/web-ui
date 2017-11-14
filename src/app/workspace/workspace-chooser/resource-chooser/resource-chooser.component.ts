@@ -36,7 +36,7 @@ import {Role} from '../../../shared/permissions/role';
 import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from "../../../collection/constants";
 import {OrganizationService} from '../../../core/rest/organization.service';
 import {ProjectService} from '../../../core/rest/project.service';
-import {NotificationsService} from 'angular2-notifications/dist';
+import {NotificationsService} from 'angular2-notifications';
 import {Organization} from "../../../core/dto/organization";
 import {WorkspaceService} from '../../../core/workspace.service';
 import {Project} from '../../../core/dto/project';
@@ -113,6 +113,9 @@ export class ResourceChooserComponent implements OnChanges {
   public newResource;
   public newOrganization: Organization = new Organization();
   public uninitializedResources: Set<Resource> = new Set<Resource>();
+  private newProject: Project = new Project();
+  private static activeOrganizationIdx: number;
+  private static activeOrganizationCode: string;
 
   constructor(private organizationService: OrganizationService,
               private projectService: ProjectService,
@@ -243,8 +246,8 @@ export class ResourceChooserComponent implements OnChanges {
       initialized: false
     }
 
-    this.resources.push(this.newResource);
     this.uninitializedResources.add(this.newResource);
+    this.resources.push(this.newResource);
     // this.resourceNew.emit();
   }
 
@@ -259,7 +262,6 @@ export class ResourceChooserComponent implements OnChanges {
 
   public onCreateOrganization(organization: Organization, resource: Resource): void {
     this.organizationService.createOrganization(organization)
-      .pipe(finalize(() => this.uninitializedResources.delete(resource)))
       .subscribe(response => {
         this.notificationsService
           .success('Success', 'Organization created');
@@ -267,6 +269,8 @@ export class ResourceChooserComponent implements OnChanges {
         // organization.code = code;
         // console.log(response);
         this.resourceNew.emit();
+        this.uninitializedResources.delete(resource);
+
 
       }, error => {
         this.notificationsService
@@ -275,10 +279,16 @@ export class ResourceChooserComponent implements OnChanges {
       });
   }
 
-  public onCreateProject(orgCode: string, project: Project): void {
-    if (!isNullOrUndefined(orgCode)) {
-      this.projectService.createProject(orgCode, project).subscribe(response => this.notificationsService
-        .success('Success', 'Project created'), error => this.notificationsService
+  public onCreateProject(orgCode: string, project: Project, resource: Resource): void {
+    console.log('creating project', orgCode);
+
+    if (!isNullOrUndefined(ResourceChooserComponent.activeOrganizationCode)) {
+      this.projectService.createProject(ResourceChooserComponent.activeOrganizationCode, project).subscribe(response => {
+        this.notificationsService
+          .success('Success', 'Project created');
+        this.resourceNew.emit(ResourceChooserComponent.activeOrganizationIdx);
+        this.uninitializedResources.delete(resource);
+      }, error => this.notificationsService
         .error('Error', 'Error creating project'));
     }
   }
@@ -295,10 +305,18 @@ export class ResourceChooserComponent implements OnChanges {
           icon: resource.icon
         };
         this.onCreateOrganization(this.newOrganization, resource);
+        break;
 
 
       case 'project':
-        this.onCreateProject(this.workspaceService.organizationCode, resource);
+        this.newProject = {
+          code: 'newcodeProject',
+          name: resource.name,
+          color: resource.color,
+          icon: resource.icon
+        };
+
+        this.onCreateProject(ResourceChooserComponent.activeOrganizationCode, this.newProject, resource);
         break;
     }
   }
@@ -306,6 +324,10 @@ export class ResourceChooserComponent implements OnChanges {
   public isInitialized(resource: Resource): boolean {
     console.log('I am initialized ' + !this.uninitializedResources.has(resource));
     return !this.uninitializedResources.has(resource);
+  }
+
+  public getOrganizations(idx: string): void {
+
   }
 
   public isAnyResourceInitializing(): boolean {

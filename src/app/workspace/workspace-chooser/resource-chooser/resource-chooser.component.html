@@ -27,7 +27,7 @@
            [style.width]="resourceWidth + 'px'">
 
         <div class="tab d-flex" *ngFor="let resource of resources; let ix = index"
-             (click)="isInitialized(resource) && onResourceSelected(ix) && resources[ix]">
+             (click)="isInitialized(resource) && onResourceSelected(ix, resource.code) && resources[ix]">
           <div class="post-it align-self-center">
             <div class="card square"></div>
             <div class="card text-center content border-0" [style.color]="resource.color">

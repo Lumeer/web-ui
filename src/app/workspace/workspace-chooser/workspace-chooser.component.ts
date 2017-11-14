@@ -175,6 +175,9 @@ export class WorkspaceChooserComponent implements OnInit {
 
   public onSelectOrganization(index: number) {
     const selectedOrganization = this.organizations[index];
+    if (!selectedOrganization.code) {
+      return;
+    }
     if (!selectedOrganization.projects) {
       selectedOrganization.projects = [];
       this.projectService.getProjects(selectedOrganization.code)
@@ -249,4 +252,14 @@ export class WorkspaceChooserComponent implements OnInit {
     this.userSettingsService.updateUserSettings(userSettings);
   }
 
+  public getProjectsOfOrganization(index: number) {
+    const selectedOrganization = this.organizations[index];
+
+    selectedOrganization.projects = [];
+    this.projectService.getProjects(selectedOrganization.code)
+      .subscribe((projects: Project[]) => {
+        selectedOrganization.projects = projects;
+      });
+
+  }
 }
