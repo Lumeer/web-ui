@@ -25,6 +25,8 @@ import {CollectionService, DocumentService, LinkInstanceService, LinkTypeService
 import {Attribute, Collection, Document, LinkInstance, LinkType} from '../../../../core/dto';
 import {AttributeHelper} from '../../../../shared/utils/attribute-helper';
 import {SearchService} from '../../../../core/rest/search.service';
+import {map} from 'rxjs/operators';
+import 'rxjs/add/observable/combineLatest';
 
 @Injectable()
 export class TableManagerService {
@@ -52,14 +54,15 @@ export class TableManagerService {
       this.searchService.searchDocuments({collectionCodes: collectionCodes}),
       this.linkTypeService.getLinkTypesByCollections(...collectionCodes),
       this.linkInstanceService.getLinkInstancesByTypes(...linkTypeIds)
-    ).map(([collections, documents, linkTypes, linkInstances]) => {
-      this.collections = collections;
-      this.documents = documents;
-      this.linkTypes = linkTypes;
-      this.linkInstances = linkInstances;
+    ).pipe(
+      map(([collections, documents, linkTypes, linkInstances]) => {
+        this.collections = collections;
+        this.documents = documents;
+        this.linkTypes = linkTypes;
+        this.linkInstances = linkInstances;
 
-      return this.createTablePartsFromConfig(config);
-    });
+        return this.createTablePartsFromConfig(config);
+      }));
   }
 
   private createTablePartsFromConfig(config: TableConfig): TablePart[] {
@@ -72,7 +75,9 @@ export class TableManagerService {
         .filter(doc => configPart.expandedDocumentIds.includes(doc.id)) : [];
 
       tablePart.linkType = this.getLinkTypeById(configPart.linkTypeId);
-      tablePart.linkedCollection = tablePart.linkType ? this.getCollectionByCode(tablePart.linkType.collectionCodes.find(code => code !== configPart.collectionCode)) : null;
+      tablePart.linkedCollection = tablePart.linkType ?
+        this.getCollectionByCode(tablePart.linkType.collectionCodes.find(code => code !== configPart.collectionCode)) :
+        null;
 
       tablePart.sorting = index === 0 ? {
         attributeId: configPart.sortedBy,

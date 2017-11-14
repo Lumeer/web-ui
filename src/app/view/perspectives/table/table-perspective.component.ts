@@ -40,7 +40,6 @@ import {AttributeChangeEvent} from './event/attribute-change-event';
 import {LinkInstanceEvent} from './event/link-instance-event';
 import {Document} from '../../../core/dto/document';
 import {NotificationService} from '../../../notifications/notification.service';
-import 'rxjs/add/observable/combineLatest';
 
 @Component({
   selector: 'table-perspective',
