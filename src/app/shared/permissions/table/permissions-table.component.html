@@ -1,7 +1,7 @@
 <table class="table table-sm">
   <thead class="font-italic">
   <tr>
-    <th class="border-0">{{ entityType }}</th>
+    <th class="border-0">{{ capitalizeFirstLetter(entityType) }}</th>
     <th *ngFor="let role of roles"
         class="border-0 font-weight-normal"
         i18n="@@permissions.role">
@@ -15,7 +15,7 @@
   <tr *ngFor="let entity of entities; let idx = index">
     <td class="border-0">{{entity.name}}</td>
     <td *ngFor="let role of roles"
-        class="role border-0">
+        class="role border-0 text-center pr-3">
       <label class="custom-control custom-checkbox">
         <input type="checkbox"
                class="custom-control-input"
@@ -43,7 +43,7 @@
       </select>
     </td>
     <td *ngFor="let role of roles"
-        class="role border-0">
+        class="role border-0 text-center pr-3">
       <label class="custom-control custom-checkbox">
         <input type="checkbox"
                class="custom-control-input"
