@@ -17,18 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
+import { createSelector } from '@ngrx/store';
 
-@Injectable()
-export class WorkspaceService {
+import {Query} from './query.model';
+import {Workspace} from './workspace.model';
+import {AppState} from '../app.state';
 
-  public organizationCode: string;
-  public projectCode: string;
-  public collectionCode: string;
-  public viewCode: string;
+export interface NavigationState {
 
-  public isWorkspaceSet(): boolean {
-    return this.organizationCode && this.organizationCode !== '' && this.projectCode && this.projectCode !== '';
-  }
+  query: Query;
+  workspace: Workspace;
+  perspectiveId?: string;
+  searchTab?: string; // TODO remove after route refactoring
+  searchBoxHidden?: boolean;
 
 }
+
+export const initialNavigationState: NavigationState = {
+
+  query: {},
+  workspace: {},
+  searchBoxHidden: false
+
+};
+
+export const selectNavigation = (state: AppState) => state.navigation;
+export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);

@@ -19,20 +19,26 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {Store} from '@ngrx/store';
 
 import {Permissions} from '../dto/permissions';
 import {Permission} from '../dto/permission';
 import {Observable} from 'rxjs/Observable';
-import {WorkspaceService} from '../workspace.service';
 import {LumeerError} from '../error/lumeer.error';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {catchError} from 'rxjs/operators';
+import {Workspace} from '../store/navigation/workspace.model';
+import {AppState} from '../store/app.state';
+import {selectWorkspace} from '../store/navigation/navigation.state';
 
 @Injectable()
 export abstract class PermissionService {
 
+  protected workspace: Workspace;
+
   constructor(protected httpClient: HttpClient,
-              protected workspaceService: WorkspaceService) {
+              protected store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
   public getPermissions(): Observable<Permissions> {

@@ -17,24 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren
-} from '@angular/core';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Store} from '@ngrx/store';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import {catchError, debounceTime, map, startWith, switchMap} from 'rxjs/operators';
 
 import {Suggestions} from '../../core/dto/suggestions';
-import {WorkspaceService} from '../../core/workspace.service';
 import {QueryItem} from './query-item/query-item';
 import {FulltextQueryItem} from './query-item/fulltext-query-item';
 import {AttributeQueryItem} from './query-item/attribute-query-item';
@@ -42,7 +33,6 @@ import {CollectionQueryItem} from './query-item/collection-query-item';
 import {Collection} from '../../core/dto/collection';
 import {QueryItemsConverter} from './query-item/query-items-converter';
 import {Query} from '../../core/dto/query';
-import {QueryConverter} from '../utils/query-converter';
 import {ViewService} from '../../core/rest/view.service';
 import {KeyCode} from '../key-code';
 import {HtmlModifier} from '../utils/html-modifier';
@@ -54,6 +44,9 @@ import {LinkType} from '../../core/dto/link-type';
 import {LinkQueryItem} from './query-item/link-query-item';
 import {LinkTypeService} from '../../core/rest/link-type.service';
 import {CollectionService} from '../../core/rest/collection.service';
+import {AppState} from '../../core/store/app.state';
+import {Workspace} from '../../core/store/navigation/workspace.model';
+import {selectNavigation} from '../../core/store/navigation/navigation.state';
 
 @Component({
   selector: 'search-box',
@@ -81,20 +74,30 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   private selectedQueryItem: number = -1;
   private textCopy: string = '';
 
+  private workspace: Workspace;
+
   constructor(private activatedRoute: ActivatedRoute,
+              private collectionService: CollectionService,
+              private linkTypeService: LinkTypeService,
               private queryItemsConverter: QueryItemsConverter,
               private router: Router,
-              private collectionService: CollectionService,
+              private store: Store<AppState>,
               private searchService: SearchService,
               private viewService: ViewService,
-              private workspaceService: WorkspaceService,
-              private linkTypeService: LinkTypeService,
               private ref: ChangeDetectorRef) {
   }
 
   public ngOnInit(): void {
-    this.getQueryItemsFromQueryParams();
-    this.getQueryItemsFromView();
+    this.store.select(selectNavigation).subscribe(navigation => {
+      this.workspace = navigation.workspace;
+
+      if (this.workspace.viewCode) {
+        this.getQueryItemsFromView(this.workspace.viewCode);
+      } else {
+        this.getQueryItemsFromQuery(navigation.query);
+      }
+    });
+
     this.suggestQueryItems();
   }
 
@@ -110,25 +113,16 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private getQueryItemsFromQueryParams() {
-    this.activatedRoute.queryParamMap.pipe(
-      map((queryParams: ParamMap) => QueryConverter.fromString(queryParams.get('query'))),
-      switchMap((query: Query) => this.queryItemsConverter.fromQuery(query))
-    ).subscribe(queryItems => {
+  private getQueryItemsFromQuery(query: Query) {
+    this.queryItemsConverter.fromQuery(query).subscribe(queryItems => {
       if (this.queryItems.length === 0) {
         this.queryItems = queryItems;
       }
     });
   }
 
-  private getQueryItemsFromView() {
-    if (!this.activatedRoute.firstChild) {
-      return;
-    }
-
-    this.activatedRoute.firstChild.paramMap.pipe(
-      map((params: ParamMap) => params.get('viewCode')),
-      switchMap(viewCode => this.viewService.getView(viewCode)),
+  private getQueryItemsFromView(viewCode: string) {
+    this.viewService.getView(viewCode).pipe(
       switchMap(view => view ? this.queryItemsConverter.fromQuery(view.query) : Observable.of([]))
     ).subscribe(queryItems => {
       if (this.queryItems.length === 0) {
@@ -382,12 +376,9 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   public search(): void {
-    const organizationCode = this.workspaceService.organizationCode;
-    const projectCode = this.workspaceService.projectCode;
-
     const items = this.queryItems.filter(item => item.isComplete());
 
-    this.router.navigate(['/w', organizationCode, projectCode, 'view'], {
+    this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view'], {
       queryParams: {
         query: this.queryItemsConverter.toQueryString(items),
         perspective: 'search',

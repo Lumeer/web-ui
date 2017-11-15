@@ -19,10 +19,10 @@
 
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {Store} from '@ngrx/store';
 
 import {CollectionTabComponent} from '../collection-tab.component';
 import {EventService} from '../../../../core/rest/event.service';
-import {WorkspaceService} from '../../../../core/workspace.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Event} from '../../../../core/dto/Event';
 import {CollectionSelectService} from '../../../service/collection-select.service';
@@ -30,6 +30,7 @@ import {NotificationService} from '../../../../notifications/notification.servic
 import {EventModel} from './model/EventModel';
 import {EventFireReason} from './model/event-fire-reason';
 import {finalize} from 'rxjs/operators';
+import {AppState} from '../../../../core/store/app.state';
 
 @Component({
   selector: 'collection-events',
@@ -41,17 +42,17 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
   public events: EventModel[];
 
   constructor(private eventService: EventService,
-              protected collectionService: CollectionService,
-              protected collectionSelectService: CollectionSelectService,
-              protected route: ActivatedRoute,
-              protected notificationService: NotificationService,
-              protected workspaceService: WorkspaceService) {
+              collectionService: CollectionService,
+              collectionSelectService: CollectionSelectService,
+              notificationService: NotificationService,
+              route: ActivatedRoute,
+              store: Store<AppState>) {
     super(
       collectionService,
       collectionSelectService,
-      route,
       notificationService,
-      workspaceService
+      route,
+      store
     );
   }
 

@@ -19,11 +19,14 @@
 
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {Store} from '@ngrx/store';
 
 import {Project} from '../../../core/dto/project';
-import {WorkspaceService} from '../../../core/workspace.service';
 import {ProjectService} from '../../../core/rest/project.service';
 import {NotificationService} from '../../../notifications/notification.service';
+import {AppState} from '../../../core/store/app.state';
+import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {Workspace} from '../../../core/store/navigation/workspace.model';
 
 @Component({
   selector: 'project-form',
@@ -37,14 +40,18 @@ export class ProjectFormComponent implements OnInit {
   public organizationCode: string;
   public projectCode: string;
 
+  private workspace: Workspace;
+
   constructor(private projectService: ProjectService,
-              private workspaceService: WorkspaceService,
               private route: ActivatedRoute,
               private router: Router,
+              private store: Store<AppState>,
               private notificationsService: NotificationService) {
   }
 
   public ngOnInit(): void {
+    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+
     this.project = new Project();
     this.route.data.subscribe((data: { creation: boolean }) => {
       this.creation = data.creation;
@@ -100,8 +107,8 @@ export class ProjectFormComponent implements OnInit {
     this.projectService.editProject(this.organizationCode, this.projectCode, this.project)
       .subscribe(
         response => {
-          if (this.projectCode === this.workspaceService.projectCode) {
-            this.workspaceService.projectCode = this.project.code;
+          if (this.projectCode === this.workspace.projectCode) {
+            this.workspace.projectCode = this.project.code;
           }
           this.goBack();
         },

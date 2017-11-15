@@ -18,48 +18,22 @@
  */
 
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, ParamMap, Router} from '@angular/router';
 
 import {SnotifyPosition, SnotifyService} from 'ng-snotify';
 
-import {WorkspaceService} from './core/workspace.service';
-import {RouteFinder} from './shared/utils/route-finder';
-import {filter, map, mergeMap} from 'rxjs/operators';
-
 @Component({
-  selector: 'app',
+  selector: 'lmr-app',
   templateUrl: './app.component.html',
   styleUrls: ['./shared/common.scss', './app.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {
 
-  constructor(private activatedRoute: ActivatedRoute,
-              private router: Router,
-              private workspaceService: WorkspaceService,
-              private notificationService: SnotifyService) {
+  constructor(private notificationService: SnotifyService) {
   }
 
   public ngOnInit() {
-    this.processPathParams();
     this.setNotificationStyle();
-  }
-
-  private processPathParams() {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd),
-      map(() => this.activatedRoute),
-      map(route => RouteFinder.getFirstChildRouteWithParams(route)),
-      filter(route => route.outlet === 'primary'),
-      mergeMap(route => route.paramMap),
-    ).subscribe((params: ParamMap) => this.setWorkspace(params));
-  }
-
-  private setWorkspace(params: ParamMap) {
-    this.workspaceService.organizationCode = params.get('organizationCode');
-    this.workspaceService.projectCode = params.get('projectCode');
-    this.workspaceService.collectionCode = params.get('collectionCode');
-    this.workspaceService.viewCode = params.get('viewCode');
   }
 
   public setNotificationStyle(): void {

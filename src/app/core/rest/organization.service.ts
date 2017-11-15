@@ -57,7 +57,7 @@ export class OrganizationService extends PermissionService {
   }
 
   protected actualApiPrefix(): string {
-    const organizationCode = this.workspaceService.organizationCode;
+    const organizationCode = this.workspace.organizationCode;
 
     return this.apiPrefix(organizationCode);
   }

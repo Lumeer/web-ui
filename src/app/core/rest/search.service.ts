@@ -19,8 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
-
-import {WorkspaceService} from '../workspace.service';
+import {Store} from '@ngrx/store';
 import {Suggestions} from '../dto/suggestions';
 import {Query} from '../dto/query';
 import {Collection} from '../dto/collection';
@@ -31,11 +30,18 @@ import {View} from '../dto/view';
 import {SuggestionType} from '../dto/suggestion-type';
 import {Observable} from 'rxjs/Observable';
 import {catchError} from 'rxjs/operators';
+import {Workspace} from '../store/navigation/workspace.model';
+import {AppState} from '../store/app.state';
+import {selectWorkspace} from '../store/navigation/navigation.state';
 
 @Injectable()
 export class SearchService {
 
-  constructor(private http: HttpClient, private workspaceService: WorkspaceService) {
+  private workspace: Workspace;
+
+  constructor(private http: HttpClient,
+              private store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
   public suggest(text: string, type: SuggestionType): Observable<Suggestions> {
@@ -59,10 +65,7 @@ export class SearchService {
   }
 
   private searchPath(): string {
-    const organizationCode = this.workspaceService.organizationCode;
-    const projectCode = this.workspaceService.projectCode;
-
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/search`;
+    return `/${API_URL}/rest/organizations/${this.workspace.organizationCode}/projects/${this.workspace.projectCode}/search`;
   }
 
   private static handleError(error: HttpErrorResponse): ErrorObservable {

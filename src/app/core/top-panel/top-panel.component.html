@@ -11,11 +11,11 @@
 
     <div class="d-flex justify-content-end col order-lg-3">
       <div class="panel-item lead mr-2"
-           *ngIf="workspaceService.isWorkspaceSet()">
+           *ngIf="this.workspace.organizationCode && this.workspace.projectCode">
         <a [routerLink]="['/workspace']"
            title="Choose workspace">
         <span>
-          {{workspaceService.projectCode}}@{{workspaceService.organizationCode}}
+          {{workspace.projectCode}}@{{workspace.organizationCode}}
         </span>
         </a>
       </div>
