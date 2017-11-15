@@ -78,9 +78,13 @@ export class LinkTypeService {
   public getLinkTypesByCollections(...collectionCodes: string[]): Observable<LinkType[]> {
     const linkTypes: { [id: string]: LinkType } = LocalStorage.get(LINK_TYPES) || {};
 
-    const results = Object.values(linkTypes)
-      .filter(linkType => collectionCodes.includes(linkType.collectionCodes[0]) || collectionCodes.includes(linkType.collectionCodes[1]));
+    const results = Object.values(linkTypes).filter(linkType => collectionCodes.includes(linkType.collectionCodes[0]) || collectionCodes.includes(linkType.collectionCodes[1]));
     return Observable.of(results);
+  }
+
+  public getLinkTypes(): LinkType[] {
+    const linkTypes: { [id: string]: LinkType } = LocalStorage.get(LINK_TYPES) || {};
+    return Object.values(linkTypes);
   }
 
   private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {

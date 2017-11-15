@@ -23,11 +23,11 @@ import {Collection} from '../../core/dto/collection';
 export class LinkHelper {
 
   public static filterRelatedLinkTypes(collection: Collection, linkTypes: LinkType[]): LinkType[] {
-    return linkTypes.filter(linkType => linkType.from.code === collection.code || linkType.from.code === collection.code);
+    return linkTypes.filter(linkType => linkType.collectionCodes.includes(collection.code));
   }
 
   public static getOtherCollectionCode(linkType: LinkType, collectionCode: string): string {
-    return linkType.from.code === collectionCode ? linkType.to.code : linkType.from.code;
+    return linkType.collectionCodes[0] === collectionCode ? linkType.collectionCodes[1] : linkType.collectionCodes[0];
   }
 
 }

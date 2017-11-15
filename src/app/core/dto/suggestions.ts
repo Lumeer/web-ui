@@ -18,6 +18,7 @@
  */
 import {Collection} from './collection';
 import {LinkType} from './link-type';
+import {Document} from './document';
 
 export interface Suggestions {
 

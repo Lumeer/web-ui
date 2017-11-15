@@ -53,6 +53,7 @@ import {SuggestionType} from '../../core/dto/suggestion-type';
 import {LinkType} from '../../core/dto/link-type';
 import {LinkQueryItem} from './query-item/link-query-item';
 import {LinkTypeService} from '../../core/rest/link-type.service';
+import {CollectionService} from '../../core/rest/collection.service';
 
 @Component({
   selector: 'search-box',
@@ -83,6 +84,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   constructor(private activatedRoute: ActivatedRoute,
               private queryItemsConverter: QueryItemsConverter,
               private router: Router,
+              private collectionService: CollectionService,
               private searchService: SearchService,
               private viewService: ViewService,
               private workspaceService: WorkspaceService,
@@ -156,7 +158,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   private searchLinkTypes(suggestions: Suggestions): Observable<Suggestions> {
     suggestions.links = [];
     for (let link of this.linkTypeService.getLinkTypes()) {
-      if (link.name.toLowerCase().startsWith(this.text)) {
+      if (link.name.toLowerCase().startsWith(this.text.toLowerCase())) {
         suggestions.links.push(link);
       }
     }
@@ -172,16 +174,38 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   private convertSuggestionsToQueryItems(suggestions: Suggestions): Observable<QueryItem[]> {
     let suggestedQueryItems: QueryItem[] = [];
-
     suggestedQueryItems = suggestedQueryItems.concat(this.createCollectionQueryItems(suggestions.collections));
     suggestedQueryItems = suggestedQueryItems.concat(this.createAttributeQueryItems(suggestions.attributes));
-    suggestedQueryItems = suggestedQueryItems.concat(this.createLinkQueryItems(suggestions.links));
     // TODO add views
     if (!this.isFullTextQueryPresented()) {
       suggestedQueryItems.push(new FulltextQueryItem(this.text));
     }
 
+    const codes = new Set<string>();
+    suggestions.links.forEach(link => {
+      codes.add(link.collectionCodes[0]);
+      codes.add(link.collectionCodes[1]);
+    });
+    if (codes.size > 0) {
+      const observables: Observable<Collection>[] = [];
+      codes.forEach(code => observables.push(this.collectionService.getCollection(code)));
+      return Observable.combineLatest(observables)
+        .pipe(
+          map((collections: Collection[]) => this.mapCollectionsAndLinks(suggestedQueryItems, collections, suggestions.links))
+        );
+    }
     return Observable.of(suggestedQueryItems);
+  }
+
+  private mapCollectionsAndLinks(itemsToPush: QueryItem[], collections: Collection[], links: LinkType[]): QueryItem[] {
+    links.forEach(link => {
+      const coll1 = collections.find(collection => collection.code === link.collectionCodes[0]);
+      const coll2 = collections.find(collection => collection.code === link.collectionCodes[1]);
+      if (coll1 && coll2) {
+        itemsToPush.push(new LinkQueryItem(link, coll1, coll2));
+      }
+    });
+    return itemsToPush;
   }
 
   private filterUsedQueryItems(queryItems: QueryItem[]): QueryItem[] {
@@ -194,10 +218,6 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   private createCollectionQueryItems(collections: Collection[]): QueryItem[] {
     return collections.map(collection => new CollectionQueryItem(collection));
-  }
-
-  private createLinkQueryItems(links: LinkType[]): QueryItem[] {
-    return links.map(link => new LinkQueryItem(link));
   }
 
   public onRemoveQueryItem(index: number) {
