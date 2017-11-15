@@ -18,9 +18,16 @@
  */
 
 import {Attribute} from './attribute';
+import {Collection} from './collection';
 
-export interface LinkedAttribute extends Attribute {
+export class LinkedAttribute {
 
-  collectionCode: string;
+  public value: Attribute;
+  public collection: Collection;
+
+  constructor(attribute: Attribute, collection: Collection) {
+    this.value = attribute;
+    this.collection = collection;
+  }
 
 }

@@ -17,14 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
-
-import {SnotifyService} from 'ng-snotify';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {LinkType} from '../../../../core/dto/link-type';
-import {LinkTypeService} from '../../../../core/rest/link-type.service';
 import {LinkedAttribute} from '../../../../core/dto/linked-attribute';
 import {Collection} from '../../../../core/dto/collection';
+import {NotificationService} from '../../../../notifications/notification.service';
+import {LinkTypeService} from '../../../../core/rest/link-type.service';
 import * as Const from '../constraints';
 
 @Component({
@@ -41,19 +40,17 @@ export class LinkAttributeListComponent {
   public linkType: LinkType;
 
   @Input()
-  public allAttributes: LinkedAttribute[];
-
-  @Input()
   public addEnabled: boolean;
 
   @Input()
   public limit = Number.MAX_SAFE_INTEGER;
 
-  public uninitialized: boolean[];
+  @Output()
+  public update = new EventEmitter<void>();
 
   public newAttributeName = '';
 
-  constructor(private notificationService: SnotifyService,
+  constructor(private notificationService: NotificationService,
               private linkTypeService: LinkTypeService) {
   }
 
@@ -61,65 +58,36 @@ export class LinkAttributeListComponent {
     return this.linkType.linkedAttributes.slice(0, this.limit);
   }
 
-  public addLinkedAttribute(): void {
-    if (!this.newAttributeName) {
-      return;
-    }
+  public attributesToAdd(currentAttribute: string): LinkedAttribute[] {
+    const usedAttributes = this.linkType.linkedAttributes.map(linkedAttribute => JSON.stringify(linkedAttribute));
 
-    // 'attributeName (collectionCode)'
-    const newAttributeName = this.newAttributeName.substring(0, this.newAttributeName.lastIndexOf('(') - 2);
-    const newAttributeCollection = this.newAttributeName.substring(
-      this.newAttributeName.lastIndexOf('('),
-      this.newAttributeName.length - 1
-    );
-
-    const newAttribute = this.possibleAttributes().find(possibleAttribute => {
-      return possibleAttribute.name === newAttributeName && possibleAttribute.collectionCode === newAttributeCollection;
-    });
-
-    if (newAttribute) {
-      this.linkType.linkedAttributes.push(newAttribute);
-
-      this.linkTypeService.updateLinkTypeDeprecated(this.linkType.fromCollection, this.linkType.name, this.linkType)
-        .subscribe(
-          linkType => {
-            this.linkType = linkType;
-          },
-          error => this.notificationService.error('Adding attribute failed')
-        );
-
-      this.newAttributeName = '';
-
-    } else {
-      this.notificationService.info('You need to use attribute from selection to create a link');
-    }
-
+    return this.linkType.collectionCodes
+      .map(collectionCode => this.collections[collectionCode])
+      .map(collection => collection.attributes.map(attribute => new LinkedAttribute(attribute, collection)))
+      .reduce((flattened: LinkedAttribute[], current: LinkedAttribute[]) => flattened.concat(current), [])
+      .filter(linkedAttribute => linkedAttribute.value.name.includes(currentAttribute))
+      .filter(linkedAttribute => !usedAttributes.includes(JSON.stringify(linkedAttribute)));
   }
 
-  public removeLinkAttribute(linkType: LinkType, attribute: LinkedAttribute) {
-    this.linkType.linkedAttributes = this.linkType.linkedAttributes.filter(linkedAttribute => {
-      return linkedAttribute !== attribute;
-    });
+  public addAttribute(linkedAttribute: LinkedAttribute): void {
+    this.linkType.linkedAttributes.push(linkedAttribute);
 
-    if (this.linkType.automaticLinkFromAttribute === attribute.name) {
-      this.linkType.automaticLinkFromAttribute = null;
+    if (this.linkType.automaticallyLinked && this.linkType.automaticallyLinked.length === 2) {
+      this.linkType.automaticallyLinked = null;
     }
 
-    if (this.linkType.automaticLinkToAttribute === attribute.name) {
-      this.linkType.automaticLinkToAttribute = null;
-    }
-
-    this.linkTypeService.updateLinkTypeDeprecated(this.linkType.fromCollection, this.linkType.name, this.linkType)
-      .subscribe(
-        linkType => {
-          this.linkType = linkType;
-        },
-        error => this.notificationService.error('Removing attribute failed')
-      );
+    this.newAttributeName = '';
+    this.update.emit();
   }
 
-  public possibleAttributes(): LinkedAttribute[] {
-    return this.allAttributes.filter(attribute => !this.linkType.linkedAttributes.includes(attribute));
+  public removeAttribute(removedAttribute: LinkedAttribute) {
+    this.linkType.linkedAttributes = this.linkType.linkedAttributes.filter(linkedAttribute => removedAttribute !== linkedAttribute);
+
+    if (this.linkType.automaticallyLinked && this.linkType.automaticallyLinked.includes(removedAttribute)) {
+      this.linkType.automaticallyLinked = null;
+    }
+
+    this.update.emit();
   }
 
   public formatNumber(numberToFormat: number): string {

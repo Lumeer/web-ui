@@ -17,13 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {EventFireReason} from '../../collection/config/tab/events/event-fire-reason';
-import {EventCallback} from '../../collection/config/tab/events/event-callback';
-import {EventParameter} from '../../collection/config/tab/events/event-parameter';
+import {EventFireReason} from '../../collection/config/tab/events/model/event-fire-reason';
+import {EventCallback} from '../../collection/config/tab/events/model/event-callback';
+import {EventParameter} from '../../collection/config/tab/events/model/event-parameter';
 
 export interface Event {
 
-  fireWhen: EventFireReason[];
+  id?: string;
+  fireReasons: EventFireReason[];
   callback: EventCallback;
   parameters: EventParameter[];
   automatic?: boolean;

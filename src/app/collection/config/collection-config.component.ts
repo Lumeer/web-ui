@@ -43,8 +43,6 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
 
   public initialCollectionCode: string;
 
-  public collectionDescriptionEditable: boolean;
-
   private routeSubscription: Subscription;
 
   constructor(private collectionService: CollectionService,
@@ -109,10 +107,6 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
 
   public workspacePath(): string {
     return `/w/${this.workspaceService.organizationCode}/${this.workspaceService.projectCode}`;
-  }
-
-  public onCollectionDescriptionEdit(): void {
-    this.collectionDescriptionEditable = true;
   }
 
   public ngOnDestroy(): void {

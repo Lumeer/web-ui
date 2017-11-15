@@ -21,12 +21,15 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 import {CollectionTabComponent} from '../collection-tab.component';
-import {EventsService} from '../../../../core/rest/events.service';
+import {EventService} from '../../../../core/rest/event.service';
 import {WorkspaceService} from '../../../../core/workspace.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Event} from '../../../../core/dto/Event';
 import {CollectionSelectService} from '../../../service/collection-select.service';
 import {NotificationService} from '../../../../notifications/notification.service';
+import {EventModel} from './model/EventModel';
+import {EventFireReason} from './model/event-fire-reason';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'collection-events',
@@ -35,9 +38,9 @@ import {NotificationService} from '../../../../notifications/notification.servic
 })
 export class CollectionEventsComponent extends CollectionTabComponent implements OnInit {
 
-  public events: Event[];
+  public events: EventModel[];
 
-  constructor(private eventsService: EventsService,
+  constructor(private eventService: EventService,
               protected collectionService: CollectionService,
               protected collectionSelectService: CollectionSelectService,
               protected route: ActivatedRoute,
@@ -58,15 +61,43 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
   }
 
   public getEvents(): void {
-    this.eventsService.getEvents(this.collection.code)
-      .subscribe(
-        events => this.events = events,
-        error => this.notificationService.error('Failed fetching Events')
-      );
+    this.eventService.getEvents(this.collection.code).subscribe(
+      events => this.events = events.map(event => new EventModel(event)),
+      error => this.notificationService.error('Failed fetching Events')
+    );
   }
 
-  public removeFireWhenFromEvent(event, on): void {
+  public addModel(): void {
+    const newEvent = new EventModel();
+    this.events.push(newEvent);
+  }
 
+  public createEvent(eventModel: EventModel): void {
+    if (eventModel.initialized) {
+      throw new Error(`Event model ${eventModel}, was already created`);
+    }
+
+    if (eventModel.initializing) {
+      return;
+    }
+
+    eventModel.initializing = true;
+    this.eventService.createEvent(this.collection.code, eventModel.data).pipe(
+      finalize(() => eventModel.initializing = false)
+    ).subscribe(
+      id => {
+        eventModel.data.id = id;
+        eventModel.initialized = true;
+      },
+      error => {
+        this.notificationService.error('Failed creating event');
+      }
+    );
+  }
+
+  public removeFireReasonFromEvent(event: Event, removedFireReason: EventFireReason): void {
+    event.fireReasons = event.fireReasons.filter(fireReason => fireReason !== removedFireReason);
+    // this.eventService.getEvents()
   }
 
 }

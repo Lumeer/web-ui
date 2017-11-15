@@ -1,6 +1,24 @@
 @import "../../../../shared/variables";
 
 :host {
+
+  .green-on-hover {
+    transition: color $animation-color-duration;
+
+    &:hover {
+      color: $success;
+    }
+  }
+
+  .uninitialized {
+    border-left-style: dashed;
+    border-right-style: dashed;
+  }
+
+  .uninitialized ~ .uninitialized { // all but first with this class
+    border-top-style: dashed;
+  }
+
   display: block;
   font-size: 20px;
 }

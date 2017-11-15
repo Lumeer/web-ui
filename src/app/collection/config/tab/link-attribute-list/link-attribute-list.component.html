@@ -18,17 +18,18 @@
 
   <tr *ngFor="let attribute of attributes(); let row = index"
       class="appear">
-    <td class="attrbute-row">
-      <i class="fa-fw mx-1 align-self-center {{ collections[attribute.collectionCode].icon }}"
-         [style.color]="collections[attribute.collectionCode].color"
+    <td class="attrbute-row" title="{{ attribute.collection.name }} {{ attribute.value.name }}">
+      <i class="fa-fw mx-1 align-self-center {{ attribute.collection.icon }}"
+         [style.color]="attribute.collection.color"
          aria-hidden="true"></i>
-      <span>{{ attribute.name }}</span>
+      <span>{{ attribute.value.name }}</span>
     </td>
-    <td class="text-right count-row">{{ formatNumber(attribute.usageCount) }}</td>
+    <td class="text-right count-row">{{ formatNumber(attribute.value.usageCount) }}</td>
     <td class="constraints-row">
       <div class="d-flex flex-wrap">
-            <span class="constraint px-2 ml-1 rounded"
-                  *ngFor="let constraint of attribute.constraints; let idx = index">{{ constraint }}</span>
+            <span *ngFor="let constraint of attribute.value.constraints"
+                  class="constraint px-2 ml-1 rounded"
+                  [style.background-color]="constraintColor(constraint)">{{ constraint }}</span>
       </div>
     </td>
     <td class="border-0 px-1 bg-white appearing">
@@ -36,18 +37,28 @@
          aria-hidden="true"
          title="Remove Link"
          i18n-title="@@collection.config.link.types.list.remove.link"
-         (click)="$event.preventDefault(); removeLinkAttribute(linkType, attribute);"></i>
+         (click)="$event.preventDefault(); removeAttribute(attribute);"></i>
     </td>
   </tr>
 
-  <tr>
+  <tr *ngIf="addEnabled">
     <td class="attrbute-row" colspan="3">
       <input #newAttribute
+             data-toggle="dropdown"
              [(ngModel)]="newAttributeName"
-             (keyup.enter)="newAttribute.blur()"
-             (blur)="addLinkedAttribute()"
              placeholder="{{ !linkType.linkedAttributes.length ? 'No attributes' : null }} + "
              class="border-0">
+
+      <div class="dropdown-menu">
+              <span *ngFor="let possibleAttribute of attributesToAdd(newAttributeName)"
+                    class="dropdown-item"
+                    [style.color]="possibleAttribute.collection.color"
+                    (click)="addAttribute(possibleAttribute)">
+                <i class="mr-1 fa-fw {{ possibleAttribute.collection.icon }}" aria-hidden="true"></i>
+                {{ possibleAttribute.value.name }}
+              </span>
+      </div>
+
     </td>
     <td class="border-0 px-3 bg-white">
     </td>

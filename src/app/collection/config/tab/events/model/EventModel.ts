@@ -17,17 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkedAttribute} from './linked-attribute';
+import {Event} from '../../../../../core/dto/Event';
 
-export interface LinkType {
+export class EventModel {
 
-  id?: string; // TODO make compulsory
-  name: string;
+  public initialized = true;
+  public initializing = false;
+  public data: Event;
 
-  collectionCodes?: [string, string]; // TODO make compulsory
+  constructor(event?: Event) {
+    if (event) {
+      this.data = event;
 
-  attributes?: string[]; // TODO use complex object
-  linkedAttributes?: LinkedAttribute[]; // TODO remove
-  automaticallyLinked?: [LinkedAttribute, LinkedAttribute];
+    } else {
+      this.initialized = false;
+      this.data = {
+        fireReasons: [],
+        parameters: [],
+        callback: {name: ''}
+      };
+    }
+  }
 
 }

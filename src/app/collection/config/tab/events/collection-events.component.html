@@ -1,39 +1,43 @@
 <ul class="list-group mx-5">
-  <li *ngFor="let event of events"
-      class="list-group-item py-3">
+  <li *ngFor="let eventModel of events"
+      class="list-group-item py-3 {{ !eventModel.initialized ? 'uninitialized' : null }}">
     <div class="d-flex">
         <span class="flex-grow-2">
           <span class="mr-2" i18n="@@collection.config.tab.events.on">On</span>
-          <ng-container *ngFor="let on of event.fireWhen; let idx = index">
+          <ng-container *ngFor="let fireReason of eventModel.data.fireReasons; let idx = index">
             <span class="text-success"
-                  (click)="removeFireWhenFromEvent(event, on)"
+                  (click)="removeFireReasonFromEvent(eventModel.data, fireReason)"
                   title="Remove event fire reason"
-                  i18n.title="@@collection.config.tab.events.remove.event.fire.reason">{{ on }}</span>
-            <span *ngIf="idx !== event.fireWhen.length - 1">, </span>
+                  i18n.title="@@collection.config.tab.events.remove.event.fire.reason">{{ fireReason }}</span>
+            <span *ngIf="idx !== eventModel.data.fireReasons.length - 1">, </span>
           </ng-container>
         </span>
-      <span *ngIf="event.automatic" i18n="@@collection.config.tab.events.automatic">
+      <span *ngIf="eventModel.data.automatic" i18n="@@collection.config.tab.events.automatic">
           automatic
-        </span>
+      </span>
     </div>
 
     <div>
       <span class="mr-2" i18n="@@collection.config.tab.events.do">Do</span>
-      <span class="text-success">{{ event.callback.name }}</span>
-      <span *ngIf="event.callback.hasValue">:</span>
-      <span *ngIf="event.callback.value">{{ event.callback.value }}</span>
+      <input class="text-success"
+             [(ngModel)]="eventModel.data.callback.name"/>
+      <ng-template *ngIf="eventModel.data.callback.hasValue">
+        <span>:</span>
+        <input [(ngModel)]="eventModel.data.callback.value"/>
+      </ng-template>
     </div>
 
     <div>
       <span class="mr-2" i18n="@@collection.config.tab.events.parameters">Parameters</span>
-      <ng-container *ngFor="let parameter of event.parameters">
+      <ng-container *ngFor="let parameter of eventModel.data.parameters">
         <div class="text-success">{{ parameter.name }}</div>
       </ng-container>
     </div>
   </li>
 
-  <li class="py-3 list-group-item">
-    <i class="fa fa-plus bigger text-success" aria-hidden="true"></i>
+  <li class="py-3 list-group-item green-on-hover"
+      (click)="addModel()">
+    <i class="fa fa-plus bigger" aria-hidden="true"></i>
     <span class="ml-2" i18n="@@collection.config.tab.events.add">Add Event</span>
   </li>
 </ul>
