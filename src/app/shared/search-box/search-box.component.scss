@@ -3,7 +3,6 @@
 .query-item {
   border-radius: $border-radius-base;
   white-space: nowrap;
-  border: 2px solid;
 
   &:hover .remove {
     opacity: 1;
@@ -22,19 +21,36 @@
   outline: 0 solid transparent;
 }
 
-.suggestions {
-  min-width: 300px;
+.icon-container {
+  width: 30px;
+  height: 24px;
+  position: relative;
 
-  .icon-container {
-    width: 30px;
-
-    .icon {
-      width: 100%;
-      font-size: 15px;
-      text-align: center;
-    }
+  .icon-left {
+    font-size: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 3px;
   }
 
+  .icon-right {
+    font-size: 10px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 3px;
+  }
+
+  .icon {
+    width: 100%;
+    font-size: 15px;
+    text-align: center;
+  }
+}
+
+.suggestions {
+  min-width: 300px;
 }
 
 .selected {

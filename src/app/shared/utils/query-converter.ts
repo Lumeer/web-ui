@@ -29,6 +29,7 @@ export class QueryConverter {
     const queryObject = query ? JSON.parse(query) : {};
     !queryObject.collectionCodes && (queryObject.collectionCodes = []);
     !queryObject.filters && (queryObject.filters = []);
+    !queryObject.linkIds && (queryObject.linkIds = []);
 
     return queryObject;
   }

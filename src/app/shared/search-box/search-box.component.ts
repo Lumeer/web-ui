@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
@@ -41,6 +50,10 @@ import {QueryItemType} from './query-item/query-item-type';
 import {ConditionQueryItem} from './query-item/condition-query-item';
 import {SearchService} from '../../core/rest/search.service';
 import {SuggestionType} from '../../core/dto/suggestion-type';
+import {LinkType} from '../../core/dto/link-type';
+import {LinkQueryItem} from './query-item/link-query-item';
+import {LinkTypeService} from '../../core/rest/link-type.service';
+import {CollectionService} from '../../core/rest/collection.service';
 
 @Component({
   selector: 'search-box',
@@ -71,9 +84,11 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   constructor(private activatedRoute: ActivatedRoute,
               private queryItemsConverter: QueryItemsConverter,
               private router: Router,
+              private collectionService: CollectionService,
               private searchService: SearchService,
               private viewService: ViewService,
               private workspaceService: WorkspaceService,
+              private linkTypeService: LinkTypeService,
               private ref: ChangeDetectorRef) {
   }
 
@@ -127,6 +142,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
       startWith(''),
       debounceTime(300),
       switchMap(text => this.retrieveSuggestions(text)),
+      switchMap(suggestions => this.searchLinkTypes(suggestions)),
       switchMap(suggestions => this.convertSuggestionsToQueryItems(suggestions)),
       map(queryItems => this.filterUsedQueryItems(queryItems)),
       catchError(error => {
@@ -139,6 +155,16 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     });
   }
 
+  private searchLinkTypes(suggestions: Suggestions): Observable<Suggestions> {
+    suggestions.links = [];
+    for (let link of this.linkTypeService.getLinkTypes()) {
+      if (link.name.toLowerCase().startsWith(this.text.toLowerCase())) {
+        suggestions.links.push(link);
+      }
+    }
+    return Observable.of(suggestions);
+  }
+
   private retrieveSuggestions(text: string): Observable<Suggestions> {
     if (text) {
       return this.searchService.suggest(text.toLowerCase(), SuggestionType.All);
@@ -148,7 +174,6 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   private convertSuggestionsToQueryItems(suggestions: Suggestions): Observable<QueryItem[]> {
     let suggestedQueryItems: QueryItem[] = [];
-
     suggestedQueryItems = suggestedQueryItems.concat(this.createCollectionQueryItems(suggestions.collections));
     suggestedQueryItems = suggestedQueryItems.concat(this.createAttributeQueryItems(suggestions.attributes));
     // TODO add views
@@ -156,7 +181,31 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
       suggestedQueryItems.push(new FulltextQueryItem(this.text));
     }
 
+    const codes = new Set<string>();
+    suggestions.links.forEach(link => {
+      codes.add(link.collectionCodes[0]);
+      codes.add(link.collectionCodes[1]);
+    });
+    if (codes.size > 0) {
+      const observables: Observable<Collection>[] = [];
+      codes.forEach(code => observables.push(this.collectionService.getCollection(code)));
+      return Observable.combineLatest(observables)
+        .pipe(
+          map((collections: Collection[]) => this.mapCollectionsAndLinks(suggestedQueryItems, collections, suggestions.links))
+        );
+    }
     return Observable.of(suggestedQueryItems);
+  }
+
+  private mapCollectionsAndLinks(itemsToPush: QueryItem[], collections: Collection[], links: LinkType[]): QueryItem[] {
+    links.forEach(link => {
+      const coll1 = collections.find(collection => collection.code === link.collectionCodes[0]);
+      const coll2 = collections.find(collection => collection.code === link.collectionCodes[1]);
+      if (coll1 && coll2) {
+        itemsToPush.push(new LinkQueryItem(link, coll1, coll2));
+      }
+    });
+    return itemsToPush;
   }
 
   private filterUsedQueryItems(queryItems: QueryItem[]): QueryItem[] {
@@ -407,7 +456,15 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     return queryItem.type === QueryItemType.Collection;
   }
 
-  public lightenColor(color: string): string {
+  public queryItemBackground(queryItem: QueryItem): string {
+    if (queryItem.color && queryItem.color2) {
+      return `linear-gradient(${this.lightenColor(queryItem.color)},${this.lightenColor(queryItem.color2)})`;
+    } else {
+      return this.lightenColor(queryItem.color);
+    }
+  }
+
+  private lightenColor(color: string): string {
     return color ? HtmlModifier.shadeColor(color, .5) : '#faeabb';
   }
 

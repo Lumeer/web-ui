@@ -19,27 +19,32 @@
 
 import {Injectable} from '@angular/core';
 import {QueryItem} from './query-item';
+
 import {Query} from '../../../core/dto/query';
 import {CollectionQueryItem} from './collection-query-item';
 import {AttributeQueryItem} from './attribute-query-item';
 import {FulltextQueryItem} from './fulltext-query-item';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
+import {map} from 'rxjs/operators'
 import {Collection} from '../../../core/dto/collection';
 import {QueryConverter} from '../../utils/query-converter';
 import {SearchService} from '../../../core/rest/search.service';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import {map} from 'rxjs/operators';
+import {LinkQueryItem} from './link-query-item';
+import {LinkTypeService} from '../../../core/rest/link-type.service';
 
 @Injectable()
 export class QueryItemsConverter {
 
-  constructor(private searchService: SearchService) {
+  constructor(private searchService: SearchService,
+              private linkTypeService: LinkTypeService) {
   }
 
   public toQueryString(queryItems: QueryItem[]): string {
     const query: Query = {
       collectionCodes: [],
-      filters: []
+      filters: [],
+      linkIds: []
     };
 
     queryItems.forEach(queryItem => {
@@ -49,6 +54,8 @@ export class QueryItemsConverter {
         query.filters.push(queryItem.value);
       } else if (queryItem instanceof FulltextQueryItem) {
         query.fulltext = queryItem.value;
+      } else if (queryItem instanceof LinkQueryItem) {
+        query.linkIds.push(queryItem.value);
       }
     });
 
@@ -58,13 +65,23 @@ export class QueryItemsConverter {
   public fromQuery(query: Query): Observable<QueryItem[]> {
     return this.loadNeededCollections(query).pipe(
       map((collections: Collection[]) => QueryItemsConverter.convertToCollectionsMap(collections)),
-      map(collectionsMap => QueryItemsConverter.createQueryItems(collectionsMap, query))
+      map(collectionsMap => this.createQueryItems(collectionsMap, query))
     );
   }
 
   private loadNeededCollections(query: Query): Observable<Collection[]> {
     let collectionCodes = query.filters.map(filter => filter.split(':')[0]);
     collectionCodes = collectionCodes.concat(query.collectionCodes);
+
+    query.linkIds.forEach(id => {
+      const linkType = this.linkTypeService.getLinkTypeById(id);
+      if (!collectionCodes.includes(linkType.collectionCodes[0])) {
+        collectionCodes.push(linkType.collectionCodes[0]);
+      }
+      if (!collectionCodes.includes(linkType.collectionCodes[1])) {
+        collectionCodes.push(linkType.collectionCodes[1]);
+      }
+    });
 
     if (collectionCodes) {
       return this.searchService.searchCollections({
@@ -81,7 +98,7 @@ export class QueryItemsConverter {
     return collectionsMap;
   }
 
-  private static createQueryItems(collectionsMap: any, query: Query): QueryItem[] {
+  private createQueryItems(collectionsMap: { [key: string]: Collection }, query: Query): QueryItem[] {
     let collectionItems: QueryItem[] = QueryItemsConverter.createCollectionQueryItems(collectionsMap, query);
     let attributeItems: QueryItem[] = QueryItemsConverter.createAttributeQueryItems(collectionsMap, query);
 
@@ -94,6 +111,7 @@ export class QueryItemsConverter {
         }
       }
     }
+    queryItems = queryItems.concat(this.createLinkQueryItems(collectionsMap, query));
 
     if (query.fulltext) {
       queryItems.push(new FulltextQueryItem(query.fulltext));
@@ -101,7 +119,20 @@ export class QueryItemsConverter {
     return queryItems;
   }
 
-  private static createCollectionQueryItems(collectionsMap: any, query: Query): QueryItem[] {
+  private createLinkQueryItems(collectionsMap: { [key: string]: Collection }, query: Query): QueryItem[] {
+    const items = [];
+    query.linkIds.forEach(id => {
+      const linkType = this.linkTypeService.getLinkTypeById(id);
+      const coll1 = collectionsMap[linkType.collectionCodes[0]];
+      const coll2 = collectionsMap[linkType.collectionCodes[1]];
+      if (coll1 && coll2) {
+        items.push(new LinkQueryItem(linkType, coll1, coll2));
+      }
+    });
+    return items;
+  }
+
+  private static createCollectionQueryItems(collectionsMap: { [key: string]: Collection }, query: Query): QueryItem[] {
     return query.collectionCodes.map(collectionCode => {
       let collection = collectionsMap[collectionCode];
       if (collection) {
@@ -110,7 +141,7 @@ export class QueryItemsConverter {
     });
   }
 
-  private static createAttributeQueryItems(collectionsMap: any, query: Query): QueryItem[] {
+  private static createAttributeQueryItems(collectionsMap: { [key: string]: Collection }, query: Query): QueryItem[] {
     return query.filters.map(filter => {
       let filterParts = filter.split(':', 3);
       let collectionCode = filterParts[0];

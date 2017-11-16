@@ -24,4 +24,8 @@ export class Organization extends Resource {
 
   public projects?: Project[];
 
+  constructor(){
+    super('','','','');
+  }
+
 }

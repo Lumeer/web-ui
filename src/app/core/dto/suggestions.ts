@@ -17,11 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {Collection} from './collection';
+import {LinkType} from './link-type';
+import {Document} from './document';
 
 export interface Suggestions {
 
   attributes: Collection[];
   collections: Collection[];
   views: Document[];
+  links: LinkType[];
 
 }
