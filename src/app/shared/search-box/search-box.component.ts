@@ -23,6 +23,7 @@ import {Store} from '@ngrx/store';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import {Subscription} from 'rxjs/Subscription';
 import {catchError, debounceTime, map, startWith, switchMap} from 'rxjs/operators';
 
 import {Suggestions} from '../../core/dto/suggestions';
@@ -76,6 +77,10 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   private workspace: Workspace;
 
+  private querySubscription: Subscription;
+  private viewSubscription: Subscription;
+  private storeSubscription: Subscription;
+
   constructor(private collectionService: CollectionService,
               private linkTypeService: LinkTypeService,
               private queryItemsConverter: QueryItemsConverter,
@@ -87,8 +92,12 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   public ngOnInit(): void {
-    this.store.select(selectNavigation).subscribe(navigation => {
+    this.storeSubscription = this.store.select(selectNavigation).subscribe(navigation => {
       this.workspace = navigation.workspace;
+
+      if (navigation.searchBoxHidden) {
+        return;
+      }
 
       if (this.workspace.viewCode) {
         this.getQueryItemsFromView(this.workspace.viewCode);
@@ -112,8 +121,20 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     });
   }
 
+  public ngOnDestroy() {
+    if (this.querySubscription) {
+      this.querySubscription.unsubscribe();
+    }
+    if (this.viewSubscription) {
+      this.viewSubscription.unsubscribe();
+    }
+    if (this.storeSubscription) {
+      this.storeSubscription.unsubscribe();
+    }
+  }
+
   private getQueryItemsFromQuery(query: Query) {
-    this.queryItemsConverter.fromQuery(query).subscribe(queryItems => {
+    this.querySubscription = this.queryItemsConverter.fromQuery(query).subscribe(queryItems => {
       if (this.queryItems.length === 0) {
         this.queryItems = queryItems;
       }
@@ -121,7 +142,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   private getQueryItemsFromView(viewCode: string) {
-    this.viewService.getView(viewCode).pipe(
+    this.viewSubscription = this.viewService.getView(viewCode).pipe(
       switchMap(view => view ? this.queryItemsConverter.fromQuery(view.query) : Observable.of([]))
     ).subscribe(queryItems => {
       if (this.queryItems.length === 0) {
