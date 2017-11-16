@@ -18,14 +18,17 @@
  */
 
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {HttpResponse} from '@angular/common/http';
+import {Store} from '@ngrx/store';
 
 import {Project} from '../../core/dto/project';
 import {ProjectService} from '../../core/rest/project.service';
 import {CollectionService} from '../../core/rest/collection.service';
 import {Collection} from '../../core/dto/collection';
 import {NotificationService} from '../../notifications/notification.service';
+import {AppState} from '../../core/store/app.state';
+import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 
 @Component({
   templateUrl: './project-settings.component.html',
@@ -33,7 +36,6 @@ import {NotificationService} from '../../notifications/notification.service';
 })
 export class ProjectSettingsComponent implements OnInit {
 
-  private creation: boolean;
   public project: Project;
   private organizationCode: string;
   public projectCode: string;
@@ -46,24 +48,18 @@ export class ProjectSettingsComponent implements OnInit {
   private originalProjectName: string;
 
   constructor(private projectService: ProjectService,
-              private route: ActivatedRoute,
               private router: Router,
+              private store: Store<AppState>,
               private collectionService: CollectionService,
               private notificationService: NotificationService) {
   }
 
   public ngOnInit(): void {
     this.project = new Project();
-    this.route.data.subscribe((data: { creation: boolean }) => {
-      this.creation = data.creation;
-      this.retrieveParamsFromRoute();
-    });
-  }
 
-  private retrieveParamsFromRoute() {
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      this.organizationCode = params.get('organizationCode');
-      this.projectCode = params.get('projectCode');
+    this.store.select(selectWorkspace).subscribe(workspace => {
+      this.organizationCode = workspace.organizationCode;
+      this.projectCode = workspace.projectCode;
       this.getProject();
       this.originalProjectCode = this.projectCode;
     });

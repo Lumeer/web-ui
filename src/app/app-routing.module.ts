@@ -19,6 +19,7 @@
 
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
+import {StoreRouterConnectingModule} from '@ngrx/router-store';
 
 import {PageNotFoundComponent} from './core/page-not-found/page-not-found.component';
 import {HomeComponent} from './core/home.component';
@@ -44,7 +45,10 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes)],
+  imports: [
+    RouterModule.forRoot(appRoutes),
+    StoreRouterConnectingModule
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

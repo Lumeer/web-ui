@@ -19,11 +19,15 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {Store} from '@ngrx/store';
+
 import {LumeerError} from '../error/lumeer.error';
-import {WorkspaceService} from '../workspace.service';
 import {Event} from '../dto/Event';
 import {Observable} from 'rxjs/Observable';
 import {LocalStorage} from '../../shared/utils/local-storage';
+import {AppState} from '../store/app.state';
+import {selectWorkspace} from '../store/navigation/navigation.state';
+import {Workspace} from '../store/navigation/workspace.model';
 
 const EVENTS_KEY = 'events';
 
@@ -31,8 +35,11 @@ const EVENTS_KEY = 'events';
 @Injectable()
 export class EventService {
 
+  private workspace: Workspace;
+
   constructor(private httpClient: HttpClient,
-              private workspaceService: WorkspaceService) {
+              private store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
   public createEvent(collectionCode: string, event: Event): Observable<string> {
@@ -79,8 +86,8 @@ export class EventService {
   }
 
   private apiPrefix(collectionCode: string): string {
-    const organizationCode = this.workspaceService.organizationCode;
-    const projectCode = this.workspaceService.projectCode;
+    const organizationCode = this.workspace.organizationCode;
+    const projectCode = this.workspace.projectCode;
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
   }

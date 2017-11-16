@@ -23,17 +23,10 @@ import 'rxjs/add/observable/of';
 
 import {PermissionService} from './permission.service';
 import {View} from '../dto/view';
-import {WorkspaceService} from '../workspace.service';
-import {HttpClient} from '@angular/common/http';
 import {LocalStorage} from '../../shared/utils/local-storage';
 
 @Injectable()
 export class ViewService extends PermissionService {
-
-  constructor(httpClient: HttpClient,
-              workspaceService: WorkspaceService) {
-    super(httpClient, workspaceService);
-  }
 
   public createView(view: View): Observable<string> {
     const views = LocalStorage.get('views') || {};
@@ -57,13 +50,13 @@ export class ViewService extends PermissionService {
   }
 
   protected actualApiPrefix(): string {
-    let viewCode = this.workspaceService.viewCode;
+    let viewCode = this.workspace.viewCode;
     return `${this.apiPrefix()}/${viewCode}`;
   }
 
   private apiPrefix(): string {
-    let organizationCode = this.workspaceService.organizationCode;
-    let projectCode = this.workspaceService.projectCode;
+    let organizationCode = this.workspace.organizationCode;
+    let projectCode = this.workspace.projectCode;
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/views`;
   }

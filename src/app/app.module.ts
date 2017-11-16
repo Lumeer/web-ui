@@ -20,8 +20,12 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-
+import {EffectsModule} from '@ngrx/effects';
+import {routerReducer} from '@ngrx/router-store';
+import {ActionReducerMap, StoreModule} from '@ngrx/store';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
+import {ContextMenuModule} from 'ngx-contextmenu';
 
 import {AppComponent} from './app.component';
 import {CoreModule} from './core/core.module';
@@ -30,8 +34,18 @@ import {WorkspaceModule} from './workspace/workspace.module';
 import {CollectionModule} from './collection/collection.module';
 import {DocumentsModule} from './documents/documents.module';
 import {ViewModule} from './view/view.module';
-import {ContextMenuModule} from 'ngx-contextmenu';
 import {NotificationService} from './notifications/notification.service';
+import {AppState, initialAppState} from './core/store/app.state';
+import {environment} from '../environments/environment';
+import {navigationReducer} from './core/store/navigation/navigation.reducer';
+
+const reducers: ActionReducerMap<AppState> = {
+  // TODO collections, documents, links, table
+  navigation: navigationReducer,
+  router: routerReducer
+};
+
+const effects = []; // TODO add effects
 
 @NgModule({
   imports: [
@@ -44,10 +58,13 @@ import {NotificationService} from './notifications/notification.service';
     ViewModule,
     WorkspaceModule,
     SnotifyModule,
+    StoreModule.forRoot(reducers, {initialState: initialAppState}),
+    EffectsModule.forRoot(effects),
+    !environment.production ? StoreDevtoolsModule.instrument({maxAge: 10}) : [],
     AppRoutingModule // needs to stay last
   ],
   providers: [
-    { provide: 'SnotifyToastConfig', useValue: ToastDefaults},
+    {provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     SnotifyService,
     NotificationService
   ],

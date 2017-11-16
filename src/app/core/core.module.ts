@@ -23,7 +23,6 @@ import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 
-import {WorkspaceService} from './workspace.service';
 import {TopPanelComponent} from './top-panel/top-panel.component';
 import {UserSettingsService} from './user-settings.service';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
@@ -44,7 +43,7 @@ import {ViewService} from './rest/view.service';
 import {LinkTypeService} from './rest/link-type.service';
 import {SearchHomeComponent} from './search-home/search-home.component';
 import {LinkInstanceService} from './rest/link-instance.service';
-import {EventService} from 'app/core/rest';
+import {EventService} from './rest/event.service';
 
 @NgModule({
   imports: [
@@ -67,7 +66,6 @@ import {EventService} from 'app/core/rest';
     ProjectService,
     SearchService,
     UserSettingsService,
-    WorkspaceService,
     ImportService,
     KeycloakService,
     UserService,

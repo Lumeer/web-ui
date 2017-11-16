@@ -18,19 +18,19 @@
  */
 
 import {Component, ComponentFactoryResolver, ComponentRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
 
 import {PerspectiveDirective} from './perspectives/perspective.directive';
 import {Query} from '../core/dto/query';
 import {Perspective, PERSPECTIVES} from './perspectives/perspective';
 import {PerspectiveComponent} from './perspectives/perspective.component';
-import {Observable} from 'rxjs/Observable';
-import {QueryConverter} from '../shared/utils/query-converter';
 import {ViewService} from '../core/rest/view.service';
 import {View} from '../core/dto/view';
-import {WorkspaceService} from '../core/workspace.service';
 import {NotificationService} from 'app/notifications/notification.service';
-import 'rxjs/add/observable/combineLatest';
+import {AppState} from '../core/store/app.state';
+import {selectNavigation} from '../core/store/navigation/navigation.state';
+import {Workspace} from '../core/store/navigation/workspace.model';
 
 @Component({
   templateUrl: './view.component.html'
@@ -44,26 +44,23 @@ export class ViewComponent implements OnInit {
 
   private perspectiveComponent: PerspectiveComponent;
 
-  constructor(private activatedRoute: ActivatedRoute,
-              private componentFactoryResolver: ComponentFactoryResolver,
+  private workspace: Workspace;
+
+  constructor(private componentFactoryResolver: ComponentFactoryResolver,
               private notificationService: NotificationService,
               private router: Router,
-              private viewService: ViewService,
-              private workspaceService: WorkspaceService) {
+              private store: Store<AppState>,
+              private viewService: ViewService) {
   }
 
   public ngOnInit() {
-    Observable.combineLatest(
-      this.activatedRoute.paramMap,
-      this.activatedRoute.queryParamMap
-    ).subscribe(([params, queryParams]) => {
-      const perspective = queryParams.get('perspective');
-      if (params.has('viewCode')) {
-        const viewCode = params.get('viewCode');
-        this.loadView(viewCode, perspective);
+    this.store.select(selectNavigation).subscribe(navigation => {
+      this.workspace = navigation.workspace;
+
+      if (this.workspace.viewCode) {
+        this.loadView(this.workspace.viewCode, navigation.perspectiveId);
       } else {
-        const query = QueryConverter.fromString(queryParams.get('query'));
-        this.loadQuery(query, perspective);
+        this.loadQuery(navigation.query, navigation.perspectiveId);
       }
     });
   }
@@ -112,7 +109,7 @@ export class ViewComponent implements OnInit {
 
   private createView() {
     this.viewService.createView(this.view).subscribe((code: string) => {
-      this.router.navigate(['w', this.workspaceService.organizationCode, this.workspaceService.projectCode, 'view', code]);
+      this.router.navigate(['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', code]);
       this.notificationService.success('View has been created');
     });
   }

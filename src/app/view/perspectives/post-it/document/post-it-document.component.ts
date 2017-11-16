@@ -18,13 +18,17 @@
  */
 
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Store} from '@ngrx/store';
+
 import {AttributePair} from '../document-data/attribute-pair';
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
 import {Direction} from '../document-data/direction';
 import {DocumentData} from '../document-data/document-data';
-import {WorkspaceService} from '../../../../core/workspace.service';
 import {KeyCode} from '../../../../shared/key-code';
 import {isString} from 'util';
+import {AppState} from '../../../../core/store/app.state';
+import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 
 @Component({
   selector: 'post-it-document',
@@ -52,12 +56,15 @@ export class PostItDocumentComponent implements OnInit {
 
   public newAttributePair: AttributePair;
 
-  constructor(
-    public element: ElementRef,
-    private workspaceService: WorkspaceService) {
+  private workspace: Workspace;
+
+  constructor(public element: ElementRef,
+              private store: Store<AppState>) {
   }
 
   public ngOnInit(): void {
+    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+
     this.initializeVariables();
     this.setEventListener();
     this.loadDocumentData();
@@ -254,7 +261,7 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   public configPrefix(): string {
-    return `/w/${this.workspaceService.organizationCode}/${this.workspaceService.projectCode}/c/${this.data.collection.code}/d/${this.data.document.id}`;
+    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}/c/${this.data.collection.code}/d/${this.data.document.id}`;
   }
 
 }

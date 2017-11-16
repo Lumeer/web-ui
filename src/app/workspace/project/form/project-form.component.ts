@@ -18,12 +18,15 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
 
 import {Project} from '../../../core/dto/project';
-import {WorkspaceService} from '../../../core/workspace.service';
 import {ProjectService} from '../../../core/rest/project.service';
 import {NotificationService} from '../../../notifications/notification.service';
+import {AppState} from '../../../core/store/app.state';
+import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {Workspace} from '../../../core/store/navigation/workspace.model';
 
 @Component({
   selector: 'project-form',
@@ -32,41 +35,24 @@ import {NotificationService} from '../../../notifications/notification.service';
 })
 export class ProjectFormComponent implements OnInit {
 
-  private creation: boolean;
   public project: Project;
   public organizationCode: string;
   public projectCode: string;
 
+  private workspace: Workspace;
+
   constructor(private projectService: ProjectService,
-              private workspaceService: WorkspaceService,
-              private route: ActivatedRoute,
               private router: Router,
+              private store: Store<AppState>,
               private notificationsService: NotificationService) {
   }
 
   public ngOnInit(): void {
+    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+
     this.project = new Project();
-    this.route.data.subscribe((data: { creation: boolean }) => {
-      this.creation = data.creation;
-      if (this.creation) {
-        this.retrieveParamsFromRoute();
-      } else {
-        this.retrieveParamsFromParentRoute();
-      }
-    });
-  }
-
-  private retrieveParamsFromRoute() {
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      this.organizationCode = params.get('organizationCode');
-    });
-  }
-
-  private retrieveParamsFromParentRoute() {
-    this.route.parent.paramMap.subscribe((params: ParamMap) => {
-      this.organizationCode = params.get('organizationCode');
-      this.projectCode = params.get('projectCode');
-      this.getProject();
+    this.store.select(selectWorkspace).subscribe(workspace => {
+      this.organizationCode = workspace.organizationCode;
     });
   }
 
@@ -79,11 +65,7 @@ export class ProjectFormComponent implements OnInit {
   }
 
   public onSave() {
-    if (this.creation) {
-      this.createProject();
-    } else {
-      this.updateProject();
-    }
+    this.createProject();
   }
 
   private createProject() {
@@ -100,8 +82,8 @@ export class ProjectFormComponent implements OnInit {
     this.projectService.editProject(this.organizationCode, this.projectCode, this.project)
       .subscribe(
         response => {
-          if (this.projectCode === this.workspaceService.projectCode) {
-            this.workspaceService.projectCode = this.project.code;
+          if (this.projectCode === this.workspace.projectCode) {
+            this.workspace.projectCode = this.project.code;
           }
           this.goBack();
         },

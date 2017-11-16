@@ -18,12 +18,11 @@
  */
 
 import {Component, ComponentFactoryResolver, ComponentRef, ViewChild} from '@angular/core';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {Store} from '@ngrx/store';
 
 import {PerspectiveComponent} from '../perspective.component';
 import {Query} from '../../../core/dto/query';
 import {SearchResultsDirective} from './search-results.directive';
-import {WorkspaceService} from '../../../core/workspace.service';
 import {QueryConverter} from '../../../shared/utils/query-converter';
 import {SearchAllComponent} from './all/search-all.component';
 import {SearchViewsComponent} from './views/search-views.component';
@@ -31,6 +30,9 @@ import {SearchLinksComponent} from './links/search-links.component';
 import {SearchDocumentsComponent} from './documents/search-documents.component';
 import {SearchCollectionsComponent} from './collections/search-collections.component';
 import {Perspective} from '../perspective';
+import {Workspace} from '../../../core/store/navigation/workspace.model';
+import {AppState} from '../../../core/store/app.state';
+import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 
 const COMPONENTS = {
   ['all']: SearchAllComponent,
@@ -52,16 +54,17 @@ export class SearchPerspectiveComponent implements PerspectiveComponent {
 
   public config: any;
 
-  constructor(private activatedRoute: ActivatedRoute,
-              private componentFactoryResolver: ComponentFactoryResolver,
-              private workspaceService: WorkspaceService) {
+  private workspace: Workspace;
+
+  constructor(private componentFactoryResolver: ComponentFactoryResolver,
+              private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
-      this.query = QueryConverter.fromString(queryParams.get('query'));
-      const searchTab = queryParams.get('searchTab');
-      this.loadSearchResults(searchTab, this.query);
+    this.store.select(selectNavigation).subscribe(navigation => {
+      this.workspace = navigation.workspace;
+      this.query = navigation.query;
+      this.loadSearchResults(navigation.searchTab, this.query);
     });
   }
 
@@ -82,7 +85,7 @@ export class SearchPerspectiveComponent implements PerspectiveComponent {
   }
 
   public viewPath(): string {
-    return `/w/${this.workspaceService.organizationCode}/${this.workspaceService.projectCode}/view`;
+    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}/view`;
   }
 
   public get stringQuery(): string {

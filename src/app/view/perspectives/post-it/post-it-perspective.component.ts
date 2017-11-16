@@ -67,7 +67,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   public layoutElement: ElementRef;
 
   @ViewChildren(PostItDocumentComponent)
-  public documentComponents: QueryList<PostItDocumentComponent>;
+  public documentComponents: QueryList<PostItDocumentComponent> = new QueryList();
 
   public postIts: DocumentData[] = [];
 
@@ -217,7 +217,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
           this.initializeAttributeSuggestions(collection);
         },
         error => {
-          this.handleError(error,'Failed fetching collection data');
+          this.handleError(error, 'Failed fetching collection data');
         }
       );
   }
@@ -397,7 +397,9 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   }
 
   public ngOnDestroy(): void {
-    this.layout.destroy();
+    if (this.layout) {
+      this.layout.destroy();
+    }
   }
 
 }

@@ -19,21 +19,27 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse} from '@angular/common/http';
+import {Store} from '@ngrx/store';
 
-import {WorkspaceService} from '../workspace.service';
 import {Document} from '../dto/document';
 import {Observable} from 'rxjs/Observable';
 import {isNullOrUndefined} from 'util';
 import {LumeerError} from '../error/lumeer.error';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {catchError, map} from 'rxjs/operators';
+import {AppState} from '../store/app.state';
+import {Workspace} from '../store/navigation/workspace.model';
+import {selectWorkspace} from '../store/navigation/navigation.state';
 
 // TODO send data attribute without '_id'
 @Injectable()
 export class DocumentService {
 
+  private workspace: Workspace;
+
   constructor(private httpClient: HttpClient,
-              private workspaceService: WorkspaceService) {
+              private store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
   public createDocument(document: Document): Observable<string> {
@@ -78,8 +84,8 @@ export class DocumentService {
   }
 
   private apiPrefix(collectionCode: string): string {
-    const organizationCode = this.workspaceService.organizationCode;
-    const projectCode = this.workspaceService.projectCode;
+    const organizationCode = this.workspace.organizationCode;
+    const projectCode = this.workspace.projectCode;
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
   }

@@ -17,25 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ActivatedRouteSnapshot} from '@angular/router';
+export interface Workspace {
 
-export class RouteFinder {
-
-  public static getDeepestChildRoute(route: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
-    while (route.firstChild) {
-      route = route.firstChild;
-    }
-    return route;
-  }
-
-  public static getFirstChildRouteWithParams(route: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
-    while (route.firstChild) {
-      route = route.firstChild;
-      if (route.paramMap.keys.length > 0) {
-        return route;
-      }
-    }
-    return route;
-  }
+  organizationCode?: string;
+  projectCode?: string;
+  collectionCode?: string;
+  viewCode?: string;
 
 }

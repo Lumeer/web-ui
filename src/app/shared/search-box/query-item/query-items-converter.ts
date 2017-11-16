@@ -26,12 +26,13 @@ import {AttributeQueryItem} from './attribute-query-item';
 import {FulltextQueryItem} from './fulltext-query-item';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import {map} from 'rxjs/operators'
+import {map, switchMap} from 'rxjs/operators';
 import {Collection} from '../../../core/dto/collection';
 import {QueryConverter} from '../../utils/query-converter';
 import {SearchService} from '../../../core/rest/search.service';
 import {LinkQueryItem} from './link-query-item';
 import {LinkTypeService} from '../../../core/rest/link-type.service';
+import {LinkType} from '../../../core/dto/link-type';
 
 @Injectable()
 export class QueryItemsConverter {
@@ -65,7 +66,7 @@ export class QueryItemsConverter {
   public fromQuery(query: Query): Observable<QueryItem[]> {
     return this.loadNeededCollections(query).pipe(
       map((collections: Collection[]) => QueryItemsConverter.convertToCollectionsMap(collections)),
-      map(collectionsMap => this.createQueryItems(collectionsMap, query))
+      switchMap(collectionsMap => this.createQueryItems(collectionsMap, query))
     );
   }
 
@@ -73,15 +74,15 @@ export class QueryItemsConverter {
     let collectionCodes = query.filters.map(filter => filter.split(':')[0]);
     collectionCodes = collectionCodes.concat(query.collectionCodes);
 
-    query.linkIds.forEach(id => {
-      const linkType = this.linkTypeService.getLinkTypeById(id);
-      if (!collectionCodes.includes(linkType.collectionCodes[0])) {
-        collectionCodes.push(linkType.collectionCodes[0]);
-      }
-      if (!collectionCodes.includes(linkType.collectionCodes[1])) {
-        collectionCodes.push(linkType.collectionCodes[1]);
-      }
-    });
+    if (query.linkIds && query.linkIds.length > 0) {
+      return this.linkTypeService.getLinkTypesByIds(...query.linkIds).pipe(
+        map((linkTypes: LinkType[]) => linkTypes.map(linkType => linkType.collectionCodes)),
+        map((collectionCodePairs: [string, string][]) => [].concat.apply([], collectionCodePairs)),
+        map((codes: string[]) => codes.filter(code => !collectionCodes.includes(code))),
+        map(codes => codes.concat(collectionCodes)),
+        switchMap(codes => this.searchService.searchCollections({collectionCodes: codes}))
+      );
+    }
 
     if (collectionCodes) {
       return this.searchService.searchCollections({
@@ -98,7 +99,7 @@ export class QueryItemsConverter {
     return collectionsMap;
   }
 
-  private createQueryItems(collectionsMap: { [key: string]: Collection }, query: Query): QueryItem[] {
+  private createQueryItems(collectionsMap: { [key: string]: Collection }, query: Query): Observable<QueryItem[]> {
     let collectionItems: QueryItem[] = QueryItemsConverter.createCollectionQueryItems(collectionsMap, query);
     let attributeItems: QueryItem[] = QueryItemsConverter.createAttributeQueryItems(collectionsMap, query);
 
@@ -111,25 +112,24 @@ export class QueryItemsConverter {
         }
       }
     }
-    queryItems = queryItems.concat(this.createLinkQueryItems(collectionsMap, query));
 
-    if (query.fulltext) {
-      queryItems.push(new FulltextQueryItem(query.fulltext));
-    }
-    return queryItems;
+    return this.createLinkQueryItems(collectionsMap, query).pipe(
+      map(items => queryItems.concat(items)),
+      map(items => query.fulltext ? items.concat(new FulltextQueryItem(query.fulltext)) : items)
+    );
   }
 
-  private createLinkQueryItems(collectionsMap: { [key: string]: Collection }, query: Query): QueryItem[] {
-    const items = [];
-    query.linkIds.forEach(id => {
-      const linkType = this.linkTypeService.getLinkTypeById(id);
-      const coll1 = collectionsMap[linkType.collectionCodes[0]];
-      const coll2 = collectionsMap[linkType.collectionCodes[1]];
-      if (coll1 && coll2) {
-        items.push(new LinkQueryItem(linkType, coll1, coll2));
-      }
-    });
-    return items;
+  private createLinkQueryItems(collectionsMap: { [key: string]: Collection }, query: Query): Observable<QueryItem[]> {
+    return this.linkTypeService.getLinkTypesByIds(...query.linkIds).pipe(
+      map(linkTypes => linkTypes.map(linkType => {
+          const coll1 = collectionsMap[linkType.collectionCodes[0]];
+          const coll2 = collectionsMap[linkType.collectionCodes[1]];
+          if (coll1 && coll2) {
+            return new LinkQueryItem(linkType, coll1, coll2);
+          }
+        }).filter(item => item)
+      )
+    );
   }
 
   private static createCollectionQueryItems(collectionsMap: { [key: string]: Collection }, query: Query): QueryItem[] {

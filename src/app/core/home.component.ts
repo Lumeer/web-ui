@@ -19,7 +19,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {WorkspaceService} from './workspace.service';
+
 import {UserSettingsService} from './user-settings.service';
 
 @Component({
@@ -28,16 +28,13 @@ import {UserSettingsService} from './user-settings.service';
 export class HomeComponent implements OnInit {
 
   constructor(private router: Router,
-              private userSettingsService: UserSettingsService,
-              private workspaceService: WorkspaceService) {
+              private userSettingsService: UserSettingsService) {
   }
 
   public ngOnInit(): void {
     const userSettings = this.userSettingsService.getUserSettings();
-    this.workspaceService.organizationCode = userSettings.defaultOrganization;
-    this.workspaceService.projectCode = userSettings.defaultProject;
 
-    if (this.workspaceService.isWorkspaceSet()) {
+    if (userSettings.defaultOrganization && userSettings.defaultProject) {
       this.router.navigate(['/w', userSettings.defaultOrganization, userSettings.defaultProject, 'search']);
     } else {
       this.router.navigate(['/workspace']);

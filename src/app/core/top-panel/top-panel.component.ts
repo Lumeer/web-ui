@@ -18,12 +18,11 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {filter, map, mergeMap} from 'rxjs/operators';
-
-import {WorkspaceService} from '../workspace.service';
-import {RouteFinder} from '../../shared/utils/route-finder';
+import {Store} from '@ngrx/store';
 import {HtmlModifier} from '../../shared/utils/html-modifier';
+import {AppState} from '../store/app.state';
+import {selectNavigation} from '../store/navigation/navigation.state';
+import {Workspace} from '../store/navigation/workspace.model';
 
 @Component({
   selector: 'top-panel',
@@ -37,29 +36,20 @@ export class TopPanelComponent implements OnInit {
   public searchBoxHidden = false;
   public notifications = 0;
 
-  constructor(private activatedRoute: ActivatedRoute,
-              private router: Router,
-              public workspaceService: WorkspaceService) {
+  public workspace: Workspace;
+
+  constructor(private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.detectSearchBoxHiddenProperty();
-  }
-
-  private detectSearchBoxHiddenProperty() {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd),
-      map(() => this.activatedRoute),
-      map(route => RouteFinder.getDeepestChildRoute(route)),
-      filter(route => route.outlet === 'primary'),
-      mergeMap(route => route.data)
-    ).subscribe((data: { searchBoxHidden: boolean }) => {
-      this.searchBoxHidden = Boolean(data.searchBoxHidden);
+    this.store.select(selectNavigation).subscribe(navigation => {
+      this.workspace = navigation.workspace;
+      this.searchBoxHidden = navigation.searchBoxHidden;
     });
   }
 
   public isSearchBoxShown(): boolean {
-    return this.workspaceService.isWorkspaceSet() && !this.searchBoxHidden;
+    return this.workspace.organizationCode && this.workspace.projectCode && !this.searchBoxHidden;
   }
 
   public removeHtmlComments(html: HTMLElement): string {

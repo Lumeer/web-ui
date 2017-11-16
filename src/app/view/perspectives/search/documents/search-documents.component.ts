@@ -18,7 +18,7 @@
  */
 
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Store} from '@ngrx/store';
 
 import {SizeType} from '../../../../shared/slider/size-type';
 import {SearchService} from '../../../../core/rest/search.service';
@@ -30,6 +30,8 @@ import {map, switchMap} from 'rxjs/operators';
 import {isArray, isObject} from 'util';
 import {Subscription} from 'rxjs/Subscription';
 import {UserSettingsService} from '../../../../core/user-settings.service';
+import {AppState} from '../../../../core/store/app.state';
+import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 
 @Component({
   templateUrl: './search-documents.component.html',
@@ -46,8 +48,8 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public documents: SearchDocument[] = [];
   private routerSubscription: Subscription;
 
-  constructor(private route: ActivatedRoute,
-              private searchService: SearchService,
+  constructor(private searchService: SearchService,
+              private store: Store<AppState>,
               private collectionService: CollectionService,
               private userSettingsService: UserSettingsService) {
   }
@@ -55,8 +57,8 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     let userSettings = this.userSettingsService.getUserSettings();
     this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
-    this.routerSubscription = this.route.queryParamMap.pipe(
-      map(paramMap => JSON.parse(paramMap.get('query'))),
+    this.routerSubscription = this.store.select(selectNavigation).pipe(
+      map(navigation => navigation.query),
       switchMap(query => this.searchService.searchDocuments(query)),
     ).subscribe(documents => this.initDocuments(documents));
   }
@@ -162,7 +164,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     if (isArray(value)) {
       return this.getValuesFromArray(value as any[]);
     } else if (isObject(value)) {
-      return this.getValuesFromObject(value as Object)
+      return this.getValuesFromObject(value as Object);
     } else {
       return value as string;
     }
@@ -186,7 +188,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   private getEntriesForObject(object: any): { key: string, value: any }[] {
     return Object.keys(object).map(key => {
-      return {key: key, value: object[key]}
+      return {key: key, value: object[key]};
     });
   }
 

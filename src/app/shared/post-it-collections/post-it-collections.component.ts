@@ -18,6 +18,7 @@
  */
 
 import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Store} from '@ngrx/store';
 
 import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../collection/constants';
 import {Collection} from '../../core/dto/collection';
@@ -25,7 +26,6 @@ import {Query} from '../../core/dto/query';
 import {CollectionService} from '../../core/rest/collection.service';
 import {ImportService} from '../../core/rest/import.service';
 import {SearchService} from '../../core/rest/search.service';
-import {WorkspaceService} from '../../core/workspace.service';
 import {Role} from '../permissions/role';
 import {PostItLayout} from '../utils/post-it-layout';
 import {PostItCollectionData} from './post-it-collection-data';
@@ -33,6 +33,9 @@ import {QueryConverter} from '../utils/query-converter';
 import {HtmlModifier} from '../utils/html-modifier';
 import {NotificationService} from '../../notifications/notification.service';
 import {finalize} from 'rxjs/operators';
+import {Workspace} from '../../core/store/navigation/workspace.model';
+import {AppState} from '../../core/store/app.state';
+import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 
 @Component({
   selector: 'post-it-collections',
@@ -66,12 +69,15 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   private layout: PostItLayout;
 
+  private workspace: Workspace;
+
   constructor(private collectionService: CollectionService,
               private searchService: SearchService,
               private notificationService: NotificationService,
               private importService: ImportService,
-              private workspaceService: WorkspaceService,
+              private store: Store<AppState>,
               private zone: NgZone) {
+    store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
   public ngOnInit(): void {
@@ -300,7 +306,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
   }
 
   public workspacePath(): string {
-    return `/w/${this.workspaceService.organizationCode}/${this.workspaceService.projectCode}`;
+    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
   public ngOnDestroy(): void {

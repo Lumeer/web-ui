@@ -18,18 +18,19 @@
  */
 
 import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
 
 import {COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../constants';
 import {Collection} from '../../../../core/dto/collection';
 import {CollectionTabComponent} from '../collection-tab.component';
 import {LinkTypeService} from '../../../../core/rest/link-type.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
-import {WorkspaceService} from '../../../../core/workspace.service';
 import {CollectionSelectService} from '../../../service/collection-select.service';
 import {LinkTypeModel} from './LinkTypeModel';
 import {NotificationService} from '../../../../notifications/notification.service';
 import {finalize, map, switchMap} from 'rxjs/operators';
+import {AppState} from '../../../../core/store/app.state';
 
 @Component({
   selector: 'collection-link-types',
@@ -47,17 +48,15 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   constructor(private linkTypeService: LinkTypeService,
               private router: Router,
-              protected collectionService: CollectionService,
-              protected collectionSelectService: CollectionSelectService,
-              protected route: ActivatedRoute,
-              protected notificationService: NotificationService,
-              protected workspaceService: WorkspaceService) {
+              collectionService: CollectionService,
+              collectionSelectService: CollectionSelectService,
+              notificationService: NotificationService,
+              store: Store<AppState>) {
     super(
       collectionService,
       collectionSelectService,
-      route,
       notificationService,
-      workspaceService
+      store
     );
   }
 

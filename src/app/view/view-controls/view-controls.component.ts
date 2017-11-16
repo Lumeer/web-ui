@@ -18,20 +18,23 @@
  */
 
 import {Router} from '@angular/router';
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Store} from '@ngrx/store';
 
 import {PERSPECTIVES} from '../perspectives/perspective';
 import {View} from '../../core/dto/view';
-import {WorkspaceService} from '../../core/workspace.service';
 import {PerspectiveChoice} from '../perspectives/perspective-choice';
 import {QueryConverter} from '../../shared/utils/query-converter';
+import {AppState} from '../../core/store/app.state';
+import {selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {Workspace} from '../../core/store/navigation/workspace.model';
 
 @Component({
   selector: 'view-controls',
   templateUrl: './view-controls.component.html',
   styleUrls: ['./view-controls.component.scss']
 })
-export class ViewControlsComponent {
+export class ViewControlsComponent implements OnInit {
 
   @Input()
   public view: View;
@@ -39,12 +42,18 @@ export class ViewControlsComponent {
   @Output()
   public save = new EventEmitter();
 
+  private workspace: Workspace;
+
   constructor(private router: Router,
-              private workspaceService: WorkspaceService) {
+              private store: Store<AppState>) {
+  }
+
+  public ngOnInit() {
+    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
   public onSelectPerspective(perspectiveId: string) {
-    const path = ['w', this.workspaceService.organizationCode, this.workspaceService.projectCode, 'view'];
+    const path = ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view'];
     if (this.view.code) {
       path.push(this.view.code);
     }
@@ -63,7 +72,7 @@ export class ViewControlsComponent {
   }
 
   public onCopy() {
-    this.router.navigate(['w', this.workspaceService.organizationCode, this.workspaceService.projectCode, 'view'], {
+    this.router.navigate(['w', this.workspace.organizationCode, this.workspace.projectCode, 'view'], {
       queryParams: {
         query: QueryConverter.toString(this.view.query),
         perspective: this.view.perspective

@@ -18,11 +18,11 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
 
 import {Collection} from '../../core/dto/collection';
 import {CollectionService} from '../../core/rest/collection.service';
-import {WorkspaceService} from '../../core/workspace.service';
 import {Role} from '../../shared/permissions/role';
 import {Permission} from '../../core/dto/permission';
 import {QueryConverter} from '../../shared/utils/query-converter';
@@ -31,6 +31,9 @@ import {CollectionSelectService} from '../service/collection-select.service';
 import {NotificationService} from '../../notifications/notification.service';
 import {Subscription} from 'rxjs/Subscription';
 import {map, switchMap, tap} from 'rxjs/operators';
+import {Workspace} from '../../core/store/navigation/workspace.model';
+import {AppState} from '../../core/store/app.state';
+import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 
 @Component({
   selector: 'collection-config',
@@ -43,19 +46,20 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
 
   public initialCollectionCode: string;
 
-  private routeSubscription: Subscription;
+  private workspaceSubscription: Subscription;
+  private workspace: Workspace;
 
   constructor(private collectionService: CollectionService,
               private collectionSelectService: CollectionSelectService,
-              private route: ActivatedRoute,
               private notificationService: NotificationService,
-              private workspaceService: WorkspaceService,
-              private router: Router) {
+              private router: Router,
+              private store: Store<AppState>) {
   }
 
   public ngOnInit(): void {
-    this.routeSubscription = this.route.paramMap.pipe(
-      map(paramMap => paramMap.get('collectionCode')),
+    this.workspaceSubscription = this.store.select(selectWorkspace).pipe(
+      tap(workspace => this.workspace = workspace),
+      map(workspace => workspace.collectionCode),
       switchMap(collectionCode => this.collectionSelectService.select(collectionCode)),
       tap(collection => this.collection = collection)
     ).subscribe(
@@ -106,11 +110,11 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
   }
 
   public workspacePath(): string {
-    return `/w/${this.workspaceService.organizationCode}/${this.workspaceService.projectCode}`;
+    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
   public ngOnDestroy(): void {
-    this.routeSubscription.unsubscribe();
+    this.workspaceSubscription.unsubscribe();
   }
 
 }

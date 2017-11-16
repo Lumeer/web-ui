@@ -18,14 +18,17 @@
  */
 
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {HttpResponse} from '@angular/common/http';
+import {Store} from '@ngrx/store';
 
 import {Organization} from '../../core/dto/organization';
 import {OrganizationService} from '../../core/rest/organization.service';
 import {ProjectService} from '../../core/rest/project.service';
 import {Project} from '../../core/dto/project';
 import {NotificationService} from '../../notifications/notification.service';
+import {AppState} from '../../core/store/app.state';
+import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 
 @Component({
   templateUrl: './organization-settings.component.html',
@@ -44,16 +47,16 @@ export class OrganizationSettingsComponent implements OnInit {
   public organizationDescription: ElementRef;
 
   constructor(private organizationService: OrganizationService,
-              private route: ActivatedRoute,
               private router: Router,
+              private store: Store<AppState>,
               private projectService: ProjectService,
               private notificationService: NotificationService) {
   }
 
   public ngOnInit(): void {
     this.organization = new Organization();
-    this.route.paramMap.subscribe((params: ParamMap) => {
-        this.organizationCode = params.get('organizationCode');
+    this.store.select(selectWorkspace).subscribe(workspace => {
+        this.organizationCode = workspace.organizationCode;
         if (this.organizationCode) {
           this.getOrganization();
         }
@@ -105,7 +108,7 @@ export class OrganizationSettingsComponent implements OnInit {
     }
     this.organizationService.editOrganization(this.originalOrganizationCode, this.organization)
       .subscribe((response: HttpResponse<Object>) => {
-          this.notificationService.success( 'Organization\'s code was successfully updated');
+          this.notificationService.success('Organization\'s code was successfully updated');
           this.originalOrganizationCode = this.organization.code;
           this.organizationCode = this.organization.code;
           this.router.navigate(['/organization', this.organization.code]);

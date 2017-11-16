@@ -17,25 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ActivatedRouteSnapshot} from '@angular/router';
+import {RouterReducerState} from '@ngrx/router-store';
 
-export class RouteFinder {
+import {initialNavigationState, NavigationState} from './navigation/navigation.state';
 
-  public static getDeepestChildRoute(route: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
-    while (route.firstChild) {
-      route = route.firstChild;
-    }
-    return route;
-  }
+export interface AppState {
 
-  public static getFirstChildRouteWithParams(route: ActivatedRouteSnapshot): ActivatedRouteSnapshot {
-    while (route.firstChild) {
-      route = route.firstChild;
-      if (route.paramMap.keys.length > 0) {
-        return route;
-      }
-    }
-    return route;
-  }
+  navigation: NavigationState;
+  router: RouterReducerState;
 
 }
+
+export const initialAppState = {
+  navigation: initialNavigationState
+};

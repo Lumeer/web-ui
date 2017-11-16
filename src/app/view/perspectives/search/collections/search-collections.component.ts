@@ -18,8 +18,11 @@
  */
 
 import {Component} from '@angular/core';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {Store} from '@ngrx/store';
+
 import {Query} from '../../../../core/dto/query';
+import {AppState} from '../../../../core/store/app.state';
+import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 
 @Component({
   templateUrl: './search-collections.component.html'
@@ -28,13 +31,11 @@ export class SearchCollectionsComponent {
 
   public query: Query = {};
 
-  constructor(private activatedRoute: ActivatedRoute) {
+  constructor(private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.activatedRoute.queryParamMap.subscribe((queryParams: ParamMap) => {
-      this.query = JSON.parse(queryParams.get('query'));
-    });
+    this.store.select(selectNavigation).subscribe(navigation => this.query = navigation.query);
   }
 
 }

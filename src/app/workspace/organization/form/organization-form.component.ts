@@ -18,12 +18,15 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
 
 import {Organization} from '../../../core/dto/organization';
-import {WorkspaceService} from '../../../core/workspace.service';
 import {OrganizationService} from '../../../core/rest/organization.service';
 import {NotificationService} from '../../../notifications/notification.service';
+import {AppState} from '../../../core/store/app.state';
+import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {Workspace} from '../../../core/store/navigation/workspace.model';
 
 @Component({
   selector: 'organization-form',
@@ -35,17 +38,19 @@ export class OrganizationFormComponent implements OnInit {
   public organization: Organization;
   public organizationCode: string;
 
+  private workspace: Workspace;
+
   constructor(private organizationService: OrganizationService,
-              private workspaceService: WorkspaceService,
-              private route: ActivatedRoute,
               private router: Router,
+              private store: Store<AppState>,
               private notificationsService: NotificationService) {
   }
 
   public ngOnInit(): void {
     this.organization = new Organization();
-    this.route.parent.paramMap.subscribe((params: ParamMap) => {
-      this.organizationCode = params.get('organizationCode');
+    this.store.select(selectWorkspace).subscribe(workspace => {
+      this.workspace = workspace;
+      this.organizationCode = workspace.organizationCode;
       if (this.organizationCode) {
         this.getOrganization();
       }
@@ -64,8 +69,8 @@ export class OrganizationFormComponent implements OnInit {
       this.organizationService.editOrganization(this.organizationCode, this.organization)
         .subscribe(
           response => {
-            if (this.organizationCode === this.workspaceService.organizationCode) {
-              this.workspaceService.organizationCode = this.organization.code;
+            if (this.organizationCode === this.workspace.organizationCode) {
+              this.workspace.organizationCode = this.organization.code;
             }
             this.goBack();
           },

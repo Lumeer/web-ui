@@ -19,18 +19,25 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {Store} from '@ngrx/store';
 
-import {WorkspaceService} from '../workspace.service';
 import {Observable} from 'rxjs/Observable';
 import {Collection} from '../dto/collection';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {LumeerError} from '../error/lumeer.error';
 import {catchError} from 'rxjs/operators';
+import {Workspace} from '../store/navigation/workspace.model';
+import {AppState} from '../store/app.state';
+import {selectWorkspace} from '../store/navigation/navigation.state';
 
 @Injectable()
 export class ImportService {
 
-  constructor(private http: HttpClient, private workspaceService: WorkspaceService) {
+  private workspace: Workspace;
+
+  constructor(private http: HttpClient,
+              private store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
   public importFile(format: string, data: string, name: string): Observable<Collection> {
@@ -45,8 +52,8 @@ export class ImportService {
   }
 
   private apiPrefix(): string {
-    const organizationCode = this.workspaceService.organizationCode;
-    const projectCode = this.workspaceService.projectCode;
+    const organizationCode = this.workspace.organizationCode;
+    const projectCode = this.workspace.projectCode;
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/import`;
   }

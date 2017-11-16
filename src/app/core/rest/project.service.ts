@@ -58,8 +58,8 @@ export class ProjectService extends PermissionService {
   }
 
   protected actualApiPrefix(): string {
-    let orgCode = this.workspaceService.organizationCode;
-    let projCode = this.workspaceService.projectCode;
+    let orgCode = this.workspace.organizationCode;
+    let projCode = this.workspace.projectCode;
 
     return this.apiPrefix(orgCode, projCode);
   }

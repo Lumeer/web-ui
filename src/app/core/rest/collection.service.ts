@@ -104,7 +104,7 @@ export class CollectionService extends PermissionService {
   }
 
   protected actualApiPrefix() {
-    const collectionCode = this.workspaceService.collectionCode;
+    const collectionCode = this.workspace.collectionCode;
 
     return `${this.apiPrefix()}/${collectionCode}`;
   }
@@ -136,8 +136,8 @@ export class CollectionService extends PermissionService {
   }
 
   private apiPrefix(): string {
-    const organizationCode = this.workspaceService.organizationCode;
-    const projectCode = this.workspaceService.projectCode;
+    const organizationCode = this.workspace.organizationCode;
+    const projectCode = this.workspace.projectCode;
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
   }

@@ -19,14 +19,16 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-
-import {WorkspaceService} from '../workspace.service';
+import {Store} from '@ngrx/store';
 import {LumeerError} from '../error/lumeer.error';
 import {LinkType} from '../dto/link-type';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {Observable} from 'rxjs/Observable';
 import {LocalStorage} from '../../shared/utils/local-storage';
 import 'rxjs/add/observable/of';
+import {Workspace} from '../store/navigation/workspace.model';
+import {AppState} from '../store/app.state';
+import {selectWorkspace} from '../store/navigation/navigation.state';
 
 const LINK_TYPES = 'linkTypes';
 
@@ -34,8 +36,11 @@ const LINK_TYPES = 'linkTypes';
 @Injectable()
 export class LinkTypeService {
 
+  private workspace: Workspace;
+
   constructor(private httpClient: HttpClient,
-              private workspaceService: WorkspaceService) {
+              private store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
   public createLinkType(linkType: LinkType): Observable<string> {
@@ -69,10 +74,11 @@ export class LinkTypeService {
     return Observable.of({});
   }
 
-  public getLinkTypeById(id: string): LinkType {
-    const linkTypes = LocalStorage.get(LINK_TYPES) || {};
+  public getLinkTypesByIds(...ids: string[]): Observable<LinkType[]> {
+    const linkTypes: { [id: string]: LinkType } = LocalStorage.get(LINK_TYPES) || {};
 
-    return linkTypes[id];
+    const results = Object.values(linkTypes).filter(linkType => ids.includes(linkType.id));
+    return Observable.of(results);
   }
 
   public getLinkTypesByCollections(...collectionCodes: string[]): Observable<LinkType[]> {
@@ -92,8 +98,8 @@ export class LinkTypeService {
   }
 
   private apiPrefix(collectionCode: string): string {
-    const organizationCode = this.workspaceService.organizationCode;
-    const projectCode = this.workspaceService.projectCode;
+    const organizationCode = this.workspace.organizationCode;
+    const projectCode = this.workspace.projectCode;
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/c/${collectionCode}/linktypes`;
   }

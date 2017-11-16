@@ -20,15 +20,19 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
+import {Store} from '@ngrx/store';
 
 import {Organization} from '../../core/dto/organization';
 import {Project} from '../../core/dto/project';
-import {WorkspaceService} from '../../core/workspace.service';
 import {OrganizationService} from '../../core/rest/organization.service';
 import {ProjectService} from '../../core/rest/project.service';
 import {isNullOrUndefined} from 'util';
 import {Role} from '../../shared/permissions/role';
 import {UserSettingsService} from '../../core/user-settings.service';
+import {AppState} from '../../core/store/app.state';
+import {selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {Workspace} from '../../core/store/navigation/workspace.model';
+import {switchMap, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'workspace-chooser',
@@ -58,43 +62,47 @@ export class WorkspaceChooserComponent implements OnInit {
   public activeOrgIx: number;
   public activeProjIx: number;
 
+  private workspace: Workspace;
+
   constructor(private organizationService: OrganizationService,
               private projectService: ProjectService,
+              private store: Store<AppState>,
               private userSettingsService: UserSettingsService,
-              private workspaceService: WorkspaceService,
               private router: Router) {
   }
 
   public ngOnInit() {
-    this.organizationService.getOrganizations()
-      .subscribe(organizations => {
-        this.organizations = organizations;
+    this.store.select(selectWorkspace).pipe(
+      tap(workspace => this.workspace = workspace),
+      switchMap(() => this.organizationService.getOrganizations())
+    ).subscribe(organizations => {
+      this.organizations = organizations;
 
-        if (this.workspaceService.organizationCode) {
-          const ix: number = this.organizations.findIndex(org =>
-            org.code === this.workspaceService.organizationCode
-          );
-          if (ix >= 0) {
-            this.activeOrgIx = ix;
+      if (this.workspace.organizationCode) {
+        const ix: number = this.organizations.findIndex(org =>
+          org.code === this.workspace.organizationCode
+        );
+        if (ix >= 0) {
+          this.activeOrgIx = ix;
 
-            const activeOrganization = this.organizations[this.activeOrgIx];
-            activeOrganization.projects = [];
-            this.projectService.getProjects(activeOrganization.code)
-              .subscribe((projects: Project[]) => {
-                activeOrganization.projects = projects;
+          const activeOrganization = this.organizations[this.activeOrgIx];
+          activeOrganization.projects = [];
+          this.projectService.getProjects(activeOrganization.code)
+            .subscribe((projects: Project[]) => {
+              activeOrganization.projects = projects;
 
-                if (this.workspaceService.projectCode) {
-                  const ixProj: number = activeOrganization.projects.findIndex(proj =>
-                    proj.code === this.workspaceService.projectCode
-                  );
-                  if (ixProj >= 0) {
-                    this.activeProjIx = ixProj;
-                  }
+              if (this.workspace.projectCode) {
+                const ixProj: number = activeOrganization.projects.findIndex(proj =>
+                  proj.code === this.workspace.projectCode
+                );
+                if (ixProj >= 0) {
+                  this.activeProjIx = ixProj;
                 }
-              });
-          }
+              }
+            });
         }
-      });
+      }
+    });
   }
 
   public onSelectOrganization(index: number) {
@@ -153,8 +161,8 @@ export class WorkspaceChooserComponent implements OnInit {
       let activeOrgCode = this.organizations[this.activeOrgIx].code;
       let activeProjCode = this.organizations[this.activeOrgIx].projects[this.activeProjIx].code;
 
-      this.workspaceService.organizationCode = activeOrgCode;
-      this.workspaceService.projectCode = activeProjCode;
+      this.workspace.organizationCode = activeOrgCode;
+      this.workspace.projectCode = activeProjCode;
 
       this.updateDefaultWorkspace(activeOrgCode, activeProjCode);
 
