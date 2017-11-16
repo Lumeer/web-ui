@@ -18,7 +18,6 @@
  */
 
 import {LinkedAttribute} from './linked-attribute';
-import {Resource} from './resource';
 
 export interface LinkType {
 
@@ -26,8 +25,6 @@ export interface LinkType {
   name: string;
 
   collectionCodes?: [string, string]; // TODO make compulsory
-  fromCollection?: string; // TODO remove
-  toCollection?: string; // TODO remove
 
   attributes?: string[]; // TODO use complex object
   linkedAttributes?: LinkedAttribute[]; // TODO remove
