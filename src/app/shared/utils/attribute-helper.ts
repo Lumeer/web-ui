@@ -32,11 +32,24 @@ export class AttributeHelper {
 
     let name = 'A';
     while (existingNames.includes(name)) {
-      // TODO deal with cases after 'Z'
-      name = String.fromCharCode(name.charCodeAt(0) + 1);
+      name = AttributeHelper.increaseChar(name);
     }
 
     return name;
+  }
+
+  private static increaseChar(name: string): string {
+    const lastIndex = name.length - 1;
+    if (lastIndex < 0) {
+      return 'A';
+    }
+
+    if (name[lastIndex] !== 'Z') {
+      const nextChar = String.fromCharCode(name.charCodeAt(lastIndex) + 1);
+      return name.substring(0, lastIndex).concat(nextChar);
+    }
+
+    return AttributeHelper.increaseChar(name.substring(0, lastIndex)) + 'A';
   }
 
   public static removeAttributeFromArray(attribute: Attribute, attributes: Attribute[]) {
@@ -46,7 +59,7 @@ export class AttributeHelper {
 
   public static getAttributesByPrefix(prefix: string, ...collections: Collection[]): [Collection, Attribute][] {
     return [].concat.apply([], collections.map(collection => collection.attributes.map(attribute => [collection, attribute])))
-      .filter(([collection, attribute] : [Collection, Attribute]) => attribute.name.toLowerCase().startsWith(prefix.toLowerCase()));
+      .filter(([collection, attribute]: [Collection, Attribute]) => attribute.name.toLowerCase().startsWith(prefix.toLowerCase()));
   }
 
   public static isAttributeInitialized(attribute: Attribute): boolean {
