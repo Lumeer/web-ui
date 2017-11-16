@@ -18,10 +18,12 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Store} from '@ngrx/store';
 
 import {Document} from '../../../../core/dto/document';
 import {Query} from '../../../../core/dto/query';
+import {AppState} from '../../../../core/store/app.state';
+import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 
 @Component({
   selector: 'add-document',
@@ -38,11 +40,11 @@ export class PostItAddDocumentComponent implements OnInit {
 
   private collectionCode: string;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private store: Store<AppState>) {
   }
 
   public ngOnInit(): void {
-    this.route.paramMap.subscribe(paramMap => this.collectionCode = paramMap.get('collectionCode'));
+    this.store.select(selectWorkspace).subscribe(workspace => this.collectionCode = workspace.collectionCode);
   }
 
   public onClick(): void {

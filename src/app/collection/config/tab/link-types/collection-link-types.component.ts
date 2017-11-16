@@ -18,7 +18,7 @@
  */
 
 import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 
 import {COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../constants';
@@ -51,13 +51,11 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
               collectionService: CollectionService,
               collectionSelectService: CollectionSelectService,
               notificationService: NotificationService,
-              route: ActivatedRoute,
               store: Store<AppState>) {
     super(
       collectionService,
       collectionSelectService,
       notificationService,
-      route,
       store
     );
   }

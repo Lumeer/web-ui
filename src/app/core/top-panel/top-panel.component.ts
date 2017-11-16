@@ -18,7 +18,6 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {HtmlModifier} from '../../shared/utils/html-modifier';
 import {AppState} from '../store/app.state';
@@ -39,9 +38,7 @@ export class TopPanelComponent implements OnInit {
 
   public workspace: Workspace;
 
-  constructor(private activatedRoute: ActivatedRoute,
-              private router: Router,
-              private store: Store<AppState>) {
+  constructor(private store: Store<AppState>) {
   }
 
   public ngOnInit() {

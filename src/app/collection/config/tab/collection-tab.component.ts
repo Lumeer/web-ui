@@ -18,7 +18,6 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 
 import {Collection} from '../../../core/dto/collection';
@@ -40,7 +39,6 @@ export class CollectionTabComponent implements OnInit {
   constructor(protected collectionService: CollectionService,
               protected collectionSelectService: CollectionSelectService,
               protected notificationService: NotificationService,
-              protected route: ActivatedRoute,
               protected store: Store<AppState>) {
   }
 

@@ -74,7 +74,7 @@ export class QueryItemsConverter {
     let collectionCodes = query.filters.map(filter => filter.split(':')[0]);
     collectionCodes = collectionCodes.concat(query.collectionCodes);
 
-    if (query.linkIds.length > 0) {
+    if (query.linkIds && query.linkIds.length > 0) {
       return this.linkTypeService.getLinkTypesByIds(...query.linkIds).pipe(
         map((linkTypes: LinkType[]) => linkTypes.map(linkType => linkType.collectionCodes)),
         map((collectionCodePairs: [string, string][]) => [].concat.apply([], collectionCodePairs)),

@@ -18,7 +18,6 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 
 import {CollectionTabComponent} from '../collection-tab.component';
@@ -45,13 +44,11 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
               collectionService: CollectionService,
               collectionSelectService: CollectionSelectService,
               notificationService: NotificationService,
-              route: ActivatedRoute,
               store: Store<AppState>) {
     super(
       collectionService,
       collectionSelectService,
       notificationService,
-      route,
       store
     );
   }

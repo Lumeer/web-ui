@@ -18,7 +18,7 @@
  */
 
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
@@ -76,8 +76,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   private workspace: Workspace;
 
-  constructor(private activatedRoute: ActivatedRoute,
-              private collectionService: CollectionService,
+  constructor(private collectionService: CollectionService,
               private linkTypeService: LinkTypeService,
               private queryItemsConverter: QueryItemsConverter,
               private router: Router,

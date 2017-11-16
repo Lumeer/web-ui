@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, ParamMap, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 
 import {Project} from '../../../core/dto/project';
@@ -35,7 +35,6 @@ import {Workspace} from '../../../core/store/navigation/workspace.model';
 })
 export class ProjectFormComponent implements OnInit {
 
-  private creation: boolean;
   public project: Project;
   public organizationCode: string;
   public projectCode: string;
@@ -43,7 +42,6 @@ export class ProjectFormComponent implements OnInit {
   private workspace: Workspace;
 
   constructor(private projectService: ProjectService,
-              private route: ActivatedRoute,
               private router: Router,
               private store: Store<AppState>,
               private notificationsService: NotificationService) {
@@ -53,27 +51,8 @@ export class ProjectFormComponent implements OnInit {
     this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
 
     this.project = new Project();
-    this.route.data.subscribe((data: { creation: boolean }) => {
-      this.creation = data.creation;
-      if (this.creation) {
-        this.retrieveParamsFromRoute();
-      } else {
-        this.retrieveParamsFromParentRoute();
-      }
-    });
-  }
-
-  private retrieveParamsFromRoute() {
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      this.organizationCode = params.get('organizationCode');
-    });
-  }
-
-  private retrieveParamsFromParentRoute() {
-    this.route.parent.paramMap.subscribe((params: ParamMap) => {
-      this.organizationCode = params.get('organizationCode');
-      this.projectCode = params.get('projectCode');
-      this.getProject();
+    this.store.select(selectWorkspace).subscribe(workspace => {
+      this.organizationCode = workspace.organizationCode;
     });
   }
 
@@ -86,11 +65,7 @@ export class ProjectFormComponent implements OnInit {
   }
 
   public onSave() {
-    if (this.creation) {
-      this.createProject();
-    } else {
-      this.updateProject();
-    }
+    this.createProject();
   }
 
   private createProject() {
