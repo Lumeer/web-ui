@@ -27,6 +27,7 @@ import {HtmlModifier} from '../../../../shared/utils/html-modifier';
 import {Attribute, Document} from '../../../../core/dto';
 import {TableManagerService} from '../util/table-manager.service';
 import {NotificationService} from '../../../../notifications/notification.service';
+import {KeyCodeHelper} from '../../../../shared/utils/key-code.helper';
 
 @Component({
   selector: 'table-body-cell',
@@ -207,17 +208,33 @@ export class TableBodyCellComponent implements OnChanges {
       case KeyCode.DownArrow:
         return this.moveCursor.emit({direction: Direction.Down, row: this.row, attribute: this.attribute});
       case KeyCode.Enter:
+      case KeyCode.Backspace:
         if (!unchangeable) {
           this.switchEditMode(true);
         }
         event.preventDefault();
         return;
+      case KeyCode.Delete:
+        this.dataCell.nativeElement.textContent = '';
+        this.saveDataChanges();
+        return;
+      default:
+        if (!KeyCodeHelper.isPrintable(event.keyCode)) {
+          return;
+        }
+
+        event.preventDefault();
+        if (!unchangeable) {
+          this.switchEditMode(true);
+        }
+        if (!this.dataCell.nativeElement.textContent) {
+          this.dataCell.nativeElement.textContent = event.key;
+        }
     }
   }
 
   public addNewRow() {
     const newRow = this.tableManagerService.addRow(this.row);
-    console.log(newRow);
     setTimeout(() => this.selectedCellChange.emit({row: newRow, attribute: newRow.part.shownAttributes[0]}));
   }
 
