@@ -30,6 +30,7 @@ import {AttributeHelper} from '../../../../shared/utils/attribute-helper';
 import {TableLinkEvent} from '../event/table-link-event';
 import {TableManagerService} from '../util/table-manager.service';
 import {NotificationService} from '../../../../notifications/notification.service';
+import {KeyCodeHelper} from '../../../../shared/utils/key-code.helper';
 
 @Component({
   selector: 'table-header-cell',
@@ -145,9 +146,40 @@ export class TableHeaderCellComponent {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    if (event.keyCode === KeyCode.Enter) {
-      event.preventDefault();
-      this.switchEditMode(!this.editMode);
+    if (this.editMode) {
+      this.onKeyDownInEditMode(event);
+    } else {
+      this.onKeyDownInSelectionMode(event);
+    }
+  }
+
+  private onKeyDownInSelectionMode(event: KeyboardEvent) {
+    switch (event.keyCode) {
+      case KeyCode.Enter:
+      case KeyCode.Backspace:
+        this.switchEditMode(true);
+        event.preventDefault();
+        return;
+      case KeyCode.Delete:
+        this.confirmRemove();
+        return;
+      default:
+        if (!KeyCodeHelper.isPrintable(event.keyCode)) {
+          return;
+        }
+
+        event.preventDefault();
+        this.switchEditMode(true);
+    }
+  }
+
+  private onKeyDownInEditMode(event: KeyboardEvent) {
+    switch (event.keyCode) {
+      case KeyCode.Enter:
+      case KeyCode.Escape:
+        this.switchEditMode(false);
+        event.preventDefault();
+        return;
     }
   }
 
@@ -167,13 +199,13 @@ export class TableHeaderCellComponent {
 
   public onRemoveColumn() {
     if (AttributeHelper.isAttributeInitialized(this.attribute)) {
-      this.confrimRemove();
+      this.confirmRemove();
     } else {
       this.tableManagerService.removeColumn(this.part, this.attribute);
     }
   }
 
-  public confrimRemove() {
+  public confirmRemove() {
     this.notificationService.confirm(
       'Deleting a column will permanently remove the attribute from the collection.',
       'Delete this column?',
