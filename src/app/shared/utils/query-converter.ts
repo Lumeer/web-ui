@@ -18,7 +18,6 @@
  */
 
 import {Query} from '../../core/dto/query';
-import _ from "lodash"
 
 export class QueryConverter {
 
@@ -37,7 +36,7 @@ export class QueryConverter {
 
   // TODO remove this method when links will be implemented in backend
   public static removeLinksFromQuery(query: Query): Query{
-    let queryCopy = _.clone(query);
+    let queryCopy = Object.assign({}, query);
     delete queryCopy.linkIds;
     return queryCopy;
   }
