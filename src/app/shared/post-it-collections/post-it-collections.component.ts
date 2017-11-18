@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChildren
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../collection/constants';
@@ -61,7 +71,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   public postItToDelete: PostItCollectionData;
 
-  public postIts: PostItCollectionData[] = [];
+  public postIts: PostItCollectionData[];
 
   public lastClickedPostIt: PostItCollectionData;
 
@@ -91,17 +101,17 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
 
   private initializeLayout(): void {
     this.layout = new PostItLayout({
-      container: '.layout',
+      container: '.parent',
       item: '.layout-item',
       gutter: 10
     }, this.zone);
   }
 
   private loadCollections() {
-    delete this.query.linkIds; // TODO delete when link will be implemented in backend
-    this.searchService.searchCollections(this.query)
+    this.searchService.searchCollections(QueryConverter.removeLinksFromQuery(this.query))
       .subscribe(
         collections => {
+          this.postIts = [];
           collections.forEach(collection => {
             const postIt = new PostItCollectionData;
             postIt.collection = collection;
@@ -288,7 +298,9 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
       return;
     }
     const clickedPostItIndex = this.postItElements.toArray().findIndex(postIt => postIt.nativeElement.contains(event.target));
-    this.lastClickedPostIt = this.postIts[clickedPostItIndex];
+    if (clickedPostItIndex != -1) {
+      this.lastClickedPostIt = this.postIts[clickedPostItIndex];
+    }
   }
 
   private postItIndex(collectionData: PostItCollectionData): number {

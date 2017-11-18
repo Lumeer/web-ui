@@ -1,3 +1,14 @@
-<div class="alert alert-warning mt-2">
-  All search results page has not been implemented yet.
+<div class="mt-2">
+  <div *ngIf="isEmptySearch()" class="alert alert-warning" i18n="@@search.result.empty">
+    We are sorry, but we haven't found anything. Please do a more accurate search.
+  </div>
+  <div *ngIf="documents && documents.length > 0">
+    Documents
+  </div>
+  <div *ngIf="collections && collections.length > 0">
+    Collections
+  </div>
+  <div *ngIf="views && views.length > 0">
+    Views
+  </div>
 </div>

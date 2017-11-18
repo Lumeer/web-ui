@@ -17,25 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {Query} from '../../../../core/dto/query';
 import {AppState} from '../../../../core/store/app.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   templateUrl: './search-collections.component.html'
 })
-export class SearchCollectionsComponent {
+export class SearchCollectionsComponent implements OnInit, OnDestroy {
 
   public query: Query = {};
+
+  private subscription: Subscription;
 
   constructor(private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.store.select(selectNavigation).subscribe(navigation => this.query = navigation.query);
+    this.subscription = this.store.select(selectNavigation)
+      .subscribe(navigation => this.query = navigation.query);
+  }
+
+  public ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
 }
