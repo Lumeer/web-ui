@@ -65,7 +65,7 @@
         <div class="d-flex flex-row align-items-end justify-content-end pointer"
              *ngIf="resourceActiveIx >= 0" [style.width]="linesWidth + 'px'">
         <div class="d-flex flex-row align-items-end justify-content-end pointer"
-             *ngIf="!isAnyResourceInitializing() && (resourceActiveIx >= 0)  ">
+             *ngIf=" (resourceActiveIx >= 0) && !isAnyResourceInitializing() ">
           <div class="line mr-auto" [style.width]="resourceLineSizes[0]+'px'"></div>
           <div class="empty-line" [style.width]="resourceLineSizes[1]+'px'"></div>
           <div class="line"
@@ -75,7 +75,7 @@
     </div>
 
 
-    <div class="right-arrow d-flex h-100" *ngIf="resourceVisibleArrows">
+    <div class="right-arrow d-flex h-100" *ngIf="resourceVisibleArrows ">
       <div class="d-flex justify-content-center align-items-center w-100">
         <i class="fas fa fa-chevron-right arrow" (click)="onScrollResource(1)"
            [class.disabled]="!resourceCanScrollRight"></i>

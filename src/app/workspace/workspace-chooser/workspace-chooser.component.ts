@@ -69,6 +69,9 @@ export class WorkspaceChooserComponent implements OnInit {
 
   private workspace: Workspace;
 
+
+  @ViewChildren(ResourceChooserComponent) resourceChoosers: QueryList<ResourceChooserComponent>;
+
   constructor(private organizationService: OrganizationService,
               private projectService: ProjectService,
               private store: Store<AppState>,
@@ -260,6 +263,53 @@ export class WorkspaceChooserComponent implements OnInit {
       .subscribe((projects: Project[]) => {
         selectedOrganization.projects = projects;
       });
+  }
 
+  public onCreateProject(project: Project): void {
+    console.log('creating project', project.code);
+
+    if (!isNullOrUndefined(this.activeOrgIx)) {
+      this.projectService.createProject(this.organizations[this.activeOrgIx].code, project).subscribe(() => {
+        this.notificationsService
+          .success('Success', 'Project created');
+        this.getProjectsOfOrganization(this.activeOrgIx);
+      }, error => this.notificationsService
+        .error('Error', 'Error creating project'));
+    }
+  }
+
+  public onCreateOrganization(organization: Organization): void {
+    this.organizationService.createOrganization(organization)
+      .subscribe(() => {
+        this.notificationsService
+          .success('Success', 'Organization created');
+        this.getOrganizations();
+        let idxOfCreated = this.organizations.findIndex(org => org.code === organization.code);
+        this.activeOrgIx = idxOfCreated;
+
+
+        if (this.resourceChoosers) {
+          console.log('The length is' + this.resourceChoosers.length);
+          this.resourceChoosers.forEach(resourceChooser => {
+            if (resourceChooser) {
+              console.log(resourceChooser.resourceType);
+              if (resourceChooser.resourceType === 'organization') {
+                resourceChooser.updateAndAppendUnitialized(organization);
+              }
+            } else {
+              console.log('Elements are null');
+            }
+
+          });
+        }
+        else {
+          console.log('The list is null');
+        }
+
+
+      }, () => {
+        this.notificationsService
+          .error('Error', 'Error creating organization');
+      });
   }
 }

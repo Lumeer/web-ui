@@ -40,7 +40,6 @@ import {NotificationsService} from 'angular2-notifications';
 import {Organization} from "../../../core/dto/organization";
 import {WorkspaceService} from '../../../core/workspace.service';
 import {Project} from '../../../core/dto/project';
-import {finalize} from "rxjs/operators";
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
@@ -95,8 +94,11 @@ export class ResourceChooserComponent implements OnChanges {
   @Input() public initActiveIx: number;
   @Input() public canCreateResource: boolean;
 
+
   @Output() public resourceSelect: EventEmitter<number> = new EventEmitter();
   @Output() public resourceNew: EventEmitter<any> = new EventEmitter();
+  @Output() public resourceNewNumber: EventEmitter<any> = new EventEmitter();
+
   @Output() public resourceSettings: EventEmitter<number> = new EventEmitter();
   @Output() public resourceNewDescription: EventEmitter<string> = new EventEmitter();
 
@@ -112,7 +114,7 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceVisibleArrows = false;
   public newResource;
   public newOrganization: Organization = new Organization();
-  public uninitializedResources: Set<Resource> = new Set<Resource>();
+  public uninitializedResources: Resource[] = [];
   private newProject: Project = new Project();
   private static activeOrganizationIdx: number;
   private static activeOrganizationCode: string;
@@ -241,15 +243,16 @@ export class ResourceChooserComponent implements OnChanges {
   public onAddResource() {
     this.newResource = {
       name: '',
+      code: '',
       color: COLLECTION_NO_COLOR,
       icon: COLLECTION_NO_ICON,
       initialized: false
     }
 
-    this.uninitializedResources.add(this.newResource);
+    this.uninitializedResources.push(this.newResource);
     this.resources.push(this.newResource);
-    // this.resourceNew.emit();
   }
+
 
   public onResourceSettings(index: number) {
     this.resourceSettings.emit(index);
@@ -258,39 +261,6 @@ export class ResourceChooserComponent implements OnChanges {
   public hasManageRole(resource: Resource): boolean {
     return resource.permissions && resource.permissions.users.length === 1
       && resource.permissions.users[0].roles.some(r => r === Role.Manage.toString());
-  }
-
-  public onCreateOrganization(organization: Organization, resource: Resource): void {
-    this.organizationService.createOrganization(organization)
-      .subscribe(response => {
-        this.notificationsService
-          .success('Success', 'Organization created');
-        // const code = response.headers.get('Location').split('/').pop();
-        // organization.code = code;
-        // console.log(response);
-        this.resourceNew.emit();
-        this.uninitializedResources.delete(resource);
-
-
-      }, error => {
-        this.notificationsService
-          .error('Error', 'Error creating organization');
-        // console.log(error);
-      });
-  }
-
-  public onCreateProject(orgCode: string, project: Project, resource: Resource): void {
-    console.log('creating project', orgCode);
-
-    if (!isNullOrUndefined(ResourceChooserComponent.activeOrganizationCode)) {
-      this.projectService.createProject(ResourceChooserComponent.activeOrganizationCode, project).subscribe(response => {
-        this.notificationsService
-          .success('Success', 'Project created');
-        this.resourceNew.emit(ResourceChooserComponent.activeOrganizationIdx);
-        this.uninitializedResources.delete(resource);
-      }, error => this.notificationsService
-        .error('Error', 'Error creating project'));
-    }
   }
 
 
@@ -304,7 +274,7 @@ export class ResourceChooserComponent implements OnChanges {
           color: resource.color,
           icon: resource.icon
         };
-        this.onCreateOrganization(this.newOrganization, resource);
+        this.resourceNew.emit(this.newOrganization);
         break;
 
 
@@ -315,23 +285,49 @@ export class ResourceChooserComponent implements OnChanges {
           color: resource.color,
           icon: resource.icon
         };
-
-        this.onCreateProject(ResourceChooserComponent.activeOrganizationCode, this.newProject, resource);
+        this.resourceNew.emit(this.newProject);
         break;
     }
   }
 
   public isInitialized(resource: Resource): boolean {
-    console.log('I am initialized ' + !this.uninitializedResources.has(resource));
-    return !this.uninitializedResources.has(resource);
+    // console.log('I am initialized ' + !this.uninitializedResources.has(resource));
+    // return !this.uninitializedResources.has(resource);
+
+    return !(resource.code == '' || resource.name === '' );
   }
 
-  public getOrganizations(idx: string): void {
-
-  }
 
   public isAnyResourceInitializing(): boolean {
-    return (this.uninitializedResources.size > 0);
+    return (this.uninitializedResources.length > 0);
   }
 
+  public updateAndAppendUnitialized(resource: Resource): void {
+    console.log('going to update');
+    console.log('length unitialized' + this.uninitializedResources.length);
+    this.uninitializedResources.splice(0, 1);
+
+    //this.uninitializedResources.
+    console.log('length unitialized' + this.uninitializedResources.length);
+    console.log(this.resources.length);
+
+
+    for (let i = 0; i < this.uninitializedResources.length; i++) {
+
+      this.resources.push(this.uninitializedResources[i]);
+    }
+    console.log(this.resources.length);
+
+    console.log('here');
+
+    for (let i = 0; i < this.resources.length; i++) {
+      console.log('A resource');
+      console.log(this.resources[i].code);
+    }
+  }
+
+  public areResourcesEqual(resource1: Resource, resource2: Resource): boolean {
+    return (resource1.code === resource2.code && resource1.name === resource2.name && resource1.color === resource2.color
+      && resource1.icon === resource2.icon);
+  }
 }
