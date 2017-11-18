@@ -17,11 +17,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+
+import {View} from '../../../../core/dto/view';
+import {Subscription} from 'rxjs/Subscription';
+import {map, switchMap} from 'rxjs/operators';
+import {SearchService} from '../../../../core/rest/search.service';
+import {AppState} from '../../../../core/store/app.state';
+import {QueryConverter} from '../../../../shared/utils/query-converter';
+import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 
 @Component({
   templateUrl: './search-views.component.html'
 })
-export class SearchViewsComponent {
+export class SearchViewsComponent implements OnInit, OnDestroy {
+
+  public views: View[];
+
+  private routerSubscription: Subscription;
+
+  constructor(private searchService: SearchService,
+              private store: Store<AppState>) {
+  }
+
+  public ngOnInit() {
+    this.routerSubscription = this.store.select(selectNavigation).pipe(
+      map(navigation => navigation.query),
+      map(query => QueryConverter.removeLinksFromQuery(query)),
+      switchMap(query => this.searchService.searchViews(query)),
+    ).subscribe(views => this.views = views);
+  }
+
+  public ngOnDestroy() {
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
 
 }

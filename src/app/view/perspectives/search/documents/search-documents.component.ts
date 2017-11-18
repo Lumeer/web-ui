@@ -32,6 +32,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {UserSettingsService} from '../../../../core/user-settings.service';
 import {AppState} from '../../../../core/store/app.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
+import {QueryConverter} from '../../../../shared/utils/query-converter';
 
 @Component({
   templateUrl: './search-documents.component.html',
@@ -45,7 +46,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   @ViewChild('xlTemplate') xlTempl: TemplateRef<any>;
 
   public size: SizeType;
-  public documents: SearchDocument[] = [];
+  public documents: SearchDocument[];
   private routerSubscription: Subscription;
 
   constructor(private searchService: SearchService,
@@ -59,6 +60,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
     this.routerSubscription = this.store.select(selectNavigation).pipe(
       map(navigation => navigation.query),
+      map(query => QueryConverter.removeLinksFromQuery(query)),
       switchMap(query => this.searchService.searchDocuments(query)),
     ).subscribe(documents => this.initDocuments(documents));
   }
@@ -100,6 +102,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   private initDocuments(documents: Document[]) {
     const codes = new Set<string>();
+    this.documents = [];
     for (let document of documents) {
       delete document.data['_id'];
       this.documents.push({document: document, opened: false});

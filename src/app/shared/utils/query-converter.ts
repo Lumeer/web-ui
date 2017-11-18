@@ -34,4 +34,11 @@ export class QueryConverter {
     return queryObject;
   }
 
+  // TODO remove this method when links will be implemented in backend
+  public static removeLinksFromQuery(query: Query): Query{
+    let queryCopy = Object.assign({}, query);
+    delete queryCopy.linkIds;
+    return queryCopy;
+  }
+
 }

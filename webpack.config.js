@@ -336,7 +336,6 @@ module.exports = {
   },
   externals: {
     'jquery': 'jQuery',
-    'lodash': '_',
     'rxjs': 'Rx'
   },
 };
