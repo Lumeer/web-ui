@@ -52,7 +52,7 @@ export class SearchPerspectiveComponent implements PerspectiveComponent {
 
   public query: Query = {};
 
-  public config: any;
+  public config: { search?: any };
 
   private workspace: Workspace;
 
@@ -80,7 +80,7 @@ export class SearchPerspectiveComponent implements PerspectiveComponent {
   }
 
   public extractConfig(): any {
-    this.config[Perspective.Search.id] = null; // TODO save configuration
+    this.config.search = null; // TODO save configuration
     return this.config;
   }
 
