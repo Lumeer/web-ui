@@ -99,7 +99,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
   }
 
   public extractConfig(): any {
-    this.config[Perspective.Table.id] = this.tableManagerService.extractTableConfig();
+    this.config.table = this.tableManagerService.extractTableConfig();
     return this.config;
   }
 

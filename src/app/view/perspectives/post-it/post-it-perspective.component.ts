@@ -52,7 +52,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   public query: Query;
 
   @Input()
-  public config: any;
+  public config: { postit?: any };
 
   @Input()
   public editable: boolean = true;
@@ -98,7 +98,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   }
 
   public extractConfig(): any {
-    this.config[Perspective.PostIt.id] = null; // TODO save configuration
+    this.config.postit = null; // TODO save configuration
     return this.config;
   }
 
