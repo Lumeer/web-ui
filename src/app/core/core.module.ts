@@ -44,6 +44,7 @@ import {LinkTypeService} from './rest/link-type.service';
 import {SearchHomeComponent} from './search-home/search-home.component';
 import {LinkInstanceService} from './rest/link-instance.service';
 import {EventService} from './rest/event.service';
+import {HomePageService} from './rest/home-page.service';
 
 @NgModule({
   imports: [
@@ -74,6 +75,7 @@ import {EventService} from './rest/event.service';
     LinkInstanceService,
     LinkTypeService,
     EventService,
+    HomePageService,
     KEYCLOAK_HTTP_PROVIDER,
     {provide: ErrorHandler, useClass: LumeerErrorHandler}
   ],

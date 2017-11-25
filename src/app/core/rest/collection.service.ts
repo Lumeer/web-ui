@@ -18,7 +18,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpErrorResponse, HttpParams, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse} from '@angular/common/http';
+import {Store} from '@ngrx/store';
 
 import {Collection} from '../dto/collection';
 import {Attribute} from '../dto/attribute';
@@ -28,11 +29,19 @@ import {PermissionService} from './permission.service';
 import {isNullOrUndefined} from 'util';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {ConfiguredAttribute} from '../../collection/config/tab/attribute-list/configured-attribute';
-import {catchError} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
+import {HomePageService} from './home-page.service';
+import {AppState} from '../store/app.state';
 
 // TODO add add support for Default Attribute
 @Injectable()
 export class CollectionService extends PermissionService {
+
+  constructor(protected httpClient: HttpClient,
+              protected store: Store<AppState>,
+              private homePageService: HomePageService) {
+    super(httpClient, store)
+  }
 
   public createCollection(collection: Collection): Observable<HttpResponse<any>> {
     return this.httpClient.post(
@@ -48,12 +57,15 @@ export class CollectionService extends PermissionService {
       collectionCode = collection.code;
     }
 
+    this.homePageService.addLastUsedCollection(collectionCode).subscribe();
     return this.httpClient.put(`${this.apiPrefix()}/${collectionCode}`, this.toDto(collection)).pipe(
       catchError(this.handleError)
     );
   }
 
   public removeCollection(collectionCode: string): Observable<HttpResponse<any>> {
+    this.homePageService.removeFavoriteCollection(collectionCode).subscribe();
+    this.homePageService.removeLastUsedCollection(collectionCode).subscribe();
     return this.httpClient.delete(
       `${this.apiPrefix()}/${collectionCode}`,
       {observe: 'response', responseType: 'text'}
@@ -65,6 +77,18 @@ export class CollectionService extends PermissionService {
   public getCollection(collectionCode: string): Observable<Collection> {
     return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionCode}`).pipe(
       catchError(CollectionService.handleGlobalError)
+    );
+  }
+
+  public getLastUsedCollections(): Observable<Collection[]> {
+    return this.homePageService.getLastUsedCollections().pipe(
+      switchMap(codes => this.convertCodesToCollections(codes))
+    );
+  }
+
+  public getFavoriteCollections(): Observable<Collection[]>{
+    return this.homePageService.getFavoriteCollections().pipe(
+      switchMap(codes => this.convertCodesToCollections(codes))
     );
   }
 
@@ -149,4 +173,7 @@ export class CollectionService extends PermissionService {
     return CollectionService.handleGlobalError(error);
   }
 
+  private convertCodesToCollections(codes: string[]): Observable<Collection[]> {
+    return Observable.combineLatest(codes.map(code => this.getCollection(code)));
+  }
 }
