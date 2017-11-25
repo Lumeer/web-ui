@@ -1,9 +1,9 @@
 <div class="parent">
-  <div *ngIf="postIts && postIts.length == 0" class="alert alert-warning mt-2"
+  <div *ngIf="postIts && postIts.length == 0 && !editable" class="alert alert-warning mt-2"
        i18n="@@search.result.empty">
     We are sorry, but we have not found anything. Please do a more accurate search.
   </div>
-  <div *ngIf="postIts && postIts.length > 0" class="layout">
+  <div *ngIf="(postIts && postIts.length > 0) || editable" class="layout">
 
     <!-- collection post-its -->
     <div *ngFor="let postIt of postIts" #postItElement class="layout-item card post-it
