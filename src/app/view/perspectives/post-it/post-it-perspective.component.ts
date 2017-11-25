@@ -75,9 +75,9 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   public lastClickedPostIt: DocumentData;
 
-  private fetchingData: boolean;
+  public fetchingData: boolean;
 
-  private collections: { [collectionCode: string]: Collection } = {};
+  public collections: { [collectionCode: string]: Collection } = {};
 
   private attributeSuggestions: { [collectionCode: string]: string[] } = {};
 
@@ -141,11 +141,11 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
       }
     };
 
-    window.addEventListener('scroll', this.infiniteScrollCallback, this.scrollEventOptions);
+    (<any>window).addEventListener('scroll', this.infiniteScrollCallback, this.scrollEventOptions);
   }
 
   private turnOffInfiniteScroll(): void {
-    window.removeEventListener('scroll', this.infiniteScrollCallback, this.scrollEventOptions);
+    (<any>window).removeEventListener('scroll', this.infiniteScrollCallback, this.scrollEventOptions);
     this.infiniteScrollCallback = null;
   }
 
