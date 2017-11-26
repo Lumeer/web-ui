@@ -36,9 +36,9 @@ export class SearchCollectionsComponent implements OnInit, OnDestroy {
 
   public query: Query = {};
 
-  private subscription: Subscription;
+  public hasWriteRole: Observable<boolean>;
 
-  private hasWriteRole: Observable<boolean>;
+  private subscription: Subscription;
 
   constructor(private store: Store<AppState>,
               private projectService: ProjectService) {
