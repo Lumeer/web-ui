@@ -24,6 +24,10 @@ import {Query} from '../../../../core/dto/query';
 import {AppState} from '../../../../core/store/app.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {Subscription} from 'rxjs/Subscription';
+import {ProjectService} from '../../../../core/rest/project.service';
+import {Role} from '../../../../shared/permissions/role';
+import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators';
 
 @Component({
   templateUrl: './search-collections.component.html'
@@ -34,12 +38,19 @@ export class SearchCollectionsComponent implements OnInit, OnDestroy {
 
   private subscription: Subscription;
 
-  constructor(private store: Store<AppState>) {
+  private hasWriteRole: Observable<boolean>;
+
+  constructor(private store: Store<AppState>,
+              private projectService: ProjectService) {
   }
 
   public ngOnInit() {
     this.subscription = this.store.select(selectNavigation)
       .subscribe(navigation => this.query = navigation.query);
+
+    this.hasWriteRole = this.projectService.getPermissions().pipe(
+      map(permissions => permissions.users.some(permission => permission.roles.includes(Role.Write)))
+    );
   }
 
   public ngOnDestroy() {

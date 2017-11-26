@@ -1,4 +1,4 @@
-<div class="parent">
+<div class="parent container-fluid">
   <div *ngIf="postIts && postIts.length == 0 && !editable" class="alert alert-warning mt-2"
        i18n="@@search.result.empty">
     We are sorry, but we have not found anything. Please do a more accurate search.
@@ -78,7 +78,7 @@
     </div>
 
     <!-- add buttons -->
-    <ng-container *ngIf="editable">
+    <ng-container *ngIf="editable && emptyQuery()">
       <div class="layout-item card text-center add-post-it" (click)="newPostIt()">
         <div class="card-body">
           <i class="fa fa-plus-circle fa-6x" aria-hidden="true"></i>

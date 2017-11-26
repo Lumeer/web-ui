@@ -327,6 +327,16 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     }
   }
 
+  public emptyQuery(): boolean {
+    return Object.values(this.query).find(value => {
+      if (value.constructor === Array) {
+        value = value.length;
+      }
+
+      return !!value;
+    }) === undefined;
+  }
+
   public documentsQuery(collectionCode: string): string {
     const query: Query = {collectionCodes: [collectionCode]};
     return QueryConverter.toString(query);
