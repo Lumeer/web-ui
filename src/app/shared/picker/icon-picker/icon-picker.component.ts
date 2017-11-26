@@ -48,7 +48,7 @@ export class IconPickerComponent implements OnInit {
 
   public tab = 0;
 
-  private TABS = 18;
+  public TABS = 18;
 
   public ngOnInit(): void {
     this.selected = this.icon;
