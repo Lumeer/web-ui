@@ -123,9 +123,8 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
   }
 
   private createDocument(doc: Document, successCallback: () => void) {
-    this.documentService.createDocument(doc).subscribe((id: string) => {
-      doc.id = id;
-      this.tableManagerService.documents.push(doc);
+    this.documentService.createDocument(doc).subscribe((document: Document) => {
+      this.tableManagerService.documents.push(document);
       this.notificationService.success('Record has been created!');
 
       successCallback();

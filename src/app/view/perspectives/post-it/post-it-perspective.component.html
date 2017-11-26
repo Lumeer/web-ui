@@ -15,7 +15,8 @@
                         [data]="postIt"
                         (selectOther)="selectDocument($event)"
                         (removed)="confirmDeletion(postIt)"
-                        (changes)="sendUpdate(postIt)">
+                        (changes)="sendUpdate(postIt)"
+                        (toggleFavorite)="toggleDocumentFavorite(postIt)">
       </post-it-document>
     </ng-container>
 

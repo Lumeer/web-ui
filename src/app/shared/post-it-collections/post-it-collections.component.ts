@@ -137,6 +137,15 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     }, 1000);
   }
 
+  public toggleFavorite(collection: Collection) {
+    this.collectionService.toggleCollectionFavorite(collection)
+      .subscribe(success => {
+        if (success) {
+          collection.isFavorite = !collection.isFavorite;
+        }
+      })
+  }
+
   public hasWriteRole(collection: Collection): boolean {
     return this.hasRole(collection, Role.Write);
   }
@@ -170,9 +179,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewChecked, OnD
     this.collectionService.createCollection(postIt.collection)
       .pipe(finalize(() => postIt.initializing = false))
       .subscribe(
-        response => {
-          const code = response.headers.get('Location').split('/').pop();
-
+        code => {
           postIt.collection.code = code;
           postIt.initialized = true;
           this.getCollection(postIt);

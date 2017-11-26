@@ -29,7 +29,7 @@ import {PermissionService} from './permission.service';
 import {isNullOrUndefined} from 'util';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {ConfiguredAttribute} from '../../collection/config/tab/attribute-list/configured-attribute';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {HomePageService} from './home-page.service';
 import {AppState} from '../store/app.state';
 
@@ -43,11 +43,13 @@ export class CollectionService extends PermissionService {
     super(httpClient, store)
   }
 
-  public createCollection(collection: Collection): Observable<HttpResponse<any>> {
+  public createCollection(collection: Collection): Observable<string> {
     return this.httpClient.post(
       this.apiPrefix(), this.toDto(collection),
       {observe: 'response', responseType: 'text'}
     ).pipe(
+      map(response => response.headers.get('Location').split('/').pop()),
+      tap(code => this.homePageService.addLastUsedCollection(code).subscribe()),
       catchError(this.handleError)
     );
   }
@@ -59,13 +61,16 @@ export class CollectionService extends PermissionService {
 
     this.homePageService.addLastUsedCollection(collectionCode).subscribe();
     return this.httpClient.put(`${this.apiPrefix()}/${collectionCode}`, this.toDto(collection)).pipe(
-      catchError(this.handleError)
+      catchError(this.handleError),
+      switchMap(collection => this.homePageService.checkFavoriteCollection(collection))
     );
   }
 
   public removeCollection(collectionCode: string): Observable<HttpResponse<any>> {
     this.homePageService.removeFavoriteCollection(collectionCode).subscribe();
     this.homePageService.removeLastUsedCollection(collectionCode).subscribe();
+    this.homePageService.removeLastUsedDocuments(collectionCode).subscribe();
+    this.homePageService.removeFavoriteDocuments(collectionCode).subscribe();
     return this.httpClient.delete(
       `${this.apiPrefix()}/${collectionCode}`,
       {observe: 'response', responseType: 'text'}
@@ -74,9 +79,17 @@ export class CollectionService extends PermissionService {
     );
   }
 
+  public toggleCollectionFavorite(collection: Collection): Observable<boolean> {
+    if (collection.isFavorite) {
+      return this.homePageService.removeFavoriteCollection(collection.code);
+    }
+    return this.homePageService.addFavoriteCollection(collection.code);
+  }
+
   public getCollection(collectionCode: string): Observable<Collection> {
     return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionCode}`).pipe(
-      catchError(CollectionService.handleGlobalError)
+      catchError(CollectionService.handleGlobalError),
+      switchMap(collection => this.homePageService.checkFavoriteCollection(collection))
     );
   }
 
@@ -86,7 +99,7 @@ export class CollectionService extends PermissionService {
     );
   }
 
-  public getFavoriteCollections(): Observable<Collection[]>{
+  public getFavoriteCollections(): Observable<Collection[]> {
     return this.homePageService.getFavoriteCollections().pipe(
       switchMap(codes => this.convertCodesToCollections(codes))
     );
@@ -101,7 +114,8 @@ export class CollectionService extends PermissionService {
     }
 
     return this.httpClient.get<Collection[]>(this.apiPrefix(), {params: queryParams}).pipe(
-      catchError(CollectionService.handleGlobalError)
+      catchError(CollectionService.handleGlobalError),
+      switchMap(collections => this.homePageService.checkFavoriteCollections(collections))
     );
   }
 
@@ -115,12 +129,14 @@ export class CollectionService extends PermissionService {
   }
 
   public updateAttribute(collectionCode: string, fullName: string, attribute: Attribute): Observable<Attribute> {
+    this.homePageService.addLastUsedCollection(collectionCode).subscribe();
     return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, this.attributeToDto(attribute)).pipe(
       catchError(CollectionService.handleGlobalError)
     );
   }
 
   public removeAttribute(collectionCode: string, fullName: string): Observable<HttpResponse<any>> {
+    this.homePageService.addLastUsedCollection(collectionCode).subscribe();
     return this.httpClient.delete(
       `${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`,
       {observe: 'response', responseType: 'text'}

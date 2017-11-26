@@ -17,7 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 
 import {PostItDocumentComponent} from './document/post-it-document.component';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
@@ -287,6 +298,15 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
     return this.attributeSuggestions[collectionCode];
   }
 
+  public toggleDocumentFavorite(postIt: DocumentData) {
+    this.documentService.toggleDocumentFavorite(postIt.document)
+      .subscribe(success => {
+        if (success) {
+          postIt.document.isFavorite = !postIt.document.isFavorite;
+        }
+      });
+  }
+
   public sendUpdate(postIt: DocumentData): void {
     if (postIt.initializing) {
       return;
@@ -313,10 +333,11 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
     this.documentService.createDocument(postIt.document).pipe(
       finalize(() => postIt.initializing = false)
-    ).subscribe((id: string) => {
+    ).subscribe((document: Document) => {
         postIt.initialized = true;
 
-        postIt.document.id = id;
+        postIt.document.id = document.id;
+        console.log(document);
         this.refreshDocument(postIt);
         this.notificationService.success('Document Created');
       },

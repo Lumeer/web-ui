@@ -25,7 +25,7 @@
           <icon-picker class="dropdown-item" [(icon)]="postIt.collection.icon"></icon-picker>
         </div>
 
-        <div *ngIf="postIt.initialized" class="float-right document-count">
+        <div *ngIf="postIt.initialized" class="document-count opacity-content clickable">
           <a title="Document Count" i18n-title="@@collection.document.count"
              [routerLink]="[workspacePath(), 'view']"
              [queryParams]="{ perspective: 'postit', query: documentsQuery(postIt.collection.code) }">
@@ -33,7 +33,16 @@
           </a>
         </div>
 
-        <div class="buttons d-flex flex-column" [style.top]="postIt.initialized ? '50px' : '5px'">
+        <div *ngIf="postIt.initialized" class="toggle-favorite opacity-content clickable"
+             [class.always-visible]="postIt.collection.isFavorite">
+          <a title="{{postIt.collection.isFavorite ?  'Remove from favorites' : 'Add to favorites'}}"
+             i18n-title="@@collection.document.favorite" (click)="toggleFavorite(postIt.collection)">
+            <i class="fa-star" [ngClass]="postIt.collection.isFavorite ? 'fas' : 'far'"
+               aria-hidden="true"></i>
+          </a>
+        </div>
+
+        <div class="buttons opacity-content d-flex flex-column" [style.top]="'50px'">
           <ng-container *ngIf="postIt.initialized">
             <a title="Configure" i18n-title="@@collection.button.configure"
                class="rounded-left text-success"

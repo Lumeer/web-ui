@@ -25,6 +25,6 @@ export interface SearchDocument {
   collectionName?: string;
   collectionIcon?: string;
   collectionColor?: string;
-  opened: boolean;
+  opened?: boolean;
 
 }

@@ -27,5 +27,6 @@ export class Document {
   public updatedBy?: string;
   public dataVersion?: number;
   public data: {[attribute: string]: any} = {};
+  public isFavorite?: boolean;
 
 }
