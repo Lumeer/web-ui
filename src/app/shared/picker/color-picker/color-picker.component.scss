@@ -3,10 +3,9 @@
 :host {
   background: $secondary-color !important;
 
-  padding-left: 6px;
+  padding: 0 18px !important;
   display: flex;
   flex-wrap: wrap;
-  padding-right: 0;
 
   &:active, &:hover {
     background-color: inherit;
@@ -21,8 +20,8 @@
     border: 2px solid transparent;
     margin-right: 3px;
     margin-top: 3px;
-    width: 22.5px;
-    height: 22.5px;
+    width: 20.5px;
+    height: 19.5px;
   }
 
   label {
@@ -32,5 +31,9 @@
     &:hover {
       color: $success;
     }
+  }
+
+  .large-text {
+    font-size: 18px;
   }
 }

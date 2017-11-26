@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 
 import * as colors from './colors';
 
@@ -27,6 +27,11 @@ import * as colors from './colors';
   styleUrls: ['./color-picker.component.scss']
 })
 export class ColorPickerComponent implements OnInit {
+
+  @HostListener('click', ['$event'])
+  public onClick(event: MouseEvent): void {
+    event.stopPropagation();
+  }
 
   @Input()
   public color: string;

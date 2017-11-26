@@ -6,20 +6,19 @@
   <div *ngIf="(postIts && postIts.length > 0) || editable" class="layout">
 
     <!-- collection post-its -->
-    <div *ngFor="let postIt of postIts" #postItElement class="layout-item card post-it
-           {{ postIt === lastClickedPostIt ? 'selected' : null }}
-           {{ !postIt.initialized ? 'uninitialized' : null }}" [style.border-color]="postIt.collection.color">
+    <div *ngFor="let postIt of postIts" #postItElement class="layout-item card post-it {{ postIt === lastClickedPostIt ? 'selected' : null }} {{ !postIt.initialized ? 'uninitialized' : null }}"
+         [style.border-color]="postIt.collection.color"
+         (click)="lastClickedPostIt = postIt">
 
       <div class="card-body text-center">
         <a class="icon" [style.color]="postIt.collection.color"
            [title]="postIt.collection.name"
            [routerLink]="postIt.initialized ? [workspacePath(), 'view'] : []"
            [queryParams]="{ perspective: 'postit', query: documentsQuery(postIt.collection.code) }"
-           data-toggle="dropdown"
-           (click)="lastClickedPostIt = postIt">
+           data-toggle="dropdown">
           <i class="fa-6x {{ postIt.collection.icon }}" aria-hidden="true"></i>
         </a>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu dropdown-menu-right">
           <color-picker class="dropdown-item" [(color)]="postIt.collection.color"></color-picker>
           <div class="dropdown-divider"></div>
           <icon-picker class="dropdown-item" [(icon)]="postIt.collection.icon"></icon-picker>
@@ -42,7 +41,8 @@
           </a>
         </div>
 
-        <div class="buttons opacity-content d-flex flex-column" [style.top]="'50px'">
+        <div class="buttons opacity-content d-flex flex-column"
+             [style.top]="'50px'">
           <ng-container *ngIf="postIt.initialized">
             <a title="Configure" i18n-title="@@collection.button.configure"
                class="rounded-left text-success"
@@ -50,9 +50,10 @@
               <i class="fa fa-fw fa-cog" aria-hidden="true"></i></a>
 
             <a title="Icon picker" i18n-title="@@collection.button.icon"
-               class="rounded-left text-success" data-toggle="dropdown">
+               class="rounded-left text-success" data-toggle="dropdown"
+               (click)="lastClickedPostIt = postIt">
               <i class="fa fa-fw fa-eye-dropper" aria-hidden="true"></i></a>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu dropdown-menu-right">
               <color-picker class="dropdown-item" [(color)]="postIt.collection.color"
                             (selectedChange)="updateCollection(postIt)"></color-picker>
               <div class="dropdown-divider"></div>

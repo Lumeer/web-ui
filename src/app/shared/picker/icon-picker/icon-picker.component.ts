@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 
 import * as Icons from './icons';
 
@@ -27,6 +27,11 @@ import * as Icons from './icons';
   styleUrls: ['./icon-picker.component.scss']
 })
 export class IconPickerComponent implements OnInit {
+
+  @HostListener('click', ['$event'])
+  public onClick(event: MouseEvent): void {
+    event.stopPropagation();
+  }
 
   @Input()
   public icon: string;
@@ -42,6 +47,8 @@ export class IconPickerComponent implements OnInit {
   public icons = Icons.solid.concat(Icons.brand);
 
   public tab = 0;
+
+  private TABS = 18;
 
   public ngOnInit(): void {
     this.selected = this.icon;
@@ -78,13 +85,13 @@ export class IconPickerComponent implements OnInit {
   }
 
   public tabIcon(tabIndex: number): string {
-    const iconsPerTab = this.icons.length / 8;
+    const iconsPerTab = this.icons.length / this.TABS;
     const start = Math.floor(tabIndex * iconsPerTab);
     return this.icons[start];
   }
 
   public iconsInTab(tabIndex: number): string[] {
-    const iconsPerTab = this.icons.length / 8;
+    const iconsPerTab = this.icons.length / this.TABS;
     const start = Math.floor(tabIndex * iconsPerTab);
     return this.icons.slice(start, start + iconsPerTab);
   }
