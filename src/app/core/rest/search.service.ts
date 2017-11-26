@@ -80,5 +80,4 @@ export class SearchService {
     throw new LumeerError(error.message);
   }
 
-
 }

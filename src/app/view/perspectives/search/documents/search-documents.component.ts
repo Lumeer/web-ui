@@ -35,8 +35,7 @@ import {selectNavigation} from '../../../../core/store/navigation/navigation.sta
 import {QueryConverter} from '../../../../shared/utils/query-converter';
 
 @Component({
-  templateUrl: './search-documents.component.html',
-  styleUrls: ['./search-documents.component.scss']
+  templateUrl: './search-documents.component.html'
 })
 export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
