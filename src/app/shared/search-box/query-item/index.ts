@@ -17,13 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection, View, LinkType} from './';
-
-export interface Suggestions {
-
-  attributes: Collection[];
-  collections: Collection[];
-  views: View[];
-  links: LinkType[];
-
-}
+export {AttributeQueryItem} from './attribute-query-item';
+export {CollectionQueryItem} from './collection-query-item';
+export {ConditionQueryItem} from './condition-query-item';
+export {FulltextQueryItem} from './fulltext-query-item';
+export {LinkQueryItem} from './link-query-item';
+export {QueryItem} from './query-item';
+export {QueryItemType} from './query-item-type';
+export {QueryItemsConverter} from './query-items-converter';
+export {ViewQueryItem} from './view-query-item';

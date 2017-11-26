@@ -17,13 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection, View, LinkType} from './';
+import {QueryItem} from './query-item';
+import {QueryItemType} from './query-item-type';
+import {View} from '../../../core/dto';
 
-export interface Suggestions {
+export class ViewQueryItem implements QueryItem {
 
-  attributes: Collection[];
-  collections: Collection[];
-  views: View[];
-  links: LinkType[];
+  public type = QueryItemType.View;
+
+  public code: string;
+  public name: string;
+
+  public constructor(view: View) {
+    this.name = view.name;
+    this.code = view.code;
+  }
+
+  public get text(): string {
+    return this.name;
+  }
+
+  public get value(): string {
+    return this.code;
+  }
+
+  public isComplete(): boolean {
+    return true;
+  }
 
 }
