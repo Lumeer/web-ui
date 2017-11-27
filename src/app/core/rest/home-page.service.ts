@@ -117,7 +117,7 @@ export class HomePageService {
         document.isFavorite = codes.includes(this.documentValue(document.collectionCode, document.id));
         return Observable.of(document);
       })
-    )
+    );
   }
 
   public checkFavoriteDocuments(documents: Document[]): Observable<Document[]> {
@@ -128,7 +128,7 @@ export class HomePageService {
         }
         return Observable.of(documents);
       })
-    )
+    );
   }
 
   public checkFavoriteCollection(collection: Collection): Observable<Collection> {
@@ -137,7 +137,7 @@ export class HomePageService {
         collection.isFavorite = codes.includes(collection.code);
         return Observable.of(collection);
       })
-    )
+    );
   }
 
   public checkFavoriteCollections(collections: Collection[]): Observable<Collection[]> {
@@ -148,7 +148,7 @@ export class HomePageService {
         }
         return Observable.of(collections);
       })
-    )
+    );
   }
 
   private addItem(param: string, code: string) {

@@ -29,7 +29,6 @@ import {SearchViewsComponent} from './views/search-views.component';
 import {SearchLinksComponent} from './links/search-links.component';
 import {SearchDocumentsComponent} from './documents/search-documents.component';
 import {SearchCollectionsComponent} from './collections/search-collections.component';
-import {Perspective} from '../perspective';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {AppState} from '../../../core/store/app.state';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';

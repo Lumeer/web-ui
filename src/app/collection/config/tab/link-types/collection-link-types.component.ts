@@ -85,6 +85,10 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public changeCollection(collectionCode: string): void {
+    if (!collectionCode) {
+      return;
+    }
+
     this.collectionSelectService
       .select(collectionCode).pipe(
       switchMap(collection => this.router.navigate([this.workspacePath(), 'c', collection.code, 'linktypes']))

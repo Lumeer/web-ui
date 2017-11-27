@@ -125,7 +125,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
         if (success) {
           collection.isFavorite = !collection.isFavorite;
         }
-      })
+      });
   }
 
   public hasWriteRole(collection: Collection): boolean {
@@ -313,7 +313,10 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.layout.destroy();
+    // might get called before onInit finishes
+    if (this.layout) {
+      this.layout.destroy();
+    }
   }
 
   public emptyQuery(): boolean {

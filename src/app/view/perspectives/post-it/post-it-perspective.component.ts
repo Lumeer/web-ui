@@ -283,7 +283,7 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   public createDocument(document: Document): void {
     this.postIts.unshift(this.documentToPostIt(document, false));
-    this.fetchCollections(new Set(document.collectionCode));
+    this.fetchCollections(new Set([document.collectionCode]));
   }
 
   public toggleDocumentFavorite(postIt: DocumentData) {
@@ -386,7 +386,10 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   }
 
   public ngOnDestroy(): void {
-    this.layout.destroy();
+    // might get called before onInit finishes
+    if (this.layout) {
+      this.layout.destroy();
+    }
     this.setInfiniteScroll(false);
   }
 
