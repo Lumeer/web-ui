@@ -78,7 +78,7 @@
     </div>
 
     <!-- add buttons -->
-    <ng-container *ngIf="editable">
+    <ng-container *ngIf="editable && emptyQuery()">
       <div class="layout-item card text-center add-post-it" (click)="newPostIt()">
         <div class="card-body">
           <i class="fa fa-plus-circle fa-6x" aria-hidden="true"></i>
