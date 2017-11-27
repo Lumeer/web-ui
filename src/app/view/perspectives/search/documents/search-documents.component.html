@@ -33,22 +33,21 @@
 
 <ng-template #header let-document>
   <div class="d-flex flex-row pt-3">
-    <div class="toggle-detail d-flex icon" (click)="toggleDocument(document)">
-      <i class="fas m-auto"
-         [ngClass]="(document.opened || isXlTemplatePresented()) ? 'fa-caret-down':'fa-caret-right'"
-         aria-hidden="true"></i>
-    </div>
-    <i class="{{document.collectionIcon}} align-self-center"
+    <i class="fa fa-fw clickable align-self-center" (click)="toggleDocument(document)"
+       [ngClass]="(document.opened || isXlTemplatePresented()) ? 'fa-caret-down':'fa-caret-right'"
+       aria-hidden="true"></i>
+    <i class="{{document.collectionIcon}} align-self-center fa-fw"
        [style.color]="document.collectionColor"
        *ngIf="document.collectionIcon" aria-hidden="true"></i>
     <span class="ml-1" *ngIf="document.collectionName" [style.color]="document.collectionColor">{{document.collectionName}}</span>
     <div class="ml-3" [innerHTML]="createDefaultAttributeHtml(document)"></div>
     <div class="ml-auto">
-      <span class="icon" (click)="onLinkClick(document)"><i class="fas fa-link" aria-hidden="true"><span
+      <span class="clickable" (click)="onLinkClick(document)"><i class="fas fa-link" aria-hidden="true"><span
         class="ml-1">10</span></i></span>
-      <span class="icon ml-2" (click)="onCommentClick(document)"><i class="fas fa-comment"
-                                                                    aria-hidden="true"><span class="ml-1">30</span></i></span>
-      <span class="icon ml-2" (click)="onDetailClick(document)"><i class="fas fa-eye" aria-hidden="true"></i></span>
+      <span class="clickable ml-2" (click)="onCommentClick(document)"><i class="fas fa-comment"
+                                                                         aria-hidden="true"><span class="ml-1">30</span></i></span>
+      <span class="clickable ml-2" (click)="onDetailClick(document)"><i class="fas fa-eye"
+                                                                        aria-hidden="true"></i></span>
     </div>
   </div>
 </ng-template>

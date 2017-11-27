@@ -1,18 +1,24 @@
 <div class="card-header d-flex py-1">
-  <span class="flex-grow-2"
+  <span class="mr-auto"
         [style.color]="data.collection.color">
     <i class="icon {{ data.collection.icon }} mr-1"></i>
     {{ data.collection.name }}
   </span>
 
   <ng-container *ngIf="data.writeRole">
-    <i class="button text-danger remove-document fa fa-times rounded"
+    <i class="button text-danger fa fa-times rounded align-self-center p-1"
        title="Remove Document" i18n-title="@@document.button.remove"
        (click)="onRemoveDocumentClick()"></i>
-    <i class="button text-success edit-document fa fa-pencil rounded"
+    <i class="button text-success fa fa-pencil rounded align-self-center p-1"
        title="Edit Document" i18n-title="@@document.button.edit"
        (click)="setEditMode(true); select(0, 0)"></i>
   </ng-container>
+  <i  *ngIf="data.initialized" class="text-warning fa-star button rounded align-self-center p-1"
+     [class.always-visible]="data.document.isFavorite"
+     title="{{data.document.isFavorite ?  'Remove from favorites' : 'Add to favorites'}}"
+     i18n-title="@@collection.document.favorite"
+     [ngClass]="data.document.isFavorite ? 'fas' : 'far'"
+     (click)="onToggleFavorite()"></i>
 </div>
 
 <div class="card-body p-2">

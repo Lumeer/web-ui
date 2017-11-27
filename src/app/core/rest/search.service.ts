@@ -29,10 +29,11 @@ import {Document} from '../dto/document';
 import {View} from '../dto/view';
 import {SuggestionType} from '../dto/suggestion-type';
 import {Observable} from 'rxjs/Observable';
-import {catchError} from 'rxjs/operators';
+import {catchError, switchMap} from 'rxjs/operators';
 import {Workspace} from '../store/navigation/workspace.model';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
+import {HomePageService} from './home-page.service';
 
 @Injectable()
 export class SearchService {
@@ -40,7 +41,8 @@ export class SearchService {
   private workspace: Workspace;
 
   constructor(private http: HttpClient,
-              private store: Store<AppState>) {
+              private store: Store<AppState>,
+              private homePageService: HomePageService) {
     this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
@@ -51,12 +53,18 @@ export class SearchService {
 
   public searchCollections(query: Query): Observable<Collection[]> {
     return this.http.post<Collection[]>(`${this.searchPath()}/collections`, query)
-      .pipe(catchError(SearchService.handleError));
+      .pipe(
+        catchError(SearchService.handleError),
+        switchMap(collections => this.homePageService.checkFavoriteCollections(collections))
+      );
   }
 
   public searchDocuments(query: Query): Observable<Document[]> {
     return this.http.post<Document[]>(`${this.searchPath()}/documents`, query)
-      .pipe(catchError(SearchService.handleError));
+      .pipe(
+        catchError(SearchService.handleError),
+        switchMap(documents => this.homePageService.checkFavoriteDocuments(documents))
+      );
   }
 
   public searchViews(query: Query): Observable<View[]> {

@@ -1,5 +1,55 @@
 <search-box></search-box>
 
-<h2 i18n="@@search.favorites.header">Favorites</h2>
+<h2 class="mt-2" i18n="@@search.recent.header">Recently used</h2>
 
-<h2 i18n="@@search.recent.header">Recently used</h2>
+<div class="row">
+  <div class="col-lg-4 col-md-6 col-12">
+    <ng-container *ngTemplateOutlet="collections; context: { $implicit: lastUsedCollections}"></ng-container>
+  </div>
+  <div class="col-lg-4 col-md-6 col-12">
+    <ng-container *ngTemplateOutlet="documents; context: { $implicit: lastUsedDocuments}"></ng-container>
+  </div>
+  <div class="col-lg-4 col-md-6 col-12">
+    <h5 i18n="@@search.recent.views">Views</h5>
+  </div>
+</div>
+
+<h2 class="mt-3" i18n="@@search.favorites.header">Favorites</h2>
+
+<div class="row">
+  <div class="col-lg-4 col-md-6 col-12">
+    <ng-container *ngTemplateOutlet="collections; context: { $implicit: favoriteCollections}"></ng-container>
+  </div>
+  <div class="col-lg-4 col-md-6 col-12">
+    <ng-container *ngTemplateOutlet="documents; context: { $implicit: favoriteDocuments}"></ng-container>
+  </div>
+  <div class="col-lg-4 col-md-6 col-12">
+    <h5 i18n="@@search.recent.views">Views</h5>
+  </div>
+</div>
+
+<ng-template #collections let-collections>
+  <h5 i18n="@@search.recent.collections">Collections</h5>
+  <div class="d-flex flex-column">
+    <div *ngFor="let collection of collections">
+      <a [routerLink]="[workspacePath(), 'view']"
+         [queryParams]="{ perspective: 'postit', query: documentsQuery(collection.code) }">
+        <i class="{{collection.icon}} fa-fw" [style.color]="collection.color" aria-hidden="true"></i>
+        <span class="ml-1 font-weight-bold" [style.color]="collection.color">{{collection.name}}</span>
+      </a>
+    </div>
+    <div class="mt-2 clickable">
+      <a [routerLink]="[workspacePath(), 'collections']">Show all</a>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #documents let-documents>
+  <h5 i18n="@@search.recent.documents">Documents</h5>
+  <div class="d-flex flex-column">
+    <div *ngFor="let document of documents">
+      <i class="{{document.collectionIcon}} fa-fw" [style.color]="document.collectionColor" aria-hidden="true"></i>
+      <span class="ml-1">{{defaultAttribute(document)}}</span>
+    </div>
+  </div>
+</ng-template>

@@ -49,6 +49,9 @@ export class PostItDocumentComponent implements OnInit {
   @Output()
   public changes = new EventEmitter();
 
+  @Output()
+  public toggleFavorite = new EventEmitter();
+
   @ViewChild('content')
   public content: ElementRef;
 
@@ -94,6 +97,10 @@ export class PostItDocumentComponent implements OnInit {
         value: isString(value) ? value : JSON.stringify(value, null, 2)
       };
     });
+  }
+
+  public onToggleFavorite() {
+    this.toggleFavorite.emit();
   }
 
   public clickOnAttributePair(column: number, row: number): void {
