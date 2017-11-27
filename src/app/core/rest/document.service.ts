@@ -52,7 +52,10 @@ export class DocumentService {
       catchError(error => this.handleGlobalError(error)),
       map(response => response.headers.get('Location').split('/').pop()),
       tap(id => this.addLastUsed(document.collectionCode, id)),
-      switchMap(id => this.getDocument(document.collectionCode, id))
+      switchMap(id => {
+        document.id = id;
+        return Observable.of(document);
+      })
     );
   }
 

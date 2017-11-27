@@ -13,7 +13,7 @@
        title="Edit Document" i18n-title="@@document.button.edit"
        (click)="setEditMode(true); select(0, 0)"></i>
   </ng-container>
-  <i  *ngIf="data.initialized" class="fa-star button rounded align-self-center p-1"
+  <i  *ngIf="data.initialized" class="text-warning fa-star button rounded align-self-center p-1"
      [class.always-visible]="data.document.isFavorite"
      title="{{data.document.isFavorite ?  'Remove from favorites' : 'Add to favorites'}}"
      i18n-title="@@collection.document.favorite"

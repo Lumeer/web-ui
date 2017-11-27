@@ -326,7 +326,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
         postIt.initialized = true;
 
         postIt.document.id = document.id;
-        console.log(document);
         this.refreshDocument(postIt);
         this.notificationService.success('Document Created');
       },

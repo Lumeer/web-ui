@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {CollectionService} from '../rest/collection.service';
@@ -32,13 +32,14 @@ import {QueryConverter} from '../../shared/utils/query-converter';
 import {map, switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs/Observable';
 import {SearchDocument} from '../../view/perspectives/search/documents/search-document';
+import {Subscription} from 'rxjs/Subscription';
 
 @Component({
   selector: 'search-home',
   templateUrl: './search-home.component.html',
   styleUrls: ['./search-home.component.scss']
 })
-export class SearchHomeComponent implements OnInit {
+export class SearchHomeComponent implements OnInit, OnDestroy {
 
   public lastUsedDocuments: SearchDocument[];
   public favoriteDocuments: SearchDocument[];
@@ -46,6 +47,7 @@ export class SearchHomeComponent implements OnInit {
   public favoriteCollections: Collection[];
 
   private workspace: Workspace;
+  private workspaceSubscription: Subscription;
 
   constructor(private collectionService: CollectionService,
               private store: Store<AppState>,
@@ -54,7 +56,7 @@ export class SearchHomeComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+    this.workspaceSubscription = this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
     this.collectionService.getLastUsedCollections()
       .subscribe(collections => this.lastUsedCollections = collections);
     this.documentService.getLastUsedDocuments()
@@ -67,6 +69,12 @@ export class SearchHomeComponent implements OnInit {
       .pipe(
         switchMap(documents => this.fetchCollectionsForDocuments(documents))
       ).subscribe(documents => this.favoriteDocuments = documents);
+  }
+
+  public ngOnDestroy() {
+    if (this.workspaceSubscription) {
+      this.workspaceSubscription.unsubscribe();
+    }
   }
 
   public defaultAttribute(document: SearchDocument): string {

@@ -33,10 +33,10 @@
           </a>
         </div>
 
-        <div *ngIf="postIt.initialized" class="toggle-favorite opacity-content clickable"
+        <div *ngIf="postIt.initialized" class="text-warning toggle-favorite opacity-content clickable"
              [class.always-visible]="postIt.collection.isFavorite">
           <a title="{{postIt.collection.isFavorite ?  'Remove from favorites' : 'Add to favorites'}}"
-             i18n-title="@@collection.document.favorite" (click)="toggleFavorite(postIt.collection)">
+             i18n-title="@@collection.favorite" (click)="toggleFavorite(postIt.collection)">
             <i class="fa-star" [ngClass]="postIt.collection.isFavorite ? 'fas' : 'far'"
                aria-hidden="true"></i>
           </a>
