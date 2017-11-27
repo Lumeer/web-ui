@@ -49,6 +49,11 @@ export class ViewService extends PermissionService {
     return Observable.of(views[code]);
   }
 
+  public getViews(): Observable<View[]>{
+    const views = LocalStorage.get('views') || {};
+    return Observable.of(Object.values(views));
+  }
+
   protected actualApiPrefix(): string {
     let viewCode = this.workspace.viewCode;
     return `${this.apiPrefix()}/${viewCode}`;

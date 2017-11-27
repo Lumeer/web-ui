@@ -17,7 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit,
+  QueryList, ViewChild, ViewChildren
+} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Subject} from 'rxjs/Subject';
@@ -26,25 +29,14 @@ import 'rxjs/add/observable/of';
 import {Subscription} from 'rxjs/Subscription';
 import {catchError, debounceTime, map, startWith, switchMap} from 'rxjs/operators';
 
-import {Suggestions} from '../../core/dto/suggestions';
-import {QueryItem} from './query-item/query-item';
-import {FulltextQueryItem} from './query-item/fulltext-query-item';
-import {AttributeQueryItem} from './query-item/attribute-query-item';
-import {CollectionQueryItem} from './query-item/collection-query-item';
-import {Collection} from '../../core/dto/collection';
-import {QueryItemsConverter} from './query-item/query-items-converter';
-import {Query} from '../../core/dto/query';
-import {ViewService} from '../../core/rest/view.service';
+import {Suggestions, Query, Collection, LinkType, SuggestionType, View} from '../../core/dto';
+import {
+  QueryItem, FulltextQueryItem, AttributeQueryItem, ConditionQueryItem, ViewQueryItem,
+  CollectionQueryItem, QueryItemsConverter, QueryItemType, LinkQueryItem
+} from './query-item';
 import {KeyCode} from '../key-code';
 import {HtmlModifier} from '../utils/html-modifier';
-import {QueryItemType} from './query-item/query-item-type';
-import {ConditionQueryItem} from './query-item/condition-query-item';
-import {SearchService} from '../../core/rest/search.service';
-import {SuggestionType} from '../../core/dto/suggestion-type';
-import {LinkType} from '../../core/dto/link-type';
-import {LinkQueryItem} from './query-item/link-query-item';
-import {LinkTypeService} from '../../core/rest/link-type.service';
-import {CollectionService} from '../../core/rest/collection.service';
+import {LinkTypeService, CollectionService, SearchService, ViewService} from '../../core/rest';
 import {AppState} from '../../core/store/app.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
@@ -156,6 +148,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
       startWith(''),
       debounceTime(300),
       switchMap(text => this.retrieveSuggestions(text)),
+      switchMap(suggestions => this.searchViews(suggestions)),
       switchMap(suggestions => this.searchLinkTypes(suggestions)),
       switchMap(suggestions => this.convertSuggestionsToQueryItems(suggestions)),
       map(queryItems => this.filterUsedQueryItems(queryItems)),
@@ -169,7 +162,27 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     });
   }
 
+  private searchViews(suggestions: Suggestions): Observable<Suggestions> {
+    if (this.queryItems.length > 0) {
+      return Observable.of(suggestions);
+    }
+    return this.viewService.getViews().pipe(
+      switchMap(views => {
+        suggestions.views = [];
+        for (let view of views) {
+          if (view.name.toLowerCase().startsWith(this.text.toLowerCase())) {
+            suggestions.views.push(view);
+          }
+        }
+        return Observable.of(suggestions);
+      })
+    )
+  }
+
   private searchLinkTypes(suggestions: Suggestions): Observable<Suggestions> {
+    if (this.isViewItemPresented()) {
+      return Observable.of(suggestions);
+    }
     suggestions.links = [];
     for (let link of this.linkTypeService.getLinkTypes()) {
       if (link.name.toLowerCase().startsWith(this.text.toLowerCase())) {
@@ -180,17 +193,21 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   private retrieveSuggestions(text: string): Observable<Suggestions> {
-    if (text) {
+    if (text && !this.isViewItemPresented()) {
       return this.searchService.suggest(text.toLowerCase(), SuggestionType.All);
     }
     return Observable.of<Suggestions>();
+  }
+
+  private isViewItemPresented(): boolean {
+    return this.queryItems.length == 1 && this.queryItems[0].type === QueryItemType.View;
   }
 
   private convertSuggestionsToQueryItems(suggestions: Suggestions): Observable<QueryItem[]> {
     let suggestedQueryItems: QueryItem[] = [];
     suggestedQueryItems = suggestedQueryItems.concat(this.createCollectionQueryItems(suggestions.collections));
     suggestedQueryItems = suggestedQueryItems.concat(this.createAttributeQueryItems(suggestions.attributes));
-    // TODO add views
+    suggestedQueryItems = suggestedQueryItems.concat(this.createViewsQueryItems(suggestions.views));
     if (!this.isFullTextQueryPresented()) {
       suggestedQueryItems.push(new FulltextQueryItem(this.text));
     }
@@ -232,6 +249,10 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   private createCollectionQueryItems(collections: Collection[]): QueryItem[] {
     return collections.map(collection => new CollectionQueryItem(collection));
+  }
+
+  private createViewsQueryItems(views: View[]): QueryItem[] {
+    return views.map(view => new ViewQueryItem(view));
   }
 
   public onRemoveQueryItem(index: number) {
@@ -396,6 +417,11 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   public search(): void {
+    if (this.isViewItemPresented()) {
+      this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', this.queryItems[0].value]);
+      return;
+    }
+
     const items = this.queryItems.filter(item => item.isComplete());
 
     this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view'], {
