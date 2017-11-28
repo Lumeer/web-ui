@@ -38,6 +38,10 @@ input {
   color: $primary !important;
 }
 
+.snotify-confirm .snotifyToast__title {
+  color: $danger !important;
+}
+
 .snotifyToast {
   border: 2px solid;
   box-shadow: $shadow-up;

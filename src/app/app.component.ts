@@ -19,7 +19,7 @@
 
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 
-import {SnotifyPosition, SnotifyService} from 'ng-snotify';
+import {SnotifyService} from 'ng-snotify';
 
 @Component({
   selector: 'lmr-app',
@@ -41,7 +41,6 @@ export class AppComponent implements OnInit {
       toast: {
         titleMaxLength: 20,
         backdrop: -1,
-        position: SnotifyPosition.leftTop,
         timeout: 3000,
         showProgressBar: false,
         closeOnClick: true,

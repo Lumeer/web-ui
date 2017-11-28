@@ -17,7 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import { Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+
+
 import {Store} from '@ngrx/store';
 import {DocumentService} from 'app/core/rest/document.service';
 import {SearchService} from 'app/core/rest/search.service';
@@ -35,6 +37,12 @@ import {AttributePropertySelection} from './document-data/attribute-property-sel
 import {Direction} from './document-data/direction';
 import {DocumentData} from './document-data/document-data';
 import {PostItDocumentComponent} from './document/post-it-document.component';
+import {Permission} from 'app/core/dto/permission';
+import {Role} from '../../../shared/permissions/role';
+import {NotificationService} from '../../../notifications/notification.service';
+import {PerspectiveComponent} from '../perspective.component';
+import {isNullOrUndefined} from 'util';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'post-it-perspective',
@@ -163,24 +171,28 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     switch (selector.direction) {
       case Direction.Left:
         if (selector.documentIdx - 1 >= 0) {
+          this.lastClickedPostIt = this.postIts[selector.documentIdx - 1];
           this.documentComponents.toArray()[selector.documentIdx - 1].select(Number.MAX_SAFE_INTEGER, selector.row);
         }
         break;
 
       case Direction.Right:
         if (selector.documentIdx + 1 < this.postIts.length) {
+          this.lastClickedPostIt = this.postIts[selector.documentIdx + 1];
           this.documentComponents.toArray()[selector.documentIdx + 1].select(0, selector.row);
         }
         break;
 
       case Direction.Up:
         if (selector.documentIdx - this.documentsPerRow() >= 0) {
+          this.lastClickedPostIt = this.postIts[selector.documentIdx - this.documentsPerRow()];
           this.documentComponents.toArray()[selector.documentIdx - this.documentsPerRow()].select(selector.column, Number.MAX_SAFE_INTEGER);
         }
         break;
 
       case Direction.Down:
         if (selector.documentIdx + this.documentsPerRow() < this.postIts.length) {
+          this.lastClickedPostIt = this.postIts[selector.documentIdx + this.documentsPerRow()];
           this.documentComponents.toArray()[selector.documentIdx + this.documentsPerRow()].select(selector.column, 0);
         }
         break;
