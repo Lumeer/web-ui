@@ -1,12 +1,16 @@
-<div class="rounded" *ngFor="let colorOption of greyscaleColors" [style.background]="colorOption" [style.border-color]="colorHighlight(colorOption)"
+<div class="rounded" *ngFor="let colorOption of greyscaleColors" [style.background]="colorOption"
+     [style.border-color]="colorHighlight(colorOption)"
      (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
-<div class="rounded" *ngFor="let colorOption of saturatedColors" [style.background]="colorOption" [style.border-color]="colorHighlight(colorOption)"
+<div class="rounded" *ngFor="let colorOption of saturatedColors" [style.background]="colorOption"
+     [style.border-color]="colorHighlight(colorOption)"
      (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
 <hr/>
-<div class="rounded" *ngFor="let colorOption of colors" [style.background]="colorOption" [style.border-color]="colorHighlight(colorOption)"
+<div class="rounded" *ngFor="let colorOption of colors" [style.background]="colorOption"
+     [style.border-color]="colorHighlight(colorOption)"
      (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
 
 <label for="customColorInput{{ id }}"
-       class="w-100"
+       class="w-100 large-text pl-2 py-0 my-0"
        i18n="@@picker.color.custom">Custom Color...</label>
-<input type="color" class="form-control" hidden id="customColorInput{{ id }}" [ngModel]="selected" (ngModelChange)="$event !== selected && select($event)"/>
+<input type="color" class="form-control" hidden id="customColorInput{{ id }}" [ngModel]="selected"
+       (ngModelChange)="$event !== selected && select($event)"/>
