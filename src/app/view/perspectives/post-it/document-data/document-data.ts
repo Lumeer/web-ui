@@ -18,19 +18,16 @@
  */
 
 import {Document} from '../../../../core/dto/document';
-import {Collection} from '../../../../core/dto/collection';
 import {AttributePropertySelection} from './attribute-property-selection';
 
 export class DocumentData {
 
   public index: number;
   public document: Document;
-  public collection: Collection;
 
   public initializing: boolean;
   public initialized: boolean;
-  public writeRole: boolean;
   public selectedInput: AttributePropertySelection;
-  public attributes: string[];
+  public visible: boolean;
 
 }

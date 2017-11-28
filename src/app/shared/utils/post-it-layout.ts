@@ -54,13 +54,14 @@ export class PostItLayout {
     if (this.zone && this.requestLock > this.REQUEST_LOCK_LIMIT) {
       this.zone.runOutsideAngular(() => {
         window.setTimeout(() => this.locked = false, this.UPDATE_LOCK_TIME);
+        this.safeRefresh();
       });
 
       this.locked = true;
       return;
     }
 
-    new window['Minigrid'](this.parameters).mount();
+    setTimeout(() => new window['Minigrid'](this.parameters).mount());
 
     if (this.zone) {
       this.requestLock++;
@@ -69,6 +70,10 @@ export class PostItLayout {
         window.setTimeout(() => this.requestLock--, 750)
       );
     }
+  }
+
+  public safeRefresh(): void {
+    setTimeout(() => new window['Minigrid'](this.parameters).mount());
   }
 
   public destroy(): void {

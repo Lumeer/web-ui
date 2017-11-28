@@ -49,7 +49,7 @@ export class ViewService extends PermissionService {
     return Observable.of(views[code]);
   }
 
-  public getViews(): Observable<View[]>{
+  public getViews(): Observable<View[]> {
     const views = LocalStorage.get('views') || {};
     return Observable.of(Object.values(views));
   }
