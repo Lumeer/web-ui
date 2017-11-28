@@ -13,8 +13,8 @@
       <div class="card-body text-center">
         <a class="icon" [style.color]="postIt.collection.color"
            [title]="postIt.collection.name"
-           [routerLink]="postIt.initialized ? [workspacePath(), 'view'] : []"
-           [queryParams]="{ perspective: 'postit', query: documentsQuery(postIt.collection.code) }"
+           [routerLink]="postIt.initialized ? [workspacePath(), 'view', 'postit'] : []"
+           [queryParams]="{ query: documentsQuery(postIt.collection.code) }"
            data-toggle="dropdown">
           <i class="fa-6x {{ postIt.collection.icon }}" aria-hidden="true"></i>
         </a>
@@ -26,8 +26,8 @@
 
         <div *ngIf="postIt.initialized" class="document-count opacity-content clickable">
           <a title="Document Count" i18n-title="@@collection.document.count"
-             [routerLink]="[workspacePath(), 'view']"
-             [queryParams]="{ perspective: 'postit', query: documentsQuery(postIt.collection.code) }">
+             [routerLink]="[workspacePath(), 'view', 'postit']"
+             [queryParams]="{ query: documentsQuery(postIt.collection.code) }">
             {{ postIt.collection.documentsCount }}&nbsp;<i class="far fa-file" aria-hidden="true"></i>
           </a>
         </div>

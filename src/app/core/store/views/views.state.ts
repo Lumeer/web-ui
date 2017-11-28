@@ -17,28 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createSelector } from '@ngrx/store';
-
-import {QueryModel} from './query.model';
-import {Workspace} from './workspace.model';
+import {createEntityAdapter, EntityState} from '@ngrx/entity';
+import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 
-export interface NavigationState {
+import {ViewModel} from './view.model';
 
-  query: QueryModel;
-  workspace: Workspace;
-  perspective?: string;
-  searchBoxHidden?: boolean;
+export interface ViewsState extends EntityState<ViewModel> {
+
+  config: any;
 
 }
 
-export const initialNavigationState: NavigationState = {
+export const viewsAdapter = createEntityAdapter<ViewModel>({selectId: view => view.code});
 
-  query: {},
-  workspace: {},
-  searchBoxHidden: false
+export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
+  config: {}
+});
 
-};
+export const selectViewsState = (state: AppState) => state.views;
 
-export const selectNavigation = (state: AppState) => state.navigation;
-export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);
+export const selectAllViews = createSelector(selectViewsState, viewsAdapter.getSelectors().selectAll);
+export const selectViewsDictionary = createSelector(selectViewsState, viewsAdapter.getSelectors().selectEntities);
+
+export const selectViewConfig = createSelector(selectViewsState, views => views.config);

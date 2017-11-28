@@ -17,32 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ElementRef,
-  Input,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren
-} from '@angular/core';
-
-import {PostItDocumentComponent} from './document/post-it-document.component';
+import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {DocumentService} from 'app/core/rest/document.service';
+import {SearchService} from 'app/core/rest/search.service';
+import {Subscription} from 'rxjs';
+import {finalize} from 'rxjs/operators';
+import {Collection} from '../../../core/dto/collection';
+import {Document} from '../../../core/dto/document';
+import {Query} from '../../../core/dto/query';
+import {CollectionService} from '../../../core/rest/collection.service';
+import {AppState} from '../../../core/store/app.state';
+import {selectNavigation} from '../../../core/store/navigation/navigation.state';
+import {NotificationService} from '../../../notifications/notification.service';
+import {PostItLayout} from '../../../shared/utils/post-it-layout';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
 import {Direction} from './document-data/direction';
 import {DocumentData} from './document-data/document-data';
-import {Query} from '../../../core/dto/query';
-import {PostItLayout} from '../../../shared/utils/post-it-layout';
-import {Collection} from '../../../core/dto/collection';
-import {DocumentService} from 'app/core/rest/document.service';
-import {SearchService} from 'app/core/rest/search.service';
-import {CollectionService} from '../../../core/rest/collection.service';
-import {Document} from '../../../core/dto/document';
-import {NotificationService} from '../../../notifications/notification.service';
-import {PerspectiveComponent} from '../perspective.component';
-import {finalize} from 'rxjs/operators';
+import {PostItDocumentComponent} from './document/post-it-document.component';
 
 @Component({
   selector: 'post-it-perspective',
@@ -52,13 +44,10 @@ import {finalize} from 'rxjs/operators';
     '(document:click)': 'onClick($event)'
   }
 })
-export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit, OnDestroy {
+export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   @Input()
   public query: Query;
-
-  @Input()
-  public config: { postit?: any };
 
   @Input()
   public editable: boolean = true;
@@ -93,17 +82,24 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
     passive: true
   };
 
+  private querySubscription: Subscription;
+
   constructor(private collectionService: CollectionService,
               private documentService: DocumentService,
               private searchService: SearchService,
               private notificationService: NotificationService,
+              private store: Store<AppState>,
               private zone: NgZone) {
   }
 
   public ngOnInit(): void {
     this.initializeLayout();
     this.setInfiniteScroll(true);
-    this.fetchPostIts();
+
+    this.querySubscription = this.store.select(selectNavigation).subscribe(navigation => {
+      this.query = navigation.query;
+      this.fetchPostIts();
+    });
   }
 
   public suggestedAttributes(): [string, string[]][] {
@@ -147,11 +143,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   private turnOffInfiniteScroll(): void {
     (<any>window).removeEventListener('scroll', this.infiniteScrollCallback, this.scrollEventOptions);
     this.infiniteScrollCallback = null;
-  }
-
-  public extractConfig(): any {
-    this.config.postit = null; // TODO save configuration
-    return this.config;
   }
 
   private selectedAttributeProperty(): AttributePropertySelection {
@@ -391,6 +382,9 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
       this.layout.destroy();
     }
     this.setInfiniteScroll(false);
+    if (this.querySubscription) {
+      this.querySubscription.unsubscribe();
+    }
   }
 
 }

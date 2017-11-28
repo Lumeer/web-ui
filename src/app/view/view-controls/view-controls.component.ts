@@ -17,71 +17,77 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
-
-import {PERSPECTIVES} from '../perspectives/perspective';
-import {View} from '../../core/dto/view';
-import {PerspectiveChoice} from '../perspectives/perspective-choice';
-import {QueryConverter} from '../../shared/utils/query-converter';
+import {Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
+import {ViewModel} from '../../core/store/views/view.model';
+import {QueryConverter} from '../../shared/utils/query-converter';
+
+import {Perspective} from '../perspectives/perspective';
 
 @Component({
   selector: 'view-controls',
   templateUrl: './view-controls.component.html',
   styleUrls: ['./view-controls.component.scss']
 })
-export class ViewControlsComponent implements OnInit {
+export class ViewControlsComponent implements OnInit, OnDestroy {
 
   @Input()
-  public view: View;
+  public view: ViewModel;
 
   @Output()
-  public save = new EventEmitter();
+  public save = new EventEmitter<string>();
+
+  @ViewChild('viewName')
+  public viewNameInput: ElementRef;
 
   private workspace: Workspace;
+
+  private subscription: Subscription;
 
   constructor(private router: Router,
               private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+    this.subscription = this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
-  public onSelectPerspective(perspectiveId: string) {
-    const path = ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view'];
-    if (this.view.code) {
-      path.push(this.view.code);
+  public ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
     }
+  }
 
-    this.router.navigate(path, {
-      queryParams: {
-        perspective: perspectiveId
-      },
-      queryParamsHandling: 'merge'
-    });
+  public onSelectPerspective(perspective: string) {
+    const path: any[] = ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view'];
+    if (this.workspace.viewCode) {
+      path.push({vc: this.workspace.viewCode});
+    }
+    path.push(perspective);
+
+    this.router.navigate(path, {queryParamsHandling: 'merge'});
   }
 
   public onSave() {
     // TODO validation
-    this.save.emit();
+    this.save.emit(this.viewNameInput.nativeElement.value.trim());
   }
 
   public onCopy() {
-    this.router.navigate(['w', this.workspace.organizationCode, this.workspace.projectCode, 'view'], {
+    this.router.navigate(['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', this.view.perspective], {
       queryParams: {
-        query: QueryConverter.toString(this.view.query),
-        perspective: this.view.perspective
+        query: QueryConverter.toString(this.view.query)
       }
-    }); // TODO transfer config somehow
+    });
   }
 
-  public get perspectives(): PerspectiveChoice[] {
-    return Object.values(PERSPECTIVES);
+  public perspectives(): string[] {
+    return Object.values(Perspective);
   }
 
 }

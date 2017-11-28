@@ -17,107 +17,98 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ComponentFactoryResolver, ComponentRef, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-
-import {PerspectiveDirective} from './perspectives/perspective.directive';
+import {Subscription} from 'rxjs';
+import {map, skipWhile, take} from 'rxjs/operators';
 import {Query} from '../core/dto/query';
-import {Perspective, PERSPECTIVES} from './perspectives/perspective';
-import {PerspectiveComponent} from './perspectives/perspective.component';
-import {ViewService} from '../core/rest/view.service';
-import {View} from '../core/dto/view';
-import {NotificationService} from 'app/notifications/notification.service';
 import {AppState} from '../core/store/app.state';
 import {selectNavigation} from '../core/store/navigation/navigation.state';
-import {Workspace} from '../core/store/navigation/workspace.model';
+import {ViewModel} from '../core/store/views/view.model';
+import {ViewsAction} from '../core/store/views/views.action';
+import {selectViewConfig, selectViewsDictionary} from '../core/store/views/views.state';
+import {perspectivesMap} from './perspectives/perspective';
 
 @Component({
   templateUrl: './view.component.html'
 })
-export class ViewComponent implements OnInit {
+export class ViewComponent implements OnInit, OnDestroy {
 
-  @ViewChild(PerspectiveDirective)
-  public perspectiveDirective: PerspectiveDirective;
+  public view: ViewModel;
 
-  public view: View;
+  private viewSubscription: Subscription;
+  private configSubscription: Subscription;
+  private navigationSubscription: Subscription;
 
-  private perspectiveComponent: PerspectiveComponent;
-
-  private workspace: Workspace;
-
-  constructor(private componentFactoryResolver: ComponentFactoryResolver,
-              private notificationService: NotificationService,
-              private router: Router,
-              private store: Store<AppState>,
-              private viewService: ViewService) {
+  constructor(private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.store.select(selectNavigation).subscribe(navigation => {
-      this.workspace = navigation.workspace;
+    this.navigationSubscription = this.store.select(selectNavigation).subscribe(navigation => {
+      if (!navigation.workspace) {
+        return;
+      }
 
-      if (this.workspace.viewCode) {
-        this.loadView(this.workspace.viewCode, navigation.perspectiveId);
+      if (navigation.workspace.viewCode) {
+        this.loadView(navigation.workspace.viewCode, navigation.perspective);
       } else {
-        this.loadQuery(navigation.query, navigation.perspectiveId);
+        this.loadQuery(navigation.query, navigation.perspective);
       }
     });
   }
 
-  private loadView(code: string, perspective: string) {
-    this.viewService.getView(code).subscribe((view: View) => {
-      view.perspective = perspective ? perspective : view.perspective;
-      this.view = view;
-      this.loadPerspective(view.perspective);
-    });
-  }
-
-  private loadQuery(query: Query, perspective: string) {
-    this.view = {
-      name: '',
-      query: query,
-      perspective: perspective,
-      config: {}
-    };
-
-    this.loadPerspective(perspective);
-  }
-
-  private loadPerspective(perspectiveId: string) {
-    const perspective = PERSPECTIVES[perspectiveId] || Perspective.Search;
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(perspective.component);
-
-    const viewContainerRef = this.perspectiveDirective.viewContainerRef;
-    viewContainerRef.clear();
-
-    const componentRef: ComponentRef<PerspectiveComponent> = viewContainerRef.createComponent(componentFactory);
-    this.perspectiveComponent = componentRef.instance;
-    this.perspectiveComponent.query = this.view.query ? this.view.query : {};
-    this.perspectiveComponent.config = this.view.config ? this.view.config : {};
-  }
-
-  public onSave() {
-    this.view.config = this.perspectiveComponent.extractConfig();
-
-    if (this.view.code) {
-      this.updateView();
-    } else {
-      this.createView();
+  public ngOnDestroy() {
+    if (this.viewSubscription) {
+      this.viewSubscription.unsubscribe();
+    }
+    if (this.configSubscription) {
+      this.configSubscription.unsubscribe();
+    }
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
     }
   }
 
-  private createView() {
-    this.viewService.createView(this.view).subscribe((code: string) => {
-      this.router.navigate(['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', code]);
-      this.notificationService.success('View has been created');
+  private loadView(code: string, perspective?: string) {
+    this.store.dispatch(new ViewsAction.GetByCode({viewCode: code}));
+
+    this.viewSubscription = this.store.select(selectViewsDictionary).pipe(
+      map(views => views[code]),
+      skipWhile(view => !view)
+    ).subscribe(view => {
+      this.view = {...view};
+      this.view.perspective = perspective ? perspectivesMap[perspective] : this.view.perspective;
     });
   }
 
-  private updateView() {
-    this.viewService.updateView(this.view.code, this.view).subscribe(() => {
-      this.notificationService.success('View has been updated');
+  private loadQuery(query: Query, perspective?: string) {
+    this.view = {
+      name: '',
+      query: query,
+      perspective: perspectivesMap[perspective],
+      config: {}
+    };
+  }
+
+  public onSave(viewName: string) {
+    this.configSubscription = this.store.select(selectViewConfig).pipe(take(1)).subscribe(config => {
+      this.view.name = viewName;
+      this.view.config = {...config};
+
+      if (this.view.code) {
+        this.updateView();
+      } else {
+        this.createView();
+      }
     });
+  }
+
+  private createView() {
+    this.store.dispatch(new ViewsAction.Create({view: this.view}));
+  }
+
+  private updateView() {
+    this.store.dispatch(new ViewsAction.Update({viewCode: this.view.code, view: this.view}));
   }
 
 }

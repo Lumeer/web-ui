@@ -17,42 +17,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AttributeHelper} from 'app/shared/utils/attribute-helper';
+import {Subscription} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
+import {map, switchMap} from 'rxjs/operators';
+import {Attribute} from '../../../core/dto/attribute';
+import {Collection} from '../../../core/dto/collection';
+import {Document} from '../../../core/dto/document';
+import {LinkInstance} from '../../../core/dto/link-instance';
+import {LinkType} from '../../../core/dto/link-type';
+import {Query} from '../../../core/dto/query';
+import {CollectionService} from '../../../core/rest/collection.service';
 
 import {DocumentService} from '../../../core/rest/document.service';
-import {CollectionService} from '../../../core/rest/collection.service';
-import {Collection} from '../../../core/dto/collection';
-import {Attribute} from '../../../core/dto/attribute';
-import {Query} from '../../../core/dto/query';
-import {PerspectiveComponent} from '../perspective.component';
-import {TableConfig} from './model/table-config';
-import {LinkType} from '../../../core/dto/link-type';
-import {TablePart} from './model/table-part';
-import {LinkInstance} from '../../../core/dto/link-instance';
-import {DataChangeEvent} from './event/data-change-event';
-import {AttributeHelper} from 'app/shared/utils/attribute-helper';
-import {TableLinkEvent} from './event/table-link-event';
-import {TableManagerService} from './util/table-manager.service';
 import {LinkInstanceService} from '../../../core/rest/link-instance.service';
 import {LinkTypeService} from '../../../core/rest/link-type.service';
-import {Perspective} from '../perspective';
-import {AttributeChangeEvent} from './event/attribute-change-event';
-import {LinkInstanceEvent} from './event/link-instance-event';
-import {Document} from '../../../core/dto/document';
+import {AppState} from '../../../core/store/app.state';
+import {selectNavigation, selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {selectViewsDictionary, selectViewsState} from '../../../core/store/views/views.state';
 import {NotificationService} from '../../../notifications/notification.service';
+import {AttributeChangeEvent} from './event/attribute-change-event';
+import {DataChangeEvent} from './event/data-change-event';
+import {LinkInstanceEvent} from './event/link-instance-event';
+import {TableLinkEvent} from './event/table-link-event';
+import {TableConfig} from './model/table-config';
+import {TablePart} from './model/table-part';
+import {TableManagerService} from './util/table-manager.service';
 
 @Component({
   selector: 'table-perspective',
   templateUrl: './table-perspective.component.html',
   styleUrls: ['./table-perspective.component.scss']
 })
-export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
+export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
   @Input()
   public query: Query;
 
   @Input()
-  public config: { table?: TableConfig };
+  public config: { table?: TableConfig } = {};
 
   @Input()
   public editable: boolean;
@@ -62,18 +67,65 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
               private linkInstanceService: LinkInstanceService,
               private linkTypeService: LinkTypeService,
               private notificationService: NotificationService,
+              private store: Store<AppState>,
               private tableManagerService: TableManagerService) {
   }
 
   public parts: TablePart[] = [];
 
+  private subscription: Subscription;
+
   public ngOnInit() {
+    if (this.query) {
+      this.initTable();
+      return;
+    }
+
+    this.subscription = Observable.combineLatest(
+      this.store.select(selectNavigation),
+      this.store.select(selectViewsDictionary)
+    ).pipe(
+      map(([navigation, views]) => {
+        const view = navigation.workspace ? views[navigation.workspace.viewCode] : null;
+        return view ? [navigation.query, view.config] : [navigation.query, {}];
+      })
+    ).subscribe(([query, config]) => {
+      this.query = query;
+      this.config = config;
+
+      this.initTable();
+    });
+  }
+
+  private initTable() {
     if (!this.isDisplayable()) {
       return;
     }
 
     this.createDefaultConfigFromQuery();
     this.fetchDataAndCreateTable();
+  }
+
+  public ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  private getTableConfig(): Observable<TableConfig> {
+    return this.store.select(selectWorkspace).pipe(
+      switchMap(workspace => {
+        if (workspace.viewCode) {
+          return this.store.select(selectViewsDictionary).pipe(
+            map(views => views[workspace.viewCode].config.table)
+          );
+        } else {
+          return this.store.select(selectViewsState).pipe(
+            map(views => views.config)
+          );
+        }
+      })
+    );
   }
 
   private createDefaultConfigFromQuery() {
@@ -95,7 +147,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit {
   }
 
   public isDisplayable(): boolean {
-    return this.query.collectionCodes.length === 1;
+    return this.query && this.query.collectionCodes && this.query.collectionCodes.length === 1;
   }
 
   public extractConfig(): any {

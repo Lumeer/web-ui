@@ -17,27 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Type} from '@angular/core';
-import {PerspectiveChoice} from './perspective-choice';
-import {PostItPerspectiveComponent} from './post-it/post-it-perspective.component';
-import {TablePerspectiveComponent} from './table/table-perspective.component';
-import {SearchPerspectiveComponent} from './search/search-perspective.component';
-
-export class Perspective implements PerspectiveChoice {
-
-  public static PostIt = new Perspective('postit', 'Post-it', PostItPerspectiveComponent);
-  public static Search = new Perspective('search', 'Search', SearchPerspectiveComponent);
-  public static Table = new Perspective('table', 'Table', TablePerspectiveComponent);
-
-  private constructor(public id: string,
-                      public name: string,
-                      public component: Type<any>) {
-  }
-
+export enum Perspective {
+  PostIt = 'postit',
+  Search = 'search',
+  Table = 'table'
 }
 
-export const PERSPECTIVES = {
-  [Perspective.PostIt.id]: Perspective.PostIt,
-  [Perspective.Search.id]: Perspective.Search,
-  [Perspective.Table.id]: Perspective.Table
+export const perspectivesMap: { [id: string]: Perspective } = {
+  [Perspective.PostIt]: Perspective.PostIt,
+  [Perspective.Search]: Perspective.Search,
+  [Perspective.Table]: Perspective.Table
 };

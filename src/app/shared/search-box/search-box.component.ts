@@ -17,29 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit,
-  QueryList, ViewChild, ViewChildren
-} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
+import {Subject, Subscription} from 'rxjs';
 import 'rxjs/add/observable/of';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import {catchError, debounceTime, map, startWith, switchMap} from 'rxjs/operators';
-
-import {Suggestions, Query, Collection, LinkType, SuggestionType, View} from '../../core/dto';
-import {
-  QueryItem, FulltextQueryItem, AttributeQueryItem, ConditionQueryItem, ViewQueryItem,
-  CollectionQueryItem, QueryItemsConverter, QueryItemType, LinkQueryItem
-} from './query-item';
+import {Collection, LinkType, Query, Suggestions, SuggestionType, View} from '../../core/dto';
+import {CollectionService, LinkTypeService, SearchService, ViewService} from '../../core/rest';
+import {AppState} from '../../core/store/app.state';
+import {selectNavigation} from '../../core/store/navigation/navigation.state';
+import {Workspace} from '../../core/store/navigation/workspace.model';
 import {KeyCode} from '../key-code';
 import {HtmlModifier} from '../utils/html-modifier';
-import {LinkTypeService, CollectionService, SearchService, ViewService} from '../../core/rest';
-import {AppState} from '../../core/store/app.state';
-import {Workspace} from '../../core/store/navigation/workspace.model';
-import {selectNavigation} from '../../core/store/navigation/navigation.state';
+import {AttributeQueryItem, CollectionQueryItem, ConditionQueryItem, FulltextQueryItem, LinkQueryItem, QueryItem,
+  QueryItemsConverter, QueryItemType, ViewQueryItem} from './query-item';
 
 @Component({
   selector: 'search-box',
@@ -91,7 +84,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
         return;
       }
 
-      if (this.workspace.viewCode) {
+      if (this.workspace && this.workspace.viewCode) {
         this.getQueryItemsFromView(this.workspace.viewCode);
       } else {
         this.getQueryItemsFromQuery(navigation.query);
@@ -126,6 +119,10 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   private getQueryItemsFromQuery(query: Query) {
+    if (!query) {
+      return;
+    }
+
     this.querySubscription = this.queryItemsConverter.fromQuery(query).subscribe(queryItems => {
       if (this.queryItems.length === 0) {
         this.queryItems = queryItems;
@@ -176,7 +173,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
         }
         return Observable.of(suggestions);
       })
-    )
+    );
   }
 
   private searchLinkTypes(suggestions: Suggestions): Observable<Suggestions> {
@@ -200,7 +197,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   private isViewItemPresented(): boolean {
-    return this.queryItems.length == 1 && this.queryItems[0].type === QueryItemType.View;
+    return this.queryItems.length === 1 && this.queryItems[0].type === QueryItemType.View;
   }
 
   private convertSuggestionsToQueryItems(suggestions: Suggestions): Observable<QueryItem[]> {
@@ -257,9 +254,9 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   public onRemoveQueryItem(index: number) {
     let numToDelete = 1;
-    if (this.queryItems[index].type == QueryItemType.Collection && index + 1 < this.queryItems.length) {
+    if (this.queryItems[index].type === QueryItemType.Collection && index + 1 < this.queryItems.length) {
       for (let i = index + 1; i < this.queryItems.length; i++) {
-        if (this.queryItems[i].type == QueryItemType.Attribute) {
+        if (this.queryItems[i].type === QueryItemType.Attribute) {
           numToDelete++;
         } else {
           break;
@@ -350,7 +347,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
       this.selectedSuggestion = this.suggestionItems.length - 1;
       return;
     }
-    if (this.selectedSuggestion == -1) {
+    if (this.selectedSuggestion === -1) {
       this.textCopy = this.text;
     }
     this.selectedSuggestion++;
@@ -362,7 +359,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
       this.selectedSuggestion = -1;
       return;
     }
-    if (this.selectedSuggestion == 0) {
+    if (this.selectedSuggestion === 0) {
       this.selectedSuggestion = -1;
       this.text = this.textCopy;
     } else {
@@ -387,7 +384,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   public suggest(): void {
-    if (this.text == '') {
+    if (this.text === '') {
       this.clearSuggestions();
     } else {
       this.showSuggestions();
@@ -424,19 +421,17 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
     const items = this.queryItems.filter(item => item.isComplete());
 
-    this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view'], {
+    this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', 'search', 'all'], {
       queryParams: {
-        query: this.queryItemsConverter.toQueryString(items),
-        perspective: 'search',
-        searchTab: 'collections' // TODO remove when `all` tab is implemented
+        query: this.queryItemsConverter.toQueryString(items)
       },
       queryParamsHandling: 'merge'
     });
   }
 
   private addQueryItem(queryItem: QueryItem) {
-    if (queryItem.type == QueryItemType.Condition) {
-      if (this.selectedQueryItem >= 0 && this.queryItems[this.selectedQueryItem].type == QueryItemType.Attribute) {
+    if (queryItem.type === QueryItemType.Condition) {
+      if (this.selectedQueryItem >= 0 && this.queryItems[this.selectedQueryItem].type === QueryItemType.Attribute) {
         (this.queryItems[this.selectedQueryItem] as AttributeQueryItem).condition = queryItem.text;
         this.findConditionElementAndFocus(this.selectedQueryItem);
       }
@@ -465,15 +460,15 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   private findConditionElement(id: number): ElementRef {
-    const filtered = this.conditions.filter(element => element.nativeElement.id == id);
-    return filtered.length == 1 ? filtered[0] : undefined;
+    const filtered = this.conditions.filter(element => element.nativeElement.id === id);
+    return filtered.length === 1 ? filtered[0] : undefined;
   }
 
   private isOneOfLastItems(queryItem: CollectionQueryItem): boolean {
     if (this.queryItems.length > 0) {
       for (let i = this.queryItems.length - 1; i >= 0; i--) {
         const item = this.queryItems[i];
-        if (item.type == QueryItemType.Collection) {
+        if (item.type === QueryItemType.Collection) {
           return item.value === queryItem.value;
         }
       }

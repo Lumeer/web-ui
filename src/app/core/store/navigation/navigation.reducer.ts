@@ -28,20 +28,23 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
   const params = RouteFinder.getFirstChildRouteWithParams(route).paramMap;
   const queryParams = route.queryParamMap;
 
-  const navigationState: NavigationState = {
+  return {
     query: QueryConverter.fromString(queryParams.get('query')),
     workspace: {
       organizationCode: params.get('organizationCode'),
       projectCode: params.get('projectCode'),
       collectionCode: params.get('collectionCode'),
-      viewCode: params.get('viewCode')
+      viewCode: params.get('vc')
     },
-    perspectiveId: queryParams.get('perspective'),
-    searchTab: queryParams.get('searchTab'),
+    perspective: extractPerspectiveIdFromUrl(action.payload.routerState.url),
     searchBoxHidden: RouteFinder.getDeepestChildRoute(route).data['searchBoxHidden']
   };
+}
 
-  return navigationState;
+function extractPerspectiveIdFromUrl(url: string): string {
+  const urlSegments = url.split('/');
+  const viewIndex = urlSegments.findIndex(segment => segment === 'view');
+  return viewIndex && url.length > viewIndex + 1 ? urlSegments[viewIndex + 1].split('?')[0] : null;
 }
 
 function onRouterCancel(state: NavigationState, action: RouterCancelAction<NavigationState>) {

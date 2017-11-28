@@ -28,12 +28,12 @@ import {LocalStorage} from '../../shared/utils/local-storage';
 @Injectable()
 export class ViewService extends PermissionService {
 
-  public createView(view: View): Observable<string> {
+  public createView(view: View): Observable<View> {
     const views = LocalStorage.get('views') || {};
     view.code = view.name.toLowerCase();
     views[view.code] = view;
     LocalStorage.set('views', views);
-    return Observable.of(view.code);
+    return Observable.of(view);
   }
 
   public updateView(code: string, view: View): Observable<View> {

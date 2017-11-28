@@ -17,28 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createSelector } from '@ngrx/store';
+import {Component} from '@angular/core';
 
-import {QueryModel} from './query.model';
-import {Workspace} from './workspace.model';
-import {AppState} from '../app.state';
-
-export interface NavigationState {
-
-  query: QueryModel;
-  workspace: Workspace;
-  perspective?: string;
-  searchBoxHidden?: boolean;
+@Component({
+  selector: 'view-loading',
+  template: ''
+})
+export class ViewLoadingComponent {
 
 }
-
-export const initialNavigationState: NavigationState = {
-
-  query: {},
-  workspace: {},
-  searchBoxHidden: false
-
-};
-
-export const selectNavigation = (state: AppState) => state.navigation;
-export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);

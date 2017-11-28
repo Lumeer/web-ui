@@ -17,28 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createSelector } from '@ngrx/store';
+import {Action} from '@ngrx/store';
 
-import {QueryModel} from './query.model';
-import {Workspace} from './workspace.model';
-import {AppState} from '../app.state';
-
-export interface NavigationState {
-
-  query: QueryModel;
-  workspace: Workspace;
-  perspective?: string;
-  searchBoxHidden?: boolean;
-
+export enum NotificationsActionType {
+  ERROR = '[Notifications] Error',
+  SUCCESS = '[Notifications] Success'
 }
 
-export const initialNavigationState: NavigationState = {
+export namespace NotificationsAction {
 
-  query: {},
-  workspace: {},
-  searchBoxHidden: false
+  export class Error implements Action {
+    public readonly type = NotificationsActionType.ERROR;
 
-};
+    public constructor(public payload: { message: string }) {
+    }
+  }
 
-export const selectNavigation = (state: AppState) => state.navigation;
-export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);
+  export class Success implements Action {
+    public readonly type = NotificationsActionType.SUCCESS;
+
+    public constructor(public payload: { message: string }) {
+    }
+  }
+
+  export type All = Error | Success;
+}
