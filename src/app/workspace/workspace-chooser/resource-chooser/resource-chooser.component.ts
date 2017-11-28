@@ -218,7 +218,6 @@ export class ResourceChooserComponent implements OnChanges {
     }
     const widthContent = (this.resources.length + 1) * squareSize;
     this.linesWidth = Math.max(this.resourceContainer.nativeElement.clientWidth, widthContent);
-    console.log(`${this.linesWidth} ${widthContent}`);
     this.resourceLineSizes[0] = (this.linesWidth - widthContent) / 2 + (index * squareSize);
     this.resourceLineSizes[1] = squareSize;
     this.resourceLineSizes[2] = this.linesWidth - this.resourceLineSizes[0] - this.resourceLineSizes[1];
