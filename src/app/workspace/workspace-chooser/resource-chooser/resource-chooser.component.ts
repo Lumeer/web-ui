@@ -88,6 +88,7 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceContentWidth: number = 0;
   public resourceContentLeft: number = arrowSize;
   public resourceWidth: number = squareSize;
+  public linesWidth: number = 1000;
   public resourceCanScrollLeft: boolean = false;
   public resourceCanScrollRight: boolean = false;
   public resourceScroll: number = 0;
@@ -109,6 +110,7 @@ export class ResourceChooserComponent implements OnChanges {
   private onResize(event) {
     this.actualizeWidthAndCheck();
     this.checkForScrollRightResources();
+    this.computeResourceLines(this.resourceActiveIx);
   }
 
   private actualizeWidthAndCheck() {
@@ -214,9 +216,11 @@ export class ResourceChooserComponent implements OnChanges {
       this.resourceLineSizes = [0, 0, 0];
       return;
     }
-    this.resourceLineSizes[0] = index * squareSize;
+    const widthContent = (this.resources.length + 1) * squareSize;
+    this.linesWidth = Math.max(this.resourceContainer.nativeElement.clientWidth, widthContent);
+    this.resourceLineSizes[0] = (this.linesWidth - widthContent) / 2 + (index * squareSize);
     this.resourceLineSizes[1] = squareSize;
-    this.resourceLineSizes[2] = (this.resources.length - index - (this.canCreateResource ? 0 : 1)) * squareSize;
+    this.resourceLineSizes[2] = this.linesWidth - this.resourceLineSizes[0] - this.resourceLineSizes[1];
   }
 
   public onCreateResource() {

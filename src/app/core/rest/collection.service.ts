@@ -40,7 +40,7 @@ export class CollectionService extends PermissionService {
   constructor(protected httpClient: HttpClient,
               protected store: Store<AppState>,
               private homePageService: HomePageService) {
-    super(httpClient, store)
+    super(httpClient, store);
   }
 
   public createCollection(collection: Collection): Observable<string> {

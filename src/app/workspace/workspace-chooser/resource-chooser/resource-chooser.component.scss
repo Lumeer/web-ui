@@ -3,12 +3,8 @@
 $post-it-size: 170px;
 $post-it-margin: 15px;
 $bookmark-height: 220px;
-$bookmark-border-width: 2px;
-$bookmark-border-color: #000;
-$box-shadow-color: rgba(0, 0, 0, 0.2);
-$box-shadow-top: 0 -2px 5px 2px $box-shadow-color;
-$box-shadow-left: 4px -5px 5px 1px $box-shadow-color;
-$box-shadow-right: -4px -5px 5px 1px $box-shadow-color;
+$bookmark-border-width: 1px;
+$bookmark-border-color: #bdbdbd;
 
 .horizontal-container {
   height: $bookmark-height + 10px;
@@ -61,9 +57,6 @@ $box-shadow-right: -4px -5px 5px 1px $box-shadow-color;
         .bookmark {
           border-width: $bookmark-border-width !important;
           border-color: $bookmark-border-color !important;
-          box-shadow: $box-shadow-left, $box-shadow-right;
-          -webkit-box-shadow: $box-shadow-left, $box-shadow-right;
-          -moz-box-shadow: $box-shadow-left, $box-shadow-right;
           width: $post-it-size + 2*$post-it-margin;
           height: $bookmark-height;
           background: #ffffff;
@@ -166,7 +159,6 @@ $box-shadow-right: -4px -5px 5px 1px $box-shadow-color;
             display: inline-block;
             height: $bookmark-border-width;
             background: $bookmark-border-color;
-            box-shadow: $box-shadow-top;
           }
         }
 

@@ -1,40 +1,31 @@
-<div class="perspective" #perspective [style.height]="height + 'px'">
-  <div class="layout" #layout>
+<div class="layout d-flex" #layout>
 
-    <add-document *ngIf="editable && query.collectionCodes.length < 2"
-                  class="layout-item"
-                  [query]="query"
-                  (newDocument)="createDocument($event)"></add-document>
+  <add-document *ngIf="editable && query.collectionCodes.length < 2"
+                class="layout-item"
+                [query]="query"
+                (newDocument)="createDocument($event)"></add-document>
 
-    <ng-container *ngFor="let postIt of postIts">
-      <post-it-document *ngIf="postIt.collection"
-                        class="layout-item card post-it
-                        {{ !postIt.initialized ? 'uninitialized' : null }}
-                        {{ postIt === lastClickedPostIt ? 'selected' : null }}"
-                        [attr.z-index]="postIt.selectedInput.documentIdx === postIt.index ? 50 : null"
-                        [data]="postIt"
-                        (selectOther)="selectDocument($event)"
-                        (removed)="confirmDeletion(postIt)"
-                        (changes)="sendUpdate(postIt)"
-                        (toggleFavorite)="toggleDocumentFavorite(postIt)">
-      </post-it-document>
-    </ng-container>
+  <ng-container *ngFor="let postIt of postIts">
+    <post-it-document *ngIf="collections[postIt.document.collectionCode]"
+                      class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : null }} {{ postIt === lastClickedPostIt ? 'selected' : null }}"
+                      [style.z-index]="postIt.selectedInput.documentIdx === postIt.index ? 50 : null"
+                      [style.transition]="postIt.visible ? 'transform 0.4s, box-shadow 0.25s' : null"
+                      [style.opacity]="postIt.visible ? 1 : 0"
+                      [data]="postIt" [collection]="collections[postIt.document.collectionCode]"
+                      (selectOther)="selectDocument($event)"
+                      (removed)="confirmDeletion(postIt)"
+                      (changes)="sendUpdate(postIt)"
+                      (toggleFavorite)="toggleDocumentFavorite(postIt)"></post-it-document>
+  </ng-container>
 
-    <datalist *ngFor="let attributeSuggestionsEntry of attributeSuggestionsEntries()"
-              id="{{ attributeSuggestionsEntry[0] }}">
-      <option *ngFor="let suggestion of attributeSuggestionsEntry[1]">{{ suggestion }}</option>
-    </datalist>
+  <datalist *ngFor="let attributeSuggestionsEntry of suggestedAttributes()"
+            id="{{ attributeSuggestionsEntry[0] }}">
+    <option *ngFor="let suggestion of attributeSuggestionsEntry[1]">{{ suggestion }}</option>
+  </datalist>
 
-    <label *ngIf="!editable && query && !postIts.length"
-           class="label-centered"
-           i18n="@@document.list.empty">Nothing To Show</label>
-  </div>
+  <label *ngIf="!editable && query && !postIts.length"
+         class="label-centered"
+         i18n="@@document.list.empty">Nothing To Show</label>
 </div>
 
-<a tabindex
-   (click)="showMore(perspective)"
-   class="scroll-down"
-   i18n="@@document.button.show.more">
-  Show More
-  <i class="fa fa-chevron-down"></i>
-</a>
+<div class="fading large-text text-center py-5" [style.opacity]="fetchingData ? 1 : 0">Loading...</div>

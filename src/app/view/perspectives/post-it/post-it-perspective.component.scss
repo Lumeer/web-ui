@@ -3,18 +3,12 @@
 :host {
   display: block;
 
-  .perspective {
-    overflow: auto;
-    transition: height $animation-duration-slow;
-  }
-
   .layout {
     margin: 0 auto;
   }
 
   .layout-item {
     width: $post-it-width;
-    transition: transform $animation-duration, box-shadow $animation-duration;
   }
 
   .post-it:hover, .selected {
@@ -34,14 +28,12 @@
     border-style: dashed;
   }
 
-  .scroll-down {
-    cursor: auto;
-    font-size: 24px;
-    float: right;
-    margin: 10px;
-
-    i {
-      padding-left: 10px;
-    }
+  .fading {
+    transition: opacity $animation-color-duration;
   }
+
+  .large-text {
+    font-size: 36px;
+  }
+
 }

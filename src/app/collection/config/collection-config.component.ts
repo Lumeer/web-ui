@@ -30,7 +30,7 @@ import {Query} from '../../core/dto/query';
 import {CollectionSelectService} from '../service/collection-select.service';
 import {NotificationService} from '../../notifications/notification.service';
 import {Subscription} from 'rxjs/Subscription';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {filter, map, switchMap, tap} from 'rxjs/operators';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
@@ -60,6 +60,7 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
     this.workspaceSubscription = this.store.select(selectWorkspace).pipe(
       tap(workspace => this.workspace = workspace),
       map(workspace => workspace.collectionCode),
+      filter(collectionCode => !!collectionCode),
       switchMap(collectionCode => this.collectionSelectService.select(collectionCode)),
       tap(collection => this.collection = collection)
     ).subscribe(

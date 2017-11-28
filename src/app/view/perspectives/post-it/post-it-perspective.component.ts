@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 
 import {PostItDocumentComponent} from './document/post-it-document.component';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
@@ -30,12 +40,8 @@ import {DocumentService} from 'app/core/rest/document.service';
 import {SearchService} from 'app/core/rest/search.service';
 import {CollectionService} from '../../../core/rest/collection.service';
 import {Document} from '../../../core/dto/document';
-import {Permission} from 'app/core/dto/permission';
-import {Role} from '../../../shared/permissions/role';
 import {NotificationService} from '../../../notifications/notification.service';
 import {PerspectiveComponent} from '../perspective.component';
-import {Perspective} from '../perspective';
-import {isNullOrUndefined} from 'util';
 import {finalize} from 'rxjs/operators';
 
 @Component({
@@ -46,7 +52,7 @@ import {finalize} from 'rxjs/operators';
     '(document:click)': 'onClick($event)'
   }
 })
-export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit, AfterViewChecked, OnDestroy {
+export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit, OnDestroy {
 
   @Input()
   public query: Query;
@@ -56,12 +62,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   @Input()
   public editable: boolean = true;
-
-  @Input()
-  public height = 500;
-
-  @ViewChild('perspective')
-  public perspective: ElementRef;
 
   @ViewChild('layout')
   public layoutElement: ElementRef;
@@ -75,11 +75,23 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   public lastClickedPostIt: DocumentData;
 
-  private collections: { [collectionCode: string]: Collection } = {};
+  public fetchingData: boolean;
+
+  public collections: { [collectionCode: string]: Collection } = {};
 
   private attributeSuggestions: { [collectionCode: string]: string[] } = {};
 
+  private infiniteScrollCallback: () => void | null;
+
   private page = 0;
+
+  private layoutGutter = 10;
+
+  // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+  private scrollEventOptions = {
+    capture: true,
+    passive: true
+  };
 
   constructor(private collectionService: CollectionService,
               private documentService: DocumentService,
@@ -90,20 +102,56 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
   public ngOnInit(): void {
     this.initializeLayout();
-    this.fetchData();
+    this.setInfiniteScroll(true);
+    this.fetchPostIts();
   }
 
-  public ngAfterViewChecked(): void {
-    this.layout.refresh();
+  public suggestedAttributes(): [string, string[]][] {
+    return Object.entries(this.attributeSuggestions);
+  }
+
+  private initializeLayout(): void {
+    this.layout = new PostItLayout({
+      container: '.layout',
+      item: '.layout-item',
+      gutter: this.layoutGutter
+    }, this.zone);
+  }
+
+  public setInfiniteScroll(enabled: boolean): void {
+    if (enabled) {
+      this.turnOnInfiniteScroll();
+    } else {
+      this.turnOffInfiniteScroll();
+    }
+  }
+
+  private turnOnInfiniteScroll(): void {
+    if (this.infiniteScrollCallback) {
+      this.turnOffInfiniteScroll();
+    }
+
+    this.infiniteScrollCallback = () => {
+      if (this.fetchingData) {
+        return;
+      }
+
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 550) {
+        this.fetchPostIts();
+      }
+    };
+
+    (<any>window).addEventListener('scroll', this.infiniteScrollCallback, this.scrollEventOptions);
+  }
+
+  private turnOffInfiniteScroll(): void {
+    (<any>window).removeEventListener('scroll', this.infiniteScrollCallback, this.scrollEventOptions);
+    this.infiniteScrollCallback = null;
   }
 
   public extractConfig(): any {
     this.config.postit = null; // TODO save configuration
     return this.config;
-  }
-
-  public attributeSuggestionsEntries(): [string, string[]][] {
-    return Object.entries(this.attributeSuggestions);
   }
 
   private selectedAttributeProperty(): AttributePropertySelection {
@@ -149,20 +197,14 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   }
 
   private documentsPerRow(): number {
-    return Math.floor(this.layoutElement.nativeElement.clientWidth / (215 /*Post-it width*/ + 10 /*Gutter*/));
-  }
-
-  private initializeLayout(): void {
-    this.layout = new PostItLayout({
-      container: '.layout',
-      item: '.layout-item',
-      gutter: 10
-    }, this.zone);
+    return Math.floor(this.layoutElement.nativeElement.clientWidth / (215 /*Post-it width*/ + this.layoutGutter));
   }
 
   private queryPage(pageNumber: number): Query {
+    const addDocumentPresent = this.editable && pageNumber === 0 ? 1 : 0;
+
     return {
-      pageSize: this.documentsPerRow() * 2,
+      pageSize: this.documentsPerRow() * 4 - addDocumentPresent,
       page: pageNumber,
       filters: this.query.filters,
       fulltext: this.query.fulltext,
@@ -170,121 +212,78 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
     };
   }
 
-  private fetchData(): void {
-    this.searchService.searchDocuments(this.queryPage(this.page++))
-      .subscribe(
-        documents => {
-          this.initializePostIts(documents);
-        },
-        error => {
-          this.handleError(error, 'Failed fetching documents');
-        }
-      );
-  }
-
-  private initializePostIts(documents: Document[]): void {
-    const selection = this.selectedAttributeProperty();
-
-    documents.forEach(document => {
-      const postIt = new DocumentData;
-      postIt.document = document;
-      postIt.selectedInput = selection;
-
-      this.fetchCollection(postIt);
-      this.postIts.push(postIt);
-    });
-
-    this.refreshIndexes();
-  }
-
-  private fetchCollection(postIt: DocumentData): void {
-    const collectionCode = postIt.document.collectionCode;
-
-    if (this.collections[collectionCode]) {
-      this.initializeAttributeSuggestions(this.collections[collectionCode]);
+  private fetchPostIts(): void {
+    if (this.fetchingData) {
       return;
     }
 
-    if (this.collections[collectionCode] === null) {
-      return;
-    }
+    this.fetchingData = true;
+    this.setInfiniteScroll(false);
 
-    this.collections[collectionCode] = null;
-    this.collectionService.getCollection(collectionCode)
-      .subscribe(
-        collection => {
-          this.collections[collectionCode] = collection;
-          this.initializeAttributeSuggestions(collection);
-        },
-        error => {
-          this.handleError(error, 'Failed fetching collection data');
-        }
+    this.searchService.searchDocuments(this.queryPage(this.page)).pipe(
+      finalize(() => {
+        this.fetchingData = false;
+        this.setInfiniteScroll(true);
+        this.page++;
+      })
+    ).subscribe(
+      documents => this.fetchDocumentData(documents),
+      error => this.notificationService.error('Failed fetching documents')
+    );
+  }
+
+  private fetchDocumentData(documents: Document[]): void {
+    documents.forEach(document => this.postIts.push(this.documentToPostIt(document, true)));
+
+    const uniqueCollectionCodes = new Set(documents.map(document => document.collectionCode));
+    this.fetchCollections(uniqueCollectionCodes);
+  }
+
+  private documentToPostIt(document: Document, initialized: boolean): DocumentData {
+    const postIt = new DocumentData;
+    postIt.document = document;
+    postIt.selectedInput = this.selectedAttributeProperty();
+    postIt.initialized = initialized;
+    postIt.visible = false;
+
+    return postIt;
+  }
+
+  private fetchCollections(collectionCodes: Set<string>): void {
+    let fetchedCollections = 0;
+    const countAsFetched = () => {
+      fetchedCollections++;
+
+      if (fetchedCollections === collectionCodes.size) {
+        this.refresh();
+      }
+    };
+
+    collectionCodes.forEach(collectionCode => {
+      if (this.collections[collectionCode]) {
+        countAsFetched();
+        return;
+      }
+
+      this.collectionService.getCollection(collectionCode).pipe(
+        finalize(() => countAsFetched())
+      ).subscribe(
+        collection => this.registerCollection(collection),
+        error => this.notificationService.error(`Failed fetching collection ${collectionCode}`)
       );
-  }
-
-  private async initializeAttributeSuggestions(collection: Collection): Promise<void> {
-    if (await this.getAttributeSuggestions(collection.code)) {
-      // initialize all postIts with current collection only once
-      // collection and attributeSuggestions are already present
-      this.finalizeInitialization(collection);
-    }
-  }
-
-  private finalizeInitialization(collection: Collection): void {
-    this.postIts
-      .filter(postIt => postIt.document.collectionCode === collection.code)
-      .forEach(postIt => {
-        postIt.collection = this.collections[postIt.document.collectionCode];
-        postIt.attributes = this.attributeSuggestions[postIt.document.collectionCode];
-        postIt.writeRole = this.hasWriteRole(collection);
-        postIt.initialized = true;
-      });
-  }
-
-  public async createDocument(document: Document) {
-    const newPostIt = new DocumentData;
-    newPostIt.document = document;
-    newPostIt.collection = await this.getCollection(document.collectionCode);
-    newPostIt.attributes = await this.getAttributeSuggestions(document.collectionCode);
-    newPostIt.writeRole = this.hasWriteRole(newPostIt.collection);
-    newPostIt.selectedInput = this.selectedAttributeProperty();
-    newPostIt.initialized = false;
-
-    this.postIts.unshift(newPostIt);
-    this.refreshIndexes();
-  }
-
-  private async getCollection(collectionCode: string): Promise<Collection> {
-    if (this.hasCollection(collectionCode)) {
-      return this.collections[collectionCode];
-    }
-
-    return this.collectionService.getCollection(collectionCode)
-      .toPromise<Collection>()
-      .then(collection => this.collections[collectionCode] = collection);
-  }
-
-  private hasCollection(collectionCode: string): boolean {
-    return !isNullOrUndefined(this.collections[collectionCode]);
-  }
-
-  private async getAttributeSuggestions(collectionCode: string): Promise<string[]> {
-    if (this.attributeSuggestions[collectionCode]) {
-      return this.attributeSuggestions[collectionCode];
-    }
-
-    if (this.attributeSuggestions[collectionCode] === null) {
-      return null;
-    }
-
-    this.attributeSuggestions[collectionCode] = null;
-    await this.getCollection(collectionCode).then(collection => {
-      this.attributeSuggestions[collectionCode] = collection.attributes
-        .sort((attribute1, attribute2) => attribute2.usageCount - attribute1.usageCount) // descending order
-        .map(attribute => attribute.name);
     });
+  }
 
-    return this.attributeSuggestions[collectionCode];
+  private registerCollection(collection: Collection): void {
+    this.collections[collection.code] = collection;
+    this.attributeSuggestions[collection.code] = collection.attributes
+      .sort((attribute1, attribute2) => attribute2.usageCount - attribute1.usageCount) // descending order
+      .map(attribute => attribute.name);
+  }
+
+  public createDocument(document: Document): void {
+    this.postIts.unshift(this.documentToPostIt(document, false));
+    this.fetchCollections(new Set([document.collectionCode]));
   }
 
   public toggleDocumentFavorite(postIt: DocumentData) {
@@ -306,15 +305,16 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
       return;
     }
 
-    this.documentService.updateDocument(postIt.document)
-      .subscribe(
-        document => {
-          delete document.data['_id']; // TODO remove after _id is no longer sent inside data
-          postIt.document.data = document.data;
-        },
-        error => {
-          this.handleError(error, 'Failed updating document');
-        });
+    this.documentService.updateDocument(postIt.document).subscribe(
+      document => {
+        delete document.data['_id']; // TODO remove after _id is no longer sent inside data
+        postIt.document.data = document.data;
+
+        this.refresh();
+      },
+      error => {
+        this.notificationService.error('Failed updating document');
+      });
   }
 
   private initializePostIt(postIt: DocumentData): void {
@@ -327,10 +327,9 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
 
         postIt.document.id = document.id;
         this.refreshDocument(postIt);
-        this.notificationService.success('Document Created');
       },
       error => {
-        this.handleError(error, 'Failed creating document');
+        this.notificationService.error('Failed creating document');
       });
   }
 
@@ -340,32 +339,36 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
         document => {
           delete document.data['_id']; // TODO remove after _id is no longer sent inside data
           postIt.document = document;
+          this.refresh();
         },
         error => {
-          this.handleError(error, 'Refreshing document failed');
+          this.notificationService.error('Refreshing document failed');
         });
   }
 
   public removeDocument(postIt: DocumentData): void {
     if (postIt.initialized) {
-      this.documentService.removeDocument(postIt.document)
-        .subscribe(
-          response => {
-            this.notificationService.success('Document removed');
-          },
-          error => {
-            this.handleError(error, 'Failed removing document');
-          });
+      this.documentService.removeDocument(postIt.document).subscribe(
+        response => null,
+        error => this.notificationService.error('Failed removing document')
+      );
     }
 
     this.postIts.splice(postIt.index, 1);
-    this.refreshIndexes();
+    this.refresh();
   }
 
-  private refreshIndexes(): void {
+  private refresh(): void {
     for (let i = 0; i < this.postIts.length; i++) {
       this.postIts[i].index = i;
     }
+
+    this.layout.refresh();
+
+    setTimeout(() => {
+      this.postIts.filter(postIt => this.collections[postIt.document.collectionCode])
+        .forEach(postIt => postIt.visible = true);
+    });
   }
 
   public confirmDeletion(postIt: DocumentData): void {
@@ -373,29 +376,6 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
       {text: 'Yes', action: () => this.removeDocument(postIt), bold: false},
       {text: 'No'}
     ]);
-  }
-
-  public hasWriteRole(collection: Collection): boolean {
-    return this.hasRole(collection, Role.Write);
-  }
-
-  private hasRole(collection: Collection, role: string): boolean {
-    return collection.permissions && collection.permissions.users
-      .some((permission: Permission) => permission.roles.includes(role));
-  }
-
-  private handleError(error: Error, message?: string): void {
-    this.notificationService.error(message ? message : error.message);
-  }
-
-  public showMore(perspective: HTMLDivElement): void {
-    this.fetchData();
-
-    perspective.scroll({
-      top: perspective.scrollHeight,
-      left: 0,
-      behavior: 'smooth'
-    });
   }
 
   public onClick(event: MouseEvent): void {
@@ -406,9 +386,11 @@ export class PostItPerspectiveComponent implements PerspectiveComponent, OnInit,
   }
 
   public ngOnDestroy(): void {
+    // might get called before onInit finishes
     if (this.layout) {
       this.layout.destroy();
     }
+    this.setInfiniteScroll(false);
   }
 
 }
