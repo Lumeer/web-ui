@@ -76,8 +76,7 @@ export class ViewComponent implements OnInit, OnDestroy {
       map(views => views[code]),
       skipWhile(view => !view)
     ).subscribe(view => {
-      this.view = {...view};
-      this.view.perspective = perspective ? perspectivesMap[perspective] : this.view.perspective;
+      this.view = {...view, perspective: perspective ? perspectivesMap[perspective] : view.perspective};
     });
   }
 

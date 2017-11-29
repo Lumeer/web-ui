@@ -17,20 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {Document} from '../../../../core/dto/document';
 import {Query} from '../../../../core/dto/query';
-import {AppState} from '../../../../core/store/app.state';
-import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 
 @Component({
   selector: 'add-document',
   templateUrl: './add-document.component.html',
   styleUrls: ['./add-document.component.scss']
 })
-export class PostItAddDocumentComponent implements OnInit {
+export class PostItAddDocumentComponent {
 
   @Input()
   public query: Query;
@@ -38,18 +35,9 @@ export class PostItAddDocumentComponent implements OnInit {
   @Output()
   public newDocument = new EventEmitter<Document>();
 
-  private collectionCode: string;
-
-  constructor(private store: Store<AppState>) {
-  }
-
-  public ngOnInit(): void {
-    this.store.select(selectWorkspace).subscribe(workspace => this.collectionCode = workspace.collectionCode);
-  }
-
   public onClick(): void {
     const newDocument = new Document;
-    newDocument.collectionCode = this.collectionCode || this.query.collectionCodes[0];
+    newDocument.collectionCode = this.query.collectionCodes[0];
 
     this.newDocument.emit(newDocument);
   }

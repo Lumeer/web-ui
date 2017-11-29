@@ -26,10 +26,10 @@ import {finalize} from 'rxjs/operators';
 import {Collection} from '../../../core/dto/collection';
 import {Document} from '../../../core/dto/document';
 import {Query} from '../../../core/dto/query';
+import {NotificationService} from '../../../core/notifications/notification.service';
 import {CollectionService} from '../../../core/rest/collection.service';
 import {AppState} from '../../../core/store/app.state';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
-import {NotificationService} from '../../../core/notifications/notification.service';
 import {PostItLayout} from '../../../shared/utils/post-it-layout';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
 import {Direction} from './document-data/direction';
@@ -385,6 +385,10 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     if (this.querySubscription) {
       this.querySubscription.unsubscribe();
     }
+  }
+
+  public isAddButtonShown(): boolean {
+    return this.editable && this.query && this.query.collectionCodes && this.query.collectionCodes.length === 1;
   }
 
 }
