@@ -18,15 +18,18 @@
  */
 
 import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
+import 'rxjs/add/observable/combineLatest';
 import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators';
+import {Attribute, Collection, Document, LinkInstance, LinkType} from '../../../../core/dto';
+import {CollectionService, DocumentService, LinkInstanceService, LinkTypeService} from '../../../../core/rest';
+import {SearchService} from '../../../../core/rest/search.service';
+import {AppState} from '../../../../core/store/app.state';
+import {ViewsAction} from '../../../../core/store/views/views.action';
+import {AttributeHelper} from '../../../../shared/utils/attribute-helper';
 
 import {TableConfig, TablePart, TableRow} from '../model';
-import {CollectionService, DocumentService, LinkInstanceService, LinkTypeService} from '../../../../core/rest';
-import {Attribute, Collection, Document, LinkInstance, LinkType} from '../../../../core/dto';
-import {AttributeHelper} from '../../../../shared/utils/attribute-helper';
-import {SearchService} from '../../../../core/rest/search.service';
-import {map} from 'rxjs/operators';
-import 'rxjs/add/observable/combineLatest';
 
 @Injectable()
 export class TableManagerService {
@@ -42,7 +45,8 @@ export class TableManagerService {
               private documentService: DocumentService,
               private linkInstanceService: LinkInstanceService,
               private linkTypeService: LinkTypeService,
-              private searchService: SearchService) {
+              private searchService: SearchService,
+              private store: Store<AppState>) {
   }
 
   public createTableFromConfig(config: TableConfig): Observable<TablePart[]> {
@@ -94,7 +98,13 @@ export class TableManagerService {
     this.linkNextParts(); // TODO move up
     this.initEmptyTable();
 
+    this.saveConfig();
+
     return this.parts;
+  }
+
+  private saveConfig() {
+    this.store.dispatch(new ViewsAction.SetConfig({config: {table: this.extractTableConfig()}}));
   }
 
   private setUpAttributes(tablePart: TablePart, config: TableConfig) {
@@ -185,9 +195,9 @@ export class TableManagerService {
   private getLinkedDocuments(doc: Document, linkTypeId: string): Document[] {
     const linkedDocumentIds = this.getLinkInstancesByType(linkTypeId)
       .filter(linkInstance => linkInstance.documentIds.includes(doc.id))
-      .map(linkInstance => linkInstance.documentIds.find(id => id != doc.id));
+      .map(linkInstance => linkInstance.documentIds.find(id => id !== doc.id));
     const linkedCollectionCode = this.getLinkTypeById(linkTypeId).collectionCodes
-      .find(code => code != doc.collectionCode);
+      .find(code => code !== doc.collectionCode);
     return this.getDocumentsByCollection(linkedCollectionCode)
       .filter(d => linkedDocumentIds.includes(d.id));
   }
@@ -215,6 +225,8 @@ export class TableManagerService {
       this.documents.push(...documents);
       this.linkInstances.push(...linkInstances);
       this.createBody();
+
+      this.saveConfig();
     });
   }
 
@@ -226,6 +238,8 @@ export class TableManagerService {
 
     this.parts.splice(part.index);
     this.parts[this.parts.length - 1].nextPart = null;
+
+    this.saveConfig();
   }
 
   private removeUninitializedColumns() {
@@ -264,6 +278,8 @@ export class TableManagerService {
     this.parts[0].sorting.descending = descending;
 
     this.parts[0].rows.sort((first, second) => TableManagerService.compareDocuments(first.documents[0], second.documents[0], attributeId, descending));
+
+    this.saveConfig();
   }
 
   private static compareDocuments(first: Document, second: Document, attributeId: string, descending: boolean): number {
@@ -300,11 +316,15 @@ export class TableManagerService {
   public collapseRow(row: TableRow) {
     const rowBelow = this.removeRows(row.nextLinkedRows);
     row.nextLinkedRows = this.getNextLinkedRows(row, false, rowBelow);
+
+    this.saveConfig();
   }
 
   public expandRow(row: TableRow) {
     const rowBelow = this.removeRows(row.nextLinkedRows);
     row.nextLinkedRows = this.getNextLinkedRows(row, true, rowBelow);
+
+    this.saveConfig();
   }
 
   public removeRow(row: TableRow) {
@@ -327,6 +347,8 @@ export class TableManagerService {
 
     const rows = row.part.rows;
     rows.splice(rows.indexOf(row), 1);
+
+    this.saveConfig();
   }
 
   private removeLastRow(row: TableRow) {
@@ -365,6 +387,8 @@ export class TableManagerService {
       }
     });
     // TODO remove empty rows when multiple linked
+
+    this.saveConfig();
   }
 
   private removeRows(rows: TableRow[]): TableRow {
@@ -412,6 +436,8 @@ export class TableManagerService {
     };
 
     part.shownAttributes.splice(index, 0, attribute);
+
+    this.saveConfig();
   }
 
   public addSubColumn(part: TablePart, parentAttribute: Attribute) {
@@ -434,6 +460,8 @@ export class TableManagerService {
 
     const index = attributes.length - attributes.reverse().findIndex(attr => attr.fullName.startsWith(parentAttribute.fullName));
     attributes.splice(index, 0, attribute);
+
+    this.saveConfig();
   }
 
   public hideColumn(part: TablePart, attribute: Attribute) {
@@ -447,6 +475,8 @@ export class TableManagerService {
     part.shownAttributes.splice(index, 1);
 
     part.hiddenAttributes.unshift(attribute);
+
+    this.saveConfig();
   }
 
   private filterLeafChildrenAttributes(all: Attribute[], parent: Attribute): Attribute[] {
@@ -460,6 +490,8 @@ export class TableManagerService {
     if (attribute.fullName) {
       AttributeHelper.removeAttributeFromArray(attribute, part.collection.attributes);
     }
+
+    this.saveConfig();
   }
 
   public addRow(rowAbove: TableRow): TableRow {
@@ -484,6 +516,8 @@ export class TableManagerService {
       });
     }
 
+    this.saveConfig();
+
     return row;
   }
 
@@ -497,6 +531,8 @@ export class TableManagerService {
 
     row.previousLinkedRow = previousLinkedRow;
     previousLinkedRow.nextLinkedRows.splice(row.rowOffset, 0, row);
+
+    this.saveConfig();
 
     return row;
   }
@@ -518,6 +554,8 @@ export class TableManagerService {
   public moveColumn(part: TablePart, previousIndex: number, nextIndex: number) {
     const attribute: Attribute = part.shownAttributes.splice(previousIndex, 1)[0];
     part.shownAttributes.splice(nextIndex, 0, attribute);
+
+    this.saveConfig();
   }
 
 }

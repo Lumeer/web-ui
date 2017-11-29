@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Query {
+export interface QueryModel {
 
   collectionCodes?: string[];
   filters?: string[];

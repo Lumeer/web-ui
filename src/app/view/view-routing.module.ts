@@ -17,24 +17,79 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {RouterModule, Routes} from '@angular/router';
-import {ViewComponent} from './view.component';
 import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {Perspective} from './perspectives/perspective';
+import {PostItPerspectiveComponent} from './perspectives/post-it/post-it-perspective.component';
+import {SearchAllComponent} from './perspectives/search/all/search-all.component';
+import {SearchCollectionsComponent} from './perspectives/search/collections/search-collections.component';
+import {SearchDocumentsComponent} from './perspectives/search/documents/search-documents.component';
+import {SearchLinksComponent} from './perspectives/search/links/search-links.component';
+import {SearchPerspectiveComponent} from './perspectives/search/search-perspective.component';
+import {SearchViewsComponent} from './perspectives/search/views/search-views.component';
+import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
 
-const searchRoutes: Routes = [
-  {
-    path: 'w/:organizationCode/:projectCode/view/:viewCode',
-    component: ViewComponent
-  },
+import {ViewComponent} from './view.component';
+import {ViewGuard} from './view.guard';
+import {ViewLoadingComponent} from './view-loading.component';
+
+const viewRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/view',
-    component: ViewComponent
+    component: ViewComponent,
+    children: [
+      {
+        path: Perspective.PostIt,
+        component: PostItPerspectiveComponent
+      },
+      {
+        path: Perspective.Search,
+        component: SearchPerspectiveComponent,
+        children: [
+          {
+            path: 'all',
+            component: SearchAllComponent
+          },
+          {
+            path: 'collections',
+            component: SearchCollectionsComponent
+          },
+          {
+            path: 'documents',
+            component: SearchDocumentsComponent
+          },
+          {
+            path: 'links',
+            component: SearchLinksComponent
+          },
+          {
+            path: 'views',
+            component: SearchViewsComponent
+          },
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'all'
+          }
+        ]
+      },
+      {
+        path: Perspective.Table,
+        component: TablePerspectiveComponent
+      },
+      {
+        path: '',
+        pathMatch: 'full',
+        canActivate: [ViewGuard],
+        component: ViewLoadingComponent
+      }
+    ]
   }
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forChild(searchRoutes)
+    RouterModule.forChild(viewRoutes)
   ],
   exports: [
     RouterModule

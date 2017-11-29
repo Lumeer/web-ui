@@ -20,14 +20,20 @@
 import {RouterReducerState} from '@ngrx/router-store';
 
 import {initialNavigationState, NavigationState} from './navigation/navigation.state';
+import {initialViewsState, ViewsState} from './views/views.state';
 
 export interface AppState {
 
   navigation: NavigationState;
   router: RouterReducerState;
+  views: ViewsState;
 
 }
 
-export const initialAppState = {
-  navigation: initialNavigationState
-};
+export function initialAppState(): AppState {
+  return {
+    navigation: initialNavigationState,
+    router: null,
+    views: initialViewsState
+  };
+}

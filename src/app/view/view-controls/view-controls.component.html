@@ -7,31 +7,33 @@
           id="perspectiveSelector"
           class="custom-select mx-3 d-block"
           (change)="onSelectPerspective(perspectiveSelector.value)">
-    <option *ngFor="let perspective of perspectives"
-            [value]="perspective.id"
-            [attr.selected]="perspective.id === view.perspective ? '' : null">
-      {{perspective.name}}
+    <option *ngFor="let perspective of perspectives()"
+            [value]="perspective"
+            [attr.selected]="perspective === view.perspective ? '' : null"
+            i18n="@@view.perspective">
+      {perspective, select, postit {Post-it} search {Search} table {Table}}
     </option>
   </select>
   <label for="viewName"
          class="col-form-label font-weight-bold">
     <span i18n="@@view.name">Name</span>:
   </label>
-  <input id="viewName"
+  <input #viewName
+         id="viewName"
          name="viewName"
-         [(ngModel)]="view.name"
+         [value]="view.name"
          class="form-control-lg border-0 font-italic flex-grow-2 no-outline"
          placeholder="Untitled view" i18n-placeholder="@@view.untitled"/>
   <button title="Save" i18n-title="@@view.button.save"
-     class="fa-lg view-button mx-1"
-     (click)="onSave()">
+          class="fa-lg view-button mx-1"
+          (click)="onSave()">
     <i class="fa fa-save fa-fw"></i>
     <i class="fal fa-save fa-fw"></i>
   </button>
   <button title="Copy" i18n-title="@@view.button.copy"
-     class="fa-lg view-button mx-1"
-     *ngIf="view"
-     (click)="onCopy()">
+          class="fa-lg view-button mx-1"
+          *ngIf="view"
+          (click)="onCopy()">
     <i class="fa fa-copy fa-fw"></i>
     <i class="fal fa-copy fa-fw"></i>
   </button>

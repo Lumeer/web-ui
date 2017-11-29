@@ -17,28 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createSelector } from '@ngrx/store';
+import {NavigationExtras} from '@angular/router';
+import {Action} from '@ngrx/store';
 
-import {QueryModel} from './query.model';
-import {Workspace} from './workspace.model';
-import {AppState} from '../app.state';
-
-export interface NavigationState {
-
-  query: QueryModel;
-  workspace: Workspace;
-  perspective?: string;
-  searchBoxHidden?: boolean;
-
+export enum RouterActionType {
+  GO = '[Router] Go',
+  BACK = '[Router] Back',
+  FORWARD = '[Router] Forward'
 }
 
-export const initialNavigationState: NavigationState = {
+export namespace RouterAction {
 
-  query: {},
-  workspace: {},
-  searchBoxHidden: false
+  export class Go implements Action {
+    public readonly type = RouterActionType.GO;
 
-};
+    constructor(public payload: {
+      path: any[];
+      query?: object;
+      extras?: NavigationExtras;
+    }) {
+    }
+  }
 
-export const selectNavigation = (state: AppState) => state.navigation;
-export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);
+  export class Back implements Action {
+    public readonly type = RouterActionType.BACK;
+  }
+
+  export class Forward implements Action {
+    public readonly type = RouterActionType.FORWARD;
+  }
+
+  export type All = Go | Back | Forward;
+}

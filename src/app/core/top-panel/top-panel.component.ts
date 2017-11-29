@@ -48,8 +48,12 @@ export class TopPanelComponent implements OnInit {
     });
   }
 
+  public isWorkspaceSet(): boolean {
+    return !!this.workspace && !!this.workspace.organizationCode && !!this.workspace.projectCode;
+  }
+
   public isSearchBoxShown(): boolean {
-    return this.workspace.organizationCode && this.workspace.projectCode && !this.searchBoxHidden;
+    return this.isWorkspaceSet() && !this.searchBoxHidden;
   }
 
   public removeHtmlComments(html: HTMLElement): string {

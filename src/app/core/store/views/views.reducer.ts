@@ -17,28 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createSelector } from '@ngrx/store';
+import {ViewsAction, ViewsActionType} from './views.action';
+import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
 
-import {QueryModel} from './query.model';
-import {Workspace} from './workspace.model';
-import {AppState} from '../app.state';
-
-export interface NavigationState {
-
-  query: QueryModel;
-  workspace: Workspace;
-  perspective?: string;
-  searchBoxHidden?: boolean;
-
+export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
+  switch (action.type) {
+    case ViewsActionType.GET_SUCCESS:
+      return viewsAdapter.addMany(action.payload.views, state);
+    case ViewsActionType.CREATE_SUCCESS:
+      return viewsAdapter.addOne(action.payload.view, state);
+    case ViewsActionType.UPDATE_SUCCESS:
+      return viewsAdapter.updateOne({id: action.payload.view.code, changes: action.payload.view}, state);
+    case ViewsActionType.SET_CONFIG:
+      return {...state, config: action.payload.config};
+    default:
+      return state;
+  }
 }
-
-export const initialNavigationState: NavigationState = {
-
-  query: {},
-  workspace: {},
-  searchBoxHidden: false
-
-};
-
-export const selectNavigation = (state: AppState) => state.navigation;
-export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);

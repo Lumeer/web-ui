@@ -17,28 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createSelector } from '@ngrx/store';
+import {perspectivesMap} from '../../../view/perspectives/perspective';
+import {View} from '../../dto/view';
+import {QueryConverter} from '../navigation/query.converter';
+import {ViewModel} from './view.model';
 
-import {QueryModel} from './query.model';
-import {Workspace} from './workspace.model';
-import {AppState} from '../app.state';
+export class ViewConverter {
 
-export interface NavigationState {
+  public static convertToModel(dto: View): ViewModel {
+    return {
+      code: dto.code,
+      name: dto.name,
+      query: QueryConverter.convertToModel(dto.query),
+      perspective: perspectivesMap[dto.perspective],
+      config: dto.config
+    };
+  }
 
-  query: QueryModel;
-  workspace: Workspace;
-  perspective?: string;
-  searchBoxHidden?: boolean;
+  public static convertToDto(model: ViewModel): View {
+    return {
+      code: model.code,
+      name: model.name,
+      query: QueryConverter.convertToDto(model.query),
+      perspective: model.perspective,
+      config: model.config
+    };
+  }
 
 }
-
-export const initialNavigationState: NavigationState = {
-
-  query: {},
-  workspace: {},
-  searchBoxHidden: false
-
-};
-
-export const selectNavigation = (state: AppState) => state.navigation;
-export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);

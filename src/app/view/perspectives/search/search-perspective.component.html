@@ -1,44 +1,39 @@
 <ul class="nav nav-tabs">
   <li role="presentation" class="nav-item">
-    <a [routerLink]="[viewPath()]"
-       [queryParams]="{query: stringQuery, perspective: 'search', searchTab: 'all'}"
+    <a [routerLink]="'all'"
+       [queryParams]="{query: stringifyQuery()}"
        routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact: true}"
        class="nav-link"
        i18n="@@search.tab.all">All</a>
   </li>
   <li role="presentation" class="nav-item">
-    <a [routerLink]="[viewPath()]"
-       [queryParams]="{query: stringQuery, perspective: 'search', searchTab: 'collections'}"
+    <a [routerLink]="'collections'"
+       [queryParams]="{query: stringifyQuery()}"
        routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact: true}"
        class="nav-link"
        i18n="@@search.tab.collections">Collections</a>
   </li>
   <li role="presentation" class="nav-item">
-    <a [routerLink]="[viewPath()]"
-       [queryParams]="{query: stringQuery, perspective: 'search', searchTab: 'documents'}"
+    <a [routerLink]="'documents'"
+       [queryParams]="{query: stringifyQuery()}"
        routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact: true}"
        class="nav-link"
        i18n="@@search.tab.documents">Documents</a>
   </li>
   <li role="presentation" class="nav-item">
-    <a [routerLink]="[viewPath()]"
-       [queryParams]="{query: stringQuery, perspective: 'search', searchTab: 'links'}"
+    <a [routerLink]="'links'"
+       [queryParams]="{query: stringifyQuery()}"
        routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact: true}"
        class="nav-link"
        i18n="@@search.tab.links">Links</a>
   </li>
   <li role="presentation" class="nav-item">
-    <a [routerLink]="[viewPath()]"
-       [queryParams]="{query: stringQuery, perspective: 'search', searchTab: 'views'}"
+    <a [routerLink]="'views'"
+       [queryParams]="{query: stringifyQuery()}"
        routerLinkActive="active"
-       [routerLinkActiveOptions]="{exact: true}"
        class="nav-link"
        i18n="@@search.tab.views">Views</a>
   </li>
 </ul>
 
-<ng-template search-results></ng-template>
+<router-outlet></router-outlet>

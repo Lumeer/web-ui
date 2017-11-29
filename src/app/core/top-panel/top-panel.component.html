@@ -11,7 +11,7 @@
 
     <div class="d-flex justify-content-end col order-lg-3">
       <div class="panel-item lead mr-2"
-           *ngIf="this.workspace.organizationCode && this.workspace.projectCode">
+           *ngIf="isWorkspaceSet()">
         <a [routerLink]="['/workspace']"
            title="Choose workspace">
         <span>

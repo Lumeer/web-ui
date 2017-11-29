@@ -17,28 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createSelector } from '@ngrx/store';
+import {QueryModel} from '../navigation/query.model';
+import {Perspective} from '../../../view/perspectives/perspective';
 
-import {QueryModel} from './query.model';
-import {Workspace} from './workspace.model';
-import {AppState} from '../app.state';
+export interface ViewModel {
 
-export interface NavigationState {
-
+  code?: string;
+  name: string;
+  perspective: Perspective;
   query: QueryModel;
-  workspace: Workspace;
-  perspective?: string;
-  searchBoxHidden?: boolean;
+  config: any;
 
 }
-
-export const initialNavigationState: NavigationState = {
-
-  query: {},
-  workspace: {},
-  searchBoxHidden: false
-
-};
-
-export const selectNavigation = (state: AppState) => state.navigation;
-export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);

@@ -17,12 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Type} from '@angular/core';
+import {Query} from '../../dto/query';
+import {QueryModel} from './query.model';
 
-export interface PerspectiveChoice {
+export class QueryConverter {
 
-  id: string;
-  name: string;
-  component: Type<any>; // TODO try to use generics (T extends PerspectiveComponent)
+  public static convertToModel(dto: Query): QueryModel {
+    return {
+      collectionCodes: dto.collectionCodes,
+      filters: dto.filters,
+      fulltext: dto.fulltext
+      // TODO convert other fields as well
+    };
+  }
+
+  public static convertToDto(model: QueryModel): Query {
+    return {
+      collectionCodes: model.collectionCodes,
+      filters: model.filters,
+      fulltext: model.fulltext
+      // TODO convert other fields as well
+    };
+  }
 
 }
