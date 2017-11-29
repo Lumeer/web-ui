@@ -1,6 +1,6 @@
 <div class="layout d-flex" #layout>
 
-  <add-document *ngIf="editable && query.collectionCodes.length < 2"
+  <add-document *ngIf="isAddButtonShown()"
                 class="layout-item"
                 [query]="query"
                 (newDocument)="createDocument($event)"></add-document>
