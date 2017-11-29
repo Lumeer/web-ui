@@ -23,7 +23,7 @@ import {UserService} from '../../../core/rest/user.service';
 import {User} from '../../../core/dto/user';
 import {KeyCode} from '../../../shared/key-code';
 import {HtmlModifier} from '../../../shared/utils/html-modifier';
-import {NotificationService} from '../../../notifications/notification.service';
+import {NotificationService} from '../../../core/notifications/notification.service';
 
 @Component({
   selector: 'share-dialog',

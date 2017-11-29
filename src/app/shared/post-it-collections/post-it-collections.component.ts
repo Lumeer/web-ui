@@ -31,7 +31,7 @@ import {PostItLayout} from '../utils/post-it-layout';
 import {PostItCollectionData} from './post-it-collection-data';
 import {QueryConverter} from '../utils/query-converter';
 import {HtmlModifier} from '../utils/html-modifier';
-import {NotificationService} from '../../notifications/notification.service';
+import {NotificationService} from '../../core/notifications/notification.service';
 import {finalize} from 'rxjs/operators';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {AppState} from '../../core/store/app.state';

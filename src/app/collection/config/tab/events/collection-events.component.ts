@@ -25,7 +25,7 @@ import {EventService} from '../../../../core/rest/event.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Event} from '../../../../core/dto/Event';
 import {CollectionSelectService} from '../../../service/collection-select.service';
-import {NotificationService} from '../../../../notifications/notification.service';
+import {NotificationService} from '../../../../core/notifications/notification.service';
 import {EventModel} from './model/EventModel';
 import {EventFireReason} from './model/event-fire-reason';
 import {finalize} from 'rxjs/operators';

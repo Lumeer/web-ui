@@ -22,7 +22,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {LinkType} from '../../../../core/dto/link-type';
 import {LinkedAttribute} from '../../../../core/dto/linked-attribute';
 import {Collection} from '../../../../core/dto/collection';
-import {NotificationService} from '../../../../notifications/notification.service';
+import {NotificationService} from '../../../../core/notifications/notification.service';
 import {LinkTypeService} from '../../../../core/rest/link-type.service';
 import * as Const from '../constraints';
 

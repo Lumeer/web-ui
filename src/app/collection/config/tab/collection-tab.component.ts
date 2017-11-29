@@ -23,7 +23,7 @@ import {Store} from '@ngrx/store';
 import {Collection} from '../../../core/dto/collection';
 import {CollectionService} from '../../../core/rest/collection.service';
 import {CollectionSelectService} from '../../service/collection-select.service';
-import {NotificationService} from '../../../notifications/notification.service';
+import {NotificationService} from '../../../core/notifications/notification.service';
 import {AppState} from '../../../core/store/app.state';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {selectWorkspace} from '../../../core/store/navigation/navigation.state';

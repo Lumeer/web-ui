@@ -37,7 +37,7 @@ import {LinkTypeService} from '../../../core/rest/link-type.service';
 import {AppState} from '../../../core/store/app.state';
 import {selectNavigation, selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {selectViewsDictionary, selectViewsState} from '../../../core/store/views/views.state';
-import {NotificationService} from '../../../notifications/notification.service';
+import {NotificationService} from '../../../core/notifications/notification.service';
 import {AttributeChangeEvent} from './event/attribute-change-event';
 import {DataChangeEvent} from './event/data-change-event';
 import {LinkInstanceEvent} from './event/link-instance-event';

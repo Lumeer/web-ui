@@ -26,7 +26,7 @@ import {Project} from '../../core/dto/project';
 import {ProjectService} from '../../core/rest/project.service';
 import {CollectionService} from '../../core/rest/collection.service';
 import {Collection} from '../../core/dto/collection';
-import {NotificationService} from '../../notifications/notification.service';
+import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 

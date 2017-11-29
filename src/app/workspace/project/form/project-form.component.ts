@@ -23,7 +23,7 @@ import {Store} from '@ngrx/store';
 
 import {Project} from '../../../core/dto/project';
 import {ProjectService} from '../../../core/rest/project.service';
-import {NotificationService} from '../../../notifications/notification.service';
+import {NotificationService} from '../../../core/notifications/notification.service';
 import {AppState} from '../../../core/store/app.state';
 import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../core/store/navigation/workspace.model';

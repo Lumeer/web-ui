@@ -28,7 +28,7 @@ import {LinkTypeService} from '../../../../core/rest/link-type.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {CollectionSelectService} from '../../../service/collection-select.service';
 import {LinkTypeModel} from './LinkTypeModel';
-import {NotificationService} from '../../../../notifications/notification.service';
+import {NotificationService} from '../../../../core/notifications/notification.service';
 import {finalize, map, switchMap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 
