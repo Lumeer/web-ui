@@ -20,7 +20,7 @@
 import {ErrorHandler, Injectable} from '@angular/core';
 
 import {LumeerError} from './lumeer.error';
-import {NotificationService} from '../../notifications/notification.service';
+import {NotificationService} from '../notifications/notification.service';
 
 /**
  * This class provides handling unexpecting errors

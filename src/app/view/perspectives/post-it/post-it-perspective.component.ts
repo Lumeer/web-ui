@@ -29,7 +29,7 @@ import {Query} from '../../../core/dto/query';
 import {CollectionService} from '../../../core/rest/collection.service';
 import {AppState} from '../../../core/store/app.state';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
-import {NotificationService} from '../../../notifications/notification.service';
+import {NotificationService} from '../../../core/notifications/notification.service';
 import {PostItLayout} from '../../../shared/utils/post-it-layout';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
 import {Direction} from './document-data/direction';

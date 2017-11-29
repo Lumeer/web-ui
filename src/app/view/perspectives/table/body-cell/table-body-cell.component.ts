@@ -26,7 +26,7 @@ import {KeyCode} from '../../../../shared/key-code';
 import {HtmlModifier} from '../../../../shared/utils/html-modifier';
 import {Attribute, Document} from '../../../../core/dto';
 import {TableManagerService} from '../util/table-manager.service';
-import {NotificationService} from '../../../../notifications/notification.service';
+import {NotificationService} from '../../../../core/notifications/notification.service';
 import {KeyCodeHelper} from '../../../../shared/utils/key-code.helper';
 
 @Component({

@@ -24,7 +24,6 @@ import {EffectsModule} from '@ngrx/effects';
 import {routerReducer} from '@ngrx/router-store';
 import {ActionReducerMap, StoreModule} from '@ngrx/store';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import {ContextMenuModule} from 'ngx-contextmenu';
 import {environment} from '../environments/environment';
 import {AppRoutingModule} from './app-routing.module';
@@ -33,13 +32,12 @@ import {AppComponent} from './app.component';
 import {CollectionModule} from './collection/collection.module';
 import {CoreModule} from './core/core.module';
 import {AppState, initialAppState} from './core/store/app.state';
-import {NotificationsEffects} from './core/store/notifications/notifications.effects';
 import {navigationReducer} from './core/store/navigation/navigation.reducer';
+import {NotificationsEffects} from './core/store/notifications/notifications.effects';
 import {RouterEffects} from './core/store/router/router.effects';
 import {ViewsEffects} from './core/store/views/views.effects';
 import {viewsReducer} from './core/store/views/views.reducer';
 import {DocumentsModule} from './documents/documents.module';
-import {NotificationService} from './notifications/notification.service';
 import {ViewModule} from './view/view.module';
 import {WorkspaceModule} from './workspace/workspace.module';
 
@@ -66,16 +64,10 @@ const effects = [
     DocumentsModule,
     ViewModule,
     WorkspaceModule,
-    SnotifyModule,
     StoreModule.forRoot(reducers, {initialState: initialAppState}),
     EffectsModule.forRoot(effects),
     !environment.production ? StoreDevtoolsModule.instrument({maxAge: 10}) : [],
     AppRoutingModule // needs to stay last
-  ],
-  providers: [
-    {provide: 'SnotifyToastConfig', useValue: ToastDefaults},
-    SnotifyService,
-    NotificationService
   ],
   declarations: [
     AppComponent

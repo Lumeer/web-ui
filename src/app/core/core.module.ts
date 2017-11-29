@@ -17,42 +17,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
+import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
+import {SnotifyComponent, SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
+import {SharedModule} from '../shared/shared.module';
+import {LumeerErrorHandler} from './error/lumeer-error.handler';
+import {HomeComponent} from './home.component';
+import {KEYCLOAK_HTTP_PROVIDER} from './keycloak/keycloak-http.service';
+import {KeycloakService} from './keycloak/keycloak.service';
+import {NotificationService} from './notifications/notification.service';
+import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
+import {CollectionService} from './rest/collection.service';
+import {DocumentService} from './rest/document.service';
+import {EventService} from './rest/event.service';
+import {GroupService} from './rest/group.service';
+import {HomePageService} from './rest/home-page.service';
+import {ImportService} from './rest/import.service';
+import {LinkInstanceService} from './rest/link-instance.service';
+import {LinkTypeService} from './rest/link-type.service';
+import {OrganizationService} from './rest/organization.service';
+import {ProjectService} from './rest/project.service';
+import {SearchService} from './rest/search.service';
+import {UserService} from './rest/user.service';
+import {ViewService} from './rest/view.service';
+import {SearchHomeComponent} from './search-home/search-home.component';
 
 import {TopPanelComponent} from './top-panel/top-panel.component';
 import {UserSettingsService} from './user-settings.service';
-import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
-import {ProjectService} from './rest/project.service';
-import {OrganizationService} from './rest/organization.service';
-import {CollectionService} from './rest/collection.service';
-import {DocumentService} from './rest/document.service';
-import {UserService} from './rest/user.service';
-import {GroupService} from './rest/group.service';
-import {HomeComponent} from './home.component';
-import {SharedModule} from '../shared/shared.module';
-import {SearchService} from './rest/search.service';
-import {LumeerErrorHandler} from './error/lumeer-error.handler';
-import {ImportService} from './rest/import.service';
-import {KEYCLOAK_HTTP_PROVIDER} from './keycloak/keycloak-http.service';
-import {KeycloakService} from './keycloak/keycloak.service';
-import {ViewService} from './rest/view.service';
-import {LinkTypeService} from './rest/link-type.service';
-import {SearchHomeComponent} from './search-home/search-home.component';
-import {LinkInstanceService} from './rest/link-instance.service';
-import {EventService} from './rest/event.service';
-import {HomePageService} from './rest/home-page.service';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    SharedModule,
     HttpClientModule,
-    RouterModule
+    RouterModule,
+    SharedModule,
+    SnotifyModule
   ],
   declarations: [
     TopPanelComponent,
@@ -77,13 +80,17 @@ import {HomePageService} from './rest/home-page.service';
     EventService,
     HomePageService,
     KEYCLOAK_HTTP_PROVIDER,
-    {provide: ErrorHandler, useClass: LumeerErrorHandler}
+    {provide: ErrorHandler, useClass: LumeerErrorHandler},
+    {provide: 'SnotifyToastConfig', useValue: ToastDefaults},
+    SnotifyService,
+    NotificationService
   ],
   exports: [
     TopPanelComponent,
     HomeComponent,
     PageNotFoundComponent,
-    SearchHomeComponent
+    SearchHomeComponent,
+    SnotifyComponent
   ]
 })
 export class CoreModule {

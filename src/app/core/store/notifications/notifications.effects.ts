@@ -22,7 +22,7 @@ import {Actions, Effect} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {tap} from 'rxjs/operators';
-import {NotificationService} from '../../../notifications/notification.service';
+import {NotificationService} from '../../notifications/notification.service';
 import {NotificationsAction, NotificationsActionType} from './notifications.action';
 
 @Injectable()

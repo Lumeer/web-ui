@@ -23,7 +23,7 @@ import {ConfiguredAttribute} from './configured-attribute';
 import {ConstraintSuggestion} from './constraint-suggestion';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Collection} from '../../../../core/dto/collection';
-import {NotificationService} from 'app/notifications/notification.service';
+import {NotificationService} from 'app/core/notifications/notification.service';
 import {isNullOrUndefined} from 'util';
 import * as Const from '../constraints';
 

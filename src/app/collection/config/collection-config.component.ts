@@ -28,7 +28,7 @@ import {Permission} from '../../core/dto/permission';
 import {QueryConverter} from '../../shared/utils/query-converter';
 import {Query} from '../../core/dto/query';
 import {CollectionSelectService} from '../service/collection-select.service';
-import {NotificationService} from '../../notifications/notification.service';
+import {NotificationService} from '../../core/notifications/notification.service';
 import {Subscription} from 'rxjs/Subscription';
 import {filter, map, switchMap, tap} from 'rxjs/operators';
 import {Workspace} from '../../core/store/navigation/workspace.model';

@@ -29,7 +29,7 @@ import {LinkHelper} from '../../../../shared/utils/link-helper';
 import {AttributeHelper} from '../../../../shared/utils/attribute-helper';
 import {TableLinkEvent} from '../event/table-link-event';
 import {TableManagerService} from '../util/table-manager.service';
-import {NotificationService} from '../../../../notifications/notification.service';
+import {NotificationService} from '../../../../core/notifications/notification.service';
 import {KeyCodeHelper} from '../../../../shared/utils/key-code.helper';
 
 @Component({
