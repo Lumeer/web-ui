@@ -26,7 +26,7 @@ import {SearchService} from '../../../../core/rest/search.service';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {Subscription} from 'rxjs/Subscription';
 import {map} from 'rxjs/operators';
-import {QueryConverter} from '../../../../shared/utils/query-converter';
+import {DeprecatedQueryConverter} from '../../../../shared/utils/query-converter';
 
 @Component({
   templateUrl: './search-all.component.html'
@@ -46,7 +46,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.routerSubscription = this.store.select(selectNavigation).pipe(
       map(navigation => navigation.query),
-      map(query => QueryConverter.removeLinksFromQuery(query))
+      map(query => DeprecatedQueryConverter.removeLinksFromQuery(query))
     ).subscribe(query => {
       this.loadCollections(query);
       this.loadDocuments(query);

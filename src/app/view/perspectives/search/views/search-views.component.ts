@@ -25,7 +25,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {map, switchMap} from 'rxjs/operators';
 import {SearchService} from '../../../../core/rest/search.service';
 import {AppState} from '../../../../core/store/app.state';
-import {QueryConverter} from '../../../../shared/utils/query-converter';
+import {DeprecatedQueryConverter} from '../../../../shared/utils/query-converter';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 
 @Component({
@@ -44,7 +44,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.routerSubscription = this.store.select(selectNavigation).pipe(
       map(navigation => navigation.query),
-      map(query => QueryConverter.removeLinksFromQuery(query)),
+      map(query => DeprecatedQueryConverter.removeLinksFromQuery(query)),
       switchMap(query => this.searchService.searchViews(query)),
     ).subscribe(views => this.views = views);
   }

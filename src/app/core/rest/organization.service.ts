@@ -17,16 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
-
-import {Organization} from '../dto/organization';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {PermissionService} from './permission.service';
+import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {catchError, map} from 'rxjs/operators';
+import {Organization} from '../dto';
 import {FetchFailedError} from '../error/fetch-failed.error';
 import {NetworkError} from '../error/network.error';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {catchError} from 'rxjs/operators';
+import {PermissionService} from './permission.service';
 
 @Injectable()
 export class OrganizationService extends PermissionService {
@@ -45,14 +44,18 @@ export class OrganizationService extends PermissionService {
     return this.httpClient.delete(this.apiPrefix(code), {observe: 'response', responseType: 'text'});
   }
 
-  public createOrganization(organization: Organization): Observable<HttpResponse<any>> {
-    return this.httpClient.post(this.apiPrefix(), organization, {observe: 'response', responseType: 'text'});
+  public createOrganization(organization: Organization): Observable<Organization> {
+    return this.httpClient.post(this.apiPrefix(), organization, {observe: 'response', responseType: 'text'}).pipe(
+      map(() => organization) // TODO return fresh instance from the server
+    );
   }
 
-  public editOrganization(code: string, organization: Organization): Observable<HttpResponse<any>> {
+  public editOrganization(code: string, organization: Organization): Observable<Organization> {
     return this.httpClient.put(
       this.apiPrefix(code), organization,
       {observe: 'response', responseType: 'text'}
+    ).pipe(
+      map(() => organization) // TODO return fresh instance from the server
     );
   }
 

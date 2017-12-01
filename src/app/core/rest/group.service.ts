@@ -29,7 +29,7 @@ const GROUPS_KEY = 'groups';
 @Injectable()
 export class GroupService {
 
-  public createGroup(group: Group): Observable<string> {
+  public createGroup(group: Group): Observable<Group> {
     const groups = LocalStorage.get(GROUPS_KEY) || {};
 
     group.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
@@ -37,7 +37,7 @@ export class GroupService {
 
     LocalStorage.set(GROUPS_KEY, groups);
 
-    return Observable.of(group.id);
+    return Observable.of(group);
   }
 
   public updateGroup(id: string, group: Group): Observable<Group> {

@@ -19,25 +19,13 @@
 
 import {Query} from '../../core/dto/query';
 
-export class QueryConverter {
-
-  public static toString(query: Query): string {
-    return JSON.stringify(query ? query : {});
-  }
-
-  public static fromString(query: string): Query {
-    const queryObject = query ? JSON.parse(query) : {};
-    !queryObject.collectionCodes && (queryObject.collectionCodes = []);
-    !queryObject.filters && (queryObject.filters = []);
-    !queryObject.linkIds && (queryObject.linkIds = []);
-
-    return queryObject;
-  }
+export class DeprecatedQueryConverter {
 
   // TODO remove this method when links will be implemented in backend
   public static removeLinksFromQuery(query: Query): Query {
-    let queryCopy = Object.assign({}, query);
-    delete queryCopy.linkIds;
+    let queryCopy = {...query};
+    delete queryCopy.linkTypeIds;
+    delete queryCopy.documentIds;
     return queryCopy;
   }
 

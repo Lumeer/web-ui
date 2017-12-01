@@ -21,6 +21,7 @@ import {perspectivesMap} from '../../../view/perspectives/perspective';
 import {View} from '../../dto/view';
 import {QueryConverter} from '../navigation/query.converter';
 import {ViewModel} from './view.model';
+import {PermissionsConverter} from '../permissions/permissions.converter';
 
 export class ViewConverter {
 
@@ -28,9 +29,10 @@ export class ViewConverter {
     return {
       code: dto.code,
       name: dto.name,
-      query: QueryConverter.convertToModel(dto.query),
+      query: QueryConverter.fromDto(dto.query),
       perspective: perspectivesMap[dto.perspective],
-      config: dto.config
+      config: dto.config,
+      permissions: PermissionsConverter.fromDto(dto.permissions)
     };
   }
 
@@ -38,7 +40,7 @@ export class ViewConverter {
     return {
       code: model.code,
       name: model.name,
-      query: QueryConverter.convertToDto(model.query),
+      query: QueryConverter.toDto(model.query),
       perspective: model.perspective,
       config: model.config
     };

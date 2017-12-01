@@ -19,7 +19,6 @@
 
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {HttpResponse} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 
 import {Project} from '../../core/dto/project';
@@ -107,7 +106,7 @@ export class ProjectSettingsComponent implements OnInit {
       return;
     }
     this.projectService.editProject(this.organizationCode, this.originalProjectCode, this.project).subscribe(
-      (response: HttpResponse<Object>) => {
+      (response) => {
         this.notificationService.success('Project\'s code was successfully updated');
         this.originalProjectCode = this.project.code;
         this.projectCode = this.project.code;

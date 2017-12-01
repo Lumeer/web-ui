@@ -339,7 +339,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public removeDocument(postIt: DocumentData): void {
     if (postIt.initialized) {
-      this.documentService.removeDocument(postIt.document).subscribe(
+      this.documentService.removeDocument(postIt.document.collectionCode, postIt.document.id).subscribe(
         response => null,
         error => this.notificationService.error('Failed removing document')
       );

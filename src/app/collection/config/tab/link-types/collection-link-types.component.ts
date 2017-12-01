@@ -76,7 +76,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   private initializeLinkTypes(): void {
     this.linkTypes = [];
-    this.linkTypeService.getLinkTypesByCollections(this.collection.code).pipe(
+    this.linkTypeService.getLinkTypes({collectionCodes: [this.collection.code]}).pipe(
       map(linkTypes => linkTypes.filter(linkType => linkType.collectionCodes[0] === this.collection.code))
     ).subscribe(
       linkTypes => this.linkTypes = linkTypes.map(linkType => new LinkTypeModel(linkType)),
@@ -123,9 +123,9 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
         finalize(() => linkTypeModel.initializing = false)
       )
       .subscribe(
-        id => {
+        linkType => {
           linkTypeModel.initialized = true;
-          linkTypeModel.data.id = id;
+          linkTypeModel.data.id = linkType.id;
         },
         error => {
           this.notificationService.error('Failed creating link type');

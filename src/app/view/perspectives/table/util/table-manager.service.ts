@@ -56,8 +56,8 @@ export class TableManagerService {
     return Observable.combineLatest(
       this.searchService.searchCollections({}), // TODO get collections on link suggestions
       this.searchService.searchDocuments({collectionCodes: collectionCodes}),
-      this.linkTypeService.getLinkTypesByCollections(...collectionCodes),
-      this.linkInstanceService.getLinkInstancesByTypes(...linkTypeIds)
+      this.linkTypeService.getLinkTypes({collectionCodes: collectionCodes}),
+      this.linkInstanceService.getLinkInstances({linkTypeIds: linkTypeIds})
     ).pipe(
       map(([collections, documents, linkTypes, linkInstances]) => {
         this.collections = collections;
@@ -220,7 +220,7 @@ export class TableManagerService {
 
     Observable.combineLatest(
       this.searchService.searchDocuments({collectionCodes: [part.collection.code]}),
-      this.linkInstanceService.getLinkInstancesByTypes(linkType.id)
+      this.linkInstanceService.getLinkInstances({linkTypeIds: [linkType.id]})
     ).subscribe(([documents, linkInstances]) => {
       this.documents.push(...documents);
       this.linkInstances.push(...linkInstances);

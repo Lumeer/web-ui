@@ -25,7 +25,7 @@ import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {ViewModel} from '../../core/store/views/view.model';
-import {QueryConverter} from '../../shared/utils/query-converter';
+import {QueryConverter} from '../../core/store/navigation/query.converter';
 
 import {Perspective} from '../perspectives/perspective';
 

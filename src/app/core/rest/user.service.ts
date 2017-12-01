@@ -18,18 +18,18 @@
  */
 
 import {Injectable} from '@angular/core';
+import 'rxjs/add/observable/of';
 
 import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import {User} from '../dto/user';
 import {LocalStorage} from '../../shared/utils/local-storage';
+import {User} from '../dto';
 
 const USERS_KEY = 'users';
 
 @Injectable()
 export class UserService {
 
-  public createUser(user: User): Observable<string> {
+  public createUser(user: User): Observable<User> {
     const users = LocalStorage.get(USERS_KEY) || {};
 
     user.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
@@ -37,7 +37,7 @@ export class UserService {
 
     LocalStorage.set(USERS_KEY, users);
 
-    return Observable.of(user.id);
+    return Observable.of(user);
   }
 
   public updateUser(id: string, user: User): Observable<User> {
@@ -61,16 +61,23 @@ export class UserService {
     return Observable.empty();
   }
 
-  public getUserById(id: string): Observable<User[]> {
-    const users = LocalStorage.get(USERS_KEY) || {};
+  public getUserById(id: string): Observable<User> {
+    const usersMap = LocalStorage.get(USERS_KEY) || {};
 
-    return Observable.of(users[id]);
+    return Observable.of(usersMap[id]);
+  }
+
+  public getUsersByGroup(groupId: string): Observable<User[]> {
+    const usersMap: { [id: string]: User } = LocalStorage.get(USERS_KEY) || {};
+    const users = Object.values(usersMap).filter(user => user.groups.includes(groupId));
+
+    return Observable.of(users);
   }
 
   public getUsers(): Observable<User[]> {
-    const users: { [id: string]: User } = LocalStorage.get(USERS_KEY) || {};
+    const usersMap: { [id: string]: User } = LocalStorage.get(USERS_KEY) || {};
 
-    return Observable.of(Object.values(users));
+    return Observable.of(Object.values(usersMap));
   }
 
 }

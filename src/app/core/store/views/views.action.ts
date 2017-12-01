@@ -21,16 +21,21 @@ import {Action} from '@ngrx/store';
 import {ViewModel} from './view.model';
 
 export enum ViewsActionType {
+
   GET_BY_CODE = '[Views] Get By Code',
-  GET_SUCCESS = '[Views] Get Success',
-  GET_FAILURE = '[Views] Get Failure',
+  GET_SUCCESS = '[Views] Get :: Success',
+  GET_FAILURE = '[Views] Get :: Failure',
+
   CREATE = '[Views] Create',
-  CREATE_SUCCESS = '[Views] Create Success',
-  CREATE_FAILURE = '[Views] Create Failure',
+  CREATE_SUCCESS = '[Views] Create :: Success',
+  CREATE_FAILURE = '[Views] Create :: Failure',
+
   UPDATE = '[Views] Update',
-  UPDATE_SUCCESS = '[Views] Update Success',
-  UPDATE_FAILURE = '[Views] Update Failure',
+  UPDATE_SUCCESS = '[Views] Update :: Success',
+  UPDATE_FAILURE = '[Views] Update :: Failure',
+
   SET_CONFIG = '[Views] Set Config'
+
 }
 
 export namespace ViewsAction {
@@ -51,6 +56,9 @@ export namespace ViewsAction {
 
   export class GetFailure implements Action {
     public readonly type = ViewsActionType.GET_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export class Create implements Action {
@@ -69,6 +77,9 @@ export namespace ViewsAction {
 
   export class CreateFailure implements Action {
     public readonly type = ViewsActionType.CREATE_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export class Update implements Action {
@@ -87,6 +98,9 @@ export namespace ViewsAction {
 
   export class UpdateFailure implements Action {
     public readonly type = ViewsActionType.UPDATE_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export class SetConfig implements Action {

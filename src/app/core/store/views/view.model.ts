@@ -17,15 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryModel} from '../navigation/query.model';
 import {Perspective} from '../../../view/perspectives/perspective';
+import {QueryModel} from '../navigation/query.model';
+import {PermissionsModel} from '../permissions/permissions.model';
 
 export interface ViewModel {
 
   code?: string;
   name: string;
+
   perspective: Perspective;
   query: QueryModel;
   config: any;
+
+  permissions?: PermissionsModel;
 
 }

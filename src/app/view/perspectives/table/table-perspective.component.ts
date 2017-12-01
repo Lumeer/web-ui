@@ -30,7 +30,6 @@ import {LinkInstance} from '../../../core/dto/link-instance';
 import {LinkType} from '../../../core/dto/link-type';
 import {Query} from '../../../core/dto/query';
 import {CollectionService} from '../../../core/rest/collection.service';
-
 import {DocumentService} from '../../../core/rest/document.service';
 import {LinkInstanceService} from '../../../core/rest/link-instance.service';
 import {LinkTypeService} from '../../../core/rest/link-type.service';
@@ -45,19 +44,23 @@ import {TableLinkEvent} from './event/table-link-event';
 import {TableConfig} from './model/table-config';
 import {TablePart} from './model/table-part';
 import {TableManagerService} from './util/table-manager.service';
+import {PerspectiveComponent} from '../perspective.component';
 
 @Component({
   selector: 'table-perspective',
   templateUrl: './table-perspective.component.html',
   styleUrls: ['./table-perspective.component.scss']
 })
-export class TablePerspectiveComponent implements OnInit, OnDestroy {
+export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, OnDestroy {
 
   @Input()
   public query: Query;
 
   @Input()
   public config: { table?: TableConfig } = {};
+
+  @Input()
+  public embedded: boolean;
 
   @Input()
   public editable: boolean;
@@ -184,13 +187,13 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private updateDocument(doc: Document) {
-    this.documentService.patchDocument(doc).subscribe(() => {
+    this.documentService.patchDocumentData(doc).subscribe(() => {
       this.notificationService.success('Record has been updated!');
     });
   }
 
   public onDeleteDocument(doc: Document) {
-    this.documentService.removeDocument(doc).subscribe(() => {
+    this.documentService.removeDocument(doc.collectionCode, doc.id).subscribe(() => {
       const index = this.tableManagerService.documents.indexOf(doc);
       this.tableManagerService.documents.splice(index, 1);
       this.notificationService.success('Record has been deleted!');
@@ -251,7 +254,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
       collectionCodes: [lastCollection.code, collection.code]
     };
 
-    this.linkTypeService.createLinkType(linkType);
+    this.linkTypeService.createLinkType(linkType); // TODO not subscribed
     this.tableManagerService.linkTypes.push(linkType);
 
     return linkType;
@@ -274,8 +277,8 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
       data: {}
     };
 
-    this.linkInstanceService.createLinkInstance(linkInstance).subscribe((id: string) => {
-      linkInstance.id = id;
+    this.linkInstanceService.createLinkInstance(linkInstance).subscribe((instance: LinkInstance) => {
+      linkInstance.id = instance.id;
       this.tableManagerService.linkInstances.push(linkInstance);
       this.notificationService.success('Link has been created!');
     });

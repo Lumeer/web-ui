@@ -28,7 +28,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import {map, switchMap} from 'rxjs/operators';
 import {Collection} from '../../../core/dto/collection';
-import {QueryConverter} from '../../utils/query-converter';
+import {QueryConverter} from '../../../core/store/navigation/query.converter';
 import {SearchService} from '../../../core/rest/search.service';
 import {LinkQueryItem} from './link-query-item';
 import {LinkTypeService} from '../../../core/rest/link-type.service';
@@ -45,7 +45,7 @@ export class QueryItemsConverter {
     const query: Query = {
       collectionCodes: [],
       filters: [],
-      linkIds: []
+      linkTypeIds: []
     };
 
     queryItems.forEach(queryItem => {
@@ -56,7 +56,7 @@ export class QueryItemsConverter {
       } else if (queryItem instanceof FulltextQueryItem) {
         query.fulltext = queryItem.value;
       } else if (queryItem instanceof LinkQueryItem) {
-        query.linkIds.push(queryItem.value);
+        query.linkTypeIds.push(queryItem.value);
       }
     });
 
@@ -74,8 +74,8 @@ export class QueryItemsConverter {
     let collectionCodes = query.filters.map(filter => filter.split(':')[0]);
     collectionCodes = collectionCodes.concat(query.collectionCodes);
 
-    if (query.linkIds && query.linkIds.length > 0) {
-      return this.linkTypeService.getLinkTypesByIds(...query.linkIds).pipe(
+    if (query.linkTypeIds && query.linkTypeIds.length > 0) {
+      return this.linkTypeService.getLinkTypes({linkTypeIds: query.linkTypeIds}).pipe(
         map((linkTypes: LinkType[]) => linkTypes.map(linkType => linkType.collectionCodes)),
         map((collectionCodePairs: [string, string][]) => [].concat.apply([], collectionCodePairs)),
         map((codes: string[]) => codes.filter(code => !collectionCodes.includes(code))),
@@ -120,7 +120,7 @@ export class QueryItemsConverter {
   }
 
   private createLinkQueryItems(collectionsMap: { [key: string]: Collection }, query: Query): Observable<QueryItem[]> {
-    return this.linkTypeService.getLinkTypesByIds(...query.linkIds).pipe(
+    return this.linkTypeService.getLinkTypes({linkTypeIds: query.linkTypeIds}).pipe(
       map(linkTypes => linkTypes.map(linkType => {
           const coll1 = collectionsMap[linkType.collectionCodes[0]];
           const coll2 = collectionsMap[linkType.collectionCodes[1]];
