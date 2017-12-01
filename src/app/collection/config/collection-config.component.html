@@ -37,8 +37,8 @@
          class="count"
          title="Number of documents in this collection"
          [style.color]="collection.color"
-         [routerLink]="[workspacePath(), 'view']"
-         [queryParams]="{ perspective: 'postit', query: documentsQuery(collection.code) }">
+         [routerLink]="[workspacePath(), 'view', 'postit']"
+         [queryParams]="{ query: documentsQuery(collection.code) }">
         <span>{{ collection.documentsCount }}</span>
         <i class="far fa-file" aria-hidden="true"></i>
       </a>
