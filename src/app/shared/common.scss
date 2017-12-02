@@ -29,6 +29,19 @@ ul {
   list-style-type: none;
 }
 
+.edit-border {
+  background: transparent;
+  border: 1px solid transparent !important;
+
+  border-radius: $border-radius-small;
+  &:hover {
+    border: 1px solid #bfbfbf !important;
+  }
+  &:focus {
+    border: 1px solid $primary !important;
+  }
+}
+
 input {
   background: transparent;
 }
@@ -36,6 +49,10 @@ input {
 // notifications
 .snotifyToast__title, .snotifyToast__body, .snotifyToast__buttons button {
   color: $primary !important;
+}
+
+.snotify-confirm .snotifyToast__title {
+  color: $danger !important;
 }
 
 .snotifyToast {
