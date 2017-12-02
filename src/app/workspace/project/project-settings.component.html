@@ -14,7 +14,7 @@
                        (selectedChange)="updateProject()"></icon-picker>
         </div>
 
-        <input class="color-class name" [(ngModel)]="project.name" (blur)="name.valid && updateProjectName()"
+        <input class="color-class name edit-border" [(ngModel)]="project.name" (blur)="name.valid && updateProjectName()"
                name="name"
                [style.color]="project.color" i18n-title="@@header.project.name" title="Edit name of the project"
                #name="ngModel" required minlength="3" maxlength="24">
@@ -27,14 +27,14 @@
           <a class="count" i18n-title="@@collections.count" title="Number of collections in this project"
              [style.color]="project.color" [routerLink]="[workspacePath(),'collections']">
             <span>{{ collectionsCount }}</span>
-            <i class="far fa-file" aria-hidden="true"></i>
+            <i class="far fa-table" aria-hidden="true"></i>
           </a>
         </div>
       </div>
 
       <div class="d-flex flex-row justify-content-start">
 
-        <input class="color-class code" [(ngModel)]="project.code"
+        <input class="color-class code edit-border" [(ngModel)]="project.code"
                name="code"
                (blur)=" code.valid && updateProjectCode()"
                [style.color]="project.color" i18n-title="@@header.project.code" title="Edit code of the project"

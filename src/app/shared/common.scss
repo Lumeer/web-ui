@@ -29,6 +29,19 @@ ul {
   list-style-type: none;
 }
 
+.edit-border {
+  background: transparent;
+  border: 1px solid transparent !important;
+
+  border-radius: $border-radius-small;
+  &:hover {
+    border: 1px solid #bfbfbf !important;
+  }
+  &:focus {
+    border: 1px solid $primary !important;
+  }
+}
+
 input {
   background: transparent;
 }

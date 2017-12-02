@@ -17,19 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-
+import {
+  Component,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {DocumentService} from 'app/core/rest/document.service';
 import {SearchService} from 'app/core/rest/search.service';
 import {Subscription} from 'rxjs';
-import {finalize} from 'rxjs/operators';
-import {Collection} from '../../../core/dto/collection';
-import {Document} from '../../../core/dto/document';
-import {Query} from '../../../core/dto/query';
-import {NotificationService} from '../../../core/notifications/notification.service';
-import {CollectionService} from '../../../core/rest/collection.service';
+import {Collection, Document, Query} from '../../../core/dto';
+import {CollectionService} from '../../../core/rest';
 import {AppState} from '../../../core/store/app.state';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 import {PostItLayout} from '../../../shared/utils/post-it-layout';
@@ -37,11 +42,7 @@ import {AttributePropertySelection} from './document-data/attribute-property-sel
 import {Direction} from './document-data/direction';
 import {DocumentData} from './document-data/document-data';
 import {PostItDocumentComponent} from './document/post-it-document.component';
-import {Permission} from 'app/core/dto/permission';
-import {Role} from '../../../shared/permissions/role';
-import {NotificationService} from '../../../notifications/notification.service';
-import {PerspectiveComponent} from '../perspective.component';
-import {isNullOrUndefined} from 'util';
+import {NotificationService} from '../../../core/notifications/notification.service';
 import {finalize} from 'rxjs/operators';
 
 @Component({

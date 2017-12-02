@@ -14,7 +14,7 @@
                        (selectedChange)="updateOrganization()"></icon-picker>
         </div>
 
-        <input class="color-class name" [(ngModel)]="organization.name" (blur)="name.valid && updateOrganizationName()"
+        <input class="color-class name edit-border" [(ngModel)]="organization.name" (blur)="name.valid && updateOrganizationName()"
                name="name"
                [style.color]="organization.color" i18n-title="@@header.organization.name"
                title="Edit name of the organization"
@@ -25,17 +25,17 @@
         </small>
 
         <div class="float-right document-count color-class ml-auto">
-          <a i18n-title="@@organization.projects.count" class="count" title="Number of projects in this organization"
-             [style.color]="organization.color" [routerLink]="['/workspace']">
+          <span i18n-title="@@organization.projects.count" class="count" title="Number of projects in this organization"
+             [style.color]="organization.color">
             <span>{{ projectsCount }}</span>
-            <i class="far fa-file" aria-hidden="true"></i>
-          </a>
+            <i class="far fa-edit" aria-hidden="true"></i>
+          </span>
 
         </div>
       </div>
 
       <div class="d-flex flex-row justify-content-start">
-        <input class="color-class code" [(ngModel)]="organization.code"
+        <input class="color-class code edit-border" [(ngModel)]="organization.code"
                name="code"
                (blur)=" code.valid && updateOrganizationCode()"
                [style.color]="organization.color" i18n-title="@@header.organization.code"
