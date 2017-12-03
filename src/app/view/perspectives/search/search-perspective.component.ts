@@ -23,7 +23,7 @@ import {AppState} from '../../../core/store/app.state';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {QueryConverter} from '../../../shared/utils/query-converter';
+import {QueryConverter} from '../../../core/store/navigation/query.converter';
 
 @Component({
   templateUrl: './search-perspective.component.html'
@@ -49,7 +49,7 @@ export class SearchPerspectiveComponent {
   }
 
   public stringifyQuery(): string {
-    return QueryConverter.toString(this.query); // TODO change
+    return QueryConverter.toString(this.query);
   }
 
 }

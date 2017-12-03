@@ -22,22 +22,47 @@ import {QueryModel} from './query.model';
 
 export class QueryConverter {
 
-  public static convertToModel(dto: Query): QueryModel {
+  public static fromDto(dto: Query): QueryModel {
     return {
       collectionCodes: dto.collectionCodes,
+      documentIds: dto.documentIds,
       filters: dto.filters,
-      fulltext: dto.fulltext
+      fulltext: dto.fulltext,
+      linkTypeIds: dto.linkTypeIds,
       // TODO convert other fields as well
     };
   }
 
-  public static convertToDto(model: QueryModel): Query {
+  public static toDto(model: QueryModel): Query {
     return {
       collectionCodes: model.collectionCodes,
+      // documentIds: model.documentIds,
       filters: model.filters,
-      fulltext: model.fulltext
+      fulltext: model.fulltext,
+      // linkTypeIds: model.linkTypeIds,
       // TODO convert other fields as well
     };
+  }
+
+  public static toString(query: QueryModel): string {
+    return JSON.stringify(query ? query : {}, (key, value) => {
+      if (value instanceof Array && value.length === 0) {
+        return undefined;
+      }
+      return value;
+    });
+  }
+
+  public static fromString(stringQuery: string): QueryModel {
+    const parsedQuery = stringQuery ? JSON.parse(stringQuery) : {};
+    const query: QueryModel = parsedQuery ? parsedQuery : {};
+
+    query.collectionCodes = query.collectionCodes || [];
+    query.documentIds = query.documentIds || [];
+    query.filters = query.filters || [];
+    query.linkTypeIds = query.linkTypeIds || [];
+
+    return query;
   }
 
 }

@@ -41,15 +41,18 @@ import {LinkTypeService} from './rest/link-type.service';
 import {OrganizationService} from './rest/organization.service';
 import {ProjectService} from './rest/project.service';
 import {SearchService} from './rest/search.service';
+import {TemplateService} from './rest/template.service';
 import {UserService} from './rest/user.service';
 import {ViewService} from './rest/view.service';
 import {SearchHomeComponent} from './search-home/search-home.component';
 
 import {TopPanelComponent} from './top-panel/top-panel.component';
 import {UserSettingsService} from './user-settings.service';
+import {AppStoreModule} from './store/app-store.module';
 
 @NgModule({
   imports: [
+    AppStoreModule,
     CommonModule,
     FormsModule,
     HttpClientModule,
@@ -79,6 +82,7 @@ import {UserSettingsService} from './user-settings.service';
     LinkTypeService,
     EventService,
     HomePageService,
+    TemplateService,
     KEYCLOAK_HTTP_PROVIDER,
     {provide: ErrorHandler, useClass: LumeerErrorHandler},
     {provide: 'SnotifyToastConfig', useValue: ToastDefaults},

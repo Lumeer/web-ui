@@ -17,16 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
-
-import {Project} from '../dto/project';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {PermissionService} from './permission.service';
-import {FetchFailedError} from '../error/fetch-failed.error';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {catchError, map} from 'rxjs/operators';
+import {Project} from '../dto';
+import {FetchFailedError} from '../error/fetch-failed.error';
 import {NetworkError} from '../error/network.error';
-import {catchError} from 'rxjs/operators';
+import {PermissionService} from './permission.service';
 
 @Injectable()
 export class ProjectService extends PermissionService {
@@ -45,12 +44,16 @@ export class ProjectService extends PermissionService {
     return this.httpClient.delete(this.apiPrefix(orgCode, projCode), {observe: 'response', responseType: 'text'});
   }
 
-  public createProject(orgCode: string, project: Project): Observable<HttpResponse<any>> {
-    return this.httpClient.post(this.apiPrefix(orgCode), project, {observe: 'response', responseType: 'text'});
+  public createProject(orgCode: string, project: Project): Observable<Project> {
+    return this.httpClient.post(this.apiPrefix(orgCode), project, {observe: 'response', responseType: 'text'}).pipe(
+      map(() => project) // TODO return fresh instance from the server instead
+    );
   }
 
-  public editProject(orgCode: string, projCode: string, project: Project): Observable<HttpResponse<any>> {
-    return this.httpClient.put(this.apiPrefix(orgCode, projCode), project, {observe: 'response', responseType: 'text'});
+  public editProject(orgCode: string, projCode: string, project: Project): Observable<Project> {
+    return this.httpClient.put(this.apiPrefix(orgCode, projCode), project, {observe: 'response', responseType: 'text'}).pipe(
+      map(() => project) // TODO return fresh instance from the server instead
+    );
   }
 
   private apiPrefix(orgCode: string, projCode?: string): string {

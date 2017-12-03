@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {catchError, flatMap, map, skipWhile, switchMap, withLatestFrom} from 'rxjs/operators';
+import {catchError, flatMap, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {View} from '../../dto/view';
 import {ViewService} from '../../rest/view.service';
 import {AppState} from '../app.state';
@@ -38,27 +38,38 @@ import {selectViewsDictionary} from './views.state';
 export class ViewsEffects {
 
   @Effect()
-  public getByCode$: Observable<Action> = this.actions.ofType<ViewsAction.GetByCode>(ViewsActionType.GET_BY_CODE).pipe(
-    withLatestFrom(this.store.select(selectViewsDictionary)),
+  public getByCode$: Observable<Action> = this.actions$.ofType<ViewsAction.GetByCode>(ViewsActionType.GET_BY_CODE).pipe(
+    withLatestFrom(this.store$.select(selectViewsDictionary)),
     skipWhile(([action, views]) => action.payload.viewCode in views),
-    switchMap(([action, views]) => this.viewService.getView(action.payload.viewCode)),
-    map((dto: View) => ViewConverter.convertToModel(dto)),
+    switchMap(([action, views]) => this.viewService.getView(action.payload.viewCode).pipe(
+      map((dto: View) => ViewConverter.convertToModel(dto))
+    )),
     map((view: ViewModel) => new ViewsAction.GetSuccess({views: [view]})),
-    catchError(() => Observable.of(new ViewsAction.GetFailure()))
+    catchError((error) => Observable.of(new ViewsAction.GetFailure({error: error})))
   );
 
   @Effect()
-  public create$: Observable<Action> = this.actions.ofType<ViewsAction.Create>(ViewsActionType.CREATE).pipe(
-    map(action => ViewConverter.convertToDto(action.payload.view)),
-    switchMap(dto => this.viewService.createView(dto)),
-    map(dto => ViewConverter.convertToModel(dto)),
+  public getFailure$: Observable<Action> = this.actions$.ofType<ViewsAction.GetFailure>(ViewsActionType.GET_FAILURE).pipe(
+    tap(action => console.error(action.payload.error)),
+    map(action => new NotificationsAction.Error({message: 'Failed to get view'}))
+  );
+
+  @Effect()
+  public create$: Observable<Action> = this.actions$.ofType<ViewsAction.Create>(ViewsActionType.CREATE).pipe(
+    switchMap(action => {
+      const viewDto = ViewConverter.convertToDto(action.payload.view);
+
+      return this.viewService.createView(viewDto).pipe(
+        map(dto => ViewConverter.convertToModel(dto))
+      );
+    }),
     map(view => new ViewsAction.CreateSuccess({view: view})),
-    catchError(() => Observable.of(new ViewsAction.CreateFailure()))
+    catchError((error) => Observable.of(new ViewsAction.CreateFailure({error: error})))
   );
 
   @Effect()
-  public createSuccess$: Observable<Action> = this.actions.ofType(ViewsActionType.CREATE_SUCCESS).pipe(
-    withLatestFrom(this.store.select(selectWorkspace)),
+  public createSuccess$: Observable<Action> = this.actions$.ofType(ViewsActionType.CREATE_SUCCESS).pipe(
+    withLatestFrom(this.store$.select(selectWorkspace)),
     flatMap(([action, workspace]: [ViewsAction.CreateSuccess, Workspace]) => [
       new NotificationsAction.Success({message: 'View has been created'}),
       new RouterAction.Go({path: ['w', workspace.organizationCode, workspace.projectCode, 'view', {vc: action.payload.view.code}]})
@@ -66,31 +77,37 @@ export class ViewsEffects {
   );
 
   @Effect()
-  public createFailure$: Observable<Action> = this.actions.ofType(ViewsActionType.CREATE_FAILURE).pipe(
+  public createFailure$: Observable<Action> = this.actions$.ofType<ViewsAction.CreateFailure>(ViewsActionType.CREATE_FAILURE).pipe(
+    tap(action => console.error(action.payload.error)),
     map(action => new NotificationsAction.Error({message: 'Failed to create view'}))
   );
 
   @Effect()
-  public update$: Observable<Action> = this.actions.ofType<ViewsAction.Update>(ViewsActionType.UPDATE).pipe(
-    map(action => [action.payload.viewCode, ViewConverter.convertToDto(action.payload.view)]),
-    switchMap(([code, dto]: [string, View]) => this.viewService.updateView(code, dto)),
-    map(dto => ViewConverter.convertToModel(dto)),
+  public update$: Observable<Action> = this.actions$.ofType<ViewsAction.Update>(ViewsActionType.UPDATE).pipe(
+    switchMap(action => {
+      const viewDto = ViewConverter.convertToDto(action.payload.view);
+
+      return this.viewService.updateView(action.payload.viewCode, viewDto).pipe(
+        map(dto => ViewConverter.convertToModel(dto))
+      );
+    }),
     map(view => new ViewsAction.UpdateSuccess({view: view})),
-    catchError(() => Observable.of(new ViewsAction.UpdateFailure()))
+    catchError((error) => Observable.of(new ViewsAction.UpdateFailure({error: error})))
   );
 
   @Effect()
-  public updateSuccess$: Observable<Action> = this.actions.ofType(ViewsActionType.UPDATE_SUCCESS).pipe(
+  public updateSuccess$: Observable<Action> = this.actions$.ofType(ViewsActionType.UPDATE_SUCCESS).pipe(
     map(view => new NotificationsAction.Success({message: 'View has been updated'}))
   );
 
   @Effect()
-  public updateFailure$: Observable<Action> = this.actions.ofType(ViewsActionType.UPDATE_FAILURE).pipe(
+  public updateFailure$: Observable<Action> = this.actions$.ofType<ViewsAction.UpdateFailure>(ViewsActionType.UPDATE_FAILURE).pipe(
+    tap(action => console.error(action.payload.error)),
     map(view => new NotificationsAction.Error({message: 'Failed to update view'}))
   );
 
-  constructor(private actions: Actions,
-              private store: Store<AppState>,
+  constructor(private actions$: Actions,
+              private store$: Store<AppState>,
               private viewService: ViewService) {
   }
 

@@ -29,7 +29,8 @@ import {SearchService} from '../../core/rest/search.service';
 import {Role} from '../permissions/role';
 import {PostItLayout} from '../utils/post-it-layout';
 import {PostItCollectionData} from './post-it-collection-data';
-import {QueryConverter} from '../utils/query-converter';
+import {DeprecatedQueryConverter} from '../utils/query-converter';
+import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {HtmlModifier} from '../utils/html-modifier';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {finalize} from 'rxjs/operators';
@@ -94,7 +95,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   private loadCollections() {
-    this.searchService.searchCollections(QueryConverter.removeLinksFromQuery(this.query)).subscribe(
+    this.searchService.searchCollections(DeprecatedQueryConverter.removeLinksFromQuery(this.query)).subscribe(
       collections => {
         this.postIts = collections.map(collection => this.collectionToPostIt(collection, true));
         this.reloadLayout();
@@ -162,8 +163,8 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.collectionService.createCollection(postIt.collection)
       .pipe(finalize(() => postIt.initializing = false))
       .subscribe(
-        code => {
-          postIt.collection.code = code;
+        collection => {
+          postIt.collection.code = collection.code;
           postIt.initialized = true;
           this.getCollection(postIt);
           this.notificationService.success('Collection created');

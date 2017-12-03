@@ -20,39 +20,15 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {EffectsModule} from '@ngrx/effects';
-import {routerReducer} from '@ngrx/router-store';
-import {ActionReducerMap, StoreModule} from '@ngrx/store';
-import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {ContextMenuModule} from 'ngx-contextmenu';
-import {environment} from '../environments/environment';
 import {AppRoutingModule} from './app-routing.module';
 
 import {AppComponent} from './app.component';
 import {CollectionModule} from './collection/collection.module';
 import {CoreModule} from './core/core.module';
-import {AppState, initialAppState} from './core/store/app.state';
-import {navigationReducer} from './core/store/navigation/navigation.reducer';
-import {NotificationsEffects} from './core/store/notifications/notifications.effects';
-import {RouterEffects} from './core/store/router/router.effects';
-import {ViewsEffects} from './core/store/views/views.effects';
-import {viewsReducer} from './core/store/views/views.reducer';
 import {DocumentsModule} from './documents/documents.module';
 import {ViewModule} from './view/view.module';
 import {WorkspaceModule} from './workspace/workspace.module';
-
-const reducers: ActionReducerMap<AppState> = {
-  // TODO collections, documents, links, table
-  navigation: navigationReducer,
-  router: routerReducer,
-  views: viewsReducer
-};
-
-const effects = [
-  NotificationsEffects,
-  RouterEffects,
-  ViewsEffects
-];
 
 @NgModule({
   imports: [
@@ -64,9 +40,6 @@ const effects = [
     DocumentsModule,
     ViewModule,
     WorkspaceModule,
-    StoreModule.forRoot(reducers, {initialState: initialAppState}),
-    EffectsModule.forRoot(effects),
-    !environment.production ? StoreDevtoolsModule.instrument({maxAge: 10}) : [],
     AppRoutingModule // needs to stay last
   ],
   declarations: [

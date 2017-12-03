@@ -17,21 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse} from '@angular/common/http';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
+import {ConfiguredAttribute} from '../../collection/config/tab/attribute-list/configured-attribute';
+import {Attribute} from '../dto/attribute';
 
 import {Collection} from '../dto/collection';
-import {Attribute} from '../dto/attribute';
-import {Observable} from 'rxjs/Observable';
 import {BadInputError} from '../error/bad-input.error';
-import {PermissionService} from './permission.service';
-import {isNullOrUndefined} from 'util';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {ConfiguredAttribute} from '../../collection/config/tab/attribute-list/configured-attribute';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
-import {HomePageService} from './home-page.service';
 import {AppState} from '../store/app.state';
+import {HomePageService} from './home-page.service';
+import {PermissionService} from './permission.service';
 
 // TODO add add support for Default Attribute
 @Injectable()
@@ -43,13 +43,14 @@ export class CollectionService extends PermissionService {
     super(httpClient, store);
   }
 
-  public createCollection(collection: Collection): Observable<string> {
+  public createCollection(collection: Collection): Observable<Collection> {
     return this.httpClient.post(
       this.apiPrefix(), this.toDto(collection),
       {observe: 'response', responseType: 'text'}
     ).pipe(
       map(response => response.headers.get('Location').split('/').pop()),
       tap(code => this.homePageService.addLastUsedCollection(code).subscribe()),
+      map(code => ({...collection, code: code})), // TODO return fresh instance from the server instead
       catchError(this.handleError)
     );
   }
@@ -66,7 +67,7 @@ export class CollectionService extends PermissionService {
     );
   }
 
-  public removeCollection(collectionCode: string): Observable<HttpResponse<any>> {
+  public removeCollection(collectionCode: string): Observable<string> {
     this.homePageService.removeFavoriteCollection(collectionCode).subscribe();
     this.homePageService.removeLastUsedCollection(collectionCode).subscribe();
     this.homePageService.removeLastUsedDocuments(collectionCode).subscribe();
@@ -75,6 +76,7 @@ export class CollectionService extends PermissionService {
       `${this.apiPrefix()}/${collectionCode}`,
       {observe: 'response', responseType: 'text'}
     ).pipe(
+      map(() => collectionCode),
       catchError(this.handleError)
     );
   }

@@ -26,7 +26,7 @@ import {AppState} from '../core/store/app.state';
 import {selectNavigation} from '../core/store/navigation/navigation.state';
 import {ViewsAction} from '../core/store/views/views.action';
 import {selectViewsDictionary} from '../core/store/views/views.state';
-import {QueryConverter} from '../shared/utils/query-converter';
+import {QueryConverter} from '../core/store/navigation/query.converter';
 import {Perspective} from './perspectives/perspective';
 
 @Injectable()

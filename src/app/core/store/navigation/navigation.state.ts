@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createSelector } from '@ngrx/store';
+import {createSelector} from '@ngrx/store';
 
 import {QueryModel} from './query.model';
 import {Workspace} from './workspace.model';
@@ -42,3 +42,4 @@ export const initialNavigationState: NavigationState = {
 
 export const selectNavigation = (state: AppState) => state.navigation;
 export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);
+export const selectQuery = createSelector(selectNavigation, (state: NavigationState) => state.query);

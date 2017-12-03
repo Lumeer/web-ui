@@ -68,7 +68,7 @@ export class DocumentService {
       );
   }
 
-  public patchDocument(document: Document): Observable<Document> {
+  public patchDocumentData(document: Document): Observable<Document> {
     this.addLastUsed(document.collectionCode, document.id);
     return this.httpClient.patch<Document>(`${this.apiPrefix(document.collectionCode)}/${document.id}/data`, document.data)
       .pipe(
@@ -84,10 +84,10 @@ export class DocumentService {
     return this.homePageService.addFavoriteDocument(document.collectionCode, document.id);
   }
 
-  public removeDocument(document: Document): Observable<HttpResponse<any>> {
-    this.removeLastUsedAndFavorite(document.collectionCode, document.id);
+  public removeDocument(collectionCode: string, documentId: string): Observable<HttpResponse<any>> {
+    this.removeLastUsedAndFavorite(collectionCode, documentId);
     return this.httpClient.delete(
-      `${this.apiPrefix(document.collectionCode)}/${document.id}`,
+      `${this.apiPrefix(collectionCode)}/${documentId}`,
       {observe: 'response', responseType: 'text'}
     ).pipe(catchError(error => this.handleGlobalError(error)));
   }

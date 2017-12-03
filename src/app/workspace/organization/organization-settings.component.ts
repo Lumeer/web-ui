@@ -19,7 +19,6 @@
 
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {HttpResponse} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 
 import {Organization} from '../../core/dto/organization';
@@ -107,7 +106,7 @@ export class OrganizationSettingsComponent implements OnInit {
       return;
     }
     this.organizationService.editOrganization(this.originalOrganizationCode, this.organization)
-      .subscribe((response: HttpResponse<Object>) => {
+      .subscribe((response) => {
           this.notificationService.success('Organization\'s code was successfully updated');
           this.originalOrganizationCode = this.organization.code;
           this.organizationCode = this.organization.code;

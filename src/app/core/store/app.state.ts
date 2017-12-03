@@ -18,22 +18,48 @@
  */
 
 import {RouterReducerState} from '@ngrx/router-store';
-
+import {CollectionsState, initialCollectionsState} from './collections/collections.state';
+import {DocumentsState, initialDocumentsState} from './documents/documents.state';
+import {GroupsState, initialGroupsState} from './groups/groups.state';
+import {initialLinkInstancesState, LinkInstancesState} from './link-instances/link-instances.state';
+import {initialLinkTypesState, LinkTypesState} from './link-types/link-types.state';
 import {initialNavigationState, NavigationState} from './navigation/navigation.state';
+import {initialOrganizationsState, OrganizationsState} from './organizations/organizations.state';
+import {initialProjectsState, ProjectsState} from './projects/projects.state';
+import {initialTemplatesState, TemplatesState} from './templates/templates.state';
+import {initialUsersState, UsersState} from './users/users.state';
 import {initialViewsState, ViewsState} from './views/views.state';
 
 export interface AppState {
 
+  collections: CollectionsState;
+  documents: DocumentsState;
+  groups: GroupsState;
+  linkInstances: LinkInstancesState;
+  linkTypes: LinkTypesState;
   navigation: NavigationState;
+  organizations: OrganizationsState;
+  projects: ProjectsState;
   router: RouterReducerState;
+  users: UsersState;
   views: ViewsState;
+  templates: TemplatesState;
 
 }
 
 export function initialAppState(): AppState {
   return {
+    collections: initialCollectionsState,
+    documents: initialDocumentsState,
+    groups: initialGroupsState,
+    linkInstances: initialLinkInstancesState,
+    linkTypes: initialLinkTypesState,
     navigation: initialNavigationState,
+    organizations: initialOrganizationsState,
+    projects: initialProjectsState,
     router: null,
+    templates: initialTemplatesState,
+    users: initialUsersState,
     views: initialViewsState
   };
 }

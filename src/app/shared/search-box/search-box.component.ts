@@ -31,8 +31,7 @@ import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {KeyCode} from '../key-code';
 import {HtmlModifier} from '../utils/html-modifier';
-import {AttributeQueryItem, CollectionQueryItem, ConditionQueryItem, FulltextQueryItem, LinkQueryItem, QueryItem,
-  QueryItemsConverter, QueryItemType, ViewQueryItem} from './query-item';
+import {AttributeQueryItem, CollectionQueryItem, ConditionQueryItem, FulltextQueryItem, LinkQueryItem, QueryItem, QueryItemsConverter, QueryItemType, ViewQueryItem} from './query-item';
 
 @Component({
   selector: 'search-box',
@@ -181,12 +180,14 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
       return Observable.of(suggestions);
     }
     suggestions.links = [];
-    for (let link of this.linkTypeService.getLinkTypes()) {
-      if (link.name.toLowerCase().startsWith(this.text.toLowerCase())) {
-        suggestions.links.push(link);
-      }
-    }
-    return Observable.of(suggestions);
+
+    return this.linkTypeService.getLinkTypes({}).pipe(
+      map(linkTypes => {
+        const linkTypeSuggestions = linkTypes.filter(linkType => linkType.name.toLowerCase().startsWith(this.text.toLowerCase()));
+        suggestions.links.push(...linkTypeSuggestions);
+        return suggestions;
+      })
+    );
   }
 
   private retrieveSuggestions(text: string): Observable<Suggestions> {

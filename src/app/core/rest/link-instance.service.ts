@@ -18,16 +18,17 @@
  */
 
 import {Injectable} from '@angular/core';
-import {LinkInstance} from '../dto/link-instance';
 import {Observable} from 'rxjs/Observable';
 import {LocalStorage} from '../../shared/utils/local-storage';
+import {LinkInstance} from '../dto/link-instance';
+import {Query} from '../dto/query';
 
 const LINK_INSTANCES = 'linkInstances';
 
 @Injectable()
 export class LinkInstanceService {
 
-  public createLinkInstance(linkInstance: LinkInstance): Observable<string> {
+  public createLinkInstance(linkInstance: LinkInstance): Observable<LinkInstance> {
     const linkInstances = LocalStorage.get(LINK_INSTANCES) || {};
 
     linkInstance.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
@@ -35,7 +36,7 @@ export class LinkInstanceService {
 
     LocalStorage.set(LINK_INSTANCES, linkInstances);
 
-    return Observable.of(linkInstance.id);
+    return Observable.of(linkInstance);
   }
 
   public updateLinkInstance(id: string, linkInstance: LinkInstance): Observable<LinkInstance> {
@@ -48,34 +49,29 @@ export class LinkInstanceService {
     return Observable.of(linkInstance);
   }
 
-  public deleteLinkInstance(id: string): Observable<any> {
+  public deleteLinkInstance(id: string): Observable<string> {
     const linkInstances = LocalStorage.get(LINK_INSTANCES) || {};
 
     delete linkInstances[id];
 
     LocalStorage.set(LINK_INSTANCES, linkInstances);
 
-    return Observable.of({});
+    return Observable.of(id);
   }
 
-  public getLinkInstanceById(id: string): Observable<LinkInstance> {
-    const linkInstances = LocalStorage.get(LINK_INSTANCES) || {};
+  public getLinkInstances(query: Query): Observable<LinkInstance[]> {
+    const linkInstancesMap: { [id: string]: LinkInstance } = LocalStorage.get(LINK_INSTANCES) || {};
+    let linkInstances = Object.values(linkInstancesMap);
 
-    return Observable.of(linkInstances[id]);
-  }
+    if (query && query.linkTypeIds && query.linkTypeIds.length) {
+      linkInstances = linkInstances.filter(linkInstance => query.linkTypeIds.includes(linkInstance.linkTypeId));
+    }
 
-  public getLinkInstancesByTypes(...linkTypeIds: string[]): Observable<LinkInstance[]> {
-    const linkInstances: { [id: string]: LinkInstance } = LocalStorage.get(LINK_INSTANCES) || {};
+    if (query && query.documentIds && query.documentIds.length) {
+      linkInstances = linkInstances.filter(linkInstance => linkInstance.documentIds.some(id => query.documentIds.includes(id)));
+    }
 
-    const results = Object.values(linkInstances).filter(linkInstance => linkTypeIds.includes(linkInstance.linkTypeId));
-    return Observable.of(results);
-  }
-
-  public getLinkInstancesByDocument(documentId: string): Observable<LinkInstance[]> {
-    const linkInstances: { [id: string]: LinkInstance } = LocalStorage.get(LINK_INSTANCES) || {};
-
-    const results = Object.values(linkInstances).filter(linkInstance => linkInstance.documentIds.includes(documentId));
-    return Observable.of(results);
+    return Observable.of(linkInstances);
   }
 
 }

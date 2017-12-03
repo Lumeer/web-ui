@@ -18,7 +18,7 @@
  */
 
 import {ROUTER_CANCEL, ROUTER_NAVIGATION, RouterCancelAction, RouterNavigationAction} from '@ngrx/router-store';
-import {QueryConverter} from '../../../shared/utils/query-converter';
+import {QueryConverter} from './query.converter';
 import {RouteFinder} from '../../../shared/utils/route-finder';
 import {NavigationState} from './navigation.state';
 
@@ -48,8 +48,7 @@ function extractPerspectiveIdFromUrl(url: string): string {
 }
 
 function onRouterCancel(state: NavigationState, action: RouterCancelAction<NavigationState>) {
-  const beforeState = (action as RouterCancelAction<NavigationState>).payload.storeState;
-  return Object.assign({}, beforeState);
+  return (action as RouterCancelAction<NavigationState>).payload.storeState;
 }
 
 export function navigationReducer(state: NavigationState, action: RouterNavigationAction | RouterCancelAction<NavigationState>): NavigationState {

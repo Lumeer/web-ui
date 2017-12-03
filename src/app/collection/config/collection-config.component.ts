@@ -25,7 +25,7 @@ import {Collection} from '../../core/dto/collection';
 import {CollectionService} from '../../core/rest/collection.service';
 import {Role} from '../../shared/permissions/role';
 import {Permission} from '../../core/dto/permission';
-import {QueryConverter} from '../../shared/utils/query-converter';
+import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {Query} from '../../core/dto/query';
 import {CollectionSelectService} from '../service/collection-select.service';
 import {NotificationService} from '../../core/notifications/notification.service';

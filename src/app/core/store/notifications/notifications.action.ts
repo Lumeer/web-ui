@@ -20,8 +20,10 @@
 import {Action} from '@ngrx/store';
 
 export enum NotificationsActionType {
+
   ERROR = '[Notifications] Error',
   SUCCESS = '[Notifications] Success'
+
 }
 
 export namespace NotificationsAction {
