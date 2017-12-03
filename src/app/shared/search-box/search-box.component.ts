@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Subject, Subscription} from 'rxjs';
@@ -31,7 +40,17 @@ import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {KeyCode} from '../key-code';
 import {HtmlModifier} from '../utils/html-modifier';
-import {AttributeQueryItem, CollectionQueryItem, ConditionQueryItem, FulltextQueryItem, LinkQueryItem, QueryItem, QueryItemsConverter, QueryItemType, ViewQueryItem} from './query-item';
+import {
+  AttributeQueryItem,
+  CollectionQueryItem,
+  ConditionQueryItem,
+  FulltextQueryItem,
+  LinkQueryItem,
+  QueryItem,
+  QueryItemsConverter,
+  QueryItemType,
+  ViewQueryItem
+} from './query-item';
 
 @Component({
   selector: 'search-box',
@@ -64,6 +83,8 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   private querySubscription: Subscription;
   private viewSubscription: Subscription;
   private storeSubscription: Subscription;
+
+  private readonly DEFAULT_COLOR = '#faeabb';
 
   constructor(private collectionService: CollectionService,
               private linkTypeService: LinkTypeService,
@@ -490,15 +511,15 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   public queryItemBackground(queryItem: QueryItem): string {
-    if (queryItem.color && queryItem.color2) {
+    if (queryItem && queryItem.color && queryItem.color2) {
       return `linear-gradient(${this.lightenColor(queryItem.color)},${this.lightenColor(queryItem.color2)})`;
     } else {
-      return this.lightenColor(queryItem.color);
+      return this.lightenColor(queryItem && queryItem.color);
     }
   }
 
-  private lightenColor(color: string): string {
-    return color ? HtmlModifier.shadeColor(color, .5) : '#faeabb';
+  private lightenColor(color: string | undefined): string {
+    return color ? HtmlModifier.shadeColor(color, .5) : this.DEFAULT_COLOR;
   }
 
 }

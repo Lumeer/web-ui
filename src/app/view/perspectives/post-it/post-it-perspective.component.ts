@@ -28,11 +28,10 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-
 import {Store} from '@ngrx/store';
+
 import {DocumentService} from 'app/core/rest/document.service';
 import {SearchService} from 'app/core/rest/search.service';
-import {Subscription} from 'rxjs';
 import {Collection, Document, Query} from '../../../core/dto';
 import {CollectionService} from '../../../core/rest';
 import {AppState} from '../../../core/store/app.state';
@@ -40,9 +39,10 @@ import {selectNavigation} from '../../../core/store/navigation/navigation.state'
 import {PostItLayout} from '../../../shared/utils/post-it-layout';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
 import {Direction} from './document-data/direction';
-import {DocumentData} from './document-data/document-data';
 import {PostItDocumentComponent} from './document/post-it-document.component';
 import {NotificationService} from '../../../core/notifications/notification.service';
+import {DocumentModel} from './document-data/document-model';
+import {Subscription} from 'rxjs';
 import {finalize} from 'rxjs/operators';
 
 @Component({
@@ -67,11 +67,11 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   @ViewChildren(PostItDocumentComponent)
   public documentComponents: QueryList<PostItDocumentComponent> = new QueryList();
 
-  public postIts: DocumentData[] = [];
+  public postIts: DocumentModel[] = [];
 
   private layout: PostItLayout;
 
-  public lastClickedPostIt: DocumentData;
+  public lastClickedPostIt: DocumentModel;
 
   public fetchingData: boolean;
 
@@ -84,6 +84,10 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private page = 0;
 
   private layoutGutter = 10;
+
+  private fetchedCollections = 0;
+
+  private collectionsToFetch = 0;
 
   // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
   private scrollEventOptions = {
@@ -168,40 +172,65 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     };
   }
 
-  public selectDocument(selector: AttributePropertySelection): void {
-    switch (selector.direction) {
+  public selectDocument(selection: AttributePropertySelection): void {
+    switch (selection.direction) {
       case Direction.Left:
-        if (selector.documentIdx - 1 >= 0) {
-          this.lastClickedPostIt = this.postIts[selector.documentIdx - 1];
-          this.documentComponents.toArray()[selector.documentIdx - 1].select(Number.MAX_SAFE_INTEGER, selector.row);
-        }
+        this.tryToSelectDocumentOnLeft(selection);
         break;
-
       case Direction.Right:
-        if (selector.documentIdx + 1 < this.postIts.length) {
-          this.lastClickedPostIt = this.postIts[selector.documentIdx + 1];
-          this.documentComponents.toArray()[selector.documentIdx + 1].select(0, selector.row);
-        }
+        this.tryToSelectDocumentOnRight(selection);
         break;
-
       case Direction.Up:
-        if (selector.documentIdx - this.documentsPerRow() >= 0) {
-          this.lastClickedPostIt = this.postIts[selector.documentIdx - this.documentsPerRow()];
-          this.documentComponents.toArray()[selector.documentIdx - this.documentsPerRow()].select(selector.column, Number.MAX_SAFE_INTEGER);
-        }
+        this.tryToSelectDocumentOnUp(selection);
         break;
-
       case Direction.Down:
-        if (selector.documentIdx + this.documentsPerRow() < this.postIts.length) {
-          this.lastClickedPostIt = this.postIts[selector.documentIdx + this.documentsPerRow()];
-          this.documentComponents.toArray()[selector.documentIdx + this.documentsPerRow()].select(selector.column, 0);
-        }
+        this.tryToSelectDocumentOnDown(selection);
         break;
     }
   }
 
+  private tryToSelectDocumentOnLeft(selection: AttributePropertySelection): void {
+    if (selection.documentIdx - 1 >= 0) {
+      const selectedDocument = this.documentComponents.toArray()[selection.documentIdx - 1];
+      this.lastClickedPostIt = this.postIts[selection.documentIdx - 1];
+      selectedDocument.select(Number.MAX_SAFE_INTEGER, selection.row);
+    }
+  }
+
+  private tryToSelectDocumentOnRight(selection: AttributePropertySelection): void {
+    if (selection.documentIdx + 1 < this.postIts.length) {
+      const selectedDocument = this.documentComponents.toArray()[selection.documentIdx + 1];
+      this.lastClickedPostIt = this.postIts[selection.documentIdx + 1];
+      selectedDocument.select(0, selection.row);
+    }
+  }
+
+  private tryToSelectDocumentOnUp(selection: AttributePropertySelection): void {
+    if (selection.documentIdx - this.documentsPerRow() >= 0) {
+      const selectedDocument = this.documentComponents.toArray()[selection.documentIdx - this.documentsPerRow()];
+      this.lastClickedPostIt = this.postIts[selection.documentIdx - this.documentsPerRow()];
+      selectedDocument.select(selection.column, Number.MAX_SAFE_INTEGER);
+    }
+  }
+
+  private tryToSelectDocumentOnDown(selection: AttributePropertySelection): void {
+    if (selection.documentIdx + this.documentsPerRow() < this.postIts.length) {
+      const selectedDocument = this.documentComponents.toArray()[selection.documentIdx + this.documentsPerRow()];
+      this.lastClickedPostIt = this.postIts[selection.documentIdx + this.documentsPerRow()];
+      selectedDocument.select(selection.column, 0);
+    }
+  }
+
   private documentsPerRow(): number {
-    return Math.floor(this.layoutElement.nativeElement.clientWidth / (215 /*Post-it width*/ + this.layoutGutter));
+    // padding - postIt - padding - postIt - padding
+    const postItWidth = 215;
+    const postItPaddingOnOneSide = this.layoutGutter;
+    const totalPostItWidth = postItWidth + postItPaddingOnOneSide;
+
+    const layoutWidth = this.layoutElement.nativeElement.clientWidth;
+    const layoutWidthWithoutPaddingOnLeft = layoutWidth - postItPaddingOnOneSide;
+
+    return Math.floor(layoutWidthWithoutPaddingOnLeft / totalPostItWidth);
   }
 
   private queryPage(pageNumber: number): Query {
@@ -221,19 +250,24 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.fetchingData = true;
-    this.setInfiniteScroll(false);
-
+    this.setFetchingPageStarted();
     this.searchService.searchDocuments(this.queryPage(this.page)).pipe(
-      finalize(() => {
-        this.fetchingData = false;
-        this.setInfiniteScroll(true);
-        this.page++;
-      })
+      finalize(() => this.setFetchingPageFinished())
     ).subscribe(
       documents => this.fetchDocumentData(documents),
       error => this.notificationService.error('Failed fetching documents')
     );
+  }
+
+  private setFetchingPageStarted(): void {
+    this.fetchingData = true;
+    this.setInfiniteScroll(false);
+  }
+
+  private setFetchingPageFinished(): void {
+    this.fetchingData = false;
+    this.setInfiniteScroll(true);
+    this.page++;
   }
 
   private fetchDocumentData(documents: Document[]): void {
@@ -243,8 +277,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.fetchCollections(uniqueCollectionCodes);
   }
 
-  private documentToPostIt(document: Document, initialized: boolean): DocumentData {
-    const postIt = new DocumentData;
+  private documentToPostIt(document: Document, initialized: boolean): DocumentModel {
+    const postIt = new DocumentModel;
     postIt.document = document;
     postIt.selectedInput = this.selectedAttributeProperty();
     postIt.initialized = initialized;
@@ -254,28 +288,30 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private fetchCollections(collectionCodes: Set<string>): void {
-    let fetchedCollections = 0;
-    const countAsFetched = () => {
-      fetchedCollections++;
-
-      if (fetchedCollections === collectionCodes.size) {
-        this.refresh();
-      }
-    };
+    this.fetchedCollections = 0;
+    this.collectionsToFetch = collectionCodes.size;
 
     collectionCodes.forEach(collectionCode => {
       if (this.collections[collectionCode]) {
-        countAsFetched();
+        this.countAsFetchedAndRefreshIfLast();
         return;
       }
 
       this.collectionService.getCollection(collectionCode).pipe(
-        finalize(() => countAsFetched())
+        finalize(() => this.countAsFetchedAndRefreshIfLast())
       ).subscribe(
         collection => this.registerCollection(collection),
         error => this.notificationService.error(`Failed fetching collection ${collectionCode}`)
       );
     });
+  }
+
+  private countAsFetchedAndRefreshIfLast(): void {
+    this.fetchedCollections++;
+
+    if (this.fetchedCollections === this.collectionsToFetch) {
+      this.refresh();
+    }
   }
 
   private registerCollection(collection: Collection): void {
@@ -290,7 +326,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.fetchCollections(new Set([document.collectionCode]));
   }
 
-  public toggleDocumentFavorite(postIt: DocumentData) {
+  public toggleDocumentFavorite(postIt: DocumentModel) {
     this.documentService.toggleDocumentFavorite(postIt.document)
       .subscribe(success => {
         if (success) {
@@ -299,7 +335,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       });
   }
 
-  public sendUpdate(postIt: DocumentData): void {
+  public sendUpdate(postIt: DocumentModel): void {
     if (postIt.initializing) {
       return;
     }
@@ -321,7 +357,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       });
   }
 
-  private initializePostIt(postIt: DocumentData): void {
+  private initializePostIt(postIt: DocumentModel): void {
     postIt.initializing = true;
 
     this.documentService.createDocument(postIt.document).pipe(
@@ -337,7 +373,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       });
   }
 
-  private refreshDocument(postIt: DocumentData): void {
+  private refreshDocument(postIt: DocumentModel): void {
     this.documentService.getDocument(postIt.document.collectionCode, postIt.document.id)
       .subscribe(
         document => {
@@ -350,7 +386,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         });
   }
 
-  public removeDocument(postIt: DocumentData): void {
+  public removeDocument(postIt: DocumentModel): void {
     if (postIt.initialized) {
       this.documentService.removeDocument(postIt.document.collectionCode, postIt.document.id).subscribe(
         response => null,
@@ -363,19 +399,19 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private refresh(): void {
-    for (let i = 0; i < this.postIts.length; i++) {
-      this.postIts[i].index = i;
-    }
-
     this.layout.refresh();
+    this.showPostItsWithCollection();
+  }
 
+  private showPostItsWithCollection(): void {
     setTimeout(() => {
-      this.postIts.filter(postIt => this.collections[postIt.document.collectionCode])
+      this.postIts
+        .filter(postIt => this.collections[postIt.document.collectionCode])
         .forEach(postIt => postIt.visible = true);
     });
   }
 
-  public confirmDeletion(postIt: DocumentData): void {
+  public confirmDeletion(postIt: DocumentModel): void {
     this.notificationService.confirm('Are you sure you want to remove the document?', 'Delete?', [
       {text: 'Yes', action: () => this.removeDocument(postIt), bold: false},
       {text: 'No'}
@@ -390,11 +426,12 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    // might get called before onInit finishes
     if (this.layout) {
       this.layout.destroy();
     }
+
     this.setInfiniteScroll(false);
+
     if (this.querySubscription) {
       this.querySubscription.unsubscribe();
     }
@@ -402,6 +439,11 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public isAddButtonShown(): boolean {
     return this.editable && this.query && this.query.collectionCodes && this.query.collectionCodes.length === 1;
+  }
+
+  public setPostItIndexAndReturn(postIt: DocumentModel, index: number): DocumentModel {
+    postIt.index = index;
+    return postIt;
   }
 
 }

@@ -28,7 +28,7 @@
           <a title="Document Count" i18n-title="@@collection.document.count"
              [routerLink]="[workspacePath(), 'view', 'postit']"
              [queryParams]="{ query: documentsQuery(postIt.collection.code) }">
-            {{ postIt.collection.documentsCount }}&nbsp;<i class="far fa-file" aria-hidden="true"></i>
+            <i class="far fa-file" aria-hidden="true"></i>&nbsp;{{ postIt.collection.documentsCount }}
           </a>
         </div>
 

@@ -39,6 +39,8 @@ export class PostItLayout {
 
   private readonly UPDATE_LOCK_TIME = 2000;
 
+  private destroyed = false;
+
   constructor(private parameters: object, private zone?: NgZone) {
     const windowResizeRefreshBuffer = new Buffer(() => this.refresh(), 500);
     this.resizeListener = () => windowResizeRefreshBuffer.stageChanges();
@@ -61,7 +63,13 @@ export class PostItLayout {
       return;
     }
 
-    setTimeout(() => new window['Minigrid'](this.parameters).mount());
+    setTimeout(() => {
+      if (this.destroyed) {
+        return;
+      }
+
+      new window['Minigrid'](this.parameters).mount();
+    });
 
     if (this.zone) {
       this.requestLock++;
@@ -73,10 +81,17 @@ export class PostItLayout {
   }
 
   public safeRefresh(): void {
-    setTimeout(() => new window['Minigrid'](this.parameters).mount());
+    setTimeout(() => {
+      if (this.destroyed) {
+        return;
+      }
+
+      new window['Minigrid'](this.parameters).mount();
+    });
   }
 
   public destroy(): void {
+    this.destroyed = true;
     window.removeEventListener('resize', this.resizeListener);
   }
 

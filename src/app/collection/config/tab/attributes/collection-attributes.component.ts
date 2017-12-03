@@ -23,8 +23,7 @@ import {CollectionTabComponent} from '../collection-tab.component';
 
 @Component({
   selector: 'collection-attributes',
-  templateUrl: './collection-attributes.component.html',
-  styleUrls: ['./collection-attributes.component.scss']
+  templateUrl: './collection-attributes.component.html'
 })
 export class CollectionAttributesComponent extends CollectionTabComponent {
 

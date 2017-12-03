@@ -169,7 +169,6 @@ $bookmark-border-color: #bdbdbd;
 }
 
 .description {
-  color: #aaa;
 
   &:hover .edit {
     opacity: 1;
@@ -177,12 +176,16 @@ $bookmark-border-color: #bdbdbd;
 
   .text {
     font-size: 17px;
+    outline-color: $success;
+    margin-right: 20px;
+    overflow: hidden;
+    height: 50px;
   }
 
   .edit {
     opacity: 0;
-    cursor: pointer;
     transition: opacity $animation-duration;
+    margin-right: 5px;
 
     &:hover {
       color: $success;

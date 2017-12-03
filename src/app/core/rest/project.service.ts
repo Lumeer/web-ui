@@ -31,29 +31,57 @@ import {PermissionService} from './permission.service';
 export class ProjectService extends PermissionService {
 
   public getProjects(orgCode: string): Observable<Project[]> {
+    if (!this.hasOrganizationApiPrefix(orgCode)) {
+      return;
+    }
+
     return this.httpClient.get<Project[]>(this.apiPrefix(orgCode)).pipe(
       catchError(ProjectService.catchGetProjectsError)
     );
   }
 
   public getProject(orgCode: string, projCode: string): Observable<Project> {
+    if (!this.hasFullApiPrefix(orgCode, projCode)) {
+      return;
+    }
+
     return this.httpClient.get<Project>(this.apiPrefix(orgCode, projCode));
   }
 
   public deleteProject(orgCode: string, projCode: string): Observable<HttpResponse<any>> {
+    if (!this.hasFullApiPrefix(orgCode, projCode)) {
+      return;
+    }
+
     return this.httpClient.delete(this.apiPrefix(orgCode, projCode), {observe: 'response', responseType: 'text'});
   }
 
   public createProject(orgCode: string, project: Project): Observable<Project> {
+    if (!this.hasOrganizationApiPrefix(orgCode)) {
+      return;
+    }
+
     return this.httpClient.post(this.apiPrefix(orgCode), project, {observe: 'response', responseType: 'text'}).pipe(
       map(() => project) // TODO return fresh instance from the server instead
     );
   }
 
   public editProject(orgCode: string, projCode: string, project: Project): Observable<Project> {
+    if (!this.hasFullApiPrefix(orgCode, projCode)) {
+      return;
+    }
+
     return this.httpClient.put(this.apiPrefix(orgCode, projCode), project, {observe: 'response', responseType: 'text'}).pipe(
       map(() => project) // TODO return fresh instance from the server instead
     );
+  }
+
+  private hasOrganizationApiPrefix(orgCode: string): boolean {
+    return !!orgCode;
+  }
+
+  private hasFullApiPrefix(orgCode: string, projCode: string): boolean {
+    return !!(orgCode && projCode);
   }
 
   private apiPrefix(orgCode: string, projCode?: string): string {

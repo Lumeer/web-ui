@@ -23,7 +23,7 @@ import {Store} from '@ngrx/store';
 import {AttributePair} from '../document-data/attribute-pair';
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
 import {Direction} from '../document-data/direction';
-import {DocumentData} from '../document-data/document-data';
+import {DocumentModel} from '../document-data/document-model';
 import {KeyCode} from '../../../../shared/key-code';
 import {isString} from 'util';
 import {AppState} from '../../../../core/store/app.state';
@@ -41,7 +41,7 @@ import {selectWorkspace} from '../../../../core/store/navigation/navigation.stat
 export class PostItDocumentComponent implements OnInit {
 
   @Input()
-  public data: DocumentData;
+  public data: DocumentModel;
 
   @Input()
   public collection: Collection;
@@ -253,8 +253,8 @@ export class PostItDocumentComponent implements OnInit {
     this.changes.emit();
   }
 
-  public createAttributePair(newPairValue: string): void {
-    this.newAttributePair.value = newPairValue;
+  public createAttributePair(): void {
+    this.newAttributePair.value = '';
     this.attributePairs.push(this.newAttributePair);
     this.changes.emit();
 

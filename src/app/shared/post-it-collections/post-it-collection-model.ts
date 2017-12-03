@@ -17,17 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Document} from '../../../../core/dto/document';
-import {AttributePropertySelection} from './attribute-property-selection';
+import {Collection} from '../../core/dto';
 
-export class DocumentData {
+export class PostItCollectionModel {
 
-  public index: number;
-  public document: Document;
-
+  public collection: Collection;
   public initializing: boolean;
   public initialized: boolean;
-  public selectedInput: AttributePropertySelection;
-  public visible: boolean;
 
 }

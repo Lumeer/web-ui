@@ -42,8 +42,6 @@
   tr {
     .first-row {
       transition: color $animation-color-duration;
-      background: $secondary-color;
-      border: none;
 
       i {
         opacity: 0;
@@ -75,6 +73,14 @@
 
   input {
     min-width: 100px;
+  }
+
+  .table-striped > tbody > tr:nth-child(odd) > td, .table-striped > tbody > tr:nth-child(odd) > th {
+    background-color: $secondary-color;
+  }
+
+  .table-striped > tbody > tr:nth-child(even) > td, .table-striped > tbody > tr:nth-child(even) > th {
+    background-color: #f2f2f2;
   }
 
 }

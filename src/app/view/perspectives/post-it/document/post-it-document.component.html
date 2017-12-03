@@ -13,7 +13,7 @@
        title="Edit Document" i18n-title="@@document.button.edit"
        (click)="setEditMode(true); select(0, 0)"></i>
   </ng-container>
-  <i  *ngIf="data.initialized" class="text-warning fa-star button rounded align-self-center p-1"
+  <i *ngIf="data.initialized" class="text-warning fa-star button rounded align-self-center p-1"
      [class.always-visible]="data.document.isFavorite"
      title="{{data.document.isFavorite ?  'Remove from favorites' : 'Add to favorites'}}"
      i18n-title="@@collection.document.favorite"
@@ -84,7 +84,8 @@
                  (keydown)="$event.stopPropagation()"
                  (keydown.F2)="setEditMode(false); focusSelection()"
                  (keydown.Escape)="setEditMode(false); focusSelection()"
-                 (keydown.enter)="onEditModeEnter()">
+                 (keydown.enter)="onEditModeEnter()"
+                 (blur)="newAttributePair.attribute && createAttributePair()">
         </span>
 
         <span id="AttributePair{{ data.index }}[1, {{ attributePairs.length }}]"
@@ -97,12 +98,7 @@
               (keydown.enter)="setEditMode(true); focusSelection()"
               (click)="newAttributePair.attribute && clickOnAttributePair(1, attributePairs.length)">
 
-        <input class="border-0"
-               [disabled]="!newAttributePair.attribute"
-               (keydown)="$event.stopPropagation(); $event.key.length === 1 && createAttributePair($event.key)"
-               (keydown.F2)="setEditMode(false); focusSelection()"
-               (keydown.Escape)="setEditMode(false); focusSelection()"
-               (keydown.enter)="onEditModeEnter()"/>
+        <input class="border-0" [disabled]="true"/>
         </span>
       </li>
     </ng-container>

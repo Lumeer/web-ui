@@ -21,22 +21,19 @@ import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, View
 import {Store} from '@ngrx/store';
 
 import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../collection/constants';
-import {Collection} from '../../core/dto/collection';
-import {Query} from '../../core/dto/query';
-import {CollectionService} from '../../core/rest/collection.service';
-import {ImportService} from '../../core/rest/import.service';
-import {SearchService} from '../../core/rest/search.service';
+import {Collection, Query} from '../../core/dto';
+import {CollectionService, ImportService, SearchService} from '../../core/rest';
 import {Role} from '../permissions/role';
 import {PostItLayout} from '../utils/post-it-layout';
-import {PostItCollectionData} from './post-it-collection-data';
+import {PostItCollectionModel} from './post-it-collection-model';
 import {DeprecatedQueryConverter} from '../utils/query-converter';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {HtmlModifier} from '../utils/html-modifier';
 import {NotificationService} from '../../core/notifications/notification.service';
-import {finalize} from 'rxjs/operators';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'post-it-collections',
@@ -60,11 +57,11 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   @ViewChildren('postItElement')
   public postItElements: QueryList<ElementRef>;
 
-  public postItToDelete: PostItCollectionData;
+  public postItToDelete: PostItCollectionModel;
 
-  public postIts: PostItCollectionData[];
+  public postIts: PostItCollectionModel[];
 
-  public lastClickedPostIt: PostItCollectionData;
+  public lastClickedPostIt: PostItCollectionModel;
 
   public dragging: boolean = false;
 
@@ -105,8 +102,8 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       });
   }
 
-  private collectionToPostIt(collection: Collection, initialized: boolean): PostItCollectionData {
-    const postIt = new PostItCollectionData;
+  private collectionToPostIt(collection: Collection, initialized: boolean): PostItCollectionModel {
+    const postIt = new PostItCollectionModel;
     postIt.collection = collection;
     postIt.initialized = initialized;
 
@@ -143,7 +140,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   public newPostIt(): void {
-    const newPostIt = new PostItCollectionData;
+    const newPostIt = new PostItCollectionModel;
     newPostIt.initialized = false;
     newPostIt.collection = {
       name: '',
@@ -153,11 +150,20 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     };
 
     this.postIts.push(newPostIt);
-    setTimeout(() => this.postItElements.last.nativeElement.getElementsByTagName('textarea').item(0).focus());
+    this.focusNewPostIt();
     this.layout.refresh();
   }
 
-  public initializePostIt(postIt: PostItCollectionData): void {
+  private focusNewPostIt(): void {
+    setTimeout(() => {
+      const newPostIt = this.postItElements.last.nativeElement;
+      const newPostItTextField = newPostIt.getElementsByTagName('textarea').item(0);
+      newPostItTextField.focus();
+    });
+  }
+
+  public initializePostIt(postIt: PostItCollectionModel): void {
+    this.trimNameWhitespace(postIt);
     postIt.initializing = true;
 
     this.collectionService.createCollection(postIt.collection)
@@ -174,7 +180,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
         });
   }
 
-  private getCollection(postIt: PostItCollectionData): void {
+  private getCollection(postIt: PostItCollectionModel): void {
     this.collectionService.getCollection(postIt.collection.code)
       .subscribe(
         collection => {
@@ -186,10 +192,12 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
         });
   }
 
-  public updateCollection(postIt: PostItCollectionData): void {
+  public updateCollection(postIt: PostItCollectionModel): void {
     if (postIt === this.postItToDelete) {
       return;
     }
+
+    this.trimNameWhitespace(postIt);
 
     this.collectionService.updateCollection(postIt.collection)
       .subscribe(
@@ -221,7 +229,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.importService.importFile(format, result, name)
       .subscribe(
         collection => {
-          const newPostIt = new PostItCollectionData;
+          const newPostIt = new PostItCollectionModel;
           newPostIt.initialized = true;
           newPostIt.collection = collection;
 
@@ -251,25 +259,27 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.fileChange(event.dataTransfer.files);
   }
 
-  private removeCollection(postIt: PostItCollectionData): void {
+  private removeCollection(postIt: PostItCollectionModel): void {
     if (postIt.initialized) {
-      this.collectionService.removeCollection(postIt.collection.code)
-        .subscribe(
-          response => {
-            this.postItToDelete = null;
-            this.notificationService.success('Collection removed');
-          },
-          error => {
-            this.notificationService.error('Failed removing collection');
-          }
-        );
+      this.sendRemoveCollectionRequest(postIt);
     }
 
     this.postIts.splice(this.postItIndex(postIt), 1);
     this.layout.refresh();
   }
 
-  public onTextAreaBlur(postIt: PostItCollectionData, textArea: HTMLTextAreaElement): void {
+  private sendRemoveCollectionRequest(deletedCollectionPostIt: PostItCollectionModel): void {
+    this.postItToDelete = deletedCollectionPostIt;
+
+    this.collectionService.removeCollection(deletedCollectionPostIt.collection.code).pipe(
+      finalize(() => this.postItToDelete = null)
+    ).subscribe(
+      response => this.notificationService.success('Collection removed'),
+      error => this.notificationService.error('Failed removing collection')
+    );
+  }
+
+  public onTextAreaBlur(postIt: PostItCollectionModel, textArea: HTMLTextAreaElement): void {
     if (postIt.initializing) {
       return;
     }
@@ -281,7 +291,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public confirmDeletion(postIt: PostItCollectionData): void {
+  public confirmDeletion(postIt: PostItCollectionModel): void {
     this.notificationService.confirm('Are you sure you want to remove the collection?', 'Delete?', [
       {text: 'Yes', action: () => this.removeCollection(postIt), bold: false},
       {text: 'No'}
@@ -299,12 +309,13 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private postItIndex(collectionData: PostItCollectionData): number {
+  private postItIndex(collectionData: PostItCollectionModel): number {
     const index = this.postIts.findIndex(collectionDataObject => collectionDataObject === collectionData);
     return index === -1 ? null : index;
   }
 
   public updateToScrollbarHeight(textArea: HTMLTextAreaElement): void {
+    // the only way to figure out the needed scroll height is to set it to auto
     textArea.style.height = 'auto';
     textArea.style.height = `${textArea.scrollHeight}px`;
   }
@@ -321,18 +332,26 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   public emptyQuery(): boolean {
-    return Object.values(this.query).find(value => {
-      if (value.constructor === Array) {
-        value = value.length;
-      }
+    const queryValues = Object.values(this.query);
+    const notEmptyValue = queryValues.find(this.isNotEmpty);
+    return notEmptyValue === undefined;
+  }
 
-      return !!value;
-    }) === undefined;
+  private isNotEmpty(value: any): boolean {
+    if (value.constructor === Array) {
+      return value.length;
+    }
+
+    return !!value;
   }
 
   public documentsQuery(collectionCode: string): string {
     const query: Query = {collectionCodes: [collectionCode]};
     return QueryConverter.toString(query);
+  }
+
+  private trimNameWhitespace(postItWithNameToTrim: PostItCollectionModel): void {
+    postItWithNameToTrim.collection.name = postItWithNameToTrim.collection.name.trim();
   }
 
   public removeHtmlComments(html: HTMLElement): string {

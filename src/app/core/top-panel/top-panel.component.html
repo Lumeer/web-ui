@@ -12,12 +12,11 @@
     <div class="d-flex justify-content-end col order-lg-3">
       <div class="panel-item lead mr-2"
            *ngIf="isWorkspaceSet()">
-        <a [routerLink]="['/workspace']"
-           title="Choose workspace">
         <span>
-          {{workspace.projectCode}}@{{workspace.organizationCode}}
+          <a [routerLink]="['/workspace']" title="Choose workspace organization">{{workspace.organizationCode}}</a>
+          &nbsp;/&nbsp;
+          <a [routerLink]="['/workspace']" title="Choose workspace project">{{workspace.projectCode}}</a>
         </span>
-        </a>
       </div>
 
       <!-- TODO remove once Angular supports ICU messages in attributes -->
@@ -37,7 +36,8 @@
       </div>
 
       <div class="dropdown show ml-2">
-        <a href="#" role="button" id="profileDropdownLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="text-secondary">
+        <a href="#" role="button" id="profileDropdownLink" data-toggle="dropdown" aria-haspopup="true"
+           aria-expanded="false" class="text-secondary">
           <i class="fa fa-user-circle fa-3x"></i>
         </a>
 
@@ -55,7 +55,8 @@
             <span i18n="@@menu.account">Account</span>
           </a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" title="Sign Out" href="https://auth.lumeer.io/auth/realms/lumeer/protocol/openid-connect/logout?redirect_uri=https%3A%2F%2Fwww.lumeer.io%2F">
+          <a class="dropdown-item" title="Sign Out"
+             href="https://auth.lumeer.io/auth/realms/lumeer/protocol/openid-connect/logout?redirect_uri=https%3A%2F%2Fwww.lumeer.io%2F">
             <i class="fas fa-fw fa-sign-in" data-fa-transform="left-4" aria-hidden="true"></i>
             <span i18n="@@menu.signOut">Sign Out</span>
           </a>

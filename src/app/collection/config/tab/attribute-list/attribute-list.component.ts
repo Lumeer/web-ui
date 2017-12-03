@@ -88,6 +88,11 @@ export class AttributeListComponent {
     // this.updateCollection(); // TODO uncomment once backend supports defaultAttributes
   }
 
+  public removeDefaultAttribute(): void {
+    this.collection.defaultAttribute = null;
+    // this.updateCollection(); // TODO uncomment once backend supports defaultAttributes
+  }
+
   public createAttribute(newAttributeName: string): void {
     this.newAttributeName = '';
     const newAttribute = this.emptyAttribute();
@@ -181,7 +186,6 @@ export class AttributeListComponent {
       .filter(suggestion => !suggestionNames.includes(suggestion.name));
   }
 
-  //======= Visual functions =======//
   public hexColorOpacity(hexColor: string, opacity: number): string {
     const hexToNumber = (start: number) => parseInt(hexColor.substr(start, 2), 16);
     const fadedColor = [hexToNumber(1), hexToNumber(3), hexToNumber(5), opacity].join(', ');
@@ -225,6 +229,10 @@ export class AttributeListComponent {
       .join(', ');
 
     return `rgb(${darkerColors})`;
-  };
+  }
+
+  public trackByIndex(index: number, obj: any): number {
+    return index;
+  }
 
 }

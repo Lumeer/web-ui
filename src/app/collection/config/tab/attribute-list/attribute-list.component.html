@@ -1,7 +1,7 @@
 <table class="table table-hover {{ colored ? 'table-striped' : null }} table-bordered border-0">
   <thead class="thead-default" [style.background-color]="colored && hexColorOpacity(collection.color, 0.5)">
   <tr>
-    <th *ngIf="allowSettingPrimaryAttribute" style="width: 45px" class="bg-white border-0"></th>
+    <th *ngIf="allowSettingPrimaryAttribute" style="width: 45px" class="border-0"></th>
     <th style="width: 230px"
         class="bg-transparent align-baseline border-0"
         i18n="@@collection.config.tab.attributes.attribute">
@@ -49,11 +49,12 @@
       <th *ngIf="allowSettingPrimaryAttribute" scope="row"
           class="first-row {{ collection.defaultAttribute === attribute ? 'visible' : null }}">
         <i *ngIf="collection.defaultAttribute === attribute"
-           class="fa fa-fw fa-dot-circle"
-           title="Default Attribute"
-           i18n-title="@@collection.config.tab.attributes.default.attribute"></i>
+           class="fas fa-fw fa-check-circle"
+           title="Remove default Attribute"
+           i18n-title="@@collection.config.tab.attributes.remove.default.attribute"
+           (click)="removeDefaultAttribute()"></i>
         <i *ngIf="collection.defaultAttribute !== attribute"
-           class="far fa-fw fa-circle"
+           class="fas fa-fw fa-check"
            title="Set Default Attribute"
            i18n-title="@@collection.config.tab.default.attribute.set"
            (click)="setDefaultAttribute(attribute)"></i>
@@ -70,14 +71,20 @@
       <td class="text-right">{{ formatNumber(attribute.usageCount) }}</td>
       <td>
         <div class="d-flex flex-wrap position-relative">
-          <span class="constraint px-2 ml-1 rounded"
-                *ngFor="let constraint of attribute.constraints; let idx = index"
-                [style.background-color]="darken(constraintColor(constraint), mouseOver.attribute === attribute && mouseOver.constraint === constraint ? 40 : 0)"
-                (mouseenter)="mouseOver = {attribute: attribute, constraint: constraint}"
-                (mouseleave)="mouseOver = {attribute: null, constraint: ''}"
-                (click)="removeConstraint(attribute, idx)"
-                title="Remove Constraint"
-                i18n="@@collection.config.tab.attributes.constraint.remove">{{ constraint }}</span>
+          <div class="constraint px-2 ml-1 rounded"
+               *ngFor="let constraint of attribute.constraints; let idx = index; trackBy:trackByIndex"
+               [style.background-color]="darken(constraintColor(constraint), mouseOver.attribute === attribute && mouseOver.constraint === constraint ? 40 : 0)"
+               (mouseenter)="mouseOver = {attribute: attribute, constraint: constraint}"
+               (mouseleave)="mouseOver = {attribute: null, constraint: ''}">
+            <input class="border-0 input text-light" #input
+                   [(ngModel)]="attribute.constraints[idx]"
+                   [style.width]="((input.value.length + 1) * 8) + 'px'"
+                   (blur)="updateAttribute(attribute)"/>
+            <i class="fas fa fa-times remove font-weight-light" aria-hidden="true"
+               (click)="removeConstraint(attribute, idx)"
+               title="Remove Constraint"
+               i18n="@@collection.config.tab.attributes.constraint.remove"></i>
+          </div>
           <input class="px-2 ml-1 border-0"
                  [(ngModel)]="attribute.newConstraint"
                  (ngModelChange)="refreshSuggestions()"
