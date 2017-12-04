@@ -4,25 +4,23 @@
          *ngFor="let queryItem of queryItems; let ix = index"
          [ngStyle]="{'background': queryItemBackground(queryItem)}"
          [style.box-shadow]="queryItem.isComplete() ? '0px 0px 0px 0px #f00 inset' : '0px 0px 0px 2px #f00 inset'">
-      <ng-container *ngIf="queryItem">
-        <div class="icon-container" *ngIf="queryItem.icon && queryItem.icon2">
-          <i class="{{queryItem.icon}} icon-left" [style.color]="queryItem.color" aria-hidden="true"></i>
-          <i class="{{queryItem.icon2}} icon-right" [style.color]="queryItem.color2" aria-hidden="true"></i>
-        </div>
-        <i *ngIf="queryItem.icon && !queryItem.icon2" class="{{queryItem.icon}} mr-1"
-           [style.color]="queryItem.color" aria-hidden="true"></i>
-        <span class="mr-1" [class.font-weight-bold]="isCollectionItem(queryItem)">{{queryItem.text}}</span>
-        <div #queryItemCondition id="{{ix}}"
-             class="mr-1 text-nowrap d-inline-flex"
-             *ngIf="queryItem.condition != undefined && queryItem.condition != null"
-             (keydown)="onKeyDownCondition($event, ix)"
-             (focus)="showSuggestions()"
-             [textContent]="queryItem.condition" (input)="queryItem.condition=$event.target.textContent"
-             (blur)="onConditionBlur()"
-             contenteditable="true">
-        </div>
-        <i class="fas fa fa-times remove" (click)="onRemoveQueryItem(ix)" aria-hidden="true"></i>
-      </ng-container>
+      <div class="icon-container" *ngIf="queryItem.icon && queryItem.icon2">
+        <i class="{{queryItem.icon}} icon-left" [style.color]="queryItem.color" aria-hidden="true"></i>
+        <i class="{{queryItem.icon2}} icon-right" [style.color]="queryItem.color2" aria-hidden="true"></i>
+      </div>
+      <i *ngIf="queryItem.icon && !queryItem.icon2" class="{{queryItem.icon}} mr-1"
+         [style.color]="queryItem.color" aria-hidden="true"></i>
+      <span class="mr-1" [class.font-weight-bold]="isCollectionItem(queryItem)">{{queryItem.text}}</span>
+      <div #queryItemCondition id="{{ix}}"
+           class="mr-1 text-nowrap d-inline-flex"
+           *ngIf="queryItem.condition != undefined && queryItem.condition != null"
+           (keydown)="onKeyDownCondition($event, ix)"
+           (focus)="showSuggestions()"
+           [textContent]="queryItem.condition" (input)="queryItem.condition=$event.target.textContent"
+           (blur)="onConditionBlur()"
+           contenteditable="true">
+      </div>
+      <i class="fas fa fa-times remove" (click)="onRemoveQueryItem(ix)" aria-hidden="true"></i>
     </div>
 
     <div class="dropdown" *ngIf="shouldShowSuggestions && suggestionItems.length > 0">

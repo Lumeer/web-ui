@@ -62,7 +62,6 @@ export class ViewsEffects {
       const viewDto = ViewConverter.convertToDto(action.payload.view);
 
       return this.viewService.createView(viewDto).pipe(
-        skipWhile((dto: View) => isNullOrUndefined(dto)),
         map(dto => ViewConverter.convertToModel(dto))
       );
     }),
@@ -91,7 +90,6 @@ export class ViewsEffects {
       const viewDto = ViewConverter.convertToDto(action.payload.view);
 
       return this.viewService.updateView(action.payload.viewCode, viewDto).pipe(
-        skipWhile((dto: View) => isNullOrUndefined(dto)),
         map(dto => ViewConverter.convertToModel(dto))
       );
     }),

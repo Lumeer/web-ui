@@ -1,9 +1,6 @@
-<div class="card-header d-flex py-1">
-  <span class="mr-auto"
-        [style.color]="collection.color">
-    <i class="icon {{ collection.icon }} mr-1"></i>
-    {{ collection.name }}
-  </span>
+<div class="card-header d-inline-flex py-1 px-3">
+  <i class="icon {{ collection.icon }} mr-1" [style.color]="collection.color"></i>
+  <div class="collection-name" [style.color]="collection.color">{{ collection.name }}</div>
 
   <ng-container *ngIf="hasWriteRole()">
     <i class="button text-danger fa fa-times rounded align-self-center p-1"

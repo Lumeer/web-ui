@@ -40,7 +40,6 @@ export class OrganizationSettingsComponent implements OnInit {
   public organizationCode: string;
   private originalOrganizationCode: string;
   public projectsCount: number;
-  public organizationDescriptionEditable: boolean = false;
 
   @ViewChild('organizationDescription')
   public organizationDescription: ElementRef;
@@ -138,17 +137,6 @@ export class OrganizationSettingsComponent implements OnInit {
 
   public getNumberOfProjects(): void {
     this.projectService.getProjects(this.organizationCode).subscribe((projects: Project[]) => (this.projectsCount = projects.length));
-  }
-
-  public onOrganizationDescriptionBlur(description: string) {
-    this.organizationDescriptionEditable = false;
-  }
-
-  public onOrganizationDescriptionEdit() {
-    this.organizationDescriptionEditable = true;
-    setTimeout(() => {
-      this.organizationDescription.nativeElement.focus();
-    }, 50);
   }
 
   public initialized(): boolean {

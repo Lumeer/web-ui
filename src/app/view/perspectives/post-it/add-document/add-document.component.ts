@@ -17,10 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
+import {Store} from '@ngrx/store';
 
-import {Document} from '../../../../core/dto/document';
-import {Query} from '../../../../core/dto/query';
+import {Document, Query} from '../../../../core/dto';
+import {AppState} from '../../../../core/store/app.state';
+import {selectQuery} from '../../../../core/store/navigation/navigation.state';
+import {Subscription} from 'rxjs/Rx';
 
 @Component({
   selector: 'add-document',
@@ -29,17 +32,35 @@ import {Query} from '../../../../core/dto/query';
 })
 export class PostItAddDocumentComponent {
 
-  @Input()
-  public query: Query;
-
   @Output()
   public newDocument = new EventEmitter<Document>();
+
+  public query: Query;
+
+  private appStateSubscription: Subscription;
+
+  constructor(private store: Store<AppState>) {
+  }
+
+  public ngOnInit(): void {
+    this.getAppStateAndInitialize();
+  }
+
+  private getAppStateAndInitialize() {
+    this.appStateSubscription = this.store.select(selectQuery).subscribe(query => this.query = query);
+  }
 
   public onClick(): void {
     const newDocument = new Document;
     newDocument.collectionCode = this.query.collectionCodes[0];
 
     this.newDocument.emit(newDocument);
+  }
+
+  public ngOnDestroy(): void {
+    if (this.appStateSubscription) {
+      this.appStateSubscription.unsubscribe();
+    }
   }
 
 }

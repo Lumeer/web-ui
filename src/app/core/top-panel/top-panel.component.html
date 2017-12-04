@@ -13,9 +13,9 @@
       <div class="panel-item lead mr-2"
            *ngIf="isWorkspaceSet()">
         <span>
-          <a [routerLink]="['/workspace']" title="Choose workspace organization">{{workspace.organizationCode}}</a>
-          &nbsp;/&nbsp;
-          <a [routerLink]="['/workspace']" title="Choose workspace project">{{workspace.projectCode}}</a>
+          <a tabindex (click)="goToWorkspaceOrganization()" title="Workspace organization">{{workspace.organizationCode}}</a>
+          <span class="mx-1">/</span>
+          <a tabindex (click)="goToWorkspaceProject()" title="Workspace project">{{workspace.projectCode}}</a>
         </span>
       </div>
 

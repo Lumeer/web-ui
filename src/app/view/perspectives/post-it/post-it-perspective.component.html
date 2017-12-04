@@ -1,8 +1,7 @@
-<div class="layout d-flex" #layout>
+<div class="post-it-document-layout d-flex" #layout>
 
   <add-document *ngIf="isAddButtonShown()"
                 class="layout-item"
-                [query]="query"
                 (newDocument)="createDocument($event)"></add-document>
 
   <ng-container *ngFor="let postIt of postIts; let idx = index">

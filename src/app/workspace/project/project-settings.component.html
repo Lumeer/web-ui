@@ -3,7 +3,7 @@
     <div class="col"></div>
     <div class="whole col-12 col-lg-11 col-xl-10" [style.opacity]="initialized() ? '1' : '0'">
       <div class="d-flex flex-row justify-content-start">
-        <a class="fa fa-arrow-left " [routerLink]="['/workspace']  "></a>
+        <a class="fa fa-arrow-left " [routerLink]="['/workspace']"></a>
         <i class="color-class fa-fw {{ project.icon }} project-icon " [style.color]="project.color"
            data-toggle="dropdown"></i>
         <div *ngIf="initialized()" class="dropdown-menu">
@@ -53,12 +53,7 @@
       </div>
 
       <div class="description d-flex py-3">
-        <div>
-          <i class="fas fa fa-pencil edit"
-             (click)="onProjectDescriptionEdit()"></i>
-        </div>
-        <div class="text flex-grow-2" [attr.contenteditable]="projectDescriptionEditable"
-             (blur)="onProjectDescriptionBlur(projectDescription.textContent)"
+        <div class="text flex-grow-2 edit-border" contenteditable="true"
              #projectDescription>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
           finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue

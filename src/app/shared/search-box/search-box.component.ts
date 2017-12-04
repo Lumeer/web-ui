@@ -84,7 +84,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   private viewSubscription: Subscription;
   private storeSubscription: Subscription;
 
-  private readonly DEFAULT_COLOR = '#faeabb';
+  private static readonly DEFAULT_COLOR = '#faeabb';
 
   constructor(private collectionService: CollectionService,
               private linkTypeService: LinkTypeService,
@@ -152,7 +152,8 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   private getQueryItemsFromView(viewCode: string) {
     this.viewSubscription = this.viewService.getView(viewCode).pipe(
-      switchMap(view => view ? this.queryItemsConverter.fromQuery(view.query) : Observable.of([]))
+      switchMap(view => view ? this.queryItemsConverter.fromQuery(view.query) : Observable.of([])),
+      map(queryItems => queryItems.filter(queryItem => !!queryItem))
     ).subscribe(queryItems => {
       if (this.queryItems.length === 0) {
         this.queryItems = queryItems;
@@ -452,6 +453,10 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   private addQueryItem(queryItem: QueryItem) {
+    if (!queryItem) {
+      return;
+    }
+
     if (queryItem.type === QueryItemType.Condition) {
       if (this.selectedQueryItem >= 0 && this.queryItems[this.selectedQueryItem].type === QueryItemType.Attribute) {
         (this.queryItems[this.selectedQueryItem] as AttributeQueryItem).condition = queryItem.text;
@@ -460,6 +465,11 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     } else {
       if (queryItem.type === QueryItemType.Attribute) {
         const collectionItem = (queryItem as AttributeQueryItem).toCollectionQueryItem();
+
+        if (!collectionItem) {
+          return;
+        }
+
         if (this.queryItems.length === 0 || !this.isOneOfLastItems(collectionItem)) {
           this.queryItems.push(collectionItem);
         }
@@ -519,7 +529,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
   }
 
   private lightenColor(color: string | undefined): string {
-    return color ? HtmlModifier.shadeColor(color, .5) : this.DEFAULT_COLOR;
+    return color ? HtmlModifier.shadeColor(color, .5) : SearchBoxComponent.DEFAULT_COLOR;
   }
 
 }

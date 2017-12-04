@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../collection/constants';
@@ -32,8 +32,11 @@ import {HtmlModifier} from '../utils/html-modifier';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {AppState} from '../../core/store/app.state';
-import {selectWorkspace} from '../../core/store/navigation/navigation.state';
-import {finalize} from 'rxjs/operators';
+import {selectQuery, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {finalize, first} from 'rxjs/operators';
+
+import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'post-it-collections',
@@ -44,9 +47,6 @@ import {finalize} from 'rxjs/operators';
   }
 })
 export class PostItCollectionsComponent implements OnInit, OnDestroy {
-
-  @Input()
-  public query: Query;
 
   @Input()
   public editable: boolean = true;
@@ -69,29 +69,49 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   private workspace: Workspace;
 
+  private query: Query;
+
+  private appStateSubscription: Subscription;
+
   constructor(private collectionService: CollectionService,
               private searchService: SearchService,
               private notificationService: NotificationService,
               private importService: ImportService,
-              private store: Store<AppState>,
-              private zone: NgZone) {
-    store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+              private store: Store<AppState>) {
   }
 
   public ngOnInit(): void {
-    this.initializeLayout();
-    this.loadCollections();
+    this.getAppStateAndInitialize();
+  }
+
+  private getAppStateAndInitialize() {
+    this.appStateSubscription = Observable.combineLatest(
+      this.store.select(selectWorkspace),
+      this.store.select(selectQuery)
+    ).pipe(
+      first()
+    ).subscribe(([workspace, query]) => {
+      this.workspace = workspace;
+      this.query = query;
+
+      if (!this.hasWorkspace()) {
+        return;
+      }
+
+      this.initializeLayout();
+      this.getCollections();
+    });
   }
 
   private initializeLayout(): void {
     this.layout = new PostItLayout({
-      container: '.parent',
+      container: '.post-it-collection-layout',
       item: '.layout-item',
       gutter: 10
-    }, this.zone);
+    });
   }
 
-  private loadCollections() {
+  private getCollections() {
     this.searchService.searchCollections(DeprecatedQueryConverter.removeLinksFromQuery(this.query)).subscribe(
       collections => {
         this.postIts = collections.map(collection => this.collectionToPostIt(collection, true));
@@ -162,22 +182,26 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  public initializePostIt(postIt: PostItCollectionModel): void {
-    this.trimNameWhitespace(postIt);
+  public createPostIt(postIt: PostItCollectionModel): void {
     postIt.initializing = true;
 
     this.collectionService.createCollection(postIt.collection)
       .pipe(finalize(() => postIt.initializing = false))
       .subscribe(
-        collection => {
-          postIt.collection.code = collection.code;
-          postIt.initialized = true;
-          this.getCollection(postIt);
-          this.notificationService.success('Collection created');
-        },
-        error => {
-          this.notificationService.error('Creating collection failed');
-        });
+        collection => this.finishCreatingCollection(postIt, collection),
+        error => this.notificationService.error('Creating collection failed')
+      );
+  }
+
+  private finishCreatingCollection(postIt: PostItCollectionModel, collection: Collection): void {
+    postIt.collection.code = collection.code;
+    postIt.initialized = true;
+
+    this.notificationService.success('Collection created');
+
+    if (this.hasWorkspace()) {
+      this.getCollection(postIt);
+    }
   }
 
   private getCollection(postIt: PostItCollectionModel): void {
@@ -188,16 +212,14 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
           this.layout.refresh();
         },
         error => {
-          this.notificationService.error('Refreshing collection failed');
+          this.notificationService.error('Getting collection failed');
         });
   }
 
   public updateCollection(postIt: PostItCollectionModel): void {
-    if (postIt === this.postItToDelete) {
+    if (postIt === this.postItToDelete || !this.hasWorkspace()) {
       return;
     }
-
-    this.trimNameWhitespace(postIt);
 
     this.collectionService.updateCollection(postIt.collection)
       .subscribe(
@@ -287,7 +309,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     if (postIt.initialized) {
       this.updateCollection(postIt);
     } else {
-      postIt.collection.name && this.initializePostIt(postIt);
+      postIt.collection.name && this.createPostIt(postIt);
     }
   }
 
@@ -320,29 +342,8 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     textArea.style.height = `${textArea.scrollHeight}px`;
   }
 
-  public workspacePath(): string {
-    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
-  }
-
-  public ngOnDestroy(): void {
-    // might get called before onInit finishes
-    if (this.layout) {
-      this.layout.destroy();
-    }
-  }
-
   public emptyQuery(): boolean {
-    const queryValues = Object.values(this.query);
-    const notEmptyValue = queryValues.find(this.isNotEmpty);
-    return notEmptyValue === undefined;
-  }
-
-  private isNotEmpty(value: any): boolean {
-    if (value.constructor === Array) {
-      return value.length;
-    }
-
-    return !!value;
+    return !this.query || (this.query && this.query.collectionCodes && this.query.collectionCodes.length === 0);
   }
 
   public documentsQuery(collectionCode: string): string {
@@ -357,6 +358,25 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   public removeHtmlComments(html: HTMLElement): string {
     if (html) {
       return HtmlModifier.removeHtmlComments(html);
+    }
+  }
+
+  public workspacePath(): string {
+    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
+  }
+
+  private hasWorkspace(): boolean {
+    return !!(this.workspace && this.workspace.organizationCode && this.workspace.projectCode);
+  }
+
+  public ngOnDestroy(): void {
+    // might get called before onInit finishes
+    if (this.layout) {
+      this.layout.destroy();
+    }
+
+    if (this.appStateSubscription) {
+      this.appStateSubscription.unsubscribe();
     }
   }
 

@@ -26,13 +26,14 @@ import {Project} from '../dto';
 import {FetchFailedError} from '../error/fetch-failed.error';
 import {NetworkError} from '../error/network.error';
 import {PermissionService} from './permission.service';
+import {LumeerError} from '../error/lumeer.error';
 
 @Injectable()
 export class ProjectService extends PermissionService {
 
   public getProjects(orgCode: string): Observable<Project[]> {
     if (!this.hasOrganizationApiPrefix(orgCode)) {
-      return;
+      throw new LumeerError('Organization not set');
     }
 
     return this.httpClient.get<Project[]>(this.apiPrefix(orgCode)).pipe(
@@ -42,7 +43,7 @@ export class ProjectService extends PermissionService {
 
   public getProject(orgCode: string, projCode: string): Observable<Project> {
     if (!this.hasFullApiPrefix(orgCode, projCode)) {
-      return;
+      throw new LumeerError(`Workspace not set ${orgCode} ${projCode}`);
     }
 
     return this.httpClient.get<Project>(this.apiPrefix(orgCode, projCode));
@@ -50,7 +51,7 @@ export class ProjectService extends PermissionService {
 
   public deleteProject(orgCode: string, projCode: string): Observable<HttpResponse<any>> {
     if (!this.hasFullApiPrefix(orgCode, projCode)) {
-      return;
+      throw new LumeerError(`Workspace not set ${orgCode} ${projCode}`);
     }
 
     return this.httpClient.delete(this.apiPrefix(orgCode, projCode), {observe: 'response', responseType: 'text'});
@@ -58,7 +59,7 @@ export class ProjectService extends PermissionService {
 
   public createProject(orgCode: string, project: Project): Observable<Project> {
     if (!this.hasOrganizationApiPrefix(orgCode)) {
-      return;
+      throw new LumeerError('Organization not set');
     }
 
     return this.httpClient.post(this.apiPrefix(orgCode), project, {observe: 'response', responseType: 'text'}).pipe(
@@ -68,7 +69,7 @@ export class ProjectService extends PermissionService {
 
   public editProject(orgCode: string, projCode: string, project: Project): Observable<Project> {
     if (!this.hasFullApiPrefix(orgCode, projCode)) {
-      return;
+      throw new LumeerError(`Workspace not set ${orgCode} ${projCode}`);
     }
 
     return this.httpClient.put(this.apiPrefix(orgCode, projCode), project, {observe: 'response', responseType: 'text'}).pipe(

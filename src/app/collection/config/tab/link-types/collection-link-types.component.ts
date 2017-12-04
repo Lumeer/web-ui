@@ -22,10 +22,9 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 
 import {COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../constants';
-import {Collection} from '../../../../core/dto/collection';
+import {Collection} from '../../../../core/dto';
 import {CollectionTabComponent} from '../collection-tab.component';
-import {LinkTypeService} from '../../../../core/rest/link-type.service';
-import {CollectionService} from '../../../../core/rest/collection.service';
+import {CollectionService, LinkTypeService} from '../../../../core/rest';
 import {CollectionSelectService} from '../../../service/collection-select.service';
 import {LinkTypeModel} from './LinkTypeModel';
 import {NotificationService} from '../../../../core/notifications/notification.service';
@@ -105,7 +104,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   public addLinkType(): void {
     const newLinkType = this.emptyLinkType();
     this.linkTypes.push(newLinkType);
-    setTimeout(() => this.linkTypeNameInput.last.nativeElement.focus());
+    setTimeout(() => this.linkTypeNameInput.last && this.linkTypeNameInput.last.nativeElement.focus());
   }
 
   public createLinkType(linkTypeModel: LinkTypeModel): void {

@@ -17,17 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ElementRef,
-  Input,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren
-} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {DocumentService} from 'app/core/rest/document.service';
@@ -35,15 +25,17 @@ import {SearchService} from 'app/core/rest/search.service';
 import {Collection, Document, Query} from '../../../core/dto';
 import {CollectionService} from '../../../core/rest';
 import {AppState} from '../../../core/store/app.state';
-import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 import {PostItLayout} from '../../../shared/utils/post-it-layout';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
 import {Direction} from './document-data/direction';
 import {PostItDocumentComponent} from './document/post-it-document.component';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {DocumentModel} from './document-data/document-model';
+import {selectQuery, selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {Workspace} from '../../../core/store/navigation/workspace.model';
+import {finalize, first} from 'rxjs/operators';
+import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs';
-import {finalize} from 'rxjs/operators';
 
 @Component({
   selector: 'post-it-perspective',
@@ -56,9 +48,6 @@ import {finalize} from 'rxjs/operators';
 export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   @Input()
-  public query: Query;
-
-  @Input()
   public editable: boolean = true;
 
   @ViewChild('layout')
@@ -69,25 +58,29 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public postIts: DocumentModel[] = [];
 
-  private layout: PostItLayout;
-
   public lastClickedPostIt: DocumentModel;
 
   public fetchingData: boolean;
 
   public collections: { [collectionCode: string]: Collection } = {};
 
+  public query: Query;
+
+  private workspace: Workspace;
+
   private attributeSuggestions: { [collectionCode: string]: string[] } = {};
 
-  private infiniteScrollCallback: () => void | null;
+  private onInfiniteScroll: () => void | null;
 
-  private page = 0;
+  private appStateSubscription: Subscription;
 
-  private layoutGutter = 10;
+  private layout: PostItLayout;
 
   private fetchedCollections = 0;
 
   private collectionsToFetch = 0;
+
+  private page = 0;
 
   // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
   private scrollEventOptions = {
@@ -95,36 +88,38 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     passive: true
   };
 
-  private querySubscription: Subscription;
-
   constructor(private collectionService: CollectionService,
               private documentService: DocumentService,
               private searchService: SearchService,
               private notificationService: NotificationService,
-              private store: Store<AppState>,
-              private zone: NgZone) {
+              private store: Store<AppState>) {
   }
 
   public ngOnInit(): void {
-    this.initializeLayout();
-    this.setInfiniteScroll(true);
+    this.getAppStateAndInitialize();
+  }
 
-    this.querySubscription = this.store.select(selectNavigation).subscribe(navigation => {
-      this.query = navigation.query;
+  private getAppStateAndInitialize() {
+    this.appStateSubscription = Observable.combineLatest(
+      this.store.select(selectWorkspace),
+      this.store.select(selectQuery)
+    ).pipe(
+      first()
+    ).subscribe(([workspace, query]) => {
+      this.workspace = workspace;
+      this.query = query;
+
+      this.initializeLayout();
       this.fetchPostIts();
     });
   }
 
-  public suggestedAttributes(): [string, string[]][] {
-    return Object.entries(this.attributeSuggestions);
-  }
-
   private initializeLayout(): void {
     this.layout = new PostItLayout({
-      container: '.layout',
+      container: '.post-it-document-layout',
       item: '.layout-item',
-      gutter: this.layoutGutter
-    }, this.zone);
+      gutter: 10
+    });
   }
 
   public setInfiniteScroll(enabled: boolean): void {
@@ -136,11 +131,11 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private turnOnInfiniteScroll(): void {
-    if (this.infiniteScrollCallback) {
+    if (this.onInfiniteScroll) {
       this.turnOffInfiniteScroll();
     }
 
-    this.infiniteScrollCallback = () => {
+    this.onInfiniteScroll = () => {
       if (this.fetchingData) {
         return;
       }
@@ -150,12 +145,12 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       }
     };
 
-    (<any>window).addEventListener('scroll', this.infiniteScrollCallback, this.scrollEventOptions);
+    (<any>window).addEventListener('scroll', this.onInfiniteScroll, this.scrollEventOptions);
   }
 
   private turnOffInfiniteScroll(): void {
-    (<any>window).removeEventListener('scroll', this.infiniteScrollCallback, this.scrollEventOptions);
-    this.infiniteScrollCallback = null;
+    (<any>window).removeEventListener('scroll', this.onInfiniteScroll, this.scrollEventOptions);
+    this.onInfiniteScroll = null;
   }
 
   private selectedAttributeProperty(): AttributePropertySelection {
@@ -224,7 +219,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private documentsPerRow(): number {
     // padding - postIt - padding - postIt - padding
     const postItWidth = 215;
-    const postItPaddingOnOneSide = this.layoutGutter;
+    const postItPaddingOnOneSide = 10;
     const totalPostItWidth = postItWidth + postItPaddingOnOneSide;
 
     const layoutWidth = this.layoutElement.nativeElement.clientWidth;
@@ -246,15 +241,16 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private fetchPostIts(): void {
-    if (this.fetchingData) {
+    if (this.fetchingData || !this.query || !this.hasWorkspace()) {
       return;
     }
 
     this.setFetchingPageStarted();
+
     this.searchService.searchDocuments(this.queryPage(this.page)).pipe(
       finalize(() => this.setFetchingPageFinished())
     ).subscribe(
-      documents => this.fetchDocumentData(documents),
+      documents => this.addDocumentsToLayoutAndGetTheirCollections(documents),
       error => this.notificationService.error('Failed fetching documents')
     );
   }
@@ -270,11 +266,11 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.page++;
   }
 
-  private fetchDocumentData(documents: Document[]): void {
+  private addDocumentsToLayoutAndGetTheirCollections(documents: Document[]): void {
     documents.forEach(document => this.postIts.push(this.documentToPostIt(document, true)));
 
     const uniqueCollectionCodes = new Set(documents.map(document => document.collectionCode));
-    this.fetchCollections(uniqueCollectionCodes);
+    this.getCollections(uniqueCollectionCodes);
   }
 
   private documentToPostIt(document: Document, initialized: boolean): DocumentModel {
@@ -287,12 +283,12 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return postIt;
   }
 
-  private fetchCollections(collectionCodes: Set<string>): void {
+  private getCollections(collectionCodes: Set<string>): void {
     this.fetchedCollections = 0;
     this.collectionsToFetch = collectionCodes.size;
 
     collectionCodes.forEach(collectionCode => {
-      if (this.collections[collectionCode]) {
+      if (this.collections[collectionCode] || !this.hasWorkspace()) {
         this.countAsFetchedAndRefreshIfLast();
         return;
       }
@@ -323,7 +319,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public createDocument(document: Document): void {
     this.postIts.unshift(this.documentToPostIt(document, false));
-    this.fetchCollections(new Set([document.collectionCode]));
+    this.getCollections(new Set([document.collectionCode]));
   }
 
   public toggleDocumentFavorite(postIt: DocumentModel) {
@@ -336,7 +332,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public sendUpdate(postIt: DocumentModel): void {
-    if (postIt.initializing) {
+    if (postIt.initializing || !this.hasWorkspace()) {
       return;
     }
 
@@ -374,6 +370,10 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private refreshDocument(postIt: DocumentModel): void {
+    if (!this.hasWorkspace()) {
+      return;
+    }
+
     this.documentService.getDocument(postIt.document.collectionCode, postIt.document.id)
       .subscribe(
         document => {
@@ -425,6 +425,18 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.lastClickedPostIt = this.postIts[clickedPostItIndex];
   }
 
+  public isAddButtonShown(): boolean {
+    return this.editable && !this.queryhasMoreCollections();
+  }
+
+  private queryhasMoreCollections(): boolean {
+    return this.query && this.query.collectionCodes && this.query.collectionCodes.length > 1;
+  }
+
+  public suggestedAttributes(): [string, string[]][] {
+    return Object.entries(this.attributeSuggestions);
+  }
+
   public ngOnDestroy(): void {
     if (this.layout) {
       this.layout.destroy();
@@ -432,13 +444,9 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
     this.setInfiniteScroll(false);
 
-    if (this.querySubscription) {
-      this.querySubscription.unsubscribe();
+    if (this.appStateSubscription) {
+      this.appStateSubscription.unsubscribe();
     }
-  }
-
-  public isAddButtonShown(): boolean {
-    return this.editable && this.query && this.query.collectionCodes && this.query.collectionCodes.length === 1;
   }
 
   public setPostItIndexAndReturn(postIt: DocumentModel, index: number): DocumentModel {
@@ -446,4 +454,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return postIt;
   }
 
+  private hasWorkspace(): boolean {
+    return !!(this.workspace && this.workspace.organizationCode && this.workspace.projectCode);
+  }
 }

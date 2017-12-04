@@ -49,7 +49,7 @@ export class SearchService {
 
   public suggest(text: string, type: SuggestionType): Observable<Suggestions> {
     if (!this.hasSearchPath()) {
-      return Observable.of();
+      throw new LumeerError('Workspace not set');
     }
 
     return this.http.get<Suggestions>(`${this.searchPath()}/suggestions`,
@@ -58,7 +58,7 @@ export class SearchService {
 
   public searchCollections(query: Query): Observable<Collection[]> {
     if (!this.hasSearchPath()) {
-      return Observable.of([]);
+      throw new LumeerError('Workspace not set');
     }
 
     return this.http.post<Collection[]>(`${this.searchPath()}/collections`, query)
@@ -70,7 +70,7 @@ export class SearchService {
 
   public searchDocuments(query: Query): Observable<Document[]> {
     if (!this.hasSearchPath()) {
-      return Observable.of([]);
+      throw new LumeerError('Workspace not set');
     }
 
     return this.http.post<Document[]>(`${this.searchPath()}/documents`, query)
@@ -88,7 +88,7 @@ export class SearchService {
 
   public searchViews(query: Query): Observable<View[]> {
     if (!this.hasSearchPath()) {
-      return Observable.of([]);
+      throw new LumeerError('Workspace not set');
     }
 
     return this.http.post<View[]>(`${this.searchPath()}/views`, query).pipe(
