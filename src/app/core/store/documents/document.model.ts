@@ -21,9 +21,13 @@ export interface DocumentModel {
 
   id?: string;
   collectionCode: string;
+  collectionIcon?: string;
+  collectionColor?: string;
+  collectionName?: string;
   data: { [attributeId: string]: any };
 
   favorite?: boolean;
+  opened?: boolean;
 
   creationDate?: string;
   updateDate?: string;

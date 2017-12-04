@@ -23,6 +23,7 @@ import {AppState} from '../app.state';
 import {QueryModel} from '../navigation/query.model';
 
 import {DocumentModel} from './document.model';
+import {selectQuery} from '../navigation/navigation.state';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
 
@@ -41,3 +42,6 @@ export const selectDocumentsState = (state: AppState) => state.documents;
 export const selectAllDocuments = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectAll);
 export const selectDocumentsDictionary = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectEntities);
 export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
+export const selectDocumentsByQuery = createSelector(selectDocumentsState, selectQuery, (documents, query) => {
+  return documents.entities;
+});

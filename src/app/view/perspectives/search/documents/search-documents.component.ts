@@ -21,18 +21,19 @@ import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/cor
 import {Store} from '@ngrx/store';
 
 import {SizeType} from '../../../../shared/slider/size-type';
-import {SearchService} from '../../../../core/rest/search.service';
-import {Document} from '../../../../core/dto/document';
-import {SearchDocument} from './search-document';
-import {CollectionService} from '../../../../core/rest/collection.service';
-import {Collection} from '../../../../core/dto/collection';
-import {map, switchMap} from 'rxjs/operators';
+import {SearchService, CollectionService} from '../../../../core/rest';
 import {isArray, isObject} from 'util';
 import {Subscription} from 'rxjs/Subscription';
 import {UserSettingsService} from '../../../../core/user-settings.service';
 import {AppState} from '../../../../core/store/app.state';
-import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
-import {DeprecatedQueryConverter} from '../../../../shared/utils/query-converter';
+import {selectQuery} from '../../../../core/store/navigation/navigation.state';
+import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {selectAllDocuments, selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {CollectionsAction} from '../../../../core/store/collections/collections.action';
+import {selectAllCollections} from '../../../../core/store/collections/collections.state';
+import {Observable} from 'rxjs/Observable';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
 
 @Component({
   templateUrl: './search-documents.component.html'
@@ -45,28 +46,38 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   @ViewChild('xlTemplate') xlTempl: TemplateRef<any>;
 
   public size: SizeType;
-  public documents: SearchDocument[];
-  private routerSubscription: Subscription;
+  public documents: DocumentModel[];
+  private querySubscription: Subscription;
 
   constructor(private searchService: SearchService,
               private store: Store<AppState>,
               private collectionService: CollectionService,
               private userSettingsService: UserSettingsService) {
+    this.querySubscription = this.store.select(selectQuery)
+      .subscribe(query => {
+        this.store.dispatch(new CollectionsAction.Get({query: query}));
+        this.store.dispatch(new DocumentsAction.Get({query: query}));
+      });
+    Observable.combineLatest(this.store.select(selectAllDocuments), this.store.select(selectAllCollections))
+      .subscribe((values) => {
+        const [documents, collections] = values;
+        if(document){
+          this.documents = documents;
+          if(collections){
+            this.initCollectionsInDocuments(collections);
+          }
+        }
+      });
   }
 
   public ngOnInit() {
     let userSettings = this.userSettingsService.getUserSettings();
     this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
-    this.routerSubscription = this.store.select(selectNavigation).pipe(
-      map(navigation => navigation.query),
-      map(query => DeprecatedQueryConverter.removeLinksFromQuery(query)),
-      switchMap(query => this.searchService.searchDocuments(query)),
-    ).subscribe(documents => this.initDocuments(documents));
   }
 
   public ngOnDestroy() {
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
+    if (this.querySubscription) {
+      this.querySubscription.unsubscribe();
     }
   }
 
@@ -77,7 +88,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.userSettingsService.updateUserSettings(userSettings);
   }
 
-  public getTemplate(document: SearchDocument): TemplateRef<any> {
+  public getTemplate(document: DocumentModel): TemplateRef<any> {
     if (document.opened) {
       return this.xlTempl;
     }
@@ -99,54 +110,40 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     return this.size === SizeType.XL;
   }
 
-  private initDocuments(documents: Document[]) {
-    const codes = new Set<string>();
-    this.documents = [];
-    for (let document of documents) {
-      delete document.data['_id'];
-      this.documents.push({document: document, opened: false});
-      codes.add(document.collectionCode);
-    }
-    codes.forEach(code => this.fetchCollection(code));
+  public createDefaultAttributeHtml(document: DocumentModel): string {
+    const data = document.data;
+    return this.valueHtml(Object.values(data)[0]);
   }
 
-  private fetchCollection(code: string) {
-    this.collectionService.getCollection(code)
-      .subscribe(collection => this.initCollectionsInDocuments(collection));
+  public toggleDocument(document: DocumentModel) {
+    document.opened = !document.opened;
   }
 
-  private initCollectionsInDocuments(collection: Collection) {
-    for (let document of this.documents) {
-      if (document.document.collectionCode === collection.code) {
-        document.collectionName = collection.name;
-        document.collectionIcon = collection.icon;
-        document.collectionColor = collection.color;
+  public onLinkClick(document: DocumentModel) {
+    // TODO
+  }
+
+  public onCommentClick(document: DocumentModel) {
+    // TODO
+  }
+
+  public onDetailClick(document: DocumentModel) {
+    // TODO
+  }
+
+  private initCollectionsInDocuments(collections:CollectionModel[]){
+    for(let collection of collections){
+      for(let document of this.documents){
+        if(document.collectionCode === collection.code){
+          document.collectionIcon = collection.icon;
+          document.collectionColor = collection.color;
+          document.collectionName = collection.name;
+        }
       }
     }
   }
 
-  public createDefaultAttributeHtml(document: SearchDocument): string {
-    const data = document.document.data;
-    return this.valueHtml(Object.values(data)[0]);
-  }
-
-  public toggleDocument(document: SearchDocument) {
-    document.opened = !document.opened;
-  }
-
-  public onLinkClick(document: SearchDocument) {
-    // TODO
-  }
-
-  public onCommentClick(document: SearchDocument) {
-    // TODO
-  }
-
-  public onDetailClick(document: SearchDocument) {
-    // TODO
-  }
-
-  public createValuesHtml(document: SearchDocument): string {
+  public createValuesHtml(document: DocumentModel): string {
     const values: string[] = this.getValues(document);
     let html = '';
     for (let i = 0; i < values.length; i++) {
@@ -158,8 +155,8 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     return html;
   }
 
-  private getValues(document: SearchDocument): string[] {
-    return this.getValuesFromArray(Object.values(document.document.data));
+  private getValues(document: DocumentModel): string[] {
+    return this.getValuesFromArray(Object.values(document.data));
   }
 
   private getValuesFromAny(value: any): string[] | string {
@@ -184,8 +181,8 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     return this.getValuesFromArray(Object.values(object));
   }
 
-  public createEntriesHtml(document: SearchDocument) {
-    return this.entriesHtml(this.getEntriesForObject(document.document.data));
+  public createEntriesHtml(document: DocumentModel) {
+    return this.entriesHtml(this.getEntriesForObject(document.data));
   }
 
   private getEntriesForObject(object: any): { key: string, value: any }[] {
