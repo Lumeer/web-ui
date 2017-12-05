@@ -28,8 +28,36 @@ export interface ViewModel {
 
   perspective: Perspective;
   query: QueryModel;
-  config: any;
+  config: ViewConfigModel;
 
   permissions?: PermissionsModel;
+
+}
+
+export interface ViewConfigModel {
+
+  search?: SearchConfigModel;
+  table?: TableConfigModel;
+
+}
+
+export interface SearchConfigModel {
+
+  expandedDocumentIds?: string[];
+  searchTab?: string; // TODO maybe create enum
+
+}
+
+export interface TableConfigModel {
+
+  parts: {
+    collectionCode: string;
+    attributeIds: string[];
+    sortedBy?: string;
+    sortedDesc?: boolean;
+    linkTypeId?: string;
+    linkAttributeIds?: string[];
+    expandedDocumentIds?: string[];
+  }[];
 
 }

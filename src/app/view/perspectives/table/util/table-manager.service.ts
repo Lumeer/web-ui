@@ -26,10 +26,11 @@ import {Attribute, Collection, Document, LinkInstance, LinkType} from '../../../
 import {CollectionService, DocumentService, LinkInstanceService, LinkTypeService} from '../../../../core/rest';
 import {SearchService} from '../../../../core/rest/search.service';
 import {AppState} from '../../../../core/store/app.state';
+import {TableConfigModel} from '../../../../core/store/views/view.model';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {AttributeHelper} from '../../../../shared/utils/attribute-helper';
 
-import {TableConfig, TablePart, TableRow} from '../model';
+import {TablePart, TableRow} from '../model';
 
 @Injectable()
 export class TableManagerService {
@@ -49,7 +50,7 @@ export class TableManagerService {
               private store: Store<AppState>) {
   }
 
-  public createTableFromConfig(config: TableConfig): Observable<TablePart[]> {
+  public createTableFromConfig(config: TableConfigModel): Observable<TablePart[]> {
     const collectionCodes = config.parts.map(part => part.collectionCode);
     const linkTypeIds = config.parts.map(part => part.linkTypeId).filter(id => id);
 
@@ -69,7 +70,7 @@ export class TableManagerService {
       }));
   }
 
-  private createTablePartsFromConfig(config: TableConfig): TablePart[] {
+  private createTablePartsFromConfig(config: TableConfigModel): TablePart[] {
     this.parts = config.parts.map((configPart, index) => {
       const tablePart = new TablePart();
       tablePart.index = index;
@@ -104,10 +105,10 @@ export class TableManagerService {
   }
 
   private saveConfig() {
-    this.store.dispatch(new ViewsAction.SetConfig({config: {table: this.extractTableConfig()}}));
+    this.store.dispatch(new ViewsAction.ChangeConfig({config: {table: this.extractTableConfig()}}));
   }
 
-  private setUpAttributes(tablePart: TablePart, config: TableConfig) {
+  private setUpAttributes(tablePart: TablePart, config: TableConfigModel) {
     const configPart = config.parts[tablePart.index];
     const leafAttributes = this.leafAttributes(configPart.collectionCode);
 
@@ -406,7 +407,7 @@ export class TableManagerService {
     return rowBelow;
   }
 
-  public extractTableConfig(): TableConfig {
+  public extractTableConfig(): TableConfigModel {
     const configParts = this.parts.map(part => {
       return {
         collectionCode: part.collection.code,

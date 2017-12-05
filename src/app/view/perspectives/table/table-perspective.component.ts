@@ -29,22 +29,23 @@ import {Document} from '../../../core/dto/document';
 import {LinkInstance} from '../../../core/dto/link-instance';
 import {LinkType} from '../../../core/dto/link-type';
 import {Query} from '../../../core/dto/query';
+import {NotificationService} from '../../../core/notifications/notification.service';
 import {CollectionService} from '../../../core/rest/collection.service';
 import {DocumentService} from '../../../core/rest/document.service';
 import {LinkInstanceService} from '../../../core/rest/link-instance.service';
 import {LinkTypeService} from '../../../core/rest/link-type.service';
 import {AppState} from '../../../core/store/app.state';
 import {selectNavigation, selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {QueryModel} from '../../../core/store/navigation/query.model';
+import {TableConfigModel, ViewConfigModel} from '../../../core/store/views/view.model';
 import {selectViewsDictionary, selectViewsState} from '../../../core/store/views/views.state';
-import {NotificationService} from '../../../core/notifications/notification.service';
+import {PerspectiveComponent} from '../perspective.component';
 import {AttributeChangeEvent} from './event/attribute-change-event';
 import {DataChangeEvent} from './event/data-change-event';
 import {LinkInstanceEvent} from './event/link-instance-event';
 import {TableLinkEvent} from './event/table-link-event';
-import {TableConfig} from './model/table-config';
 import {TablePart} from './model/table-part';
 import {TableManagerService} from './util/table-manager.service';
-import {PerspectiveComponent} from '../perspective.component';
 
 @Component({
   selector: 'table-perspective',
@@ -57,7 +58,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   public query: Query;
 
   @Input()
-  public config: { table?: TableConfig } = {};
+  public config: ViewConfigModel = {};
 
   @Input()
   public embedded: boolean;
@@ -92,7 +93,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
         const view = navigation.workspace ? views[navigation.workspace.viewCode] : null;
         return view ? [navigation.query, view.config] : [navigation.query, {}];
       })
-    ).subscribe(([query, config]) => {
+    ).subscribe(([query, config] : [QueryModel, ViewConfigModel]) => {
       this.query = query;
       this.config = config;
 
@@ -115,7 +116,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
     }
   }
 
-  private getTableConfig(): Observable<TableConfig> {
+  private getTableConfig(): Observable<TableConfigModel> {
     return this.store.select(selectWorkspace).pipe(
       switchMap(workspace => {
         if (workspace.viewCode) {

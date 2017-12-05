@@ -27,7 +27,7 @@ export interface View {
 
   perspective: string;
   query: Query;
-  config: any;
+  config: any; // TODO create DTO
 
   permissions?: Permissions;
 
