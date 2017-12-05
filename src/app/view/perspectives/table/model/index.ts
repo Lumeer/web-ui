@@ -17,6 +17,5 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {TableConfig} from './table-config';
 export {TablePart} from './table-part';
 export {TableRow} from './table-row';

@@ -20,12 +20,11 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-
-import {ViewModel} from './view.model';
+import {ViewConfigModel, ViewModel} from './view.model';
 
 export interface ViewsState extends EntityState<ViewModel> {
 
-  config: any;
+  config: ViewConfigModel;
 
 }
 

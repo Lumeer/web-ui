@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {ViewModel} from './view.model';
+import {ViewConfigModel, ViewModel} from './view.model';
 
 export enum ViewsActionType {
 
@@ -34,7 +34,7 @@ export enum ViewsActionType {
   UPDATE_SUCCESS = '[Views] Update :: Success',
   UPDATE_FAILURE = '[Views] Update :: Failure',
 
-  SET_CONFIG = '[Views] Set Config'
+  CHANGE_CONFIG = '[Views] Change Config'
 
 }
 
@@ -103,16 +103,16 @@ export namespace ViewsAction {
     }
   }
 
-  export class SetConfig implements Action {
-    public readonly type = ViewsActionType.SET_CONFIG;
+  export class ChangeConfig implements Action {
+    public readonly type = ViewsActionType.CHANGE_CONFIG;
 
-    public constructor(public payload: { config: any }) {
+    public constructor(public payload: { config: ViewConfigModel }) {
     }
   }
 
   export type All = GetByCode | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    SetConfig;
+    ChangeConfig;
 
 }

@@ -28,8 +28,9 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return viewsAdapter.addOne(action.payload.view, state);
     case ViewsActionType.UPDATE_SUCCESS:
       return viewsAdapter.updateOne({id: action.payload.view.code, changes: action.payload.view}, state);
-    case ViewsActionType.SET_CONFIG:
-      return {...state, config: action.payload.config};
+    case ViewsActionType.CHANGE_CONFIG:
+      const config = Object.assign({}, state.config, action.payload.config);
+      return {...state, config: config};
     default:
       return state;
   }
