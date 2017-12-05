@@ -19,6 +19,7 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+
 import {Perspective} from './perspectives/perspective';
 import {PostItPerspectiveComponent} from './perspectives/post-it/post-it-perspective.component';
 import {SearchAllComponent} from './perspectives/search/all/search-all.component';
@@ -28,14 +29,15 @@ import {SearchLinksComponent} from './perspectives/search/links/search-links.com
 import {SearchPerspectiveComponent} from './perspectives/search/search-perspective.component';
 import {SearchViewsComponent} from './perspectives/search/views/search-views.component';
 import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
-
 import {ViewComponent} from './view.component';
 import {ViewGuard} from './view.guard';
 import {ViewLoadingComponent} from './view-loading.component';
+import {CollectionsGuard} from '../core/store/collections/collections.guard';
 
 const viewRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/view',
+    canActivate: [CollectionsGuard],
     component: ViewComponent,
     children: [
       {

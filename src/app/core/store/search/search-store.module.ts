@@ -17,24 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionModel} from '../collections/collection.model';
 
-export interface DocumentModel {
+import {NgModule} from '@angular/core';
 
-  id?: string;
-  collectionCode: string;
-  collection?: CollectionModel;
-  data: { [attributeId: string]: any };
+import {StoreModule} from '@ngrx/store';
+import {searchReducers} from './search.state';
 
-  favorite?: boolean;
-  opened?: boolean;
-
-  creationDate?: string;
-  updateDate?: string;
-  createdBy?: string;
-  updatedBy?: string;
-  dataVersion?: number;
-
-  correlationId?: string;
-
+@NgModule({
+  imports: [
+    StoreModule.forFeature('search', searchReducers)
+  ],
+  declarations: []
+})
+export class SearchStoreModule {
 }

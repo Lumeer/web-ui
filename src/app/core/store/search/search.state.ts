@@ -17,24 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionModel} from '../collections/collection.model';
+import {ActionReducerMap, createFeatureSelector, createSelector} from '@ngrx/store';
+import {searchDocumentsReducer} from './search.reducer';
 
-export interface DocumentModel {
-
-  id?: string;
-  collectionCode: string;
-  collection?: CollectionModel;
-  data: { [attributeId: string]: any };
-
-  favorite?: boolean;
-  opened?: boolean;
-
-  creationDate?: string;
-  updateDate?: string;
-  createdBy?: string;
-  updatedBy?: string;
-  dataVersion?: number;
-
-  correlationId?: string;
-
+export interface SearchState {
+  selectedDocuments: string[]
 }
+
+export const searchReducers = {
+  searchDocuments: searchDocumentsReducer
+};
+
+export const initialSearchState: SearchState = {selectedDocuments: []};
+
+export const selectSearchState = createFeatureSelector<SearchState>('search');
+
+export const selectSelectedDocuments = createSelector(selectSearchState, (state: SearchState) => state.selectedDocuments);

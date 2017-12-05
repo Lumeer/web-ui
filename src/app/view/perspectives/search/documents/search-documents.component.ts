@@ -28,12 +28,12 @@ import {UserSettingsService} from '../../../../core/user-settings.service';
 import {AppState} from '../../../../core/store/app.state';
 import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {selectAllDocuments, selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
+import {selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CollectionsAction} from '../../../../core/store/collections/collections.action';
-import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {Observable} from 'rxjs/Observable';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {tap} from 'rxjs/operators';
+import {SearchState, selectSelectedDocuments} from '../../../../core/store/search/search.state';
+import {SearchAction} from '../../../../core/store/search/search.action';
 
 @Component({
   templateUrl: './search-documents.component.html'
@@ -46,33 +46,27 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   @ViewChild('xlTemplate') xlTempl: TemplateRef<any>;
 
   public size: SizeType;
-  public documents: DocumentModel[];
+  public documents$: Observable<DocumentModel[]>;
   private querySubscription: Subscription;
 
   constructor(private searchService: SearchService,
               private store: Store<AppState>,
+              private searchStore: Store<SearchState>,
               private collectionService: CollectionService,
               private userSettingsService: UserSettingsService) {
-    this.querySubscription = this.store.select(selectQuery)
-      .subscribe(query => {
-        this.store.dispatch(new CollectionsAction.Get({query: query}));
-        this.store.dispatch(new DocumentsAction.Get({query: query}));
-      });
-    Observable.combineLatest(this.store.select(selectAllDocuments), this.store.select(selectAllCollections))
-      .subscribe((values) => {
-        const [documents, collections] = values;
-        if(document){
-          this.documents = documents;
-          if(collections){
-            this.initCollectionsInDocuments(collections);
-          }
-        }
-      });
   }
 
   public ngOnInit() {
     let userSettings = this.userSettingsService.getUserSettings();
     this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
+    this.querySubscription = this.store.select(selectQuery)
+      .pipe(
+        tap(query => this.store.dispatch(new DocumentsAction.Get({query: query}))),
+        tap(query => this.searchStore.dispatch(new SearchAction.ClearSelectedDocuments()))
+      ).subscribe();
+    this.documents$ = this.store.select(selectDocumentsByQuery);
+    this.searchStore.select(selectSelectedDocuments)
+      .subscribe(selected => console.log('component', selected));
   }
 
   public ngOnDestroy() {
@@ -116,7 +110,11 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public toggleDocument(document: DocumentModel) {
-    document.opened = !document.opened;
+    if (document.opened) {
+      this.searchStore.dispatch(new SearchAction.RemoveSelectedDocument({id: document.id}));
+    } else {
+      this.searchStore.dispatch(new SearchAction.AddSelectedDocument({id: document.id}));
+    }
   }
 
   public onLinkClick(document: DocumentModel) {
@@ -129,18 +127,6 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   public onDetailClick(document: DocumentModel) {
     // TODO
-  }
-
-  private initCollectionsInDocuments(collections:CollectionModel[]){
-    for(let collection of collections){
-      for(let document of this.documents){
-        if(document.collectionCode === collection.code){
-          document.collectionIcon = collection.icon;
-          document.collectionColor = collection.color;
-          document.collectionName = collection.name;
-        }
-      }
-    }
   }
 
   public createValuesHtml(document: DocumentModel): string {

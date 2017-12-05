@@ -17,24 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionModel} from '../collections/collection.model';
+import {initialSearchState, SearchState} from './search.state';
+import {SearchAction, SearchActionType} from './search.action';
 
-export interface DocumentModel {
-
-  id?: string;
-  collectionCode: string;
-  collection?: CollectionModel;
-  data: { [attributeId: string]: any };
-
-  favorite?: boolean;
-  opened?: boolean;
-
-  creationDate?: string;
-  updateDate?: string;
-  createdBy?: string;
-  updatedBy?: string;
-  dataVersion?: number;
-
-  correlationId?: string;
-
+export function searchDocumentsReducer(state: SearchState = initialSearchState, action: SearchAction.All): SearchState {
+  switch (action.type) {
+    case SearchActionType.ADD_SELECTED_DOCUMENT:
+      return {...state, selectedDocuments: [...state.selectedDocuments, action.payload.id]};
+    case SearchActionType.CLEAR_SELECTED_DOCUMENTS:
+      return {...state, selectedDocuments: []};
+    case SearchActionType.REMOVE_SELECTED_DOCUMENT:
+      return {...state, selectedDocuments: state.selectedDocuments.filter(id => id !== action.payload.id)};
+    default:
+      return state;
+  }
 }

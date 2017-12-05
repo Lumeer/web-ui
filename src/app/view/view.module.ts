@@ -33,6 +33,7 @@ import {ViewLoadingComponent} from './view-loading.component';
 import {ViewRoutingModule} from './view-routing.module';
 import {ViewComponent} from './view.component';
 import {ViewGuard} from './view.guard';
+import {CollectionsGuard} from '../core/store/collections/collections.guard';
 
 @NgModule({
   imports: [
@@ -53,7 +54,8 @@ import {ViewGuard} from './view.guard';
     ViewLoadingComponent
   ],
   providers: [
-    ViewGuard
+    ViewGuard,
+    CollectionsGuard
   ]
 })
 export class ViewModule {
