@@ -32,8 +32,8 @@ import {selectDocumentsByQuery} from '../../../../core/store/documents/documents
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Observable} from 'rxjs/Observable';
 import {tap} from 'rxjs/operators';
-import {SearchState, selectSelectedDocuments} from '../../../../core/store/search/search.state';
-import {SearchAction} from '../../../../core/store/search/search.action';
+import {ViewsAction} from '../../../../core/store/views/views.action';
+import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
 
 @Component({
   templateUrl: './search-documents.component.html'
@@ -47,11 +47,13 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   public size: SizeType;
   public documents$: Observable<DocumentModel[]>;
+  public expandedDocumentIds: string[] = [];
+
   private querySubscription: Subscription;
+  private searchConfigSubscription: Subscription;
 
   constructor(private searchService: SearchService,
               private store: Store<AppState>,
-              private searchStore: Store<SearchState>,
               private collectionService: CollectionService,
               private userSettingsService: UserSettingsService) {
   }
@@ -62,16 +64,19 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.querySubscription = this.store.select(selectQuery)
       .pipe(
         tap(query => this.store.dispatch(new DocumentsAction.Get({query: query}))),
-        tap(query => this.searchStore.dispatch(new SearchAction.ClearSelectedDocuments()))
+        tap(query => this.store.dispatch(new ViewsAction.ChangeConfig({config: {search: {expandedDocumentIds: []}}})))
       ).subscribe();
     this.documents$ = this.store.select(selectDocumentsByQuery);
-    this.searchStore.select(selectSelectedDocuments)
-      .subscribe(selected => console.log('component', selected));
+    this.searchConfigSubscription = this.store.select(selectViewSearchConfig)
+      .subscribe(config => this.expandedDocumentIds = config.expandedDocumentIds.slice(0));
   }
 
   public ngOnDestroy() {
     if (this.querySubscription) {
       this.querySubscription.unsubscribe();
+    }
+    if (this.searchConfigSubscription) {
+      this.searchConfigSubscription.unsubscribe();
     }
   }
 
@@ -83,9 +88,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public getTemplate(document: DocumentModel): TemplateRef<any> {
-    if (document.opened) {
-      return this.xlTempl;
-    }
+     if (this.isDocumentOpened(document)) {
+       return this.xlTempl;
+     }
     switch (this.size) {
       case SizeType.S:
         return this.sTempl;
@@ -104,17 +109,19 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     return this.size === SizeType.XL;
   }
 
+  public isDocumentOpened(document: DocumentModel): boolean{
+    return this.expandedDocumentIds.includes(document.id);
+  }
+
   public createDefaultAttributeHtml(document: DocumentModel): string {
     const data = document.data;
     return this.valueHtml(Object.values(data)[0]);
   }
 
   public toggleDocument(document: DocumentModel) {
-    if (document.opened) {
-      this.searchStore.dispatch(new SearchAction.RemoveSelectedDocument({id: document.id}));
-    } else {
-      this.searchStore.dispatch(new SearchAction.AddSelectedDocument({id: document.id}));
-    }
+    const newIds = this.isDocumentOpened(document) ? this.expandedDocumentIds.filter(id => id !== document.id)
+      : [...this.expandedDocumentIds, document.id];
+    this.store.dispatch(new ViewsAction.ChangeConfig({config: {search: {expandedDocumentIds: newIds}}}));
   }
 
   public onLinkClick(document: DocumentModel) {

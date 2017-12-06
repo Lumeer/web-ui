@@ -46,7 +46,6 @@ import {UsersEffects} from './users/users.effects';
 import {usersReducer} from './users/users.reducer';
 import {ViewsEffects} from './views/views.effects';
 import {viewsReducer} from './views/views.reducer';
-import {SearchStoreModule} from './search/search-store.module';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -81,8 +80,7 @@ const effects = [
   imports: [
     StoreModule.forRoot(reducers, {initialState: initialAppState}),
     EffectsModule.forRoot(effects),
-    !environment.production ? StoreDevtoolsModule.instrument({maxAge: 10}) : [],
-    SearchStoreModule
+    !environment.production ? StoreDevtoolsModule.instrument({maxAge: 10}) : []
   ],
   declarations: []
 })

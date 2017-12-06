@@ -1,11 +1,11 @@
-<div class="mt-2">
-  <div *ngIf="!((documents$ | async)?.length)" class="alert alert-warning" i18n="@@search.result.empty">
+<div class="mt-2" *ngIf="(documents$ | async) as documents">
+  <div *ngIf="!documents.length" class="alert alert-warning" i18n="@@search.result.empty">
     We are sorry, but we have not found anything. Please do a more accurate search.
   </div>
-  <div *ngIf="(documents$ | async)?.length">
+  <div *ngIf="documents.length">
     <size-slider class="d-flex justify-content-end"
                  [defaultSize]="size" (newSize)="onSizeChange($event)"></size-slider>
-    <div *ngFor="let document of (documents$ | async)">
+    <div *ngFor="let document of documents">
       <ng-container *ngTemplateOutlet="header; context: { $implicit: document}"></ng-container>
       <div class="content">
         <ng-container *ngTemplateOutlet="getTemplate(document); context: { $implicit: document}"></ng-container>
@@ -34,7 +34,7 @@
 <ng-template #header let-document>
   <div class="d-flex flex-row pt-3">
     <i class="fa fa-fw clickable align-self-center" (click)="toggleDocument(document)"
-       [ngClass]="(document.opened || isXlTemplatePresented()) ? 'fa-caret-down':'fa-caret-right'"
+       [ngClass]="(isDocumentOpened(document) || isXlTemplatePresented()) ? 'fa-caret-down':'fa-caret-right'"
        aria-hidden="true"></i>
     <i class="{{document.collection.icon}} align-self-center fa-fw"
        [style.color]="document.collection.color"

@@ -27,7 +27,6 @@ export interface DocumentModel {
   data: { [attributeId: string]: any };
 
   favorite?: boolean;
-  opened?: boolean;
 
   creationDate?: string;
   updateDate?: string;

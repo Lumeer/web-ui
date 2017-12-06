@@ -28,7 +28,7 @@ export interface CollectionsState extends EntityState<CollectionModel> {
 
 export const collectionsAdapter = createEntityAdapter<CollectionModel>({selectId: collection => collection.code});
 
-export const initialCollectionsState: CollectionsState = {...collectionsAdapter.getInitialState(), loaded: false};
+export const initialCollectionsState: CollectionsState = collectionsAdapter.getInitialState({loaded: false});
 
 export const selectCollectionsState = (state: AppState) => state.collections;
 

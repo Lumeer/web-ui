@@ -40,3 +40,4 @@ export const selectAllViews = createSelector(selectViewsState, viewsAdapter.getS
 export const selectViewsDictionary = createSelector(selectViewsState, viewsAdapter.getSelectors().selectEntities);
 
 export const selectViewConfig = createSelector(selectViewsState, views => views.config);
+export const selectViewSearchConfig = createSelector(selectViewConfig, config => config.search);
