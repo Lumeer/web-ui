@@ -80,7 +80,7 @@ const effects = [
   imports: [
     StoreModule.forRoot(reducers, {initialState: initialAppState}),
     EffectsModule.forRoot(effects),
-    !environment.production ? StoreDevtoolsModule.instrument({maxAge: 10}) : [],
+    !environment.production ? StoreDevtoolsModule.instrument({maxAge: 10}) : []
   ],
   declarations: []
 })

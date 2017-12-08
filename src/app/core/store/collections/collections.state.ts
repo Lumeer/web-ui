@@ -20,18 +20,18 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-
 import {CollectionModel} from './collection.model';
 
 export interface CollectionsState extends EntityState<CollectionModel> {
-
+  loaded: boolean;
 }
 
 export const collectionsAdapter = createEntityAdapter<CollectionModel>({selectId: collection => collection.code});
 
-export const initialCollectionsState: CollectionsState = collectionsAdapter.getInitialState();
+export const initialCollectionsState: CollectionsState = collectionsAdapter.getInitialState({loaded: false});
 
 export const selectCollectionsState = (state: AppState) => state.collections;
-const selectCollections = collectionsAdapter.getSelectors().selectAll;
 
-export const selectAllCollections = createSelector(selectCollectionsState, selectCollections);
+export const selectAllCollections = createSelector(selectCollectionsState, collectionsAdapter.getSelectors().selectAll);
+export const selectCollectionsDictionary = createSelector(selectCollectionsState, collectionsAdapter.getSelectors().selectEntities);
+export const selectCollectionsLoaded = createSelector(selectCollectionsState, (state: CollectionsState) => state.loaded)

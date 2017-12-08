@@ -24,7 +24,7 @@ import {collectionsAdapter, CollectionsState, initialCollectionsState} from './c
 export function collectionsReducer(state: CollectionsState = initialCollectionsState, action: CollectionsAction.All): CollectionsState {
   switch (action.type) {
     case CollectionsActionType.GET_SUCCESS:
-      return collectionsAdapter.addMany(action.payload.collections, state);
+      return {...collectionsAdapter.addMany(action.payload.collections, state), loaded: true};
     case CollectionsActionType.CREATE_SUCCESS:
       return collectionsAdapter.addOne(action.payload.collection, state);
     case CollectionsActionType.UPDATE_SUCCESS:

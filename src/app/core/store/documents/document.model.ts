@@ -17,10 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {CollectionModel} from '../collections/collection.model';
+
 export interface DocumentModel {
 
   id?: string;
   collectionCode: string;
+  collection?: CollectionModel;
   data: { [attributeId: string]: any };
 
   favorite?: boolean;

@@ -1,8 +1,8 @@
-<div class="mt-2" *ngIf="documents">
-  <div *ngIf="documents.length == 0" class="alert alert-warning" i18n="@@search.result.empty">
+<div class="mt-2" *ngIf="(documents$ | async) as documents">
+  <div *ngIf="!documents.length" class="alert alert-warning" i18n="@@search.result.empty">
     We are sorry, but we have not found anything. Please do a more accurate search.
   </div>
-  <div *ngIf="documents.length > 0">
+  <div *ngIf="documents.length">
     <size-slider class="d-flex justify-content-end"
                  [defaultSize]="size" (newSize)="onSizeChange($event)"></size-slider>
     <div *ngFor="let document of documents">
@@ -34,12 +34,12 @@
 <ng-template #header let-document>
   <div class="d-flex flex-row pt-3">
     <i class="fa fa-fw clickable align-self-center" (click)="toggleDocument(document)"
-       [ngClass]="(document.opened || isXlTemplatePresented()) ? 'fa-caret-down':'fa-caret-right'"
+       [ngClass]="(isDocumentOpened(document) || isXlTemplatePresented()) ? 'fa-caret-down':'fa-caret-right'"
        aria-hidden="true"></i>
-    <i class="{{document.collectionIcon}} align-self-center fa-fw"
-       [style.color]="document.collectionColor"
-       *ngIf="document.collectionIcon" aria-hidden="true"></i>
-    <span class="ml-1" *ngIf="document.collectionName" [style.color]="document.collectionColor">{{document.collectionName}}</span>
+    <i class="{{document.collection.icon}} align-self-center fa-fw"
+       [style.color]="document.collection.color"
+       *ngIf="document.collection" aria-hidden="true"></i>
+    <span class="ml-1" *ngIf="document.collection" [style.color]="document.collection.color">{{document.collection.name}}</span>
     <div class="ml-3" [innerHTML]="createDefaultAttributeHtml(document)"></div>
     <div class="ml-auto">
       <span class="clickable" (click)="onLinkClick(document)"><i class="fas fa-link" aria-hidden="true"><span
