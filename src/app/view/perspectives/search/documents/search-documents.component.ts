@@ -68,7 +68,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
       ).subscribe();
     this.documents$ = this.store.select(selectDocumentsByQuery);
     this.searchConfigSubscription = this.store.select(selectViewSearchConfig)
-      .subscribe(config => this.expandedDocumentIds = config.expandedDocumentIds.slice(0));
+      .subscribe(config => this.expandedDocumentIds = config.expandedDocumentIds.slice());
   }
 
   public ngOnDestroy() {
@@ -88,9 +88,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public getTemplate(document: DocumentModel): TemplateRef<any> {
-     if (this.isDocumentOpened(document)) {
-       return this.xlTempl;
-     }
+    if (this.isDocumentOpened(document)) {
+      return this.xlTempl;
+    }
     switch (this.size) {
       case SizeType.S:
         return this.sTempl;
