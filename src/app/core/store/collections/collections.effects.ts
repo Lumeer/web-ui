@@ -22,16 +22,13 @@ import {Actions, Effect} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
-import {Collection} from '../../dto/collection';
-import {Permission} from '../../dto/permission';
-import {CollectionService} from '../../rest/collection.service';
-import {SearchService} from '../../rest/search.service';
+import {Collection, Permission} from '../../dto';
+import {CollectionService, SearchService} from '../../rest';
 import {QueryConverter} from '../navigation/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {PermissionsConverter} from '../permissions/permissions.converter';
-import {PermissionModel, PermissionType} from '../permissions/permissions.model';
+import {PermissionType} from '../permissions/permissions.model';
 import {CollectionConverter} from './collection.converter';
-import {AttributeModel, CollectionModel} from './collection.model';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
 
 @Injectable()
@@ -46,14 +43,14 @@ export class CollectionsEffects {
         map((dtos: Collection[]) => dtos.map(dto => CollectionConverter.fromDto(dto)))
       );
     }),
-    map((collections: CollectionModel[]) => new CollectionsAction.GetSuccess({collections: collections})),
+    map((collections) => new CollectionsAction.GetSuccess({collections: collections})),
     catchError((error) => Observable.of(new CollectionsAction.GetFailure({error: error})))
   );
 
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.GetFailure>(CollectionsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to get collections'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to get collections'}))
   );
 
   @Effect()
@@ -91,7 +88,7 @@ export class CollectionsEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to update collection'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to update collection'}))
   );
 
   @Effect()
@@ -104,7 +101,7 @@ export class CollectionsEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.DeleteFailure>(CollectionsActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to delete collection'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to delete collection'}))
   );
 
   @Effect()
@@ -113,10 +110,10 @@ export class CollectionsEffects {
       const attributeDto = CollectionConverter.toAttributeDto(action.payload.attribute);
 
       return this.collectionService.updateAttribute(action.payload.collectionCode, action.payload.attributeId, attributeDto).pipe(
-        map(result => [action, CollectionConverter.fromAttributeDto(attributeDto)])
+        map(result => ({action: action, attribute: CollectionConverter.fromAttributeDto(result)}))
       );
     }),
-    map(([action, attribute]: [CollectionsAction.ChangeAttribute, AttributeModel]) => new CollectionsAction.ChangeAttributeSuccess(
+    map(({action, attribute}) => new CollectionsAction.ChangeAttributeSuccess(
       {collectionCode: action.payload.collectionCode, attributeId: action.payload.attributeId, attribute: attribute}
     )),
     catchError((error) => Observable.of(new CollectionsAction.ChangeAttributeFailure({error: error})))
@@ -126,7 +123,7 @@ export class CollectionsEffects {
   public changeAttributeFailure$: Observable<Action> = this.actions$
     .ofType<CollectionsAction.ChangeAttributeFailure>(CollectionsActionType.CHANGE_ATTRIBUTE_FAILURE).pipe(
       tap(action => console.error(action.payload.error)),
-      map(action => new NotificationsAction.Error({message: 'Failed to change attribute'}))
+      map(() => new NotificationsAction.Error({message: 'Failed to change attribute'}))
     );
 
   @Effect()
@@ -142,7 +139,7 @@ export class CollectionsEffects {
   public removeAttributeFailure$: Observable<Action> = this.actions$
     .ofType<CollectionsAction.RemoveAttributeFailure>(CollectionsActionType.REMOVE_ATTRIBUTE_FAILURE).pipe(
       tap(action => console.error(action.payload.error)),
-      map(action => new NotificationsAction.Error({message: 'Failed to remove attribute'}))
+      map(() => new NotificationsAction.Error({message: 'Failed to remove attribute'}))
     );
 
   @Effect()
@@ -152,15 +149,15 @@ export class CollectionsEffects {
 
       if (action.payload.type === PermissionType.Users) {
         return this.collectionService.updateUserPermission(permissionDto).pipe(
-          map(permission => [action, PermissionsConverter.fromPermissionDto(permission)])
+          map(permission => ({action: action, permission: PermissionsConverter.fromPermissionDto(permission)}))
         );
       } else {
         return this.collectionService.updateGroupPermission(permissionDto).pipe(
-          map(permission => [action, PermissionsConverter.fromPermissionDto(permission)])
+          map(permission => ({action: action, permission: PermissionsConverter.fromPermissionDto(permission)}))
         );
       }
     }),
-    map(([action, permission]: [CollectionsAction.ChangePermission, PermissionModel]) => new CollectionsAction.ChangePermissionSuccess(
+    map(({action, permission}) => new CollectionsAction.ChangePermissionSuccess(
       {collectionCode: action.payload.collectionCode, type: action.payload.type, permission: permission}
     )),
     catchError((error) => Observable.of(new CollectionsAction.ChangePermissionFailure({error: error})))
@@ -170,7 +167,7 @@ export class CollectionsEffects {
   public changePermissionFailure$: Observable<Action> = this.actions$
     .ofType<CollectionsAction.ChangePermissionFailure>(CollectionsActionType.CHANGE_PERMISSION_FAILURE).pipe(
       tap(action => console.error(action.payload.error)),
-      map(action => new NotificationsAction.Error({message: 'Failed to change permission'}))
+      map(() => new NotificationsAction.Error({message: 'Failed to change permission'}))
     );
 
   @Effect()
@@ -190,7 +187,7 @@ export class CollectionsEffects {
   public removePermissionFailure$: Observable<Action> = this.actions$
     .ofType<CollectionsAction.RemovePermissionFailure>(CollectionsActionType.REMOVE_PERMISSION_FAILURE).pipe(
       tap(action => console.error(action.payload.error)),
-      map(action => new NotificationsAction.Error({message: 'Failed to remove permission'}))
+      map(() => new NotificationsAction.Error({message: 'Failed to remove permission'}))
     );
 
   constructor(private actions$: Actions,

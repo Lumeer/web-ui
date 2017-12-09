@@ -32,7 +32,7 @@ export class CollectionManageRoleGuard implements CanActivate {
   }
 
   public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    const collectionCode = state.url.split('/').reverse()[1];
+    const [,collectionCode] = state.url.split('/').reverse();
 
     const hasMangeRole = collection => collection.permissions && collection.permissions.users
       .some(permission => permission.roles.includes(Role.Manage));

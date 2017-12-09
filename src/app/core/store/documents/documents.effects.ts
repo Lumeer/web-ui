@@ -54,7 +54,7 @@ export class DocumentsEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.GetFailure>(DocumentsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to get documents'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to get documents'}))
   );
 
   @Effect()
@@ -73,7 +73,7 @@ export class DocumentsEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.CreateFailure>(DocumentsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to create document'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to create document'}))
   );
 
   @Effect()
@@ -90,7 +90,7 @@ export class DocumentsEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.UpdateFailure>(DocumentsActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to update document'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to update document'}))
   );
 
   @Effect()
@@ -113,7 +113,7 @@ export class DocumentsEffects {
   @Effect()
   public updateDataFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.UpdateDataFailure>(DocumentsActionType.UPDATE_DATA_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to update data'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to update data'}))
   );
 
   @Effect()
@@ -128,7 +128,7 @@ export class DocumentsEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.DeleteFailure>(DocumentsActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to delete document'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to delete document'}))
   );
 
   constructor(private actions$: Actions,

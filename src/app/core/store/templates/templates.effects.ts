@@ -39,17 +39,17 @@ export class TemplatesEffects {
     map((action: TemplatesAction.Get) => action.payload.templateId),
     withLatestFrom(this.store$.select(selectTemplatesDictionary)),
     skipWhile(([templateId, templates]) => templates.hasOwnProperty(templateId)),
-    switchMap(([templateId, dictionary]) => this.templateService.getTemplatesById(templateId).pipe(
+    switchMap(([templateId]) => this.templateService.getTemplatesById(templateId).pipe(
       map(dtos => dtos.map(dto => TemplateConverter.fromDto(dto)))
     )),
-    map((templates: TemplateModel[]) => new TemplatesAction.GetSuccess({templates: templates})),
+    map((templates) => new TemplatesAction.GetSuccess({templates: templates})),
     catchError((error) => Observable.of(new TemplatesAction.GetFailure({error: error})))
   );
 
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<TemplatesAction.GetFailure>(TemplatesActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to get template'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to get template'}))
   );
 
   @Effect()
@@ -68,7 +68,7 @@ export class TemplatesEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<TemplatesAction.CreateFailure>(TemplatesActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to create template'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to create template'}))
   );
 
   @Effect()
@@ -87,7 +87,7 @@ export class TemplatesEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<TemplatesAction.UpdateFailure>(TemplatesActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to update template'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to update template'}))
   );
 
   @Effect()
@@ -100,7 +100,7 @@ export class TemplatesEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<TemplatesAction.DeleteFailure>(TemplatesActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to delete template'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to delete template'}))
   );
 
   @Effect()

@@ -42,7 +42,7 @@ export class UsersEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<UsersAction.GetFailure>(UsersActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to get users'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to get users'}))
   );
 
   @Effect()
@@ -61,7 +61,7 @@ export class UsersEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<UsersAction.CreateFailure>(UsersActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to create user'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to create user'}))
   );
 
   @Effect()
@@ -80,7 +80,7 @@ export class UsersEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<UsersAction.UpdateFailure>(UsersActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to update user'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to update user'}))
   );
 
   @Effect()
@@ -95,7 +95,7 @@ export class UsersEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<UsersAction.DeleteFailure>(UsersActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to delete user'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to delete user'}))
   );
 
   constructor(private actions$: Actions,

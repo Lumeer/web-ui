@@ -22,12 +22,11 @@ import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {catchError, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
-import {LinkInstanceService} from '../../rest/link-instance.service';
+import {LinkInstanceService} from '../../rest';
 import {AppState} from '../app.state';
 import {QueryHelper} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {LinkInstanceConverter} from './link-instance.converter';
-import {LinkInstanceModel} from './link-instance.model';
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {selectLinkInstancesQueries} from './link-instances.state';
 
@@ -38,18 +37,17 @@ export class LinkInstancesEffects {
   public get$: Observable<Action> = this.actions$.ofType<LinkInstancesAction.Get>(LinkInstancesActionType.GET).pipe(
     withLatestFrom(this.store$.select(selectLinkInstancesQueries)),
     skipWhile(([action, queries]) => queries.some(query => QueryHelper.equal(query, action.payload.query))),
-    switchMap(([action, queries]) => this.linkInstanceService.getLinkInstances(action.payload.query).pipe(
-      map(dtos => [action, dtos.map(dto => LinkInstanceConverter.fromDto(dto))])
+    switchMap(([action]) => this.linkInstanceService.getLinkInstances(action.payload.query).pipe(
+      map(dtos => ({action: action, linkInstances: dtos.map(dto => LinkInstanceConverter.fromDto(dto))}))
     )),
-    map(([action, linkInstances]: [LinkInstancesAction.Get, LinkInstanceModel[]]) =>
-      new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})),
+    map(({action, linkInstances}) => new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})),
     catchError((error) => Observable.of(new LinkInstancesAction.GetFailure({error: error})))
   );
 
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<LinkInstancesAction.GetFailure>(LinkInstancesActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to get links'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to get links'}))
   );
 
   @Effect()
@@ -68,7 +66,7 @@ export class LinkInstancesEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<LinkInstancesAction.CreateFailure>(LinkInstancesActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to link document'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to link document'}))
   );
 
   @Effect()
@@ -87,7 +85,7 @@ export class LinkInstancesEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<LinkInstancesAction.UpdateFailure>(LinkInstancesActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to update link attributes'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to update link attributes'}))
   );
 
   @Effect()
@@ -100,7 +98,7 @@ export class LinkInstancesEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<LinkInstancesAction.DeleteFailure>(LinkInstancesActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to unlink document'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to unlink document'}))
   );
 
   constructor(private actions$: Actions,
