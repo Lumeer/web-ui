@@ -140,8 +140,8 @@ export class DocumentService {
 
   private convertCodesToDocuments(codes: string[]): Observable<Document[]> {
     return Observable.combineLatest(codes.map(code => {
-      const vals = code.split(' ', 2);
-      return this.getDocument(vals[0], vals[1]);
+      const [collectionCode, documentId] = code.split(' ', 2);
+      return this.getDocument(collectionCode, documentId);
     }));
   }
 
@@ -150,7 +150,7 @@ export class DocumentService {
     this.homePageService.addLastUsedDocument(collectionCode, id);
   }
 
-  private removeLastUsedAndFavorite(collectionCode: string, id: string){
+  private removeLastUsedAndFavorite(collectionCode: string, id: string) {
     this.homePageService.addLastUsedCollection(collectionCode);
     this.homePageService.removeLastUsedDocument(collectionCode, id);
     this.homePageService.removeFavoriteDocument(collectionCode, id);

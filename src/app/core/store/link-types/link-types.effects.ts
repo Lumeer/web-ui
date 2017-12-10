@@ -22,13 +22,12 @@ import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {catchError, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
-import {LinkTypeService} from '../../rest/link-type.service';
+import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
 import {QueryConverter} from '../navigation/query.converter';
 import {QueryHelper} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {LinkTypeConverter} from './link-type.converter';
-import {LinkTypeModel} from './link-type.model';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {selectLinkTypesQueries} from './link-types.state';
 
@@ -43,17 +42,17 @@ export class LinkTypesEffects {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
       return this.linkTypeService.getLinkTypes(action.payload.query).pipe(
-        map(dtos => [action, dtos.map(dto => LinkTypeConverter.fromDto(dto))])
+        map(dtos => ({action, linkTypes: dtos.map(dto => LinkTypeConverter.fromDto(dto))}))
       );
     }),
-    map(([action, linkTypes]: [LinkTypesAction.Get, LinkTypeModel[]]) => (new LinkTypesAction.GetSuccess({linkTypes: linkTypes, query: action.payload.query}))),
+    map(({action, linkTypes}) => (new LinkTypesAction.GetSuccess({linkTypes: linkTypes, query: action.payload.query}))),
     catchError((error) => Observable.of(new LinkTypesAction.GetFailure({error: error})))
   );
 
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.GetFailure>(LinkTypesActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to create link'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to create link'}))
   );
 
   @Effect()
@@ -72,7 +71,7 @@ export class LinkTypesEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.CreateFailure>(LinkTypesActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to create link'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to create link'}))
   );
 
   @Effect()
@@ -91,7 +90,7 @@ export class LinkTypesEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.UpdateFailure>(LinkTypesActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to update link'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to update link'}))
   );
 
   @Effect()
@@ -104,7 +103,7 @@ export class LinkTypesEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.DeleteFailure>(LinkTypesActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to delete link'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to delete link'}))
   );
 
   constructor(private actions$: Actions,

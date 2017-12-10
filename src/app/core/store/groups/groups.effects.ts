@@ -42,7 +42,7 @@ export class GroupsEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<GroupsAction.GetFailure>(GroupsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to get groups'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to get groups'}))
   );
 
   @Effect()
@@ -61,7 +61,7 @@ export class GroupsEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<GroupsAction.CreateFailure>(GroupsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to create group'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to create group'}))
   );
 
   @Effect()
@@ -80,7 +80,7 @@ export class GroupsEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<GroupsAction.UpdateFailure>(GroupsActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to update group'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to update group'}))
   );
 
   @Effect()
@@ -95,7 +95,7 @@ export class GroupsEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<GroupsAction.DeleteFailure>(GroupsActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to delete group'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to delete group'}))
   );
 
   constructor(private actions$: Actions,

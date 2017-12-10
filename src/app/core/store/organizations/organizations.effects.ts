@@ -25,7 +25,6 @@ import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {OrganizationService} from '../../rest';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {OrganizationConverter} from './organization.converter';
-import {OrganizationModel} from './organization.model';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 
 @Injectable()
@@ -43,7 +42,7 @@ export class OrganizationsEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.GetFailure>(OrganizationsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to get organizations'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to get organizations'}))
   );
 
   @Effect()
@@ -62,7 +61,7 @@ export class OrganizationsEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.CreateFailure>(OrganizationsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to create organization'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to create organization'}))
   );
 
   @Effect()
@@ -71,18 +70,17 @@ export class OrganizationsEffects {
       const organizationDto = OrganizationConverter.toDto(action.payload.organization);
 
       return this.organizationService.editOrganization(organizationDto.code, organizationDto).pipe(
-        map(dto => [action, OrganizationConverter.fromDto(dto)])
+        map(dto => ({action, organization: OrganizationConverter.fromDto(dto)}))
       );
     }),
-    map(([action, organization]: [OrganizationsAction.Update, OrganizationModel]) =>
-      new OrganizationsAction.UpdateSuccess({organizationCode: action.payload.organizationCode, organization: organization})),
+    map(({action, organization}) => new OrganizationsAction.UpdateSuccess({organizationCode: action.payload.organizationCode, organization: organization})),
     catchError(error => Observable.of(new OrganizationsAction.UpdateFailure({error: error})))
   );
 
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.UpdateFailure>(OrganizationsActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to update organization'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to update organization'}))
   );
 
   @Effect()
@@ -97,7 +95,7 @@ export class OrganizationsEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.DeleteFailure>(OrganizationsActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to delete organization'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to delete organization'}))
   );
 
   constructor(private actions$: Actions,

@@ -22,8 +22,8 @@ import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {catchError, flatMap, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
-import {View} from '../../dto/view';
-import {ViewService} from '../../rest/view.service';
+import {View} from '../../dto';
+import {ViewService} from '../../rest';
 import {AppState} from '../app.state';
 import {selectWorkspace} from '../navigation/navigation.state';
 import {Workspace} from '../navigation/workspace.model';
@@ -41,7 +41,7 @@ export class ViewsEffects {
   public getByCode$: Observable<Action> = this.actions$.ofType<ViewsAction.GetByCode>(ViewsActionType.GET_BY_CODE).pipe(
     withLatestFrom(this.store$.select(selectViewsDictionary)),
     skipWhile(([action, views]) => action.payload.viewCode in views),
-    switchMap(([action, views]) => this.viewService.getView(action.payload.viewCode).pipe(
+    switchMap(([action]) => this.viewService.getView(action.payload.viewCode).pipe(
       map((dto: View) => ViewConverter.convertToModel(dto))
     )),
     map((view: ViewModel) => new ViewsAction.GetSuccess({views: [view]})),
@@ -51,7 +51,7 @@ export class ViewsEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<ViewsAction.GetFailure>(ViewsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to get view'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to get view'}))
   );
 
   @Effect()
@@ -79,7 +79,7 @@ export class ViewsEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<ViewsAction.CreateFailure>(ViewsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to create view'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to create view'}))
   );
 
   @Effect()
@@ -97,13 +97,13 @@ export class ViewsEffects {
 
   @Effect()
   public updateSuccess$: Observable<Action> = this.actions$.ofType(ViewsActionType.UPDATE_SUCCESS).pipe(
-    map(view => new NotificationsAction.Success({message: 'View has been updated'}))
+    map(() => new NotificationsAction.Success({message: 'View has been updated'}))
   );
 
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<ViewsAction.UpdateFailure>(ViewsActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(view => new NotificationsAction.Error({message: 'Failed to update view'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to update view'}))
   );
 
   constructor(private actions$: Actions,

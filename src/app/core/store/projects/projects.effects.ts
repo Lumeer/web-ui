@@ -26,7 +26,6 @@ import {ProjectService} from '../../rest';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {ProjectConverter} from './project.converter';
-import {ProjectModel} from './project.model';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {selectProjectsOrganizationCode} from './projects.state';
 
@@ -47,7 +46,7 @@ export class ProjectsEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.GetFailure>(ProjectsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to get projects'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to get projects'}))
   );
 
   @Effect()
@@ -67,7 +66,7 @@ export class ProjectsEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.CreateFailure>(ProjectsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to create project'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to create project'}))
   );
 
   @Effect()
@@ -77,18 +76,17 @@ export class ProjectsEffects {
       const projectDto = ProjectConverter.toDto(action.payload.project);
 
       return this.projectService.editProject(organizationCode, action.payload.projectCode, projectDto).pipe(
-        map(dto => [action, ProjectConverter.fromDto(dto, organizationCode)])
+        map(dto => ({action, project: ProjectConverter.fromDto(dto, organizationCode)}))
       );
     }),
-    map(([action, project]: [ProjectsAction.Update, ProjectModel]) =>
-      new ProjectsAction.UpdateSuccess({projectCode: action.payload.projectCode, project: project})),
+    map(({action, project}) => new ProjectsAction.UpdateSuccess({projectCode: action.payload.projectCode, project: project})),
     catchError(error => Observable.of(new ProjectsAction.UpdateFailure({error: error})))
   );
 
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.UpdateFailure>(ProjectsActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to update project'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to update project'}))
   );
 
   @Effect()
@@ -103,7 +101,7 @@ export class ProjectsEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.DeleteFailure>(ProjectsActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to delete project'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to delete project'}))
   );
 
   constructor(private actions$: Actions,

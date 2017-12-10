@@ -77,8 +77,7 @@ export class QueryItemsConverter {
     if (query.linkTypeIds && query.linkTypeIds.length > 0) {
       return this.linkTypeService.getLinkTypes({linkTypeIds: query.linkTypeIds}).pipe(
         map((linkTypes: LinkType[]) => linkTypes.map(linkType => linkType.collectionCodes)),
-        map((collectionCodePairs: [string, string][]) => [].concat.apply([], collectionCodePairs)),
-        map((codes: string[]) => codes.filter(code => !collectionCodes.includes(code))),
+        map(([codes]: string[][]) => codes.filter(code => !collectionCodes.includes(code))),
         map(codes => codes.concat(collectionCodes)),
         switchMap(codes => this.searchService.searchCollections({collectionCodes: codes}))
       );
@@ -143,10 +142,7 @@ export class QueryItemsConverter {
 
   private static createAttributeQueryItems(collectionsMap: { [key: string]: Collection }, query: Query): QueryItem[] {
     return query.filters.map(filter => {
-      let filterParts = filter.split(':', 3);
-      let collectionCode = filterParts[0];
-      let attribute = filterParts[1];
-      let condition = filterParts[2];
+      const [collectionCode, attribute, condition] = filter.split(':', 3);
 
       let collection: Collection = collectionsMap[collectionCode];
       if (collection && attribute && condition) {
