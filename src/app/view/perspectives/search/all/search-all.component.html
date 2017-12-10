@@ -3,10 +3,14 @@
     We are sorry, but we have not found anything. Please do a more accurate search.
   </div>
   <div *ngIf="(documents$ | async) as documents">
-    Documents
+    <ng-container *ngIf="documents.length > 0">
+      Documents
+    </ng-container>
   </div>
   <div *ngIf="(collections$ | async) as collections">
-    Collections
+    <ng-container *ngIf="collections.length > 0">
+      Collections
+    </ng-container>
   </div>
   <div *ngIf="views && views.length > 0">
     Views
