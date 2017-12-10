@@ -39,6 +39,17 @@ import {selectViewsDictionary} from './views.state';
 export class ViewsEffects {
 
   @Effect()
+  public get: Observable<Action> = this.actions$.ofType<ViewsAction.Get>(ViewsActionType.GET).pipe(
+    switchMap(() => {
+      return this.viewService.getViews().pipe(
+        map((dtos: View[]) => dtos.map(dto => ViewConverter.convertToModel(dto)))
+      );
+    }),
+    map((views: ViewModel[]) => new ViewsAction.GetSuccess({views})),
+    catchError((error) => Observable.of(new ViewsAction.GetFailure({error: error})))
+  );
+
+  @Effect()
   public getByCode$: Observable<Action> = this.actions$.ofType<ViewsAction.GetByCode>(ViewsActionType.GET_BY_CODE).pipe(
     withLatestFrom(this.store$.select(selectViewsDictionary)),
     skipWhile(([action, views]) => action.payload.viewCode in views),

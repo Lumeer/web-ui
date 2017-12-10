@@ -71,7 +71,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.querySubscription = this.store.select(selectQuery)
       .pipe(
         skipWhile(query => isNullOrUndefined(query)),
-        tap(query => this.store.dispatch(new DocumentsAction.Get({query: query}))),
+        tap(query => this.store.dispatch(new DocumentsAction.Get({query}))),
         tap(() => this.store.dispatch(new ViewsAction.ChangeConfig({config: {search: {expandedDocumentIds: []}}})))
       ).subscribe();
     this.documents$ = this.store.select(selectDocumentsByQuery);

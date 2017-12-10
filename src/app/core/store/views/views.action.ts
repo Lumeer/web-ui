@@ -18,10 +18,12 @@
  */
 
 import {Action} from '@ngrx/store';
+import {QueryModel} from '../navigation/query.model';
 import {ViewConfigModel, ViewModel} from './view.model';
 
 export enum ViewsActionType {
 
+  GET = '[Views] Get',
   GET_BY_CODE = '[Views] Get By Code',
   GET_SUCCESS = '[Views] Get :: Success',
   GET_FAILURE = '[Views] Get :: Failure',
@@ -39,6 +41,13 @@ export enum ViewsActionType {
 }
 
 export namespace ViewsAction {
+
+  export class Get implements Action {
+    public readonly type = ViewsActionType.GET;
+
+    public constructor(public payload: { query: QueryModel }) {
+    }
+  }
 
   export class GetByCode implements Action {
     public readonly type = ViewsActionType.GET_BY_CODE;

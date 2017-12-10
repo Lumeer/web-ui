@@ -12,7 +12,9 @@
       Collections
     </ng-container>
   </div>
-  <div *ngIf="views && views.length > 0">
-    Views
+  <div *ngIf="(views$ | async) as views">
+    <ng-container *ngIf="views.length > 0">
+      Views
+    </ng-container>
   </div>
 </div>

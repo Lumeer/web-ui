@@ -27,7 +27,7 @@ import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {ViewModel} from '../../core/store/views/view.model';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
-import {Perspective} from '../perspectives/perspective';
+import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
 import {RouterAction} from '../../core/store/router/router.action';
 
 @Component({
@@ -89,15 +89,7 @@ export class ViewControlsComponent implements OnInit, OnDestroy {
   }
 
   public getIconForPerspective(perspective: string): string {
-    switch (perspective) {
-      case Perspective.Table:
-        return 'fa-table';
-      case Perspective.PostIt:
-        return 'fa-file';
-      case Perspective.Search:
-        return 'fa-list-ul';
-    }
-    return '';
+    return perspectiveIconsMap[perspective] || '';
   }
 
   public getTitleForPerspective(perspective: string): string {

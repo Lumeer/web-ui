@@ -20,7 +20,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 
-import {View} from '../../../../core/dto';
 import {AppState} from '../../../../core/store/app.state';
 import {SearchService} from '../../../../core/rest';
 import {selectQuery} from '../../../../core/store/navigation/navigation.state';
@@ -34,6 +33,9 @@ import {selectCollectionsByQuery} from '../../../../core/store/collections/colle
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {isNullOrUndefined} from 'util';
+import {ViewModel} from '../../../../core/store/views/view.model';
+import {ViewsAction} from '../../../../core/store/views/views.action';
+import {selectViewsByQuery} from '../../../../core/store/views/views.state';
 
 @Component({
   templateUrl: './search-all.component.html'
@@ -42,7 +44,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
   public documents$: Observable<DocumentModel[]>;
   public collections$: Observable<CollectionModel[]>;
-  public views: View[];
+  public views$: Observable<ViewModel[]>;
 
   private querySubscription: Subscription;
 
@@ -54,12 +56,13 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     this.querySubscription = this.store.select(selectQuery)
       .pipe(
         skipWhile(query => isNullOrUndefined(query)),
-        tap(query => this.store.dispatch(new DocumentsAction.Get({query: query}))),
-        tap(query => this.store.dispatch(new CollectionsAction.Get({query: query})))
+        tap(query => this.store.dispatch(new DocumentsAction.Get({query}))),
+        tap(query => this.store.dispatch(new CollectionsAction.Get({query}))),
+        tap(query => this.store.dispatch(new ViewsAction.Get({query})))
       ).subscribe();
     this.documents$ = this.store.select(selectDocumentsByQuery);
     this.collections$ = this.store.select(selectCollectionsByQuery);
-    // TODO views
+    this.views$ = this.store.select(selectViewsByQuery);
   }
 
   public ngOnDestroy() {
