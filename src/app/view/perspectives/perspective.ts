@@ -30,7 +30,7 @@ export const perspectivesMap: { [id: string]: Perspective } = {
 };
 
 export const perspectiveIconsMap: { [id: string]: string } = {
-  [Perspective.PostIt]: 'fa-sticky-note',
-  [Perspective.Search]: 'fa-search',
-  [Perspective.Table]: 'fa-table'
+  [Perspective.PostIt]: 'fa fa-sticky-note',
+  [Perspective.Search]: 'fa fa-search',
+  [Perspective.Table]: 'fa fa-table'
 };

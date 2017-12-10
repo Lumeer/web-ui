@@ -3,13 +3,13 @@
   <div class="form-control dropdown mx-3 p-0">
     <div class="dropdown-toggle py-1 px-2" id="dropdownMenuButton" data-toggle="dropdown"
          aria-haspopup="true" aria-expanded="false">
-      <i class="fa fa-fw {{getIconForPerspective(view.perspective)}}"></i>
+      <i class="fa-fw {{getIconForPerspective(view.perspective)}}"></i>
       <span class="ml-1">{view.perspective, select, postit {Post-it} search {Search} table {Table}}</span>
     </div>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
       <div class="dropdown-item" *ngFor="let perspective of perspectives()"
            (click)="onSelectPerspective(perspective)">
-        <i class="fa fa-fw {{getIconForPerspective(perspective)}}"></i>
+        <i class="fa-fw {{getIconForPerspective(perspective)}}"></i>
         <span class="ml-1">{perspective, select, postit {Post-it} search {Search} table {Table}}</span>
       </div>
     </div>

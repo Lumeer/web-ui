@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {perspectiveIconsMap} from '../../../view/perspectives/perspective';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {View} from '../../../core/dto';
@@ -27,10 +28,12 @@ export class ViewQueryItem implements QueryItem {
 
   public code: string;
   public name: string;
+  public icon: string;
 
   public constructor(view: View) {
     this.name = view.name;
     this.code = view.code;
+    this.icon = perspectiveIconsMap[view.perspective];
   }
 
   public get text(): string {
