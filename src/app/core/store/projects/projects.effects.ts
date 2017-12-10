@@ -76,7 +76,7 @@ export class ProjectsEffects {
       const projectDto = ProjectConverter.toDto(action.payload.project);
 
       return this.projectService.editProject(organizationCode, action.payload.projectCode, projectDto).pipe(
-        map(dto => ({action: action, project: ProjectConverter.fromDto(dto, organizationCode)}))
+        map(dto => ({action, project: ProjectConverter.fromDto(dto, organizationCode)}))
       );
     }),
     map(({action, project}) => new ProjectsAction.UpdateSuccess({projectCode: action.payload.projectCode, project: project})),

@@ -42,7 +42,7 @@ export class LinkTypesEffects {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
       return this.linkTypeService.getLinkTypes(action.payload.query).pipe(
-        map(dtos => ({action: action, linkTypes: dtos.map(dto => LinkTypeConverter.fromDto(dto))}))
+        map(dtos => ({action, linkTypes: dtos.map(dto => LinkTypeConverter.fromDto(dto))}))
       );
     }),
     map(({action, linkTypes}) => (new LinkTypesAction.GetSuccess({linkTypes: linkTypes, query: action.payload.query}))),

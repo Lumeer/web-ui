@@ -70,7 +70,7 @@ export class OrganizationsEffects {
       const organizationDto = OrganizationConverter.toDto(action.payload.organization);
 
       return this.organizationService.editOrganization(organizationDto.code, organizationDto).pipe(
-        map(dto => ({action: action, organization: OrganizationConverter.fromDto(dto)}))
+        map(dto => ({action, organization: OrganizationConverter.fromDto(dto)}))
       );
     }),
     map(({action, organization}) => new OrganizationsAction.UpdateSuccess({organizationCode: action.payload.organizationCode, organization: organization})),

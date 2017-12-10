@@ -38,7 +38,7 @@ export class LinkInstancesEffects {
     withLatestFrom(this.store$.select(selectLinkInstancesQueries)),
     skipWhile(([action, queries]) => queries.some(query => QueryHelper.equal(query, action.payload.query))),
     switchMap(([action]) => this.linkInstanceService.getLinkInstances(action.payload.query).pipe(
-      map(dtos => ({action: action, linkInstances: dtos.map(dto => LinkInstanceConverter.fromDto(dto))}))
+      map(dtos => ({action, linkInstances: dtos.map(dto => LinkInstanceConverter.fromDto(dto))}))
     )),
     map(({action, linkInstances}) => new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})),
     catchError((error) => Observable.of(new LinkInstancesAction.GetFailure({error: error})))

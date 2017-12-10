@@ -110,7 +110,7 @@ export class CollectionsEffects {
       const attributeDto = CollectionConverter.toAttributeDto(action.payload.attribute);
 
       return this.collectionService.updateAttribute(action.payload.collectionCode, action.payload.attributeId, attributeDto).pipe(
-        map(result => ({action: action, attribute: CollectionConverter.fromAttributeDto(result)}))
+        map(result => ({action, attribute: CollectionConverter.fromAttributeDto(result)}))
       );
     }),
     map(({action, attribute}) => new CollectionsAction.ChangeAttributeSuccess(
@@ -149,11 +149,11 @@ export class CollectionsEffects {
 
       if (action.payload.type === PermissionType.Users) {
         return this.collectionService.updateUserPermission(permissionDto).pipe(
-          map(permission => ({action: action, permission: PermissionsConverter.fromPermissionDto(permission)}))
+          map(permission => ({action, permission: PermissionsConverter.fromPermissionDto(permission)}))
         );
       } else {
         return this.collectionService.updateGroupPermission(permissionDto).pipe(
-          map(permission => ({action: action, permission: PermissionsConverter.fromPermissionDto(permission)}))
+          map(permission => ({action, permission: PermissionsConverter.fromPermissionDto(permission)}))
         );
       }
     }),
