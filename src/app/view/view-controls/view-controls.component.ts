@@ -17,10 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, ViewChild,
-  ViewChildren
-} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {Store} from '@ngrx/store';

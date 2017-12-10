@@ -25,7 +25,7 @@ import {AppState} from '../../../../core/store/app.state';
 import {SearchService} from '../../../../core/rest';
 import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {Subscription} from 'rxjs/Subscription';
-import {tap} from 'rxjs/operators';
+import {skipWhile, tap} from 'rxjs/operators';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {Observable} from 'rxjs/Observable';
@@ -53,6 +53,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.querySubscription = this.store.select(selectQuery)
       .pipe(
+        skipWhile(query => isNullOrUndefined(query)),
         tap(query => this.store.dispatch(new DocumentsAction.Get({query: query}))),
         tap(query => this.store.dispatch(new CollectionsAction.Get({query: query})))
       ).subscribe();

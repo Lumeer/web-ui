@@ -22,7 +22,6 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {CollectionModel} from './collection.model';
 import {selectQuery} from '../navigation/navigation.state';
-import {Dictionary} from '@ngrx/entity/src/models';
 
 export interface CollectionsState extends EntityState<CollectionModel> {
   loaded: boolean;
