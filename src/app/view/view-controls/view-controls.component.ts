@@ -92,16 +92,4 @@ export class ViewControlsComponent implements OnInit, OnDestroy {
     return perspectiveIconsMap[perspective] || '';
   }
 
-  public getTitleForPerspective(perspective: string): string {
-    switch (perspective) {
-      case Perspective.Table:
-        return 'Table';
-      case Perspective.PostIt:
-        return 'Post-it';
-      case Perspective.Search:
-        return 'Search';
-    }
-    return '';
-  }
-
 }
