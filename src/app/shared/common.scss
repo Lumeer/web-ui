@@ -19,6 +19,10 @@ a {
   flex-grow: 2;
 }
 
+.flex-grow {
+  flex: 1 0 auto;
+}
+
 .no-outline {
   &:focus {
     outline: none;
