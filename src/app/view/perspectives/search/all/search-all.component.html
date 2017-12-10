@@ -1,11 +1,11 @@
 <div class="mt-2">
-  <div *ngIf="isEmptySearch()" class="alert alert-warning" i18n="@@search.result.empty">
+  <div *ngIf="false" class="alert alert-warning" i18n="@@search.result.empty">
     We are sorry, but we have not found anything. Please do a more accurate search.
   </div>
-  <div *ngIf="documents && documents.length > 0">
+  <div *ngIf="(documents$ | async) as documents">
     Documents
   </div>
-  <div *ngIf="collections && collections.length > 0">
+  <div *ngIf="(collections$ | async) as collections">
     Collections
   </div>
   <div *ngIf="views && views.length > 0">

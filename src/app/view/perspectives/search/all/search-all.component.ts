@@ -20,71 +20,50 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 
-import {Collection, Document, Query, View} from '../../../../core/dto';
+import {View} from '../../../../core/dto';
 import {AppState} from '../../../../core/store/app.state';
 import {SearchService} from '../../../../core/rest';
-import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
+import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {Subscription} from 'rxjs/Subscription';
-import {filter, map} from 'rxjs/operators';
-import {DeprecatedQueryConverter} from '../../../../shared/utils/query-converter';
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {tap} from 'rxjs/operators';
+import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {CollectionsAction} from '../../../../core/store/collections/collections.action';
+import {Observable} from 'rxjs/Observable';
+import {selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
+import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
 
 @Component({
   templateUrl: './search-all.component.html'
 })
 export class SearchAllComponent implements OnInit, OnDestroy {
 
-  public documents: Document[];
-  public collections: Collection[];
+  public documents$: Observable<DocumentModel[]>;
+  public collections$: Observable<CollectionModel[]>;
   public views: View[];
 
-  private routerSubscription: Subscription;
+  private querySubscription: Subscription;
 
   constructor(private searchService: SearchService,
               private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.routerSubscription = this.store.select(selectNavigation).pipe(
-      filter(navigation => this.isWorkspaceSet(navigation.workspace)),
-      map(navigation => navigation.query),
-      map(query => DeprecatedQueryConverter.removeLinksFromQuery(query)),
-    ).subscribe(query => {
-      this.loadCollections(query);
-      this.loadDocuments(query);
-      this.loadViews(query);
-    });
+    this.querySubscription = this.store.select(selectQuery)
+      .pipe(
+        tap(query => this.store.dispatch(new DocumentsAction.Get({query: query}))),
+        tap(query => this.store.dispatch(new CollectionsAction.Get({query: query})))
+      ).subscribe();
+    this.documents$ = this.store.select(selectDocumentsByQuery);
+    this.collections$ = this.store.select(selectCollectionsByQuery);
+    // TODO views
   }
 
   public ngOnDestroy() {
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
+    if (this.querySubscription) {
+      this.querySubscription.unsubscribe();
     }
-  }
-
-  public isEmptySearch(): boolean {
-    return this.documents && this.documents.length === 0
-      && this.collections && this.collections.length === 0
-      && this.views && this.views.length === 0;
-  }
-
-  private isWorkspaceSet(workspace: Workspace): boolean {
-    return !!(workspace.organizationCode && workspace.projectCode);
-  }
-
-  private loadCollections(query: Query) {
-    this.searchService.searchCollections(query)
-      .subscribe(collections => this.collections = collections);
-  }
-
-  private loadDocuments(query: Query) {
-    this.searchService.searchDocuments(query)
-      .subscribe(documents => this.documents = documents);
-  }
-
-  private loadViews(query: Query) {
-    this.searchService.searchViews(query)
-      .subscribe(views => this.views = views);
   }
 
 }
