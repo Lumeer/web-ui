@@ -33,6 +33,7 @@ import {selectDocumentsByQuery} from '../../../../core/store/documents/documents
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {isNullOrUndefined} from 'util';
 
 @Component({
   templateUrl: './search-all.component.html'

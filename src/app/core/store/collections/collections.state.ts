@@ -37,6 +37,6 @@ export const selectCollectionsState = (state: AppState) => state.collections;
 export const selectAllCollections = createSelector(selectCollectionsState, collectionsAdapter.getSelectors().selectAll);
 export const selectCollectionsDictionary = createSelector(selectCollectionsState, collectionsAdapter.getSelectors().selectEntities);
 export const selectCollectionsLoaded = createSelector(selectCollectionsState, (state: CollectionsState) => state.loaded);
-export const selectCollectionsByQuery = createSelector(selectCollectionsDictionary, selectQuery, (collections, query) =>{
-  return query.collectionCodes.map(code => collections[code]);
+export const selectCollectionsByQuery = createSelector(selectCollectionsDictionary, selectQuery, (collections, query) => {
+  return query.collectionCodes.length == 0 ? Object.values(collections) : query.collectionCodes.map(code => collections[code]);
 });

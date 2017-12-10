@@ -19,8 +19,7 @@
 
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
-import {tap} from 'rxjs/operators';
+
 import {Subscription} from 'rxjs/Subscription';
 import {isArray, isNullOrUndefined, isObject} from 'util';
 import {CollectionService, SearchService} from '../../../../core/rest';
@@ -29,6 +28,8 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
 import {selectQuery} from '../../../../core/store/navigation/navigation.state';
+import {Observable} from 'rxjs/Observable';
+import {skipWhile, tap} from 'rxjs/operators';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
 import {UserSettingsService} from '../../../../core/user-settings.service';
@@ -69,8 +70,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
     this.querySubscription = this.store.select(selectQuery)
       .pipe(
+        skipWhile(query => isNullOrUndefined(query)),
         tap(query => this.store.dispatch(new DocumentsAction.Get({query: query}))),
-        tap(query => this.store.dispatch(new ViewsAction.ChangeConfig({config: {search: {expandedDocumentIds: []}}})))
+        tap(() => this.store.dispatch(new ViewsAction.ChangeConfig({config: {search: {expandedDocumentIds: []}}})))
       ).subscribe();
     this.documents$ = this.store.select(selectDocumentsByQuery);
     this.searchConfigSubscription = this.store.select(selectViewSearchConfig)

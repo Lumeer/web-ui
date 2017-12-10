@@ -17,7 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, ViewChild,
+  ViewChildren
+} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {Store} from '@ngrx/store';
@@ -86,6 +89,30 @@ export class ViewControlsComponent implements OnInit, OnDestroy {
 
   public perspectives(): string[] {
     return Object.values(Perspective);
+  }
+
+  public getIconForPerspective(perspective: string): string {
+    switch (perspective) {
+      case Perspective.Table:
+        return 'fa-table';
+      case Perspective.PostIt:
+        return 'fa-file';
+      case Perspective.Search:
+        return 'fa-list-ul';
+    }
+    return '';
+  }
+
+  public getTitleForPerspective(perspective: string): string {
+    switch (perspective) {
+      case Perspective.Table:
+        return 'Table';
+      case Perspective.PostIt:
+        return 'Post-it';
+      case Perspective.Search:
+        return 'Search';
+    }
+    return '';
   }
 
 }

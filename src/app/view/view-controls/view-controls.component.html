@@ -1,19 +1,19 @@
 <form class="form-inline d-flex">
-  <label for="perspectiveSelector"
-         class="col-form-label font-weight-bold">
-    <span i18n="@@view.perspective">Perspective</span>:
-  </label>
-  <select #perspectiveSelector
-          id="perspectiveSelector"
-          class="custom-select mx-3 d-block"
-          (change)="onSelectPerspective(perspectiveSelector.value)">
-    <option *ngFor="let perspective of perspectives()"
-            [value]="perspective"
-            [attr.selected]="perspective === view.perspective ? '' : null"
-            i18n="@@view.perspective">
-      {perspective, select, postit {Post-it} search {Search} table {Table}}
-    </option>
-  </select>
+  <span i18n="@@view.perspective" class="col-form-label font-weight-bold">Perspective</span>:
+  <div class="form-control dropdown mx-3 p-0">
+    <div class="dropdown-toggle py-1 px-2" id="dropdownMenuButton" data-toggle="dropdown"
+         aria-haspopup="true" aria-expanded="false">
+      <i class="fa fa-fw {{getIconForPerspective(view.perspective)}}"></i>
+      {{getTitleForPerspective(view.perspective)}}
+    </div>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <div class="dropdown-item" *ngFor="let perspective of perspectives()"
+           (click)="onSelectPerspective(perspective)">
+        <i class="fa fa-fw {{getIconForPerspective(perspective)}}"></i>
+        {{getTitleForPerspective(perspective)}}
+      </div>
+    </div>
+  </div>
   <label for="viewName"
          class="col-form-label font-weight-bold">
     <span i18n="@@view.name">Name</span>:
