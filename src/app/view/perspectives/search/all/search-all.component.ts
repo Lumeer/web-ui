@@ -20,71 +20,55 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 
-import {Collection, Document, Query, View} from '../../../../core/dto';
 import {AppState} from '../../../../core/store/app.state';
 import {SearchService} from '../../../../core/rest';
-import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
+import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {Subscription} from 'rxjs/Subscription';
-import {filter, map} from 'rxjs/operators';
-import {DeprecatedQueryConverter} from '../../../../shared/utils/query-converter';
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {skipWhile, tap} from 'rxjs/operators';
+import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {CollectionsAction} from '../../../../core/store/collections/collections.action';
+import {Observable} from 'rxjs/Observable';
+import {selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
+import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {isNullOrUndefined} from 'util';
+import {ViewModel} from '../../../../core/store/views/view.model';
+import {ViewsAction} from '../../../../core/store/views/views.action';
+import {selectViewsByQuery} from '../../../../core/store/views/views.state';
 
 @Component({
   templateUrl: './search-all.component.html'
 })
 export class SearchAllComponent implements OnInit, OnDestroy {
 
-  public documents: Document[];
-  public collections: Collection[];
-  public views: View[];
+  public documents$: Observable<DocumentModel[]>;
+  public collections$: Observable<CollectionModel[]>;
+  public views$: Observable<ViewModel[]>;
 
-  private routerSubscription: Subscription;
+  private querySubscription: Subscription;
 
   constructor(private searchService: SearchService,
               private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.routerSubscription = this.store.select(selectNavigation).pipe(
-      filter(navigation => this.isWorkspaceSet(navigation.workspace)),
-      map(navigation => navigation.query),
-      map(query => DeprecatedQueryConverter.removeLinksFromQuery(query)),
-    ).subscribe(query => {
-      this.loadCollections(query);
-      this.loadDocuments(query);
-      this.loadViews(query);
-    });
+    this.querySubscription = this.store.select(selectQuery)
+      .pipe(
+        skipWhile(query => isNullOrUndefined(query)),
+        tap(query => this.store.dispatch(new DocumentsAction.Get({query}))),
+        tap(query => this.store.dispatch(new CollectionsAction.Get({query}))),
+        tap(query => this.store.dispatch(new ViewsAction.Get({query})))
+      ).subscribe();
+    this.documents$ = this.store.select(selectDocumentsByQuery);
+    this.collections$ = this.store.select(selectCollectionsByQuery);
+    this.views$ = this.store.select(selectViewsByQuery);
   }
 
   public ngOnDestroy() {
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
+    if (this.querySubscription) {
+      this.querySubscription.unsubscribe();
     }
-  }
-
-  public isEmptySearch(): boolean {
-    return this.documents && this.documents.length === 0
-      && this.collections && this.collections.length === 0
-      && this.views && this.views.length === 0;
-  }
-
-  private isWorkspaceSet(workspace: Workspace): boolean {
-    return !!(workspace.organizationCode && workspace.projectCode);
-  }
-
-  private loadCollections(query: Query) {
-    this.searchService.searchCollections(query)
-      .subscribe(collections => this.collections = collections);
-  }
-
-  private loadDocuments(query: Query) {
-    this.searchService.searchDocuments(query)
-      .subscribe(documents => this.documents = documents);
-  }
-
-  private loadViews(query: Query) {
-    this.searchService.searchViews(query)
-      .subscribe(views => this.views = views);
   }
 
 }

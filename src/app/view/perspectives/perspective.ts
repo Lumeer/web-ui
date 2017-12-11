@@ -28,3 +28,9 @@ export const perspectivesMap: { [id: string]: Perspective } = {
   [Perspective.Search]: Perspective.Search,
   [Perspective.Table]: Perspective.Table
 };
+
+export const perspectiveIconsMap: { [id: string]: string } = {
+  [Perspective.PostIt]: 'fa fa-sticky-note',
+  [Perspective.Search]: 'fa fa-search',
+  [Perspective.Table]: 'fa fa-table'
+};

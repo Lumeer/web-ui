@@ -21,6 +21,7 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {CollectionModel} from './collection.model';
+import {selectQuery} from '../navigation/navigation.state';
 
 export interface CollectionsState extends EntityState<CollectionModel> {
   loaded: boolean;
@@ -34,4 +35,7 @@ export const selectCollectionsState = (state: AppState) => state.collections;
 
 export const selectAllCollections = createSelector(selectCollectionsState, collectionsAdapter.getSelectors().selectAll);
 export const selectCollectionsDictionary = createSelector(selectCollectionsState, collectionsAdapter.getSelectors().selectEntities);
-export const selectCollectionsLoaded = createSelector(selectCollectionsState, (state: CollectionsState) => state.loaded)
+export const selectCollectionsLoaded = createSelector(selectCollectionsState, (state: CollectionsState) => state.loaded);
+export const selectCollectionsByQuery = createSelector(selectCollectionsDictionary, selectQuery, (collections, query) => {
+  return query.collectionCodes.length == 0 ? Object.values(collections) : query.collectionCodes.map(code => collections[code]);
+});
