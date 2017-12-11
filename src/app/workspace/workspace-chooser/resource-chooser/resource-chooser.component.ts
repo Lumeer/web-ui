@@ -38,8 +38,8 @@ import {OrganizationService} from '../../../core/rest/organization.service';
 import {ProjectService} from '../../../core/rest/project.service';
 import {NotificationsService} from 'angular2-notifications';
 import {Organization} from "../../../core/dto/organization";
-import {WorkspaceService} from '../../../core/workspace.service';
 import {Project} from '../../../core/dto/project';
+import {PostItResourceModel} from "./PostItResourceModel";
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
@@ -90,15 +90,13 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceDescription: ElementRef;
 
   @Input() public resourceType: string;
-  @Input() public resources: Resource[];
+  @Input() public resourcesPostIts: PostItResourceModel[] = [];
   @Input() public initActiveIx: number;
   @Input() public canCreateResource: boolean;
 
-
   @Output() public resourceSelect: EventEmitter<number> = new EventEmitter();
-  @Output() public resourceNew: EventEmitter<any> = new EventEmitter();
+  @Output() public resourceNew: EventEmitter<Resource> = new EventEmitter();
   @Output() public resourceNewNumber: EventEmitter<any> = new EventEmitter();
-
   @Output() public resourceSettings: EventEmitter<number> = new EventEmitter();
   @Output() public resourceNewDescription: EventEmitter<string> = new EventEmitter();
 
@@ -112,27 +110,25 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceActiveIx: number;
   public resourceLineSizes = [0, 0, 0];
   public resourceVisibleArrows = false;
-  public newResource;
   public newOrganization: Organization = new Organization();
-  public uninitializedResources: Resource[] = [];
   private newProject: Project = new Project();
-  private static activeOrganizationIdx: number;
-  private static activeOrganizationCode: string;
 
-  constructor(private organizationService: OrganizationService,
-              private projectService: ProjectService,
-              private notificationsService: NotificationsService,
-              private workspaceService: WorkspaceService) {
+  public ngOnInit(): void {
+    this.actualizeWidthAndCheck();
+    this.checkForScrollRightResources();
+    this.computeResourceLines(this.resourceActiveIx);
   }
 
   public ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
-    if (changes['resources']) {
+    if (changes['resourcesNotPostIts']) {
       this.actualizeWidthAndCheck();
       this.checkForScrollRightResources();
       this.resourceActiveIx = this.initActiveIx;
       this.computeResourceLines(this.resourceActiveIx);
     }
   }
+
+
 
   @HostListener('window:resize', ['$event'])
   private onResize(event) {
@@ -143,12 +139,11 @@ export class ResourceChooserComponent implements OnChanges {
 
   private actualizeWidthAndCheck() {
     let resourceContentWidth = this.resourceContainer.nativeElement.clientWidth;
-    this.resourceWidth = Math.max((this.resources.length + (this.canCreateResource ? 1 : 0)) * squareSize, resourceContentWidth);
+    this.resourceWidth = Math.max((this.resourcesPostIts.length + (this.canCreateResource ? 1 : 0)) * squareSize, resourceContentWidth);
     this.checkForDisableResourceArrows(resourceContentWidth);
   }
 
   public onResourceSelected(index: number) {
-
     this.resourceActiveIx = index;
     this.computeResourceLines(index);
     this.resourceSelect.emit(index);
@@ -189,7 +184,7 @@ export class ResourceChooserComponent implements OnChanges {
     const numVisible = this.numResourcesVisible();
     if (ix >= numVisible) {
       const numShouldScroll = ix - numVisible + Math.round(numVisible / 2);
-      const numMaxScroll = this.resources.length + (this.canCreateResource ? 1 : 0) - numVisible;
+      const numMaxScroll = this.resourcesPostIts.length + (this.canCreateResource ? 1 : 0) - numVisible;
       const numToScroll = Math.min(numShouldScroll, numMaxScroll);
       this.resourceScroll = -numToScroll * squareSize;
       this.resourceCanScrollLeft = true;
@@ -221,11 +216,11 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private numResourcesVisible(): number {
-    return Math.min(Math.floor(this.resourceContentWidth / squareSize), this.resources.length + (this.canCreateResource ? 1 : 0));
+    return Math.min(Math.floor(this.resourceContentWidth / squareSize), this.resourcesPostIts.length + (this.canCreateResource ? 1 : 0));
   }
 
   private numResourcesPotentiallyVisible(): number {
-    return this.resources.length + (this.canCreateResource ? 1 : 0) - Math.abs(this.resourceScroll / squareSize);
+    return this.resourcesPostIts.length + (this.canCreateResource ? 1 : 0) - Math.abs(this.resourceScroll / squareSize);
   }
 
   private computeResourceLines(index: number) {
@@ -233,26 +228,26 @@ export class ResourceChooserComponent implements OnChanges {
       this.resourceLineSizes = [0, 0, 0];
       return;
     }
-    const widthContent = (this.resources.length + 1) * squareSize;
+    const widthContent = (this.resourcesPostIts.length + 1) * squareSize;
     this.linesWidth = Math.max(this.resourceContainer.nativeElement.clientWidth, widthContent);
     this.resourceLineSizes[0] = (this.linesWidth - widthContent) / 2 + (index * squareSize);
     this.resourceLineSizes[1] = squareSize;
     this.resourceLineSizes[2] = this.linesWidth - this.resourceLineSizes[0] - this.resourceLineSizes[1];
   }
 
-  public onAddResource() {
-    this.newResource = {
+  public  onAddResource() {
+    const postIt: PostItResourceModel = new PostItResourceModel;
+    postIt.resource   = {
       name: '',
       code: '',
       color: COLLECTION_NO_COLOR,
       icon: COLLECTION_NO_ICON,
-      initialized: false
-    }
+    };
+    postIt.initializing = true;
+    postIt.initialized = false;
 
-    this.uninitializedResources.push(this.newResource);
-    this.resources.push(this.newResource);
+    this.resourcesPostIts.push(postIt);
   }
-
 
   public onResourceSettings(index: number) {
     this.resourceSettings.emit(index);
@@ -264,70 +259,33 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
 
-  public initializeResource(resource: Resource): void {
+  public initializeResource(postIt:PostItResourceModel): void {
 
     switch (this.resourceType) {
       case 'organization':
         this.newOrganization = {
-          code: 'newcode2',
-          name: resource.name,
-          color: resource.color,
-          icon: resource.icon
+          code: postIt.resource.code,
+          name: postIt.resource.name,
+          color: postIt.resource.color,
+          icon: postIt.resource.icon
         };
         this.resourceNew.emit(this.newOrganization);
+        postIt.initialized =true;
+
         break;
 
 
       case 'project':
         this.newProject = {
-          code: 'newcodeProject',
-          name: resource.name,
-          color: resource.color,
-          icon: resource.icon
+          code: postIt.resource.code,
+          name: postIt.resource.name,
+          color: postIt.resource.color,
+          icon: postIt.resource.icon
         };
         this.resourceNew.emit(this.newProject);
+        postIt.initialized = true;
         break;
     }
   }
 
-  public isInitialized(resource: Resource): boolean {
-    // console.log('I am initialized ' + !this.uninitializedResources.has(resource));
-    // return !this.uninitializedResources.has(resource);
-
-    return !(resource.code == '' || resource.name === '' );
-  }
-
-
-  public isAnyResourceInitializing(): boolean {
-    return (this.uninitializedResources.length > 0);
-  }
-
-  public updateAndAppendUnitialized(resource: Resource): void {
-    console.log('going to update');
-    console.log('length unitialized' + this.uninitializedResources.length);
-    this.uninitializedResources.splice(0, 1);
-
-    //this.uninitializedResources.
-    console.log('length unitialized' + this.uninitializedResources.length);
-    console.log(this.resources.length);
-
-
-    for (let i = 0; i < this.uninitializedResources.length; i++) {
-
-      this.resources.push(this.uninitializedResources[i]);
-    }
-    console.log(this.resources.length);
-
-    console.log('here');
-
-    for (let i = 0; i < this.resources.length; i++) {
-      console.log('A resource');
-      console.log(this.resources[i].code);
-    }
-  }
-
-  public areResourcesEqual(resource1: Resource, resource2: Resource): boolean {
-    return (resource1.code === resource2.code && resource1.name === resource2.name && resource1.color === resource2.color
-      && resource1.icon === resource2.icon);
-  }
 }

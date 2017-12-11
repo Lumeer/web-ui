@@ -24,7 +24,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {first} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
-import {Organization, Project} from '../../core/dto';
+import {Organization, Project, Resource} from '../../core/dto';
 import {OrganizationService, ProjectService} from '../../core/rest';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
@@ -35,6 +35,8 @@ import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {selectSelectedProjectCode} from '../../core/store/projects/projects.state';
 import {UserSettingsService} from '../../core/user-settings.service';
 import {Role} from '../../shared/permissions/role';
+import {NotificationService} from '../../core/notifications/notification.service';
+import {PostItResourceModel} from './resource-chooser/PostItResourceModel';
 
 @Component({
   selector: 'workspace-chooser',
@@ -60,7 +62,8 @@ import {Role} from '../../shared/permissions/role';
 })
 export class WorkspaceChooserComponent implements OnInit {
 
-  public organizations: Organization[] = [];
+  public organizations: Organization[] = []
+  public organizationsPostIts: PostItResourceModel[] = [];
   public activeOrgIx: number;
   public activeProjIx: number;
 
@@ -68,16 +71,16 @@ export class WorkspaceChooserComponent implements OnInit {
   private selectedProjectCode: string;
 
   private workspace: Workspace;
-
-
-  @ViewChildren(ResourceChooserComponent) resourceChoosers: QueryList<ResourceChooserComponent>;
+  public selectedProjectsPostIts: PostItResourceModel[];
 
   constructor(private organizationService: OrganizationService,
               private projectService: ProjectService,
               private store: Store<AppState>,
               private userSettingsService: UserSettingsService,
-              private router: Router) {
+              private router: Router,
+              private notificationsService: NotificationService) {
   }
+
 
   public ngOnInit() {
     Observable.combineLatest(
@@ -95,11 +98,21 @@ export class WorkspaceChooserComponent implements OnInit {
     });
   }
 
+  public toPostIt(resource: Resource) {
+    const postIt = new PostItResourceModel;
+
+    postIt.resource = resource;
+    postIt.initialized = true;
+    postIt.initializing = false;
+    return postIt;
+  }
+
   private getOrganizations(): void {
     this.organizationService.getOrganizations().subscribe(
       organizations => {
         this.organizations = organizations;
-
+        this.organizationsPostIts = organizations.map(organization => this.toPostIt(organization));
+        console.log(this.organizationsPostIts[0].resource.name);
         if (this.workspace.organizationCode) {
           const ix: number = this.organizations.findIndex(org =>
             org.code === this.workspace.organizationCode
@@ -166,14 +179,6 @@ export class WorkspaceChooserComponent implements OnInit {
 
     organization.projects = [];
     return this.projectService.getProjects(organization.code);
-  }
-
-  public getOrganizations(): void {
-    this.organizationService.getOrganizations()
-      .subscribe(organizations => {
-        console.log('got', organizations);
-        this.organizations = organizations;
-      });
   }
 
   public onSelectOrganization(index: number) {
@@ -262,6 +267,7 @@ export class WorkspaceChooserComponent implements OnInit {
     this.projectService.getProjects(selectedOrganization.code)
       .subscribe((projects: Project[]) => {
         selectedOrganization.projects = projects;
+        this.selectedProjectsPostIts = projects.map(project => this.toPostIt(project));
       });
   }
 
@@ -270,46 +276,20 @@ export class WorkspaceChooserComponent implements OnInit {
 
     if (!isNullOrUndefined(this.activeOrgIx)) {
       this.projectService.createProject(this.organizations[this.activeOrgIx].code, project).subscribe(() => {
-        this.notificationsService
-          .success('Success', 'Project created');
-        this.getProjectsOfOrganization(this.activeOrgIx);
-      }, error => this.notificationsService
-        .error('Error', 'Error creating project'));
+          this.notificationsService.success('Project created')
+        }, error => {
+          this.notificationsService.error('Error creating project');
+        }
+      );
     }
   }
 
   public onCreateOrganization(organization: Organization): void {
     this.organizationService.createOrganization(organization)
       .subscribe(() => {
-        this.notificationsService
-          .success('Success', 'Organization created');
-        this.getOrganizations();
-        let idxOfCreated = this.organizations.findIndex(org => org.code === organization.code);
-        this.activeOrgIx = idxOfCreated;
-
-
-        if (this.resourceChoosers) {
-          console.log('The length is' + this.resourceChoosers.length);
-          this.resourceChoosers.forEach(resourceChooser => {
-            if (resourceChooser) {
-              console.log(resourceChooser.resourceType);
-              if (resourceChooser.resourceType === 'organization') {
-                resourceChooser.updateAndAppendUnitialized(organization);
-              }
-            } else {
-              console.log('Elements are null');
-            }
-
-          });
-        }
-        else {
-          console.log('The list is null');
-        }
-
-
+        this.notificationsService.success('Organization created')
       }, () => {
-        this.notificationsService
-          .error('Error', 'Error creating organization');
+        this.notificationsService.error('Error creating organization')
       });
   }
 }
