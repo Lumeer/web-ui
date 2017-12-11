@@ -20,13 +20,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 
-import {Collection, Document, View, Query} from '../../../../core/dto';
+import {Collection, Document, Query, View} from '../../../../core/dto';
 import {AppState} from '../../../../core/store/app.state';
-import {SearchService} from '../../../../core/rest/search.service';
+import {SearchService} from '../../../../core/rest';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {Subscription} from 'rxjs/Subscription';
-import {map} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {DeprecatedQueryConverter} from '../../../../shared/utils/query-converter';
+import {Workspace} from '../../../../core/store/navigation/workspace.model';
 
 @Component({
   templateUrl: './search-all.component.html'
@@ -45,8 +46,9 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.routerSubscription = this.store.select(selectNavigation).pipe(
+      filter(navigation => this.isWorkspaceSet(navigation.workspace)),
       map(navigation => navigation.query),
-      map(query => DeprecatedQueryConverter.removeLinksFromQuery(query))
+      map(query => DeprecatedQueryConverter.removeLinksFromQuery(query)),
     ).subscribe(query => {
       this.loadCollections(query);
       this.loadDocuments(query);
@@ -64,6 +66,10 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     return this.documents && this.documents.length === 0
       && this.collections && this.collections.length === 0
       && this.views && this.views.length === 0;
+  }
+
+  private isWorkspaceSet(workspace: Workspace): boolean {
+    return !!(workspace.organizationCode && workspace.projectCode);
   }
 
   private loadCollections(query: Query) {

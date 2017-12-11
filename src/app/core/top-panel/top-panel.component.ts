@@ -23,6 +23,9 @@ import {HtmlModifier} from '../../shared/utils/html-modifier';
 import {AppState} from '../store/app.state';
 import {selectNavigation} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
+import {Router} from '@angular/router';
+import {OrganizationsAction} from '../store/organizations/organizations.action';
+import {ProjectsAction} from '../store/projects/projects.action';
 
 @Component({
   selector: 'top-panel',
@@ -38,7 +41,8 @@ export class TopPanelComponent implements OnInit {
 
   public workspace: Workspace;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>,
+              private router: Router) {
   }
 
   public ngOnInit() {
@@ -46,6 +50,20 @@ export class TopPanelComponent implements OnInit {
       this.workspace = navigation.workspace;
       this.searchBoxHidden = navigation.searchBoxHidden;
     });
+  }
+
+  public goToWorkspaceOrganization(): void {
+    this.store.dispatch(new OrganizationsAction.Select({organizationCode: this.workspace.organizationCode}));
+    this.store.dispatch(new ProjectsAction.Select({projectCode: null}));
+
+    this.router.navigate(['/workspace']);
+  }
+
+  public goToWorkspaceProject(): void {
+    this.store.dispatch(new OrganizationsAction.Select({organizationCode: this.workspace.organizationCode}));
+    this.store.dispatch(new ProjectsAction.Select({projectCode: this.workspace.projectCode}));
+
+    this.router.navigate(['/workspace']);
   }
 
   public isWorkspaceSet(): boolean {
@@ -59,4 +77,5 @@ export class TopPanelComponent implements OnInit {
   public removeHtmlComments(html: HTMLElement): string {
     return HtmlModifier.removeHtmlComments(html);
   }
+
 }

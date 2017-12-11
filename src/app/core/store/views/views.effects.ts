@@ -22,6 +22,7 @@ import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {catchError, flatMap, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
 import {View} from '../../dto';
 import {ViewService} from '../../rest';
 import {AppState} from '../app.state';
@@ -42,6 +43,7 @@ export class ViewsEffects {
     withLatestFrom(this.store$.select(selectViewsDictionary)),
     skipWhile(([action, views]) => action.payload.viewCode in views),
     switchMap(([action]) => this.viewService.getView(action.payload.viewCode).pipe(
+      skipWhile((dto: View) => isNullOrUndefined(dto)), // TODO can probably be removed once views are not stored in webstorage
       map((dto: View) => ViewConverter.convertToModel(dto))
     )),
     map((view: ViewModel) => new ViewsAction.GetSuccess({views: [view]})),

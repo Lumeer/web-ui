@@ -21,13 +21,12 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 
-import {Project} from '../../core/dto/project';
-import {ProjectService} from '../../core/rest/project.service';
-import {CollectionService} from '../../core/rest/collection.service';
-import {Collection} from '../../core/dto/collection';
+import {Collection, Project} from '../../core/dto';
+import {CollectionService, ProjectService} from '../../core/rest';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {filter} from 'rxjs/operators';
 
 @Component({
   templateUrl: './project-settings.component.html',
@@ -40,7 +39,6 @@ export class ProjectSettingsComponent implements OnInit {
   public projectCode: string;
   private originalProjectCode: string;
   public collectionsCount: number;
-  public projectDescriptionEditable: boolean = false;
 
   @ViewChild('projectDescription')
   public projectDescription: ElementRef;
@@ -56,7 +54,9 @@ export class ProjectSettingsComponent implements OnInit {
   public ngOnInit(): void {
     this.project = new Project();
 
-    this.store.select(selectWorkspace).subscribe(workspace => {
+    this.store.select(selectWorkspace).pipe(
+      filter(workspace => !!(workspace.organizationCode && workspace.projectCode))
+    ).subscribe(workspace => {
       this.organizationCode = workspace.organizationCode;
       this.projectCode = workspace.projectCode;
       this.getProject();
@@ -135,17 +135,6 @@ export class ProjectSettingsComponent implements OnInit {
   public getNumberOfCollections(): void {
     this.collectionService.getCollections().subscribe((collections: Collection[]) =>
       (this.collectionsCount = collections.length));
-  }
-
-  public onProjectDescriptionBlur(description: string) {
-    this.projectDescriptionEditable = false;
-  }
-
-  public onProjectDescriptionEdit() {
-    this.projectDescriptionEditable = true;
-    setTimeout(() => {
-      this.projectDescription.nativeElement.focus();
-    }, 50);
   }
 
   public workspacePath(): string {

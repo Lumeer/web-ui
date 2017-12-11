@@ -18,7 +18,14 @@
  */
 
 import {
-  Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChange,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChange,
   ViewChild
 } from '@angular/core';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
@@ -95,7 +102,6 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceActiveIx: number;
   public resourceLineSizes = [0, 0, 0];
   public resourceVisibleArrows = false;
-  public resourceDescriptionEditable = false;
 
   public ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
     if (changes['resources']) {
@@ -117,18 +123,6 @@ export class ResourceChooserComponent implements OnChanges {
     let resourceContentWidth = this.resourceContainer.nativeElement.clientWidth;
     this.resourceWidth = Math.max((this.resources.length + (this.canCreateResource ? 1 : 0)) * squareSize, resourceContentWidth);
     this.checkForDisableResourceArrows(resourceContentWidth);
-  }
-
-  public onResourceDescriptionEdit() {
-    this.resourceDescriptionEditable = true;
-    setTimeout(() => {
-      this.resourceDescription.nativeElement.focus();
-    }, 50);
-  }
-
-  public onResourceDescriptionBlur(description: string) {
-    this.resourceDescriptionEditable = false;
-    this.resourceNewDescription.emit(description);
   }
 
   public onResourceSelected(index: number) {

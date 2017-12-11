@@ -1,115 +1,116 @@
-<div class="parent">
-  <div *ngIf="postIts && postIts.length == 0 && !editable" class="alert alert-warning mt-2"
-       i18n="@@search.result.empty">
-    We are sorry, but we have not found anything. Please do a more accurate search.
-  </div>
-  <div *ngIf="(postIts && postIts.length > 0) || editable" class="layout">
+<div *ngIf="postIts && postIts.length == 0 && !editable" class="alert alert-warning mt-2"
+     i18n="@@search.result.empty">
+  We are sorry, but we have not found anything. Please do a more accurate search.
+</div>
+<div *ngIf="(postIts && postIts.length > 0) || editable" class="post-it-collection-layout">
 
-    <!-- collection post-its -->
-    <div *ngFor="let postIt of postIts" #postItElement class="layout-item card post-it {{ postIt === lastClickedPostIt ? 'selected' : null }} {{ !postIt.initialized ? 'uninitialized' : null }}"
-         [style.border-color]="postIt.collection.color"
-         (click)="lastClickedPostIt = postIt">
+  <!-- collection post-its -->
+  <div *ngFor="let postIt of postIts" #postItElement
+       class="layout-item card post-it {{ postIt === lastClickedPostIt ? 'selected' : null }} {{ !postIt.initialized ? 'uninitialized' : null }}"
+       [style.border-color]="postIt.collection.color"
+       (click)="lastClickedPostIt = postIt">
 
-      <div class="card-body text-center">
-        <a class="icon" [style.color]="postIt.collection.color"
-           [title]="postIt.collection.name"
-           [routerLink]="postIt.initialized ? [workspacePath(), 'view', 'postit'] : []"
-           [queryParams]="{ query: documentsQuery(postIt.collection.code) }"
-           data-toggle="dropdown">
-          <i class="fa-6x {{ postIt.collection.icon }}" aria-hidden="true"></i>
+    <div class="card-body text-center">
+      <a class="icon" [style.color]="postIt.collection.color"
+         [title]="postIt.collection.name"
+         [routerLink]="postIt.initialized ? [workspacePath(), 'view', 'postit'] : []"
+         [queryParams]="{ query: documentsQuery(postIt.collection.code) }"
+         data-toggle="dropdown">
+        <i class="fa-6x {{ postIt.collection.icon }}" aria-hidden="true"></i>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <color-picker class="dropdown-item" [(color)]="postIt.collection.color"></color-picker>
+        <div class="dropdown-divider"></div>
+        <icon-picker class="dropdown-item" [(icon)]="postIt.collection.icon"></icon-picker>
+      </div>
+
+      <div *ngIf="postIt.initialized" class="document-count opacity-content clickable">
+        <a title="Document Count" i18n-title="@@collection.document.count"
+           [routerLink]="[workspacePath(), 'view', 'postit']"
+           [queryParams]="{ query: documentsQuery(postIt.collection.code) }">
+          <i class="far fa-file" aria-hidden="true"></i>&nbsp;{{ postIt.collection.documentsCount }}
         </a>
-        <div class="dropdown-menu dropdown-menu-right">
-          <color-picker class="dropdown-item" [(color)]="postIt.collection.color"></color-picker>
-          <div class="dropdown-divider"></div>
-          <icon-picker class="dropdown-item" [(icon)]="postIt.collection.icon"></icon-picker>
-        </div>
-
-        <div *ngIf="postIt.initialized" class="document-count opacity-content clickable">
-          <a title="Document Count" i18n-title="@@collection.document.count"
-             [routerLink]="[workspacePath(), 'view', 'postit']"
-             [queryParams]="{ query: documentsQuery(postIt.collection.code) }">
-            {{ postIt.collection.documentsCount }}&nbsp;<i class="far fa-file" aria-hidden="true"></i>
-          </a>
-        </div>
-
-        <div *ngIf="postIt.initialized" class="text-warning toggle-favorite opacity-content clickable"
-             [class.always-visible]="postIt.collection.isFavorite">
-          <a title="{{postIt.collection.isFavorite ?  'Remove from favorites' : 'Add to favorites'}}"
-             i18n-title="@@collection.favorite" (click)="toggleFavorite(postIt.collection)">
-            <i class="fa-star" [ngClass]="postIt.collection.isFavorite ? 'fas' : 'far'"
-               aria-hidden="true"></i>
-          </a>
-        </div>
-
-        <div class="buttons opacity-content d-flex flex-column"
-             [style.top]="'50px'">
-          <ng-container *ngIf="postIt.initialized">
-            <a title="Configure" i18n-title="@@collection.button.configure"
-               class="rounded-left text-success"
-               [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'attributes']">
-              <i class="fa fa-fw fa-cog" aria-hidden="true"></i></a>
-
-            <a title="Icon picker" i18n-title="@@collection.button.icon"
-               class="rounded-left text-success" data-toggle="dropdown"
-               (click)="lastClickedPostIt = postIt">
-              <i class="fa fa-fw fa-eye-dropper" aria-hidden="true"></i></a>
-            <div class="dropdown-menu dropdown-menu-right">
-              <color-picker class="dropdown-item" [(color)]="postIt.collection.color"
-                            (selectedChange)="updateCollection(postIt)"></color-picker>
-              <div class="dropdown-divider"></div>
-              <icon-picker class="dropdown-item" [(icon)]="postIt.collection.icon"
-                           (selectedChange)="updateCollection(postIt)"></icon-picker>
-            </div>
-          </ng-container>
-
-          <a *ngIf="!postIt.initialized || hasManageRole(postIt.collection)"
-             (click)="confirmDeletion(postIt)"
-             class="text-danger rounded-left"
-             title="Remove Collection" i18n-title="@@collection.button.remove">
-            <i class="fa fa-fw fa-times" aria-hidden="true"></i>
-          </a>
-        </div>
-
       </div>
 
-      <!-- TODO remove once Angular supports translations outside templates -->
-      <div hidden>
-        <span #inputPlaceholder i18n="@@collection.name.input.placeholder">Name</span>
+      <div *ngIf="postIt.initialized" class="text-warning toggle-favorite opacity-content clickable"
+           [class.always-visible]="postIt.collection.isFavorite">
+        <a title="{{postIt.collection.isFavorite ?  'Remove from favorites' : 'Add to favorites'}}"
+           i18n-title="@@collection.favorite" (click)="toggleFavorite(postIt.collection)">
+          <i class="fa-star" [ngClass]="postIt.collection.isFavorite ? 'fas' : 'far'"
+             aria-hidden="true"></i>
+        </a>
       </div>
 
-      <textarea class="card-footer text-center font-weight-bold bg-transparent" #textArea
-                rows="1"
-                [(ngModel)]="postIt.collection.name"
-                (ngModelChange)="updateToScrollbarHeight(textArea)"
-                (blur)="onTextAreaBlur(postIt, textArea);
-                textArea.placeholder = removeHtmlComments(inputPlaceholder)"
-                (focus)="textArea.placeholder = ''">
-      </textarea>
+      <div class="buttons opacity-content d-flex flex-column"
+           [style.top]="'50px'">
+        <ng-container *ngIf="postIt.initialized">
+          <a title="Configure" i18n-title="@@collection.button.configure"
+             class="rounded-left text-success"
+             [routerLink]="[workspacePath(), 'c', postIt.collection.code, 'attributes']">
+            <i class="fa fa-fw fa-cog" aria-hidden="true"></i></a>
+
+          <a title="Icon picker" i18n-title="@@collection.button.icon"
+             class="rounded-left text-success" data-toggle="dropdown"
+             (click)="lastClickedPostIt = postIt">
+            <i class="fa fa-fw fa-eye-dropper" aria-hidden="true"></i></a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <color-picker class="dropdown-item" [(color)]="postIt.collection.color"
+                          (selectedChange)="updateCollection(postIt)"></color-picker>
+            <div class="dropdown-divider"></div>
+            <icon-picker class="dropdown-item" [(icon)]="postIt.collection.icon"
+                         (selectedChange)="updateCollection(postIt)"></icon-picker>
+          </div>
+        </ng-container>
+
+        <a *ngIf="!postIt.initialized || hasManageRole(postIt.collection)"
+           (click)="confirmDeletion(postIt)"
+           class="text-danger rounded-left"
+           title="Remove Collection" i18n-title="@@collection.button.remove">
+          <i class="fa fa-fw fa-times" aria-hidden="true"></i>
+        </a>
+      </div>
+
     </div>
 
-    <!-- add buttons -->
-    <ng-container *ngIf="editable && emptyQuery()">
-      <div class="layout-item card text-center add-post-it" (click)="newPostIt()">
-        <div class="card-body">
-          <i class="fa fa-plus-circle fa-6x" aria-hidden="true"></i>
-        </div>
-        <div class="card-footer font-weight-bold bg-transparent"
-             i18n="@@collection.button.add">Add collection
-        </div>
-      </div>
+    <!-- TODO remove once Angular supports translations outside templates -->
+    <div hidden>
+      <span #inputPlaceholder i18n="@@collection.name.input.placeholder">Name</span>
+    </div>
 
-      <div class="layout-item card text-center add-post-it" ondragover="return false;"
-           [ngClass]="{'dragging': dragging}" (click)="fileInput.click()"
-           (drop)="handleDrop($event)" (dragenter)="handleDragEnter()" (dragleave)="handleDragLeave()">
-        <div class="card-body">
-          <i class="fa fa-cloud-upload fa-6x" aria-hidden="true"></i>
-        </div>
-        <div class="card-footer font-weight-bold bg-transparent"
-             i18n="@@collection.button.import">Import collection
-        </div>
-        <input hidden type="file" #fileInput (click)="$event.stopPropagation()"
-               (change)="fileChange($event.target.files)" accept=".csv, text/csv">
-      </div>
-    </ng-container>
+    <textarea class="card-footer text-center font-weight-bold bg-transparent" #textArea
+              rows="1"
+              [(ngModel)]="postIt.collection.name"
+              (ngModelChange)="updateToScrollbarHeight(textArea)"
+              (blur)="trimNameWhitespace(postIt);
+                updateToScrollbarHeight(textArea);
+                onTextAreaBlur(postIt, textArea);
+                textArea.placeholder = removeHtmlComments(inputPlaceholder)"
+              (focus)="textArea.placeholder = ''">
+      </textarea>
   </div>
+
+  <!-- add buttons -->
+  <ng-container *ngIf="editable && emptyQuery()">
+    <div class="layout-item card text-center add-post-it" (click)="newPostIt()">
+      <div class="card-body">
+        <i class="fa fa-plus-circle fa-6x" aria-hidden="true"></i>
+      </div>
+      <div class="card-footer font-weight-bold bg-transparent"
+           i18n="@@collection.button.add">Add collection
+      </div>
+    </div>
+
+    <div class="layout-item card text-center add-post-it" ondragover="return false;"
+         [ngClass]="{'dragging': dragging}" (click)="fileInput.click()"
+         (drop)="handleDrop($event)" (dragenter)="handleDragEnter()" (dragleave)="handleDragLeave()">
+      <div class="card-body">
+        <i class="fa fa-cloud-upload fa-6x" aria-hidden="true"></i>
+      </div>
+      <div class="card-footer font-weight-bold bg-transparent"
+           i18n="@@collection.button.import">Import collection
+      </div>
+      <input hidden type="file" #fileInput (click)="$event.stopPropagation()"
+             (change)="fileChange($event.target.files)" accept=".csv, text/csv">
+    </div>
+  </ng-container>
 </div>

@@ -6,10 +6,12 @@
     <size-slider class="d-flex justify-content-end"
                  [defaultSize]="size" (newSize)="onSizeChange($event)"></size-slider>
     <div *ngFor="let document of documents">
-      <ng-container *ngTemplateOutlet="header; context: { $implicit: document}"></ng-container>
-      <div class="content">
-        <ng-container *ngTemplateOutlet="getTemplate(document); context: { $implicit: document}"></ng-container>
-      </div>
+      <ng-container *ngIf="document">
+        <ng-container *ngTemplateOutlet="header; context: { $implicit: document}"></ng-container>
+        <div class="content">
+          <ng-container *ngTemplateOutlet="getTemplate(document); context: { $implicit: document}"></ng-container>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>

@@ -7,7 +7,8 @@
 
     <div *ngIf="resources.length == 0 && !canCreateResource"
          i18n="@@resource.chooser.empty">
-      There are no {resourceType, select, organization {organizations} project {projects}} and you are not allowed to create new ones.
+      There are no {resourceType, select, organization {organizations} project {projects}} and you are not allowed to
+      create new ones.
     </div>
 
     <div class="left-arrow d-flex h-100" *ngIf="resourceVisibleArrows">
@@ -76,9 +77,8 @@
 
   <div class="description d-inline-flex pt-3" *ngIf="resourceActiveIx >= 0" [@animateOpacityFromUp]="'in'">
     <i class="fas fa-2x fa-quote-right pr-2"></i>
-    <div class="text" [attr.contenteditable]="resourceDescriptionEditable"
+    <div class="text edit-border" contenteditable="true"
          [attr.spellcheck]="false"
-         (blur)="onResourceDescriptionBlur(resourceDescription.textContent)"
          #resourceDescription>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
       finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
@@ -86,10 +86,6 @@
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
       finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
       vel augue.
-    </div>
-    <div class="pl-2">
-      <i class="fas fa fa-pencil edit"
-         (click)="onResourceDescriptionEdit()"></i>
     </div>
   </div>
 

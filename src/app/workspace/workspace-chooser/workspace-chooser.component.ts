@@ -17,22 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 import {Store} from '@ngrx/store';
-
-import {Organization} from '../../core/dto/organization';
-import {Project} from '../../core/dto/project';
-import {OrganizationService} from '../../core/rest/organization.service';
-import {ProjectService} from '../../core/rest/project.service';
+import {Observable} from 'rxjs/Observable';
+import {first} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
-import {Role} from '../../shared/permissions/role';
-import {UserSettingsService} from '../../core/user-settings.service';
+import {Organization, Project} from '../../core/dto';
+import {OrganizationService, ProjectService} from '../../core/rest';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
-import {switchMap, tap} from 'rxjs/operators';
+import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
+import {selectSelectedOrganizationCode} from '../../core/store/organizations/organizations.state';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {selectSelectedProjectCode} from '../../core/store/projects/projects.state';
+import {UserSettingsService} from '../../core/user-settings.service';
+import {Role} from '../../shared/permissions/role';
 
 @Component({
   selector: 'workspace-chooser',
@@ -62,6 +64,9 @@ export class WorkspaceChooserComponent implements OnInit {
   public activeOrgIx: number;
   public activeProjIx: number;
 
+  private selectedOrganizationCode: string;
+  private selectedProjectCode: string;
+
   private workspace: Workspace;
 
   constructor(private organizationService: OrganizationService,
@@ -72,37 +77,92 @@ export class WorkspaceChooserComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.store.select(selectWorkspace).pipe(
-      tap(workspace => this.workspace = workspace),
-      switchMap(() => this.organizationService.getOrganizations())
-    ).subscribe(organizations => {
-      this.organizations = organizations;
+    Observable.combineLatest(
+      this.store.select(selectWorkspace),
+      this.store.select(selectSelectedOrganizationCode),
+      this.store.select(selectSelectedProjectCode)
+    ).pipe(
+      first() // TODO it should react to all changes
+    ).subscribe(([workspace, selectedOrganizationCode, selectedProjectCode]) => {
+      this.workspace = workspace;
+      this.selectedOrganizationCode = selectedOrganizationCode;
+      this.selectedProjectCode = selectedProjectCode;
 
-      if (this.workspace.organizationCode) {
-        const ix: number = this.organizations.findIndex(org =>
-          org.code === this.workspace.organizationCode
-        );
-        if (ix >= 0) {
-          this.activeOrgIx = ix;
+      this.getOrganizations();
+    });
+  }
 
-          const activeOrganization = this.organizations[this.activeOrgIx];
-          activeOrganization.projects = [];
-          this.projectService.getProjects(activeOrganization.code)
-            .subscribe((projects: Project[]) => {
-              activeOrganization.projects = projects;
+  private getOrganizations(): void {
+    this.organizationService.getOrganizations().subscribe(
+      organizations => {
+        this.organizations = organizations;
 
-              if (this.workspace.projectCode) {
-                const ixProj: number = activeOrganization.projects.findIndex(proj =>
-                  proj.code === this.workspace.projectCode
-                );
-                if (ixProj >= 0) {
-                  this.activeProjIx = ixProj;
+        if (this.workspace.organizationCode) {
+          const ix: number = this.organizations.findIndex(org =>
+            org.code === this.workspace.organizationCode
+          );
+          if (ix >= 0) {
+            this.activeOrgIx = ix;
+
+            const activeOrganization = this.organizations[this.activeOrgIx];
+            activeOrganization.projects = [];
+            this.projectService.getProjects(activeOrganization.code)
+              .subscribe((projects: Project[]) => {
+                activeOrganization.projects = projects;
+
+                if (this.workspace.projectCode) {
+                  const ixProj: number = activeOrganization.projects.findIndex(proj =>
+                    proj.code === this.workspace.projectCode
+                  );
+                  if (ixProj >= 0) {
+                    this.activeProjIx = ixProj;
+                  }
                 }
-              }
-            });
+              });
+          }
+        }
+
+        this.selectPreviousWorkspace();
+      });
+  }
+
+  private selectPreviousWorkspace(): void {
+    const previouslySelectedOrganizationIndex = this.getPreviouslySelectedOrganizationIndex();
+    if (previouslySelectedOrganizationIndex !== -1) {
+      this.activeOrgIx = previouslySelectedOrganizationIndex;
+      this.selectPreviouslySelectedProject(previouslySelectedOrganizationIndex);
+    }
+  }
+
+  private getPreviouslySelectedOrganizationIndex(): number {
+    return this.organizations.findIndex(organization => organization.code === this.selectedOrganizationCode);
+  }
+
+  private selectPreviouslySelectedProject(index: number) {
+    const selectedOrganization = this.organizations[index];
+    this.getOrganizationProjects(selectedOrganization).subscribe(
+      projects => {
+        selectedOrganization.projects = projects;
+
+        const previouslySelectedProjectIndex = this.getPreviouslySelectedProjectIndex(projects);
+        if (previouslySelectedProjectIndex !== -1) {
+          this.activeProjIx = previouslySelectedProjectIndex;
         }
       }
-    });
+    );
+  }
+
+  private getPreviouslySelectedProjectIndex(projectsToSearchFrom: Project[]): number {
+    return projectsToSearchFrom.findIndex(project => project.code === this.selectedProjectCode);
+  }
+
+  private getOrganizationProjects(organization: Organization): Observable<Project[]> {
+    if (organization.projects) {
+      return Observable.of(organization.projects);
+    }
+
+    organization.projects = [];
+    return this.projectService.getProjects(organization.code);
   }
 
   public onSelectOrganization(index: number) {
@@ -116,6 +176,15 @@ export class WorkspaceChooserComponent implements OnInit {
     }
     this.activeProjIx = undefined;
     this.activeOrgIx = index;
+
+    this.storeOrganizationInAppState(index);
+  }
+
+  private storeOrganizationInAppState(index: number): void {
+    const selectedOrganization = this.organizations[index];
+    const organizationCode = selectedOrganization.code;
+    this.store.dispatch(new OrganizationsAction.Select({organizationCode: organizationCode}));
+    this.store.dispatch(new ProjectsAction.Select({projectCode: null}));
   }
 
   public onCreateOrganization() {
@@ -132,6 +201,11 @@ export class WorkspaceChooserComponent implements OnInit {
 
   public onSelectProject(index: number) {
     this.activeProjIx = index;
+
+    const activeOrganization = this.organizations[this.activeOrgIx];
+    const activeProject = activeOrganization.projects[index];
+
+    this.store.dispatch(new ProjectsAction.Select({projectCode: activeProject.code}));
   }
 
   public onCreateProject() {
@@ -176,4 +250,5 @@ export class WorkspaceChooserComponent implements OnInit {
     userSettings.defaultProject = projectCode;
     this.userSettingsService.updateUserSettings(userSettings);
   }
+
 }

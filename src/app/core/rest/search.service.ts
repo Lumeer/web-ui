@@ -48,11 +48,19 @@ export class SearchService {
   }
 
   public suggest(text: string, type: SuggestionType): Observable<Suggestions> {
+    if (!this.hasSearchPath()) {
+      throw new LumeerError('Workspace not set');
+    }
+
     return this.http.get<Suggestions>(`${this.searchPath()}/suggestions`,
       {params: new HttpParams().set('text', text).set('type', type.toString())});
   }
 
   public searchCollections(query: Query): Observable<Collection[]> {
+    if (!this.hasSearchPath()) {
+      throw new LumeerError('Workspace not set');
+    }
+
     return this.http.post<Collection[]>(`${this.searchPath()}/collections`, query)
       .pipe(
         catchError(SearchService.handleError),
@@ -61,21 +69,35 @@ export class SearchService {
   }
 
   public searchDocuments(query: Query): Observable<Document[]> {
-    return this.http.post<Document[]>(`${this.searchPath()}/documents`, query)
-      .pipe(// TODO remove after backend supports pagination
-      map(documents => {
-        if (isNullOrUndefined(query.page) || isNullOrUndefined(query.pageSize)) {
-          return documents;
-        }
+    if (!this.hasSearchPath()) {
+      throw new LumeerError('Workspace not set');
+    }
 
-        return documents.slice(query.page * query.pageSize, (query.page + 1) * query.pageSize);
-      }),catchError(SearchService.handleError),
+    return this.http.post<Document[]>(`${this.searchPath()}/documents`, query)
+      .pipe(
+        map(documents => { // TODO remove after backend supports pagination
+          if (isNullOrUndefined(query.page) || isNullOrUndefined(query.pageSize)) {
+            return documents;
+          }
+
+          return documents.slice(query.page * query.pageSize, (query.page + 1) * query.pageSize);
+        }),
+        catchError(SearchService.handleError),
         switchMap(documents => this.homePageService.checkFavoriteDocuments(documents)));
   }
 
   public searchViews(query: Query): Observable<View[]> {
-    return this.http.post<View[]>(`${this.searchPath()}/views`, query)
-      .pipe(catchError(SearchService.handleError));
+    if (!this.hasSearchPath()) {
+      throw new LumeerError('Workspace not set');
+    }
+
+    return this.http.post<View[]>(`${this.searchPath()}/views`, query).pipe(
+      catchError(SearchService.handleError)
+    );
+  }
+
+  private hasSearchPath(): boolean {
+    return !!(this.workspace.organizationCode && this.workspace.projectCode);
   }
 
   private searchPath(): string {

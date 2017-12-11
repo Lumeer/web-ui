@@ -3,7 +3,7 @@
     <div class="col"></div>
     <div class="whole col-12 col-lg-11 col-xl-10" [style.opacity]="initialized() ? '1' : '0'">
       <div class="d-flex flex-row justify-content-start">
-        <a class="fa fa-arrow-left " [routerLink]="['/workspace']  "></a>
+        <a class="fa fa-arrow-left " [routerLink]="['/workspace']"></a>
         <i class="color-class fa-fw {{ organization.icon }} organization-icon " [style.color]="organization.color"
            data-toggle="dropdown"></i>
         <div *ngIf="initialized()" class="dropdown-menu">
@@ -25,11 +25,11 @@
         </small>
 
         <div class="float-right document-count color-class ml-auto">
-          <span i18n-title="@@organization.projects.count" class="count" title="Number of projects in this organization"
-             [style.color]="organization.color">
-            <span>{{ projectsCount }}</span>
+          <a i18n-title="@@organization.projects.count" class="count" title="Number of projects in this organization"
+             [style.color]="organization.color" [routerLink]="['/workspace']">
             <i class="far fa-edit" aria-hidden="true"></i>
-          </span>
+            <span>{{ projectsCount }}</span>
+          </a>
 
         </div>
       </div>
@@ -54,12 +54,7 @@
       </div>
 
       <div class="description d-flex py-3">
-        <div>
-          <i class="fas fa fa-pencil edit"
-             (click)="onOrganizationDescriptionEdit()"></i>
-        </div>
-        <div class="text flex-grow-2" [attr.contenteditable]="organizationDescriptionEditable"
-             (blur)="onOrganizationDescriptionBlur(organizationDescription.textContent)"
+        <div class="text flex-grow-2 edit-border" contenteditable="true"
              #organizationDescription>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
           finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue

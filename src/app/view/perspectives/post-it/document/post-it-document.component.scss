@@ -10,6 +10,17 @@
     }
   }
 
+  .icon {
+    margin-top: 4px;
+  }
+
+  .collection-name {
+    flex-grow: 2;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
   .always-visible{
     opacity: 1 !important;
   }

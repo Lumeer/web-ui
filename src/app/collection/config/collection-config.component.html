@@ -31,7 +31,7 @@
          i18n-title="@@header.collection.remove"
          title="Remove collection"
          *ngIf="collection"
-         (click)="confirmDeletion(modal)"></i>
+         (click)="confirmDeletion()"></i>
 
       <a i18n-title="@@header.collection.documents.count"
          class="count"
@@ -39,8 +39,8 @@
          [style.color]="collection.color"
          [routerLink]="[workspacePath(), 'view', 'postit']"
          [queryParams]="{ query: documentsQuery(collection.code) }">
-        <span>{{ collection.documentsCount }}</span>
         <i class="far fa-file" aria-hidden="true"></i>
+        <span>{{ collection.documentsCount }}</span>
       </a>
     </div>
   </div>

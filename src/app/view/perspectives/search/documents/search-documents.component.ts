@@ -19,31 +19,37 @@
 
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-
-import {SizeType} from '../../../../shared/slider/size-type';
-import {SearchService, CollectionService} from '../../../../core/rest';
-import {isArray, isObject} from 'util';
-import {Subscription} from 'rxjs/Subscription';
-import {UserSettingsService} from '../../../../core/user-settings.service';
-import {AppState} from '../../../../core/store/app.state';
-import {selectQuery} from '../../../../core/store/navigation/navigation.state';
-import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Observable} from 'rxjs/Observable';
 import {tap} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
+import {isArray, isNullOrUndefined, isObject} from 'util';
+import {CollectionService, SearchService} from '../../../../core/rest';
+import {AppState} from '../../../../core/store/app.state';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
+import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
+import {UserSettingsService} from '../../../../core/user-settings.service';
+import {SizeType} from '../../../../shared/slider/size-type';
 
 @Component({
   templateUrl: './search-documents.component.html'
 })
 export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
-  @ViewChild('sTemplate') sTempl: TemplateRef<any>;
-  @ViewChild('mTemplate') mTempl: TemplateRef<any>;
-  @ViewChild('lTemplate') lTempl: TemplateRef<any>;
-  @ViewChild('xlTemplate') xlTempl: TemplateRef<any>;
+  @ViewChild('sTemplate')
+  private sTempl: TemplateRef<any>;
+
+  @ViewChild('mTemplate')
+  private mTempl: TemplateRef<any>;
+
+  @ViewChild('lTemplate')
+  private lTempl: TemplateRef<any>;
+
+  @ViewChild('xlTemplate')
+  private xlTempl: TemplateRef<any>;
 
   public size: SizeType;
   public documents$: Observable<DocumentModel[]>;
@@ -109,7 +115,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     return this.size === SizeType.XL;
   }
 
-  public isDocumentOpened(document: DocumentModel): boolean{
+  public isDocumentOpened(document: DocumentModel): boolean {
     return this.expandedDocumentIds.includes(document.id);
   }
 
@@ -141,7 +147,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     let html = '';
     for (let i = 0; i < values.length; i++) {
       html += `<b>${values[i]}</b>`;
-      if (i != values.length - 1) {
+      if (i !== values.length - 1) {
         html += ', ';
       }
     }
@@ -189,7 +195,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     for (let i = 0; i < entries.length; i++) {
       html += `<i>${entries[i].key}</i>: `;
       html += this.valueHtml(entries[i].value);
-      if (i != entries.length - 1) {
+      if (i !== entries.length - 1) {
         html += ', ';
       }
     }
@@ -197,7 +203,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private valueHtml(value: any): string {
-    if (isArray(value)) {
+    if (isNullOrUndefined(value)) {
+      return '';
+    } else if (isArray(value)) {
       return `[${this.arrayHtml(value as any[])}]`;
     } else if (isObject(value)) {
       return `{${this.entriesHtml(this.getEntriesForObject(value))}}`;
@@ -210,7 +218,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     let html = '';
     for (let i = 0; i < array.length; i++) {
       html += this.valueHtml(array[i]);
-      if (i != array.length - 1) {
+      if (i !== array.length - 1) {
         html += ', ';
       }
     }

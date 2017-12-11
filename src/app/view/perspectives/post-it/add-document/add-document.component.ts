@@ -18,9 +18,7 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-
-import {Document} from '../../../../core/dto/document';
-import {Query} from '../../../../core/dto/query';
+import {Document} from '../../../../core/dto';
 
 @Component({
   selector: 'add-document',
@@ -30,14 +28,14 @@ import {Query} from '../../../../core/dto/query';
 export class PostItAddDocumentComponent {
 
   @Input()
-  public query: Query;
+  public collectionCode: string;
 
   @Output()
   public newDocument = new EventEmitter<Document>();
 
   public onClick(): void {
     const newDocument = new Document;
-    newDocument.collectionCode = this.query.collectionCodes[0];
+    newDocument.collectionCode = this.collectionCode;
 
     this.newDocument.emit(newDocument);
   }

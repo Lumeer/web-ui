@@ -20,9 +20,9 @@
                       (resourceNewDescription)="onNewProjectDescription($event)">
     </resource-chooser>
   </div>
-  <div class="py-2 px-5 d-flex justify-content-end fixed-bottom container" *ngIf="activeProjIx >=0"
+  <div class="my-4 py-2 px-5 d-flex justify-content-end container" *ngIf="activeProjIx >=0"
        [@animateOpacityFromUp]="'in'">
-    <button type="button" class="btn btn-lg btn-success" (click)="onSaveActiveItems()">
+    <button type="button" class="btn btn-lg btn-success py-2 px-4 font-weight-bold" (click)="onSaveActiveItems()">
       <i class="fas fa fa-play px-2"></i>
       <span i18n="@@workspace.button.apply">Use project</span>
     </button>

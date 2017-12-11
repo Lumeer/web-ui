@@ -181,7 +181,6 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   private createDocument(doc: Document, successCallback: () => void) {
     this.documentService.createDocument(doc).subscribe((document: Document) => {
       this.tableManagerService.documents.push(document);
-      this.notificationService.success('Record has been created!');
 
       successCallback();
     });
@@ -189,7 +188,6 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
 
   private updateDocument(doc: Document) {
     this.documentService.patchDocumentData(doc).subscribe(() => {
-      this.notificationService.success('Record has been updated!');
     });
   }
 
@@ -197,7 +195,6 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
     this.documentService.removeDocument(doc.collectionCode, doc.id).subscribe(() => {
       const index = this.tableManagerService.documents.indexOf(doc);
       this.tableManagerService.documents.splice(index, 1);
-      this.notificationService.success('Record has been deleted!');
     });
   }
 
@@ -222,20 +219,17 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
 
     this.collectionService.updateAttribute(collection.code, attribute.fullName, attribute).subscribe(() => {
       collection.attributes.push(attribute);
-      this.notificationService.success('Attribute has been created!');
     });
   }
 
   private updateAttribute(collection: Collection, attribute: Attribute) {
     this.collectionService.updateAttribute(collection.code, attribute.fullName, attribute).subscribe(() => {
-      this.notificationService.success('Attribute has been updated!');
     });
   }
 
   private deleteAttribute(collection: Collection, attribute: Attribute) {
     this.collectionService.removeAttribute(collection.code, attribute.fullName).subscribe(() => {
       AttributeHelper.removeAttributeFromArray(attribute, collection.attributes);
-      this.notificationService.success('Attribute has been deleted!');
     });
   }
 
