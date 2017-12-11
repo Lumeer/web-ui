@@ -43,7 +43,7 @@ export class ViewsEffects {
     withLatestFrom(this.store$.select(selectViewsDictionary)),
     skipWhile(([action, views]) => action.payload.viewCode in views),
     switchMap(([action]) => this.viewService.getView(action.payload.viewCode).pipe(
-      skipWhile((dto: View) => isNullOrUndefined(dto)),
+      skipWhile((dto: View) => isNullOrUndefined(dto)), // TODO can probably be removed once views are not stored in webstorage
       map((dto: View) => ViewConverter.convertToModel(dto))
     )),
     map((view: ViewModel) => new ViewsAction.GetSuccess({views: [view]})),

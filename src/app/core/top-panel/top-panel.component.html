@@ -13,9 +13,17 @@
       <div class="panel-item lead mr-2"
            *ngIf="isWorkspaceSet()">
         <span>
-          <a tabindex (click)="goToWorkspaceOrganization()" title="Workspace organization">{{workspace.organizationCode}}</a>
+          <a (click)="goToWorkspaceOrganization()"
+             tabindex
+             title="Organization" i18n-title="@@panel.workspace.organization">
+            {{workspace.organizationCode}}
+          </a>
           <span class="mx-1">/</span>
-          <a tabindex (click)="goToWorkspaceProject()" title="Workspace project">{{workspace.projectCode}}</a>
+          <a (click)="goToWorkspaceProject()"
+             tabindex
+             title="Project" i18n-title="@@panel.workspace.project">
+            {{workspace.projectCode}}
+          </a>
         </span>
       </div>
 

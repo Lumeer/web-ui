@@ -17,25 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 import {Store} from '@ngrx/store';
-
+import {Observable} from 'rxjs/Observable';
+import {first} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
 import {Organization, Project} from '../../core/dto';
 import {OrganizationService, ProjectService} from '../../core/rest';
-import {isNullOrUndefined} from 'util';
-import {Role} from '../../shared/permissions/role';
-import {UserSettingsService} from '../../core/user-settings.service';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
-import {Observable} from 'rxjs/Observable';
-import {OrganizationsState, selectOrganizationsState} from '../../core/store/organizations/organizations.state';
-import {ProjectsState, selectProjectsState} from '../../core/store/projects/projects.state';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
+import {selectSelectedOrganizationCode} from '../../core/store/organizations/organizations.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {first} from 'rxjs/operators';
+import {selectSelectedProjectCode} from '../../core/store/projects/projects.state';
+import {UserSettingsService} from '../../core/user-settings.service';
+import {Role} from '../../shared/permissions/role';
 
 @Component({
   selector: 'workspace-chooser',
@@ -65,9 +64,8 @@ export class WorkspaceChooserComponent implements OnInit {
   public activeOrgIx: number;
   public activeProjIx: number;
 
-  private organizationsState: OrganizationsState;
-
-  private projectsState: ProjectsState;
+  private selectedOrganizationCode: string;
+  private selectedProjectCode: string;
 
   private workspace: Workspace;
 
@@ -81,14 +79,14 @@ export class WorkspaceChooserComponent implements OnInit {
   public ngOnInit() {
     Observable.combineLatest(
       this.store.select(selectWorkspace),
-      this.store.select(selectOrganizationsState),
-      this.store.select(selectProjectsState)
+      this.store.select(selectSelectedOrganizationCode),
+      this.store.select(selectSelectedProjectCode)
     ).pipe(
-      first()
-    ).subscribe(([workspace, organizationsState, projectsState]) => {
+      first() // TODO it should react to all changes
+    ).subscribe(([workspace, selectedOrganizationCode, selectedProjectCode]) => {
       this.workspace = workspace;
-      this.organizationsState = organizationsState;
-      this.projectsState = projectsState;
+      this.selectedOrganizationCode = selectedOrganizationCode;
+      this.selectedProjectCode = selectedProjectCode;
 
       this.getOrganizations();
     });
@@ -137,8 +135,7 @@ export class WorkspaceChooserComponent implements OnInit {
   }
 
   private getPreviouslySelectedOrganizationIndex(): number {
-    const selectedOrganizationCode = this.organizationsState.selectedOrganizationCode;
-    return this.organizations.findIndex(organization => organization.code === selectedOrganizationCode);
+    return this.organizations.findIndex(organization => organization.code === this.selectedOrganizationCode);
   }
 
   private selectPreviouslySelectedProject(index: number) {
@@ -156,8 +153,7 @@ export class WorkspaceChooserComponent implements OnInit {
   }
 
   private getPreviouslySelectedProjectIndex(projectsToSearchFrom: Project[]): number {
-    const selectedProjectCode = this.projectsState.selectedProjectCode;
-    return projectsToSearchFrom.findIndex(project => project.code === selectedProjectCode);
+    return projectsToSearchFrom.findIndex(project => project.code === this.selectedProjectCode);
   }
 
   private getOrganizationProjects(organization: Organization): Observable<Project[]> {

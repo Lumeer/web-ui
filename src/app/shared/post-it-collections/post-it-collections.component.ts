@@ -19,24 +19,22 @@
 
 import {Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Store} from '@ngrx/store';
-
+import {Observable} from 'rxjs/Observable';
+import {finalize, first} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
 import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../collection/constants';
 import {Collection, Query} from '../../core/dto';
-import {CollectionService, ImportService, SearchService} from '../../core/rest';
-import {Role} from '../permissions/role';
-import {PostItLayout} from '../utils/post-it-layout';
-import {PostItCollectionModel} from './post-it-collection-model';
-import {DeprecatedQueryConverter} from '../utils/query-converter';
-import {QueryConverter} from '../../core/store/navigation/query.converter';
-import {HtmlModifier} from '../utils/html-modifier';
 import {NotificationService} from '../../core/notifications/notification.service';
-import {Workspace} from '../../core/store/navigation/workspace.model';
+import {CollectionService, ImportService, SearchService} from '../../core/rest';
 import {AppState} from '../../core/store/app.state';
 import {selectQuery, selectWorkspace} from '../../core/store/navigation/navigation.state';
-import {finalize, first} from 'rxjs/operators';
-
-import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
+import {QueryConverter} from '../../core/store/navigation/query.converter';
+import {Workspace} from '../../core/store/navigation/workspace.model';
+import {Role} from '../permissions/role';
+import {HtmlModifier} from '../utils/html-modifier';
+import {PostItLayout} from '../utils/post-it-layout';
+import {DeprecatedQueryConverter} from '../utils/query-converter';
+import {PostItCollectionModel} from './post-it-collection-model';
 
 @Component({
   selector: 'post-it-collections',
@@ -104,6 +102,11 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   private initializeLayout(): void {
+    if (this.layout) {
+      this.reloadLayout();
+      return;
+    }
+
     this.layout = new PostItLayout({
       container: '.post-it-collection-layout',
       item: '.layout-item',

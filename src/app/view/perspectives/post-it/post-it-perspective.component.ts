@@ -19,23 +19,22 @@
 
 import {Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {Store} from '@ngrx/store';
-
 import {DocumentService} from 'app/core/rest/document.service';
 import {SearchService} from 'app/core/rest/search.service';
+import {Subscription} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
+import {finalize, first} from 'rxjs/operators';
 import {Collection, Document, Query} from '../../../core/dto';
+import {NotificationService} from '../../../core/notifications/notification.service';
 import {CollectionService} from '../../../core/rest';
 import {AppState} from '../../../core/store/app.state';
+import {selectQuery, selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {PostItLayout} from '../../../shared/utils/post-it-layout';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
 import {Direction} from './document-data/direction';
-import {PostItDocumentComponent} from './document/post-it-document.component';
-import {NotificationService} from '../../../core/notifications/notification.service';
 import {DocumentModel} from './document-data/document-model';
-import {selectQuery, selectWorkspace} from '../../../core/store/navigation/navigation.state';
-import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {finalize, first} from 'rxjs/operators';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs';
+import {PostItDocumentComponent} from './document/post-it-document.component';
 
 @Component({
   selector: 'post-it-perspective',
@@ -63,6 +62,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   public fetchingData: boolean;
 
   public collections: { [collectionCode: string]: Collection } = {};
+
+  public singleCollectionCode: string;
 
   public query: Query;
 
@@ -115,6 +116,11 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private initializeLayout(): void {
+    if (this.layout) {
+      this.refresh();
+      return;
+    }
+
     this.layout = new PostItLayout({
       container: '.post-it-document-layout',
       item: '.layout-item',
@@ -300,6 +306,16 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         error => this.notificationService.error(`Failed fetching collection ${collectionCode}`)
       );
     });
+
+    this.setSingleCollection(Array.from(collectionCodes));
+  }
+
+  private setSingleCollection(collectionCodes: string[]) {
+    if (collectionCodes && collectionCodes.length === 1) {
+      this.singleCollectionCode = collectionCodes[0];
+      return;
+    }
+    this.singleCollectionCode = null;
   }
 
   private countAsFetchedAndRefreshIfLast(): void {
