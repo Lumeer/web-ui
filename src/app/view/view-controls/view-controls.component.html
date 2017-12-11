@@ -3,22 +3,22 @@
     <div class="dropdown-toggle py-1 px-2 d-flex flex-nowrap align-items-center"
          id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <i class="fa-fw {{getIconForPerspective(view.perspective)}}"></i>
-      <span class="ml-1" i18n="@@view.perspective">{view.perspective, select, postit {Post-it} search {Search} table {Table}}</span>
+      <span class="ml-1 nowrap" i18n="@@view.perspective.name">{view.perspective, select, postit {Post-it} search {Search} table {Table}}</span>
     </div>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
       <div class="dropdown-item" *ngFor="let perspective of perspectives()"
            (click)="onSelectPerspective(perspective)">
         <i class="fa-fw {{getIconForPerspective(perspective)}}"></i>
-        <span class="ml-1" i18n="@@view.perspective">{perspective, select, postit {Post-it} search {Search} table {Table}}</span>
+        <span class="ml-1 nowrap" i18n="@@view.perspective.name">{perspective, select, postit {Post-it} search {Search} table {Table}}</span>
       </div>
     </div>
   </div>
   <input #viewName
          id="viewName"
          name="viewName"
-         title="Name" i18n-title="@@view.name"
+         title="View name" i18n-title="@@view.name"
          [value]="view.name"
-         class="form-control-lg p-2 border-0 font-italic flex-grow no-outline"
+         class="form-control-lg p-2 border-0 font-italic flex-grow-2 no-outline"
          placeholder="Untitled view" i18n-placeholder="@@view.untitled"/>
   <button title="Save" i18n-title="@@view.button.save"
           class="fa-lg view-button mx-1"
