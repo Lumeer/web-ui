@@ -27,14 +27,14 @@
            [style.width]="resourceWidth + 'px'">
 
         <div class="tab d-flex" *ngFor="let resource of resources; let ix = index"
-             (click)="onResourceSelected(ix)">
+             (click)="onResourceSelected(resource.code)">
           <div class="post-it align-self-center">
             <div class="card square"></div>
             <div class="card text-center content border-0" [style.color]="resource.color">
               <div class="card-body">
                 <i class="fas fa fa-cog settings" *ngIf="hasManageRole(resource)"
                    (click)="onResourceSettings(ix); $event.stopPropagation()"
-                   [style.opacity]="ix === resourceActiveIx ? 1 : 0"></i>
+                   [style.opacity]="resource.code === selectedCode ? 1 : 0"></i>
                 <i class="fa-3x {{resource.icon}}" aria-hidden="true"></i>
                 <div class="card-title code">{{resource.code}}</div>
                 <div class="card-subtitle name">{{resource.name}}</div>
@@ -42,7 +42,7 @@
             </div>
           </div>
           <div class="align-self-stretch border border-bottom-0 rounded-top bookmark"
-               *ngIf="ix === resourceActiveIx" [@animateVisible]="'in'"></div>
+               *ngIf="resource.code === selectedCode" [@animateVisible]="'in'"></div>
         </div>
 
         <div class="tab d-flex new-resource" *ngIf="canCreateResource">
@@ -56,7 +56,7 @@
         </div>
 
         <div class="d-flex flex-row align-items-end justify-content-end pointer"
-             *ngIf="resourceActiveIx >= 0" [style.width]="linesWidth + 'px'">
+             *ngIf="selectedCode" [style.width]="linesWidth + 'px'">
           <div class="line mr-auto" [style.width]="resourceLineSizes[0]+'px'"></div>
           <div class="empty-line" [style.width]="resourceLineSizes[1]+'px'"></div>
           <div class="line"
@@ -75,7 +75,7 @@
 
   </div>
 
-  <div class="description d-inline-flex pt-3" *ngIf="resourceActiveIx >= 0" [@animateOpacityFromUp]="'in'">
+  <div class="description d-inline-flex pt-3" *ngIf="selectedCode" [@animateOpacityFromUp]="'in'">
     <i class="fas fa-2x fa-quote-right pr-2"></i>
     <div class="text edit-border" contenteditable="true"
          [attr.spellcheck]="false"

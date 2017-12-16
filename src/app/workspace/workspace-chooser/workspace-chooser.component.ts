@@ -18,21 +18,25 @@
  */
 
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {first} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
 import {isNullOrUndefined} from 'util';
-import {Organization, Project} from '../../core/dto';
-import {OrganizationService, ProjectService} from '../../core/rest';
 import {AppState} from '../../core/store/app.state';
-import {selectWorkspace} from '../../core/store/navigation/navigation.state';
-import {Workspace} from '../../core/store/navigation/workspace.model';
+import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {selectSelectedOrganizationCode} from '../../core/store/organizations/organizations.state';
+import {
+  selectAllOrganizations,
+  selectSelectedOrganizationCode
+} from '../../core/store/organizations/organizations.state';
+import {ProjectModel} from '../../core/store/projects/project.model';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {selectSelectedProjectCode} from '../../core/store/projects/projects.state';
+import {
+  selectProjectsForSelectedOrganization,
+  selectSelectedProjectCode
+} from '../../core/store/projects/projects.state';
+import {RouterAction} from '../../core/store/router/router.action';
 import {UserSettingsService} from '../../core/user-settings.service';
 import {Role} from '../../shared/permissions/role';
 
@@ -58,166 +62,67 @@ import {Role} from '../../shared/permissions/role';
     ])
   ]
 })
-export class WorkspaceChooserComponent implements OnInit {
+export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
-  public organizations: Organization[] = [];
-  public activeOrgIx: number;
-  public activeProjIx: number;
+  public organizations$: Observable<OrganizationModel[]>;
+  public projects$: Observable<ProjectModel[]>;
 
-  private selectedOrganizationCode: string;
-  private selectedProjectCode: string;
+  public selectedOrganizationCode: string;
+  public selectedProjectCode: string;
 
-  private workspace: Workspace;
+  private subscriptions: Subscription[] = [];
 
-  constructor(private organizationService: OrganizationService,
-              private projectService: ProjectService,
-              private store: Store<AppState>,
-              private userSettingsService: UserSettingsService,
-              private router: Router) {
+  constructor(private store: Store<AppState>,
+              private userSettingsService: UserSettingsService) {
   }
 
   public ngOnInit() {
-    Observable.combineLatest(
-      this.store.select(selectWorkspace),
-      this.store.select(selectSelectedOrganizationCode),
-      this.store.select(selectSelectedProjectCode)
-    ).pipe(
-      first() // TODO it should react to all changes
-    ).subscribe(([workspace, selectedOrganizationCode, selectedProjectCode]) => {
-      this.workspace = workspace;
-      this.selectedOrganizationCode = selectedOrganizationCode;
-      this.selectedProjectCode = selectedProjectCode;
-
-      this.getOrganizations();
-    });
-  }
-
-  private getOrganizations(): void {
-    this.organizationService.getOrganizations().subscribe(
-      organizations => {
-        this.organizations = organizations;
-
-        if (this.workspace.organizationCode) {
-          const ix: number = this.organizations.findIndex(org =>
-            org.code === this.workspace.organizationCode
-          );
-          if (ix >= 0) {
-            this.activeOrgIx = ix;
-
-            const activeOrganization = this.organizations[this.activeOrgIx];
-            activeOrganization.projects = [];
-            this.projectService.getProjects(activeOrganization.code)
-              .subscribe((projects: Project[]) => {
-                activeOrganization.projects = projects;
-
-                if (this.workspace.projectCode) {
-                  const ixProj: number = activeOrganization.projects.findIndex(proj =>
-                    proj.code === this.workspace.projectCode
-                  );
-                  if (ixProj >= 0) {
-                    this.activeProjIx = ixProj;
-                  }
-                }
-              });
-          }
+    this.organizations$ = this.store.select(selectAllOrganizations);
+    this.projects$ = this.store.select(selectProjectsForSelectedOrganization); // TODO use selector for organizations?
+    this.subscriptions.push(
+      this.store.select(selectSelectedOrganizationCode).subscribe(code => {
+        this.selectedOrganizationCode = code;
+        if (code) {
+          this.store.dispatch(new ProjectsAction.Get({organizationCode: code}));
         }
-
-        this.selectPreviousWorkspace();
-      });
-  }
-
-  private selectPreviousWorkspace(): void {
-    const previouslySelectedOrganizationIndex = this.getPreviouslySelectedOrganizationIndex();
-    if (previouslySelectedOrganizationIndex !== -1) {
-      this.activeOrgIx = previouslySelectedOrganizationIndex;
-      this.selectPreviouslySelectedProject(previouslySelectedOrganizationIndex);
-    }
-  }
-
-  private getPreviouslySelectedOrganizationIndex(): number {
-    return this.organizations.findIndex(organization => organization.code === this.selectedOrganizationCode);
-  }
-
-  private selectPreviouslySelectedProject(index: number) {
-    const selectedOrganization = this.organizations[index];
-    this.getOrganizationProjects(selectedOrganization).subscribe(
-      projects => {
-        selectedOrganization.projects = projects;
-
-        const previouslySelectedProjectIndex = this.getPreviouslySelectedProjectIndex(projects);
-        if (previouslySelectedProjectIndex !== -1) {
-          this.activeProjIx = previouslySelectedProjectIndex;
-        }
-      }
+      }),
+      this.store.select(selectSelectedProjectCode).subscribe(code => this.selectedProjectCode = code)
     );
+    this.store.dispatch(new OrganizationsAction.Get());
   }
 
-  private getPreviouslySelectedProjectIndex(projectsToSearchFrom: Project[]): number {
-    return projectsToSearchFrom.findIndex(project => project.code === this.selectedProjectCode);
+  public ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  private getOrganizationProjects(organization: Organization): Observable<Project[]> {
-    if (organization.projects) {
-      return Observable.of(organization.projects);
-    }
-
-    organization.projects = [];
-    return this.projectService.getProjects(organization.code);
-  }
-
-  public onSelectOrganization(index: number) {
-    const selectedOrganization = this.organizations[index];
-    if (!selectedOrganization.projects) {
-      selectedOrganization.projects = [];
-      this.projectService.getProjects(selectedOrganization.code)
-        .subscribe((projects: Project[]) => {
-          selectedOrganization.projects = projects;
-        });
-    }
-    this.activeProjIx = undefined;
-    this.activeOrgIx = index;
-
-    this.storeOrganizationInAppState(index);
-  }
-
-  private storeOrganizationInAppState(index: number): void {
-    const selectedOrganization = this.organizations[index];
-    const organizationCode = selectedOrganization.code;
-    this.store.dispatch(new OrganizationsAction.Select({organizationCode: organizationCode}));
+  public onSelectOrganization(code: string) {
+    this.store.dispatch(new OrganizationsAction.Select({organizationCode: code}));
     this.store.dispatch(new ProjectsAction.Select({projectCode: null}));
   }
 
   public onCreateOrganization() {
-    this.router.navigate(['organization', 'add']);
+    // TODO
   }
 
-  public onOrganizationSettings(index: number) {
-    this.router.navigate(['organization', this.organizations[index].code]);
+  public onOrganizationSettings(code: string) {
+    this.store.dispatch(new RouterAction.Go({path: ['organization', code]}));
   }
 
   public onNewOrganizationDescription(description: string) {
     // TODO save for selected organization ix
   }
 
-  public onSelectProject(index: number) {
-    this.activeProjIx = index;
-
-    const activeOrganization = this.organizations[this.activeOrgIx];
-    const activeProject = activeOrganization.projects[index];
-
-    this.store.dispatch(new ProjectsAction.Select({projectCode: activeProject.code}));
+  public onSelectProject(code: string) {
+    this.store.dispatch(new ProjectsAction.Select({projectCode: code}));
   }
 
   public onCreateProject() {
-    if (!isNullOrUndefined(this.activeOrgIx)) {
-      this.router.navigate(['organization', this.organizations[this.activeOrgIx].code, 'project', 'add']);
-    }
+    // TODO
   }
 
-  public onProjectSettings(index: number) {
-    if (!isNullOrUndefined(this.activeOrgIx)) {
-      const project = this.organizations[this.activeOrgIx].projects[index];
-      this.router.navigate(['organization', this.organizations[this.activeOrgIx].code, 'project', project.code]);
+  public onProjectSettings(code: string) {
+    if (!isNullOrUndefined(this.selectedOrganizationCode)) {
+      this.store.dispatch(new RouterAction.Go({path: ['organization', this.selectedOrganizationCode, 'project', code]}));
     }
   }
 
@@ -225,22 +130,15 @@ export class WorkspaceChooserComponent implements OnInit {
     // TODO save for selected project ix
   }
 
-  public hasManageRole(organization: Organization) {
+  public hasManageRole(organization: OrganizationModel) {
     return organization.permissions && organization.permissions.users.length === 1
       && organization.permissions.users[0].roles.some(r => r === Role.Manage.toString());
   }
 
   public onSaveActiveItems() {
-    if (!isNullOrUndefined(this.activeOrgIx) && !isNullOrUndefined(this.activeProjIx)) {
-      let activeOrgCode = this.organizations[this.activeOrgIx].code;
-      let activeProjCode = this.organizations[this.activeOrgIx].projects[this.activeProjIx].code;
-
-      this.workspace.organizationCode = activeOrgCode;
-      this.workspace.projectCode = activeProjCode;
-
-      this.updateDefaultWorkspace(activeOrgCode, activeProjCode);
-
-      this.router.navigate(['w', activeOrgCode, activeProjCode, 'files']);
+    if (!isNullOrUndefined(this.selectedOrganizationCode) && !isNullOrUndefined(this.selectedProjectCode)) {
+      this.updateDefaultWorkspace(this.selectedOrganizationCode, this.selectedProjectCode);
+      this.store.dispatch(new RouterAction.Go({path: ['w', this.selectedOrganizationCode, this.selectedProjectCode, 'collections']}));
     }
   }
 

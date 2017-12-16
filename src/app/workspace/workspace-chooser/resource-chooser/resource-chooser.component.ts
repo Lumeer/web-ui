@@ -84,10 +84,10 @@ export class ResourceChooserComponent implements OnChanges {
 
   @Input() public resourceType: string;
   @Input() public resources: Resource[];
-  @Input() public initActiveIx: number;
+  @Input() public selectedCode: string;
   @Input() public canCreateResource: boolean;
 
-  @Output() public resourceSelect: EventEmitter<number> = new EventEmitter();
+  @Output() public resourceSelect: EventEmitter<string> = new EventEmitter();
   @Output() public resourceNew: EventEmitter<any> = new EventEmitter();
   @Output() public resourceSettings: EventEmitter<number> = new EventEmitter();
   @Output() public resourceNewDescription: EventEmitter<string> = new EventEmitter();
@@ -95,11 +95,10 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceContentWidth: number = 0;
   public resourceContentLeft: number = arrowSize;
   public resourceWidth: number = squareSize;
-  public linesWidth: number = 1000;
+  public linesWidth: number = 0;
   public resourceCanScrollLeft: boolean = false;
   public resourceCanScrollRight: boolean = false;
   public resourceScroll: number = 0;
-  public resourceActiveIx: number;
   public resourceLineSizes = [0, 0, 0];
   public resourceVisibleArrows = false;
 
@@ -107,8 +106,9 @@ export class ResourceChooserComponent implements OnChanges {
     if (changes['resources']) {
       this.actualizeWidthAndCheck();
       this.checkForScrollRightResources();
-      this.resourceActiveIx = this.initActiveIx;
-      this.computeResourceLines(this.resourceActiveIx);
+      this.computeResourceLines(this.getActiveIndex());
+    } else if (changes['selectedCode']) {
+      this.computeResourceLines(this.getActiveIndex());
     }
   }
 
@@ -116,7 +116,7 @@ export class ResourceChooserComponent implements OnChanges {
   private onResize(event) {
     this.actualizeWidthAndCheck();
     this.checkForScrollRightResources();
-    this.computeResourceLines(this.resourceActiveIx);
+    this.computeResourceLines(this.getActiveIndex());
   }
 
   private actualizeWidthAndCheck() {
@@ -125,10 +125,8 @@ export class ResourceChooserComponent implements OnChanges {
     this.checkForDisableResourceArrows(resourceContentWidth);
   }
 
-  public onResourceSelected(index: number) {
-    this.resourceActiveIx = index;
-    this.computeResourceLines(index);
-    this.resourceSelect.emit(index);
+  public onResourceSelected(code: string) {
+    this.resourceSelect.emit(code);
   }
 
   public onScrollResource(direction: number) {
@@ -157,6 +155,11 @@ export class ResourceChooserComponent implements OnChanges {
     const numVisible = this.numResourcesVisible();
     const numPotentiallyVisible = this.numResourcesPotentiallyVisible();
     this.resourceCanScrollRight = numVisible > 0 && (numPotentiallyVisible - numVisible > 0);
+  }
+
+  private getActiveIndex(): number {
+    if (isNullOrUndefined(this.resources) || isNullOrUndefined(this.selectedCode)) return -1;
+    return this.resources.findIndex(resource => resource.code === this.selectedCode);
   }
 
   private checkForInitScrollResources(ix: number) {

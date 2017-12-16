@@ -1,7 +1,7 @@
 <div class="container-fluid container">
-  <resource-chooser [initActiveIx]="activeOrgIx"
+  <resource-chooser [selectedCode]="selectedOrganizationCode"
                     [resourceType]="'organization'"
-                    [resources]="organizations"
+                    [resources]="organizations$ | async"
                     [canCreateResource]="true"
                     (resourceSelect)="onSelectOrganization($event)"
                     (resourceNew)="onCreateOrganization()"
@@ -9,18 +9,18 @@
                     (resourceNewDescription)="onNewOrganizationDescription($event)">
   </resource-chooser>
 
-  <div class="pt-3" *ngIf="activeOrgIx >=0" [@animateOpacityFromUp]="'in'">
-    <resource-chooser [initActiveIx]="activeProjIx"
+  <div class="pt-3" *ngIf="selectedOrganizationCode" [@animateOpacityFromUp]="'in'">
+    <resource-chooser [selectedCode]="selectedProjectCode"
                       [resourceType]="'project'"
-                      [resources]="organizations[activeOrgIx].projects"
-                      [canCreateResource]="hasManageRole(organizations[activeOrgIx])"
+                      [resources]="projects$ | async"
+                      [canCreateResource]="true"
                       (resourceSelect)="onSelectProject($event)"
                       (resourceNew)="onCreateProject()"
                       (resourceSettings)="onProjectSettings($event)"
                       (resourceNewDescription)="onNewProjectDescription($event)">
     </resource-chooser>
   </div>
-  <div class="my-4 py-2 px-5 d-flex justify-content-end container" *ngIf="activeProjIx >=0"
+  <div class="my-4 py-2 px-5 d-flex justify-content-end fixed-bottom container" *ngIf="selectedOrganizationCode && selectedProjectCode"
        [@animateOpacityFromUp]="'in'">
     <button type="button" class="btn btn-lg btn-success py-2 px-4 font-weight-bold" (click)="onSaveActiveItems()">
       <i class="fas fa fa-play px-2"></i>
