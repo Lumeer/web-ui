@@ -23,12 +23,14 @@ import {OrganizationModel} from './organization.model';
 
 export class OrganizationConverter {
 
-  public static fromDto(dto: Organization): OrganizationModel {
+  public static fromDto(dto: Organization, correlationId?: string): OrganizationModel {
     return {
+      id: dto.id,
       code: dto.code,
       name: dto.name,
       icon: dto.icon,
       color: dto.color,
+      correlationId: correlationId,
       permissions: PermissionsConverter.fromDto(dto.permissions)
     };
   }

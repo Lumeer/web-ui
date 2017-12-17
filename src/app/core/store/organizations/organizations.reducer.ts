@@ -28,11 +28,12 @@ export function organizationsReducer(state: OrganizationsState = initialOrganiza
     case OrganizationsActionType.CREATE_SUCCESS:
       return groupsAdapter.addOne(action.payload.organization, state);
     case OrganizationsActionType.UPDATE_SUCCESS:
-      return organizationsAdapter.updateOne({id: action.payload.organization.code, changes: action.payload.organization}, state);
+      console.log('reducer', action.payload);
+      return organizationsAdapter.updateOne({id: action.payload.organization.id, changes: action.payload.organization}, state);
     case OrganizationsActionType.DELETE_SUCCESS:
-      return groupsAdapter.removeOne(action.payload.organizationCode, state);
+      return groupsAdapter.removeOne(action.payload.organizationId, state);
     case OrganizationsActionType.SELECT:
-      return {...state, selectedOrganizationCode: action.payload.organizationCode};
+      return {...state, selectedOrganizationId: action.payload.organizationId};
     default:
       return state;
   }

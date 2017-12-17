@@ -22,7 +22,7 @@ import {PermissionsModel} from '../permissions/permissions.model';
 export interface ProjectModel {
 
   id?: string; // TODO use in the future
-  organizationCode: string;
+  organizationId?: string;
 
   code: string;
   name: string;

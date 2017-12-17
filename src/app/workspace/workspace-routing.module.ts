@@ -20,8 +20,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
-import {OrganizationFormComponent} from './organization/form/organization-form.component';
-import {ProjectFormComponent} from './project/form/project-form.component';
 import {OrganizationSettingsComponent} from './organization/organization-settings.component';
 import {ProjectSettingsComponent} from './project/project-settings.component';
 import {ProjectPermissionsComponent} from './project/permissions/project-permissions.component';
@@ -29,14 +27,7 @@ import {OrganizationPermissionsComponent} from './organization/permissions/organ
 
 const workspaceRoutes: Routes = [
   {
-    path: 'organization/:organizationCode/project/add',
-    component: ProjectFormComponent,
-    data: {
-      creation: true
-    }
-  },
-  {
-    path: 'organization/:organizationCode/project/:projectCode',
+    path: 'organization/:organizationId/project/:projectId',
     component: ProjectSettingsComponent,
     children: [
       {
@@ -51,11 +42,7 @@ const workspaceRoutes: Routes = [
     ]
   },
   {
-    path: 'organization/add',
-    component: OrganizationFormComponent
-  },
-  {
-    path: 'organization/:organizationCode',
+    path: 'organization/:organizationId',
     component: OrganizationSettingsComponent,
     children: [
       {

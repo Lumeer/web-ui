@@ -86,14 +86,14 @@ export namespace OrganizationsAction {
   export class Update implements Action {
     public readonly type = OrganizationsActionType.UPDATE;
 
-    public constructor(public payload: { organizationCode: string, organization: OrganizationModel }) {
+    public constructor(public payload: { organization: OrganizationModel }) {
     }
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = OrganizationsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: { organizationCode: string, organization: OrganizationModel }) {
+    public constructor(public payload: { organization: OrganizationModel }) {
     }
   }
 
@@ -107,14 +107,14 @@ export namespace OrganizationsAction {
   export class Delete implements Action {
     public readonly type = OrganizationsActionType.DELETE;
 
-    public constructor(public payload: { organizationCode: string }) {
+    public constructor(public payload: { organizationId: string }) {
     }
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = OrganizationsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: { organizationCode: string }) {
+    public constructor(public payload: { organizationId: string }) {
     }
   }
 
@@ -128,7 +128,7 @@ export namespace OrganizationsAction {
   export class Select implements Action {
     public readonly type = OrganizationsActionType.SELECT;
 
-    public constructor(public payload: { organizationCode: string }) {
+    public constructor(public payload: { organizationId: string }) {
     }
   }
 

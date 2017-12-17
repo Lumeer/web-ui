@@ -31,6 +31,7 @@ import {
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
 import {isNullOrUndefined} from 'util';
+import {NotificationService} from '../../../core/notifications/notification.service';
 import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generator';
 import {OrganizationModel} from '../../../core/store/organizations/organization.model';
 import {ProjectModel} from '../../../core/store/projects/project.model';
@@ -91,13 +92,14 @@ export class ResourceChooserComponent implements OnChanges {
 
   @Input() public resourceType: ResourceItemType;
   @Input() public resources: ResourceModel[];
-  @Input() public selectedCode: string;
+  @Input() public selectedId: string;
   @Input() public canCreateResource: boolean;
 
+  @Output() public resourceDelete: EventEmitter<string> = new EventEmitter();
   @Output() public resourceSelect: EventEmitter<string> = new EventEmitter();
   @Output() public resourceNew: EventEmitter<ResourceModel> = new EventEmitter();
   @Output() public resourceSettings: EventEmitter<string> = new EventEmitter();
-  @Output() public resourceUpdate: EventEmitter<{ code: string, resource: ResourceModel }> = new EventEmitter();
+  @Output() public resourceUpdate: EventEmitter<ResourceModel> = new EventEmitter();
 
   public newResources: ResourceModel[] = [];
 
@@ -111,10 +113,14 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceLineSizes = [0, 0, 0];
   public resourceVisibleArrows = false;
 
+  public constructor(private notificationService: NotificationService) {
+  }
+
   public ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
     if (changes['resources']) {
+      this.checkResources();
       this.compute();
-    } else if (changes['selectedCode']) {
+    } else if (changes['selectedId']) {
       this.computeResourceLines(this.getActiveIndex());
     }
   }
@@ -122,6 +128,11 @@ export class ResourceChooserComponent implements OnChanges {
   @HostListener('window:resize', ['$event'])
   private onResize(event) {
     this.compute();
+  }
+
+  private checkResources() {
+    const ids: string[] = this.resources.filter(res => res.correlationId).map(res => res.correlationId);
+    this.newResources = this.newResources.filter(newRes => !ids.includes(newRes.correlationId));
   }
 
   private compute() {
@@ -136,9 +147,9 @@ export class ResourceChooserComponent implements OnChanges {
     this.checkForDisableResourceArrows(resourceContentWidth);
   }
 
-  public onResourceSelected(code: string) {
-    if (code && code !== this.selectedCode) {
-      this.resourceSelect.emit(code);
+  public onResourceSelected(id: string) {
+    if (id && id !== this.selectedId) {
+      this.resourceSelect.emit(id);
     }
   }
 
@@ -171,8 +182,8 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private getActiveIndex(): number {
-    if (isNullOrUndefined(this.resources) || isNullOrUndefined(this.selectedCode)) return -1;
-    return this.resources.findIndex(resource => resource.code === this.selectedCode);
+    if (isNullOrUndefined(this.resources) || isNullOrUndefined(this.selectedId)) return -1;
+    return this.resources.findIndex(resource => resource.id === this.selectedId);
   }
 
   private checkForInitScrollResources(ix: number) {
@@ -244,8 +255,29 @@ export class ResourceChooserComponent implements OnChanges {
     this.compute();
   }
 
-  public onResourceSettings(code: string) {
-    this.resourceSettings.emit(code);
+  public onResourceSettings(id: string) {
+    this.resourceSettings.emit(id);
+  }
+
+  public onResourceDelete(resource: ResourceModel) {
+    if (resource.id) {
+      this.notificationService.confirm(`Are you sure you want to remove the ${this.resourceType}?`, 'Delete?', [
+        {text: 'Yes', action: () => this.resourceDelete.emit(resource.id), bold: false},
+        {text: 'No'}
+      ]);
+    } else {
+      this.newResources = this.newResources.filter(newRes => newRes.correlationId !== resource.correlationId);
+      this.compute();
+    }
+  }
+
+  public onNewColor(resource: ResourceModel, color: string){
+    console.log(color);
+  }
+
+
+  public onNewIcon(resource: ResourceModel, icon: string){
+    console.log(icon);
   }
 
   public hasManageRole(resource: ResourceModel): boolean {
@@ -260,15 +292,48 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   public onCodeBlur(element: HTMLElement, resource: ResourceModel) {
-    resource.code = element.textContent;
+    const property = 'code';
+    const propertyOther = 'name';
+    if (resource.hasOwnProperty(property) && resource.hasOwnProperty(propertyOther)) {
+      this.onFieldBlur(element, resource, property, propertyOther);
+    }
   }
 
   public onNameBlur(element: HTMLElement, resource: ResourceModel) {
-    resource.name = element.textContent;
-    if (this.resourceType === ResourceItemType.Organization) {
-      this.resourceNew.emit(resource as OrganizationModel);
-    } else if (this.resourceType === ResourceItemType.Project) {
-      this.resourceNew.emit(resource as ProjectModel);
+    const property = 'name';
+    const propertyOther = 'code';
+    if (resource.hasOwnProperty(property) && resource.hasOwnProperty(propertyOther)) {
+      this.onFieldBlur(element, resource, property, propertyOther);
+    }
+  }
+
+  private onFieldBlur(element: HTMLElement, resource: ResourceModel, property: string, propertyOther: string) {
+    const contentTrim = element.textContent.trim();
+    const contentTrimLength = contentTrim.length;
+    const codeLength = resource[property].length;
+
+    if (resource.id) {
+      // we know, that code is not empty
+      if (contentTrimLength === 0) {
+        element.textContent = resource[property];
+      } else {
+        if (contentTrim !== resource[property]) {
+          const resourceModel = {...resource};
+          resourceModel[property] = contentTrim;
+          this.resourceUpdate.emit(resourceModel);
+        }
+      }
+    } else {
+      if (resource[propertyOther].length === 0) {
+        resource[property] = contentTrim;
+      } else if (contentTrimLength == 0 && codeLength == 0) {
+        // TODO error on field
+      } else if (contentTrimLength == 0 && codeLength > 0) {
+        element.textContent = resource[property];
+      } else if (contentTrimLength > 0 && codeLength == 0) {
+        resource[property] = contentTrim;
+        this.resourceNew.emit(resource);
+      }// else do nothing
     }
   }
 

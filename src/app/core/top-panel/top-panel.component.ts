@@ -64,15 +64,17 @@ export class TopPanelComponent implements OnInit {
   }
 
   public goToWorkspaceOrganization(): void {
-    this.store.dispatch(new OrganizationsAction.Select({organizationCode: this.workspace.organizationCode}));
-    this.store.dispatch(new ProjectsAction.Select({projectCode: null}));
+    // TODO
+    // this.store.dispatch(new OrganizationsAction.Select({organizationCode: this.workspace.organizationCode}));
+    // this.store.dispatch(new ProjectsAction.Select({projectCode: null}));
 
     this.router.navigate(['/workspace']);
   }
 
   public goToWorkspaceProject(): void {
-    this.store.dispatch(new OrganizationsAction.Select({organizationCode: this.workspace.organizationCode}));
-    this.store.dispatch(new ProjectsAction.Select({projectCode: this.workspace.projectCode}));
+    // TODO
+    // this.store.dispatch(new OrganizationsAction.Select({organizationCode: this.workspace.organizationCode}));
+    // this.store.dispatch(new ProjectsAction.Select({projectCode: this.workspace.projectCode}));
 
     this.router.navigate(['/workspace']);
   }

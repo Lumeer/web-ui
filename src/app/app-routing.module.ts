@@ -27,7 +27,7 @@ import {SearchHomeComponent} from './core/search-home/search-home.component';
 
 const appRoutes: Routes = [
   {
-    path: 'w/:organizationCode/:projectCode/search',
+    path: 'w/:organizationId/:projectCode/search',
     component: SearchHomeComponent,
     data: {
       searchBoxHidden: true

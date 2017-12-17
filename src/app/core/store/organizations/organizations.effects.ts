@@ -19,10 +19,11 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
-import {Action} from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {OrganizationService} from '../../rest';
+import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
@@ -48,10 +49,11 @@ export class OrganizationsEffects {
   @Effect()
   public create$: Observable<Action> = this.actions$.ofType<OrganizationsAction.Create>(OrganizationsActionType.CREATE).pipe(
     switchMap(action => {
+      const correlationId = action.payload.organization.correlationId;
       const organizationDto = OrganizationConverter.toDto(action.payload.organization);
 
       return this.organizationService.createOrganization(organizationDto).pipe(
-        map(dto => OrganizationConverter.fromDto(dto))
+        map(dto => OrganizationConverter.fromDto(dto, correlationId))
       );
     }),
     map(organization => new OrganizationsAction.CreateSuccess({organization: organization})),
@@ -66,14 +68,17 @@ export class OrganizationsEffects {
 
   @Effect()
   public update$: Observable<Action> = this.actions$.ofType<OrganizationsAction.Update>(OrganizationsActionType.UPDATE).pipe(
-    switchMap(action => {
+    withLatestFrom(this.store$),
+    switchMap(([action, state]) => {
       const organizationDto = OrganizationConverter.toDto(action.payload.organization);
-
-      return this.organizationService.editOrganization(organizationDto.code, organizationDto).pipe(
+      const organization = state.organizations.entities[action.payload.organization.id];
+      return this.organizationService.editOrganization(organization.code, organizationDto).pipe(
         map(dto => ({action, organization: OrganizationConverter.fromDto(dto)}))
       );
     }),
-    map(({action, organization}) => new OrganizationsAction.UpdateSuccess({organizationCode: action.payload.organizationCode, organization: organization})),
+    map(({action, organization}) => new OrganizationsAction.UpdateSuccess({
+      organization: {...organization, id: action.payload.organization.id}
+    })),
     catchError(error => Observable.of(new OrganizationsAction.UpdateFailure({error: error})))
   );
 
@@ -85,9 +90,13 @@ export class OrganizationsEffects {
 
   @Effect()
   public delete$: Observable<Action> = this.actions$.ofType<OrganizationsAction.Delete>(OrganizationsActionType.DELETE).pipe(
-    switchMap(action => this.organizationService.deleteOrganization(action.payload.organizationCode).pipe(
-      map(() => action)
-    )),
+    withLatestFrom(this.store$),
+    switchMap(([action, state]) => {
+      const organization = state.organizations.entities[action.payload.organizationId];
+      return this.organizationService.deleteOrganization(organization.code).pipe(
+        map(() => action)
+      );
+    }),
     map(action => new OrganizationsAction.DeleteSuccess(action.payload)),
     catchError(error => Observable.of(new OrganizationsAction.DeleteFailure({error: error})))
   );
@@ -98,7 +107,8 @@ export class OrganizationsEffects {
     map(() => new NotificationsAction.Error({message: 'Failed to delete organization'}))
   );
 
-  constructor(private actions$: Actions,
+  constructor(private store$: Store<AppState>,
+              private actions$: Actions,
               private organizationService: OrganizationService) {
   }
 

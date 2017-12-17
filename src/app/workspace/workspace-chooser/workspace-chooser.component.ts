@@ -21,20 +21,21 @@ import {animate, keyframes, state, style, transition, trigger} from '@angular/an
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
+import {first, map} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {
-  selectAllOrganizations,
-  selectSelectedOrganizationCode
+  selectAllOrganizations, selectSelectedOrganization,
+  selectSelectedOrganizationId
 } from '../../core/store/organizations/organizations.state';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {
-  selectProjectsForSelectedOrganization,
-  selectSelectedProjectCode
+  selectProjectsForSelectedOrganization, selectSelectedProject,
+  selectSelectedProjectId
 } from '../../core/store/projects/projects.state';
 import {RouterAction} from '../../core/store/router/router.action';
 import {UserSettingsService} from '../../core/user-settings.service';
@@ -67,9 +68,10 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   public organizations$: Observable<OrganizationModel[]>;
   public projects$: Observable<ProjectModel[]>;
+  public canCreateProjects$: Observable<boolean>;
 
-  public selectedOrganizationCode: string;
-  public selectedProjectCode: string;
+  public selectedOrganizationId: string;
+  public selectedProjectId: string;
 
   private subscriptions: Subscription[] = [];
 
@@ -87,28 +89,31 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   private bindData() {
     this.organizations$ = this.store.select(selectAllOrganizations);
     this.projects$ = this.store.select(selectProjectsForSelectedOrganization);
+    this.canCreateProjects$ = this.store.select(selectSelectedOrganization).pipe(
+      map(organization => organization && this.hasManageRole(organization))
+    );
   }
 
   private subscribeCodes() {
     this.subscriptions.push(
-      this.store.select(selectSelectedOrganizationCode).subscribe(code => {
-        this.selectedOrganizationCode = code;
-        if (code) {
-          this.store.dispatch(new ProjectsAction.Get({organizationCode: code}));
+      this.store.select(selectSelectedOrganizationId).subscribe(id => {
+        this.selectedOrganizationId = id;
+        if (id) {
+          this.store.dispatch(new ProjectsAction.Get({organizationId: id}));
         }
       }),
-      this.store.select(selectSelectedProjectCode).subscribe(code => {
-        this.selectedProjectCode = code;
+      this.store.select(selectSelectedProjectId).subscribe(id => {
+        this.selectedProjectId = id;
       })
     );
   }
 
   private selectDefault() {
     let userSettings = this.userSettingsService.getUserSettings();
-    if (userSettings.defaultOrganization) {
-      this.store.dispatch(new OrganizationsAction.Select({organizationCode: userSettings.defaultOrganization}));
-      if (userSettings.defaultProject) {
-        this.store.dispatch(new ProjectsAction.Select({projectCode: userSettings.defaultProject}));
+    if (userSettings.defaultOrganizationId) {
+      this.store.dispatch(new OrganizationsAction.Select({organizationId: userSettings.defaultOrganizationId}));
+      if (userSettings.defaultProjectId) {
+        this.store.dispatch(new ProjectsAction.Select({projectId: userSettings.defaultProjectId}));
       }
     }
   }
@@ -117,42 +122,59 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  public onSelectOrganization(code: string) {
-    this.store.dispatch(new OrganizationsAction.Select({organizationCode: code}));
-    this.store.dispatch(new ProjectsAction.Select({projectCode: null}));
+  public onSelectOrganization(id: string) {
+    this.store.dispatch(new OrganizationsAction.Select({organizationId: id}));
+    this.store.dispatch(new ProjectsAction.Select({projectId: null}));
   }
 
   public onCreateOrganization(organization: OrganizationModel) {
-    console.log(organization);
-    //this.store.dispatch(new OrganizationsAction.Create({organization}));
+    this.store.dispatch(new OrganizationsAction.Create({organization}));
   }
 
-  public onUpdateOrganization(payload: { organizationCode: string, organization: OrganizationModel }) {
-    this.store.dispatch(new OrganizationsAction.Update(payload));
+  public onUpdateOrganization(resource: OrganizationModel) {
+    this.store.dispatch(new OrganizationsAction.Update({organization: resource}));
   }
 
-  public onOrganizationSettings(code: string) {
-    this.store.dispatch(new RouterAction.Go({path: ['organization', code]}));
+  public onDeleteOrganization(id: string) {
+    if (this.selectedOrganizationId === id) {
+      this.onSelectOrganization(null);
+    }
+    this.store.dispatch(new OrganizationsAction.Delete({organizationId: id}));
   }
 
-  public onSelectProject(code: string) {
-    this.store.dispatch(new ProjectsAction.Select({projectCode: code}));
+  public onOrganizationSettings(id: string) {
+    this.store.dispatch(new RouterAction.Go({path: ['organization', id]}));
+  }
+
+  public onSelectProject(id: string) {
+    this.store.dispatch(new ProjectsAction.Select({projectId: id}));
   }
 
   public onCreateProject(project: ProjectModel) {
-    if (!isNullOrUndefined(this.selectedOrganizationCode)) {
-      const projectModel = {...project, organizationCode: this.selectedOrganizationCode};
+    if (!isNullOrUndefined(this.selectedOrganizationId)) {
+      const projectModel = {...project, organizationId: this.selectedOrganizationId};
       this.store.dispatch(new ProjectsAction.Create({project: projectModel}));
     }
   }
 
-  public onUpdateProject(payload: { projectCode: string, project: ProjectModel }) {
-    this.store.dispatch(new ProjectsAction.Update(payload));
+  public onUpdateProject(resource: ProjectModel) {
+    if (!isNullOrUndefined(this.selectedOrganizationId)) {
+      this.store.dispatch(new ProjectsAction.Update({project: resource}));
+    }
   }
 
-  public onProjectSettings(code: string) {
-    if (!isNullOrUndefined(this.selectedOrganizationCode)) {
-      this.store.dispatch(new RouterAction.Go({path: ['organization', this.selectedOrganizationCode, 'project', code]}));
+  public onDeleteProject(id: string) {
+    if (!isNullOrUndefined(this.selectedOrganizationId)) {
+      if (this.selectedProjectId === id) {
+        this.onSelectProject(null);
+      }
+      this.store.dispatch(new ProjectsAction.Delete({organizationId: this.selectedOrganizationId, projectId: id}));
+    }
+  }
+
+  public onProjectSettings(id: string) {
+    if (!isNullOrUndefined(this.selectedOrganizationId)) {
+      this.store.dispatch(new RouterAction.Go({path: ['organization', this.selectedOrganizationId, 'project', id]}));
     }
   }
 
@@ -162,24 +184,34 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   }
 
   public onSaveActiveItems() {
-    if (!isNullOrUndefined(this.selectedOrganizationCode) && !isNullOrUndefined(this.selectedProjectCode)) {
-      this.updateDefaultWorkspace(this.selectedOrganizationCode, this.selectedProjectCode);
-      this.store.dispatch(new RouterAction.Go({path: ['w', this.selectedOrganizationCode, this.selectedProjectCode, 'collections']}));
+    if (!isNullOrUndefined(this.selectedOrganizationId) && !isNullOrUndefined(this.selectedProjectId)) {
+      Observable.combineLatest(
+        this.store.select(selectSelectedOrganization),
+        this.store.select(selectSelectedProject)
+      ).pipe(first())
+        .subscribe(([organization, project]) => {
+          if (organization && project) {
+            this.updateDefaultWorkspace(organization, project);
+            this.store.dispatch(new RouterAction.Go({path: ['w', organization.code, project.code, 'collections']}));
+          }
+        });
     }
   }
 
-  public organizationItemType(): ResourceItemType{
+  public organizationItemType(): ResourceItemType {
     return ResourceItemType.Organization;
   }
 
-  public projectItemType(): ResourceItemType{
+  public projectItemType(): ResourceItemType {
     return ResourceItemType.Project;
   }
 
-  private updateDefaultWorkspace(organizationCode: string, projectCode: string) {
+  private updateDefaultWorkspace(organization: OrganizationModel, project: ProjectModel) {
     let userSettings = this.userSettingsService.getUserSettings();
-    userSettings.defaultOrganization = organizationCode;
-    userSettings.defaultProject = projectCode;
+    userSettings.defaultOrganization = organization.code;
+    userSettings.defaultOrganizationId = organization.id;
+    userSettings.defaultProject = project.code;
+    userSettings.defaultProjectId = project.id;
     this.userSettingsService.updateUserSettings(userSettings);
   }
 

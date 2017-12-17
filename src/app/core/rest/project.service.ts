@@ -63,7 +63,8 @@ export class ProjectService extends PermissionService {
     }
 
     return this.httpClient.post(this.apiPrefix(orgCode), project, {observe: 'response', responseType: 'text'}).pipe(
-      map(() => project) // TODO return fresh instance from the server instead
+      map(response => response.headers.get('Location').split('/').pop()),
+      map(id => ({...project, id: id})) // TODO return fresh instance from the server instead
     );
   }
 

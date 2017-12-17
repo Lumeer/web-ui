@@ -24,16 +24,15 @@ import {initialProjectsState, projectsAdapter, ProjectsState} from './projects.s
 export function projectsReducer(state: ProjectsState = initialProjectsState, action: ProjectsAction.All): ProjectsState {
   switch (action.type) {
     case ProjectsActionType.GET_SUCCESS:
-      const organizationCode = action.payload.projects.length ? action.payload.projects[0].organizationCode : null;
-      return projectsAdapter.addAll(action.payload.projects, {...state, organizationCode: organizationCode});
+      return projectsAdapter.addMany(action.payload.projects, state);
     case ProjectsActionType.CREATE_SUCCESS:
       return groupsAdapter.addOne(action.payload.project, state);
     case ProjectsActionType.UPDATE_SUCCESS:
-      return projectsAdapter.updateOne({id: action.payload.project.code, changes: action.payload.project}, state);
+      return projectsAdapter.updateOne({id: action.payload.project.id, changes: action.payload.project}, state);
     case ProjectsActionType.DELETE_SUCCESS:
-      return groupsAdapter.removeOne(action.payload.projectCode, state);
+      return groupsAdapter.removeOne(action.payload.projectId, state);
     case ProjectsActionType.SELECT:
-      return {...state, selectedProjectCode: action.payload.projectCode};
+      return {...state, selectedProjectId: action.payload.projectId};
     default:
       return state;
   }

@@ -20,8 +20,6 @@
 import {NgModule} from '@angular/core';
 
 import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
-import {OrganizationFormComponent} from './organization/form/organization-form.component';
-import {ProjectFormComponent} from './project/form/project-form.component';
 import {WorkspaceRoutingModule} from './workspace-routing.module';
 import {SharedModule} from '../shared/shared.module';
 import {OrganizationPermissionsComponent} from './organization/permissions/organization-permissions.component';
@@ -38,8 +36,6 @@ import {PickerModule} from '../shared/picker/picker.module';
     PickerModule
   ],
   declarations: [
-    OrganizationFormComponent,
-    ProjectFormComponent,
     OrganizationPermissionsComponent,
     ProjectPermissionsComponent,
     OrganizationSettingsComponent,

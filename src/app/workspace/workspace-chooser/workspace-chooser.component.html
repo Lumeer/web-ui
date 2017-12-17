@@ -1,19 +1,21 @@
 <div class="container-fluid container">
-  <resource-chooser [selectedCode]="selectedOrganizationCode"
+  <resource-chooser [selectedId]="selectedOrganizationId"
                     [resourceType]="organizationItemType()"
                     [resources]="organizations$ | async"
                     [canCreateResource]="true"
+                    (resourceDelete)="onDeleteOrganization($event)"
                     (resourceSelect)="onSelectOrganization($event)"
                     (resourceNew)="onCreateOrganization($event)"
                     (resourceUpdate)="onUpdateOrganization($event)"
                     (resourceSettings)="onOrganizationSettings($event)">
   </resource-chooser>
 
-  <div class="pt-3" *ngIf="selectedOrganizationCode" [@animateOpacityFromUp]="'in'">
-    <resource-chooser [selectedCode]="selectedProjectCode"
+  <div class="pt-3" *ngIf="selectedOrganizationId" [@animateOpacityFromUp]="'in'">
+    <resource-chooser [selectedId]="selectedProjectId"
                       [resourceType]="projectItemType()"
                       [resources]="projects$ | async"
-                      [canCreateResource]="true"
+                      [canCreateResource]="canCreateProjects$ | async"
+                      (resourceDelete)="onDeleteProject($event)"
                       (resourceSelect)="onSelectProject($event)"
                       (resourceNew)="onCreateProject($event)"
                       (resourceUpdate)="onUpdateProject($event)"
@@ -21,7 +23,7 @@
     </resource-chooser>
   </div>
   <div class="my-4 py-2 px-5 d-flex justify-content-end fixed-bottom container"
-       *ngIf="selectedOrganizationCode && selectedProjectCode"
+       *ngIf="selectedOrganizationId && selectedProjectId"
        [@animateOpacityFromUp]="'in'">
     <button type="button" class="btn btn-lg btn-success py-2 px-4 font-weight-bold" (click)="onSaveActiveItems()">
       <i class="fas fa fa-play px-2"></i>

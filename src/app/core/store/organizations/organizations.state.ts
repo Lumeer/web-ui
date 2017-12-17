@@ -18,23 +18,26 @@
  */
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {createSelector} from '@ngrx/store';
+import {createSelector, MemoizedSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {OrganizationModel} from './organization.model';
 
 export interface OrganizationsState extends EntityState<OrganizationModel> {
 
-  selectedOrganizationCode: string;
+  selectedOrganizationId: string;
 
 }
 
-export const organizationsAdapter = createEntityAdapter<OrganizationModel>({selectId: organization => organization.code});
+export const organizationsAdapter = createEntityAdapter<OrganizationModel>({selectId: organization => organization.id});
 
 export const initialOrganizationsState: OrganizationsState = organizationsAdapter.getInitialState({
-  selectedOrganizationCode: null
+  selectedOrganizationId: null
 });
 
 export const selectOrganizationsState = (state: AppState) => state.organizations;
 export const selectAllOrganizations = createSelector(selectOrganizationsState, organizationsAdapter.getSelectors().selectAll);
-export const selectOrganizationsMap = createSelector(selectOrganizationsState, organizationsAdapter.getSelectors().selectEntities);
-export const selectSelectedOrganizationCode = createSelector(selectOrganizationsState, organizationsState => organizationsState.selectedOrganizationCode);
+export const selectOrganizationsDictionary = createSelector(selectOrganizationsState, organizationsAdapter.getSelectors().selectEntities);
+export const selectSelectedOrganizationId = createSelector(selectOrganizationsState, organizationsState => organizationsState.selectedOrganizationId);
+export const selectSelectedOrganization = createSelector(selectOrganizationsDictionary, selectSelectedOrganizationId, (organizations, selectedId)=>{
+  return selectedId ? organizations[selectedId] : null;
+});
