@@ -36,7 +36,7 @@ import {ViewGuard} from './view.guard';
 
 const viewRoutes: Routes = [
   {
-    path: 'w/:organizationId/:projectCode/view',
+    path: 'w/:organizationCode/:projectCode/view',
     canActivate: [CollectionsGuard],
     component: ViewComponent,
     children: [

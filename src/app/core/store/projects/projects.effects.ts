@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {ProjectService} from '../../rest';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -34,11 +34,12 @@ export class ProjectsEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.ofType<ProjectsAction.Get>(ProjectsActionType.GET).pipe(
     withLatestFrom(this.store$),
+    skipWhile(([action, state]) => !state.organizations.entities[action.payload.organizationId]),
     switchMap(([action, state]) => {
       const organization = state.organizations.entities[action.payload.organizationId];
       return this.projectService.getProjects(organization.code).pipe(
         map(dtos => dtos.map(dto => ProjectConverter.fromDto(dto, action.payload.organizationId)))
-      )
+      );
     }),
     map(projects => new ProjectsAction.GetSuccess({projects: projects})),
     catchError(error => Observable.of(new ProjectsAction.GetFailure({error: error})))

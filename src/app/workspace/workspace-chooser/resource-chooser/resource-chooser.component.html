@@ -35,12 +35,12 @@
 
                 <div class="d-flex flex-column settings" [style.opacity]="resource.id === selectedId ? 1 : 0">
                   <ng-container *ngIf="resource.id">
-                    <a class="mb-2" *ngIf="hasManageRole(resource)"
+                    <a class="mb-1" *ngIf="hasManageRole(resource)"
                        (click)="onResourceSettings(resource.id); $event.stopPropagation()"
                        title="Settings" i18n-title="@@resource.postit.settings">
                       <i class="fas fa fa-cog clickable" aria-hidden="true"></i>
                     </a>
-                    <a class="mb-2"
+                    <a class="mb-1"
                        data-toggle="dropdown"
                        title="Icon picker" i18n-title="@@resource.postit.picker">
                       <i class="fas fa fa-eye-dropper clickable" aria-hidden="true"></i>
@@ -75,8 +75,8 @@
                      (keydown)="onKeyDown($event, name)"
                      title="Name" i18n-title="@@resource.postit.name"
                      [attr.spellcheck]="false"
+                     [textContent]="resource.name"
                      #name>
-                  {{resource.name}}
                 </div>
               </div>
             </div>

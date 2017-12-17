@@ -131,6 +131,7 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private checkResources() {
+    console.log(this.resources, this.resourceType);
     const ids: string[] = this.resources.filter(res => res.correlationId).map(res => res.correlationId);
     this.newResources = this.newResources.filter(newRes => !ids.includes(newRes.correlationId));
   }
@@ -233,7 +234,7 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private computeResourceLines(index: number) {
-    if (isNullOrUndefined(index)) {
+    if (index === -1) {
       this.resourceLineSizes = [0, 0, 0];
       return;
     }
