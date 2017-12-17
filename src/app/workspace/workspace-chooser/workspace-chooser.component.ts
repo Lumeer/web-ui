@@ -39,6 +39,7 @@ import {
 import {RouterAction} from '../../core/store/router/router.action';
 import {UserSettingsService} from '../../core/user-settings.service';
 import {Role} from '../../shared/permissions/role';
+import {ResourceItemType} from './resource-chooser/resource-item-type';
 
 @Component({
   selector: 'workspace-chooser',
@@ -77,8 +78,18 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
+    this.bindData();
+    this.subscribeCodes();
+    this.selectDefault();
+    this.store.dispatch(new OrganizationsAction.Get());
+  }
+
+  private bindData() {
     this.organizations$ = this.store.select(selectAllOrganizations);
-    this.projects$ = this.store.select(selectProjectsForSelectedOrganization); // TODO use selector for organizations?
+    this.projects$ = this.store.select(selectProjectsForSelectedOrganization);
+  }
+
+  private subscribeCodes() {
     this.subscriptions.push(
       this.store.select(selectSelectedOrganizationCode).subscribe(code => {
         this.selectedOrganizationCode = code;
@@ -86,9 +97,20 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
           this.store.dispatch(new ProjectsAction.Get({organizationCode: code}));
         }
       }),
-      this.store.select(selectSelectedProjectCode).subscribe(code => this.selectedProjectCode = code)
+      this.store.select(selectSelectedProjectCode).subscribe(code => {
+        this.selectedProjectCode = code;
+      })
     );
-    this.store.dispatch(new OrganizationsAction.Get());
+  }
+
+  private selectDefault() {
+    let userSettings = this.userSettingsService.getUserSettings();
+    if (userSettings.defaultOrganization) {
+      this.store.dispatch(new OrganizationsAction.Select({organizationCode: userSettings.defaultOrganization}));
+      if (userSettings.defaultProject) {
+        this.store.dispatch(new ProjectsAction.Select({projectCode: userSettings.defaultProject}));
+      }
+    }
   }
 
   public ngOnDestroy() {
@@ -100,34 +122,38 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ProjectsAction.Select({projectCode: null}));
   }
 
-  public onCreateOrganization() {
-    // TODO
+  public onCreateOrganization(organization: OrganizationModel) {
+    console.log(organization);
+    //this.store.dispatch(new OrganizationsAction.Create({organization}));
+  }
+
+  public onUpdateOrganization(payload: { organizationCode: string, organization: OrganizationModel }) {
+    this.store.dispatch(new OrganizationsAction.Update(payload));
   }
 
   public onOrganizationSettings(code: string) {
     this.store.dispatch(new RouterAction.Go({path: ['organization', code]}));
   }
 
-  public onNewOrganizationDescription(description: string) {
-    // TODO save for selected organization ix
-  }
-
   public onSelectProject(code: string) {
     this.store.dispatch(new ProjectsAction.Select({projectCode: code}));
   }
 
-  public onCreateProject() {
-    // TODO
+  public onCreateProject(project: ProjectModel) {
+    if (!isNullOrUndefined(this.selectedOrganizationCode)) {
+      const projectModel = {...project, organizationCode: this.selectedOrganizationCode};
+      this.store.dispatch(new ProjectsAction.Create({project: projectModel}));
+    }
+  }
+
+  public onUpdateProject(payload: { projectCode: string, project: ProjectModel }) {
+    this.store.dispatch(new ProjectsAction.Update(payload));
   }
 
   public onProjectSettings(code: string) {
     if (!isNullOrUndefined(this.selectedOrganizationCode)) {
       this.store.dispatch(new RouterAction.Go({path: ['organization', this.selectedOrganizationCode, 'project', code]}));
     }
-  }
-
-  public onNewProjectDescription(description: string) {
-    // TODO save for selected project ix
   }
 
   public hasManageRole(organization: OrganizationModel) {
@@ -140,6 +166,14 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
       this.updateDefaultWorkspace(this.selectedOrganizationCode, this.selectedProjectCode);
       this.store.dispatch(new RouterAction.Go({path: ['w', this.selectedOrganizationCode, this.selectedProjectCode, 'collections']}));
     }
+  }
+
+  public organizationItemType(): ResourceItemType{
+    return ResourceItemType.Organization;
+  }
+
+  public projectItemType(): ResourceItemType{
+    return ResourceItemType.Project;
   }
 
   private updateDefaultWorkspace(organizationCode: string, projectCode: string) {

@@ -30,12 +30,19 @@ import {
 } from '@angular/core';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
-import {Resource} from '../../../core/dto/resource';
 import {isNullOrUndefined} from 'util';
+import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generator';
+import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {ProjectModel} from '../../../core/store/projects/project.model';
+import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
+import {KeyCode} from '../../../shared/key-code';
 import {Role} from '../../../shared/permissions/role';
+import {ResourceItemType} from './resource-item-type';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
+
+type ResourceModel = OrganizationModel | ProjectModel;
 
 @Component({
   selector: 'resource-chooser',
@@ -82,15 +89,17 @@ export class ResourceChooserComponent implements OnChanges {
   @ViewChild('resourceDescription')
   public resourceDescription: ElementRef;
 
-  @Input() public resourceType: string;
-  @Input() public resources: Resource[];
+  @Input() public resourceType: ResourceItemType;
+  @Input() public resources: ResourceModel[];
   @Input() public selectedCode: string;
   @Input() public canCreateResource: boolean;
 
   @Output() public resourceSelect: EventEmitter<string> = new EventEmitter();
-  @Output() public resourceNew: EventEmitter<any> = new EventEmitter();
-  @Output() public resourceSettings: EventEmitter<number> = new EventEmitter();
-  @Output() public resourceNewDescription: EventEmitter<string> = new EventEmitter();
+  @Output() public resourceNew: EventEmitter<ResourceModel> = new EventEmitter();
+  @Output() public resourceSettings: EventEmitter<string> = new EventEmitter();
+  @Output() public resourceUpdate: EventEmitter<{ code: string, resource: ResourceModel }> = new EventEmitter();
+
+  public newResources: ResourceModel[] = [];
 
   public resourceContentWidth: number = 0;
   public resourceContentLeft: number = arrowSize;
@@ -104,9 +113,7 @@ export class ResourceChooserComponent implements OnChanges {
 
   public ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
     if (changes['resources']) {
-      this.actualizeWidthAndCheck();
-      this.checkForScrollRightResources();
-      this.computeResourceLines(this.getActiveIndex());
+      this.compute();
     } else if (changes['selectedCode']) {
       this.computeResourceLines(this.getActiveIndex());
     }
@@ -114,6 +121,10 @@ export class ResourceChooserComponent implements OnChanges {
 
   @HostListener('window:resize', ['$event'])
   private onResize(event) {
+    this.compute();
+  }
+
+  private compute() {
     this.actualizeWidthAndCheck();
     this.checkForScrollRightResources();
     this.computeResourceLines(this.getActiveIndex());
@@ -121,12 +132,14 @@ export class ResourceChooserComponent implements OnChanges {
 
   private actualizeWidthAndCheck() {
     let resourceContentWidth = this.resourceContainer.nativeElement.clientWidth;
-    this.resourceWidth = Math.max((this.resources.length + (this.canCreateResource ? 1 : 0)) * squareSize, resourceContentWidth);
+    this.resourceWidth = Math.max(this.resourcesLength() * squareSize, resourceContentWidth);
     this.checkForDisableResourceArrows(resourceContentWidth);
   }
 
   public onResourceSelected(code: string) {
-    this.resourceSelect.emit(code);
+    if (code && code !== this.selectedCode) {
+      this.resourceSelect.emit(code);
+    }
   }
 
   public onScrollResource(direction: number) {
@@ -169,7 +182,7 @@ export class ResourceChooserComponent implements OnChanges {
     const numVisible = this.numResourcesVisible();
     if (ix >= numVisible) {
       const numShouldScroll = ix - numVisible + Math.round(numVisible / 2);
-      const numMaxScroll = this.resources.length + (this.canCreateResource ? 1 : 0) - numVisible;
+      const numMaxScroll = this.resourcesLength() - numVisible;
       const numToScroll = Math.min(numShouldScroll, numMaxScroll);
       this.resourceScroll = -numToScroll * squareSize;
       this.resourceCanScrollLeft = true;
@@ -201,11 +214,11 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private numResourcesVisible(): number {
-    return Math.min(Math.floor(this.resourceContentWidth / squareSize), this.resources.length + (this.canCreateResource ? 1 : 0));
+    return Math.min(Math.floor(this.resourceContentWidth / squareSize), this.resourcesLength());
   }
 
   private numResourcesPotentiallyVisible(): number {
-    return this.resources.length + (this.canCreateResource ? 1 : 0) - Math.abs(this.resourceScroll / squareSize);
+    return this.resourcesLength() - Math.abs(this.resourceScroll / squareSize);
   }
 
   private computeResourceLines(index: number) {
@@ -213,7 +226,7 @@ export class ResourceChooserComponent implements OnChanges {
       this.resourceLineSizes = [0, 0, 0];
       return;
     }
-    const widthContent = (this.resources.length + 1) * squareSize;
+    const widthContent = this.resourcesLength() * squareSize;
     this.linesWidth = Math.max(this.resourceContainer.nativeElement.clientWidth, widthContent);
     this.resourceLineSizes[0] = (this.linesWidth - widthContent) / 2 + (index * squareSize);
     this.resourceLineSizes[1] = squareSize;
@@ -221,16 +234,49 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   public onCreateResource() {
-    this.resourceNew.emit();
+    this.newResources.push({
+      name: '',
+      code: '',
+      color: DEFAULT_COLOR,
+      icon: DEFAULT_ICON,
+      correlationId: CorrelationIdGenerator.generate()
+    });
+    this.compute();
   }
 
-  public onResourceSettings(index: number) {
-    this.resourceSettings.emit(index);
+  public onResourceSettings(code: string) {
+    this.resourceSettings.emit(code);
   }
 
-  public hasManageRole(resource: Resource): boolean {
+  public hasManageRole(resource: ResourceModel): boolean {
     return resource.permissions && resource.permissions.users.length === 1
       && resource.permissions.users[0].roles.some(r => r === Role.Manage.toString());
   }
 
+  public onKeyDown(event: KeyboardEvent, element: HTMLElement) {
+    if (event.keyCode === KeyCode.Enter) {
+      element.blur();
+    }
+  }
+
+  public onCodeBlur(element: HTMLElement, resource: ResourceModel) {
+    resource.code = element.textContent;
+  }
+
+  public onNameBlur(element: HTMLElement, resource: ResourceModel) {
+    resource.name = element.textContent;
+    if (this.resourceType === ResourceItemType.Organization) {
+      this.resourceNew.emit(resource as OrganizationModel);
+    } else if (this.resourceType === ResourceItemType.Project) {
+      this.resourceNew.emit(resource as ProjectModel);
+    }
+  }
+
+  private resourcesLength(): number {
+    let length = this.resources.length;
+    if (this.canCreateResource) {
+      length += this.newResources.length + 1;
+    }
+    return length;
+  }
 }

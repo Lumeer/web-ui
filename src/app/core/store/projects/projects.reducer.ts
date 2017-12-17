@@ -25,7 +25,7 @@ export function projectsReducer(state: ProjectsState = initialProjectsState, act
   switch (action.type) {
     case ProjectsActionType.GET_SUCCESS:
       const organizationCode = action.payload.projects.length ? action.payload.projects[0].organizationCode : null;
-      return projectsAdapter.addAll(action.payload.projects, {...state, organizationCode: organizationCode, selectedProjectCode: null});
+      return projectsAdapter.addAll(action.payload.projects, {...state, organizationCode: organizationCode});
     case ProjectsActionType.CREATE_SUCCESS:
       return groupsAdapter.addOne(action.payload.project, state);
     case ProjectsActionType.UPDATE_SUCCESS:

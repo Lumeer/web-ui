@@ -11,17 +11,12 @@ $bookmark-border-color: #bdbdbd;
   position: relative;
 
   .disabled {
-    color: $secondary;
+    color: $secondary !important;
     cursor: default !important;
   }
 
   .arrow {
-    color: $success;
     cursor: pointer;
-
-    &:hover {
-      color: $info;
-    }
   }
 
   .left-arrow {
@@ -103,39 +98,38 @@ $bookmark-border-color: #bdbdbd;
               right: 10px;
               top: 10px;
               opacity: 0;
-              color: black;
               transition: opacity $animation-duration;
-
-              &:hover {
-                color: $success;
-              }
             }
 
             .code {
               font-size: 25px;
               white-space: nowrap;
+              cursor: text;
               text-overflow: ellipsis;
               overflow: hidden;
+
+              &:focus {
+                text-overflow: clip;
+              }
             }
             .name {
               font-size: 15px;
-              line-height: 20px;
+              cursor: text;
               overflow: hidden;
+              white-space: nowrap;
               text-overflow: ellipsis;
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 2;
-              max-height: 40px;
+
+              //line-height: 20px;
+              //display: -webkit-box;
+              //-webkit-box-orient: vertical;
+              //-webkit-line-clamp: 2;
+              //max-height: 40px;
+
+              &:focus {
+                text-overflow: clip;
+              }
             }
           }
-        }
-      }
-
-      .new-resource {
-        color: black;
-
-        &:hover {
-          color: $success;
         }
       }
 
@@ -168,28 +162,8 @@ $bookmark-border-color: #bdbdbd;
 
 }
 
-.description {
-
-  &:hover .edit {
-    opacity: 1;
-  }
-
-  .text {
-    font-size: 17px;
-    outline-color: $success;
-    margin-right: 20px;
-    overflow: hidden;
-    height: 50px;
-  }
-
-  .edit {
-    opacity: 0;
-    transition: opacity $animation-duration;
-    margin-right: 5px;
-
-    &:hover {
-      color: $success;
-    }
-  }
+.description .text {
+  font-size: 17px;
+  outline-color: $success;
 }
 

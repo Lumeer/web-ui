@@ -17,19 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PermissionsModel} from '../permissions/permissions.model';
+export const DEFAULT_ICON = 'fa fa-exclamation-circle';
 
-export interface OrganizationModel {
-
-  id?: string; // TODO use in the future
-
-  code: string;
-  name: string;
-  color: string;
-  icon: string;
-
-  permissions?: PermissionsModel;
-
-  correlationId?: string;
-
-}
+export const DEFAULT_COLOR = '#cccccc';

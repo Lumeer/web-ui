@@ -17,8 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const COLLECTION_NO_ICON = 'fa fa-exclamation-circle';
+export enum ResourceItemType {
 
-export const COLLECTION_NO_COLOR = '#cccccc';
+  Organization = 'Organization',
+  Project = 'Project'
 
-export const COLLECTION_NO_CODE = '';
+}

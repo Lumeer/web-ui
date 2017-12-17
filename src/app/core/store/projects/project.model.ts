@@ -31,4 +31,6 @@ export interface ProjectModel {
 
   permissions?: PermissionsModel;
 
+  correlationId?: string;
+
 }
