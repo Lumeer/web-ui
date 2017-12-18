@@ -18,14 +18,15 @@
  */
 
 import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {HtmlModifier} from '../../shared/utils/html-modifier';
 import {AppState} from '../store/app.state';
 import {selectNavigation} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
-import {Router} from '@angular/router';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {ProjectsAction} from '../store/projects/projects.action';
+import {UserSettingsService} from '../user-settings.service';
 
 @Component({
   selector: 'top-panel',
@@ -41,8 +42,11 @@ export class TopPanelComponent implements OnInit {
 
   public workspace: Workspace;
 
+  public notificationsDisabled: boolean;
+
   constructor(private store: Store<AppState>,
-              private router: Router) {
+              private router: Router,
+              private userSettingsService: UserSettingsService) {
   }
 
   public ngOnInit() {
@@ -50,6 +54,13 @@ export class TopPanelComponent implements OnInit {
       this.workspace = navigation.workspace;
       this.searchBoxHidden = navigation.searchBoxHidden;
     });
+    this.notificationsDisabled = this.userSettingsService.getUserSettings().notificationsDisabled;
+  }
+
+  public disableNotifications() {
+    const userSettings = this.userSettingsService.getUserSettings();
+    userSettings.notificationsDisabled = !this.notificationsDisabled;
+    this.userSettingsService.updateUserSettings(userSettings);
   }
 
   public goToWorkspaceOrganization(): void {

@@ -23,5 +23,6 @@ export interface UserSettings {
   defaultOrganization: string;
   defaultProject: string;
   searchSize: SizeType;
+  notificationsDisabled: boolean;
 
 }

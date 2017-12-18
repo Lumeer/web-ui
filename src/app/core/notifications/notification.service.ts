@@ -20,35 +20,56 @@
 import {Injectable, NgZone} from '@angular/core';
 import {Snotify, SnotifyButton, SnotifyPosition, SnotifyService} from 'ng-snotify';
 import {Observable} from 'rxjs/Observable';
+import {UserSettingsService} from '../user-settings.service';
 
 @Injectable()
 export class NotificationService {
 
   constructor(private zone: NgZone,
-              private notifications: SnotifyService) {
+              private notifications: SnotifyService,
+              private userSettingsService: UserSettingsService) {
   }
 
   public simple(message: string): void {
+    if (this.areNotificationsDisabled()) {
+      return;
+    }
     this.zone.runOutsideAngular(() => this.notifications.simple(message, 'Hey'));
   }
 
   public success(message: string): void {
+    console.log('success');
+    if (this.areNotificationsDisabled()) {
+      return;
+    }
     this.zone.runOutsideAngular(() => this.notifications.success(message, 'Success'));
   }
 
   public info(message: string): void {
+    if (this.areNotificationsDisabled()) {
+      return;
+    }
     this.zone.runOutsideAngular(() => this.notifications.info(message, 'Info'));
   }
 
   public warning(message: string): void {
+    if (this.areNotificationsDisabled()) {
+      return;
+    }
     this.zone.runOutsideAngular(() => this.notifications.warning(message, 'Warning'));
   }
 
   public error(message: string): void {
+    if (this.areNotificationsDisabled()) {
+      return;
+    }
     this.zone.runOutsideAngular(() => this.notifications.error(message, 'Error'));
   }
 
   public async(message: string, finishAction: Promise<Snotify> | Observable<Snotify>): void {
+    if (this.areNotificationsDisabled()) {
+      return;
+    }
     this.zone.runOutsideAngular(() => this.notifications.async(message, finishAction));
   }
 
@@ -68,7 +89,14 @@ export class NotificationService {
   }
 
   public html(html: string): void {
+    if (this.areNotificationsDisabled()) {
+      return;
+    }
     this.zone.runOutsideAngular(() => this.notifications.html(html));
+  }
+
+  private areNotificationsDisabled(): boolean {
+    return this.userSettingsService.getUserSettings().notificationsDisabled;
   }
 
 }
