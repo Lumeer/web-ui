@@ -63,6 +63,16 @@
             <span i18n="@@menu.account">Account</span>
           </a>
           <div class="dropdown-divider"></div>
+          <div class="dropdown-item form-check">
+            <label class="form-check-label">
+              <input [checked]="notificationsDisabled"
+                     (change)="disableNotifications()"
+                     type="checkbox"
+                     class="form-check-input">
+              <span i18n="@@menu.notifications.disable">Disable notifications</span>
+            </label>
+          </div>
+          <div class="dropdown-divider"></div>
           <a class="dropdown-item" title="Sign Out"
              href="https://auth.lumeer.io/auth/realms/lumeer/protocol/openid-connect/logout?redirect_uri=https%3A%2F%2Fwww.lumeer.io%2F">
             <i class="fas fa-fw fa-sign-in" data-fa-transform="left-4" aria-hidden="true"></i>
