@@ -24,7 +24,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {first} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
-import {Organization, Project} from '../../core/dto';
+import {Organization, Project, Resource} from '../../core/dto';
 import {OrganizationService, ProjectService} from '../../core/rest';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
@@ -35,6 +35,8 @@ import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {selectSelectedProjectCode} from '../../core/store/projects/projects.state';
 import {UserSettingsService} from '../../core/user-settings.service';
 import {Role} from '../../shared/permissions/role';
+import {NotificationService} from '../../core/notifications/notification.service';
+import {PostItResourceModel} from './resource-chooser/PostItResourceModel';
 
 @Component({
   selector: 'workspace-chooser',
@@ -60,7 +62,8 @@ import {Role} from '../../shared/permissions/role';
 })
 export class WorkspaceChooserComponent implements OnInit {
 
-  public organizations: Organization[] = [];
+  public organizations: Organization[] = []
+  public organizationsPostIts: PostItResourceModel[] = [];
   public activeOrgIx: number;
   public activeProjIx: number;
 
@@ -68,13 +71,16 @@ export class WorkspaceChooserComponent implements OnInit {
   private selectedProjectCode: string;
 
   private workspace: Workspace;
+  public selectedProjectsPostIts: PostItResourceModel[];
 
   constructor(private organizationService: OrganizationService,
               private projectService: ProjectService,
               private store: Store<AppState>,
               private userSettingsService: UserSettingsService,
-              private router: Router) {
+              private router: Router,
+              private notificationsService: NotificationService) {
   }
+
 
   public ngOnInit() {
     Observable.combineLatest(
@@ -92,11 +98,21 @@ export class WorkspaceChooserComponent implements OnInit {
     });
   }
 
+  public toPostIt(resource: Resource) {
+    const postIt = new PostItResourceModel;
+
+    postIt.resource = resource;
+    postIt.initialized = true;
+    postIt.initializing = false;
+    return postIt;
+  }
+
   private getOrganizations(): void {
     this.organizationService.getOrganizations().subscribe(
       organizations => {
         this.organizations = organizations;
-
+        this.organizationsPostIts = organizations.map(organization => this.toPostIt(organization));
+        console.log(this.organizationsPostIts[0].resource.name);
         if (this.workspace.organizationCode) {
           const ix: number = this.organizations.findIndex(org =>
             org.code === this.workspace.organizationCode
@@ -167,6 +183,9 @@ export class WorkspaceChooserComponent implements OnInit {
 
   public onSelectOrganization(index: number) {
     const selectedOrganization = this.organizations[index];
+    if (!selectedOrganization.code) {
+      return;
+    }
     if (!selectedOrganization.projects) {
       selectedOrganization.projects = [];
       this.projectService.getProjects(selectedOrganization.code)
@@ -187,10 +206,6 @@ export class WorkspaceChooserComponent implements OnInit {
     this.store.dispatch(new ProjectsAction.Select({projectCode: null}));
   }
 
-  public onCreateOrganization() {
-    this.router.navigate(['organization', 'add']);
-  }
-
   public onOrganizationSettings(index: number) {
     this.router.navigate(['organization', this.organizations[index].code]);
   }
@@ -206,12 +221,6 @@ export class WorkspaceChooserComponent implements OnInit {
     const activeProject = activeOrganization.projects[index];
 
     this.store.dispatch(new ProjectsAction.Select({projectCode: activeProject.code}));
-  }
-
-  public onCreateProject() {
-    if (!isNullOrUndefined(this.activeOrgIx)) {
-      this.router.navigate(['organization', this.organizations[this.activeOrgIx].code, 'project', 'add']);
-    }
   }
 
   public onProjectSettings(index: number) {
@@ -251,4 +260,36 @@ export class WorkspaceChooserComponent implements OnInit {
     this.userSettingsService.updateUserSettings(userSettings);
   }
 
+  public getProjectsOfOrganization(index: number) {
+    const selectedOrganization = this.organizations[index];
+
+    selectedOrganization.projects = [];
+    this.projectService.getProjects(selectedOrganization.code)
+      .subscribe((projects: Project[]) => {
+        selectedOrganization.projects = projects;
+        this.selectedProjectsPostIts = projects.map(project => this.toPostIt(project));
+      });
+  }
+
+  public onCreateProject(project: Project): void {
+    console.log('creating project', project.code);
+
+    if (!isNullOrUndefined(this.activeOrgIx)) {
+      this.projectService.createProject(this.organizations[this.activeOrgIx].code, project).subscribe(() => {
+          this.notificationsService.success('Project created')
+        }, error => {
+          this.notificationsService.error('Error creating project');
+        }
+      );
+    }
+  }
+
+  public onCreateOrganization(organization: Organization): void {
+    this.organizationService.createOrganization(organization)
+      .subscribe(() => {
+        this.notificationsService.success('Organization created')
+      }, () => {
+        this.notificationsService.error('Error creating organization')
+      });
+  }
 }

@@ -33,6 +33,13 @@ import {animate, keyframes, state, style, transition, trigger} from '@angular/an
 import {Resource} from '../../../core/dto/resource';
 import {isNullOrUndefined} from 'util';
 import {Role} from '../../../shared/permissions/role';
+import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from "../../../collection/constants";
+import {OrganizationService} from '../../../core/rest/organization.service';
+import {ProjectService} from '../../../core/rest/project.service';
+import {NotificationsService} from 'angular2-notifications';
+import {Organization} from "../../../core/dto/organization";
+import {Project} from '../../../core/dto/project';
+import {PostItResourceModel} from "./PostItResourceModel";
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
@@ -83,12 +90,13 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceDescription: ElementRef;
 
   @Input() public resourceType: string;
-  @Input() public resources: Resource[];
+  @Input() public resourcesPostIts: PostItResourceModel[] = [];
   @Input() public initActiveIx: number;
   @Input() public canCreateResource: boolean;
 
   @Output() public resourceSelect: EventEmitter<number> = new EventEmitter();
-  @Output() public resourceNew: EventEmitter<any> = new EventEmitter();
+  @Output() public resourceNew: EventEmitter<Resource> = new EventEmitter();
+  @Output() public resourceNewNumber: EventEmitter<any> = new EventEmitter();
   @Output() public resourceSettings: EventEmitter<number> = new EventEmitter();
   @Output() public resourceNewDescription: EventEmitter<string> = new EventEmitter();
 
@@ -102,15 +110,25 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceActiveIx: number;
   public resourceLineSizes = [0, 0, 0];
   public resourceVisibleArrows = false;
+  public newOrganization: Organization = new Organization();
+  private newProject: Project = new Project();
+
+  public ngOnInit(): void {
+    this.actualizeWidthAndCheck();
+    this.checkForScrollRightResources();
+    this.computeResourceLines(this.resourceActiveIx);
+  }
 
   public ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
-    if (changes['resources']) {
+    if (changes['resourcesNotPostIts']) {
       this.actualizeWidthAndCheck();
       this.checkForScrollRightResources();
       this.resourceActiveIx = this.initActiveIx;
       this.computeResourceLines(this.resourceActiveIx);
     }
   }
+
+
 
   @HostListener('window:resize', ['$event'])
   private onResize(event) {
@@ -121,7 +139,7 @@ export class ResourceChooserComponent implements OnChanges {
 
   private actualizeWidthAndCheck() {
     let resourceContentWidth = this.resourceContainer.nativeElement.clientWidth;
-    this.resourceWidth = Math.max((this.resources.length + (this.canCreateResource ? 1 : 0)) * squareSize, resourceContentWidth);
+    this.resourceWidth = Math.max((this.resourcesPostIts.length + (this.canCreateResource ? 1 : 0)) * squareSize, resourceContentWidth);
     this.checkForDisableResourceArrows(resourceContentWidth);
   }
 
@@ -166,7 +184,7 @@ export class ResourceChooserComponent implements OnChanges {
     const numVisible = this.numResourcesVisible();
     if (ix >= numVisible) {
       const numShouldScroll = ix - numVisible + Math.round(numVisible / 2);
-      const numMaxScroll = this.resources.length + (this.canCreateResource ? 1 : 0) - numVisible;
+      const numMaxScroll = this.resourcesPostIts.length + (this.canCreateResource ? 1 : 0) - numVisible;
       const numToScroll = Math.min(numShouldScroll, numMaxScroll);
       this.resourceScroll = -numToScroll * squareSize;
       this.resourceCanScrollLeft = true;
@@ -198,11 +216,11 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private numResourcesVisible(): number {
-    return Math.min(Math.floor(this.resourceContentWidth / squareSize), this.resources.length + (this.canCreateResource ? 1 : 0));
+    return Math.min(Math.floor(this.resourceContentWidth / squareSize), this.resourcesPostIts.length + (this.canCreateResource ? 1 : 0));
   }
 
   private numResourcesPotentiallyVisible(): number {
-    return this.resources.length + (this.canCreateResource ? 1 : 0) - Math.abs(this.resourceScroll / squareSize);
+    return this.resourcesPostIts.length + (this.canCreateResource ? 1 : 0) - Math.abs(this.resourceScroll / squareSize);
   }
 
   private computeResourceLines(index: number) {
@@ -210,15 +228,25 @@ export class ResourceChooserComponent implements OnChanges {
       this.resourceLineSizes = [0, 0, 0];
       return;
     }
-    const widthContent = (this.resources.length + 1) * squareSize;
+    const widthContent = (this.resourcesPostIts.length + 1) * squareSize;
     this.linesWidth = Math.max(this.resourceContainer.nativeElement.clientWidth, widthContent);
     this.resourceLineSizes[0] = (this.linesWidth - widthContent) / 2 + (index * squareSize);
     this.resourceLineSizes[1] = squareSize;
     this.resourceLineSizes[2] = this.linesWidth - this.resourceLineSizes[0] - this.resourceLineSizes[1];
   }
 
-  public onCreateResource() {
-    this.resourceNew.emit();
+  public  onAddResource() {
+    const postIt: PostItResourceModel = new PostItResourceModel;
+    postIt.resource   = {
+      name: '',
+      code: '',
+      color: COLLECTION_NO_COLOR,
+      icon: COLLECTION_NO_ICON,
+    };
+    postIt.initializing = true;
+    postIt.initialized = false;
+
+    this.resourcesPostIts.push(postIt);
   }
 
   public onResourceSettings(index: number) {
@@ -228,6 +256,36 @@ export class ResourceChooserComponent implements OnChanges {
   public hasManageRole(resource: Resource): boolean {
     return resource.permissions && resource.permissions.users.length === 1
       && resource.permissions.users[0].roles.some(r => r === Role.Manage.toString());
+  }
+
+
+  public initializeResource(postIt:PostItResourceModel): void {
+
+    switch (this.resourceType) {
+      case 'organization':
+        this.newOrganization = {
+          code: postIt.resource.code,
+          name: postIt.resource.name,
+          color: postIt.resource.color,
+          icon: postIt.resource.icon
+        };
+        this.resourceNew.emit(this.newOrganization);
+        postIt.initialized =true;
+
+        break;
+
+
+      case 'project':
+        this.newProject = {
+          code: postIt.resource.code,
+          name: postIt.resource.name,
+          color: postIt.resource.color,
+          icon: postIt.resource.icon
+        };
+        this.resourceNew.emit(this.newProject);
+        postIt.initialized = true;
+        break;
+    }
   }
 
 }

@@ -193,3 +193,22 @@ $bookmark-border-color: #bdbdbd;
   }
 }
 
+.textarea {
+
+  z-index: 100000000;
+  resize: none;
+  border: none;
+  outline: none;
+  overflow: hidden;
+}
+
+.name-input{
+  border: none;
+  width: 100px;
+  outline:none;
+}
+.code-input{
+  border:none;
+  width: 100px;
+  outline: none;
+}

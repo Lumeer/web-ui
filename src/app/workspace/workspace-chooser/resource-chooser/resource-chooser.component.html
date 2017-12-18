@@ -5,7 +5,7 @@
 
   <div class="horizontal-container w-100" #resourceContainer>
 
-    <div *ngIf="resources.length == 0 && !canCreateResource"
+    <div *ngIf="resourcesPostIts.length == 0 && !canCreateResource"
          i18n="@@resource.chooser.empty">
       There are no {resourceType, select, organization {organizations} project {projects}} and you are not allowed to
       create new ones.
@@ -26,18 +26,26 @@
            [style.left]="resourceScroll + 'px'"
            [style.width]="resourceWidth + 'px'">
 
-        <div class="tab d-flex" *ngFor="let resource of resources; let ix = index"
-             (click)="onResourceSelected(ix)">
+
+        <div class="tab d-flex" *ngFor="let resourcePostIt of resourcesPostIts; let ix = index"
+             (click)="resourcePostIt.initialized && onResourceSelected(ix, resourcePostIt.resource.code) && resourcesPostIts[ix]">
           <div class="post-it align-self-center">
             <div class="card square"></div>
-            <div class="card text-center content border-0" [style.color]="resource.color">
+            <div class="card text-center content border-0" [style.color]="resourcePostIt.resource.color">
               <div class="card-body">
-                <i class="fas fa fa-cog settings" *ngIf="hasManageRole(resource)"
+                <i class="fas fa fa-cog settings" *ngIf="hasManageRole(resourcePostIt)"
                    (click)="onResourceSettings(ix); $event.stopPropagation()"
                    [style.opacity]="ix === resourceActiveIx ? 1 : 0"></i>
-                <i class="fa-3x {{resource.icon}}" aria-hidden="true"></i>
-                <div class="card-title code">{{resource.code}}</div>
-                <div class="card-subtitle name">{{resource.name}}</div>
+                <i class="fa-3x {{resourcePostIt.resource.icon}}" aria-hidden="true"></i>
+                <div *ngIf="resourcePostIt.initialized" class="card-title code">{{resourcePostIt.resource.code}}</div>
+                <div *ngIf="resourcePostIt.initialized" class="card-subtitle name">{{resourcePostIt.resource.name}}
+                </div>
+
+                <input class="code-input" (blur)="resourcePostIt.resource.name !== '' && initializeResource(resourcePostIt)" *ngIf="!resourcePostIt.initialized"
+                       [(ngModel)]="resourcePostIt.resource.code" placeholder="Code">
+                <input class="name-input" (blur)="resourcePostIt.resource.code !== '' && initializeResource(resourcePostIt)" *ngIf="!resourcePostIt.initialized"
+                       [(ngModel)]="resourcePostIt.resource.name" placeholder="Name">
+
               </div>
             </div>
           </div>
@@ -45,18 +53,22 @@
                *ngIf="ix === resourceActiveIx" [@animateVisible]="'in'"></div>
         </div>
 
-        <div class="tab d-flex new-resource" *ngIf="canCreateResource">
-          <div class="post-it align-self-center" (click)="onCreateResource()">
-            <div class="card text-center content border-0">
-              <div class="card-body d-flex align-items-center justify-content-center">
-                <i class="fas fa-3x fa-plus" aria-hidden="true"></i>
-              </div>
+      </div>
+
+      <div class="tab d-flex new-resource" *ngIf="canCreateResource">
+        <div class="post-it align-self-center" (click)="onAddResource()">
+          <div class="card text-center content border-0">
+            <div class="card-body d-flex align-items-center justify-content-center">
+              <i class="fas fa-3x fa-plus" aria-hidden="true"></i>
             </div>
           </div>
         </div>
+      </div>
 
+      <div class="d-flex flex-row align-items-end justify-content-end pointer"
+           *ngIf="resourceActiveIx >= 0" [style.width]="linesWidth + 'px'">
         <div class="d-flex flex-row align-items-end justify-content-end pointer"
-             *ngIf="resourceActiveIx >= 0" [style.width]="linesWidth + 'px'">
+             *ngIf=" (resourceActiveIx >= 0)">
           <div class="line mr-auto" [style.width]="resourceLineSizes[0]+'px'"></div>
           <div class="empty-line" [style.width]="resourceLineSizes[1]+'px'"></div>
           <div class="line"
@@ -66,7 +78,7 @@
     </div>
 
 
-    <div class="right-arrow d-flex h-100" *ngIf="resourceVisibleArrows">
+    <div class="right-arrow d-flex h-100" *ngIf="resourceVisibleArrows ">
       <div class="d-flex justify-content-center align-items-center w-100">
         <i class="fas fa fa-chevron-right arrow" (click)="onScrollResource(1)"
            [class.disabled]="!resourceCanScrollRight"></i>
