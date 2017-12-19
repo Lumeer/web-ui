@@ -1,39 +1,52 @@
-<ul class="nav nav-tabs">
-  <li role="presentation" class="nav-item">
-    <a [routerLink]="'all'"
-       [queryParams]="{query: stringifyQuery()}"
-       routerLinkActive="active"
-       class="nav-link"
-       i18n="@@search.tab.all">All</a>
-  </li>
-  <li role="presentation" class="nav-item">
-    <a [routerLink]="'collections'"
-       [queryParams]="{query: stringifyQuery()}"
-       routerLinkActive="active"
-       class="nav-link"
-       i18n="@@search.tab.collections">Collections</a>
-  </li>
-  <li role="presentation" class="nav-item">
-    <a [routerLink]="'documents'"
-       [queryParams]="{query: stringifyQuery()}"
-       routerLinkActive="active"
-       class="nav-link"
-       i18n="@@search.tab.documents">Documents</a>
-  </li>
-  <li role="presentation" class="nav-item">
-    <a [routerLink]="'links'"
-       [queryParams]="{query: stringifyQuery()}"
-       routerLinkActive="active"
-       class="nav-link"
-       i18n="@@search.tab.links">Links</a>
-  </li>
-  <li role="presentation" class="nav-item">
-    <a [routerLink]="'views'"
-       [queryParams]="{query: stringifyQuery()}"
-       routerLinkActive="active"
-       class="nav-link"
-       i18n="@@search.tab.views">Views</a>
-  </li>
-</ul>
-
-<router-outlet></router-outlet>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col"></div>
+    <div class="col-12 col-lg-10 col-xl-9">
+      <ul class="nav nav-tabs">
+        <li role="presentation" class="nav-item">
+          <a [routerLink]="'all'"
+             [queryParams]="{query: stringifyQuery()}"
+             routerLinkActive="active"
+             class="nav-link"
+             i18n="@@search.tab.all">All</a>
+        </li>
+        <li role="presentation" class="nav-item">
+          <a [routerLink]="'collections'"
+             [queryParams]="{query: stringifyQuery()}"
+             routerLinkActive="active"
+             class="nav-link"
+             i18n="@@search.tab.collections">Collections</a>
+        </li>
+        <li role="presentation" class="nav-item">
+          <a [routerLink]="'documents'"
+             [queryParams]="{query: stringifyQuery()}"
+             routerLinkActive="active"
+             class="nav-link"
+             i18n="@@search.tab.documents">Documents</a>
+        </li>
+        <li role="presentation" class="nav-item">
+          <a [routerLink]="'links'"
+             [queryParams]="{query: stringifyQuery()}"
+             routerLinkActive="active"
+             class="nav-link"
+             i18n="@@search.tab.links">Links</a>
+        </li>
+        <li role="presentation" class="nav-item">
+          <a [routerLink]="'views'"
+             [queryParams]="{query: stringifyQuery()}"
+             routerLinkActive="active"
+             class="nav-link"
+             i18n="@@search.tab.views">Views</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col"></div>
+  </div>
+  <div class="row">
+    <div class="col"></div>
+    <div class="col-12 col-lg-10 col-xl-9">
+      <router-outlet></router-outlet>
+    </div>
+    <div class="col"></div>
+  </div>
+</div>

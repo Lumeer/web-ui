@@ -4,17 +4,21 @@
      i18n="@@table.query.invalid">Given query results cannot be shown using table perspective. The query needs to specify exactly one collection.
 </div>
 
-<table *ngIf="isDisplayable()">
-  <table-header [parts]="parts"
-                (createAttribute)="onCreateAttribute($event)"
-                (renameAttribute)="onRenameAttribute($event)"
-                (deleteAttribute)="onDeleteAttribute($event)"
-                (addLinkedPart)="onAddLinkedPart($event)">
-  </table-header>
-  <table-body [parts]="parts"
-              (dataChange)="onDataChange($event)"
-              (deleteDocument)="onDeleteDocument($event)"
-              (createLinkInstance)="onCreateLinkInstance($event)"
-              (deleteLinkInstance)="onDeleteLinkInstance($event)">
-  </table-body>
-</table>
+<div class="text-center">
+  <div class="d-inline-block text-left">
+    <table *ngIf="isDisplayable()">
+      <table-header [parts]="parts"
+                    (createAttribute)="onCreateAttribute($event)"
+                    (renameAttribute)="onRenameAttribute($event)"
+                    (deleteAttribute)="onDeleteAttribute($event)"
+                    (addLinkedPart)="onAddLinkedPart($event)">
+      </table-header>
+      <table-body [parts]="parts"
+                  (dataChange)="onDataChange($event)"
+                  (deleteDocument)="onDeleteDocument($event)"
+                  (createLinkInstance)="onCreateLinkInstance($event)"
+                  (deleteLinkInstance)="onDeleteLinkInstance($event)">
+      </table-body>
+    </table>
+  </div>
+</div>
