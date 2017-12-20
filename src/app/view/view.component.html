@@ -1,23 +1,18 @@
 <div class="container-fluid">
-  <div *ngIf="view"
-       class="row">
-    <div class="col"></div>
-    <div class="col-lg-6 col-xl-7 mb-4">
-      <view-controls [view]="view"
-                     (save)="onSave($event)">
-      </view-controls>
-    </div>
-    <div class="col"></div>
-  </div>
-
   <div class="row">
     <div class="col"></div>
-    <div class="col-12 col-lg-11 col-xl-10">
+    <div class="col-lg-6 col-xl-7 mb-4">
+      <view-controls *ngIf="view"
+                     [view]="view"
+                     (save)="onSave($event)">
+      </view-controls>
+
       <div *ngIf="!view"
            class="alert alert-warning">View does not exist!
       </div>
-      <router-outlet></router-outlet>
     </div>
     <div class="col"></div>
   </div>
 </div>
+
+<router-outlet></router-outlet>
