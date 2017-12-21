@@ -18,45 +18,48 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-
-import {PermissionService} from './permission.service';
-import {View} from '../dto/view';
+import {Observable} from 'rxjs/Observable';
 import {LocalStorage} from '../../shared/utils/local-storage';
+import {View} from '../dto';
+import {PermissionService} from './permission.service';
 
 @Injectable()
 export class ViewService extends PermissionService {
 
   public createView(view: View): Observable<View> {
-    const views = LocalStorage.get('views') || {};
+    const views = LocalStorage.get(this.webStorageKey()) || {};
     view.code = view.name.toLowerCase();
     views[view.code] = view;
-    LocalStorage.set('views', views);
+    LocalStorage.set(this.webStorageKey(), views);
     return Observable.of(view);
   }
 
   public updateView(code: string, view: View): Observable<View> {
-    const views = LocalStorage.get('views') || {};
+    const views = LocalStorage.get(this.webStorageKey()) || {};
     views[code] = null;
     views[view.code] = view;
-    LocalStorage.set('views', views);
+    LocalStorage.set(this.webStorageKey(), views);
     return Observable.of(view);
   }
 
   public getView(code: string): Observable<View> {
-    const views = LocalStorage.get('views') || {};
+    const views = LocalStorage.get(this.webStorageKey()) || {};
     return Observable.of(views[code]);
   }
 
   public getViews(): Observable<View[]> {
-    const views = LocalStorage.get('views') || {};
+    const views = LocalStorage.get(this.webStorageKey()) || {};
     return Observable.of(Object.values(views));
   }
 
   protected actualApiPrefix(): string {
     let viewCode = this.workspace.viewCode;
     return `${this.apiPrefix()}/${viewCode}`;
+  }
+
+  private webStorageKey(): string {
+    return `views-${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
   private apiPrefix(): string {

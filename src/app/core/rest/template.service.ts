@@ -17,51 +17,60 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-
-import {TemplateDto} from '../dto/template.dto';
 import {LocalStorage} from '../../shared/utils/local-storage';
+import {TemplateDto} from '../dto/template.dto';
+import {AppState} from '../store/app.state';
+import {selectWorkspace} from '../store/navigation/navigation.state';
+import {Workspace} from '../store/navigation/workspace.model';
 import {TemplatePartType} from '../store/templates/template.model';
-
-const TEMPLATES_KEY = 'templates';
 
 @Injectable()
 export class TemplateService {
 
+  private workspace: Workspace;
+
+  constructor(private httpClient: HttpClient,
+              private store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+  }
+
   public createTemplate(template: TemplateDto): Observable<TemplateDto> {
-    const templates = LocalStorage.get(TEMPLATES_KEY) || {};
+    const templates = LocalStorage.get(this.webStorageKey()) || {};
 
     template.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
     templates[template.id] = template;
 
-    LocalStorage.set(TEMPLATES_KEY, templates);
+    LocalStorage.set(this.webStorageKey(), templates);
 
     return Observable.of(template);
   }
 
   public updateTemplate(template: TemplateDto): Observable<TemplateDto> {
-    const templates = LocalStorage.get(TEMPLATES_KEY) || {};
+    const templates = LocalStorage.get(this.webStorageKey()) || {};
 
     templates[template.id] = template;
 
-    LocalStorage.set(TEMPLATES_KEY, templates);
+    LocalStorage.set(this.webStorageKey(), templates);
 
     return Observable.of(template);
   }
 
   public deleteTemplate(id: string): Observable<string> {
-    const templates = LocalStorage.get(TEMPLATES_KEY) || {};
+    const templates = LocalStorage.get(this.webStorageKey()) || {};
 
     delete templates[id];
 
-    LocalStorage.set(TEMPLATES_KEY, templates);
+    LocalStorage.set(this.webStorageKey(), templates);
 
     return Observable.of(id);
   }
 
   public getTemplatesById(id: string): Observable<TemplateDto[]> {
-    const templates = LocalStorage.get(TEMPLATES_KEY) || {};
+    const templates = LocalStorage.get(this.webStorageKey()) || {};
 
     const template: TemplateDto = templates[id];
     const childIds = template.parts.filter(part => part.type === TemplatePartType.Embedded)
@@ -74,6 +83,17 @@ export class TemplateService {
     return Observable.combineLatest(
       [].concat.apply([], childIds.map(id => this.getTemplatesById(id)))
     );
+  }
+
+  private webStorageKey(): string {
+    return `smartDocTemplates-${this.workspace.organizationCode}/${this.workspace.projectCode}`;
+  }
+
+  private apiPrefix(): string {
+    let organizationCode = this.workspace.organizationCode;
+    let projectCode = this.workspace.projectCode;
+
+    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/templates/smartdoc`;
   }
 
 }
