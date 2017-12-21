@@ -17,21 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import 'rxjs/add/observable/of';
 import {Observable} from 'rxjs/Observable';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {LocalStorage} from '../../shared/utils/local-storage';
-import {LinkType} from '../dto/link-type';
-import {Query} from '../dto/query';
-import {LumeerError} from '../error/lumeer.error';
+import {LinkType, Query} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
-
-const LINK_TYPES = 'linkTypes';
 
 @Injectable()
 export class LinkTypeService {
@@ -44,38 +39,38 @@ export class LinkTypeService {
   }
 
   public createLinkType(linkType: LinkType): Observable<LinkType> {
-    const linkTypes = LocalStorage.get(LINK_TYPES) || {};
+    const linkTypes = LocalStorage.get(this.webStorageKey()) || {};
 
     linkType.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
     linkTypes[linkType.id] = linkType;
 
-    LocalStorage.set(LINK_TYPES, linkTypes);
+    LocalStorage.set(this.webStorageKey(), linkTypes);
 
     return Observable.of(linkType);
   }
 
   public updateLinkType(id: string, linkType: LinkType): Observable<LinkType> {
-    const linkTypes = LocalStorage.get(LINK_TYPES) || {};
+    const linkTypes = LocalStorage.get(this.webStorageKey()) || {};
 
     linkTypes[id] = linkType;
 
-    LocalStorage.set(LINK_TYPES, linkTypes);
+    LocalStorage.set(this.webStorageKey(), linkTypes);
 
     return Observable.of(linkType);
   }
 
   public deleteLinkType(id: string): Observable<string> {
-    const linkTypes = LocalStorage.get(LINK_TYPES) || {};
+    const linkTypes = LocalStorage.get(this.webStorageKey()) || {};
 
     delete linkTypes[id];
 
-    LocalStorage.set(LINK_TYPES, linkTypes);
+    LocalStorage.set(this.webStorageKey(), linkTypes);
 
     return Observable.of(id);
   }
 
   public getLinkTypes(query: Query): Observable<LinkType[]> {
-    const linkTypesMap: { [id: string]: LinkType } = LocalStorage.get(LINK_TYPES) || {};
+    const linkTypesMap: { [id: string]: LinkType } = LocalStorage.get(this.webStorageKey()) || {};
     let linkTypes = Object.values(linkTypesMap);
 
     if (query && query.linkTypeIds && query.linkTypeIds.length) {
@@ -89,11 +84,11 @@ export class LinkTypeService {
     return Observable.of(linkTypes);
   }
 
-  private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {
-    throw new LumeerError(error.message);
+  private webStorageKey(): string {
+    return `linkTypes-${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
-  private apiPrefix(collectionCode: string): string {
+  private restApiPrefix(collectionCode: string): string {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 

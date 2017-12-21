@@ -17,60 +17,77 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-
-import {Observable} from 'rxjs/Observable';
+import {Store} from '@ngrx/store';
 import 'rxjs/add/observable/of';
-import {Group} from '../dto/group';
+import {Observable} from 'rxjs/Observable';
 import {LocalStorage} from '../../shared/utils/local-storage';
-
-const GROUPS_KEY = 'groups';
+import {Group} from '../dto';
+import {AppState} from '../store/app.state';
+import {selectWorkspace} from '../store/navigation/navigation.state';
+import {Workspace} from '../store/navigation/workspace.model';
 
 @Injectable()
 export class GroupService {
 
+  private workspace: Workspace;
+
+  constructor(private httpClient: HttpClient,
+              private store: Store<AppState>) {
+    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+  }
+
   public createGroup(group: Group): Observable<Group> {
-    const groups = LocalStorage.get(GROUPS_KEY) || {};
+    const groups = LocalStorage.get(this.webStorageKey()) || {};
 
     group.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
     groups[group.id] = group;
 
-    LocalStorage.set(GROUPS_KEY, groups);
+    LocalStorage.set(this.webStorageKey(), groups);
 
     return Observable.of(group);
   }
 
   public updateGroup(id: string, group: Group): Observable<Group> {
-    const groups = LocalStorage.get(GROUPS_KEY) || {};
+    const groups = LocalStorage.get(this.webStorageKey()) || {};
 
     delete groups[id];
     groups[group.id] = group;
 
-    LocalStorage.set(GROUPS_KEY, groups);
+    LocalStorage.set(this.webStorageKey(), groups);
 
     return Observable.of(group);
   }
 
   public deleteGroup(id: string): Observable<void> {
-    const groups = LocalStorage.get(GROUPS_KEY) || {};
+    const groups = LocalStorage.get(this.webStorageKey()) || {};
 
     delete groups[id];
 
-    LocalStorage.set(GROUPS_KEY, groups);
+    LocalStorage.set(this.webStorageKey(), groups);
 
     return Observable.empty();
   }
 
   public getGroupById(id: string): Observable<Group> {
-    const groups = LocalStorage.get(GROUPS_KEY) || {};
+    const groups = LocalStorage.get(this.webStorageKey()) || {};
 
     return Observable.of(groups[id]);
   }
 
   public getGroups(): Observable<Group[]> {
-    const groups: { [id: string]: Group } = LocalStorage.get(GROUPS_KEY) || {};
+    const groups: { [id: string]: Group } = LocalStorage.get(this.webStorageKey()) || {};
 
     return Observable.of(Object.values(groups));
+  }
+
+  private webStorageKey(): string {
+    return `groups-${this.workspace.organizationCode}`;
+  }
+
+  private apiPrefix(): string {
+    return `/${API_URL}/rest/organizations/${this.workspace.organizationCode}/groups`;
   }
 
 }
