@@ -24,7 +24,11 @@ export function linkTypesReducer(state: LinkTypesState = initialLinkTypesState, 
   switch (action.type) {
     case LinkTypesActionType.GET_SUCCESS:
       const queriesState = {...state, queries: state.queries.concat(action.payload.query)};
-      return linkTypesAdapter.addMany(action.payload.linkTypes, queriesState);
+      if (action.payload.linkTypes.length > 0) {
+        return linkTypesAdapter.addMany(action.payload.linkTypes, queriesState);
+      } else {
+        return queriesState;
+      }
     case LinkTypesActionType.CREATE_SUCCESS:
       return linkTypesAdapter.addOne(action.payload.linkType, state);
     case LinkTypesActionType.UPDATE_SUCCESS:

@@ -20,17 +20,20 @@
 export enum Perspective {
   PostIt = 'postit',
   Search = 'search',
+  SmartDoc = 'smartdoc',
   Table = 'table'
 }
 
 export const perspectivesMap: { [id: string]: Perspective } = {
   [Perspective.PostIt]: Perspective.PostIt,
   [Perspective.Search]: Perspective.Search,
+  [Perspective.SmartDoc]: Perspective.SmartDoc,
   [Perspective.Table]: Perspective.Table
 };
 
 export const perspectiveIconsMap: { [id: string]: string } = {
-  [Perspective.PostIt]: 'fa fa-sticky-note',
-  [Perspective.Search]: 'fa fa-search',
-  [Perspective.Table]: 'fa fa-table'
+  [Perspective.PostIt]: 'far fa-sticky-note',
+  [Perspective.Search]: 'far fa-search',
+  [Perspective.SmartDoc]: 'far fa-file-alt',
+  [Perspective.Table]: 'far fa-table'
 };

@@ -22,11 +22,11 @@ import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
-import {PerspectiveDirective} from './perspectives/perspective.directive';
 import {PostItPerspectiveModule} from './perspectives/post-it/post-it-perspective.module';
 
 import {SearchPerspectiveModule} from './perspectives/search/search-perspective.module';
 import {TablePerspectiveModule} from './perspectives/table/table-perspective.module';
+import {SmartDocPerspectiveModule} from './perspectives/smartdoc/smartdoc-perspective.module';
 import {ShareDialogComponent} from './view-controls/share-dialog/share-dialog.component';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ViewLoadingComponent} from './view-loading.component';
@@ -43,11 +43,11 @@ import {CollectionsGuard} from '../core/store/collections/collections.guard';
     PostItPerspectiveModule,
     SearchPerspectiveModule,
     TablePerspectiveModule,
+    SmartDocPerspectiveModule,
     SharedModule,
     ViewRoutingModule
   ],
   declarations: [
-    PerspectiveDirective,
     ShareDialogComponent,
     ViewComponent,
     ViewControlsComponent,

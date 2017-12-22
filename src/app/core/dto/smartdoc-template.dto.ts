@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface TemplatePartDto {
+export interface SmartDocTemplatePartDto {
 
   type: string;
 
-  text?: string;
+  textHtml?: string;
+  textData?: any;
 
   linkTypeId?: string;
   perspective?: string;
@@ -29,10 +30,10 @@ export interface TemplatePartDto {
 
 }
 
-export interface TemplateDto {
+export interface SmartDocTemplateDto {
 
   id?: string;
   collectionCode: string;
-  parts: TemplatePartDto[];
+  parts: SmartDocTemplatePartDto[];
 
 }

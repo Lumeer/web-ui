@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkType} from '../../dto/link-type';
+import {LinkType} from '../../dto';
 import {CollectionModel} from '../collections/collection.model';
 import {LinkTypeModel} from './link-type.model';
 

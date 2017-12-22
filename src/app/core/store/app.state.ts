@@ -26,7 +26,7 @@ import {initialLinkTypesState, LinkTypesState} from './link-types/link-types.sta
 import {initialNavigationState, NavigationState} from './navigation/navigation.state';
 import {initialOrganizationsState, OrganizationsState} from './organizations/organizations.state';
 import {initialProjectsState, ProjectsState} from './projects/projects.state';
-import {initialTemplatesState, TemplatesState} from './templates/templates.state';
+import {initialSmartDocTemplatesState, SmartDocTemplatesState} from './smartdoc-templates/smartdoc-templates.state';
 import {initialUsersState, UsersState} from './users/users.state';
 import {initialViewsState, ViewsState} from './views/views.state';
 
@@ -43,7 +43,7 @@ export interface AppState {
   router: RouterReducerState;
   users: UsersState;
   views: ViewsState;
-  templates: TemplatesState;
+  smartDocTemplates: SmartDocTemplatesState;
 
 }
 
@@ -58,7 +58,7 @@ export function initialAppState(): AppState {
     organizations: initialOrganizationsState,
     projects: initialProjectsState,
     router: null,
-    templates: initialTemplatesState,
+    smartDocTemplates: initialSmartDocTemplatesState,
     users: initialUsersState,
     views: initialViewsState
   };

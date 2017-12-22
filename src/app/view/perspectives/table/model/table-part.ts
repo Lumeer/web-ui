@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {TableRow} from './table-row';
 import {Collection} from '../../../../core/dto/collection';
 import {Attribute} from '../../../../core/dto/attribute';
@@ -36,8 +37,9 @@ export class TablePart {
 
   linkType: LinkType;
   linkedCollection: Collection;
+  linkedDocument?: DocumentModel;
 
   rows: TableRow[] = [];
-  sorting: {attributeId: string, descending: boolean}
+  sorting: {attributeId: string, descending: boolean};
 
 }

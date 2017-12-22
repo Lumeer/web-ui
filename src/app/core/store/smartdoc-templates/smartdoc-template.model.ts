@@ -19,17 +19,18 @@
 
 import {Perspective} from '../../../view/perspectives/perspective';
 
-export enum TemplatePartType {
+export enum SmartDocTemplatePartType {
   Attachments = 'attachments',
   Embedded = 'embedded',
   Text = 'text'
 }
 
-export interface TemplatePartModel {
+export interface SmartDocTemplatePartModel {
 
-  type: TemplatePartType;
+  type: SmartDocTemplatePartType;
 
-  text?: string;
+  textHtml?: string;
+  textData?: any;
 
   linkTypeId?: string;
   perspective?: Perspective;
@@ -37,29 +38,29 @@ export interface TemplatePartModel {
 
 }
 
-export interface TemplateModel {
+export interface SmartDocTemplateModel {
 
   id?: string;
   collectionCode: string;
 
-  parts: TemplatePartModel[];
+  parts: SmartDocTemplatePartModel[];
 
   correlationId?: string;
 
 }
 
-export function mergeTextParts(parts: TemplatePartModel[]) {
+export function mergeTextParts(parts: SmartDocTemplatePartModel[]) {
   for (let i = parts.length - 1; i > 0; i--) {
-    if (parts[i].type === TemplatePartType.Text && parts[i - 1].type === TemplatePartType.Text) {
-      const part: TemplatePartModel = {
-        type: TemplatePartType.Text,
-        text: parts[i - 1].text + '<br>' + parts[i].text
+    if (parts[i].type === SmartDocTemplatePartType.Text && parts[i - 1].type === SmartDocTemplatePartType.Text) {
+      const part: SmartDocTemplatePartModel = {
+        type: SmartDocTemplatePartType.Text,
+        textHtml: parts[i - 1].textHtml + '<br>' + parts[i].textHtml
       };
       parts.splice(i - 1, 2, part);
     }
   }
 }
 
-export function isValidEmbeddedPart(part: TemplatePartModel) {
+export function isValidEmbeddedPart(part: SmartDocTemplatePartModel) {
   return part && part.linkTypeId && part.perspective;
 }

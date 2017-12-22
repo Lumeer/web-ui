@@ -38,7 +38,6 @@ export class NotificationService {
   }
 
   public success(message: string): void {
-    console.log('success');
     if (this.areNotificationsDisabled()) {
       return;
     }
@@ -77,7 +76,7 @@ export class NotificationService {
     this.zone.runOutsideAngular(() => this.notifications.prompt(
       message,
       title,
-      {buttons: buttons, placeholder: placeholder, position: SnotifyPosition.centerTop, timeout: null})
+      {buttons, placeholder, position: SnotifyPosition.centerTop, timeout: null})
     );
   }
 
@@ -93,6 +92,10 @@ export class NotificationService {
       return;
     }
     this.zone.runOutsideAngular(() => this.notifications.html(html));
+  }
+
+  public remove(id: number) {
+    this.zone.runOutsideAngular(() => this.notifications.remove(id));
   }
 
   private areNotificationsDisabled(): boolean {

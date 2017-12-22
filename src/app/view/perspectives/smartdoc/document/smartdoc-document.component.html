@@ -1,0 +1,45 @@
+<div class="document border border-light rounded mb-3">
+  <div class="record-mover"
+       title="Move record" i18n-title="@@smartdoc.document.move">
+    <i class="fa fa-lg fa-ellipsis-h"></i>
+  </div>
+  <div *ngIf="template">
+    <div *ngFor="let part of template.parts; index as partIndex"
+         [class.border]="selectedPartIndex === partIndex"
+         [class.border-success]="selectedPartIndex === partIndex"
+         (click)="onClickInsidePart($event, partIndex)"
+         (clickOutside)="onClickOutsidePart(partIndex)"
+         class="rounded">
+      <div *ngIf="selectedPartIndex === partIndex"
+           class="d-flex justify-content-end">
+        <div class="position-relative">
+          <div class="position-absolute document-panel">
+            <smartdoc-side-panel [partIndex]="partIndex"
+                                 [collection]="getCurrentCollection()"
+                                 [document]="document"
+                                 [template]="template">
+            </smartdoc-side-panel>
+          </div>
+        </div>
+      </div>
+      <ng-container [ngSwitch]="part.type">
+        <smartdoc-embedded *ngSwitchCase="'embedded'"
+                           [selected]="selectedPartIndex === partIndex"
+                           [document]="document"
+                           [templatePart]="part"
+                           (copyPart)="onCopyPart(partIndex)"
+                           (updatePart)="onUpdatePart(partIndex, $event)"
+                           (removePart)="onRemovePart(partIndex)"></smartdoc-embedded>
+        <smartdoc-text *ngSwitchCase="'text'"
+                       [selected]="selectedPartIndex === partIndex"
+                       [collection]="getCurrentCollection()"
+                       [document]="document"
+                       [templatePart]="part"
+                       (copyPart)="onCopyPart(partIndex)"
+                       (removePart)="onRemovePart(partIndex)"
+                       (templatePartChange)="onUpdatePart(partIndex, $event)">
+        </smartdoc-text>
+      </ng-container>
+    </div>
+  </div>
+</div>

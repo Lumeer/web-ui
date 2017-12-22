@@ -21,9 +21,10 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, map, skipWhile, switchMap, tap, withLatestFrom, mergeMap} from 'rxjs/operators';
 import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
+import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {QueryHelper} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -45,7 +46,13 @@ export class LinkTypesEffects {
         map(dtos => ({action, linkTypes: dtos.map(dto => LinkTypeConverter.fromDto(dto))}))
       );
     }),
-    map(({action, linkTypes}) => (new LinkTypesAction.GetSuccess({linkTypes: linkTypes, query: action.payload.query}))),
+    mergeMap(({action, linkTypes}) => {
+      const actions: Action[] = [new LinkTypesAction.GetSuccess({linkTypes: linkTypes, query: action.payload.query})];
+      if (action.payload.loadInstances) {
+        actions.push(new LinkInstancesAction.Get({query: action.payload.query}));
+      }
+      return actions;
+    }),
     catchError((error) => Observable.of(new LinkTypesAction.GetFailure({error: error})))
   );
 
