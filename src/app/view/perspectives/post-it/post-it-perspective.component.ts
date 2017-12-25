@@ -31,6 +31,7 @@ import {AppState} from '../../../core/store/app.state';
 import {selectQuery, selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
+import {PostItLayoutConfig} from '../../../shared/utils/layout/post-it-layout-config';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
 import {Direction} from './document-data/direction';
 import {DocumentModel} from './document-data/document-model';
@@ -116,9 +117,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private initializeLayout(): void {
-    this.layout = new PostItLayout('.post-it-document-layout', {
-      items: '.layout-item'
-    });
+    this.layout = new PostItLayout('.post-it-document-layout', new PostItLayoutConfig());
   }
 
   public setInfiniteScroll(enabled: boolean): void {

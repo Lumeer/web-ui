@@ -2,6 +2,10 @@
 
 :host {
 
+  .card-header {
+    width: 100%;
+  }
+
   .card-header .button {
     transition: background $animation-color-duration, opacity $animation-color-duration;
 

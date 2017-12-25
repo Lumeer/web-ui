@@ -19,6 +19,7 @@
 
 import {Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {PostItLayoutConfig} from 'app/shared/utils/layout/post-it-layout-config';
 import {Observable} from 'rxjs/Observable';
 import {finalize, first} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
@@ -102,9 +103,10 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   private initializeLayout(): void {
-    this.layout = new PostItLayout('post-it-collection-layout',{
-      items: '.layout-item'
-    });
+    const config = new PostItLayoutConfig();
+    config.dragEnabled = false;
+
+    this.layout = new PostItLayout('post-it-collection-layout', config);
   }
 
   private getCollections() {

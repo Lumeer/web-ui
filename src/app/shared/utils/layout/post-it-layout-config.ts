@@ -21,29 +21,29 @@ import {Axis} from './Axis';
 
 export class PostItLayoutConfig {
 
-  public items = '*';
+  public items = '.layout-item';
 
-  public showDuration? = 300;
+  public showDuration = 300;
 
-  public showEasing? = 'ease';
+  public showEasing = 'ease';
 
-  public hideDuration? = 300;
+  public hideDuration = 300;
 
-  public hideEasing? = 'ease';
+  public hideEasing = 'ease';
 
-  public visibleStyles?: object =
+  public visibleStyles: object =
     {
       opacity: '1',
-      transform: 'scale(1)',
+      transform: 'scale(1)'
     };
 
-  public hiddenStyles?: object =
+  public hiddenStyles: object =
     {
       opacity: '0',
-      transform: 'scale(0.5)',
+      transform: 'scale(0.5)'
     };
 
-  public layout?: { fillGaps: boolean, horizontal: boolean, alignRight: boolean, alignBottom: boolean, rounding: boolean } =
+  public layout: { fillGaps: boolean, horizontal: boolean, alignRight: boolean, alignBottom: boolean, rounding: boolean } =
     {
       fillGaps: false,
       horizontal: false,
@@ -52,60 +52,60 @@ export class PostItLayoutConfig {
       rounding: true
     };
 
-  public layoutOnResize? = 100;
+  public layoutOnResize = 100;
 
-  public layoutOnInit? = true;
+  public layoutOnInit = true;
 
-  public layoutDuration? = 300;
+  public layoutDuration = 300;
 
-  public layoutEasing? = 'ease';
+  public layoutEasing = 'ease';
 
-  public sortData?: object = null;
+  public sortData: object = null;
 
-  public dragEnabled? = false;
+  public dragEnabled = true;
 
-  public dragContainer?: HTMLElement = null;
+  public dragContainer: HTMLElement = null;
 
-  public dragStartPredicate?: { distance: number, delay: number, handle: boolean } =
+  public dragStartPredicate: { distance: number, delay: number, handle: boolean } =
     {
       distance: 0,
       delay: 0,
       handle: false
     };
 
-  public dragAxis?: Axis = null;
+  public dragAxis: Axis = null;
 
-  public dragSort? = true;
+  public dragSort = true;
 
-  public dragSortInterval? = 100;
+  public dragSortInterval = 100;
 
-  public dragSortPredicate?: { threshold: number, action: string } =
+  public dragSortPredicate: { threshold: number, action: string } =
     {
       threshold: 50,
       action: 'move'
     };
 
-  public dragReleaseDuration? = 300;
+  public dragReleaseDuration = 300;
 
-  public dragReleaseEasing? = 'ease';
+  public dragReleaseEasing = 'ease';
 
-  public dragHammerSettings?: { touchAction: string } =
+  public dragHammerSettings: { touchAction: string } =
     {
       touchAction: 'none'
     };
 
-  public containerClass? = 'masonry-layout';
+  public containerClass = 'masonry-layout';
 
-  public itemClass? = 'masonry-layout-item';
+  public itemClass = 'masonry-layout-item';
 
-  public itemVisibleClass? = 'masonry-layout-item-shown';
+  public itemVisibleClass = 'masonry-layout-item-shown';
 
-  public itemHiddenClass? = 'masonry-layout-item-hidden';
+  public itemHiddenClass = 'masonry-layout-item-hidden';
 
-  public itemPositioningClass? = 'masonry-layout-item-positioning';
+  public itemPositioningClass = 'masonry-layout-item-positioning';
 
-  public itemDraggingClass? = 'masonry-layout-item-dragging';
+  public itemDraggingClass = 'masonry-layout-item-dragging';
 
-  public itemReleasingClass? = 'masonry-layout-item-releasing';
+  public itemReleasingClass = 'masonry-layout-item-releasing';
 
 }
