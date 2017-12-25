@@ -15,7 +15,7 @@
          [title]="postIt.collection.name"
          [routerLink]="postIt.initialized ? [workspacePath(), 'view', 'postit'] : []"
          [queryParams]="{ query: documentsQuery(postIt.collection.code) }"
-         data-toggle="dropdown">
+         [attr.data-toggle]="postIt.initialized ? '' : 'dropdown'">
         <i class="fa-6x {{ postIt.collection.icon }}" aria-hidden="true"></i>
       </a>
       <div class="dropdown-menu dropdown-menu-right">
