@@ -67,7 +67,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public collections: { [collectionCode: string]: Collection } = {};
 
-  public singleCollectionCode: string;
+  public currentCollection: string;
 
   public query: Query;
 
@@ -117,11 +117,16 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
       this.fetchPostIts();
       this.initializeLayout();
+      this.setCurrentCollection();
     });
   }
 
   private initializeLayout(): void {
       this.layout = new PostItLayout('.post-it-document-layout', new PostItLayoutConfig(), this.zone);
+  }
+
+  private setCurrentCollection() {
+    this.currentCollection = (this.query && this.query.collectionCodes) ? this.query.collectionCodes[0] : null;
   }
 
   public setInfiniteScroll(enabled: boolean): void {
@@ -302,16 +307,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         error => this.notificationService.error(`Failed fetching collection ${collectionCode}`)
       );
     });
-
-    this.setSingleCollection(Array.from(collectionCodes));
-  }
-
-  private setSingleCollection(collectionCodes: string[]) {
-    if (collectionCodes && collectionCodes.length === 1) {
-      this.singleCollectionCode = collectionCodes[0];
-      return;
-    }
-    this.singleCollectionCode = null;
   }
 
   private countAsFetchedAndRefreshIfLast(): void {

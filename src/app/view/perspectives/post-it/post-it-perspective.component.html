@@ -2,7 +2,7 @@
 
   <add-document *ngIf="isAddButtonShown()"
                 class="layout-item"
-                [collectionCode]="singleCollectionCode"
+                [collectionCode]="currentCollection"
                 (newDocument)="createDocument($event)"></add-document>
 
   <ng-container *ngFor="let postIt of postIts; let idx = index">
