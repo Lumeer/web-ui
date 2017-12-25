@@ -4,12 +4,12 @@
   </div>
   <div *ngIf="(documents$ | async) as documents">
     <ng-container *ngIf="documents.length > 0">
-      Documents
+      Records
     </ng-container>
   </div>
   <div *ngIf="(collections$ | async) as collections">
     <ng-container *ngIf="collections.length > 0">
-      Collections
+      Files
     </ng-container>
   </div>
   <div *ngIf="(views$ | async) as views">

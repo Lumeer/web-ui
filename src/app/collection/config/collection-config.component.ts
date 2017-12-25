@@ -20,20 +20,20 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
+import {filter, map, switchMap, tap} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
 
 import {Collection} from '../../core/dto/collection';
-import {CollectionService} from '../../core/rest/collection.service';
-import {Role} from '../../shared/permissions/role';
 import {Permission} from '../../core/dto/permission';
-import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {Query} from '../../core/dto/query';
-import {CollectionSelectService} from '../service/collection-select.service';
 import {NotificationService} from '../../core/notifications/notification.service';
-import {Subscription} from 'rxjs/Subscription';
-import {filter, map, switchMap, tap} from 'rxjs/operators';
-import {Workspace} from '../../core/store/navigation/workspace.model';
+import {CollectionService} from '../../core/rest/collection.service';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {QueryConverter} from '../../core/store/navigation/query.converter';
+import {Workspace} from '../../core/store/navigation/workspace.model';
+import {Role} from '../../shared/permissions/role';
+import {CollectionSelectService} from '../service/collection-select.service';
 
 @Component({
   selector: 'collection-config',
@@ -65,7 +65,7 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
       tap(collection => this.collection = collection)
     ).subscribe(
       collection => null,
-      error => this.notificationService.error('Failed fetching collection')
+      error => this.notificationService.error('Failed fetching file')
     );
   }
 
@@ -74,19 +74,19 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
       switchMap(collection => this.collectionSelectService.selectCollection(collection))
     ).subscribe(
       collection => null,
-      error => this.notificationService.error('Failed updating collection')
+      error => this.notificationService.error('Failed updating file')
     );
   }
 
   public removeCollection(): void {
     this.collectionService.removeCollection(this.collection.code).subscribe(
       () => this.goToCollectionsPage(),
-      error => this.notificationService.error('Failed removing collection')
+      error => this.notificationService.error('Failed removing file')
     );
   }
 
   public confirmDeletion(): void {
-    this.notificationService.confirm('Are you sure you want to remove the collection?', 'Delete?', [
+    this.notificationService.confirm('Are you sure you want to remove the file?', 'Delete?', [
       {text: 'Yes', action: () => this.removeCollection(), bold: false},
       {text: 'No'}
     ]);

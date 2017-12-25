@@ -54,7 +54,7 @@ export class DocumentsEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.GetFailure>(DocumentsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to get documents'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to get records'}))
   );
 
   @Effect()
@@ -90,7 +90,7 @@ export class DocumentsEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.UpdateFailure>(DocumentsActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to update document'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to update record'}))
   );
 
   @Effect()
@@ -128,7 +128,7 @@ export class DocumentsEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.DeleteFailure>(DocumentsActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to delete document'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to delete record'}))
   );
 
   constructor(private actions$: Actions,

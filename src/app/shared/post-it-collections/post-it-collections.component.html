@@ -4,7 +4,6 @@
 </div>
 <div *ngIf="(postIts && postIts.length > 0) || editable" class="post-it-collection-layout">
 
-  <!-- collection post-its -->
   <div *ngFor="let postIt of postIts" #postItElement
        class="layout-item card post-it {{ postIt === lastClickedPostIt ? 'selected' : null }} {{ !postIt.initialized ? 'uninitialized' : null }}"
        [style.border-color]="postIt.collection.color"
@@ -25,7 +24,7 @@
       </div>
 
       <div *ngIf="postIt.initialized" class="document-count opacity-content clickable">
-        <a title="Document Count" i18n-title="@@collection.document.count"
+        <a title="Record Count" i18n-title="@@collection.document.count"
            [routerLink]="[workspacePath(), 'view', 'postit']"
            [queryParams]="{ query: documentsQuery(postIt.collection.code) }">
           <i class="far fa-file" aria-hidden="true"></i>&nbsp;{{ postIt.collection.documentsCount }}
@@ -65,7 +64,7 @@
         <a *ngIf="!postIt.initialized || hasManageRole(postIt.collection)"
            (click)="confirmDeletion(postIt)"
            class="text-danger rounded-left"
-           title="Remove Collection" i18n-title="@@collection.button.remove">
+           title="Remove File" i18n-title="@@collection.button.remove">
           <i class="fa fa-fw fa-times" aria-hidden="true"></i>
         </a>
       </div>
@@ -96,7 +95,7 @@
         <i class="fa fa-plus-circle fa-6x" aria-hidden="true"></i>
       </div>
       <div class="card-footer font-weight-bold bg-transparent"
-           i18n="@@collection.button.add">Add collection
+           i18n="@@collection.button.add">Add file
       </div>
     </div>
 
@@ -107,7 +106,7 @@
         <i class="fa fa-cloud-upload fa-6x" aria-hidden="true"></i>
       </div>
       <div class="card-footer font-weight-bold bg-transparent"
-           i18n="@@collection.button.import">Import collection
+           i18n="@@collection.button.import">Import file
       </div>
       <input hidden type="file" #fileInput (click)="$event.stopPropagation()"
              (change)="fileChange($event.target.files)" accept=".csv, text/csv">

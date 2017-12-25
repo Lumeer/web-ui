@@ -20,16 +20,16 @@
 import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
+import {finalize, map, switchMap} from 'rxjs/operators';
+import {Collection} from '../../../../core/dto';
+import {NotificationService} from '../../../../core/notifications/notification.service';
+import {CollectionService, LinkTypeService} from '../../../../core/rest';
+import {AppState} from '../../../../core/store/app.state';
 
 import {COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../constants';
-import {Collection} from '../../../../core/dto';
-import {CollectionTabComponent} from '../collection-tab.component';
-import {CollectionService, LinkTypeService} from '../../../../core/rest';
 import {CollectionSelectService} from '../../../service/collection-select.service';
+import {CollectionTabComponent} from '../collection-tab.component';
 import {LinkTypeModel} from './LinkTypeModel';
-import {NotificationService} from '../../../../core/notifications/notification.service';
-import {finalize, map, switchMap} from 'rxjs/operators';
-import {AppState} from '../../../../core/store/app.state';
 
 @Component({
   selector: 'collection-link-types',
@@ -68,7 +68,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
         this.initializeLinkTypes();
       },
       error => {
-        this.notificationService.error('Failed fetching collections');
+        this.notificationService.error('Failed fetching files');
       }
     );
   }
@@ -93,7 +93,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       switchMap(collection => this.router.navigate([this.workspacePath(), 'c', collection.code, 'linktypes']))
     ).subscribe(
       navigated => this.initializeLinkTypes(),
-      error => this.notificationService.error('Failed switching collection')
+      error => this.notificationService.error('Failed switching file')
     );
   }
 
@@ -140,7 +140,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public changeToCollection(linkTypeModel: LinkTypeModel, collectionCode: string): void {
-    this.notificationService.confirm('Are you sure you want to change linked collection?', 'Delete?', [
+    this.notificationService.confirm('Are you sure you want to change linked file?', 'Delete?', [
       {
         text: 'Yes', action: () => {
         linkTypeModel.changeLinkedCollection(collectionCode);

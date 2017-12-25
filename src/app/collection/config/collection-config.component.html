@@ -23,19 +23,19 @@
            (blur)="updateCollection()"
            [style.color]="collection.color"
            i18n-title="@@header.collection.name"
-           title="Edit name of the collection">
+           title="Edit name of the file">
 
     <div class="float-right document-count color-class ml-auto">
       <i class="fa fa-times pull-right text-danger icon ml-auto"
          aria-hidden="true"
          i18n-title="@@header.collection.remove"
-         title="Remove collection"
+         title="Remove file"
          *ngIf="collection"
          (click)="confirmDeletion()"></i>
 
       <a i18n-title="@@header.collection.documents.count"
          class="count"
-         title="Number of documents in this collection"
+         title="Number of records in this file"
          [style.color]="collection.color"
          [routerLink]="[workspacePath(), 'view', 'postit']"
          [queryParams]="{ query: documentsQuery(collection.code) }">
