@@ -4,10 +4,13 @@
   display: block;
 
   .post-it-document-layout {
+    position: relative;
     margin: 0 auto;
   }
 
   .layout-item {
+    position: absolute;
+    margin: 5px;
     width: $post-it-width;
   }
 

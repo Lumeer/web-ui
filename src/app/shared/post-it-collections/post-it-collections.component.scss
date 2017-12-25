@@ -3,7 +3,13 @@
 :host {
   display: block;
 
+  .post-it-collection-layout {
+    position: relative;
+  }
+
   .layout-item {
+    position: absolute;
+    margin: 5px;
     width: $post-it-width;
   }
 
@@ -49,7 +55,7 @@
     left: 8px;
   }
 
-  .always-visible{
+  .always-visible {
     opacity: 1 !important;
   }
 

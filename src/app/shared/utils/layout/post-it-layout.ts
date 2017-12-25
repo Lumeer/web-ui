@@ -17,32 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Buffer} from './buffer';
+import {PostItLayoutConfig} from './post-it-layout-config';
 
-export interface PostItLayoutConfig {
-
-  container: string;
-  item: string;
-  gutter: number;
-
-}
-
-/**
- * Provides Pinterest-like layout using minigrid library http://minigrid.js.org/
- */
 export class PostItLayout {
 
-  private resizeListener: () => void;
+  constructor(private containerClassName: string, private parameters: PostItLayoutConfig) {
+    this.addContainerClassIdentifierIfMissing();
+  }
 
-  private containerClassName: string;
-
-  constructor(private parameters: PostItLayoutConfig) {
-    this.containerClassName = parameters.container.slice(1);
-
-    const windowResizeRefreshBuffer = new Buffer(() => this.refresh(), 500);
-    this.resizeListener = () => windowResizeRefreshBuffer.stageChanges();
-
-    window.addEventListener('resize', this.resizeListener);
+  private addContainerClassIdentifierIfMissing(): void {
+    if (!this.containerClassName.startsWith('.')) {
+      this.containerClassName = '.' + this.containerClassName;
+    }
   }
 
   public refresh(): void {
@@ -51,16 +37,12 @@ export class PostItLayout {
         return;
       }
 
-      new window['Minigrid'](this.parameters).mount();
+      new window['Muuri'](this.containerClassName, this.parameters);
     });
   }
 
   private containerExists(): boolean {
-    return !!(document.getElementsByClassName(this.containerClassName).length);
-  }
-
-  public destroy(): void {
-    window.removeEventListener('resize', this.resizeListener);
+    return !!(document.querySelector(this.containerClassName));
   }
 
 }

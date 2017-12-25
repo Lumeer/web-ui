@@ -32,7 +32,7 @@ import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {Role} from '../permissions/role';
 import {HtmlModifier} from '../utils/html-modifier';
-import {PostItLayout} from '../utils/post-it-layout';
+import {PostItLayout} from '../utils/layout/post-it-layout';
 import {DeprecatedQueryConverter} from '../utils/query-converter';
 import {PostItCollectionModel} from './post-it-collection-model';
 
@@ -96,21 +96,14 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.initializeLayout();
       this.getCollections();
+      this.initializeLayout();
     });
   }
 
   private initializeLayout(): void {
-    if (this.layout) {
-      this.reloadLayout();
-      return;
-    }
-
-    this.layout = new PostItLayout({
-      container: '.post-it-collection-layout',
-      item: '.layout-item',
-      gutter: 10
+    this.layout = new PostItLayout('post-it-collection-layout',{
+      items: '.layout-item'
     });
   }
 
@@ -373,11 +366,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    // might get called before onInit finishes
-    if (this.layout) {
-      this.layout.destroy();
-    }
-
     if (this.appStateSubscription) {
       this.appStateSubscription.unsubscribe();
     }

@@ -30,7 +30,7 @@ import {CollectionService} from '../../../core/rest';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery, selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {PostItLayout} from '../../../shared/utils/post-it-layout';
+import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
 import {Direction} from './document-data/direction';
 import {DocumentModel} from './document-data/document-model';
@@ -110,21 +110,14 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       this.workspace = workspace;
       this.query = query;
 
-      this.initializeLayout();
       this.fetchPostIts();
+      this.initializeLayout();
     });
   }
 
   private initializeLayout(): void {
-    if (this.layout) {
-      this.refresh();
-      return;
-    }
-
-    this.layout = new PostItLayout({
-      container: '.post-it-document-layout',
-      item: '.layout-item',
-      gutter: 10
+    this.layout = new PostItLayout('.post-it-document-layout', {
+      items: '.layout-item'
     });
   }
 
@@ -415,7 +408,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private refresh(): void {
-    this.layout.refresh();
     this.showPostItsWithCollection();
   }
 
@@ -424,6 +416,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       this.postIts
         .filter(postIt => this.collections[postIt.document.collectionCode])
         .forEach(postIt => postIt.visible = true);
+
+      this.layout.refresh();
     });
   }
 
@@ -454,10 +448,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (this.layout) {
-      this.layout.destroy();
-    }
-
     this.setInfiniteScroll(false);
 
     if (this.appStateSubscription) {
@@ -473,4 +463,5 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private hasWorkspace(): boolean {
     return !!(this.workspace && this.workspace.organizationCode && this.workspace.projectCode);
   }
+
 }
