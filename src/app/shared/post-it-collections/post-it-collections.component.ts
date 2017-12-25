@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {PostItLayoutConfig} from 'app/shared/utils/layout/post-it-layout-config';
 import {Observable} from 'rxjs/Observable';
@@ -76,7 +76,8 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
               private searchService: SearchService,
               private notificationService: NotificationService,
               private importService: ImportService,
-              private store: Store<AppState>) {
+              private store: Store<AppState>,
+              private zone: NgZone) {
   }
 
   public ngOnInit(): void {
@@ -106,7 +107,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     const config = new PostItLayoutConfig();
     config.dragEnabled = false;
 
-    this.layout = new PostItLayout('post-it-collection-layout', config);
+    this.layout = new PostItLayout('post-it-collection-layout', config, this.zone);
   }
 
   private getCollections() {

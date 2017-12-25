@@ -9,13 +9,14 @@
   }
 
   .layout-item {
+    will-change: transform;
     position: absolute;
     margin: 5px;
     width: $post-it-width;
   }
 
-  .post-it:hover, .selected {
-    box-shadow: $shadow-default;
+  .masonry-layout-item-dragging, .masonry-layout-item-releasing {
+    z-index: $z-index-selected;
   }
 
   .post-it:hover {
@@ -29,10 +30,6 @@
   .uninitialized {
     border-width: 1.5px;
     border-style: dashed;
-  }
-
-  .fading {
-    transition: opacity $animation-color-duration;
   }
 
   .large-text {

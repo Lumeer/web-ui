@@ -10,7 +10,7 @@
                       class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : null }} {{ postIt === lastClickedPostIt ? 'selected' : null }}"
                       [style.z-index]="postIt.selectedInput.documentIdx === postIt.index ? 50 : null"
                       [style.transition]="postIt.visible ? 'transform 0.4s, box-shadow 0.25s' : null"
-                      [style.opacity]="postIt.visible ? 1 : 0"
+                      [style.visibility]="postIt.visible ? 'visible' : 'hidden'"
                       [data]="setPostItIndexAndReturn(postIt, idx)"
                       [collection]="collections[postIt.document.collectionCode]"
                       (selectOther)="selectDocument($event)"

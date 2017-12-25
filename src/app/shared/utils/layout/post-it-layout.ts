@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {NgZone} from '@angular/core';
 import {PostItLayoutConfig} from './post-it-layout-config';
 
 export class PostItLayout {
 
-  constructor(private containerClassName: string, private parameters: PostItLayoutConfig) {
+  constructor(private containerClassName: string, private parameters: PostItLayoutConfig, private zone: NgZone) {
     this.addContainerClassIdentifierIfMissing();
   }
 
@@ -37,7 +38,9 @@ export class PostItLayout {
         return;
       }
 
-      new window['Muuri'](this.containerClassName, this.parameters);
+      this.zone.runOutsideAngular(() => {
+        new window['Muuri'](this.containerClassName, this.parameters);
+      });
     });
   }
 
