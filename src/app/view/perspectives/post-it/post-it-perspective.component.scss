@@ -15,15 +15,11 @@
     width: $post-it-width;
   }
 
-  .masonry-layout-item-dragging, .masonry-layout-item-releasing {
-    z-index: $z-index-selected;
-  }
-
   .post-it:hover {
     z-index: $z-index-hovered;
   }
 
-  .selected {
+  .masonry-layout-item-dragging, .masonry-layout-item-releasing, .selected {
     z-index: $z-index-selected;
   }
 

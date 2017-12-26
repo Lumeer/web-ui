@@ -22,6 +22,10 @@ import {PostItLayoutConfig} from './post-it-layout-config';
 
 export class PostItLayout {
 
+  public layout: any;
+
+  private layoutEndCallback: () => void;
+
   constructor(private containerClassName: string, private parameters: PostItLayoutConfig, private zone: NgZone) {
     this.addContainerClassIdentifierIfMissing();
   }
@@ -33,19 +37,34 @@ export class PostItLayout {
   }
 
   public refresh(): void {
-    setTimeout(() => {
-      if (!this.containerExists()) {
-        return;
-      }
+    if (!this.containerExists()) {
+      return;
+    }
 
-      this.zone.runOutsideAngular(() => {
-        new window['Muuri'](this.containerClassName, this.parameters);
-      });
+    this.zone.runOutsideAngular(() => {
+      new window['Muuri'](this.containerClassName, this.parameters);
     });
+  }
+
+  public onLayoutEnd(callback: () => void): void {
+    const onMostRecentLayoutEnd = () => {
+      this.layout.off('layoutEnd', this.layoutEndCallback);
+    };
+
+    this.layout
+      .off('layoutEnd', this.onLayoutEnd)
+      .on('layoutEnd', onMostRecentLayoutEnd);
+
+    this.layoutEndCallback = onMostRecentLayoutEnd;
   }
 
   private containerExists(): boolean {
     return !!(document.querySelector(this.containerClassName));
+  }
+
+  public destroy(): void {
+    this.layout.off('layoutEnd', this.layoutEndCallback());
+    this.layout.destroy();
   }
 
 }

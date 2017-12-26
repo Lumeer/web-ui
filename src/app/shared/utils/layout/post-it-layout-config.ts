@@ -52,11 +52,11 @@ export class PostItLayoutConfig {
       rounding: true
     };
 
-  public layoutOnResize = 100;
+  public layoutOnResize = 200;
 
   public layoutOnInit = true;
 
-  public layoutDuration = 300;
+  public layoutDuration = 400;
 
   public layoutEasing = 'ease';
 
@@ -77,7 +77,7 @@ export class PostItLayoutConfig {
 
   public dragSort = true;
 
-  public dragSortInterval = 100;
+  public dragSortInterval = 200;
 
   public dragSortPredicate: { threshold: number, action: string } =
     {

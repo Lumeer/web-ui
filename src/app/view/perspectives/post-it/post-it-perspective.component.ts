@@ -81,6 +81,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private layout: PostItLayout;
 
+  private allLoaded: boolean;
+
   private fetchedCollections = 0;
 
   private collectionsToFetch = 0;
@@ -102,6 +104,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.initializeLayout();
     this.getAppStateAndInitialize();
   }
 
@@ -116,13 +119,12 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       this.query = query;
 
       this.fetchPostIts();
-      this.initializeLayout();
       this.setCurrentCollection();
     });
   }
 
   private initializeLayout(): void {
-      this.layout = new PostItLayout('.post-it-document-layout', new PostItLayoutConfig(), this.zone);
+    this.layout = new PostItLayout('.post-it-document-layout', new PostItLayoutConfig(), this.zone);
   }
 
   private setCurrentCollection() {
@@ -152,11 +154,11 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       }
     };
 
-    (<any>window).addEventListener('scroll', this.onInfiniteScroll, this.scrollEventOptions);
+    (window as any).addEventListener('scroll', this.onInfiniteScroll, this.scrollEventOptions);
   }
 
   private turnOffInfiniteScroll(): void {
-    (<any>window).removeEventListener('scroll', this.onInfiniteScroll, this.scrollEventOptions);
+    (window as any).removeEventListener('scroll', this.onInfiniteScroll, this.scrollEventOptions);
     this.onInfiniteScroll = null;
   }
 
@@ -239,7 +241,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     const addDocumentPresent = this.editable && pageNumber === 0 ? 1 : 0;
 
     return {
-      pageSize: this.documentsPerRow() * 4 - addDocumentPresent,
+      pageSize: this.documentsPerRow() * 3 - addDocumentPresent,
       page: pageNumber,
       filters: this.query.filters,
       fulltext: this.query.fulltext,
@@ -248,7 +250,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private fetchPostIts(): void {
-    if (this.fetchingData || !this.query || !this.hasWorkspace()) {
+    if (this.fetchingData || !this.query || !this.hasWorkspace() || this.allLoaded) {
       return;
     }
 
@@ -274,6 +276,10 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private addDocumentsToLayoutAndGetTheirCollections(documents: Document[]): void {
+    if (documents.length === 0) {
+      this.allLoaded = true;
+    }
+
     documents.forEach(document => this.postIts.push(this.documentToPostIt(document, true)));
 
     const uniqueCollectionCodes = new Set(documents.map(document => document.collectionCode));
@@ -447,7 +453,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.setInfiniteScroll(false);
-
+    this.layout.destroy();
     if (this.appStateSubscription) {
       this.appStateSubscription.unsubscribe();
     }
