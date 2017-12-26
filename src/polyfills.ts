@@ -43,8 +43,10 @@
 import 'core-js/es6/reflect';
 import 'core-js/es7/reflect';
 
+import 'socket.io-client';
 /** ALL Firefox browsers require the following to support `@angular/animation`. **/
 import 'web-animations-js';
+import './assets/js/custom.js';
 
 /***************************************************************************************************
  * Zone JS is required by Angular itself.
@@ -61,10 +63,6 @@ import 'web-animations-js';
  */
 // import 'intl';  // Run `npm install --save intl`.
 
-window['Hammer'] = require('../node_modules/hammerjs/hammer.min.js');
-window['Muuri'] = require('../node_modules/muuri/muuri.min.js');
 window['Keycloak'] = require('./assets/js/keycloak.js');
+window['Muuri'] = require('../node_modules/muuri/muuri.min.js');
 
-import './assets/js/custom.js';
-
-import 'socket.io-client';
