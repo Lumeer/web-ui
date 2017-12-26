@@ -1,11 +1,6 @@
 @import "variables";
 @import "~bootstrap/scss/bootstrap";
 
-html, body {
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
-}
-
 *[contenteditable] {
   -webkit-user-select: auto !important;
 }
@@ -115,4 +110,8 @@ input {
   &:hover {
     color: $link-hover-color;
   }
+}
+
+.pointer-events-none {
+  pointer-events: none;
 }

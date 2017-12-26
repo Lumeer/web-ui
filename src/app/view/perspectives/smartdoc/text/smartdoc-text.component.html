@@ -1,0 +1,55 @@
+<div>
+  <quill-editor *ngIf="editorShown"
+                [theme]="'snow'"
+                [modules]="modules"
+                (clickOutside)="onClickOutside()"
+                (onEditorCreated)="onEditorCreated($event)"
+                (onContentChanged)="onContentChanged($event)"
+                (onSelectionChanged)="onSelectionChanged($event)">
+    <div quill-editor-toolbar>
+      <span class="ql-formats">
+        <select class="ql-header" [title]="'Header'">
+          <option selected>Normal</option>
+          <option value="1">Heading</option>
+          <option value="2">Subheading</option>
+        </select>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-bold" [title]="'Bold'"></button>
+        <button class="ql-italic" [title]="'Italic'"></button>
+        <button class="ql-underline" [title]="'Underline'"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-list" [value]="'ordered'" [title]="'Ordered list'"></button>
+        <button class="ql-list" [value]="'bullet'" [title]="'Bullet list'"></button>
+        <select class="ql-align" [title]="'Alignment'">
+          <option selected></option>
+          <option value="center"></option>
+          <option value="right"></option>
+          <option value="justify"></option>
+        </select>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-link" [title]="'Link'"></button>
+        <button class="ql-image" [title]="'Image'"></button>
+      </span>
+      <span class="ql-formats">
+        <span class="ql-attribute">
+          <button *ngFor="let attribute of documentAttributes()"
+                  [title]="document.data[attribute.id]"
+                  (click)="onAddAttribute(attribute.id)">
+            {{attribute.name}}
+          </button>
+        </span>
+      </span>
+    </div>
+  </quill-editor>
+  <div *ngIf="!editorShown && !!templatePart"
+       [innerHtml]="getHtmlContent()"
+       class="mx-2">
+  </div>
+  <smartdoc-bottom-panel [selected]="selected"
+                         (copyPart)="onCopyPart()"
+                         (removePart)="onRemovePart()">
+  </smartdoc-bottom-panel>
+</div>

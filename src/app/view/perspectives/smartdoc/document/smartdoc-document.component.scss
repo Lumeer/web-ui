@@ -1,0 +1,23 @@
+@import "../../../../shared/variables";
+
+.document-panel {
+  left: 10px;
+}
+
+.document {
+  .record-mover {
+    color: $white;
+    cursor: move;
+    text-align: center;
+  }
+}
+
+.document:hover {
+  .record-mover {
+    color: $secondary;
+  }
+}
+
+.selected {
+  border: 2x solid $success;
+}

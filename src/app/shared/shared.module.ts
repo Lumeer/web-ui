@@ -32,6 +32,7 @@ import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 import {SizeSliderComponent} from './slider/size-slider.component';
 import {CommentsComponent} from './comments/comments.component';
 import {LinksComponent} from './links/links.component';
+import {PerspectiveDirective} from './perspective.directive';
 
 @NgModule({
   imports: [
@@ -49,7 +50,8 @@ import {LinksComponent} from './links/links.component';
     SearchBoxComponent,
     SizeSliderComponent,
     CommentsComponent,
-    LinksComponent
+    LinksComponent,
+    PerspectiveDirective
   ],
   exports: [
     CommonModule,
@@ -61,7 +63,8 @@ import {LinksComponent} from './links/links.component';
     SearchBoxComponent,
     SizeSliderComponent,
     CommentsComponent,
-    LinksComponent
+    LinksComponent,
+    PerspectiveDirective
   ]
 })
 export class SharedModule {

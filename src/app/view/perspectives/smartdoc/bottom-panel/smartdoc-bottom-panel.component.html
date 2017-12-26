@@ -1,0 +1,43 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col d-flex justify-content-start">
+
+    </div>
+    <div class="col">
+      <div class="flex-grow-2 mover"
+           title="Move part" i18n-title="@@smartdoc.document.move">
+        <i class="fal fa-lg fa-ellipsis-h-alt"></i>
+      </div>
+    </div>
+    <div class="col d-flex justify-content-end">
+      <ng-container *ngIf="selected">
+        <ng-container *ngFor="let perspective of perspectives">
+          <!-- TODO remove once Angular supports ICU messages in attributes -->
+          <div hidden>
+            <span #perspectiveName
+                  i18n="@@smartdoc.button.perspective.switch">
+              Switch to {perspective, select, postit {post-it} search {search} table {table} smartdoc {smart document}}
+            </span>
+          </div>
+          <a *ngIf="perspective !== selectedPerspective"
+             (click)="onSwitchPerspective(perspective)"
+             class="ml-3"
+             [title]="removeHtmlComments(perspectiveName)">
+             <!--title="Switch perspective" i18n-title="@@smartdoc.perspective.switch">-->
+            <i class="{{perspectiveIcon(perspective)}} text-success"></i>
+          </a>
+        </ng-container>
+        <a (click)="onCopyPart()"
+           class="ml-3"
+           title="Copy part" i18n-title="@@smartdoc.part.copy">
+          <i class="fa fa-copy text-success"></i>
+        </a>
+        <a (click)="onRemovePart()"
+           class="ml-3"
+           title="Remove part" i18n-title="@@smartdoc.part.remove">
+          <i class="fa fa-trash-alt text-danger"></i>
+        </a>
+      </ng-container>
+    </div>
+  </div>
+</div>

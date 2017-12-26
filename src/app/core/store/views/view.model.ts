@@ -38,6 +38,7 @@ export interface ViewConfigModel {
 
   search?: SearchConfigModel;
   table?: TableConfigModel;
+  template?: TemplateConfigModel;
 
 }
 
@@ -59,5 +60,12 @@ export interface TableConfigModel {
     linkAttributeIds?: string[];
     expandedDocumentIds?: string[];
   }[];
+
+}
+
+export interface TemplateConfigModel {
+
+  templateId: string;
+  documentsOrder?: string[];
 
 }

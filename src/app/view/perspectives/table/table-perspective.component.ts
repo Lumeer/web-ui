@@ -19,6 +19,7 @@
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {DocumentModel} from 'app/core/store/documents/document.model';
 import {AttributeHelper} from 'app/shared/utils/attribute-helper';
 import {Subscription} from 'rxjs';
 import {Observable} from 'rxjs/Observable';
@@ -55,6 +56,9 @@ import {TableManagerService} from './util/table-manager.service';
 export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, OnDestroy {
 
   @Input()
+  public linkedDocument: DocumentModel;
+
+  @Input()
   public query: Query;
 
   @Input()
@@ -65,6 +69,8 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
 
   @Input()
   public editable: boolean;
+
+  private linkTypeId: string;
 
   constructor(private collectionService: CollectionService,
               private documentService: DocumentService,
@@ -80,7 +86,8 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   private subscription: Subscription;
 
   public ngOnInit() {
-    if (this.query) {
+    if (this.embedded && this.query) {
+      this.linkTypeId = this.query.linkTypeIds[0];
       this.initTable();
       return;
     }
@@ -93,7 +100,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
         const view = navigation.workspace ? views[navigation.workspace.viewCode] : null;
         return view ? [navigation.query, view.config] : [navigation.query, {}];
       })
-    ).subscribe(([query, config] : [QueryModel, ViewConfigModel]) => {
+    ).subscribe(([query, config]: [QueryModel, ViewConfigModel]) => {
       this.query = query;
       this.config = config;
 
@@ -125,7 +132,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
           );
         } else {
           return this.store.select(selectViewsState).pipe(
-            map(views => views.config)
+            map(views => views.config.table)
           );
         }
       })
@@ -146,7 +153,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   }
 
   private fetchDataAndCreateTable() {
-    this.tableManagerService.createTableFromConfig(this.config.table)
+    this.tableManagerService.createTableFromConfig(this.query, this.config.table, this.linkTypeId, this.linkedDocument)
       .subscribe(parts => this.parts = parts);
   }
 
@@ -187,8 +194,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   }
 
   private updateDocument(doc: Document) {
-    this.documentService.patchDocumentData(doc).subscribe(() => {
-    });
+    this.documentService.patchDocumentData(doc).subscribe();
   }
 
   public onDeleteDocument(doc: Document) {
@@ -223,8 +229,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   }
 
   private updateAttribute(collection: Collection, attribute: Attribute) {
-    this.collectionService.updateAttribute(collection.code, attribute.fullName, attribute).subscribe(() => {
-    });
+    this.collectionService.updateAttribute(collection.code, attribute.fullName, attribute).subscribe();
   }
 
   private deleteAttribute(collection: Collection, attribute: Attribute) {

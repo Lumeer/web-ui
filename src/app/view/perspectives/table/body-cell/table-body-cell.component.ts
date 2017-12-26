@@ -18,16 +18,17 @@
  */
 
 import {Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
-
-import {TableRow} from '../model/table-row';
-import {Direction} from '../../post-it/document-data/direction';
-import {DataChangeEvent, LinkInstanceEvent, TableCursorEvent} from '../event';
+import {Attribute, Document} from '../../../../core/dto';
+import {NotificationService} from '../../../../core/notifications/notification.service';
+import {DocumentConverter} from '../../../../core/store/documents/document.converter';
 import {KeyCode} from '../../../../shared/key-code';
 import {HtmlModifier} from '../../../../shared/utils/html-modifier';
-import {Attribute, Document} from '../../../../core/dto';
-import {TableManagerService} from '../util/table-manager.service';
-import {NotificationService} from '../../../../core/notifications/notification.service';
 import {KeyCodeHelper} from '../../../../shared/utils/key-code.helper';
+import {Direction} from '../../post-it/document-data/direction';
+import {DataChangeEvent, LinkInstanceEvent, TableCursorEvent} from '../event';
+
+import {TableRow} from '../model/table-row';
+import {TableManagerService} from '../util/table-manager.service';
 
 @Component({
   selector: 'table-body-cell',
@@ -125,13 +126,15 @@ export class TableBodyCellComponent implements OnChanges {
 
     // TODO validate new value based on constraints
 
+    const linkedDocument: Document = this.row.part.linkedDocument ? DocumentConverter.toDto(this.row.part.linkedDocument) : null;
+
     if (newValue !== oldValue) {
       this.dataChange.emit({
         collection: this.row.part.collection,
         document: this.row.documents[0],
         attribute: this.attribute,
         value: newValue,
-        linkedDocument: this.row.previousLinkedRow ? this.row.previousLinkedRow.documents[0] : null,
+        linkedDocument: this.row.previousLinkedRow ? this.row.previousLinkedRow.documents[0] : linkedDocument,
         linkType: this.row.part.linkType
       });
     }

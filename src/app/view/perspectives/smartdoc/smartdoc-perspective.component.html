@@ -1,0 +1,26 @@
+<div *ngIf="!isDisplayable()"
+     class="alert alert-warning"
+     role="alert"
+     i18n="@@smartdoc.query.invalid">Given query results cannot be shown using smart document perspective. The query needs to specify exactly one collection.
+</div>
+
+<ng-container *ngIf="isDisplayable()">
+  <size-slider *ngIf="false"
+               class="d-flex justify-content-center mb-2"
+               [defaultSize]="size"
+               (newSize)="onSizeChange($event)">
+  </size-slider>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col pointer-events-none"></div>
+      <div class="col-12 {{getColClasses()}}">
+        <smartdoc-document *ngFor="let doc of documents$ | async"
+                           [collections]="collections$ | async"
+                           [document]="doc"
+                           [template]="template$ | async">
+        </smartdoc-document>
+      </div>
+      <div class="col pointer-events-none"></div>
+    </div>
+  </div>
+</ng-container>

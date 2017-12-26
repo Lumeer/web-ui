@@ -23,9 +23,11 @@ import 'rxjs/add/observable/combineLatest';
 import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
 import {Attribute, Collection, Document, LinkInstance, LinkType} from '../../../../core/dto';
-import {CollectionService, DocumentService, LinkInstanceService, LinkTypeService} from '../../../../core/rest';
+import {LinkInstanceService, LinkTypeService} from '../../../../core/rest';
 import {SearchService} from '../../../../core/rest/search.service';
 import {AppState} from '../../../../core/store/app.state';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {TableConfigModel} from '../../../../core/store/views/view.model';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {AttributeHelper} from '../../../../shared/utils/attribute-helper';
@@ -42,15 +44,13 @@ export class TableManagerService {
   public linkTypes: LinkType[] = [];
   public linkInstances: LinkInstance[] = [];
 
-  constructor(private collectionService: CollectionService,
-              private documentService: DocumentService,
-              private linkInstanceService: LinkInstanceService,
+  constructor(private linkInstanceService: LinkInstanceService,
               private linkTypeService: LinkTypeService,
               private searchService: SearchService,
               private store: Store<AppState>) {
   }
 
-  public createTableFromConfig(config: TableConfigModel): Observable<TablePart[]> {
+  public createTableFromConfig(query: QueryModel, config: TableConfigModel, linkTypeId?: string, linkedDocument?: DocumentModel): Observable<TablePart[]> {
     const collectionCodes = config.parts.map(part => part.collectionCode);
     const linkTypeIds = config.parts.map(part => part.linkTypeId).filter(id => id);
 
@@ -66,11 +66,11 @@ export class TableManagerService {
         this.linkTypes = linkTypes;
         this.linkInstances = linkInstances;
 
-        return this.createTablePartsFromConfig(config);
+        return this.createTablePartsFromConfig(query, config, linkTypeId, linkedDocument);
       }));
   }
 
-  private createTablePartsFromConfig(config: TableConfigModel): TablePart[] {
+  private createTablePartsFromConfig(query: QueryModel, config: TableConfigModel, linkTypeId?: string, linkedDocument?: DocumentModel): TablePart[] {
     this.parts = config.parts.map((configPart, index) => {
       const tablePart = new TablePart();
       tablePart.index = index;
@@ -79,10 +79,11 @@ export class TableManagerService {
       tablePart.expandedDocuments = configPart.expandedDocumentIds ? this.getDocumentsByCollection(configPart.collectionCode)
         .filter(doc => configPart.expandedDocumentIds.includes(doc.id)) : [];
 
-      tablePart.linkType = this.getLinkTypeById(configPart.linkTypeId);
+      tablePart.linkType = this.getLinkTypeById(configPart.linkTypeId ? configPart.linkTypeId : linkTypeId);
       tablePart.linkedCollection = tablePart.linkType ?
         this.getCollectionByCode(tablePart.linkType.collectionCodes.find(code => code !== configPart.collectionCode)) :
         null;
+      tablePart.linkedDocument = index === 0 ? linkedDocument : null;
 
       tablePart.sorting = index === 0 ? {
         attributeId: configPart.sortedBy,
@@ -94,7 +95,7 @@ export class TableManagerService {
       return tablePart;
     });
 
-    this.createBody();
+    this.createBody(query);
 
     this.linkNextParts(); // TODO move up
     this.initEmptyTable();
@@ -225,7 +226,7 @@ export class TableManagerService {
     ).subscribe(([documents, linkInstances]) => {
       this.documents.push(...documents);
       this.linkInstances.push(...linkInstances);
-      this.createBody();
+      this.createBody({});
 
       this.saveConfig();
     });
@@ -249,8 +250,8 @@ export class TableManagerService {
     );
   }
 
-  private createBody() {
-    const primaryDocuments = this.getDocumentsByCollection(this.parts[0].collection.code);
+  private createBody(query: QueryModel) {
+    const primaryDocuments = this.getDocumentsByCollection(this.parts[0].collection.code, query.documentIds, !!this.parts[0].linkType);
     this.sortDocuments(primaryDocuments);
 
     primaryDocuments.forEach((doc, index) => this.createRow(null, null, 0, index, [doc]));
@@ -302,8 +303,18 @@ export class TableManagerService {
     return this.collections.find(collection => collection.code === code);
   }
 
-  private getDocumentsByCollection(collectionCode: string): Document[] {
-    return this.documents.filter(doc => doc.collectionCode === collectionCode);
+  private getDocumentsByCollection(collectionCode: string, documentIds?: string[], embedded?: boolean): Document[] {
+    return this.documents.filter(doc => {
+      if (doc.collectionCode !== collectionCode) {
+        return false;
+      }
+
+      if (embedded) {
+        return documentIds.includes(doc.id);
+      }
+
+      return documentIds.length === 0 || documentIds.includes(doc.id);
+    });
   }
 
   private getLinkTypeById(linkTypeId: string): LinkType {

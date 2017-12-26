@@ -1,0 +1,14 @@
+@import "../../../../shared/variables";
+
+.onhover-success, .onhover-danger {
+  color: transparent;
+}
+
+div:hover {
+  .onhover-success {
+    color: $success;
+  }
+  .onhover-danger {
+    color: $danger;
+  }
+}

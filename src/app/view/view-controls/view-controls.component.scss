@@ -1,5 +1,13 @@
 @import "../../shared/variables";
 
+.dropdown {
+  cursor: default;
+}
+
+.dropdown-menu {
+  cursor: pointer;
+}
+
 .view-button {
   background-color: transparent;
   border: 0;

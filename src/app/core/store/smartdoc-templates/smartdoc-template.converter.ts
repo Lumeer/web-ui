@@ -18,56 +18,58 @@
  */
 
 import {perspectivesMap} from '../../../view/perspectives/perspective';
-import {TemplateDto, TemplatePartDto} from '../../dto/template.dto';
-import {TemplateModel, TemplatePartModel, TemplatePartType} from './template.model';
+import {SmartDocTemplateDto, SmartDocTemplatePartDto} from '../../dto/smartdoc-template.dto';
+import {SmartDocTemplateModel, SmartDocTemplatePartModel, SmartDocTemplatePartType} from './smartdoc-template.model';
 
-export class TemplateConverter {
+export class SmartDocTemplateConverter {
 
-  public static fromDto(dto: TemplateDto, correlationId?: string): TemplateModel {
+  public static fromDto(dto: SmartDocTemplateDto, correlationId?: string): SmartDocTemplateModel {
     return {
       id: dto.id,
       collectionCode: dto.collectionCode,
-      parts: dto.parts.map(TemplateConverter.fromPartDto),
+      parts: dto.parts.map(SmartDocTemplateConverter.fromPartDto),
       correlationId: correlationId
     };
   }
 
-  private static fromPartDto(partDto: TemplatePartDto): TemplatePartModel {
+  private static fromPartDto(partDto: SmartDocTemplatePartDto): SmartDocTemplatePartModel {
     return {
-      type: TemplateConverter.typeFromString(partDto.type),
-      text: partDto.text,
+      type: SmartDocTemplateConverter.typeFromString(partDto.type),
+      textHtml: partDto.textHtml,
+      textData: partDto.textData,
       linkTypeId: partDto.linkTypeId,
       perspective: perspectivesMap[partDto.perspective],
       templateId: partDto.templateId
     };
   }
 
-  public static toDto(model: TemplateModel): TemplateDto {
+  public static toDto(model: SmartDocTemplateModel): SmartDocTemplateDto {
     return {
       id: model.id,
       collectionCode: model.collectionCode,
-      parts: model.parts.map(TemplateConverter.toPartDto)
+      parts: model.parts.map(SmartDocTemplateConverter.toPartDto)
     };
   }
 
-  private static toPartDto(partModel: TemplatePartModel): TemplatePartDto {
+  private static toPartDto(partModel: SmartDocTemplatePartModel): SmartDocTemplatePartDto {
     return {
       type: partModel.type,
-      text: partModel.text,
+      textHtml: partModel.textHtml,
+      textData: partModel.textData,
       linkTypeId: partModel.linkTypeId,
       perspective: partModel.perspective,
       templateId: partModel.templateId
     };
   }
 
-  private static typeFromString(type: string): TemplatePartType {
+  private static typeFromString(type: string): SmartDocTemplatePartType {
     switch (type) {
-      case TemplatePartType.Attachments:
-        return TemplatePartType.Attachments;
-      case TemplatePartType.Embedded:
-        return TemplatePartType.Embedded;
-      case TemplatePartType.Text:
-        return TemplatePartType.Text;
+      case SmartDocTemplatePartType.Attachments:
+        return SmartDocTemplatePartType.Attachments;
+      case SmartDocTemplatePartType.Embedded:
+        return SmartDocTemplatePartType.Embedded;
+      case SmartDocTemplatePartType.Text:
+        return SmartDocTemplatePartType.Text;
       default:
         throw new TypeError('Unknown template part type: ' + type);
     }

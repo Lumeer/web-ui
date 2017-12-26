@@ -40,3 +40,4 @@ export const selectLinkTypesState = (state: AppState) => state.linkTypes;
 export const selectAllLinkTypes = createSelector(selectLinkTypesState, linkTypesAdapter.getSelectors().selectAll);
 export const selectLinkTypesDictionary = createSelector(selectLinkTypesState, linkTypesAdapter.getSelectors().selectEntities);
 export const selectLinkTypesQueries = createSelector(selectLinkTypesState, linkTypesState => linkTypesState.queries);
+export const selectLinkTypeById = (linkTypeId: string) => createSelector(selectLinkTypesDictionary, linkTypes => linkTypes[linkTypeId]);

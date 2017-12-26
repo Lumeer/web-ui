@@ -24,11 +24,11 @@ import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
-import {Workspace} from '../../core/store/navigation/workspace.model';
-import {ViewModel} from '../../core/store/views/view.model';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
-import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
+import {Workspace} from '../../core/store/navigation/workspace.model';
 import {RouterAction} from '../../core/store/router/router.action';
+import {ViewModel} from '../../core/store/views/view.model';
+import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
 
 @Component({
   selector: 'view-controls',
@@ -90,6 +90,21 @@ export class ViewControlsComponent implements OnInit, OnDestroy {
 
   public getIconForPerspective(perspective: string): string {
     return perspectiveIconsMap[perspective] || '';
+  }
+
+  private isSingleCollectionInQuery(): boolean {
+    const query = this.view.query;
+    return query && query.collectionCodes && query.collectionCodes.length === 1;
+  }
+
+  public canShowPerspective(perspective: Perspective): boolean {
+    switch (perspective) {
+      case Perspective.Table:
+      case Perspective.SmartDoc:
+        return this.isSingleCollectionInQuery();
+      default:
+        return true;
+    }
   }
 
 }

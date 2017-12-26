@@ -22,14 +22,14 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {LocalStorage} from '../../shared/utils/local-storage';
-import {TemplateDto} from '../dto/template.dto';
+import {SmartDocTemplateDto} from '../dto/smartdoc-template.dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
-import {TemplatePartType} from '../store/templates/template.model';
+import {SmartDocTemplatePartType} from '../store/smartdoc-templates/smartdoc-template.model';
 
 @Injectable()
-export class TemplateService {
+export class SmartDocTemplateService {
 
   private workspace: Workspace;
 
@@ -38,7 +38,7 @@ export class TemplateService {
     this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
-  public createTemplate(template: TemplateDto): Observable<TemplateDto> {
+  public createTemplate(template: SmartDocTemplateDto): Observable<SmartDocTemplateDto> {
     const templates = LocalStorage.get(this.webStorageKey()) || {};
 
     template.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
@@ -49,7 +49,7 @@ export class TemplateService {
     return Observable.of(template);
   }
 
-  public updateTemplate(template: TemplateDto): Observable<TemplateDto> {
+  public updateTemplate(template: SmartDocTemplateDto): Observable<SmartDocTemplateDto> {
     const templates = LocalStorage.get(this.webStorageKey()) || {};
 
     templates[template.id] = template;
@@ -69,11 +69,11 @@ export class TemplateService {
     return Observable.of(id);
   }
 
-  public getTemplatesById(id: string): Observable<TemplateDto[]> {
+  public getTemplatesById(id: string): Observable<SmartDocTemplateDto[]> {
     const templates = LocalStorage.get(this.webStorageKey()) || {};
 
-    const template: TemplateDto = templates[id];
-    const childIds = template.parts.filter(part => part.type === TemplatePartType.Embedded)
+    const template: SmartDocTemplateDto = templates[id];
+    const childIds = template.parts.filter(part => part.type === SmartDocTemplatePartType.Embedded)
       .map(part => part.templateId);
 
     if (childIds.length === 0) {

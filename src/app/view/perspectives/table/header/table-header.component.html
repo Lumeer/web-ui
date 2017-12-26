@@ -9,8 +9,8 @@
 </tr>
 <tr *ngFor="let row of headerRows(); first as isFirstRow">
   <th class="border-0"></th>
-  <ng-container *ngFor="let part of parts">
-    <th *ngIf="isFirstRow && part.linkType"
+  <ng-container *ngFor="let part of parts; index as partIndex">
+    <th *ngIf="isFirstRow && part.linkType && partIndex > 0"
         [attr.rowspan]="maxAttributeDepth">
       <div class="link-cell dropup mx-1">
         <a data-toggle="dropdown"

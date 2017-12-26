@@ -1,0 +1,9 @@
+<ng-template perspective></ng-template>
+
+<smartdoc-bottom-panel [selected]="selected"
+                       [perspectives]="allowedPerspectives()"
+                       [selectedPerspective]="templatePart.perspective"
+                       (copyPart)="onCopyPart()"
+                       (removePart)="onRemovePart()"
+                       (switchPerspective)="onSwitchPerspective($event)">
+</smartdoc-bottom-panel>

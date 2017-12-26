@@ -212,7 +212,9 @@ module.exports = {
   "plugins": [
     new ProvidePlugin({
       $: 'jquery',
-      jQuery: 'jquery'
+      jQuery: 'jquery',
+      'window.QuillEditor': 'quill',
+      'QuillEditor': 'quill'
     }),
     new DefinePlugin({
       LUMEER_ENV: JSON.stringify(LUMEER_ENV),
