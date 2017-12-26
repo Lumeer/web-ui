@@ -73,7 +73,7 @@ export class DocumentsEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.CreateFailure>(DocumentsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to create document'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to create record'}))
   );
 
   @Effect()

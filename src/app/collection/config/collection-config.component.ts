@@ -102,7 +102,7 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
   }
 
   public goToCollectionsPage(): void {
-    this.router.navigate([this.workspacePath(), 'collections']);
+    this.router.navigate([this.workspacePath(), 'files']);
   }
 
   public documentsQuery(collectionCode: string): string {

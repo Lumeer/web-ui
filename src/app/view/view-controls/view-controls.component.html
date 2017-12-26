@@ -3,7 +3,7 @@
     <div class="dropdown-toggle py-1 px-2 d-flex flex-nowrap align-items-center"
          id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <i class="fa-fw {{getIconForPerspective(view.perspective)}}"></i>
-      <span class="ml-1 text-nowrap" i18n="@@view.perspective.name">{view.perspective, select, postit {Post-it} search {Search} table {Table} smartdoc {Smart document}}</span>
+      <span class="ml-1 text-nowrap" i18n="@@view.perspective.name">{view.perspective, select, postit {Post-it} search {Search} table {Table} smartrec {Smart record}}</span>
     </div>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
       <ng-container *ngFor="let perspective of perspectives()">
@@ -11,7 +11,7 @@
              class="dropdown-item"
              (click)="onSelectPerspective(perspective)">
           <i class="fa-fw {{getIconForPerspective(perspective)}}"></i>
-          <span class="ml-1 text-nowrap" i18n="@@view.perspective.name">{perspective, select, postit {Post-it} search {Search} table {Table} smartdoc {Smart document}}</span>
+          <span class="ml-1 text-nowrap" i18n="@@view.perspective.name">{perspective, select, postit {Post-it} search {Search} table {Table} smartrec {Smart record}}</span>
         </div>
       </ng-container>
     </div>

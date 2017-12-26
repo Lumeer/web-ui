@@ -50,7 +50,7 @@ export class CollectionsEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.GetFailure>(CollectionsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to get collections'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to get files'}))
   );
 
   @Effect()
@@ -69,7 +69,7 @@ export class CollectionsEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.CreateFailure>(CollectionsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to create collection'}))
+    map(action => new NotificationsAction.Error({message: 'Failed to create file'}))
   );
 
   @Effect()
@@ -88,7 +88,7 @@ export class CollectionsEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to update collection'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to update file'}))
   );
 
   @Effect()
@@ -101,7 +101,7 @@ export class CollectionsEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.DeleteFailure>(CollectionsActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to delete collection'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to delete file'}))
   );
 
   @Effect()

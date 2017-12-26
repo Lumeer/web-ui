@@ -28,8 +28,8 @@ import {SearchDocumentsComponent} from './perspectives/search/documents/search-d
 import {SearchLinksComponent} from './perspectives/search/links/search-links.component';
 import {SearchPerspectiveComponent} from './perspectives/search/search-perspective.component';
 import {SearchViewsComponent} from './perspectives/search/views/search-views.component';
-import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
 import {SmartDocPerspectiveComponent} from './perspectives/smartdoc/smartdoc-perspective.component';
+import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
 import {ViewGuard} from './view.guard';
@@ -53,7 +53,7 @@ const viewRoutes: Routes = [
             component: SearchAllComponent
           },
           {
-            path: 'collections',
+            path: 'files',
             component: SearchCollectionsComponent
           },
           {

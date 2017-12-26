@@ -90,7 +90,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
     this.collectionSelectService
       .select(collectionCode).pipe(
-      switchMap(collection => this.router.navigate([this.workspacePath(), 'c', collection.code, 'linktypes']))
+      switchMap(collection => this.router.navigate([this.workspacePath(), 'f', collection.code, 'linktypes']))
     ).subscribe(
       navigated => this.initializeLinkTypes(),
       error => this.notificationService.error('Failed switching file')

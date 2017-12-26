@@ -259,7 +259,7 @@ export class TableBodyCellComponent implements OnChanges {
 
   public confirmRemove() {
     this.notificationService.confirm(
-      'Deleting a row will permanently remove the record from the collection',
+      'Deleting a row will permanently remove the record from the file',
       'Delete this record?',
       [
         {text: 'Yes', action: () => this.onDeleteDocument(), bold: false},

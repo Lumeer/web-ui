@@ -19,19 +19,19 @@
 
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {isString} from 'util';
+import {Collection} from '../../../../core/dto/collection';
+import {Permission} from '../../../../core/dto/permission';
+import {AppState} from '../../../../core/store/app.state';
+import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
+import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {KeyCode} from '../../../../shared/key-code';
+import {Role} from '../../../../shared/permissions/role';
 
 import {AttributePair} from '../document-data/attribute-pair';
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
 import {Direction} from '../document-data/direction';
 import {DocumentModel} from '../document-data/document-model';
-import {KeyCode} from '../../../../shared/key-code';
-import {isString} from 'util';
-import {AppState} from '../../../../core/store/app.state';
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
-import {Collection} from '../../../../core/dto/collection';
-import {Role} from '../../../../shared/permissions/role';
-import {Permission} from '../../../../core/dto/permission';
-import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 
 @Component({
   selector: 'post-it-document',
@@ -286,7 +286,7 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   public configPrefix(): string {
-    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}/c/${this.collection.code}/d/${this.data.document.id}`;
+    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}/f/${this.collection.code}/r/${this.data.document.id}`;
   }
 
 }
