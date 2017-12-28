@@ -20,7 +20,7 @@
 export enum Perspective {
   PostIt = 'postit',
   Search = 'search',
-  SmartDoc = 'smartrec',
+  SmartDoc = 'smartdoc',
   Table = 'table'
 }
 
