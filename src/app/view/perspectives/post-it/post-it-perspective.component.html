@@ -7,8 +7,7 @@
 
   <ng-container *ngFor="let postIt of postIts; let idx = index">
     <post-it-document *ngIf="collections[postIt.document.collectionCode]"
-                      class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : null }} {{ postIt === lastClickedPostIt ? 'selected' : null }}"
-                      [style.z-index]="postIt.selectedInput.documentIdx === postIt.index ? 50 : null"
+                      class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : null }}"
                       [attr.index]="idx"
                       [data]="setPostItIndexAndReturn(postIt, idx)"
                       [collection]="collections[postIt.document.collectionCode]"

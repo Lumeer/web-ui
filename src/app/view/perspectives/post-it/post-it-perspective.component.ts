@@ -453,7 +453,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.setInfiniteScroll(false);
-    this.layout.destroy();
     if (this.appStateSubscription) {
       this.appStateSubscription.unsubscribe();
     }

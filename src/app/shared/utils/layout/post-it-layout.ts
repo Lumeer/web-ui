@@ -22,8 +22,6 @@ import {PostItLayoutConfig} from './post-it-layout-config';
 
 export class PostItLayout {
 
-  public layout: any;
-
   private layoutEndCallback: () => void;
 
   constructor(private containerClassName: string, private parameters: PostItLayoutConfig, private zone: NgZone) {
@@ -46,25 +44,8 @@ export class PostItLayout {
     });
   }
 
-  public onLayoutEnd(callback: () => void): void {
-    const onMostRecentLayoutEnd = () => {
-      this.layout.off('layoutEnd', this.layoutEndCallback);
-    };
-
-    this.layout
-      .off('layoutEnd', this.onLayoutEnd)
-      .on('layoutEnd', onMostRecentLayoutEnd);
-
-    this.layoutEndCallback = onMostRecentLayoutEnd;
-  }
-
   private containerExists(): boolean {
     return !!(document.querySelector(this.containerClassName));
-  }
-
-  public destroy(): void {
-    this.layout.off('layoutEnd', this.layoutEndCallback());
-    this.layout.destroy();
   }
 
 }
