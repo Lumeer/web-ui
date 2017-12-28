@@ -456,7 +456,6 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     if (!queryItem) {
       return;
     }
-
     if (queryItem.type === QueryItemType.Condition) {
       if (this.selectedQueryItem >= 0 && this.queryItems[this.selectedQueryItem].type === QueryItemType.Attribute) {
         (this.queryItems[this.selectedQueryItem] as AttributeQueryItem).condition = queryItem.text;

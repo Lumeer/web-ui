@@ -93,6 +93,7 @@ export class OrganizationSettingsComponent implements OnInit {
     }
     this.organizationService.editOrganization(this.organizationCode, this.organization)
       .subscribe(success => {
+          this.notificationService.success(`Organization's name was successfully updated`);
           this.originalOrganizationName = this.organization.name;
         },
         error => {

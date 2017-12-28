@@ -1,58 +1,103 @@
+const fs = require('fs');
 const path = require('path');
 const ProgressPlugin = require('webpack/lib/ProgressPlugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 const autoprefixer = require('autoprefixer');
 const postcssUrl = require('postcss-url');
+const cssnano = require('cssnano');
+const customProperties = require('postcss-custom-properties');
+const rxPaths = require('rxjs/_esm5/path-mapping');
 
-const {NoEmitOnErrorsPlugin, LoaderOptionsPlugin, DefinePlugin, ProvidePlugin} = require('webpack');
-const {BaseHrefWebpackPlugin} = require('@angular/cli/plugins/webpack');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const {CommonsChunkPlugin} = require('webpack').optimize;
-const {AngularCompilerPlugin} = require('@ngtools/webpack');
+const { NoEmitOnErrorsPlugin, SourceMapDevToolPlugin, NamedModulesPlugin } = require('webpack');
+const { BaseHrefWebpackPlugin, NamedLazyChunksWebpackPlugin } = require('@angular/cli/plugins/webpack');
+const { CommonsChunkPlugin } = require('webpack').optimize;
+const { LicenseWebpackPlugin } = require('license-webpack-plugin');
 
 const nodeModules = path.join(process.cwd(), 'node_modules');
-const entryPoints = ["inline", "polyfills", "sw-register", "styles", "vendor", "main"];
+const genDirNodeModules = path.join(process.cwd(), 'src', '$$_gendir', 'node_modules');
+const realNodeModules = fs.realpathSync(nodeModules);
+
+const minimizeCss = true;
 const baseHref = "";
 const deployUrl = "";
-const LUMEER_ENV = process.env.LUMEER_ENV || 'production';
-const LUMEER_ENGINE = process.env.LUMEER_ENGINE || 'lumeer-engine';
-const OUTPUT_PATH = process.env.OUTPUT_PATH || 'dist/';
-const I18N_FORMAT = process.env.I18N_FORMAT || 'xlf';
-const I18N_LOCALE = process.env.I18N_LOCALE;
-const AOT = process.env.AOT || false;
-const I18N_PATH = process.env.I18N_PATH || 'src/i18n/messages.' + I18N_LOCALE + '.' + I18N_FORMAT;
-
-const devServer = {
-  contentBase: path.join(__dirname, 'dist'),
-  historyApiFallback: true,
-  port: 7000,
-  proxy: {
-    ['/' + LUMEER_ENGINE]: {
-      target: 'http://127.0.0.1:8080/' + LUMEER_ENGINE,
-      pathRewrite: {['^/' + LUMEER_ENGINE]: ''}
-    }
-  }
+const postcssPlugins = function () {
+  // safe settings based on: https://github.com/ben-eb/cssnano/issues/358#issuecomment-283696193
+  const importantCommentRe = /@preserve|@licen[cs]e|[@#]\s*source(?:Mapping)?URL|^!/i;
+  const minimizeOptions = {
+    autoprefixer: false,
+    safe: true,
+    mergeLonghand: false,
+    discardComments: { remove: (comment) => !importantCommentRe.test(comment) }
+  };
+  return [
+    postcssUrl([
+      {
+        // Only convert root relative URLs, which CSS-Loader won't process into require().
+        filter: ({ url }) => url.startsWith('/') && !url.startsWith('//'),
+        url: ({ url }) => {
+          if (deployUrl.match(/:\/\//) || deployUrl.startsWith('/')) {
+            // If deployUrl is absolute or root relative, ignore baseHref & use deployUrl as is.
+            return `${deployUrl.replace(/\/$/, '')}${url}`;
+          }
+          else if (baseHref.match(/:\/\//)) {
+            // If baseHref contains a scheme, include it as is.
+            return baseHref.replace(/\/$/, '') +
+              `/${deployUrl}/${url}`.replace(/\/\/+/g, '/');
+          }
+          else {
+            // Join together base-href, deploy-url and the original URL.
+            // Also dedupe multiple slashes into single ones.
+            return `/${baseHref}/${deployUrl}/${url}`.replace(/\/\/+/g, '/');
+          }
+        }
+      },
+      {
+        // TODO: inline .cur if not supporting IE (use browserslist to check)
+        filter: (asset) => !asset.hash && !asset.absolutePath.endsWith('.cur'),
+        url: 'inline',
+        // NOTE: maxSize is in KB
+        maxSize: 10
+      }
+    ]),
+    autoprefixer(),
+    customProperties({ preserve: true })
+  ].concat(minimizeCss ? [cssnano(minimizeOptions)] : []);
 };
 
+/* Custom imports */
+const {  externals, output} = require('./config/settings');
+const { lumeerDevServer } = require('./config/dev-server');
+const { providePlugin, angularCompilerPlugin, copyWebpackPlugin, definePlugin, htmlWebpackPlugin } = require('./config/custom-plugins');
+/* Custom imports */
 
 module.exports = {
-  devServer: devServer,
-  performance: {hints: false},
-  "devtool": "source-map",
+  devServer: lumeerDevServer, // Custom devServer
+  performance: {hints: false}, // Custom performance change
+  output: output, // Custom output
+  externals: externals, // Custom externals
   "resolve": {
     "extensions": [
       ".ts",
       ".js"
     ],
     "modules": [
+      "./node_modules",
       "./node_modules"
+    ],
+    "symlinks": true,
+    "alias": rxPaths(),
+    "mainFields": [
+      "browser",
+      "module",
+      "main"
     ]
   },
   "resolveLoader": {
     "modules": [
+      "./node_modules",
       "./node_modules"
-    ]
+    ],
+    "alias": rxPaths()
   },
   "entry": {
     "main": [
@@ -65,47 +110,50 @@ module.exports = {
       "./src/styles.css"
     ]
   },
-  "output": {
-    "path": path.join(process.cwd(), OUTPUT_PATH),
-    "filename": "[name].bundle.js",
-    "chunkFilename": "[id].chunk.js",
-    "publicPath": "/ui/"
-  },
   "module": {
     "rules": [
-      {
-        "enforce": "pre",
-        "test": /\.js$/,
-        "loader": "source-map-loader",
-        "exclude": [
-          /\/node_modules\//
-        ]
-      },
-      {
-        "test": /\.json$/,
-        "loader": "json-loader"
-      },
       {
         "test": /\.html$/,
         "loader": "raw-loader"
       },
       {
-        "test": /\.(eot|svg)$/,
-        "loader": "file-loader?name=[name].[hash:20].[ext]"
+        "test": /\.(eot|svg|cur)$/,
+        "loader": "file-loader",
+        "options": {
+          "name": "[name].[hash:20].[ext]",
+          "limit": 10000
+        }
       },
       {
-        "test": /\.(jpg|png|gif|otf|ttf|woff|woff2|cur|ani)$/,
-        "loader": "url-loader?name=[name].[hash:20].[ext]&limit=10000"
+        "test": /\.(jpg|png|webp|gif|otf|ttf|woff|woff2|ani)$/,
+        "loader": "url-loader",
+        "options": {
+          "name": "[name].[hash:20].[ext]",
+          "limit": 10000
+        }
       },
       {
         "exclude": [
           path.join(process.cwd(), "src/styles.css")
         ],
         "test": /\.css$/,
-        "loaders": [
+        "use": [
           "exports-loader?module.exports.toString()",
-          "css-loader?{\"sourceMap\":false,\"importLoaders\":1}",
-          "postcss-loader"
+          {
+            "loader": "css-loader",
+            "options": {
+              "sourceMap": false,
+              "importLoaders": 1
+            }
+          },
+          {
+            "loader": "postcss-loader",
+            "options": {
+              "ident": "postcss",
+              "plugins": postcssPlugins,
+              "sourceMap": false
+            }
+          }
         ]
       },
       {
@@ -113,11 +161,31 @@ module.exports = {
           path.join(process.cwd(), "src/styles.css")
         ],
         "test": /\.scss$|\.sass$/,
-        "loaders": [
+        "use": [
           "exports-loader?module.exports.toString()",
-          "css-loader?{\"sourceMap\":false,\"importLoaders\":1}",
-          "postcss-loader",
-          "sass-loader"
+          {
+            "loader": "css-loader",
+            "options": {
+              "sourceMap": false,
+              "importLoaders": 1
+            }
+          },
+          {
+            "loader": "postcss-loader",
+            "options": {
+              "ident": "postcss",
+              "plugins": postcssPlugins,
+              "sourceMap": false
+            }
+          },
+          {
+            "loader": "sass-loader",
+            "options": {
+              "sourceMap": false,
+              "precision": 8,
+              "includePaths": []
+            }
+          }
         ]
       },
       {
@@ -125,11 +193,29 @@ module.exports = {
           path.join(process.cwd(), "src/styles.css")
         ],
         "test": /\.less$/,
-        "loaders": [
+        "use": [
           "exports-loader?module.exports.toString()",
-          "css-loader?{\"sourceMap\":false,\"importLoaders\":1}",
-          "postcss-loader",
-          "less-loader"
+          {
+            "loader": "css-loader",
+            "options": {
+              "sourceMap": false,
+              "importLoaders": 1
+            }
+          },
+          {
+            "loader": "postcss-loader",
+            "options": {
+              "ident": "postcss",
+              "plugins": postcssPlugins,
+              "sourceMap": false
+            }
+          },
+          {
+            "loader": "less-loader",
+            "options": {
+              "sourceMap": false
+            }
+          }
         ]
       },
       {
@@ -137,11 +223,30 @@ module.exports = {
           path.join(process.cwd(), "src/styles.css")
         ],
         "test": /\.styl$/,
-        "loaders": [
+        "use": [
           "exports-loader?module.exports.toString()",
-          "css-loader?{\"sourceMap\":false,\"importLoaders\":1}",
-          "postcss-loader",
-          "stylus-loader?{\"sourceMap\":false,\"paths\":[]}"
+          {
+            "loader": "css-loader",
+            "options": {
+              "sourceMap": false,
+              "importLoaders": 1
+            }
+          },
+          {
+            "loader": "postcss-loader",
+            "options": {
+              "ident": "postcss",
+              "plugins": postcssPlugins,
+              "sourceMap": false
+            }
+          },
+          {
+            "loader": "stylus-loader",
+            "options": {
+              "sourceMap": false,
+              "paths": []
+            }
+          }
         ]
       },
       {
@@ -149,180 +254,196 @@ module.exports = {
           path.join(process.cwd(), "src/styles.css")
         ],
         "test": /\.css$/,
-        "loaders": ExtractTextPlugin.extract({
-          "use": [
-            "css-loader?{\"sourceMap\":false,\"importLoaders\":1}",
-            "postcss-loader"
-          ],
-          "fallback": "style-loader",
-          "publicPath": ""
-        })
+        "use": [
+          "style-loader",
+          {
+            "loader": "css-loader",
+            "options": {
+              "sourceMap": false,
+              "importLoaders": 1
+            }
+          },
+          {
+            "loader": "postcss-loader",
+            "options": {
+              "ident": "postcss",
+              "plugins": postcssPlugins,
+              "sourceMap": false
+            }
+          }
+        ]
       },
       {
         "include": [
           path.join(process.cwd(), "src/styles.css")
         ],
         "test": /\.scss$|\.sass$/,
-        "loaders": ExtractTextPlugin.extract({
-          "use": [
-            "css-loader?{\"sourceMap\":false,\"importLoaders\":1}",
-            "postcss-loader",
-            "sass-loader"
-          ],
-          "fallback": "style-loader",
-          "publicPath": ""
-        })
+        "use": [
+          "style-loader",
+          {
+            "loader": "css-loader",
+            "options": {
+              "sourceMap": false,
+              "importLoaders": 1
+            }
+          },
+          {
+            "loader": "postcss-loader",
+            "options": {
+              "ident": "postcss",
+              "plugins": postcssPlugins,
+              "sourceMap": false
+            }
+          },
+          {
+            "loader": "sass-loader",
+            "options": {
+              "sourceMap": false,
+              "precision": 8,
+              "includePaths": []
+            }
+          }
+        ]
       },
       {
         "include": [
           path.join(process.cwd(), "src/styles.css")
         ],
         "test": /\.less$/,
-        "loaders": ExtractTextPlugin.extract({
-          "use": [
-            "css-loader?{\"sourceMap\":false,\"importLoaders\":1}",
-            "postcss-loader",
-            "less-loader"
-          ],
-          "fallback": "style-loader",
-          "publicPath": ""
-        })
+        "use": [
+          "style-loader",
+          {
+            "loader": "css-loader",
+            "options": {
+              "sourceMap": false,
+              "importLoaders": 1
+            }
+          },
+          {
+            "loader": "postcss-loader",
+            "options": {
+              "ident": "postcss",
+              "plugins": postcssPlugins,
+              "sourceMap": false
+            }
+          },
+          {
+            "loader": "less-loader",
+            "options": {
+              "sourceMap": false
+            }
+          }
+        ]
       },
       {
         "include": [
           path.join(process.cwd(), "src/styles.css")
         ],
         "test": /\.styl$/,
-        "loaders": ExtractTextPlugin.extract({
-          "use": [
-            "css-loader?{\"sourceMap\":false,\"importLoaders\":1}",
-            "postcss-loader",
-            "stylus-loader?{\"sourceMap\":false,\"paths\":[]}"
-          ],
-          "fallback": "style-loader",
-          "publicPath": ""
-        })
+        "use": [
+          "style-loader",
+          {
+            "loader": "css-loader",
+            "options": {
+              "sourceMap": false,
+              "importLoaders": 1
+            }
+          },
+          {
+            "loader": "postcss-loader",
+            "options": {
+              "ident": "postcss",
+              "plugins": postcssPlugins,
+              "sourceMap": false
+            }
+          },
+          {
+            "loader": "stylus-loader",
+            "options": {
+              "sourceMap": false,
+              "paths": []
+            }
+          }
+        ]
       },
       {
         "test": /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-        "loader": "@ngtools/webpack"
+        "use": [
+          "@ngtools/webpack"
+        ]
       }
     ]
   },
   "plugins": [
-    new ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.QuillEditor': 'quill',
-      'QuillEditor': 'quill'
-    }),
-    new DefinePlugin({
-      LUMEER_ENV: JSON.stringify(LUMEER_ENV),
-      API_URL: JSON.stringify(LUMEER_ENGINE)
-    }),
-    new CopyWebpackPlugin([
-      {from: __dirname + '/img', to: 'img'}
-    ]),
+    providePlugin, // Custom plugin
+    angularCompilerPlugin, // Custom plugin
+    copyWebpackPlugin, // Custom plugin
+    definePlugin, // Custom plugin
+    htmlWebpackPlugin, // Custom plugin
     new NoEmitOnErrorsPlugin(),
     new ProgressPlugin(),
-    new HtmlWebpackPlugin({
-      "favicon": "img/favicon.ico",
-      "title": "Lumeer tool",
-      "publicPath": "/ui/",
-      "inject": "body",
-      "template": "./src/index.ejs",
-      "hash": false,
-      "compile": true,
-      "minify": false,
-      "cache": true,
-      "showErrors": true,
-      "chunks": "all",
-      "excludeChunks": [],
-      "xhtml": true,
-      "chunksSortMode": function sort(left, right) {
-        let leftIndex = entryPoints.indexOf(left.names[0]);
-        let rightindex = entryPoints.indexOf(right.names[0]);
-        if (leftIndex > rightindex) {
-          return 1;
-        }
-        else if (leftIndex < rightindex) {
-          return -1;
-        }
-        else {
-          return 0;
-        }
-      }
+    new CircularDependencyPlugin({
+      "exclude": /(\\|\/)node_modules(\\|\/)/,
+      "failOnError": false,
+      "onDetected": false
     }),
+    new NamedLazyChunksWebpackPlugin(),
     new BaseHrefWebpackPlugin({}),
     new CommonsChunkPlugin({
-      "name": "inline",
+      "name": [
+        "inline"
+      ],
       "minChunks": null
     }),
     new CommonsChunkPlugin({
-      "name": "vendor",
-      "minChunks": (module) => module.resource && module.resource.startsWith(nodeModules),
+      "name": [
+        "vendor"
+      ],
+      "minChunks": (module) => {
+        return module.resource
+          && (module.resource.startsWith(nodeModules)
+          || module.resource.startsWith(genDirNodeModules)
+          || module.resource.startsWith(realNodeModules));
+      },
       "chunks": [
         "main"
       ]
     }),
-    new ExtractTextPlugin({
-      "filename": "[name].bundle.css",
-      "disable": true
+    new SourceMapDevToolPlugin({
+      "filename": "[file].map[query]",
+      "moduleFilenameTemplate": "[resource-path]",
+      "fallbackModuleFilenameTemplate": "[resource-path]?[hash]",
+      "sourceRoot": "webpack:///"
     }),
-    new LoaderOptionsPlugin({
-      "sourceMap": false,
-      "options": {
-        "tslint": {
-          emitErrors: true,
-          failOnHint: false
-        },
-        "postcss": [
-          autoprefixer(),
-          postcssUrl({
-            "url": (URL) => {
-              // Only convert root relative URLs, which CSS-Loader won't process into require().
-              if (!URL.startsWith('/') || URL.startsWith('//')) {
-                return URL;
-              }
-              if (deployUrl.match(/:\/\//)) {
-                // If deployUrl contains a scheme, ignore baseHref use deployUrl as is.
-                return `${deployUrl.replace(/\/$/, '')}${URL}`;
-              }
-              else if (baseHref.match(/:\/\//)) {
-                // If baseHref contains a scheme, include it as is.
-                return baseHref.replace(/\/$/, '') +
-                  `/${deployUrl}/${URL}`.replace(/\/\/+/g, '/');
-              }
-              else {
-                // Join together base-href, deploy-url and the original URL.
-                // Also dedupe multiple slashes into single ones.
-                return `/${baseHref}/${deployUrl}/${URL}`.replace(/\/\/+/g, '/');
-              }
-            }
-          })
-        ],
-        "sassLoader": {
-          "sourceMap": false,
-          "includePaths": []
-        },
-        "lessLoader": {
-          "sourceMap": false
-        },
-        "context": ""
-      }
+    new CommonsChunkPlugin({
+      "name": [
+        "main"
+      ],
+      "minChunks": 2,
+      "async": "common"
     }),
-    new AngularCompilerPlugin({
-      "mainPath": "main.ts",
-      "i18nFile": I18N_LOCALE ? I18N_PATH : null,
-      "i18nFormat": I18N_LOCALE ? I18N_FORMAT : null,
-      "locale": I18N_LOCALE,
-      "replaceExport": false,
-      "hostReplacementPaths": {
-        "environments/environment.ts": "environments/environment.ts"
-      },
-      "exclude": [],
-      "tsConfigPath": "src/tsconfig.app.json",
-      "skipCodeGeneration": !AOT
+    new NamedModulesPlugin({}),
+    new LicenseWebpackPlugin({
+      "licenseFilenames": [
+        "LICENSE",
+        "LICENSE.md",
+        "LICENSE.txt",
+        "license",
+        "license.md",
+        "license.txt"
+      ],
+      "perChunkOutput": false,
+      "outputTemplate": __dirname + "/node_modules/license-webpack-plugin/output.template.ejs",
+      "outputFilename": "3rdpartylicenses.txt",
+      "suppressErrors": true,
+      "includePackagesWithoutLicense": false,
+      "abortOnUnacceptableLicense": false,
+      "addBanner": false,
+      "bannerTemplate": "/*! 3rd party license information is available at <%- filename %> */",
+      "includedChunks": [],
+      "excludedChunks": [],
+      "additionalPackages": [],
+      "pattern": /^(MIT|ISC|BSD.*)$/
     })
   ],
   "node": {
@@ -335,9 +456,5 @@ module.exports = {
     "module": false,
     "clearImmediate": false,
     "setImmediate": false
-  },
-  externals: {
-    'jquery': 'jQuery',
-    'rxjs': 'Rx'
-  },
+  }
 };

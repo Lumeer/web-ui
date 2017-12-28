@@ -24,18 +24,19 @@ import {AttributeModel, CollectionModel} from '../../../../core/store/collection
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {SmartDocTemplatePartModel} from '../../../../core/store/smartdoc-templates/smartdoc-template.model';
 import {AttributeBlot} from './attribute.blot';
+import BlockType from 'quill/blots/block';
 
-declare const QuillEditor: any;
-const Delta = QuillEditor.import('delta');
-const Parchment = QuillEditor.import('parchment');
-let Block = Parchment.query('block');
+import * as QuillEditor from 'quill';
+const Delta = QuillEditor['import']('delta');
+const Parchment = QuillEditor['import']('parchment');
+let Block: BlockType = Parchment.query('block');
 
 class NewBlock extends Block {
 }
 
-NewBlock.tagName = 'DIV';
-QuillEditor.register(NewBlock, true);
-QuillEditor.register(AttributeBlot);
+NewBlock['tagName'] = 'DIV';
+QuillEditor['register'](NewBlock, true);
+QuillEditor['register'](AttributeBlot);
 
 @Component({
   selector: 'smartdoc-text',

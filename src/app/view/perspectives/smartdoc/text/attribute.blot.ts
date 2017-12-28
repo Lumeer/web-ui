@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare const QuillEditor: any;
-const Parchment = QuillEditor.import('parchment');
+import * as Quill from 'quill';
+import EmbedType from 'quill/blots/embed';
 
-let Embed = QuillEditor.import('blots/embed');
-
+const Parchment = Quill['import']('parchment');
+let Embed: EmbedType = Quill['import']('blots/embed');
 let Color = new Parchment.Attributor.Style('color', 'color', {
   whitelist: ['#18bc9c']
 });
@@ -47,9 +47,9 @@ export class AttributeBlot extends Embed {
   }
 
   public format(name, value) {
-    if (name === this.blotName && value) {
-      this.domNode['dataset'].attributeId = value.id;
-      this.domNode['dataset'].attributeValue = value.value;
+    if (name === AttributeBlot.blotName && value) {
+      super.domNode['dataset'].attributeId = value.id;
+      super.domNode['dataset'].attributeValue = value.value;
     } else {
       super.format(name, value);
     }
