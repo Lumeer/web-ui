@@ -1,7 +1,6 @@
 <div>
   <quill-editor *ngIf="editorShown"
                 [theme]="'snow'"
-                [modules]="modules"
                 (clickOutside)="onClickOutside()"
                 (onEditorCreated)="onEditorCreated($event)"
                 (onContentChanged)="onContentChanged($event)"
@@ -15,9 +14,27 @@
         </select>
       </span>
       <span class="ql-formats">
-        <button class="ql-bold" [title]="'Bold'"></button>
-        <button class="ql-italic" [title]="'Italic'"></button>
-        <button class="ql-underline" [title]="'Underline'"></button>
+        <button class="ql-bold" title="Bold" i18n-title="@@text.editor.toolbar.bold"></button>
+        <button class="ql-italic" title="Italic" i18n-title="@@text.editor.toolbar.italic"></button>
+        <button class="ql-underline" title="Underline" i18n-title="@@text.editor.toolbar.underline"></button>
+        <select class="ql-color" title="Color" i18n-title="@@text.editor.toolbar.color">
+          <option selected></option>
+          <option value="red"></option>
+          <option value="orange"></option>
+          <option value="yellow"></option>
+          <option value="green"></option>
+          <option value="blue"></option>
+          <option value="purple"></option>
+        </select>
+        <select class="ql-background" title="Background" i18n-title="@@text.editor.toolbar.background">
+          <option selected></option>
+          <option value="red"></option>
+          <option value="orange"></option>
+          <option value="yellow"></option>
+          <option value="green"></option>
+          <option value="blue"></option>
+          <option value="purple"></option>
+        </select>
       </span>
       <span class="ql-formats">
         <button class="ql-list" [value]="'ordered'" [title]="'Ordered list'"></button>
@@ -45,8 +62,8 @@
     </div>
   </quill-editor>
   <div *ngIf="!editorShown && !!templatePart"
-       [innerHtml]="getHtmlContent()"
-       class="mx-2">
+       [innerHtml]="getHtmlContent() | safeHtml"
+       class="ql-viewer mx-2">
   </div>
   <smartdoc-bottom-panel [selected]="selected"
                          (copyPart)="onCopyPart()"
