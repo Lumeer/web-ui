@@ -18,25 +18,15 @@
  */
 
 import {Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
-import {DeltaOperation, DeltaStatic, Quill, RangeStatic} from 'quill';
+import QuillEditor, {DeltaOperation, DeltaStatic, Quill, RangeStatic} from 'quill';
 import * as QuillDeltaToHtmlConverter from 'quill-delta-to-html';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {SmartDocTemplatePartModel} from '../../../../core/store/smartdoc-templates/smartdoc-template.model';
 import {AttributeBlot} from './attribute.blot';
-import BlockType from 'quill/blots/block';
 
-import * as QuillEditor from 'quill';
-const Delta = QuillEditor['import']('delta');
-const Parchment = QuillEditor['import']('parchment');
-let Block: BlockType = Parchment.query('block');
-
-class NewBlock extends Block {
-}
-
-NewBlock['tagName'] = 'DIV';
-QuillEditor['register'](NewBlock, true);
-QuillEditor['register'](AttributeBlot);
+const Delta = QuillEditor.import('delta');
+QuillEditor.register(AttributeBlot);
 
 @Component({
   selector: 'smartdoc-text',
@@ -72,13 +62,6 @@ export class SmartDocTextComponent {
   private contentChanged: boolean;
   private lastSelection: RangeStatic;
 
-  public modules = {
-    // toolbar: [
-    //   ['bold', 'italic', 'underline', 'strike'],
-    //   [{'attribute': [{'Insert attribute': 'b'}]}]
-    // ]
-  };
-
   @HostListener('dblclick')
   public onDoubleClick(): void {
     this.editorShown = true;
@@ -112,6 +95,9 @@ export class SmartDocTextComponent {
               id: op.insert.attribute.id,
               value: this.document.data[op.insert.attribute.id]
             }
+          },
+          attributes: {
+            color: '#18bc9c'
           }
         };
       }
@@ -176,22 +162,6 @@ export class SmartDocTextComponent {
     const delta: DeltaStatic = this.templatePart.textData || new Delta();
     const converter = new QuillDeltaToHtmlConverter(this.addDataToDeltaForRead(delta).ops, {});
     return converter.convert();
-  }
-
-  public getHtmlWithData(): string {
-    if (!this.templatePart.textHtml) {
-      return '<br>';
-    }
-
-    const regex = /<span class="attribute".*?data-attribute-id="(.*?)".*?<\/span>\s*<\/span>/g;
-    return this.templatePart.textHtml.replace(regex, (match, attributeId) => this.document.data[attributeId] || '');
-  }
-
-  private removeValuesFromHtml(html: string): string {
-    const regex = /<span class="attribute".*?data-attribute-id="(.*?)".*?<\/span>\s*<\/span>/g;
-    return html.replace(regex, (match, attributeId) =>
-      `<span class="attribute" data-attribute-id="${attributeId}">﻿<span contenteditable="false"> </span>﻿</span>`
-    );
   }
 
   public onCopyPart() {
