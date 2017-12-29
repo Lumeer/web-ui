@@ -10,6 +10,8 @@
     <div *ngFor="let part of template.parts; index as partIndex"
          [class.border]="selectedPartIndex === partIndex"
          [class.border-success]="selectedPartIndex === partIndex"
+         [lmrDropTarget]="{zone: document.id}"
+         (lmrDrop)="onDropPart($event, partIndex)"
          (click)="onClickInsidePart($event, partIndex)"
          (clickOutside)="onClickOutsidePart(partIndex)"
          class="rounded">
@@ -33,6 +35,8 @@
                                  [showMover]="template.parts.length > 1"
                                  [perspectives]="allowedPerspectives()"
                                  [selectedPerspective]="part.perspective"
+                                 [documentId]="document.id"
+                                 [partIndex]="partIndex"
                                  (copyPart)="onCopyPart(partIndex)"
                                  (removePart)="onRemovePart(partIndex)"
                                  (switchPerspective)="onSwitchPerspective(partIndex, part, $event)">
@@ -45,6 +49,8 @@
                        (templatePartChange)="onUpdatePart(partIndex, $event)">
           <smartdoc-bottom-panel [selected]="selectedPartIndex === partIndex"
                                  [showMover]="template.parts.length > 1"
+                                 [documentId]="document.id"
+                                 [partIndex]="partIndex"
                                  (copyPart)="onCopyPart(partIndex)"
                                  (removePart)="onRemovePart(partIndex)">
           </smartdoc-bottom-panel>

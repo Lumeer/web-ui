@@ -112,4 +112,8 @@ export class TemplateDocumentComponent {
     this.moveDocument.emit(documentId);
   }
 
+  public onDropPart(oldIndex: number, newIndex: number) {
+    this.store.dispatch(new SmartDocTemplatesAction.MovePart({templateId: this.template.id, oldIndex, newIndex}));
+  }
+
 }

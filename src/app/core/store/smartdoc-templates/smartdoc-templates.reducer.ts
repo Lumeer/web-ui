@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {SmartDocTemplatePartModel} from './smartdoc-template.model';
 import {SmartDocTemplatesAction, SmartDocTemplatesActionType} from './smartdoc-templates.action';
 import {initialSmartDocTemplatesState, smartDocTemplatesAdapter, SmartDocTemplatesState} from './smartdoc-templates.state';
 
@@ -35,6 +36,10 @@ export function smartDocTemplatesReducer(state: SmartDocTemplatesState = initial
       return {...state, selectedTemplatePart: action.payload};
     case SmartDocTemplatesActionType.DESELECT:
       return {...state, selectedTemplatePart: null};
+    case SmartDocTemplatesActionType.MOVE_PART:
+      const parts: SmartDocTemplatePartModel[] = state.entities[action.payload.templateId].parts.slice();
+      parts.splice(action.payload.newIndex, 0, parts.splice(action.payload.oldIndex, 1)[0]);
+      return smartDocTemplatesAdapter.updateOne({id: action.payload.templateId, changes: {parts}}, state);
     default:
       return state;
   }

@@ -5,6 +5,7 @@
     </div>
     <div class="col">
       <div *ngIf="showMover"
+           [lmrDraggable]="{enabled: true, data: partIndex, zone: documentId}"
            class="flex-grow-2 mover"
            title="Move part" i18n-title="@@smartdoc.document.move">
         <i class="fal fa-lg fa-ellipsis-h-alt"></i>
