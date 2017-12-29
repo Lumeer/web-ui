@@ -21,21 +21,25 @@ import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, View
 import {Store} from '@ngrx/store';
 import {PostItLayoutConfig} from 'app/shared/utils/layout/post-it-layout-config';
 import {Observable} from 'rxjs/Observable';
-import {finalize, first} from 'rxjs/operators';
+import {finalize} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../collection/constants';
-import {Collection, Query} from '../../core/dto';
+import {Query} from '../../core/dto';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {CollectionService, ImportService, SearchService} from '../../core/rest';
 import {AppState} from '../../core/store/app.state';
+import {CollectionConverter} from '../../core/store/collections/collection.converter';
+import {CollectionModel} from '../../core/store/collections/collection.model';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {selectCollectionsByQuery} from '../../core/store/collections/collections.state';
 import {selectQuery, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {Role} from '../permissions/role';
 import {HtmlModifier} from '../utils/html-modifier';
 import {PostItLayout} from '../utils/layout/post-it-layout';
-import {DeprecatedQueryConverter} from '../utils/query-converter';
 import {PostItCollectionModel} from './post-it-collection-model';
+import Get = CollectionsAction.Get;
 
 @Component({
   selector: 'post-it-collections',
@@ -88,17 +92,15 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.appStateSubscription = Observable.combineLatest(
       this.store.select(selectWorkspace),
       this.store.select(selectQuery)
-    ).pipe(
-      first()
     ).subscribe(([workspace, query]) => {
       this.workspace = workspace;
       this.query = query;
 
-      if (!this.hasWorkspace()) {
-        return;
-      }
-
-      this.getCollections();
+      this.store.dispatch(new Get({query: query}));
+      this.store.select(selectCollectionsByQuery).subscribe(collections => {
+        this.postIts = collections.map(collection => this.collectionToPostIt(collection, true));
+        this.reloadLayout();
+      });
       this.initializeLayout();
     });
   }
@@ -110,18 +112,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.layout = new PostItLayout('post-it-collection-layout', config, this.zone);
   }
 
-  private getCollections() {
-    this.searchService.searchCollections(DeprecatedQueryConverter.removeLinksFromQuery(this.query)).subscribe(
-      collections => {
-        this.postIts = collections.map(collection => this.collectionToPostIt(collection, true));
-        this.reloadLayout();
-      },
-      error => {
-        this.notificationService.error('Failed fetching files');
-      });
-  }
-
-  private collectionToPostIt(collection: Collection, initialized: boolean): PostItCollectionModel {
+  private collectionToPostIt(collection: CollectionModel, initialized: boolean): PostItCollectionModel {
     const postIt = new PostItCollectionModel;
     postIt.collection = collection;
     postIt.initialized = initialized;
@@ -136,24 +127,24 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     });
   }
 
-  public toggleFavorite(collection: Collection) {
-    this.collectionService.toggleCollectionFavorite(collection)
+  public toggleFavorite(collection: CollectionModel) {
+    this.collectionService.toggleCollectionFavorite(CollectionConverter.toDto(collection))
       .subscribe(success => {
         if (success) {
-          collection.isFavorite = !collection.isFavorite;
+          collection.favourite = !collection.favourite;
         }
       });
   }
 
-  public hasWriteRole(collection: Collection): boolean {
+  public hasWriteRole(collection: CollectionModel): boolean {
     return this.hasRole(collection, Role.Write);
   }
 
-  public hasManageRole(collection: Collection): boolean {
+  public hasManageRole(collection: CollectionModel): boolean {
     return this.hasRole(collection, Role.Manage);
   }
 
-  private hasRole(collection: Collection, role: string) {
+  private hasRole(collection: CollectionModel, role: string) {
     return collection.permissions && collection.permissions.users
       .some(permission => permission.roles.includes(role));
   }
@@ -165,7 +156,8 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       name: '',
       description: '',
       color: COLLECTION_NO_COLOR,
-      icon: COLLECTION_NO_ICON
+      icon: COLLECTION_NO_ICON,
+      defaultAttributeId: ''
     };
 
     this.postIts.push(newPostIt);
@@ -184,15 +176,15 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   public createPostIt(postIt: PostItCollectionModel): void {
     postIt.initializing = true;
 
-    this.collectionService.createCollection(postIt.collection)
+    this.collectionService.createCollection(CollectionConverter.toDto(postIt.collection))
       .pipe(finalize(() => postIt.initializing = false))
       .subscribe(
-        collection => this.finishCreatingCollection(postIt, collection),
+        collection => this.finishCreatingCollection(postIt, CollectionConverter.fromDto(collection)),
         error => this.notificationService.error('Creating file failed')
       );
   }
 
-  private finishCreatingCollection(postIt: PostItCollectionModel, collection: Collection): void {
+  private finishCreatingCollection(postIt: PostItCollectionModel, collection: CollectionModel): void {
     postIt.collection.code = collection.code;
     postIt.initialized = true;
 
@@ -207,7 +199,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.collectionService.getCollection(postIt.collection.code)
       .subscribe(
         collection => {
-          postIt.collection = collection;
+          postIt.collection = CollectionConverter.fromDto(collection);
           this.layout.refresh();
         },
         error => {
@@ -220,10 +212,10 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.collectionService.updateCollection(postIt.collection)
+    this.collectionService.updateCollection(CollectionConverter.toDto(postIt.collection))
       .subscribe(
         collection => {
-          postIt.collection = collection;
+          postIt.collection = CollectionConverter.fromDto(collection);
           this.layout.refresh();
         },
         error => {
@@ -252,7 +244,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
         collection => {
           const newPostIt = new PostItCollectionModel;
           newPostIt.initialized = true;
-          newPostIt.collection = collection;
+          newPostIt.collection = CollectionConverter.fromDto(collection);
 
           collection.color = COLLECTION_NO_COLOR;
           collection.icon = COLLECTION_NO_ICON;

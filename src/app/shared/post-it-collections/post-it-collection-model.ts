@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from '../../core/dto';
+import {CollectionModel} from '../../core/store/collections/collection.model';
 
 export class PostItCollectionModel {
 
-  public collection: Collection;
+  public collection: CollectionModel;
   public initializing: boolean;
   public initialized: boolean;
 

@@ -36,7 +36,8 @@ export class CollectionConverter {
       defaultAttributeId: dto.defaultAttribute ? dto.defaultAttribute.fullName : null,
       permissions: dto.permissions ? PermissionsConverter.fromDto(dto.permissions) : null,
       documentsCount: dto.documentsCount,
-      correlationId: correlationId
+      correlationId: correlationId,
+      favourite: dto.isFavorite
     };
   }
 
@@ -52,7 +53,8 @@ export class CollectionConverter {
       defaultAttribute: model.attributes ? CollectionConverter.toAttributeDto(model.attributes
         .find(attr => attr.id === model.defaultAttributeId)) : null,
       permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null,
-      documentsCount: model.documentsCount // TODO maybe not needed this way
+      documentsCount: model.documentsCount, // TODO maybe not needed this way
+      isFavorite: model.favourite
     };
   }
 

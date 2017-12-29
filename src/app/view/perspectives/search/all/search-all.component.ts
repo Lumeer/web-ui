@@ -19,20 +19,19 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {skipWhile, tap} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
+import {isNullOrUndefined} from 'util';
+import {SearchService} from '../../../../core/rest';
 
 import {AppState} from '../../../../core/store/app.state';
-import {SearchService} from '../../../../core/rest';
-import {selectQuery} from '../../../../core/store/navigation/navigation.state';
-import {Subscription} from 'rxjs/Subscription';
-import {skipWhile, tap} from 'rxjs/operators';
-import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
-import {Observable} from 'rxjs/Observable';
-import {selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {isNullOrUndefined} from 'util';
+import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
+import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {ViewModel} from '../../../../core/store/views/view.model';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewsByQuery} from '../../../../core/store/views/views.state';
@@ -42,11 +41,19 @@ import {selectViewsByQuery} from '../../../../core/store/views/views.state';
 })
 export class SearchAllComponent implements OnInit, OnDestroy {
 
-  public documents$: Observable<DocumentModel[]>;
-  public collections$: Observable<CollectionModel[]>;
-  public views$: Observable<ViewModel[]>;
+  public collections: CollectionModel[];
+
+  public documents: DocumentModel[];
+
+  public views: ViewModel[];
 
   private querySubscription: Subscription;
+
+  private collectionsSubscription: Subscription;
+
+  private documentsSubscription: Subscription;
+
+  private viewsSubscription: Subscription;
 
   constructor(private searchService: SearchService,
               private store: Store<AppState>) {
@@ -56,18 +63,48 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     this.querySubscription = this.store.select(selectQuery)
       .pipe(
         skipWhile(query => isNullOrUndefined(query)),
-        tap(query => this.store.dispatch(new DocumentsAction.Get({query}))),
         tap(query => this.store.dispatch(new CollectionsAction.Get({query}))),
+        tap(query => this.store.dispatch(new DocumentsAction.Get({query}))),
         tap(query => this.store.dispatch(new ViewsAction.Get({query})))
       ).subscribe();
-    this.documents$ = this.store.select(selectDocumentsByQuery);
-    this.collections$ = this.store.select(selectCollectionsByQuery);
-    this.views$ = this.store.select(selectViewsByQuery);
+
+    this.collectionsSubscription = this.store.select(selectCollectionsByQuery).subscribe(collections => {
+      this.collections = collections;
+    });
+
+    this.documentsSubscription = this.store.select(selectDocumentsByQuery).subscribe(documents => {
+      this.documents = documents;
+    });
+
+    this.viewsSubscription = this.store.select(selectViewsByQuery).subscribe(views => {
+      this.views = views;
+    });
+  }
+
+  public loading(): boolean {
+    return Boolean(!this.collections || !this.documents || !this.views);
+  }
+
+  public emptySearch(): boolean {
+    return Boolean(
+      this.collections.length === 0 &&
+      this.documents.length === 0 &&
+      this.views.length === 0
+    );
   }
 
   public ngOnDestroy() {
-    if (this.querySubscription) {
-      this.querySubscription.unsubscribe();
+    const subscriptions = [this.querySubscription, this.documentsSubscription, this.collectionsSubscription, this.viewsSubscription];
+    this.unsubscribeAllIfPresent(subscriptions);
+  }
+
+  private unsubscribeAllIfPresent(subscriptions: Subscription[]) {
+    subscriptions.forEach(this.unsubscribeIfPresent);
+  }
+
+  private unsubscribeIfPresent(subscription: Subscription) {
+    if (subscription) {
+      subscription.unsubscribe();
     }
   }
 

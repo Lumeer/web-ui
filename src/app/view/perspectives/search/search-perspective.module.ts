@@ -18,20 +18,22 @@
  */
 
 import {NgModule} from '@angular/core';
+import {RouterModule} from '@angular/router';
 import {SharedModule} from '../../../shared/shared.module';
+import {PostItPerspectiveModule} from '../post-it/post-it-perspective.module';
 import {SearchAllComponent} from './all/search-all.component';
-import {SearchPerspectiveComponent} from './search-perspective.component';
 import {SearchCollectionsComponent} from './collections/search-collections.component';
 import {SearchDocumentsComponent} from './documents/search-documents.component';
-import {SearchResultsDirective} from './search-results.directive';
-import {RouterModule} from '@angular/router';
 import {SearchLinksComponent} from './links/search-links.component';
+import {SearchPerspectiveComponent} from './search-perspective.component';
+import {SearchResultsDirective} from './search-results.directive';
 import {SearchViewsComponent} from './views/search-views.component';
 
 @NgModule({
   imports: [
     RouterModule,
-    SharedModule
+    SharedModule,
+    PostItPerspectiveModule
   ],
   declarations: [
     SearchAllComponent,
