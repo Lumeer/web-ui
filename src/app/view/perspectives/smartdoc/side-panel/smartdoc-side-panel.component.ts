@@ -65,9 +65,16 @@ export class SmartDocSidePanelComponent {
   }
 
   private addTextPart() {
+    const delta = {
+      ops: [
+        {insert: 'Insert your text here...'}
+      ]
+    };
+
     const part: SmartDocTemplatePartModel = {
       type: SmartDocTemplatePartType.Text,
-      textHtml: 'Insert your text here'
+      textHtml: 'Insert your text here...',
+      textData: delta
     };
     this.addTemplatePart(part);
   }
@@ -124,7 +131,7 @@ export class SmartDocSidePanelComponent {
   public suggestLinkTypes(): Observable<LinkTypeModel[]> {
     return Observable.combineLatest(
       this.linkTypes$.pipe(
-        map(linkTypes => linkTypes.filter(linkType => linkType.collectionCodes.includes(this.document.collectionCode)))
+        map(linkTypes => linkTypes.filter(linkType => linkType.id && linkType.collectionCodes.includes(this.document.collectionCode)))
       ),
       this.collections$
     ).pipe(

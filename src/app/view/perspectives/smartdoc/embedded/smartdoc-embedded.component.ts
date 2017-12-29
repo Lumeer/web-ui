@@ -32,7 +32,7 @@ import {LinkTypesAction} from '../../../../core/store/link-types/link-types.acti
 import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {isValidEmbeddedPart, SmartDocTemplatePartModel} from '../../../../core/store/smartdoc-templates/smartdoc-template.model';
-import {TemplateConfigModel} from '../../../../core/store/views/view.model';
+import {SmartDocConfigModel} from '../../../../core/store/views/view.model';
 import {PerspectiveDirective} from '../../../../shared/perspective.directive';
 import {Perspective} from '../../perspective';
 import {PerspectiveComponent} from '../../perspective.component';
@@ -52,9 +52,6 @@ const perspectiveComponents: { [perspective: string]: Type<any> } = {
 export class SmartDocEmbeddedComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
-  public selected: boolean;
-
-  @Input()
   public document: DocumentModel;
 
   @Input()
@@ -62,15 +59,6 @@ export class SmartDocEmbeddedComponent implements OnInit, OnChanges, OnDestroy {
 
   @Output()
   public templatePartChange = new EventEmitter<SmartDocTemplatePartModel>();
-
-  @Output()
-  public copyPart = new EventEmitter();
-
-  @Output()
-  public updatePart = new EventEmitter<SmartDocTemplatePartModel>();
-
-  @Output()
-  public removePart = new EventEmitter();
 
   @ViewChild(PerspectiveDirective)
   public perspectiveDirective: PerspectiveDirective;
@@ -133,7 +121,7 @@ export class SmartDocEmbeddedComponent implements OnInit, OnChanges, OnDestroy {
     };
     this.perspectiveComponent.query = query;
 
-    const templateConfig: TemplateConfigModel = {
+    const templateConfig: SmartDocConfigModel = {
       templateId: this.templatePart.templateId
     };
     this.perspectiveComponent.config = {template: templateConfig};
@@ -154,23 +142,6 @@ export class SmartDocEmbeddedComponent implements OnInit, OnChanges, OnDestroy {
 
   public isTemplatePerspective() {
     return this.templatePart.perspective === Perspective.SmartDoc;
-  }
-
-  public onSwitchPerspective(perspective: Perspective) {
-    const part: SmartDocTemplatePartModel = {...this.templatePart, perspective};
-    this.updatePart.emit(part);
-  }
-
-  public allowedPerspectives(): Perspective[] {
-    return [Perspective.Table, Perspective.SmartDoc];
-  }
-
-  public onCopyPart() {
-    this.copyPart.emit();
-  }
-
-  public onRemovePart() {
-    this.removePart.emit();
   }
 
 }

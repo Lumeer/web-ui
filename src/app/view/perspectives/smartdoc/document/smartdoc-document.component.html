@@ -1,5 +1,8 @@
-<div class="document border border-light rounded mb-3">
-  <div class="record-mover"
+<div [lmrDropTarget]="{zone: template.id}"
+     (lmrDrop)="onDropDocument($event)"
+     class="document border border-light rounded mb-3">
+  <div [lmrDraggable]="{enabled: true, data: document.id, zone: template.id}"
+       class="record-mover"
        title="Move record" i18n-title="@@smartdoc.document.move">
     <i class="fa fa-lg fa-ellipsis-h"></i>
   </div>
@@ -24,20 +27,27 @@
       </div>
       <ng-container [ngSwitch]="part.type">
         <smartdoc-embedded *ngSwitchCase="'embedded'"
-                           [selected]="selectedPartIndex === partIndex"
                            [document]="document"
-                           [templatePart]="part"
-                           (copyPart)="onCopyPart(partIndex)"
-                           (updatePart)="onUpdatePart(partIndex, $event)"
-                           (removePart)="onRemovePart(partIndex)"></smartdoc-embedded>
+                           [templatePart]="part">
+          <smartdoc-bottom-panel [selected]="selectedPartIndex === partIndex"
+                                 [showMover]="template.parts.length > 1"
+                                 [perspectives]="allowedPerspectives()"
+                                 [selectedPerspective]="part.perspective"
+                                 (copyPart)="onCopyPart(partIndex)"
+                                 (removePart)="onRemovePart(partIndex)"
+                                 (switchPerspective)="onSwitchPerspective(partIndex, part, $event)">
+          </smartdoc-bottom-panel>
+        </smartdoc-embedded>
         <smartdoc-text *ngSwitchCase="'text'"
-                       [selected]="selectedPartIndex === partIndex"
                        [collection]="getCurrentCollection()"
                        [document]="document"
                        [templatePart]="part"
-                       (copyPart)="onCopyPart(partIndex)"
-                       (removePart)="onRemovePart(partIndex)"
                        (templatePartChange)="onUpdatePart(partIndex, $event)">
+          <smartdoc-bottom-panel [selected]="selectedPartIndex === partIndex"
+                                 [showMover]="template.parts.length > 1"
+                                 (copyPart)="onCopyPart(partIndex)"
+                                 (removePart)="onRemovePart(partIndex)">
+          </smartdoc-bottom-panel>
         </smartdoc-text>
       </ng-container>
     </div>

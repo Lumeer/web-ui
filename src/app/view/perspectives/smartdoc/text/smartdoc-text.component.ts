@@ -36,9 +36,6 @@ QuillEditor.register(AttributeBlot);
 export class SmartDocTextComponent {
 
   @Input()
-  public selected: boolean;
-
-  @Input()
   public collection: CollectionModel;
 
   @Input()
@@ -49,12 +46,6 @@ export class SmartDocTextComponent {
 
   @Output()
   public templatePartChange = new EventEmitter<SmartDocTemplatePartModel>();
-
-  @Output()
-  public copyPart = new EventEmitter();
-
-  @Output()
-  public removePart = new EventEmitter();
 
   public editorShown: boolean;
   private editor: Quill;
@@ -162,14 +153,6 @@ export class SmartDocTextComponent {
     const delta: DeltaStatic = this.templatePart.textData || new Delta();
     const converter = new QuillDeltaToHtmlConverter(this.addDataToDeltaForRead(delta).ops, {});
     return converter.convert();
-  }
-
-  public onCopyPart() {
-    this.copyPart.emit();
-  }
-
-  public onRemovePart() {
-    this.removePart.emit();
   }
 
 }

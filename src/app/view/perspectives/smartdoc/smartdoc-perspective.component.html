@@ -14,10 +14,11 @@
     <div class="row">
       <div class="col pointer-events-none"></div>
       <div class="col-12 {{getColClasses()}}">
-        <smartdoc-document *ngFor="let doc of documents$ | async"
+        <smartdoc-document *ngFor="let doc of documents$ | async; index as docIndex"
                            [collections]="collections$ | async"
                            [document]="doc"
-                           [template]="template$ | async">
+                           [template]="template$ | async"
+                           (moveDocument)="onMoveDocument($event, docIndex)">
         </smartdoc-document>
       </div>
       <div class="col pointer-events-none"></div>

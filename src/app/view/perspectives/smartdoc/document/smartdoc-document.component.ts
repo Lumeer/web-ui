@@ -26,6 +26,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {SmartDocTemplateModel, SmartDocTemplatePartModel} from '../../../../core/store/smartdoc-templates/smartdoc-template.model';
 import {SmartDocTemplatesAction} from '../../../../core/store/smartdoc-templates/smartdoc-templates.action';
 import {selectSelectedSmartDocTemplatePart} from '../../../../core/store/smartdoc-templates/smartdoc-templates.state';
+import {Perspective} from '../../perspective';
 
 @Component({
   selector: 'smartdoc-document',
@@ -49,6 +50,9 @@ export class TemplateDocumentComponent {
   @Output()
   public templateChange = new EventEmitter<SmartDocTemplateModel>();
 
+  @Output()
+  public moveDocument = new EventEmitter<string>();
+
   public selectedPartIndex: number;
   private selectedPartSubscription: Subscription;
 
@@ -63,6 +67,11 @@ export class TemplateDocumentComponent {
 
   public onUpdatePart(partIndex: number, part: SmartDocTemplatePartModel) {
     this.store.dispatch(new SmartDocTemplatesAction.UpdatePart({templateId: this.template.id, partIndex: partIndex, part: part}));
+  }
+
+  public onSwitchPerspective(partIndex: number, templatePart: SmartDocTemplatePartModel, perspective: Perspective) {
+    const part: SmartDocTemplatePartModel = {...templatePart, perspective};
+    this.store.dispatch(new SmartDocTemplatesAction.UpdatePart({templateId: this.template.id, partIndex, part}));
   }
 
   public onRemovePart(partIndex: number) {
@@ -93,6 +102,14 @@ export class TemplateDocumentComponent {
   public onCopyPart(partIndex: number) {
     const part = this.template.parts[partIndex];
     this.store.dispatch(new SmartDocTemplatesAction.AddPart({templateId: this.template.id, partIndex: partIndex + 1, part}));
+  }
+
+  public allowedPerspectives(): Perspective[] {
+    return [Perspective.Table, Perspective.SmartDoc];
+  }
+
+  public onDropDocument(documentId: string) {
+    this.moveDocument.emit(documentId);
   }
 
 }
