@@ -2,7 +2,13 @@
 
 :host {
 
+  .card-header {
+    cursor: move;
+    width: 100%;
+  }
+
   .card-header .button {
+    cursor: auto;
     transition: background $animation-color-duration, opacity $animation-color-duration;
 
     &:hover {
@@ -78,7 +84,7 @@
   }
 }
 
-:host(.selected), :host:hover {
+:host:hover {
   .button, .buttons {
     opacity: 1;
   }

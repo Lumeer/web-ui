@@ -17,7 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {
+  Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild,
+  ViewChildren
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {DocumentService} from 'app/core/rest/document.service';
 import {SearchService} from 'app/core/rest/search.service';
@@ -30,7 +33,8 @@ import {CollectionService} from '../../../core/rest';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery, selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {PostItLayout} from '../../../shared/utils/post-it-layout';
+import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
+import {PostItLayoutConfig} from '../../../shared/utils/layout/post-it-layout-config';
 import {AttributePropertySelection} from './document-data/attribute-property-selection';
 import {Direction} from './document-data/direction';
 import {DocumentModel} from './document-data/document-model';
@@ -63,7 +67,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public collections: { [collectionCode: string]: Collection } = {};
 
-  public singleCollectionCode: string;
+  public currentCollection: string;
 
   public query: Query;
 
@@ -76,6 +80,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private appStateSubscription: Subscription;
 
   private layout: PostItLayout;
+
+  private allLoaded: boolean;
 
   private fetchedCollections = 0;
 
@@ -93,10 +99,12 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
               private documentService: DocumentService,
               private searchService: SearchService,
               private notificationService: NotificationService,
-              private store: Store<AppState>) {
+              private store: Store<AppState>,
+              private zone: NgZone) {
   }
 
   public ngOnInit(): void {
+    this.initializeLayout();
     this.getAppStateAndInitialize();
   }
 
@@ -110,22 +118,17 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       this.workspace = workspace;
       this.query = query;
 
-      this.initializeLayout();
       this.fetchPostIts();
+      this.setCurrentCollection();
     });
   }
 
   private initializeLayout(): void {
-    if (this.layout) {
-      this.refresh();
-      return;
-    }
+    this.layout = new PostItLayout('.post-it-document-layout', new PostItLayoutConfig(), this.zone);
+  }
 
-    this.layout = new PostItLayout({
-      container: '.post-it-document-layout',
-      item: '.layout-item',
-      gutter: 10
-    });
+  private setCurrentCollection() {
+    this.currentCollection = (this.query && this.query.collectionCodes) ? this.query.collectionCodes[0] : null;
   }
 
   public setInfiniteScroll(enabled: boolean): void {
@@ -151,11 +154,11 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       }
     };
 
-    (<any>window).addEventListener('scroll', this.onInfiniteScroll, this.scrollEventOptions);
+    (window as any).addEventListener('scroll', this.onInfiniteScroll, this.scrollEventOptions);
   }
 
   private turnOffInfiniteScroll(): void {
-    (<any>window).removeEventListener('scroll', this.onInfiniteScroll, this.scrollEventOptions);
+    (window as any).removeEventListener('scroll', this.onInfiniteScroll, this.scrollEventOptions);
     this.onInfiniteScroll = null;
   }
 
@@ -238,7 +241,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     const addDocumentPresent = this.editable && pageNumber === 0 ? 1 : 0;
 
     return {
-      pageSize: this.documentsPerRow() * 4 - addDocumentPresent,
+      pageSize: this.documentsPerRow() * 3 - addDocumentPresent,
       page: pageNumber,
       filters: this.query.filters,
       fulltext: this.query.fulltext,
@@ -247,7 +250,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private fetchPostIts(): void {
-    if (this.fetchingData || !this.query || !this.hasWorkspace()) {
+    if (this.fetchingData || !this.query || !this.hasWorkspace() || this.allLoaded) {
       return;
     }
 
@@ -273,6 +276,10 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private addDocumentsToLayoutAndGetTheirCollections(documents: Document[]): void {
+    if (documents.length === 0) {
+      this.allLoaded = true;
+    }
+
     documents.forEach(document => this.postIts.push(this.documentToPostIt(document, true)));
 
     const uniqueCollectionCodes = new Set(documents.map(document => document.collectionCode));
@@ -306,16 +313,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         error => this.notificationService.error(`Failed fetching collection ${collectionCode}`)
       );
     });
-
-    this.setSingleCollection(Array.from(collectionCodes));
-  }
-
-  private setSingleCollection(collectionCodes: string[]) {
-    if (collectionCodes && collectionCodes.length === 1) {
-      this.singleCollectionCode = collectionCodes[0];
-      return;
-    }
-    this.singleCollectionCode = null;
   }
 
   private countAsFetchedAndRefreshIfLast(): void {
@@ -415,7 +412,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private refresh(): void {
-    this.layout.refresh();
     this.showPostItsWithCollection();
   }
 
@@ -424,6 +420,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       this.postIts
         .filter(postIt => this.collections[postIt.document.collectionCode])
         .forEach(postIt => postIt.visible = true);
+
+      this.layout.refresh();
     });
   }
 
@@ -454,12 +452,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (this.layout) {
-      this.layout.destroy();
-    }
-
     this.setInfiniteScroll(false);
-
     if (this.appStateSubscription) {
       this.appStateSubscription.unsubscribe();
     }
@@ -473,4 +466,5 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private hasWorkspace(): boolean {
     return !!(this.workspace && this.workspace.organizationCode && this.workspace.projectCode);
   }
+
 }

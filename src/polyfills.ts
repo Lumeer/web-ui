@@ -43,8 +43,10 @@
 import 'core-js/es6/reflect';
 import 'core-js/es7/reflect';
 
+import 'socket.io-client';
 /** ALL Firefox browsers require the following to support `@angular/animation`. **/
-// import 'web-animations-js';  // Run `npm install --save web-animations-js`.
+import 'web-animations-js';
+import './assets/js/custom.js';
 
 /***************************************************************************************************
  * Zone JS is required by Angular itself.
@@ -60,9 +62,7 @@ import 'core-js/es7/reflect';
  * Needed for: All but Chrome, Firefox, Edge, IE11 and Safari 10
  */
 // import 'intl';  // Run `npm install --save intl`.
-window['Minigrid'] = require('../node_modules/minigrid/dist/minigrid.min.js');
+
 window['Keycloak'] = require('./assets/js/keycloak.js');
+window['Muuri'] = require('../node_modules/muuri/muuri.min.js');
 
-import './assets/js/custom.js';
-
-import 'socket.io-client';

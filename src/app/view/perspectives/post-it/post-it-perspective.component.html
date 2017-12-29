@@ -1,16 +1,14 @@
-<div class="post-it-document-layout d-flex" #layout>
+<div class="post-it-document-layout d-flex mx-5" #layout>
 
   <add-document *ngIf="isAddButtonShown()"
                 class="layout-item"
-                [collectionCode]="singleCollectionCode"
+                [collectionCode]="currentCollection"
                 (newDocument)="createDocument($event)"></add-document>
 
   <ng-container *ngFor="let postIt of postIts; let idx = index">
     <post-it-document *ngIf="collections[postIt.document.collectionCode]"
-                      class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : null }} {{ postIt === lastClickedPostIt ? 'selected' : null }}"
-                      [style.z-index]="postIt.selectedInput.documentIdx === postIt.index ? 50 : null"
-                      [style.transition]="postIt.visible ? 'transform 0.4s, box-shadow 0.25s' : null"
-                      [style.opacity]="postIt.visible ? 1 : 0"
+                      class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : null }}"
+                      [attr.index]="idx"
                       [data]="setPostItIndexAndReturn(postIt, idx)"
                       [collection]="collections[postIt.document.collectionCode]"
                       (selectOther)="selectDocument($event)"

@@ -4,10 +4,14 @@
   display: block;
 
   .post-it-document-layout {
+    position: relative;
     margin: 0 auto;
   }
 
   .layout-item {
+    will-change: transform;
+    position: absolute;
+    margin: 5px;
     width: $post-it-width;
   }
 
@@ -19,17 +23,17 @@
     z-index: $z-index-hovered;
   }
 
-  .selected {
+  .masonry-layout-item-dragging {
+    cursor: move;
+  }
+
+  .masonry-layout-item-dragging, .masonry-layout-item-releasing {
     z-index: $z-index-selected;
   }
 
   .uninitialized {
     border-width: 1.5px;
     border-style: dashed;
-  }
-
-  .fading {
-    transition: opacity $animation-color-duration;
   }
 
   .large-text {
