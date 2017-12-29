@@ -1,22 +1,25 @@
 <div class="card-header d-inline-flex py-1 px-3">
-  <i class="icon {{ data.collection.icon }} mr-1" [style.color]="data.collection.color"></i>
-  <div class="collection-name" [style.color]="data.collection.color">{{ data.collection.name }}</div>
+  <i class="icon {{ postItModel.documentModel.collection.icon }} mr-1"
+     [style.color]="postItModel.documentModel.collection.color"></i>
+  <div class="collection-name" [style.color]="postItModel.documentModel.collection.color">
+    {{ postItModel.documentModel.collection.name }}
+  </div>
 
   <ng-container *ngIf="hasWriteRole()">
     <i class="button text-danger fa fa-times rounded align-self-center p-1"
        title="Remove Record" i18n-title="@@document.button.remove"
-       (click)="onRemoveDocumentClick()"></i>
+       (click)="confirmDeletion()"></i>
     <i class="button text-success fa fa-pencil rounded align-self-center p-1"
        title="Edit Record" i18n-title="@@document.button.edit"
        (click)="setEditMode(true); select(0, 0)"></i>
   </ng-container>
-  <i *ngIf="data.initialized"
+  <i *ngIf="postItModel.initialized"
      class="text-warning fa-star button rounded align-self-center p-1"
-     [class.always-visible]="data.document.favorite"
-     title="{{data.document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
+     [class.always-visible]="postItModel.documentModel.favorite"
+     title="{{ postItModel.documentModel.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
      i18n-title="@@collection.document.favorite"
-     [ngClass]="data.document.favorite ? 'fas' : 'far'"
-     (click)="onToggleFavorite()"></i>
+     [ngClass]="postItModel.documentModel.favorite ? 'fas' : 'far'"
+     (click)="toggleDocumentFavorite()"></i>
 </div>
 
 <div class="card-body p-2">
@@ -24,7 +27,7 @@
 
     <ng-container *ngIf="hasWriteRole()">
       <li *ngFor="let attributePair of attributePairs; let row = index">
-        <span id="{{ perspectiveId }}{{ data.index }}[0, {{ row }}]" class="attribute"
+        <span id="{{ perspectiveId }}{{ postItModel.index }}[0, {{ row }}]" class="attribute"
               tabindex="-1"
               (keydown.ArrowLeft)="moveSelection(-1, 0)"
               (keydown.ArrowRight)="moveSelection(1, 0)"
@@ -43,7 +46,7 @@
                  (blur)="updateAttribute(attributePair)">
         </span>
 
-        <span id="{{ perspectiveId }}{{ data.index }}[1, {{ row }}]" tabindex="-1"
+        <span id="{{ perspectiveId }}{{ postItModel.index }}[1, {{ row }}]" tabindex="-1"
               title="{{ attributePair.value }}"
               (keydown.ArrowLeft)="moveSelection(-1, 0)"
               (keydown.ArrowRight)="moveSelection(1, 0)"
@@ -64,7 +67,7 @@
       </li>
 
       <li>
-        <span id="{{ perspectiveId }}{{ data.index }}[0, {{ attributePairs.length }}]"
+        <span id="{{ perspectiveId }}{{ postItModel.index }}[0, {{ attributePairs.length }}]"
               class="attribute"
               tabindex="-1"
               (keydown.ArrowLeft)="moveSelection(-1, 0)"
@@ -78,7 +81,7 @@
           <!-- the list refers to one of the attribute suggestion lists in document perspective -->
           <input class="border-0"
                  placeholder=" + "
-                 [attr.list]="perspectiveId + data.document.collectionCode"
+                 [attr.list]="perspectiveId + postItModel.documentModel.collectionCode"
                  [(ngModel)]="newAttributePair.attribute"
                  (keydown)="$event.stopPropagation()"
                  (keydown.F2)="setEditMode(false); focusSelection()"
@@ -87,7 +90,7 @@
                  (blur)="newAttributePair.attribute && createAttributePair()">
         </span>
 
-        <span id="{{ perspectiveId }}{{ data.index }}[1, {{ attributePairs.length }}]"
+        <span id="{{ perspectiveId }}{{ postItModel.index }}[1, {{ attributePairs.length }}]"
               [attr.tabindex]="newAttributePair.attribute ? -1 : null"
               (keydown.ArrowLeft)="moveSelection(-1, 0)"
               (keydown.ArrowRight)="moveSelection(1, 0)"
@@ -121,7 +124,7 @@
   </ul>
 </div>
 
-<div *ngIf="data.initialized" class="card-footer px-4 py-0">
+<div *ngIf="postItModel.initialized" class="card-footer px-4 py-0">
   <div class="buttons d-flex align-content-center ml-2">
     <a [routerLink]="[configPrefix(), 'details']"
        class="px-2"

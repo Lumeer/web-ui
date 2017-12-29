@@ -131,6 +131,30 @@ export class DocumentsEffects {
     map(() => new NotificationsAction.Error({message: 'Failed to delete record'}))
   );
 
+  @Effect()
+  public toggleFavourite$: Observable<Action> =
+    this.actions$.ofType<DocumentsAction.ToggleFavourite>(DocumentsActionType.TOGGLE_FAVOURITE).pipe(
+      switchMap(action => {
+        const documentDto = DocumentConverter.toDto(action.payload.document);
+
+        return this.documentService.toggleDocumentFavorite(documentDto).pipe(
+          map(success => {
+            action.payload.document.favorite = !action.payload.document.favorite;
+            return action.payload.document;
+          })
+        );
+      }),
+      map(document => new DocumentsAction.ToggleFavouriteSuccess({document: document})),
+      catchError((error) => Observable.of(new DocumentsAction.ToggleFavouriteFailure({error: error})))
+    );
+
+  @Effect()
+  public toggleFavouriteFailure$: Observable<Action> =
+    this.actions$.ofType<DocumentsAction.ToggleFavouriteFailure>(DocumentsActionType.TOGGLE_FAVOURITE_FAILURE).pipe(
+      tap(action => console.error(action.payload.error)),
+      map(() => new NotificationsAction.Error({message: 'Failed to toggle favourite'}))
+    );
+
   constructor(private actions$: Actions,
               private documentService: DocumentService,
               private searchService: SearchService,

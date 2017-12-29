@@ -17,10 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild,
-  ViewChildren
-} from '@angular/core';
+import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
 import {Collection} from '../../../core/dto';
@@ -33,8 +30,7 @@ import {Collection, Document, Query} from '../../../core/dto';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {CollectionService} from '../../../core/rest';
 import {AppState} from '../../../core/store/app.state';
-import {CollectionConverter} from '../../../core/store/collections/collection.converter';
-import {DocumentConverter} from '../../../core/store/documents/document.converter';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectDocumentsByCustomQuery} from '../../../core/store/documents/documents.state';
@@ -47,11 +43,9 @@ import {InfiniteScrollManager} from './bussiness/infinite-scroll-manager';
 import {NavigationManager} from './bussiness/navigation-manager';
 import {SelectionManager} from './bussiness/selection-manager';
 import {PostItDocumentModel} from './document-data/post-it-document-model';
-import {PostItDocumentComponent} from './document/post-it-document.component';
 import Create = DocumentsAction.Create;
 import Delete = DocumentsAction.Delete;
 import UpdateData = DocumentsAction.UpdateData;
-import Confirm = NotificationsAction.Confirm;
 
 @Component({
   selector: 'post-it-perspective',
@@ -68,9 +62,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   @ViewChild('layout')
   public layoutElement: ElementRef;
-
-  @ViewChildren(PostItDocumentComponent)
-  public documentComponents: QueryList<PostItDocumentComponent> = new QueryList();
 
   public perspectiveId: string;
 
@@ -110,7 +101,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.infiniteScrollManager = new InfiniteScrollManager(() => this.loadMoreOnInfiniteScroll());
     this.infiniteScrollManager.initialize();
 
-    this.selectionManager = new SelectionManager(this.postIts, this.documentComponents, () => this.documentsPerRow());
+    this.selectionManager = new SelectionManager(this.postIts, () => this.documentsPerRow());
 
     this.navigationManager = new NavigationManager(this.store, () => this.documentsPerRow());
     this.navigationManager.setCallback(() => this.reinitializePostIts());
@@ -168,20 +159,19 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private replaceDocumentsInLayout(documents): void {
-    const usedDocumentIDs = new Set(this.postIts.map(postIt => postIt.document.id));
+    const usedDocumentIDs = new Set(this.postIts.map(postIt => postIt.documentModel.id));
     documents
       .filter(documentModel => usedDocumentIDs.has(documentModel.id))
       .forEach(documentModel => this.replaceDocument(documentModel));
   }
 
   private replaceDocument(documentModel: DocumentModel): void {
-    const replaced = this.postIts.find(postIt => postIt.document.id === documentModel.id);
-    Object.entries(this.documentModelToPostItModel(documentModel, true))
-      .forEach(([key, value]) => replaced[key] = value);
+    const replaced = this.postIts.findIndex(postIt => postIt.documentModel.id === documentModel.id);
+    this.postIts[replaced] = this.documentModelToPostItModel(documentModel, true);
   }
 
   private addDocumentsNotInLayout(documents: DocumentModel[]): void {
-    const usedDocumentIDs = new Set(this.postIts.map(postIt => postIt.document.id));
+    const usedDocumentIDs = new Set(this.postIts.map(postIt => postIt.documentModel.id));
     documents
       .filter(documentModel => !usedDocumentIDs.has(documentModel.id))
       .map(documentModel => this.documentModelToPostItModel(documentModel, true))
@@ -205,9 +195,9 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private updateDocument(postIt: PostItDocumentModel) {
     this.store.dispatch(new UpdateData(
       {
-        collectionCode: postIt.collection.code,
-        documentId: postIt.document.id,
-        data: postIt.document.data
+        collectionCode: postIt.documentModel.collectionCode,
+        documentId: postIt.documentModel.id,
+        data: postIt.documentModel.data
       }
     ));
   }
@@ -215,37 +205,27 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private initializePostIt(postItToInitialize: PostItDocumentModel): void {
     if (!postItToInitialize.updating) {
       postItToInitialize.updating = true;
-      this.store.dispatch(new Create(postItToInitialize));
-      this.postIts.splice(this.postIts.indexOf(postItToInitialize));
+      this.store.dispatch(new Create({document: postItToInitialize.documentModel}));
+      this.postIts.splice(this.postIts.indexOf(postItToInitialize), 1);
     }
-  }
-
-  public confirmDeletion(postIt: PostItDocumentModel): void {
-    this.store.dispatch(new Confirm(
-      {
-        title: 'Delete?',
-        message: 'Are you sure you want to remove the document?',
-        callback: () => this.deletePostIt(postIt)
-      }
-    ));
   }
 
   public deletePostIt(postIt: PostItDocumentModel): void {
     if (postIt.initialized) {
       this.store.dispatch(new Delete(
         {
-          collectionCode: postIt.collection.code,
-          documentId: postIt.document.id
+          collectionCode: postIt.documentModel.collectionCode,
+          documentId: postIt.documentModel.id
         }
       ));
     }
 
-    this.postIts.splice(postIt.index);
+    this.postIts.splice(postIt.index, 1);
     this.layout.refresh();
   }
 
-  public usedCollections(): Collection[] {
-    return Array.from(new Set(this.postIts.map(postIt => postIt.collection)));
+  public usedCollections(): CollectionModel[] {
+    return Array.from(new Set(this.postIts.map(postIt => postIt.documentModel.collection)));
   }
 
   public postItWithIndex(postIt: PostItDocumentModel, index: number): PostItDocumentModel {
@@ -263,8 +243,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private documentModelToPostItModel(documentModel: DocumentModel, initialized: boolean): PostItDocumentModel {
     const postIt = new PostItDocumentModel();
-    postIt.document = DocumentConverter.toDto(documentModel);
-    postIt.collection = CollectionConverter.toDto(documentModel.collection);
+    postIt.documentModel = documentModel;
     postIt.selectedInput = this.selectionManager.selectedAttributeProperty();
     postIt.initialized = initialized;
 

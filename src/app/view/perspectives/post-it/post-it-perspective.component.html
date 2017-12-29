@@ -8,11 +8,11 @@
   <post-it-document *ngFor="let postIt of postIts; let idx = index"
                     class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : null }}"
                     [attr.order]="postIt.order"
-                    [data]="postItWithIndex(postIt, idx)"
+                    [postItModel]="postItWithIndex(postIt, idx)"
                     [perspectiveId]="perspectiveId"
                     [selectionManager]="selectionManager"
                     [navigationManager]="navigationManager"
-                    (removed)="confirmDeletion(postIt)"
+                    (removed)="deletePostIt(postIt)"
                     (changes)="postItChanged(postIt)"></post-it-document>
 
   <datalist *ngFor="let collection of usedCollections()"

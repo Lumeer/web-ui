@@ -17,14 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection, Document} from '../../../../core/dto';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {AttributePropertySelection} from './attribute-property-selection';
 
 export class PostItDocumentModel {
 
   public index: number;
-  public document: Document;
-  public collection: Collection;
+  public documentModel: DocumentModel;
 
   public order = 1;
   public updating = false;
