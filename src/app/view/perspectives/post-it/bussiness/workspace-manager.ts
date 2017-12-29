@@ -17,17 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Document} from '../../../../core/dto';
-import {AttributePropertySelection} from './attribute-property-selection';
+import {Workspace} from '../../../../core/store/navigation/workspace.model';
 
-export class DocumentModel {
+export class WorkspaceManager {
 
-  public index: number;
-  public document: Document;
+  constructor(private workspace: Workspace) {
+  }
 
-  public initializing: boolean;
-  public initialized: boolean;
-  public selectedInput: AttributePropertySelection;
-  public visible: boolean;
+  public hasWorkspace(): boolean {
+    return Boolean(this.workspace && this.workspace.organizationCode && this.workspace.projectCode);
+  }
 
 }

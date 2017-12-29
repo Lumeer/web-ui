@@ -17,18 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface QueryModel {
+export interface Chronology {
 
-  collectionCodes?: string[];
-  documentIds?: string[];
-  filters?: string[];
-  fulltext?: string;
-  linkTypeIds?: string[];
-  page?: number;
-  pageSize?: number;
-
-  and?: QueryModel[];
-  or?: QueryModel[];
-  not?: QueryModel;
+  calendarType: string;
+  id: string;
 
 }
