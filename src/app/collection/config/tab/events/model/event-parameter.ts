@@ -26,7 +26,7 @@ export interface EventParameter {
 }
 
 export const documentStickyness: EventParameter = {
-  name: 'document stickyness',
+  name: 'record stickyness',
   value: 'yes',
   possibleValues: ['yes', 'no']
 };

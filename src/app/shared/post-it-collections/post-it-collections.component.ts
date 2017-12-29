@@ -117,7 +117,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
         this.reloadLayout();
       },
       error => {
-        this.notificationService.error('Failed fetching collections');
+        this.notificationService.error('Failed fetching files');
       });
   }
 
@@ -188,7 +188,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => postIt.initializing = false))
       .subscribe(
         collection => this.finishCreatingCollection(postIt, collection),
-        error => this.notificationService.error('Creating collection failed')
+        error => this.notificationService.error('Creating file failed')
       );
   }
 
@@ -196,7 +196,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     postIt.collection.code = collection.code;
     postIt.initialized = true;
 
-    this.notificationService.success('Collection created');
+    this.notificationService.success('File created');
 
     if (this.hasWorkspace()) {
       this.getCollection(postIt);
@@ -211,7 +211,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
           this.layout.refresh();
         },
         error => {
-          this.notificationService.error('Getting collection failed');
+          this.notificationService.error('Getting file failed');
         });
   }
 
@@ -227,7 +227,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
           this.layout.refresh();
         },
         error => {
-          this.notificationService.error('Failed updating collection');
+          this.notificationService.error('Failed updating file');
         });
   }
 
@@ -295,8 +295,8 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.collectionService.removeCollection(deletedCollectionPostIt.collection.code).pipe(
       finalize(() => this.postItToDelete = null)
     ).subscribe(
-      response => this.notificationService.success('Collection removed'),
-      error => this.notificationService.error('Failed removing collection')
+      response => this.notificationService.success('File removed'),
+      error => this.notificationService.error('Failed removing file')
     );
   }
 
@@ -313,7 +313,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   public confirmDeletion(postIt: PostItCollectionModel): void {
-    this.notificationService.confirm('Are you sure you want to remove the collection?', 'Delete?', [
+    this.notificationService.confirm('Are you sure you want to remove the file?', 'Delete?', [
       {text: 'Yes', action: () => this.removeCollection(postIt), bold: false},
       {text: 'No'}
     ]);

@@ -19,9 +19,9 @@
 
 export enum EventFireReason {
 
-  documentCreate = 'new document',
-  documentEdit = 'document edit',
-  documentRemove = 'document removal',
+  documentCreate = 'new record',
+  documentEdit = 'record edit',
+  documentRemove = 'record removal',
 
   attributeCreate = 'new attribute',
   attributeEdit = 'attribute edit',

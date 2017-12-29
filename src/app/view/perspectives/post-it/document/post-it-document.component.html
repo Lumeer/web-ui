@@ -4,10 +4,10 @@
 
   <ng-container *ngIf="hasWriteRole()">
     <i class="button text-danger fa fa-times rounded align-self-center p-1"
-       title="Remove Document" i18n-title="@@document.button.remove"
+       title="Remove Record" i18n-title="@@document.button.remove"
        (click)="onRemoveDocumentClick()"></i>
     <i class="button text-success fa fa-pencil rounded align-self-center p-1"
-       title="Edit Document" i18n-title="@@document.button.edit"
+       title="Edit Record" i18n-title="@@document.button.edit"
        (click)="setEditMode(true); select(0, 0)"></i>
   </ng-container>
   <i *ngIf="data.initialized" class="text-warning fa-star button rounded align-self-center p-1"

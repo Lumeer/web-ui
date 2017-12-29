@@ -240,7 +240,7 @@ export class WorkspaceChooserComponent implements OnInit {
 
       this.updateDefaultWorkspace(activeOrgCode, activeProjCode);
 
-      this.router.navigate(['w', activeOrgCode, activeProjCode, 'collections']);
+      this.router.navigate(['w', activeOrgCode, activeProjCode, 'files']);
     }
   }
 

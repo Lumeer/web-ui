@@ -23,7 +23,7 @@ import {DocumentsComponent} from './documents.component';
 
 const documentRoutes: Routes = [
   {
-    path: 'w/:organizationCode/:projectCode/c/:collectionCode/documents',
+    path: 'w/:organizationCode/:projectCode/f/:collectionCode/records',
     component: DocumentsComponent
   }
 ];

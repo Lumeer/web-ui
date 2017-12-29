@@ -260,7 +260,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       finalize(() => this.setFetchingPageFinished())
     ).subscribe(
       documents => this.addDocumentsToLayoutAndGetTheirCollections(documents),
-      error => this.notificationService.error('Failed fetching documents')
+      error => this.notificationService.error('Failed fetching records')
     );
   }
 
@@ -310,7 +310,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         finalize(() => this.countAsFetchedAndRefreshIfLast())
       ).subscribe(
         collection => this.registerCollection(collection),
-        error => this.notificationService.error(`Failed fetching collection ${collectionCode}`)
+        error => this.notificationService.error(`Failed fetching file ${collectionCode}`)
       );
     });
   }
@@ -362,7 +362,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         this.refresh();
       },
       error => {
-        this.notificationService.error('Failed updating document');
+        this.notificationService.error('Failed updating record');
       });
   }
 
@@ -378,7 +378,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         this.refreshDocument(postIt);
       },
       error => {
-        this.notificationService.error('Failed creating document');
+        this.notificationService.error('Failed creating record');
       });
   }
 
@@ -395,7 +395,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
           this.refresh();
         },
         error => {
-          this.notificationService.error('Refreshing document failed');
+          this.notificationService.error('Refreshing record failed');
         });
   }
 
@@ -403,7 +403,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     if (postIt.initialized) {
       this.documentService.removeDocument(postIt.document.collectionCode, postIt.document.id).subscribe(
         response => null,
-        error => this.notificationService.error('Failed removing document')
+        error => this.notificationService.error('Failed removing record')
       );
     }
 
@@ -426,7 +426,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public confirmDeletion(postIt: DocumentModel): void {
-    this.notificationService.confirm('Are you sure you want to remove the document?', 'Delete?', [
+    this.notificationService.confirm('Are you sure you want to remove the record?', 'Delete?', [
       {text: 'Yes', action: () => this.removeDocument(postIt), bold: false},
       {text: 'No'}
     ]);

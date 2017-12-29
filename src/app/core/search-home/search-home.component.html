@@ -29,7 +29,7 @@
 </div>
 
 <ng-template #collections let-collections>
-  <h5 i18n="@@search.recent.collections">Collections</h5>
+  <h5 i18n="@@search.recent.collections">Files</h5>
   <div class="d-flex flex-column">
     <div *ngFor="let collection of collections">
       <a [routerLink]="[workspacePath(), 'view', 'postit']"
@@ -39,13 +39,13 @@
       </a>
     </div>
     <div class="mt-2 clickable">
-      <a [routerLink]="[workspacePath(), 'collections']">Show all</a>
+      <a [routerLink]="[workspacePath(), 'files']">Show all</a>
     </div>
   </div>
 </ng-template>
 
 <ng-template #documents let-documents>
-  <h5 i18n="@@search.recent.documents">Documents</h5>
+  <h5 i18n="@@search.recent.documents">Records</h5>
   <div class="d-flex flex-column">
     <div *ngFor="let document of documents">
       <i class="{{document.collectionIcon}} fa-fw" [style.color]="document.collectionColor" aria-hidden="true"></i>
