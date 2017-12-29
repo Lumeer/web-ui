@@ -17,17 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryList} from '@angular/core';
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
 import {Direction} from '../document-data/direction';
 import {PostItDocumentModel} from '../document-data/post-it-document-model';
-import {PostItDocumentComponent} from '../document/post-it-document.component';
 
 export class SelectionManager {
 
   constructor(
     private postIts: PostItDocumentModel[],
-    private postItComponents: QueryList<PostItDocumentComponent>,
     private getDocumentsPerRow: () => number) {
   }
 
@@ -64,29 +61,29 @@ export class SelectionManager {
 
   private tryToSelectDocumentOnLeft(selection: AttributePropertySelection): void {
     if (selection.documentIdx - 1 >= 0) {
-      const selectedDocument = this.postItComponents.toArray()[selection.documentIdx - 1];
-      selectedDocument.select(Number.MAX_SAFE_INTEGER, selection.row);
+      // const selectedDocument = this.postItComponents.toArray()[selection.documentIdx - 1];
+      // selectedDocument.select(Number.MAX_SAFE_INTEGER, selection.row);
     }
   }
 
   private tryToSelectDocumentOnRight(selection: AttributePropertySelection): void {
     if (selection.documentIdx + 1 < this.postIts.length) {
-      const selectedDocument = this.postItComponents.toArray()[selection.documentIdx + 1];
-      selectedDocument.select(0, selection.row);
+      // const selectedDocument = this.postItComponents.toArray()[selection.documentIdx + 1];
+      // selectedDocument.select(0, selection.row);
     }
   }
 
   private tryToSelectDocumentOnUp(selection: AttributePropertySelection): void {
     if (selection.documentIdx - this.getDocumentsPerRow() >= 0) {
-      const selectedDocument = this.postItComponents.toArray()[selection.documentIdx - this.getDocumentsPerRow()];
-      selectedDocument.select(selection.column, Number.MAX_SAFE_INTEGER);
+      // const selectedDocument = this.postItComponents.toArray()[selection.documentIdx - this.getDocumentsPerRow()];
+      // selectedDocument.select(selection.column, Number.MAX_SAFE_INTEGER);
     }
   }
 
   private tryToSelectDocumentOnDown(selection: AttributePropertySelection): void {
     if (selection.documentIdx + this.getDocumentsPerRow() < this.postIts.length) {
-      const selectedDocument = this.postItComponents.toArray()[selection.documentIdx + this.getDocumentsPerRow()];
-      selectedDocument.select(selection.column, 0);
+      // const selectedDocument = this.postItComponents.toArray()[selection.documentIdx + this.getDocumentsPerRow()];
+      // selectedDocument.select(selection.column, 0);
     }
   }
 
