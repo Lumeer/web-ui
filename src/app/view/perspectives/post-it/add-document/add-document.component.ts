@@ -17,27 +17,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Document} from '../../../../core/dto';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {Subscription} from 'rxjs/Subscription';
+import {AppState} from '../../../../core/store/app.state';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
 @Component({
   selector: 'add-document',
   templateUrl: './add-document.component.html',
   styleUrls: ['./add-document.component.scss']
 })
-export class PostItAddDocumentComponent {
-
-  @Input()
-  public collectionCode: string;
+export class PostItAddDocumentComponent implements OnInit, OnDestroy {
 
   @Output()
-  public newDocument = new EventEmitter<Document>();
+  public createPostIt = new EventEmitter<DocumentModel>();
+
+  public selectedCollection: CollectionModel;
+
+  private collectionSubscription: Subscription;
+
+  constructor(private store: Store<AppState>) {
+  }
+
+  public ngOnInit(): void {
+    this.collectionSubscription = this.store.select(selectCollectionsByQuery).subscribe((collections: CollectionModel[]) => {
+      this.selectedCollection = collections.length === 1 ? collections[0] : null;
+    });
+  }
 
   public onClick(): void {
-    const newDocument = new Document;
-    newDocument.collectionCode = this.collectionCode;
+    this.createPostIt.emit({
+      collection: this.selectedCollection,
+      collectionCode: this.selectedCollection.code,
+      data: {}
+    });
+  }
 
-    this.newDocument.emit(newDocument);
+  public ngOnDestroy(): void {
+    this.collectionSubscription.unsubscribe();
   }
 
 }

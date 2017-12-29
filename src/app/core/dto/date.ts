@@ -17,18 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface QueryModel {
+import {Chronology} from './chronology';
 
-  collectionCodes?: string[];
-  documentIds?: string[];
-  filters?: string[];
-  fulltext?: string;
-  linkTypeIds?: string[];
-  page?: number;
-  pageSize?: number;
+export interface Date {
 
-  and?: QueryModel[];
-  or?: QueryModel[];
-  not?: QueryModel;
+  chronology: Chronology;
+  dayOfMonth: number;
+  dayOfWeek: number;
+  dayOfYear: number;
+  hour: number;
+  minute: number;
+  month: string;
+  monthValue: number;
+  nano: number;
+  second: number;
+  year: number;
 
 }

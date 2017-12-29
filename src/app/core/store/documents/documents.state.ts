@@ -19,12 +19,13 @@
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
+import {isNullOrUndefined} from 'util';
 import {AppState} from '../app.state';
+import {selectCollectionsDictionary} from '../collections/collections.state';
+import {selectQuery} from '../navigation/navigation.state';
 import {QueryModel} from '../navigation/query.model';
 
 import {DocumentModel} from './document.model';
-import {selectQuery} from '../navigation/navigation.state';
-import {selectCollectionsDictionary} from '../collections/collections.state';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   queries: QueryModel[];
@@ -41,11 +42,42 @@ export const selectDocumentsState = (state: AppState) => state.documents;
 export const selectAllDocuments = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectAll);
 export const selectDocumentsDictionary = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectEntities);
 export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
-export const selectDocumentsByQuery = createSelector(selectAllDocuments, selectCollectionsDictionary, selectQuery, (documents, collections, query): DocumentModel[] => {
-  // TODO create more complex filtering
-  const filtered = query.collectionCodes && query.collectionCodes.length > 0
-    ? documents.filter(document => query.collectionCodes.includes(document.collectionCode)) : documents;
-  return filtered.map(document => {
-    return {...document, collection: collections[document.collectionCode]};
-  });
-});
+export const selectDocumentsByQuery = createSelector(
+  selectAllDocuments,
+  selectCollectionsDictionary,
+  selectQuery,
+  (documents, collections, query): DocumentModel[] => {
+    // TODO create more complex filtering
+    documents = filterDocumentsByQuery(documents, query);
+
+    return documents.map(document => {
+      return {...document, collection: collections[document.collectionCode]};
+    });
+  }
+);
+
+export function selectDocumentsByCustomQuery(query: QueryModel) {
+  return createSelector(
+    selectAllDocuments,
+    selectCollectionsDictionary,
+    (documents, collections): DocumentModel[] => {
+      documents = filterDocumentsByQuery(documents, query);
+
+      return documents.map(document => {
+        return {...document, collection: collections[document.collectionCode]};
+      });
+    }
+  );
+}
+
+const filterDocumentsByQuery = (documents: DocumentModel[], query: QueryModel): DocumentModel[] => {
+  if (query.collectionCodes && query.collectionCodes.length) {
+    documents = documents.filter(document => query.collectionCodes.includes(document.collectionCode));
+  }
+
+  if (!isNullOrUndefined(query.page) && !isNullOrUndefined(query.pageSize)) {
+    documents = documents.slice(query.page * query.pageSize, (query.page + 1) * query.pageSize);
+  }
+
+  return documents;
+};

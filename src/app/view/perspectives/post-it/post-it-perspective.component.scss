@@ -14,6 +14,7 @@
     position: absolute;
     margin: 5px;
     width: $post-it-width;
+    height: 100px;
   }
 
   .post-it:hover, .selected {
@@ -37,8 +38,13 @@
     border-style: dashed;
   }
 
-  .large-text {
+  .loading-text {
+    position: relative;
+    top: 50px;
+
     font-size: 36px;
+
+    pointer-events: none;
   }
 
 }

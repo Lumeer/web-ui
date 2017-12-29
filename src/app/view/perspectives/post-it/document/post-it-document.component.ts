@@ -20,18 +20,16 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {isString} from 'util';
-import {Collection} from '../../../../core/dto/collection';
-import {Permission} from '../../../../core/dto/permission';
+import {Permission} from '../../../../core/dto';
 import {AppState} from '../../../../core/store/app.state';
-import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../shared/permissions/role';
+import {NavigationManager} from '../bussiness/navigation-manager';
+import {SelectionManager} from '../bussiness/selection-manager';
 
 import {AttributePair} from '../document-data/attribute-pair';
-import {AttributePropertySelection} from '../document-data/attribute-property-selection';
 import {Direction} from '../document-data/direction';
-import {DocumentModel} from '../document-data/document-model';
+import {PostItDocumentModel} from '../document-data/post-it-document-model';
 
 @Component({
   selector: 'post-it-document',
@@ -41,25 +39,25 @@ import {DocumentModel} from '../document-data/document-model';
 export class PostItDocumentComponent implements OnInit {
 
   @Input()
-  public data: DocumentModel;
-
-  @Input()
-  public collection: Collection;
+  public data: PostItDocumentModel;
 
   @Input()
   public attributeSuggestions: string[];
+
+  @Input()
+  public perspectiveId: string;
+
+  @Input()
+  public navigationManager: NavigationManager;
+
+  @Input()
+  public selectionManager: SelectionManager;
 
   @Output()
   public removed = new EventEmitter();
 
   @Output()
-  public selectOther = new EventEmitter<AttributePropertySelection>();
-
-  @Output()
   public changes = new EventEmitter();
-
-  @Output()
-  public toggleFavorite = new EventEmitter();
 
   @ViewChild('content')
   public content: ElementRef;
@@ -68,15 +66,10 @@ export class PostItDocumentComponent implements OnInit {
 
   public newAttributePair: AttributePair;
 
-  private workspace: Workspace;
-
-  constructor(public element: ElementRef,
-              private store: Store<AppState>) {
+  constructor(private store: Store<AppState>) {
   }
 
   public ngOnInit(): void {
-    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
-
     this.initializeVariables();
     this.setEventListener();
     this.loadDocumentData();
@@ -88,6 +81,16 @@ export class PostItDocumentComponent implements OnInit {
       value: '',
       previousAttributeName: ''
     };
+  }
+
+  public toggleDocumentFavorite(postIt: PostItDocumentModel) {
+    // this.store.dispatch(new Do)
+    // this.documentService.toggleDocumentFavorite(postIt.document)
+    //   .subscribe(success => {
+    //     if (success) {
+    postIt.document.isFavorite = !postIt.document.isFavorite;
+    //     }
+    //   });
   }
 
   private setEventListener(): void {
@@ -109,7 +112,7 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   public onToggleFavorite() {
-    this.toggleFavorite.emit();
+    // this.toggleFavorite.emit();
   }
 
   public clickOnAttributePair(column: number, row: number): void {
@@ -146,13 +149,13 @@ export class PostItDocumentComponent implements OnInit {
     if (this.selectedDocumentDirection(newColumn, newRow) === Direction.Self) {
       this.select(newColumn, newRow);
     } else {
-      this.selectOther.emit({
-        row: newRow,
-        column: newColumn,
-        direction: this.selectedDocumentDirection(newColumn, newRow),
-        editing: false,
-        documentIdx: this.data.index
-      });
+      // this.selectOther.emit({
+      //   row: newRow,
+      //   column: newColumn,
+      //   direction: this.selectedDocumentDirection(newColumn, newRow),
+      //   editing: false,
+      //   documentIdx: this.data.index
+      // });
     }
   }
 
@@ -228,7 +231,7 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   private selectedInputId(): string {
-    return `AttributePair${ this.data.index }[${ this.data.selectedInput.column }, ${ this.data.selectedInput.row }]`;
+    return `${ this.perspectiveId }${ this.data.index }[${ this.data.selectedInput.column }, ${ this.data.selectedInput.row }]`;
   }
 
   private setEditMode(on: boolean): void {
@@ -281,12 +284,13 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   private hasRole(role: string): boolean {
-    return this.collection.permissions && this.collection.permissions.users
+    return this.data.collection.permissions && this.data.collection.permissions.users
       .some((permission: Permission) => permission.roles.includes(role));
   }
 
   public configPrefix(): string {
-    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}/f/${this.collection.code}/r/${this.data.document.id}`;
+    // return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}/f/${this.data.collection.code}/r/${this.data.document.id}`;
+    return '';
   }
 
 }

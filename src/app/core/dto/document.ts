@@ -17,12 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Date} from './date';
+
 export class Document {
 
   public id: string;
   public collectionCode: string;
-  public creationDate?: string;
-  public updateDate?: string;
+  public creationDate?: Date;
+  public updateDate?: Date;
   public createdBy?: string;
   public updatedBy?: string;
   public dataVersion?: number;

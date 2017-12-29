@@ -18,18 +18,35 @@
  */
 
 import {NgZone} from '@angular/core';
+import {PostItLayout} from './post-it-layout';
 import {PostItLayoutConfig} from './post-it-layout-config';
 
-export class PostItLayout {
+export class PostItSortingLayout extends PostItLayout {
 
-  constructor(protected containerClassName: string, protected parameters: PostItLayoutConfig, protected zone: NgZone) {
-    this.addContainerClassIdentifierIfMissing();
+  constructor(containerClassName: string,
+              parameters: PostItLayoutConfig,
+              sortFunction: (item: any, element: HTMLElement) => number,
+              selectorOfDraggableElements: string,
+              zone: NgZone) {
+
+    super(containerClassName, parameters, zone);
+    this.setSortingParameters(selectorOfDraggableElements, sortFunction);
   }
 
-  private addContainerClassIdentifierIfMissing(): void {
-    if (!this.containerClassName.startsWith('.')) {
-      this.containerClassName = '.' + this.containerClassName;
-    }
+  private setSortingParameters(selectorOfDraggableElements: string, sortFunction: (item: any, element: HTMLElement) => number) {
+    this.parameters.dragEnabled = true;
+
+    this.parameters.layoutOnInit = false;
+
+    this.parameters.dragStartPredicate = {
+      distance: 15,
+      delay: 40,
+      handle: selectorOfDraggableElements
+    };
+
+    this.parameters.sortData = {
+      order: sortFunction
+    };
   }
 
   public refresh(): void {
@@ -39,13 +56,10 @@ export class PostItLayout {
       }
 
       this.zone.runOutsideAngular(() => {
-        new window['Muuri'](this.containerClassName, this.parameters);
+        const layout = new window['Muuri'](this.containerClassName, this.parameters);
+        layout.sort('order', {layout: 'instant'});
       });
     });
-  }
-
-  protected containerExists(): boolean {
-    return !!(document.querySelector(this.containerClassName));
   }
 
 }

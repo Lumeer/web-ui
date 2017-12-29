@@ -1,6 +1,6 @@
 <div class="card-header d-inline-flex py-1 px-3">
-  <i class="icon {{ collection.icon }} mr-1" [style.color]="collection.color"></i>
-  <div class="collection-name" [style.color]="collection.color">{{ collection.name }}</div>
+  <i class="icon {{ data.collection.icon }} mr-1" [style.color]="data.collection.color"></i>
+  <div class="collection-name" [style.color]="data.collection.color">{{ data.collection.name }}</div>
 
   <ng-container *ngIf="hasWriteRole()">
     <i class="button text-danger fa fa-times rounded align-self-center p-1"
@@ -10,7 +10,8 @@
        title="Edit Record" i18n-title="@@document.button.edit"
        (click)="setEditMode(true); select(0, 0)"></i>
   </ng-container>
-  <i *ngIf="data.initialized" class="text-warning fa-star button rounded align-self-center p-1"
+  <i *ngIf="data.initialized"
+     class="text-warning fa-star button rounded align-self-center p-1"
      [class.always-visible]="data.document.favorite"
      title="{{data.document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
      i18n-title="@@collection.document.favorite"
@@ -23,7 +24,7 @@
 
     <ng-container *ngIf="hasWriteRole()">
       <li *ngFor="let attributePair of attributePairs; let row = index">
-        <span id="AttributePair{{ data.index }}[0, {{ row }}]" class="attribute"
+        <span id="{{ perspectiveId }}{{ data.index }}[0, {{ row }}]" class="attribute"
               tabindex="-1"
               (keydown.ArrowLeft)="moveSelection(-1, 0)"
               (keydown.ArrowRight)="moveSelection(1, 0)"
@@ -42,7 +43,7 @@
                  (blur)="updateAttribute(attributePair)">
         </span>
 
-        <span id="AttributePair{{ data.index }}[1, {{ row }}]" tabindex="-1"
+        <span id="{{ perspectiveId }}{{ data.index }}[1, {{ row }}]" tabindex="-1"
               title="{{ attributePair.value }}"
               (keydown.ArrowLeft)="moveSelection(-1, 0)"
               (keydown.ArrowRight)="moveSelection(1, 0)"
@@ -63,8 +64,9 @@
       </li>
 
       <li>
-        <span id="AttributePair{{ data.index }}[0, {{ attributePairs.length }}]"
-              class="attribute" tabindex="-1"
+        <span id="{{ perspectiveId }}{{ data.index }}[0, {{ attributePairs.length }}]"
+              class="attribute"
+              tabindex="-1"
               (keydown.ArrowLeft)="moveSelection(-1, 0)"
               (keydown.ArrowRight)="moveSelection(1, 0)"
               (keydown.ArrowUp)="moveSelection(0, -1)"
@@ -76,7 +78,7 @@
           <!-- the list refers to one of the attribute suggestion lists in document perspective -->
           <input class="border-0"
                  placeholder=" + "
-                 [attr.list]="data.document.collectionCode"
+                 [attr.list]="perspectiveId + data.document.collectionCode"
                  [(ngModel)]="newAttributePair.attribute"
                  (keydown)="$event.stopPropagation()"
                  (keydown.F2)="setEditMode(false); focusSelection()"
@@ -85,7 +87,7 @@
                  (blur)="newAttributePair.attribute && createAttributePair()">
         </span>
 
-        <span id="AttributePair{{ data.index }}[1, {{ attributePairs.length }}]"
+        <span id="{{ perspectiveId }}{{ data.index }}[1, {{ attributePairs.length }}]"
               [attr.tabindex]="newAttributePair.attribute ? -1 : null"
               (keydown.ArrowLeft)="moveSelection(-1, 0)"
               (keydown.ArrowRight)="moveSelection(1, 0)"
@@ -120,7 +122,7 @@
 </div>
 
 <div *ngIf="data.initialized" class="card-footer px-4 py-0">
-  <div class="buttons d-flex align-content-center">
+  <div class="buttons d-flex align-content-center ml-2">
     <a [routerLink]="[configPrefix(), 'details']"
        class="px-2"
        title="Details" i18n-title="@@document.button.links.details">

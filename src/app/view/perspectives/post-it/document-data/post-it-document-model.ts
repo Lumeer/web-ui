@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface QueryModel {
+import {Collection, Document} from '../../../../core/dto';
+import {AttributePropertySelection} from './attribute-property-selection';
 
-  collectionCodes?: string[];
-  documentIds?: string[];
-  filters?: string[];
-  fulltext?: string;
-  linkTypeIds?: string[];
-  page?: number;
-  pageSize?: number;
+export class PostItDocumentModel {
 
-  and?: QueryModel[];
-  or?: QueryModel[];
-  not?: QueryModel;
+  public index: number;
+  public document: Document;
+  public collection: Collection;
+
+  public order = 1;
+  public updating = false;
+  public initialized: boolean;
+  public selectedInput: AttributePropertySelection;
 
 }
