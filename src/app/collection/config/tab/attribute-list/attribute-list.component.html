@@ -70,14 +70,18 @@
       </td>
       <td class="text-right">{{ formatNumber(attribute.usageCount) }}</td>
       <td>
-        <div class="d-flex flex-wrap position-relative">
-          <div class="constraint px-2 ml-1 rounded"
+        <div class="d-flex flex-wrap position-relative"
+             (keydown.ArrowUp)="suggestions.length && selectUpperSuggestion()"
+             (keydown.ArrowDown)="suggestions.length && selectLowerSuggestion()"
+             (keydown.enter)="suggestions.length && selectedSuggestionIndex !== -1 && addSelectedSuggestion(attribute)">
+          <div class="constraint px-2 my-1 ml-1 rounded"
                *ngFor="let constraint of attribute.constraints; let idx = index; trackBy:trackByIndex"
                [style.background-color]="darken(constraintColor(constraint), mouseOver.attribute === attribute && mouseOver.constraint === constraint ? 40 : 0)"
                (mouseenter)="mouseOver = {attribute: attribute, constraint: constraint}"
                (mouseleave)="mouseOver = {attribute: null, constraint: ''}">
             <input class="border-0 input text-light" #input
                    [(ngModel)]="attribute.constraints[idx]"
+                   [attr.id]="'constraint' + idx"
                    [style.width]="((input.value.length + 1) * 8) + 'px'"
                    (blur)="updateAttribute(attribute)"/>
             <i class="fas fa fa-times remove font-weight-light" aria-hidden="true"
@@ -85,18 +89,24 @@
                title="Remove Constraint"
                i18n="@@collection.config.tab.attributes.constraint.remove"></i>
           </div>
-          <input class="px-2 ml-1 border-0"
-                 [(ngModel)]="attribute.newConstraint"
-                 (ngModelChange)="refreshSuggestions()"
-                 (focus)="activeAttribute = attribute"
-                 (keyup.enter)="addConstraint(attribute)"
-                 (keydown.backspace)="constraintBackspace(attribute)"
-                 placeholder="{{ attribute.constraints.length ? '...' : '+' }}"/>
-          <div *ngIf="attribute.newConstraint && suggestions.length"
-               class="dropdown-menu show">
-            <span *ngFor="let suggestion of suggestions" class="dropdown-item"
+          <div class="dropdown">
+            <input class="px-2 my-1 ml-1 border-0"
+                   [attr.id]="attribute.name + 'addAttribute'"
+                   [(ngModel)]="attribute.newConstraint"
+                   (ngModelChange)="refreshSuggestions(); selectedSuggestionIndex = -1"
+                   (focus)="activeAttribute = attribute"
+                   (keyup.enter)="attribute.newConstraint && addConstraint(attribute, attribute.newConstraint)"
+                   (keydown.backspace)="constraintBackspace(attribute)"
+                   placeholder="{{ attribute.constraints.length ? '...' : '+' }}"/>
+            <div *ngIf="attribute.newConstraint && suggestions.length"
+                 class="dropdown-menu show">
+            <span *ngFor="let suggestion of suggestions; let suggestionIdx = index"
+                  class="dropdown-item"
+                  tabindex="1"
                   [style.color]="suggestion.color"
+                  [attr.id]="'suggestion' + suggestionIdx"
                   (click)="addConstraint(attribute, suggestion.name)">{{ suggestion.name }}</span>
+            </div>
           </div>
         </div>
       </td>

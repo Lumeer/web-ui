@@ -18,14 +18,14 @@
  */
 
 import {Component, Input} from '@angular/core';
+import {NotificationService} from 'app/core/notifications/notification.service';
+import {isNullOrUndefined} from 'util';
+import {Collection} from '../../../../core/dto/collection';
+import {CollectionService} from '../../../../core/rest/collection.service';
+import * as Const from '../constraints';
 
 import {ConfiguredAttribute} from './configured-attribute';
 import {ConstraintSuggestion} from './constraint-suggestion';
-import {CollectionService} from '../../../../core/rest/collection.service';
-import {Collection} from '../../../../core/dto/collection';
-import {NotificationService} from 'app/core/notifications/notification.service';
-import {isNullOrUndefined} from 'util';
-import * as Const from '../constraints';
 
 @Component({
   selector: 'attribute-list',
@@ -62,6 +62,8 @@ export class AttributeListComponent {
   public suggestions: ConstraintSuggestion[] = [];
 
   public lumeerSuggestions: ConstraintSuggestion[] = [];
+
+  public selectedSuggestionIndex = -1;
 
   constructor(private collectionService: CollectionService,
               private notificationService: NotificationService) {
@@ -112,7 +114,11 @@ export class AttributeListComponent {
 
     this.collectionService.updateAttribute(this.collection.code, previousFullName, attribute)
       .subscribe(
-        attribute => !isNullOrUndefined(index) && (this.collection.attributes[index] = attribute),
+        attribute => {
+          if (!isNullOrUndefined(index)) {
+            this.collection.attributes[index] = attribute;
+          }
+        },
         error => this.notificationService.error('Failed updating attribute')
       );
   }
@@ -127,8 +133,6 @@ export class AttributeListComponent {
   }
 
   public addConstraint(attribute: ConfiguredAttribute, constraint: string): void {
-    constraint && (attribute.newConstraint = constraint);
-
     const toCamelCase = str => str
       .trim()
       .split(/\s+/)
@@ -136,10 +140,21 @@ export class AttributeListComponent {
       .join('')
       .replace(':', ': ');
 
-    attribute.constraints.push(toCamelCase(attribute.newConstraint));
+    attribute.constraints.push(toCamelCase(constraint));
     attribute.newConstraint = '';
 
     this.updateAttribute(attribute);
+    this.preSelectRelevantConstraintInput(constraint, attribute);
+  }
+
+  private preSelectRelevantConstraintInput(constraint: string, attribute: ConfiguredAttribute) {
+    if (constraint.endsWith(':')) {
+      setTimeout(() => {
+        document.getElementById('constraint' + (attribute.constraints.length - 1)).focus();
+      });
+    } else {
+      document.getElementById(attribute.name + 'addAttribute').focus();
+    }
   }
 
   public removeConstraint(attribute: ConfiguredAttribute, constraintIndex: number): void {
@@ -152,11 +167,9 @@ export class AttributeListComponent {
   }
 
   public matchesSearch(attribute: ConfiguredAttribute): boolean {
-    const isSearched = str => str.toLowerCase().includes(this.searched);
-
-    return isSearched(attribute.name) ||
-      isSearched(this.formatNumber(attribute.usageCount)) ||
-      attribute.constraints.find(isSearched) !== undefined;
+    return attribute.name.includes(this.searched) ||
+      this.formatNumber(attribute.usageCount).includes(this.searched) ||
+      attribute.constraints.find(constraint => constraint.includes(this.searched)) !== undefined;
   }
 
   public refreshSuggestions(): void {
@@ -166,24 +179,46 @@ export class AttributeListComponent {
     }, []);
     const flatten = (flattenedList, currentList) => flattenedList.concat(currentList);
 
+    this.refreshConstraintSuggestions(flattenConstraints, flatten);
+    this.refreshLummeerSuggestions(flattenConstraints, flatten);
+  }
+
+  private refreshConstraintSuggestions(flattenConstraints: (constraints?) => any, flatten: (flattenedList, currentList) => any) {
     const nonNull = stringOrNull => stringOrNull ? stringOrNull : '';
     const startsWith = (str, start) => nonNull(str).toLowerCase().startsWith(nonNull(start).toLowerCase());
 
     this.suggestions = Const.constraints.map(flattenConstraints)
       .reduce(flatten, [])
       .filter(suggestion => startsWith(suggestion.name, this.activeAttribute.newConstraint))
-      .filter(suggestion => !this.activeAttribute.constraints.includes(suggestion.name))
+      .filter(suggestion => !this.activeAttribute.constraints.find(constraint => startsWith(constraint, suggestion.name)))
       .slice(0, 5);
+  }
 
+  private refreshLummeerSuggestions(flattenConstraints: (constraints?) => any, flatten: (flattenedList, currentList) => any) {
     const usedColors = this.activeAttribute.constraints.map(constraint => this.constraintColor(constraint));
     const uniqueUsedColors = new Set(usedColors);
-    const suggestionNames = this.suggestions.map(suggestion => suggestion.name);
 
     this.lumeerSuggestions = Const.constraints.map(flattenConstraints)
       .reduce(flatten, [])
-      .filter(suggestion => this.activeAttribute.newConstraint.includes(suggestion.name))
       .filter(suggestion => uniqueUsedColors.has(suggestion.color))
-      .filter(suggestion => !suggestionNames.includes(suggestion.name));
+      .slice(0, 6);
+  }
+
+  public selectUpperSuggestion(): void {
+    this.selectedSuggestionIndex = Math.max(0, Math.min(this.selectedSuggestionIndex - 1, this.suggestions.length - 1));
+    document.getElementById('suggestion' + this.selectedSuggestionIndex).focus();
+  }
+
+  public selectLowerSuggestion(): void {
+    this.selectedSuggestionIndex = Math.max(0, Math.min(this.selectedSuggestionIndex + 1, this.suggestions.length - 1));
+    document.getElementById('suggestion' + this.selectedSuggestionIndex).focus();
+  }
+
+  public addSelectedSuggestion(attribute: ConfiguredAttribute): void {
+    const focused = document.getElementById('suggestion' + this.selectedSuggestionIndex);
+    this.addConstraint(attribute, focused.textContent);
+
+    this.selectedSuggestionIndex = -1;
   }
 
   public hexColorOpacity(hexColor: string, opacity: number): string {
@@ -203,20 +238,16 @@ export class AttributeListComponent {
   }
 
   public constraintColor(constraint: string): string {
-    const removeWhitespace = list => list.map(str => str.replace(/\s/g, ''));
-    const shortestLength = list => Math.min(...list.map(str => str.length));
-    const trimToShortest = list => list.map(str => str.substring(0, shortestLength(list)));
-    const toLowerCase = list => list.map(str => str.toLowerCase());
+    constraint = constraint
+      .replace(/\s/g, '')
+      .replace(/:.*$/, ':')
+      .toLowerCase();
 
-    const makeComparable = list => toLowerCase(trimToShortest(removeWhitespace(list)));
-    const allSame = list => new Set(list).size === 1;
-
-    const matching = (a, b) => allSame(makeComparable([a, b]));
-    const containsConstraint = suggestions => suggestions.list.find(suggestion => {
-      return matching(suggestion, constraint);
-    }) !== undefined;
-
-    const constraintType = Const.constraints.find(containsConstraint);
+    const constraintType = Const.constraints.find(constraintType => {
+      return constraintType.list
+        .map(constraintName => constraintName.replace(/\s/g, '').toLowerCase())
+        .includes(constraint);
+    });
     return constraintType ? constraintType.color : '#858585';
   }
 

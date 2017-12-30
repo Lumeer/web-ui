@@ -1,13 +1,19 @@
 @import "../../../../shared/variables";
 
 :host {
+  display: block;
 
-  .green-on-hover {
-    transition: color $animation-color-duration;
+  .color-transition {
+    transition: color $animation-color-duration, border-color $animation-color-duration;
+  }
 
-    &:hover {
-      color: $success;
-    }
+  li {
+    transition: height $animation-duration;
+    align-items: baseline;
+  }
+
+  .new-event {
+    height: auto;
   }
 
   .uninitialized {
@@ -19,6 +25,12 @@
     border-top-style: dashed;
   }
 
-  display: block;
-  font-size: 20px;
+  .green-on-hover:hover {
+    color: $success;
+  }
+
+  .bigger {
+    font-size: 22px;
+  }
+
 }
