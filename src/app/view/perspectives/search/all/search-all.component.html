@@ -11,15 +11,17 @@
       <div class="h3 ml-3 my-2">
         Files
       </div>
-      <post-it-collections [editable]="false"></post-it-collections>
+      <post-it-collections [editable]="false" class="perspective"></post-it-collections>
     </div>
     <div *ngIf="documents.length > 0">
+      <hr *ngIf="collections.length > 0">
       <div class="h3 ml-3 my-2">
         Records
       </div>
-      <post-it-perspective [editable]="false"></post-it-perspective>
+      <post-it-perspective [editable]="false" [useOwnScrollbar]="true" class="perspective"></post-it-perspective>
     </div>
     <div *ngIf="views.length > 0">
+      <hr *ngIf="collections.length > 0 || documents.length > 0">
       <div class="h3 ml-3 my-2">
         Views
       </div>

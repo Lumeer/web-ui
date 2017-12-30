@@ -42,6 +42,12 @@ export class CollectionConverter {
   }
 
   public static toDto(model: CollectionModel): Collection {
+    let defaultAttribute = null;
+    if (model.attributes) {
+      const modelDefaultAttribute = model.attributes.find(attr => attr.id === model.defaultAttributeId);
+      defaultAttribute = modelDefaultAttribute || null;
+    }
+
     return {
       // TODO convert 'id' as well
       code: model.code,
@@ -50,8 +56,7 @@ export class CollectionConverter {
       color: model.color,
       icon: model.icon,
       attributes: model.attributes ? model.attributes.map(CollectionConverter.toAttributeDto) : [],
-      defaultAttribute: model.attributes ? CollectionConverter.toAttributeDto(model.attributes
-        .find(attr => attr.id === model.defaultAttributeId)) : null,
+      defaultAttribute: defaultAttribute,
       permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null,
       documentsCount: model.documentsCount, // TODO maybe not needed this way
       isFavorite: model.favourite

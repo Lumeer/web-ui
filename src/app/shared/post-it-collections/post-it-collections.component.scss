@@ -4,6 +4,7 @@
   display: block;
 
   .post-it-collection-layout {
+    transition: height $animation-duration;
     position: relative;
   }
 
