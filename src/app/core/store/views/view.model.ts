@@ -67,5 +67,6 @@ export interface SmartDocConfigModel {
 
   templateId: string;
   documentIdsOrder?: string[];
+  innerDocumentIdsOrder?: { [documentIdTemplateId: string]: string[] };
 
 }

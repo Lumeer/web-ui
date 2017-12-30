@@ -90,7 +90,12 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
       this.store.select(selectViewSmartDocConfig)
     ).pipe(
       map(([documents, smartDocConfig]) => ({documents: this.filterDocuments(documents), smartDocConfig})),
-      map(({documents, smartDocConfig}) => this.orderDocuments(documents, smartDocConfig ? smartDocConfig.documentIdsOrder : []))
+      map(({documents, smartDocConfig}) => {
+        const config: SmartDocConfigModel = smartDocConfig || {templateId: null};
+        const innerDocumentIdsOrder = config.innerDocumentIdsOrder || {};
+        const documentIds: string[] = this.embedded ? innerDocumentIdsOrder[this.linkedDocument.id + this.templateId] : config.documentIdsOrder;
+        return this.orderDocuments(documents, documentIds || []);
+      })
     );
   }
 
@@ -259,26 +264,39 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
   }
 
   public onMoveDocument(documentId: string, index: number) {
-    if (this.embedded) {
-      return; // TODO implement
-    }
-
     Observable.combineLatest(
-      this.store.select(selectViewConfig),
+      this.store.select(selectViewSmartDocConfig),
       this.documents$,
       this.template$
     ).pipe(
       first()
-    ).subscribe(([viewConfig, documents, template]: [ViewConfigModel, DocumentModel[], SmartDocTemplateModel]) => {
+    ).subscribe(([config, documents, template]: [SmartDocConfigModel, DocumentModel[], SmartDocTemplateModel]) => {
       const documentIds = documents.map(doc => doc.id)
         .filter(id => id !== documentId);
       documentIds.splice(index, 0, documentId);
       const documentIdsOrder = documentIds.filter(id => !!id);
 
-      const smartdoc: SmartDocConfigModel = {templateId: template.id, documentIdsOrder};
-      const config: ViewConfigModel = {...viewConfig, smartdoc};
-      this.store.dispatch(new ViewsAction.ChangeConfig({config}));
+      if (this.embedded) {
+        this.updateEmbeddedDocumentsOrder(config, template, documentIdsOrder);
+      } else {
+        this.updateTopLevelDocumentsOrder(config, template, documentIdsOrder);
+      }
     });
+  }
+
+  private updateEmbeddedDocumentsOrder(oldConfig: SmartDocConfigModel, template: SmartDocTemplateModel, documentIds: string[]) {
+    const smartDocConfig: SmartDocConfigModel = oldConfig ? {...oldConfig} : {templateId: null};
+    const innerDocumentIdsOrder: { [key: string]: string[] } = smartDocConfig.innerDocumentIdsOrder ? {...smartDocConfig.innerDocumentIdsOrder} : {};
+    innerDocumentIdsOrder[this.linkedDocument.id + this.templateId] = documentIds;
+
+    const smartdoc: SmartDocConfigModel = {...oldConfig, innerDocumentIdsOrder};
+    this.store.dispatch(new ViewsAction.ChangeConfig({config: {smartdoc}}));
+  }
+
+  private updateTopLevelDocumentsOrder(oldConfig: SmartDocConfigModel, template: SmartDocTemplateModel, documentIds: string[]) {
+    const smartDocConfig: SmartDocConfigModel = oldConfig ? {...oldConfig, templateId: template.id} : {templateId: template.id};
+    const smartdoc: SmartDocConfigModel = {...smartDocConfig, documentIdsOrder: documentIds};
+    this.store.dispatch(new ViewsAction.ChangeConfig({config: {smartdoc}}));
   }
 
 }
