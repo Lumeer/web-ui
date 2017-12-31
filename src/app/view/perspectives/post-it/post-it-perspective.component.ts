@@ -350,7 +350,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.documentService.toggleDocumentFavorite(postIt.document)
       .subscribe(success => {
         if (success) {
-          postIt.document.isFavorite = !postIt.document.isFavorite;
+          postIt.document.favorite = !postIt.document.favorite;
         }
       });
   }

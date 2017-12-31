@@ -30,7 +30,7 @@ export class DocumentConverter {
       id: dto.id,
       collectionCode: dto.collectionCode,
       data: data,
-      favorite: dto.isFavorite,
+      favorite: dto.favorite,
       creationDate: dto.creationDate,
       updateDate: dto.updateDate,
       createdBy: dto.createdBy,
@@ -45,7 +45,7 @@ export class DocumentConverter {
       id: model.id,
       collectionCode: model.collectionCode,
       data: model.data,
-      isFavorite: model.favorite
+      favorite: model.favorite
     };
   }
 

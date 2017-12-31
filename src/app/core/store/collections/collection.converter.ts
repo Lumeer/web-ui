@@ -37,7 +37,7 @@ export class CollectionConverter {
       permissions: dto.permissions ? PermissionsConverter.fromDto(dto.permissions) : null,
       documentsCount: dto.documentsCount,
       correlationId: correlationId,
-      favourite: dto.isFavorite
+      favourite: dto.favorite
     };
   }
 
@@ -59,7 +59,7 @@ export class CollectionConverter {
       defaultAttribute: defaultAttribute,
       permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null,
       documentsCount: model.documentsCount, // TODO maybe not needed this way
-      isFavorite: model.favourite
+      favorite: model.favourite
     };
   }
 

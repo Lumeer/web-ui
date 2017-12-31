@@ -19,14 +19,14 @@
 
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-
-import {Workspace} from '../store/navigation/workspace.model';
-import {AppState} from '../store/app.state';
-import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Observable} from 'rxjs/Observable';
+import {switchMap} from 'rxjs/operators';
 import {LocalStorage} from '../../shared/utils/local-storage';
 import {Collection, Document} from '../dto';
-import {switchMap} from 'rxjs/operators';
+import {AppState} from '../store/app.state';
+import {selectWorkspace} from '../store/navigation/navigation.state';
+
+import {Workspace} from '../store/navigation/workspace.model';
 
 const LAST_USED_COLLECTIONS = 'lastUsedCollections';
 const LAST_USED_DOCUMENTS = 'lastUsedDocuments';
@@ -114,7 +114,7 @@ export class HomePageService {
   public checkFavoriteDocument(document: Document): Observable<Document> {
     return this.getFavoriteDocuments().pipe(
       switchMap(codes => {
-        document.isFavorite = codes.includes(this.documentValue(document.collectionCode, document.id));
+        document.favorite = codes.includes(this.documentValue(document.collectionCode, document.id));
         return Observable.of(document);
       })
     );
@@ -124,7 +124,7 @@ export class HomePageService {
     return this.getFavoriteDocuments().pipe(
       switchMap(codes => {
         for (let document of documents) {
-          document.isFavorite = codes.includes(this.documentValue(document.collectionCode, document.id));
+          document.favorite = codes.includes(this.documentValue(document.collectionCode, document.id));
         }
         return Observable.of(documents);
       })
@@ -134,7 +134,7 @@ export class HomePageService {
   public checkFavoriteCollection(collection: Collection): Observable<Collection> {
     return this.getFavoriteCollections().pipe(
       switchMap(codes => {
-        collection.isFavorite = codes.includes(collection.code);
+        collection.favorite = codes.includes(collection.code);
         return Observable.of(collection);
       })
     );
@@ -144,7 +144,7 @@ export class HomePageService {
     return this.getFavoriteCollections().pipe(
       switchMap(codes => {
         for (let collection of collections) {
-          collection.isFavorite = codes.includes(collection.code);
+          collection.favorite = codes.includes(collection.code);
         }
         return Observable.of(collections);
       })

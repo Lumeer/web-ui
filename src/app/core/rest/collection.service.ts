@@ -82,7 +82,7 @@ export class CollectionService extends PermissionService {
   }
 
   public toggleCollectionFavorite(collection: Collection): Observable<boolean> {
-    if (collection.isFavorite) {
+    if (collection.favorite) {
       return this.homePageService.removeFavoriteCollection(collection.code);
     }
     return this.homePageService.addFavoriteCollection(collection.code);

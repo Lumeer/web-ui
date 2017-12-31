@@ -17,19 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse} from '@angular/common/http';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-
-import {Document} from '../dto/document';
 import {Observable} from 'rxjs/Observable';
-import {isNullOrUndefined} from 'util';
-import {LumeerError} from '../error/lumeer.error';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
+
+import {Document} from '../dto/document';
+import {LumeerError} from '../error/lumeer.error';
 import {AppState} from '../store/app.state';
-import {Workspace} from '../store/navigation/workspace.model';
 import {selectWorkspace} from '../store/navigation/navigation.state';
+import {Workspace} from '../store/navigation/workspace.model';
 import {HomePageService} from './home-page.service';
 
 // TODO send data attribute without '_id'
@@ -78,7 +78,7 @@ export class DocumentService {
   }
 
   public toggleDocumentFavorite(document: Document): Observable<boolean> {
-    if (document.isFavorite) {
+    if (document.favorite) {
       return this.homePageService.removeFavoriteDocument(document.collectionCode, document.id);
     }
     return this.homePageService.addFavoriteDocument(document.collectionCode, document.id);

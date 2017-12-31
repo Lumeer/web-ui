@@ -11,10 +11,10 @@
        (click)="setEditMode(true); select(0, 0)"></i>
   </ng-container>
   <i *ngIf="data.initialized" class="text-warning fa-star button rounded align-self-center p-1"
-     [class.always-visible]="data.document.isFavorite"
-     title="{{data.document.isFavorite ?  'Remove from favorites' : 'Add to favorites'}}"
+     [class.always-visible]="data.document.favorite"
+     title="{{data.document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
      i18n-title="@@collection.document.favorite"
-     [ngClass]="data.document.isFavorite ? 'fas' : 'far'"
+     [ngClass]="data.document.favorite ? 'fas' : 'far'"
      (click)="onToggleFavorite()"></i>
 </div>
 

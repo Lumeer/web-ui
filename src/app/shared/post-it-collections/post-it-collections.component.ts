@@ -34,6 +34,7 @@ import {CollectionsAction} from '../../core/store/collections/collections.action
 import {selectCollectionsByQuery} from '../../core/store/collections/collections.state';
 import {selectQuery, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
+import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {Role} from '../permissions/role';
 import {HtmlModifier} from '../utils/html-modifier';
@@ -72,9 +73,11 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   private workspace: Workspace;
 
-  private query: Query;
+  private query: QueryModel;
 
   private appStateSubscription: Subscription;
+
+  private collectionsSubscription: Subscription;
 
   constructor(private collectionService: CollectionService,
               private searchService: SearchService,
@@ -97,10 +100,16 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       this.query = query;
 
       this.store.dispatch(new Get({query: query}));
-      this.store.select(selectCollectionsByQuery).subscribe(collections => {
+
+      if (this.collectionsSubscription) {
+        this.collectionsSubscription.unsubscribe();
+      }
+
+      this.collectionsSubscription = this.store.select(selectCollectionsByQuery).subscribe(collections => {
         this.postIts = collections.map(collection => this.collectionToPostIt(collection, true));
         this.reloadLayout();
       });
+
       this.initializeLayout();
     });
   }
@@ -363,6 +372,10 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     if (this.appStateSubscription) {
       this.appStateSubscription.unsubscribe();
+    }
+
+    if (this.collectionsSubscription) {
+      this.collectionsSubscription.unsubscribe();
     }
   }
 
