@@ -11,7 +11,7 @@
        (click)="confirmDeletion()"></i>
     <i class="button text-success fa fa-pencil rounded align-self-center p-1"
        title="Edit Record" i18n-title="@@document.button.edit"
-       (click)="setEditMode(true); select(0, 0)"></i>
+       (click)="setEditMode(true); select(0, 0, postItModel)"></i>
   </ng-container>
   <i *ngIf="postItModel.initialized"
      class="text-warning fa-star button rounded align-self-center p-1"
@@ -29,39 +29,39 @@
       <li *ngFor="let attributePair of attributePairs; let row = index">
         <span id="{{ perspectiveId }}{{ postItModel.index }}[0, {{ row }}]" class="attribute"
               tabindex="-1"
-              (keydown.ArrowLeft)="moveSelection(-1, 0)"
-              (keydown.ArrowRight)="moveSelection(1, 0)"
-              (keydown.ArrowUp)="moveSelection(0, -1)"
-              (keydown.ArrowDown)="moveSelection(0, 1)"
-              (keydown.F2)="setEditMode(true); focusSelection()"
-              (keydown.enter)="setEditMode(true); focusSelection()"
+              (keydown.ArrowLeft)="selectionManager.moveSelection(-1, 0)"
+              (keydown.ArrowRight)="selectionManager.moveSelection(1, 0)"
+              (keydown.ArrowUp)="selectionManager.moveSelection(0, -1)"
+              (keydown.ArrowDown)="selectionManager.moveSelection(0, 1)"
+              (keydown.F2)="selectionManager.setEditMode(true); selectionManager.focus()"
+              (keydown.enter)="selectionManager.setEditMode(true); selectionManager.focus()"
               (click)="clickOnAttributePair(0, row)">
 
           <input class="border-0"
                  [(ngModel)]="attributePair.attribute"
                  (keydown)="$event.stopPropagation()"
-                 (keydown.F2)="setEditMode(false); focusSelection()"
-                 (keydown.Escape)="setEditMode(false); focusSelection()"
-                 (keydown.enter)="onEditModeEnter()"
+                 (keydown.F2)="selectionManager.setEditMode(false); selectionManager.focus()"
+                 (keydown.Escape)="selectionManager.setEditMode(false); selectionManager.focus()"
+                 (keydown.enter)="onEnterKeyPressedInEditMode()"
                  (blur)="updateAttribute(attributePair)">
         </span>
 
         <span id="{{ perspectiveId }}{{ postItModel.index }}[1, {{ row }}]" tabindex="-1"
               title="{{ attributePair.value }}"
-              (keydown.ArrowLeft)="moveSelection(-1, 0)"
-              (keydown.ArrowRight)="moveSelection(1, 0)"
-              (keydown.ArrowUp)="moveSelection(0, -1)"
-              (keydown.ArrowDown)="moveSelection(0, 1)"
-              (keydown.F2)="setEditMode(true); focusSelection()"
-              (keydown.enter)="setEditMode(true); focusSelection()"
+              (keydown.ArrowLeft)="selectionManager.moveSelection(-1, 0)"
+              (keydown.ArrowRight)="selectionManager.moveSelection(1, 0)"
+              (keydown.ArrowUp)="selectionManager.moveSelection(0, -1)"
+              (keydown.ArrowDown)="selectionManager.moveSelection(0, 1)"
+              (keydown.F2)="selectionManager.setEditMode(true); selectionManager.focus()"
+              (keydown.enter)="selectionManager.setEditMode(true); selectionManager.focus()"
               (click)="clickOnAttributePair(1, row)">
 
         <input class="border-0"
                [(ngModel)]="attributePair.value"
                (keydown)="$event.stopPropagation()"
-               (keydown.F2)="setEditMode(false); focusSelection()"
-               (keydown.Escape)="setEditMode(false); focusSelection()"
-               (keydown.enter)="onEditModeEnter()"
+               (keydown.F2)="selectionManager.setEditMode(false); selectionManager.focus()"
+               (keydown.Escape)="selectionManager.setEditMode(false); selectionManager.focus()"
+               (keydown.enter)="onEnterKeyPressedInEditMode()"
                (blur)="updateValue(attributePair)">
        </span>
       </li>
@@ -70,12 +70,12 @@
         <span id="{{ perspectiveId }}{{ postItModel.index }}[0, {{ attributePairs.length }}]"
               class="attribute"
               tabindex="-1"
-              (keydown.ArrowLeft)="moveSelection(-1, 0)"
-              (keydown.ArrowRight)="moveSelection(1, 0)"
-              (keydown.ArrowUp)="moveSelection(0, -1)"
-              (keydown.ArrowDown)="moveSelection(0, 1)"
-              (keydown.F2)="setEditMode(true); focusSelection()"
-              (keydown.enter)="setEditMode(true); focusSelection()"
+              (keydown.ArrowLeft)="selectionManager.moveSelection(-1, 0)"
+              (keydown.ArrowRight)="selectionManager.moveSelection(1, 0)"
+              (keydown.ArrowUp)="selectionManager.moveSelection(0, -1)"
+              (keydown.ArrowDown)="selectionManager.moveSelection(0, 1)"
+              (keydown.F2)="selectionManager.setEditMode(true); selectionManager.focus()"
+              (keydown.enter)="selectionManager.setEditMode(true); selectionManager.focus()"
               (click)="clickOnAttributePair(0, attributePairs.length)">
 
           <!-- the list refers to one of the attribute suggestion lists in document perspective -->
@@ -84,20 +84,20 @@
                  [attr.list]="perspectiveId + postItModel.documentModel.collectionCode"
                  [(ngModel)]="newAttributePair.attribute"
                  (keydown)="$event.stopPropagation()"
-                 (keydown.F2)="setEditMode(false); focusSelection()"
-                 (keydown.Escape)="setEditMode(false); focusSelection()"
-                 (keydown.enter)="onEditModeEnter()"
+                 (keydown.F2)="selectionManager.setEditMode(false); selectionManager.focus()"
+                 (keydown.Escape)="selectionManager.setEditMode(false); selectionManager.focus()"
+                 (keydown.enter)="onEnterKeyPressedInEditMode()"
                  (blur)="newAttributePair.attribute && createAttributePair()">
         </span>
 
         <span id="{{ perspectiveId }}{{ postItModel.index }}[1, {{ attributePairs.length }}]"
               [attr.tabindex]="newAttributePair.attribute ? -1 : null"
-              (keydown.ArrowLeft)="moveSelection(-1, 0)"
-              (keydown.ArrowRight)="moveSelection(1, 0)"
-              (keydown.ArrowUp)="moveSelection(0, -1)"
-              (keydown.ArrowDown)="moveSelection(0, 1)"
-              (keydown.F2)="setEditMode(true); focusSelection()"
-              (keydown.enter)="setEditMode(true); focusSelection()"
+              (keydown.ArrowLeft)="selectionManager.moveSelection(-1, 0)"
+              (keydown.ArrowRight)="selectionManager.moveSelection(1, 0)"
+              (keydown.ArrowUp)="selectionManager.moveSelection(0, -1)"
+              (keydown.ArrowDown)="selectionManager.moveSelection(0, 1)"
+              (keydown.F2)="selectionManager.setEditMode(true); selectionManager.focus()"
+              (keydown.enter)="selectionManager.setEditMode(true); selectionManager.focus()"
               (click)="newAttributePair.attribute && clickOnAttributePair(1, attributePairs.length)">
 
         <input class="border-0" [disabled]="true"/>
@@ -126,25 +126,25 @@
 
 <div *ngIf="postItModel.initialized" class="card-footer px-4 py-0">
   <div class="buttons d-flex align-content-center ml-2">
-    <a [routerLink]="[configPrefix(), 'details']"
+    <a [routerLink]="[documentPrefix(), 'details']"
        class="px-2"
        title="Details" i18n-title="@@document.button.links.details">
       <i class="fa fa-fw fa-search"></i>
     </a>
 
-    <a [routerLink]="[configPrefix(), 'linktypes']"
+    <a [routerLink]="[documentPrefix(), 'linktypes']"
        class="px-2"
        title="Link Types" i18n-title="@@document.button.link.types">
       <i class="fa fa-fw fa-sign-out"></i>
     </a>
 
-    <a [routerLink]="[configPrefix(), 'history']"
+    <a [routerLink]="[documentPrefix(), 'history']"
        class="px-2"
        title="History" i18n-title="@@document.button.links.history">
       <i class="fa fa-fw fa-history"></i>
     </a>
 
-    <a [routerLink]="[configPrefix(), 'permissions']"
+    <a [routerLink]="[documentPrefix(), 'permissions']"
        class="px-2"
        title="User Rights" i18n-title="@@document.button.links.permissions">
       <i class="fa fa-fw fa-users"></i>

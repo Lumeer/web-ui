@@ -17,19 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output,
+  ViewChild
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {isString} from 'util';
+import {Permission} from '../../../../core/dto';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../shared/permissions/role';
+import {PostItLayout} from '../../../../shared/utils/layout/post-it-layout';
 import {NavigationManager} from '../bussiness/navigation-manager';
 import {SelectionManager} from '../bussiness/selection-manager';
-
 import {AttributePair} from '../document-data/attribute-pair';
-import {Direction} from '../document-data/direction';
 import {PostItDocumentModel} from '../document-data/post-it-document-model';
 import ToggleFavourite = DocumentsAction.ToggleFavourite;
 import Confirm = NotificationsAction.Confirm;
@@ -39,7 +42,7 @@ import Confirm = NotificationsAction.Confirm;
   templateUrl: './post-it-document.component.html',
   styleUrls: ['./post-it-document.component.scss']
 })
-export class PostItDocumentComponent implements OnInit {
+export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _postItModel: PostItDocumentModel;
 
@@ -55,6 +58,9 @@ export class PostItDocumentComponent implements OnInit {
 
   @Input()
   public perspectiveId: string;
+
+  @Input()
+  public layoutManager: PostItLayout;
 
   @Input()
   public navigationManager: NavigationManager;
@@ -75,7 +81,8 @@ export class PostItDocumentComponent implements OnInit {
 
   public newAttributePair: AttributePair = new AttributePair();
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>,
+              private element: ElementRef) {
   }
 
   public ngOnInit(): void {
@@ -93,6 +100,10 @@ export class PostItDocumentComponent implements OnInit {
     }, capture);
   }
 
+  public ngAfterViewInit(): void {
+    this.layoutManager.add(this.element.nativeElement);
+  }
+
   private refreshDataAttributePairs(): void {
     this.attributePairs = Object.entries(this.postItModel.documentModel.data).map(([attribute, value]) => {
       return {
@@ -108,15 +119,65 @@ export class PostItDocumentComponent implements OnInit {
   }
 
   public clickOnAttributePair(column: number, row: number): void {
-    this.setEditMode(this.previouslySelected(column, row));
-    this.select(column, row);
+    const enableEditMode = this.selectionManager.wasPreviouslySelected(column, row, this.postItModel.documentModel.id);
+
+    this.selectionManager.setEditMode(enableEditMode);
+    this.selectionManager.select(column, row, this.postItModel);
   }
 
-  private previouslySelected(column: number, row: number): boolean {
-    return false;
-    // return column === this.data.selectedInput.column &&
-    //   row === this.data.selectedInput.row &&
-    //   this.data.index === this.data.selectedInput.documentIdx;
+  public onEnterKeyPressedInEditMode(): void {
+    this.selectionManager.selectNext(this.postItModel);
+  }
+
+  public updateAttribute(attributePair: AttributePair): void {
+    delete this.postItModel.documentModel.data[attributePair.previousAttributeName];
+    attributePair.previousAttributeName = attributePair.attribute;
+
+    if (attributePair.attribute) {
+      this.postItModel.documentModel.data[attributePair.attribute] = attributePair.value;
+
+    } else {
+      const selectedRow = this.selectionManager.selection.row;
+      this.attributePairs.splice(selectedRow, 1);
+    }
+
+    this.changes.emit();
+  }
+
+  public updateValue(attributePair: AttributePair): void {
+    this.postItModel.documentModel.data[attributePair.attribute] = attributePair.value;
+    this.changes.emit();
+  }
+
+  public createAttributePair(): void {
+    this.newAttributePair.value = '';
+    this.attributePairs.push(this.newAttributePair);
+    this.changes.emit();
+
+    this.newAttributePair = {} as AttributePair;
+    document.activeElement['value'] = '';
+
+    setTimeout(() => {
+      this.selectionManager.select(1, this.attributePairs.length - 1, this.postItModel);
+    });
+  }
+
+  public hasWriteRole(): boolean {
+    return this.hasRole(Role.Write);
+  }
+
+  private hasRole(role: string): boolean {
+    const collection = this.postItModel.documentModel.collection;
+    return collection.permissions && collection.permissions.users
+      .some((permission: Permission) => permission.roles.includes(role));
+  }
+
+  public documentPrefix(): string {
+    const workspace = this.navigationManager.workspacePrefix();
+    const collection = `f/${this.postItModel.documentModel.collectionCode}`;
+    const document = `r/${this.postItModel.documentModel.id}`;
+
+    return `${workspace}/${collection}/${document}`;
   }
 
   public confirmDeletion(): void {
@@ -129,174 +190,8 @@ export class PostItDocumentComponent implements OnInit {
     ));
   }
 
-  public onEditModeEnter(): void {
-    // if (this.attributeColumn(this.data.selectedInput.column)) {
-    //   if (this.data.selectedInput.row === this.attributePairs.length && !this.newAttributePair.attribute) {
-    //     this.moveSelection(Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER);
-    //   } else {
-    //     this.moveSelection(1, 0);
-    //   }
-    // } else {
-    //   if (this.data.selectedInput.row === this.attributePairs.length) {
-    //     this.moveSelection(Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER);
-    //   } else {
-    //     this.moveSelection(-1, 1);
-    //   }
-    // }
-  }
-
-  private moveSelection(columnChange: number, rowChange: number): void {
-    // const newColumn = this.data.selectedInput.column + columnChange;
-    // const newRow = this.data.selectedInput.row + rowChange;
-    //
-    // if (this.selectedDocumentDirection(newColumn, newRow) === Direction.Self) {
-    //   this.select(newColumn, newRow);
-    // } else {
-    // this.selectOther.emit({
-    //   row: newRow,
-    //   column: newColumn,
-    //   direction: this.selectedDocumentDirection(newColumn, newRow),
-    //   editing: false,
-    //   documentIdx: this.data.index
-    // });
-    // }
-  }
-
-  private selectedDocumentDirection(newColumn: number, newRow: number): Direction {
-    // if (newColumn < 0) {
-    //   return Direction.Left;
-    // }
-    // if (newColumn > 1 || (this.onDisabledInput(newColumn, newRow) && this.attributeColumn(this.data.selectedInput.column))) {
-    //   return Direction.Right;
-    // }
-    // if (newRow < 0) {
-    //   return Direction.Up;
-    // }
-    // if (newRow > this.attributePairs.length || (this.onDisabledInput(newColumn, newRow) && this.onSecondToLastRow())) {
-    //   return Direction.Down;
-    // }
-    //
-    return Direction.Self;
-  }
-
-  private onDisabledInput(column: number, row: number): boolean {
-    return !this.newAttributePair.attribute && this.valueColumn(column) && row === this.attributePairs.length;
-  }
-
-  private onSecondToLastRow(): boolean {
-    return true;
-    // return this.data.selectedInput.row === this.attributePairs.length - 1;
-  }
-
-  public select(column: number, row: number): void {
-    // this.data.selectedInput.documentIdx = this.data.index;
-    // this.selectRow(column, row);
-    // this.selectColumn(column, row);
-    //
-    // this.focusSelection();
-  }
-
-  private selectRow(column: number, row: number): void {
-    // if (row < this.attributePairs.length) {
-    //   this.data.selectedInput.row = row;
-    // } else {
-    //   this.data.selectedInput.row = this.attributePairs.length;
-    //
-    //   if (this.valueColumn(column) && !this.newAttributePair.attribute) {
-    //     this.data.selectedInput.row--;
-    //   }
-    // }
-    //
-    // this.data.selectedInput.row = Math.max(0, Math.min(this.attributePairs.length, this.data.selectedInput.row));
-  }
-
-  private selectColumn(column: number, row: number): void {
-    // this.data.selectedInput.column = column;
-    //
-    // if (!this.newAttributePair.attribute && column >= 1 && row === this.attributePairs.length) {
-    //   this.data.selectedInput.column = 0;
-    // }
-    //
-    // this.data.selectedInput.column = Math.max(0, Math.min(this.data.selectedInput.column, 1));
-  }
-
-  private focusSelection(): void {
-    // if (this.data.selectedInput.column == null || this.data.selectedInput.row == null) {
-    //   return;
-    // }
-    //
-    // let elementToFocus = document.getElementById(this.selectedInputId());
-    //
-    // if (this.data.selectedInput.editing) {
-    //   elementToFocus = elementToFocus.getElementsByTagName('Input').item(0) as HTMLInputElement;
-    // }
-    //
-    // elementToFocus.focus();
-  }
-
-  private selectedInputId(): string {
-    return '';
-    // return `${ this.perspectiveId }${ this.data.index }[${ this.data.selectedInput.column }, ${ this.data.selectedInput.row }]`;
-  }
-
-  private setEditMode(on: boolean): void {
-    // this.data.selectedInput.editing = on;
-  }
-
-  public updateAttribute(attributePair: AttributePair): void {
-    // delete this.data.document.data[attributePair.previousAttributeName];
-    // attributePair.previousAttributeName = attributePair.attribute;
-    //
-    // if (attributePair.attribute) {
-    //   this.data.document.data[attributePair.attribute] = attributePair.value;
-    // } else {
-    //   this.attributePairs.splice(this.data.selectedInput.row, 1);
-    // }
-    //
-    // this.changes.emit();
-  }
-
-  public updateValue(attributePair: AttributePair): void {
-    // this.data.document.data[attributePair.attribute] = attributePair.value;
-    // this.changes.emit();
-  }
-
-  public createAttributePair(): void {
-    // this.newAttributePair.value = '';
-    // this.attributePairs.push(this.newAttributePair);
-    // this.changes.emit();
-
-    // this.newAttributePair = {} as AttributePair;
-    // document.activeElement['value'] = '';
-    //
-    // setTimeout(() => this.select(1, this.attributePairs.length - 1));
-  }
-
-  private attributeColumn(column: number): boolean {
-    return column === 0;
-  }
-
-  private valueColumn(column: number): boolean {
-    return column === 1;
-  }
-
-  public onRemoveDocumentClick(): void {
-    // this.removed.emit();
-  }
-
-  public hasWriteRole(): boolean {
-    return this.hasRole(Role.Write);
-  }
-
-  private hasRole(role: string): boolean {
-    return true;
-    // return this.data.collection.permissions && this.data.collection.permissions.users
-    //   .some((permission: Permission) => permission.roles.includes(role));
-  }
-
-  public configPrefix(): string {
-    // return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}/f/${this.data.collection.code}/r/${this.data.document.id}`;
-    return '';
+  public ngOnDestroy(): void {
+    this.layoutManager.remove(this.element.nativeElement);
   }
 
 }

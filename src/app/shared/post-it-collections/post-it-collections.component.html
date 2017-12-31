@@ -4,8 +4,9 @@
 </div>
 <div *ngIf="(postIts && postIts.length > 0) || editable" class="post-it-collection-layout mx-4">
 
-  <div *ngFor="let postIt of postIts" #postItElement
+  <div *ngFor="let postIt of postIts; let idx = index" #postItElement
        class="layout-item card post-it {{ postIt === lastClickedPostIt ? 'selected' : null }} {{ !postIt.initialized ? 'uninitialized' : null }}"
+       [attr.id]="'perspectivePostIt' + idx"
        [style.border-color]="postIt.collection.color"
        (click)="lastClickedPostIt = postIt">
 
