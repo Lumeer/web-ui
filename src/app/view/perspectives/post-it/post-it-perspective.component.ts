@@ -19,27 +19,18 @@
 
 import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {skipWhile} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
-import {Collection} from '../../../core/dto';
-import {DocumentService} from 'app/core/rest/document.service';
-import {SearchService} from 'app/core/rest/search.service';
-import {Subscription} from 'rxjs';
-import {Observable} from 'rxjs/Observable';
-import {finalize} from 'rxjs/operators';
-import {Collection, Document, Query} from '../../../core/dto';
-import {NotificationService} from '../../../core/notifications/notification.service';
-import {CollectionService} from '../../../core/rest';
 import {AppState} from '../../../core/store/app.state';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectDocumentsByCustomQuery} from '../../../core/store/documents/documents.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
-import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
 import {PostItLayoutConfig} from '../../../shared/utils/layout/post-it-layout-config';
 import {PostItSortingLayout} from '../../../shared/utils/layout/post-it-sorting-layout';
-import {InfiniteScrollManager} from './bussiness/infinite-scroll-manager';
+import {InfiniteScroll} from './bussiness/infinite-scroll';
 import {NavigationManager} from './bussiness/navigation-manager';
 import {SelectionManager} from './bussiness/selection-manager';
 import {PostItDocumentModel} from './document-data/post-it-document-model';
@@ -57,8 +48,20 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   @Input()
   public editable: boolean = true;
 
+  private _useOwnScrollbar = false;
+
   @Input()
-  public useOwnScrollbar: boolean = false;
+  public get useOwnScrollbar(): boolean {
+    return this._useOwnScrollbar;
+  }
+
+  public set useOwnScrollbar(value: boolean) {
+    this._useOwnScrollbar = value;
+
+    if (this.infiniteScrollManager) {
+      this.infiniteScrollManager.setUseParentScrollbar(value);
+    }
+  }
 
   @ViewChild('layout')
   public layoutElement: ElementRef;
@@ -67,13 +70,13 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public postIts: PostItDocumentModel[] = [];
 
-  public infiniteScrollManager: InfiniteScrollManager;
+  public infiniteScrollManager: InfiniteScroll;
 
   public navigationManager: NavigationManager;
 
   public selectionManager: SelectionManager;
 
-  private layout: PostItLayout;
+  private layoutManager: PostItLayout;
 
   private pageSubscriptions: Subscription[] = [];
 
@@ -89,19 +92,26 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
 
-    this.layout = new PostItSortingLayout(
+    this.layoutManager = new PostItSortingLayout(
       '.post-it-document-layout',
       new PostItLayoutConfig(),
       this.sortByOrder,
       'post-it-document',
       this.zone
     );
-    this.layout.refresh();
 
-    this.infiniteScrollManager = new InfiniteScrollManager(() => this.loadMoreOnInfiniteScroll());
+    this.infiniteScrollManager = new InfiniteScroll(
+      () => this.loadMoreOnInfiniteScroll(),
+      this.element.nativeElement,
+      this.useOwnScrollbar
+    );
     this.infiniteScrollManager.initialize();
 
-    this.selectionManager = new SelectionManager(this.postIts, () => this.documentsPerRow());
+    this.selectionManager = new SelectionManager(
+      this.postIts,
+      () => this.documentsPerRow(),
+      this.perspectiveId
+    );
 
     this.navigationManager = new NavigationManager(this.store, () => this.documentsPerRow());
     this.navigationManager.setCallback(() => this.reinitializePostIts());
@@ -139,7 +149,9 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeOnDocuments(queryModel: QueryModel) {
-    const subscription = this.store.select(selectDocumentsByCustomQuery(queryModel)).subscribe(documents => {
+    const subscription = this.store.select(selectDocumentsByCustomQuery(queryModel)).pipe(
+      skipWhile(() => !this.navigationManager.validNavigation())
+    ).subscribe(documents => {
       setTimeout(() => {
         this.checkAllLoaded(documents);
 
@@ -147,7 +159,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         this.addDocumentsNotInLayout(documents);
 
         this.infiniteScrollManager.finishLoading();
-        this.layout.refresh();
+        this.layoutManager.refresh();
       });
     });
 
@@ -180,7 +192,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public createPostIt(document: DocumentModel): void {
     this.postIts.unshift(this.documentModelToPostItModel(document, false));
-    this.layout.refresh();
+    this.layoutManager.refresh();
   }
 
   public postItChanged(postIt: PostItDocumentModel): void {
@@ -221,7 +233,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     }
 
     this.postIts.splice(postIt.index, 1);
-    this.layout.refresh();
+    this.layoutManager.refresh();
   }
 
   public usedCollections(): CollectionModel[] {
@@ -237,35 +249,18 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return this.editable && this.navigationManager.hasOneCollection();
   }
 
-  private sortByOrder(item: any, element: HTMLElement): number {
-    return Number(element.getAttribute('order'));
-  }
-
   private documentModelToPostItModel(documentModel: DocumentModel, initialized: boolean): PostItDocumentModel {
     const postIt = new PostItDocumentModel();
     postIt.documentModel = documentModel;
-    postIt.selectedInput = this.selectionManager.selectedAttributeProperty();
     postIt.initialized = initialized;
 
     if (!initialized) {
       postIt.order = 0;
     } else {
-      postIt.order = documentModel.updateDate ? documentModel.updateDate.nano : documentModel.creationDate.nano;
+      postIt.order = 1;
     }
 
     return postIt;
-
-    if (this.useOwnScrollbar) {
-      const perspective = this.element.nativeElement;
-      if (perspective.scrollTop >= perspective.scrollHeight - 400) {
-        this.fetchPostIts();
-      }
-
-    } else {
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 550) {
-        this.fetchPostIts();
-      }
-    }
   }
 
   private documentsPerRow(): number {
@@ -273,6 +268,14 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     const layoutWidth = this.layoutElement.nativeElement.clientWidth;
 
     return Math.max(1, Math.floor(layoutWidth / postItWidth));
+  }
+
+  private sortByOrder(item: any, element: HTMLElement): number {
+    return Number(element.getAttribute('order'));
+  }
+
+  public trackByIndex(index: number, obj: any): number {
+    return index;
   }
 
   public ngOnDestroy(): void {

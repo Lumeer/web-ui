@@ -17,12 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface AttributePropertySelection {
+import {NgZone} from '@angular/core';
+import {PostItLayout} from './post-it-layout';
+import {PostItLayoutConfig} from './post-it-layout-config';
 
-  row: number;
-  column: number;
-  editing: boolean;
-  documentId: string;
-  documentIndex: number;
+export class PostItKeepingAtEndLayout extends PostItLayout {
+
+  constructor(containerClassName: string, parameters: PostItLayoutConfig, zone: NgZone, private elementsKeptAtEnd: number) {
+    super(containerClassName, parameters, zone);
+  }
+
+  public add(element: HTMLElement): void {
+    if (this.layout) {
+      this.zone.runOutsideAngular(() => {
+        this.layout.add(element, {index: this.layoutElementsCount() - 1 - this.elementsKeptAtEnd});
+      });
+    }
+  }
+
+  private layoutElementsCount(): number {
+    return document.querySelectorAll(this.parameters.items).length;
+  }
 
 }

@@ -18,7 +18,6 @@
  */
 
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {AttributePropertySelection} from './attribute-property-selection';
 
 export class PostItDocumentModel {
 
@@ -28,6 +27,5 @@ export class PostItDocumentModel {
   public order = 1;
   public updating = false;
   public initialized: boolean;
-  public selectedInput: AttributePropertySelection;
 
 }

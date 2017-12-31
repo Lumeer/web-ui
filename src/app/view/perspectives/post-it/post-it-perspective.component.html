@@ -5,11 +5,12 @@
                 [attr.order]="-1"
                 (createPostIt)="createPostIt($event)"></add-document>
 
-  <post-it-document *ngFor="let postIt of postIts; let idx = index"
+  <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByIndex"
                     class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : null }}"
                     [attr.order]="postIt.order"
                     [postItModel]="postItWithIndex(postIt, idx)"
                     [perspectiveId]="perspectiveId"
+                    [layoutManager]="layoutManager"
                     [selectionManager]="selectionManager"
                     [navigationManager]="navigationManager"
                     (removed)="deletePostIt(postIt)"

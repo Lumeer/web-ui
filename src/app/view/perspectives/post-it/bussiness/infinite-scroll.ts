@@ -17,28 +17,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class InfiniteScrollManager {
+export class InfiniteScroll {
 
   private gettingData: boolean;
 
   private onScroll: () => void;
+
+  private userHitBottom: () => boolean;
 
   private scrollEventOptions = {
     capture: true,
     passive: true
   };
 
-  constructor(private callback: () => void) {
+  constructor(private callback: () => void, private parent: HTMLElement, private useParentScrollbar) {
+  }
+
+  public setUseParentScrollbar(value: boolean): void {
+    this.useParentScrollbar = value;
+    this.setTrackedScrollbar();
   }
 
   public initialize(): void {
+    this.setTrackedScrollbar();
+    this.turnOffInfiniteScroll();
+
     this.onScroll = () => {
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 550) {
+      if (this.userHitBottom()) {
         this.callback();
       }
     };
 
     this.turnOnInfiniteScroll();
+  }
+
+  private setTrackedScrollbar() {
+    this.userHitBottom = this.useParentScrollbar ?
+      () => this.parent.scrollTop >= this.parent.scrollHeight - 400 :
+      () => window.innerHeight + window.scrollY >= document.body.offsetHeight - 550;
   }
 
   public isLoading(): boolean {

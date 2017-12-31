@@ -19,6 +19,7 @@
 
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
+import {LumeerError} from '../../../../core/error/lumeer.error';
 import {AppState} from '../../../../core/store/app.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
@@ -78,9 +79,18 @@ export class NavigationManager {
     );
   }
 
+  public workspacePrefix(): string {
+    if (!this.validNavigation()) {
+      throw new LumeerError('Navigation is invalid');
+    }
+
+    return `/w/${this.workspaceManager.workspace.organizationCode}/${this.workspaceManager.workspace.projectCode}`;
+  }
+
   public destroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
   }
+
 }

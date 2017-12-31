@@ -49,16 +49,12 @@ export class PostItSortingLayout extends PostItLayout {
     };
   }
 
-  public refresh(): void {
-    setTimeout(() => {
-      if (!this.containerExists()) {
-        return;
-      }
-
-      this.zone.runOutsideAngular(() => {
-        const layout = new window['Muuri'](this.containerClassName, this.parameters);
-        layout.sort('order', {layout: 'instant'});
-      });
+  protected relayout(): void {
+    this.zone.runOutsideAngular(() => {
+      this.layout
+        .refreshSortData()
+        .refreshItems()
+        .sort('order');
     });
   }
 

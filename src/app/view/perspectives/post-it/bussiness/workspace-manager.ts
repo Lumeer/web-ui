@@ -21,7 +21,7 @@ import {Workspace} from '../../../../core/store/navigation/workspace.model';
 
 export class WorkspaceManager {
 
-  constructor(private workspace: Workspace) {
+  constructor(public workspace: Workspace) {
   }
 
   public hasWorkspace(): boolean {

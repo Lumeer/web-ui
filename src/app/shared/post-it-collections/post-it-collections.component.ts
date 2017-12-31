@@ -21,8 +21,7 @@ import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, View
 import {Store} from '@ngrx/store';
 
 import {PostItLayoutConfig} from 'app/shared/utils/layout/post-it-layout-config';
-import {Observable} from 'rxjs/Observable';
-import {finalize} from 'rxjs/operators';
+import {finalize, skipWhile} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {Query} from '../../core/dto';
 import {NotificationService} from '../../core/notifications/notification.service';
@@ -32,13 +31,14 @@ import {CollectionConverter} from '../../core/store/collections/collection.conve
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {selectCollectionsByQuery} from '../../core/store/collections/collections.state';
-import {selectQuery, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 import {Role} from '../permissions/role';
 import {HtmlModifier} from '../utils/html-modifier';
+import {PostItKeepingAtEndLayout} from '../utils/layout/post-it-keepin-at-end-layout';
 import {PostItLayout} from '../utils/layout/post-it-layout';
 import {PostItCollectionModel} from './post-it-collection-model';
 import Get = CollectionsAction.Get;
@@ -93,14 +93,13 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   private getAppStateAndInitialize() {
-    this.appStateSubscription = Observable.combineLatest(
-      this.store.select(selectWorkspace),
-      this.store.select(selectQuery)
-    ).subscribe(([workspace, query]) => {
-      this.workspace = workspace;
-      this.query = query;
+    this.appStateSubscription = this.store.select(selectNavigation).pipe(
+      skipWhile(navigation => !navigation.workspace.organizationCode || !navigation.workspace.projectCode)
+    ).subscribe(navigation => {
+      this.workspace = navigation.workspace;
+      this.query = navigation.query;
 
-      this.store.dispatch(new Get({query: query}));
+      this.store.dispatch(new Get({query: this.query}));
 
       if (this.collectionsSubscription) {
         this.collectionsSubscription.unsubscribe();
@@ -119,7 +118,8 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     const config = new PostItLayoutConfig();
     config.dragEnabled = false;
 
-    this.layout = new PostItLayout('post-it-collection-layout', config, this.zone);
+    const ButtonsAtEnd = (this.editable && this.emptyQuery()) ? 2 : 0;
+    this.layout = new PostItKeepingAtEndLayout('post-it-collection-layout', config, this.zone, ButtonsAtEnd);
   }
 
   private collectionToPostIt(collection: CollectionModel, initialized: boolean): PostItCollectionModel {
@@ -171,8 +171,14 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     };
 
     this.postIts.push(newPostIt);
+
+    setTimeout(() => {
+      const newPostItElement = document.getElementById('perspectivePostIt' + (this.postIts.length - 1));
+      this.layout.add(newPostItElement);
+      this.layout.refresh();
+    });
+
     this.focusNewPostIt();
-    this.layout.refresh();
   }
 
   private focusNewPostIt(): void {
@@ -260,7 +266,11 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
           collection.icon = DEFAULT_ICON;
 
           this.postIts.push(newPostIt);
-          this.layout.refresh();
+
+          setTimeout(() => {
+            const newPostItElement = document.getElementById('perspectivePostIt' + (this.postIts.length - 1));
+            this.layout.add(newPostItElement);
+          });
         },
         error => {
           this.notificationService.error('Import failed');
@@ -287,8 +297,10 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       this.sendRemoveCollectionRequest(postIt);
     }
 
-    this.postIts.splice(this.postItIndex(postIt), 1);
+    const deletedPostItElement = document.getElementById('perspectivePostIt' + this.postItIndex(postIt));
+    this.layout.remove(deletedPostItElement);
     this.layout.refresh();
+    this.postIts.splice(this.postItIndex(postIt), 1);
   }
 
   private sendRemoveCollectionRequest(deletedCollectionPostIt: PostItCollectionModel): void {
