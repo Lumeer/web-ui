@@ -38,7 +38,7 @@ export interface ViewConfigModel {
 
   search?: SearchConfigModel;
   table?: TableConfigModel;
-  template?: TemplateConfigModel;
+  smartdoc?: SmartDocConfigModel;
 
 }
 
@@ -63,9 +63,10 @@ export interface TableConfigModel {
 
 }
 
-export interface TemplateConfigModel {
+export interface SmartDocConfigModel {
 
   templateId: string;
-  documentsOrder?: string[];
+  documentIdsOrder?: string[];
+  innerDocumentIdsOrder?: { [documentIdTemplateId: string]: string[] };
 
 }

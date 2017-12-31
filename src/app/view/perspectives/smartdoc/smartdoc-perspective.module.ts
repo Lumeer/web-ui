@@ -22,21 +22,23 @@ import {EffectsModule} from '@ngrx/effects';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {QuillModule} from 'ngx-quill';
 import {SmartDocTemplatesEffects} from '../../../core/store/smartdoc-templates/smartdoc-templates.effects';
+import {DragAndDropModule} from '../../../shared/drag-and-drop/drag-and-drop.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {SmartDocBottomPanelComponent} from './bottom-panel/smartdoc-bottom-panel.component';
 import {TemplateDocumentComponent} from './document/smartdoc-document.component';
 import {SmartDocEmbeddedComponent} from './embedded/smartdoc-embedded.component';
 import {SmartDocSidePanelComponent} from './side-panel/smartdoc-side-panel.component';
 import {SmartDocPerspectiveComponent} from './smartdoc-perspective.component';
+import {SafeHtmlPipe} from './text/safe-html.pipe';
 import {SmartDocTextComponent} from './text/smartdoc-text.component';
-import { SafeHtmlPipe } from './text/safe-html.pipe';
 
 @NgModule({
   imports: [
     SharedModule,
     EffectsModule.forFeature([SmartDocTemplatesEffects]),
     QuillModule,
-    ClickOutsideModule
+    ClickOutsideModule,
+    DragAndDropModule
   ],
   declarations: [
     TemplateDocumentComponent,

@@ -37,8 +37,9 @@ import {QueryModel} from '../../../core/store/navigation/query.model';
 import {SmartDocTemplateModel, SmartDocTemplatePartModel, SmartDocTemplatePartType} from '../../../core/store/smartdoc-templates/smartdoc-template.model';
 import {SmartDocTemplatesAction} from '../../../core/store/smartdoc-templates/smartdoc-templates.action';
 import {selectSmartDocTemplatesDictionary} from '../../../core/store/smartdoc-templates/smartdoc-templates.state';
-import {TemplateConfigModel, ViewConfigModel} from '../../../core/store/views/view.model';
-import {selectViewConfig} from '../../../core/store/views/views.state';
+import {SmartDocConfigModel, ViewConfigModel} from '../../../core/store/views/view.model';
+import {ViewsAction} from '../../../core/store/views/views.action';
+import {selectViewConfig, selectViewSmartDocConfig} from '../../../core/store/views/views.state';
 import {SizeType} from '../../../shared/slider/size-type';
 import {PerspectiveComponent} from '../perspective.component';
 
@@ -74,25 +75,49 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
   public size: SizeType = SizeType.M;
 
   public constructor(private store: Store<AppState>) {
-    this.bindCollection();
+    this.bindStoreData();
+  }
+
+  private bindStoreData() {
+    this.collections$ = this.store.select(selectAllCollections);
     this.bindDocuments();
     this.bindTemplate();
   }
 
-  private bindCollection() {
-    this.collections$ = this.store.select(selectAllCollections);
+  private bindDocuments() {
+    this.documents$ = Observable.combineLatest(
+      this.store.select(selectAllDocuments),
+      this.store.select(selectViewSmartDocConfig)
+    ).pipe(
+      map(([documents, smartDocConfig]) => ({documents: this.filterDocuments(documents), smartDocConfig})),
+      map(({documents, smartDocConfig}) => {
+        const config: SmartDocConfigModel = smartDocConfig || {templateId: null};
+        const innerDocumentIdsOrder = config.innerDocumentIdsOrder || {};
+        const documentIds: string[] = this.embedded ? innerDocumentIdsOrder[this.linkedDocument.id + this.templateId] : config.documentIdsOrder;
+        return this.orderDocuments(documents, documentIds || []);
+      })
+    );
   }
 
-  private bindDocuments() {
-    this.documents$ = this.store.select(selectAllDocuments).pipe(
-      map((documents: DocumentModel[]) => documents.filter(doc => {
-        if (!this.query || !this.query.collectionCodes || !this.query.collectionCodes.includes(doc.collectionCode)) {
-          return false;
-        }
+  private filterDocuments(documents: DocumentModel[]): DocumentModel[] {
+    return documents.filter(doc => {
+      if (!this.query || !this.query.collectionCodes || !this.query.collectionCodes.includes(doc.collectionCode)) {
+        return false;
+      }
 
-        return this.query.documentIds.length === 0 || this.query.documentIds.includes(doc.id); // TODO ignore on empty
-      }))
-    );
+      return this.query.documentIds.length === 0 || this.query.documentIds.includes(doc.id); // TODO ignore on empty
+    });
+  }
+
+  private orderDocuments(documents: DocumentModel[], documentIdsOrder: string[]): DocumentModel[] {
+    if (!documentIdsOrder || documentIdsOrder.length === 0) {
+      return documents;
+    }
+
+    const orderedDocuments: DocumentModel[] = documentIdsOrder.map(id => documents.find(doc => doc.id === id))
+      .filter(doc => !!doc);
+    const leftDocuments = documents.filter(doc => !orderedDocuments.includes(doc));
+    return orderedDocuments.concat(leftDocuments);
   }
 
   private bindTemplate() {
@@ -111,8 +136,8 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('config') && this.config && this.config.template && this.config.template.templateId) {
-      this.loadTemplate(this.config.template.templateId);
+    if (changes.hasOwnProperty('config') && this.config && this.config.smartdoc && this.config.smartdoc.templateId) {
+      this.loadTemplate(this.config.smartdoc.templateId);
     }
     if (changes.hasOwnProperty('query') && this.query) {
       this.getData(this.query);
@@ -130,7 +155,7 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
   private initEmbeddedTemplate() {
     this.getData(this.query);
 
-    const templateId = this.config.template ? this.config.template.templateId : null;
+    const templateId = this.config.smartdoc ? this.config.smartdoc.templateId : null;
     this.loadOrCreateTemplate(templateId);
   }
 
@@ -141,7 +166,7 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
     });
 
     this.configSubscription = this.store.select(selectViewConfig).subscribe(config => {
-      const templateId = config.template ? config.template.templateId : null;
+      const templateId = config.smartdoc ? config.smartdoc.templateId : null;
       this.loadOrCreateTemplate(templateId);
     });
   }
@@ -216,21 +241,8 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
     this.store.dispatch(new LinkTypesAction.Get({query: {collectionCodes: query.collectionCodes}}));
   }
 
-  public extractConfig(): { template: TemplateConfigModel } {
-    return {
-      template: {
-        templateId: this.templateId,
-        documentsOrder: null
-      }
-    };
-  }
-
   public isDisplayable(): boolean {
     return this.query && this.query.collectionCodes && this.query.collectionCodes.length === 1;
-  }
-
-  public onAddTemplatePart(event: { templateId: string, part: SmartDocTemplatePartModel }) {
-    this.store.dispatch(new SmartDocTemplatesAction.AddPart(event));
   }
 
   public onSizeChange(size: SizeType) {
@@ -242,13 +254,49 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
       [SizeType.S, 'col-lg-6 col-xl-5'],
       [SizeType.M, 'col-lg-8 col-xl-7'],
       [SizeType.L, 'col-lg-10 col-xl-9'],
-      [SizeType.XL, 'col-lg-12 col-xl-11'],
+      [SizeType.XL, 'col-lg-12 col-xl-11']
     ]);
     return !this.embedded ? collClasses.get(this.size) : '';
   }
 
   public onClickDocument(event: MouseEvent) {
     event.stopPropagation();
+  }
+
+  public onMoveDocument(documentId: string, index: number) {
+    Observable.combineLatest(
+      this.store.select(selectViewSmartDocConfig),
+      this.documents$,
+      this.template$
+    ).pipe(
+      first()
+    ).subscribe(([config, documents, template]: [SmartDocConfigModel, DocumentModel[], SmartDocTemplateModel]) => {
+      const documentIds = documents.map(doc => doc.id)
+        .filter(id => id !== documentId);
+      documentIds.splice(index, 0, documentId);
+      const documentIdsOrder = documentIds.filter(id => !!id);
+
+      if (this.embedded) {
+        this.updateEmbeddedDocumentsOrder(config, template, documentIdsOrder);
+      } else {
+        this.updateTopLevelDocumentsOrder(config, template, documentIdsOrder);
+      }
+    });
+  }
+
+  private updateEmbeddedDocumentsOrder(oldConfig: SmartDocConfigModel, template: SmartDocTemplateModel, documentIds: string[]) {
+    const smartDocConfig: SmartDocConfigModel = oldConfig ? {...oldConfig} : {templateId: null};
+    const innerDocumentIdsOrder: { [key: string]: string[] } = smartDocConfig.innerDocumentIdsOrder ? {...smartDocConfig.innerDocumentIdsOrder} : {};
+    innerDocumentIdsOrder[this.linkedDocument.id + this.templateId] = documentIds;
+
+    const smartdoc: SmartDocConfigModel = {...oldConfig, innerDocumentIdsOrder};
+    this.store.dispatch(new ViewsAction.ChangeConfig({config: {smartdoc}}));
+  }
+
+  private updateTopLevelDocumentsOrder(oldConfig: SmartDocConfigModel, template: SmartDocTemplateModel, documentIds: string[]) {
+    const smartDocConfig: SmartDocConfigModel = oldConfig ? {...oldConfig, templateId: template.id} : {templateId: template.id};
+    const smartdoc: SmartDocConfigModel = {...smartDocConfig, documentIdsOrder: documentIds};
+    this.store.dispatch(new ViewsAction.ChangeConfig({config: {smartdoc}}));
   }
 
 }

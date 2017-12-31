@@ -4,7 +4,9 @@
 
     </div>
     <div class="col">
-      <div class="flex-grow-2 mover"
+      <div *ngIf="showMover"
+           [lmrDraggable]="{enabled: true, data: partIndex, zone: documentId}"
+           class="flex-grow-2 mover"
            title="Move part" i18n-title="@@smartdoc.document.move">
         <i class="fal fa-lg fa-ellipsis-h-alt"></i>
       </div>
@@ -23,7 +25,7 @@
              (click)="onSwitchPerspective(perspective)"
              class="ml-3"
              [title]="removeHtmlComments(perspectiveName)">
-             <!--title="Switch perspective" i18n-title="@@smartdoc.perspective.switch">-->
+            <!--title="Switch perspective" i18n-title="@@smartdoc.perspective.switch">-->
             <i class="{{perspectiveIcon(perspective)}} text-success"></i>
           </a>
         </ng-container>

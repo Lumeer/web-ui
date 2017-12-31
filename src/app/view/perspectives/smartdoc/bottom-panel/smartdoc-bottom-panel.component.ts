@@ -32,6 +32,15 @@ export class SmartDocBottomPanelComponent {
   public selected: boolean;
 
   @Input()
+  public showMover: boolean;
+
+  @Input()
+  public partIndex: number;
+
+  @Input()
+  public documentId: string;
+
+  @Input()
   public perspectives: Perspective[] = [];
 
   @Input()

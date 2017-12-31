@@ -65,8 +65,5 @@
        [innerHtml]="getHtmlContent() | safeHtml"
        class="ql-viewer mx-2">
   </div>
-  <smartdoc-bottom-panel [selected]="selected"
-                         (copyPart)="onCopyPart()"
-                         (removePart)="onRemovePart()">
-  </smartdoc-bottom-panel>
+  <ng-content></ng-content>
 </div>
