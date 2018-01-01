@@ -57,7 +57,7 @@ const viewRoutes: Routes = [
             component: SearchCollectionsComponent
           },
           {
-            path: 'documents',
+            path: 'records',
             component: SearchDocumentsComponent
           },
           {

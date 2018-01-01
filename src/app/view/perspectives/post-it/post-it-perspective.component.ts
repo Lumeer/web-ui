@@ -26,7 +26,7 @@ import {DocumentService} from 'app/core/rest/document.service';
 import {SearchService} from 'app/core/rest/search.service';
 import {Subscription} from 'rxjs';
 import {Observable} from 'rxjs/Observable';
-import {finalize, first} from 'rxjs/operators';
+import {finalize} from 'rxjs/operators';
 import {Collection, Document, Query} from '../../../core/dto';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {CollectionService} from '../../../core/rest';
@@ -52,6 +52,9 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   @Input()
   public editable: boolean = true;
+
+  @Input()
+  public useOwnScrollbar: boolean = false;
 
   @ViewChild('layout')
   public layoutElement: ElementRef;
@@ -100,7 +103,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
               private searchService: SearchService,
               private notificationService: NotificationService,
               private store: Store<AppState>,
-              private zone: NgZone) {
+              private zone: NgZone,
+              private element: ElementRef) {
   }
 
   public ngOnInit(): void {
@@ -112,11 +116,15 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.appStateSubscription = Observable.combineLatest(
       this.store.select(selectWorkspace),
       this.store.select(selectQuery)
-    ).pipe(
-      first()
     ).subscribe(([workspace, query]) => {
       this.workspace = workspace;
       this.query = query;
+
+      this.postIts = [];
+      this.fetchingData = false;
+      this.fetchedCollections = 0;
+      this.collectionsToFetch = 0;
+      this.page = 0;
 
       this.fetchPostIts();
       this.setCurrentCollection();
@@ -149,8 +157,16 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         return;
       }
 
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 550) {
-        this.fetchPostIts();
+      if (this.useOwnScrollbar) {
+        const perspective = this.element.nativeElement;
+        if (perspective.scrollTop >= perspective.scrollHeight - 400) {
+          this.fetchPostIts();
+        }
+
+      } else {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 550) {
+          this.fetchPostIts();
+        }
       }
     };
 
@@ -226,22 +242,17 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private documentsPerRow(): number {
-    // padding - postIt - padding - postIt - padding
-    const postItWidth = 215;
-    const postItPaddingOnOneSide = 10;
-    const totalPostItWidth = postItWidth + postItPaddingOnOneSide;
-
+    const postItWidth = 225;
     const layoutWidth = this.layoutElement.nativeElement.clientWidth;
-    const layoutWidthWithoutPaddingOnLeft = layoutWidth - postItPaddingOnOneSide;
 
-    return Math.floor(layoutWidthWithoutPaddingOnLeft / totalPostItWidth);
+    return Math.max(1, Math.floor(layoutWidth / postItWidth));
   }
 
   private queryPage(pageNumber: number): Query {
     const addDocumentPresent = this.editable && pageNumber === 0 ? 1 : 0;
 
     return {
-      pageSize: this.documentsPerRow() * 3 - addDocumentPresent,
+      pageSize: this.documentsPerRow() * 2 - addDocumentPresent,
       page: pageNumber,
       filters: this.query.filters,
       fulltext: this.query.fulltext,
@@ -339,7 +350,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.documentService.toggleDocumentFavorite(postIt.document)
       .subscribe(success => {
         if (success) {
-          postIt.document.isFavorite = !postIt.document.isFavorite;
+          postIt.document.favorite = !postIt.document.favorite;
         }
       });
   }

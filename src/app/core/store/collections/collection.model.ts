@@ -50,4 +50,6 @@ export interface CollectionModel {
 
   correlationId?: string;
 
+  favourite?: boolean;
+
 }

@@ -4,6 +4,7 @@
   display: block;
 
   .post-it-document-layout {
+    transition: height $animation-duration;
     position: relative;
     margin: 0 auto;
   }

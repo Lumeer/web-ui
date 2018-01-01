@@ -31,6 +31,6 @@ export interface Collection {
   attributes?: Attribute[];
   defaultAttribute?: Attribute; // TODO implement on backend
   documentsCount?: number;
-  isFavorite?: boolean;
+  favorite?: boolean;
 
 }
