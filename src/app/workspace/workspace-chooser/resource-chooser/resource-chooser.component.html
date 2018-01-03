@@ -1,9 +1,9 @@
 <div class="row">
   <h3 class="w-100 d-flex" i18n="@@resource.chooser.header">
-    {resourceType, select, organization {Organizations} project {Projects}}
+    {resourceType, select, Organization {Organizations} Project {Projects}}
   </h3>
 
-  <div class="horizontal-container w-100" #resourceContainer>
+  <div class="horizontal-container d-flex w-100" #resourceContainer>
 
     <div *ngIf="resources.length == 0 && !canCreateResource"
          i18n="@@resource.chooser.empty">
@@ -45,7 +45,7 @@
                        title="Icon picker" i18n-title="@@resource.postit.picker">
                       <i class="fas fa fa-eye-dropper clickable" aria-hidden="true"></i>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right" #picker>
+                    <div class="dropdown-menu" #picker>
                       <color-picker class="dropdown-item" [color]="resource.color"
                                     (selectedChange)="onNewColor(resource, $event)"></color-picker>
                       <div class="dropdown-divider"></div>
@@ -64,6 +64,7 @@
                      (blur)="code.scrollTo(0,0); onCodeBlur(code, resource)"
                      (click)="$event.stopPropagation()"
                      (keydown)="onKeyDown($event, code)"
+                     placeholder="Code" i18n-placeholder="@@resource.postit.code"
                      title="Code" i18n-title="@@resource.postit.code"
                      [attr.spellcheck]="false"
                      [textContent]="resource.code"
@@ -73,6 +74,7 @@
                      (blur)="name.scrollTo(0,0); onNameBlur(name, resource)"
                      (click)="$event.stopPropagation()"
                      (keydown)="onKeyDown($event, name)"
+                     placeholder="Name" i18n-placeholder="@@resource.postit.name"
                      title="Name" i18n-title="@@resource.postit.name"
                      [attr.spellcheck]="false"
                      [textContent]="resource.name"

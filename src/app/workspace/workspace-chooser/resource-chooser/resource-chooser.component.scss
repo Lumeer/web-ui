@@ -90,7 +90,7 @@ $bookmark-border-color: #bdbdbd;
             width: $post-it-size;
             height: $post-it-size;
             background: transparent;
-            z-index: 100;
+            z-index: 10;
             position: absolute !important;
 
             .settings {
@@ -160,6 +160,12 @@ $bookmark-border-color: #bdbdbd;
     }
   }
 
+}
+
+[contenteditable=true]:empty:before{
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  color: $grey-color;
 }
 
 .description .text {

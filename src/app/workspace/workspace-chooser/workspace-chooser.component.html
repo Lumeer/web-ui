@@ -1,4 +1,4 @@
-<div class="container-fluid container">
+<div class="container">
   <resource-chooser [selectedId]="selectedOrganizationId"
                     [resourceType]="organizationItemType()"
                     [resources]="organizations$ | async"
@@ -22,6 +22,7 @@
                       (resourceSettings)="onProjectSettings($event)">
     </resource-chooser>
   </div>
+  <div class="my-4 py-2" [style.height]="'3.5em'"></div>
   <div class="my-4 py-2 px-5 d-flex justify-content-end fixed-bottom container"
        *ngIf="selectedOrganizationId && selectedProjectId"
        [@animateOpacityFromUp]="'in'">

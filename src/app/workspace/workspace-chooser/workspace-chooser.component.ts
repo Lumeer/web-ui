@@ -143,6 +143,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   }
 
   public onOrganizationSettings(id: string) {
+    // TODO get organization by code and select it
     this.store.dispatch(new RouterAction.Go({path: ['organization', id]}));
   }
 
@@ -174,6 +175,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   public onProjectSettings(id: string) {
     if (!isNullOrUndefined(this.selectedOrganizationId)) {
+      // TODO get project by code and select it
       this.store.dispatch(new RouterAction.Go({path: ['organization', this.selectedOrganizationId, 'project', id]}));
     }
   }
@@ -192,7 +194,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
         .subscribe(([organization, project]) => {
           if (organization && project) {
             this.updateDefaultWorkspace(organization, project);
-            this.store.dispatch(new RouterAction.Go({path: ['w', organization.code, project.code, 'collections']}));
+            this.store.dispatch(new RouterAction.Go({path: ['w', organization.code, project.code, 'files']}));
           }
         });
     }

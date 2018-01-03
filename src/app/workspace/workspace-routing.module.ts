@@ -27,7 +27,7 @@ import {OrganizationPermissionsComponent} from './organization/permissions/organ
 
 const workspaceRoutes: Routes = [
   {
-    path: 'organization/:organizationId/project/:projectId',
+    path: 'organization/:organizationCode/project/:projectCode',
     component: ProjectSettingsComponent,
     children: [
       {
@@ -42,7 +42,7 @@ const workspaceRoutes: Routes = [
     ]
   },
   {
-    path: 'organization/:organizationId',
+    path: 'organization/:organizationCode',
     component: OrganizationSettingsComponent,
     children: [
       {
