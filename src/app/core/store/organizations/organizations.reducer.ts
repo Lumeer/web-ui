@@ -28,7 +28,6 @@ export function organizationsReducer(state: OrganizationsState = initialOrganiza
     case OrganizationsActionType.CREATE_SUCCESS:
       return groupsAdapter.addOne(action.payload.organization, state);
     case OrganizationsActionType.UPDATE_SUCCESS:
-      console.log('reducer', action.payload);
       return organizationsAdapter.updateOne({id: action.payload.organization.id, changes: action.payload.organization}, state);
     case OrganizationsActionType.DELETE_SUCCESS:
       return groupsAdapter.removeOne(action.payload.organizationId, state);

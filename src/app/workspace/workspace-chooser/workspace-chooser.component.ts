@@ -82,7 +82,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.bindData();
     this.subscribeCodes();
-    this.selectDefault();
+    //this.selectDefault();
     this.store.dispatch(new OrganizationsAction.Get());
   }
 

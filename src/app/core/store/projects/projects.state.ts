@@ -46,3 +46,7 @@ export const selectProjectsForSelectedOrganization = createSelector(selectAllPro
 export const selectSelectedProject = createSelector(selectProjectsDictionary, selectSelectedProjectId, (projects, selectedId)=>{
   return selectedId ? projects[selectedId] : null;
 });
+
+export const selectProjectByCode = (code) => createSelector(selectAllProjects, projects => {
+  return projects.find(project => project.code === code);
+});

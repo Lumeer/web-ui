@@ -24,6 +24,7 @@ import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {SnotifyComponent, SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import {SharedModule} from '../shared/shared.module';
+import {WorkspaceGuard} from '../workspace/workspace.guard';
 import {LumeerErrorHandler} from './error/lumeer-error.handler';
 import {HomeComponent} from './home.component';
 import {KEYCLOAK_HTTP_PROVIDER} from './keycloak/keycloak-http.service';
@@ -87,7 +88,8 @@ import {AppStoreModule} from './store/app-store.module';
     {provide: ErrorHandler, useClass: LumeerErrorHandler},
     {provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     SnotifyService,
-    NotificationService
+    NotificationService,
+    WorkspaceGuard
   ],
   exports: [
     TopPanelComponent,

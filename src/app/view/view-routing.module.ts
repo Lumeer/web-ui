@@ -20,6 +20,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {CollectionsGuard} from '../core/store/collections/collections.guard';
+import {WorkspaceGuard} from '../workspace/workspace.guard';
 import {Perspective} from './perspectives/perspective';
 import {PostItPerspectiveComponent} from './perspectives/post-it/post-it-perspective.component';
 import {SearchAllComponent} from './perspectives/search/all/search-all.component';
@@ -37,7 +38,7 @@ import {ViewGuard} from './view.guard';
 const viewRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/view',
-    canActivate: [CollectionsGuard],
+    canActivate: [WorkspaceGuard, CollectionsGuard],
     component: ViewComponent,
     children: [
       {

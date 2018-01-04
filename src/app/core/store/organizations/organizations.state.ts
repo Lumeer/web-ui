@@ -18,7 +18,7 @@
  */
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {createSelector} from '@ngrx/store';
+import {createSelector, MemoizedSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {OrganizationModel} from './organization.model';
 
@@ -38,6 +38,10 @@ export const selectOrganizationsState = (state: AppState) => state.organizations
 export const selectAllOrganizations = createSelector(selectOrganizationsState, organizationsAdapter.getSelectors().selectAll);
 export const selectOrganizationsDictionary = createSelector(selectOrganizationsState, organizationsAdapter.getSelectors().selectEntities);
 export const selectSelectedOrganizationId = createSelector(selectOrganizationsState, organizationsState => organizationsState.selectedOrganizationId);
-export const selectSelectedOrganization = createSelector(selectOrganizationsDictionary, selectSelectedOrganizationId, (organizations, selectedId)=>{
+export const selectSelectedOrganization = createSelector(selectOrganizationsDictionary, selectSelectedOrganizationId, (organizations, selectedId) => {
   return selectedId ? organizations[selectedId] : null;
+});
+
+export const selectOrganizationByCode = (code) => createSelector(selectAllOrganizations, organizations => {
+  return organizations.find(organization => organization.code === code);
 });
