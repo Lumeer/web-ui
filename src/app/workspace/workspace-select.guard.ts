@@ -33,7 +33,6 @@ import {
 } from '../core/store/organizations/organizations.state';
 import {ProjectsAction} from '../core/store/projects/projects.action';
 import {selectAllProjects, selectSelectedProject, selectSelectedProjectId} from '../core/store/projects/projects.state';
-import {RouterAction} from '../core/store/router/router.action';
 import {UserSettingsService} from '../core/user-settings.service';
 
 @Injectable()

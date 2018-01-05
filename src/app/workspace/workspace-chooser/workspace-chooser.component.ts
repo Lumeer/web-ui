@@ -24,6 +24,7 @@ import {Observable} from 'rxjs/Observable';
 import {first, map} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {isNullOrUndefined} from 'util';
+import {AppStateAction} from '../../core/store/app-state-action';
 import {AppState} from '../../core/store/app.state';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
@@ -183,6 +184,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
         .subscribe(([organization, project]) => {
           if (organization && project) {
             this.updateDefaultWorkspace(organization, project);
+            this.store.dispatch(new AppStateAction.ResetWithoutWorkspace());
             this.store.dispatch(new RouterAction.Go({path: ['w', organization.code, project.code, 'files']}));
           }
         });
