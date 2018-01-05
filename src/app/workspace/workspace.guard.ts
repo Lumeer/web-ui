@@ -22,22 +22,18 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {catchError, tap, map, take, switchMap} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
-import {OrganizationService, ProjectService} from '../core/rest';
+import {WorkspaceService} from '../core/rest/workspace.service';
 import {AppState} from '../core/store/app.state';
-import {OrganizationsAction} from '../core/store/organizations/organizations.action';
-import {selectAllOrganizations} from '../core/store/organizations/organizations.state';
-import {ProjectsAction} from '../core/store/projects/projects.action';
-import {selectAllProjects} from '../core/store/projects/projects.state';
+import {NotificationsAction} from '../core/store/notifications/notifications.action';
 import {RouterAction} from '../core/store/router/router.action';
 
 @Injectable()
 export class WorkspaceGuard implements CanActivate {
 
   public constructor(private router: Router,
-                     private organizationService: OrganizationService,
-                     private projectService: ProjectService,
+                     private workspaceService: WorkspaceService,
                      private store: Store<AppState>) {
   }
 
@@ -47,70 +43,31 @@ export class WorkspaceGuard implements CanActivate {
     const organizationCode = next.paramMap.get('organizationCode');
     const projectCode = next.paramMap.get('projectCode');
 
-    return Observable.combineLatest(
-      this.hasOrganization(organizationCode),
-      this.hasProject(organizationCode, projectCode)
-    ).pipe(
-      switchMap(([hasOrganization, hasProject]) => Observable.of(hasOrganization && hasProject))
-    );
-  }
-
-  private hasOrganization(code: string): Observable<boolean> {
-    return this.hasOrganizationInStore(code).pipe(
-      switchMap(inStore => {
-        if (inStore) {
-          return Observable.of(inStore);
+    return this.workspaceService.getOrganizationFromStoreOrApi(organizationCode).pipe(
+      switchMap(organization => {
+        if (isNullOrUndefined(organization)) {
+          this.dispatchErrorActions();
+          return Observable.of(false);
         }
-        return this.hasOrganizationInApi(code);
+        return this.checkProject(organizationCode, organization.id, projectCode);
       })
     );
   }
 
-  private hasOrganizationInStore(code: string): Observable<boolean> {
-    return this.store.select(selectAllOrganizations).pipe(
-      map(organizations => !isNullOrUndefined(organizations.find(org => org.code === code))),
-      take(1)
-    );
-  }
-
-  private hasOrganizationInApi(code: string): Observable<boolean> {
-    return this.organizationService.getOrganization(code).pipe(
-      tap(organization => this.store.dispatch(new OrganizationsAction.GetSuccess({organizations: [organization]}))),
-      map(organization => !isNullOrUndefined(organization)),
-      catchError(() => {
-        this.store.dispatch(new RouterAction.Go({path: ['404']}));
-        return Observable.of(false);
-      })
-    );
-  }
-
-  private hasProject(orgCode: string, projCode: string): Observable<boolean> {
-    return this.hasProjectInStore(projCode).pipe(
-      switchMap(inStore => {
-        if (inStore) {
-          return Observable.of(inStore);
+  private checkProject(orgCode: string, orgId: string, projCode: string): Observable<boolean> {
+    return this.workspaceService.getProjectFromStoreOrApi(orgCode, orgId, projCode).pipe(
+      switchMap(project => {
+          if (isNullOrUndefined(project)) {
+            this.dispatchErrorActions();
+            return Observable.of(false);
+          }
+          return Observable.of(true);
         }
-        return this.hasProjectInApi(orgCode, projCode);
-      })
-    );
+      ));
   }
 
-  private hasProjectInStore(code: string): Observable<boolean> {
-    return this.store.select(selectAllProjects).pipe(
-      map(projects => !!projects.find(proj => proj.code === code)),
-      take(1)
-    );
+  private dispatchErrorActions() {
+    this.store.dispatch(new RouterAction.Go({path: ['workspace']}));
+    this.store.dispatch(new NotificationsAction.Error({message: 'Organization or project does not exist'}));
   }
-
-  private hasProjectInApi(orgCode: string, projCode: string): Observable<boolean> {
-    return this.projectService.getProject(orgCode, projCode).pipe(
-      tap(project => this.store.dispatch(new ProjectsAction.GetSuccess({projects: [project]}))),
-      map(project => !isNullOrUndefined(project)),
-      catchError(() => {
-        this.store.dispatch(new RouterAction.Go({path: ['404']}));
-        return Observable.of(false);
-      })
-    );
-  }
-
 }

@@ -21,9 +21,7 @@ import {SizeType} from '../../shared/slider/size-type';
 export interface UserSettings {
 
   defaultOrganization: string;
-  defaultOrganizationId: string;
   defaultProject: string;
-  defaultProjectId: string;
   searchSize: SizeType;
   notificationsDisabled: boolean;
 

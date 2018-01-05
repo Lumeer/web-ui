@@ -30,6 +30,7 @@ import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {selectOrganizationByCode} from '../store/organizations/organizations.state';
 import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectByCode} from '../store/projects/projects.state';
+import {RouterAction} from '../store/router/router.action';
 import {UserSettingsService} from '../user-settings.service';
 
 @Component({
@@ -83,7 +84,7 @@ export class TopPanelComponent implements OnInit {
       if (organization && project) {
         this.store.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
         this.store.dispatch(new ProjectsAction.Select({projectId: selectProject ? project.id : null}));
-        this.router.navigate(['/workspace']);
+        this.store.dispatch(new RouterAction.Go({path: ['workspace']}))
       }
     });
   }

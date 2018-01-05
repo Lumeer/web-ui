@@ -24,6 +24,7 @@ import {OrganizationSettingsComponent} from './organization/organization-setting
 import {ProjectSettingsComponent} from './project/project-settings.component';
 import {ProjectPermissionsComponent} from './project/permissions/project-permissions.component';
 import {OrganizationPermissionsComponent} from './organization/permissions/organization-permissions.component';
+import {WorkspaceSelectGuard} from './workspace-select.guard';
 
 const workspaceRoutes: Routes = [
   {
@@ -58,6 +59,7 @@ const workspaceRoutes: Routes = [
   },
   {
     path: 'workspace',
+    canActivate: [WorkspaceSelectGuard],
     component: WorkspaceChooserComponent,
     data: {
       searchBoxHidden: true

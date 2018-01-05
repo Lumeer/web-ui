@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {CanActivate} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
@@ -34,14 +34,15 @@ export class CollectionsGuard implements CanActivate {
   constructor(private store: Store<AppState>) {
   }
 
-  canActivate(): Observable<boolean> {
+  public canActivate(next: ActivatedRouteSnapshot,
+                     state: RouterStateSnapshot): Observable<boolean> {
     return this.checkStore().pipe(
       switchMap(() => of(true)),
       catchError(() => of(false))
     );
   }
 
-  checkStore(): Observable<boolean> {
+  private checkStore(): Observable<boolean> {
     return this.store.select(selectCollectionsLoaded).pipe(
       tap(loaded => {
         if (!loaded) {

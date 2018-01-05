@@ -82,7 +82,6 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.bindData();
     this.subscribeCodes();
-    //this.selectDefault();
     this.store.dispatch(new OrganizationsAction.Get());
   }
 
@@ -106,16 +105,6 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
         this.selectedProjectId = id;
       })
     );
-  }
-
-  private selectDefault() {
-    let userSettings = this.userSettingsService.getUserSettings();
-    if (userSettings.defaultOrganizationId) {
-      this.store.dispatch(new OrganizationsAction.Select({organizationId: userSettings.defaultOrganizationId}));
-      if (userSettings.defaultProjectId) {
-        this.store.dispatch(new ProjectsAction.Select({projectId: userSettings.defaultProjectId}));
-      }
-    }
   }
 
   public ngOnDestroy() {
@@ -211,9 +200,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   private updateDefaultWorkspace(organization: OrganizationModel, project: ProjectModel) {
     let userSettings = this.userSettingsService.getUserSettings();
     userSettings.defaultOrganization = organization.code;
-    userSettings.defaultOrganizationId = organization.id;
     userSettings.defaultProject = project.code;
-    userSettings.defaultProjectId = project.id;
     this.userSettingsService.updateUserSettings(userSettings);
   }
 

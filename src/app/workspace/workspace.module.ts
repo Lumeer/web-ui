@@ -28,6 +28,7 @@ import {OrganizationSettingsComponent} from './organization/organization-setting
 import {ProjectSettingsComponent} from './project/project-settings.component';
 import {ResourceChooserComponent} from './workspace-chooser/resource-chooser/resource-chooser.component';
 import {PickerModule} from '../shared/picker/picker.module';
+import {WorkspaceSelectGuard} from './workspace-select.guard';
 
 @NgModule({
   imports: [
@@ -45,6 +46,9 @@ import {PickerModule} from '../shared/picker/picker.module';
   ],
   exports: [
     WorkspaceChooserComponent
+  ],
+  providers: [
+    WorkspaceSelectGuard
   ]
 })
 export class WorkspaceModule {

@@ -18,7 +18,7 @@
  */
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {createSelector, MemoizedSelector} from '@ngrx/store';
+import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {OrganizationModel} from './organization.model';
 
