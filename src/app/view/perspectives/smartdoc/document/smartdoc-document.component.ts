@@ -75,7 +75,7 @@ export class TemplateDocumentComponent {
   }
 
   public onRemovePart(partIndex: number) {
-    this.store.dispatch(new SmartDocTemplatesAction.RemovePart({templateId: this.template.id, partIndex: partIndex}));
+    this.store.dispatch(new SmartDocTemplatesAction.RemovePartConfirm({templateId: this.template.id, partIndex: partIndex}));
   }
 
   public getCurrentCollection(): CollectionModel {
