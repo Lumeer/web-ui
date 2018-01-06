@@ -22,7 +22,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 export class PostItDocumentModel {
 
   public index: number;
-  public documentModel: DocumentModel;
+  public document: DocumentModel;
 
   public order = 1;
   public updating = false;

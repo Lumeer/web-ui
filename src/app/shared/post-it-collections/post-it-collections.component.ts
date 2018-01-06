@@ -21,7 +21,8 @@ import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, View
 import {Store} from '@ngrx/store';
 
 import {PostItLayoutConfig} from 'app/shared/utils/layout/post-it-layout-config';
-import {finalize, skipWhile} from 'rxjs/operators';
+import {Observable} from 'rxjs/Observable';
+import {finalize, skipWhile, tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {Query} from '../../core/dto';
 import {NotificationService} from '../../core/notifications/notification.service';
@@ -99,27 +100,43 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       this.workspace = navigation.workspace;
       this.query = navigation.query;
 
-      this.store.dispatch(new Get({query: this.query}));
-
-      if (this.collectionsSubscription) {
-        this.collectionsSubscription.unsubscribe();
-      }
-
-      this.collectionsSubscription = this.store.select(selectCollectionsByQuery).subscribe(collections => {
-        this.postIts = collections.map(collection => this.collectionToPostIt(collection, true));
-        this.reloadLayout();
-      });
-
-      this.initializeLayout();
+      this.refreshCollections();
     });
+  }
+
+  private refreshCollections(): void {
+    this.store.dispatch(new Get({query: this.query}));
+
+    if (this.collectionsSubscription) {
+      this.collectionsSubscription.unsubscribe();
+    }
+
+    this.collectionsSubscription = this.collections$().subscribe();
+    this.initializeLayout();
+  }
+
+  private collections$(): Observable<CollectionModel[]> {
+    return this.store.select(selectCollectionsByQuery).pipe(
+      tap(collections => {
+        const initialized = true;
+        this.postIts = collections.map(collection => this.collectionToPostIt(collection, initialized));
+
+        setTimeout(() => {
+          for (let i = 0; i < collections.length; i++) {
+            const newPostItElement = document.getElementById('perspectivePostIt' + i);
+            this.layout.add(newPostItElement);
+          }
+        });
+      })
+    );
   }
 
   private initializeLayout(): void {
     const config = new PostItLayoutConfig();
     config.dragEnabled = false;
 
-    const ButtonsAtEnd = (this.editable && this.emptyQuery()) ? 2 : 0;
-    this.layout = new PostItKeepingAtEndLayout('post-it-collection-layout', config, this.zone, ButtonsAtEnd);
+    const buttonsAtEnd = (this.editable && this.emptyQuery()) ? 2 : 0;
+    this.layout = new PostItKeepingAtEndLayout('post-it-collection-layout', config, this.zone, buttonsAtEnd);
   }
 
   private collectionToPostIt(collection: CollectionModel, initialized: boolean): PostItCollectionModel {
@@ -128,13 +145,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     postIt.initialized = initialized;
 
     return postIt;
-  }
-
-  private reloadLayout(): void {
-    setTimeout(() => {
-      this.nameInputs.forEach(nameInput => this.updateToScrollbarHeight(nameInput.nativeElement));
-      this.layout.refresh();
-    });
   }
 
   public toggleFavorite(collection: CollectionModel) {
@@ -175,7 +185,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       const newPostItElement = document.getElementById('perspectivePostIt' + (this.postIts.length - 1));
       this.layout.add(newPostItElement);
-      this.layout.refresh();
     });
 
     this.focusNewPostIt();
@@ -184,7 +193,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   private focusNewPostIt(): void {
     setTimeout(() => {
       const newPostIt = this.postItElements.last.nativeElement;
-      const newPostItTextField = newPostIt.getElementsByTagName('textarea').item(0);
+      const newPostItTextField = newPostIt.getElementsByTagName('input').item(0);
       newPostItTextField.focus();
     });
   }
@@ -216,7 +225,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       .subscribe(
         collection => {
           postIt.collection = CollectionConverter.fromDto(collection);
-          this.layout.refresh();
         },
         error => {
           this.notificationService.error('Getting file failed');
@@ -232,7 +240,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       .subscribe(
         collection => {
           postIt.collection = CollectionConverter.fromDto(collection);
-          this.layout.refresh();
         },
         error => {
           this.notificationService.error('Failed updating file');
@@ -299,7 +306,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
     const deletedPostItElement = document.getElementById('perspectivePostIt' + this.postItIndex(postIt));
     this.layout.remove(deletedPostItElement);
-    this.layout.refresh();
     this.postIts.splice(this.postItIndex(postIt), 1);
   }
 
@@ -347,12 +353,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   private postItIndex(collectionData: PostItCollectionModel): number {
     const index = this.postIts.findIndex(collectionDataObject => collectionDataObject === collectionData);
     return index === -1 ? null : index;
-  }
-
-  public updateToScrollbarHeight(textArea: HTMLTextAreaElement): void {
-    // the only way to figure out the needed scroll height is to set it to auto
-    textArea.style.height = 'auto';
-    textArea.style.height = `${textArea.scrollHeight}px`;
   }
 
   public emptyQuery(): boolean {

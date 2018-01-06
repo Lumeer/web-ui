@@ -77,16 +77,12 @@
       <span #inputPlaceholder i18n="@@collection.name.input.placeholder">Name</span>
     </div>
 
-    <textarea class="card-footer text-center font-weight-bold bg-transparent" #textArea
-              rows="1"
-              [(ngModel)]="postIt.collection.name"
-              (ngModelChange)="updateToScrollbarHeight(textArea)"
-              (blur)="trimNameWhitespace(postIt);
-                updateToScrollbarHeight(textArea);
+    <input class="card-footer text-center font-weight-bold bg-transparent" #input
+           [(ngModel)]="postIt.collection.name"
+           (blur)="trimNameWhitespace(postIt);
                 onTextAreaBlur(postIt, textArea);
-                textArea.placeholder = removeHtmlComments(inputPlaceholder)"
-              (focus)="textArea.placeholder = ''">
-      </textarea>
+                input.placeholder = removeHtmlComments(inputPlaceholder)"
+           (focus)="input.placeholder = ''"/>
   </div>
 
   <!-- add buttons -->

@@ -30,12 +30,12 @@ import {NotificationsAction} from '../../../../core/store/notifications/notifica
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../shared/permissions/role';
 import {PostItLayout} from '../../../../shared/utils/layout/post-it-layout';
-import {NavigationManager} from '../bussiness/navigation-manager';
-import {SelectionManager} from '../bussiness/selection-manager';
 import {AttributePair} from '../document-data/attribute-pair';
 import {PostItDocumentModel} from '../document-data/post-it-document-model';
-import ToggleFavourite = DocumentsAction.ToggleFavourite;
-import Confirm = NotificationsAction.Confirm;
+import {NavigationHelper} from '../util/navigation-helper';
+import {SelectionHelper} from '../util/selection-helper';
+import DeleteConfirm = DocumentsAction.DeleteConfirm;
+import Update = DocumentsAction.Update;
 
 @Component({
   selector: 'post-it-document',
@@ -63,10 +63,10 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   public layoutManager: PostItLayout;
 
   @Input()
-  public navigationManager: NavigationManager;
+  public navigationHelper: NavigationHelper;
 
   @Input()
-  public selectionManager: SelectionManager;
+  public selectionHelper: SelectionHelper;
 
   @Output()
   public removed = new EventEmitter();
@@ -104,48 +104,37 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     this.layoutManager.add(this.element.nativeElement);
   }
 
-  private refreshDataAttributePairs(): void {
-    this.attributePairs = Object.entries(this.postItModel.documentModel.data).map(([attribute, value]) => {
-      return {
-        attribute: attribute,
-        previousAttributeName: attribute,
-        value: isString(value) ? value : JSON.stringify(value, null, 2)
-      };
-    });
-  }
-
   public toggleDocumentFavorite() {
-    this.store.dispatch(new ToggleFavourite({document: this.postItModel.documentModel}));
+    this.store.dispatch(new Update({document: this.postItModel.document, toggleFavourite: true}));
   }
 
   public clickOnAttributePair(column: number, row: number): void {
-    const enableEditMode = this.selectionManager.wasPreviouslySelected(column, row, this.postItModel.documentModel.id);
+    const enableEditMode = this.selectionHelper.wasPreviouslySelected(column, row, this.postItModel.document.id);
 
-    this.selectionManager.setEditMode(enableEditMode);
-    this.selectionManager.select(column, row, this.postItModel);
+    this.selectionHelper.setEditMode(enableEditMode);
+    this.selectionHelper.select(column, row, this.postItModel);
   }
 
   public onEnterKeyPressedInEditMode(): void {
-    this.selectionManager.selectNext(this.postItModel);
+    this.selectionHelper.selectNext(this.postItModel);
   }
 
   public updateAttribute(attributePair: AttributePair): void {
-    delete this.postItModel.documentModel.data[attributePair.previousAttributeName];
+    delete this.postItModel.document.data[attributePair.previousAttributeName];
     attributePair.previousAttributeName = attributePair.attribute;
 
     if (attributePair.attribute) {
-      this.postItModel.documentModel.data[attributePair.attribute] = attributePair.value;
+      this.postItModel.document.data[attributePair.attribute] = attributePair.value;
 
     } else {
-      const selectedRow = this.selectionManager.selection.row;
-      this.attributePairs.splice(selectedRow, 1);
+      this.removeAttributePair();
     }
 
     this.changes.emit();
   }
 
   public updateValue(attributePair: AttributePair): void {
-    this.postItModel.documentModel.data[attributePair.attribute] = attributePair.value;
+    this.postItModel.document.data[attributePair.attribute] = attributePair.value;
     this.changes.emit();
   }
 
@@ -157,8 +146,36 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     this.newAttributePair = {} as AttributePair;
     document.activeElement['value'] = '';
 
-    setTimeout(() => {
-      this.selectionManager.select(1, this.attributePairs.length - 1, this.postItModel);
+    this.focusNewAttributeValue();
+  }
+
+  public documentPrefix(): string {
+    const workspace = this.navigationHelper.workspacePrefix();
+    const collection = `f/${this.postItModel.document.collectionCode}`;
+    const document = `r/${this.postItModel.document.id}`;
+
+    return `${workspace}/${collection}/${document}`;
+  }
+
+  public confirmDeletion(): void {
+    if (this.postItModel.initialized) {
+      this.store.dispatch(new DeleteConfirm({
+        collectionCode: this.postItModel.document.collectionCode,
+        documentId: this.postItModel.document.id
+      }));
+
+    } else {
+      this.removed.emit();
+    }
+  }
+
+  private refreshDataAttributePairs(): void {
+    this.attributePairs = Object.entries(this.postItModel.document.data).map(([attribute, value]) => {
+      return {
+        attribute: attribute,
+        previousAttributeName: attribute,
+        value: isString(value) ? value : JSON.stringify(value, null, 2)
+      };
     });
   }
 
@@ -166,28 +183,29 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     return this.hasRole(Role.Write);
   }
 
+  private removeAttributePair() {
+    const selectedRow = this.selectionHelper.selection.row;
+    this.attributePairs.splice(selectedRow, 1);
+
+    setTimeout(() => {
+      this.selectionHelper.select(
+        this.selectionHelper.selection.column,
+        this.selectionHelper.selection.row - 1,
+        this.postItModel
+      );
+    });
+  }
+
+  private focusNewAttributeValue() {
+    setTimeout(() => {
+      this.selectionHelper.select(1, this.attributePairs.length, this.postItModel);
+    });
+  }
+
   private hasRole(role: string): boolean {
-    const collection = this.postItModel.documentModel.collection;
+    const collection = this.postItModel.document.collection;
     return collection.permissions && collection.permissions.users
       .some((permission: Permission) => permission.roles.includes(role));
-  }
-
-  public documentPrefix(): string {
-    const workspace = this.navigationManager.workspacePrefix();
-    const collection = `f/${this.postItModel.documentModel.collectionCode}`;
-    const document = `r/${this.postItModel.documentModel.id}`;
-
-    return `${workspace}/${collection}/${document}`;
-  }
-
-  public confirmDeletion(): void {
-    this.store.dispatch(new Confirm(
-      {
-        title: 'Delete?',
-        message: 'Are you sure you want to remove the document?',
-        callback: () => this.removed.emit(this.postItModel)
-      }
-    ));
   }
 
   public ngOnDestroy(): void {

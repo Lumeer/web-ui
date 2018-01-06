@@ -17,9 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Chronology {
+import {Workspace} from '../../../../core/store/navigation/workspace.model';
 
-  calendarType: string;
-  id: string;
+export class WorkspaceHelper {
+
+  constructor(public workspace: Workspace) {
+  }
+
+  public hasWorkspace(): boolean {
+    return Boolean(this.workspace && this.workspace.organizationCode && this.workspace.projectCode);
+  }
 
 }

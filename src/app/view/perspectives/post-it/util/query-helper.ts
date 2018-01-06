@@ -21,7 +21,7 @@ import {Query} from '../../../../core/dto';
 import {QueryConverter} from '../../../../core/store/navigation/query.converter';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
 
-export class QueryManager {
+export class QueryHelper {
 
   private query: Query;
 
