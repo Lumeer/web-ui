@@ -133,6 +133,15 @@ export class SmartDocTemplatesEffects {
   );
 
   @Effect()
+  public removePartConfirm$: Observable<Action> = this.actions$.ofType(SmartDocTemplatesActionType.REMOVE_PART_CONFIRM).pipe(
+    map((action: SmartDocTemplatesAction.RemovePartConfirm) => new NotificationsAction.Confirm({
+      title: 'Remove part',
+      message: 'Do you really want to remove this template part?',
+      action: new SmartDocTemplatesAction.RemovePart(action.payload)
+    }))
+  );
+
+  @Effect()
   public removePart$: Observable<Action> = this.actions$.ofType(SmartDocTemplatesActionType.REMOVE_PART).pipe(
     withLatestFrom(this.store$.select(selectSmartDocTemplatesDictionary)),
     map(([action, dictionary]: [SmartDocTemplatesAction.RemovePart, { [templateId: string]: SmartDocTemplateModel }]) => {

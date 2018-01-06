@@ -19,14 +19,27 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
-import {Action} from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
+import {SnotifyButton} from 'ng-snotify';
 import {Observable} from 'rxjs/Observable';
 import {tap} from 'rxjs/operators';
 import {NotificationService} from '../../notifications/notification.service';
+import {AppState} from '../app.state';
 import {NotificationsAction, NotificationsActionType} from './notifications.action';
 
 @Injectable()
 export class NotificationsEffects {
+
+  @Effect({dispatch: false})
+  public confirm$: Observable<Action> = this.actions.ofType(NotificationsActionType.CONFIRM).pipe(
+    tap((action: NotificationsAction.Confirm) => {
+      const buttons: SnotifyButton[] = [
+        {text: 'Yes', action: () => this.store$.dispatch(action.payload.action)},
+        {text: 'No'}
+      ];
+      this.notificationService.confirm(action.payload.message, action.payload.title, buttons);
+    })
+  );
 
   @Effect({dispatch: false})
   public error$: Observable<Action> = this.actions.ofType(NotificationsActionType.ERROR).pipe(
@@ -39,6 +52,7 @@ export class NotificationsEffects {
   );
 
   constructor(private actions: Actions,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private store$: Store<AppState>) {
   }
 }
