@@ -47,7 +47,6 @@ export const selectDocumentsByQuery = createSelector(
   selectCollectionsDictionary,
   selectQuery,
   (documents, collections, query): DocumentModel[] => {
-    // TODO create more complex filtering
     documents = filterDocumentsByQuery(documents, query);
 
     return documents.map(document => {
@@ -61,9 +60,7 @@ export function selectDocumentsByCustomQuery(query: QueryModel) {
     selectAllDocuments,
     selectCollectionsDictionary,
     (documents, collections): DocumentModel[] => {
-      documents = filterDocumentsByQuery(documents, query);
-
-      return documents.map(document => {
+      return filterDocumentsByQuery(documents, query).map(document => {
         return {...document, collection: collections[document.collectionCode]};
       });
     }
@@ -71,6 +68,7 @@ export function selectDocumentsByCustomQuery(query: QueryModel) {
 }
 
 const filterDocumentsByQuery = (documents: DocumentModel[], query: QueryModel): DocumentModel[] => {
+  // TODO implement the rest of updating on backend
   if (query.collectionCodes && query.collectionCodes.length) {
     documents = documents.filter(document => query.collectionCodes.includes(document.collectionCode));
   }

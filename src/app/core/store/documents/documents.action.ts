@@ -40,6 +40,7 @@ export enum DocumentsActionType {
   UPDATE_DATA_FAILURE = '[Documents] Update Data :: Failure',
 
   DELETE = '[Documents] Delete',
+  DELETE_CONFIRM = '[Documents] Delete :: Confirm',
   DELETE_SUCCESS = '[Documents] Delete :: Success',
   DELETE_FAILURE = '[Documents] Delete :: Failure',
 
@@ -94,7 +95,7 @@ export namespace DocumentsAction {
   export class Update implements Action {
     public readonly type = DocumentsActionType.UPDATE;
 
-    public constructor(public payload: { document: DocumentModel }) {
+    public constructor(public payload: { document: DocumentModel, toggleFavourite: boolean }) {
     }
   }
 
@@ -135,6 +136,13 @@ export namespace DocumentsAction {
 
   export class Delete implements Action {
     public readonly type = DocumentsActionType.DELETE;
+
+    public constructor(public payload: { collectionCode: string, documentId: string }) {
+    }
+  }
+
+  export class DeleteConfirm implements Action {
+    public readonly type = DocumentsActionType.DELETE_CONFIRM;
 
     public constructor(public payload: { collectionCode: string, documentId: string }) {
     }

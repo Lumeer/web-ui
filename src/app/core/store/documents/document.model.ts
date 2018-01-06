@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Date} from '../../dto/date';
 import {CollectionModel} from '../collections/collection.model';
 
 export interface DocumentModel {
@@ -29,8 +28,8 @@ export interface DocumentModel {
 
   favorite?: boolean;
 
-  creationDate?: Date;
-  updateDate?: Date;
+  creationDate?: Date; // Date is currently in MongoDb format
+  updateDate?: Date; // Date is currently in MongoDb format
   createdBy?: string;
   updatedBy?: string;
   dataVersion?: number;

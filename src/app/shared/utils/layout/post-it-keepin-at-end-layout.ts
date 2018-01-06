@@ -28,11 +28,15 @@ export class PostItKeepingAtEndLayout extends PostItLayout {
   }
 
   public add(element: HTMLElement): void {
-    if (this.layout) {
-      this.zone.runOutsideAngular(() => {
-        this.layout.add(element, {index: this.layoutElementsCount() - 1 - this.elementsKeptAtEnd});
-      });
+    if (!this.canModify()) {
+      return;
     }
+
+    this.insertingElementsAtIndex = this.layoutElementsCount() - 1 - this.elementsKeptAtEnd;
+
+    this.zone.runOutsideAngular(() => {
+      this.layout.add(element, {index: this.insertingElementsAtIndex});
+    });
   }
 
   private layoutElementsCount(): number {

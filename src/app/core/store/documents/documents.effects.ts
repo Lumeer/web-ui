@@ -81,6 +81,15 @@ export class DocumentsEffects {
     switchMap(action => {
       const documentDto = DocumentConverter.toDto(action.payload.document);
 
+      if (action.payload.toggleFavourite) {
+        return this.documentService.toggleDocumentFavorite(documentDto).pipe(
+          map(success => {
+            action.payload.document.favorite = !action.payload.document.favorite;
+            return action.payload.document;
+          })
+        );
+      }
+
       throw Error('not implemented on backend yet');
     }),
     map((document: DocumentModel) => new DocumentsAction.UpdateSuccess({document: document})),
@@ -102,7 +111,7 @@ export class DocumentsEffects {
         data: action.payload.data
       };
 
-      return this.documentService.patchDocumentData(documentDto).pipe(
+      return this.documentService.updateDocument(documentDto).pipe(
         map(dto => DocumentConverter.fromDto(dto))
       );
     }),
@@ -126,34 +135,19 @@ export class DocumentsEffects {
   );
 
   @Effect()
+  public deleteConfirm$: Observable<Action> = this.actions$.ofType<DocumentsAction.DeleteConfirm>(DocumentsActionType.DELETE_CONFIRM).pipe(
+    map((action: DocumentsAction.DeleteConfirm) => new NotificationsAction.Confirm({
+      title: 'Remove document',
+      message: 'Do you really want to remove this document?',
+      action: new DocumentsAction.Delete(action.payload)
+    }))
+  );
+
+  @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.DeleteFailure>(DocumentsActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
     map(() => new NotificationsAction.Error({message: 'Failed to delete record'}))
   );
-
-  @Effect()
-  public toggleFavourite$: Observable<Action> =
-    this.actions$.ofType<DocumentsAction.ToggleFavourite>(DocumentsActionType.TOGGLE_FAVOURITE).pipe(
-      switchMap(action => {
-        const documentDto = DocumentConverter.toDto(action.payload.document);
-
-        return this.documentService.toggleDocumentFavorite(documentDto).pipe(
-          map(success => {
-            action.payload.document.favorite = !action.payload.document.favorite;
-            return action.payload.document;
-          })
-        );
-      }),
-      map(document => new DocumentsAction.ToggleFavouriteSuccess({document: document})),
-      catchError((error) => Observable.of(new DocumentsAction.ToggleFavouriteFailure({error: error})))
-    );
-
-  @Effect()
-  public toggleFavouriteFailure$: Observable<Action> =
-    this.actions$.ofType<DocumentsAction.ToggleFavouriteFailure>(DocumentsActionType.TOGGLE_FAVOURITE_FAILURE).pipe(
-      tap(action => console.error(action.payload.error)),
-      map(() => new NotificationsAction.Error({message: 'Failed to toggle favourite'}))
-    );
 
   constructor(private actions$: Actions,
               private documentService: DocumentService,

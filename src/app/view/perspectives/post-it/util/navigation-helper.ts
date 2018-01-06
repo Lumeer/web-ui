@@ -23,16 +23,16 @@ import {LumeerError} from '../../../../core/error/lumeer.error';
 import {AppState} from '../../../../core/store/app.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
-import {QueryManager} from './query-manager';
-import {WorkspaceManager} from './workspace-manager';
+import {QueryHelper} from './query-helper';
+import {WorkspaceHelper} from './workspace-helper';
 
-export class NavigationManager {
+export class NavigationHelper {
 
   private subscription: Subscription;
 
-  private queryManager: QueryManager;
+  private queryHelper: QueryHelper;
 
-  private workspaceManager: WorkspaceManager;
+  private workspaceHelper: WorkspaceHelper;
 
   private callback: () => void = () => null;
 
@@ -51,31 +51,31 @@ export class NavigationManager {
 
   public initialize(): void {
     this.subscription = this.store.select(selectNavigation).subscribe(navigation => {
-      this.workspaceManager = new WorkspaceManager(navigation.workspace);
-      this.queryManager = new QueryManager(navigation.query, this.getDocumentsPerRow);
+      this.workspaceHelper = new WorkspaceHelper(navigation.workspace);
+      this.queryHelper = new QueryHelper(navigation.query, this.getDocumentsPerRow);
 
       this.callCallback();
     });
   }
 
   public queryWithPagination(page: number, editable: boolean): QueryModel {
-    return this.queryManager.queryWithPagination(page, editable);
+    return this.queryHelper.queryWithPagination(page, editable);
   }
 
   public hasQuery(): boolean {
-    return this.queryManager.hasQuery();
+    return this.queryHelper.hasQuery();
   }
 
   public hasOneCollection(): boolean {
-    return Boolean(this.queryManager && this.queryManager.currentCollectionCode());
+    return Boolean(this.queryHelper && this.queryHelper.currentCollectionCode());
   }
 
   public validNavigation(): boolean {
     return Boolean(
-      this.workspaceManager &&
-      this.workspaceManager.hasWorkspace() &&
-      this.queryManager &&
-      this.queryManager.hasQuery()
+      this.workspaceHelper &&
+      this.workspaceHelper.hasWorkspace() &&
+      this.queryHelper &&
+      this.queryHelper.hasQuery()
     );
   }
 
@@ -84,7 +84,7 @@ export class NavigationManager {
       throw new LumeerError('Navigation is invalid');
     }
 
-    return `/w/${this.workspaceManager.workspace.organizationCode}/${this.workspaceManager.workspace.projectCode}`;
+    return `/w/${this.workspaceHelper.workspace.organizationCode}/${this.workspaceHelper.workspace.projectCode}`;
   }
 
   public destroy(): void {

@@ -29,7 +29,7 @@ const VALUE_COLUMN = 1;
 
 const COLUMNS = 1;
 
-export class SelectionManager {
+export class SelectionHelper {
 
   public selection: AttributePropertySelection = this.emptySelection();
 
@@ -97,17 +97,28 @@ export class SelectionManager {
     }
   }
 
+  public select(column: number, row: number, postIt: PostItDocumentModel): void {
+    this.selectedPostIt = postIt;
+
+    this.selection.documentId = postIt.document.id;
+    this.selection.documentIndex = postIt.index;
+    this.selectRow(column, row);
+    this.selectColumn(column, row);
+
+    this.focus();
+  }
+
   private selectedDocumentDirection(newColumn: number, newRow: number): Direction {
     if (newColumn < 0) {
       return Direction.Left;
     }
-    if (newColumn > COLUMNS || this.leftOfDisabledInput(newColumn, newRow)) {
+    if (newColumn > COLUMNS || this.leftOfDisabledInput() && newColumn === VALUE_COLUMN) {
       return Direction.Right;
     }
     if (newRow < 0) {
       return Direction.Up;
     }
-    if (newRow > this.lastRow() || this.aboveDisabledInput(newColumn, newRow)) {
+    if (newRow > this.lastRow() || this.aboveDisabledInput() && newRow === this.lastRow()) {
       return Direction.Down;
     }
 
@@ -115,8 +126,8 @@ export class SelectionManager {
   }
 
   private selectDocumentByDirection(column: number, row: number, direction: Direction): void {
-    this.selection.column = column;
-    this.selection.row = row;
+    this.selectColumn(column, row);
+    this.selectRow(column, row);
 
     switch (direction) {
       case Direction.Left:
@@ -135,48 +146,37 @@ export class SelectionManager {
   }
 
   private tryToSelectDocumentOnLeft(): void {
-    if (this.selection.documentIndex - 1 >= 0) {
-      const selectedDocument = this.postIts[this.selection.documentIndex - 1];
+    if (this.selection.documentIndex + 1 < this.postIts.length) {
+      const selectedDocument = this.postIts[this.selection.documentIndex + 1];
       this.select(Number.MAX_SAFE_INTEGER, this.selection.row, selectedDocument);
     }
   }
 
   private tryToSelectDocumentOnRight(): void {
-    if (this.selection.documentIndex + 1 < this.postIts.length) {
-      const selectedDocument = this.postIts[this.selection.documentIndex + 1];
+    if (this.selection.documentIndex - 1 >= 0) {
+      const selectedDocument = this.postIts[this.selection.documentIndex - 1];
       this.select(0, this.selection.row, selectedDocument);
     }
   }
 
   private tryToSelectDocumentOnUp(): void {
-    if (this.selection.documentIndex - this.getDocumentsPerRow() >= 0) {
-      const selectedDocument = this.postIts[this.selection.documentIndex - this.getDocumentsPerRow()];
+    if (this.selection.documentIndex + this.getDocumentsPerRow() < this.postIts.length) {
+      const selectedDocument = this.postIts[this.selection.documentIndex + this.getDocumentsPerRow()];
       this.select(this.selection.column, Number.MAX_SAFE_INTEGER, selectedDocument);
     }
   }
 
   private tryToSelectDocumentOnDown(): void {
-    if (this.selection.documentIndex + this.getDocumentsPerRow() < this.postIts.length) {
-      const selectedDocument = this.postIts[this.selection.documentIndex + this.getDocumentsPerRow()];
+    if (this.selection.documentIndex - this.getDocumentsPerRow() >= 0) {
+      const selectedDocument = this.postIts[this.selection.documentIndex - this.getDocumentsPerRow()];
       this.select(this.selection.column, 0, selectedDocument);
     }
-  }
-
-  public select(column: number, row: number, postIt: PostItDocumentModel): void {
-    this.selectedPostIt = postIt;
-
-    this.selection.documentId = postIt.documentModel.id;
-    this.selection.documentIndex = postIt.index;
-    this.selectRow(column, row);
-    this.selectColumn(column, row);
-
-    this.focus();
   }
 
   private selectRow(column: number, row: number): void {
     this.selection.row = Math.max(0, Math.min(row, this.lastRow()));
 
-    if (row === this.lastRow() && column === VALUE_COLUMN) {
+    if (this.selection.row === this.lastRow() && column === VALUE_COLUMN) {
       this.selection.row--;
     }
   }
@@ -203,16 +203,18 @@ export class SelectionManager {
     return `${ this.perspectiveId }${ this.selection.documentIndex }[${ this.selection.column }, ${ this.selection.row }]`;
   }
 
-  private leftOfDisabledInput(column: number, row: number): boolean {
-    return column === ATTRIBUTE_COLUMN && row === this.lastRow();
+  private leftOfDisabledInput(): boolean {
+    return this.selection.column === ATTRIBUTE_COLUMN &&
+      this.selection.row === this.lastRow();
   }
 
-  private aboveDisabledInput(column: number, row: number): boolean {
-    return column === VALUE_COLUMN && row === this.lastRow() - 1;
+  private aboveDisabledInput(): boolean {
+    return this.selection.column === VALUE_COLUMN &&
+      this.selection.row === this.lastRow() - 1;
   }
 
   private lastRow(): number {
-    return Object.keys(this.selectedPostIt.documentModel.data).length;
+    return Object.keys(this.selectedPostIt.document.data).length;
   }
 
   public wasPreviouslySelected(column: number, row: number, postItId: string): boolean {

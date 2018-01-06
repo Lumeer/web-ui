@@ -23,6 +23,7 @@ import {PostItLayoutConfig} from './post-it-layout-config';
 export class PostItLayout {
 
   protected layout: any;
+  protected insertingElementsAtIndex: number = -1;
 
   constructor(protected containerClassName: string, protected parameters: PostItLayoutConfig, protected zone: NgZone) {
     this.addContainerClassIdentifierIfMissing();
@@ -34,47 +35,54 @@ export class PostItLayout {
     }
   }
 
-  public refresh(): void {
-    setTimeout(() => {
-      if (!this.containerExists()) {
-        return;
-      }
+  public add(element: HTMLElement): void {
+    if (!this.canModify()) {
+      return;
+    }
 
-      this.zone.runOutsideAngular(() => {
-        if (!this.layout) {
-          this.layout = new window['Muuri'](this.containerClassName, this.parameters);
-        }
+    this.zone.runOutsideAngular(() => {
+      this.layout.add(element, {index: this.insertingElementsAtIndex});
+    });
+  }
 
-        this.relayout();
-      });
+  public remove(element: HTMLElement): void {
+    if (!this.canModify()) {
+      return;
+    }
+
+    this.zone.runOutsideAngular(() => {
+      this.layout.remove(element);
     });
   }
 
   protected relayout(): void {
-    this.zone.runOutsideAngular(() => {
-      // TODO fix the issue with collections not laying out correctly
-      this.layout = new window['Muuri'](this.containerClassName, this.parameters);
-
-      // this.layout
-      //   .refreshItems()
-      //   .layout();
+    setTimeout(() => {
+      this.layout
+        .refreshItems()
+        .synchronize()
+        .layout();
     });
   }
 
-  public add(element: HTMLElement): void {
-    if (this.layout) {
-      this.zone.runOutsideAngular(() => {
-        this.layout.add(element);
-      });
+  protected canModify(): boolean {
+    if (!this.containerExists()) {
+      return false;
     }
+
+    if (!this.layout) {
+      this.createLayout();
+    }
+
+    return true;
   }
 
-  public remove(element: HTMLElement): void {
-    if (this.layout) {
-      this.zone.runOutsideAngular(() => {
-        this.layout.remove(element);
-      });
-    }
+  private createLayout(): void {
+    this.zone.runOutsideAngular(() => {
+      this.layout = new window['Muuri'](this.containerClassName, this.parameters);
+
+      this.layout.on('add', items => this.relayout());
+      this.layout.on('remove', items => this.relayout());
+    });
   }
 
   protected containerExists(): boolean {

@@ -11,8 +11,8 @@
                     [postItModel]="postItWithIndex(postIt, idx)"
                     [perspectiveId]="perspectiveId"
                     [layoutManager]="layoutManager"
-                    [selectionManager]="selectionManager"
-                    [navigationManager]="navigationManager"
+                    [selectionHelper]="selectionHelper"
+                    [navigationHelper]="navigationHelper"
                     (removed)="deletePostIt(postIt)"
                     (changes)="postItChanged(postIt)"></post-it-document>
 
@@ -21,11 +21,11 @@
     <option *ngFor="let attribute of collection.attributes">{{ attribute.name }}</option>
   </datalist>
 
-  <label *ngIf="!editable && navigationManager.hasQuery() && !postIts.length"
+  <label *ngIf="!editable && navigationHelper.hasQuery() && !postIts.length"
          class="label-centered"
          i18n="@@document.list.empty">Nothing To Show</label>
 </div>
 
-<div class="fading loading-text text-center py-5" [style.opacity]="infiniteScrollManager.isLoading() ? 1 : 0">
+<div class="fading loading-text text-center py-5" [style.opacity]="infiniteScroll.isLoading() ? 1 : 0">
   Loading...
 </div>
