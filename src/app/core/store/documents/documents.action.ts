@@ -174,5 +174,6 @@ export namespace DocumentsAction {
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
     UpdateData | UpdateDataSuccess | UpdateDataFailure |
-    Delete | DeleteSuccess | DeleteFailure | Clear;
+    Delete | DeleteSuccess | DeleteFailure | DeleteConfirm | Clear;
+
 }

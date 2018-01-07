@@ -152,13 +152,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.allLoaded = documents.length === 0;
   }
 
-  public ngOnDestroy(): void {
-    this.deletionHelper.destroy();
-    this.navigationHelper.destroy();
-    this.infiniteScroll.destroy();
-    this.pageSubscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
   private loadMoreOnInfiniteScroll(): void {
     if (!this.allLoaded && this.navigationHelper && this.navigationHelper.validNavigation()) {
       this.getPostIts();
@@ -273,6 +266,22 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     }
 
     return postIt;
+  }
+
+  public ngOnDestroy(): void {
+    if (this.deletionHelper) {
+      this.deletionHelper.destroy();
+    }
+
+    if (this.navigationHelper) {
+      this.navigationHelper.destroy();
+    }
+
+    if (this.infiniteScroll) {
+      this.infiniteScroll.destroy();
+    }
+
+    this.pageSubscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
 }
