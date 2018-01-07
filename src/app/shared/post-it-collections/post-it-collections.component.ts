@@ -21,8 +21,7 @@ import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, View
 import {Store} from '@ngrx/store';
 
 import {PostItLayoutConfig} from 'app/shared/utils/layout/post-it-layout-config';
-import {Observable} from 'rxjs/Observable';
-import {finalize, skipWhile, tap} from 'rxjs/operators';
+import {finalize, skipWhile} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {Query} from '../../core/dto';
 import {NotificationService} from '../../core/notifications/notification.service';
@@ -77,7 +76,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   private query: QueryModel;
 
-  private appStateSubscription: Subscription;
+  private navigationSubscription: Subscription;
 
   private collectionsSubscription: Subscription;
 
@@ -90,45 +89,30 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.getAppStateAndInitialize();
+    this.subscribeOnNavigation();
+    this.subscribeOnCollections();
   }
 
-  private getAppStateAndInitialize() {
-    this.appStateSubscription = this.store.select(selectNavigation).pipe(
+  public ngOnDestroy(): void {
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
+    }
+
+    if (this.collectionsSubscription) {
+      this.collectionsSubscription.unsubscribe();
+    }
+  }
+
+  private subscribeOnNavigation() {
+    this.navigationSubscription = this.store.select(selectNavigation).pipe(
       skipWhile(navigation => !navigation.workspace.organizationCode || !navigation.workspace.projectCode)
     ).subscribe(navigation => {
       this.workspace = navigation.workspace;
       this.query = navigation.query;
 
-      this.refreshCollections();
+      this.store.dispatch(new Get({query: this.query}));
+      this.initializeLayout();
     });
-  }
-
-  private refreshCollections(): void {
-    this.store.dispatch(new Get({query: this.query}));
-
-    if (this.collectionsSubscription) {
-      this.collectionsSubscription.unsubscribe();
-    }
-
-    this.collectionsSubscription = this.collections$().subscribe();
-    this.initializeLayout();
-  }
-
-  private collections$(): Observable<CollectionModel[]> {
-    return this.store.select(selectCollectionsByQuery).pipe(
-      tap(collections => {
-        const initialized = true;
-        this.postIts = collections.map(collection => this.collectionToPostIt(collection, initialized));
-
-        setTimeout(() => {
-          for (let i = 0; i < collections.length; i++) {
-            const newPostItElement = document.getElementById('perspectivePostIt' + i);
-            this.layout.add(newPostItElement);
-          }
-        });
-      })
-    );
   }
 
   private initializeLayout(): void {
@@ -382,14 +366,18 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     return !!(this.workspace && this.workspace.organizationCode && this.workspace.projectCode);
   }
 
-  public ngOnDestroy(): void {
-    if (this.appStateSubscription) {
-      this.appStateSubscription.unsubscribe();
-    }
+  private subscribeOnCollections() {
+    this.collectionsSubscription = this.store.select(selectCollectionsByQuery).subscribe(collections => {
+      const initialized = true;
+      this.postIts = collections.map(collection => this.collectionToPostIt(collection, initialized));
 
-    if (this.collectionsSubscription) {
-      this.collectionsSubscription.unsubscribe();
-    }
+      setTimeout(() => {
+        for (let i = 0; i < collections.length; i++) {
+          const newPostItElement = document.getElementById('perspectivePostIt' + i);
+          this.layout.add(newPostItElement);
+        }
+      });
+    });
   }
 
 }
