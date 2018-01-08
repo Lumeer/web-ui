@@ -23,16 +23,16 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {catchError, map, switchMap, take, tap} from 'rxjs/operators';
 import {isNullOrUndefined} from "util";
-import {AppState} from '../store/app.state';
-import {OrganizationConverter} from '../store/organizations/organization.converter';
-import {OrganizationModel} from '../store/organizations/organization.model';
-import {OrganizationsAction} from '../store/organizations/organizations.action';
-import {selectAllOrganizations} from '../store/organizations/organizations.state';
-import {ProjectConverter} from '../store/projects/project.converter';
-import {ProjectModel} from '../store/projects/project.model';
-import {ProjectsAction} from '../store/projects/projects.action';
-import {selectAllProjects} from '../store/projects/projects.state';
-import {OrganizationService, ProjectService} from './index';
+import {AppState} from '../core/store/app.state';
+import {OrganizationConverter} from '../core/store/organizations/organization.converter';
+import {OrganizationModel} from '../core/store/organizations/organization.model';
+import {OrganizationsAction} from '../core/store/organizations/organizations.action';
+import {selectAllOrganizations} from '../core/store/organizations/organizations.state';
+import {ProjectConverter} from '../core/store/projects/project.converter';
+import {ProjectModel} from '../core/store/projects/project.model';
+import {ProjectsAction} from '../core/store/projects/projects.action';
+import {selectAllProjects} from '../core/store/projects/projects.state';
+import {OrganizationService, ProjectService} from '../core/rest';
 
 @Injectable()
 export class WorkspaceService {

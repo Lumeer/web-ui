@@ -21,26 +21,20 @@ import {NgModule} from '@angular/core';
 
 import {EffectsModule} from '@ngrx/effects';
 import {routerReducer} from '@ngrx/router-store';
-import {Action, ActionReducerMap, StoreModule} from '@ngrx/store';
+import {ActionReducerMap, StoreModule} from '@ngrx/store';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from '../../../environments/environment';
-import {AppStateActionType} from './app-state-action';
 import {AppState, initialAppState} from './app.state';
 import {CollectionsEffects} from './collections/collections.effects';
 import {collectionsReducer} from './collections/collections.reducer';
-import {initialCollectionsState} from './collections/collections.state';
 import {DocumentsEffects} from './documents/documents.effects';
 import {documentsReducer} from './documents/documents.reducer';
-import {initialDocumentsState} from './documents/documents.state';
 import {GroupsEffects} from './groups/groups.effects';
 import {groupsReducer} from './groups/groups.reducer';
-import {initialGroupsState} from './groups/groups.state';
 import {LinkInstancesEffects} from './link-instances/link-instances.effects';
 import {linkInstancesReducer} from './link-instances/link-instances.reducer';
-import {initialLinkInstancesState} from './link-instances/link-instances.state';
 import {LinkTypesEffects} from './link-types/link-types.effects';
 import {linkTypesReducer} from './link-types/link-types.reducer';
-import {initialLinkTypesState} from './link-types/link-types.state';
 import {navigationReducer} from './navigation/navigation.reducer';
 import {NotificationsEffects} from './notifications/notifications.effects';
 import {OrganizationsEffects} from './organizations/organizations.effects';
@@ -49,13 +43,10 @@ import {ProjectsEffects} from './projects/projects.effects';
 import {projectsReducer} from './projects/projects.reducer';
 import {RouterEffects} from './router/router.effects';
 import {smartDocTemplatesReducer} from './smartdoc-templates/smartdoc-templates.reducer';
-import {initialSmartDocTemplatesState} from './smartdoc-templates/smartdoc-templates.state';
 import {UsersEffects} from './users/users.effects';
 import {usersReducer} from './users/users.reducer';
-import {initialUsersState} from './users/users.state';
 import {ViewsEffects} from './views/views.effects';
 import {viewsReducer} from './views/views.reducer';
-import {initialViewsState} from './views/views.state';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -86,28 +77,9 @@ const effects = [
   ViewsEffects
 ];
 
-function appStateReducer(reducer) {
-  return function newReducer(state: AppState, action: Action): AppState {
-    if (action.type === AppStateActionType.RESET_WITHOUT_WORKSPACE) {
-      state = {
-        ...state,
-        collections: initialCollectionsState,
-        documents: initialDocumentsState,
-        groups: initialGroupsState,
-        linkInstances: initialLinkInstancesState,
-        linkTypes: initialLinkTypesState,
-        users: initialUsersState,
-        views: initialViewsState,
-        smartDocTemplates: initialSmartDocTemplatesState
-      };
-    }
-    return reducer(state, action);
-  }
-}
-
 @NgModule({
   imports: [
-    StoreModule.forRoot(reducers, {initialState: initialAppState, metaReducers: [appStateReducer]}),
+    StoreModule.forRoot(reducers, {initialState: initialAppState}),
     EffectsModule.forRoot(effects),
     !environment.production ? StoreDevtoolsModule.instrument({maxAge: 10}) : []
   ],

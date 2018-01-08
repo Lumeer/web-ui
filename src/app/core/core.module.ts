@@ -45,7 +45,6 @@ import {SearchService} from './rest/search.service';
 import {SmartDocTemplateService} from './rest/smartdoc-template.service';
 import {UserService} from './rest/user.service';
 import {ViewService} from './rest/view.service';
-import {WorkspaceService} from './rest/workspace.service';
 import {SearchHomeComponent} from './search-home/search-home.component';
 
 import {TopPanelComponent} from './top-panel/top-panel.component';
@@ -84,7 +83,6 @@ import {AppStoreModule} from './store/app-store.module';
     LinkTypeService,
     EventService,
     HomePageService,
-    WorkspaceService,
     SmartDocTemplateService,
     KEYCLOAK_HTTP_PROVIDER,
     {provide: ErrorHandler, useClass: LumeerErrorHandler},

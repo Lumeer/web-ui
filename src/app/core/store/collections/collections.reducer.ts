@@ -39,6 +39,8 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
       return onChangePermissionSuccess(state, action);
     case CollectionsActionType.REMOVE_PERMISSION_SUCCESS:
       return onRemovePermissionSuccess(state, action);
+    case CollectionsActionType.CLEAR:
+      return initialCollectionsState;
     default:
       return state;
   }

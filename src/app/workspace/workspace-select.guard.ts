@@ -24,7 +24,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {map, switchMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
-import {WorkspaceService} from '../core/rest/workspace.service';
+import {WorkspaceService} from './workspace.service';
 import {AppState} from '../core/store/app.state';
 import {OrganizationsAction} from '../core/store/organizations/organizations.action';
 import {

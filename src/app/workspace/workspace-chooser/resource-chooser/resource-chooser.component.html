@@ -45,7 +45,7 @@
                        title="Icon picker" i18n-title="@@resource.postit.picker">
                       <i class="fas fa fa-eye-dropper clickable" aria-hidden="true"></i>
                     </a>
-                    <div class="dropdown-menu" #picker>
+                    <div class="dropdown-menu dropdown-menu-right" [style.width]="400+'px'" #picker>
                       <color-picker class="dropdown-item" [color]="resource.color"
                                     (selectedChange)="onNewColor(resource, $event)"></color-picker>
                       <div class="dropdown-divider"></div>

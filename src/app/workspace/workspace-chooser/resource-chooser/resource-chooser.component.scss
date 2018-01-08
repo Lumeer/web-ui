@@ -23,6 +23,8 @@ $bookmark-border-color: #bdbdbd;
     width: 40px;
     position: absolute;
     left: 0;
+    background: white;
+    z-index: 100;
     font-size: 40px;
   }
 
@@ -30,12 +32,13 @@ $bookmark-border-color: #bdbdbd;
     width: 40px;
     position: absolute;
     right: 0;
+    background: white;
+    z-index: 100;
     font-size: 40px;
   }
 
   .content-container {
     position: absolute;
-    overflow: hidden;
 
     .horizontal-chooser {
       position: absolute;
@@ -99,6 +102,10 @@ $bookmark-border-color: #bdbdbd;
               top: 10px;
               opacity: 0;
               transition: opacity $animation-duration;
+
+              .dropdown-menu {
+                opacity: 1 !important;
+              }
             }
 
             .code {
@@ -118,12 +125,6 @@ $bookmark-border-color: #bdbdbd;
               overflow: hidden;
               white-space: nowrap;
               text-overflow: ellipsis;
-
-              //line-height: 20px;
-              //display: -webkit-box;
-              //-webkit-box-orient: vertical;
-              //-webkit-line-clamp: 2;
-              //max-height: 40px;
 
               &:focus {
                 text-overflow: clip;
@@ -162,7 +163,7 @@ $bookmark-border-color: #bdbdbd;
 
 }
 
-[contenteditable=true]:empty:before{
+[contenteditable=true]:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
   color: $grey-color;

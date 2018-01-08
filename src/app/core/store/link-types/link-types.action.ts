@@ -37,7 +37,9 @@ export enum LinkTypesActionType {
 
   DELETE = '[Link Types] Delete',
   DELETE_SUCCESS = '[Link Types] Delete :: Success',
-  DELETE_FAILURE = '[Link Types] Delete :: Failure'
+  DELETE_FAILURE = '[Link Types] Delete :: Failure',
+
+  CLEAR = '[Link Types] Clear'
 
 }
 
@@ -127,9 +129,17 @@ export namespace LinkTypesAction {
     }
   }
 
+
+  export class Clear implements Action {
+    public readonly type = LinkTypesActionType.CLEAR;
+
+    public constructor() {
+    }
+  }
+
   export type All =
     Get | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure;
+    Delete | DeleteSuccess | DeleteFailure | Clear;
 }

@@ -40,6 +40,8 @@ export function smartDocTemplatesReducer(state: SmartDocTemplatesState = initial
       const parts: SmartDocTemplatePartModel[] = state.entities[action.payload.templateId].parts.slice();
       parts.splice(action.payload.newIndex, 0, parts.splice(action.payload.oldIndex, 1)[0]);
       return smartDocTemplatesAdapter.updateOne({id: action.payload.templateId, changes: {parts}}, state);
+    case SmartDocTemplatesActionType.CLEAR:
+      return initialSmartDocTemplatesState;
     default:
       return state;
   }

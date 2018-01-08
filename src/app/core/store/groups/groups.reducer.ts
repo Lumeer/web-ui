@@ -30,6 +30,8 @@ export function groupsReducer(state: GroupsState = initialGroupsState, action: G
       return groupsAdapter.updateOne({id: action.payload.group.id, changes: action.payload.group}, state);
     case GroupsActionType.DELETE_SUCCESS:
       return groupsAdapter.removeOne(action.payload.groupId, state);
+    case GroupsActionType.CLEAR:
+      return initialGroupsState;
     default:
       return state;
   }

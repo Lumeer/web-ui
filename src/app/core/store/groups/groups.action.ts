@@ -38,6 +38,8 @@ export enum GroupsActionType {
   DELETE_SUCCESS = '[Groups] Delete :: Success',
   DELETE_FAILURE = '[Groups] Delete :: Failure',
 
+  CLEAR = '[Groups] Clear'
+
 }
 
 export namespace GroupsAction {
@@ -123,8 +125,15 @@ export namespace GroupsAction {
     }
   }
 
+  export class Clear implements Action {
+    public readonly type = GroupsActionType.CLEAR;
+
+    public constructor() {
+    }
+  }
+
   export type All = Get | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure;
+    Delete | DeleteSuccess | DeleteFailure | Clear;
 }

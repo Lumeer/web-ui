@@ -31,6 +31,8 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
     case ViewsActionType.CHANGE_CONFIG:
       const config = Object.assign({}, state.config, action.payload.config);
       return {...state, config: config};
+    case ViewsActionType.CLEAR:
+      return initialViewsState;
     default:
       return state;
   }
