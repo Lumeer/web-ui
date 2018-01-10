@@ -18,6 +18,7 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {SmartDocTemplatePartModel} from '../../../../core/store/smartdoc-templates/smartdoc-template.model';
 import {HtmlModifier} from '../../../../shared/utils/html-modifier';
 import {Perspective, perspectiveIconsMap} from '../../perspective';
 
@@ -29,7 +30,7 @@ import {Perspective, perspectiveIconsMap} from '../../perspective';
 export class SmartDocBottomPanelComponent {
 
   @Input()
-  public selected: boolean;
+  public part: SmartDocTemplatePartModel;
 
   @Input()
   public showMover: boolean;
@@ -42,9 +43,6 @@ export class SmartDocBottomPanelComponent {
 
   @Input()
   public perspectives: Perspective[] = [];
-
-  @Input()
-  public selectedPerspective: Perspective;
 
   @Output()
   public switchPerspective = new EventEmitter<Perspective>();

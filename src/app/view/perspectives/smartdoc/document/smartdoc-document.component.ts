@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, Input, NgZone, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {AppState} from '../../../../core/store/app.state';
@@ -26,6 +26,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {SmartDocTemplateModel, SmartDocTemplatePartModel} from '../../../../core/store/smartdoc-templates/smartdoc-template.model';
 import {SmartDocTemplatesAction} from '../../../../core/store/smartdoc-templates/smartdoc-templates.action';
 import {selectSelectedSmartDocTemplatePart} from '../../../../core/store/smartdoc-templates/smartdoc-templates.state';
+import {GridLayout} from '../../../../shared/utils/layout/grid-layout';
 import {Perspective} from '../../perspective';
 
 @Component({
@@ -33,10 +34,7 @@ import {Perspective} from '../../perspective';
   templateUrl: './smartdoc-document.component.html',
   styleUrls: ['./smartdoc-document.component.scss']
 })
-export class TemplateDocumentComponent {
-
-  @Input()
-  public selected: boolean;
+export class SmartDocDocumentComponent implements OnInit {
 
   @Input()
   public collections: CollectionModel[];
@@ -47,22 +45,27 @@ export class TemplateDocumentComponent {
   @Input()
   public template: SmartDocTemplateModel;
 
-  @Output()
-  public templateChange = new EventEmitter<SmartDocTemplateModel>();
-
-  @Output()
-  public moveDocument = new EventEmitter<string>();
-
   public selectedPartIndex: number;
   private selectedPartSubscription: Subscription;
 
-  public constructor(private store: Store<AppState>) {
+  private partsLayout: GridLayout;
+
+  public constructor(private store: Store<AppState>,
+                     private zone: NgZone) {
   }
 
   public ngOnInit() {
     this.selectedPartSubscription = this.store.select(selectSelectedSmartDocTemplatePart).subscribe((selected) => {
       this.selectedPartIndex = selected && selected.templateId === this.template.id && selected.documentId === this.document.id ? selected.partIndex : null;
     });
+  }
+
+  public ngOnChanges() {
+    this.refreshLayout();
+  }
+
+  public ngOnDestroy() {
+    this.destroyLayout();
   }
 
   public onUpdatePart(partIndex: number, part: SmartDocTemplatePartModel) {
@@ -108,12 +111,40 @@ export class TemplateDocumentComponent {
     return [Perspective.Table, Perspective.SmartDoc];
   }
 
-  public onDropDocument(documentId: string) {
-    this.moveDocument.emit(documentId);
+  private refreshLayout() {
+    this.destroyLayout();
+    this.initLayout();
   }
 
-  public onDropPart(oldIndex: number, newIndex: number) {
+  private initLayout() {
+    const containerClass = `parts-layout-${this.template.id}-${this.document.id}`;
+    this.partsLayout = new GridLayout('.' + containerClass, {
+      dragEnabled: true,
+      dragAxis: 'y',
+      dragStartPredicate: (item, event) => SmartDocDocumentComponent.canDragWithElement(event.target, containerClass)
+    }, this.zone, ({fromIndex, toIndex}) => this.onMovePart(fromIndex, toIndex));
+  }
+
+  private static canDragWithElement(element: Element, containerClass: string): boolean {
+    let currentElement = element;
+    while (!currentElement.classList.contains(containerClass)) {
+      if (currentElement.classList.contains('muuri')) {
+        return false;
+      }
+      currentElement = currentElement.parentElement;
+    }
+    return true;
+  }
+
+  private destroyLayout() {
+    if (this.partsLayout) {
+      this.partsLayout.destroy();
+    }
+  }
+
+  public onMovePart(oldIndex: number, newIndex: number) {
     this.store.dispatch(new SmartDocTemplatesAction.MovePart({templateId: this.template.id, oldIndex, newIndex}));
+    this.store.dispatch(new SmartDocTemplatesAction.Select({templateId: this.template.id, documentId: this.document.id, partIndex: newIndex}));
   }
 
 }

@@ -25,7 +25,7 @@ import {SmartDocTemplatesEffects} from '../../../core/store/smartdoc-templates/s
 import {DragAndDropModule} from '../../../shared/drag-and-drop/drag-and-drop.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {SmartDocBottomPanelComponent} from './bottom-panel/smartdoc-bottom-panel.component';
-import {TemplateDocumentComponent} from './document/smartdoc-document.component';
+import {SmartDocDocumentComponent} from './document/smartdoc-document.component';
 import {SmartDocEmbeddedComponent} from './embedded/smartdoc-embedded.component';
 import {SmartDocSidePanelComponent} from './side-panel/smartdoc-side-panel.component';
 import {SmartDocPerspectiveComponent} from './smartdoc-perspective.component';
@@ -41,7 +41,7 @@ import {SmartDocTextComponent} from './text/smartdoc-text.component';
     DragAndDropModule
   ],
   declarations: [
-    TemplateDocumentComponent,
+    SmartDocDocumentComponent,
     SmartDocEmbeddedComponent,
     SmartDocTextComponent,
     SmartDocPerspectiveComponent,

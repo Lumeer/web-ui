@@ -14,12 +14,20 @@
     <div class="row">
       <div class="col pointer-events-none"></div>
       <div class="col-12 {{getColClasses()}}">
-        <smartdoc-document *ngFor="let doc of documents$ | async; index as docIndex"
-                           [collections]="collections$ | async"
-                           [document]="doc"
-                           [template]="template$ | async"
-                           (moveDocument)="onMoveDocument($event, docIndex)">
-        </smartdoc-document>
+        <div class="documents-layout-{{templateId}} muuri"
+             [class.mt-3]="embedded">
+          <div *ngFor="let doc of documents; index as docIndex"
+               class="muuri-item mb-3 w-100"
+               [class.selected]="doc.id === selectedDocumentId">
+            <div class="muuri-item-content">
+              <smartdoc-document [collections]="collections$ | async"
+                                 [document]="doc"
+                                 [template]="template"
+                                 class="card document">
+              </smartdoc-document>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="col pointer-events-none"></div>
     </div>

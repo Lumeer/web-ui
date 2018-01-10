@@ -1,61 +1,57 @@
-<div [lmrDropTarget]="{zone: template.id}"
-     (lmrDrop)="onDropDocument($event)"
-     class="document border border-light rounded mb-3">
-  <div [lmrDraggable]="{enabled: true, data: document.id, zone: template.id}"
-       class="record-mover"
-       title="Move record" i18n-title="@@smartdoc.document.move">
-    <i class="fa fa-lg fa-ellipsis-h"></i>
-  </div>
-  <div *ngIf="template">
+<div class="card-header record-mover record-mover-{{template.id}} p-0"
+     title="Move record" i18n-title="@@smartdoc.document.move">
+  <i class="fa fa-lg fa-ellipsis-h"></i>
+</div>
+<div class="card-body p-0">
+  <div *ngIf="template"
+       class="parts-layout-{{this.template.id}}-{{this.document.id}} muuri">
     <div *ngFor="let part of template.parts; index as partIndex"
-         [class.border]="selectedPartIndex === partIndex"
-         [class.border-success]="selectedPartIndex === partIndex"
-         [lmrDropTarget]="{zone: document.id}"
-         (lmrDrop)="onDropPart($event, partIndex)"
-         (click)="onClickInsidePart($event, partIndex)"
-         (clickOutside)="onClickOutsidePart(partIndex)"
-         class="rounded">
-      <div *ngIf="selectedPartIndex === partIndex"
-           class="d-flex justify-content-end">
-        <div class="position-relative">
-          <div class="position-absolute document-panel">
-            <smartdoc-side-panel [partIndex]="partIndex"
-                                 [collection]="getCurrentCollection()"
+         [class.selected]="selectedPartIndex === partIndex"
+         class="muuri-item w-100">
+      <div class="muuri-item-content">
+        <div [class.selected]="selectedPartIndex === partIndex"
+             (click)="onClickInsidePart($event, partIndex)"
+             (clickOutside)="onClickOutsidePart(partIndex)"
+             class="card m-2 template-part">
+          <div class="card-body p-0">
+            <div *ngIf="selectedPartIndex === partIndex"
+                 class="d-flex justify-content-end">
+              <div class="position-relative">
+                <div class="position-absolute document-panel">
+                  <smartdoc-side-panel [partIndex]="partIndex"
+                                       [collection]="getCurrentCollection()"
+                                       [document]="document"
+                                       [template]="template">
+                  </smartdoc-side-panel>
+                </div>
+              </div>
+            </div>
+            <ng-container [ngSwitch]="part.type">
+              <smartdoc-embedded *ngSwitchCase="'embedded'"
                                  [document]="document"
-                                 [template]="template">
-            </smartdoc-side-panel>
+                                 [templatePart]="part">
+              </smartdoc-embedded>
+              <smartdoc-text *ngSwitchCase="'text'"
+                             [collection]="getCurrentCollection()"
+                             [document]="document"
+                             [templatePart]="part"
+                             (templatePartChange)="onUpdatePart(partIndex, $event)">
+              </smartdoc-text>
+            </ng-container>
           </div>
-        </div>
-      </div>
-      <ng-container [ngSwitch]="part.type">
-        <smartdoc-embedded *ngSwitchCase="'embedded'"
-                           [document]="document"
-                           [templatePart]="part">
-          <smartdoc-bottom-panel [selected]="selectedPartIndex === partIndex"
+          <smartdoc-bottom-panel *ngIf="selectedPartIndex === partIndex"
                                  [showMover]="template.parts.length > 1"
                                  [perspectives]="allowedPerspectives()"
-                                 [selectedPerspective]="part.perspective"
+                                 [part]="part"
                                  [documentId]="document.id"
                                  [partIndex]="partIndex"
                                  (copyPart)="onCopyPart(partIndex)"
                                  (removePart)="onRemovePart(partIndex)"
-                                 (switchPerspective)="onSwitchPerspective(partIndex, part, $event)">
+                                 (switchPerspective)="onSwitchPerspective(partIndex, part, $event)"
+                                 class="card-footer p-0">
           </smartdoc-bottom-panel>
-        </smartdoc-embedded>
-        <smartdoc-text *ngSwitchCase="'text'"
-                       [collection]="getCurrentCollection()"
-                       [document]="document"
-                       [templatePart]="part"
-                       (templatePartChange)="onUpdatePart(partIndex, $event)">
-          <smartdoc-bottom-panel [selected]="selectedPartIndex === partIndex"
-                                 [showMover]="template.parts.length > 1"
-                                 [documentId]="document.id"
-                                 [partIndex]="partIndex"
-                                 (copyPart)="onCopyPart(partIndex)"
-                                 (removePart)="onRemovePart(partIndex)">
-          </smartdoc-bottom-panel>
-        </smartdoc-text>
-      </ng-container>
+        </div>
+      </div>
     </div>
   </div>
 </div>
