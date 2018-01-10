@@ -1,23 +1,34 @@
 @import "../../../../shared/variables";
 
 .document-panel {
-  left: 10px;
+  left: 20px;
 }
 
-.document {
+:host {
   .record-mover {
-    color: $white;
+    color: $light;
     cursor: move;
     text-align: center;
   }
-}
 
-.document:hover {
-  .record-mover {
-    color: $secondary;
+  &:hover {
+    .record-mover {
+      color: $secondary;
+    }
   }
 }
 
-.selected {
-  border: 2x solid $success;
+.template-part {
+  &:not(.selected) {
+    border: 1px solid transparent;
+  }
+
+  &:hover {
+    box-shadow: $shadow-default;
+    cursor: auto;
+
+    &:not(.selected) {
+      cursor: move;
+    }
+  }
 }

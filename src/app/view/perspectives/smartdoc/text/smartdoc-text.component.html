@@ -1,11 +1,10 @@
-<div>
-  <quill-editor *ngIf="editorShown"
-                [theme]="'snow'"
-                (clickOutside)="onClickOutside()"
-                (onEditorCreated)="onEditorCreated($event)"
-                (onContentChanged)="onContentChanged($event)"
-                (onSelectionChanged)="onSelectionChanged($event)">
-    <div quill-editor-toolbar>
+<quill-editor *ngIf="editorShown"
+              [theme]="'snow'"
+              (clickOutside)="onClickOutside()"
+              (onEditorCreated)="onEditorCreated($event)"
+              (onContentChanged)="onContentChanged($event)"
+              (onSelectionChanged)="onSelectionChanged($event)">
+  <div quill-editor-toolbar>
       <span class="ql-formats">
         <select class="ql-header" [title]="'Header'">
           <option selected>Normal</option>
@@ -13,7 +12,7 @@
           <option value="2">Subheading</option>
         </select>
       </span>
-      <span class="ql-formats">
+    <span class="ql-formats">
         <button class="ql-bold" title="Bold" i18n-title="@@text.editor.toolbar.bold"></button>
         <button class="ql-italic" title="Italic" i18n-title="@@text.editor.toolbar.italic"></button>
         <button class="ql-underline" title="Underline" i18n-title="@@text.editor.toolbar.underline"></button>
@@ -36,7 +35,7 @@
           <option value="purple"></option>
         </select>
       </span>
-      <span class="ql-formats">
+    <span class="ql-formats">
         <button class="ql-list" [value]="'ordered'" [title]="'Ordered list'"></button>
         <button class="ql-list" [value]="'bullet'" [title]="'Bullet list'"></button>
         <select class="ql-align" [title]="'Alignment'">
@@ -46,11 +45,11 @@
           <option value="justify"></option>
         </select>
       </span>
-      <span class="ql-formats">
+    <span class="ql-formats">
         <button class="ql-link" [title]="'Link'"></button>
         <button class="ql-image" [title]="'Image'"></button>
       </span>
-      <span class="ql-formats">
+    <span class="ql-formats">
         <span class="ql-attribute">
           <button *ngFor="let attribute of documentAttributes()"
                   [title]="document.data[attribute.id]"
@@ -59,11 +58,9 @@
           </button>
         </span>
       </span>
-    </div>
-  </quill-editor>
-  <div *ngIf="!editorShown && !!templatePart"
-       [innerHtml]="getHtmlContent() | safeHtml"
-       class="ql-viewer mx-2">
   </div>
-  <ng-content></ng-content>
+</quill-editor>
+<div *ngIf="!editorShown && !!templatePart"
+     [innerHtml]="getHtmlContent() | safeHtml"
+     class="ql-viewer mx-2">
 </div>
