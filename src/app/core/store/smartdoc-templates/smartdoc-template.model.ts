@@ -49,18 +49,6 @@ export interface SmartDocTemplateModel {
 
 }
 
-export function mergeTextParts(parts: SmartDocTemplatePartModel[]) {
-  for (let i = parts.length - 1; i > 0; i--) {
-    if (parts[i].type === SmartDocTemplatePartType.Text && parts[i - 1].type === SmartDocTemplatePartType.Text) {
-      const part: SmartDocTemplatePartModel = {
-        type: SmartDocTemplatePartType.Text,
-        textHtml: parts[i - 1].textHtml + '<br>' + parts[i].textHtml
-      };
-      parts.splice(i - 1, 2, part);
-    }
-  }
-}
-
 export function isValidEmbeddedPart(part: SmartDocTemplatePartModel) {
   return part && part.linkTypeId && part.perspective;
 }

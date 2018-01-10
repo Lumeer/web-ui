@@ -31,6 +31,7 @@ import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generat
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectAllDocuments} from '../../../core/store/documents/documents.state';
+import {LinkTypeModel} from '../../../core/store/link-types/link-type.model';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
@@ -42,6 +43,7 @@ import {ViewsAction} from '../../../core/store/views/views.action';
 import {selectViewConfig, selectViewSmartDocConfig} from '../../../core/store/views/views.state';
 import {SizeType} from '../../../shared/slider/size-type';
 import {GridLayout} from '../../../shared/utils/layout/grid-layout';
+import {Perspective} from '../perspective';
 import {PerspectiveComponent} from '../perspective.component';
 
 @Component({
@@ -96,9 +98,7 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
 
   private bindSelectedDocument() {
     this.selectedDocumentSubscription = this.store.select(selectSelectedSmartDocTemplatePart).subscribe((selected) => {
-      console.log(selected);
       this.selectedDocumentId = selected && selected.templateId === this.templateId ? selected.documentId : null;
-      console.log(this.selectedDocumentId);
     });
   }
 
@@ -109,6 +109,9 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
       this.store.select(selectViewSmartDocConfig)
     ).subscribe(([templates, documents, smartDocConfig]) => {
       this.template = this.processTemplate(templates);
+      if (this.template && this.template.parts.length === 0) {
+        this.addSingleTextPart();
+      }
 
       if (!this.documentMoved) {
         const filteredDocuments = this.filterDocuments(documents);
@@ -126,13 +129,31 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
     });
   }
 
+  private addSingleTextPart() {
+    const delta = {
+      ops: [
+        {insert: 'Insert your text here...'}
+      ]
+    };
+
+    const part: SmartDocTemplatePartModel = {
+      type: SmartDocTemplatePartType.Text,
+      textData: delta
+    };
+    this.store.dispatch(new SmartDocTemplatesAction.AddPart({templateId: this.template.id, partIndex: 0, part}));
+  }
+
   private filterDocuments(documents: DocumentModel[]): DocumentModel[] {
     return documents.filter(doc => {
       if (!this.query || !this.query.collectionCodes || !this.query.collectionCodes.includes(doc.collectionCode)) {
         return false;
       }
 
-      return this.query.documentIds.length === 0 || this.query.documentIds.includes(doc.id); // TODO ignore on empty
+      if (this.embedded) {
+        return this.query.documentIds.includes(doc.id);
+      }
+
+      return this.query.documentIds.length === 0 || this.query.documentIds.includes(doc.id);
     });
   }
 

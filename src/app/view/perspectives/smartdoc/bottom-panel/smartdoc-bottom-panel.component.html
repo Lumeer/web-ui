@@ -1,7 +1,13 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col d-flex justify-content-start">
-
+      <span *ngIf="linkType">
+        <i class="{{linkType.collections[0].icon}} fa-xs fa-fw align-top"
+           [style.color]="linkType.collections[0].color"></i><!-- TODO remove space somehow
+    --><i class="{{linkType.collections[1].icon}} fa-xs fa-fw"
+          [style.color]="linkType.collections[1].color"></i>
+          <span class="text-secondary">{{linkType.name}}</span>
+      </span>
     </div>
     <div class="col">
       <div *ngIf="showMover"

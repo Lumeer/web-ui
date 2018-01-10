@@ -28,7 +28,7 @@ import {SmartDocTemplateService} from '../../rest/smartdoc-template.service';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {SmartDocTemplateConverter} from './smartdoc-template.converter';
-import {mergeTextParts, SmartDocTemplateModel} from './smartdoc-template.model';
+import {SmartDocTemplateModel} from './smartdoc-template.model';
 import {SmartDocTemplatesAction, SmartDocTemplatesActionType} from './smartdoc-templates.action';
 import {selectSmartDocTemplatesDictionary} from './smartdoc-templates.state';
 
@@ -148,7 +148,6 @@ export class SmartDocTemplatesEffects {
       const template: SmartDocTemplateModel = {...dictionary[action.payload.templateId]};
       template.parts = template.parts.slice();
       template.parts.splice(action.payload.partIndex, 1);
-      mergeTextParts(template.parts);
       return new SmartDocTemplatesAction.Update({template: template});
     })
   );
