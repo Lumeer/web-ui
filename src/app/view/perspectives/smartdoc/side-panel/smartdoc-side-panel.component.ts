@@ -60,7 +60,9 @@ export class SmartDocSidePanelComponent {
 
   public constructor(private notificationService: NotificationService,
                      private store: Store<AppState>) {
-    this.collections$ = this.store.select(selectAllCollections);
+    this.collections$ = this.store.select(selectAllCollections).pipe(
+      map(collections => collections.filter(collection => collection && collection.code))
+    );
     this.linkTypes$ = this.store.select(selectAllLinkTypes);
   }
 

@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {skipWhile} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
+import {AppState} from '../../../../core/store/app.state';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
+import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
+import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
 import {SmartDocTemplatePartModel} from '../../../../core/store/smartdoc-templates/smartdoc-template.model';
 import {HtmlModifier} from '../../../../shared/utils/html-modifier';
 import {Perspective, perspectiveIconsMap} from '../../perspective';
@@ -27,7 +36,7 @@ import {Perspective, perspectiveIconsMap} from '../../perspective';
   templateUrl: './smartdoc-bottom-panel.component.html',
   styleUrls: ['./smartdoc-bottom-panel.component.scss']
 })
-export class SmartDocBottomPanelComponent {
+export class SmartDocBottomPanelComponent implements OnInit, OnDestroy {
 
   @Input()
   public part: SmartDocTemplatePartModel;
@@ -52,6 +61,32 @@ export class SmartDocBottomPanelComponent {
 
   @Output()
   public removePart = new EventEmitter();
+
+  public linkType: LinkTypeModel;
+  private linkTypeSubscription: Subscription;
+
+  public constructor(private store: Store<AppState>) {
+  }
+
+  public ngOnInit() {
+    if (this.part.linkTypeId) {
+      this.linkTypeSubscription = Observable.combineLatest(
+        this.store.select(selectLinkTypeById(this.part.linkTypeId)),
+        this.store.select(selectCollectionsDictionary)
+      ).pipe(
+        skipWhile(([linkType]) => !linkType)
+      ).subscribe(([linkType, collectionsMap]) => {
+        const collections: [CollectionModel, CollectionModel] = [collectionsMap[linkType.collectionCodes[0]], collectionsMap[linkType.collectionCodes[1]]];
+        this.linkType = {...linkType, collections};
+      });
+    }
+  }
+
+  public ngOnDestroy() {
+    if (this.linkTypeSubscription) {
+      this.linkTypeSubscription.unsubscribe();
+    }
+  }
 
   public onSwitchPerspective(perspective: Perspective) {
     this.switchPerspective.emit(perspective);
