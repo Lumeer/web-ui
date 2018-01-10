@@ -24,9 +24,9 @@ import {
   HostListener,
   Input,
   OnChanges,
-  Output,
+  Output, QueryList,
   SimpleChange,
-  ViewChild
+  ViewChild, ViewChildren
 } from '@angular/core';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
@@ -84,6 +84,9 @@ type ResourceModel = OrganizationModel | ProjectModel;
 })
 export class ResourceChooserComponent implements OnChanges {
 
+  @ViewChildren('picker')
+  public pickers: QueryList<ElementRef>;
+
   @ViewChild('resourceContainer')
   public resourceContainer: ElementRef;
 
@@ -113,6 +116,8 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceLineSizes = [0, 0, 0];
   public resourceVisibleArrows = false;
 
+  public openedPickerId: string;
+
   public constructor(private notificationService: NotificationService) {
   }
 
@@ -131,6 +136,7 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private checkResources() {
+    this.resources = this.resources.filter(res => res && typeof res === 'object');
     const ids: string[] = this.resources.filter(res => res.correlationId).map(res => res.correlationId);
     this.newResources = this.newResources.filter(newRes => !ids.includes(newRes.correlationId));
   }
@@ -271,12 +277,12 @@ export class ResourceChooserComponent implements OnChanges {
     }
   }
 
-  public onNewColor(resource: ResourceModel, color: string){
+  public onNewColor(resource: ResourceModel, color: string) {
     console.log(color);
   }
 
 
-  public onNewIcon(resource: ResourceModel, icon: string){
+  public onNewIcon(resource: ResourceModel, icon: string) {
     console.log(icon);
   }
 
@@ -335,6 +341,28 @@ export class ResourceChooserComponent implements OnChanges {
         this.resourceNew.emit(resource);
       }// else do nothing
     }
+  }
+
+  public hasResourcePickerVisible(resource: ResourceModel): boolean {
+    if(!this.openedPickerId) return false;
+    return this.openedPickerId === this.getResourceIdentificator(resource);
+  }
+
+  public onResourcePickerClick(resource: ResourceModel) {
+    const identificator = this.getResourceIdentificator(resource);
+    if (this.openedPickerId === identificator) {
+      this.openedPickerId = null;
+    } else {
+      this.openedPickerId = identificator;
+    }
+  }
+
+  public onResourcePickerBlur() {
+    this.openedPickerId = null;
+  }
+
+  private getResourceIdentificator(resource: ResourceModel): string {
+    return resource.id || resource.correlationId;
   }
 
   private resourcesLength(): number {

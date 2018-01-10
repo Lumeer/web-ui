@@ -50,3 +50,7 @@ export const selectSelectedProject = createSelector(selectProjectsDictionary, se
 export const selectProjectByCode = (code) => createSelector(selectAllProjects, projects => {
   return projects.find(project => project.code === code);
 });
+
+export const selectProjectById = (id) => createSelector(selectProjectsDictionary, projects => {
+  return projects[id];
+});

@@ -22,6 +22,8 @@ import {HttpClientModule} from '@angular/common/http';
 import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
+
+import {ClickOutsideModule} from 'ng-click-outside';
 import {SnotifyComponent, SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import {SharedModule} from '../shared/shared.module';
 import {WorkspaceGuard} from '../workspace/workspace.guard';
@@ -59,7 +61,8 @@ import {AppStoreModule} from './store/app-store.module';
     HttpClientModule,
     RouterModule,
     SharedModule,
-    SnotifyModule
+    SnotifyModule,
+    ClickOutsideModule
   ],
   declarations: [
     TopPanelComponent,

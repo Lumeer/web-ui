@@ -24,7 +24,7 @@ $bookmark-border-color: #bdbdbd;
     position: absolute;
     left: 0;
     background: white;
-    z-index: 100;
+    z-index: 20;
     font-size: 40px;
   }
 
@@ -33,7 +33,7 @@ $bookmark-border-color: #bdbdbd;
     position: absolute;
     right: 0;
     background: white;
-    z-index: 100;
+    z-index: 20;
     font-size: 40px;
   }
 
@@ -47,6 +47,12 @@ $bookmark-border-color: #bdbdbd;
       -webkit-transition: left $animation-duration;
       -moz-transition: left $animation-duration;
       -o-transition: left $animation-duration;
+
+      .dropdown-menu {
+        width: $post-it-size + 2*$post-it-margin;
+        top: 0 !important;
+        left: auto !important;
+      }
 
       .tab {
         width: $post-it-size + 2*$post-it-margin;
@@ -102,10 +108,6 @@ $bookmark-border-color: #bdbdbd;
               top: 10px;
               opacity: 0;
               transition: opacity $animation-duration;
-
-              .dropdown-menu {
-                opacity: 1 !important;
-              }
             }
 
             .code {

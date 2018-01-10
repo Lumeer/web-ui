@@ -33,12 +33,14 @@ import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {
+  selectOrganizationById,
   selectAllOrganizations, selectSelectedOrganization,
   selectSelectedOrganizationId
 } from '../../core/store/organizations/organizations.state';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {
+  selectProjectById,
   selectProjectsForSelectedOrganization, selectSelectedProject,
   selectSelectedProjectId
 } from '../../core/store/projects/projects.state';
@@ -140,8 +142,11 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   }
 
   public onOrganizationSettings(id: string) {
-    // TODO get organization by code and select it
-    this.store.dispatch(new RouterAction.Go({path: ['organization', id]}));
+    this.store.select(selectOrganizationById(id)).pipe(first()).subscribe(organization => {
+      if (organization) {
+        this.store.dispatch(new RouterAction.Go({path: ['organization', organization.code]}));
+      }
+    });
   }
 
   public onSelectProject(id: string) {
@@ -172,8 +177,15 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   public onProjectSettings(id: string) {
     if (!isNullOrUndefined(this.selectedOrganizationId)) {
-      // TODO get project by code and select it
-      this.store.dispatch(new RouterAction.Go({path: ['organization', this.selectedOrganizationId, 'project', id]}));
+      Observable.combineLatest(
+        this.store.select(selectSelectedOrganization),
+        this.store.select(selectProjectById(id))
+      ).pipe(first())
+        .subscribe(([organization, project]) => {
+          if (organization && project) {
+            this.store.dispatch(new RouterAction.Go({path: ['organization', organization.code, 'project', project.code]}));
+          }
+        });
     }
   }
 
@@ -206,7 +218,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     return ResourceItemType.Project;
   }
 
-  private clearStore(){
+  private clearStore() {
     this.store.dispatch(new CollectionsAction.Clear());
     this.store.dispatch(new DocumentsAction.Clear());
     this.store.dispatch(new GroupsAction.Clear());

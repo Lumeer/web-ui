@@ -45,3 +45,7 @@ export const selectSelectedOrganization = createSelector(selectOrganizationsDict
 export const selectOrganizationByCode = (code) => createSelector(selectAllOrganizations, organizations => {
   return organizations.find(organization => organization.code === code);
 });
+
+export const selectOrganizationById = (id) => createSelector(selectOrganizationsDictionary, organizations => {
+  return organizations[id];
+});

@@ -21,7 +21,7 @@ import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {Project} from '../dto';
 import {FetchFailedError} from '../error/fetch-failed.error';
 import {NetworkError} from '../error/network.error';
@@ -64,7 +64,7 @@ export class ProjectService extends PermissionService {
 
     return this.httpClient.post(this.apiPrefix(orgCode), project, {observe: 'response', responseType: 'text'}).pipe(
       map(response => response.headers.get('Location').split('/').pop()),
-      map(id => ({...project, id: id})) // TODO return fresh instance from the server instead
+      switchMap(id => this.getProject(orgCode, project.code))
     );
   }
 
@@ -73,7 +73,10 @@ export class ProjectService extends PermissionService {
       throw new LumeerError(`Workspace not set ${orgCode} ${projCode}`);
     }
 
-    return this.httpClient.put(this.apiPrefix(orgCode, projCode), project, {observe: 'response', responseType: 'text'}).pipe(
+    return this.httpClient.put(this.apiPrefix(orgCode, projCode), project, {
+      observe: 'response',
+      responseType: 'text'
+    }).pipe(
       map(() => project) // TODO return fresh instance from the server instead
     );
   }
