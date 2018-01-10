@@ -216,11 +216,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       .forEach(postIt => this.postIts.push(postIt));
   }
 
-  public postItWithIndex(postIt: PostItDocumentModel, index: number): PostItDocumentModel {
-    postIt.index = index;
-    return postIt;
-  }
-
   private updateDocument(postIt: PostItDocumentModel) {
     this.store.dispatch(new UpdateData(
       {
@@ -239,6 +234,25 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     }
   }
 
+  private documentModelToPostItModel(documentModel: DocumentModel, initialized: boolean): PostItDocumentModel {
+    const postIt = new PostItDocumentModel();
+    postIt.document = documentModel;
+    postIt.initialized = initialized;
+
+    if (!initialized) {
+      postIt.order = 0;
+    } else {
+      postIt.order = 1;
+    }
+
+    return postIt;
+  }
+
+  public postItWithIndex(postIt: PostItDocumentModel, index: number): PostItDocumentModel {
+    postIt.index = index;
+    return postIt;
+  }
+
   private documentsPerRow(): number {
     const postItWidth = 225;
     const layoutWidth = this.layoutElement.nativeElement.clientWidth;
@@ -252,20 +266,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public trackByIndex(index: number, obj: any): number {
     return index;
-  }
-
-  private documentModelToPostItModel(documentModel: DocumentModel, initialized: boolean): PostItDocumentModel {
-    const postIt = new PostItDocumentModel();
-    postIt.document = documentModel;
-    postIt.initialized = initialized;
-
-    if (!initialized) {
-      postIt.order = 0;
-    } else {
-      postIt.order = 1;
-    }
-
-    return postIt;
   }
 
   public ngOnDestroy(): void {

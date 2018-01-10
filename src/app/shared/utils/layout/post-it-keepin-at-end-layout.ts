@@ -23,12 +23,18 @@ import {PostItLayoutConfig} from './post-it-layout-config';
 
 export class PostItKeepingAtEndLayout extends PostItLayout {
 
-  constructor(containerClassName: string, parameters: PostItLayoutConfig, zone: NgZone, private elementsKeptAtEnd: number) {
+  private elementsKeptAtEnd = 0;
+
+  constructor(containerClassName: string, parameters: PostItLayoutConfig, zone: NgZone) {
     super(containerClassName, parameters, zone);
   }
 
+  public setElementsAtEnd(elementCount: number): void {
+    this.elementsKeptAtEnd = elementCount;
+  }
+
   public add(element: HTMLElement): void {
-    if (!this.canModify()) {
+    if (!this.isInitializedAffterAttempt()) {
       return;
     }
 
@@ -36,6 +42,7 @@ export class PostItKeepingAtEndLayout extends PostItLayout {
 
     this.zone.runOutsideAngular(() => {
       this.layout.add(element, {index: this.insertingElementsAtIndex});
+      this.relayout();
     });
   }
 

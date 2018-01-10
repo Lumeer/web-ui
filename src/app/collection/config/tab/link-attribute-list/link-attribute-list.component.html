@@ -41,7 +41,7 @@
     </td>
   </tr>
 
-  <tr *ngIf="addEnabled">
+  <tr *ngIf="addEnabled && linkType.linkedAttributes.length <= 2">
     <td class="attrbute-row" colspan="3">
       <input #newAttribute
              data-toggle="dropdown"

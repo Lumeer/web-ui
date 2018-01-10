@@ -49,7 +49,9 @@ export const selectDocumentsByQuery = createSelector(
   (documents, collections, query): DocumentModel[] => {
     documents = filterDocumentsByQuery(documents, query);
 
-    return documents.map(document => {
+    return documents
+      .filter(document => typeof(document) !== 'function')
+      .map(document => {
       return {...document, collection: collections[document.collectionCode]};
     });
   }
@@ -60,9 +62,11 @@ export function selectDocumentsByCustomQuery(query: QueryModel) {
     selectAllDocuments,
     selectCollectionsDictionary,
     (documents, collections): DocumentModel[] => {
-      return filterDocumentsByQuery(documents, query).map(document => {
-        return {...document, collection: collections[document.collectionCode]};
-      });
+      return filterDocumentsByQuery(documents, query)
+        .filter(document => typeof(document) !== 'function')
+        .map(document => {
+          return {...document, collection: collections[document.collectionCode]};
+        });
     }
   );
 }

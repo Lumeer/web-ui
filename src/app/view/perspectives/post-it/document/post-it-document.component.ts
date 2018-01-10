@@ -24,6 +24,7 @@ import {
 import {Store} from '@ngrx/store';
 import {isString} from 'util';
 import {Permission} from '../../../../core/dto';
+import {LumeerError} from '../../../../core/error/lumeer.error';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
@@ -52,6 +53,10 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public set postItModel(value) {
+    if (!value) {
+      throw new LumeerError('Invalid internal state');
+    }
+
     this._postItModel = value;
     this.refreshDataAttributePairs();
   }
@@ -170,6 +175,10 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   private refreshDataAttributePairs(): void {
+    if (!this.postItModel.document.data) {
+      this.postItModel.document.data = {};
+    }
+
     this.attributePairs = Object.entries(this.postItModel.document.data).map(([attribute, value]) => {
       return {
         attribute: attribute,
@@ -204,8 +213,8 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   private hasRole(role: string): boolean {
     const collection = this.postItModel.document.collection;
-    return collection.permissions && collection.permissions.users
-      .some((permission: Permission) => permission.roles.includes(role));
+    const permissions = collection && collection.permissions || {users: [], groups: []};
+    return permissions.users.some((permission: Permission) => permission.roles.includes(role));
   }
 
   public ngOnDestroy(): void {

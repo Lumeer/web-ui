@@ -18,10 +18,11 @@
  */
 
 import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
 import {Store} from '@ngrx/store';
 
 import {PostItLayoutConfig} from 'app/shared/utils/layout/post-it-layout-config';
-import {finalize, skipWhile} from 'rxjs/operators';
+import {filter, finalize, skipWhile} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {Query} from '../../core/dto';
 import {NotificationService} from '../../core/notifications/notification.service';
@@ -39,7 +40,6 @@ import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 import {Role} from '../permissions/role';
 import {HtmlModifier} from '../utils/html-modifier';
 import {PostItKeepingAtEndLayout} from '../utils/layout/post-it-keepin-at-end-layout';
-import {PostItLayout} from '../utils/layout/post-it-layout';
 import {PostItCollectionModel} from './post-it-collection-model';
 import Get = CollectionsAction.Get;
 
@@ -51,7 +51,7 @@ import Get = CollectionsAction.Get;
     '(document:click)': 'onClick($event)'
   }
 })
-export class PostItCollectionsComponent implements OnInit, OnDestroy {
+export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input()
   public editable: boolean = true;
@@ -70,7 +70,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   public dragging: boolean = false;
 
-  private layout: PostItLayout;
+  private layout: PostItKeepingAtEndLayout;
 
   private workspace: Workspace;
 
@@ -89,38 +89,32 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.createLayout();
     this.subscribeOnNavigation();
     this.subscribeOnCollections();
   }
 
-  public ngOnDestroy(): void {
-    if (this.navigationSubscription) {
-      this.navigationSubscription.unsubscribe();
-    }
-
-    if (this.collectionsSubscription) {
-      this.collectionsSubscription.unsubscribe();
-    }
+  public ngAfterViewInit(): void {
+    this.layout.initialize();
   }
 
   private subscribeOnNavigation() {
     this.navigationSubscription = this.store.select(selectNavigation).pipe(
-      skipWhile(navigation => !navigation.workspace.organizationCode || !navigation.workspace.projectCode)
+      filter(navigation => Boolean(navigation.workspace.organizationCode && navigation.workspace.projectCode))
     ).subscribe(navigation => {
       this.workspace = navigation.workspace;
       this.query = navigation.query;
 
       this.store.dispatch(new Get({query: this.query}));
-      this.initializeLayout();
+      this.layout.setElementsAtEnd((this.editable && this.emptyQuery()) ? 2 : 0);
     });
   }
 
-  private initializeLayout(): void {
+  private createLayout(): void {
     const config = new PostItLayoutConfig();
     config.dragEnabled = false;
 
-    const buttonsAtEnd = (this.editable && this.emptyQuery()) ? 2 : 0;
-    this.layout = new PostItKeepingAtEndLayout('post-it-collection-layout', config, this.zone, buttonsAtEnd);
+    this.layout = new PostItKeepingAtEndLayout('post-it-collection-layout', config, this.zone);
   }
 
   private collectionToPostIt(collection: CollectionModel, initialized: boolean): PostItCollectionModel {
@@ -378,6 +372,16 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
         }
       });
     });
+  }
+
+  public ngOnDestroy(): void {
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
+    }
+
+    if (this.collectionsSubscription) {
+      this.collectionsSubscription.unsubscribe();
+    }
   }
 
 }
