@@ -18,12 +18,11 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {LinkedAttribute} from '../../../../core/dto';
+import {Collection} from '../../../../core/dto/collection';
 
 import {LinkType} from '../../../../core/dto/link-type';
-import {LinkedAttribute} from '../../../../core/dto/linked-attribute';
-import {Collection} from '../../../../core/dto/collection';
-import {NotificationService} from '../../../../core/notifications/notification.service';
-import {LinkTypeService} from '../../../../core/rest/link-type.service';
+import {CollectionService, LinkTypeService} from '../../../../core/rest';
 import * as Const from '../constraints';
 
 @Component({
@@ -40,81 +39,30 @@ export class LinkAttributeListComponent {
   public linkType: LinkType;
 
   @Input()
-  public addEnabled: boolean;
-
-  @Input()
-  public limit = Number.MAX_SAFE_INTEGER;
+  public expanded: boolean;
 
   @Output()
   public update = new EventEmitter<void>();
 
   public newAttributeName = '';
 
-  constructor(private notificationService: NotificationService,
-              private linkTypeService: LinkTypeService) {
-  }
-
-  public attributes(): LinkedAttribute[] {
-    return this.linkType.linkedAttributes.slice(0, this.limit);
-  }
-
   public attributesToAdd(currentAttribute: string): LinkedAttribute[] {
-    const usedAttributes = this.linkType.linkedAttributes.map(linkedAttribute => JSON.stringify(linkedAttribute));
-
     return this.linkType.collectionCodes
       .map(collectionCode => this.collections[collectionCode])
       .map(collection => collection.attributes.map(attribute => new LinkedAttribute(attribute, collection)))
       .reduce((flattened: LinkedAttribute[], current: LinkedAttribute[]) => flattened.concat(current), [])
-      .filter(linkedAttribute => linkedAttribute.value.name.includes(currentAttribute))
-      .filter(linkedAttribute => !usedAttributes.includes(JSON.stringify(linkedAttribute)));
+      .filter(linkedAttribute => linkedAttribute.value.name.includes(currentAttribute));
   }
 
   public addAttribute(linkedAttribute: LinkedAttribute): void {
-    this.linkType.linkedAttributes.push(linkedAttribute);
-
-    if (this.linkType.automaticallyLinked && this.linkType.automaticallyLinked.length === 2) {
-      this.linkType.automaticallyLinked = null;
-    }
-
+    this.linkType.attributes.push(linkedAttribute.value.name);
     this.newAttributeName = '';
     this.update.emit();
   }
 
   public removeAttribute(removedAttribute: LinkedAttribute) {
-    this.linkType.linkedAttributes = this.linkType.linkedAttributes.filter(linkedAttribute => removedAttribute !== linkedAttribute);
-
-    if (this.linkType.automaticallyLinked && this.linkType.automaticallyLinked.includes(removedAttribute)) {
-      this.linkType.automaticallyLinked = null;
-    }
-
+    this.linkType.attributes = this.linkType.attributes.filter(attribute => removedAttribute.value.name !== attribute);
     this.update.emit();
-  }
-
-  public formatNumber(numberToFormat: number): string {
-    const spaceBetweenEveryThreeDigits = /(?=(\d{3})+(?!\d))/g;
-    const optionalCommaAtTheStart = /^,/;
-
-    return String(numberToFormat)
-      .replace(spaceBetweenEveryThreeDigits, ',')
-      .replace(optionalCommaAtTheStart, '');
-  }
-
-  public constraintColor(constraint: string): string {
-    const removeWhitespace = list => list.map(str => str.replace(/\s/g, ''));
-    const shortestLength = list => Math.min(...list.map(str => str.length));
-    const trimToShortest = list => list.map(str => str.substring(0, shortestLength(list)));
-    const toLowerCase = list => list.map(str => str.toLowerCase());
-
-    const makeComparable = list => toLowerCase(trimToShortest(removeWhitespace(list)));
-    const allSame = list => new Set(list).size === 1;
-
-    const matching = (a, b) => allSame(makeComparable([a, b]));
-    const containsConstraint = suggestions => suggestions.list.find(suggestion => {
-      return matching(suggestion, constraint);
-    }) !== undefined;
-
-    const constraintType = Const.constraints.find(containsConstraint);
-    return constraintType ? constraintType.color : '#858585';
   }
 
 }

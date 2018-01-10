@@ -19,6 +19,7 @@
 
 import {Action} from '@ngrx/store';
 import {NavigationState} from '../navigation/navigation.state';
+import {QueryModel} from '../navigation/query.model';
 import {AttributeModel, CollectionModel} from './collection.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 

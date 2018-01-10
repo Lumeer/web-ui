@@ -27,32 +27,37 @@ export class LinkTypeModel {
   public baseCollectionCode: string;
   public data: LinkType;
 
-  constructor(data?: LinkType, baseCollectionCode?: string) {
-    if (data) {
-      this.data = data;
-      this.baseCollectionCode = data.collectionCodes[0];
+  constructor(linkType?: LinkType, baseCollectionCode?: string) {
+    if (linkType) {
+      this.createInitialized(linkType);
       return;
     }
 
     if (baseCollectionCode) {
-      this.baseCollectionCode = baseCollectionCode;
-      this.data = {
-        name: '',
-        attributes: [],
-        linkedAttributes: []
-      };
-      this.initialized = false;
+      this.createUninitialized(baseCollectionCode);
       return;
     }
 
     throw new Error('You must provide a link type or a collection to the constructor');
   }
 
+  private createInitialized(linkType: LinkType) {
+    this.data = linkType;
+    this.baseCollectionCode = linkType.collectionCodes[0];
+  }
+
+  private createUninitialized(baseCollectionCode: string) {
+    this.baseCollectionCode = baseCollectionCode;
+    this.data = {
+      name: '',
+      attributes: [],
+    };
+    this.initialized = false;
+  }
+
   public changeLinkedCollection(collectionCode: string): void {
     this.data.collectionCodes[1] = collectionCode;
     this.data.attributes = [];
-    this.data.linkedAttributes = [];
-    this.data.automaticallyLinked = null;
   }
 
 }

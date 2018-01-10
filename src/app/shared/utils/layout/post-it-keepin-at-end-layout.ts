@@ -18,6 +18,7 @@
  */
 
 import {NgZone} from '@angular/core';
+import {LumeerError} from '../../../core/error/lumeer.error';
 import {PostItLayout} from './post-it-layout';
 import {PostItLayoutConfig} from './post-it-layout-config';
 

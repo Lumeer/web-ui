@@ -162,7 +162,9 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
     setTimeout(() => {
       const newPostItElement = document.getElementById('perspectivePostIt' + (this.postIts.length - 1));
-      this.layout.add(newPostItElement);
+      if (newPostItElement) {
+        this.layout.add(newPostItElement);
+      }
     });
 
     this.focusNewPostIt();
@@ -254,7 +256,9 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
           setTimeout(() => {
             const newPostItElement = document.getElementById('perspectivePostIt' + (this.postIts.length - 1));
-            this.layout.add(newPostItElement);
+            if (newPostItElement) {
+              this.layout.add(newPostItElement);
+            }
           });
         },
         error => {
@@ -368,7 +372,9 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       setTimeout(() => {
         for (let i = 0; i < collections.length; i++) {
           const newPostItElement = document.getElementById('perspectivePostIt' + i);
-          this.layout.add(newPostItElement);
+          if (newPostItElement) {
+            this.layout.add(newPostItElement);
+          }
         }
       });
     });
