@@ -176,13 +176,22 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     });
   }
 
-  public postItChanged(postIt: PostItDocumentModel): void {
-    if (!postIt.initialized) {
-      this.initializePostIt(postIt);
+  public postItChanged(changedPostIt: PostItDocumentModel): void {
+    if (Object.keys(changedPostIt.document.data).length === 0) {
+      this.postIts.splice(this.postIts.findIndex(postIt => postIt === changedPostIt), 1);
+
+      if (changedPostIt.initialized) {
+        this.deletePostIt(changedPostIt);
+      }
       return;
     }
 
-    this.updateDocument(postIt);
+    if (!changedPostIt.initialized) {
+      this.initializePostIt(changedPostIt);
+      return;
+    }
+
+    this.updateDocument(changedPostIt);
   }
 
   private subscribeOnDocuments(queryModel: QueryModel) {
@@ -249,7 +258,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     postIt.initialized = initialized;
 
     if (!initialized) {
-      postIt.order = - this.postIts.length;
+      postIt.order = -this.postIts.length;
     } else {
       postIt.order = this.postIts.length;
     }

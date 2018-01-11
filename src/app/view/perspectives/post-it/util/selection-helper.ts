@@ -246,7 +246,7 @@ export class SelectionHelper {
   }
 
   private lastRow(): number {
-    return Object.keys(this.selectedPostIt.document.data).length;
+    return Object.entries(this.selectedPostIt.document.data).length;
   }
 
   public wasPreviouslySelected(column: number, row: number, postItId: string): boolean {

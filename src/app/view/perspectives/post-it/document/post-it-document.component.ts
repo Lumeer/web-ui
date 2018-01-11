@@ -18,7 +18,7 @@
  */
 
 import {
-  AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output,
+  AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output,
   ViewChild
 } from '@angular/core';
 import {Store} from '@ngrx/store';
@@ -43,6 +43,14 @@ import Update = DocumentsAction.Update;
   styleUrls: ['./post-it-document.component.scss']
 })
 export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  @HostListener('focusout')
+  public onFocusOut(): void {
+    if (this.changed) {
+      this.changed = false;
+      this.changes.emit();
+    }
+  }
 
   private _postItModel: PostItDocumentModel;
 
@@ -80,6 +88,8 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   @ViewChild('content')
   public content: ElementRef;
+
+  private changed: boolean;
 
   public attributePairs: AttributePair[] = [];
 
@@ -120,15 +130,19 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public createAttributePair(): void {
-    this.postItModel.document.data = {};
     this.postItModel.document.data[this.newAttributePair.attribute] = '';
 
     this.newAttributePair.value = '';
     this.attributePairs.push(this.newAttributePair);
-    this.changes.emit();
 
     this.newAttributePair = {} as AttributePair;
     document.activeElement['value'] = '';
+
+    this.changed = true;
+
+    setTimeout(() => {
+      this.selectionHelper.select(1, Number.MAX_SAFE_INTEGER, this.postItModel);
+    });
   }
 
   public updateAttribute(attributePair: AttributePair): void {
@@ -142,12 +156,12 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
       this.removeAttributePair();
     }
 
-    this.changes.emit();
+    this.changed = true;
   }
 
   public updateValue(attributePair: AttributePair): void {
     this.postItModel.document.data[attributePair.attribute] = attributePair.value;
-    this.changes.emit();
+    this.changed = true;
   }
 
   public toggleDocumentFavorite() {

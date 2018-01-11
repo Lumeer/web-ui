@@ -18,20 +18,20 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
+import {Group} from '../../../core/dto/group';
+import {Permission} from '../../../core/dto/permission';
+import {Permissions} from '../../../core/dto/permissions';
+import {User} from '../../../core/dto/user';
+import {CollectionService} from '../../../core/rest/collection.service';
+import {GroupService} from '../../../core/rest/group.service';
 
 import {OrganizationService} from '../../../core/rest/organization.service';
 import {ProjectService} from '../../../core/rest/project.service';
-import {Permissions} from '../../../core/dto/permissions';
-import {Permission} from '../../../core/dto/permission';
-import {Role} from '../role';
+import {UserService} from '../../../core/rest/user.service';
+import {ViewService} from '../../../core/rest/view.service';
 import {EntityType} from '../entity-type';
 import {ResourceType} from '../resource-type';
-import {UserService} from '../../../core/rest/user.service';
-import {GroupService} from '../../../core/rest/group.service';
-import {Group} from '../../../core/dto/group';
-import {User} from '../../../core/dto/user';
-import {CollectionService} from '../../../core/rest/collection.service';
-import {ViewService} from '../../../core/rest/view.service';
+import {Role} from '../role';
 
 const ROLES = {
   [ResourceType.Organization]: [Role.Read, Role.Write, Role.Manage],
@@ -103,7 +103,7 @@ export class PermissionsTableComponent implements OnInit {
 
     const getPermissions = getPermissionsFunctions[resourceType];
     if (!getPermissions) {
-      throw Error('unknown resorce type');
+      throw Error('unknown resource type');
     }
 
     getPermissions().subscribe((permissions: Permissions) => {

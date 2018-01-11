@@ -3,8 +3,9 @@
     <div class="col"></div>
     <div class="whole col-12 col-lg-11 col-xl-10" [style.opacity]="initialized() ? '1' : '0'">
       <div class="d-flex flex-row justify-content-start">
-        <a class="fa fa-arrow-left " [routerLink]="['/workspace']"></a>
-        <i class="color-class fa-fw {{ organization.icon }} organization-icon " [style.color]="organization.color"
+        <a class="fas fa-chevron-left bigger mr-2" [routerLink]="['/workspace']"></a>
+        <i class="color-class fa-fw {{ organization.icon }} organization-icon clickable"
+           [style.color]="organization.color"
            data-toggle="dropdown"></i>
         <div *ngIf="initialized()" class="dropdown-menu">
           <color-picker class="dropdown-item" [(color)]="organization.color"
