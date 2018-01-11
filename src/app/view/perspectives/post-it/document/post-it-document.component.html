@@ -79,27 +79,18 @@
               (click)="clickOnAttributePair(0, attributePairs.length)">
 
           <!-- the list refers to one of the attribute suggestion lists in document perspective -->
-          <input class="border-0"
+          <input class="border-0" #newAttributeInput
                  placeholder=" + "
                  [attr.list]="perspectiveId + postItModel.document.collectionCode"
                  [(ngModel)]="newAttributePair.attribute"
                  (keydown)="$event.stopPropagation()"
                  (keydown.F2)="selectionHelper.setEditMode(false); selectionHelper.focus()"
                  (keydown.Escape)="selectionHelper.setEditMode(false); selectionHelper.focus()"
-                 (keydown.enter)="onEnterKeyPressedInEditMode()"
+                 (keydown.enter)="onEnterKeyPressedInEditMode(); newAttributePair.attribute && newAttributeInput.blur()"
                  (blur)="newAttributePair.attribute && createAttributePair()">
         </span>
 
-        <span id="{{ perspectiveId }}{{ postItModel.index }}[1, {{ attributePairs.length }}]"
-              [attr.tabindex]="newAttributePair.attribute ? -1 : null"
-              (keydown.ArrowLeft)="selectionHelper.moveSelection(-1, 0)"
-              (keydown.ArrowRight)="selectionHelper.moveSelection(1, 0)"
-              (keydown.ArrowUp)="selectionHelper.moveSelection(0, -1)"
-              (keydown.ArrowDown)="selectionHelper.moveSelection(0, 1)"
-              (keydown.F2)="selectionHelper.setEditMode(true); selectionHelper.focus()"
-              (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
-              (click)="newAttributePair.attribute && clickOnAttributePair(1, attributePairs.length)">
-
+        <span>
         <input class="border-0" [disabled]="true"/>
         </span>
       </li>

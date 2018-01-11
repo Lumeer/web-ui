@@ -2,7 +2,7 @@
 
   <add-document *ngIf="isAddButtonShown()"
                 class="layout-item"
-                [attr.order]="-1"
+                [attr.order]="-10000"
                 (createPostIt)="createPostIt($event)"></add-document>
 
   <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByIndex"

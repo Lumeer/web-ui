@@ -27,7 +27,6 @@ import {Permission} from '../../../../core/dto';
 import {LumeerError} from '../../../../core/error/lumeer.error';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../shared/permissions/role';
 import {PostItLayout} from '../../../../shared/utils/layout/post-it-layout';
@@ -109,10 +108,6 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     this.layoutManager.add(this.element.nativeElement);
   }
 
-  public toggleDocumentFavorite() {
-    this.store.dispatch(new Update({document: this.postItModel.document, toggleFavourite: true}));
-  }
-
   public clickOnAttributePair(column: number, row: number): void {
     const enableEditMode = this.selectionHelper.wasPreviouslySelected(column, row, this.postItModel.document.id);
 
@@ -122,6 +117,18 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   public onEnterKeyPressedInEditMode(): void {
     this.selectionHelper.selectNext(this.postItModel);
+  }
+
+  public createAttributePair(): void {
+    this.postItModel.document.data = {};
+    this.postItModel.document.data[this.newAttributePair.attribute] = '';
+
+    this.newAttributePair.value = '';
+    this.attributePairs.push(this.newAttributePair);
+    this.changes.emit();
+
+    this.newAttributePair = {} as AttributePair;
+    document.activeElement['value'] = '';
   }
 
   public updateAttribute(attributePair: AttributePair): void {
@@ -143,15 +150,8 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     this.changes.emit();
   }
 
-  public createAttributePair(): void {
-    this.newAttributePair.value = '';
-    this.attributePairs.push(this.newAttributePair);
-    this.changes.emit();
-
-    this.newAttributePair = {} as AttributePair;
-    document.activeElement['value'] = '';
-
-    this.focusNewAttributeValue();
+  public toggleDocumentFavorite() {
+    this.store.dispatch(new Update({document: this.postItModel.document, toggleFavourite: true}));
   }
 
   public documentPrefix(): string {
@@ -174,6 +174,19 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
+  private removeAttributePair() {
+    const selectedRow = this.selectionHelper.selection.row;
+    this.attributePairs.splice(selectedRow, 1);
+
+    setTimeout(() => {
+      this.selectionHelper.select(
+        this.selectionHelper.selection.column,
+        this.selectionHelper.selection.row - 1,
+        this.postItModel
+      );
+    });
+  }
+
   private refreshDataAttributePairs(): void {
     if (!this.postItModel.document.data) {
       this.postItModel.document.data = {};
@@ -190,25 +203,6 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   public hasWriteRole(): boolean {
     return this.hasRole(Role.Write);
-  }
-
-  private removeAttributePair() {
-    const selectedRow = this.selectionHelper.selection.row;
-    this.attributePairs.splice(selectedRow, 1);
-
-    setTimeout(() => {
-      this.selectionHelper.select(
-        this.selectionHelper.selection.column,
-        this.selectionHelper.selection.row - 1,
-        this.postItModel
-      );
-    });
-  }
-
-  private focusNewAttributeValue() {
-    setTimeout(() => {
-      this.selectionHelper.select(1, this.attributePairs.length, this.postItModel);
-    });
   }
 
   private hasRole(role: string): boolean {

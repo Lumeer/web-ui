@@ -22,7 +22,7 @@ import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
 import {Store} from '@ngrx/store';
 
 import {PostItLayoutConfig} from 'app/shared/utils/layout/post-it-layout-config';
-import {filter, finalize, skipWhile} from 'rxjs/operators';
+import {filter, finalize} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {Query} from '../../core/dto';
 import {NotificationService} from '../../core/notifications/notification.service';
@@ -39,7 +39,7 @@ import {Workspace} from '../../core/store/navigation/workspace.model';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 import {Role} from '../permissions/role';
 import {HtmlModifier} from '../utils/html-modifier';
-import {PostItKeepingAtEndLayout} from '../utils/layout/post-it-keepin-at-end-layout';
+import {PostItLayout} from '../utils/layout/post-it-layout';
 import {PostItCollectionModel} from './post-it-collection-model';
 import Get = CollectionsAction.Get;
 
@@ -70,7 +70,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public dragging: boolean = false;
 
-  private layout: PostItKeepingAtEndLayout;
+  private layout: PostItLayout;
 
   private workspace: Workspace;
 
@@ -106,7 +106,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       this.query = navigation.query;
 
       this.store.dispatch(new Get({query: this.query}));
-      this.layout.setElementsAtEnd((this.editable && this.emptyQuery()) ? 2 : 0);
     });
   }
 
@@ -114,7 +113,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     const config = new PostItLayoutConfig();
     config.dragEnabled = false;
 
-    this.layout = new PostItKeepingAtEndLayout('post-it-collection-layout', config, this.zone);
+    this.layout = new PostItLayout('post-it-collection-layout', config, this.zone);
   }
 
   private collectionToPostIt(collection: CollectionModel, initialized: boolean): PostItCollectionModel {
@@ -159,14 +158,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     };
 
     this.postIts.push(newPostIt);
-
-    setTimeout(() => {
-      const newPostItElement = document.getElementById('perspectivePostIt' + (this.postIts.length - 1));
-      if (newPostItElement) {
-        this.layout.add(newPostItElement);
-      }
-    });
-
     this.focusNewPostIt();
   }
 
@@ -253,13 +244,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
           collection.icon = DEFAULT_ICON;
 
           this.postIts.push(newPostIt);
-
-          setTimeout(() => {
-            const newPostItElement = document.getElementById('perspectivePostIt' + (this.postIts.length - 1));
-            if (newPostItElement) {
-              this.layout.add(newPostItElement);
-            }
-          });
         },
         error => {
           this.notificationService.error('Import failed');
@@ -286,8 +270,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       this.sendRemoveCollectionRequest(postIt);
     }
 
-    const deletedPostItElement = document.getElementById('perspectivePostIt' + this.postItIndex(postIt));
-    this.layout.remove(deletedPostItElement);
     this.postIts.splice(this.postItIndex(postIt), 1);
   }
 
@@ -368,15 +350,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.collectionsSubscription = this.store.select(selectCollectionsByQuery).subscribe(collections => {
       const initialized = true;
       this.postIts = collections.map(collection => this.collectionToPostIt(collection, initialized));
-
-      setTimeout(() => {
-        for (let i = 0; i < collections.length; i++) {
-          const newPostItElement = document.getElementById('perspectivePostIt' + i);
-          if (newPostItElement) {
-            this.layout.add(newPostItElement);
-          }
-        }
-      });
     });
   }
 

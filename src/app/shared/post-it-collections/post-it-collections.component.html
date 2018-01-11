@@ -4,9 +4,34 @@
 </div>
 <div *ngIf="(postIts && postIts.length > 0) || editable" class="post-it-collection-layout mx-4">
 
-  <div *ngFor="let postIt of postIts; let idx = index" #postItElement
+  <!-- add buttons -->
+  <ng-container *ngIf="editable && emptyQuery()">
+    <div class="layout-item card text-center add-post-it" (click)="newPostIt()">
+      <div class="card-body">
+        <i class="fa fa-plus-circle fa-6x" aria-hidden="true"></i>
+      </div>
+      <div class="card-footer font-weight-bold bg-transparent"
+           i18n="@@collection.button.add">Add File
+      </div>
+    </div>
+
+    <div class="layout-item card text-center add-post-it" ondragover="return false;"
+         [ngClass]="{'dragging': dragging}" (click)="fileInput.click()"
+         (drop)="handleDrop($event)" (dragenter)="handleDragEnter()" (dragleave)="handleDragLeave()">
+      <div class="card-body">
+        <i class="fa fa-cloud-upload fa-6x" aria-hidden="true"></i>
+      </div>
+      <div class="card-footer font-weight-bold bg-transparent"
+           i18n="@@collection.button.import">Import File
+      </div>
+      <input hidden type="file" #fileInput (click)="$event.stopPropagation()"
+             (change)="fileChange($event.target.files)" accept=".csv, text/csv">
+    </div>
+  </ng-container>
+
+  <div *ngFor="let postIt of postIts" #postItElement
+       layout-item [layout]="layout"
        class="layout-item card post-it {{ postIt === lastClickedPostIt ? 'selected' : null }} {{ !postIt.initialized ? 'uninitialized' : null }}"
-       [attr.id]="'perspectivePostIt' + idx"
        [style.border-color]="postIt.collection.color"
        (click)="lastClickedPostIt = postIt">
 
@@ -88,28 +113,4 @@
            (focus)="input.placeholder = ''"/>
   </div>
 
-  <!-- add buttons -->
-  <ng-container *ngIf="editable && emptyQuery()">
-    <div class="layout-item card text-center add-post-it" (click)="newPostIt()">
-      <div class="card-body">
-        <i class="fa fa-plus-circle fa-6x" aria-hidden="true"></i>
-      </div>
-      <div class="card-footer font-weight-bold bg-transparent"
-           i18n="@@collection.button.add">Add File
-      </div>
-    </div>
-
-    <div class="layout-item card text-center add-post-it" ondragover="return false;"
-         [ngClass]="{'dragging': dragging}" (click)="fileInput.click()"
-         (drop)="handleDrop($event)" (dragenter)="handleDragEnter()" (dragleave)="handleDragLeave()">
-      <div class="card-body">
-        <i class="fa fa-cloud-upload fa-6x" aria-hidden="true"></i>
-      </div>
-      <div class="card-footer font-weight-bold bg-transparent"
-           i18n="@@collection.button.import">Import File
-      </div>
-      <input hidden type="file" #fileInput (click)="$event.stopPropagation()"
-             (change)="fileChange($event.target.files)" accept=".csv, text/csv">
-    </div>
-  </ng-container>
 </div>

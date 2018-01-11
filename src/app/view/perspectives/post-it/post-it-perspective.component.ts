@@ -55,18 +55,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return this._useOwnScrollbar;
   }
 
-  public infiniteScroll: InfiniteScroll;
-
-  @ViewChild('layout')
-  public layoutElement: ElementRef;
-
-  public perspectiveId: string;
-
-  public postIts: PostItDocumentModel[] = [];
-  public navigationHelper: NavigationHelper;
-  public selectionHelper: SelectionHelper;
-  private deletionHelper: DeletionHelper;
-
   public set useOwnScrollbar(value: boolean) {
     this._useOwnScrollbar = value;
 
@@ -74,6 +62,21 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       this.infiniteScroll.setUseParentScrollbar(value);
     }
   }
+
+  @ViewChild('layout')
+  public layoutElement: ElementRef;
+
+  public infiniteScroll: InfiniteScroll;
+
+  public perspectiveId: string;
+
+  public postIts: PostItDocumentModel[] = [];
+
+  public navigationHelper: NavigationHelper;
+
+  public selectionHelper: SelectionHelper;
+
+  private deletionHelper: DeletionHelper;
 
   private layoutManager: PostItLayout;
 
@@ -120,10 +123,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.deletionHelper.initialize();
   }
 
-  public deletePostIt(postIt: PostItDocumentModel): void {
-    this.deletionHelper.deletePostIt(postIt);
-  }
-
   private reinitializePostIts(): void {
     this.resetToInitialState();
     this.getPostIts();
@@ -167,7 +166,14 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public createPostIt(document: DocumentModel): void {
-    this.postIts.unshift(this.documentModelToPostItModel(document, false));
+    const newPostIt = this.documentModelToPostItModel(document, false);
+    this.postIts.unshift(newPostIt);
+
+    setTimeout(() => {
+      this.selectionHelper.select(0, 0, newPostIt);
+      this.selectionHelper.setEditMode(true);
+      this.selectionHelper.focus();
+    });
   }
 
   public postItChanged(postIt: PostItDocumentModel): void {
@@ -212,8 +218,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     const usedDocumentIDs = new Set(this.postIts.map(postIt => postIt.document.id));
     documents
       .filter(documentModel => !usedDocumentIDs.has(documentModel.id))
-      .map(documentModel => this.documentModelToPostItModel(documentModel, true))
-      .forEach(postIt => this.postIts.push(postIt));
+      .forEach(documentModel => this.postIts.push(this.documentModelToPostItModel(documentModel, true)));
   }
 
   private updateDocument(postIt: PostItDocumentModel) {
@@ -234,15 +239,19 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     }
   }
 
+  public deletePostIt(postIt: PostItDocumentModel): void {
+    this.deletionHelper.deletePostIt(postIt);
+  }
+
   private documentModelToPostItModel(documentModel: DocumentModel, initialized: boolean): PostItDocumentModel {
     const postIt = new PostItDocumentModel();
     postIt.document = documentModel;
     postIt.initialized = initialized;
 
     if (!initialized) {
-      postIt.order = 0;
+      postIt.order = - this.postIts.length;
     } else {
-      postIt.order = 1;
+      postIt.order = this.postIts.length;
     }
 
     return postIt;
