@@ -82,7 +82,7 @@ export class ProjectsEffects {
       const oldProject = state.projects.entities[action.payload.project.id];
       const projectDto = ProjectConverter.toDto(action.payload.project);
       return this.projectService.editProject(organization.code, oldProject.code, projectDto).pipe(
-        map(dto => ({action, project: ProjectConverter.fromDto(dto, action.payload.project.organizationId)}))
+        map(dto => ({action, project: {...ProjectConverter.fromDto(dto, action.payload.project.organizationId), permissions: oldProject.permissions}}))
       );
     }),
     map(({action, project}) => new ProjectsAction.UpdateSuccess({

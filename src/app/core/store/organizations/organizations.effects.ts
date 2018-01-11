@@ -74,7 +74,7 @@ export class OrganizationsEffects {
       const organizationDto = OrganizationConverter.toDto(action.payload.organization);
       const oldOrganization = organizationEntities[action.payload.organization.id];
       return this.organizationService.editOrganization(oldOrganization.code, organizationDto).pipe(
-        map(dto => ({action, organization: OrganizationConverter.fromDto(dto)}))
+        map(dto => ({action, organization:{...OrganizationConverter.fromDto(dto), permissions: oldOrganization.permissions}}))
       );
     }),
     map(({action, organization}) => new OrganizationsAction.UpdateSuccess({

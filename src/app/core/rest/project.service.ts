@@ -76,7 +76,7 @@ export class ProjectService extends PermissionService {
       observe: 'response',
       responseType: 'text'
     }).pipe(
-      switchMap(id => this.getProject(orgCode, project.code))
+      map(() => project) // TODO return fresh instance from the server instead
     );
   }
 

@@ -55,7 +55,7 @@ export class OrganizationService extends PermissionService {
       this.apiPrefix(code), organization,
       {observe: 'response', responseType: 'text'}
     ).pipe(
-      switchMap(() => this.getOrganization(organization.code))
+      map(() => organization) // TODO return fresh instance from the server
     );
   }
 

@@ -33,8 +33,7 @@
             <div class="card text-center content border-0" [style.color]="resource.color">
               <div class="card-body">
 
-                <div class="d-flex flex-column settings"
-                     [style.opacity]="resource.id === selectedId || hasResourcePickerVisible(resource)  ? 1 : 0">
+                <div class="d-flex flex-column settings">
                   <ng-container *ngIf="resource.id">
                     <a class="mb-1" *ngIf="hasManageRole(resource)"
                        (click)="$event.stopPropagation(); onResourceSettings(resource.id)"
