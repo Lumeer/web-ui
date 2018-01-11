@@ -313,7 +313,7 @@ export class TableManagerService {
         return documentIds.includes(doc.id);
       }
 
-      return documentIds.length === 0 || documentIds.includes(doc.id);
+      return !documentIds || documentIds.length === 0 || documentIds.includes(doc.id);
     });
   }
 
