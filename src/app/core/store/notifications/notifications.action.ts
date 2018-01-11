@@ -23,7 +23,8 @@ export enum NotificationsActionType {
 
   CONFIRM = '[Notifications] Confirm',
   ERROR = '[Notifications] Error',
-  SUCCESS = '[Notifications] Success'
+  SUCCESS = '[Notifications] Success',
+  WARNING = '[Notifications] Warning'
 
 }
 
@@ -50,5 +51,12 @@ export namespace NotificationsAction {
     }
   }
 
-  export type All = Confirm | Error | Success;
+  export class Warning implements Action {
+    public readonly type = NotificationsActionType.WARNING;
+
+    public constructor(public payload: { message: string }) {
+    }
+  }
+
+  export type All = Confirm | Error | Success | Warning;
 }

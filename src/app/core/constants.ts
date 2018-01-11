@@ -17,6 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const DEFAULT_ICON = 'fa fa-exclamation-circle';
+export const DEFAULT_ICON = 'fas fa-question-circle';
 
 export const DEFAULT_COLOR = '#cccccc';

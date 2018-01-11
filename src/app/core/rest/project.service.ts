@@ -63,7 +63,6 @@ export class ProjectService extends PermissionService {
     }
 
     return this.httpClient.post(this.apiPrefix(orgCode), project, {observe: 'response', responseType: 'text'}).pipe(
-      map(response => response.headers.get('Location').split('/').pop()),
       switchMap(id => this.getProject(orgCode, project.code))
     );
   }
@@ -77,7 +76,7 @@ export class ProjectService extends PermissionService {
       observe: 'response',
       responseType: 'text'
     }).pipe(
-      map(() => project) // TODO return fresh instance from the server instead
+      switchMap(id => this.getProject(orgCode, project.code))
     );
   }
 

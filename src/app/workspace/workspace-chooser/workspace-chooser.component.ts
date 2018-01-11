@@ -30,6 +30,7 @@ import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {GroupsAction} from '../../core/store/groups/groups.action';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
+import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {
@@ -208,6 +209,10 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
           }
         });
     }
+  }
+
+  public onWarningMessage(message: string){
+    this.store.dispatch(new NotificationsAction.Warning({message}));
   }
 
   public organizationItemType(): ResourceItemType {

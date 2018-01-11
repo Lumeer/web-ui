@@ -1,11 +1,11 @@
 <div class="row">
-  <h3 class="w-100 d-flex" i18n="@@resource.chooser.header">
+  <h3 class="w-100 d-flex px-3" i18n="@@resource.chooser.header">
     {resourceType, select, Organization {Organizations} Project {Projects}}
   </h3>
 
   <div class="horizontal-container d-flex w-100" #resourceContainer>
 
-    <div *ngIf="resources.length == 0 && !canCreateResource"
+    <div class="px-3" *ngIf="resources.length == 0 && !canCreateResource"
          i18n="@@resource.chooser.empty">
       There are no {resourceType, select, organization {organizations} project {projects}} and you are not allowed to
       create new ones.
@@ -29,7 +29,7 @@
         <div class="tab d-flex" *ngFor="let resource of resources.concat(newResources); let ix = index"
              (click)="onResourceSelected(resource.id)">
           <div class="post-it align-self-center">
-            <div class="card square"></div>
+            <div class="card square" [class.highlight]="!resource.id"></div>
             <div class="card text-center content border-0" [style.color]="resource.color">
               <div class="card-body">
 
@@ -120,18 +120,16 @@
 
   </div>
 
-  <div class="description d-inline-flex pt-3" *ngIf="selectedId" [@animateOpacityFromUp]="'in'">
+  <div class="description d-inline-flex pt-3 px-3" *ngIf="selectedId" [@animateOpacityFromUp]="'in'">
     <i class="fas fa-2x fa-quote-right pr-2 mt-2"></i>
     <div class="text edit-border p-2" contenteditable="true"
+         placeholder="Description" i18n-placeholder="@@resource.postit.description"
          title="Description" i18n-title="@@resource.postit.description"
          [attr.spellcheck]="false"
+         [textContent]="'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique,'
+          + 'dignissim mi sed,finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna,'
+          + 'nec pellentesque libero auguevel augue.'"
          #resourceDescription>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
-      finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
-      vel augue.
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
-      finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
-      vel augue.
     </div>
   </div>
 

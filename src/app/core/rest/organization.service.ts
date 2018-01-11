@@ -46,8 +46,7 @@ export class OrganizationService extends PermissionService {
 
   public createOrganization(organization: Organization): Observable<Organization> {
     return this.httpClient.post(this.apiPrefix(), organization, {observe: 'response', responseType: 'text'}).pipe(
-      map(response => response.headers.get('Location').split('/').pop()),
-      switchMap(id => this.getOrganization(organization.code))
+      switchMap(() => this.getOrganization(organization.code))
     );
   }
 
@@ -56,7 +55,7 @@ export class OrganizationService extends PermissionService {
       this.apiPrefix(code), organization,
       {observe: 'response', responseType: 'text'}
     ).pipe(
-      map(() => organization) // TODO return fresh instance from the server
+      switchMap(() => this.getOrganization(organization.code))
     );
   }
 

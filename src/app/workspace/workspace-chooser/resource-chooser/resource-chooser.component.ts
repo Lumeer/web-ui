@@ -33,6 +33,7 @@ import {animate, keyframes, state, style, transition, trigger} from '@angular/an
 import {isNullOrUndefined} from 'util';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generator';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {OrganizationModel} from '../../../core/store/organizations/organization.model';
 import {ProjectModel} from '../../../core/store/projects/project.model';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
@@ -42,6 +43,7 @@ import {ResourceItemType} from './resource-item-type';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
+const warningStyle = 'lmr-warning';
 
 type ResourceModel = OrganizationModel | ProjectModel;
 
@@ -103,6 +105,7 @@ export class ResourceChooserComponent implements OnChanges {
   @Output() public resourceNew: EventEmitter<ResourceModel> = new EventEmitter();
   @Output() public resourceSettings: EventEmitter<string> = new EventEmitter();
   @Output() public resourceUpdate: EventEmitter<ResourceModel> = new EventEmitter();
+  @Output() public warningMessage: EventEmitter<string> = new EventEmitter();
 
   public newResources: ResourceModel[] = [];
 
@@ -117,6 +120,9 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceVisibleArrows = false;
 
   public openedPickerId: string;
+  public lastIcon: string;
+  public lastColor: string;
+  public syncingCorrIds: string[] = [];
 
   public constructor(private notificationService: NotificationService) {
   }
@@ -138,6 +144,7 @@ export class ResourceChooserComponent implements OnChanges {
   private checkResources() {
     this.resources = this.resources.filter(res => res && typeof res === 'object');
     const ids: string[] = this.resources.filter(res => res.correlationId).map(res => res.correlationId);
+    this.syncingCorrIds = this.syncingCorrIds.filter(id => !ids.includes(id));
     this.newResources = this.newResources.filter(newRes => !ids.includes(newRes.correlationId));
   }
 
@@ -267,7 +274,7 @@ export class ResourceChooserComponent implements OnChanges {
 
   public onResourceDelete(resource: ResourceModel) {
     if (resource.id) {
-      this.notificationService.confirm(`Are you sure you want to remove the ${this.resourceType}?`, 'Delete?', [
+      this.notificationService.confirm(`Are you sure you want to remove the ${this.resourceType} ${resource.code}?`, 'Delete?', [
         {text: 'Yes', action: () => this.resourceDelete.emit(resource.id), bold: false},
         {text: 'No'}
       ]);
@@ -278,12 +285,20 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   public onNewColor(resource: ResourceModel, color: string) {
-    console.log(color);
+    if (resource.id) {
+      this.lastColor = color;
+    } else {
+      resource.color = color;
+    }
   }
 
 
   public onNewIcon(resource: ResourceModel, icon: string) {
-    console.log(icon);
+    if (resource.id) {
+      this.lastIcon = icon;
+    } else {
+      resource.icon = icon;
+    }
   }
 
   public hasManageRole(resource: ResourceModel): boolean {
@@ -298,6 +313,16 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   public onCodeBlur(element: HTMLElement, resource: ResourceModel) {
+    const newCode = element.textContent.trim();
+    const isValid = this.resources.filter(res => res.id !== resource.id).findIndex(res => res.code === newCode) === -1;
+    if (isValid) {
+      element.classList.remove(warningStyle);
+    } else {
+      element.classList.add(warningStyle);
+      this.warningMessage.emit(`${this.resourceType} with code ${newCode} already exist`);
+      return;
+    }
+
     const property = 'code';
     const propertyOther = 'name';
     if (resource.hasOwnProperty(property) && resource.hasOwnProperty(propertyOther)) {
@@ -316,7 +341,7 @@ export class ResourceChooserComponent implements OnChanges {
   private onFieldBlur(element: HTMLElement, resource: ResourceModel, property: string, propertyOther: string) {
     const contentTrim = element.textContent.trim();
     const contentTrimLength = contentTrim.length;
-    const codeLength = resource[property].length;
+    const propertyLength = resource[property].length;
 
     if (resource.id) {
       // we know, that code is not empty
@@ -332,19 +357,21 @@ export class ResourceChooserComponent implements OnChanges {
     } else {
       if (resource[propertyOther].length === 0) {
         resource[property] = contentTrim;
-      } else if (contentTrimLength == 0 && codeLength == 0) {
-        // TODO error on field
-      } else if (contentTrimLength == 0 && codeLength > 0) {
+      } else if (contentTrimLength == 0 && propertyLength > 0) {
         element.textContent = resource[property];
-      } else if (contentTrimLength > 0 && codeLength == 0) {
+      } else if (contentTrimLength > 0 && propertyLength == 0) {
         resource[property] = contentTrim;
-        this.resourceNew.emit(resource);
+        if (this.isNewCodeValid(resource.code)) {
+          setTimeout(() => {
+            this.onResourcePickerClick(resource)
+          }, 200);
+        }
       }// else do nothing
     }
   }
 
   public hasResourcePickerVisible(resource: ResourceModel): boolean {
-    if(!this.openedPickerId) return false;
+    if (isNullOrUndefined(this.openedPickerId)) return false;
     return this.openedPickerId === this.getResourceIdentificator(resource);
   }
 
@@ -355,14 +382,44 @@ export class ResourceChooserComponent implements OnChanges {
     } else {
       this.openedPickerId = identificator;
     }
+    this.lastIcon = null;
+    this.lastColor = null;
   }
 
   public onResourcePickerBlur() {
+    if (isNullOrUndefined(this.openedPickerId)) return;
+    const resource = this.findResource(this.openedPickerId);
+    if (isNullOrUndefined(resource)) return;
+
     this.openedPickerId = null;
+
+    if (resource.id) {
+      if (this.shouldUpdateResource(resource)) {
+        const resourceModel = {
+          ...resource,
+          icon: this.lastIcon || resource.icon,
+          color: this.lastColor || resource.color
+        };
+        this.resourceUpdate.emit(resourceModel);
+      }
+    } else if (!this.syncingCorrIds.includes(resource.correlationId) && resource.code && resource.name) {
+      this.syncingCorrIds.push(resource.correlationId);
+      this.resourceNew.emit(resource);
+    }
+
+  }
+
+  private shouldUpdateResource(resource: ResourceModel): boolean {
+    return (this.lastIcon && resource.icon !== this.lastIcon) || (this.lastColor && resource.color !== this.lastColor);
   }
 
   private getResourceIdentificator(resource: ResourceModel): string {
     return resource.id || resource.correlationId;
+  }
+
+  private findResource(identificator: string): ResourceModel {
+    return this.resources.find(res => res.id === identificator) ||
+      this.newResources.find(newRes => newRes.correlationId === identificator);
   }
 
   private resourcesLength(): number {
@@ -371,5 +428,9 @@ export class ResourceChooserComponent implements OnChanges {
       length += this.newResources.length + 1;
     }
     return length;
+  }
+
+  private isNewCodeValid(code: string): boolean {
+    return this.resources.findIndex(res => res.code === code) === -1;
   }
 }

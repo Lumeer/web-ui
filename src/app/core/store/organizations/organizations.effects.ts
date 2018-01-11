@@ -27,6 +27,7 @@ import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
+import {selectOrganizationsDictionary} from './organizations.state';
 
 @Injectable()
 export class OrganizationsEffects {
@@ -68,11 +69,11 @@ export class OrganizationsEffects {
 
   @Effect()
   public update$: Observable<Action> = this.actions$.ofType<OrganizationsAction.Update>(OrganizationsActionType.UPDATE).pipe(
-    withLatestFrom(this.store$),
-    switchMap(([action, state]) => {
+    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    switchMap(([action, organizationEntities]) => {
       const organizationDto = OrganizationConverter.toDto(action.payload.organization);
-      const organization = state.organizations.entities[action.payload.organization.id];
-      return this.organizationService.editOrganization(organization.code, organizationDto).pipe(
+      const oldOrganization = organizationEntities[action.payload.organization.id];
+      return this.organizationService.editOrganization(oldOrganization.code, organizationDto).pipe(
         map(dto => ({action, organization: OrganizationConverter.fromDto(dto)}))
       );
     }),
@@ -90,9 +91,9 @@ export class OrganizationsEffects {
 
   @Effect()
   public delete$: Observable<Action> = this.actions$.ofType<OrganizationsAction.Delete>(OrganizationsActionType.DELETE).pipe(
-    withLatestFrom(this.store$),
-    switchMap(([action, state]) => {
-      const organization = state.organizations.entities[action.payload.organizationId];
+    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    switchMap(([action, organizationEntities]) => {
+      const organization = organizationEntities[action.payload.organizationId];
       return this.organizationService.deleteOrganization(organization.code).pipe(
         map(() => action)
       );

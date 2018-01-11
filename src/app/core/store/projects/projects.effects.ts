@@ -25,6 +25,7 @@ import {catchError, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/o
 import {ProjectService} from '../../rest';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {selectOrganizationsDictionary} from '../organizations/organizations.state';
 import {ProjectConverter} from './project.converter';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
 
@@ -33,10 +34,10 @@ export class ProjectsEffects {
 
   @Effect()
   public get$: Observable<Action> = this.actions$.ofType<ProjectsAction.Get>(ProjectsActionType.GET).pipe(
-    withLatestFrom(this.store$),
-    skipWhile(([action, state]) => !state.organizations.entities[action.payload.organizationId]),
-    switchMap(([action, state]) => {
-      const organization = state.organizations.entities[action.payload.organizationId];
+    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    skipWhile(([action, organizationsEntities]) => !organizationsEntities[action.payload.organizationId]),
+    switchMap(([action, organizationsEntities]) => {
+      const organization = organizationsEntities[action.payload.organizationId];
       return this.projectService.getProjects(organization.code).pipe(
         map(dtos => dtos.map(dto => ProjectConverter.fromDto(dto, action.payload.organizationId)))
       );
@@ -53,9 +54,9 @@ export class ProjectsEffects {
 
   @Effect()
   public create$: Observable<Action> = this.actions$.ofType<ProjectsAction.Create>(ProjectsActionType.CREATE).pipe(
-    withLatestFrom(this.store$),
-    switchMap(([action, state]) => {
-      const organization = state.organizations.entities[action.payload.project.organizationId];
+    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    switchMap(([action, organizationsEntities]) => {
+      const organization = organizationsEntities[action.payload.project.organizationId];
       const correlationId = action.payload.project.correlationId;
       const projectDto = ProjectConverter.toDto(action.payload.project);
 
@@ -78,9 +79,9 @@ export class ProjectsEffects {
     withLatestFrom(this.store$),
     switchMap(([action, state]) => {
       const organization = state.organizations.entities[action.payload.project.organizationId];
-      const project = state.projects.entities[action.payload.project.id];
+      const oldProject = state.projects.entities[action.payload.project.id];
       const projectDto = ProjectConverter.toDto(action.payload.project);
-      return this.projectService.editProject(organization.code, project.code, projectDto).pipe(
+      return this.projectService.editProject(organization.code, oldProject.code, projectDto).pipe(
         map(dto => ({action, project: ProjectConverter.fromDto(dto, action.payload.project.organizationId)}))
       );
     }),
