@@ -21,12 +21,13 @@ import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/c
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {finalize, map, switchMap} from 'rxjs/operators';
+
+import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../../core/constants';
 import {Collection} from '../../../../core/dto';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {CollectionService, LinkTypeService} from '../../../../core/rest';
 import {AppState} from '../../../../core/store/app.state';
 
-import {COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../../constants';
 import {CollectionSelectService} from '../../../service/collection-select.service';
 import {CollectionTabComponent} from '../collection-tab.component';
 import {LinkTypeModel} from './LinkTypeModel';
@@ -181,9 +182,9 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
       return this.collections[linkTypeModel.data.collectionCodes[1]];
     } else {
       return {
-        code: COLLECTION_NO_CODE,
-        icon: COLLECTION_NO_ICON,
-        color: COLLECTION_NO_COLOR,
+        code: '',
+        icon: DEFAULT_ICON,
+        color: DEFAULT_COLOR,
         name: '',
         description: '',
         attributes: []

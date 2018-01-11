@@ -51,6 +51,11 @@ export class NotificationsEffects {
     tap((action: NotificationsAction.Success) => this.notificationService.success(action.payload.message))
   );
 
+  @Effect({dispatch: false})
+  public warning$: Observable<Action> = this.actions.ofType(NotificationsActionType.WARNING).pipe(
+    tap((action: NotificationsAction.Warning) => this.notificationService.warning(action.payload.message))
+  );
+
   constructor(private actions: Actions,
               private notificationService: NotificationService,
               private store$: Store<AppState>) {

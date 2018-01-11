@@ -20,24 +20,37 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
+import {OrganizationModel} from '../organizations/organization.model';
+import {selectSelectedOrganizationId} from '../organizations/organizations.state';
 import {ProjectModel} from './project.model';
 
 export interface ProjectsState extends EntityState<ProjectModel> {
 
-  organizationCode: string;
-  selectedProjectCode: string;
+  selectedProjectId: string;
 
 }
 
-export const projectsAdapter = createEntityAdapter<ProjectModel>({selectId: project => project.code});
+export const projectsAdapter = createEntityAdapter<ProjectModel>({selectId: project => project.id});
 
 export const initialProjectsState: ProjectsState = projectsAdapter.getInitialState({
-  organizationCode: null,
-  selectedProjectCode: null
+  selectedProjectId: null
 });
 
 export const selectProjectsState = (state: AppState) => state.projects;
 export const selectAllProjects = createSelector(selectProjectsState, projectsAdapter.getSelectors().selectAll);
-export const selectProjectsMap = createSelector(selectProjectsState, projectsAdapter.getSelectors().selectEntities);
-export const selectProjectsOrganizationCode = createSelector(selectProjectsState, projectsState => projectsState.organizationCode);
-export const selectSelectedProjectCode = createSelector(selectProjectsState, projectsState => projectsState.selectedProjectCode);
+export const selectProjectsDictionary = createSelector(selectProjectsState, projectsAdapter.getSelectors().selectEntities);
+export const selectSelectedProjectId = createSelector(selectProjectsState, projectsState => projectsState.selectedProjectId);
+export const selectProjectsForSelectedOrganization = createSelector(selectAllProjects, selectSelectedOrganizationId, (projects, organizationId) => {
+  return projects.filter(project => project.organizationId === organizationId);
+});
+export const selectSelectedProject = createSelector(selectProjectsDictionary, selectSelectedProjectId, (projects, selectedId)=>{
+  return selectedId ? projects[selectedId] : null;
+});
+
+export const selectProjectByCode = (code) => createSelector(selectAllProjects, projects => {
+  return projects.find(project => project.code === code);
+});
+
+export const selectProjectById = (id) => createSelector(selectProjectsDictionary, projects => {
+  return projects[id];
+});

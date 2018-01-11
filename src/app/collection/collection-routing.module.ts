@@ -19,6 +19,7 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+
 import {CollectionManageRoleGuard} from './collection-managed-role.guard';
 import {CollectionComponent} from './collection.component';
 import {CollectionConfigComponent} from './config/collection-config.component';
@@ -26,12 +27,13 @@ import {CollectionAccessRightsComponent} from './config/tab/access-rights/collec
 import {CollectionAttributesComponent} from './config/tab/attributes/collection-attributes.component';
 import {CollectionEventsComponent} from './config/tab/events/collection-events.component';
 import {CollectionLinkTypesComponent} from './config/tab/link-types/collection-link-types.component';
-
 import {CollectionListComponent} from './list/collection-list.component';
+import {WorkspaceGuard} from '../workspace/workspace.guard';
 
 const collectionRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/f/:collectionCode',
+    canActivate:[WorkspaceGuard],
     component: CollectionConfigComponent,
     children: [
       {
@@ -60,6 +62,7 @@ const collectionRoutes: Routes = [
   },
   {
     path: 'w/:organizationCode/:projectCode/files',
+    canActivate:[WorkspaceGuard],
     component: CollectionComponent,
     children: [
       {

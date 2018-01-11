@@ -19,11 +19,11 @@
 
 import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Store} from '@ngrx/store';
+
 import {PostItLayoutConfig} from 'app/shared/utils/layout/post-it-layout-config';
 import {Observable} from 'rxjs/Observable';
 import {finalize} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
-import {COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from '../../collection/constants';
 import {Query} from '../../core/dto';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {CollectionService, ImportService, SearchService} from '../../core/rest';
@@ -36,6 +36,7 @@ import {selectQuery, selectWorkspace} from '../../core/store/navigation/navigati
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
+import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 import {Role} from '../permissions/role';
 import {HtmlModifier} from '../utils/html-modifier';
 import {PostItLayout} from '../utils/layout/post-it-layout';
@@ -164,8 +165,8 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     newPostIt.collection = {
       name: '',
       description: '',
-      color: COLLECTION_NO_COLOR,
-      icon: COLLECTION_NO_ICON,
+      color: DEFAULT_COLOR,
+      icon: DEFAULT_ICON,
       defaultAttributeId: ''
     };
 
@@ -255,8 +256,8 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
           newPostIt.initialized = true;
           newPostIt.collection = CollectionConverter.fromDto(collection);
 
-          collection.color = COLLECTION_NO_COLOR;
-          collection.icon = COLLECTION_NO_ICON;
+          collection.color = DEFAULT_COLOR;
+          collection.icon = DEFAULT_ICON;
 
           this.postIts.push(newPostIt);
           this.layout.refresh();

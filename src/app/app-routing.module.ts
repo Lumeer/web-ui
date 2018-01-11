@@ -24,10 +24,12 @@ import {StoreRouterConnectingModule} from '@ngrx/router-store';
 import {PageNotFoundComponent} from './core/page-not-found/page-not-found.component';
 import {HomeComponent} from './core/home.component';
 import {SearchHomeComponent} from './core/search-home/search-home.component';
+import {WorkspaceGuard} from './workspace/workspace.guard';
 
 const appRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/search',
+    canActivate:[WorkspaceGuard],
     component: SearchHomeComponent,
     data: {
       searchBoxHidden: true

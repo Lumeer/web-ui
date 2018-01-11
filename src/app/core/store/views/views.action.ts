@@ -36,7 +36,9 @@ export enum ViewsActionType {
   UPDATE_SUCCESS = '[Views] Update :: Success',
   UPDATE_FAILURE = '[Views] Update :: Failure',
 
-  CHANGE_CONFIG = '[Views] Change Config'
+  CHANGE_CONFIG = '[Views] Change Config',
+
+  CLEAR = '[Views] Clear'
 
 }
 
@@ -119,9 +121,16 @@ export namespace ViewsAction {
     }
   }
 
+  export class Clear implements Action {
+    public readonly type = ViewsActionType.CLEAR;
+
+    public constructor() {
+    }
+  }
+
   export type All = GetByCode | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    ChangeConfig;
+    ChangeConfig | Clear;
 
 }

@@ -31,6 +31,8 @@ export function linkInstancesReducer(state: LinkInstancesState = initialLinkInst
       return linkInstancesAdapter.updateOne({id: action.payload.linkInstance.id, changes: action.payload.linkInstance}, state);
     case LinkInstancesActionType.DELETE_SUCCESS:
       return linkInstancesAdapter.removeOne(action.payload.linkInstanceId, state);
+    case LinkInstancesActionType.CLEAR:
+      return initialLinkInstancesState;
     default:
       return state;
   }

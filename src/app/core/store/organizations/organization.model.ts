@@ -30,4 +30,6 @@ export interface OrganizationModel {
 
   permissions?: PermissionsModel;
 
+  correlationId?: string;
+
 }

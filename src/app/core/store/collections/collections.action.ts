@@ -56,6 +56,8 @@ export enum CollectionsActionType {
   REMOVE_PERMISSION_SUCCESS = '[Collections] Remove Permission :: Success',
   REMOVE_PERMISSION_FAILURE = '[Collections] Remove Permission :: Failure',
 
+  CLEAR = '[Collections] Clear'
+
 }
 
 export namespace CollectionsAction {
@@ -228,6 +230,13 @@ export namespace CollectionsAction {
     }
   }
 
+  export class Clear implements Action {
+    public readonly type = CollectionsActionType.CLEAR;
+
+    public constructor() {
+    }
+  }
+
   export type All =
     Get | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
@@ -236,5 +245,5 @@ export namespace CollectionsAction {
     ChangeAttribute | ChangeAttributeSuccess | ChangeAttributeFailure |
     RemoveAttribute | RemoveAttributeSuccess | RemoveAttributeFailure |
     ChangePermission | ChangePermissionSuccess | ChangePermissionFailure |
-    RemovePermission | RemovePermissionSuccess | RemovePermissionFailure;
+    RemovePermission | RemovePermissionSuccess | RemovePermissionFailure | Clear;
 }

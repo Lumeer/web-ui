@@ -37,7 +37,9 @@ export enum LinkInstancesActionType {
 
   DELETE = '[Link Instances] Delete',
   DELETE_SUCCESS = '[Link Instances] Delete :: Success',
-  DELETE_FAILURE = '[Link Instances] Delete :: Failure'
+  DELETE_FAILURE = '[Link Instances] Delete :: Failure',
+
+  CLEAR = '[Link Instances] Clear'
 
 }
 
@@ -127,10 +129,17 @@ export namespace LinkInstancesAction {
     }
   }
 
+  export class Clear implements Action {
+    public readonly type = LinkInstancesActionType.CLEAR;
+
+    public constructor() {
+    }
+  }
+
   export type All =
     Get | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure;
+    Delete | DeleteSuccess | DeleteFailure | Clear;
 
 }

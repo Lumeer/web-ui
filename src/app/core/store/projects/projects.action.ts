@@ -47,7 +47,7 @@ export namespace ProjectsAction {
   export class Get implements Action {
     public readonly type = ProjectsActionType.GET;
 
-    public constructor(public payload: { organizationCode: string }) {
+    public constructor(public payload: { organizationId: string }) {
     }
   }
 
@@ -89,14 +89,14 @@ export namespace ProjectsAction {
   export class Update implements Action {
     public readonly type = ProjectsActionType.UPDATE;
 
-    public constructor(public payload: { projectCode: string, project: ProjectModel }) {
+    public constructor(public payload: { project: ProjectModel }) {
     }
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = ProjectsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: { projectCode: string, project: ProjectModel }) {
+    public constructor(public payload: { project: ProjectModel }) {
     }
   }
 
@@ -110,14 +110,14 @@ export namespace ProjectsAction {
   export class Delete implements Action {
     public readonly type = ProjectsActionType.DELETE;
 
-    public constructor(public payload: { organizationCode: string, projectCode: string }) {
+    public constructor(public payload: { organizationId: string, projectId: string }) {
     }
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = ProjectsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: { projectCode: string }) {
+    public constructor(public payload: { projectId: string }) {
     }
   }
 
@@ -131,7 +131,7 @@ export namespace ProjectsAction {
   export class Select implements Action {
     public readonly type = ProjectsActionType.SELECT;
 
-    public constructor(public payload: { projectCode: string }) {
+    public constructor(public payload: { projectId: string }) {
     }
   }
 

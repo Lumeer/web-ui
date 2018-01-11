@@ -19,20 +19,20 @@
 
 import {Injectable} from '@angular/core';
 
-import {COLLECTION_NO_CODE, COLLECTION_NO_COLOR, COLLECTION_NO_ICON} from 'app/collection/constants';
 import {CollectionService} from '../../core/rest/collection.service';
 import {Collection} from '../../core/dto/collection';
 import {Observable} from 'rxjs/Observable';
 import {map, tap} from 'rxjs/operators';
 import 'rxjs/add/observable/of';
+import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 
 @Injectable()
 export class CollectionSelectService {
 
   private selection: Collection = {
-    code: COLLECTION_NO_CODE,
-    icon: COLLECTION_NO_ICON,
-    color: COLLECTION_NO_COLOR,
+    code: '',
+    icon: DEFAULT_ICON,
+    color: DEFAULT_COLOR,
     description: 'Description',
     name: '',
     attributes: []

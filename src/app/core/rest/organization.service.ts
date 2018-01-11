@@ -21,7 +21,7 @@ import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {Organization} from '../dto';
 import {FetchFailedError} from '../error/fetch-failed.error';
 import {NetworkError} from '../error/network.error';
@@ -46,7 +46,7 @@ export class OrganizationService extends PermissionService {
 
   public createOrganization(organization: Organization): Observable<Organization> {
     return this.httpClient.post(this.apiPrefix(), organization, {observe: 'response', responseType: 'text'}).pipe(
-      map(() => organization) // TODO return fresh instance from the server
+      switchMap(() => this.getOrganization(organization.code))
     );
   }
 

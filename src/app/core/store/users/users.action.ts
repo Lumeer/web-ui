@@ -38,6 +38,8 @@ export enum UsersActionType {
   DELETE_SUCCESS = '[Users] Delete :: Success',
   DELETE_FAILURE = '[Users] Delete :: Failure',
 
+  CLEAR = '[Users] Clear'
+
 }
 
 export namespace UsersAction {
@@ -123,8 +125,16 @@ export namespace UsersAction {
     }
   }
 
+
+  export class Clear implements Action {
+    public readonly type = UsersActionType.CLEAR;
+
+    public constructor() {
+    }
+  }
+
   export type All = Get | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure;
+    Delete | DeleteSuccess | DeleteFailure | Clear;
 }

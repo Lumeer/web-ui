@@ -18,6 +18,7 @@
  */
 
 import {NgModule} from '@angular/core';
+
 import {EffectsModule} from '@ngrx/effects';
 import {routerReducer} from '@ngrx/router-store';
 import {ActionReducerMap, StoreModule} from '@ngrx/store';

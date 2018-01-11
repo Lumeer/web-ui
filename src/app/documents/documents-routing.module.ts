@@ -19,11 +19,14 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+
+import {WorkspaceGuard} from '../workspace/workspace.guard';
 import {DocumentsComponent} from './documents.component';
 
 const documentRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/f/:collectionCode/records',
+    canActivate:[WorkspaceGuard],
     component: DocumentsComponent
   }
 ];

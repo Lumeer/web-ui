@@ -45,7 +45,9 @@ export enum SmartDocTemplatesActionType {
   UPDATE_PART = '[SmartDoc Templates] Update Part',
   REMOVE_PART = '[SmartDoc Templates] Remove Part',
   REMOVE_PART_CONFIRM = '[SmartDoc Templates] Remove Part Confirm',
-  MOVE_PART = '[SmartDoc Templates] Move Part'
+  MOVE_PART = '[SmartDoc Templates] Move Part',
+
+  CLEAR = '[SmartDoc Templates] Clear'
 
 }
 
@@ -180,6 +182,13 @@ export namespace SmartDocTemplatesAction {
     public constructor(public payload: { templateId: string, oldIndex: number, newIndex: number }) {
     }
   }
+  
+  export class Clear implements Action {
+    public readonly type = SmartDocTemplatesActionType.CLEAR;
+
+    public constructor() {
+    }
+  }
 
   export type All =
     Get | GetSuccess | GetFailure |
@@ -187,5 +196,5 @@ export namespace SmartDocTemplatesAction {
     Update | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure |
     Select | Deselect |
-    AddPart | UpdatePart | RemovePart | RemovePartConfirm | MovePart;
+    AddPart | UpdatePart | RemovePart | RemovePartConfirm | MovePart | Clear;
 }

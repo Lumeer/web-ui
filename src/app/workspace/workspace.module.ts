@@ -19,9 +19,8 @@
 
 import {NgModule} from '@angular/core';
 
+import {ClickOutsideModule} from 'ng-click-outside';
 import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
-import {OrganizationFormComponent} from './organization/form/organization-form.component';
-import {ProjectFormComponent} from './project/form/project-form.component';
 import {WorkspaceRoutingModule} from './workspace-routing.module';
 import {SharedModule} from '../shared/shared.module';
 import {OrganizationPermissionsComponent} from './organization/permissions/organization-permissions.component';
@@ -30,16 +29,17 @@ import {OrganizationSettingsComponent} from './organization/organization-setting
 import {ProjectSettingsComponent} from './project/project-settings.component';
 import {ResourceChooserComponent} from './workspace-chooser/resource-chooser/resource-chooser.component';
 import {PickerModule} from '../shared/picker/picker.module';
+import {WorkspaceSelectGuard} from './workspace-select.guard';
+import {WorkspaceService} from './workspace.service';
 
 @NgModule({
   imports: [
     SharedModule,
     WorkspaceRoutingModule,
-    PickerModule
+    PickerModule,
+    ClickOutsideModule
   ],
   declarations: [
-    OrganizationFormComponent,
-    ProjectFormComponent,
     OrganizationPermissionsComponent,
     ProjectPermissionsComponent,
     OrganizationSettingsComponent,
@@ -49,6 +49,10 @@ import {PickerModule} from '../shared/picker/picker.module';
   ],
   exports: [
     WorkspaceChooserComponent
+  ],
+  providers: [
+    WorkspaceService,
+    WorkspaceSelectGuard
   ]
 })
 export class WorkspaceModule {

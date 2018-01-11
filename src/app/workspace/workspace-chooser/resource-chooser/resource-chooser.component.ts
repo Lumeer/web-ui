@@ -24,18 +24,28 @@ import {
   HostListener,
   Input,
   OnChanges,
-  Output,
+  Output, QueryList,
   SimpleChange,
-  ViewChild
+  ViewChild, ViewChildren
 } from '@angular/core';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
-import {Resource} from '../../../core/dto/resource';
 import {isNullOrUndefined} from 'util';
+import {NotificationService} from '../../../core/notifications/notification.service';
+import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generator';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {ProjectModel} from '../../../core/store/projects/project.model';
+import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
+import {KeyCode} from '../../../shared/key-code';
 import {Role} from '../../../shared/permissions/role';
+import {ResourceItemType} from './resource-item-type';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
+const warningStyle = 'lmr-warning';
+
+type ResourceModel = OrganizationModel | ProjectModel;
 
 @Component({
   selector: 'resource-chooser',
@@ -76,59 +86,84 @@ const arrowSize: number = 40;
 })
 export class ResourceChooserComponent implements OnChanges {
 
+  @ViewChildren('picker')
+  public pickers: QueryList<ElementRef>;
+
   @ViewChild('resourceContainer')
   public resourceContainer: ElementRef;
 
   @ViewChild('resourceDescription')
   public resourceDescription: ElementRef;
 
-  @Input() public resourceType: string;
-  @Input() public resources: Resource[];
-  @Input() public initActiveIx: number;
+  @Input() public resourceType: ResourceItemType;
+  @Input() public resources: ResourceModel[];
+  @Input() public selectedId: string;
   @Input() public canCreateResource: boolean;
 
-  @Output() public resourceSelect: EventEmitter<number> = new EventEmitter();
-  @Output() public resourceNew: EventEmitter<any> = new EventEmitter();
-  @Output() public resourceSettings: EventEmitter<number> = new EventEmitter();
-  @Output() public resourceNewDescription: EventEmitter<string> = new EventEmitter();
+  @Output() public resourceDelete: EventEmitter<string> = new EventEmitter();
+  @Output() public resourceSelect: EventEmitter<string> = new EventEmitter();
+  @Output() public resourceNew: EventEmitter<ResourceModel> = new EventEmitter();
+  @Output() public resourceSettings: EventEmitter<string> = new EventEmitter();
+  @Output() public resourceUpdate: EventEmitter<ResourceModel> = new EventEmitter();
+  @Output() public warningMessage: EventEmitter<string> = new EventEmitter();
+
+  public newResources: ResourceModel[] = [];
 
   public resourceContentWidth: number = 0;
   public resourceContentLeft: number = arrowSize;
   public resourceWidth: number = squareSize;
-  public linesWidth: number = 1000;
+  public linesWidth: number = 0;
   public resourceCanScrollLeft: boolean = false;
   public resourceCanScrollRight: boolean = false;
   public resourceScroll: number = 0;
-  public resourceActiveIx: number;
   public resourceLineSizes = [0, 0, 0];
   public resourceVisibleArrows = false;
 
+  public openedPickerId: string;
+  public lastIcon: string;
+  public lastColor: string;
+  public syncingCorrIds: string[] = [];
+
+  public constructor(private notificationService: NotificationService) {
+  }
+
   public ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
     if (changes['resources']) {
-      this.actualizeWidthAndCheck();
-      this.checkForScrollRightResources();
-      this.resourceActiveIx = this.initActiveIx;
-      this.computeResourceLines(this.resourceActiveIx);
+      this.checkResources();
+      this.compute();
+    } else if (changes['selectedId']) {
+      this.computeResourceLines(this.getActiveIndex());
     }
   }
 
   @HostListener('window:resize', ['$event'])
   private onResize(event) {
+    this.compute();
+  }
+
+  private checkResources() {
+    this.resources = this.resources.filter(res => res && typeof res === 'object');
+    const ids: string[] = this.resources.filter(res => res.correlationId).map(res => res.correlationId);
+    this.syncingCorrIds = this.syncingCorrIds.filter(id => !ids.includes(id));
+    this.newResources = this.newResources.filter(newRes => !ids.includes(newRes.correlationId));
+  }
+
+  private compute() {
     this.actualizeWidthAndCheck();
     this.checkForScrollRightResources();
-    this.computeResourceLines(this.resourceActiveIx);
+    this.computeResourceLines(this.getActiveIndex());
   }
 
   private actualizeWidthAndCheck() {
     let resourceContentWidth = this.resourceContainer.nativeElement.clientWidth;
-    this.resourceWidth = Math.max((this.resources.length + (this.canCreateResource ? 1 : 0)) * squareSize, resourceContentWidth);
+    this.resourceWidth = Math.max(this.resourcesLength() * squareSize, resourceContentWidth);
     this.checkForDisableResourceArrows(resourceContentWidth);
   }
 
-  public onResourceSelected(index: number) {
-    this.resourceActiveIx = index;
-    this.computeResourceLines(index);
-    this.resourceSelect.emit(index);
+  public onResourceSelected(id: string) {
+    if (id && id !== this.selectedId) {
+      this.resourceSelect.emit(id);
+    }
   }
 
   public onScrollResource(direction: number) {
@@ -159,6 +194,11 @@ export class ResourceChooserComponent implements OnChanges {
     this.resourceCanScrollRight = numVisible > 0 && (numPotentiallyVisible - numVisible > 0);
   }
 
+  private getActiveIndex(): number {
+    if (isNullOrUndefined(this.resources) || isNullOrUndefined(this.selectedId)) return -1;
+    return this.resources.findIndex(resource => resource.id === this.selectedId);
+  }
+
   private checkForInitScrollResources(ix: number) {
     if (ix === 0) {
       return;
@@ -166,7 +206,7 @@ export class ResourceChooserComponent implements OnChanges {
     const numVisible = this.numResourcesVisible();
     if (ix >= numVisible) {
       const numShouldScroll = ix - numVisible + Math.round(numVisible / 2);
-      const numMaxScroll = this.resources.length + (this.canCreateResource ? 1 : 0) - numVisible;
+      const numMaxScroll = this.resourcesLength() - numVisible;
       const numToScroll = Math.min(numShouldScroll, numMaxScroll);
       this.resourceScroll = -numToScroll * squareSize;
       this.resourceCanScrollLeft = true;
@@ -198,19 +238,19 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private numResourcesVisible(): number {
-    return Math.min(Math.floor(this.resourceContentWidth / squareSize), this.resources.length + (this.canCreateResource ? 1 : 0));
+    return Math.min(Math.floor(this.resourceContentWidth / squareSize), this.resourcesLength());
   }
 
   private numResourcesPotentiallyVisible(): number {
-    return this.resources.length + (this.canCreateResource ? 1 : 0) - Math.abs(this.resourceScroll / squareSize);
+    return this.resourcesLength() - Math.abs(this.resourceScroll / squareSize);
   }
 
   private computeResourceLines(index: number) {
-    if (isNullOrUndefined(index)) {
+    if (index === -1) {
       this.resourceLineSizes = [0, 0, 0];
       return;
     }
-    const widthContent = (this.resources.length + 1) * squareSize;
+    const widthContent = this.resourcesLength() * squareSize;
     this.linesWidth = Math.max(this.resourceContainer.nativeElement.clientWidth, widthContent);
     this.resourceLineSizes[0] = (this.linesWidth - widthContent) / 2 + (index * squareSize);
     this.resourceLineSizes[1] = squareSize;
@@ -218,16 +258,179 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   public onCreateResource() {
-    this.resourceNew.emit();
+    this.newResources.push({
+      name: '',
+      code: '',
+      color: DEFAULT_COLOR,
+      icon: DEFAULT_ICON,
+      correlationId: CorrelationIdGenerator.generate()
+    });
+    this.compute();
   }
 
-  public onResourceSettings(index: number) {
-    this.resourceSettings.emit(index);
+  public onResourceSettings(id: string) {
+    this.resourceSettings.emit(id);
   }
 
-  public hasManageRole(resource: Resource): boolean {
+  public onResourceDelete(resource: ResourceModel) {
+    if (resource.id) {
+      this.notificationService.confirm(`Are you sure you want to remove the ${this.resourceType} ${resource.code}?`, 'Delete?', [
+        {text: 'Yes', action: () => this.resourceDelete.emit(resource.id), bold: false},
+        {text: 'No'}
+      ]);
+    } else {
+      this.newResources = this.newResources.filter(newRes => newRes.correlationId !== resource.correlationId);
+      this.compute();
+    }
+  }
+
+  public onNewColor(resource: ResourceModel, color: string) {
+    if (resource.id) {
+      this.lastColor = color;
+    } else {
+      resource.color = color;
+    }
+  }
+
+
+  public onNewIcon(resource: ResourceModel, icon: string) {
+    if (resource.id) {
+      this.lastIcon = icon;
+    } else {
+      resource.icon = icon;
+    }
+  }
+
+  public hasManageRole(resource: ResourceModel): boolean {
     return resource.permissions && resource.permissions.users.length === 1
       && resource.permissions.users[0].roles.some(r => r === Role.Manage.toString());
   }
 
+  public onKeyDown(event: KeyboardEvent, element: HTMLElement) {
+    if (event.keyCode === KeyCode.Enter) {
+      element.blur();
+    }
+  }
+
+  public onCodeBlur(element: HTMLElement, resource: ResourceModel) {
+    const newCode = element.textContent.trim();
+    const isValid = this.resources.filter(res => res.id !== resource.id).findIndex(res => res.code === newCode) === -1;
+    if (isValid) {
+      element.classList.remove(warningStyle);
+    } else {
+      element.classList.add(warningStyle);
+      this.warningMessage.emit(`${this.resourceType} with code ${newCode} already exist`);
+      return;
+    }
+
+    const property = 'code';
+    const propertyOther = 'name';
+    if (resource.hasOwnProperty(property) && resource.hasOwnProperty(propertyOther)) {
+      this.onFieldBlur(element, resource, property, propertyOther);
+    }
+  }
+
+  public onNameBlur(element: HTMLElement, resource: ResourceModel) {
+    const property = 'name';
+    const propertyOther = 'code';
+    if (resource.hasOwnProperty(property) && resource.hasOwnProperty(propertyOther)) {
+      this.onFieldBlur(element, resource, property, propertyOther);
+    }
+  }
+
+  private onFieldBlur(element: HTMLElement, resource: ResourceModel, property: string, propertyOther: string) {
+    const contentTrim = element.textContent.trim();
+    const contentTrimLength = contentTrim.length;
+    const propertyLength = resource[property].length;
+
+    if (resource.id) {
+      // we know, that code is not empty
+      if (contentTrimLength === 0) {
+        element.textContent = resource[property];
+      } else {
+        if (contentTrim !== resource[property]) {
+          const resourceModel = {...resource};
+          resourceModel[property] = contentTrim;
+          this.resourceUpdate.emit(resourceModel);
+        }
+      }
+    } else {
+      if (resource[propertyOther].length === 0) {
+        resource[property] = contentTrim;
+      } else if (contentTrimLength == 0 && propertyLength > 0) {
+        element.textContent = resource[property];
+      } else if (contentTrimLength > 0 && propertyLength == 0) {
+        resource[property] = contentTrim;
+        if (this.isNewCodeValid(resource.code)) {
+          setTimeout(() => {
+            this.onResourcePickerClick(resource)
+          }, 200);
+        }
+      }// else do nothing
+    }
+  }
+
+  public hasResourcePickerVisible(resource: ResourceModel): boolean {
+    if (isNullOrUndefined(this.openedPickerId)) return false;
+    return this.openedPickerId === this.getResourceIdentificator(resource);
+  }
+
+  public onResourcePickerClick(resource: ResourceModel) {
+    const identificator = this.getResourceIdentificator(resource);
+    if (this.openedPickerId === identificator) {
+      this.openedPickerId = null;
+    } else {
+      this.openedPickerId = identificator;
+    }
+    this.lastIcon = null;
+    this.lastColor = null;
+  }
+
+  public onResourcePickerBlur() {
+    if (isNullOrUndefined(this.openedPickerId)) return;
+    const resource = this.findResource(this.openedPickerId);
+    if (isNullOrUndefined(resource)) return;
+
+    this.openedPickerId = null;
+
+    if (resource.id) {
+      if (this.shouldUpdateResource(resource)) {
+        const resourceModel = {
+          ...resource,
+          icon: this.lastIcon || resource.icon,
+          color: this.lastColor || resource.color
+        };
+        this.resourceUpdate.emit(resourceModel);
+      }
+    } else if (!this.syncingCorrIds.includes(resource.correlationId) && resource.code && resource.name) {
+      this.syncingCorrIds.push(resource.correlationId);
+      this.resourceNew.emit(resource);
+    }
+
+  }
+
+  private shouldUpdateResource(resource: ResourceModel): boolean {
+    return (this.lastIcon && resource.icon !== this.lastIcon) || (this.lastColor && resource.color !== this.lastColor);
+  }
+
+  private getResourceIdentificator(resource: ResourceModel): string {
+    return resource.id || resource.correlationId;
+  }
+
+  private findResource(identificator: string): ResourceModel {
+    return this.resources.find(res => res.id === identificator) ||
+      this.newResources.find(newRes => newRes.correlationId === identificator);
+  }
+
+  private resourcesLength(): number {
+    let length = this.resources.length;
+    if (this.canCreateResource) {
+      length += this.newResources.length + 1;
+    }
+    return length;
+  }
+
+  private isNewCodeValid(code: string): boolean {
+    return this.resources.findIndex(res => res.code === code) === -1;
+  }
 }

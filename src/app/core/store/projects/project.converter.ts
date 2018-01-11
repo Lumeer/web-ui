@@ -23,13 +23,15 @@ import {ProjectModel} from './project.model';
 
 export class ProjectConverter {
 
-  public static fromDto(dto: Project, organizationCode: string): ProjectModel {
+  public static fromDto(dto: Project, organizationId: string, correlationId?: string,): ProjectModel {
     return {
-      organizationCode: organizationCode,
+      id: dto.id,
+      organizationId: organizationId,
       code: dto.code,
       name: dto.name,
       icon: dto.icon,
       color: dto.color,
+      correlationId: correlationId,
       permissions: PermissionsConverter.fromDto(dto.permissions)
     };
   }

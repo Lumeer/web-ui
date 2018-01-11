@@ -17,31 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Organization} from '../../dto';
-import {PermissionsConverter} from '../permissions/permissions.converter';
-import {OrganizationModel} from './organization.model';
+export enum ResourceItemType {
 
-export class OrganizationConverter {
-
-  public static fromDto(dto: Organization, correlationId?: string): OrganizationModel {
-    return {
-      id: dto.id,
-      code: dto.code,
-      name: dto.name,
-      icon: dto.icon,
-      color: dto.color,
-      correlationId: correlationId,
-      permissions: PermissionsConverter.fromDto(dto.permissions)
-    };
-  }
-
-  public static toDto(organization: OrganizationModel): Organization {
-    return {
-      code: organization.code,
-      name: organization.name,
-      icon: organization.icon,
-      color: organization.color
-    };
-  }
+  Organization = 'Organization',
+  Project = 'Project'
 
 }
