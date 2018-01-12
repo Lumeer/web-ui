@@ -45,18 +45,11 @@ export class OrganizationService extends PermissionService {
   }
 
   public createOrganization(organization: Organization): Observable<Organization> {
-    return this.httpClient.post(this.apiPrefix(), organization, {observe: 'response', responseType: 'text'}).pipe(
-      switchMap(() => this.getOrganization(organization.code))
-    );
+    return this.httpClient.post<Organization>(this.apiPrefix(), organization);
   }
 
   public editOrganization(code: string, organization: Organization): Observable<Organization> {
-    return this.httpClient.put(
-      this.apiPrefix(code), organization,
-      {observe: 'response', responseType: 'text'}
-    ).pipe(
-      map(() => organization) // TODO return fresh instance from the server
-    );
+    return this.httpClient.put<Organization>(this.apiPrefix(code), organization);
   }
 
   protected actualApiPrefix(): string {
