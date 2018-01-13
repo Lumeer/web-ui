@@ -18,8 +18,11 @@
  */
 
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
+import * as jsSHA from 'jssha';
 
 import {SnotifyService} from 'ng-snotify';
+import {KeycloakService} from './core/keycloak/keycloak.service';
 
 @Component({
   selector: 'lmr-app',
@@ -31,7 +34,33 @@ import {SnotifyService} from 'ng-snotify';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private notificationService: SnotifyService) {
+  constructor(private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
+              private notificationService: SnotifyService) {
+    this.getUserProfileFromKeycloak().then(profile => {
+      if (profile) {
+        const userHash = this.hashUserIdentifier(profile.email);
+        angulartics2GoogleAnalytics.setUsername(userHash);
+      }
+    });
+  }
+
+  private hashUserIdentifier(identifier: string): string {
+    if (identifier) {
+      const sha3 = new jsSHA('SHA3-512', 'TEXT');
+      sha3.update(identifier);
+      return sha3.getHash('HEX');
+    }
+
+    return 'unknown';
+  }
+
+  private getUserProfileFromKeycloak(): Promise<any> {
+    const keycloak = KeycloakService.auth.authz;
+    if (!keycloak) {
+      return Promise.resolve(null);
+    }
+
+    return keycloak.loadUserProfile();
   }
 
   public ngOnInit() {
