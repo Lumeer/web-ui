@@ -87,8 +87,12 @@
             <span i18n="@@menu.signOut">Sign Out</span>
           </a>
           <span class="dropdown-item">
-          <span i18n="@@menu.licence">Licence</span>: {{this.licence}}
-        </span>
+            <span i18n="@@menu.licence">Licence</span>: {{this.licence}}
+          </span>
+          <ng-container *ngIf="buildNumber">
+            <div class="dropdown-divider"></div>
+            <small class="dropdown-header py-0">Build #{{buildNumber}}</small>
+          </ng-container>
         </div>
       </div>
     </div>
