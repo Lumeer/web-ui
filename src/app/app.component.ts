@@ -36,12 +36,12 @@ export class AppComponent implements OnInit {
 
   constructor(private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
               private notificationService: SnotifyService) {
-    this.getUserProfileFromKeycloak().then(profile => {
-      if (profile) {
-        const userHash = this.hashUserIdentifier(profile.email);
-        angulartics2GoogleAnalytics.setUsername(userHash);
-      }
-    });
+    // this.getUserProfileFromKeycloak().then(profile => {
+    //   if (profile) {
+    //     const userHash = this.hashUserIdentifier(profile.email);
+    //     angulartics2GoogleAnalytics.setUsername(userHash);
+    //   }
+    // });
   }
 
   private hashUserIdentifier(identifier: string): string {
