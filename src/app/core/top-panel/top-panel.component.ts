@@ -49,6 +49,8 @@ export class TopPanelComponent implements OnInit {
 
   public notificationsDisabled: boolean;
 
+  public buildNumber = BUILD_NUMBER;
+
   constructor(private store: Store<AppState>,
               private router: Router,
               private userSettingsService: UserSettingsService) {
@@ -84,7 +86,7 @@ export class TopPanelComponent implements OnInit {
       if (organization && project) {
         this.store.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
         this.store.dispatch(new ProjectsAction.Select({projectId: selectProject ? project.id : null}));
-        this.store.dispatch(new RouterAction.Go({path: ['workspace']}))
+        this.store.dispatch(new RouterAction.Go({path: ['workspace']}));
       }
     });
   }
