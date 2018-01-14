@@ -101,4 +101,8 @@ export class TopPanelComponent implements OnInit {
     return HtmlModifier.removeHtmlComments(html);
   }
 
+  public workspacePath(): string {
+    return `w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
+  }
+
 }
