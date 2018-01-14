@@ -7,10 +7,21 @@ $top-panel-height: 48px;
   line-height: $top-panel-height;
 }
 
-.logo {
+.lumeer-logo {
   height: $top-panel-height;
   position: relative;
   bottom: 3px;
+}
+
+.lumeer-header {
+  color: $primary;
+  font-size: $h4-font-size;
+  font-weight: bold;
+}
+.home-button {
+  position: relative;
+  bottom: 2px;
+  left: 15px;
 }
 
 .profile-dropdown {
