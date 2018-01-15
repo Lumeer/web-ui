@@ -1,7 +1,7 @@
 <tr>
   <th class="border-0"></th>
   <th *ngFor="let part of parts; index as i"
-      [attr.colspan]="part.shownAttributes.length + part.hiddenAttributes.length !== 0  + (parts.length > i+1 ? 1 : 0)"
+      [attr.colspan]="part.shownAttributes.length + !!part.hiddenAttributes.length + (parts.length > i+1)"
       class="border-0">
     <i class="{{part.collection.icon}} mr-1" [style.color]="part.collection.color"></i>
     <span>{{part.collection.name}}</span>
