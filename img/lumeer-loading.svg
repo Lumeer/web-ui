@@ -14,19 +14,21 @@
 <circle cx="172.23" cy="168.96" r="153.04" fill="#fff" stroke="#2c3e50" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
 <g transform="translate(-111.91 -289.94)" fill="#2c3e50" stroke="#2c3e50" stroke-linecap="round" stroke-linejoin="round" stroke-width="10">
 <ellipse cx="257.14" cy="452.36" rx="8.57" ry="10.71">
-<animateTransform attributeName="transform" begin="0s" dur="2s" from="0 0" keyTimes="0; 0.15; 0.4; 0.75; 1.0" repeatCount="indefinite" to="-25 0" type="translate" values="0 0; -25 0; 0 0; 25 0; 0 0"/>
-<animate attributeName="ry" begin="0s" dur="2s" keyTimes="0; 0.7; 0.75; 0.80; 1.0" repeatCount="indefinite" values="10.71; 10.71; 0.5; 10.71; 10.71;"/>
+<animateTransform attributeName="transform" begin="0s" dur="3s" from="0 0" keyTimes="0; 0.33; 0.43; 0.66; 0.89; 1.0" repeatCount="indefinite" to="25 0" type="translate" values="0 0; 0 0; 25 0; 0 0; -25 0; 0 0"/>
+<animate attributeName="ry" begin="0s" dur="3s" keyTimes="0; 0.2; 0.25; 0.30; 1.0" repeatCount="indefinite" values="10.71; 10.71; 0.25; 10.71; 10.71;"/>
+<animate attributeName="rx" begin="0s" dur="3s" keyTimes="0; 0.2; 0.25; 0.30; 1.0" repeatCount="indefinite" values="8.57; 8.57; 4; 8.57; 8.57;"/>
 </ellipse>
 <ellipse cx="311.14" cy="452.36" rx="8.57" ry="10.71">
-<animateTransform attributeName="transform" begin="0s" dur="2s" from="0 0" keyTimes="0; 0.15; 0.4; 0.75; 1.0" repeatCount="indefinite" to="-25 0" type="translate" values="0 0; -25 0; 0 0; 25 0; 0 0"/>
-<animate attributeName="ry" begin="0s" dur="2s" keyTimes="0; 0.7; 0.75; 0.80; 1.0" repeatCount="indefinite" values="10.71; 10.71; 0.5; 10.71; 10.71;"/>
+<animateTransform attributeName="transform" begin="0s" dur="3s" from="0 0" keyTimes="0; 0.33; 0.43; 0.66; 0.89; 1.0" repeatCount="indefinite" to="25 0" type="translate" values="0 0; 0 0; 25 0; 0 0; -25 0; 0 0"/>
+<animate attributeName="ry" begin="0s" dur="3s" keyTimes="0; 0.2; 0.25; 0.30; 1.0" repeatCount="indefinite" values="10.71; 10.71; 0.25; 10.71; 10.71;"/>
+<animate attributeName="rx" begin="0s" dur="3s" keyTimes="0; 0.2; 0.25; 0.30; 1.0" repeatCount="indefinite" values="8.57; 8.57; 4; 8.57; 8.57;"/>
 </ellipse>
 </g>
 <path d="m162.78 235.72h-100.15s72.712-47.428 100.07-26.414c6.9832 5.3628 0.0781 26.414 0.0781 26.414z" fill="#2c3e50" fill-rule="evenodd" stroke="#2c3e50" stroke-linecap="round" stroke-linejoin="round" stroke-width="5.4178">
-<animateTransform attributeName="transform" begin="0s" dur="2s" keyTimes="0; 0.08; 0.16; 0.84; 0.92; 1" repeatCount="indefinite" type="rotate" values="0 112 235; -10 112 235; 0 112 235; 0 112 235; -10 112 235; 0 112 235;"/>
+<animateTransform attributeName="transform" begin="0s" dur="3s" keyTimes="0; 0.04; 0.12; 0.20; 1" repeatCount="indefinite" type="rotate" values="0 112 235; 0 112 235; -10 112 235; 0 112 235; 0 112 235;"/>
 </path>
 <path d="m181.68 235.72h100.15s-72.712-47.428-100.07-26.414c-6.9832 5.3628-0.0781 26.414-0.0781 26.414z" fill="#2c3e50" fill-rule="evenodd" stroke="#2c3e50" stroke-linecap="round" stroke-linejoin="round" stroke-width="5.4178">
-<animateTransform attributeName="transform" begin="0s" dur="2s" keyTimes="0; 0.08; 0.16; 0.84; 0.92; 1" repeatCount="indefinite" type="rotate" values="0 231 235; 10 231 235; 0 231 235; 0 231 235; 10 231 235; 0 231 235;"/>
+<animateTransform attributeName="transform" begin="0s" dur="3s" keyTimes="0; 0.04; 0.12; 0.20; 1" repeatCount="indefinite" type="rotate" values="0 231 235; 0 231 235; 10 231 235; 0 231 235; 0 231 235;"/>
 </path>
 <g transform="translate(-186.45 115.13)">
 <g transform="translate(-593.37 -820.5)" fill="#2c3e50" fill-rule="evenodd" stroke="#2c3e50" stroke-width="1px">
