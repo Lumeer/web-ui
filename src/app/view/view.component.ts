@@ -145,7 +145,7 @@ export class ViewComponent implements OnInit, OnDestroy {
     $('#overwriteViewDialogModal').modal('show');
   }
 
-  private onConfirmOverwrite(view: ViewModel) {
+  public onConfirmOverwrite(view: ViewModel) {
     const path: any[] = ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}];
 
     this.store.dispatch(new ViewsAction.Update({
