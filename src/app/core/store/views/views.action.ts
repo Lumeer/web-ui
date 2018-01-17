@@ -96,14 +96,14 @@ export namespace ViewsAction {
   export class Update implements Action {
     public readonly type = ViewsActionType.UPDATE;
 
-    public constructor(public payload: { viewCode: string, view: ViewModel }) {
+    public constructor(public payload: { viewCode: string, view: ViewModel, nextAction?: Action}) {
     }
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = ViewsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: { view: ViewModel }) {
+    public constructor(public payload: { view: ViewModel, nextAction?: Action }) {
     }
   }
 

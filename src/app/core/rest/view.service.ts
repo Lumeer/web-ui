@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import 'rxjs/add/observable/of';
 import {Observable} from 'rxjs/Observable';
-import {LocalStorage} from '../../shared/utils/local-storage';
+import {isNullOrUndefined} from 'util';
 import {View} from '../dto';
 import {PermissionService} from './permission.service';
 
@@ -28,44 +28,38 @@ import {PermissionService} from './permission.service';
 export class ViewService extends PermissionService {
 
   public createView(view: View): Observable<View> {
-    const views = LocalStorage.get(this.webStorageKey()) || {};
-    view.code = view.name.toLowerCase();
-    views[view.code] = view;
-    LocalStorage.set(this.webStorageKey(), views);
-    return Observable.of(view);
+    return this.httpClient.post<View>(this.apiPrefix(), view);
   }
 
   public updateView(code: string, view: View): Observable<View> {
-    const views = LocalStorage.get(this.webStorageKey()) || {};
-    views[code] = null;
-    views[view.code] = view;
-    LocalStorage.set(this.webStorageKey(), views);
-    return Observable.of(view);
+    return this.httpClient.put<View>(this.apiPrefix(code), view);
   }
 
   public getView(code: string): Observable<View> {
-    const views = LocalStorage.get(this.webStorageKey()) || {};
-    return Observable.of(views[code]);
+    return this.httpClient.get<View>(this.apiPrefix(code));
   }
 
-  public getViews(): Observable<View[]> {
-    const views = LocalStorage.get(this.webStorageKey()) || {};
-    return Observable.of(Object.values(views));
+  public getViews(pageNumber?: number, pageSize?: number): Observable<View[]> {
+    const queryParams = new HttpParams();
+
+    if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
+      queryParams.set('page', pageNumber.toString())
+        .set('size', pageSize.toString());
+    }
+
+    return this.httpClient.get<View[]>(this.apiPrefix(), {params: queryParams});
   }
 
   protected actualApiPrefix(): string {
-    let viewCode = this.workspace.viewCode;
-    return `${this.apiPrefix()}/${viewCode}`;
+    const viewCode = this.workspace.viewCode;
+    return this.apiPrefix(viewCode);
   }
 
-  private webStorageKey(): string {
-    return `views-${this.workspace.organizationCode}/${this.workspace.projectCode}`;
-  }
-
-  private apiPrefix(): string {
+  private apiPrefix(code?: string): string {
     let organizationCode = this.workspace.organizationCode;
     let projectCode = this.workspace.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/views`;
+    const viewsPath = `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/views`;
+    return code ? viewsPath.concat('/', code) : viewsPath;
   }
 }

@@ -17,17 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
+import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
-import {selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {RouterAction} from '../../core/store/router/router.action';
 import {ViewModel} from '../../core/store/views/view.model';
+import {selectViewConfig} from '../../core/store/views/views.state';
 import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
 
 @Component({
@@ -35,7 +38,7 @@ import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
   templateUrl: './view-controls.component.html',
   styleUrls: ['./view-controls.component.scss']
 })
-export class ViewControlsComponent implements OnInit, OnDestroy {
+export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public view: ViewModel;
@@ -43,8 +46,7 @@ export class ViewControlsComponent implements OnInit, OnDestroy {
   @Output()
   public save = new EventEmitter<string>();
 
-  @ViewChild('viewName')
-  public viewNameInput: ElementRef;
+  public viewName: string;
 
   private workspace: Workspace;
 
@@ -55,7 +57,21 @@ export class ViewControlsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.subscription = this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+    this.subscription = this.store.select(selectNavigation).subscribe(navigation => {
+      console.log(navigation);
+      this.workspace = navigation.workspace;
+      if (navigation.viewName) {
+        this.viewName =  `${navigation.viewName} - copy`;
+      }
+    });
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.hasOwnProperty('view') && this.view) {
+      if (this.view.name) {
+        this.viewName = this.view.name;
+      }
+    }
   }
 
   public ngOnDestroy() {
@@ -76,12 +92,17 @@ export class ViewControlsComponent implements OnInit, OnDestroy {
 
   public onSave() {
     // TODO validation
-    this.save.emit(this.viewNameInput.nativeElement.value.trim());
+    this.save.emit(this.viewName.trim());
   }
 
   public onCopy() {
     const path: any[] = ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', this.view.perspective];
-    this.store.dispatch(new RouterAction.Go({path, query: {query: QueryConverter.toString(this.view.query)}}));
+    this.store.dispatch(new RouterAction.Go({
+      path, query: {
+        query: QueryConverter.toString(this.view.query),
+        viewName: `${this.view.name}`
+      }
+    }));
   }
 
   public perspectives(): string[] {
@@ -105,6 +126,15 @@ export class ViewControlsComponent implements OnInit, OnDestroy {
       default:
         return true;
     }
+  }
+
+  public isViewChanged(): Observable<boolean> {
+    return this.store.select(selectViewConfig).pipe(
+      map(config => {
+        const sameConfig: boolean = JSON.stringify(config) === JSON.stringify(this.view.config);
+        return this.view.name !== this.viewName || !sameConfig;
+      })
+    )
   }
 
 }

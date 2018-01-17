@@ -8,7 +8,8 @@
       </view-controls>
 
       <div *ngIf="!view"
-           class="alert alert-warning">View does not exist!
+           class="alert alert-warning"
+           i18n="@@view.not.exist">View does not exist!
       </div>
     </div>
     <div class="col pointer-events-none"></div>
@@ -16,3 +17,8 @@
 </div>
 
 <router-outlet></router-outlet>
+
+<overwrite-view-dialog [existingView]="existingView"
+                       [newView]="newView"
+                       [workspace]="workspace"
+                       (save)="onConfirmOverwrite($event)"></overwrite-view-dialog>
