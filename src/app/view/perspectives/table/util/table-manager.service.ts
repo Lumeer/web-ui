@@ -106,7 +106,7 @@ export class TableManagerService {
   }
 
   private saveConfig() {
-    this.store.dispatch(new ViewsAction.ChangeConfig({config: {table: this.extractTableConfig()}}));
+    this.store.dispatch(new ViewsAction.ChangeTableConfig({config: this.extractTableConfig()}));
   }
 
   private setUpAttributes(tablePart: TablePart, config: TableConfigModel) {
