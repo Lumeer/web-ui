@@ -20,7 +20,7 @@
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {skipWhile, tap} from 'rxjs/operators';
+import {map, skipWhile, tap} from 'rxjs/operators';
 
 import {Subscription} from 'rxjs/Subscription';
 import {isArray, isNullOrUndefined, isObject} from 'util';
@@ -74,7 +74,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
         tap(query => this.store.dispatch(new DocumentsAction.Get({query}))),
         tap(() => this.store.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: []}})))
       ).subscribe();
-    this.documents$ = this.store.select(selectDocumentsByQuery);
+    this.documents$ = this.store.select(selectDocumentsByQuery).pipe(
+      map(documents => documents.filter(doc => doc.id))
+    );
     this.searchConfigSubscription = this.store.select(selectViewSearchConfig)
       .subscribe(config => this.expandedDocumentIds = config.expandedDocumentIds.slice());
   }
