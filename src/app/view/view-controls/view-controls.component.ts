@@ -58,7 +58,6 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnInit() {
     this.subscription = this.store.select(selectNavigation).subscribe(navigation => {
-      console.log(navigation);
       this.workspace = navigation.workspace;
       if (navigation.viewName) {
         this.viewName =  `${navigation.viewName} - copy`;
