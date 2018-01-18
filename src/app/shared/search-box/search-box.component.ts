@@ -233,10 +233,12 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
     }
 
     const codes = new Set<string>();
-    suggestions.links.forEach(link => {
-      codes.add(link.collectionCodes[0]);
-      codes.add(link.collectionCodes[1]);
-    });
+    if (suggestions.links) {
+      suggestions.links.forEach(link => {
+        codes.add(link.collectionCodes[0]);
+        codes.add(link.collectionCodes[1]);
+      });
+    }
     if (codes.size > 0) {
       const observables: Observable<Collection>[] = [];
       codes.forEach(code => observables.push(this.collectionService.getCollection(code)));
@@ -438,7 +440,7 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   public search(): void {
     if (this.isViewItemPresented()) {
-      this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', this.queryItems[0].value]);
+      this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: this.queryItems[0].value}]);
       return;
     }
 

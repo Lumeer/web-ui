@@ -29,6 +29,7 @@ export interface NavigationState {
   workspace: Workspace;
   perspective?: string;
   searchBoxHidden?: boolean;
+  viewName?: string;
 
 }
 

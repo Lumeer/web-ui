@@ -37,7 +37,8 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
       viewCode: params.get('vc')
     },
     perspective: extractPerspectiveIdFromUrl(action.payload.routerState.url),
-    searchBoxHidden: RouteFinder.getDeepestChildRoute(route).data['searchBoxHidden']
+    searchBoxHidden: RouteFinder.getDeepestChildRoute(route).data['searchBoxHidden'],
+    viewName: queryParams.get('viewName')
   };
 }
 

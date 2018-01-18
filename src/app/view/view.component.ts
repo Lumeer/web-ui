@@ -20,14 +20,19 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {map, skipWhile, take} from 'rxjs/operators';
-import {Query} from '../core/dto/query';
+import {Observable} from 'rxjs/Observable';
+import {first, map, skipWhile, take} from 'rxjs/operators';
+import {Query} from '../core/dto';
 import {AppState} from '../core/store/app.state';
 import {selectNavigation} from '../core/store/navigation/navigation.state';
+import {Workspace} from '../core/store/navigation/workspace.model';
+import {RouterAction} from '../core/store/router/router.action';
 import {ViewModel} from '../core/store/views/view.model';
 import {ViewsAction} from '../core/store/views/views.action';
-import {selectViewConfig, selectViewsDictionary} from '../core/store/views/views.state';
+import {selectAllViews, selectViewConfig, selectViewsDictionary} from '../core/store/views/views.state';
 import {perspectivesMap} from './perspectives/perspective';
+
+declare var $: any;
 
 @Component({
   templateUrl: './view.component.html'
@@ -35,6 +40,11 @@ import {perspectivesMap} from './perspectives/perspective';
 export class ViewComponent implements OnInit, OnDestroy {
 
   public view: ViewModel;
+
+  public workspace: Workspace;
+
+  public existingView: ViewModel;
+  public newView: ViewModel;
 
   private viewSubscription: Subscription;
   private configSubscription: Subscription;
@@ -44,16 +54,26 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.navigationSubscription = this.store.select(selectNavigation).subscribe(navigation => {
+    this.navigationSubscription = this.store.select(selectNavigation).pipe(
+      skipWhile(navigation => !navigation.perspective)
+    ).subscribe(navigation => {
+      this.workspace = navigation.workspace;
       if (!navigation.workspace) {
         return;
       }
+
+      this.store.dispatch(new ViewsAction.Get({query: {}}));
 
       if (navigation.workspace.viewCode) {
         this.loadView(navigation.workspace.viewCode, navigation.perspective);
       } else {
         this.loadQuery(navigation.query, navigation.perspective);
       }
+    });
+
+    $('#overwriteViewDialogModal').on('hidden.bs.modal', () => {
+      this.existingView = null;
+      this.newView = null;
     });
   }
 
@@ -89,25 +109,58 @@ export class ViewComponent implements OnInit, OnDestroy {
     };
   }
 
-  public onSave(viewName: string) {
+  public onSave(name: string) {
     this.configSubscription = this.store.select(selectViewConfig).pipe(take(1)).subscribe(config => {
-      this.view.name = viewName;
-      this.view.config = {...config};
+      const view: ViewModel = {...this.view, name, config};
 
-      if (this.view.code) {
-        this.updateView();
+      if (view.code) {
+        this.updateView(view);
       } else {
-        this.createView();
+        this.saveView(view);
       }
     });
   }
 
-  private createView() {
-    this.store.dispatch(new ViewsAction.Create({view: this.view}));
+  private saveView(view: ViewModel) {
+    this.getViewByName(view.name).subscribe(existingView => {
+      if (existingView) {
+        this.openOverwriteDialog(existingView, view);
+      } else {
+        this.createView(view);
+      }
+    });
   }
 
-  private updateView() {
-    this.store.dispatch(new ViewsAction.Update({viewCode: this.view.code, view: this.view}));
+  private getViewByName(viewName: string): Observable<ViewModel> {
+    return this.store.select(selectAllViews).pipe(
+      first(),
+      map(views => views.find(view => view.name === viewName))
+    );
+  }
+
+  private openOverwriteDialog(existingView: ViewModel, newView: ViewModel) {
+    this.existingView = existingView;
+    this.newView = newView;
+
+    $('#overwriteViewDialogModal').modal('show');
+  }
+
+  public onConfirmOverwrite(view: ViewModel) {
+    const path: any[] = ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}];
+
+    this.store.dispatch(new ViewsAction.Update({
+      viewCode: view.code,
+      view,
+      nextAction: new RouterAction.Go({path})
+    }));
+  }
+
+  private createView(view: ViewModel) {
+    this.store.dispatch(new ViewsAction.Create({view}));
+  }
+
+  private updateView(view: ViewModel) {
+    this.store.dispatch(new ViewsAction.Update({viewCode: view.code, view}));
   }
 
 }

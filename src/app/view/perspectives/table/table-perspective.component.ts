@@ -23,29 +23,18 @@ import {DocumentModel} from 'app/core/store/documents/document.model';
 import {AttributeHelper} from 'app/shared/utils/attribute-helper';
 import {Subscription} from 'rxjs';
 import {Observable} from 'rxjs/Observable';
-import {map, switchMap} from 'rxjs/operators';
-import {Attribute} from '../../../core/dto/attribute';
-import {Collection} from '../../../core/dto/collection';
-import {Document} from '../../../core/dto/document';
-import {LinkInstance} from '../../../core/dto/link-instance';
-import {LinkType} from '../../../core/dto/link-type';
-import {Query} from '../../../core/dto/query';
+import {map, switchMap, withLatestFrom} from 'rxjs/operators';
+import {Attribute, Collection, Document, LinkInstance, LinkType, Query} from '../../../core/dto';
 import {NotificationService} from '../../../core/notifications/notification.service';
-import {CollectionService} from '../../../core/rest/collection.service';
-import {DocumentService} from '../../../core/rest/document.service';
-import {LinkInstanceService} from '../../../core/rest/link-instance.service';
-import {LinkTypeService} from '../../../core/rest/link-type.service';
+import {CollectionService, DocumentService, LinkInstanceService, LinkTypeService} from '../../../core/rest';
 import {AppState} from '../../../core/store/app.state';
 import {selectNavigation, selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {TableConfigModel, ViewConfigModel} from '../../../core/store/views/view.model';
-import {selectViewsDictionary, selectViewsState} from '../../../core/store/views/views.state';
+import {selectViewConfig, selectViewsDictionary, selectViewsState} from '../../../core/store/views/views.state';
 import {PerspectiveComponent} from '../perspective.component';
-import {AttributeChangeEvent} from './event/attribute-change-event';
-import {DataChangeEvent} from './event/data-change-event';
-import {LinkInstanceEvent} from './event/link-instance-event';
-import {TableLinkEvent} from './event/table-link-event';
-import {TablePart} from './model/table-part';
+import {AttributeChangeEvent, DataChangeEvent, LinkInstanceEvent, TableLinkEvent} from './event';
+import {TablePart} from './model';
 import {TableManagerService} from './util/table-manager.service';
 
 @Component({
@@ -96,9 +85,10 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
       this.store.select(selectNavigation),
       this.store.select(selectViewsDictionary)
     ).pipe(
-      map(([navigation, views]) => {
+      withLatestFrom(this.store.select(selectViewConfig)),
+      map(([[navigation, views], config]) => {
         const view = navigation.workspace ? views[navigation.workspace.viewCode] : null;
-        return view ? [navigation.query, view.config] : [navigation.query, {}];
+        return view ? [navigation.query, view.config] : [navigation.query, config];
       })
     ).subscribe(([query, config]: [QueryModel, ViewConfigModel]) => {
       this.query = query;
