@@ -28,9 +28,14 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return viewsAdapter.addOne(action.payload.view, state);
     case ViewsActionType.UPDATE_SUCCESS:
       return viewsAdapter.updateOne({id: action.payload.view.code, changes: action.payload.view}, state);
-    case ViewsActionType.CHANGE_CONFIG:
-      const config = Object.assign({}, state.config, action.payload.config);
-      return {...state, config: config};
+    case ViewsActionType.CHANGE_POSTIT_CONFIG:
+      return {...state, config: {...state.config, postit: action.payload.config}};
+    case ViewsActionType.CHANGE_SEARCH_CONFIG:
+      return {...state, config: {...state.config, search: action.payload.config}};
+    case ViewsActionType.CHANGE_SMARTDOC_CONFIG:
+      return {...state, config: {...state.config, smartdoc: action.payload.config}};
+    case ViewsActionType.CHANGE_TABLE_CONFIG:
+      return {...state, config: {...state.config, table: action.payload.config}};
     case ViewsActionType.CLEAR:
       return initialViewsState;
     default:
