@@ -18,6 +18,7 @@
  */
 
 import {ROUTER_CANCEL, ROUTER_NAVIGATION, RouterCancelAction, RouterNavigationAction} from '@ngrx/router-store';
+import {perspectivesMap} from '../../../view/perspectives/perspective';
 import {QueryConverter} from './query.converter';
 import {RouteFinder} from '../../../shared/utils/route-finder';
 import {NavigationState} from './navigation.state';
@@ -36,7 +37,7 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
       collectionCode: params.get('collectionCode'),
       viewCode: params.get('vc')
     },
-    perspective: extractPerspectiveIdFromUrl(action.payload.routerState.url),
+    perspective: perspectivesMap[extractPerspectiveIdFromUrl(action.payload.routerState.url)],
     searchBoxHidden: RouteFinder.getDeepestChildRoute(route).data['searchBoxHidden'],
     viewName: queryParams.get('viewName')
   };

@@ -24,13 +24,12 @@ import {Observable} from 'rxjs/Observable';
 import {first, map, skipWhile, take} from 'rxjs/operators';
 import {Query} from '../core/dto';
 import {AppState} from '../core/store/app.state';
-import {selectNavigation} from '../core/store/navigation/navigation.state';
+import {selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
 import {Workspace} from '../core/store/navigation/workspace.model';
 import {RouterAction} from '../core/store/router/router.action';
 import {ViewModel} from '../core/store/views/view.model';
 import {ViewsAction} from '../core/store/views/views.action';
 import {selectAllViews, selectViewConfig, selectViewsDictionary} from '../core/store/views/views.state';
-import {perspectivesMap} from './perspectives/perspective';
 
 declare var $: any;
 
@@ -65,9 +64,9 @@ export class ViewComponent implements OnInit, OnDestroy {
       this.store.dispatch(new ViewsAction.Get({query: {}}));
 
       if (navigation.workspace.viewCode) {
-        this.loadView(navigation.workspace.viewCode, navigation.perspective);
+        this.loadView(navigation.workspace.viewCode);
       } else {
-        this.loadQuery(navigation.query, navigation.perspective);
+        this.loadQuery(navigation.query);
       }
     });
 
@@ -89,29 +88,32 @@ export class ViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadView(code: string, perspective?: string) {
+  private loadView(code: string) {
     this.store.dispatch(new ViewsAction.GetByCode({viewCode: code}));
 
     this.viewSubscription = this.store.select(selectViewsDictionary).pipe(
       map(views => views[code]),
       skipWhile(view => !view)
     ).subscribe(view => {
-      this.view = {...view, perspective: perspective ? perspectivesMap[perspective] : view.perspective};
+      this.view = {...view};
     });
   }
 
-  private loadQuery(query: Query, perspective?: string) {
+  private loadQuery(query: Query) {
     this.view = {
       name: '',
       query: query,
-      perspective: perspectivesMap[perspective],
+      perspective: null,
       config: {}
     };
   }
 
   public onSave(name: string) {
-    this.configSubscription = this.store.select(selectViewConfig).pipe(take(1)).subscribe(config => {
-      const view: ViewModel = {...this.view, name, config};
+    this.configSubscription = Observable.combineLatest(
+      this.store.select(selectViewConfig),
+      this.store.select(selectPerspective)
+    ).pipe(take(1)).subscribe(([config, perspective]) => {
+      const view: ViewModel = {...this.view, name, config, perspective};
 
       if (view.code) {
         this.updateView(view);
