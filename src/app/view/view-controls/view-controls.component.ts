@@ -17,13 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
@@ -46,36 +43,69 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public save = new EventEmitter<string>();
 
-  public viewName: string;
+  @ViewChild('viewNameInput')
+  public viewNameInput: ElementRef;
+
+  public nameChanged: boolean;
+  public configChanged: boolean;
 
   private workspace: Workspace;
+  public perspective: Perspective;
 
-  private subscription: Subscription;
+  private configSubscription: Subscription;
+  private navigationSubscription: Subscription;
 
   constructor(private router: Router,
               private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.subscription = this.store.select(selectNavigation).subscribe(navigation => {
+    this.subscribeNavigation();
+    this.subscribeConfig();
+  }
+
+  private subscribeNavigation() {
+    this.navigationSubscription = this.store.select(selectNavigation).subscribe(navigation => {
       this.workspace = navigation.workspace;
+      this.perspective = navigation.perspective;
+
       if (navigation.viewName) {
-        this.viewName =  `${navigation.viewName} - copy`;
+        this.viewNameInput.nativeElement.value = `${navigation.viewName} - copy`;
+        this.nameChanged = true;
       }
     });
+  }
+
+  private subscribeConfig() {
+    this.configSubscription = this.store.select(selectViewConfig).subscribe(config => {
+      this.configChanged = JSON.stringify(config[this.perspective]) !== JSON.stringify(this.view.config[this.perspective]);
+    });
+  }
+
+  public onNameInput(viewName: string) {
+    this.nameChanged = this.view.name !== viewName;
+  }
+
+  public isViewChanged(): boolean {
+    const perspectiveChanged = this.view.perspective !== this.perspective;
+    return this.view.code ? (this.nameChanged || this.configChanged || perspectiveChanged) : this.nameChanged;
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('view') && this.view) {
       if (this.view.name) {
-        this.viewName = this.view.name;
+        this.viewNameInput.nativeElement.value = this.view.name;
+        this.nameChanged = false;
       }
     }
   }
 
   public ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    if (this.configSubscription) {
+      this.configSubscription.unsubscribe();
+    }
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
     }
   }
 
@@ -89,9 +119,8 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.store.dispatch(new RouterAction.Go({path, extras: {queryParamsHandling: 'merge'}}));
   }
 
-  public onSave() {
-    // TODO validation
-    this.save.emit(this.viewName.trim());
+  public onSave(viewName: string) {
+    this.save.emit(viewName.trim());
   }
 
   public onCopy() {
@@ -125,15 +154,6 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       default:
         return true;
     }
-  }
-
-  public isViewChanged(): Observable<boolean> {
-    return this.store.select(selectViewConfig).pipe(
-      map(config => {
-        const sameConfig: boolean = JSON.stringify(config) === JSON.stringify(this.view.config);
-        return this.view.name !== this.viewName || !sameConfig;
-      })
-    )
   }
 
 }

@@ -18,16 +18,16 @@
  */
 
 import {createSelector} from '@ngrx/store';
-
+import {Perspective} from '../../../view/perspectives/perspective';
+import {AppState} from '../app.state';
 import {QueryModel} from './query.model';
 import {Workspace} from './workspace.model';
-import {AppState} from '../app.state';
 
 export interface NavigationState {
 
   query: QueryModel;
   workspace: Workspace;
-  perspective?: string;
+  perspective?: Perspective;
   searchBoxHidden?: boolean;
   viewName?: string;
 
@@ -42,5 +42,6 @@ export const initialNavigationState: NavigationState = {
 };
 
 export const selectNavigation = (state: AppState) => state.navigation;
-export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);
 export const selectQuery = createSelector(selectNavigation, (state: NavigationState) => state.query);
+export const selectPerspective = createSelector(selectNavigation, (state: NavigationState) => state.perspective);
+export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);
