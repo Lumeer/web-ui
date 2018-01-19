@@ -50,7 +50,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   public configChanged: boolean;
 
   private workspace: Workspace;
-  private perspective: Perspective;
+  public perspective: Perspective;
 
   private configSubscription: Subscription;
   private navigationSubscription: Subscription;
