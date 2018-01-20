@@ -22,7 +22,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {map, switchMap} from 'rxjs/operators';
+import {first, map, switchMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {WorkspaceService} from './workspace.service';
 import {AppState} from '../core/store/app.state';
@@ -38,8 +38,7 @@ import {UserSettingsService} from '../core/user-settings.service';
 @Injectable()
 export class WorkspaceSelectGuard implements CanActivate {
 
-  public constructor(private router: Router,
-                     private workspaceService: WorkspaceService,
+  public constructor(private workspaceService: WorkspaceService,
                      private userSettingsService: UserSettingsService,
                      private store: Store<AppState>) {
   }
@@ -65,6 +64,7 @@ export class WorkspaceSelectGuard implements CanActivate {
       this.store.select(selectSelectedOrganization),
       this.store.select(selectSelectedProject)
     ).pipe(
+      first(),
       map(([selectedOrganization, selectedProject]) => !isNullOrUndefined(selectedOrganization) || !isNullOrUndefined(selectedProject))
     );
   }
