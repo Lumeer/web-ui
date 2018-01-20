@@ -19,7 +19,7 @@
 
 import {Action} from '@ngrx/store';
 import {QueryModel} from '../navigation/query.model';
-import {ViewConfigModel, ViewModel} from './view.model';
+import {PostItConfigModel, SearchConfigModel, SmartDocConfigModel, TableConfigModel, ViewModel} from './view.model';
 
 export enum ViewsActionType {
 
@@ -36,7 +36,10 @@ export enum ViewsActionType {
   UPDATE_SUCCESS = '[Views] Update :: Success',
   UPDATE_FAILURE = '[Views] Update :: Failure',
 
-  CHANGE_CONFIG = '[Views] Change Config',
+  CHANGE_POSTIT_CONFIG = '[Views] Change Post-it Config',
+  CHANGE_SEARCH_CONFIG = '[Views] Change Search Config',
+  CHANGE_SMARTDOC_CONFIG = '[Views] Change Smart Document Config',
+  CHANGE_TABLE_CONFIG = '[Views] Change Table Config',
 
   CLEAR = '[Views] Clear'
 
@@ -96,14 +99,14 @@ export namespace ViewsAction {
   export class Update implements Action {
     public readonly type = ViewsActionType.UPDATE;
 
-    public constructor(public payload: { viewCode: string, view: ViewModel }) {
+    public constructor(public payload: { viewCode: string, view: ViewModel, nextAction?: Action }) {
     }
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = ViewsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: { view: ViewModel }) {
+    public constructor(public payload: { view: ViewModel, nextAction?: Action }) {
     }
   }
 
@@ -114,10 +117,31 @@ export namespace ViewsAction {
     }
   }
 
-  export class ChangeConfig implements Action {
-    public readonly type = ViewsActionType.CHANGE_CONFIG;
+  export class ChangePostItConfig implements Action {
+    public readonly type = ViewsActionType.CHANGE_POSTIT_CONFIG;
 
-    public constructor(public payload: { config: ViewConfigModel }) {
+    public constructor(public payload: { config: PostItConfigModel }) {
+    }
+  }
+
+  export class ChangeSearchConfig implements Action {
+    public readonly type = ViewsActionType.CHANGE_SEARCH_CONFIG;
+
+    public constructor(public payload: { config: SearchConfigModel }) {
+    }
+  }
+
+  export class ChangeSmartDocConfig implements Action {
+    public readonly type = ViewsActionType.CHANGE_SMARTDOC_CONFIG;
+
+    public constructor(public payload: { config: SmartDocConfigModel }) {
+    }
+  }
+
+  export class ChangeTableConfig implements Action {
+    public readonly type = ViewsActionType.CHANGE_TABLE_CONFIG;
+
+    public constructor(public payload: { config: TableConfigModel }) {
     }
   }
 
@@ -131,6 +155,7 @@ export namespace ViewsAction {
   export type All = GetByCode | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    ChangeConfig | Clear;
+    ChangePostItConfig | ChangeSearchConfig | ChangeSmartDocConfig | ChangeTableConfig |
+    Clear;
 
 }

@@ -31,7 +31,6 @@ import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generat
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectAllDocuments} from '../../../core/store/documents/documents.state';
-import {LinkTypeModel} from '../../../core/store/link-types/link-type.model';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
@@ -43,7 +42,6 @@ import {ViewsAction} from '../../../core/store/views/views.action';
 import {selectViewConfig, selectViewSmartDocConfig} from '../../../core/store/views/views.state';
 import {SizeType} from '../../../shared/slider/size-type';
 import {GridLayout} from '../../../shared/utils/layout/grid-layout';
-import {Perspective} from '../perspective';
 import {PerspectiveComponent} from '../perspective.component';
 
 @Component({
@@ -353,14 +351,14 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
     const innerDocumentIdsOrder: { [key: string]: string[] } = smartDocConfig.innerDocumentIdsOrder ? {...smartDocConfig.innerDocumentIdsOrder} : {};
     innerDocumentIdsOrder[this.linkedDocument.id + this.templateId] = documentIds;
 
-    const smartdoc: SmartDocConfigModel = {...this.viewConfig, innerDocumentIdsOrder};
-    this.store.dispatch(new ViewsAction.ChangeConfig({config: {smartdoc}}));
+    const config: SmartDocConfigModel = {...this.viewConfig, innerDocumentIdsOrder};
+    this.store.dispatch(new ViewsAction.ChangeSmartDocConfig({config}));
   }
 
   private updateTopLevelDocumentsOrder(documentIds: string[]) {
     const smartDocConfig: SmartDocConfigModel = this.viewConfig ? {...this.viewConfig, templateId: this.template.id} : {templateId: this.template.id};
-    const smartdoc: SmartDocConfigModel = {...smartDocConfig, documentIdsOrder: documentIds};
-    this.store.dispatch(new ViewsAction.ChangeConfig({config: {smartdoc}}));
+    const config: SmartDocConfigModel = {...smartDocConfig, documentIdsOrder: documentIds};
+    this.store.dispatch(new ViewsAction.ChangeSmartDocConfig({config}));
   }
 
 }

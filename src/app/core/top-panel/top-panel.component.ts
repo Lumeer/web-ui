@@ -32,6 +32,7 @@ import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectByCode} from '../store/projects/projects.state';
 import {RouterAction} from '../store/router/router.action';
 import {UserSettingsService} from '../user-settings.service';
+import {first} from "rxjs/operators";
 
 @Component({
   selector: 'top-panel',
@@ -48,6 +49,8 @@ export class TopPanelComponent implements OnInit {
   public workspace: Workspace;
 
   public notificationsDisabled: boolean;
+
+  public buildNumber = BUILD_NUMBER;
 
   constructor(private store: Store<AppState>,
               private router: Router,
@@ -80,11 +83,12 @@ export class TopPanelComponent implements OnInit {
     Observable.combineLatest(
       this.store.select(selectOrganizationByCode(this.workspace.organizationCode)),
       this.store.select(selectProjectByCode(this.workspace.projectCode))
-    ).subscribe(([organization, project]) => {
+    ).pipe(first())
+      .subscribe(([organization, project]) => {
       if (organization && project) {
         this.store.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
         this.store.dispatch(new ProjectsAction.Select({projectId: selectProject ? project.id : null}));
-        this.store.dispatch(new RouterAction.Go({path: ['workspace']}))
+        this.store.dispatch(new RouterAction.Go({path: ['workspace']}));
       }
     });
   }
@@ -99,6 +103,10 @@ export class TopPanelComponent implements OnInit {
 
   public removeHtmlComments(html: HTMLElement): string {
     return HtmlModifier.removeHtmlComments(html);
+  }
+
+  public workspacePath(): string {
+    return `w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
 }

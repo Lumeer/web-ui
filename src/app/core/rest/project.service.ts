@@ -62,22 +62,14 @@ export class ProjectService extends PermissionService {
       throw new LumeerError('Organization not set');
     }
 
-    return this.httpClient.post(this.apiPrefix(orgCode), project, {observe: 'response', responseType: 'text'}).pipe(
-      switchMap(id => this.getProject(orgCode, project.code))
-    );
+    return this.httpClient.post<Project>(this.apiPrefix(orgCode), project);
   }
 
   public editProject(orgCode: string, projCode: string, project: Project): Observable<Project> {
     if (!this.hasFullApiPrefix(orgCode, projCode)) {
       throw new LumeerError(`Workspace not set ${orgCode} ${projCode}`);
     }
-
-    return this.httpClient.put(this.apiPrefix(orgCode, projCode), project, {
-      observe: 'response',
-      responseType: 'text'
-    }).pipe(
-      map(() => project) // TODO return fresh instance from the server instead
-    );
+    return this.httpClient.put<Project>(this.apiPrefix(orgCode, projCode), project);
   }
 
   private hasOrganizationApiPrefix(orgCode: string): boolean {

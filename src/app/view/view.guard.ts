@@ -44,11 +44,11 @@ export class ViewGuard implements CanActivate {
 
     return this.store.select(selectViewsDictionary).pipe(
       withLatestFrom(this.store.select(selectNavigation)),
-      skipWhile(([views, navigation]) => !(viewCode in views)),
+      skipWhile(([views]) => !(viewCode in views)),
       tap(([views, navigation]) => {
         const workspace = navigation.workspace;
         const view = views[workspace.viewCode];
-        const perspective = view ? view.perspective : Perspective.Search;
+        const perspective = view && view.perspective ? view.perspective : Perspective.Search;
         const query = view ? QueryConverter.toString(view.query) : null;
 
         const viewPath: any[] = ['w', workspace.organizationCode, workspace.projectCode, 'view'];

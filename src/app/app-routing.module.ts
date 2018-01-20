@@ -17,19 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {StoreRouterConnectingModule} from '@ngrx/router-store';
+import {Angulartics2Module} from 'angulartics2';
+import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
+import {HomeComponent} from './core/home.component';
 
 import {PageNotFoundComponent} from './core/page-not-found/page-not-found.component';
-import {HomeComponent} from './core/home.component';
 import {SearchHomeComponent} from './core/search-home/search-home.component';
 import {WorkspaceGuard} from './workspace/workspace.guard';
 
 const appRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/search',
-    canActivate:[WorkspaceGuard],
+    canActivate: [WorkspaceGuard],
     component: SearchHomeComponent,
     data: {
       searchBoxHidden: true
@@ -46,10 +48,18 @@ const appRoutes: Routes = [
   }
 ];
 
+export const angularticsSettings = {
+  pageTracking: {
+    clearIds: true,
+    idsRegExp: new RegExp('^[0-9a-z]{24}$')
+  }
+};
+
 @NgModule({
   imports: [
     RouterModule.forRoot(appRoutes),
-    StoreRouterConnectingModule
+    StoreRouterConnectingModule,
+    Angulartics2Module.forRoot([Angulartics2GoogleAnalytics], angularticsSettings)
   ],
   exports: [RouterModule]
 })

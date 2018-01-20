@@ -2,8 +2,8 @@
   <div class="form-control dropdown mr-2 p-0" title="Perspective" i18n-title="@@view.perspective">
     <div class="dropdown-toggle py-1 px-2 d-flex flex-nowrap align-items-center"
          id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <i class="fa-fw {{getIconForPerspective(view.perspective)}}"></i>
-      <span class="ml-1 text-nowrap" i18n="@@view.perspective.name">{view.perspective, select, postit {Post-it} search {Search} table {Table} smartdoc {Smart document}}</span>
+      <i class="fa-fw {{getIconForPerspective(perspective)}}"></i>
+      <span class="ml-1 text-nowrap" i18n="@@view.perspective.name">{perspective, select, postit {Post-it} search {Search} table {Table} smartdoc {Smart document}}</span>
     </div>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
       <ng-container *ngFor="let perspective of perspectives()">
@@ -16,26 +16,40 @@
       </ng-container>
     </div>
   </div>
-  <input #viewName
+  <input #viewNameInput
          id="viewName"
          name="viewName"
          title="View name" i18n-title="@@view.name"
-         [value]="view.name"
-         class="form-control-lg p-2 border-0 font-italic flex-grow-2 no-outline"
+         class="form-control-lg p-2 border-0 flex-grow-2 no-outline"
+         [class.font-italic]="!view.code || nameChanged"
+         (input)="onNameInput(viewNameInput.value)"
          placeholder="Untitled view" i18n-placeholder="@@view.untitled"/>
-  <button title="Save" i18n-title="@@view.button.save"
+  <i *ngIf="isViewChanged()"
+     class="far fa-exclamation-triangle fa-fw text-warning mx-1"
+     title="Changes has not been saved" i18n-title="@@view.indicator.not.saved">
+  </i>
+  <button *ngIf="viewNameInput.value && isViewChanged()"
+          title="Save" i18n-title="@@view.button.save"
           class="fa-lg view-button mx-1"
-          (click)="onSave()">
+          (click)="onSave(viewNameInput.value)">
     <i class="fa fa-save fa-fw"></i>
     <i class="fal fa-save fa-fw"></i>
   </button>
-  <button title="Copy" i18n-title="@@view.button.copy"
+  <i *ngIf="!(viewNameInput.value && isViewChanged())"
+     class="fal fa-lg fa-save fa-fw text-secondary mx-1"
+     title="Nothing to save" i18n-title="@@view.button.save.disabled">
+  </i>
+  <button *ngIf="view.code"
+          title="Copy" i18n-title="@@view.button.copy"
           class="fa-lg view-button mx-1"
-          *ngIf="view"
           (click)="onCopy()">
     <i class="fa fa-copy fa-fw"></i>
     <i class="fal fa-copy fa-fw"></i>
   </button>
+  <i *ngIf="!view.code"
+     class="fal fa-lg fa-copy fa-fw text-secondary mx-1"
+     title="Nothing to copy" i18n-title="@@view.button.copy.disabled">
+  </i>
   <button class="btn btn-outline-success ml-2"
           type="button"
           data-toggle="modal"

@@ -100,16 +100,24 @@ export class ViewsEffects {
     switchMap(action => {
       const viewDto = ViewConverter.convertToDto(action.payload.view);
 
-      return this.viewService.updateView(action.payload.viewCode, viewDto).pipe(
-        map(dto => ViewConverter.convertToModel(dto))
+      return Observable.combineLatest(
+        Observable.of(action),
+        this.viewService.updateView(action.payload.viewCode, viewDto).pipe(
+          map(dto => ViewConverter.convertToModel(dto))
+        )
       );
     }),
-    map(view => new ViewsAction.UpdateSuccess({view: view})),
+    map(([action, view]) => new ViewsAction.UpdateSuccess({view: view, nextAction: action.payload.nextAction})),
     catchError((error) => Observable.of(new ViewsAction.UpdateFailure({error: error})))
   );
 
   @Effect()
-  public updateSuccess$: Observable<Action> = this.actions$.ofType(ViewsActionType.UPDATE_SUCCESS).pipe(
+  public updateSuccess$: Observable<Action> = this.actions$.ofType<ViewsAction.UpdateSuccess>(ViewsActionType.UPDATE_SUCCESS).pipe(
+    tap(action => {
+      if (action.payload.nextAction) {
+        this.store$.dispatch(action.payload.nextAction);
+      }
+    }),
     map(() => new NotificationsAction.Success({message: 'View has been updated'}))
   );
 

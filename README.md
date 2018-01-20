@@ -35,6 +35,10 @@ $ LUMEER_ENV=development
 ```
 $ LUMEER_ENGINE=lumeer-engine
 ```
+* BUILD_NUMBER - if this variable is set, the given build number is shown in the top panel dropdown menu
+```
+$ BUILD_NUMBER=42
+```
 * AOT - To turn off or on AOT generation. Default is false.
 ```
 $ AOT=true

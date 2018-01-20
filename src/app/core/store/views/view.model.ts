@@ -36,9 +36,16 @@ export interface ViewModel {
 
 export interface ViewConfigModel {
 
+  postit?: PostItConfigModel;
   search?: SearchConfigModel;
   table?: TableConfigModel;
   smartdoc?: SmartDocConfigModel;
+
+}
+
+export interface PostItConfigModel {
+
+  documentIdsOrder?: string[];
 
 }
 

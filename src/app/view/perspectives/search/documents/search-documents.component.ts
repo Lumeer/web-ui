@@ -19,6 +19,8 @@
 
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {map, skipWhile, tap} from 'rxjs/operators';
 
 import {Subscription} from 'rxjs/Subscription';
 import {isArray, isNullOrUndefined, isObject} from 'util';
@@ -28,8 +30,6 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
 import {selectQuery} from '../../../../core/store/navigation/navigation.state';
-import {Observable} from 'rxjs/Observable';
-import {skipWhile, tap} from 'rxjs/operators';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
 import {UserSettingsService} from '../../../../core/user-settings.service';
@@ -72,9 +72,11 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
       .pipe(
         skipWhile(query => isNullOrUndefined(query)),
         tap(query => this.store.dispatch(new DocumentsAction.Get({query}))),
-        tap(() => this.store.dispatch(new ViewsAction.ChangeConfig({config: {search: {expandedDocumentIds: []}}})))
+        tap(() => this.store.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: []}})))
       ).subscribe();
-    this.documents$ = this.store.select(selectDocumentsByQuery);
+    this.documents$ = this.store.select(selectDocumentsByQuery).pipe(
+      map(documents => documents.filter(doc => doc.id))
+    );
     this.searchConfigSubscription = this.store.select(selectViewSearchConfig)
       .subscribe(config => this.expandedDocumentIds = config.expandedDocumentIds.slice());
   }
@@ -122,14 +124,14 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public createDefaultAttributeHtml(document: DocumentModel): string {
-    const data = document.data;
-    return this.valueHtml(Object.values(data)[0]);
+    const data = Object.values(document.data || {});
+    return this.valueHtml(data[0]);
   }
 
   public toggleDocument(document: DocumentModel) {
     const newIds = this.isDocumentOpened(document) ? this.expandedDocumentIds.filter(id => id !== document.id)
       : [...this.expandedDocumentIds, document.id];
-    this.store.dispatch(new ViewsAction.ChangeConfig({config: {search: {expandedDocumentIds: newIds}}}));
+    this.store.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: newIds}}));
   }
 
   public onLinkClick(document: DocumentModel) {
@@ -157,7 +159,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private getValues(document: DocumentModel): string[] {
-    return this.getValuesFromArray(Object.values(document.data));
+    return this.getValuesFromArray(Object.values(document.data || {}));
   }
 
   private getValuesFromAny(value: any): string[] | string {
