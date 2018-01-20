@@ -71,6 +71,12 @@ export class PostItLayout {
     });
   }
 
+  public refresh(): void {
+    if (this.isInitializedAffterAttempt()) {
+      this.relayout();
+    }
+  }
+
   protected isInitializedAffterAttempt(): boolean {
     if (!this.containerExists()) {
       return false;

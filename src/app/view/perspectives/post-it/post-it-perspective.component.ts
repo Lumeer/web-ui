@@ -19,7 +19,7 @@
 
 import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {skipWhile} from 'rxjs/operators';
+import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../core/store/app.state';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
@@ -166,7 +166,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public createPostIt(document: DocumentModel): void {
-    const newPostIt = this.documentModelToPostItModel(document, false);
+    const newPostIt = this.documentModelToPostItModel(document);
     this.postIts.unshift(newPostIt);
 
     setTimeout(() => {
@@ -196,38 +196,53 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeOnDocuments(queryModel: QueryModel) {
     const subscription = this.store.select(selectDocumentsByCustomQuery(queryModel)).pipe(
-      skipWhile(() => !this.navigationHelper.validNavigation())
-    ).subscribe(documents => {
-      setTimeout(() => {
-        this.checkAllLoaded(documents);
-
-        this.replaceDocumentsInLayout(documents);
-        this.addDocumentsNotInLayout(documents);
-
-        this.infiniteScroll.finishLoading();
-      });
-    });
+      filter(() => this.canFetchDocuments())
+    ).subscribe(documents => this.updateLayoutWithDocuments(documents));
 
     this.pageSubscriptions.push(subscription);
   }
 
-  private replaceDocumentsInLayout(documents): void {
-    const usedDocumentIDs = new Set(this.postIts.map(postIt => postIt.document.id));
-    documents
-      .filter(documentModel => usedDocumentIDs.has(documentModel.id))
-      .forEach(documentModel => this.replaceDocument(documentModel));
+  private canFetchDocuments() {
+    return this.navigationHelper.validNavigation();
   }
 
-  private replaceDocument(documentModel: DocumentModel): void {
-    const replaced = this.postIts.findIndex(postIt => postIt.document.id === documentModel.id);
-    this.postIts[replaced] = this.documentModelToPostItModel(documentModel, true);
+  private updateLayoutWithDocuments(documents) {
+    setTimeout(() => {
+      this.checkAllLoaded(documents);
+      this.addDocumentsNotInLayout(documents);
+      this.focusNewDocumentIfPresent(documents);
+
+      this.infiniteScroll.finishLoading();
+      this.layoutManager.refresh();
+    });
   }
 
   private addDocumentsNotInLayout(documents: DocumentModel[]): void {
     const usedDocumentIDs = new Set(this.postIts.map(postIt => postIt.document.id));
     documents
       .filter(documentModel => !usedDocumentIDs.has(documentModel.id))
-      .forEach(documentModel => this.postIts.push(this.documentModelToPostItModel(documentModel, true)));
+      .forEach(documentModel => this.postIts.push(this.documentModelToPostItModel(documentModel)));
+  }
+
+  private focusNewDocumentIfPresent(documents: DocumentModel[]): void {
+    const newDocument = documents.find(document => Boolean(document.correlationId));
+
+    if (newDocument) {
+      this.focusDocument(newDocument);
+    }
+  }
+
+  private focusDocument(document: DocumentModel): void {
+    const focusedPostIt = this.findPostItOfDocument(document);
+
+    setTimeout(() => {
+      this.selectionHelper.select(1, 0, focusedPostIt);
+      this.selectionHelper.focus();
+    });
+  }
+
+  private findPostItOfDocument(document: DocumentModel): PostItDocumentModel {
+    return this.postIts.find(postIt => postIt.document.id === document.id);
   }
 
   private updateDocument(postIt: PostItDocumentModel) {
@@ -243,6 +258,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private initializePostIt(postItToInitialize: PostItDocumentModel): void {
     if (!postItToInitialize.updating) {
       postItToInitialize.updating = true;
+      postItToInitialize.document.correlationId = String(Math.floor(Math.random() * 1000000000000000) + 1);
+
       this.store.dispatch(new Create({document: postItToInitialize.document}));
       this.postIts.splice(this.postIts.indexOf(postItToInitialize), 1);
     }
@@ -252,12 +269,12 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.deletionHelper.deletePostIt(postIt);
   }
 
-  private documentModelToPostItModel(documentModel: DocumentModel, initialized: boolean): PostItDocumentModel {
+  private documentModelToPostItModel(documentModel: DocumentModel): PostItDocumentModel {
     const postIt = new PostItDocumentModel();
     postIt.document = documentModel;
-    postIt.initialized = initialized;
+    postIt.initialized = Boolean(documentModel.id);
 
-    if (!initialized) {
+    if (!postIt.initialized) {
       postIt.order = -this.postIts.length;
     } else {
       postIt.order = this.postIts.length;

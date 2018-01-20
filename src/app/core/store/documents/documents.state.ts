@@ -19,13 +19,13 @@
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
-import {isNullOrUndefined} from 'util';
 import {AppState} from '../app.state';
 import {selectCollectionsDictionary} from '../collections/collections.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {QueryModel} from '../navigation/query.model';
 
 import {DocumentModel} from './document.model';
+import {isNullOrUndefined} from 'util';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   queries: QueryModel[];
@@ -52,8 +52,8 @@ export const selectDocumentsByQuery = createSelector(
     return documents
       .filter(document => typeof(document) !== 'function')
       .map(document => {
-      return {...document, collection: collections[document.collectionCode]};
-    });
+        return {...document, collection: collections[document.collectionCode]};
+      });
   }
 );
 
@@ -62,8 +62,9 @@ export function selectDocumentsByCustomQuery(query: QueryModel) {
     selectAllDocuments,
     selectCollectionsDictionary,
     (documents, collections): DocumentModel[] => {
+      documents = documents.filter(document => typeof(document) !== 'function');
+
       return filterDocumentsByQuery(documents, query)
-        .filter(document => typeof(document) !== 'function')
         .map(document => {
           return {...document, collection: collections[document.collectionCode]};
         });

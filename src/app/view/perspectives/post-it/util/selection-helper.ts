@@ -222,7 +222,7 @@ export class SelectionHelper {
 
     let elementToFocus = document.getElementById(this.selectedInputId());
 
-    if (this.selection.editing) {
+    if (elementToFocus && this.selection.editing) {
       elementToFocus = elementToFocus.getElementsByTagName('Input').item(0) as HTMLInputElement;
     }
 

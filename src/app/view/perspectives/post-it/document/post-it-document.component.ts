@@ -17,10 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output,
-  ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {isString} from 'util';
 import {Permission} from '../../../../core/dto';
@@ -47,8 +44,19 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   @HostListener('focusout')
   public onFocusOut(): void {
     if (this.changed) {
+      this.checkforDuplicitAttributes();
+
       this.changed = false;
       this.changes.emit();
+    }
+  }
+
+  private checkforDuplicitAttributes(): void {
+    const attributesCount = Object.keys(this.postItModel.document.data).length;
+    const userWrittenAttributesCount = this.attributePairs.length;
+
+    if (attributesCount !== userWrittenAttributesCount) {
+      console.warn('You added more values to single attribute, we suggest refreshing');
     }
   }
 
@@ -160,8 +168,11 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public updateValue(attributePair: AttributePair): void {
+    if (this.postItModel.document.data[attributePair.attribute] === attributePair.value) {
+      this.changed = true;
+    }
+
     this.postItModel.document.data[attributePair.attribute] = attributePair.value;
-    this.changed = true;
   }
 
   public toggleDocumentFavorite() {
