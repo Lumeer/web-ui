@@ -58,7 +58,7 @@
                      (click)="$event.stopPropagation()"
                      (keydown)="onKeyDown($event, code)"
                      placeholder="Set code" i18n-placeholder="@@resource.postit.code"
-                     title="Code" i18n-title="@@resource.postit.code"
+                     title="{{resource.code}}"
                      [attr.spellcheck]="false"
                      [textContent]="resource.code"
                      #code>
@@ -68,7 +68,7 @@
                      (click)="$event.stopPropagation()"
                      (keydown)="onKeyDown($event, name)"
                      placeholder="Fill in name" i18n-placeholder="@@resource.postit.name"
-                     title="Name" i18n-title="@@resource.postit.name"
+                     title="{{resource.name}}"
                      [attr.spellcheck]="false"
                      [textContent]="resource.name"
                      #name>
