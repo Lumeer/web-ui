@@ -29,7 +29,7 @@
         <div class="tab d-flex" *ngFor="let resource of resources.concat(newResources); let ix = index"
              (click)="onResourceSelected(resource.id)">
           <div class="post-it align-self-center">
-            <div class="card square" [class.highlight]="!resource.id"></div>
+            <div class="card square" [class.unitialized]="!resource.id"></div>
             <div class="card text-center content border-0" [style.color]="resource.color">
               <div class="card-body">
 
@@ -57,7 +57,7 @@
                      (blur)="code.scrollTo(0,0); onCodeBlur(code, resource)"
                      (click)="$event.stopPropagation()"
                      (keydown)="onKeyDown($event, code)"
-                     placeholder="Code" i18n-placeholder="@@resource.postit.code"
+                     placeholder="Set code" i18n-placeholder="@@resource.postit.code"
                      title="Code" i18n-title="@@resource.postit.code"
                      [attr.spellcheck]="false"
                      [textContent]="resource.code"
@@ -67,7 +67,7 @@
                      (blur)="name.scrollTo(0,0); onNameBlur(name, resource)"
                      (click)="$event.stopPropagation()"
                      (keydown)="onKeyDown($event, name)"
-                     placeholder="Name" i18n-placeholder="@@resource.postit.name"
+                     placeholder="Fill in name" i18n-placeholder="@@resource.postit.name"
                      title="Name" i18n-title="@@resource.postit.name"
                      [attr.spellcheck]="false"
                      [textContent]="resource.name"
