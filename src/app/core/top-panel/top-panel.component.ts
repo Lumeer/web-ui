@@ -32,6 +32,7 @@ import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectByCode} from '../store/projects/projects.state';
 import {RouterAction} from '../store/router/router.action';
 import {UserSettingsService} from '../user-settings.service';
+import {first} from "rxjs/operators";
 
 @Component({
   selector: 'top-panel',
@@ -80,7 +81,8 @@ export class TopPanelComponent implements OnInit {
     Observable.combineLatest(
       this.store.select(selectOrganizationByCode(this.workspace.organizationCode)),
       this.store.select(selectProjectByCode(this.workspace.projectCode))
-    ).subscribe(([organization, project]) => {
+    ).pipe(first())
+      .subscribe(([organization, project]) => {
       if (organization && project) {
         this.store.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
         this.store.dispatch(new ProjectsAction.Select({projectId: selectProject ? project.id : null}));
