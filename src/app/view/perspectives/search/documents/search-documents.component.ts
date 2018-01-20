@@ -124,8 +124,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public createDefaultAttributeHtml(document: DocumentModel): string {
-    const data = Object.values(document.data || {});
-    return this.valueHtml(data[0]);
+    const data = document.data;
+    if (isNullOrUndefined(data)) return '';
+    return this.valueHtml(Object.values(data)[0]);
   }
 
   public toggleDocument(document: DocumentModel) {
@@ -159,7 +160,8 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private getValues(document: DocumentModel): string[] {
-    return this.getValuesFromArray(Object.values(document.data || {}));
+    if(isNullOrUndefined(document.data)) return [];
+    return this.getValuesFromArray(Object.values(document.data));
   }
 
   private getValuesFromAny(value: any): string[] | string {
@@ -184,7 +186,8 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     return this.getValuesFromArray(Object.values(object));
   }
 
-  public createEntriesHtml(document: DocumentModel) {
+  public createEntriesHtml(document: DocumentModel): string{
+    if(isNullOrUndefined(document.data)) return '';
     return this.entriesHtml(this.getEntriesForObject(document.data));
   }
 
