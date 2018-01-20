@@ -64,7 +64,9 @@ export class DocumentService {
     return this.httpClient.put<Document>(`${this.apiPrefix(document.collectionCode)}/${document.id}/data`, document.data)
       .pipe(
         catchError(error => this.handleGlobalError(error)),
-        tap(returnedDocument => returnedDocument.collectionCode = document.collectionCode),
+        map(returnedDocument => {
+          return {...returnedDocument, collectionCode: document.collectionCode};
+        }),
         switchMap(document => this.homePageService.checkFavoriteDocument(document))
       );
   }

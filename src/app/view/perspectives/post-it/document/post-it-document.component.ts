@@ -168,7 +168,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public updateValue(attributePair: AttributePair): void {
-    if (this.postItModel.document.data[attributePair.attribute] === attributePair.value) {
+    if (this.postItModel.document.data[attributePair.attribute] !== attributePair.value) {
       this.changed = true;
     }
 
