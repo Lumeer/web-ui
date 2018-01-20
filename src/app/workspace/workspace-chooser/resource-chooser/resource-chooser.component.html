@@ -57,8 +57,8 @@
                      (blur)="code.scrollTo(0,0); onCodeBlur(code, resource)"
                      (click)="$event.stopPropagation()"
                      (keydown)="onKeyDown($event, code)"
-                     placeholder="Code" i18n-placeholder="@@resource.postit.code"
-                     title="Code" i18n-title="@@resource.postit.code"
+                     placeholder="Set code" i18n-placeholder="@@resource.postit.code"
+                     title="{{resource.code}}"
                      [attr.spellcheck]="false"
                      [textContent]="resource.code"
                      #code>
@@ -67,8 +67,8 @@
                      (blur)="name.scrollTo(0,0); onNameBlur(name, resource)"
                      (click)="$event.stopPropagation()"
                      (keydown)="onKeyDown($event, name)"
-                     placeholder="Name" i18n-placeholder="@@resource.postit.name"
-                     title="Name" i18n-title="@@resource.postit.name"
+                     placeholder="Fill name" i18n-placeholder="@@resource.postit.name"
+                     title="{{resource.name}}"
                      [attr.spellcheck]="false"
                      [textContent]="resource.name"
                      #name>
