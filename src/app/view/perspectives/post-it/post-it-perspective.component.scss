@@ -37,8 +37,13 @@
     border-style: dashed;
   }
 
-  .large-text {
+  .loading-text {
+    position: relative;
+    top: 50px;
+
     font-size: 36px;
+
+    pointer-events: none;
   }
 
 }

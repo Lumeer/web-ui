@@ -62,11 +62,11 @@ export class PostItLayoutConfig {
 
   public sortData: object = null;
 
-  public dragEnabled = true;
+  public dragEnabled = false;
 
   public dragContainer: HTMLElement = null;
 
-  public dragStartPredicate: { distance: number, delay: number, handle: boolean } =
+  public dragStartPredicate: { distance: number, delay: number, handle: boolean | string } =
     {
       distance: 0,
       delay: 0,

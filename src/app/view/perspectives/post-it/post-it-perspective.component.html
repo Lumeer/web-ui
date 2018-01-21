@@ -2,29 +2,30 @@
 
   <add-document *ngIf="isAddButtonShown()"
                 class="layout-item"
-                [collectionCode]="currentCollection"
-                (newDocument)="createDocument($event)"></add-document>
+                [attr.order]="-1"
+                (createPostIt)="createPostIt($event)"></add-document>
 
-  <ng-container *ngFor="let postIt of postIts; let idx = index">
-    <post-it-document *ngIf="collections[postIt.document.collectionCode]"
-                      class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : null }}"
-                      [attr.index]="idx"
-                      [data]="setPostItIndexAndReturn(postIt, idx)"
-                      [collection]="collections[postIt.document.collectionCode]"
-                      (selectOther)="selectDocument($event)"
-                      (removed)="confirmDeletion(postIt)"
-                      (changes)="sendUpdate(postIt)"
-                      (toggleFavorite)="toggleDocumentFavorite(postIt)"></post-it-document>
-  </ng-container>
+  <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByIndex"
+                    class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : null }}"
+                    [attr.order]="postIt.order"
+                    [postItModel]="postItWithIndex(postIt, idx)"
+                    [perspectiveId]="perspectiveId"
+                    [layoutManager]="layoutManager"
+                    [selectionHelper]="selectionHelper"
+                    [navigationHelper]="navigationHelper"
+                    (removed)="deletePostIt(postIt)"
+                    (changes)="postItChanged(postIt)"></post-it-document>
 
-  <datalist *ngFor="let attributeSuggestionsEntry of suggestedAttributes()"
-            id="{{ attributeSuggestionsEntry[0] }}">
-    <option *ngFor="let suggestion of attributeSuggestionsEntry[1]">{{ suggestion }}</option>
+  <datalist *ngFor="let collection of usedCollections()"
+            id="{{ perspectiveId }}{{ collection.code }}">
+    <option *ngFor="let attribute of collection.attributes">{{ attribute.name }}</option>
   </datalist>
 
-  <label *ngIf="!editable && query && !postIts.length"
+  <label *ngIf="!editable && navigationHelper.hasQuery() && !postIts.length"
          class="label-centered"
          i18n="@@document.list.empty">Nothing To Show</label>
 </div>
 
-<div class="fading large-text text-center py-5" [style.opacity]="fetchingData ? 1 : 0">Loading...</div>
+<div class="fading loading-text text-center py-5" [style.opacity]="infiniteScroll.isLoading() ? 1 : 0">
+  Loading...
+</div>

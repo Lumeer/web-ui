@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {isNullOrUndefined} from 'util';
 import {Query} from '../../dto/query';
 import {QueryModel} from './query.model';
 
@@ -29,6 +30,8 @@ export class QueryConverter {
       filters: dto.filters,
       fulltext: dto.fulltext,
       linkTypeIds: dto.linkTypeIds,
+      page: dto.page,
+      pageSize: dto.pageSize
       // TODO convert other fields as well
     };
   }
@@ -39,6 +42,8 @@ export class QueryConverter {
       // documentIds: model.documentIds,
       filters: model.filters,
       fulltext: model.fulltext,
+      page: model.page,
+      pageSize: model.pageSize,
       // linkTypeIds: model.linkTypeIds,
       // TODO convert other fields as well
     };
@@ -61,6 +66,8 @@ export class QueryConverter {
     query.documentIds = query.documentIds || [];
     query.filters = query.filters || [];
     query.linkTypeIds = query.linkTypeIds || [];
+    query.pageSize = isNullOrUndefined(query.pageSize) ? null : query.pageSize;
+    query.page = isNullOrUndefined(query.page) ? null : query.page;
 
     return query;
   }

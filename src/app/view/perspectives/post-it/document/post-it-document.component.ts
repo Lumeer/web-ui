@@ -17,239 +17,124 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {
+  AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output,
+  ViewChild
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {isString} from 'util';
-import {Collection} from '../../../../core/dto/collection';
-import {Permission} from '../../../../core/dto/permission';
+import {Permission} from '../../../../core/dto';
 import {AppState} from '../../../../core/store/app.state';
-import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../shared/permissions/role';
-
+import {PostItLayout} from '../../../../shared/utils/layout/post-it-layout';
 import {AttributePair} from '../document-data/attribute-pair';
-import {AttributePropertySelection} from '../document-data/attribute-property-selection';
-import {Direction} from '../document-data/direction';
-import {DocumentModel} from '../document-data/document-model';
+import {PostItDocumentModel} from '../document-data/post-it-document-model';
+import {NavigationHelper} from '../util/navigation-helper';
+import {SelectionHelper} from '../util/selection-helper';
+import DeleteConfirm = DocumentsAction.DeleteConfirm;
+import Update = DocumentsAction.Update;
 
 @Component({
   selector: 'post-it-document',
   templateUrl: './post-it-document.component.html',
   styleUrls: ['./post-it-document.component.scss']
 })
-export class PostItDocumentComponent implements OnInit {
+export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  private _postItModel: PostItDocumentModel;
 
   @Input()
-  public data: DocumentModel;
+  public get postItModel() {
+    return this._postItModel;
+  }
+
+  public set postItModel(value) {
+    this._postItModel = value;
+    this.refreshDataAttributePairs();
+  }
 
   @Input()
-  public collection: Collection;
+  public perspectiveId: string;
 
   @Input()
-  public attributeSuggestions: string[];
+  public layoutManager: PostItLayout;
+
+  @Input()
+  public navigationHelper: NavigationHelper;
+
+  @Input()
+  public selectionHelper: SelectionHelper;
 
   @Output()
   public removed = new EventEmitter();
 
   @Output()
-  public selectOther = new EventEmitter<AttributePropertySelection>();
-
-  @Output()
   public changes = new EventEmitter();
-
-  @Output()
-  public toggleFavorite = new EventEmitter();
 
   @ViewChild('content')
   public content: ElementRef;
 
   public attributePairs: AttributePair[] = [];
 
-  public newAttributePair: AttributePair;
+  public newAttributePair: AttributePair = new AttributePair();
 
-  private workspace: Workspace;
-
-  constructor(public element: ElementRef,
-              private store: Store<AppState>) {
+  constructor(private store: Store<AppState>,
+              private element: ElementRef) {
   }
 
   public ngOnInit(): void {
-    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
-
-    this.initializeVariables();
-    this.setEventListener();
-    this.loadDocumentData();
+    this.disableScrollOnNavigation();
   }
 
-  private initializeVariables(): void {
-    this.newAttributePair = {
-      attribute: '',
-      value: '',
-      previousAttributeName: ''
-    };
-  }
+  private disableScrollOnNavigation(): void {
+    const capture = false;
+    const scrollKeys = [KeyCode.UpArrow, KeyCode.DownArrow];
 
-  private setEventListener(): void {
     this.content.nativeElement.addEventListener('keydown', (key: KeyboardEvent) => {
-      [KeyCode.UpArrow, KeyCode.DownArrow].includes(key.keyCode) && key.preventDefault();
-    }, false);
+      if (scrollKeys.includes(key.keyCode)) {
+        key.preventDefault();
+      }
+    }, capture);
   }
 
-  private loadDocumentData(): void {
-    delete this.data.document.data['_id']; // TODO remove after _id is no longer sent inside data
-
-    this.attributePairs = Object.entries(this.data.document.data).map(([attribute, value]) => {
-      return {
-        attribute: attribute,
-        previousAttributeName: attribute,
-        value: isString(value) ? value : JSON.stringify(value, null, 2)
-      };
-    });
+  public ngAfterViewInit(): void {
+    this.layoutManager.add(this.element.nativeElement);
   }
 
-  public onToggleFavorite() {
-    this.toggleFavorite.emit();
+  public toggleDocumentFavorite() {
+    this.store.dispatch(new Update({document: this.postItModel.document, toggleFavourite: true}));
   }
 
   public clickOnAttributePair(column: number, row: number): void {
-    this.setEditMode(this.previouslySelected(column, row));
-    this.select(column, row);
+    const enableEditMode = this.selectionHelper.wasPreviouslySelected(column, row, this.postItModel.document.id);
+
+    this.selectionHelper.setEditMode(enableEditMode);
+    this.selectionHelper.select(column, row, this.postItModel);
   }
 
-  private previouslySelected(column: number, row: number): boolean {
-    return column === this.data.selectedInput.column &&
-      row === this.data.selectedInput.row &&
-      this.data.index === this.data.selectedInput.documentIdx;
-  }
-
-  public onEditModeEnter(): void {
-    if (this.attributeColumn(this.data.selectedInput.column)) {
-      if (this.data.selectedInput.row === this.attributePairs.length && !this.newAttributePair.attribute) {
-        this.moveSelection(Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER);
-      } else {
-        this.moveSelection(1, 0);
-      }
-    } else {
-      if (this.data.selectedInput.row === this.attributePairs.length) {
-        this.moveSelection(Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER);
-      } else {
-        this.moveSelection(-1, 1);
-      }
-    }
-  }
-
-  private moveSelection(columnChange: number, rowChange: number): void {
-    const newColumn = this.data.selectedInput.column + columnChange;
-    const newRow = this.data.selectedInput.row + rowChange;
-
-    if (this.selectedDocumentDirection(newColumn, newRow) === Direction.Self) {
-      this.select(newColumn, newRow);
-    } else {
-      this.selectOther.emit({
-        row: newRow,
-        column: newColumn,
-        direction: this.selectedDocumentDirection(newColumn, newRow),
-        editing: false,
-        documentIdx: this.data.index
-      });
-    }
-  }
-
-  private selectedDocumentDirection(newColumn: number, newRow: number): Direction {
-    if (newColumn < 0) {
-      return Direction.Left;
-    }
-    if (newColumn > 1 || (this.onDisabledInput(newColumn, newRow) && this.attributeColumn(this.data.selectedInput.column))) {
-      return Direction.Right;
-    }
-    if (newRow < 0) {
-      return Direction.Up;
-    }
-    if (newRow > this.attributePairs.length || (this.onDisabledInput(newColumn, newRow) && this.onSecondToLastRow())) {
-      return Direction.Down;
-    }
-
-    return Direction.Self;
-  }
-
-  private onDisabledInput(column: number, row: number): boolean {
-    return !this.newAttributePair.attribute && this.valueColumn(column) && row === this.attributePairs.length;
-  }
-
-  private onSecondToLastRow(): boolean {
-    return this.data.selectedInput.row === this.attributePairs.length - 1;
-  }
-
-  public select(column: number, row: number): void {
-    this.data.selectedInput.documentIdx = this.data.index;
-    this.selectRow(column, row);
-    this.selectColumn(column, row);
-
-    this.focusSelection();
-  }
-
-  private selectRow(column: number, row: number): void {
-    if (row < this.attributePairs.length) {
-      this.data.selectedInput.row = row;
-    } else {
-      this.data.selectedInput.row = this.attributePairs.length;
-
-      if (this.valueColumn(column) && !this.newAttributePair.attribute) {
-        this.data.selectedInput.row--;
-      }
-    }
-
-    this.data.selectedInput.row = Math.max(0, Math.min(this.attributePairs.length, this.data.selectedInput.row));
-  }
-
-  private selectColumn(column: number, row: number): void {
-    this.data.selectedInput.column = column;
-
-    if (!this.newAttributePair.attribute && column >= 1 && row === this.attributePairs.length) {
-      this.data.selectedInput.column = 0;
-    }
-
-    this.data.selectedInput.column = Math.max(0, Math.min(this.data.selectedInput.column, 1));
-  }
-
-  private focusSelection(): void {
-    if (this.data.selectedInput.column == null || this.data.selectedInput.row == null) {
-      return;
-    }
-
-    let elementToFocus = document.getElementById(this.selectedInputId());
-
-    if (this.data.selectedInput.editing) {
-      elementToFocus = elementToFocus.getElementsByTagName('Input').item(0) as HTMLInputElement;
-    }
-
-    elementToFocus.focus();
-  }
-
-  private selectedInputId(): string {
-    return `AttributePair${ this.data.index }[${ this.data.selectedInput.column }, ${ this.data.selectedInput.row }]`;
-  }
-
-  private setEditMode(on: boolean): void {
-    this.data.selectedInput.editing = on;
+  public onEnterKeyPressedInEditMode(): void {
+    this.selectionHelper.selectNext(this.postItModel);
   }
 
   public updateAttribute(attributePair: AttributePair): void {
-    delete this.data.document.data[attributePair.previousAttributeName];
+    delete this.postItModel.document.data[attributePair.previousAttributeName];
     attributePair.previousAttributeName = attributePair.attribute;
 
     if (attributePair.attribute) {
-      this.data.document.data[attributePair.attribute] = attributePair.value;
+      this.postItModel.document.data[attributePair.attribute] = attributePair.value;
+
     } else {
-      this.attributePairs.splice(this.data.selectedInput.row, 1);
+      this.removeAttributePair();
     }
 
     this.changes.emit();
   }
 
   public updateValue(attributePair: AttributePair): void {
-    this.data.document.data[attributePair.attribute] = attributePair.value;
+    this.postItModel.document.data[attributePair.attribute] = attributePair.value;
     this.changes.emit();
   }
 
@@ -261,32 +146,70 @@ export class PostItDocumentComponent implements OnInit {
     this.newAttributePair = {} as AttributePair;
     document.activeElement['value'] = '';
 
-    setTimeout(() => this.select(1, this.attributePairs.length - 1));
+    this.focusNewAttributeValue();
   }
 
-  private attributeColumn(column: number): boolean {
-    return column === 0;
+  public documentPrefix(): string {
+    const workspace = this.navigationHelper.workspacePrefix();
+    const collection = `f/${this.postItModel.document.collectionCode}`;
+    const document = `r/${this.postItModel.document.id}`;
+
+    return `${workspace}/${collection}/${document}`;
   }
 
-  private valueColumn(column: number): boolean {
-    return column === 1;
+  public confirmDeletion(): void {
+    if (this.postItModel.initialized) {
+      this.store.dispatch(new DeleteConfirm({
+        collectionCode: this.postItModel.document.collectionCode,
+        documentId: this.postItModel.document.id
+      }));
+
+    } else {
+      this.removed.emit();
+    }
   }
 
-  public onRemoveDocumentClick(): void {
-    this.removed.emit();
+  private refreshDataAttributePairs(): void {
+    this.attributePairs = Object.entries(this.postItModel.document.data).map(([attribute, value]) => {
+      return {
+        attribute: attribute,
+        previousAttributeName: attribute,
+        value: isString(value) ? value : JSON.stringify(value, null, 2)
+      };
+    });
   }
 
   public hasWriteRole(): boolean {
     return this.hasRole(Role.Write);
   }
 
+  private removeAttributePair() {
+    const selectedRow = this.selectionHelper.selection.row;
+    this.attributePairs.splice(selectedRow, 1);
+
+    setTimeout(() => {
+      this.selectionHelper.select(
+        this.selectionHelper.selection.column,
+        this.selectionHelper.selection.row - 1,
+        this.postItModel
+      );
+    });
+  }
+
+  private focusNewAttributeValue() {
+    setTimeout(() => {
+      this.selectionHelper.select(1, this.attributePairs.length, this.postItModel);
+    });
+  }
+
   private hasRole(role: string): boolean {
-    return this.collection.permissions && this.collection.permissions.users
+    const collection = this.postItModel.document.collection;
+    return collection.permissions && collection.permissions.users
       .some((permission: Permission) => permission.roles.includes(role));
   }
 
-  public configPrefix(): string {
-    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}/f/${this.collection.code}/r/${this.data.document.id}`;
+  public ngOnDestroy(): void {
+    this.layoutManager.remove(this.element.nativeElement);
   }
 
 }

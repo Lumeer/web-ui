@@ -17,227 +17,225 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild,
-  ViewChildren
-} from '@angular/core';
+import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {DocumentService} from 'app/core/rest/document.service';
-import {SearchService} from 'app/core/rest/search.service';
-import {Subscription} from 'rxjs';
-import {Observable} from 'rxjs/Observable';
-import {finalize} from 'rxjs/operators';
-import {Collection, Document, Query} from '../../../core/dto';
-import {NotificationService} from '../../../core/notifications/notification.service';
-import {CollectionService} from '../../../core/rest';
+import {skipWhile} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../core/store/app.state';
-import {selectQuery, selectWorkspace} from '../../../core/store/navigation/navigation.state';
-import {Workspace} from '../../../core/store/navigation/workspace.model';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {selectDocumentsByCustomQuery} from '../../../core/store/documents/documents.state';
+import {QueryModel} from '../../../core/store/navigation/query.model';
 import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
 import {PostItLayoutConfig} from '../../../shared/utils/layout/post-it-layout-config';
-import {AttributePropertySelection} from './document-data/attribute-property-selection';
-import {Direction} from './document-data/direction';
-import {DocumentModel} from './document-data/document-model';
-import {PostItDocumentComponent} from './document/post-it-document.component';
+import {PostItSortingLayout} from '../../../shared/utils/layout/post-it-sorting-layout';
+import {PostItDocumentModel} from './document-data/post-it-document-model';
+import {DeletionHelper} from './util/deletion-helper';
+import {InfiniteScroll} from './util/infinite-scroll';
+import {NavigationHelper} from './util/navigation-helper';
+import {SelectionHelper} from './util/selection-helper';
+import Create = DocumentsAction.Create;
+import UpdateData = DocumentsAction.UpdateData;
 
 @Component({
   selector: 'post-it-perspective',
   templateUrl: './post-it-perspective.component.html',
-  styleUrls: ['./post-it-perspective.component.scss'],
-  host: {
-    '(document:click)': 'onClick($event)'
-  }
+  styleUrls: ['./post-it-perspective.component.scss']
 })
 export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   @Input()
   public editable: boolean = true;
 
+  private _useOwnScrollbar = false;
+
   @Input()
-  public useOwnScrollbar: boolean = false;
+  public get useOwnScrollbar(): boolean {
+    return this._useOwnScrollbar;
+  }
+
+  public infiniteScroll: InfiniteScroll;
 
   @ViewChild('layout')
   public layoutElement: ElementRef;
 
-  @ViewChildren(PostItDocumentComponent)
-  public documentComponents: QueryList<PostItDocumentComponent> = new QueryList();
+  public perspectiveId: string;
 
-  public postIts: DocumentModel[] = [];
+  public postIts: PostItDocumentModel[] = [];
+  public navigationHelper: NavigationHelper;
+  public selectionHelper: SelectionHelper;
+  private deletionHelper: DeletionHelper;
 
-  public lastClickedPostIt: DocumentModel;
+  public set useOwnScrollbar(value: boolean) {
+    this._useOwnScrollbar = value;
 
-  public fetchingData: boolean;
+    if (this.infiniteScroll) {
+      this.infiniteScroll.setUseParentScrollbar(value);
+    }
+  }
 
-  public collections: { [collectionCode: string]: Collection } = {};
+  private layoutManager: PostItLayout;
 
-  public currentCollection: string;
-
-  public query: Query;
-
-  private workspace: Workspace;
-
-  private attributeSuggestions: { [collectionCode: string]: string[] } = {};
-
-  private onInfiniteScroll: () => void | null;
-
-  private appStateSubscription: Subscription;
-
-  private layout: PostItLayout;
+  private pageSubscriptions: Subscription[] = [];
 
   private allLoaded: boolean;
 
-  private fetchedCollections = 0;
-
-  private collectionsToFetch = 0;
-
   private page = 0;
 
-  // https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
-  private scrollEventOptions = {
-    capture: true,
-    passive: true
-  };
-
-  constructor(private collectionService: CollectionService,
-              private documentService: DocumentService,
-              private searchService: SearchService,
-              private notificationService: NotificationService,
-              private store: Store<AppState>,
+  constructor(private store: Store<AppState>,
               private zone: NgZone,
               private element: ElementRef) {
   }
 
   public ngOnInit(): void {
-    this.initializeLayout();
-    this.getAppStateAndInitialize();
+    this.perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
+
+    this.layoutManager = new PostItSortingLayout(
+      '.post-it-document-layout',
+      new PostItLayoutConfig(),
+      this.sortByOrder,
+      'post-it-document',
+      this.zone
+    );
+
+    this.infiniteScroll = new InfiniteScroll(
+      () => this.loadMoreOnInfiniteScroll(),
+      this.element.nativeElement,
+      this.useOwnScrollbar
+    );
+    this.infiniteScroll.initialize();
+
+    this.selectionHelper = new SelectionHelper(
+      this.postIts,
+      () => this.documentsPerRow(),
+      this.perspectiveId
+    );
+
+    this.navigationHelper = new NavigationHelper(this.store, () => this.documentsPerRow());
+    this.navigationHelper.setCallback(() => this.reinitializePostIts());
+    this.navigationHelper.initialize();
+
+    this.deletionHelper = new DeletionHelper(this.store, this.postIts);
+    this.deletionHelper.initialize();
   }
 
-  private getAppStateAndInitialize() {
-    this.appStateSubscription = Observable.combineLatest(
-      this.store.select(selectWorkspace),
-      this.store.select(selectQuery)
-    ).subscribe(([workspace, query]) => {
-      this.workspace = workspace;
-      this.query = query;
+  public deletePostIt(postIt: PostItDocumentModel): void {
+    this.deletionHelper.deletePostIt(postIt);
+  }
 
-      this.postIts = [];
-      this.fetchingData = false;
-      this.fetchedCollections = 0;
-      this.collectionsToFetch = 0;
-      this.page = 0;
+  private reinitializePostIts(): void {
+    this.resetToInitialState();
+    this.getPostIts();
+  }
 
-      this.fetchPostIts();
-      this.setCurrentCollection();
+  private resetToInitialState(): void {
+    this.allLoaded = false;
+    this.page = 0;
+    this.postIts.splice(0);
+    this.pageSubscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  public usedCollections(): CollectionModel[] {
+    return Array.from(new Set(this.postIts.map(postIt => postIt.document.collection)));
+  }
+
+  public fetchQueryDocuments(queryModel: QueryModel): void {
+    this.store.dispatch(new DocumentsAction.Get({query: queryModel}));
+  }
+
+  public isAddButtonShown(): boolean {
+    return this.editable && this.navigationHelper.hasOneCollection();
+  }
+
+  private checkAllLoaded(documents: DocumentModel[]): void {
+    this.allLoaded = documents.length === 0;
+  }
+
+  private loadMoreOnInfiniteScroll(): void {
+    if (!this.allLoaded && this.navigationHelper && this.navigationHelper.validNavigation()) {
+      this.getPostIts();
+    }
+  }
+
+  private getPostIts(): void {
+    this.infiniteScroll.startLoading();
+
+    const queryModel = this.navigationHelper.queryWithPagination(this.page++, this.editable);
+    this.fetchQueryDocuments(queryModel);
+    this.subscribeOnDocuments(queryModel);
+  }
+
+  public createPostIt(document: DocumentModel): void {
+    this.postIts.unshift(this.documentModelToPostItModel(document, false));
+  }
+
+  public postItChanged(postIt: PostItDocumentModel): void {
+    if (!postIt.initialized) {
+      this.initializePostIt(postIt);
+      return;
+    }
+
+    this.updateDocument(postIt);
+  }
+
+  private subscribeOnDocuments(queryModel: QueryModel) {
+    const subscription = this.store.select(selectDocumentsByCustomQuery(queryModel)).pipe(
+      skipWhile(() => !this.navigationHelper.validNavigation())
+    ).subscribe(documents => {
+      setTimeout(() => {
+        this.checkAllLoaded(documents);
+
+        this.replaceDocumentsInLayout(documents);
+        this.addDocumentsNotInLayout(documents);
+
+        this.infiniteScroll.finishLoading();
+      });
     });
+
+    this.pageSubscriptions.push(subscription);
   }
 
-  private initializeLayout(): void {
-    this.layout = new PostItLayout('.post-it-document-layout', new PostItLayoutConfig(), this.zone);
+  private replaceDocumentsInLayout(documents): void {
+    const usedDocumentIDs = new Set(this.postIts.map(postIt => postIt.document.id));
+    documents
+      .filter(documentModel => usedDocumentIDs.has(documentModel.id))
+      .forEach(documentModel => this.replaceDocument(documentModel));
   }
 
-  private setCurrentCollection() {
-    this.currentCollection = (this.query && this.query.collectionCodes) ? this.query.collectionCodes[0] : null;
+  private replaceDocument(documentModel: DocumentModel): void {
+    const replaced = this.postIts.findIndex(postIt => postIt.document.id === documentModel.id);
+    this.postIts[replaced] = this.documentModelToPostItModel(documentModel, true);
   }
 
-  public setInfiniteScroll(enabled: boolean): void {
-    if (enabled) {
-      this.turnOnInfiniteScroll();
-    } else {
-      this.turnOffInfiniteScroll();
-    }
+  private addDocumentsNotInLayout(documents: DocumentModel[]): void {
+    const usedDocumentIDs = new Set(this.postIts.map(postIt => postIt.document.id));
+    documents
+      .filter(documentModel => !usedDocumentIDs.has(documentModel.id))
+      .map(documentModel => this.documentModelToPostItModel(documentModel, true))
+      .forEach(postIt => this.postIts.push(postIt));
   }
 
-  private turnOnInfiniteScroll(): void {
-    if (this.onInfiniteScroll) {
-      this.turnOffInfiniteScroll();
-    }
+  public postItWithIndex(postIt: PostItDocumentModel, index: number): PostItDocumentModel {
+    postIt.index = index;
+    return postIt;
+  }
 
-    this.onInfiniteScroll = () => {
-      if (this.fetchingData) {
-        return;
+  private updateDocument(postIt: PostItDocumentModel) {
+    this.store.dispatch(new UpdateData(
+      {
+        collectionCode: postIt.document.collectionCode,
+        documentId: postIt.document.id,
+        data: postIt.document.data
       }
-
-      if (this.useOwnScrollbar) {
-        const perspective = this.element.nativeElement;
-        if (perspective.scrollTop >= perspective.scrollHeight - 400) {
-          this.fetchPostIts();
-        }
-
-      } else {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 550) {
-          this.fetchPostIts();
-        }
-      }
-    };
-
-    (window as any).addEventListener('scroll', this.onInfiniteScroll, this.scrollEventOptions);
+    ));
   }
 
-  private turnOffInfiniteScroll(): void {
-    (window as any).removeEventListener('scroll', this.onInfiniteScroll, this.scrollEventOptions);
-    this.onInfiniteScroll = null;
-  }
-
-  private selectedAttributeProperty(): AttributePropertySelection {
-    return this.postIts[0] ? this.postIts[0].selectedInput : this.emptySelection();
-  }
-
-  private emptySelection(): AttributePropertySelection {
-    return {
-      row: null,
-      column: null,
-      documentIdx: null,
-      direction: Direction.Self,
-      editing: false
-    };
-  }
-
-  public selectDocument(selection: AttributePropertySelection): void {
-    switch (selection.direction) {
-      case Direction.Left:
-        this.tryToSelectDocumentOnLeft(selection);
-        break;
-      case Direction.Right:
-        this.tryToSelectDocumentOnRight(selection);
-        break;
-      case Direction.Up:
-        this.tryToSelectDocumentOnUp(selection);
-        break;
-      case Direction.Down:
-        this.tryToSelectDocumentOnDown(selection);
-        break;
-    }
-  }
-
-  private tryToSelectDocumentOnLeft(selection: AttributePropertySelection): void {
-    if (selection.documentIdx - 1 >= 0) {
-      const selectedDocument = this.documentComponents.toArray()[selection.documentIdx - 1];
-      this.lastClickedPostIt = this.postIts[selection.documentIdx - 1];
-      selectedDocument.select(Number.MAX_SAFE_INTEGER, selection.row);
-    }
-  }
-
-  private tryToSelectDocumentOnRight(selection: AttributePropertySelection): void {
-    if (selection.documentIdx + 1 < this.postIts.length) {
-      const selectedDocument = this.documentComponents.toArray()[selection.documentIdx + 1];
-      this.lastClickedPostIt = this.postIts[selection.documentIdx + 1];
-      selectedDocument.select(0, selection.row);
-    }
-  }
-
-  private tryToSelectDocumentOnUp(selection: AttributePropertySelection): void {
-    if (selection.documentIdx - this.documentsPerRow() >= 0) {
-      const selectedDocument = this.documentComponents.toArray()[selection.documentIdx - this.documentsPerRow()];
-      this.lastClickedPostIt = this.postIts[selection.documentIdx - this.documentsPerRow()];
-      selectedDocument.select(selection.column, Number.MAX_SAFE_INTEGER);
-    }
-  }
-
-  private tryToSelectDocumentOnDown(selection: AttributePropertySelection): void {
-    if (selection.documentIdx + this.documentsPerRow() < this.postIts.length) {
-      const selectedDocument = this.documentComponents.toArray()[selection.documentIdx + this.documentsPerRow()];
-      this.lastClickedPostIt = this.postIts[selection.documentIdx + this.documentsPerRow()];
-      selectedDocument.select(selection.column, 0);
+  private initializePostIt(postItToInitialize: PostItDocumentModel): void {
+    if (!postItToInitialize.updating) {
+      postItToInitialize.updating = true;
+      this.store.dispatch(new Create({document: postItToInitialize.document}));
+      this.postIts.splice(this.postIts.indexOf(postItToInitialize), 1);
     }
   }
 
@@ -248,234 +246,42 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return Math.max(1, Math.floor(layoutWidth / postItWidth));
   }
 
-  private queryPage(pageNumber: number): Query {
-    const addDocumentPresent = this.editable && pageNumber === 0 ? 1 : 0;
-
-    return {
-      pageSize: this.documentsPerRow() * 2 - addDocumentPresent,
-      page: pageNumber,
-      filters: this.query.filters,
-      fulltext: this.query.fulltext,
-      collectionCodes: this.query.collectionCodes
-    };
+  private sortByOrder(item: any, element: HTMLElement): number {
+    return Number(element.getAttribute('order'));
   }
 
-  private fetchPostIts(): void {
-    if (this.fetchingData || !this.query || !this.hasWorkspace() || this.allLoaded) {
-      return;
-    }
-
-    this.setFetchingPageStarted();
-
-    this.searchService.searchDocuments(this.queryPage(this.page)).pipe(
-      finalize(() => this.setFetchingPageFinished())
-    ).subscribe(
-      documents => this.addDocumentsToLayoutAndGetTheirCollections(documents),
-      error => this.notificationService.error('Failed fetching records')
-    );
+  public trackByIndex(index: number, obj: any): number {
+    return index;
   }
 
-  private setFetchingPageStarted(): void {
-    this.fetchingData = true;
-    this.setInfiniteScroll(false);
-  }
-
-  private setFetchingPageFinished(): void {
-    this.fetchingData = false;
-    this.setInfiniteScroll(true);
-    this.page++;
-  }
-
-  private addDocumentsToLayoutAndGetTheirCollections(documents: Document[]): void {
-    if (documents.length === 0) {
-      this.allLoaded = true;
-    }
-
-    documents.forEach(document => this.postIts.push(this.documentToPostIt(document, true)));
-
-    const uniqueCollectionCodes = new Set(documents.map(document => document.collectionCode));
-    this.getCollections(uniqueCollectionCodes);
-  }
-
-  private documentToPostIt(document: Document, initialized: boolean): DocumentModel {
-    const postIt = new DocumentModel;
-    postIt.document = document;
-    postIt.selectedInput = this.selectedAttributeProperty();
+  private documentModelToPostItModel(documentModel: DocumentModel, initialized: boolean): PostItDocumentModel {
+    const postIt = new PostItDocumentModel();
+    postIt.document = documentModel;
     postIt.initialized = initialized;
-    postIt.visible = false;
+
+    if (!initialized) {
+      postIt.order = 0;
+    } else {
+      postIt.order = 1;
+    }
 
     return postIt;
-  }
-
-  private getCollections(collectionCodes: Set<string>): void {
-    this.fetchedCollections = 0;
-    this.collectionsToFetch = collectionCodes.size;
-
-    collectionCodes.forEach(collectionCode => {
-      if (this.collections[collectionCode] || !this.hasWorkspace()) {
-        this.countAsFetchedAndRefreshIfLast();
-        return;
-      }
-
-      this.collectionService.getCollection(collectionCode).pipe(
-        finalize(() => this.countAsFetchedAndRefreshIfLast())
-      ).subscribe(
-        collection => this.registerCollection(collection),
-        error => this.notificationService.error(`Failed fetching file ${collectionCode}`)
-      );
-    });
-  }
-
-  private countAsFetchedAndRefreshIfLast(): void {
-    this.fetchedCollections++;
-
-    if (this.fetchedCollections === this.collectionsToFetch) {
-      this.refresh();
-    }
-  }
-
-  private registerCollection(collection: Collection): void {
-    this.collections[collection.code] = collection;
-    this.attributeSuggestions[collection.code] = collection.attributes
-      .sort((attribute1, attribute2) => attribute2.usageCount - attribute1.usageCount) // descending order
-      .map(attribute => attribute.name);
-  }
-
-  public createDocument(document: Document): void {
-    this.postIts.unshift(this.documentToPostIt(document, false));
-    this.getCollections(new Set([document.collectionCode]));
-  }
-
-  public toggleDocumentFavorite(postIt: DocumentModel) {
-    this.documentService.toggleDocumentFavorite(postIt.document)
-      .subscribe(success => {
-        if (success) {
-          postIt.document.favorite = !postIt.document.favorite;
-        }
-      });
-  }
-
-  public sendUpdate(postIt: DocumentModel): void {
-    if (postIt.initializing || !this.hasWorkspace()) {
-      return;
-    }
-
-    if (!postIt.initialized) {
-      this.initializePostIt(postIt);
-      return;
-    }
-
-    this.documentService.updateDocument(postIt.document).subscribe(
-      document => {
-        delete document.data['_id']; // TODO remove after _id is no longer sent inside data
-        postIt.document.data = document.data;
-
-        this.refresh();
-      },
-      error => {
-        this.notificationService.error('Failed updating record');
-      });
-  }
-
-  private initializePostIt(postIt: DocumentModel): void {
-    postIt.initializing = true;
-
-    this.documentService.createDocument(postIt.document).pipe(
-      finalize(() => postIt.initializing = false)
-    ).subscribe((document: Document) => {
-        postIt.initialized = true;
-
-        postIt.document.id = document.id;
-        this.refreshDocument(postIt);
-      },
-      error => {
-        this.notificationService.error('Failed creating record');
-      });
-  }
-
-  private refreshDocument(postIt: DocumentModel): void {
-    if (!this.hasWorkspace()) {
-      return;
-    }
-
-    this.documentService.getDocument(postIt.document.collectionCode, postIt.document.id)
-      .subscribe(
-        document => {
-          delete document.data['_id']; // TODO remove after _id is no longer sent inside data
-          postIt.document = document;
-          this.refresh();
-        },
-        error => {
-          this.notificationService.error('Refreshing record failed');
-        });
-  }
-
-  public removeDocument(postIt: DocumentModel): void {
-    if (postIt.initialized) {
-      this.documentService.removeDocument(postIt.document.collectionCode, postIt.document.id).subscribe(
-        response => null,
-        error => this.notificationService.error('Failed removing record')
-      );
-    }
-
-    this.postIts.splice(postIt.index, 1);
-    this.refresh();
-  }
-
-  private refresh(): void {
-    this.showPostItsWithCollection();
-  }
-
-  private showPostItsWithCollection(): void {
-    setTimeout(() => {
-      this.postIts
-        .filter(postIt => this.collections[postIt.document.collectionCode])
-        .forEach(postIt => postIt.visible = true);
-
-      this.layout.refresh();
-    });
-  }
-
-  public confirmDeletion(postIt: DocumentModel): void {
-    this.notificationService.confirm('Are you sure you want to remove the record?', 'Delete?', [
-      {text: 'Yes', action: () => this.removeDocument(postIt), bold: false},
-      {text: 'No'}
-    ]);
-  }
-
-  public onClick(event: MouseEvent): void {
-    const clickedPostItIndex = this.documentComponents
-      .toArray()
-      .findIndex(postIt => postIt.element.nativeElement.contains(event.target));
-    this.lastClickedPostIt = this.postIts[clickedPostItIndex];
-  }
-
-  public isAddButtonShown(): boolean {
-    return this.editable && !this.queryhasMoreCollections();
-  }
-
-  private queryhasMoreCollections(): boolean {
-    return this.query && this.query.collectionCodes && this.query.collectionCodes.length > 1;
-  }
-
-  public suggestedAttributes(): [string, string[]][] {
-    return Object.entries(this.attributeSuggestions);
   }
 
   public ngOnDestroy(): void {
-    this.setInfiniteScroll(false);
-    if (this.appStateSubscription) {
-      this.appStateSubscription.unsubscribe();
+    if (this.deletionHelper) {
+      this.deletionHelper.destroy();
     }
-  }
 
-  public setPostItIndexAndReturn(postIt: DocumentModel, index: number): DocumentModel {
-    postIt.index = index;
-    return postIt;
-  }
+    if (this.navigationHelper) {
+      this.navigationHelper.destroy();
+    }
 
-  private hasWorkspace(): boolean {
-    return !!(this.workspace && this.workspace.organizationCode && this.workspace.projectCode);
+    if (this.infiniteScroll) {
+      this.infiniteScroll.destroy();
+    }
+
+    this.pageSubscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
 }

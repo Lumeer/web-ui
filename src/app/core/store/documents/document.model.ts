@@ -28,8 +28,8 @@ export interface DocumentModel {
 
   favorite?: boolean;
 
-  creationDate?: string;
-  updateDate?: string;
+  creationDate?: Date; // Date is currently in MongoDb format
+  updateDate?: Date; // Date is currently in MongoDb format
   createdBy?: string;
   updatedBy?: string;
   dataVersion?: number;
