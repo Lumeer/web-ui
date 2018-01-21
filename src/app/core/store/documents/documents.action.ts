@@ -162,7 +162,6 @@ export namespace DocumentsAction {
     }
   }
 
-
   export class Clear implements Action {
     public readonly type = DocumentsActionType.CLEAR;
 

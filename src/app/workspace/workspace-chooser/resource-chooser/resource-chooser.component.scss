@@ -86,12 +86,6 @@ $bookmark-border-color: #bdbdbd;
             }
           }
 
-          .highlight {
-            box-shadow: $shadow-default;
-            -webkit-box-shadow: $shadow-default;
-            -moz-box-shadow: $shadow-default;
-          }
-
           .square {
             width: $post-it-size;
             height: $post-it-size;
@@ -99,6 +93,10 @@ $bookmark-border-color: #bdbdbd;
             position: absolute !important;
             background-color: transparent !important;
             transition: box-shadow $animation-duration;
+          }
+
+          .unitialized{
+            border-style: dashed;
           }
 
           .content {
