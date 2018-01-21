@@ -21,10 +21,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {Observable} from 'rxjs/Observable';
-import {first, map, skipWhile, take} from 'rxjs/operators';
+import {filter, first, map, skipWhile, take} from 'rxjs/operators';
 import {Query} from '../core/dto';
 import {AppState} from '../core/store/app.state';
-import {selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
+import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
 import {Workspace} from '../core/store/navigation/workspace.model';
 import {RouterAction} from '../core/store/router/router.action';
 import {ViewModel} from '../core/store/views/view.model';
@@ -54,7 +54,7 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.navigationSubscription = this.store.select(selectNavigation).pipe(
-      skipWhile(navigation => !navigation.perspective)
+      filter(this.validNavigation)
     ).subscribe(navigation => {
       this.workspace = navigation.workspace;
       if (!navigation.workspace) {
@@ -74,6 +74,12 @@ export class ViewComponent implements OnInit, OnDestroy {
       this.existingView = null;
       this.newView = null;
     });
+  }
+
+  private validNavigation(navigation: NavigationState): boolean {
+    return Boolean(navigation.workspace.projectCode &&
+      navigation.workspace.organizationCode &&
+      navigation.perspective);
   }
 
   public ngOnDestroy() {
