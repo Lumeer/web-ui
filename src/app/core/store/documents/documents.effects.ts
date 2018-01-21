@@ -81,6 +81,15 @@ export class DocumentsEffects {
     switchMap(action => {
       const documentDto = DocumentConverter.toDto(action.payload.document);
 
+      if (action.payload.toggleFavourite) {
+        return this.documentService.toggleDocumentFavorite(documentDto).pipe(
+          map(success => {
+            action.payload.document.favorite = !action.payload.document.favorite;
+            return action.payload.document;
+          })
+        );
+      }
+
       throw Error('not implemented on backend yet');
     }),
     map((document: DocumentModel) => new DocumentsAction.UpdateSuccess({document: document})),
@@ -102,7 +111,7 @@ export class DocumentsEffects {
         data: action.payload.data
       };
 
-      return this.documentService.patchDocumentData(documentDto).pipe(
+      return this.documentService.updateDocument(documentDto).pipe(
         map(dto => DocumentConverter.fromDto(dto))
       );
     }),
@@ -123,6 +132,15 @@ export class DocumentsEffects {
     )),
     map(action => new DocumentsAction.DeleteSuccess({documentId: action.payload.documentId})),
     catchError((error) => Observable.of(new DocumentsAction.DeleteFailure({error: error})))
+  );
+
+  @Effect()
+  public deleteConfirm$: Observable<Action> = this.actions$.ofType<DocumentsAction.DeleteConfirm>(DocumentsActionType.DELETE_CONFIRM).pipe(
+    map((action: DocumentsAction.DeleteConfirm) => new NotificationsAction.Confirm({
+      title: 'Remove document',
+      message: 'Do you really want to remove this document?',
+      action: new DocumentsAction.Delete(action.payload)
+    }))
   );
 
   @Effect()

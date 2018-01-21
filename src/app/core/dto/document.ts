@@ -21,8 +21,8 @@ export class Document {
 
   public id: string;
   public collectionCode: string;
-  public creationDate?: string;
-  public updateDate?: string;
+  public creationDate?: Date; // TODO Date is currently in MongoDb format
+  public updateDate?: Date; // Date is currently in MongodDb format
   public createdBy?: string;
   public updatedBy?: string;
   public dataVersion?: number;

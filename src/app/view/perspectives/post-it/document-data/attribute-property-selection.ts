@@ -17,14 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Direction} from './direction';
-
 export interface AttributePropertySelection {
 
-  direction: Direction;
   row: number;
   column: number;
   editing: boolean;
-  documentIdx: number;
+  documentId: string;
+  documentIndex: number;
 
 }

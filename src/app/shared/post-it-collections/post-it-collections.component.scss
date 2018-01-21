@@ -96,6 +96,12 @@
   }
 
   .card-footer {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    height: 35px;
+
     width: 100%;
     color: inherit;
     font-size: 20px;

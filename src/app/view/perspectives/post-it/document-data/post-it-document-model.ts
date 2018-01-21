@@ -17,18 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface QueryModel {
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
-  collectionCodes?: string[];
-  documentIds?: string[];
-  filters?: string[];
-  fulltext?: string;
-  linkTypeIds?: string[];
-  page?: number;
-  pageSize?: number;
+export class PostItDocumentModel {
 
-  and?: QueryModel[];
-  or?: QueryModel[];
-  not?: QueryModel;
+  public index: number;
+  public document: DocumentModel;
+
+  public order = 1;
+  public updating = false;
+  public initialized: boolean;
 
 }

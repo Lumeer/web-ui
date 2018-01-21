@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface AttributePair {
+export class AttributePair {
 
-  attribute: string;
-  previousAttributeName: string;
-  value: string;
+  public attribute: string = '';
+  public previousAttributeName: string = '';
+  public value: string = '';
 
 }

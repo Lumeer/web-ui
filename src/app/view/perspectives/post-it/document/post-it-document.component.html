@@ -1,21 +1,25 @@
 <div class="card-header d-inline-flex py-1 px-3">
-  <i class="icon {{ collection.icon }} mr-1" [style.color]="collection.color"></i>
-  <div class="collection-name" [style.color]="collection.color">{{ collection.name }}</div>
+  <i class="icon fa-fw {{ postItModel.document.collection.icon }} mr-1"
+     [style.color]="postItModel.document.collection.color"></i>
+  <div class="collection-name" [style.color]="postItModel.document.collection.color">
+    {{ postItModel.document.collection.name }}
+  </div>
 
   <ng-container *ngIf="hasWriteRole()">
     <i class="button text-danger fa fa-times rounded align-self-center p-1"
        title="Remove Record" i18n-title="@@document.button.remove"
-       (click)="onRemoveDocumentClick()"></i>
+       (click)="confirmDeletion()"></i>
     <i class="button text-success fa fa-pencil rounded align-self-center p-1"
        title="Edit Record" i18n-title="@@document.button.edit"
-       (click)="setEditMode(true); select(0, 0)"></i>
+       (click)="selectionHelper.setEditMode(true); selectionHelper.select(0, 0, postItModel)"></i>
   </ng-container>
-  <i *ngIf="data.initialized" class="text-warning fa-star button rounded align-self-center p-1"
-     [class.always-visible]="data.document.favorite"
-     title="{{data.document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
+  <i *ngIf="postItModel.initialized"
+     class="text-warning fa-star button rounded align-self-center p-1"
+     [class.always-visible]="postItModel.document.favorite"
+     title="{{ postItModel.document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
      i18n-title="@@collection.document.favorite"
-     [ngClass]="data.document.favorite ? 'fas' : 'far'"
-     (click)="onToggleFavorite()"></i>
+     [ngClass]="postItModel.document.favorite ? 'fas' : 'far'"
+     (click)="toggleDocumentFavorite()"></i>
 </div>
 
 <div class="card-body p-2">
@@ -23,76 +27,77 @@
 
     <ng-container *ngIf="hasWriteRole()">
       <li *ngFor="let attributePair of attributePairs; let row = index">
-        <span id="AttributePair{{ data.index }}[0, {{ row }}]" class="attribute"
+        <span id="{{ perspectiveId }}{{ postItModel.index }}[0, {{ row }}]" class="attribute"
               tabindex="-1"
-              (keydown.ArrowLeft)="moveSelection(-1, 0)"
-              (keydown.ArrowRight)="moveSelection(1, 0)"
-              (keydown.ArrowUp)="moveSelection(0, -1)"
-              (keydown.ArrowDown)="moveSelection(0, 1)"
-              (keydown.F2)="setEditMode(true); focusSelection()"
-              (keydown.enter)="setEditMode(true); focusSelection()"
+              (keydown.ArrowLeft)="selectionHelper.moveSelection(-1, 0)"
+              (keydown.ArrowRight)="selectionHelper.moveSelection(1, 0)"
+              (keydown.ArrowUp)="selectionHelper.moveSelection(0, -1)"
+              (keydown.ArrowDown)="selectionHelper.moveSelection(0, 1)"
+              (keydown.F2)="selectionHelper.setEditMode(true); selectionHelper.focus()"
+              (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
               (click)="clickOnAttributePair(0, row)">
 
           <input class="border-0"
                  [(ngModel)]="attributePair.attribute"
                  (keydown)="$event.stopPropagation()"
-                 (keydown.F2)="setEditMode(false); focusSelection()"
-                 (keydown.Escape)="setEditMode(false); focusSelection()"
-                 (keydown.enter)="onEditModeEnter()"
+                 (keydown.F2)="selectionHelper.setEditMode(false); selectionHelper.focus()"
+                 (keydown.Escape)="selectionHelper.setEditMode(false); selectionHelper.focus()"
+                 (keydown.enter)="onEnterKeyPressedInEditMode()"
                  (blur)="updateAttribute(attributePair)">
         </span>
 
-        <span id="AttributePair{{ data.index }}[1, {{ row }}]" tabindex="-1"
+        <span id="{{ perspectiveId }}{{ postItModel.index }}[1, {{ row }}]" tabindex="-1"
               title="{{ attributePair.value }}"
-              (keydown.ArrowLeft)="moveSelection(-1, 0)"
-              (keydown.ArrowRight)="moveSelection(1, 0)"
-              (keydown.ArrowUp)="moveSelection(0, -1)"
-              (keydown.ArrowDown)="moveSelection(0, 1)"
-              (keydown.F2)="setEditMode(true); focusSelection()"
-              (keydown.enter)="setEditMode(true); focusSelection()"
+              (keydown.ArrowLeft)="selectionHelper.moveSelection(-1, 0)"
+              (keydown.ArrowRight)="selectionHelper.moveSelection(1, 0)"
+              (keydown.ArrowUp)="selectionHelper.moveSelection(0, -1)"
+              (keydown.ArrowDown)="selectionHelper.moveSelection(0, 1)"
+              (keydown.F2)="selectionHelper.setEditMode(true); selectionHelper.focus()"
+              (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
               (click)="clickOnAttributePair(1, row)">
 
         <input class="border-0"
                [(ngModel)]="attributePair.value"
                (keydown)="$event.stopPropagation()"
-               (keydown.F2)="setEditMode(false); focusSelection()"
-               (keydown.Escape)="setEditMode(false); focusSelection()"
-               (keydown.enter)="onEditModeEnter()"
+               (keydown.F2)="selectionHelper.setEditMode(false); selectionHelper.focus()"
+               (keydown.Escape)="selectionHelper.setEditMode(false); selectionHelper.focus()"
+               (keydown.enter)="onEnterKeyPressedInEditMode()"
                (blur)="updateValue(attributePair)">
        </span>
       </li>
 
       <li>
-        <span id="AttributePair{{ data.index }}[0, {{ attributePairs.length }}]"
-              class="attribute" tabindex="-1"
-              (keydown.ArrowLeft)="moveSelection(-1, 0)"
-              (keydown.ArrowRight)="moveSelection(1, 0)"
-              (keydown.ArrowUp)="moveSelection(0, -1)"
-              (keydown.ArrowDown)="moveSelection(0, 1)"
-              (keydown.F2)="setEditMode(true); focusSelection()"
-              (keydown.enter)="setEditMode(true); focusSelection()"
+        <span id="{{ perspectiveId }}{{ postItModel.index }}[0, {{ attributePairs.length }}]"
+              class="attribute"
+              tabindex="-1"
+              (keydown.ArrowLeft)="selectionHelper.moveSelection(-1, 0)"
+              (keydown.ArrowRight)="selectionHelper.moveSelection(1, 0)"
+              (keydown.ArrowUp)="selectionHelper.moveSelection(0, -1)"
+              (keydown.ArrowDown)="selectionHelper.moveSelection(0, 1)"
+              (keydown.F2)="selectionHelper.setEditMode(true); selectionHelper.focus()"
+              (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
               (click)="clickOnAttributePair(0, attributePairs.length)">
 
           <!-- the list refers to one of the attribute suggestion lists in document perspective -->
           <input class="border-0"
                  placeholder=" + "
-                 [attr.list]="data.document.collectionCode"
+                 [attr.list]="perspectiveId + postItModel.document.collectionCode"
                  [(ngModel)]="newAttributePair.attribute"
                  (keydown)="$event.stopPropagation()"
-                 (keydown.F2)="setEditMode(false); focusSelection()"
-                 (keydown.Escape)="setEditMode(false); focusSelection()"
-                 (keydown.enter)="onEditModeEnter()"
+                 (keydown.F2)="selectionHelper.setEditMode(false); selectionHelper.focus()"
+                 (keydown.Escape)="selectionHelper.setEditMode(false); selectionHelper.focus()"
+                 (keydown.enter)="onEnterKeyPressedInEditMode()"
                  (blur)="newAttributePair.attribute && createAttributePair()">
         </span>
 
-        <span id="AttributePair{{ data.index }}[1, {{ attributePairs.length }}]"
+        <span id="{{ perspectiveId }}{{ postItModel.index }}[1, {{ attributePairs.length }}]"
               [attr.tabindex]="newAttributePair.attribute ? -1 : null"
-              (keydown.ArrowLeft)="moveSelection(-1, 0)"
-              (keydown.ArrowRight)="moveSelection(1, 0)"
-              (keydown.ArrowUp)="moveSelection(0, -1)"
-              (keydown.ArrowDown)="moveSelection(0, 1)"
-              (keydown.F2)="setEditMode(true); focusSelection()"
-              (keydown.enter)="setEditMode(true); focusSelection()"
+              (keydown.ArrowLeft)="selectionHelper.moveSelection(-1, 0)"
+              (keydown.ArrowRight)="selectionHelper.moveSelection(1, 0)"
+              (keydown.ArrowUp)="selectionHelper.moveSelection(0, -1)"
+              (keydown.ArrowDown)="selectionHelper.moveSelection(0, 1)"
+              (keydown.F2)="selectionHelper.setEditMode(true); selectionHelper.focus()"
+              (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
               (click)="newAttributePair.attribute && clickOnAttributePair(1, attributePairs.length)">
 
         <input class="border-0" [disabled]="true"/>
@@ -119,27 +124,27 @@
   </ul>
 </div>
 
-<div *ngIf="data.initialized" class="card-footer px-4 py-0">
-  <div class="buttons d-flex align-content-center">
-    <a [routerLink]="[configPrefix(), 'details']"
+<div *ngIf="postItModel.initialized" class="card-footer px-4 py-0">
+  <div class="buttons d-flex align-content-center ml-2">
+    <a [routerLink]="[documentPrefix(), 'details']"
        class="px-2"
        title="Details" i18n-title="@@document.button.links.details">
       <i class="fa fa-fw fa-search"></i>
     </a>
 
-    <a [routerLink]="[configPrefix(), 'linktypes']"
+    <a [routerLink]="[documentPrefix(), 'linktypes']"
        class="px-2"
        title="Link Types" i18n-title="@@document.button.link.types">
       <i class="fa fa-fw fa-sign-out"></i>
     </a>
 
-    <a [routerLink]="[configPrefix(), 'history']"
+    <a [routerLink]="[documentPrefix(), 'history']"
        class="px-2"
        title="History" i18n-title="@@document.button.links.history">
       <i class="fa fa-fw fa-history"></i>
     </a>
 
-    <a [routerLink]="[configPrefix(), 'permissions']"
+    <a [routerLink]="[documentPrefix(), 'permissions']"
        class="px-2"
        title="User Rights" i18n-title="@@document.button.links.permissions">
       <i class="fa fa-fw fa-users"></i>
