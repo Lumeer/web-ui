@@ -32,7 +32,7 @@ import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectByCode} from '../store/projects/projects.state';
 import {RouterAction} from '../store/router/router.action';
 import {UserSettingsService} from '../user-settings.service';
-import {first} from "rxjs/operators";
+import {first} from 'rxjs/operators';
 
 @Component({
   selector: 'top-panel',

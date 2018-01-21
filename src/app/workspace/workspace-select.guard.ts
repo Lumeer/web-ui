@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
@@ -27,12 +27,9 @@ import {isNullOrUndefined} from 'util';
 import {WorkspaceService} from './workspace.service';
 import {AppState} from '../core/store/app.state';
 import {OrganizationsAction} from '../core/store/organizations/organizations.action';
-import {
-  selectAllOrganizations, selectSelectedOrganization,
-  selectSelectedOrganizationId
-} from '../core/store/organizations/organizations.state';
+import {selectSelectedOrganization} from '../core/store/organizations/organizations.state';
 import {ProjectsAction} from '../core/store/projects/projects.action';
-import {selectAllProjects, selectSelectedProject, selectSelectedProjectId} from '../core/store/projects/projects.state';
+import {selectSelectedProject} from '../core/store/projects/projects.state';
 import {UserSettingsService} from '../core/user-settings.service';
 
 @Injectable()
