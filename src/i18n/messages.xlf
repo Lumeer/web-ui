@@ -483,7 +483,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collection.config.tab.link.types.rename" datatype="html">
-        <source>rename</source>
+        <source>Rename</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/config/tab/link-types/collection-link-types.component.ts</context>
           <context context-type="linenumber">39</context>
@@ -587,7 +587,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="document.button.links.permissions" datatype="html">
-        <source>User Rights</source>
+        <source>Access Rights</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document.component.ts</context>
           <context context-type="linenumber">144</context>
@@ -636,7 +636,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="table.query.invalid" datatype="html">
-        <source>Given query results cannot be shown using table perspective. The query needs to specify exactly one file.
+        <source>Your query results cannot be shown using table perspective. The query needs to specify exactly one file.
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/table-perspective.component.ts</context>
@@ -644,7 +644,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="smartdoc.query.invalid" datatype="html">
-        <source>Given query results cannot be shown using smart document perspective. The query needs to specify exactly one file.
+        <source>Your query results cannot be shown using smart document perspective. The query needs to specify exactly one file.
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/smartdoc/smartdoc-perspective.component.ts</context>
@@ -667,8 +667,8 @@
           <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="e10dc82586bcbb63cc11e8b2c5a90b2d410f8555" datatype="html">
-        <source>{VAR_SELECT, select, 0 {Enter user emails...} other {} }</source>
+      <trans-unit id="91514b0fd2d4dd72e262f175a24fb7e91da8c39e" datatype="html">
+        <source>{VAR_SELECT, select, 0 {Enter users&apos; emails...} other {} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/share-dialog/share-dialog.component.ts</context>
           <context context-type="linenumber">30</context>
