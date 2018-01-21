@@ -180,6 +180,10 @@ $bookmark-border-color: #bdbdbd;
   color: $grey-color;
 }
 
+[contenteditable]:focus {
+  outline: 0 solid transparent;
+}
+
 .description {
   width: 100%;
 
