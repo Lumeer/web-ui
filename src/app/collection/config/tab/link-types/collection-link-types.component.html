@@ -44,61 +44,26 @@
                    (linkTypeModel.data.name ? updateLinkType(linkTypeModel) : deleteLinkType(linkTypeModel)) :
                    (linkTypeModel.data.name ? (linkTypeModel.data.collectionCodes && linkTypeModel.data.collectionCodes[1] &&
                    createLinkType(linkTypeModel)) : removeLinkType(linkTypeModel))">
-            <span *ngIf="linkTypeModel.initialized"
-                  class="ml-3 pr-1 border-dark instance-count rounded border"
-                  title="Instance count"
-                  i18n-title="@@collection.config.tab.link.types.instance.count">
-              {{ formatNumber(instanceCount(linkTypeModel)) }}
-            </span>
           </span>
 
       <span *ngIf="linkTypeModel.initialized">
-            <a [routerLink]="[workspacePath(), 'search', 'links']"
-               [queryParams]="searchLinkTypesQueryParams(linkTypeModel)"
-               class="btn btn-outline-success mr-1"
-               title="Show all searches of this attribute"
-               i18n-title="@@collection.config.tab.link.types.show.all"
-               i18n="@@collection.config.tab.link.types.show.all.text">
-              See all
-            </a>
-
             <a tabindex
                (click)="changeCollection(linkTypeModel.data.collectionCodes[1])"
                class="btn btn-outline-success {{ !linkTypeModel.initialized ? 'disabled' : null }}"
                title="Go to {{ getLinkedCollection(linkTypeModel).name }}"
                i18n-title="@@collection.config.tab.link.types.go.to">
               <i class="fa fa-arrow-right" aria-hidden="true"></i>
+              {{ getLinkedCollection(linkTypeModel).name }}
               <i class="fa-fw {{ getLinkedCollection(linkTypeModel).icon }}" aria-hidden="true"></i>
             </a>
           </span>
     </div>
     <div *ngIf="linkTypeModel.initialized"
          (click)="linkTypeModel.expanded = true">
-      <div *ngIf="isAutomatic(linkTypeModel) || canBecomeAutomatic(linkTypeModel)"
-           class="p-1 {{ canBecomeAutomatic(linkTypeModel) ? 'greyed-out' : null }}"
-           (click)="canBecomeAutomatic(linkTypeModel) && makeAutomatic(linkTypeModel)">
-          <span i18n="@@collection.config.link.types.automatic.link" class="font-weight-bold mr-1">
-            {{ isAutomatic(linkTypeModel) ? 'Automatic Link:' : 'Make Automatic:' }}
-          </span>
-        <span>
-            <i class="fa-fw {{ collection.icon }} color-transition"
-               [style.color]="collection.color"></i>
-            <span>{{ linkTypeModel.data.automaticallyLinked[0] ||
-              (linkTypeModel.data.linkedAttributes.length === 2 && linkTypeModel.data.linkedAttributes[0].value.name) }}</span>
-          </span>
-        <i class="fa fa-arrows-h mx-1" aria-hidden="true"></i>
-        <span>
-            <i class="fa-fw {{ getLinkedCollection(linkTypeModel).icon }}"
-               [style.color]="getLinkedCollection(linkTypeModel).color"></i>
-            <span>{{ linkTypeModel.data.automaticallyLinked[1] ||
-              (linkTypeModel.data.linkedAttributes.length === 2 && linkTypeModel.data.linkedAttributes[1].value.name) }}</span>
-          </span>
-      </div>
       <link-attribute-list *ngIf="linkTypeModel.initialized"
                            [collections]="collections"
                            [linkType]="linkTypeModel.data"
-                           [addEnabled]="!linkTypeModel.data.automaticLinkFromAttribute || !linkTypeModel.data.automaticLinkToAttribute"
-                           [limit]="linkTypeModel.expanded ? 9999 : 1"
+                           [expanded]="linkTypeModel.expanded"
                            (update)="updateLinkType(linkTypeModel)"></link-attribute-list>
     </div>
   </li>

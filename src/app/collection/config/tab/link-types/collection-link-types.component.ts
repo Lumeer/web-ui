@@ -144,9 +144,9 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     this.notificationService.confirm('Are you sure you want to change linked file?', 'Delete?', [
       {
         text: 'Yes', action: () => {
-        linkTypeModel.changeLinkedCollection(collectionCode);
-        this.updateLinkType(linkTypeModel);
-      }, bold: false
+          linkTypeModel.changeLinkedCollection(collectionCode);
+          this.updateLinkType(linkTypeModel);
+        }, bold: false
       },
       {
         text: 'No'
@@ -158,11 +158,11 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     this.notificationService.confirm('Are you sure you want to delete link type?', 'Delete?', [
       {
         text: 'Yes', action: () => {
-        this.linkTypeService.deleteLinkType(linkTypeModel.data.id).subscribe(
-          () => this.removeLinkType(linkTypeModel),
-          error => this.notificationService.error('Failed removing link type')
-        );
-      }, bold: false
+          this.linkTypeService.deleteLinkType(linkTypeModel.data.id).subscribe(
+            () => this.removeLinkType(linkTypeModel),
+            error => this.notificationService.error('Failed removing link type')
+          );
+        }, bold: false
       },
       {
         text: 'No'
@@ -202,36 +202,6 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     return Object
       .keys(this.collections)
       .filter(collectionCode => !excludedCodes.includes(collectionCode));
-  }
-
-  public isAutomatic(linkTypeModel: LinkTypeModel): boolean {
-    return linkTypeModel.data.automaticallyLinked && linkTypeModel.data.automaticallyLinked.length === 2;
-  }
-
-  public canBecomeAutomatic(linkTypeModel: LinkTypeModel): boolean {
-    return !this.isAutomatic(linkTypeModel) &&
-      linkTypeModel.data.linkedAttributes.length === 2 &&
-      linkTypeModel.data.linkedAttributes[0].collection.code !== linkTypeModel.data.linkedAttributes[1].collection.code;
-  }
-
-  public makeAutomatic(linkTypeModel: LinkTypeModel): void {
-    linkTypeModel.data.automaticallyLinked = [linkTypeModel.data.linkedAttributes[0], linkTypeModel.data.linkedAttributes[1]];
-    this.updateLinkType(linkTypeModel);
-  }
-
-  public instanceCount(linkTypeModel: LinkTypeModel): number {
-    return linkTypeModel.data.linkedAttributes
-      .map(linkedAttribute => linkedAttribute.value.usageCount)
-      .reduce((sum, current) => sum + current, 0);
-  }
-
-  public formatNumber(numberToFormat: number): string {
-    const spaceBetweenEveryThreeDigits = /(?=(\d{3})+(?!\d))/g;
-    const optionalCommaAtTheStart = /^,/;
-
-    return String(numberToFormat)
-      .replace(spaceBetweenEveryThreeDigits, ',')
-      .replace(optionalCommaAtTheStart, '');
   }
 
   public searchLinkTypesQueryParams(linkTypeModel: LinkTypeModel): object {

@@ -2,8 +2,8 @@
      [style.opacity]="collection ? '1' : '0'"
      *ngIf="collection">
   <div class="d-flex flex-row justify-content-start">
-    <a class="fa fa-arrow-left text-success" (click)="goToCollectionsPage()"></a>
-    <i class="color-class fa-fw {{ collection.icon }} collection-icon"
+    <a class="fas fa-chevron-left bigger mr-2 text-success" (click)="goToCollectionsPage()"></a>
+    <i class="color-class fa-fw {{ collection.icon }} collection-icon clickable"
        [style.color]="collection.color"
        data-toggle="dropdown"></i>
     <div class="dropdown-menu">

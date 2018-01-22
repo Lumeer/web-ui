@@ -33,6 +33,7 @@ import {SizeSliderComponent} from './slider/size-slider.component';
 import {CommentsComponent} from './comments/comments.component';
 import {LinksComponent} from './links/links.component';
 import {PerspectiveDirective} from './perspective.directive';
+import { LayoutItem } from './utils/layout/layout-item.directive';
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import {PerspectiveDirective} from './perspective.directive';
     SizeSliderComponent,
     CommentsComponent,
     LinksComponent,
-    PerspectiveDirective
+    PerspectiveDirective,
+    LayoutItem
   ],
   exports: [
     CommonModule,

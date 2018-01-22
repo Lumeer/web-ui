@@ -17,16 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output,
-  ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {isString} from 'util';
 import {Permission} from '../../../../core/dto';
+import {LumeerError} from '../../../../core/error/lumeer.error';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../shared/permissions/role';
 import {PostItLayout} from '../../../../shared/utils/layout/post-it-layout';
@@ -44,6 +41,25 @@ import Update = DocumentsAction.Update;
 })
 export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  @HostListener('focusout')
+  public onFocusOut(): void {
+    if (this.changed) {
+      this.checkforDuplicitAttributes();
+
+      this.changed = false;
+      this.changes.emit();
+    }
+  }
+
+  private checkforDuplicitAttributes(): void {
+    const attributesCount = Object.keys(this.postItModel.document.data).length;
+    const userWrittenAttributesCount = this.attributePairs.length;
+
+    if (attributesCount !== userWrittenAttributesCount) {
+      console.warn('You added more values to single attribute, we suggest refreshing');
+    }
+  }
+
   private _postItModel: PostItDocumentModel;
 
   @Input()
@@ -52,6 +68,10 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public set postItModel(value) {
+    if (!value) {
+      throw new LumeerError('Invalid internal state');
+    }
+
     this._postItModel = value;
     this.refreshDataAttributePairs();
   }
@@ -76,6 +96,8 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   @ViewChild('content')
   public content: ElementRef;
+
+  private changed: boolean;
 
   public attributePairs: AttributePair[] = [];
 
@@ -104,10 +126,6 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     this.layoutManager.add(this.element.nativeElement);
   }
 
-  public toggleDocumentFavorite() {
-    this.store.dispatch(new Update({document: this.postItModel.document, toggleFavourite: true}));
-  }
-
   public clickOnAttributePair(column: number, row: number): void {
     const enableEditMode = this.selectionHelper.wasPreviouslySelected(column, row, this.postItModel.document.id);
 
@@ -117,6 +135,22 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   public onEnterKeyPressedInEditMode(): void {
     this.selectionHelper.selectNext(this.postItModel);
+  }
+
+  public createAttributePair(): void {
+    this.postItModel.document.data[this.newAttributePair.attribute] = '';
+
+    this.newAttributePair.value = '';
+    this.attributePairs.push(this.newAttributePair);
+
+    this.newAttributePair = {} as AttributePair;
+    document.activeElement['value'] = '';
+
+    this.changed = true;
+
+    setTimeout(() => {
+      this.selectionHelper.select(1, Number.MAX_SAFE_INTEGER, this.postItModel);
+    });
   }
 
   public updateAttribute(attributePair: AttributePair): void {
@@ -130,23 +164,19 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
       this.removeAttributePair();
     }
 
-    this.changes.emit();
+    this.changed = true;
   }
 
   public updateValue(attributePair: AttributePair): void {
+    if (this.postItModel.document.data[attributePair.attribute] !== attributePair.value) {
+      this.changed = true;
+    }
+
     this.postItModel.document.data[attributePair.attribute] = attributePair.value;
-    this.changes.emit();
   }
 
-  public createAttributePair(): void {
-    this.newAttributePair.value = '';
-    this.attributePairs.push(this.newAttributePair);
-    this.changes.emit();
-
-    this.newAttributePair = {} as AttributePair;
-    document.activeElement['value'] = '';
-
-    this.focusNewAttributeValue();
+  public toggleDocumentFavorite() {
+    this.store.dispatch(new Update({document: this.postItModel.document, toggleFavourite: true}));
   }
 
   public documentPrefix(): string {
@@ -169,20 +199,6 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
-  private refreshDataAttributePairs(): void {
-    this.attributePairs = Object.entries(this.postItModel.document.data).map(([attribute, value]) => {
-      return {
-        attribute: attribute,
-        previousAttributeName: attribute,
-        value: isString(value) ? value : JSON.stringify(value, null, 2)
-      };
-    });
-  }
-
-  public hasWriteRole(): boolean {
-    return this.hasRole(Role.Write);
-  }
-
   private removeAttributePair() {
     const selectedRow = this.selectionHelper.selection.row;
     this.attributePairs.splice(selectedRow, 1);
@@ -196,16 +212,28 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
-  private focusNewAttributeValue() {
-    setTimeout(() => {
-      this.selectionHelper.select(1, this.attributePairs.length, this.postItModel);
+  private refreshDataAttributePairs(): void {
+    if (!this.postItModel.document.data) {
+      this.postItModel.document.data = {};
+    }
+
+    this.attributePairs = Object.entries(this.postItModel.document.data).map(([attribute, value]) => {
+      return {
+        attribute: attribute,
+        previousAttributeName: attribute,
+        value: isString(value) ? value : JSON.stringify(value, null, 2)
+      };
     });
+  }
+
+  public hasWriteRole(): boolean {
+    return this.hasRole(Role.Write);
   }
 
   private hasRole(role: string): boolean {
     const collection = this.postItModel.document.collection;
-    return collection.permissions && collection.permissions.users
-      .some((permission: Permission) => permission.roles.includes(role));
+    const permissions = collection && collection.permissions || {users: [], groups: []};
+    return permissions.users.some((permission: Permission) => permission.roles.includes(role));
   }
 
   public ngOnDestroy(): void {

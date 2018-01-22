@@ -64,6 +64,9 @@ export class DocumentService {
     return this.httpClient.put<Document>(`${this.apiPrefix(document.collectionCode)}/${document.id}/data`, document.data)
       .pipe(
         catchError(error => this.handleGlobalError(error)),
+        map(returnedDocument => {
+          return {...returnedDocument, collectionCode: document.collectionCode};
+        }),
         switchMap(document => this.homePageService.checkFavoriteDocument(document))
       );
   }
@@ -145,7 +148,7 @@ export class DocumentService {
     }));
   }
 
-  private addLastUsed(collectionCode: string, id: string){
+  private addLastUsed(collectionCode: string, id: string) {
     this.homePageService.addLastUsedCollection(collectionCode);
     this.homePageService.addLastUsedDocument(collectionCode, id);
   }

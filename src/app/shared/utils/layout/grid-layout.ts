@@ -20,8 +20,8 @@
 import {NgZone} from '@angular/core';
 
 interface MovePosition {
-  fromIndex: number,
-  toIndex: number
+  fromIndex: number;
+  toIndex: number;
 }
 
 export class GridLayout {

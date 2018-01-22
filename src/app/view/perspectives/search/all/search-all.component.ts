@@ -19,7 +19,7 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {skipWhile, tap} from 'rxjs/operators';
+import {filter, map, skipWhile, tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {isNullOrUndefined} from 'util';
 import {SearchService} from '../../../../core/rest';
@@ -31,7 +31,7 @@ import {selectCollectionsByQuery} from '../../../../core/store/collections/colle
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
-import {selectQuery} from '../../../../core/store/navigation/navigation.state';
+import {NavigationState, selectNavigation, selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {ViewModel} from '../../../../core/store/views/view.model';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewsByQuery} from '../../../../core/store/views/views.state';
@@ -61,9 +61,11 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.querySubscription = this.store.select(selectQuery)
+    this.querySubscription = this.store.select(selectNavigation)
       .pipe(
-        skipWhile(query => isNullOrUndefined(query)),
+        filter((navigation: NavigationState) => Boolean(navigation.workspace.organizationCode && navigation.workspace.projectCode)),
+        map(navigation => navigation.query),
+        filter(query => !isNullOrUndefined(query)),
         tap(query => this.store.dispatch(new CollectionsAction.Get({query}))),
         tap(query => this.store.dispatch(new DocumentsAction.Get({query}))),
         tap(query => this.store.dispatch(new ViewsAction.Get({query})))

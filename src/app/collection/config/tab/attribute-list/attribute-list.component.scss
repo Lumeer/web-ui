@@ -88,4 +88,10 @@
     color: $secondary-color !important;
   }
 
+  .input-box {
+    margin-left: 4px;
+    border: 1px solid #ced4da;
+    border-radius: $border-radius-small;
+  }
+
 }

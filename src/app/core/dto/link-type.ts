@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkedAttribute} from './linked-attribute';
-
 export interface LinkType {
 
   id?: string; // TODO make compulsory
@@ -27,7 +25,5 @@ export interface LinkType {
   collectionCodes?: [string, string]; // TODO make compulsory
 
   attributes?: string[]; // TODO use complex object
-  linkedAttributes?: LinkedAttribute[]; // TODO remove
-  automaticallyLinked?: [LinkedAttribute, LinkedAttribute];
 
 }

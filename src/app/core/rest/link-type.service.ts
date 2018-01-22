@@ -81,6 +81,12 @@ export class LinkTypeService {
       linkTypes = linkTypes.filter(linkType => linkType.collectionCodes.some(code => query.collectionCodes.includes(code)));
     }
 
+    linkTypes.forEach(linkType => {
+      if (!linkType.attributes) {
+        linkType.attributes = [];
+      }
+    });
+
     return Observable.of(linkTypes);
   }
 

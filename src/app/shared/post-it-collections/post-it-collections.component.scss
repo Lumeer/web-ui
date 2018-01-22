@@ -18,7 +18,7 @@
     transition: box-shadow $animation-duration, transform $animation-duration;
   }
 
-  .post-it:hover, .selected {
+  .post-it:hover{
     box-shadow: $shadow-default;
 
     .opacity-content {
@@ -32,7 +32,6 @@
 
   .selected {
     z-index: $z-index-selected;
-    opacity: 1;
   }
 
   .add-post-it {
@@ -106,6 +105,7 @@
     color: inherit;
     font-size: 20px;
     border: none;
+    outline: none !important;
     padding-top: 0;
   }
 

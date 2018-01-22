@@ -23,6 +23,7 @@ import {PostItLayoutConfig} from './post-it-layout-config';
 export class PostItLayout {
 
   protected layout: any;
+
   protected insertingElementsAtIndex: number = -1;
 
   constructor(protected containerClassName: string, protected parameters: PostItLayoutConfig, protected zone: NgZone) {
@@ -35,23 +36,29 @@ export class PostItLayout {
     }
   }
 
+  public initialize(): void {
+    this.isInitializedAffterAttempt();
+  }
+
   public add(element: HTMLElement): void {
-    if (!this.canModify()) {
+    if (!this.isInitializedAffterAttempt()) {
       return;
     }
 
     this.zone.runOutsideAngular(() => {
       this.layout.add(element, {index: this.insertingElementsAtIndex});
+      this.relayout();
     });
   }
 
   public remove(element: HTMLElement): void {
-    if (!this.canModify()) {
+    if (!this.isInitializedAffterAttempt()) {
       return;
     }
 
     this.zone.runOutsideAngular(() => {
       this.layout.remove(element);
+      this.relayout();
     });
   }
 
@@ -64,7 +71,13 @@ export class PostItLayout {
     });
   }
 
-  protected canModify(): boolean {
+  public refresh(): void {
+    if (this.isInitializedAffterAttempt()) {
+      this.relayout();
+    }
+  }
+
+  protected isInitializedAffterAttempt(): boolean {
     if (!this.containerExists()) {
       return false;
     }
@@ -79,9 +92,6 @@ export class PostItLayout {
   private createLayout(): void {
     this.zone.runOutsideAngular(() => {
       this.layout = new window['Muuri'](this.containerClassName, this.parameters);
-
-      this.layout.on('add', items => this.relayout());
-      this.layout.on('remove', items => this.relayout());
     });
   }
 

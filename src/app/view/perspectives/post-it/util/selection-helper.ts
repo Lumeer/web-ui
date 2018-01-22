@@ -65,7 +65,7 @@ export class SelectionHelper {
         this.selectNextOnNewLine();
         break;
       default:
-        throw new LumeerError('Currently selected nonexistant column');
+        throw new LumeerError('Currently selected nonexistent column');
     }
   }
 
@@ -100,10 +100,12 @@ export class SelectionHelper {
   public select(column: number, row: number, postIt: PostItDocumentModel): void {
     this.selectedPostIt = postIt;
 
-    this.selection.documentId = postIt.document.id;
+    this.selection.documentId = postIt.document && postIt.document.id;
     this.selection.documentIndex = postIt.index;
-    this.selectRow(column, row);
-    this.selectColumn(column, row);
+    this.selectRow(row);
+    this.selectColumn(column);
+
+    this.handleBoundarySelections();
 
     this.focus();
   }
@@ -118,71 +120,99 @@ export class SelectionHelper {
     if (newRow < 0) {
       return Direction.Up;
     }
-    if (newRow > this.lastRow() || this.aboveDisabledInput() && newRow === this.lastRow()) {
+    if (newRow > this.lastRow() || this.aboveDisabledInput() && newRow === this.lastRow() && newColumn !== ATTRIBUTE_COLUMN) {
       return Direction.Down;
     }
 
     return Direction.Self;
   }
 
-  private selectDocumentByDirection(column: number, row: number, direction: Direction): void {
-    this.selectColumn(column, row);
-    this.selectRow(column, row);
-
+  private selectDocumentByDirection(newColumn: number, newRow: number, direction: Direction): void {
     switch (direction) {
       case Direction.Left:
-        this.tryToSelectDocumentOnLeft();
+        this.tryToSelectDocumentOnLeft(newColumn, newRow);
         break;
       case Direction.Right:
-        this.tryToSelectDocumentOnRight();
+        this.tryToSelectDocumentOnRight(newColumn, newRow);
         break;
       case Direction.Up:
-        this.tryToSelectDocumentOnUp();
+        this.tryToSelectDocumentOnUp(newColumn, newRow);
         break;
       case Direction.Down:
-        this.tryToSelectDocumentOnDown();
+        this.tryToSelectDocumentOnDown(newColumn, newRow);
         break;
     }
   }
 
-  private tryToSelectDocumentOnLeft(): void {
-    if (this.selection.documentIndex + 1 < this.postIts.length) {
-      const selectedDocument = this.postIts[this.selection.documentIndex + 1];
-      this.select(Number.MAX_SAFE_INTEGER, this.selection.row, selectedDocument);
-    }
-  }
+  private tryToSelectDocumentOnLeft(newColumn: number, newRow: number): void {
+    newColumn = VALUE_COLUMN;
+    newRow = newRow > this.lastRow() ? 0 : newRow;
 
-  private tryToSelectDocumentOnRight(): void {
     if (this.selection.documentIndex - 1 >= 0) {
       const selectedDocument = this.postIts[this.selection.documentIndex - 1];
-      this.select(0, this.selection.row, selectedDocument);
+      this.select(newColumn, newRow, selectedDocument);
     }
   }
 
-  private tryToSelectDocumentOnUp(): void {
-    if (this.selection.documentIndex + this.getDocumentsPerRow() < this.postIts.length) {
-      const selectedDocument = this.postIts[this.selection.documentIndex + this.getDocumentsPerRow()];
-      this.select(this.selection.column, Number.MAX_SAFE_INTEGER, selectedDocument);
+  private tryToSelectDocumentOnRight(newColumn: number, newRow: number): void {
+    newColumn = ATTRIBUTE_COLUMN;
+
+    if (this.selection.documentIndex + 1 < this.postIts.length) {
+      const selectedDocument = this.postIts[this.selection.documentIndex + 1];
+      this.select(newColumn, newRow, selectedDocument);
     }
   }
 
-  private tryToSelectDocumentOnDown(): void {
+  private tryToSelectDocumentOnUp(newColumn: number, newRow: number): void {
     if (this.selection.documentIndex - this.getDocumentsPerRow() >= 0) {
       const selectedDocument = this.postIts[this.selection.documentIndex - this.getDocumentsPerRow()];
-      this.select(this.selection.column, 0, selectedDocument);
+      this.select(newColumn, newRow, selectedDocument);
     }
   }
 
-  private selectRow(column: number, row: number): void {
-    this.selection.row = Math.max(0, Math.min(row, this.lastRow()));
+  private tryToSelectDocumentOnDown(newColumn: number, newRow: number): void {
+    newRow = 0;
 
-    if (this.selection.row === this.lastRow() && column === VALUE_COLUMN) {
+    if (this.selection.documentIndex + this.getDocumentsPerRow() < this.postIts.length) {
+      const selectedDocument = this.postIts[this.selection.documentIndex + this.getDocumentsPerRow()];
+      this.select(newColumn, newRow, selectedDocument);
+    }
+  }
+
+  private selectRow(row: number): void {
+    if (row < 0) {
+      row = 0;
+    }
+
+    if (row > this.lastRow()) {
+      row = this.lastRow();
+    }
+
+    this.selection.row = row;
+  }
+
+  private selectColumn(column: number): void {
+    if (column > COLUMNS) {
+      column = ATTRIBUTE_COLUMN;
+    }
+
+    if (column < 0) {
+      column = VALUE_COLUMN;
+    }
+
+    this.selection.column = column;
+  }
+
+  private handleBoundarySelections(): void {
+    if (this.lastRow() === 0 && this.selection.column === VALUE_COLUMN) {
+      this.selection.column = ATTRIBUTE_COLUMN;
+      return;
+    }
+
+    if (this.selection.row === this.lastRow() && this.selection.column === VALUE_COLUMN) {
       this.selection.row--;
+      return;
     }
-  }
-
-  private selectColumn(column: number, row: number): void {
-    this.selection.column = Math.max(0, Math.min(column, COLUMNS));
   }
 
   public focus(): void {
@@ -192,11 +222,13 @@ export class SelectionHelper {
 
     let elementToFocus = document.getElementById(this.selectedInputId());
 
-    if (this.selection.editing) {
+    if (elementToFocus && this.selection.editing) {
       elementToFocus = elementToFocus.getElementsByTagName('Input').item(0) as HTMLInputElement;
     }
 
-    elementToFocus.focus();
+    if (elementToFocus) {
+      elementToFocus.focus();
+    }
   }
 
   private selectedInputId(): string {
@@ -214,7 +246,7 @@ export class SelectionHelper {
   }
 
   private lastRow(): number {
-    return Object.keys(this.selectedPostIt.document.data).length;
+    return Object.entries(this.selectedPostIt.document.data).length;
   }
 
   public wasPreviouslySelected(column: number, row: number, postItId: string): boolean {
@@ -222,5 +254,4 @@ export class SelectionHelper {
       row === this.selection.row &&
       postItId === this.selection.documentId;
   }
-
 }
