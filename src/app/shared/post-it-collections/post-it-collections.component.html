@@ -44,7 +44,7 @@
          (click)="lastClickedPostIt = postIt">
         <i class="fa-6x {{ postIt.collection.icon }}" aria-hidden="true"></i>
       </a>
-      <div class="dropdown-menu dropdown-menu-right">
+      <div class="dropdown-menu dropdown-menu-right uninitialized-dropdown">
         <color-picker class="dropdown-item" [(color)]="postIt.collection.color"></color-picker>
         <div class="dropdown-divider"></div>
         <icon-picker class="dropdown-item" [(icon)]="postIt.collection.icon"></icon-picker>
