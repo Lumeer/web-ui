@@ -53,7 +53,7 @@
                 </div>
 
                 <i class="fa-3x {{resource.icon}}" aria-hidden="true"></i>
-                <div class="card-title code edit-border p-1" contenteditable="true"
+                <div class="card-title code p-1" contenteditable="true"
                      (blur)="code.scrollTo(0,0); onCodeBlur(code, resource)"
                      (click)="$event.stopPropagation()"
                      (keydown)="onKeyDown($event, code)"
@@ -63,7 +63,7 @@
                      [textContent]="resource.code"
                      #code>
                 </div>
-                <div class="card-subtitle name edit-border p-1" contenteditable="true"
+                <div class="card-subtitle name p-1" contenteditable="true"
                      (blur)="name.scrollTo(0,0); onNameBlur(name, resource)"
                      (click)="$event.stopPropagation()"
                      (keydown)="onKeyDown($event, name)"
