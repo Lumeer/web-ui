@@ -58,7 +58,7 @@
   <ng-template *ngIf="row.documents.length === 1 && row.documents[0].id"
                (execute)="onRemoveRow()"
                contextMenuItem>
-    <i class="fa fa-fw fa-times text-danger mr-1" aria-hidden="true"></i>
+    <i class="fas fa-fw fa-trash text-danger mr-1" aria-hidden="true"></i>
     <span i18n="@@table.body.row.remove">Remove row</span>
   </ng-template>
   <ng-template *ngIf="row.documents.length === 1"
