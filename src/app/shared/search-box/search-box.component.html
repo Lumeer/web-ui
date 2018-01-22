@@ -20,7 +20,7 @@
            (blur)="onConditionBlur()"
            contenteditable="true">
       </div>
-      <i class="fas fa-trash remove" (click)="onRemoveQueryItem(ix)" aria-hidden="true"></i>
+      <i class="fas fa fa-times remove" (click)="onRemoveQueryItem(ix)" aria-hidden="true"></i>
     </div>
 
     <div class="dropdown" *ngIf="shouldShowSuggestions && suggestionItems.length > 0">
