@@ -86,9 +86,6 @@ type ResourceModel = OrganizationModel | ProjectModel;
 })
 export class ResourceChooserComponent implements OnChanges {
 
-  @ViewChildren('picker')
-  public pickers: QueryList<ElementRef>;
-
   @ViewChild('resourceContainer')
   public resourceContainer: ElementRef;
 
@@ -237,6 +234,14 @@ export class ResourceChooserComponent implements OnChanges {
     }
   }
 
+  private checkVisibilityNewResource() {
+    const numVisible = this.numResourcesVisible();
+    const numPotentiallyVisible = this.numResourcesPotentiallyVisible();
+    if (numPotentiallyVisible - numVisible > 1) {
+      this.resourceScroll -= squareSize;
+    }
+  }
+
   private numResourcesVisible(): number {
     return Math.min(Math.floor(this.resourceContentWidth / squareSize), this.resourcesLength());
   }
@@ -266,6 +271,7 @@ export class ResourceChooserComponent implements OnChanges {
       correlationId: CorrelationIdGenerator.generate()
     });
     this.compute();
+    this.checkVisibilityNewResource();
   }
 
   public onResourceSettings(id: string) {
