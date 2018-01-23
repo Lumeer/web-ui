@@ -17,26 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnChanges,
-  Output, QueryList,
-  SimpleChange,
-  ViewChild, ViewChildren
-} from '@angular/core';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
-
+import {Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChange, ViewChild} from '@angular/core';
 import {isNullOrUndefined} from 'util';
+import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generator';
-import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {OrganizationModel} from '../../../core/store/organizations/organization.model';
 import {ProjectModel} from '../../../core/store/projects/project.model';
-import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
 import {KeyCode} from '../../../shared/key-code';
 import {Role} from '../../../shared/permissions/role';
 import {ResourceItemType} from './resource-item-type';
@@ -116,9 +104,9 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceLineSizes = [0, 0, 0];
   public resourceVisibleArrows = false;
 
-  public openedPickerId: string;
   public lastIcon: string;
   public lastColor: string;
+  public modifiedResourceId: string;
   public syncingCorrIds: string[] = [];
 
   public constructor(private notificationService: NotificationService) {
@@ -369,35 +357,23 @@ export class ResourceChooserComponent implements OnChanges {
         resource[property] = contentTrim;
         if (this.isNewCodeValid(resource.code)) {
           setTimeout(() => {
-            this.onResourcePickerClick(resource)
+            this.onResourcePickerClick(resource);
           }, 200);
         }
       }// else do nothing
     }
   }
 
-  public hasResourcePickerVisible(resource: ResourceModel): boolean {
-    if (isNullOrUndefined(this.openedPickerId)) return false;
-    return this.openedPickerId === this.getResourceIdentificator(resource);
-  }
-
   public onResourcePickerClick(resource: ResourceModel) {
-    const identificator = this.getResourceIdentificator(resource);
-    if (this.openedPickerId === identificator) {
-      this.openedPickerId = null;
-    } else {
-      this.openedPickerId = identificator;
-    }
+    this.modifiedResourceId = this.getResourceIdentificator(resource);
     this.lastIcon = null;
     this.lastColor = null;
   }
 
-  public onResourcePickerBlur() {
-    if (isNullOrUndefined(this.openedPickerId)) return;
-    const resource = this.findResource(this.openedPickerId);
-    if (isNullOrUndefined(resource)) return;
-
-    this.openedPickerId = null;
+  public onResourcePickerBlur(resource: ResourceModel) {
+    if (this.modifiedResourceId !== this.getResourceIdentificator(resource)) {
+      return;
+    }
 
     if (resource.id) {
       if (this.shouldUpdateResource(resource)) {
