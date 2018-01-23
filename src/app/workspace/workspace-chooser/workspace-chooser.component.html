@@ -11,7 +11,7 @@
                     (resourceSettings)="onOrganizationSettings($event)">
   </resource-chooser>
 
-  <div class="pt-3" *ngIf="selectedOrganizationId" [@animateOpacityFromUp]="'in'">
+  <div class="pt-3" *ngIf="selectedOrganizationId">
     <resource-chooser [selectedId]="selectedProjectId"
                       [resourceType]="projectItemType()"
                       [resources]="projects$ | async"

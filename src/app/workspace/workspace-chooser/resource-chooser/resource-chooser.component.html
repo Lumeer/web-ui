@@ -35,16 +35,28 @@
 
                 <div class="d-flex flex-column settings">
                   <ng-container *ngIf="resource.id">
-                    <a class="mb-1" *ngIf="hasManageRole(resource)"
+                    <a class="text-success mb-1" *ngIf="hasManageRole(resource)"
                        (click)="$event.stopPropagation(); onResourceSettings(resource.id)"
                        title="Settings" i18n-title="@@resource.postit.settings">
                       <i class="fas fa fa-cog clickable" aria-hidden="true"></i>
                     </a>
-                    <a class="mb-1"
-                       (click)="$event.stopPropagation(); onResourcePickerClick(resource)"
-                       title="Icon picker" i18n-title="@@resource.postit.picker">
-                      <i class="fas fa fa-eye-dropper clickable" aria-hidden="true"></i>
-                    </a>
+
+                    <div class="dropdown mb-1">
+                      <a class="text-success"
+                         (click)="onResourcePickerClick(resource)"
+                         (clickOutside)="onResourcePickerBlur(resource)"
+                         data-toggle="dropdown"
+                         title="Icon picker" i18n-title="@@resource.postit.picker">
+                        <i class="fas fa fa-eye-dropper clickable" aria-hidden="true"></i>
+                      </a>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <color-picker class="dropdown-item" [color]="resource.color"
+                                      (selectedChange)="onNewColor(resource, $event)"></color-picker>
+                        <div class="dropdown-divider"></div>
+                        <icon-picker class="dropdown-item" [icon]="resource.icon"
+                                     (selectedChange)="onNewIcon(resource, $event)"></icon-picker>
+                      </div>
+                    </div>
                   </ng-container>
                   <a class="text-danger" (click)="onResourceDelete(resource); $event.stopPropagation()"
                      title="Remove" i18n-title="@@resource.postit.remove">
@@ -52,7 +64,21 @@
                   </a>
                 </div>
 
-                <i class="fa-3x {{resource.icon}}" aria-hidden="true"></i>
+                <div class="dropdown">
+                  <i (click)="onResourcePickerClick(resource)"
+                     (clickOutside)="onResourcePickerBlur(resource)"
+                     class="fa-3x {{resource.icon}}"
+                     data-toggle="dropdown"
+                     aria-hidden="true"></i>
+                  <div *ngIf="!resource.id"
+                       class="dropdown-menu dropdown-menu-right">
+                    <color-picker class="dropdown-item" [color]="resource.color"
+                                  (selectedChange)="onNewColor(resource, $event)"></color-picker>
+                    <div class="dropdown-divider"></div>
+                    <icon-picker class="dropdown-item" [icon]="resource.icon"
+                                 (selectedChange)="onNewIcon(resource, $event)"></icon-picker>
+                  </div>
+                </div>
                 <div class="card-title code p-1" contenteditable="true"
                      (blur)="code.scrollTo(0,0); onCodeBlur(code, resource)"
                      (click)="$event.stopPropagation()"
@@ -79,15 +105,6 @@
           <div class="align-self-stretch border border-bottom-0 rounded-top bookmark"
                *ngIf="resource.id === selectedId" [@animateVisible]="'in'"></div>
 
-          <div class="dropdown-menu dropdown-menu-right"
-               [class.show]="hasResourcePickerVisible(resource)"
-               (clickOutside)="onResourcePickerBlur()">
-            <color-picker class="dropdown-item" [color]="resource.color"
-                          (selectedChange)="onNewColor(resource, $event)"></color-picker>
-            <div class="dropdown-divider"></div>
-            <icon-picker class="dropdown-item" [icon]="resource.icon"
-                         (selectedChange)="onNewIcon(resource, $event)"></icon-picker>
-          </div>
         </div>
 
         <div class="tab d-flex clickable" *ngIf="canCreateResource">

@@ -49,9 +49,7 @@ $bookmark-border-color: #bdbdbd;
       -o-transition: left $animation-duration;
 
       .dropdown-menu {
-        width: 330px;
-        top: -40px;
-        left: auto !important;
+        width: 230px;
       }
 
       .tab {
@@ -106,12 +104,25 @@ $bookmark-border-color: #bdbdbd;
             z-index: 10;
             position: absolute !important;
 
+            &:hover {
+              z-index: $z-index-hovered;
+            }
+
             .settings {
               position: absolute;
               right: 5px;
               top: 5px;
-              opacity: 0;
-              transition: opacity $animation-duration;
+            }
+
+            .settings .fas {
+              color: $white;
+              transition: color $animation-duration;
+            }
+
+            &:hover {
+              .settings .fas {
+                color: inherit;
+              }
             }
 
             .code {
