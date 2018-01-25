@@ -37,8 +37,6 @@ import {AttributeChangeEvent, DataChangeEvent, LinkInstanceEvent, TableLinkEvent
 import {TablePart} from './model';
 import {TableManagerService} from './util/table-manager.service';
 import {selectCollectionsDictionary} from "../../../core/store/collections/collections.state";
-import {Dictionary} from "@ngrx/entity/src/models";
-import {CollectionModel} from "../../../core/store/collections/collection.model";
 
 @Component({
   selector: 'table-perspective',
@@ -76,7 +74,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   public parts: TablePart[] = [];
 
   private subscription: Subscription;
-  private collectionSubscription: Subscription;
+  private collectionsSubscription: Subscription;
 
   public ngOnInit() {
     if (this.embedded && this.query) {
@@ -107,7 +105,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
       return;
     }
 
-    this.collectionSubscription = this.store.select(selectCollectionsDictionary)
+    this.collectionsSubscription = this.store.select(selectCollectionsDictionary)
       .pipe(first())
       .subscribe(collectionsMap => {
         this.query.collectionIds = this.query.collectionCodes.map(code => collectionsMap[code].id)
@@ -120,8 +118,8 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
-    if (this.collectionSubscription){
-      this.collectionSubscription.unsubscribe();
+    if (this.collectionsSubscription){
+      this.collectionsSubscription.unsubscribe();
     }
   }
 
@@ -146,7 +144,6 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
       this.config.table = {
         parts: [
           {
-            // TODO verify this!!!
             collectionId: this.query.collectionIds[0],
             attributeIds: []
           }

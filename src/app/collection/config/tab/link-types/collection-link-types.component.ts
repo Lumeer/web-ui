@@ -194,15 +194,15 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public possibleToCollectionIds(linkTypeModel: LinkTypeModel): string[] {
-    const excludedCodes = [this.collection.id];
+    const excludedIds = [this.collection.id];
 
     if (linkTypeModel.initialized) {
-      excludedCodes.push(linkTypeModel.data.collectionIds[1]);
+      excludedIds.push(linkTypeModel.data.collectionIds[1]);
     }
 
     return Object
       .keys(this.collections)
-      .filter(collectionId => !excludedCodes.includes(collectionId));
+      .filter(collectionId => !excludedIds.includes(collectionId));
   }
 
   public searchLinkTypesQueryParams(linkTypeModel: LinkTypeModel): object {
