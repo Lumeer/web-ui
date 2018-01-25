@@ -121,10 +121,10 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
         this.getData(query);
 
         if (!this.embedded && !smartDocConfig) {
-          const collectionCode = query && query.collectionCodes ? query.collectionCodes[0] : null;
-          return this.getCollectionByCode(collectionCode).pipe(map(collection => {
+          const collectionId = query && query.collectionIds ? query.collectionIds[0] : null;
+          return this.getCollectionById(collectionId).pipe(map(collection => {
             const defaultSmartDoc: SmartDocModel = {
-              collectionId: collection.id,
+              collectionId: collectionId,
               parts: [SmartDocUtils.createInitialTextPart(collection)]
             };
             this.store.dispatch(new ViewsAction.ChangeSmartDocConfig({config: defaultSmartDoc}));
@@ -239,9 +239,9 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
     }
   }
 
-  private getCollectionByCode(collectionCode: string): Observable<CollectionModel> {
+  private getCollectionById(collectionId: string): Observable<CollectionModel> {
     return this.collections$.pipe(
-      map(collections => collections.find(collection => collection.code === collectionCode)),
+      map(collections => collections.find(collection => collection.id === collectionId)),
       skipWhile(collection => !collection),
       first()
     );
