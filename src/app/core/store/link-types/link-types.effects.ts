@@ -60,12 +60,13 @@ export class LinkTypesEffects {
 
   private convertCollectionCodesToIds(action: LinkTypesAction.Get): Observable<LinkTypesAction.Get> {
     const collectionCodes = action.payload.query.collectionCodes;
+    const collectionIds = action.payload.query.collectionIds || [];
     if (!collectionCodes || collectionCodes.length == 0) return Observable.of(action);
     return Observable.of().pipe(
       withLatestFrom(this.store$.select(selectCollectionsDictionary)),
       map(collections => {
-        const collectionIds = collectionCodes.map(code => collections[code].id);
-        return {...action, collectionCodes: null, collectionIds: [collectionIds]}
+        const convertedIds = collectionCodes.map(code => collections[code].id);
+        return {...action, collectionCodes: null, collectionIds: [collectionIds.concat(convertedIds)]}
       })
     );
   }
