@@ -124,7 +124,7 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
           const collectionCode = query && query.collectionCodes ? query.collectionCodes[0] : null;
           return this.getCollectionByCode(collectionCode).pipe(map(collection => {
             const defaultSmartDoc: SmartDocModel = {
-              collectionCode: collectionCode,
+              collectionId: collection.id,
               parts: [SmartDocUtils.createInitialTextPart(collection)]
             };
             this.store.dispatch(new ViewsAction.ChangeSmartDocConfig({config: defaultSmartDoc}));

@@ -112,7 +112,7 @@ export class SmartDocEmbeddedComponent implements OnInit, OnChanges, OnDestroy {
     this.perspectiveComponent.embedded = true;
     this.perspectiveComponent.linkedDocument = this.document;
 
-    const collectionCode = LinkTypeHelper.getOtherCollectionCode(linkType, this.document.collectionCode);
+    const collectionCode = LinkTypeHelper.getOtherCollectionId(linkType, this.document.collectionCode);
     const query: QueryModel = {
       documentIds: this.getLinkedDocumentIds(linkInstances),
       collectionCodes: [collectionCode],

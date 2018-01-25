@@ -79,14 +79,14 @@ export class SmartDocSidePanelComponent {
   }
 
   private addEmbeddedPart(linkType: LinkTypeModel) {
-    const collectionCode = LinkTypeHelper.getOtherCollectionCode(linkType, this.collection.code);
+    const collectionId = LinkTypeHelper.getOtherCollectionId(linkType, this.collection.id);
 
     this.collections$.pipe(
       first(),
-      map(collections => collections.find(collection => collection.code === collectionCode))
+      map(collections => collections.find(collection => collection.id === collectionId))
     ).subscribe(collection => {
       const smartDoc: SmartDocModel = {
-        collectionCode: collectionCode,
+        collectionId: collectionId,
         parts: [SmartDocUtils.createInitialTextPart(collection)]
       };
       const part: SmartDocPartModel = {

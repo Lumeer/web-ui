@@ -21,7 +21,7 @@ import {LinkTypeModel} from './link-type.model';
 
 export class LinkTypeHelper {
 
-  public static getOtherCollectionCode(linkType: LinkTypeModel, collectionId: string): string {
+  public static getOtherCollectionId(linkType: LinkTypeModel, collectionId: string): string {
     return linkType.collectionIds[0] === collectionId ? linkType.collectionIds[1] : linkType.collectionIds[0];
   }
 
