@@ -52,7 +52,7 @@ export class LinkInstanceService {
   }
 
   public getLinkInstances(query: Query): Observable<LinkInstance[]> {
-    return this.httpClient.get<LinkInstance[]>(this.restApiPrefix());
+    return this.httpClient.post<LinkInstance[]>(this.restApiPrefix() + '/search', query);
   }
 
   private restApiPrefix(id?: string): string {

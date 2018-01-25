@@ -53,7 +53,7 @@ export class LinkTypeService {
   }
 
   public getLinkTypes(query: Query): Observable<LinkType[]> {
-    return this.httpClient.get<LinkType[]>(this.restApiPrefix());
+    return this.httpClient.post<LinkType[]>(this.restApiPrefix() + '/search', query);
   }
 
   private restApiPrefix(id?: string): string {
