@@ -14,7 +14,7 @@
     <div class="row">
       <div class="col pointer-events-none"></div>
       <div class="col-12 {{getColClasses()}}">
-        <div class="documents-layout-{{templateId}} muuri"
+        <div class="{{documentsLayoutContainerClass()}} muuri"
              [class.mt-3]="embedded">
           <div *ngFor="let doc of documents; index as docIndex"
                class="muuri-item mb-3 w-100"
@@ -22,7 +22,8 @@
             <div class="muuri-item-content">
               <smartdoc-document [collections]="collections$ | async"
                                  [document]="doc"
-                                 [template]="template"
+                                 [path]="path"
+                                 [smartDoc]="smartDoc"
                                  class="card document">
               </smartdoc-document>
             </div>

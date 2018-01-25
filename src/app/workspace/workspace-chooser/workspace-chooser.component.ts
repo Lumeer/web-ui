@@ -33,20 +33,11 @@ import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {
-  selectOrganizationById,
-  selectAllOrganizations, selectSelectedOrganization,
-  selectSelectedOrganizationId
-} from '../../core/store/organizations/organizations.state';
+import {selectAllOrganizations, selectOrganizationById, selectSelectedOrganization, selectSelectedOrganizationId} from '../../core/store/organizations/organizations.state';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {
-  selectProjectById,
-  selectProjectsForSelectedOrganization, selectSelectedProject,
-  selectSelectedProjectId
-} from '../../core/store/projects/projects.state';
+import {selectProjectById, selectProjectsForSelectedOrganization, selectSelectedProject, selectSelectedProjectId} from '../../core/store/projects/projects.state';
 import {RouterAction} from '../../core/store/router/router.action';
-import {SmartDocTemplatesAction} from '../../core/store/smartdoc-templates/smartdoc-templates.action';
 import {UsersAction} from '../../core/store/users/users.action';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {UserSettingsService} from '../../core/user-settings.service';
@@ -211,7 +202,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onWarningMessage(message: string){
+  public onWarningMessage(message: string) {
     this.store.dispatch(new NotificationsAction.Warning({message}));
   }
 
@@ -229,7 +220,6 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     this.store.dispatch(new GroupsAction.Clear());
     this.store.dispatch(new LinkInstancesAction.Clear());
     this.store.dispatch(new LinkTypesAction.Clear());
-    this.store.dispatch(new SmartDocTemplatesAction.Clear());
     this.store.dispatch(new UsersAction.Clear());
     this.store.dispatch(new ViewsAction.Clear());
   }

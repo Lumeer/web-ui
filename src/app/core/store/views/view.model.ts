@@ -20,6 +20,7 @@
 import {Perspective} from '../../../view/perspectives/perspective';
 import {QueryModel} from '../navigation/query.model';
 import {PermissionsModel} from '../permissions/permissions.model';
+import {SmartDocModel} from '../smartdoc/smartdoc.model';
 
 export interface ViewModel {
 
@@ -39,7 +40,7 @@ export interface ViewConfigModel {
   postit?: PostItConfigModel;
   search?: SearchConfigModel;
   table?: TableConfigModel;
-  smartdoc?: SmartDocConfigModel;
+  smartdoc?: SmartDocModel;
 
 }
 
@@ -67,13 +68,5 @@ export interface TableConfigModel {
     linkAttributeIds?: string[];
     expandedDocumentIds?: string[];
   }[];
-
-}
-
-export interface SmartDocConfigModel {
-
-  templateId: string;
-  documentIdsOrder?: string[];
-  innerDocumentIdsOrder?: { [documentIdTemplateId: string]: string[] };
 
 }

@@ -77,7 +77,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   private validNavigation(navigation: NavigationState): boolean {
-    return Boolean(navigation.workspace.projectCode &&
+    return Boolean(navigation && navigation.workspace && navigation.workspace.projectCode &&
       navigation.workspace.organizationCode &&
       navigation.perspective);
   }
@@ -102,6 +102,7 @@ export class ViewComponent implements OnInit, OnDestroy {
       skipWhile(view => !view)
     ).subscribe(view => {
       this.view = {...view};
+      this.store.dispatch(new ViewsAction.ChangeConfig({config: view.config}));
     });
   }
 

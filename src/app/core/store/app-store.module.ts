@@ -42,7 +42,6 @@ import {organizationsReducer} from './organizations/organizations.reducer';
 import {ProjectsEffects} from './projects/projects.effects';
 import {projectsReducer} from './projects/projects.reducer';
 import {RouterEffects} from './router/router.effects';
-import {smartDocTemplatesReducer} from './smartdoc-templates/smartdoc-templates.reducer';
 import {UsersEffects} from './users/users.effects';
 import {usersReducer} from './users/users.reducer';
 import {ViewsEffects} from './views/views.effects';
@@ -59,8 +58,7 @@ const reducers: ActionReducerMap<AppState> = {
   projects: projectsReducer,
   router: routerReducer,
   users: usersReducer,
-  views: viewsReducer,
-  smartDocTemplates: smartDocTemplatesReducer
+  views: viewsReducer
 };
 
 const effects = [

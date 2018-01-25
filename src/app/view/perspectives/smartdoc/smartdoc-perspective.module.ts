@@ -19,9 +19,12 @@
 
 import {NgModule} from '@angular/core';
 import {EffectsModule} from '@ngrx/effects';
+import {StoreModule} from '@ngrx/store';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {QuillModule} from 'ngx-quill';
-import {SmartDocTemplatesEffects} from '../../../core/store/smartdoc-templates/smartdoc-templates.effects';
+import {SmartDocEffects} from '../../../core/store/smartdoc/smartdoc.effects';
+import {smartDocReducer} from '../../../core/store/smartdoc/smartdoc.reducer';
+import {initialSmartDocState} from '../../../core/store/smartdoc/smartdoc.state';
 import {DragAndDropModule} from '../../../shared/drag-and-drop/drag-and-drop.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {SmartDocBottomPanelComponent} from './bottom-panel/smartdoc-bottom-panel.component';
@@ -35,7 +38,8 @@ import {SmartDocTextComponent} from './text/smartdoc-text.component';
 @NgModule({
   imports: [
     SharedModule,
-    EffectsModule.forFeature([SmartDocTemplatesEffects]),
+    StoreModule.forFeature('smartDoc', smartDocReducer, {initialState: initialSmartDocState}),
+    EffectsModule.forFeature([SmartDocEffects]),
     QuillModule,
     ClickOutsideModule,
     DragAndDropModule

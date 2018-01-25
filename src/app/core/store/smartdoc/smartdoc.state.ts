@@ -17,15 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Query} from '../../core/dto/query';
-import {DocumentModel} from '../../core/store/documents/document.model';
-import {ViewConfigModel} from '../../core/store/views/view.model';
+import {createSelector} from '@ngrx/store';
+import {AppState} from '../app.state';
 
-export interface PerspectiveComponent {
+export interface SmartDocState {
 
-  query: Query;
-  config: ViewConfigModel;
-  embedded: boolean;
-  linkedDocument: DocumentModel;
+  selectedPart: {
+    path: number[];
+    documentId: string;
+    partIndex: number;
+  };
 
 }
+
+export const initialSmartDocState: SmartDocState = {
+  selectedPart: null
+};
+
+export const selectSmartDocState = (state: AppState) => state.smartDoc;
+
+export const selectSelectedSmartDocPart = createSelector(selectSmartDocState, templateState => templateState.selectedPart);

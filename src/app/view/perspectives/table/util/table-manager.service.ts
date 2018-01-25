@@ -100,7 +100,9 @@ export class TableManagerService {
     this.linkNextParts(); // TODO move up
     this.initEmptyTable();
 
-    this.saveConfig();
+    if (!linkTypeId) {
+      this.saveConfig();
+    }
 
     return this.parts;
   }

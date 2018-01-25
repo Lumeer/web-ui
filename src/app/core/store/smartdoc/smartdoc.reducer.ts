@@ -17,38 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Perspective} from '../../../view/perspectives/perspective';
+import {SmartDocAction, SmartDocActionType} from './smartdoc.action';
+import {initialSmartDocState, SmartDocState} from './smartdoc.state';
 
-export enum SmartDocTemplatePartType {
-  Attachments = 'attachments',
-  Embedded = 'embedded',
-  Text = 'text'
-}
-
-export interface SmartDocTemplatePartModel {
-
-  type: SmartDocTemplatePartType;
-
-  textHtml?: string;
-  textData?: any;
-
-  linkTypeId?: string;
-  perspective?: Perspective;
-  templateId?: string;
-
-}
-
-export interface SmartDocTemplateModel {
-
-  id?: string;
-  collectionCode: string;
-
-  parts: SmartDocTemplatePartModel[];
-
-  correlationId?: string;
-
-}
-
-export function isValidEmbeddedPart(part: SmartDocTemplatePartModel) {
-  return part && part.linkTypeId && part.perspective;
+export function smartDocReducer(state: SmartDocState = initialSmartDocState,
+                                action: SmartDocAction.All): SmartDocState {
+  switch (action.type) {
+    case SmartDocActionType.SELECT:
+      return {...state, selectedPart: action.payload};
+    case SmartDocActionType.DESELECT:
+      return {...state, selectedPart: null};
+    default:
+      return state;
+  }
 }

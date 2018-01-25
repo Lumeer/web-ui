@@ -60,7 +60,7 @@
       </span>
   </div>
 </quill-editor>
-<div *ngIf="!editorShown && !!templatePart"
+<div *ngIf="!editorShown && !!part"
      [innerHtml]="getHtmlContent() | safeHtml"
      class="ql-viewer mx-2">
 </div>

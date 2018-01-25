@@ -22,7 +22,7 @@ import QuillEditor, {DeltaOperation, DeltaStatic, Quill, RangeStatic} from 'quil
 import * as QuillDeltaToHtmlConverter from 'quill-delta-to-html';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {SmartDocTemplatePartModel} from '../../../../core/store/smartdoc-templates/smartdoc-template.model';
+import {SmartDocPartModel} from '../../../../core/store/smartdoc/smartdoc.model';
 import {AttributeBlot} from './attribute.blot';
 
 const Delta = QuillEditor.import('delta');
@@ -42,10 +42,13 @@ export class SmartDocTextComponent {
   public document: DocumentModel;
 
   @Input()
-  public templatePart: SmartDocTemplatePartModel;
+  public path: number[];
+
+  @Input()
+  public part: SmartDocPartModel;
 
   @Output()
-  public templatePartChange = new EventEmitter<SmartDocTemplatePartModel>();
+  public partChange = new EventEmitter<SmartDocPartModel>();
 
   public editorShown: boolean;
   private editor: Quill;
@@ -71,7 +74,7 @@ export class SmartDocTextComponent {
     this.editorInitializing = true;
     this.editor = editor;
 
-    const delta: DeltaStatic = this.templatePart.textData || new Delta();
+    const delta: DeltaStatic = this.part.textData || new Delta();
     this.editor.setContents(this.addDataToDeltaForEdit(delta), 'api');
 
     this.editor.focus();
@@ -129,8 +132,8 @@ export class SmartDocTextComponent {
 
   private updateTemplateText() {
     const textData = this.removeValuesFromDelta(this.editor.getContents());
-    const templatePart: SmartDocTemplatePartModel = {...this.templatePart, textData};
-    this.templatePartChange.emit(templatePart);
+    const templatePart: SmartDocPartModel = {...this.part, textData};
+    this.partChange.emit(templatePart);
   }
 
   public documentAttributes(): AttributeModel[] {
@@ -146,11 +149,11 @@ export class SmartDocTextComponent {
   }
 
   public getHtmlContent() {
-    if (!this.templatePart.textData) {
+    if (!this.part.textData) {
       return '';
     }
 
-    const delta: DeltaStatic = this.templatePart.textData || new Delta();
+    const delta: DeltaStatic = this.part.textData || new Delta();
     const converter = new QuillDeltaToHtmlConverter(this.addDataToDeltaForRead(delta).ops, {});
     return converter.convert();
   }
