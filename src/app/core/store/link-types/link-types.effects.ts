@@ -31,12 +31,14 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {LinkTypeConverter} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {selectLinkTypesQueries} from './link-types.state';
+import {selectCollectionsDictionary} from "../collections/collections.state";
 
 @Injectable()
 export class LinkTypesEffects {
 
   @Effect()
   public get$: Observable<Action> = this.actions$.ofType<LinkTypesAction.Get>(LinkTypesActionType.GET).pipe(
+    switchMap(action => this.convertCollectionCodesToIds(action)),
     withLatestFrom(this.store$.select(selectLinkTypesQueries)),
     skipWhile(([action, queries]) => queries.some(query => QueryHelper.equal(query, action.payload.query))),
     switchMap(([action]) => {
@@ -55,6 +57,18 @@ export class LinkTypesEffects {
     }),
     catchError((error) => Observable.of(new LinkTypesAction.GetFailure({error: error})))
   );
+
+  private convertCollectionCodesToIds(action: LinkTypesAction.Get): Observable<LinkTypesAction.Get> {
+    const collectionCodes = action.payload.query.collectionCodes;
+    if (!collectionCodes || collectionCodes.length == 0) return Observable.of(action);
+    return Observable.of().pipe(
+      withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+      map(collections => {
+        const collectionIds = collectionCodes.map(code => collections[code].id);
+        return {...action, collectionCodes: null, collectionIds: [collectionIds]}
+      })
+    );
+  }
 
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.GetFailure>(LinkTypesActionType.GET_FAILURE).pipe(
