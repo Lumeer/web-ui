@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {createSelector} from '@ngrx/store';
-import {AppState} from '../app.state';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
 
 export interface SmartDocState {
 
@@ -34,6 +33,6 @@ export const initialSmartDocState: SmartDocState = {
   selectedPart: null
 };
 
-export const selectSmartDocState = (state: AppState) => state.smartDoc;
+export const selectSmartDocState = createFeatureSelector<SmartDocState>('smartDoc');
 
 export const selectSelectedSmartDocPart = createSelector(selectSmartDocState, templateState => templateState.selectedPart);
