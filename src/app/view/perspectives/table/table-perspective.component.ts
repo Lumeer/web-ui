@@ -23,7 +23,7 @@ import {DocumentModel} from 'app/core/store/documents/document.model';
 import {AttributeHelper} from 'app/shared/utils/attribute-helper';
 import {Subscription} from 'rxjs';
 import {Observable} from 'rxjs/Observable';
-import {map, switchMap, withLatestFrom} from 'rxjs/operators';
+import {first, map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {Attribute, Collection, Document, LinkInstance, LinkType, Query} from '../../../core/dto';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {CollectionService, DocumentService, LinkInstanceService, LinkTypeService} from '../../../core/rest';
@@ -36,6 +36,9 @@ import {PerspectiveComponent} from '../perspective.component';
 import {AttributeChangeEvent, DataChangeEvent, LinkInstanceEvent, TableLinkEvent} from './event';
 import {TablePart} from './model';
 import {TableManagerService} from './util/table-manager.service';
+import {selectCollectionsDictionary} from "../../../core/store/collections/collections.state";
+import {Dictionary} from "@ngrx/entity/src/models";
+import {CollectionModel} from "../../../core/store/collections/collection.model";
 
 @Component({
   selector: 'table-perspective',
@@ -73,6 +76,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   public parts: TablePart[] = [];
 
   private subscription: Subscription;
+  private collectionSubscription: Subscription;
 
   public ngOnInit() {
     if (this.embedded && this.query) {
@@ -103,13 +107,21 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
       return;
     }
 
-    this.createDefaultConfigFromQuery();
-    this.fetchDataAndCreateTable();
+    this.collectionSubscription = this.store.select(selectCollectionsDictionary)
+      .pipe(first())
+      .subscribe(collectionsMap => {
+        this.query.collectionIds = this.query.collectionCodes.map(code => collectionsMap[code].id)
+        this.createDefaultConfigFromQuery();
+        this.fetchDataAndCreateTable();
+      });
   }
 
   public ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
+    }
+    if (this.collectionSubscription){
+      this.collectionSubscription.unsubscribe();
     }
   }
 
@@ -134,7 +146,8 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
       this.config.table = {
         parts: [
           {
-            collectionCode: this.query.collectionCodes[0],
+            // TODO verify this!!!
+            collectionId: this.query.collectionIds[0],
             attributeIds: []
           }
         ]
@@ -241,7 +254,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
 
     const linkType: LinkType = {
       name: lastCollection.name + '-' + collection.name, // TODO input from user
-      collectionCodes: [lastCollection.code, collection.code]
+      collectionIds: [lastCollection.id, collection.id]
     };
 
     this.linkTypeService.createLinkType(linkType); // TODO not subscribed

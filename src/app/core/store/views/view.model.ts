@@ -60,7 +60,7 @@ export interface SearchConfigModel {
 export interface TableConfigModel {
 
   parts: {
-    collectionCode: string;
+    collectionId: string;
     attributeIds: string[];
     sortedBy?: string;
     sortedDesc?: boolean;

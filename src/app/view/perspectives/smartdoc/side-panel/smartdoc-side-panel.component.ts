@@ -132,7 +132,7 @@ export class SmartDocSidePanelComponent {
   private createLinkType(thisCollection: CollectionModel, otherCollection: CollectionModel, name?: string): string {
     const linkType: LinkTypeModel = {
       name: name ? name : thisCollection.name + '-' + otherCollection.name,
-      collectionCodes: [thisCollection.code, otherCollection.code],
+      collectionIds: [thisCollection.id, otherCollection.id],
       correlationId: CorrelationIdGenerator.generate()
     };
     this.store.dispatch(new LinkTypesAction.Create({linkType}));
@@ -142,7 +142,7 @@ export class SmartDocSidePanelComponent {
   public suggestLinkTypes(): Observable<LinkTypeModel[]> {
     return Observable.combineLatest(
       this.linkTypes$.pipe(
-        map(linkTypes => linkTypes.filter(linkType => linkType.id && linkType.collectionCodes.includes(this.document.collectionCode)))
+        map(linkTypes => linkTypes.filter(linkType => linkType.id && linkType.collectionIds.includes(this.document.collectionId)))
       ),
       this.collections$
     ).pipe(

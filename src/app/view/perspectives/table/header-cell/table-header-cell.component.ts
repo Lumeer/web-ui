@@ -77,8 +77,8 @@ export class TableHeaderCellComponent {
   private getRelatedLinks(): [LinkType, Collection][] {
     return LinkHelper.filterRelatedLinkTypes(this.part.collection, this.tableManagerService.linkTypes)
       .map(linkType => {
-        const collectionCode = LinkHelper.getOtherCollectionCode(linkType, this.part.collection.code);
-        const collection = this.tableManagerService.collections.find(collection => collection.code === collectionCode);
+        const collectionId = LinkHelper.getOtherCollectionId(linkType, this.part.collection.id);
+        const collection = this.tableManagerService.collections.find(collection => collection.id === collectionId);
 
         const relatedLink: [LinkType, Collection] = [linkType, collection];
         return relatedLink;

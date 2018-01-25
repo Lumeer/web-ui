@@ -17,16 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpEvent} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 import 'rxjs/add/observable/of';
 import {Observable} from 'rxjs/Observable';
-import {LocalStorage} from '../../shared/utils/local-storage';
 import {LinkType, Query} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
+import {switchMap} from "rxjs/operators";
 
 @Injectable()
 export class LinkTypeService {
@@ -39,66 +40,28 @@ export class LinkTypeService {
   }
 
   public createLinkType(linkType: LinkType): Observable<LinkType> {
-    const linkTypes = LocalStorage.get(this.webStorageKey()) || {};
-
-    linkType.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
-    linkTypes[linkType.id] = linkType;
-
-    LocalStorage.set(this.webStorageKey(), linkTypes);
-
-    return Observable.of(linkType);
+    return this.httpClient.post<LinkType>(this.restApiPrefix(), linkType);
   }
 
   public updateLinkType(id: string, linkType: LinkType): Observable<LinkType> {
-    const linkTypes = LocalStorage.get(this.webStorageKey()) || {};
-
-    linkTypes[id] = linkType;
-
-    LocalStorage.set(this.webStorageKey(), linkTypes);
-
-    return Observable.of(linkType);
+    return this.httpClient.put<LinkType>(this.restApiPrefix(id), linkType);
   }
 
   public deleteLinkType(id: string): Observable<string> {
-    const linkTypes = LocalStorage.get(this.webStorageKey()) || {};
-
-    delete linkTypes[id];
-
-    LocalStorage.set(this.webStorageKey(), linkTypes);
-
-    return Observable.of(id);
+    return this.httpClient.delete(this.restApiPrefix(id))
+      .pipe(switchMap(() => Observable.of(id)));
   }
 
   public getLinkTypes(query: Query): Observable<LinkType[]> {
-    const linkTypesMap: { [id: string]: LinkType } = LocalStorage.get(this.webStorageKey()) || {};
-    let linkTypes = Object.values(linkTypesMap);
-
-    if (query && query.linkTypeIds && query.linkTypeIds.length) {
-      linkTypes = linkTypes.filter(linkType => query.linkTypeIds.includes(linkType.id));
-    }
-
-    if (query && query.collectionCodes && query.collectionCodes.length) {
-      linkTypes = linkTypes.filter(linkType => linkType.collectionCodes.some(code => query.collectionCodes.includes(code)));
-    }
-
-    linkTypes.forEach(linkType => {
-      if (!linkType.attributes) {
-        linkType.attributes = [];
-      }
-    });
-
-    return Observable.of(linkTypes);
+    return this.httpClient.get<LinkType[]>(this.restApiPrefix());
   }
 
-  private webStorageKey(): string {
-    return `linkTypes-${this.workspace.organizationCode}/${this.workspace.projectCode}`;
-  }
-
-  private restApiPrefix(collectionCode: string): string {
+  private restApiPrefix(id?: string): string {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
+    const suffix = id ? `/${id}` : '';
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/link-types`;
+    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/link-types${suffix}`;
   }
 
 }

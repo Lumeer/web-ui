@@ -26,7 +26,7 @@ export class CollectionConverter {
 
   public static fromDto(dto: Collection, correlationId?: string): CollectionModel {
     return {
-      // TODO convert 'id' as well
+      id: dto.id,
       code: dto.code,
       name: dto.name,
       description: dto.description,
@@ -49,7 +49,7 @@ export class CollectionConverter {
     }
 
     return {
-      // TODO convert 'id' as well
+      id: model.id,
       code: model.code,
       name: model.name,
       description: model.description,

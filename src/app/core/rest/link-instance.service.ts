@@ -19,13 +19,14 @@
 
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {LocalStorage} from '../../shared/utils/local-storage';
 import {LinkInstance, Query} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
+import {switchMap} from "rxjs/operators";
 
 @Injectable()
 export class LinkInstanceService {
@@ -38,58 +39,26 @@ export class LinkInstanceService {
   }
 
   public createLinkInstance(linkInstance: LinkInstance): Observable<LinkInstance> {
-    const linkInstances = LocalStorage.get(this.webStorageKey()) || {};
-
-    linkInstance.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
-    linkInstances[linkInstance.id] = linkInstance;
-
-    LocalStorage.set(this.webStorageKey(), linkInstances);
-
-    return Observable.of(linkInstance);
+    return this.httpClient.post<LinkInstance>(this.restApiPrefix(), linkInstance);
   }
 
   public updateLinkInstance(id: string, linkInstance: LinkInstance): Observable<LinkInstance> {
-    const linkInstances = LocalStorage.get(this.webStorageKey()) || {};
-
-    linkInstances[id] = linkInstance;
-
-    LocalStorage.set(this.webStorageKey(), linkInstances);
-
-    return Observable.of(linkInstance);
+    return this.httpClient.put<LinkInstance>(this.restApiPrefix(id), linkInstance);
   }
 
   public deleteLinkInstance(id: string): Observable<string> {
-    const linkInstances = LocalStorage.get(this.webStorageKey()) || {};
-
-    delete linkInstances[id];
-
-    LocalStorage.set(this.webStorageKey(), linkInstances);
-
-    return Observable.of(id);
+    return this.httpClient.delete(this.restApiPrefix(id))
+      .pipe(switchMap(() => Observable.of(id)));
   }
 
   public getLinkInstances(query: Query): Observable<LinkInstance[]> {
-    const linkInstancesMap: { [id: string]: LinkInstance } = LocalStorage.get(this.webStorageKey()) || {};
-    let linkInstances = Object.values(linkInstancesMap);
-
-    if (query && query.linkTypeIds && query.linkTypeIds.length) {
-      linkInstances = linkInstances.filter(linkInstance => query.linkTypeIds.includes(linkInstance.linkTypeId));
-    }
-
-    if (query && query.documentIds && query.documentIds.length) {
-      linkInstances = linkInstances.filter(linkInstance => linkInstance.documentIds.some(id => query.documentIds.includes(id)));
-    }
-
-    return Observable.of(linkInstances);
+    return this.httpClient.get<LinkInstance[]>(this.restApiPrefix());
   }
 
-  private webStorageKey(): string {
-    return `linkInstances-${this.workspace.organizationCode}/${this.workspace.projectCode}`;
-  }
-
-  private restApiPrefix(collectionCode: string): string {
+  private restApiPrefix(id?: string): string {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
+    const suffix = id ? `/${id}` : '';
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/link-instances`;
   }

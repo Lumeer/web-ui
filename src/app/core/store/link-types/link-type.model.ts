@@ -35,7 +35,7 @@ export interface LinkTypeModel {
   id?: string;
   name: string;
 
-  collectionCodes: [string, string];
+  collectionIds: [string, string];
   collections?: [CollectionModel, CollectionModel];
 
   attributes?: LinkTypeAttributeModel[];

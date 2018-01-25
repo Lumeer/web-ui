@@ -33,7 +33,7 @@ import * as Const from '../constraints';
 export class LinkAttributeListComponent {
 
   @Input()
-  public collections: { [collectionCode: string]: Collection } = {};
+  public collections: { [collectionId: string]: Collection } = {};
 
   @Input()
   public linkType: LinkType;
@@ -47,8 +47,8 @@ export class LinkAttributeListComponent {
   public newAttributeName = '';
 
   public attributesToAdd(currentAttribute: string): LinkedAttribute[] {
-    return this.linkType.collectionCodes
-      .map(collectionCode => this.collections[collectionCode])
+    return this.linkType.collectionIds
+      .map(collectionId => this.collections[collectionId])
       .map(collection => collection.attributes.map(attribute => new LinkedAttribute(attribute, collection)))
       .reduce((flattened: LinkedAttribute[], current: LinkedAttribute[]) => flattened.concat(current), [])
       .filter(linkedAttribute => linkedAttribute.value.name.includes(currentAttribute));

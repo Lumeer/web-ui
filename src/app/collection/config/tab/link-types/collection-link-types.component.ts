@@ -44,7 +44,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   public linkTypes: LinkTypeModel[] = [];
 
-  public collections: { [collectionCode: string]: Collection } = {};
+  public collections: { [collectionId: string]: Collection } = {};
 
   constructor(private linkTypeService: LinkTypeService,
               private router: Router,
@@ -65,7 +65,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
     this.collectionService.getCollections().subscribe(
       collections => {
-        collections.forEach(collection => this.collections[collection.code] = collection);
+        collections.forEach(collection => this.collections[collection.id] = collection);
         this.initializeLinkTypes();
       },
       error => {
@@ -76,15 +76,16 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   private initializeLinkTypes(): void {
     this.linkTypes = [];
-    this.linkTypeService.getLinkTypes({collectionCodes: [this.collection.code]}).pipe(
-      map(linkTypes => linkTypes.filter(linkType => linkType.collectionCodes[0] === this.collection.code))
+    this.linkTypeService.getLinkTypes({collectionIds: [this.collection.id]}).pipe(
+      map(linkTypes => linkTypes.filter(linkType => linkType.collectionIds[0] === this.collection.id))
     ).subscribe(
       linkTypes => this.linkTypes = linkTypes.map(linkType => new LinkTypeModel(linkType)),
       error => this.notificationService.error('Failed fetching LinkTypes')
     );
   }
 
-  public changeCollection(collectionCode: string): void {
+  public changeCollection(collectionId: string): void {
+    const collectionCode = this.collections[collectionId].code;
     if (!collectionCode) {
       return;
     }
@@ -140,11 +141,11 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     );
   }
 
-  public changeToCollection(linkTypeModel: LinkTypeModel, collectionCode: string): void {
+  public changeToCollection(linkTypeModel: LinkTypeModel, collectionId: string): void {
     this.notificationService.confirm('Are you sure you want to change linked file?', 'Delete?', [
       {
         text: 'Yes', action: () => {
-          linkTypeModel.changeLinkedCollection(collectionCode);
+          linkTypeModel.changeLinkedCollection(collectionId);
           this.updateLinkType(linkTypeModel);
         }, bold: false
       },
@@ -179,7 +180,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   public getLinkedCollection(linkTypeModel: LinkTypeModel): Collection {
     if (linkTypeModel.initialized) {
-      return this.collections[linkTypeModel.data.collectionCodes[1]];
+      return this.collections[linkTypeModel.data.collectionIds[1]];
     } else {
       return {
         code: '',
@@ -192,16 +193,16 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
     }
   }
 
-  public possibleToCollectionCodes(linkTypeModel: LinkTypeModel): string[] {
-    const excludedCodes = [this.collection.code];
+  public possibleToCollectionIds(linkTypeModel: LinkTypeModel): string[] {
+    const excludedCodes = [this.collection.id];
 
     if (linkTypeModel.initialized) {
-      excludedCodes.push(linkTypeModel.data.collectionCodes[1]);
+      excludedCodes.push(linkTypeModel.data.collectionIds[1]);
     }
 
     return Object
       .keys(this.collections)
-      .filter(collectionCode => !excludedCodes.includes(collectionCode));
+      .filter(collectionId => !excludedCodes.includes(collectionId));
   }
 
   public searchLinkTypesQueryParams(linkTypeModel: LinkTypeModel): object {

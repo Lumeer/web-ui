@@ -232,17 +232,15 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
       suggestedQueryItems.push(new FulltextQueryItem(this.text));
     }
 
-    const codes = new Set<string>();
+    const ids = new Set<string>();
     if (suggestions.links) {
       suggestions.links.forEach(link => {
-        codes.add(link.collectionCodes[0]);
-        codes.add(link.collectionCodes[1]);
+        ids.add(link.collectionIds[0]);
+        ids.add(link.collectionIds[1]);
       });
     }
-    if (codes.size > 0) {
-      const observables: Observable<Collection>[] = [];
-      codes.forEach(code => observables.push(this.collectionService.getCollection(code)));
-      return Observable.combineLatest(observables)
+    if (ids.size > 0) {
+      return this.searchService.searchCollections({collectionIds: Array.from(ids)})
         .pipe(
           map((collections: Collection[]) => this.mapCollectionsAndLinks(suggestedQueryItems, collections, suggestions.links))
         );
@@ -252,8 +250,8 @@ export class SearchBoxComponent implements OnInit, AfterViewInit {
 
   private mapCollectionsAndLinks(itemsToPush: QueryItem[], collections: Collection[], links: LinkType[]): QueryItem[] {
     links.forEach(link => {
-      const coll1 = collections.find(collection => collection.code === link.collectionCodes[0]);
-      const coll2 = collections.find(collection => collection.code === link.collectionCodes[1]);
+      const coll1 = collections.find(collection => collection.id === link.collectionIds[0]);
+      const coll2 = collections.find(collection => collection.id === link.collectionIds[1]);
       if (coll1 && coll2) {
         itemsToPush.push(new LinkQueryItem(link, coll1, coll2));
       }

@@ -20,6 +20,7 @@
 export interface QueryModel {
 
   collectionCodes?: string[];
+  collectionIds?: string[];
   documentIds?: string[];
   filters?: string[];
   fulltext?: string;

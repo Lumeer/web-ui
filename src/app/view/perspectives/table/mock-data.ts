@@ -114,12 +114,12 @@ export const MOCK_LINK_TYPES: LinkType[] = [
   {
     id: 'applications',
     name: 'Applications',
-    collectionCodes: ['candidates', 'postings']
+    collectionIds: ['candidates', 'postings']
   },
   {
     id: 'positions',
     name: 'Positions',
-    collectionCodes: ['postings', 'employees']
+    collectionIds: ['postings', 'employees']
   }
 ];
 

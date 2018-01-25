@@ -20,10 +20,11 @@
 export interface Query {
 
   collectionCodes?: string[];
+  collectionIds?: string[];
   documentIds?: string[];
   filters?: string[];
   fulltext?: string;
-  linkTypeIds?: string[]; // TODO implement on backend
+  linkTypeIds?: string[];
 
   page?: number;
   pageSize?: number;

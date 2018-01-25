@@ -24,17 +24,17 @@ export class LinkTypeModel {
   public initialized = true;
   public initializing = false;
   public expanded = false;
-  public baseCollectionCode: string;
+  public baseCollectionId: string;
   public data: LinkType;
 
-  constructor(linkType?: LinkType, baseCollectionCode?: string) {
+  constructor(linkType?: LinkType, baseCollectionId?: string) {
     if (linkType) {
       this.createInitialized(linkType);
       return;
     }
 
-    if (baseCollectionCode) {
-      this.createUninitialized(baseCollectionCode);
+    if (baseCollectionId) {
+      this.createUninitialized(baseCollectionId);
       return;
     }
 
@@ -43,11 +43,11 @@ export class LinkTypeModel {
 
   private createInitialized(linkType: LinkType) {
     this.data = linkType;
-    this.baseCollectionCode = linkType.collectionCodes[0];
+    this.baseCollectionId = linkType.collectionIds[0];
   }
 
-  private createUninitialized(baseCollectionCode: string) {
-    this.baseCollectionCode = baseCollectionCode;
+  private createUninitialized(baseCollectionId: string) {
+    this.baseCollectionId = baseCollectionId;
     this.data = {
       name: '',
       attributes: [],
@@ -55,8 +55,8 @@ export class LinkTypeModel {
     this.initialized = false;
   }
 
-  public changeLinkedCollection(collectionCode: string): void {
-    this.data.collectionCodes[1] = collectionCode;
+  public changeLinkedCollection(collectionId: string): void {
+    this.data.collectionIds[1] = collectionId;
     this.data.attributes = [];
   }
 
