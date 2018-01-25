@@ -17,15 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Query} from '../../core/dto/query';
-import {DocumentModel} from '../../core/store/documents/document.model';
-import {ViewConfigModel} from '../../core/store/views/view.model';
+import {SmartDocAction, SmartDocActionType} from './smartdoc.action';
+import {initialSmartDocState, SmartDocState} from './smartdoc.state';
 
-export interface PerspectiveComponent {
-
-  query: Query;
-  config: ViewConfigModel;
-  embedded: boolean;
-  linkedDocument: DocumentModel;
-
+export function smartDocReducer(state: SmartDocState = initialSmartDocState,
+                                action: SmartDocAction.All): SmartDocState {
+  switch (action.type) {
+    case SmartDocActionType.SELECT:
+      return {...state, selectedPart: action.payload};
+    case SmartDocActionType.DESELECT:
+      return {...state, selectedPart: null};
+    default:
+      return state;
+  }
 }

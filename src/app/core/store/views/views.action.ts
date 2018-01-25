@@ -19,7 +19,8 @@
 
 import {Action} from '@ngrx/store';
 import {QueryModel} from '../navigation/query.model';
-import {PostItConfigModel, SearchConfigModel, SmartDocConfigModel, TableConfigModel, ViewModel} from './view.model';
+import {SmartDocModel} from '../smartdoc/smartdoc.model';
+import {PostItConfigModel, SearchConfigModel, TableConfigModel, ViewConfigModel, ViewModel} from './view.model';
 
 export enum ViewsActionType {
 
@@ -36,6 +37,7 @@ export enum ViewsActionType {
   UPDATE_SUCCESS = '[Views] Update :: Success',
   UPDATE_FAILURE = '[Views] Update :: Failure',
 
+  CHANGE_CONFIG = '[Views] Change Config',
   CHANGE_POSTIT_CONFIG = '[Views] Change Post-it Config',
   CHANGE_SEARCH_CONFIG = '[Views] Change Search Config',
   CHANGE_SMARTDOC_CONFIG = '[Views] Change Smart Document Config',
@@ -117,6 +119,13 @@ export namespace ViewsAction {
     }
   }
 
+  export class ChangeConfig implements Action {
+    public readonly type = ViewsActionType.CHANGE_CONFIG;
+
+    public constructor(public payload: { config: ViewConfigModel }) {
+    }
+  }
+
   export class ChangePostItConfig implements Action {
     public readonly type = ViewsActionType.CHANGE_POSTIT_CONFIG;
 
@@ -134,7 +143,7 @@ export namespace ViewsAction {
   export class ChangeSmartDocConfig implements Action {
     public readonly type = ViewsActionType.CHANGE_SMARTDOC_CONFIG;
 
-    public constructor(public payload: { config: SmartDocConfigModel }) {
+    public constructor(public payload: { config: SmartDocModel }) {
     }
   }
 
@@ -155,7 +164,7 @@ export namespace ViewsAction {
   export type All = GetByCode | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    ChangePostItConfig | ChangeSearchConfig | ChangeSmartDocConfig | ChangeTableConfig |
+    ChangeConfig | ChangePostItConfig | ChangeSearchConfig | ChangeSmartDocConfig | ChangeTableConfig |
     Clear;
 
 }

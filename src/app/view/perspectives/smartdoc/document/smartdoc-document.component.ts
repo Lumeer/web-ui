@@ -23,11 +23,12 @@ import {Subscription} from 'rxjs';
 import {AppState} from '../../../../core/store/app.state';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {SmartDocTemplateModel, SmartDocTemplatePartModel} from '../../../../core/store/smartdoc-templates/smartdoc-template.model';
-import {SmartDocTemplatesAction} from '../../../../core/store/smartdoc-templates/smartdoc-templates.action';
-import {selectSelectedSmartDocTemplatePart} from '../../../../core/store/smartdoc-templates/smartdoc-templates.state';
+import {SmartDocAction} from '../../../../core/store/smartdoc/smartdoc.action';
+import {SmartDocModel, SmartDocPartModel} from '../../../../core/store/smartdoc/smartdoc.model';
+import {selectSelectedSmartDocPart} from '../../../../core/store/smartdoc/smartdoc.state';
 import {GridLayout} from '../../../../shared/utils/layout/grid-layout';
 import {Perspective} from '../../perspective';
+import {SmartDocUtils} from '../smartdoc.utils';
 
 @Component({
   selector: 'smartdoc-document',
@@ -43,7 +44,10 @@ export class SmartDocDocumentComponent implements OnInit {
   public document: DocumentModel;
 
   @Input()
-  public template: SmartDocTemplateModel;
+  public path: number[];
+
+  @Input()
+  public smartDoc: SmartDocModel;
 
   public selectedPartIndex: number;
   private selectedPartSubscription: Subscription;
@@ -55,8 +59,9 @@ export class SmartDocDocumentComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.selectedPartSubscription = this.store.select(selectSelectedSmartDocTemplatePart).subscribe((selected) => {
-      this.selectedPartIndex = selected && selected.templateId === this.template.id && selected.documentId === this.document.id ? selected.partIndex : null;
+    this.selectedPartSubscription = this.store.select(selectSelectedSmartDocPart).subscribe((selected) => {
+      this.selectedPartIndex = selected && (JSON.stringify(this.path) === JSON.stringify(selected.path))
+      && selected.documentId === this.document.id ? selected.partIndex : null;
     });
   }
 
@@ -68,17 +73,21 @@ export class SmartDocDocumentComponent implements OnInit {
     this.destroyLayout();
   }
 
-  public onUpdatePart(partIndex: number, part: SmartDocTemplatePartModel) {
-    this.store.dispatch(new SmartDocTemplatesAction.UpdatePart({templateId: this.template.id, partIndex: partIndex, part: part}));
+  public onSwitchPerspective(partIndex: number, templatePart: SmartDocPartModel, perspective: Perspective) {
+    const part: SmartDocPartModel = {...templatePart, perspective};
+    this.store.dispatch(new SmartDocAction.UpdatePart({partPath: this.path, partIndex, part}));
   }
 
-  public onSwitchPerspective(partIndex: number, templatePart: SmartDocTemplatePartModel, perspective: Perspective) {
-    const part: SmartDocTemplatePartModel = {...templatePart, perspective};
-    this.store.dispatch(new SmartDocTemplatesAction.UpdatePart({templateId: this.template.id, partIndex, part}));
+  public onAddPart(partIndex: number, part: SmartDocPartModel) {
+    this.store.dispatch(new SmartDocAction.AddPart({partPath: this.path, partIndex: partIndex + 1, part}));
+  }
+
+  public onUpdatePart(partIndex: number, part: SmartDocPartModel) {
+    this.store.dispatch(new SmartDocAction.UpdatePart({partPath: this.path, partIndex: partIndex, part: part}));
   }
 
   public onRemovePart(partIndex: number) {
-    this.store.dispatch(new SmartDocTemplatesAction.RemovePartConfirm({templateId: this.template.id, partIndex: partIndex}));
+    this.store.dispatch(new SmartDocAction.RemovePartConfirm({partPath: this.path, partIndex: partIndex}));
   }
 
   public getCurrentCollection(): CollectionModel {
@@ -92,19 +101,19 @@ export class SmartDocDocumentComponent implements OnInit {
     event['templateSelected'] = true;
 
     if (this.selectedPartIndex !== partIndex) {
-      this.store.dispatch(new SmartDocTemplatesAction.Select({templateId: this.template.id, documentId: this.document.id, partIndex}));
+      this.store.dispatch(new SmartDocAction.Select({path: this.path, documentId: this.document.id, partIndex}));
     }
   }
 
   public onClickOutsidePart(partIndex: number) {
     if (this.selectedPartIndex === partIndex) {
-      this.store.dispatch(new SmartDocTemplatesAction.Deselect());
+      this.store.dispatch(new SmartDocAction.Deselect());
     }
   }
 
   public onCopyPart(partIndex: number) {
-    const part = this.template.parts[partIndex];
-    this.store.dispatch(new SmartDocTemplatesAction.AddPart({templateId: this.template.id, partIndex: partIndex + 1, part}));
+    const part = this.smartDoc.parts[partIndex];
+    this.store.dispatch(new SmartDocAction.AddPart({partPath: this.path, partIndex: partIndex + 1, part}));
   }
 
   public allowedPerspectives(): Perspective[] {
@@ -117,12 +126,20 @@ export class SmartDocDocumentComponent implements OnInit {
   }
 
   private initLayout() {
-    const containerClass = `parts-layout-${this.template.id}-${this.document.id}`;
+    const containerClass = this.layoutContainerClass();
     this.partsLayout = new GridLayout('.' + containerClass, {
       dragEnabled: true,
       dragAxis: 'y',
       dragStartPredicate: (item, event) => SmartDocDocumentComponent.canDragWithElement(event.target, containerClass)
     }, this.zone, ({fromIndex, toIndex}) => this.onMovePart(fromIndex, toIndex));
+  }
+
+  public layoutContainerClass(): string {
+    return `parts-layout-${SmartDocUtils.pathToString(this.path)}-${this.document.id}`;
+  }
+
+  public recordMoverClass(): string {
+    return `record-mover-${SmartDocUtils.pathToString(this.path)}`;
   }
 
   private static canDragWithElement(element: Element, containerClass: string): boolean {
@@ -143,8 +160,8 @@ export class SmartDocDocumentComponent implements OnInit {
   }
 
   public onMovePart(oldIndex: number, newIndex: number) {
-    this.store.dispatch(new SmartDocTemplatesAction.MovePart({templateId: this.template.id, oldIndex, newIndex}));
-    this.store.dispatch(new SmartDocTemplatesAction.Select({templateId: this.template.id, documentId: this.document.id, partIndex: newIndex}));
+    this.store.dispatch(new SmartDocAction.MovePart({partPath: this.path, oldIndex, newIndex}));
+    this.store.dispatch(new SmartDocAction.Select({path: this.path, documentId: this.document.id, partIndex: newIndex}));
   }
 
 }

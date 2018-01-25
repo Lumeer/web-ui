@@ -17,15 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Query} from '../../core/dto/query';
-import {DocumentModel} from '../../core/store/documents/document.model';
-import {ViewConfigModel} from '../../core/store/views/view.model';
+import {Perspective} from '../../../view/perspectives/perspective';
 
-export interface PerspectiveComponent {
+export enum SmartDocPartType {
+  Attachments = 'attachments',
+  Embedded = 'embedded',
+  Text = 'text'
+}
 
-  query: Query;
-  config: ViewConfigModel;
-  embedded: boolean;
-  linkedDocument: DocumentModel;
+export interface SmartDocPartModel {
+
+  type: SmartDocPartType;
+
+  textHtml?: string;
+  textData?: any;
+
+  linkTypeId?: string;
+  perspective?: Perspective;
+  smartDoc?: SmartDocModel;
+
+}
+
+export interface SmartDocModel {
+
+  collectionCode: string;
+  documentIdsOrder?: string[];
+  parts: SmartDocPartModel[];
 
 }

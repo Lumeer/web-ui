@@ -31,13 +31,13 @@ import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
-import {isValidEmbeddedPart, SmartDocTemplatePartModel} from '../../../../core/store/smartdoc-templates/smartdoc-template.model';
-import {SmartDocConfigModel} from '../../../../core/store/views/view.model';
+import {SmartDocPartModel} from '../../../../core/store/smartdoc/smartdoc.model';
 import {PerspectiveDirective} from '../../../../shared/perspective.directive';
 import {Perspective} from '../../perspective';
 import {PerspectiveComponent} from '../../perspective.component';
 import {TablePerspectiveComponent} from '../../table/table-perspective.component';
 import {SmartDocPerspectiveComponent} from '../smartdoc-perspective.component';
+import {SmartDocUtils} from '../smartdoc.utils';
 
 const perspectiveComponents: { [perspective: string]: Type<any> } = {
   [Perspective.Table]: TablePerspectiveComponent,
@@ -55,10 +55,13 @@ export class SmartDocEmbeddedComponent implements OnInit, OnChanges, OnDestroy {
   public document: DocumentModel;
 
   @Input()
-  public templatePart: SmartDocTemplatePartModel;
+  public path: number[];
+
+  @Input()
+  public part: SmartDocPartModel;
 
   @Output()
-  public templatePartChange = new EventEmitter<SmartDocTemplatePartModel>();
+  public templatePartChange = new EventEmitter<SmartDocPartModel>();
 
   @ViewChild(PerspectiveDirective)
   public perspectiveDirective: PerspectiveDirective;
@@ -72,11 +75,11 @@ export class SmartDocEmbeddedComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnInit() {
-    this.store.dispatch(new LinkTypesAction.Get({query: {linkTypeIds: [this.templatePart.linkTypeId]}, loadInstances: true}));
+    this.store.dispatch(new LinkTypesAction.Get({query: {linkTypeIds: [this.part.linkTypeId]}, loadInstances: true}));
 
     this.linkSubscription = Observable.combineLatest(
-      this.store.select(selectLinkTypeById(this.templatePart.linkTypeId)),
-      this.store.select(selectLinkInstancesByType(this.templatePart.linkTypeId))
+      this.store.select(selectLinkTypeById(this.part.linkTypeId)),
+      this.store.select(selectLinkInstancesByType(this.part.linkTypeId))
     ).pipe(
       skipWhile(([linkType]) => !linkType)
     ).subscribe(([linkType, linkInstances]) => this.loadPerspective(linkType, linkInstances));
@@ -92,17 +95,13 @@ export class SmartDocEmbeddedComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  // private isInputInitialized() {
-  //   return this.document && this.linkType && this.templatePart;
-  // }
-
   private loadPerspective(linkType: LinkTypeModel, linkInstances: LinkInstanceModel[]) {
-    if (!isValidEmbeddedPart(this.templatePart)) {
-      console.error('Invalid embedded part', this.templatePart);
+    if (!SmartDocUtils.isValidEmbeddedPart(this.part)) {
+      console.error('Invalid embedded part', this.part);
       return;
     }
 
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(perspectiveComponents[this.templatePart.perspective]);
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(perspectiveComponents[this.part.perspective]);
 
     const viewContainerRef = this.perspectiveDirective.viewContainerRef;
     viewContainerRef.clear();
@@ -121,10 +120,12 @@ export class SmartDocEmbeddedComponent implements OnInit, OnChanges, OnDestroy {
     };
     this.perspectiveComponent.query = query;
 
-    const templateConfig: SmartDocConfigModel = {
-      templateId: this.templatePart.templateId
-    };
-    this.perspectiveComponent.config = {template: templateConfig};
+    const smartDoc = this.part.smartDoc;
+    this.perspectiveComponent.config = {smartdoc: smartDoc};
+
+    if (this.part.perspective === Perspective.SmartDoc) {
+      this.perspectiveComponent['path'] = this.path;
+    }
   }
 
   private createDocumentIdsFilters(documentIds: string[]): string[] {
@@ -137,11 +138,11 @@ export class SmartDocEmbeddedComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public isTablePerspective() {
-    return this.templatePart.perspective === Perspective.Table;
+    return this.part.perspective === Perspective.Table;
   }
 
   public isTemplatePerspective() {
-    return this.templatePart.perspective === Perspective.SmartDoc;
+    return this.part.perspective === Perspective.SmartDoc;
   }
 
 }

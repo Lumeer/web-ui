@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {SnotifyToast} from 'ng-snotify';
 import {Observable} from 'rxjs/Observable';
@@ -29,12 +29,13 @@ import {selectAllCollections} from '../../../../core/store/collections/collectio
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkTypeConverter} from '../../../../core/store/link-types/link-type.converter';
+import {LinkTypeHelper} from '../../../../core/store/link-types/link-type.helper';
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
-import {SmartDocTemplateModel, SmartDocTemplatePartModel, SmartDocTemplatePartType} from '../../../../core/store/smartdoc-templates/smartdoc-template.model';
-import {SmartDocTemplatesAction} from '../../../../core/store/smartdoc-templates/smartdoc-templates.action';
+import {SmartDocModel, SmartDocPartModel, SmartDocPartType} from '../../../../core/store/smartdoc/smartdoc.model';
 import {Perspective} from '../../perspective';
+import {SmartDocUtils} from '../smartdoc.utils';
 
 @Component({
   selector: 'smartdoc-side-panel',
@@ -44,16 +45,13 @@ import {Perspective} from '../../perspective';
 export class SmartDocSidePanelComponent {
 
   @Input()
-  public partIndex: number;
-
-  @Input()
   public collection: CollectionModel;
 
   @Input()
   public document: DocumentModel;
 
-  @Input()
-  public template: SmartDocTemplateModel;
+  @Output()
+  public addPart = new EventEmitter<SmartDocPartModel>();
 
   public collections$: Observable<CollectionModel[]>;
   public linkTypes$: Observable<LinkTypeModel[]>;
@@ -73,25 +71,36 @@ export class SmartDocSidePanelComponent {
       ]
     };
 
-    const part: SmartDocTemplatePartModel = {
-      type: SmartDocTemplatePartType.Text,
-      textHtml: 'Insert your text here...',
+    const part: SmartDocPartModel = {
+      type: SmartDocPartType.Text,
       textData: delta
     };
     this.addTemplatePart(part);
   }
 
   private addEmbeddedPart(linkType: LinkTypeModel) {
-    const part: SmartDocTemplatePartModel = {
-      type: SmartDocTemplatePartType.Embedded,
-      linkTypeId: linkType.id,
-      perspective: Perspective.Table
-    };
-    this.addTemplatePart(part);
+    const collectionCode = LinkTypeHelper.getOtherCollectionCode(linkType, this.collection.code);
+
+    this.collections$.pipe(
+      first(),
+      map(collections => collections.find(collection => collection.code === collectionCode))
+    ).subscribe(collection => {
+      const smartDoc: SmartDocModel = {
+        collectionCode: collectionCode,
+        parts: [SmartDocUtils.createInitialTextPart(collection)]
+      };
+      const part: SmartDocPartModel = {
+        type: SmartDocPartType.Embedded,
+        linkTypeId: linkType.id,
+        perspective: Perspective.Table,
+        smartDoc
+      };
+      this.addTemplatePart(part);
+    });
   }
 
-  private addTemplatePart(part: SmartDocTemplatePartModel) {
-    this.store.dispatch(new SmartDocTemplatesAction.AddPart({templateId: this.template.id, partIndex: this.partIndex + 1, part}));
+  private addTemplatePart(part: SmartDocPartModel) {
+    this.addPart.emit(part);
   }
 
   public addPartByLinkType(linkType: LinkTypeModel) {

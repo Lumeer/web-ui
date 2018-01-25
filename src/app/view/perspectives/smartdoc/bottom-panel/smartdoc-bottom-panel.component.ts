@@ -27,7 +27,7 @@ import {CollectionModel} from '../../../../core/store/collections/collection.mod
 import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
-import {SmartDocTemplatePartModel} from '../../../../core/store/smartdoc-templates/smartdoc-template.model';
+import {SmartDocPartModel} from '../../../../core/store/smartdoc/smartdoc.model';
 import {HtmlModifier} from '../../../../shared/utils/html-modifier';
 import {Perspective, perspectiveIconsMap} from '../../perspective';
 
@@ -39,16 +39,10 @@ import {Perspective, perspectiveIconsMap} from '../../perspective';
 export class SmartDocBottomPanelComponent implements OnInit, OnDestroy {
 
   @Input()
-  public part: SmartDocTemplatePartModel;
+  public part: SmartDocPartModel;
 
   @Input()
   public showMover: boolean;
-
-  @Input()
-  public partIndex: number;
-
-  @Input()
-  public documentId: string;
 
   @Input()
   public perspectives: Perspective[] = [];
