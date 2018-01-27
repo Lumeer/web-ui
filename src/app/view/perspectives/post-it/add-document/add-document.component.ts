@@ -52,8 +52,18 @@ export class PostItAddDocumentComponent implements OnInit, OnDestroy {
     this.createPostIt.emit({
       collection: this.selectedCollection,
       collectionCode: this.selectedCollection.code,
-      data: {}
+      data: this.dataWithAttributeNames()
     });
+  }
+
+  private dataWithAttributeNames(): { [attributeName: string]: string } {
+    let result = {};
+
+    this.selectedCollection.attributes.forEach(attribute => {
+      result[attribute.name] = '';
+    });
+
+    return result;
   }
 
   public ngOnDestroy(): void {

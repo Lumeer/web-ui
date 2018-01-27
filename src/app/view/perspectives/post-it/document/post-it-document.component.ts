@@ -43,12 +43,21 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   @HostListener('focusout')
   public onFocusOut(): void {
+    if (this.hasNoAttributes()) {
+      this.confirmDeletion();
+      return;
+    }
+
     if (this.changed) {
       this.checkforDuplicitAttributes();
 
       this.changed = false;
       this.changes.emit();
     }
+  }
+
+  private hasNoAttributes(): boolean {
+    return this.attributePairs.length === 0;
   }
 
   private checkforDuplicitAttributes(): void {
