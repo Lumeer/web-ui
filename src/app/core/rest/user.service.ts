@@ -51,27 +51,20 @@ export class UserService {
     return Observable.of(user);
   }
 
-  public deleteUser(id: string): Observable<void> {
+  public deleteUser(id: string): Observable<string> {
     const users = LocalStorage.get(USERS_KEY) || {};
 
     delete users[id];
 
     LocalStorage.set(USERS_KEY, users);
 
-    return Observable.empty();
+    return Observable.of(id);
   }
 
   public getUserById(id: string): Observable<User> {
     const usersMap = LocalStorage.get(USERS_KEY) || {};
 
     return Observable.of(usersMap[id]);
-  }
-
-  public getUsersByGroup(groupId: string): Observable<User[]> {
-    const usersMap: { [id: string]: User } = LocalStorage.get(USERS_KEY) || {};
-    const users = Object.values(usersMap).filter(user => user.groups.includes(groupId));
-
-    return Observable.of(users);
   }
 
   public getUsers(): Observable<User[]> {

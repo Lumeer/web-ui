@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {groupsAdapter} from '../groups/groups.state';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {initialProjectsState, projectsAdapter, ProjectsState} from './projects.state';
 
@@ -26,11 +25,11 @@ export function projectsReducer(state: ProjectsState = initialProjectsState, act
     case ProjectsActionType.GET_SUCCESS:
       return projectsAdapter.addMany(action.payload.projects, state);
     case ProjectsActionType.CREATE_SUCCESS:
-      return groupsAdapter.addOne(action.payload.project, state);
+      return projectsAdapter.addOne(action.payload.project, state);
     case ProjectsActionType.UPDATE_SUCCESS:
       return projectsAdapter.updateOne({id: action.payload.project.id, changes: action.payload.project}, state);
     case ProjectsActionType.DELETE_SUCCESS:
-      return groupsAdapter.removeOne(action.payload.projectId, state);
+      return projectsAdapter.removeOne(action.payload.projectId, state);
     case ProjectsActionType.SELECT:
       return {...state, selectedProjectId: action.payload.projectId};
     default:
