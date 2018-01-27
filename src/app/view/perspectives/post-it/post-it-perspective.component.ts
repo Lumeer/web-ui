@@ -37,8 +37,11 @@ import {ATTRIBUTE_COLUMN, SelectionHelper, VALUE_COLUMN} from './util/selection-
 import {isNullOrUndefined} from 'util';
 import {KeyCode} from '../../../shared/key-code';
 import {HashCodeGenerator} from '../../../shared/utils/hash-code-generator';
+import {SelectionHelper} from './util/selection-helper';
+import {PostItConfigModel} from '../../../core/store/views/view.model';
 import Create = DocumentsAction.Create;
 import UpdateData = DocumentsAction.UpdateData;
+import {ConfigHelper} from './util/config-helper';
 
 @Component({
   selector: 'post-it-perspective',
@@ -95,6 +98,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private deletionHelper: DeletionHelper;
 
+  private configHelper: ConfigHelper;
+
   private layoutManager: PostItLayout;
 
   private pageSubscriptions: Subscription[] = [];
@@ -140,6 +145,9 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
     this.deletionHelper = new DeletionHelper(this.store, this.postIts);
     this.deletionHelper.initialize();
+
+    this.configHelper = new ConfigHelper(this.store);
+    this.configHelper.initialize();
   }
 
   private reinitializePostIts(): void {
@@ -351,6 +359,9 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       this.infiniteScroll.destroy();
     }
 
+    if (this.configHelper) {
+      this.configHelper.destroy();
+    }
     this.pageSubscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
