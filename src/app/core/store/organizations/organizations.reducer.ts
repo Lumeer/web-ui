@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {groupsAdapter} from '../groups/groups.state';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {initialOrganizationsState, organizationsAdapter, OrganizationsState} from './organizations.state';
 
@@ -26,11 +25,11 @@ export function organizationsReducer(state: OrganizationsState = initialOrganiza
     case OrganizationsActionType.GET_SUCCESS:
       return organizationsAdapter.addAll(action.payload.organizations, state);
     case OrganizationsActionType.CREATE_SUCCESS:
-      return groupsAdapter.addOne(action.payload.organization, state);
+      return organizationsAdapter.addOne(action.payload.organization, state);
     case OrganizationsActionType.UPDATE_SUCCESS:
       return organizationsAdapter.updateOne({id: action.payload.organization.id, changes: action.payload.organization}, state);
     case OrganizationsActionType.DELETE_SUCCESS:
-      return groupsAdapter.removeOne(action.payload.organizationId, state);
+      return organizationsAdapter.removeOne(action.payload.organizationId, state);
     case OrganizationsActionType.SELECT:
       return {...state, selectedOrganizationId: action.payload.organizationId};
     default:

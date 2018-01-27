@@ -93,7 +93,7 @@ export class ShareDialogComponent implements OnInit {
 
   public suggest() {
     this.suggestions = this.users
-      .map(user => user.username)
+      .map(user => user.email)
       .filter(username => username.includes(this.text))
       .filter(username => !this.emails.includes(username));
   }
