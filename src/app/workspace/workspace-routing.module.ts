@@ -25,6 +25,9 @@ import {ProjectSettingsComponent} from './project/project-settings.component';
 import {ProjectPermissionsComponent} from './project/permissions/project-permissions.component';
 import {OrganizationPermissionsComponent} from './organization/permissions/organization-permissions.component';
 import {WorkspaceSelectGuard} from './workspace-select.guard';
+import {OrganizationUsersComponent} from './organization/users/organization-users.component';
+import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
+import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
 
 const workspaceRoutes: Routes = [
   {
@@ -47,12 +50,24 @@ const workspaceRoutes: Routes = [
     component: OrganizationSettingsComponent,
     children: [
       {
+        path: 'users',
+        component: OrganizationUsersComponent
+      },
+      {
+        path: 'groups',
+        component: OrganizationGroupsComponent
+      },
+      {
+        path: 'registration',
+        component: OrganizationRegistrationComponent
+      },
+      {
         path: 'permissions',
         component: OrganizationPermissionsComponent
       },
       {
         path: '',
-        redirectTo: 'permissions',
+        redirectTo: 'users',
         pathMatch: 'full'
       }
     ]

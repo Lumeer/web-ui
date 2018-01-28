@@ -65,11 +65,30 @@
           vel augue.
         </div>
       </div>
-      <ul class="nav nav-tabs ">
-        <li role="presentation" class="nav-item ">
-          <a routerLink="permissions" routerLinkActive="active" class="nav-link">
-            Permissions
-          </a>
+      <ul class="nav nav-tabs">
+        <li role="presentation" class="nav-item">
+          <a [routerLink]="'users'"
+             routerLinkActive="active"
+             class="nav-link"
+             i18n="@@organizations.tab.users">Users</a>
+        </li>
+        <li role="presentation" class="nav-item">
+          <a [routerLink]="'groups'"
+             routerLinkActive="active"
+             class="nav-link"
+             i18n="@@organizations.tab.groups">Groups</a>
+        </li>
+        <li role="presentation" class="nav-item">
+          <a [routerLink]="'registration'"
+             routerLinkActive="active"
+             class="nav-link"
+             i18n="@@organizations.tab.registration">Registration</a>
+        </li>
+        <li role="presentation" class="nav-item">
+          <a [routerLink]="'permissions'"
+             routerLinkActive="active"
+             class="nav-link"
+             i18n="@@organizations.tab.permissions">Permissions</a>
         </li>
       </ul>
       <router-outlet></router-outlet>

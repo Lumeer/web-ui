@@ -31,6 +31,9 @@ import {ResourceChooserComponent} from './workspace-chooser/resource-chooser/res
 import {PickerModule} from '../shared/picker/picker.module';
 import {WorkspaceSelectGuard} from './workspace-select.guard';
 import {WorkspaceService} from './workspace.service';
+import {OrganizationUsersComponent} from './organization/users/organization-users.component';
+import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
+import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
 
 @NgModule({
   imports: [
@@ -41,6 +44,9 @@ import {WorkspaceService} from './workspace.service';
   ],
   declarations: [
     OrganizationPermissionsComponent,
+    OrganizationUsersComponent,
+    OrganizationGroupsComponent,
+    OrganizationRegistrationComponent,
     ProjectPermissionsComponent,
     OrganizationSettingsComponent,
     ProjectSettingsComponent,
