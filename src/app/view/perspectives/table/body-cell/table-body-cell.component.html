@@ -31,11 +31,13 @@
 <div *ngIf="editMode && row.part.index && !row.documents[0].id"
      class="dropdown">
   <div class="dropdown-menu show">
-    <a *ngFor="let doc of suggestLinkedDocuments()"
-       (mousedown)="linkExistingDocument(doc)"
-       class="dropdown-item">
-      {{doc.data[attribute.fullName] | highlight: dataCell.textContent}}
-    </a>
+    <ng-container *ngFor="let doc of suggestLinkedDocuments()">
+      <a *ngIf="doc.data.hasOwnProperty([attribute.fullName])"
+         (mousedown)="linkExistingDocument(doc)"
+         class="dropdown-item">
+        {{doc.data[attribute.fullName] | highlight: dataCell.textContent}}
+      </a>
+    </ng-container>
   </div>
 </div>
 
