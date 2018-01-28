@@ -63,8 +63,9 @@
         <input #attributeName
                type="text"
                class="{{ collection.defaultAttribute === attribute ? 'font-weight-bold' : null }} border-0"
-               [(ngModel)]="attribute.name"
-               (blur)="attribute.name ? updateAttribute(attribute) : removeAttribute(attribute, row)"
+               [(ngModel)]="attribute.fullName"
+               (focus)="editedAttributeFullName = attribute.fullName"
+               (blur)="attribute.fullName ? updateAttribute(attribute) : removeAttribute(attribute, row)"
                (keyup.enter)="attributeName.blur()"
                (keyup.Escape)="attributeName.blur()">
       </td>
@@ -91,7 +92,7 @@
           </div>
           <div class="dropdown input-box">
             <input class="px-2 my-1 ml-1 border-0"
-                   [attr.id]="attribute.name + 'addAttribute'"
+                   [attr.id]="attribute.fullName + 'addAttribute'"
                    [(ngModel)]="attribute.newConstraint"
                    (ngModelChange)="refreshSuggestions(); selectedSuggestionIndex = -1"
                    (focus)="activeAttribute = attribute"

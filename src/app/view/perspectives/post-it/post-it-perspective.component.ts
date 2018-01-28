@@ -22,7 +22,6 @@ import {Store} from '@ngrx/store';
 import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../core/store/app.state';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectDocumentsByCustomQuery} from '../../../core/store/documents/documents.state';
@@ -133,10 +132,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.page = 0;
     this.postIts.splice(0);
     this.pageSubscriptions.forEach(subscription => subscription.unsubscribe());
-  }
-
-  public usedCollections(): CollectionModel[] {
-    return Array.from(new Set(this.postIts.map(postIt => postIt.document.collection)));
   }
 
   public fetchQueryDocuments(queryModel: QueryModel): void {
