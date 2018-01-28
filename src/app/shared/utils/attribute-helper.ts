@@ -23,8 +23,8 @@ import {Collection} from '../../core/dto/collection';
 export class AttributeHelper {
 
   public static generateAttributeId(attributeName: string): string {
-    // TODO deal with existing same ID
-    return attributeName.replace(' ', '').toLowerCase();
+    // TODO deal with existing same ID as well as invalid characters
+    return attributeName;
   }
 
   public static generateAttributeName(otherAttributes: Attribute[]): string {
