@@ -21,7 +21,7 @@ import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core'
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../core/store/app.state';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 
@@ -52,8 +52,18 @@ export class PostItAddDocumentComponent implements OnInit, OnDestroy {
     this.createPostIt.emit({
       collection: this.selectedCollection,
       collectionCode: this.selectedCollection.code,
-      data: {}
+      data: this.dataWithAttributeNames()
     });
+  }
+
+  private dataWithAttributeNames(): { [attributeName: string]: string } {
+    let result = {};
+
+    this.selectedCollection.attributes.forEach((attribute: AttributeModel) => {
+      result[attribute.id] = '';
+    });
+
+    return result;
   }
 
   public ngOnDestroy(): void {

@@ -177,12 +177,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public postItChanged(changedPostIt: PostItDocumentModel): void {
-    if (Object.keys(changedPostIt.document.data).length === 0) {
-      this.postIts.splice(this.postIts.findIndex(postIt => postIt === changedPostIt), 1);
-
-      if (changedPostIt.initialized) {
-        this.deletePostIt(changedPostIt);
-      }
+    if (this.postItInInitialState(changedPostIt)) {
       return;
     }
 
@@ -192,6 +187,14 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     }
 
     this.updateDocument(changedPostIt);
+  }
+
+  private postItInInitialState(postIt: PostItDocumentModel): boolean {
+    const isUnitialized = !postIt.initialized;
+    const hasInitialAttributes = Object.keys(postIt.document.data).length === postIt.document.collection.attributes.length;
+    const hasInitialValues = Object.values(postIt.document.data).every(value => value === '');
+
+    return isUnitialized && hasInitialAttributes && hasInitialValues;
   }
 
   private subscribeOnDocuments(queryModel: QueryModel) {
