@@ -1,1 +1,121 @@
-Registration tab
+<div class="container pt-3">
+
+  <div class="row large-text">
+    <div i18n="@@organization.registration.available.licences">
+      Available Licences
+    </div>
+    <div class="px-3">
+      {{ licenceCount }}
+    </div>
+    <button type="button"
+            class="btn btn-outline-success ml-auto mr-3"
+            data-toggle="modal"
+            data-target="#reserveModal"
+            i18n="@@organization.registration.reserve.licences">
+      + Reserve More
+    </button>
+    <button type="button"
+            class="btn btn-outline-danger"
+            data-toggle="modal"
+            data-target="#removeModal"
+            i18n="@@organization.registration.remove.licences">
+      - Remove Licences
+    </button>
+  </div>
+
+  <div class="row pt-1 text-muted">
+    <div class="ml-auto"
+         i18n="@@organization.registration.licences.description">
+      You'll be charged only for activated licences
+    </div>
+  </div>
+
+  <div class="row pt-2 large-text">
+    <table class="col">
+      <tbody>
+      <tr>
+        <td i18n="@@organization.registration.allow.link">
+          Allow Link Registration
+        </td>
+        <td>
+          <input type="checkbox">
+        </td>
+      </tr>
+      <tr>
+        <td i18n="@@organization.registration.require.email">
+          Require Email Domain
+        </td>
+        <td>
+          <input type="checkbox">
+        </td>
+      </tr>
+      <tr class="text-muted">
+        <td>
+          Only users with emails on the given domains are allowed to register
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <table class="col">
+      <tbody>
+      <tr>
+        <td>
+          @
+        </td>
+        <td>
+          Allow Link Registration
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade"
+     id="reserveModal"
+     tabindex="-1"
+     role="dialog"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade"
+     id="removeModal"
+     tabindex="-1"
+     role="dialog"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

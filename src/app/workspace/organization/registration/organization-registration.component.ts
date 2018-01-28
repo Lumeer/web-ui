@@ -18,9 +18,20 @@
  */
 
 import {Component} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../core/store/app.state';
 
 @Component({
-  templateUrl: './organization-registration.component.html'
+  templateUrl: './organization-registration.component.html',
+  styleUrls: ['./organization-registration.component.scss']
 })
 export class OrganizationRegistrationComponent {
+
+  public licenceCount = 42;
+  public linkRegistrationAllowed: boolean;
+  public emailDomainRequired: boolean;
+
+  constructor(private store: Store<AppState>) {
+  }
+
 }

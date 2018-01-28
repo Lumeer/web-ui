@@ -32,7 +32,6 @@ import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
 import {HomePageService} from './home-page.service';
 
-// TODO send data attribute without '_id'
 @Injectable()
 export class DocumentService {
 
