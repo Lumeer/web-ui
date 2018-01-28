@@ -63,6 +63,8 @@ export class AttributeListComponent {
 
   public lumeerSuggestions: ConstraintSuggestion[] = [];
 
+  public editedAttributeFullName = '';
+
   public selectedSuggestionIndex = -1;
 
   constructor(private collectionService: CollectionService,
@@ -109,10 +111,10 @@ export class AttributeListComponent {
   }
 
   public updateAttribute(attribute: ConfiguredAttribute, index?: number): void {
-    const previousFullName = attribute.fullName;
-    attribute.fullName = attribute.name;
+    const attributeFullNamePath = attribute.fullName.split('.');
+    attribute.name = attributeFullNamePath[attributeFullNamePath.length - 1];
 
-    this.collectionService.updateAttribute(this.collection.code, previousFullName, attribute)
+    this.collectionService.updateAttribute(this.collection.code, this.editedAttributeFullName, attribute)
       .subscribe(
         attribute => {
           if (!isNullOrUndefined(index)) {
@@ -125,7 +127,7 @@ export class AttributeListComponent {
 
   public removeAttribute(attribute: ConfiguredAttribute, index?: number): void {
     const removed = this.collection.attributes[index];
-    this.collectionService.removeAttribute(this.collection.code, removed.fullName)
+    this.collectionService.removeAttribute(this.collection.code, this.editedAttributeFullName)
       .subscribe(
         () => this.collection.attributes.splice(index, 1),
         error => console.error(error)
@@ -153,7 +155,7 @@ export class AttributeListComponent {
         document.getElementById('constraint' + (attribute.constraints.length - 1)).focus();
       });
     } else {
-      document.getElementById(attribute.name + 'addAttribute').focus();
+      document.getElementById(attribute.fullName + 'addAttribute').focus();
     }
   }
 
@@ -167,7 +169,7 @@ export class AttributeListComponent {
   }
 
   public matchesSearch(attribute: ConfiguredAttribute): boolean {
-    return attribute.name.includes(this.searched) ||
+    return attribute.fullName.includes(this.searched) ||
       this.formatNumber(attribute.usageCount).includes(this.searched) ||
       attribute.constraints.find(constraint => constraint.includes(this.searched)) !== undefined;
   }

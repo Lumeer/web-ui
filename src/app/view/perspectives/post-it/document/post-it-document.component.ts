@@ -31,6 +31,7 @@ import {AttributePair} from '../document-data/attribute-pair';
 import {PostItDocumentModel} from '../document-data/post-it-document-model';
 import {NavigationHelper} from '../util/navigation-helper';
 import {SelectionHelper} from '../util/selection-helper';
+import {AttributeModel} from '../../../../core/store/collections/collection.model';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
 import Update = DocumentsAction.Update;
 
@@ -224,6 +225,16 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
         value: isString(value) ? value : JSON.stringify(value, null, 2)
       };
     });
+  }
+
+  public unusedAttributes(): AttributeModel[] {
+    return this.postItModel.document.collection.attributes.filter(attribute => {
+      return this.postItModel.document.data[attribute.id] === undefined;
+    });
+  }
+
+  public suggestionListId(): string {
+    return `${ this.perspectiveId }${ this.postItModel.document.id || 'uninitialized' }`;
   }
 
   public hasWriteRole(): boolean {

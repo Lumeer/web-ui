@@ -16,11 +16,6 @@
                     (removed)="deletePostIt(postIt)"
                     (changes)="postItChanged(postIt)"></post-it-document>
 
-  <datalist *ngFor="let collection of usedCollections()"
-            id="{{ perspectiveId }}{{ collection.code }}">
-    <option *ngFor="let attribute of collection.attributes">{{ attribute.name }}</option>
-  </datalist>
-
   <label *ngIf="!editable && navigationHelper.hasQuery() && !postIts.length"
          class="label-centered"
          i18n="@@document.list.empty">Nothing To Show</label>
