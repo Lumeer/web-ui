@@ -18,6 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+import {isNullOrUndefined} from 'util';
 
 @Pipe({
   name: 'highlight'
@@ -25,6 +26,9 @@ import {Pipe, PipeTransform} from '@angular/core';
 export class HighlightPipe implements PipeTransform {
 
   public transform(value: string, prefix: string): string {
+    if (isNullOrUndefined(value)) {
+      return '';
+    }
     if (!value.startsWith(prefix)) {
       return value;
     }
