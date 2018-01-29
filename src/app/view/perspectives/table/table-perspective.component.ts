@@ -23,11 +23,12 @@ import {DocumentModel} from 'app/core/store/documents/document.model';
 import {AttributeHelper} from 'app/shared/utils/attribute-helper';
 import {Subscription} from 'rxjs';
 import {Observable} from 'rxjs/Observable';
-import {map, switchMap, withLatestFrom} from 'rxjs/operators';
+import {first, map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {Attribute, Collection, Document, LinkInstance, LinkType, Query} from '../../../core/dto';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {CollectionService, DocumentService, LinkInstanceService, LinkTypeService} from '../../../core/rest';
 import {AppState} from '../../../core/store/app.state';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {selectNavigation, selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {TableConfigModel, ViewConfigModel} from '../../../core/store/views/view.model';
@@ -36,6 +37,7 @@ import {PerspectiveComponent} from '../perspective.component';
 import {AttributeChangeEvent, DataChangeEvent, LinkInstanceEvent, TableLinkEvent} from './event';
 import {TablePart} from './model';
 import {TableManagerService} from './util/table-manager.service';
+import {selectCollectionsDictionary} from "../../../core/store/collections/collections.state";
 
 @Component({
   selector: 'table-perspective',
@@ -73,6 +75,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   public parts: TablePart[] = [];
 
   private subscription: Subscription;
+  private collectionsSubscription: Subscription;
 
   public ngOnInit() {
     if (this.embedded && this.query) {
@@ -103,13 +106,23 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
       return;
     }
 
-    this.createDefaultConfigFromQuery();
-    this.fetchDataAndCreateTable();
+    this.collectionsSubscription = this.store.select(selectCollectionsDictionary)
+      .pipe(first())
+      .subscribe(collectionsMap => {
+        if (this.query.collectionCodes) {
+          this.query.collectionIds = this.query.collectionCodes.map(code => collectionsMap[code].id);
+        }
+        this.createDefaultConfigFromQuery();
+        this.fetchDataAndCreateTable();
+      });
   }
 
   public ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
+    }
+    if (this.collectionsSubscription){
+      this.collectionsSubscription.unsubscribe();
     }
   }
 
@@ -134,7 +147,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
       this.config.table = {
         parts: [
           {
-            collectionCode: this.query.collectionCodes[0],
+            collectionId: this.query.collectionIds[0],
             attributeIds: []
           }
         ]
@@ -148,7 +161,9 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   }
 
   public isDisplayable(): boolean {
-    return this.query && this.query.collectionCodes && this.query.collectionCodes.length === 1;
+    return this.query && (
+      (this.query.collectionCodes && this.query.collectionCodes.length === 1) || (this.query.collectionIds && this.query.collectionIds.length === 1)
+    );
   }
 
   public extractConfig(): any {
@@ -241,7 +256,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
 
     const linkType: LinkType = {
       name: lastCollection.name + '-' + collection.name, // TODO input from user
-      collectionCodes: [lastCollection.code, collection.code]
+      collectionIds: [lastCollection.id, collection.id]
     };
 
     this.linkTypeService.createLinkType(linkType); // TODO not subscribed

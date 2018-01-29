@@ -22,6 +22,7 @@ import {Permissions} from './permissions';
 
 export interface Collection {
 
+  id?: string;
   code?: string;
   name: string;
   icon: string;

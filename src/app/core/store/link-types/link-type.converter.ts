@@ -27,7 +27,7 @@ export class LinkTypeConverter {
     return {
       id: dto.id,
       name: dto.name,
-      collectionCodes: dto.collectionCodes,
+      collectionIds: dto.collectionIds,
       attributes: [], // TODO
       correlationId: correlationId
     };
@@ -37,15 +37,15 @@ export class LinkTypeConverter {
     return {
       id: model.id,
       name: model.name,
-      collectionCodes: model.collectionCodes,
+      collectionIds: model.collectionIds,
       attributes: [] // TODO
     };
   }
 
   public static addCollections(linkType: LinkTypeModel, collections: CollectionModel[]): LinkTypeModel {
     const usedCollections: [CollectionModel, CollectionModel] = [
-      collections.find(collection => collection.code === linkType.collectionCodes[0]),
-      collections.find(collection => collection.code === linkType.collectionCodes[1])
+      collections.find(collection => collection.id === linkType.collectionIds[0]),
+      collections.find(collection => collection.id === linkType.collectionIds[1])
     ];
     return {...linkType, collections: usedCollections};
   }

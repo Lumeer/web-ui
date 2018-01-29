@@ -40,7 +40,7 @@ export interface SmartDocPartModel {
 
 export interface SmartDocModel {
 
-  collectionCode: string;
+  collectionId: string;
   documentIdsOrder?: string[];
   parts: SmartDocPartModel[];
 

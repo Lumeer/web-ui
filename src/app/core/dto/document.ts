@@ -20,6 +20,7 @@
 export class Document {
 
   public id: string;
+  public collectionId?: string;
   public collectionCode: string;
   public creationDate?: Date; // TODO Date is currently in MongoDb format
   public updateDate?: Date; // Date is currently in MongodDb format

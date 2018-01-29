@@ -21,15 +21,15 @@
                data-toggle="dropdown"
                aria-hidden="true"></i>
             <ul class="dropdown-menu">
-              <li *ngFor="let collectionCode of possibleToCollectionCodes(linkTypeModel)"
+              <li *ngFor="let collectionId of possibleToCollectionIds(linkTypeModel)"
                     class="dropdown-item"
-                    [style.color]="collections[collectionCode].color"
+                    [style.color]="collections[collectionId].color"
                     (click)="linkTypeModel.initialized ?
-                    changeToCollection(linkTypeModel, collectionCode) :
-                    ((linkTypeModel.data.collectionCodes = [collection.code, collectionCode]) && linkTypeModel.data.name &&
+                    changeToCollection(linkTypeModel, collectionId) :
+                    ((linkTypeModel.data.collectionIds = [collection.id, collectionId]) && linkTypeModel.data.name &&
                     createLinkType(linkTypeModel))">
-                <i class="mr-1 fa-fw {{ collections[collectionCode].icon }}" aria-hidden="true"></i>
-                {{ collections[collectionCode].name }}
+                <i class="mr-1 fa-fw {{ collections[collectionId].icon }}" aria-hidden="true"></i>
+                {{ collections[collectionId].name }}
               </li>
             </ul>
 
@@ -42,13 +42,13 @@
                    (keyup.enter)="name.blur()"
                    (blur)="linkTypeModel.initialized ?
                    (linkTypeModel.data.name ? updateLinkType(linkTypeModel) : deleteLinkType(linkTypeModel)) :
-                   (linkTypeModel.data.name ? (linkTypeModel.data.collectionCodes && linkTypeModel.data.collectionCodes[1] &&
+                   (linkTypeModel.data.name ? (linkTypeModel.data.collectionIds && linkTypeModel.data.collectionIds[1] &&
                    createLinkType(linkTypeModel)) : removeLinkType(linkTypeModel))">
           </span>
 
       <span *ngIf="linkTypeModel.initialized">
             <a tabindex
-               (click)="changeCollection(linkTypeModel.data.collectionCodes[1])"
+               (click)="changeCollection(linkTypeModel.data.collectionIds[1])"
                class="btn btn-outline-success {{ !linkTypeModel.initialized ? 'disabled' : null }}"
                title="Go to {{ getLinkedCollection(linkTypeModel).name }}"
                i18n-title="@@collection.config.tab.link.types.go.to">

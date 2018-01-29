@@ -23,6 +23,7 @@ export interface DocumentModel {
 
   id?: string;
   collectionCode: string;
+  collectionId: string;
   collection?: CollectionModel;
   data: { [attributeId: string]: any };
 

@@ -21,9 +21,10 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, skipWhile, switchMap, tap, withLatestFrom, mergeMap} from 'rxjs/operators';
+import {catchError, map, mergeMap, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
+import {selectCollectionsDictionary} from '../collections/collections.state';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {QueryHelper} from '../navigation/query.helper';
@@ -37,12 +38,13 @@ export class LinkTypesEffects {
 
   @Effect()
   public get$: Observable<Action> = this.actions$.ofType<LinkTypesAction.Get>(LinkTypesActionType.GET).pipe(
+    switchMap(action => this.convertCollectionCodesToIds(action)),
     withLatestFrom(this.store$.select(selectLinkTypesQueries)),
     skipWhile(([action, queries]) => queries.some(query => QueryHelper.equal(query, action.payload.query))),
     switchMap(([action]) => {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
-      return this.linkTypeService.getLinkTypes(action.payload.query).pipe(
+      return this.linkTypeService.getLinkTypes(queryDto).pipe(
         map(dtos => ({action, linkTypes: dtos.map(dto => LinkTypeConverter.fromDto(dto))}))
       );
     }),
@@ -55,6 +57,18 @@ export class LinkTypesEffects {
     }),
     catchError((error) => Observable.of(new LinkTypesAction.GetFailure({error: error})))
   );
+
+  private convertCollectionCodesToIds(action: LinkTypesAction.Get): Observable<LinkTypesAction.Get> {
+    const collectionCodes = action.payload.query.collectionCodes;
+    const collectionIds = action.payload.query.collectionIds || [];
+    if (!collectionCodes || collectionCodes.length == 0) return Observable.of(action);
+    return this.store$.select(selectCollectionsDictionary).pipe(
+      map(collections => {
+        const convertedIds = collectionCodes.map(code => collections[code].id);
+        return {...action, collectionCodes: null, collectionIds: [collectionIds.concat(convertedIds)]};
+      })
+    );
+  }
 
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.GetFailure>(LinkTypesActionType.GET_FAILURE).pipe(

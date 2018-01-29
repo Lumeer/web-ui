@@ -76,10 +76,15 @@ export class QueryItemsConverter {
 
     if (query.linkTypeIds && query.linkTypeIds.length > 0) {
       return this.linkTypeService.getLinkTypes({linkTypeIds: query.linkTypeIds}).pipe(
-        map((linkTypes: LinkType[]) => linkTypes.map(linkType => linkType.collectionCodes)),
-        map(([codes]: string[][]) => codes.filter(code => !collectionCodes.includes(code))),
-        map(codes => codes.concat(collectionCodes)),
-        switchMap(codes => this.searchService.searchCollections({collectionCodes: codes}))
+        map((linkTypes: LinkType[]) => {
+          const set = new Set<string>();
+          linkTypes.forEach(linkType => {
+            set.add(linkType.collectionIds[0]);
+            set.add(linkType.collectionIds[1]);
+          });
+          return Array.from(set);
+        }),
+        switchMap(ids => this.searchService.searchCollections({collectionIds: ids, collectionCodes: collectionCodes}))
       );
     }
 
@@ -121,8 +126,8 @@ export class QueryItemsConverter {
   private createLinkQueryItems(collectionsMap: { [key: string]: Collection }, query: Query): Observable<QueryItem[]> {
     return this.linkTypeService.getLinkTypes({linkTypeIds: query.linkTypeIds}).pipe(
       map(linkTypes => linkTypes.map(linkType => {
-          const coll1 = collectionsMap[linkType.collectionCodes[0]];
-          const coll2 = collectionsMap[linkType.collectionCodes[1]];
+          const coll1 = collectionsMap[linkType.collectionIds[0]];
+          const coll2 = collectionsMap[linkType.collectionIds[1]];
           if (coll1 && coll2) {
             return new LinkQueryItem(linkType, coll1, coll2);
           }

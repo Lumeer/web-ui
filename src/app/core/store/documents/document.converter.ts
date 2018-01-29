@@ -29,6 +29,7 @@ export class DocumentConverter {
     return {
       id: dto.id,
       collectionCode: dto.collectionCode,
+      collectionId: dto.collectionId,
       data: data,
       favorite: dto.favorite,
       creationDate: dto.creationDate,
@@ -43,6 +44,7 @@ export class DocumentConverter {
   public static toDto(model: DocumentModel): Document {
     return {
       id: model.id,
+      collectionId: model.collectionId,
       collectionCode: model.collectionCode,
       data: model.data,
       favorite: model.favorite

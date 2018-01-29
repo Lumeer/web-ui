@@ -22,7 +22,7 @@ export interface LinkType {
   id?: string; // TODO make compulsory
   name: string;
 
-  collectionCodes?: [string, string]; // TODO make compulsory
+  collectionIds?: [string, string];
 
   attributes?: string[]; // TODO use complex object
 

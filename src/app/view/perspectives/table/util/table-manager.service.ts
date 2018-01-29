@@ -51,13 +51,13 @@ export class TableManagerService {
   }
 
   public createTableFromConfig(query: QueryModel, config: TableConfigModel, linkTypeId?: string, linkedDocument?: DocumentModel): Observable<TablePart[]> {
-    const collectionCodes = config.parts.map(part => part.collectionCode);
+    const collectionIds = config.parts.map(part => part.collectionId);
     const linkTypeIds = config.parts.map(part => part.linkTypeId).filter(id => id);
 
     return Observable.combineLatest(
       this.searchService.searchCollections({}), // TODO get collections on link suggestions
-      this.searchService.searchDocuments({collectionCodes: collectionCodes}),
-      this.linkTypeService.getLinkTypes({collectionCodes: collectionCodes}),
+      this.searchService.searchDocuments({collectionIds: collectionIds}),
+      this.linkTypeService.getLinkTypes({collectionIds: collectionIds}),
       this.linkInstanceService.getLinkInstances({linkTypeIds: linkTypeIds})
     ).pipe(
       map(([collections, documents, linkTypes, linkInstances]) => {
@@ -74,14 +74,14 @@ export class TableManagerService {
     this.parts = config.parts.map((configPart, index) => {
       const tablePart = new TablePart();
       tablePart.index = index;
-      tablePart.collection = this.getCollectionByCode(configPart.collectionCode);
+      tablePart.collection = this.getCollectionById(configPart.collectionId);
 
-      tablePart.expandedDocuments = configPart.expandedDocumentIds ? this.getDocumentsByCollection(configPart.collectionCode)
+      tablePart.expandedDocuments = configPart.expandedDocumentIds ? this.getDocumentsByCollection(configPart.collectionId)
         .filter(doc => configPart.expandedDocumentIds.includes(doc.id)) : [];
 
       tablePart.linkType = this.getLinkTypeById(configPart.linkTypeId ? configPart.linkTypeId : linkTypeId);
       tablePart.linkedCollection = tablePart.linkType ?
-        this.getCollectionByCode(tablePart.linkType.collectionCodes.find(code => code !== configPart.collectionCode)) :
+        this.getCollectionById(tablePart.linkType.collectionIds.find(id => id !== configPart.collectionId)) :
         null;
       tablePart.linkedDocument = index === 0 ? linkedDocument : null;
 
@@ -113,7 +113,7 @@ export class TableManagerService {
 
   private setUpAttributes(tablePart: TablePart, config: TableConfigModel) {
     const configPart = config.parts[tablePart.index];
-    const leafAttributes = this.leafAttributes(configPart.collectionCode);
+    const leafAttributes = this.leafAttributes(configPart.collectionId);
 
     const attributeIds = configPart.attributeIds.filter(id => id);
     if (configPart.attributeIds.length > 0) {
@@ -200,9 +200,9 @@ export class TableManagerService {
     const linkedDocumentIds = this.getLinkInstancesByType(linkTypeId)
       .filter(linkInstance => linkInstance.documentIds.includes(doc.id))
       .map(linkInstance => linkInstance.documentIds.find(id => id !== doc.id));
-    const linkedCollectionCode = this.getLinkTypeById(linkTypeId).collectionCodes
-      .find(code => code !== doc.collectionCode);
-    return this.getDocumentsByCollection(linkedCollectionCode)
+    const linkedCollectionId = this.getLinkTypeById(linkTypeId).collectionIds
+      .find(id => id !== doc.collectionId);
+    return this.getDocumentsByCollection(linkedCollectionId)
       .filter(d => linkedDocumentIds.includes(d.id));
   }
 
@@ -223,7 +223,7 @@ export class TableManagerService {
     this.parts.push(part);
 
     Observable.combineLatest(
-      this.searchService.searchDocuments({collectionCodes: [part.collection.code]}),
+      this.searchService.searchDocuments({collectionIds: [part.collection.id]}),
       this.linkInstanceService.getLinkInstances({linkTypeIds: [linkType.id]})
     ).subscribe(([documents, linkInstances]) => {
       this.documents.push(...documents);
@@ -235,7 +235,7 @@ export class TableManagerService {
   }
 
   public removeTablePart(part: TablePart) {
-    this.documents = this.documents.filter(doc => doc.collectionCode !== part.collection.code);
+    this.documents = this.documents.filter(doc => doc.collectionId !== part.collection.id);
     this.linkInstances = this.linkInstances.filter(linkInstance => linkInstance.linkTypeId !== part.linkType.id);
 
     this.parts[part.index - 1].rows.forEach(row => row.nextLinkedRows = []);
@@ -253,7 +253,7 @@ export class TableManagerService {
   }
 
   private createBody(query: QueryModel) {
-    const primaryDocuments = this.getDocumentsByCollection(this.parts[0].collection.code, query.documentIds, !!this.parts[0].linkType);
+    const primaryDocuments = this.getDocumentsByCollection(this.parts[0].collection.id, query.documentIds, !!this.parts[0].linkType);
     this.sortDocuments(primaryDocuments);
 
     primaryDocuments.forEach((doc, index) => this.createRow(null, null, 0, index, [doc]));
@@ -297,17 +297,17 @@ export class TableManagerService {
     return 0;
   }
 
-  private leafAttributes(collectionCode: string): Attribute[] {
-    return this.getCollectionByCode(collectionCode).attributes.filter(attr => !attr.intermediate);
+  private leafAttributes(collectionId: string): Attribute[] {
+    return this.getCollectionById(collectionId).attributes.filter(attr => !attr.intermediate);
   }
 
-  private getCollectionByCode(code: string): Collection {
-    return this.collections.find(collection => collection.code === code);
+  private getCollectionById(id: string): Collection {
+    return this.collections.find(collection => collection.id === id);
   }
 
-  private getDocumentsByCollection(collectionCode: string, documentIds?: string[], embedded?: boolean): Document[] {
+  private getDocumentsByCollection(collectionId: string, documentIds?: string[], embedded?: boolean): Document[] {
     return this.documents.filter(doc => {
-      if (doc.collectionCode !== collectionCode) {
+      if (doc.collectionId !== collectionId) {
         return false;
       }
 
@@ -369,7 +369,7 @@ export class TableManagerService {
     const emptyRow = new TableRow();
     emptyRow.part = row.part;
     emptyRow.rowOffset = 0;
-    emptyRow.documents = [this.emptyDocument(row.part.collection.code)];
+    emptyRow.documents = [this.emptyDocument(row.part.collection.id)];
     emptyRow.previousLinkedRow = row.previousLinkedRow;
 
     const rows = row.part.rows;
@@ -382,9 +382,9 @@ export class TableManagerService {
     }
   }
 
-  private emptyDocument(collectionCode: string) {
+  private emptyDocument(collectionId: string) {
     const emptyDocument = new Document();
-    emptyDocument.collectionCode = collectionCode;
+    emptyDocument.collectionId = collectionId;
     emptyDocument.data = {};
     return emptyDocument;
   }
@@ -396,7 +396,7 @@ export class TableManagerService {
         if (row.documents.length > 1) {
           row.documents.splice(index, 1);
         } else {
-          row.documents.splice(index, 1, this.emptyDocument(doc.collectionCode));
+          row.documents.splice(index, 1, this.emptyDocument(doc.collectionId));
         }
       }
     });
@@ -423,7 +423,7 @@ export class TableManagerService {
   public extractTableConfig(): TableConfigModel {
     const configParts = this.parts.map(part => {
       return {
-        collectionCode: part.collection.code,
+        collectionId: part.collection.id,
         attributeIds: part.shownAttributes.map(attr => attr.fullName).filter(id => id),
         sortedBy: part.sorting ? part.sorting.attributeId : null,
         sortedDesc: part.sorting ? part.sorting.descending : null,

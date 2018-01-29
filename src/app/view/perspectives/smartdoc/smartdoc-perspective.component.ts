@@ -124,7 +124,7 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
           const collectionCode = query && query.collectionCodes ? query.collectionCodes[0] : null;
           return this.getCollectionByCode(collectionCode).pipe(map(collection => {
             const defaultSmartDoc: SmartDocModel = {
-              collectionCode: collectionCode,
+              collectionId: collection.id,
               parts: [SmartDocUtils.createInitialTextPart(collection)]
             };
             this.store.dispatch(new ViewsAction.ChangeSmartDocConfig({config: defaultSmartDoc}));
@@ -190,7 +190,10 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
 
   private filterDocuments(documents: DocumentModel[]): DocumentModel[] {
     return documents.filter(doc => {
-      if (!this.query || !this.query.collectionCodes || !this.query.collectionCodes.includes(doc.collectionCode)) {
+      if (!this.query || (
+          (!this.query.collectionCodes || !this.query.collectionCodes.includes(doc.collectionCode)) &&
+          (!this.query.collectionIds || !this.query.collectionIds.includes(doc.collectionId)))
+      ) {
         return false;
       }
 
@@ -250,11 +253,12 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
   private getData(query: QueryModel) {
     this.store.dispatch(new CollectionsAction.Get({query: {}}));
     this.store.dispatch(new DocumentsAction.Get({query: query}));
-    this.store.dispatch(new LinkTypesAction.Get({query: {collectionCodes: query.collectionCodes}}));
+    this.store.dispatch(new LinkTypesAction.Get({query: {collectionCodes: query.collectionCodes, collectionIds: query.collectionIds}}));
   }
 
   public isDisplayable(): boolean {
-    return this.query && this.query.collectionCodes && this.query.collectionCodes.length === 1;
+    return this.query && ((this.query.collectionCodes && this.query.collectionCodes.length === 1)
+      || (this.query.collectionIds && this.query.collectionIds.length === 1));
   }
 
   public onSizeChange(size: SizeType) {

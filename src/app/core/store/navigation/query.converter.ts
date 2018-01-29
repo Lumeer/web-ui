@@ -18,7 +18,7 @@
  */
 
 import {isNullOrUndefined} from 'util';
-import {Query} from '../../dto/query';
+import {Query} from '../../dto';
 import {QueryModel} from './query.model';
 
 export class QueryConverter {
@@ -26,6 +26,7 @@ export class QueryConverter {
   public static fromDto(dto: Query): QueryModel {
     return {
       collectionCodes: dto.collectionCodes,
+      collectionIds: dto.collectionIds,
       documentIds: dto.documentIds,
       filters: dto.filters,
       fulltext: dto.fulltext,
@@ -39,12 +40,13 @@ export class QueryConverter {
   public static toDto(model: QueryModel): Query {
     return {
       collectionCodes: model.collectionCodes,
-      // documentIds: model.documentIds,
+      collectionIds: model.collectionIds,
+      documentIds: model.documentIds,
+      linkTypeIds: model.linkTypeIds,
       filters: model.filters,
       fulltext: model.fulltext,
       page: model.page,
       pageSize: model.pageSize,
-      // linkTypeIds: model.linkTypeIds,
       // TODO convert other fields as well
     };
   }
@@ -63,6 +65,7 @@ export class QueryConverter {
     const query: QueryModel = parsedQuery ? parsedQuery : {};
 
     query.collectionCodes = query.collectionCodes || [];
+    query.collectionIds = query.collectionIds || [];
     query.documentIds = query.documentIds || [];
     query.filters = query.filters || [];
     query.linkTypeIds = query.linkTypeIds || [];

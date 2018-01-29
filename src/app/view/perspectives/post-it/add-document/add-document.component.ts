@@ -51,6 +51,7 @@ export class PostItAddDocumentComponent implements OnInit, OnDestroy {
   public onClick(): void {
     this.createPostIt.emit({
       collection: this.selectedCollection,
+      collectionId: this.selectedCollection.id,
       collectionCode: this.selectedCollection.code,
       data: this.dataWithAttributeNames()
     });
