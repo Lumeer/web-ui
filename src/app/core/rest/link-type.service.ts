@@ -27,7 +27,7 @@ import {LinkType, Query} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
-import {switchMap} from "rxjs/operators";
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class LinkTypeService {
@@ -49,7 +49,7 @@ export class LinkTypeService {
 
   public deleteLinkType(id: string): Observable<string> {
     return this.httpClient.delete(this.restApiPrefix(id))
-      .pipe(switchMap(() => Observable.of(id)));
+      .pipe(map(() => id));
   }
 
   public getLinkTypes(query: Query): Observable<LinkType[]> {

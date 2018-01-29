@@ -20,7 +20,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {map, skipWhile} from 'rxjs/operators';
+import {skipWhile} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../core/store/app.state';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
@@ -66,12 +66,11 @@ export class SmartDocBottomPanelComponent implements OnInit, OnDestroy {
     if (this.part.linkTypeId) {
       this.linkTypeSubscription = Observable.combineLatest(
         this.store.select(selectLinkTypeById(this.part.linkTypeId)),
-        this.store.select(selectAllCollections).pipe(
-          map(collections => new Map(collections.map(collection => [collection.id, collection] as [string, CollectionModel])))
-        )
+        this.store.select(selectAllCollections)
       ).pipe(
         skipWhile(([linkType]) => !linkType)
-      ).subscribe(([linkType, collectionsMap]) => {
+      ).subscribe(([linkType, allCollections]) => {
+        const collectionsMap = new Map(allCollections.map(collection => [collection.id, collection] as [string, CollectionModel]));
         const collections: [CollectionModel, CollectionModel] = [collectionsMap.get(linkType.collectionIds[0]), collectionsMap.get(linkType.collectionIds[1])];
         this.linkType = {...linkType, collections};
       });

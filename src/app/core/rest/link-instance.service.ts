@@ -26,7 +26,7 @@ import {LinkInstance, Query} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
-import {switchMap} from "rxjs/operators";
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class LinkInstanceService {
@@ -48,7 +48,7 @@ export class LinkInstanceService {
 
   public deleteLinkInstance(id: string): Observable<string> {
     return this.httpClient.delete(this.restApiPrefix(id))
-      .pipe(switchMap(() => Observable.of(id)));
+      .pipe(map(() => id));
   }
 
   public getLinkInstances(query: Query): Observable<LinkInstance[]> {
@@ -60,7 +60,7 @@ export class LinkInstanceService {
     const projectCode = this.workspace.projectCode;
     const suffix = id ? `/${id}` : '';
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/link-instances`;
+    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/link-instances${suffix}`;
   }
 
 }
