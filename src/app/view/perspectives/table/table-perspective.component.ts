@@ -28,6 +28,7 @@ import {Attribute, Collection, Document, LinkInstance, LinkType, Query} from '..
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {CollectionService, DocumentService, LinkInstanceService, LinkTypeService} from '../../../core/rest';
 import {AppState} from '../../../core/store/app.state';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {selectNavigation, selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {TableConfigModel, ViewConfigModel} from '../../../core/store/views/view.model';
@@ -108,7 +109,9 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
     this.collectionsSubscription = this.store.select(selectCollectionsDictionary)
       .pipe(first())
       .subscribe(collectionsMap => {
-        this.query.collectionIds = this.query.collectionCodes.map(code => collectionsMap[code].id)
+        if (this.query.collectionCodes) {
+          this.query.collectionIds = this.query.collectionCodes.map(code => collectionsMap[code].id);
+        }
         this.createDefaultConfigFromQuery();
         this.fetchDataAndCreateTable();
       });
@@ -158,7 +161,9 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   }
 
   public isDisplayable(): boolean {
-    return this.query && this.query.collectionCodes && this.query.collectionCodes.length === 1;
+    return this.query && (
+      (this.query.collectionCodes && this.query.collectionCodes.length === 1) || (this.query.collectionIds && this.query.collectionIds.length === 1)
+    );
   }
 
   public extractConfig(): any {

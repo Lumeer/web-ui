@@ -190,8 +190,10 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
 
   private filterDocuments(documents: DocumentModel[]): DocumentModel[] {
     return documents.filter(doc => {
-      if (!this.query || (!this.query.collectionCodes && !this.query.collectionIds) ||
-        (!this.query.collectionCodes.includes(doc.collectionCode) && !this.query.collectionIds.includes(doc.collectionId))) {
+      if (!this.query || (
+          (!this.query.collectionCodes || !this.query.collectionCodes.includes(doc.collectionCode)) &&
+          (!this.query.collectionIds || !this.query.collectionIds.includes(doc.collectionId)))
+      ) {
         return false;
       }
 

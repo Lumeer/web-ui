@@ -21,9 +21,10 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, skipWhile, switchMap, tap, withLatestFrom, mergeMap} from 'rxjs/operators';
+import {catchError, map, mergeMap, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
+import {selectCollectionsDictionary} from '../collections/collections.state';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {QueryHelper} from '../navigation/query.helper';
@@ -31,7 +32,6 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {LinkTypeConverter} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {selectLinkTypesQueries} from './link-types.state';
-import {selectCollectionsDictionary} from "../collections/collections.state";
 
 @Injectable()
 export class LinkTypesEffects {
@@ -44,7 +44,7 @@ export class LinkTypesEffects {
     switchMap(([action]) => {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
-      return this.linkTypeService.getLinkTypes(action.payload.query).pipe(
+      return this.linkTypeService.getLinkTypes(queryDto).pipe(
         map(dtos => ({action, linkTypes: dtos.map(dto => LinkTypeConverter.fromDto(dto))}))
       );
     }),
@@ -62,11 +62,10 @@ export class LinkTypesEffects {
     const collectionCodes = action.payload.query.collectionCodes;
     const collectionIds = action.payload.query.collectionIds || [];
     if (!collectionCodes || collectionCodes.length == 0) return Observable.of(action);
-    return Observable.of().pipe(
-      withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+    return this.store$.select(selectCollectionsDictionary).pipe(
       map(collections => {
         const convertedIds = collectionCodes.map(code => collections[code].id);
-        return {...action, collectionCodes: null, collectionIds: [collectionIds.concat(convertedIds)]}
+        return {...action, collectionCodes: null, collectionIds: [collectionIds.concat(convertedIds)]};
       })
     );
   }

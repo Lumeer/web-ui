@@ -24,7 +24,7 @@ import {map, skipWhile} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../core/store/app.state';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {selectAllCollections, selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
+import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
 import {SmartDocPartModel} from '../../../../core/store/smartdoc/smartdoc.model';
@@ -72,7 +72,7 @@ export class SmartDocBottomPanelComponent implements OnInit, OnDestroy {
       ).pipe(
         skipWhile(([linkType]) => !linkType)
       ).subscribe(([linkType, collectionsMap]) => {
-        const collections: [CollectionModel, CollectionModel] = [collectionsMap[linkType.collectionIds[0]], collectionsMap[linkType.collectionIds[1]]];
+        const collections: [CollectionModel, CollectionModel] = [collectionsMap.get(linkType.collectionIds[0]), collectionsMap.get(linkType.collectionIds[1])];
         this.linkType = {...linkType, collections};
       });
     }
