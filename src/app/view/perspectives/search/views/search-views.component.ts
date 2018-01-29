@@ -21,38 +21,43 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 
 import {View} from '../../../../core/dto/view';
-import {Subscription} from 'rxjs/Subscription';
-import {map, switchMap} from 'rxjs/operators';
 import {SearchService} from '../../../../core/rest/search.service';
 import {AppState} from '../../../../core/store/app.state';
-import {DeprecatedQueryConverter} from '../../../../shared/utils/query-converter';
-import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
+import {Observable} from "rxjs/Observable";
+import {selectViewsByQuery} from "../../../../core/store/views/views.state";
+import {ViewsAction, ViewsActionType} from "../../../../core/store/views/views.action";
+import {selectNavigation} from "../../../../core/store/navigation/navigation.state";
+import {Subscription} from "rxjs/Subscription";
+import {perspectiveIconsMap} from "../../perspective";
 
 @Component({
   templateUrl: './search-views.component.html'
 })
 export class SearchViewsComponent implements OnInit, OnDestroy {
 
-  public views: View[];
+  public views$: Observable<View[]>;
 
-  private routerSubscription: Subscription;
+  private navigationSubscription: Subscription;
 
   constructor(private searchService: SearchService,
               private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.routerSubscription = this.store.select(selectNavigation).pipe(
-      map(navigation => navigation.query),
-      map(query => DeprecatedQueryConverter.removeLinksFromQuery(query)),
-      switchMap(query => this.searchService.searchViews(query)),
-    ).subscribe(views => this.views = views);
+    this.views$ = this.store.select(selectViewsByQuery);
+    this.navigationSubscription = this.store.select(selectNavigation).subscribe(
+      navigation => this.store.dispatch(new ViewsAction.Get({query: navigation.query}))
+    );
   }
 
   public ngOnDestroy() {
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
     }
+  }
+
+  public getIconForPerspective(perspective: string): string {
+    return perspectiveIconsMap[perspective] || '';
   }
 
 }

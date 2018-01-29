@@ -1,9 +1,13 @@
-<div class="mt-2" *ngIf="views">
-  <div *ngIf="views.length == 0" class="alert alert-warning" i18n="@@search.result.empty">
+<div class="mt-2" *ngIf="views$ | async as views">
+  <ng-container *ngIf="views.length; else noViews">
+    <div *ngFor="let view of views">
+      <div class="d-flex flex-row">
+        <i class="fa fa-fw {{getIconForPerspective(view.perspective)}} align-self-center" aria-hidden="true"></i>
+        <span class="ml-1 text-nowrap">{{view.name}}</span>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template class="alert alert-warning" #noViews i18n="@@search.perspective.result.empty">
     We are sorry, but we have not found anything. Please do a more accurate search.
-  </div>
-
-  <div *ngIf="views.length > 0" class="alert alert-warning">
-    Views search results page has not been implemented yet.
-  </div>
+  </ng-template>
 </div>
