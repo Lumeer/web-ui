@@ -17,13 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection, View, LinkType} from './';
+import {ViewModel} from '../../../../core/store/views/view.model';
+import {perspectiveIconsMap} from '../../../../view/perspectives/perspective';
+import {QueryItem} from './query-item';
+import {QueryItemType} from './query-item-type';
 
-export interface Suggestions {
+export class ViewQueryItem implements QueryItem {
 
-  attributes: Collection[];
-  collections: Collection[];
-  views: View[];
-  linkTypes: LinkType[];
+  public type = QueryItemType.View;
+
+  public icons: string[];
+
+  public constructor(public view: ViewModel) {
+    this.icons = [perspectiveIconsMap[view.perspective]];
+  }
+
+  public get text(): string {
+    return this.view.name;
+  }
+
+  public get value(): string {
+    return this.view.code;
+  }
+
+  public isComplete(): boolean {
+    return !!this.view;
+  }
 
 }

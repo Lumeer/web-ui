@@ -17,13 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum QueryItemType {
+import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
+import {QueryItem} from './query-item';
+import {QueryItemType} from './query-item-type';
 
-  Attribute = 'Attribute',
-  Collection = 'Collection',
-  Fulltext = 'Fulltext',
-  View = 'View',
-  Condition = 'Condition',
-  Link = 'Link'
+export class LinkQueryItem implements QueryItem {
+
+  public type = QueryItemType.Link;
+
+  public icons: string[];
+  public colors: string[];
+
+  public constructor(public linkType: LinkTypeModel) {
+    this.icons = linkType.collections.map(collection => collection.icon);
+    this.colors = linkType.collections.map(collection => collection.color);
+  }
+
+  public get text(): string {
+    return this.linkType.name;
+  }
+
+  public get value(): string {
+    return this.linkType.id;
+  }
+
+  public isComplete(): boolean {
+    return true;
+  }
 
 }

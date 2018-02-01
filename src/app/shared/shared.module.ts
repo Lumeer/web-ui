@@ -17,23 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
+import {CommentsComponent} from './comments/comments.component';
+import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
+import {LinksComponent} from './links/links.component';
 
 import {PermissionsComponent} from './permissions/permissions.component';
 import {PermissionsTableComponent} from './permissions/table/permissions-table.component';
-import {SearchBoxComponent} from './search-box/search-box.component';
-import {PostItCollectionsComponent} from './post-it-collections/post-it-collections.component';
-import {PickerModule} from './picker/picker.module';
-import {RouterModule} from '@angular/router';
-import {HighlightPipe} from './highlight.pipe';
-import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
-import {SizeSliderComponent} from './slider/size-slider.component';
-import {CommentsComponent} from './comments/comments.component';
-import {LinksComponent} from './links/links.component';
 import {PerspectiveDirective} from './perspective.directive';
-import { LayoutItem } from './utils/layout/layout-item.directive';
+import {PickerModule} from './picker/picker.module';
+import {PostItCollectionsComponent} from './post-it-collections/post-it-collections.component';
+import {SearchBoxModule} from './search-box/search-box.module';
+import {SizeSliderComponent} from './slider/size-slider.component';
+import {LayoutItem} from './utils/layout/layout-item.directive';
 
 @NgModule({
   imports: [
@@ -41,14 +40,13 @@ import { LayoutItem } from './utils/layout/layout-item.directive';
     FormsModule,
     RouterModule,
     PickerModule,
-    DragAndDropModule
+    DragAndDropModule,
+    SearchBoxModule
   ],
   declarations: [
-    HighlightPipe,
     PermissionsComponent,
     PermissionsTableComponent,
     PostItCollectionsComponent,
-    SearchBoxComponent,
     SizeSliderComponent,
     CommentsComponent,
     LinksComponent,
@@ -59,14 +57,13 @@ import { LayoutItem } from './utils/layout/layout-item.directive';
     CommonModule,
     DragAndDropModule,
     FormsModule,
-    HighlightPipe,
     PermissionsComponent,
     PostItCollectionsComponent,
-    SearchBoxComponent,
     SizeSliderComponent,
     CommentsComponent,
     LinksComponent,
-    PerspectiveDirective
+    PerspectiveDirective,
+    SearchBoxModule
   ]
 })
 export class SharedModule {

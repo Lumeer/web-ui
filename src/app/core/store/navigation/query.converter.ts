@@ -53,7 +53,7 @@ export class QueryConverter {
 
   public static toString(query: QueryModel): string {
     return JSON.stringify(query ? query : {}, (key, value) => {
-      if (value instanceof Array && value.length === 0) {
+      if (!value || (value instanceof Array && value.length === 0)) {
         return undefined;
       }
       return value;

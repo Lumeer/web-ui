@@ -17,44 +17,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {Collection} from '../../../core/dto/collection';
-import {CollectionQueryItem} from './collection-query-item';
-import {ConditionQueryItem} from './condition-query-item';
-import {LinkType} from '../../../core/dto/link-type';
 
-export class LinkQueryItem implements QueryItem {
+export class AttributeQueryItem implements QueryItem {
 
-  public type = QueryItemType.Link;
+  public type = QueryItemType.Attribute;
 
-  public id: string;
-  public name: string;
-  public icon: string;
-  public color: string;
-  public icon2: string;
-  public color2: string;
-
-  public constructor(linkType: LinkType, collection1: Collection, collection2: Collection) {
-    this.id = linkType.id;
-    this.name = linkType.name;
-    this.icon = collection1.icon;
-    this.color = collection1.color;
-    this.icon2 = collection2.icon;
-    this.color2 = collection2.color;
+  public constructor(public collection: CollectionModel,
+                     public attribute: AttributeModel,
+                     public condition: string) {
   }
 
-  public get text(): string {
-    return this.name;
+  public get text() {
+    return this.attribute.name;
   }
 
-  public get value(): string {
-    return this.id;
+  public get value() {
+    return this.getFilter();
+  }
+
+  public get icons(): string[] {
+    return [this.collection.icon];
+  }
+
+  public get colors(): string[] {
+    return [this.collection.color];
   }
 
   public isComplete(): boolean {
-    return true;
+    return !!this.condition; // TODO add condition validation
   }
 
+  public getFilter(): string {
+    return `${this.collection.id}:${this.attribute.id}:${this.condition}`;
+  }
 
 }

@@ -1,0 +1,7 @@
+<div class="d-inline-flex" [class.font-weight-bold]="isCollectionItem()">
+  <query-item-icons [queryItem]="suggestion"></query-item-icons>
+  <span [innerHtml]="!isFulltextItem() ? (suggestion.text | truncate:40 | highlight:text) : (suggestion.text | truncate:40)"
+        [title]="suggestion.text"
+        class="ml-2"></span>
+</div>
+<span class="font-weight-light font-italic ml-3">{{suggestion.type}}</span>

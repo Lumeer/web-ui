@@ -17,27 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 
-export class FulltextQueryItem implements QueryItem {
+export class CollectionQueryItem implements QueryItem {
 
-  public type = QueryItemType.Fulltext;
+  public type = QueryItemType.Collection;
 
-  public text: string;
-  public icon: string;
-  public color: string;
+  public constructor(public collection: CollectionModel) {
+  }
 
-  public constructor(text: string) {
-    this.text = text;
+  public get text(): string {
+    return this.collection.name;
   }
 
   public get value(): string {
-    return this.text;
+    return this.collection.code; // TODO use collectionID
+  }
+
+  public get icons(): string[] {
+    return [this.collection.icon];
+  }
+
+  public get colors(): string[] {
+    return [this.collection.color];
   }
 
   public isComplete(): boolean {
-    return this.text !== '';
+    return true;
   }
 
 }

@@ -17,12 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {AttributeQueryItem} from './attribute-query-item';
-export {CollectionQueryItem} from './collection-query-item';
-export {ConditionQueryItem} from './condition-query-item';
-export {FulltextQueryItem} from './fulltext-query-item';
-export {LinkQueryItem} from './link-query-item';
-export {QueryItem} from './query-item';
-export {QueryItemType} from './query-item-type';
-export {QueryItemsConverter} from './query-items-converter';
-export {ViewQueryItem} from './view-query-item';
+import {Pipe, PipeTransform} from '@angular/core';
+
+@Pipe({
+  name: 'truncate'
+})
+export class TruncatePipe implements PipeTransform {
+
+  public transform(value: string, limit: number): any {
+    const trail = '...';
+    return value.length > limit ? value.substring(0, limit) + trail : value;
+  }
+
+}

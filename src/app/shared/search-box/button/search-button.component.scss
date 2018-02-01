@@ -1,0 +1,12 @@
+@import "../../variables";
+
+.search-button {
+  background: transparent;
+  border: 0;
+  color: $success;
+
+  &:hover {
+    background-color: $success;
+    color: $white;
+  }
+}

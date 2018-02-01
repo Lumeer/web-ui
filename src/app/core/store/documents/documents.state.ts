@@ -25,7 +25,7 @@ import {selectQuery} from '../navigation/navigation.state';
 import {QueryModel} from '../navigation/query.model';
 
 import {DocumentModel} from './document.model';
-import {isNullOrUndefined} from 'util';
+import {DocumentsFilters} from './documents.filters';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   queries: QueryModel[];
@@ -47,7 +47,7 @@ export const selectDocumentsByQuery = createSelector(
   selectCollectionsDictionary,
   selectQuery,
   (documents, collections, query): DocumentModel[] => {
-    documents = filterDocumentsByQuery(documents, query);
+    documents = DocumentsFilters.filterByQuery(documents, query);
 
     return documents
       .filter(document => typeof(document) !== 'function')
@@ -64,23 +64,10 @@ export function selectDocumentsByCustomQuery(query: QueryModel) {
     (documents, collections): DocumentModel[] => {
       documents = documents.filter(document => typeof(document) !== 'function');
 
-      return filterDocumentsByQuery(documents, query)
+      return DocumentsFilters.filterByQuery(documents, query)
         .map(document => {
           return {...document, collection: collections[document.collectionCode]};
         });
     }
   );
 }
-
-const filterDocumentsByQuery = (documents: DocumentModel[], query: QueryModel): DocumentModel[] => {
-  // TODO implement the rest of updating on backend
-  if (query.collectionCodes && query.collectionCodes.length) {
-    documents = documents.filter(document => query.collectionCodes.includes(document.collectionCode));
-  }
-
-  if (!isNullOrUndefined(query.page) && !isNullOrUndefined(query.pageSize)) {
-    documents = documents.slice(query.page * query.pageSize, (query.page + 1) * query.pageSize);
-  }
-
-  return documents;
-};

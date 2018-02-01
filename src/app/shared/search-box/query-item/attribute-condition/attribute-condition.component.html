@@ -1,0 +1,20 @@
+<span #conditionInput
+      [attr.contenteditable]="!readonly"
+      [class.invalid]="!queryItem.isComplete()"
+      [textContent]="queryItem.condition"
+      (blur)="onBlur()"
+      (focus)="onFocus()"
+      (input)="onInput($event)"
+      (keydown)="onKeyDown($event)"
+      (keyup.enter)="onEnterKeyUp()"
+      class="condition px-1"
+      spellcheck="false">
+</span>
+
+<condition-suggestions *ngIf="!readonly && focused"
+                       [attribute]="queryItem.attribute"
+                       [text]="this.queryItem.condition"
+                       [moveSelection$]="moveSuggestionSelection$"
+                       [useSelection$]="useSuggestionSelection$"
+                       (useSuggestion)="onUseSuggestion($event)">
+</condition-suggestions>

@@ -1,0 +1,22 @@
+<!-- TODO remove once Angular supports ICU messages in attributes -->
+<div hidden>
+  <span #inputPlaceholder i18n="@@search.input.placeholder">
+    {queryItems.length, select, 0 {Type anything you search for...} other {}}
+  </span>
+</div>
+
+<input #searchInput
+       [(ngModel)]="text"
+       [placeholder]="removeHtmlComments(inputPlaceholder)"
+       (blur)="onBlur()"
+       (focus)="onFocus()"
+       (keydown)="onKeyDown($event)"
+       (keyup.enter)="onEnterKeyUp()"
+       class="w-100 py-1 px-2"/>
+
+<search-suggestions [queryItems]="queryItems"
+                    [moveSelection$]="moveSuggestionSelection$"
+                    [useSelection$]="useSuggestionSelection$"
+                    [text]="suggesting ? text : ''"
+                    (useSuggestion)="onUseSuggestion($event)">
+</search-suggestions>

@@ -17,518 +17,169 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  QueryList,
-  ViewChild,
-  ViewChildren
-} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {Subject, Subscription} from 'rxjs';
-import 'rxjs/add/observable/of';
+import {ViewQueryItem} from 'app/shared/search-box/query-item/model/view.query-item';
 import {Observable} from 'rxjs/Observable';
-import {catchError, debounceTime, map, startWith, switchMap} from 'rxjs/operators';
-import {Collection, LinkType, Query, Suggestions, SuggestionType, View} from '../../core/dto';
-import {CollectionService, LinkTypeService, SearchService, ViewService} from '../../core/rest';
+import {flatMap, map, skipWhile} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../core/store/app.state';
-import {selectNavigation} from '../../core/store/navigation/navigation.state';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {selectAllCollections} from '../../core/store/collections/collections.state';
+import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
+import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
+import {selectNavigation, selectQuery} from '../../core/store/navigation/navigation.state';
+import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
-import {KeyCode} from '../key-code';
-import {HtmlModifier} from '../utils/html-modifier';
-import {
-  AttributeQueryItem,
-  CollectionQueryItem,
-  ConditionQueryItem,
-  FulltextQueryItem,
-  LinkQueryItem,
-  QueryItem,
-  QueryItemsConverter,
-  QueryItemType,
-  ViewQueryItem
-} from './query-item';
+import {ViewModel} from '../../core/store/views/view.model';
+import {Perspective} from '../../view/perspectives/perspective';
+import {QueryData} from './query-data';
+import {QueryItem} from './query-item/model/query-item';
+import {QueryItemType} from './query-item/model/query-item-type';
+import {QueryItemsConverter} from './query-item/query-items.converter';
 
 @Component({
   selector: 'search-box',
-  templateUrl: './search-box.component.html',
-  styleUrls: ['./search-box.component.scss'],
-  providers: [QueryItemsConverter]
+  templateUrl: './search-box.component.html'
 })
-export class SearchBoxComponent implements OnInit, AfterViewInit {
-
-  @ViewChildren('queryItemCondition')
-  public conditions: QueryList<ElementRef>;
-
-  @ViewChild('searchBox')
-  public input: ElementRef;
+export class SearchBoxComponent implements OnInit, OnDestroy {
 
   public queryItems: QueryItem[] = [];
-  public suggestionItems: QueryItem[] = [];
-
-  private searchTerms = new Subject<string>();
-
-  public text: string = '';
-  public shouldShowSuggestions: boolean = false;
-  public selectedSuggestion: number = -1;
-  private shouldFocusCondition: boolean = false;
-  private selectedQueryItem: number = -1;
-  private textCopy: string = '';
-
-  private workspace: Workspace;
 
   private querySubscription: Subscription;
-  private viewSubscription: Subscription;
-  private storeSubscription: Subscription;
+  private navigationSubscription: Subscription;
 
-  private static readonly DEFAULT_COLOR = '#faeabb';
+  private workspace: Workspace;
+  private perspective: Perspective;
 
-  constructor(private collectionService: CollectionService,
-              private linkTypeService: LinkTypeService,
-              private queryItemsConverter: QueryItemsConverter,
-              private router: Router,
-              private store: Store<AppState>,
-              private searchService: SearchService,
-              private viewService: ViewService,
-              private ref: ChangeDetectorRef) {
+  constructor(private router: Router,
+              private store: Store<AppState>) {
   }
 
-  public ngOnInit(): void {
-    this.storeSubscription = this.store.select(selectNavigation).subscribe(navigation => {
-      this.workspace = navigation.workspace;
+  public ngOnInit() {
+    this.subscribeToQuery();
+    this.subscribeToNavigation();
 
-      if (navigation.searchBoxHidden) {
-        return;
-      }
-
-      if (this.workspace && this.workspace.viewCode) {
-        this.getQueryItemsFromView(this.workspace.viewCode);
-      } else {
-        this.getQueryItemsFromQuery(navigation.query);
-      }
-    });
-
-    this.suggestQueryItems();
+    this.getAllCollections();
+    this.getAllLinkTypes();
   }
 
-  public ngAfterViewInit(): void {
-    this.conditions.changes.subscribe(change => {
-      if (this.shouldFocusCondition && change.last) {
-        this.shouldFocusCondition = false;
-        setTimeout(() => change.last.nativeElement.focus());
-        this.selectedQueryItem = change.last.nativeElement.id;
-        this.suggestionItems = ConditionQueryItem.conditions.map(condition => new ConditionQueryItem(condition));
-        this.ref.detectChanges();
-      }
+  private subscribeToQuery() {
+    this.querySubscription = this.store.select(selectQuery).pipe(
+      flatMap(query => Observable.combineLatest(
+        Observable.of(query),
+        this.loadData(query)
+      )),
+      map(([query, data]) => new QueryItemsConverter(data).fromQuery(query)),
+    ).subscribe(queryItems => {
+      this.queryItems = queryItems;
     });
+  }
+
+  private subscribeToNavigation() {
+    this.navigationSubscription = this.store.select(selectNavigation)
+      .subscribe(navigation => {
+        this.workspace = navigation.workspace;
+        this.perspective = navigation.perspective;
+      });
+  }
+
+  private loadData(query: QueryModel): Observable<QueryData> {
+    return Observable.combineLatest(
+      this.store.select(selectAllCollections),
+      this.store.select(selectAllLinkTypes)
+    ).pipe(
+      map(([collections, linkTypes]) => {
+        return {
+          collections: collections.filter(collection => collection && collection.id),
+          linkTypes: linkTypes.filter(linkType => linkType && linkType.id) // TODO remove after NgRx bug is fixed
+        };
+      }),
+      skipWhile(({collections, linkTypes}) => {
+        const collectionIds = new Set(collections.map(collection => collection.id));
+        const collectionCodes = new Set(collections.map(collection => collection.code));
+        const linkTypeIds = new Set(linkTypes.map(linkType => {
+          linkType.collectionIds.forEach(collectionId => collectionIds.add(collectionId));
+          return linkType.id;
+        }));
+
+        return !query.collectionIds.every(collectionId => collectionIds.has(collectionId)) ||
+          !query.collectionCodes.every(collectionCode => collectionCodes.has(collectionCode)) ||
+          !query.linkTypeIds.every(linkTypeId => linkTypeIds.has(linkTypeId));
+      })
+    );
+  }
+
+  private getAllCollections() {
+    this.store.dispatch(new CollectionsAction.Get({query: {}}));
+  }
+
+  private getAllLinkTypes() {
+    this.store.dispatch(new LinkTypesAction.Get({query: {}}));
   }
 
   public ngOnDestroy() {
     if (this.querySubscription) {
       this.querySubscription.unsubscribe();
     }
-    if (this.viewSubscription) {
-      this.viewSubscription.unsubscribe();
-    }
-    if (this.storeSubscription) {
-      this.storeSubscription.unsubscribe();
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
     }
   }
 
-  private getQueryItemsFromQuery(query: Query) {
-    if (!query) {
-      return;
-    }
-
-    this.querySubscription = this.queryItemsConverter.fromQuery(query).subscribe(queryItems => {
-      if (this.queryItems.length === 0) {
-        this.queryItems = queryItems;
-      }
-    });
-  }
-
-  private getQueryItemsFromView(viewCode: string) {
-    this.viewSubscription = this.viewService.getView(viewCode).pipe(
-      switchMap(view => view ? this.queryItemsConverter.fromQuery(view.query) : Observable.of([])),
-      map(queryItems => queryItems.filter(queryItem => !!queryItem))
-    ).subscribe(queryItems => {
-      if (this.queryItems.length === 0) {
-        this.queryItems = queryItems;
-      }
-    });
-  }
-
-  private suggestQueryItems() {
-    this.searchTerms.pipe(
-      startWith(''),
-      debounceTime(300),
-      switchMap(text => this.retrieveSuggestions(text)),
-      switchMap(suggestions => this.searchViews(suggestions)),
-      switchMap(suggestions => this.searchLinkTypes(suggestions)),
-      switchMap(suggestions => this.convertSuggestionsToQueryItems(suggestions)),
-      map(queryItems => this.filterUsedQueryItems(queryItems)),
-      catchError(error => {
-        console.error(error); // TODO: add real error handling
-        return Observable.of<QueryItem[]>();
-      })
-    ).subscribe(items => {
-      this.selectedSuggestion = -1;
-      this.suggestionItems = items;
-    });
-  }
-
-  private searchViews(suggestions: Suggestions): Observable<Suggestions> {
-    if (this.queryItems.length > 0) {
-      return Observable.of(suggestions);
-    }
-    return this.viewService.getViews().pipe(
-      switchMap(views => {
-        suggestions.views = [];
-        for (let view of views) {
-          if (view.name.toLowerCase().startsWith(this.text.toLowerCase())) {
-            suggestions.views.push(view);
-          }
-        }
-        return Observable.of(suggestions);
-      })
-    );
-  }
-
-  private searchLinkTypes(suggestions: Suggestions): Observable<Suggestions> {
-    if (this.isViewItemPresented()) {
-      return Observable.of(suggestions);
-    }
-    suggestions.links = [];
-
-    return this.linkTypeService.getLinkTypes({}).pipe(
-      map(linkTypes => {
-        const linkTypeSuggestions = linkTypes.filter(linkType => linkType.name.toLowerCase().startsWith(this.text.toLowerCase()));
-        suggestions.links.push(...linkTypeSuggestions);
-        return suggestions;
-      })
-    );
-  }
-
-  private retrieveSuggestions(text: string): Observable<Suggestions> {
-    if (text && !this.isViewItemPresented()) {
-      return this.searchService.suggest(text.toLowerCase(), SuggestionType.All);
-    }
-    return Observable.of<Suggestions>();
-  }
-
-  private isViewItemPresented(): boolean {
-    return this.queryItems.length === 1 && this.queryItems[0].type === QueryItemType.View;
-  }
-
-  private convertSuggestionsToQueryItems(suggestions: Suggestions): Observable<QueryItem[]> {
-    let suggestedQueryItems: QueryItem[] = [];
-    suggestedQueryItems = suggestedQueryItems.concat(this.createCollectionQueryItems(suggestions.collections));
-    suggestedQueryItems = suggestedQueryItems.concat(this.createAttributeQueryItems(suggestions.attributes));
-    suggestedQueryItems = suggestedQueryItems.concat(this.createViewsQueryItems(suggestions.views));
-    if (!this.isFullTextQueryPresented()) {
-      suggestedQueryItems.push(new FulltextQueryItem(this.text));
-    }
-
-    const ids = new Set<string>();
-    if (suggestions.links) {
-      suggestions.links.forEach(link => {
-        ids.add(link.collectionIds[0]);
-        ids.add(link.collectionIds[1]);
-      });
-    }
-    if (ids.size > 0) {
-      return this.searchService.searchCollections({collectionIds: Array.from(ids)})
-        .pipe(
-          map((collections: Collection[]) => this.mapCollectionsAndLinks(suggestedQueryItems, collections, suggestions.links))
-        );
-    }
-    return Observable.of(suggestedQueryItems);
-  }
-
-  private mapCollectionsAndLinks(itemsToPush: QueryItem[], collections: Collection[], links: LinkType[]): QueryItem[] {
-    links.forEach(link => {
-      const coll1 = collections.find(collection => collection.id === link.collectionIds[0]);
-      const coll2 = collections.find(collection => collection.id === link.collectionIds[1]);
-      if (coll1 && coll2) {
-        itemsToPush.push(new LinkQueryItem(link, coll1, coll2));
-      }
-    });
-    return itemsToPush;
-  }
-
-  private filterUsedQueryItems(queryItems: QueryItem[]): QueryItem[] {
-    return queryItems.filter(queryItem => !this.queryItems.find(usedItem => usedItem.value === queryItem.value));
-  }
-
-  private createAttributeQueryItems(collections: Collection[]): QueryItem[] {
-    return collections.map(collection => new AttributeQueryItem(collection));
-  }
-
-  private createCollectionQueryItems(collections: Collection[]): QueryItem[] {
-    return collections.map(collection => new CollectionQueryItem(collection));
-  }
-
-  private createViewsQueryItems(views: View[]): QueryItem[] {
-    return views.map(view => new ViewQueryItem(view));
+  public onAddQueryItem(queryItem: QueryItem) {
+    this.queryItems.push(queryItem);
   }
 
   public onRemoveQueryItem(index: number) {
-    let numToDelete = 1;
-    if (this.queryItems[index].type === QueryItemType.Collection && index + 1 < this.queryItems.length) {
-      for (let i = index + 1; i < this.queryItems.length; i++) {
-        if (this.queryItems[i].type === QueryItemType.Attribute) {
-          numToDelete++;
-        } else {
-          break;
-        }
-      }
-    }
-    this.queryItems.splice(index, numToDelete);
+    this.queryItems.splice(index, 1);
   }
 
-  public onKeyUp(event: KeyboardEvent) {
-    switch (event.keyCode) {
-      case KeyCode.Enter:
-      case KeyCode.UpArrow:
-      case KeyCode.DownArrow:
-        return;
-      case KeyCode.Backspace:
-      default:
-        this.suggest();
-    }
+  public onRemoveLastQueryItem() {
+    this.queryItems.pop();
   }
 
-  public onKeyDown(event: KeyboardEvent) {
-    switch (event.keyCode) {
-      case KeyCode.Backspace:
-        this.removeItem();
-        return;
-      case KeyCode.Enter:
-        event.preventDefault();
-        this.addItemOrSearch();
-        return;
-      case KeyCode.DownArrow:
-        this.incSelectedSuggestionAndEditText();
-        return;
-      case KeyCode.UpArrow:
-        this.decSelectedSuggestionAndEditText();
-        return;
-    }
-  }
-
-  public onKeyDownCondition(event: KeyboardEvent, id: number) {
-    switch (event.keyCode) {
-      case KeyCode.Enter:
-        event.preventDefault();
-        if (this.selectedSuggestion >= 0) {
-          this.addCondition(id);
-        } else {
-          this.input.nativeElement.focus();
-        }
-        return;
-      case KeyCode.DownArrow:
-        this.incSelectedSuggestion();
-        return;
-      case KeyCode.UpArrow:
-        this.decSelectedSuggestion();
-        return;
-    }
-  }
-
-  public onConditionBlur() {
-    this.clearSuggestions();
-    this.selectedQueryItem = -1;
-  }
-
-  private addCondition(ix: number) {
-    this.queryItems[ix].condition = this.suggestionItems[this.selectedSuggestion].text;
-    this.findConditionElementAndFocus(ix);
-    this.clearSuggestions();
-  }
-
-  private incSelectedSuggestion() {
-    if (this.selectedSuggestion + 1 >= this.suggestionItems.length) {
-      this.selectedSuggestion = this.suggestionItems.length - 1;
-      return;
-    }
-    this.selectedSuggestion++;
-  }
-
-  private decSelectedSuggestion() {
-    if (this.selectedSuggestion <= -1) {
-      this.selectedSuggestion = -1;
-      return;
-    }
-    this.selectedSuggestion--;
-  }
-
-  private incSelectedSuggestionAndEditText() {
-    if (this.selectedSuggestion + 1 >= this.suggestionItems.length) {
-      this.selectedSuggestion = this.suggestionItems.length - 1;
-      return;
-    }
-    if (this.selectedSuggestion === -1) {
-      this.textCopy = this.text;
-    }
-    this.selectedSuggestion++;
-    this.text = this.suggestionItems[this.selectedSuggestion].text;
-  }
-
-  private decSelectedSuggestionAndEditText() {
-    if (this.selectedSuggestion <= -1) {
-      this.selectedSuggestion = -1;
-      return;
-    }
-    if (this.selectedSuggestion === 0) {
-      this.selectedSuggestion = -1;
-      this.text = this.textCopy;
-    } else {
-      this.selectedSuggestion--;
-      this.text = this.suggestionItems[this.selectedSuggestion].text;
-    }
-  }
-
-  private removeItem() {
-    if (this.text === '') {
-      event.preventDefault();
-      this.queryItems.pop();
-    }
-  }
-
-  private addItemOrSearch() {
-    if (this.selectedSuggestion >= 0 && this.selectedSuggestion < this.suggestionItems.length) {
-      this.addQueryItem(this.suggestionItems[this.selectedSuggestion]);
-    } else {
-      this.search();
-    }
-  }
-
-  public suggest(): void {
-    if (this.text === '') {
-      this.clearSuggestions();
-    } else {
-      this.showSuggestions();
-    }
-    this.searchTerms.next(this.text);
-  }
-
-  public showSuggestions() {
-    this.shouldShowSuggestions = true;
-  }
-
-  public hideSuggestions() {
-    this.shouldShowSuggestions = false;
-  }
-
-  public clearSuggestions() {
-    this.suggestionItems = [];
-    this.selectedSuggestion = -1;
-  }
-
-  public onSuggestionClick(queryItem: QueryItem): void {
-    this.addQueryItem(queryItem);
-  }
-
-  public onButtonClick() {
-    this.search();
-  }
-
-  public search(): void {
-    if (this.isViewItemPresented()) {
-      this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: this.queryItems[0].value}]);
+  public onSearch(redirect?: boolean) {
+    if (!this.areAllQueryItemsCompleted()) {
       return;
     }
 
-    const items = this.queryItems.filter(item => item.isComplete());
-
-    this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', 'search', 'all'], {
-      queryParams: {
-        query: this.queryItemsConverter.toQueryString(items)
-      },
-      queryParamsHandling: 'merge'
-    });
-  }
-
-  private addQueryItem(queryItem: QueryItem) {
-    if (!queryItem) {
+    if (this.showView()) {
       return;
     }
-    if (queryItem.type === QueryItemType.Condition) {
-      if (this.selectedQueryItem >= 0 && this.queryItems[this.selectedQueryItem].type === QueryItemType.Attribute) {
-        (this.queryItems[this.selectedQueryItem] as AttributeQueryItem).condition = queryItem.text;
-        this.findConditionElementAndFocus(this.selectedQueryItem);
-      }
-    } else {
-      if (queryItem.type === QueryItemType.Attribute) {
-        const collectionItem = (queryItem as AttributeQueryItem).toCollectionQueryItem();
 
-        if (!collectionItem) {
-          return;
-        }
+    this.showByQueryItems(redirect);
+  }
 
-        if (this.queryItems.length === 0 || !this.isOneOfLastItems(collectionItem)) {
-          this.queryItems.push(collectionItem);
-        }
-        this.shouldFocusCondition = true;
-      }
-      this.queryItems.push(queryItem);
-      this.text = '';
+  private areAllQueryItemsCompleted(): boolean {
+    return this.queryItems.every(item => item.isComplete());
+  }
+
+  private showView(): boolean {
+    const viewQueryItem = this.queryItems.find(item => item.type === QueryItemType.View) as ViewQueryItem;
+
+    if (viewQueryItem) {
+      this.navigateToView(viewQueryItem.view);
     }
-    this.clearSuggestions();
+
+    return !!viewQueryItem;
   }
 
-  private findConditionElementAndFocus(id: number) {
-    const conditionElement = this.findConditionElement(id);
-    if (conditionElement) {
-      setTimeout(() => {
-        conditionElement.nativeElement.focus();
-        HtmlModifier.setCursorAtTextContentEnd(conditionElement.nativeElement);
-      });
-    }
+  private navigateToView(view: ViewModel) {
+    this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}]);
   }
 
-  private findConditionElement(id: number): ElementRef {
-    const filtered = this.conditions.filter(element => element.nativeElement.id === id);
-    return filtered.length === 1 ? filtered[0] : undefined;
+  private showByQueryItems(redirect: boolean) {
+    const completedQueryItems = this.queryItems.filter(queryItem => queryItem.isComplete());
+    const query = QueryItemsConverter.toQueryString(completedQueryItems);
+    this.navigateToQuery(query, redirect);
   }
 
-  private isOneOfLastItems(queryItem: CollectionQueryItem): boolean {
-    if (this.queryItems.length > 0) {
-      for (let i = this.queryItems.length - 1; i >= 0; i--) {
-        const item = this.queryItems[i];
-        if (item.type === QueryItemType.Collection) {
-          return item.value === queryItem.value;
-        }
-      }
-    }
-    return false;
-  }
-
-  public removeHtmlComments(html: HTMLElement): string {
-    return HtmlModifier.removeHtmlComments(html);
-  }
-
-  private isFullTextQueryPresented(): boolean {
-    return this.queryItems.some(item => item.type === QueryItemType.Fulltext);
-  }
-
-  public isCollectionItem(queryItem: QueryItem): boolean {
-    return queryItem.type === QueryItemType.Collection;
-  }
-
-  public queryItemBackground(queryItem: QueryItem): string {
-    if (queryItem && queryItem.color && queryItem.color2) {
-      return `linear-gradient(${this.lightenColor(queryItem.color)},${this.lightenColor(queryItem.color2)})`;
-    } else {
-      return this.lightenColor(queryItem && queryItem.color);
-    }
-  }
-
-  private lightenColor(color: string | undefined): string {
-    return color ? HtmlModifier.shadeColor(color, .5) : SearchBoxComponent.DEFAULT_COLOR;
+  private navigateToQuery(query: string, redirect: boolean) {
+    const searchUrl = ['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', 'search', 'all'];
+    const url = redirect || !this.perspective ? searchUrl : [];
+    this.router.navigate(url, {queryParams: {query}});
   }
 
 }
