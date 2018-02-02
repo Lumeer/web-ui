@@ -94,7 +94,8 @@ export class SearchInputComponent {
   }
 
   public onBackspaceKeyDown() {
-    if (!this.text) {
+    const {selectionStart, selectionEnd} = this.searchInput.nativeElement;
+    if (selectionStart === 0 && selectionEnd === 0) {
       this.removeQueryItem.emit();
     }
   }
