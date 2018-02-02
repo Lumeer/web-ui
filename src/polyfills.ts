@@ -63,6 +63,5 @@ import './assets/js/custom.js';
  */
 // import 'intl';  // Run `npm install --save intl`.
 
-window['Keycloak'] = require('./assets/js/keycloak.js');
 window['Muuri'] = require('../node_modules/muuri/muuri.min.js');
 

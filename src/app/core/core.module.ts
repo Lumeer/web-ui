@@ -29,8 +29,6 @@ import {SharedModule} from '../shared/shared.module';
 import {WorkspaceGuard} from '../workspace/workspace.guard';
 import {LumeerErrorHandler} from './error/lumeer-error.handler';
 import {HomeComponent} from './home.component';
-import {KEYCLOAK_HTTP_PROVIDER} from './keycloak/keycloak-http.service';
-import {KeycloakService} from './keycloak/keycloak.service';
 import {NotificationService} from './notifications/notification.service';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {CollectionService} from './rest/collection.service';
@@ -77,7 +75,6 @@ import {UserSettingsService} from './user-settings.service';
     SearchService,
     UserSettingsService,
     ImportService,
-    KeycloakService,
     UserService,
     GroupService,
     ViewService,
@@ -85,7 +82,6 @@ import {UserSettingsService} from './user-settings.service';
     LinkTypeService,
     EventService,
     HomePageService,
-    KEYCLOAK_HTTP_PROVIDER,
     {provide: ErrorHandler, useClass: LumeerErrorHandler},
     {provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     SnotifyService,

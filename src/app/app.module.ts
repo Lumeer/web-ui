@@ -17,13 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular';
 import {ContextMenuModule} from 'ngx-contextmenu';
 import {AppRoutingModule} from './app-routing.module';
-
 import {AppComponent} from './app.component';
+import {appInitializer} from './app.initializer';
 import {CollectionModule} from './collection/collection.module';
 import {CoreModule} from './core/core.module';
 import {DocumentsModule} from './documents/documents.module';
@@ -38,9 +39,18 @@ import {WorkspaceModule} from './workspace/workspace.module';
     CoreModule,
     CollectionModule,
     DocumentsModule,
+    KeycloakAngularModule,
     ViewModule,
     WorkspaceModule,
     AppRoutingModule // needs to stay last
+  ],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: appInitializer,
+      multi: true,
+      deps: [KeycloakService]
+    }
   ],
   declarations: [
     AppComponent
