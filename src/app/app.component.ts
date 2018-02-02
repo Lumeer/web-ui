@@ -19,10 +19,9 @@
 
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
-import * as jsSHA from 'jssha';
+import {KeycloakService} from 'keycloak-angular';
 
 import {SnotifyService} from 'ng-snotify';
-import {KeycloakService} from './core/keycloak/keycloak.service';
 
 @Component({
   selector: 'lmr-app',
@@ -35,32 +34,10 @@ import {KeycloakService} from './core/keycloak/keycloak.service';
 export class AppComponent implements OnInit {
 
   constructor(private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
+              private keycloakService: KeycloakService,
               private notificationService: SnotifyService) {
-    // this.getUserProfileFromKeycloak().then(profile => {
-    //   if (profile) {
-    //     const userHash = this.hashUserIdentifier(profile.email);
-    //     angulartics2GoogleAnalytics.setUsername(userHash);
-    //   }
-    // });
-  }
-
-  private hashUserIdentifier(identifier: string): string {
-    if (identifier) {
-      const sha3 = new jsSHA('SHA3-512', 'TEXT');
-      sha3.update(identifier);
-      return sha3.getHash('HEX');
-    }
-
-    return 'unknown';
-  }
-
-  private getUserProfileFromKeycloak(): Promise<any> {
-    const keycloak = KeycloakService.auth.authz;
-    if (!keycloak) {
-      return Promise.resolve(null);
-    }
-
-    return keycloak.loadUserProfile();
+    this.keycloakService.loadUserProfile()
+      .then(userProfile => angulartics2GoogleAnalytics.setUsername(userProfile.id));
   }
 
   public ngOnInit() {
