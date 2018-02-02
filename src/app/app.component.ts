@@ -36,8 +36,16 @@ export class AppComponent implements OnInit {
   constructor(private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
               private keycloakService: KeycloakService,
               private notificationService: SnotifyService) {
+    this.setUpGoogleAnalytics();
+  }
+
+  private setUpGoogleAnalytics() {
+    if (!this.keycloakService.getKeycloakInstance()) {
+      return;
+    }
+
     this.keycloakService.loadUserProfile()
-      .then(userProfile => angulartics2GoogleAnalytics.setUsername(userProfile.id));
+      .then(userProfile => this.angulartics2GoogleAnalytics.setUsername(userProfile.id));
   }
 
   public ngOnInit() {
