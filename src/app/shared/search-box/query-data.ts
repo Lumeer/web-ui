@@ -17,36 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryItem} from './query-item';
-import {QueryItemType} from './query-item-type';
-import {Collection} from '../../../core/dto/collection';
+import {CollectionModel} from '../../core/store/collections/collection.model';
+import {LinkTypeModel} from '../../core/store/link-types/link-type.model';
 
-export class CollectionQueryItem implements QueryItem {
+export interface QueryData {
 
-  public type = QueryItemType.Collection;
-
-  public code: string;
-  public name: string;
-  public icon: string;
-  public color: string;
-
-  public constructor(collection: Collection) {
-    this.code = collection.code;
-    this.name = collection.name;
-    this.icon = collection.icon;
-    this.color = collection.color;
-  }
-
-  public get text(): string {
-    return this.name;
-  }
-
-  public get value(): string {
-    return this.code;
-  }
-
-  public isComplete(): boolean {
-    return true; // TODO detect changes
-  }
+  collections: CollectionModel[];
+  linkTypes: LinkTypeModel[];
 
 }

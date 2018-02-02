@@ -1,0 +1,11 @@
+<div class="dropdown" *ngIf="suggestions.length > 0">
+  <div class="dropdown-menu show suggestions">
+    <search-suggestion-item class="dropdown-item d-flex justify-content-between"
+                            *ngFor="let suggestion of suggestions; let suggestionIndex = index"
+                            [class.selected]="suggestionIndex == selectedIndex"
+                            [suggestion]="suggestion"
+                            [text]="text"
+                            (mousedown)="onUseSuggestion(suggestion)">
+    </search-suggestion-item>
+  </div>
+</div>

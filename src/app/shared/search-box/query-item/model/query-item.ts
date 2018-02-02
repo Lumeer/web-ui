@@ -17,13 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection, View, LinkType} from './';
+import {QueryItemType} from './query-item-type';
 
-export interface Suggestions {
+export interface QueryItem {
 
-  attributes: Collection[];
-  collections: Collection[];
-  views: View[];
-  linkTypes: LinkType[];
+  text: string;
+  icons?: string[];
+  colors?: string[];
+  condition?: string;
+
+  value: string;
+  type: QueryItemType;
+
+  isComplete(): boolean;
 
 }

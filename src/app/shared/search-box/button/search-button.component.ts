@@ -17,13 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection, View, LinkType} from './';
+import {Component, EventEmitter, Output} from '@angular/core';
 
-export interface Suggestions {
+@Component({
+  selector: 'search-button',
+  templateUrl: './search-button.component.html',
+  styleUrls: ['./search-button.component.scss']
+})
+export class SearchButtonComponent {
 
-  attributes: Collection[];
-  collections: Collection[];
-  views: View[];
-  linkTypes: LinkType[];
+  @Output()
+  public search = new EventEmitter<boolean>();
+
+  public onButtonClick(event: MouseEvent) {
+    const redirect = event.altKey || event.ctrlKey || event.shiftKey;
+    this.search.emit(redirect);
+  }
 
 }

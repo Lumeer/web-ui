@@ -17,20 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryItemType} from './query-item-type';
+export enum QueryItemType {
 
-export interface QueryItem {
-
-  text: string;
-  icon?: string;
-  icon2?: string;
-  color?: string;
-  color2?: string;
-  condition?: string;
-
-  value: string;
-  type: QueryItemType;
-
-  isComplete(): boolean;
+  Attribute = 'Attribute',
+  Collection = 'Collection',
+  Document = 'Document',
+  Fulltext = 'Fulltext',
+  Link = 'Link',
+  View = 'View'
 
 }

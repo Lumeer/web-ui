@@ -1,0 +1,23 @@
+<div [style.background-color]="backgroundColor()"
+     [style.border-color]="borderColor()"
+     [class.pr-2]="readonly"
+     class="query-item py-1 px-1">
+  <query-item-icons [queryItem]="queryItem"></query-item-icons>
+
+  <span [class.font-weight-bold]="isCollectionItem()"
+        [title]="queryItem.text"
+        class="ml-1">
+    {{queryItem.text | truncate:20}}
+  </span>
+
+  <attribute-condition *ngIf="isAttributeItem()"
+                       [queryItem]="queryItem"
+                       [readonly]="readonly">
+  </attribute-condition>
+
+  <i *ngIf="!readonly"
+     (click)="onRemove()"
+     class="fas fa-times remove"
+     title="Remove query item" i18n-title="@@query.item.button.remove">
+  </i>
+</div>

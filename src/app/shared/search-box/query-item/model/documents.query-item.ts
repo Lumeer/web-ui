@@ -17,35 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {perspectiveIconsMap} from '../../../view/perspectives/perspective';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {View} from '../../../core/dto';
 
-export class ViewQueryItem implements QueryItem {
+export class DocumentQueryItem implements QueryItem {
 
-  public type = QueryItemType.View;
+  public type = QueryItemType.Document;
 
-  public code: string;
-  public name: string;
-  public icon: string;
-
-  public constructor(view: View) {
-    this.name = view.name;
-    this.code = view.code;
-    this.icon = perspectiveIconsMap[view.perspective];
-  }
-
-  public get text(): string {
-    return this.name;
+  public constructor(public documentId: string) {
+    // TODO use collection for icon and color
   }
 
   public get value(): string {
-    return this.code;
+    return this.documentId;
+  }
+
+  public get text(): string {
+    return this.documentId;
   }
 
   public isComplete(): boolean {
-    return true;
+    return !!this.documentId;
   }
 
 }

@@ -20,35 +20,19 @@
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 
-export class ConditionQueryItem implements QueryItem {
+export class FulltextQueryItem implements QueryItem {
 
-  public static conditions = ['=', '!=', '<', '>', '~'];
-  public text: string;
-  public value: string;
-  public type: QueryItemType = QueryItemType.Condition;
+  public type = QueryItemType.Fulltext;
 
-  public constructor(condition: string) {
-    this.text = condition;
-    this.value = condition;
+  public constructor(public text: string) {
+  }
+
+  public get value(): string {
+    return this.text;
   }
 
   public isComplete(): boolean {
-    return true;
-  }
-
-  public static isComplete(text: string): boolean {
-    const trimmed = text.trim();
-    const prefixLength = this.conditionPrefixLength(trimmed);
-    return prefixLength > 0 && trimmed.length > prefixLength;
-  }
-
-  private static conditionPrefixLength(text: string): number {
-    for (let condition of this.conditions) {
-      if (text.startsWith(condition)) {
-        return condition.length;
-      }
-    }
-    return -1;
+    return this.text !== '';
   }
 
 }

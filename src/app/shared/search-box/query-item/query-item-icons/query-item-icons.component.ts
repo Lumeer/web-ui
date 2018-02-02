@@ -17,13 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection, View, LinkType} from './';
+import {Component, Input} from '@angular/core';
+import {QueryItem} from '../model/query-item';
 
-export interface Suggestions {
+@Component({
+  selector: 'query-item-icons',
+  templateUrl: './query-item-icons.component.html'
+})
+export class QueryItemIconsComponent {
 
-  attributes: Collection[];
-  collections: Collection[];
-  views: View[];
-  linkTypes: LinkType[];
+  @Input()
+  public queryItem: QueryItem;
 
 }

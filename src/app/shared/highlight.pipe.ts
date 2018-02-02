@@ -29,10 +29,11 @@ export class HighlightPipe implements PipeTransform {
     if (isNullOrUndefined(value)) {
       return '';
     }
-    if (!value.startsWith(prefix)) {
+    const match = value.match(new RegExp(prefix, 'i'));
+    if (!match) {
       return value;
     }
-    return value.replace(prefix, `<span class="text-success">${prefix}</span>`);
+    return value.replace(match.toString(), `<span class="text-success">${match}</span>`);
   }
 
 }
