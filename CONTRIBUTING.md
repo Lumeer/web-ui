@@ -3,10 +3,18 @@
 If you want to contribute to Lumeer, read this document in order to save both your time and the time of the developers who maintain this project.
 
 ## Technologies
-The project is using [Angular 4](https://angular.io/) framework with
-[Typescript](https://www.typescriptlang.org/) as the main language.
-Some knowledge of [Sass](http://sass-lang.com/) preprocessor and
-[RxJS](http://reactivex.io/) is also highly recommended.
+The project is written in [Typescript](https://www.typescriptlang.org/) and based on [Angular](https://angular.io/).
+You can get familiar with this framework many different ways but we recommend you these steps:
+* Read official Angular tutorial [Tour of Heroes](https://angular.io/tutorial)
+* Take [Angular Crash Course](https://www.udemy.com/angular-crash-course/) on Udemy
+
+The state management is ensured by Redux-like library [NgRx](https://ngrx.github.io/).
+It is crucial to know the principles this library is based on since it is used heavily throughout the whole application.
+You can start with the following sources or read more up-to-date articles on [Medium](https://medium.com/search?q=ngrx):
+* [Using NgRx 4 to Manage State in Angular Applications](https://blog.nrwl.io/using-ngrx-4-to-manage-state-in-angular-applications-64e7a1f84b7b)
+* [Comprehensive Introduction to @ngrx/store](https://gist.github.com/btroncone/a6e4347326749f938510)
+
+Some knowledge of [SASS](http://sass-lang.com/) preprocessor and [RxJS](http://reactivex.io/) is also highly recommended.
 
 ## Repository
 Before you start working on this project, you will need to set up your Git repository properly. To do so, follow these steps:
@@ -16,9 +24,32 @@ Before you start working on this project, you will need to set up your Git repos
 3. Fork Lumeer engine repository by following [this guide](https://help.github.com/articles/fork-a-repo/).
 
 ## Code style
-Before committing check if your code is compliant with our [TSLint](https://palantir.github.io/tslint/) and [EditorConfig](http://editorconfig.org/) rules.
+Try to write clean code that is self-explaining and can be easily understood by others.
+If you are not good at it, read the following book:
+* [Clean Code: A Handbook of Agile Software Craftsmanship](https://www.goodreads.com/book/show/3735293-clean-code)
+
+Before committing anything, check if your code is compliant with our [TSLint](https://palantir.github.io/tslint/) and [EditorConfig](http://editorconfig.org/) rules.
 Configuration files for both can be found in the root directory.
-If you are using recommended IDE from JetBrains, rules are configured and checked automatically.
+If you are using the recommended IDE from JetBrains, rules are configured and checked automatically.
+
+## Component design
+Although it might seem like an easy task, designing components in a good way is always something between art and rocket science.
+
+### Size
+Try to avoid large components doing 10 different things and having hundreds of lines of source code.
+Such components are hard to maintain and error-prone since every change might introduce various side effects and cause many bugs.
+
+Try to design new components as small as possible.
+Basically every visual element should be represented by its own component.
+
+For example, when you need to display a list of items together with other things in your component, it should probably be done in a separate component.
+Based on how complicated those items are and what actions you need to do with every one of them, it might also be a good practise to use a new component for displaying a single item.
+
+### Reusability
+Before you create a new component, you should think about other parts of the application where it could potentially be used.
+But do not overcomplicate a simple component just because some hypothetical use case in the future.
+
+Try to design clear component interfaces (`@Input` and `@Output` properties in Angular) but keep the number of interactions with its surroundings to a minimum.
 
 ## License
 Add the following license header at the beginning of every TypeScript file you add to Lumeer engine repository:
