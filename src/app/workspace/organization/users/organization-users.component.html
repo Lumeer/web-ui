@@ -1,150 +1,17 @@
 <div class="container" *ngIf="(organization$ | async) as organization">
-  <div class="d-flex">
-    <h5 class="text-muted flex-grow-2"
-        i18n="@@organizations.users.header">
-      Users in the <i class="{{ organization.icon }} mr-1"></i>{{ organization.name }} organization
-    </h5>
-
-    <i class="fas fa-plus text-success large-text clickable"
-       aria-hidden="true"
-       title="Add User"
-       i18n-title="@@organizations.users.add"
-       (click)="addUser()">
-    </i>
-  </div>
+  <organization-users-header
+    [organization]="organization">
+  </organization-users-header>
 
   <ng-container *ngIf="(users$ | async)?.length else emptyResult">
-
-    <div class="form-control d-flex p-0 m-2 filter">
-      <input class="border-0 flex-grow-2 px-2" placeholder="Filter users"/>
-
-      <button class="btn search-button"
-              type="button"
-              title="Filter"
-              i18n-title="@@organizations.users.filter">
-        <i class="fa fa-search" aria-hidden="true"></i>
-        <span class="d-none" i18n="@@organizations.users.filter.button">Filter</span>
-      </button>
-    </div>
-
-    <table>
-      <thead class="thead-light medium-text">
-      <tr>
-        <td colspan="3">
-        </td>
-        <td class="px-2"
-            i18n="@@organizations.user.roles.create">
-          Create Project
-        </td>
-        <td class="px-2"
-            i18n="@@organizations.user.roles.manage">
-          Manage Organization
-        </td>
-        <td colspan="3">
-        </td>
-      </tr>
-      </thead>
-      <tbody>
-      <ng-container *ngFor="let user of users$ | async">
-        <tr>
-          <td class="px-1">
-            <i class="fa fa-caret-right large-text text-success {{ expanded[user.email] ? 'fa-rotate-90' : null }}"
-               aria-hidden="true"
-               title="{{ expanded[user.email] ? 'Close' : 'Open' }}"
-               i18n-title="@@organizations.user.expand"
-               (click)="(expanded[user.email] = !expanded[user.email])"></i>
-          </td>
-
-          <td class="px-1">
-            <input class="form-control edit-border"
-                   type="text"
-                   tabindex="1"
-                   placeholder="Username"
-                   [(ngModel)]="user.name"
-                   (blur)="updateUserName(user)">
-          </td>
-
-          <td class="px-1">
-            <input class="form-control edit-border"
-                   type="email"
-                   tabindex="1"
-                   placeholder="User email"
-                   [(ngModel)]="user.email"
-                   (blur)="updateUserEmail(user)">
-          </td>
-
-          <td class="px-1 text-center">
-            <div class="custom-control custom-control-inline custom-checkbox">
-              <input type="checkbox"
-                     class="custom-control-input"
-                     id="Create_proj_{{ user.id }}"
-                     [ngModel]="hasWritePermission(user, organization)"
-                     (change)="changeWritePermission(user, organization)">
-              <label class="custom-control-label"
-                     for="Create_proj_{{ user.id }}">
-              </label>
-            </div>
-          </td>
-
-          <td class="px-1 text-center">
-            <div class="custom-control custom-control-inline custom-checkbox">
-              <input type="checkbox"
-                     class="custom-control-input"
-                     id="Manage_org_{{ user.id }}"
-                     [ngModel]="hasManagePermission(user, organization)"
-                     (change)="changeManagePermission(user, organization)">
-              <label class="custom-control-label"
-                     for="Manage_org_{{ user.id }}">
-              </label>
-            </div>
-          </td>
-
-          <td class="px-1">
-            <i class="fas fa-fw {{ user.blocked ? 'fa-volume-mute' : 'fa-volume-up' }} text-danger mx-2 clickable"
-               aria-hidden="true"
-               title="{{ user.blocked ? 'Unblock' : 'Temporarily Block' }} User"
-               i18n-title="@@organizations.users.block"
-               (click)="blockUser(user)"></i>
-          </td>
-
-          <td class="px-1">
-            <i class="fas fa-fw fa-trash text-danger mx-2 clickable"
-               aria-hidden="true"
-               title="Remove User"
-               i18n-title="@@organizations.users.remove"
-               (click)="removeUser(user)"></i>
-          </td>
-        </tr>
-
-        <tr *ngIf="expanded[user.email]">
-          <td>
-            <div class="vertical-line">
-            </div>
-          </td>
-          <td colspan="2"
-              class="d-flex">
-            <div i18n="@@organizations.user.roles.groups">
-              Groups:
-            </div>
-            <ng-container *ngIf="(groups$ | async) as groups">
-              <input *ngFor="let group of userGroups(user, groups)"
-                     class="form-check edit-border p-1 mx-1"
-                     [(ngModel)]="group.name">
-            </ng-container>
-
-            <input class="form-check edit-border p-1 mx-1"
-                   [(ngModel)]="newGroupName[user.email]">
-          </td>
-          <td colspan="4">
-          </td>
-        </tr>
-      </ng-container>
-      </tbody>
-    </table>
+    <organization-user-list
+      [organization]="organization"
+      [users]="users$ | async">
+    </organization-user-list>
   </ng-container>
 
   <ng-template #emptyResult>
-    <h3 class="mx-auto text-center pt-3" i18n="@@organizations.users.no.result">
+    <h3 class="mx-auto text-center pt-4 text-muted huge-text" i18n="@@organizations.users.no.result">
       Organization has no users...
     </h3>
   </ng-template>

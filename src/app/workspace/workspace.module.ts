@@ -35,6 +35,11 @@ import {OrganizationUsersComponent} from './organization/users/organization-user
 import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
 import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
 import {OrganizationSettingsGuard} from "./organization/organization-settings.guard";
+import {OrganizationUserListComponent} from './organization/users/list/organization-user-list.component';
+import {OrganizationUserComponent} from './organization/users/user/organization-user.component';
+import {OrganizationUsersHeaderComponent} from './organization/users/header/organization-users-header.component';
+import {OrganizationUserFilterComponent} from './organization/users/user-filter/organization-user-filter.component';
+import {OrganizationUserGroupsComponent} from './organization/users/groups/organization-user-groups.component';
 
 @NgModule({
   imports: [
@@ -46,6 +51,11 @@ import {OrganizationSettingsGuard} from "./organization/organization-settings.gu
   declarations: [
     OrganizationPermissionsComponent,
     OrganizationUsersComponent,
+    OrganizationUserListComponent,
+    OrganizationUserFilterComponent,
+    OrganizationUserGroupsComponent,
+    OrganizationUserComponent,
+    OrganizationUsersHeaderComponent,
     OrganizationGroupsComponent,
     OrganizationRegistrationComponent,
     ProjectPermissionsComponent,

@@ -1,0 +1,35 @@
+<table>
+  <thead class="thead-light medium-text">
+  <tr>
+    <td colspan="3">
+      <organization-user-filter>
+      </organization-user-filter>
+    </td>
+    <td class="px-2"
+        i18n="@@organizations.user.roles.create">
+      Create Project
+    </td>
+    <td class="px-2"
+        i18n="@@organizations.user.roles.manage">
+      Manage Organization
+    </td>
+    <td colspan="3">
+    </td>
+  </tr>
+  </thead>
+  <tbody>
+  <ng-container *ngFor="let user of users">
+    <organization-user
+      [organization]="organization"
+      [user]="user"
+      [expanded]="expanded[user.email]"
+      (expandedChange)="(expanded[user.email] = !expanded[user.email])">
+    </organization-user>
+    <organization-user-groups
+      *ngIf="expanded[user.email]"
+      [organization]="organization"
+      [user]="user">
+    </organization-user-groups>
+  </ng-container>
+  </tbody>
+</table>

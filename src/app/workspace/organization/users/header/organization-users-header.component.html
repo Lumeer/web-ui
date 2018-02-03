@@ -1,0 +1,13 @@
+<div class="d-flex">
+  <h5 class="text-muted flex-grow-2"
+      i18n="@@organizations.users.header">
+    Users in the <i class="{{ organization.icon }} mr-1"></i>{{ organization.name }} organization
+  </h5>
+
+  <i class="fas fa-plus text-success large-text clickable"
+     aria-hidden="true"
+     title="Add User"
+     i18n-title="@@organizations.users.add"
+     (click)="addUser()">
+  </i>
+</div>
