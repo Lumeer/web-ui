@@ -1,4 +1,4 @@
-import {AfterViewInit, Directive, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, Input, OnDestroy} from '@angular/core';
 import {PostItLayout} from './post-it-layout';
 
 @Directive({
