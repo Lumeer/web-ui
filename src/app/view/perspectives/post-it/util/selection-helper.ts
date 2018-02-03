@@ -23,11 +23,11 @@ import {AttributePropertySelection} from '../document-data/attribute-property-se
 import {Direction} from '../document-data/direction';
 import {PostItDocumentModel} from '../document-data/post-it-document-model';
 
-const ATTRIBUTE_COLUMN = 0;
+export const ATTRIBUTE_COLUMN = 0;
 
-const VALUE_COLUMN = 1;
+export const VALUE_COLUMN = 1;
 
-const COLUMNS = 1;
+export const COLUMNS = 1;
 
 export class SelectionHelper {
 
