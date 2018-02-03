@@ -42,6 +42,7 @@ import {HtmlModifier} from '../utils/html-modifier';
 import {PostItLayout} from '../utils/layout/post-it-layout';
 import {PostItCollectionModel} from './post-it-collection-model';
 import {HashHelper} from '../utils/hash-helper';
+import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import Get = CollectionsAction.Get;
 
 @Component({
@@ -156,7 +157,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       color: DEFAULT_COLOR,
       icon: DEFAULT_ICON,
       defaultAttributeId: '',
-      correlationId: String(Math.floor(Math.random() * 1000000000000000) + 1)
+      correlationId: CorrelationIdGenerator.generate()
     };
 
     this.postIts.push(newPostIt);
