@@ -228,7 +228,9 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
       this.postItModel.document.data = {};
     }
 
-    this.attributePairs = Object.entries(this.postItModel.document.data).map(([attribute, value]) => {
+    this.attributePairs = Object.entries(this.postItModel.document.data)
+      .sort(([attribute1, value1], [attribute2, value2]) => attribute1.localeCompare(attribute2))
+      .map(([attribute, value]) => {
       return {
         attribute: attribute,
         previousAttributeName: attribute,
