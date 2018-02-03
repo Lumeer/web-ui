@@ -17,20 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {KeycloakService} from 'keycloak-angular';
-import {KeycloakSettings} from './core/keycloak.settings';
+import {KeycloakConfig} from 'keycloak-angular/src/interfaces/keycloak-config';
+import {isNullOrUndefined} from 'util';
 
-export function appInitializer(keycloak: KeycloakService): () => Promise<any> {
-  return (): Promise<any> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        if (!KeycloakSettings.isDisabled()) {
-          await keycloak.init({config: KeycloakSettings.getConfig()});
-        }
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
-    });
-  };
+const SETTINGS = require('../../main/webapp/WEB-INF/keycloak.json');
+
+export class KeycloakSettings {
+
+  public static getConfig(): KeycloakConfig {
+    return {
+      url: SETTINGS['auth-server-url'],
+      realm: SETTINGS['realm'],
+      clientId: SETTINGS['resource']
+    };
+  }
+
+  public static getAuthServerUrl(): string {
+    return this.getConfig().url;
+  }
+
+  public static isDisabled(): boolean {
+    return isNullOrUndefined(SETTINGS.disabled) ? LUMEER_ENV === 'development' : SETTINGS.disabled;
+  }
+
 }
