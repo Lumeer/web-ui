@@ -1,0 +1,21 @@
+<td>
+  <div class="vertical-line">
+  </div>
+</td>
+<td colspan="3">
+  <div class="d-flex">
+    <div i18n="@@organizations.user.roles.groups">
+      Groups:
+    </div>
+    <ng-container *ngIf="(groups$ | async) as groups">
+      <input *ngFor="let group of userGroups(user, groups)"
+             class="form-check edit-border p-1 mx-1"
+             [(ngModel)]="group.name">
+    </ng-container>
+
+    <input class="form-check edit-border p-1 mx-1"
+           [(ngModel)]="newGroupName">
+  </div>
+</td>
+<td colspan="3">
+</td>
