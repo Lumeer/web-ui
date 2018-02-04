@@ -33,7 +33,7 @@ import {PostItDocumentModel} from './document-data/post-it-document-model';
 import {DeletionHelper} from './util/deletion-helper';
 import {InfiniteScroll} from './util/infinite-scroll';
 import {NavigationHelper} from './util/navigation-helper';
-import {SelectionHelper} from './util/selection-helper';
+import {ATTRIBUTE_COLUMN, SelectionHelper, VALUE_COLUMN} from './util/selection-helper';
 import Create = DocumentsAction.Create;
 import UpdateData = DocumentsAction.UpdateData;
 
@@ -165,10 +165,23 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.postIts.unshift(newPostIt);
 
     setTimeout(() => {
-      this.selectionHelper.select(0, 0, newPostIt);
-      this.selectionHelper.setEditMode(true);
-      this.selectionHelper.focus();
+      this.selectAndFocusCreatedPostIt(newPostIt);
     });
+  }
+
+  private selectAndFocusCreatedPostIt(newPostIt: PostItDocumentModel) {
+    this.selectionHelper.select(this.createdPostItPreferredColumn(newPostIt), 0, newPostIt);
+    this.selectionHelper.setEditMode(true);
+    this.selectionHelper.focus();
+  }
+
+  private createdPostItPreferredColumn(focusedPostIt: PostItDocumentModel): number {
+    const attributes = Object.keys(focusedPostIt.document.data);
+    if (attributes.length === 0) {
+      return ATTRIBUTE_COLUMN;
+    }
+
+    return VALUE_COLUMN;
   }
 
   public postItChanged(changedPostIt: PostItDocumentModel): void {
@@ -234,9 +247,12 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     const focusedPostIt = this.findPostItOfDocument(document);
 
     setTimeout(() => {
-      this.selectionHelper.select(1, 0, focusedPostIt);
-      this.selectionHelper.focus();
+      this.selectPostIt(focusedPostIt);
     });
+  }
+
+  private selectPostIt(focusedPostIt: PostItDocumentModel) {
+    this.selectionHelper.select(0, 0, focusedPostIt);
   }
 
   private findPostItOfDocument(document: DocumentModel): PostItDocumentModel {
