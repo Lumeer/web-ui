@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class HashHelper {
+export class HashCodeGenerator {
 
   public static hashString(str: string): number {
     let hash = 0;

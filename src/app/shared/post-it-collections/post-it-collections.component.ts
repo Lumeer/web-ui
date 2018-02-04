@@ -41,7 +41,7 @@ import {Role} from '../permissions/role';
 import {HtmlModifier} from '../utils/html-modifier';
 import {PostItLayout} from '../utils/layout/post-it-layout';
 import {PostItCollectionModel} from './post-it-collection-model';
-import {HashHelper} from '../utils/hash-helper';
+import {HashCodeGenerator} from '../utils/hash-helper';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import Get = CollectionsAction.Get;
 
@@ -357,7 +357,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public trackByCollection(index: number, postIt: PostItCollectionModel): number {
-    return HashHelper.hashString(postIt.collection.id || postIt.collection.correlationId);
+    return HashCodeGenerator.hashString(postIt.collection.id || postIt.collection.correlationId);
   }
 
   public ngOnDestroy(): void {

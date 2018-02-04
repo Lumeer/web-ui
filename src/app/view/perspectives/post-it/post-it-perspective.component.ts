@@ -34,7 +34,7 @@ import {DeletionHelper} from './util/deletion-helper';
 import {InfiniteScroll} from './util/infinite-scroll';
 import {NavigationHelper} from './util/navigation-helper';
 import {ATTRIBUTE_COLUMN, SelectionHelper, VALUE_COLUMN} from './util/selection-helper';
-import {HashHelper} from '../../../shared/utils/hash-helper';
+import {HashCodeGenerator} from '../../../shared/utils/hash-helper';
 import Create = DocumentsAction.Create;
 import UpdateData = DocumentsAction.UpdateData;
 
@@ -317,7 +317,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public trackByDocument(index: number, postIt: PostItDocumentModel): number {
-    return HashHelper.hashString(postIt.document.id || postIt.document.correlationId);
+    return HashCodeGenerator.hashString(postIt.document.id || postIt.document.correlationId);
   }
 
   public ngOnDestroy(): void {
