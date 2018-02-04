@@ -261,6 +261,10 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     return `${ this.perspectiveId }${ this.postItModel.document.id || 'uninitialized' }`;
   }
 
+  public isDefaultAttribute(attributeFullName: string): boolean {
+    return attributeFullName === this.postItModel.document.collection.defaultAttributeId;
+  }
+
   public hasWriteRole(): boolean {
     return this.hasRole(Role.Write);
   }
