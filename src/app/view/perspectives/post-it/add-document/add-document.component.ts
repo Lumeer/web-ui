@@ -24,6 +24,7 @@ import {AppState} from '../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 
 @Component({
   selector: 'add-document',
@@ -53,6 +54,7 @@ export class PostItAddDocumentComponent implements OnInit, OnDestroy {
       collection: this.selectedCollection,
       collectionId: this.selectedCollection.id,
       collectionCode: this.selectedCollection.code,
+      correlationId: CorrelationIdGenerator.generate(),
       data: this.dataWithAttributeNames()
     });
   }

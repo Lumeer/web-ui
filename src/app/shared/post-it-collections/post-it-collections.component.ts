@@ -41,6 +41,8 @@ import {Role} from '../permissions/role';
 import {HtmlModifier} from '../utils/html-modifier';
 import {PostItLayout} from '../utils/layout/post-it-layout';
 import {PostItCollectionModel} from './post-it-collection-model';
+import {HashCodeGenerator} from '../utils/hash-code-generator';
+import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import Get = CollectionsAction.Get;
 
 @Component({
@@ -154,7 +156,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       description: '',
       color: DEFAULT_COLOR,
       icon: DEFAULT_ICON,
-      defaultAttributeId: ''
+      defaultAttributeId: '',
+      correlationId: CorrelationIdGenerator.generate()
     };
 
     this.postIts.push(newPostIt);
@@ -351,6 +354,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       const initialized = true;
       this.postIts = collections.map(collection => this.collectionToPostIt(collection, initialized));
     });
+  }
+
+  public trackByCollection(index: number, postIt: PostItCollectionModel): number {
+    return HashCodeGenerator.hashString(postIt.collection.id || postIt.collection.correlationId);
   }
 
   public ngOnDestroy(): void {
