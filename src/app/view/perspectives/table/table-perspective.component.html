@@ -8,6 +8,7 @@
   <div class="d-inline-block text-left">
     <table *ngIf="isDisplayable()">
       <table-header [parts]="parts"
+                    [embedded]="embedded"
                     (createAttribute)="onCreateAttribute($event)"
                     (renameAttribute)="onRenameAttribute($event)"
                     (deleteAttribute)="onDeleteAttribute($event)"

@@ -42,7 +42,7 @@ export class SmartDocBottomPanelComponent implements OnInit, OnDestroy {
   public part: SmartDocPartModel;
 
   @Input()
-  public showMover: boolean;
+  public single: boolean;
 
   @Input()
   public perspectives: Perspective[] = [];

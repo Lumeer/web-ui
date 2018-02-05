@@ -23,6 +23,7 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {HtmlModifier} from '../../shared/utils/html-modifier';
+import {KeycloakSettings} from '../keycloak.settings';
 import {AppState} from '../store/app.state';
 import {selectNavigation} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
@@ -107,6 +108,14 @@ export class TopPanelComponent implements OnInit {
 
   public workspacePath(): string {
     return `w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
+  }
+
+  public keycloakAccountUrl(): string {
+    return `${KeycloakSettings.getAuthServerUrl()}/realms/lumeer/account`;
+  }
+
+  public keycloakSignOutUrl(): string {
+    return `${KeycloakSettings.getAuthServerUrl()}/realms/lumeer/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Fwww.lumeer.io%2F`;
   }
 
 }

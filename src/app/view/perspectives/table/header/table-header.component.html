@@ -44,6 +44,7 @@
         [style.backgroundColor]="lightenColor(part.collection.color)">
       <table-header-cell [part]="part"
                          [attribute]="attribute"
+                         [embedded]="embedded"
                          [lmrDropTarget]="{zone: part.index}"
                          (lmrDrop)="onDropColumn(part, $event, attribute)"
                          (createAttribute)="onCreateAttribute(part.collection, attribute)"

@@ -44,7 +44,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   @HostListener('focusout')
   public onFocusOut(): void {
-    if (this.hasNoAttributes()) {
+    if (this.shouldSuggestDeletion()) {
       this.confirmDeletion();
       this.changed = false;
       return;
@@ -58,8 +58,16 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
+  private shouldSuggestDeletion(): boolean {
+    return this.hasNoAttributes() && this.isInitialized();
+  }
+
   private hasNoAttributes(): boolean {
     return this.attributePairs.length === 0;
+  }
+
+  private isInitialized(): boolean {
+    return Boolean(this.postItModel && this._postItModel.document.id);
   }
 
   private checkforDuplicitAttributes(): void {
@@ -165,6 +173,8 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public updateAttribute(attributePair: AttributePair): void {
+    attributePair.attribute = attributePair.attribute.trim();
+
     delete this.postItModel.document.data[attributePair.previousAttributeName];
     attributePair.previousAttributeName = attributePair.attribute;
 
@@ -179,6 +189,8 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public updateValue(attributePair: AttributePair): void {
+    attributePair.value = attributePair.value.trim();
+
     if (this.postItModel.document.data[attributePair.attribute] !== attributePair.value) {
       this.changed = true;
     }

@@ -21,8 +21,9 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {map, withLatestFrom} from 'rxjs/operators';
+import {map, withLatestFrom, flatMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
+import {SmartDocUtils} from '../../../view/perspectives/smartdoc/smartdoc.utils';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {ViewsAction} from '../views/views.action';
@@ -64,12 +65,18 @@ export class SmartDocEffects {
   @Effect()
   public removePart$: Observable<Action> = this.actions$.ofType<SmartDocAction.RemovePart>(SmartDocActionType.REMOVE_PART).pipe(
     withLatestFrom(this.store$.select(selectViewSmartDocConfig)),
-    map(([action, smartDocConfig]) => {
+    flatMap(([action, smartDocConfig]) => {
       const config = SmartDocEffects.modifyInnerSmartDoc(smartDocConfig, action.payload.partPath, innerSmartDoc => {
         innerSmartDoc.parts.splice(action.payload.partIndex, 1);
         return innerSmartDoc;
       });
-      return new ViewsAction.ChangeSmartDocConfig({config});
+
+      const actions: Action[] = [new ViewsAction.ChangeSmartDocConfig({config})];
+      if (action.payload.last) {
+        const part = SmartDocUtils.createEmptyTextPart();
+        actions.push(new SmartDocAction.AddPart({partPath: action.payload.partPath, part}))
+      }
+      return actions;
     })
   );
 

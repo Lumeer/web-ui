@@ -45,6 +45,9 @@ export class TableHeaderCellComponent {
   @Input()
   public attribute: Attribute;
 
+  @Input()
+  public embedded: boolean;
+
   @Output()
   public createAttribute = new EventEmitter();
 
