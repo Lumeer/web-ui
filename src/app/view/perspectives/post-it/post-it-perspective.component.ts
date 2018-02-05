@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
@@ -34,6 +34,7 @@ import {DeletionHelper} from './util/deletion-helper';
 import {InfiniteScroll} from './util/infinite-scroll';
 import {NavigationHelper} from './util/navigation-helper';
 import {ATTRIBUTE_COLUMN, SelectionHelper, VALUE_COLUMN} from './util/selection-helper';
+import {KeyCode} from '../../../shared/key-code';
 import {HashCodeGenerator} from '../../../shared/utils/hash-code-generator';
 import Create = DocumentsAction.Create;
 import UpdateData = DocumentsAction.UpdateData;
@@ -44,6 +45,21 @@ import UpdateData = DocumentsAction.UpdateData;
   styleUrls: ['./post-it-perspective.component.scss']
 })
 export class PostItPerspectiveComponent implements OnInit, OnDestroy {
+
+  @HostListener('document:keydown', ['$event'])
+  public onKeyboardClick(event: KeyboardEvent) {
+    if (!this.isNavigationKey(event.keyCode)) {
+      return;
+    }
+
+    if (this.selectionHelper) {
+      this.selectionHelper.initializeIfNeeded();
+    }
+  }
+
+  private isNavigationKey(keyCode: number): boolean {
+    return [KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.Enter].includes(keyCode);
+  }
 
   @Input()
   public editable: boolean = true;
