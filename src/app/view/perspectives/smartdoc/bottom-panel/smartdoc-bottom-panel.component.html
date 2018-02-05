@@ -10,7 +10,7 @@
       </span>
     </div>
     <div class="col">
-      <div *ngIf="showMover"
+      <div *ngIf="!single"
            class="flex-grow-2 mover"
            title="Move part" i18n-title="@@smartdoc.document.move">
         <i class="fal fa-lg fa-ellipsis-h-alt"></i>
@@ -38,7 +38,8 @@
          title="Copy part" i18n-title="@@smartdoc.part.copy">
         <i class="fa fa-copy text-success"></i>
       </a>
-      <a (click)="onRemovePart()"
+      <a *ngIf="!single"
+         (click)="onRemovePart()"
          class="ml-3"
          title="Remove part" i18n-title="@@smartdoc.part.remove">
         <i class="fa fa-trash-alt text-danger"></i>

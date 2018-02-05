@@ -17,15 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {SmartDocAction, SmartDocActionType} from './smartdoc.action';
-import {initialSmartDocState, SmartDocState} from './smartdoc.state';
+import {KeycloakConfig} from 'keycloak-angular/src/interfaces/keycloak-config';
+import {isNullOrUndefined} from 'util';
 
-export function smartDocReducer(state: SmartDocState = initialSmartDocState,
-                                action: SmartDocAction.All): SmartDocState {
-  switch (action.type) {
-    case SmartDocActionType.SELECT:
-      return {...state, selectedPart: action.payload};
-    default:
-      return state;
+const SETTINGS = require('../../main/webapp/WEB-INF/keycloak.json');
+
+export class KeycloakSettings {
+
+  public static getConfig(): KeycloakConfig {
+    return {
+      url: SETTINGS['auth-server-url'],
+      realm: SETTINGS['realm'],
+      clientId: SETTINGS['resource']
+    };
   }
+
+  public static getAuthServerUrl(): string {
+    return this.getConfig().url;
+  }
+
+  public static isDisabled(): boolean {
+    return isNullOrUndefined(SETTINGS.disabled) ? LUMEER_ENV === 'development' : SETTINGS.disabled;
+  }
+
 }

@@ -77,7 +77,7 @@
               (keydown.ArrowDown)="selectionHelper.moveSelection(0, 1)"
               (keydown.F2)="selectionHelper.setEditMode(true); selectionHelper.focus()"
               (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
-              (click)="clickOnAttributePair(0, attributePairs.length)">
+              (click)="selectionHelper.setEditMode(true); this.selectionHelper.select(0, attributePairs.length, postItModel)">
 
           <input class="border-0" #newAttributeInput
                  placeholder=" + "

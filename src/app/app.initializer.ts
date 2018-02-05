@@ -18,29 +18,14 @@
  */
 
 import {KeycloakService} from 'keycloak-angular';
-import {isNullOrUndefined} from 'util';
-
-function isKeycloakDisabled({disabled}): boolean {
-  return isNullOrUndefined(disabled) ? LUMEER_ENV === 'development' : disabled;
-}
-
-async function initKeycloak(keycloak: KeycloakService, settings: any): Promise<any> {
-  return keycloak.init({
-    config: {
-      url: settings['auth-server-url'],
-      realm: settings['realm'],
-      clientId: settings['resource']
-    }
-  });
-}
+import {KeycloakSettings} from './core/keycloak.settings';
 
 export function appInitializer(keycloak: KeycloakService): () => Promise<any> {
   return (): Promise<any> => {
     return new Promise(async (resolve, reject) => {
       try {
-        let keycloakSettings = require('../main/webapp/WEB-INF/keycloak.json');
-        if (!isKeycloakDisabled(keycloakSettings)) {
-          await initKeycloak(keycloak, keycloakSettings);
+        if (!KeycloakSettings.isDisabled()) {
+          await keycloak.init({config: KeycloakSettings.getConfig()});
         }
         resolve();
       } catch (error) {

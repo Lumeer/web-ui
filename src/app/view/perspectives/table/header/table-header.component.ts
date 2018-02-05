@@ -37,6 +37,9 @@ export class TableHeaderComponent {
   public editable = true;
 
   @Input()
+  public embedded: boolean;
+
+  @Input()
   public parts: TablePart[] = [];
 
   @Output()

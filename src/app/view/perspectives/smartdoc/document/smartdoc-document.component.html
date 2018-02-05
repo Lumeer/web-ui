@@ -5,52 +5,20 @@
 <div class="card-body p-0">
   <div *ngIf="smartDoc"
        class="{{layoutContainerClass()}} muuri">
-    <div *ngFor="let part of smartDoc.parts; index as partIndex"
-         [class.selected]="selectedPartIndex === partIndex"
-         class="muuri-item w-100">
-      <div class="muuri-item-content">
-        <div [class.selected]="selectedPartIndex === partIndex"
-             (click)="onClickInsidePart($event, partIndex)"
-             (clickOutside)="onClickOutsidePart(partIndex)"
-             class="card m-2 template-part">
-          <div class="card-body p-0">
-            <div *ngIf="selectedPartIndex === partIndex"
-                 class="d-flex justify-content-end">
-              <div class="position-relative">
-                <div class="position-absolute document-panel">
-                  <smartdoc-side-panel [collection]="getCurrentCollection()"
-                                       [document]="document"
-                                       (addPart)="onAddPart(partIndex, $event)">
-                  </smartdoc-side-panel>
-                </div>
-              </div>
-            </div>
-            <ng-container [ngSwitch]="part.type">
-              <smartdoc-embedded *ngSwitchCase="'embedded'"
-                                 [document]="document"
-                                 [path]="path.concat(partIndex)"
-                                 [part]="part">
-              </smartdoc-embedded>
-              <smartdoc-text *ngSwitchCase="'text'"
-                             [collection]="getCurrentCollection()"
-                             [document]="document"
-                             [path]="path.concat(partIndex)"
-                             [part]="part"
-                             (partChange)="onUpdatePart(partIndex, $event)">
-              </smartdoc-text>
-            </ng-container>
-          </div>
-          <smartdoc-bottom-panel *ngIf="selectedPartIndex === partIndex"
-                                 [showMover]="smartDoc.parts.length > 1"
-                                 [perspectives]="allowedPerspectives()"
-                                 [part]="part"
-                                 (copyPart)="onCopyPart(partIndex)"
-                                 (removePart)="onRemovePart(partIndex)"
-                                 (switchPerspective)="onSwitchPerspective(partIndex, part, $event)"
-                                 class="card-footer p-0">
-          </smartdoc-bottom-panel>
-        </div>
-      </div>
-    </div>
+    <smartdoc-part *ngFor="let part of smartDoc.parts; index as partIndex"
+                   [class.selected]="selectedPartIndex === partIndex"
+                   [collection]="getCurrentCollection()"
+                   [document]="document"
+                   [part]="part"
+                   [path]="path.concat(partIndex)"
+                   [selected]="selectedPartIndex === partIndex"
+                   [single]="hasSinglePart()"
+                   (add)="onAddPart(partIndex, $event)"
+                   (update)="onUpdatePart(partIndex, $event)"
+                   (copy)="onCopyPart(partIndex)"
+                   (remove)="onRemovePart(partIndex)"
+                   (select)="onSelectPart(partIndex, $event)"
+                   class="muuri-item w-100">
+    </smartdoc-part>
   </div>
 </div>
