@@ -52,14 +52,14 @@ export namespace SmartDocAction {
   export class RemovePart implements Action {
     public readonly type = SmartDocActionType.REMOVE_PART;
 
-    public constructor(public payload: { partPath: number[], partIndex: number }) {
+    public constructor(public payload: { partPath: number[], partIndex: number, last: boolean }) {
     }
   }
 
   export class RemovePartConfirm implements Action {
     public readonly type = SmartDocActionType.REMOVE_PART_CONFIRM;
 
-    public constructor(public payload: { partPath: number[], partIndex: number }) {
+    public constructor(public payload: { partPath: number[], partIndex: number, last: boolean }) {
     }
   }
 

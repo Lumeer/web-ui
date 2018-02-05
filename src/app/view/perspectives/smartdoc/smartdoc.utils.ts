@@ -54,4 +54,17 @@ export class SmartDocUtils {
     return {ops};
   }
 
+  public static createEmptyTextPart(): SmartDocPartModel {
+    const delta = {
+      ops: [
+        {insert: 'Insert your text here...'} // TODO translate somehow
+      ]
+    };
+
+    return {
+      type: SmartDocPartType.Text,
+      textData: delta
+    };
+  }
+
 }

@@ -81,7 +81,7 @@ export class SmartDocDocumentComponent implements OnInit {
   }
 
   public onRemovePart(partIndex: number) {
-    this.store.dispatch(new SmartDocAction.RemovePartConfirm({partPath: this.path, partIndex: partIndex}));
+    this.store.dispatch(new SmartDocAction.RemovePartConfirm({partPath: this.path, partIndex: partIndex, last: this.hasSinglePart()}));
   }
 
   public getCurrentCollection(): CollectionModel {
@@ -140,6 +140,10 @@ export class SmartDocDocumentComponent implements OnInit {
   public onMovePart(oldIndex: number, newIndex: number) {
     this.store.dispatch(new SmartDocAction.MovePart({partPath: this.path, oldIndex, newIndex}));
     this.store.dispatch(new SmartDocAction.Select({path: this.path, documentId: this.document.id, partIndex: newIndex}));
+  }
+
+  public hasSinglePart(): boolean {
+    return this.smartDoc.parts.length === 1;
   }
 
 }

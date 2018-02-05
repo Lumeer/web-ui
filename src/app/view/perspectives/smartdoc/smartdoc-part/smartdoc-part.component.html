@@ -31,7 +31,7 @@
       </ng-container>
     </div>
     <smartdoc-bottom-panel *ngIf="selected"
-                           [showMover]="!single"
+                           [single]="single"
                            [perspectives]="allowedPerspectives()"
                            [part]="part"
                            (copyPart)="onCopyPart()"

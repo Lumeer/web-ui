@@ -65,16 +65,7 @@ export class SmartDocSidePanelComponent {
   }
 
   private addTextPart() {
-    const delta = {
-      ops: [
-        {insert: 'Insert your text here...'}
-      ]
-    };
-
-    const part: SmartDocPartModel = {
-      type: SmartDocPartType.Text,
-      textData: delta
-    };
+    const part = SmartDocUtils.createEmptyTextPart();
     this.addTemplatePart(part);
   }
 

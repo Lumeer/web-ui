@@ -12,7 +12,7 @@
                    [part]="part"
                    [path]="path.concat(partIndex)"
                    [selected]="selectedPartIndex === partIndex"
-                   [single]="smartDoc.parts.length === 1"
+                   [single]="hasSinglePart()"
                    (add)="onAddPart(partIndex, $event)"
                    (update)="onUpdatePart(partIndex, $event)"
                    (copy)="onCopyPart(partIndex)"
