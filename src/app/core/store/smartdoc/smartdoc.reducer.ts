@@ -25,8 +25,6 @@ export function smartDocReducer(state: SmartDocState = initialSmartDocState,
   switch (action.type) {
     case SmartDocActionType.SELECT:
       return {...state, selectedPart: action.payload};
-    case SmartDocActionType.DESELECT:
-      return {...state, selectedPart: null};
     default:
       return state;
   }

@@ -34,6 +34,7 @@ import {SmartDocSidePanelComponent} from './side-panel/smartdoc-side-panel.compo
 import {SmartDocPerspectiveComponent} from './smartdoc-perspective.component';
 import {SafeHtmlPipe} from './text/safe-html.pipe';
 import {SmartDocTextComponent} from './text/smartdoc-text.component';
+import { SmartDocPartComponent } from './smartdoc-part/smartdoc-part.component';
 
 @NgModule({
   imports: [
@@ -51,7 +52,8 @@ import {SmartDocTextComponent} from './text/smartdoc-text.component';
     SmartDocPerspectiveComponent,
     SmartDocSidePanelComponent,
     SmartDocBottomPanelComponent,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    SmartDocPartComponent
   ],
   entryComponents: [
     SmartDocPerspectiveComponent,

@@ -29,8 +29,7 @@ export enum SmartDocActionType {
   MOVE_PART = '[Smart Document] Move Part',
   ORDER_DOCUMENTS = '[Smart Document] Order Documents',
 
-  SELECT = '[SmartDoc Templates] Select',
-  DESELECT = '[SmartDoc Templates] Deselect'
+  SELECT = '[SmartDoc Templates] Select'
 
 }
 
@@ -85,11 +84,7 @@ export namespace SmartDocAction {
     }
   }
 
-  export class Deselect implements Action {
-    public readonly type = SmartDocActionType.DESELECT;
-  }
-
   export type All = AddPart | UpdatePart | RemovePart | RemovePartConfirm | MovePart |
     OrderDocuments |
-    Select | Deselect;
+    Select;
 }
