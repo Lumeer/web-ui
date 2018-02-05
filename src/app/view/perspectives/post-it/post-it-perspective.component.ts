@@ -35,6 +35,7 @@ import {InfiniteScroll} from './util/infinite-scroll';
 import {NavigationHelper} from './util/navigation-helper';
 import {ATTRIBUTE_COLUMN, SelectionHelper, VALUE_COLUMN} from './util/selection-helper';
 import {isNullOrUndefined} from 'util';
+import {HashCodeGenerator} from '../../../shared/utils/hash-code-generator';
 import Create = DocumentsAction.Create;
 import UpdateData = DocumentsAction.UpdateData;
 
@@ -81,6 +82,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private layoutManager: PostItLayout;
 
   private pageSubscriptions: Subscription[] = [];
+
+  private createdDocumentCorrelationId: string;
 
   private allLoaded: boolean;
 
@@ -199,11 +202,11 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private postItInInitialState(postIt: PostItDocumentModel): boolean {
-    const isUnitialized = !postIt.initialized;
+    const isUninitialized = !postIt.initialized;
     const hasInitialAttributes = Object.keys(postIt.document.data).length === postIt.document.collection.attributes.length;
     const hasInitialValues = Object.values(postIt.document.data).every(value => value === '');
 
-    return isUnitialized && hasInitialAttributes && hasInitialValues;
+    return isUninitialized && hasInitialAttributes && hasInitialValues;
   }
 
   private subscribeOnDocuments(queryModel: QueryModel) {
@@ -237,7 +240,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private focusNewDocumentIfPresent(documents: DocumentModel[]): void {
-    const newDocument = documents.find(document => Boolean(document.correlationId));
+    const newDocument = documents.find(document => document.correlationId === this.createdDocumentCorrelationId);
 
     if (newDocument) {
       this.focusDocument(newDocument);
@@ -272,8 +275,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private initializePostIt(postItToInitialize: PostItDocumentModel): void {
     if (!postItToInitialize.updating) {
+      this.createdDocumentCorrelationId = postItToInitialize.document.correlationId;
       postItToInitialize.updating = true;
-      postItToInitialize.document.correlationId = String(Math.floor(Math.random() * 1000000000000000) + 1);
 
       this.store.dispatch(new Create({document: postItToInitialize.document}));
       this.postIts.splice(this.postIts.indexOf(postItToInitialize), 1);
@@ -315,8 +318,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return Number(element.getAttribute('order'));
   }
 
-  public trackByIndex(index: number, obj: any): number {
-    return index;
+  public trackByDocument(index: number, postIt: PostItDocumentModel): number {
+    return HashCodeGenerator.hashString(postIt.document.id || postIt.document.correlationId);
   }
 
   public ngOnDestroy(): void {
