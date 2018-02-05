@@ -5,7 +5,7 @@
                 [attr.order]="-10000"
                 (createPostIt)="createPostIt($event)"></add-document>
 
-  <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByIndex"
+  <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByDocument"
                     class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : null }}"
                     [attr.order]="postIt.order"
                     [postItModel]="postItWithIndex(postIt, idx)"
