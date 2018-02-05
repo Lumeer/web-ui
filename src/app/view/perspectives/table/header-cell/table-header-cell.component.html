@@ -37,7 +37,7 @@
       <span>{{attributeName}}</span>
     </a>
 
-    <ng-container *ngIf="!part.nextPart">
+    <ng-container *ngIf="!part.nextPart && !embedded">
       <div class="dropdown-divider"></div>
       <div class="dropdown-header"
            i18n="@@table.header.suggestion.link.existing">Use existing link
