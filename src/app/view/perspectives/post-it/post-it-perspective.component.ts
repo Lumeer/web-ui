@@ -34,7 +34,7 @@ import {DeletionHelper} from './util/deletion-helper';
 import {InfiniteScroll} from './util/infinite-scroll';
 import {NavigationHelper} from './util/navigation-helper';
 import {ATTRIBUTE_COLUMN, SelectionHelper, VALUE_COLUMN} from './util/selection-helper';
-import {HashCodeGenerator} from '../../../shared/utils/hash-helper';
+import {HashCodeGenerator} from '../../../shared/utils/hash-code-generator';
 import Create = DocumentsAction.Create;
 import UpdateData = DocumentsAction.UpdateData;
 

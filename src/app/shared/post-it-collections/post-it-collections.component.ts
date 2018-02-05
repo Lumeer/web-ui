@@ -41,7 +41,7 @@ import {Role} from '../permissions/role';
 import {HtmlModifier} from '../utils/html-modifier';
 import {PostItLayout} from '../utils/layout/post-it-layout';
 import {PostItCollectionModel} from './post-it-collection-model';
-import {HashCodeGenerator} from '../utils/hash-helper';
+import {HashCodeGenerator} from '../utils/hash-code-generator';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import Get = CollectionsAction.Get;
 
