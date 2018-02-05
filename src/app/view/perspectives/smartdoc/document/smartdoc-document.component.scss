@@ -1,9 +1,5 @@
 @import "../../../../shared/variables";
 
-.document-panel {
-  left: 20px;
-}
-
 :host {
   .record-mover {
     color: $light;
@@ -14,21 +10,6 @@
   &:hover {
     .record-mover {
       color: $secondary;
-    }
-  }
-}
-
-.template-part {
-  &:not(.selected) {
-    border: 1px solid transparent;
-  }
-
-  &:hover {
-    box-shadow: $shadow-default;
-    cursor: auto;
-
-    &:not(.selected) {
-      cursor: move;
     }
   }
 }

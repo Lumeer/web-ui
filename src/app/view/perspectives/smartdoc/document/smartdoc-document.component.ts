@@ -27,7 +27,6 @@ import {SmartDocAction} from '../../../../core/store/smartdoc/smartdoc.action';
 import {SmartDocModel, SmartDocPartModel} from '../../../../core/store/smartdoc/smartdoc.model';
 import {selectSelectedSmartDocPart} from '../../../../core/store/smartdoc/smartdoc.state';
 import {GridLayout} from '../../../../shared/utils/layout/grid-layout';
-import {Perspective} from '../../perspective';
 import {SmartDocUtils} from '../smartdoc.utils';
 
 @Component({
@@ -73,11 +72,6 @@ export class SmartDocDocumentComponent implements OnInit {
     this.destroyLayout();
   }
 
-  public onSwitchPerspective(partIndex: number, templatePart: SmartDocPartModel, perspective: Perspective) {
-    const part: SmartDocPartModel = {...templatePart, perspective};
-    this.store.dispatch(new SmartDocAction.UpdatePart({partPath: this.path, partIndex, part}));
-  }
-
   public onAddPart(partIndex: number, part: SmartDocPartModel) {
     this.store.dispatch(new SmartDocAction.AddPart({partPath: this.path, partIndex: partIndex + 1, part}));
   }
@@ -87,28 +81,11 @@ export class SmartDocDocumentComponent implements OnInit {
   }
 
   public onRemovePart(partIndex: number) {
-    this.store.dispatch(new SmartDocAction.RemovePartConfirm({partPath: this.path, partIndex: partIndex}));
+    this.store.dispatch(new SmartDocAction.RemovePartConfirm({partPath: this.path, partIndex: partIndex, last: this.hasSinglePart()}));
   }
 
   public getCurrentCollection(): CollectionModel {
     return this.collections.find(collection => collection.code === this.document.collectionCode);
-  }
-
-  public onClickInsidePart(event: MouseEvent, partIndex: number) {
-    if (event['templateSelected']) {
-      return;
-    }
-    event['templateSelected'] = true;
-
-    if (this.selectedPartIndex !== partIndex) {
-      this.store.dispatch(new SmartDocAction.Select({path: this.path, documentId: this.document.id, partIndex}));
-    }
-  }
-
-  public onClickOutsidePart(partIndex: number) {
-    if (this.selectedPartIndex === partIndex) {
-      this.store.dispatch(new SmartDocAction.Deselect());
-    }
   }
 
   public onCopyPart(partIndex: number) {
@@ -116,8 +93,9 @@ export class SmartDocDocumentComponent implements OnInit {
     this.store.dispatch(new SmartDocAction.AddPart({partPath: this.path, partIndex: partIndex + 1, part}));
   }
 
-  public allowedPerspectives(): Perspective[] {
-    return [Perspective.Table, Perspective.SmartDoc];
+  public onSelectPart(partIndex: number, select: boolean) {
+    const payload = select ? {path: this.path, documentId: this.document.id, partIndex} : null;
+    this.store.dispatch(new SmartDocAction.Select(payload));
   }
 
   private refreshLayout() {
@@ -162,6 +140,10 @@ export class SmartDocDocumentComponent implements OnInit {
   public onMovePart(oldIndex: number, newIndex: number) {
     this.store.dispatch(new SmartDocAction.MovePart({partPath: this.path, oldIndex, newIndex}));
     this.store.dispatch(new SmartDocAction.Select({path: this.path, documentId: this.document.id, partIndex: newIndex}));
+  }
+
+  public hasSinglePart(): boolean {
+    return this.smartDoc.parts.length === 1;
   }
 
 }

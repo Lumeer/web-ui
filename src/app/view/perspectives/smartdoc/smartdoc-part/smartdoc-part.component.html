@@ -1,0 +1,43 @@
+<div class="muuri-item-content">
+  <div [class.selected]="selected"
+       (click)="onClickInside($event)"
+       (clickOutside)="onClickOutside()"
+       class="card m-2 template-part">
+    <div class="card-body p-0">
+      <div *ngIf="selected"
+           class="d-flex justify-content-end">
+        <div class="position-relative">
+          <div class="position-absolute side-panel">
+            <smartdoc-side-panel [collection]="collection"
+                                 [document]="document"
+                                 (addPart)="onAddPart($event)">
+            </smartdoc-side-panel>
+          </div>
+        </div>
+      </div>
+      <ng-container [ngSwitch]="part.type">
+        <smartdoc-embedded *ngSwitchCase="'embedded'"
+                           [document]="document"
+                           [path]="path"
+                           [part]="part">
+        </smartdoc-embedded>
+        <smartdoc-text *ngSwitchCase="'text'"
+                       [collection]="collection"
+                       [document]="document"
+                       [path]="path"
+                       [part]="part"
+                       (partChange)="onUpdatePart($event)">
+        </smartdoc-text>
+      </ng-container>
+    </div>
+    <smartdoc-bottom-panel *ngIf="selected"
+                           [single]="single"
+                           [perspectives]="allowedPerspectives()"
+                           [part]="part"
+                           (copyPart)="onCopyPart()"
+                           (removePart)="onRemovePart()"
+                           (switchPerspective)="onSwitchPerspective($event)"
+                           class="card-footer p-0">
+    </smartdoc-bottom-panel>
+  </div>
+</div>
