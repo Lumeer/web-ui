@@ -64,8 +64,9 @@
   }
 
   .attribute input {
-    font-weight: bold !important;
-    width: 80px;
+    width: 75px;
+    color: $primary;
+    font-style: italic;
   }
 
   span:focus, span input:focus {

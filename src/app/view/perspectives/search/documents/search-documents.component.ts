@@ -36,7 +36,8 @@ import {UserSettingsService} from '../../../../core/user-settings.service';
 import {SizeType} from '../../../../shared/slider/size-type';
 
 @Component({
-  templateUrl: './search-documents.component.html'
+  templateUrl: './search-documents.component.html',
+  styleUrls: ['./search-documents.component.scss']
 })
 export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
@@ -125,7 +126,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   public createDefaultAttributeHtml(document: DocumentModel): string {
     const data = document.data;
-    if (isNullOrUndefined(data)) return '';
+    if (isNullOrUndefined(data)) {
+      return '';
+    }
     return this.valueHtml(Object.values(data)[0]);
   }
 
@@ -148,19 +151,15 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public createValuesHtml(document: DocumentModel): string {
-    const values: string[] = this.getValues(document);
-    let html = '';
-    for (let i = 0; i < values.length; i++) {
-      html += `<b>${values[i]}</b>`;
-      if (i !== values.length - 1) {
-        html += ', ';
-      }
-    }
-    return html;
+    return this.getValues(document)
+      .map(value => `<span class="search-documents-value">${value}</span>`)
+      .join(', ');
   }
 
   private getValues(document: DocumentModel): string[] {
-    if(isNullOrUndefined(document.data)) return [];
+    if (isNullOrUndefined(document.data)) {
+      return [];
+    }
     return this.getValuesFromArray(Object.values(document.data));
   }
 
@@ -186,27 +185,30 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     return this.getValuesFromArray(Object.values(object));
   }
 
-  public createEntriesHtml(document: DocumentModel): string{
-    if(isNullOrUndefined(document.data)) return '';
-    return this.entriesHtml(this.getEntriesForObject(document.data));
-  }
-
-  private getEntriesForObject(object: any): { key: string, value: any }[] {
-    return Object.keys(object).map(key => {
-      return {key: key, value: object[key]};
-    });
-  }
-
-  private entriesHtml(entries: { key: string, value: any }[]): string {
-    let html = '';
-    for (let i = 0; i < entries.length; i++) {
-      html += `<i>${entries[i].key}</i>: `;
-      html += this.valueHtml(entries[i].value);
-      if (i !== entries.length - 1) {
-        html += ', ';
-      }
+  public createEntriesHtml(document: DocumentModel): string {
+    if (isNullOrUndefined(document.data)) {
+      return '';
     }
-    return html;
+
+    return this.entriesHtml(Object.entries(document.data), document);
+  }
+
+  private entriesHtml(entries: [string, any][], document?: DocumentModel): string {
+    return entries
+      .map(([key, value]) => `${this.attributeHtml(key, document)}${this.valueHtml(value)}`)
+      .join(', ');
+  }
+
+  private attributeHtml(attribute: string, document: DocumentModel): string {
+    return `<i class="${this.attributeHtmlClasses(attribute, document)}">${attribute}</i>: `;
+  }
+
+  private attributeHtmlClasses(attribute: string, document: DocumentModel): string {
+    return `search-documents-attribute ${this.isDefaultAttribute(attribute, document) ? 'search-documents-default-attribute' : ''}`;
+  }
+
+  private isDefaultAttribute(attributeFullName: string, document: DocumentModel): boolean {
+    return document && attributeFullName === document.collection.defaultAttributeId;
   }
 
   private valueHtml(value: any): string {
@@ -215,9 +217,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     } else if (isArray(value)) {
       return `[${this.arrayHtml(value as any[])}]`;
     } else if (isObject(value)) {
-      return `{${this.entriesHtml(this.getEntriesForObject(value))}}`;
+      return `{${this.entriesHtml(Object.entries(value))}}`;
     } else {
-      return `<b>${value.toString()}</b>`;
+      return `<span class="search-documents-value">${value.toString()}</span>`;
     }
   }
 
