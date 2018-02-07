@@ -37,7 +37,8 @@
               (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
               (click)="clickOnAttributePair(0, row)">
 
-          <input class="border-0 {{ isDefaultAttribute(attributePair.attribute) ? 'default-attribute' : null }}"
+          <input class="border-0"
+                 [class.font-weight-bold]="isDefaultAttribute(attributePair.attribute)"
                  [(ngModel)]="attributePair.attribute"
                  [attr.list]="suggestionListId()"
                  (keydown)="$event.stopPropagation()"

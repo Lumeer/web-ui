@@ -69,12 +69,6 @@
     font-style: italic;
   }
 
-  .default-attribute input {
-    font-style: normal;
-    font-weight: bold;
-    color: #000000;
-  }
-
   span:focus, span input:focus {
     outline: auto !important;
   }
@@ -83,7 +77,6 @@
     padding: 0 3px;
     width: 100%;
     pointer-events: none;
-    color: #000000;
   }
 
   input:read-only:focus {
