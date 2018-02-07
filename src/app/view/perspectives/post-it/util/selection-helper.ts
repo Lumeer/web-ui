@@ -50,6 +50,26 @@ export class SelectionHelper {
     };
   }
 
+  public initializeIfNeeded() {
+    if (this.selectionIsEmpty()) {
+      this.select(0, 0, this.firstPostIt());
+    }
+  }
+
+  private firstPostIt(): PostItDocumentModel {
+    return this.postIts.reduce((first, current) => {
+      if (first.order <= current.order) {
+        return first;
+      } else {
+        return current;
+      }
+    });
+  }
+
+  private selectionIsEmpty(): boolean {
+    return JSON.stringify(this.selection) === JSON.stringify(this.emptySelection());
+  }
+
   public setEditMode(on: boolean): void {
     this.selection.editing = on;
   }
@@ -254,4 +274,5 @@ export class SelectionHelper {
       row === this.selection.row &&
       postItId === this.selection.documentId;
   }
+
 }
