@@ -34,6 +34,7 @@ import {DeletionHelper} from './util/deletion-helper';
 import {InfiniteScroll} from './util/infinite-scroll';
 import {NavigationHelper} from './util/navigation-helper';
 import {ATTRIBUTE_COLUMN, SelectionHelper, VALUE_COLUMN} from './util/selection-helper';
+import {isNullOrUndefined} from 'util';
 import {KeyCode} from '../../../shared/key-code';
 import {HashCodeGenerator} from '../../../shared/utils/hash-code-generator';
 import Create = DocumentsAction.Create;
@@ -307,13 +308,14 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     postIt.document = documentModel;
     postIt.initialized = Boolean(documentModel.id);
 
-    if (!postIt.initialized) {
-      postIt.order = -this.postIts.length;
-    } else {
-      postIt.order = this.postIts.length;
-    }
+    const direction = this.wasCreatedPreviously(postIt) ? 1 : -1;
+    postIt.order = this.postIts.length * direction;
 
     return postIt;
+  }
+
+  private wasCreatedPreviously(postIt: PostItDocumentModel): boolean {
+    return postIt.initialized && isNullOrUndefined(postIt.document.correlationId);
   }
 
   public postItWithIndex(postIt: PostItDocumentModel, index: number): PostItDocumentModel {
