@@ -1,12 +1,12 @@
 <div class="card-header d-inline-flex py-1 px-3">
-  <i class="icon fa-fw {{ postItModel.document.collection.icon }} mr-1"
-     [style.color]="postItModel.document.collection.color"
-     title="{{ postItModel.document.collection.name }}"></i>
-  <div class="collection-name"
-       [style.color]="postItModel.document.collection.color"
-       title="{{ postItModel.document.collection.name }}">
-    {{ postItModel.document.collection.name }}
-  </div>
+  <span class="mr-1 d-flex overflow-hidden"
+        [style.color]="postItModel.document.collection.color"
+        [title]="postItModel.document.collection.name">
+    <i class="icon fa-fw {{ postItModel.document.collection.icon }}"></i>
+    <div class="collection-name pl-3">
+      {{ postItModel.document.collection.name }}
+    </div>
+  </span>
 
   <ng-container *ngIf="hasWriteRole()">
     <i class="button text-danger fas fa-trash rounded align-self-center p-1"
@@ -32,7 +32,7 @@
       <li *ngFor="let attributePair of attributePairs; let row = index">
         <span id="{{ perspectiveId }}{{ postItModel.index }}[0, {{ row }}]" class="attribute"
               tabindex="-1"
-              title="{{ attributePair.attribute }}"
+              [title]="attributePair.attribute"
               (keydown.ArrowLeft)="selectionHelper.moveSelection(-1, 0)"
               (keydown.ArrowRight)="selectionHelper.moveSelection(1, 0)"
               (keydown.ArrowUp)="selectionHelper.moveSelection(0, -1)"
@@ -52,7 +52,7 @@
         </span>
 
         <span id="{{ perspectiveId }}{{ postItModel.index }}[1, {{ row }}]" tabindex="-1"
-              title="{{ attributePair.value }}"
+              [title]="attributePair.value"
               (keydown.ArrowLeft)="selectionHelper.moveSelection(-1, 0)"
               (keydown.ArrowRight)="selectionHelper.moveSelection(1, 0)"
               (keydown.ArrowUp)="selectionHelper.moveSelection(0, -1)"
@@ -110,7 +110,7 @@
 
         <span>
           <input class="border-0"
-                 title="{{ attributePair.value }}"
+                 [title]="attributePair.value"
                  readonly
                  [ngModel]="attributePair.value">
         </span>
