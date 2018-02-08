@@ -104,7 +104,8 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
           return linkType.id;
         }));
 
-        return !query.collectionIds.every(collectionId => collectionIds.has(collectionId)) ||
+        return !query ||
+          !query.collectionIds.every(collectionId => collectionIds.has(collectionId)) ||
           !query.collectionCodes.every(collectionCode => collectionCodes.has(collectionCode)) ||
           !query.linkTypeIds.every(linkTypeId => linkTypeIds.has(linkTypeId));
       })

@@ -63,7 +63,9 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.querySubscription = this.store.select(selectNavigation)
       .pipe(
-        filter((navigation: NavigationState) => Boolean(navigation.workspace.organizationCode && navigation.workspace.projectCode)),
+        filter((navigation: NavigationState) => {
+          return Boolean(navigation && navigation.workspace && navigation.workspace.organizationCode && navigation.workspace.projectCode)
+        }),
         map(navigation => navigation.query),
         filter(query => !isNullOrUndefined(query)),
         tap(query => this.store.dispatch(new CollectionsAction.Get({query}))),

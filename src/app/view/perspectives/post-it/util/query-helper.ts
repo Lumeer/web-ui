@@ -26,7 +26,7 @@ export class QueryHelper {
   private query: Query;
 
   constructor(queryModel: QueryModel, private getDocumentsPerRow: () => number) {
-    this.query = QueryConverter.toDto(queryModel);
+    this.query = queryModel ? QueryConverter.toDto(queryModel) : null;
   }
 
   public getQuery(): Query {

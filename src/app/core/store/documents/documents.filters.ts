@@ -24,6 +24,10 @@ import {DocumentModel} from './document.model';
 export class DocumentsFilters {
 
   public static filterByQuery(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
+    if (!query) {
+      return documents;
+    }
+
     let filteredDocuments = this.filterByCollections(documents, query);
     filteredDocuments = this.filterByFulltext(filteredDocuments, query);
     return this.paginate(filteredDocuments, query);
