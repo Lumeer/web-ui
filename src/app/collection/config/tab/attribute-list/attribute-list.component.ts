@@ -268,4 +268,8 @@ export class AttributeListComponent {
     return index;
   }
 
+  public publicPath(): string {
+    return PUBLIC_PATH;
+  }
+
 }
