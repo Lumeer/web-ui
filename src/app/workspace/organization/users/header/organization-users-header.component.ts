@@ -18,11 +18,7 @@
  */
 
 import {Component, Input} from '@angular/core';
-import {Store} from '@ngrx/store';
 import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
-import {AppState} from '../../../../core/store/app.state';
-import {UserModel} from '../../../../core/store/users/user.model';
-import {UsersAction} from '../../../../core/store/users/users.action';
 
 @Component({
   selector: 'organization-users-header',
@@ -33,17 +29,5 @@ export class OrganizationUsersHeaderComponent {
 
   @Input()
   public organization: OrganizationModel;
-
-  constructor(private store: Store<AppState>) {
-  }
-
-  public addUser(): void {
-    const user: UserModel = {
-      email: '',
-      name: '',
-    };
-
-    this.store.dispatch(new UsersAction.Create({user: user}));
-  }
 
 }

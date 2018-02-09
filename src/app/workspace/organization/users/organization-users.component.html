@@ -3,12 +3,17 @@
     [organization]="organization">
   </organization-users-header>
 
-  <ng-container *ngIf="(users$ | async)?.length else emptyResult">
-    <organization-user-list
-      [organization]="organization"
-      [users]="users$ | async">
-    </organization-user-list>
-  </ng-container>
+  <organization-user-list
+    *ngIf="(users$ | async)?.length else emptyResult"
+    class="pt-2"
+    [organization]="organization"
+    [users]="users$ | async"
+    [groups]="groups$ | async"
+    (userCreated)="onUserCreated($event)"
+    (userUpdated)="onUserUpdated($event)"
+    (userDeleted)="onUserDeleted($event)"
+    (permissionsChanged)="onPermissionsChanged($event)">
+  </organization-user-list>
 
   <ng-template #emptyResult>
     <h3 class="mx-auto text-center pt-4 text-muted huge-text" i18n="@@organizations.users.no.result">

@@ -1,5 +1,6 @@
 <td class="px-1">
-  <i class="fa fa-caret-right large-text text-success {{ expanded ? 'fa-rotate-90' : null }}"
+  <i class="fa fa-caret-right large-text text-success"
+     [class.fa-rotate-90]="expanded"
      aria-hidden="true"
      title="{{ expanded ? 'Close' : 'Open' }}"
      i18n-title="@@organizations.user.expand"
@@ -7,12 +8,12 @@
 </td>
 
 <td class="px-1">
-  <input class="form-control edit-border"
+  <input class="form-control edit-border" #nameInput
          type="text"
          tabindex="1"
          placeholder="Username"
-         [(ngModel)]="user.name"
-         (blur)="updateUserName(user)">
+         [ngModel]="user.name"
+         (blur)="updateUserName(nameInput.value)">
 </td>
 
 <td class="px-1">
@@ -29,9 +30,9 @@
     <input type="checkbox"
            class="custom-control-input"
            id="Create_proj_{{ user.id }}"
-           [ngModel]="hasWritePermission(user, organization)"
-           (change)="changeWritePermission(user, organization)">
-    <label class="custom-control-label"
+           [ngModel]="hasWritePermission()"
+           (change)="changeWritePermission()">
+    <label class="custom-control-label my-1"
            for="Create_proj_{{ user.id }}">
     </label>
   </div>
@@ -42,20 +43,20 @@
     <input type="checkbox"
            class="custom-control-input"
            id="Manage_org_{{ user.id }}"
-           [ngModel]="hasManagePermission(user, organization)"
-           (change)="changeManagePermission(user, organization)">
-    <label class="custom-control-label"
+           [ngModel]="hasManagePermission()"
+           (change)="changeManagePermission()">
+    <label class="custom-control-label my-1"
            for="Manage_org_{{ user.id }}">
     </label>
   </div>
 </td>
 
 <td class="px-1">
-  <i class="fas fa-fw {{ user.blocked ? 'fa-volume-mute' : 'fa-volume-up' }} text-danger mx-2 clickable"
+  <i class="fas fa-fw {{ blocked ? 'fa-volume-mute' : 'fa-volume-up' }} text-danger mx-2 clickable"
      aria-hidden="true"
-     title="{{ user.blocked ? 'Unblock' : 'Temporarily Block' }} User"
+     title="{{ blocked ? 'Unblock' : 'Temporarily Block' }} User"
      i18n-title="@@organizations.users.block"
-     (click)="blockUser(user)"></i>
+     (click)="blockUser()"></i>
 </td>
 
 <td class="px-1">
@@ -63,5 +64,5 @@
      aria-hidden="true"
      title="Remove User"
      i18n-title="@@organizations.users.remove"
-     (click)="removeUser(user)"></i>
+     (click)="removeUser()"></i>
 </td>

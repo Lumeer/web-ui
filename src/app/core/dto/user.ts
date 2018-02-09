@@ -22,6 +22,6 @@ export interface User {
   id?: string;
   name: string;
   email: string;
-  blocked?: boolean;
+  groups: string[];
 
 }
