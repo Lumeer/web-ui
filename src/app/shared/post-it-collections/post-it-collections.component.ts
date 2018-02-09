@@ -38,7 +38,6 @@ import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 import {Role} from '../permissions/role';
-import {HtmlModifier} from '../utils/html-modifier';
 import {PostItLayout} from '../utils/layout/post-it-layout';
 import {PostItCollectionModel} from './post-it-collection-model';
 import {HashCodeGenerator} from '../utils/hash-code-generator';
@@ -55,6 +54,16 @@ import Get = CollectionsAction.Get;
 })
 export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  private readonly COLLECTION_NAME_COLLAPSED_HEIGHT = 42;
+
+  private readonly COLLECTION_NAME_MAX_HEIGHT = 500;
+
+  private readonly COLLECTION_PLACEHOLDER_NAME = 'Name';
+
+  private readonly COLLECTION_WHITESPACE_COLLAPSED = 'nowrap';
+
+  private readonly COLLECTION_WHITESPACE_EXPANDED = 'normal';
+
   @Input()
   public editable: boolean = true;
 
@@ -68,7 +77,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public postIts: PostItCollectionModel[];
 
-  public lastClickedPostIt: PostItCollectionModel;
+  private lastClickedPostIt: PostItCollectionModel;
 
   public dragging: boolean = false;
 
@@ -287,18 +296,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     );
   }
 
-  public onTextAreaBlur(postIt: PostItCollectionModel, textArea: HTMLTextAreaElement): void {
-    if (postIt.initializing) {
-      return;
-    }
-
-    if (postIt.initialized) {
-      this.updateCollection(postIt);
-    } else {
-      postIt.collection.name && this.createPostIt(postIt);
-    }
-  }
-
   public confirmDeletion(postIt: PostItCollectionModel): void {
     this.notificationService.confirm('Are you sure you want to remove the file?', 'Delete?', [
       {text: 'Yes', action: () => this.removeCollection(postIt), bold: false},
@@ -306,15 +303,75 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     ]);
   }
 
-  public onClick(event: MouseEvent): void {
-    if (!this.postItElements) {
+  public postItSelected(postIt: PostItCollectionModel): boolean {
+    return postIt === this.lastClickedPostIt;
+  }
+
+  public collectionNameHeight(postIt: PostItCollectionModel): string {
+    if (this.postItExpanded(postIt)) {
+      return `${ this.COLLECTION_NAME_MAX_HEIGHT }px`;
+    } else {
+      return `${ this.COLLECTION_NAME_COLLAPSED_HEIGHT }px`;
+    }
+  }
+
+  public collectionNameWhiteSpace(postIt: PostItCollectionModel): string {
+    if (this.postItExpanded(postIt)) {
+      return this.COLLECTION_WHITESPACE_EXPANDED;
+    } else {
+      return this.COLLECTION_WHITESPACE_COLLAPSED;
+    }
+  }
+
+  public onPostItCollectionNameBlurred(postIt: PostItCollectionModel) {
+    if (postIt.collection.id) {
+      this.updateCollection(postIt);
       return;
     }
 
-    const clickedPostItIndex = this.postItElements.toArray().findIndex(postIt => postIt.nativeElement.contains(event.target));
-    if (clickedPostItIndex !== -1) {
-      this.lastClickedPostIt = this.postIts[clickedPostItIndex];
+    if (this.validCollectionName(postIt.collection.name)) {
+      this.createPostIt(postIt);
     }
+  }
+
+  public postItNamePlaceholder(postIt: PostItCollectionModel, collectionName: HTMLDivElement): string {
+    if (postIt.collection && postIt.collection.id) {
+      return '';
+    }
+
+    if (this.collectionNameFocused(collectionName)) {
+      return '';
+    }
+
+    return this.COLLECTION_PLACEHOLDER_NAME;
+  }
+
+  public collectionNameFocused(collectionName: HTMLDivElement): boolean {
+    return document.activeElement === collectionName;
+  }
+
+  public collectionNameChanged(postIt: PostItCollectionModel, newCollectionName: HTMLDivElement) {
+    postIt.collection.name = newCollectionName.textContent;
+  }
+
+  private validCollectionName(collectionName: string): boolean {
+    return collectionName &&
+      collectionName === collectionName.trim() &&
+      collectionName !== this.COLLECTION_PLACEHOLDER_NAME;
+  }
+
+  public onClick(event: MouseEvent): void {
+    if (!this.clickedOnPostIt(event)) {
+      this.lastClickedPostIt = null;
+    }
+  }
+
+  private postItExpanded(postIt: PostItCollectionModel): boolean {
+    return this.postItSelected(postIt) || postIt.hovered;
+  }
+
+  private clickedOnPostIt(event: MouseEvent): boolean {
+    return this.postItElements && this.postItElements.find(postIt => postIt.nativeElement.contains(event.target)) !== undefined;
   }
 
   private postItIndex(collectionData: PostItCollectionModel): number {
@@ -329,16 +386,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   public documentsQuery(collectionId: string): string {
     const query: Query = {collectionIds: [collectionId]};
     return QueryConverter.toString(query);
-  }
-
-  private trimNameWhitespace(postItWithNameToTrim: PostItCollectionModel): void {
-    postItWithNameToTrim.collection.name = postItWithNameToTrim.collection.name.trim();
-  }
-
-  public removeHtmlComments(html: HTMLElement): string {
-    if (html) {
-      return HtmlModifier.removeHtmlComments(html);
-    }
   }
 
   public workspacePath(): string {
@@ -357,7 +404,15 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public trackByCollection(index: number, postIt: PostItCollectionModel): number {
-    return HashCodeGenerator.hashString(postIt.collection.id || postIt.collection.correlationId);
+    return HashCodeGenerator.hashString(PostItCollectionsComponent.postItIdentifier(postIt));
+  }
+
+  private static postItIdentifier(postIt: PostItCollectionModel): string {
+    if (!postIt || !postIt.collection) {
+      return null;
+    }
+
+    return postIt.collection.id || postIt.collection.correlationId;
   }
 
   public ngOnDestroy(): void {
@@ -369,5 +424,4 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       this.collectionsSubscription.unsubscribe();
     }
   }
-
 }

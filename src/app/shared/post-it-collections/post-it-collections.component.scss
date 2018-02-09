@@ -100,11 +100,10 @@
   }
 
   .card-footer {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    transition: max-height $animation-duration ease;
 
-    height: 35px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     width: 100%;
     color: inherit;

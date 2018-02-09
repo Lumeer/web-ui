@@ -24,5 +24,6 @@ export class PostItCollectionModel {
   public collection: CollectionModel;
   public initializing: boolean;
   public initialized: boolean;
+  public hovered: boolean;
 
 }
