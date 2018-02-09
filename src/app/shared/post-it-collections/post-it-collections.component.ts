@@ -102,7 +102,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   private subscribeOnNavigation() {
     this.navigationSubscription = this.store.select(selectNavigation).pipe(
-      filter(navigation => Boolean(navigation.workspace.organizationCode && navigation.workspace.projectCode))
+      filter(navigation => Boolean(navigation && navigation.workspace && navigation.workspace.organizationCode && navigation.workspace.projectCode))
     ).subscribe(navigation => {
       this.workspace = navigation.workspace;
       this.query = navigation.query;
