@@ -9,6 +9,10 @@
    <name>Lumeer's web UI</name>
    <description/>
 
+  <properties>
+    <context.root>ui</context.root>
+  </properties>
+
    <build>
       <finalName>lumeer-web</finalName>
       <plugins>
@@ -34,6 +38,10 @@
                   <resource>
                      <directory>dist</directory>
                   </resource>
+                 <resource>
+                   <directory>src/main/webapp</directory>
+                   <filtering>true</filtering>
+                 </resource>
                </webResources>
             </configuration>
          </plugin>
@@ -68,6 +76,7 @@
                      <workingDirectory>${basedir}</workingDirectory>
                      <environmentVariables>
                         <AOT>true</AOT>
+                        <PUBLIC_PATH>/${context.root}/</PUBLIC_PATH>
                      </environmentVariables>
                   </configuration>
                   <goals>

@@ -118,4 +118,8 @@ export class TopPanelComponent implements OnInit {
     return `${KeycloakSettings.getAuthServerUrl()}/realms/lumeer/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Fwww.lumeer.io%2F`;
   }
 
+  public publicPath(): string {
+    return PUBLIC_PATH;
+  }
+
 }

@@ -1,5 +1,5 @@
 const { ProvidePlugin, DefinePlugin } = require('webpack');
-const { LUMEER_ENV, I18N_FORMAT, I18N_LOCALE, AOT, I18N_PATH, BUILD_NUMBER, LUMEER_ENGINE, entryPoints} = require('./settings');
+const { LUMEER_ENV, I18N_FORMAT, I18N_LOCALE, AOT, I18N_PATH, BUILD_NUMBER, LUMEER_ENGINE, PUBLIC_PATH, entryPoints} = require('./settings');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {AngularCompilerPlugin} = require('@ngtools/webpack');
@@ -15,7 +15,8 @@ const definePlugin = new DefinePlugin(
   {
     LUMEER_ENV: JSON.stringify(LUMEER_ENV),
     API_URL: JSON.stringify(LUMEER_ENGINE),
-    BUILD_NUMBER: JSON.stringify(BUILD_NUMBER)
+    BUILD_NUMBER: JSON.stringify(BUILD_NUMBER),
+    PUBLIC_PATH: JSON.stringify(PUBLIC_PATH)
   }
 );
 
@@ -31,7 +32,7 @@ const htmlWebpackPlugin = new HtmlWebpackPlugin(
   {
     "favicon": "img/favicon.ico",
     "title": "Lumeer tool",
-    "publicPath": "/ui/",
+    "publicPath": PUBLIC_PATH,
     "inject": "body",
     "template": "./src/index.ejs",
     "hash": false,
