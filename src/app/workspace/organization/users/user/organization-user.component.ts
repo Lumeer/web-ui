@@ -21,11 +21,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
 import {UserModel} from '../../../../core/store/users/user.model';
 import {Role} from '../../../../shared/permissions/role';
-import {UsersAction} from '../../../../core/store/users/users.action';
 import {PermissionModel} from '../../../../core/store/permissions/permissions.model';
-import {OrganizationsAction} from '../../../../core/store/organizations/organizations.action';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
 
 @Component({
   selector: 'organization-user',
@@ -46,85 +42,92 @@ export class OrganizationUserComponent {
   @Output()
   public expandedChange = new EventEmitter();
 
-  constructor(private store: Store<AppState>) {
+  @Output()
+  public userUpdated = new EventEmitter<UserModel>();
+
+  @Output()
+  public userDeleted = new EventEmitter<UserModel>();
+
+  @Output()
+  public permissionsUpdated = new EventEmitter<OrganizationModel>();
+
+  public blocked: boolean;
+
+  public updateUserName(newName: string) {
+    this.userUpdated.emit({...this.user, name: newName});
   }
 
-  public hasWritePermission(user: UserModel, organization: OrganizationModel): boolean {
-    const permissions = this.userPermissions(user, organization);
-    return permissions.roles.includes(Role.Write);
+  public hasWritePermission(): boolean {
+    return this.hasPermission(Role.Write);
   }
 
-  public hasManagePermission(user: UserModel, organization: OrganizationModel): boolean {
-    const permissions = this.userPermissions(user, organization);
-    return permissions.roles.includes(Role.Manage);
+  public hasManagePermission(): boolean {
+    return this.hasPermission(Role.Manage);
   }
 
-  private userPermissions(user: UserModel, organization: OrganizationModel): PermissionModel {
-    let permissions = organization.permissions.users.find(userPermissions => {
-      return userPermissions.id === user.email;
+  private hasPermission(role: Role): boolean {
+    const permissions = this.userPermissions();
+    return permissions.roles.includes(role);
+  }
+
+  private userPermissions(): PermissionModel {
+    let permissions = this.organization.permissions.users.find(userPermissions => {
+      return userPermissions.id === this.user.email;
     });
 
     if (permissions === undefined) {
-      permissions = this.addUserPermissions(user, organization);
+      permissions = this.addUserPermissions();
     }
 
     return permissions;
   }
 
-  private addUserPermissions(user: UserModel, organization: OrganizationModel): PermissionModel {
+  private addUserPermissions(): PermissionModel {
     const createdPermissions: PermissionModel = {
-      id: user.email,
+      id: this.user.email,
       roles: []
     };
 
-    organization.permissions.users.push(createdPermissions);
-    this.store.dispatch(new OrganizationsAction.Update({organization: organization}));
-
+    this.organization.permissions.users.push(createdPermissions);
     return createdPermissions;
   }
 
-  public changeWritePermission(user: UserModel, organization: OrganizationModel): void {
-    if (this.hasWritePermission(user, organization)) {
-      this.removePermission(user, organization, Role.Write);
-    } else {
-      this.addPermission(user, organization, Role.Write);
-    }
-
-    this.store.dispatch(new OrganizationsAction.Update({organization: organization}));
+  public changeWritePermission() {
+    this.changePermission(Role.Write);
   }
 
-  public changeManagePermission(user: UserModel, organization: OrganizationModel): void {
-    if (this.hasManagePermission(user, organization)) {
-      this.removePermission(user, organization, Role.Manage);
-    } else {
-      this.addPermission(user, organization, Role.Manage);
-    }
-
-    this.store.dispatch(new OrganizationsAction.Update({organization: organization}));
+  public changeManagePermission() {
+    this.changePermission(Role.Manage);
   }
 
-  private addPermission(user: UserModel, organization: OrganizationModel, addedRole: Role): void {
-    const permissions = this.userPermissions(user, organization);
+  private changePermission(changedRole: Role) {
+    if (this.hasPermission(changedRole)) {
+      this.removePermission(changedRole);
+    } else {
+      this.addPermission(changedRole);
+    }
+  }
+
+  private addPermission(addedRole: Role) {
+    const permissions = this.userPermissions();
     permissions.roles.push(addedRole);
+
+    this.permissionsUpdated.emit(this.organization);
   }
 
-  private removePermission(user: UserModel, organization: OrganizationModel, removedRole: Role): void {
-    const permissions = this.userPermissions(user, organization);
+  private removePermission(removedRole: Role) {
+    const permissions = this.userPermissions();
     permissions.roles = permissions.roles.filter(role => role !== removedRole);
+
+    this.permissionsUpdated.emit(this.organization);
   }
 
-  public updateUserName(user: UserModel): void {
-    this.store.dispatch(new UsersAction.Update({user: user}));
+  public blockUser() {
+    this.blocked = !this.blocked;
   }
 
-  public blockUser(user: UserModel): void {
-    user.blocked = !user.blocked;
-
-    this.store.dispatch(new UsersAction.Update({user: user}));
-  }
-
-  public removeUser(user: UserModel): void {
-    this.store.dispatch(new UsersAction.Delete({userId: user.id}));
+  public removeUser() {
+    this.userDeleted.emit(this.user);
   }
 
 }

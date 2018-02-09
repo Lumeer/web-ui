@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
 import {UserModel} from '../../../../core/store/users/user.model';
+import {GroupModel} from '../../../../core/store/groups/group.model';
 
 @Component({
   selector: 'organization-user-list',
@@ -33,6 +34,21 @@ export class OrganizationUserListComponent {
 
   @Input()
   public users: UserModel[];
+
+  @Input()
+  public groups: GroupModel[];
+
+  @Output()
+  public userCreated = new EventEmitter<UserModel>();
+
+  @Output()
+  public userUpdated = new EventEmitter<UserModel>();
+
+  @Output()
+  public userDeleted = new EventEmitter<UserModel>();
+
+  @Output()
+  public permissionsChanged = new EventEmitter<OrganizationModel>();
 
   public expanded: { [email: string]: boolean } = {};
 

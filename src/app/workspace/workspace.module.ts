@@ -40,6 +40,7 @@ import {OrganizationUserComponent} from './organization/users/user/organization-
 import {OrganizationUsersHeaderComponent} from './organization/users/header/organization-users-header.component';
 import {OrganizationUserFilterComponent} from './organization/users/user-filter/organization-user-filter.component';
 import {OrganizationUserGroupsComponent} from './organization/users/groups/organization-user-groups.component';
+import {OrganizationNewUserComponent} from './organization/users/new-user/organization-new-user.component';
 
 @NgModule({
   imports: [
@@ -55,6 +56,7 @@ import {OrganizationUserGroupsComponent} from './organization/users/groups/organ
     OrganizationUserFilterComponent,
     OrganizationUserGroupsComponent,
     OrganizationUserComponent,
+    OrganizationNewUserComponent,
     OrganizationUsersHeaderComponent,
     OrganizationGroupsComponent,
     OrganizationRegistrationComponent,

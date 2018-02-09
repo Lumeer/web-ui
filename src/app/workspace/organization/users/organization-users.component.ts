@@ -26,6 +26,10 @@ import {OrganizationModel} from '../../../core/store/organizations/organization.
 import {UserModel} from '../../../core/store/users/user.model';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {tap} from 'rxjs/operators';
+import {selectAllGroups} from '../../../core/store/groups/groups.state';
+import {GroupModel} from '../../../core/store/groups/group.model';
+import {UsersAction} from '../../../core/store/users/users.action';
+import {OrganizationsAction} from '../../../core/store/organizations/organizations.action';
 
 @Component({
   templateUrl: './organization-users.component.html',
@@ -35,6 +39,7 @@ export class OrganizationUsersComponent implements OnInit {
 
   public organization$: Observable<OrganizationModel>;
   public users$: Observable<UserModel[]>;
+  public groups$: Observable<GroupModel[]>;
 
   constructor(private store: Store<AppState>) {
   }
@@ -42,10 +47,27 @@ export class OrganizationUsersComponent implements OnInit {
   public ngOnInit(): void {
     this.organization$ = this.store.select(selectOrganizationByWorkspace);
     this.users$ = this.store.select(selectAllUsers).pipe(tap(this.sortUsers));
+    this.groups$ = this.store.select(selectAllGroups);
   }
 
-  private sortUsers(users: UserModel[]): void {
+  private sortUsers(users: UserModel[]) {
     users.sort((user1, user2) => user1.name.localeCompare(user2.name));
+  }
+
+  public onUserCreated(user: UserModel) {
+    this.store.dispatch(new UsersAction.Create({user: user}));
+  }
+
+  public onUserUpdated(user: UserModel) {
+    this.store.dispatch(new UsersAction.Update({user: user}));
+  }
+
+  public onUserDeleted(user: UserModel) {
+    this.store.dispatch(new UsersAction.Delete({userId: user.id}));
+  }
+
+  public onPermissionsChanged(organization: OrganizationModel) {
+    this.store.dispatch(new OrganizationsAction.Update({organization: organization}));
   }
 
 }

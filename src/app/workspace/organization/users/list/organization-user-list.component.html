@@ -19,17 +19,27 @@
   </thead>
   <tbody>
   <ng-container *ngFor="let user of users">
+
     <organization-user
       [organization]="organization"
       [user]="user"
       [expanded]="expanded[user.email]"
-      (expandedChange)="(expanded[user.email] = !expanded[user.email])">
+      (expandedChange)="(expanded[user.email] = !expanded[user.email])"
+      (userUpdated)="userUpdated.emit(user)"
+      (userDeleted)="userDeleted.emit(user)"
+      (permissionsUpdated)="permissionsChanged.emit(organization)">
     </organization-user>
+
     <organization-user-groups
       *ngIf="expanded[user.email]"
-      [organization]="organization"
-      [user]="user">
+      [user]="user"
+      [groups]="groups"
+      (groupAdded)="userUpdated.emit(user)">
     </organization-user-groups>
+
   </ng-container>
+  <organization-new-user
+    (userCreated)="userCreated.emit($event)">
+  </organization-new-user>
   </tbody>
 </table>

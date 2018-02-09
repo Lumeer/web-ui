@@ -17,23 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Group} from '../../dto/group';
-import {GroupModel} from './group.model';
+import {Component, EventEmitter, Output} from '@angular/core';
+import {UserModel} from '../../../../core/store/users/user.model';
 
-export class GroupConverter {
+@Component({
+  selector: 'organization-new-user',
+  templateUrl: './organization-new-user.component.html',
+  styleUrls: ['./organization-new-user.component.scss']
+})
+export class OrganizationNewUserComponent {
 
-  public static fromDto(dto: Group): GroupModel {
-    return {
-      id: dto.id,
-      name: dto.name
+  @Output()
+  public userCreated = new EventEmitter<UserModel>();
+
+  public name: string;
+
+  public email: string;
+
+  public addUser() {
+    const newUser: UserModel = {
+      name: this.name,
+      email: this.email,
+      groups: []
     };
-  }
 
-  public static toDto(group: GroupModel): Group {
-    return {
-      id: group.id,
-      name: group.name
-    };
+    this.userCreated.emit(newUser);
   }
 
 }

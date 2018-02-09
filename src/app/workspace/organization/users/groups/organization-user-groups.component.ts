@@ -17,41 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {UserModel} from '../../../../core/store/users/user.model';
 import {GroupModel} from '../../../../core/store/groups/group.model';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
-import {selectAllGroups} from '../../../../core/store/groups/groups.state';
-import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'organization-user-groups',
   templateUrl: './organization-user-groups.component.html',
   styleUrls: ['./organization-user-groups.component.scss']
 })
-export class OrganizationUserGroupsComponent implements OnInit {
-
-  @Input()
-  public organization: OrganizationModel;
+export class OrganizationUserGroupsComponent {
 
   @Input()
   public user: UserModel;
 
-  public groups$: Observable<GroupModel[]>;
+  @Input()
+  public groups: GroupModel[];
+
+  @Output()
+  public groupAdded = new EventEmitter<GroupModel>();
 
   public newGroupName: string;
 
-  constructor(private store: Store<AppState>) {
-  }
+  public addGroup() {
+    const newGroup: GroupModel = {name: this.newGroupName};
+    this.user.groups.push(newGroup);
 
-  public ngOnInit() {
-    this.groups$ = this.store.select(selectAllGroups);
-  }
-
-  public userGroups(user: UserModel, groups: GroupModel[]): GroupModel[] {
-    return groups.filter(group => group.users && group.users.includes(user.email));
+    this.groupAdded.emit(this.user);
+    this.newGroupName = '';
   }
 
 }

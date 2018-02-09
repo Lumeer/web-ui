@@ -4,17 +4,17 @@
 </td>
 <td colspan="3">
   <div class="d-flex">
-    <div i18n="@@organizations.user.roles.groups">
+    <div i18n="@@organizations.user.roles.groups"
+         class="my-auto pl-4">
       Groups:
     </div>
-    <ng-container *ngIf="(groups$ | async) as groups">
-      <input *ngFor="let group of userGroups(user, groups)"
-             class="form-check edit-border p-1 mx-1"
-             [(ngModel)]="group.name">
-    </ng-container>
+    <input *ngFor="let group of user.groups"
+           class="form-check edit-border p-1 mx-1"
+           [(ngModel)]="group.name">
 
     <input class="form-check edit-border p-1 mx-1"
-           [(ngModel)]="newGroupName">
+           [(ngModel)]="newGroupName"
+           (keydown.enter)="addGroup()">
   </div>
 </td>
 <td colspan="3">
