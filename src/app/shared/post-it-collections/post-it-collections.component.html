@@ -31,9 +31,13 @@
 
   <div *ngFor="let postIt of postIts; trackBy:trackByCollection" #postItElement
        layout-item [layout]="layout"
-       class="layout-item card post-it {{ postIt === lastClickedPostIt ? 'selected' : null }} {{ !postIt.initialized ? 'uninitialized' : null }}"
+       class="layout-item card post-it"
+       [class.selected]="postItSelected(postIt)"
+       [class.uninitialized]="!postIt.initialized"
        [style.border-color]="postIt.collection.color"
-       (click)="lastClickedPostIt = postIt">
+       (click)="lastClickedPostIt = postIt"
+       (mouseenter)="postIt.hovered = true"
+       (mouseleave)="postIt.hovered = false">
 
     <div class="card-body text-center">
       <a class="icon" [style.color]="postIt.collection.color"
@@ -98,19 +102,17 @@
 
     </div>
 
-    <!-- TODO remove once Angular supports translations outside templates -->
-    <div hidden>
-      <span #inputPlaceholder i18n="@@collection.name.input.placeholder">Name</span>
+    <div #collectionName
+         class="card-footer text-center font-weight-bold bg-transparent"
+         contenteditable="true"
+         [textContent]="postIt.collection.name || postItNamePlaceholder(postIt, collectionName)"
+         (input)="collectionNameChanged(postIt, $event.target)"
+         [style.max-height]="collectionNameHeight(postIt)"
+         [style.white-space]="collectionNameWhiteSpace(postIt)"
+         (blur)="onPostItCollectionNameBlurred(postIt, collectionName)"
+         (keydown.enter)="collectionName.blur()"
+         (keydown.Escape)="collectionName.blur()">
     </div>
-
-    <input class="card-footer text-center font-weight-bold bg-transparent" #input
-           [(ngModel)]="postIt.collection.name"
-           (keydown.enter)="input.blur()"
-           (keydown.Escape)="input.blur()"
-           (blur)="trimNameWhitespace(postIt);
-                onTextAreaBlur(postIt, textArea);
-                input.placeholder = removeHtmlComments(inputPlaceholder)"
-           (focus)="input.placeholder = ''"/>
   </div>
 
 </div>
