@@ -109,7 +109,7 @@
          (input)="collectionNameChanged(postIt, $event.target)"
          [style.max-height]="collectionNameHeight(postIt)"
          [style.white-space]="collectionNameWhiteSpace(postIt)"
-         (blur)="onPostItCollectionNameBlurred(postIt, collectionName)"
+         (blur)="onPostItCollectionNameBlurred(postIt)"
          (keydown.enter)="collectionName.blur()"
          (keydown.Escape)="collectionName.blur()">
     </div>

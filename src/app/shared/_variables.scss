@@ -45,6 +45,6 @@ $table-border-color: #cccccc;
 
 $post-it-width: 215px;
 
-$animation-duration: 0.4s;
-$animation-duration-slow: 0.5s;
-$animation-color-duration: 0.25s;
+$animation-duration: 0.4s ease;
+$animation-duration-slow: 0.5s ease;
+$animation-color-duration: 0.25s ease;

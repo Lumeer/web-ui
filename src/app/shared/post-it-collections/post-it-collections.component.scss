@@ -100,7 +100,7 @@
   }
 
   .card-footer {
-    transition: max-height $animation-duration ease;
+    transition: max-height $animation-duration;
 
     overflow: hidden;
     text-overflow: ellipsis;
