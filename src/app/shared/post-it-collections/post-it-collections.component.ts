@@ -324,6 +324,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public onPostItCollectionNameBlurred(postIt: PostItCollectionModel) {
+    this.submitCollectionNameChanges(postIt);
+  }
+
+  private submitCollectionNameChanges(postIt: PostItCollectionModel) {
     if (postIt.collection.id) {
       this.updateCollection(postIt);
       return;
