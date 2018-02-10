@@ -1,0 +1,11 @@
+<div #collectionName
+     class="card-footer text-center font-weight-bold bg-transparent"
+     contenteditable="true"
+     [textContent]="postIt.collection.name || postItNamePlaceholder(collectionName)"
+     (input)="onNameChanged($event.target)"
+     [style.max-height]="nameHeight()"
+     [style.white-space]="nameWrapping()"
+     (blur)="onNameBlurred()"
+     (keydown.enter)="collectionName.blur()"
+     (keydown.Escape)="collectionName.blur()">
+</div>
