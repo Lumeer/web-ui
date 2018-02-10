@@ -21,9 +21,10 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, flatMap, map, switchMap, tap} from 'rxjs/operators';
 import {Collection, Permission} from '../../dto';
 import {CollectionService, SearchService} from '../../rest';
+import {LinkTypesAction} from '../link-types/link-types.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {PermissionsConverter} from '../permissions/permissions.converter';
@@ -54,15 +55,35 @@ export class CollectionsEffects {
   );
 
   @Effect()
+  public getNames$: Observable<Action> = this.actions$.ofType<CollectionsAction.GetNames>(CollectionsActionType.GET_NAMES).pipe(
+    switchMap(() => this.collectionService.getAllCollectionNames()),
+    map((collectionNames) => new CollectionsAction.GetNamesSuccess({collectionNames})),
+    catchError((error) => Observable.of(new CollectionsAction.GetNamesFailure({error: error})))
+  );
+
+  @Effect({dispatch: false})
+  public getNamesFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.GetNamesFailure>(CollectionsActionType.GET_NAMES_FAILURE).pipe(
+    tap((action: CollectionsAction.GetNamesFailure) => console.error(action.payload.error))
+  );
+
+  @Effect()
   public create$: Observable<Action> = this.actions$.ofType<CollectionsAction.Create>(CollectionsActionType.CREATE).pipe(
     switchMap(action => {
       const collectionDto = CollectionConverter.toDto(action.payload.collection);
 
       return this.collectionService.createCollection(collectionDto).pipe(
-        map(collection => CollectionConverter.fromDto(collection, action.payload.collection.correlationId))
+        map(collection => CollectionConverter.fromDto(collection, action.payload.collection.correlationId)),
+        map(collection => ({collection, nextAction: action.payload.nextAction}))
       );
     }),
-    map(collection => new CollectionsAction.CreateSuccess({collection: collection})),
+    flatMap(({collection, nextAction}) => {
+      const actions: Action[] = [new CollectionsAction.CreateSuccess({collection})];
+      if (nextAction && nextAction instanceof LinkTypesAction.Create) {
+        nextAction.payload.linkType.collectionIds[1] = collection.id;
+        actions.push(nextAction);
+      }
+      return actions;
+    }),
     catchError((error) => Observable.of(new CollectionsAction.CreateFailure({error: error})))
   );
 

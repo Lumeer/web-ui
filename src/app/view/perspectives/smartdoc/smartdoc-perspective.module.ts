@@ -18,6 +18,7 @@
  */
 
 import {NgModule} from '@angular/core';
+import {ReactiveFormsModule} from '@angular/forms';
 import {EffectsModule} from '@ngrx/effects';
 import {StoreModule} from '@ngrx/store';
 import {ClickOutsideModule} from 'ng-click-outside';
@@ -26,15 +27,17 @@ import {SmartDocEffects} from '../../../core/store/smartdoc/smartdoc.effects';
 import {smartDocReducer} from '../../../core/store/smartdoc/smartdoc.reducer';
 import {initialSmartDocState} from '../../../core/store/smartdoc/smartdoc.state';
 import {DragAndDropModule} from '../../../shared/drag-and-drop/drag-and-drop.module';
+import {PickerModule} from '../../../shared/picker/picker.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {SmartDocBottomPanelComponent} from './bottom-panel/smartdoc-bottom-panel.component';
 import {SmartDocDocumentComponent} from './document/smartdoc-document.component';
 import {SmartDocEmbeddedComponent} from './embedded/smartdoc-embedded.component';
+import {NewCollectionDialogComponent} from './new-collection-dialog/new-collection-dialog.component';
 import {SmartDocSidePanelComponent} from './side-panel/smartdoc-side-panel.component';
+import {SmartDocPartComponent} from './smartdoc-part/smartdoc-part.component';
 import {SmartDocPerspectiveComponent} from './smartdoc-perspective.component';
 import {SafeHtmlPipe} from './text/safe-html.pipe';
 import {SmartDocTextComponent} from './text/smartdoc-text.component';
-import { SmartDocPartComponent } from './smartdoc-part/smartdoc-part.component';
 
 @NgModule({
   imports: [
@@ -43,7 +46,9 @@ import { SmartDocPartComponent } from './smartdoc-part/smartdoc-part.component';
     EffectsModule.forFeature([SmartDocEffects]),
     QuillModule,
     ClickOutsideModule,
-    DragAndDropModule
+    DragAndDropModule,
+    PickerModule,
+    ReactiveFormsModule
   ],
   declarations: [
     SmartDocDocumentComponent,
@@ -53,7 +58,8 @@ import { SmartDocPartComponent } from './smartdoc-part/smartdoc-part.component';
     SmartDocSidePanelComponent,
     SmartDocBottomPanelComponent,
     SafeHtmlPipe,
-    SmartDocPartComponent
+    SmartDocPartComponent,
+    NewCollectionDialogComponent
   ],
   entryComponents: [
     SmartDocPerspectiveComponent,

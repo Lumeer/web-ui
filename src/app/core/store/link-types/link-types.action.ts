@@ -19,6 +19,7 @@
 
 import {Action} from '@ngrx/store';
 import {QueryModel} from '../navigation/query.model';
+import {SmartDocAction} from '../smartdoc/smartdoc.action';
 import {LinkTypeModel} from './link-type.model';
 
 export enum LinkTypesActionType {
@@ -69,7 +70,7 @@ export namespace LinkTypesAction {
   export class Create implements Action {
     public readonly type = LinkTypesActionType.CREATE;
 
-    public constructor(public payload: { linkType: LinkTypeModel }) {
+    public constructor(public payload: { linkType: LinkTypeModel, nextAction?: Action }) {
     }
   }
 

@@ -7,7 +7,7 @@
        class="{{layoutContainerClass()}} muuri">
     <smartdoc-part *ngFor="let part of smartDoc.parts; index as partIndex"
                    [class.selected]="selectedPartIndex === partIndex"
-                   [collection]="getCurrentCollection()"
+                   [collection]="collection"
                    [document]="document"
                    [part]="part"
                    [path]="path.concat(partIndex)"

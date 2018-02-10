@@ -19,8 +19,8 @@
 
 import {Component, OnInit} from '@angular/core';
 
-import {UserService} from '../../../core/rest/user.service';
-import {User} from '../../../core/dto/user';
+import {UserService} from '../../../core/rest';
+import {User} from '../../../core/dto';
 import {KeyCode} from '../../../shared/key-code';
 import {HtmlModifier} from '../../../shared/utils/html-modifier';
 import {NotificationService} from '../../../core/notifications/notification.service';

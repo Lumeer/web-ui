@@ -37,6 +37,8 @@ import {SmartDocModel, SmartDocPartModel, SmartDocPartType} from '../../../../co
 import {Perspective} from '../../perspective';
 import {SmartDocUtils} from '../smartdoc.utils';
 
+declare let $: any;
+
 @Component({
   selector: 'smartdoc-side-panel',
   templateUrl: './smartdoc-side-panel.component.html',
@@ -155,8 +157,8 @@ export class SmartDocSidePanelComponent {
     this.addTextPart();
   }
 
-  public addEmbeddedPartWithNewCollection() {
-    console.log('creating new collection and adding embedded part'); // TODO implement
+  public addPartWithNewCollection() {
+    $(`#newLinkedCollectionInSmartDocModal`).modal('show'); // TODO connect ids
   }
 
 }

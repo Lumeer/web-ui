@@ -49,6 +49,7 @@ import {AppStoreModule} from './store/app-store.module';
 
 import {TopPanelComponent} from './top-panel/top-panel.component';
 import {UserSettingsService} from './user-settings.service';
+import {CollectionValidators} from './validators/collection.validators';
 
 @NgModule({
   imports: [
@@ -86,7 +87,8 @@ import {UserSettingsService} from './user-settings.service';
     {provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     SnotifyService,
     NotificationService,
-    WorkspaceGuard
+    WorkspaceGuard,
+    CollectionValidators
   ],
   exports: [
     TopPanelComponent,

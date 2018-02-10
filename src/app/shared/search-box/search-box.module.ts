@@ -21,21 +21,22 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {HighlightPipe} from '../highlight.pipe';
+import {PickerModule} from '../picker/picker.module';
 import {SearchButtonComponent} from './button/search-button.component';
 import {SearchInputComponent} from './input/search-input.component';
 import {SuggestionItemComponent} from './input/suggestions/item/search-suggestion-item.component';
 import {SearchSuggestionsComponent} from './input/suggestions/search-suggestions.component';
+import {AttributeConditionComponent} from './query-item/attribute-condition/attribute-condition.component';
 import {ConditionSuggestionsComponent} from './query-item/condition-suggestions/condition-suggestions.component';
-import {QueryItemIconsComponent} from './query-item/query-item-icons/query-item-icons.component';
 import {QueryItemComponent} from './query-item/query-item.component';
 import {SearchBoxComponent} from './search-box.component';
 import {TruncatePipe} from './truncate.pipe';
-import { AttributeConditionComponent } from './query-item/attribute-condition/attribute-condition.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    PickerModule
   ],
   declarations: [
     SearchBoxComponent,
@@ -46,7 +47,6 @@ import { AttributeConditionComponent } from './query-item/attribute-condition/at
     ConditionSuggestionsComponent,
     HighlightPipe,
     SuggestionItemComponent,
-    QueryItemIconsComponent,
     TruncatePipe,
     AttributeConditionComponent
   ],

@@ -1,0 +1,16 @@
+<ng-container *ngIf="icons && colors">
+  <ng-container [ngSwitch]="icons.length">
+    <i *ngSwitchCase="1"
+       [style.color]="colors[0]"
+       aria-hidden="true"
+       class="{{icons[0]}} fa-fw">
+    </i>
+    <ng-container *ngSwitchCase="2">
+      <i [style.color]="colors[0]"
+         class="{{icons[0]}} fa-xs fa-fw align-top">
+      </i><!-- TODO remove space somehow
+     --><i [style.color]="colors[1]"
+           class="{{icons[1]}} fa-xs fa-fw align-bottom"></i>
+    </ng-container>
+  </ng-container>
+</ng-container>

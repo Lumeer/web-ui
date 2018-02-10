@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, mergeMap, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, flatMap, map, mergeMap, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
 import {selectCollectionsDictionary} from '../collections/collections.state';
@@ -29,6 +29,7 @@ import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {QueryHelper} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {SmartDocAction} from '../smartdoc/smartdoc.action';
 import {LinkTypeConverter} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {selectLinkTypesQueries} from './link-types.state';
@@ -82,10 +83,20 @@ export class LinkTypesEffects {
       const linkTypeDto = LinkTypeConverter.toDto(action.payload.linkType);
 
       return this.linkTypeService.createLinkType(linkTypeDto).pipe(
-        map(dto => LinkTypeConverter.fromDto(dto, action.payload.linkType.correlationId))
+        map(dto => LinkTypeConverter.fromDto(dto, action.payload.linkType.correlationId)),
+        map(linkType => ({linkType, nextAction: action.payload.nextAction}))
       );
     }),
-    map(linkType => new LinkTypesAction.CreateSuccess({linkType: linkType})),
+    flatMap(({linkType, nextAction}) => {
+      const actions: Action[] = [new LinkTypesAction.CreateSuccess({linkType: linkType})];
+
+      if (nextAction && nextAction instanceof SmartDocAction.AddPart) {
+        nextAction.payload.part.linkTypeId = linkType.id;
+        actions.push(nextAction);
+      }
+
+      return actions;
+    }),
     catchError((error) => Observable.of(new LinkTypesAction.CreateFailure({error: error})))
   );
 

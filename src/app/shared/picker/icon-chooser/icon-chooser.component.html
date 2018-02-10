@@ -1,0 +1,20 @@
+<div [id]="dropdownId"
+     class="dropdown text-center">
+  <a [attr.data-toggle]="readonly ? '' : 'dropdown'"
+     [style.color]="changedColor"
+     [style.cursor]="readonly && !url ? 'default' : 'pointer'"
+     data-toggle="dropdown">
+    <i aria-hidden="true"
+       class="{{changedIcon}} {{size}}">
+    </i>
+  </a>
+  <div class="dropdown-menu pickers">
+    <color-picker [(color)]="changedColor"
+                  class="dropdown-item">
+    </color-picker>
+    <div class="dropdown-divider"></div>
+    <icon-picker [(icon)]="changedIcon"
+                 class="dropdown-item">
+    </icon-picker>
+  </div>
+</div>

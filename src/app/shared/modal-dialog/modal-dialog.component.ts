@@ -17,33 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {DialogType} from './dialog-type';
 
-import {ColorPickerComponent} from './color-picker/color-picker.component';
-import {IconPickerComponent} from './icon-picker/icon-picker.component';
-import {IconComponent} from './icon-chooser/icon-chooser.component';
-import {IconsPresenterComponent} from './icons-presenter/icons-presenter.component';
-
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  declarations: [
-    IconPickerComponent,
-    ColorPickerComponent,
-    IconComponent,
-    IconsPresenterComponent
-  ],
-  exports: [
-    IconPickerComponent,
-    ColorPickerComponent,
-    IconComponent,
-    IconsPresenterComponent
-  ]
+@Component({
+  selector: 'modal-dialog',
+  templateUrl: './modal-dialog.component.html'
 })
-export class PickerModule {
+export class ModalDialogComponent {
+
+  @Input()
+  public submitDisabled: boolean;
+
+  @Input()
+  public id: string;
+
+  @Input()
+  public type: DialogType;
+
+  @Input()
+  public width: number;
+
+  @Output()
+  public submit = new EventEmitter();
+
+  public onSubmit() {
+    this.submit.emit();
+  }
 
 }

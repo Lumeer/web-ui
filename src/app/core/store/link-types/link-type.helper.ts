@@ -17,12 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {CollectionModel} from '../collections/collection.model';
 import {LinkTypeModel} from './link-type.model';
 
 export class LinkTypeHelper {
 
   public static getOtherCollectionId(linkType: LinkTypeModel, collectionId: string): string {
     return linkType.collectionIds[0] === collectionId ? linkType.collectionIds[1] : linkType.collectionIds[0];
+  }
+
+  public static composeDefaultName(collections: [CollectionModel, CollectionModel]): string {
+    return collections.map(collection => collection.name).join('-');
   }
 
 }

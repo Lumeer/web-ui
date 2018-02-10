@@ -18,16 +18,19 @@
  */
 
 import {Action} from '@ngrx/store';
-import {NavigationState} from '../navigation/navigation.state';
 import {QueryModel} from '../navigation/query.model';
-import {AttributeModel, CollectionModel} from './collection.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
+import {AttributeModel, CollectionModel} from './collection.model';
 
 export enum CollectionsActionType {
 
   GET = '[Collections] Get',
   GET_SUCCESS = '[Collections] Get :: Success',
   GET_FAILURE = '[Collections] Get :: Failure',
+
+  GET_NAMES = '[Collections] Get Collection Names',
+  GET_NAMES_SUCCESS = '[Collections] Get Collection Names :: Success',
+  GET_NAMES_FAILURE = '[Collections] Get Collection Names :: Failure',
 
   CREATE = '[Collections] Create',
   CREATE_SUCCESS = '[Collections] Create :: Success',
@@ -66,14 +69,14 @@ export namespace CollectionsAction {
   export class Get implements Action {
     public readonly type = CollectionsActionType.GET;
 
-    public constructor(public payload: {query: QueryModel}) {
+    public constructor(public payload: { query: QueryModel }) {
     }
   }
 
   export class GetSuccess implements Action {
     public readonly type = CollectionsActionType.GET_SUCCESS;
 
-    public constructor(public payload: {collections: CollectionModel[]}) {
+    public constructor(public payload: { collections: CollectionModel[] }) {
     }
   }
 
@@ -84,10 +87,31 @@ export namespace CollectionsAction {
     }
   }
 
+  export class GetNames implements Action {
+    public readonly type = CollectionsActionType.GET_NAMES;
+
+    public constructor() {
+    }
+  }
+
+  export class GetNamesSuccess implements Action {
+    public readonly type = CollectionsActionType.GET_NAMES_SUCCESS;
+
+    public constructor(public payload: { collectionNames: string[] }) {
+    }
+  }
+
+  export class GetNamesFailure implements Action {
+    public readonly type = CollectionsActionType.GET_NAMES_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
   export class Create implements Action {
     public readonly type = CollectionsActionType.CREATE;
 
-    public constructor(public payload: { collection: CollectionModel }) {
+    public constructor(public payload: { collection: CollectionModel, nextAction?: Action }) {
     }
   }
 
@@ -240,6 +264,7 @@ export namespace CollectionsAction {
 
   export type All =
     Get | GetSuccess | GetFailure |
+    GetNames | GetNamesSuccess | GetNamesFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure |

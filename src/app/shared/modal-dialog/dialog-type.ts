@@ -17,33 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+export enum DialogType {
 
-import {ColorPickerComponent} from './color-picker/color-picker.component';
-import {IconPickerComponent} from './icon-picker/icon-picker.component';
-import {IconComponent} from './icon-chooser/icon-chooser.component';
-import {IconsPresenterComponent} from './icons-presenter/icons-presenter.component';
-
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
-  declarations: [
-    IconPickerComponent,
-    ColorPickerComponent,
-    IconComponent,
-    IconsPresenterComponent
-  ],
-  exports: [
-    IconPickerComponent,
-    ColorPickerComponent,
-    IconComponent,
-    IconsPresenterComponent
-  ]
-})
-export class PickerModule {
+  Primary = 'primary',
+  Secondary = 'secondary',
+  Success = 'success',
+  Danger = 'danger',
+  Warning = 'warning',
+  Info = 'info',
+  Light = 'light',
+  Dark = 'dark'
 
 }

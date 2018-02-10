@@ -23,6 +23,7 @@ import {Subscription} from 'rxjs';
 import {AppState} from '../../../../core/store/app.state';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 import {SmartDocAction} from '../../../../core/store/smartdoc/smartdoc.action';
 import {SmartDocModel, SmartDocPartModel} from '../../../../core/store/smartdoc/smartdoc.model';
 import {selectSelectedSmartDocPart} from '../../../../core/store/smartdoc/smartdoc.state';
@@ -37,7 +38,7 @@ import {SmartDocUtils} from '../smartdoc.utils';
 export class SmartDocDocumentComponent implements OnInit {
 
   @Input()
-  public collections: CollectionModel[];
+  public collection: CollectionModel;
 
   @Input()
   public document: DocumentModel;
@@ -82,10 +83,6 @@ export class SmartDocDocumentComponent implements OnInit {
 
   public onRemovePart(partIndex: number) {
     this.store.dispatch(new SmartDocAction.RemovePartConfirm({partPath: this.path, partIndex: partIndex, last: this.hasSinglePart()}));
-  }
-
-  public getCurrentCollection(): CollectionModel {
-    return this.collections.find(collection => collection.code === this.document.collectionCode);
   }
 
   public onCopyPart(partIndex: number) {

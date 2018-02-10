@@ -42,7 +42,7 @@ export interface CollectionModel {
   color: string;
 
   attributes?: AttributeModel[];
-  defaultAttributeId: string;
+  defaultAttributeId?: string;
 
   permissions?: PermissionsModel;
 
