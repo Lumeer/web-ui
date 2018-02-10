@@ -54,16 +54,6 @@ import Get = CollectionsAction.Get;
 })
 export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  private readonly COLLECTION_NAME_COLLAPSED_HEIGHT = 42;
-
-  private readonly COLLECTION_NAME_MAX_HEIGHT = 500;
-
-  private readonly COLLECTION_PLACEHOLDER_NAME = 'Name';
-
-  private readonly COLLECTION_WHITESPACE_COLLAPSED = 'nowrap';
-
-  private readonly COLLECTION_WHITESPACE_EXPANDED = 'normal';
-
   @Input()
   public editable: boolean = true;
 
@@ -142,10 +132,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
           collection.favourite = !collection.favourite;
         }
       });
-  }
-
-  public hasWriteRole(collection: CollectionModel): boolean {
-    return this.hasRole(collection, Role.Write);
   }
 
   public hasManageRole(collection: CollectionModel): boolean {
@@ -303,75 +289,26 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     ]);
   }
 
-  public postItSelected(postIt: PostItCollectionModel): boolean {
-    return postIt === this.lastClickedPostIt;
-  }
-
-  public collectionNameHeight(postIt: PostItCollectionModel): string {
-    if (this.postItExpanded(postIt)) {
-      return `${ this.COLLECTION_NAME_MAX_HEIGHT }px`;
-    } else {
-      return `${ this.COLLECTION_NAME_COLLAPSED_HEIGHT }px`;
-    }
-  }
-
-  public collectionNameWhiteSpace(postIt: PostItCollectionModel): string {
-    if (this.postItExpanded(postIt)) {
-      return this.COLLECTION_WHITESPACE_EXPANDED;
-    } else {
-      return this.COLLECTION_WHITESPACE_COLLAPSED;
-    }
-  }
-
-  public onPostItCollectionNameBlurred(postIt: PostItCollectionModel) {
-    this.submitCollectionNameChanges(postIt);
-  }
-
-  private submitCollectionNameChanges(postIt: PostItCollectionModel) {
+  private onCollectionNameChanged(postIt: PostItCollectionModel) {
     if (postIt.collection.id) {
       this.updateCollection(postIt);
-      return;
-    }
-
-    if (this.validCollectionName(postIt.collection.name)) {
+    } else {
       this.createPostIt(postIt);
     }
   }
 
-  public postItNamePlaceholder(postIt: PostItCollectionModel, collectionName: HTMLDivElement): string {
-    if (postIt.collection && postIt.collection.id) {
-      return '';
-    }
-
-    if (this.collectionNameFocused(collectionName)) {
-      return '';
-    }
-
-    return this.COLLECTION_PLACEHOLDER_NAME;
+  public postItExpanded(postIt: PostItCollectionModel): boolean {
+    return this.postItSelected(postIt) || postIt.hovered;
   }
 
-  public collectionNameFocused(collectionName: HTMLDivElement): boolean {
-    return document.activeElement === collectionName;
-  }
-
-  public collectionNameChanged(postIt: PostItCollectionModel, newCollectionName: HTMLDivElement) {
-    postIt.collection.name = newCollectionName.textContent;
-  }
-
-  private validCollectionName(collectionName: string): boolean {
-    return collectionName &&
-      collectionName === collectionName.trim() &&
-      collectionName !== this.COLLECTION_PLACEHOLDER_NAME;
+  private postItSelected(postIt: PostItCollectionModel): boolean {
+    return PostItCollectionsComponent.postItIdentifier(postIt) === PostItCollectionsComponent.postItIdentifier(this.lastClickedPostIt);
   }
 
   public onClick(event: MouseEvent): void {
     if (!this.clickedOnPostIt(event)) {
       this.lastClickedPostIt = null;
     }
-  }
-
-  private postItExpanded(postIt: PostItCollectionModel): boolean {
-    return this.postItSelected(postIt) || postIt.hovered;
   }
 
   private clickedOnPostIt(event: MouseEvent): boolean {

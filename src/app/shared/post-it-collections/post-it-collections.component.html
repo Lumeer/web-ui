@@ -102,17 +102,11 @@
 
     </div>
 
-    <div #collectionName
-         class="card-footer text-center font-weight-bold bg-transparent"
-         contenteditable="true"
-         [textContent]="postIt.collection.name || postItNamePlaceholder(postIt, collectionName)"
-         (input)="collectionNameChanged(postIt, $event.target)"
-         [style.max-height]="collectionNameHeight(postIt)"
-         [style.white-space]="collectionNameWhiteSpace(postIt)"
-         (blur)="onPostItCollectionNameBlurred(postIt)"
-         (keydown.enter)="collectionName.blur()"
-         (keydown.Escape)="collectionName.blur()">
-    </div>
+    <post-it-collection-name
+      [postIt]="postIt"
+      [selected]="postItExpanded(postIt)"
+      (changed)="onCollectionNameChanged(postIt)">
+    </post-it-collection-name>
   </div>
 
 </div>
