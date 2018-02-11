@@ -85,6 +85,10 @@
   }
 }
 
+.overflow-hidden {
+  overflow:hidden;
+}
+
 :host:hover {
   .button, .buttons {
     opacity: 1;
