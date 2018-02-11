@@ -1,0 +1,73 @@
+<modal-dialog [submitDisabled]="!form.valid"
+              [id]="id"
+              [type]="'success'"
+              [width]="350"
+              (submit)="onSubmit()">
+  <span class="title" i18n="@@collection.new.dialog.title">Create new linked file</span>
+
+  <div class="body">
+    <form [formGroup]="form">
+      <div class="form-group">
+        <icon-chooser [(color)]="color"
+                      [(icon)]="icon"
+                      class="d-block mb-3">
+        </icon-chooser>
+      </div>
+      <div class="form-group">
+        <input [class.is-invalid]="collectionNameInput.touched && collectionNameInput.invalid"
+               (input)="onCollectionNameInput($event)"
+               formControlName="collectionName"
+               type="text"
+               class="form-control"
+               placeholder="Enter file name..." i18n-placeholder="@@collection.new.dialog.file.name.placeholder">
+        <div class="invalid-feedback">
+          <div *ngIf="collectionNameInput.errors && collectionNameInput.errors.required"
+               i18n="@@validation.collection.name.empty">
+            Collection name cannot be empty.
+          </div>
+          <div *ngIf="collectionNameInput.errors && collectionNameInput.errors.minlength"
+               i18n="@@validation.collection.name.short">
+            Collection name needs to have at least {{collectionNameInput.errors.minlength.requiredLength}} characters.
+          </div>
+          <div *ngIf="collectionNameInput.errors && collectionNameInput.errors.uniqueName"
+               i18n="@@validation.collection.name.short">
+            Collection name must be unique.
+          </div>
+        </div>
+      </div>
+      <div *ngIf="linkedCollection"
+           class="form-group">
+        <label for="linkName"
+               i18n="@@collection.new.dialog.link.label">Link</label>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <div class="input-group-text px-2">
+              <icons-presenter [colors]="colors()"
+                               [icons]="icons()">
+              </icons-presenter>
+            </div>
+          </div>
+          <input [class.is-invalid]="linkNameInput.touched && linkNameInput.invalid"
+                 formControlName="linkName"
+                 id="linkName"
+                 type="text"
+                 class="form-control"
+                 placeholder="Enter link name..." i18n-placeholder="@@collection.new.dialog.link.name.placeholder">
+          <div class="invalid-feedback">
+            <div *ngIf="linkNameInput.errors && linkNameInput.errors.required"
+                 i18n="@@validation.link.name.empty">
+              Link name cannot be empty.
+            </div>
+            <div *ngIf="linkNameInput.errors &&linkNameInput.errors.minlength"
+                 i18n="@@validation.link.name.short">
+              Link name needs to have at least {{linkNameInput.errors.minlength.requiredLength}} characters.
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <span class="button-cancel" i18n="@@collection.new.dialog.button.cancel">Cancel</span>
+  <span class="button-submit" i18n="@@collection.new.dialog.button.create">Create</span>
+</modal-dialog>

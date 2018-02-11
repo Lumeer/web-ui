@@ -69,6 +69,7 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
 
   public collections$: Observable<CollectionModel[]>;
 
+  public collection: CollectionModel;
   public documents: DocumentModel[];
 
   private documentsSubscription: Subscription;
@@ -123,6 +124,7 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
         if (!this.embedded && !smartDocConfig) {
           const collectionCode = query && query.collectionCodes ? query.collectionCodes[0] : null;
           return this.getCollectionByCode(collectionCode).pipe(map(collection => {
+            this.collection = collection;
             const defaultSmartDoc: SmartDocModel = {
               collectionId: collection.id,
               parts: [SmartDocUtils.createInitialTextPart(collection)]

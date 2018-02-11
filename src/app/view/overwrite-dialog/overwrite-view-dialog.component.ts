@@ -23,8 +23,7 @@ import {ViewModel} from '../../core/store/views/view.model';
 
 @Component({
   selector: 'overwrite-view-dialog',
-  templateUrl: './overwrite-view-dialog.component.html',
-  styleUrls: ['./overwrite-view-dialog.component.scss']
+  templateUrl: './overwrite-view-dialog.component.html'
 })
 export class OverwriteViewDialogComponent implements OnChanges {
 
@@ -48,7 +47,7 @@ export class OverwriteViewDialogComponent implements OnChanges {
     }
   }
 
-  public onSave() {
+  public onSubmit() {
     const view = {...this.newView, code: this.existingView.code};
     this.save.emit(view);
   }

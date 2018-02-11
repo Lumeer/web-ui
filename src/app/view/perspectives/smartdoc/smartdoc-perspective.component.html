@@ -20,7 +20,7 @@
                class="muuri-item mb-3 w-100"
                [class.selected]="doc.id === selectedDocumentId">
             <div class="muuri-item-content">
-              <smartdoc-document [collections]="collections$ | async"
+              <smartdoc-document [collection]="collection"
                                  [document]="doc"
                                  [path]="path"
                                  [smartDoc]="smartDoc"
@@ -34,3 +34,7 @@
     </div>
   </div>
 </ng-container>
+
+<new-collection-dialog [id]="'newLinkedCollectionInSmartDocModal'"
+                       [linkedCollection]="collection">
+</new-collection-dialog>

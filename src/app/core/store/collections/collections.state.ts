@@ -24,12 +24,18 @@ import {selectQuery} from '../navigation/navigation.state';
 import {CollectionModel} from './collection.model';
 
 export interface CollectionsState extends EntityState<CollectionModel> {
+
   loaded: boolean;
+  collectionNames: string[];
+
 }
 
 export const collectionsAdapter = createEntityAdapter<CollectionModel>({selectId: collection => collection.code});
 
-export const initialCollectionsState: CollectionsState = collectionsAdapter.getInitialState({loaded: false});
+export const initialCollectionsState: CollectionsState = collectionsAdapter.getInitialState({
+  loaded: false,
+  collectionNames: []
+});
 
 export const selectCollectionsState = (state: AppState) => state.collections;
 
@@ -40,6 +46,9 @@ export const selectCollectionsByQuery = createSelector(selectCollectionsDictiona
   delete collections['undefined'];
   return !query || query.collectionCodes.length === 0 ? Object.values(collections) : query.collectionCodes.map(code => collections[code]);
 });
+
 export function selectCollectionByCode(code: string) {
   return createSelector(selectCollectionsDictionary, collections => collections[code]);
 }
+
+export const selectCollectionNames = createSelector(selectCollectionsState, (state: CollectionsState) => state.collectionNames);

@@ -19,11 +19,12 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {CommentsComponent} from './comments/comments.component';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 import {LinksComponent} from './links/links.component';
+import {ModalDialogComponent} from './modal-dialog/modal-dialog.component';
 
 import {PermissionsComponent} from './permissions/permissions.component';
 import {PermissionsTableComponent} from './permissions/table/permissions-table.component';
@@ -51,7 +52,8 @@ import {LayoutItem} from './utils/layout/layout-item.directive';
     CommentsComponent,
     LinksComponent,
     PerspectiveDirective,
-    LayoutItem
+    LayoutItem,
+    ModalDialogComponent
   ],
   exports: [
     CommonModule,
@@ -63,7 +65,8 @@ import {LayoutItem} from './utils/layout/layout-item.directive';
     CommentsComponent,
     LinksComponent,
     PerspectiveDirective,
-    SearchBoxModule
+    SearchBoxModule,
+    ModalDialogComponent
   ]
 })
 export class SharedModule {

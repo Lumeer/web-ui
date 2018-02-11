@@ -44,15 +44,7 @@ export class CollectionService extends PermissionService {
   }
 
   public createCollection(collection: Collection): Observable<Collection> {
-    return this.httpClient.post(
-      this.apiPrefix(), this.toDto(collection),
-      {observe: 'response', responseType: 'text'}
-    ).pipe(
-      map(response => response.headers.get('Location').split('/').pop()),
-      tap(code => this.homePageService.addLastUsedCollection(code).subscribe()),
-      map(code => ({...collection, code: code})), // TODO return fresh instance from the server instead
-      catchError(this.handleError)
-    );
+    return this.httpClient.post<Collection>(this.apiPrefix(), this.toDto(collection));
   }
 
   public updateCollection(collection: Collection, collectionCode?: string): Observable<Collection> {
@@ -119,6 +111,10 @@ export class CollectionService extends PermissionService {
       catchError(CollectionService.handleGlobalError),
       switchMap(collections => this.homePageService.checkFavoriteCollections(collections))
     );
+  }
+
+  public getAllCollectionNames(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.apiPrefix()}/names`);
   }
 
   /**

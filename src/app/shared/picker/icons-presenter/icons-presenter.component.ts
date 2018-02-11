@@ -18,15 +18,17 @@
  */
 
 import {Component, Input} from '@angular/core';
-import {QueryItem} from '../model/query-item';
 
 @Component({
-  selector: 'query-item-icons',
-  templateUrl: './query-item-icons.component.html'
+  selector: 'icons-presenter',
+  templateUrl: './icons-presenter.component.html'
 })
-export class QueryItemIconsComponent {
+export class IconsPresenterComponent {
 
   @Input()
-  public queryItem: QueryItem;
+  public colors: string[];
+
+  @Input()
+  public icons: string[];
 
 }

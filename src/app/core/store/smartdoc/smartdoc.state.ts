@@ -19,13 +19,17 @@
 
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 
+export interface SelectedSmartDocPart {
+
+  path: number[];
+  documentId: string;
+  partIndex: number;
+
+}
+
 export interface SmartDocState {
 
-  selectedPart: {
-    path: number[];
-    documentId: string;
-    partIndex: number;
-  };
+  selectedPart: SelectedSmartDocPart;
 
 }
 
