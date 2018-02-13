@@ -30,6 +30,7 @@ export interface NavigationState {
   perspective?: Perspective;
   searchBoxHidden?: boolean;
   viewName?: string;
+  linkCollectionIds?: string[];
 
 }
 
@@ -45,3 +46,4 @@ export const selectNavigation = (state: AppState) => state.navigation;
 export const selectQuery = createSelector(selectNavigation, (state: NavigationState) => state.query);
 export const selectPerspective = createSelector(selectNavigation, (state: NavigationState) => state.perspective);
 export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);
+export const selectLinkCollectionIds = createSelector(selectNavigation, (state: NavigationState) => state.linkCollectionIds);

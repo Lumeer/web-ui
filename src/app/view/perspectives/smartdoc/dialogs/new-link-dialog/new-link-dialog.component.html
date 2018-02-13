@@ -1,0 +1,20 @@
+<modal-dialog [submitDisabled]="!form.valid"
+              [id]="id"
+              [type]="'success'"
+              [width]="350"
+              (submit)="onSubmit()">
+  <span class="title" i18n="@@link.new.dialog.title">Create new link</span>
+
+  <div class="body">
+    <form [formGroup]="form">
+      <link-name-input [colors]="colors()"
+                       [icons]="icons()"
+                       [focused]="linkInputFocused"
+                       [formGroup]="linkTypeFormGroup">
+      </link-name-input>
+    </form>
+  </div>
+
+  <span class="button-cancel" i18n="@@link.new.dialog.button.cancel">Cancel</span>
+  <span class="button-submit" i18n="@@link.new.dialog.button.create">Create</span>
+</modal-dialog>

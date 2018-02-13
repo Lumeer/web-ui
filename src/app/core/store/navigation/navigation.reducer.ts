@@ -29,6 +29,8 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
   const params = RouteFinder.getFirstChildRouteWithParams(route).paramMap;
   const queryParams = route.queryParamMap;
 
+  const linkCollectionIds = queryParams.get('linkCollectionIds');
+
   return {
     query: QueryConverter.fromString(queryParams.get('query')),
     workspace: {
@@ -39,7 +41,8 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
     },
     perspective: perspectivesMap[extractPerspectiveIdFromUrl(action.payload.routerState.url)],
     searchBoxHidden: RouteFinder.getDeepestChildRoute(route).data['searchBoxHidden'],
-    viewName: queryParams.get('viewName')
+    viewName: queryParams.get('viewName'),
+    linkCollectionIds: linkCollectionIds ? linkCollectionIds.split(',') : null
   };
 }
 

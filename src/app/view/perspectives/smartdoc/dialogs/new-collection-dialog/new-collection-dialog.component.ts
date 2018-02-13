@@ -23,17 +23,17 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
-import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../../core/constants';
-import {AppState} from '../../../../core/store/app.state';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {CollectionsAction} from '../../../../core/store/collections/collections.action';
-import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
-import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
-import {SmartDocAction} from '../../../../core/store/smartdoc/smartdoc.action';
-import {SmartDocPartModel, SmartDocPartType} from '../../../../core/store/smartdoc/smartdoc.model';
-import {SelectedSmartDocPart, selectSelectedSmartDocPart} from '../../../../core/store/smartdoc/smartdoc.state';
-import {CollectionValidators} from '../../../../core/validators/collection.validators';
-import {Perspective} from '../../perspective';
+import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../../../core/constants';
+import {AppState} from '../../../../../core/store/app.state';
+import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {CollectionsAction} from '../../../../../core/store/collections/collections.action';
+import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
+import {LinkTypesAction} from '../../../../../core/store/link-types/link-types.action';
+import {SmartDocAction} from '../../../../../core/store/smartdoc/smartdoc.action';
+import {SmartDocPartModel, SmartDocPartType} from '../../../../../core/store/smartdoc/smartdoc.model';
+import {SelectedSmartDocPart, selectSelectedSmartDocPart} from '../../../../../core/store/smartdoc/smartdoc.state';
+import {CollectionValidators} from '../../../../../core/validators/collection.validators';
+import {Perspective} from '../../../perspective';
 
 declare let $: any;
 
@@ -49,13 +49,15 @@ export class NewCollectionDialogComponent implements OnInit, OnDestroy {
   @Input()
   public linkedCollection: CollectionModel;
 
-  public color: string = DEFAULT_COLOR;
-  public icon: string = DEFAULT_ICON;
-
   private selectedSmartDocPart: SelectedSmartDocPart;
   private smartDocSubscription: Subscription;
 
   public form: FormGroup;
+  public collectionFormGroup: FormGroup;
+  public linkTypeFormGroup: FormGroup;
+
+  public color: string = DEFAULT_COLOR;
+  public icon: string = DEFAULT_ICON;
 
   constructor(private collectionValidators: CollectionValidators,
               private router: Router,
@@ -64,12 +66,35 @@ export class NewCollectionDialogComponent implements OnInit, OnDestroy {
   }
 
   private createForm() {
-    const validators = [Validators.required, Validators.minLength(3)];
+    this.collectionFormGroup = this.createCollectionFormGroup();
+    this.linkTypeFormGroup = this.createLinkTypeFormGroup();
 
     this.form = new FormGroup({
-      collectionName: new FormControl('', validators, this.collectionValidators.uniqueName()),
+      collection: this.collectionFormGroup,
+      linkType: this.linkTypeFormGroup
+    });
+  }
+
+  private createCollectionFormGroup() {
+    const validators = [Validators.required, Validators.minLength(3)];
+    return new FormGroup({
+      collectionName: new FormControl('', validators, this.collectionValidators.uniqueName())
+    });
+  }
+
+  private createLinkTypeFormGroup() {
+    const validators = [Validators.required, Validators.minLength(3)];
+    return new FormGroup({
       linkName: new FormControl('', validators)
     });
+  }
+
+  public get collectionNameInput(): AbstractControl {
+    return this.collectionFormGroup.get('collectionName');
+  }
+
+  public get linkNameInput(): AbstractControl {
+    return this.linkTypeFormGroup.get('linkName');
   }
 
   public ngOnInit() {
@@ -103,14 +128,6 @@ export class NewCollectionDialogComponent implements OnInit, OnDestroy {
     this.color = DEFAULT_COLOR;
     this.icon = DEFAULT_ICON;
     this.form.reset();
-  }
-
-  public get collectionNameInput(): AbstractControl {
-    return this.form.get('collectionName');
-  }
-
-  public get linkNameInput(): AbstractControl {
-    return this.form.get('linkName');
   }
 
   public colors(): string[] {
@@ -164,9 +181,9 @@ export class NewCollectionDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  public onCollectionNameInput(event: Event) {
+  public onCollectionNameChange() {
     if (this.linkedCollection && !this.linkNameInput.dirty) {
-      const collectionName = event.target['value'];
+      const collectionName = this.collectionNameInput.value;
       const linkName = collectionName ? `${this.linkedCollection.name}-${collectionName}` : '';
       this.linkNameInput.setValue(linkName);
     }

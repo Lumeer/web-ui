@@ -1,0 +1,31 @@
+<div [formGroup]="formGroup"
+     class="form-group">
+  <label for="linkName"
+         i18n="@@collection.new.dialog.link.label">Link</label>
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <div class="input-group-text px-2">
+        <icons-presenter [colors]="colors"
+                         [icons]="icons">
+        </icons-presenter>
+      </div>
+    </div>
+    <input #linkName
+           [class.is-invalid]="linkNameInput.touched && linkNameInput.invalid"
+           formControlName="linkName"
+           id="linkName"
+           type="text"
+           class="form-control"
+           placeholder="Enter link name..." i18n-placeholder="@@collection.new.dialog.link.name.placeholder">
+    <div class="invalid-feedback">
+      <div *ngIf="linkNameInput.errors && linkNameInput.errors.required"
+           i18n="@@validation.link.name.empty">
+        Link name cannot be empty.
+      </div>
+      <div *ngIf="linkNameInput.errors &&linkNameInput.errors.minlength"
+           i18n="@@validation.link.name.short">
+        Link name needs to have at least {{linkNameInput.errors.minlength.requiredLength}} characters.
+      </div>
+    </div>
+  </div>
+</div>
