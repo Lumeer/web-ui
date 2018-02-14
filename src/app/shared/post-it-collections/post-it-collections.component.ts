@@ -22,16 +22,12 @@ import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
 import {Store} from '@ngrx/store';
 
 import {PostItLayoutConfig} from 'app/shared/utils/layout/post-it-layout-config';
-import {filter, finalize} from 'rxjs/operators';
+import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {Query} from '../../core/dto';
-import {NotificationService} from '../../core/notifications/notification.service';
-import {CollectionService, ImportService, SearchService} from '../../core/rest';
 import {AppState} from '../../core/store/app.state';
-import {CollectionConverter} from '../../core/store/collections/collection.converter';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {selectCollectionsByQuery} from '../../core/store/collections/collections.state';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {QueryModel} from '../../core/store/navigation/query.model';
@@ -42,7 +38,9 @@ import {PostItLayout} from '../utils/layout/post-it-layout';
 import {PostItCollectionModel} from './post-it-collection-model';
 import {HashCodeGenerator} from '../utils/hash-code-generator';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
-import Get = CollectionsAction.Get;
+import {LumeerError} from '../../core/error/lumeer.error';
+import {NotificationsAction} from '../../core/store/notifications/notifications.action';
+import {selectCollectionsByQuery} from '../../core/store/collections/collections.state';
 
 @Component({
   selector: 'post-it-collections',
@@ -63,8 +61,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   @ViewChildren('postItElement')
   public postItElements: QueryList<ElementRef>;
 
-  public postItToDelete: PostItCollectionModel;
-
   public postIts: PostItCollectionModel[];
 
   private lastClickedPostIt: PostItCollectionModel;
@@ -81,22 +77,25 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   private collectionsSubscription: Subscription;
 
-  constructor(private collectionService: CollectionService,
-              private searchService: SearchService,
-              private notificationService: NotificationService,
-              private importService: ImportService,
-              private store: Store<AppState>,
+  constructor(private store: Store<AppState>,
               private zone: NgZone) {
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.createLayout();
     this.subscribeOnNavigation();
     this.subscribeOnCollections();
   }
 
-  public ngAfterViewInit(): void {
+  public ngAfterViewInit() {
     this.layout.initialize();
+  }
+
+  private createLayout() {
+    const config = new PostItLayoutConfig();
+    config.dragEnabled = false;
+
+    this.layout = new PostItLayout('post-it-collection-layout', config, this.zone);
   }
 
   private subscribeOnNavigation() {
@@ -106,113 +105,51 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       this.workspace = navigation.workspace;
       this.query = navigation.query;
 
-      this.store.dispatch(new Get({query: this.query}));
+      this.store.dispatch(new CollectionsAction.Get({query: this.query}));
     });
   }
 
-  private createLayout(): void {
-    const config = new PostItLayoutConfig();
-    config.dragEnabled = false;
-
-    this.layout = new PostItLayout('post-it-collection-layout', config, this.zone);
+  private subscribeOnCollections() {
+    this.collectionsSubscription = this.store.select(selectCollectionsByQuery).subscribe(collections => {
+      this.postIts = collections.map(collection => this.collectionToPostIt(collection))
+        .concat(this.unitializedCollections());
+    });
   }
 
-  private collectionToPostIt(collection: CollectionModel, initialized: boolean): PostItCollectionModel {
+  private collectionToPostIt(collection: CollectionModel): PostItCollectionModel {
     const postIt = new PostItCollectionModel;
     postIt.collection = collection;
-    postIt.initialized = initialized;
 
     return postIt;
   }
 
   public toggleFavorite(collection: CollectionModel) {
-    this.collectionService.toggleCollectionFavorite(CollectionConverter.toDto(collection))
-      .subscribe(success => {
-        if (success) {
-          collection.favourite = !collection.favourite;
-        }
-      });
+    const collectionCopy = Object.assign({}, collection);
+    collectionCopy.favourite = !collectionCopy.favourite;
+
+    this.store.dispatch(new CollectionsAction.Update({collection: collectionCopy}));
   }
 
-  public hasManageRole(collection: CollectionModel): boolean {
-    return this.hasRole(collection, Role.Manage);
-  }
-
-  private hasRole(collection: CollectionModel, role: string) {
-    return collection.permissions && collection.permissions.users
-      .some(permission => permission.roles.includes(role));
-  }
-
-  public newPostIt(): void {
+  public newPostIt() {
     const newPostIt = new PostItCollectionModel;
-    newPostIt.initialized = false;
     newPostIt.collection = {
       name: '',
       description: '',
       color: DEFAULT_COLOR,
       icon: DEFAULT_ICON,
-      defaultAttributeId: '',
-      correlationId: CorrelationIdGenerator.generate()
+      defaultAttributeId: ''
     };
 
     this.postIts.push(newPostIt);
-    this.focusNewPostIt();
   }
 
-  private focusNewPostIt(): void {
-    setTimeout(() => {
-      const newPostIt = this.postItElements.last.nativeElement;
-      const newPostItTextField = newPostIt.getElementsByTagName('input').item(0);
-      newPostItTextField.focus();
-    });
+  public createPostIt(postIt: PostItCollectionModel) {
+    postIt.collection.correlationId = CorrelationIdGenerator.generate();
+    this.store.dispatch(new CollectionsAction.Create({collection: postIt.collection}));
   }
 
-  public createPostIt(postIt: PostItCollectionModel): void {
-    postIt.initializing = true;
-
-    this.collectionService.createCollection(CollectionConverter.toDto(postIt.collection))
-      .pipe(finalize(() => postIt.initializing = false))
-      .subscribe(
-        collection => this.finishCreatingCollection(postIt, CollectionConverter.fromDto(collection)),
-        error => this.notificationService.error('Creating file failed')
-      );
-  }
-
-  private finishCreatingCollection(postIt: PostItCollectionModel, collection: CollectionModel): void {
-    postIt.collection.code = collection.code;
-    postIt.initialized = true;
-
-    this.notificationService.success('File created');
-
-    if (this.hasWorkspace()) {
-      this.getCollection(postIt);
-    }
-  }
-
-  private getCollection(postIt: PostItCollectionModel): void {
-    this.collectionService.getCollection(postIt.collection.code)
-      .subscribe(
-        collection => {
-          postIt.collection = CollectionConverter.fromDto(collection);
-        },
-        error => {
-          this.notificationService.error('Getting file failed');
-        });
-  }
-
-  public updateCollection(postIt: PostItCollectionModel): void {
-    if (postIt === this.postItToDelete || !this.hasWorkspace()) {
-      return;
-    }
-
-    this.collectionService.updateCollection(CollectionConverter.toDto(postIt.collection))
-      .subscribe(
-        collection => {
-          postIt.collection = CollectionConverter.fromDto(collection);
-        },
-        error => {
-          this.notificationService.error('Failed updating file');
-        });
+  public updateCollection(postIt: PostItCollectionModel) {
+    this.store.dispatch(new CollectionsAction.Update({collection: postIt.collection}));
   }
 
   public fileChange(files: FileList) {
@@ -226,27 +163,12 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       };
       reader.readAsText(file);
     } else {
-      this.notificationService.error('File input is empty');
+      this.store.dispatch(new NotificationsAction.Error({message: 'File input is empty'}));
     }
   }
 
   private importData(result: string, name: string, format: string) {
-    this.importService.importFile(format, result, name)
-      .subscribe(
-        collection => {
-          const newPostIt = new PostItCollectionModel;
-          newPostIt.initialized = true;
-          newPostIt.collection = CollectionConverter.fromDto(collection);
-
-          collection.color = DEFAULT_COLOR;
-          collection.icon = DEFAULT_ICON;
-
-          this.postIts.push(newPostIt);
-        },
-        error => {
-          this.notificationService.error('Import failed');
-        }
-      );
+    this.store.dispatch(new CollectionsAction.Import({format: format, data: result, name: name}));
   }
 
   public handleDragEnter() {
@@ -263,38 +185,63 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.fileChange(event.dataTransfer.files);
   }
 
-  private removeCollection(postIt: PostItCollectionModel): void {
-    if (postIt.initialized) {
-      this.sendRemoveCollectionRequest(postIt);
-    }
-
-    this.postIts.splice(this.postItIndex(postIt), 1);
-  }
-
-  private sendRemoveCollectionRequest(deletedCollectionPostIt: PostItCollectionModel): void {
-    this.postItToDelete = deletedCollectionPostIt;
-
-    this.collectionService.removeCollection(deletedCollectionPostIt.collection.code).pipe(
-      finalize(() => this.postItToDelete = null)
-    ).subscribe(
-      response => this.notificationService.success('File removed'),
-      error => this.notificationService.error('Failed removing file')
-    );
-  }
-
-  public confirmDeletion(postIt: PostItCollectionModel): void {
-    this.notificationService.confirm('Are you sure you want to remove the file?', 'Delete?', [
-      {text: 'Yes', action: () => this.removeCollection(postIt), bold: false},
-      {text: 'No'}
-    ]);
-  }
-
-  private onCollectionNameChanged(postIt: PostItCollectionModel) {
-    if (postIt.collection.id) {
-      this.updateCollection(postIt);
+  public confirmDeletion(deletedPostIt: PostItCollectionModel) {
+    if (deletedPostIt.collection.id) {
+      this.deleteInitializedPostIt(deletedPostIt);
     } else {
-      this.createPostIt(postIt);
+      this.deleteUninitializedPostIt(deletedPostIt);
     }
+  }
+
+  private deleteInitializedPostIt(deletedPostIt: PostItCollectionModel) {
+    this.store.dispatch(new NotificationsAction.Confirm(
+      {
+        title: 'Delete?',
+        message: 'Are you sure you want to remove the file?',
+        action: new CollectionsAction.Delete({collectionCode: deletedPostIt.collection.code})
+      }));
+  }
+
+  private deleteUninitializedPostIt(deletedPostIt: PostItCollectionModel) {
+    this.postIts = this.postIts.filter(postIt => postIt !== deletedPostIt);
+  }
+
+  private onCollectionNameChanged(postIt: PostItCollectionModel, newName: string) {
+    const sentPostIt = this.postItCopyWithName(postIt, newName);
+    if (sentPostIt.collection.id) {
+      this.updateCollection(sentPostIt);
+    } else {
+      this.createPostIt(sentPostIt);
+    }
+  }
+
+  private postItCopyWithName(postIt: PostItCollectionModel, newName: string): PostItCollectionModel {
+    const postItCopy = Object.assign({}, postIt);
+
+    if (!postItCopy.collection) {
+      throw new LumeerError(`Collection on postIt, ${JSON.stringify(postItCopy)} missing.`);
+    }
+
+    postItCopy.collection.name = newName;
+    return postItCopy;
+  }
+
+  private unitializedCollections(): PostItCollectionModel[] {
+    return this.postIts && this.postIts.filter(this.uninitializedPostIt) || [];
+  }
+
+  private uninitializedPostIt(postIt: PostItCollectionModel): boolean {
+    return !postIt.collection.id && !postIt.collection.correlationId;
+  }
+
+  public onClick(event: MouseEvent) {
+    if (!this.clickedOnPostIt(event)) {
+      this.lastClickedPostIt = null;
+    }
+  }
+
+  private clickedOnPostIt(event: MouseEvent): boolean {
+    return this.postItElements && this.postItElements.find(postIt => postIt.nativeElement.contains(event.target)) !== undefined;
   }
 
   public postItExpanded(postIt: PostItCollectionModel): boolean {
@@ -305,43 +252,26 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     return PostItCollectionsComponent.postItIdentifier(postIt) === PostItCollectionsComponent.postItIdentifier(this.lastClickedPostIt);
   }
 
-  public onClick(event: MouseEvent): void {
-    if (!this.clickedOnPostIt(event)) {
-      this.lastClickedPostIt = null;
-    }
+  public hasManageRole(collection: CollectionModel): boolean {
+    return this.hasRole(collection, Role.Manage);
   }
 
-  private clickedOnPostIt(event: MouseEvent): boolean {
-    return this.postItElements && this.postItElements.find(postIt => postIt.nativeElement.contains(event.target)) !== undefined;
-  }
-
-  private postItIndex(collectionData: PostItCollectionModel): number {
-    const index = this.postIts.findIndex(collectionDataObject => collectionDataObject === collectionData);
-    return index === -1 ? null : index;
-  }
-
-  public emptyQuery(): boolean {
-    return !this.query || (this.query && this.query.collectionCodes && this.query.collectionCodes.length === 0);
-  }
-
-  public documentsQuery(collectionCode: string): string {
-    const query: Query = {collectionCodes: [collectionCode]};
-    return QueryConverter.toString(query);
+  private hasRole(collection: CollectionModel, role: string) {
+    return collection.permissions && collection.permissions.users
+      .some(permission => permission.roles.includes(role));
   }
 
   public workspacePath(): string {
     return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
-  private hasWorkspace(): boolean {
-    return !!(this.workspace && this.workspace.organizationCode && this.workspace.projectCode);
+  public emptyQuery(): boolean {
+    return !this.query || (this.query && this.query.collectionCodes && this.query.collectionCodes.length === 0);
   }
 
-  private subscribeOnCollections() {
-    this.collectionsSubscription = this.store.select(selectCollectionsByQuery).subscribe(collections => {
-      const initialized = true;
-      this.postIts = collections.map(collection => this.collectionToPostIt(collection, initialized));
-    });
+  public queryForCollectionDocuments(collectionCode: string): string {
+    const query: Query = {collectionCodes: [collectionCode]};
+    return QueryConverter.toString(query);
   }
 
   public trackByCollection(index: number, postIt: PostItCollectionModel): number {
@@ -356,7 +286,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     return postIt.collection.id || postIt.collection.correlationId;
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     if (this.navigationSubscription) {
       this.navigationSubscription.unsubscribe();
     }
@@ -365,4 +295,5 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       this.collectionsSubscription.unsubscribe();
     }
   }
+
 }

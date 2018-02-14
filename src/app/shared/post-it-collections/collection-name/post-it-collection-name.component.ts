@@ -19,6 +19,8 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {PostItCollectionModel} from '../post-it-collection-model';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {LumeerError} from '../../../core/error/lumeer.error';
 
 @Component({
   selector: 'post-it-collection-name',
@@ -37,14 +39,33 @@ export class PostItCollectionNameComponent {
 
   private readonly COLLECTION_WHITESPACE_EXPANDED = 'normal';
 
+  private _postIt: PostItCollectionModel;
+
   @Input()
-  public postIt: PostItCollectionModel;
+  set postIt(value: PostItCollectionModel) {
+    this._postIt = value;
+    this.extractCollectionName(value.collection);
+  }
+
+  get postIt(): PostItCollectionModel {
+    return this._postIt;
+  }
 
   @Input()
   public selected: boolean;
 
   @Output()
   public changed = new EventEmitter();
+
+  public collectionName: string;
+
+  private extractCollectionName(collection: CollectionModel) {
+    if (!collection) {
+      throw new LumeerError('No collection to extract name from.');
+    }
+
+    this.collectionName = collection.name;
+  }
 
   public nameHeight(): string {
     if (this.selected) {
@@ -79,12 +100,12 @@ export class PostItCollectionNameComponent {
   }
 
   public onNameChanged(newCollectionName: HTMLDivElement) {
-    this.postIt.collection.name = newCollectionName.textContent;
+    this.collectionName = newCollectionName.textContent;
   }
 
   public onNameBlurred() {
-    if (this.validCollectionName(this.postIt.collection.name)) {
-      this.changed.emit();
+    if (this.validCollectionName(this.collectionName)) {
+      this.changed.emit(this.collectionName);
     }
   }
 
