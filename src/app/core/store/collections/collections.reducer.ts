@@ -29,6 +29,8 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
       return {...state, collectionNames: action.payload.collectionNames};
     case CollectionsActionType.CREATE_SUCCESS:
       return collectionsAdapter.addOne(action.payload.collection, state);
+    case CollectionsActionType.IMPORT_SUCCESS:
+      return collectionsAdapter.addOne(action.payload.collection, state);
     case CollectionsActionType.UPDATE_SUCCESS:
       return collectionsAdapter.updateOne({id: action.payload.collection.id, changes: action.payload.collection}, state);
     case CollectionsActionType.DELETE_SUCCESS:

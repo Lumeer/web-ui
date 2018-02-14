@@ -17,8 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {PostItCollectionModel} from '../post-it-collection-model';
+import {Component, EventEmitter, Input, Output, SimpleChange} from '@angular/core';
+
+import {CollectionModel} from '../../../core/store/collections/collection.model';
 
 @Component({
   selector: 'post-it-collection-name',
@@ -27,70 +28,22 @@ import {PostItCollectionModel} from '../post-it-collection-model';
 })
 export class PostItCollectionNameComponent {
 
-  private readonly COLLECTION_NAME_COLLAPSED_HEIGHT = 42;
+  public collectionName: string;
 
-  private readonly COLLECTION_NAME_MAX_HEIGHT = 500;
-
-  private readonly COLLECTION_PLACEHOLDER_NAME = 'Name';
-
-  private readonly COLLECTION_WHITESPACE_COLLAPSED = 'nowrap';
-
-  private readonly COLLECTION_WHITESPACE_EXPANDED = 'normal';
-
-  @Input()
-  public postIt: PostItCollectionModel;
-
-  @Input()
-  public selected: boolean;
+  @Input() public collection: CollectionModel;
 
   @Output()
-  public changed = new EventEmitter();
+  public changed = new EventEmitter<string>();
 
-  public nameHeight(): string {
-    if (this.selected) {
-      return `${ this.COLLECTION_NAME_MAX_HEIGHT }px`;
-    } else {
-      return `${ this.COLLECTION_NAME_COLLAPSED_HEIGHT }px`;
+  public ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
+    if (changes['collection']) {
+      this.collectionName = this.collection.name;
     }
-  }
-
-  public nameWrapping(): string {
-    if (this.selected) {
-      return this.COLLECTION_WHITESPACE_EXPANDED;
-    } else {
-      return this.COLLECTION_WHITESPACE_COLLAPSED;
-    }
-  }
-
-  public postItNamePlaceholder(collectionName: HTMLDivElement): string {
-    if (this.postIt.collection && this.postIt.collection.id) {
-      return '';
-    }
-
-    if (this.nameFocused(collectionName)) {
-      return '';
-    }
-
-    return this.COLLECTION_PLACEHOLDER_NAME;
-  }
-
-  public nameFocused(collectionName: HTMLDivElement): boolean {
-    return document.activeElement === collectionName;
-  }
-
-  public onNameChanged(newCollectionName: HTMLDivElement) {
-    this.postIt.collection.name = newCollectionName.textContent;
   }
 
   public onNameBlurred() {
-    if (this.validCollectionName(this.postIt.collection.name)) {
-      this.changed.emit();
-    }
-  }
-
-  private validCollectionName(collectionName: string): boolean {
-    return collectionName &&
-      collectionName === collectionName.trim();
+    this.collectionName = this.collectionName.trim();
+    this.changed.emit(this.collectionName);
   }
 
 }

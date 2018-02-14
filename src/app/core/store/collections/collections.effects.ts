@@ -23,7 +23,7 @@ import {Action} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {catchError, flatMap, map, switchMap, tap} from 'rxjs/operators';
 import {Collection, Permission} from '../../dto';
-import {CollectionService, SearchService} from '../../rest';
+import {CollectionService, ImportService, SearchService} from '../../rest';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -91,6 +91,23 @@ export class CollectionsEffects {
   public createFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.CreateFailure>(CollectionsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
     map(() => new NotificationsAction.Error({message: 'Failed to create file'}))
+  );
+
+  @Effect()
+  public import$: Observable<Action> = this.actions$.ofType<CollectionsAction.Import>(CollectionsActionType.IMPORT).pipe(
+    switchMap(action => {
+      return this.importService.importFile(action.payload.format, action.payload.importedCollection).pipe(
+        map(collection => CollectionConverter.fromDto(collection))
+      );
+    }),
+    map(collection => new CollectionsAction.ImportSuccess({collection: collection})),
+    catchError((error) => Observable.of(new CollectionsAction.ImportFailure({error: error})))
+  );
+
+  @Effect()
+  public importFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.ImportFailure>(CollectionsActionType.IMPORT_FAILURE).pipe(
+    tap(action => console.error(action.payload.error)),
+    map(() => new NotificationsAction.Error({message: 'Failed to import file'}))
   );
 
   @Effect()
@@ -213,6 +230,7 @@ export class CollectionsEffects {
 
   constructor(private actions$: Actions,
               private collectionService: CollectionService,
+              private importService: ImportService,
               private searchService: SearchService) {
   }
 

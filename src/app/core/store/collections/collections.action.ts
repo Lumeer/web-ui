@@ -21,6 +21,7 @@ import {Action} from '@ngrx/store';
 import {QueryModel} from '../navigation/query.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 import {AttributeModel, CollectionModel} from './collection.model';
+import {ImportedCollection} from "../../dto/imported-collection";
 
 export enum CollectionsActionType {
 
@@ -35,6 +36,10 @@ export enum CollectionsActionType {
   CREATE = '[Collections] Create',
   CREATE_SUCCESS = '[Collections] Create :: Success',
   CREATE_FAILURE = '[Collections] Create :: Failure',
+
+  IMPORT = '[Collections] Import',
+  IMPORT_SUCCESS = '[Collections] Import :: Success',
+  IMPORT_FAILURE = '[Collections] Import :: Failure',
 
   UPDATE = '[Collections] Update',
   UPDATE_SUCCESS = '[Collections] Update :: Success',
@@ -124,6 +129,27 @@ export namespace CollectionsAction {
 
   export class CreateFailure implements Action {
     public readonly type = CollectionsActionType.CREATE_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
+  export class Import implements Action {
+    public readonly type = CollectionsActionType.IMPORT;
+
+    public constructor(public payload: { format: string, importedCollection: ImportedCollection }) {
+    }
+  }
+
+  export class ImportSuccess implements Action {
+    public readonly type = CollectionsActionType.IMPORT_SUCCESS;
+
+    public constructor(public payload: { collection: CollectionModel }) {
+    }
+  }
+
+  export class ImportFailure implements Action {
+    public readonly type = CollectionsActionType.IMPORT_FAILURE;
 
     public constructor(public payload: { error: any }) {
     }
@@ -266,6 +292,7 @@ export namespace CollectionsAction {
     Get | GetSuccess | GetFailure |
     GetNames | GetNamesSuccess | GetNamesFailure |
     Create | CreateSuccess | CreateFailure |
+    Import | ImportSuccess | ImportFailure |
     Update | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure |
     ChangeAttribute | ChangeAttributeSuccess | ChangeAttributeFailure |
