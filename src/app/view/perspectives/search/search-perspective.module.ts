@@ -28,12 +28,15 @@ import {SearchLinksComponent} from './links/search-links.component';
 import {SearchPerspectiveComponent} from './search-perspective.component';
 import {SearchResultsDirective} from './search-results.directive';
 import {SearchViewsComponent} from './views/search-views.component';
+import {ViewDetailComponent} from "./views/view-detail/view-detail.component";
+import {SearchBoxModule} from "../../../shared/search-box/search-box.module";
 
 @NgModule({
   imports: [
     RouterModule,
     SharedModule,
-    PostItPerspectiveModule
+    PostItPerspectiveModule,
+    SearchBoxModule
   ],
   declarations: [
     SearchAllComponent,
@@ -42,7 +45,8 @@ import {SearchViewsComponent} from './views/search-views.component';
     SearchLinksComponent,
     SearchPerspectiveComponent,
     SearchResultsDirective,
-    SearchViewsComponent
+    SearchViewsComponent,
+    ViewDetailComponent
   ],
   entryComponents: [
     SearchAllComponent,
@@ -53,7 +57,8 @@ import {SearchViewsComponent} from './views/search-views.component';
     SearchViewsComponent
   ],
   exports: [
-    SearchPerspectiveComponent
+    SearchPerspectiveComponent,
+    ViewDetailComponent
   ]
 })
 export class SearchPerspectiveModule {

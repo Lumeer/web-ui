@@ -44,6 +44,8 @@ export const selectViewConfig = createSelector(selectViewsState, views => views.
 export const selectViewSearchConfig = createSelector(selectViewConfig, config => config.search);
 export const selectViewSmartDocConfig = createSelector(selectViewConfig, config => config.smartdoc);
 export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (views, query): ViewModel[] => {
-  // TODO query
-  return views.filter(view => typeof(view) !== 'function');
+  if (query && query.fulltext && query.fulltext.length > 0){
+      return views.filter(view => view.name.toLowerCase().includes(query.fulltext.toLowerCase()));
+  }
+  return views;
 });

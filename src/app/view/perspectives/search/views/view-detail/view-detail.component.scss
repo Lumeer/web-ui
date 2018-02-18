@@ -1,0 +1,13 @@
+@import "../../../../../shared/variables";
+
+.view {
+  cursor: pointer;
+  transition: box-shadow $animation-duration;
+
+  &:hover {
+    box-shadow: $shadow-default;
+    -webkit-box-shadow: $shadow-default;
+    -moz-box-shadow: $shadow-default;
+  }
+
+}

@@ -24,7 +24,7 @@ import {Observable} from 'rxjs/Observable';
 import {catchError, flatMap, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {View} from '../../dto';
-import {ViewService} from '../../rest';
+import {SearchService, ViewService} from '../../rest';
 import {AppState} from '../app.state';
 import {selectWorkspace} from '../navigation/navigation.state';
 import {Workspace} from '../navigation/workspace.model';
@@ -40,8 +40,8 @@ export class ViewsEffects {
 
   @Effect()
   public get: Observable<Action> = this.actions$.ofType<ViewsAction.Get>(ViewsActionType.GET).pipe(
-    switchMap(() => {
-      return this.viewService.getViews().pipe(
+    switchMap((action) => {
+      return this.searchService.searchViews(action.payload.query).pipe(
         map((dtos: View[]) => dtos.map(dto => ViewConverter.convertToModel(dto)))
       );
     }),
@@ -129,7 +129,9 @@ export class ViewsEffects {
 
   constructor(private actions$: Actions,
               private store$: Store<AppState>,
-              private viewService: ViewService) {
+              private viewService: ViewService,
+              private searchService: SearchService
+  ) {
   }
 
 }
