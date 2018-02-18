@@ -184,21 +184,6 @@ export class ResourceChooserComponent implements OnChanges {
     return this.resources.findIndex(resource => resource.id === this.selectedId);
   }
 
-  private checkForInitScrollResources(ix: number) {
-    if (ix === 0) {
-      return;
-    }
-    const numVisible = this.numResourcesVisible();
-    if (ix >= numVisible) {
-      const numShouldScroll = ix - numVisible + Math.round(numVisible / 2);
-      const numMaxScroll = this.resourcesLength() - numVisible;
-      const numToScroll = Math.min(numShouldScroll, numMaxScroll);
-      this.resourceScroll = -numToScroll * squareSize;
-      this.resourceCanScrollLeft = true;
-      this.resourceCanScrollRight = numToScroll < numMaxScroll;
-    }
-  }
-
   private checkForDisableResourceArrows(screenWidth: number) {
     if (screenWidth < this.resourceWidth) {
       this.resourceVisibleArrows = true;
@@ -228,6 +213,11 @@ export class ResourceChooserComponent implements OnChanges {
     if (numPotentiallyVisible - numVisible > 1) {
       this.resourceScroll -= squareSize;
     }
+    this.checkForScrollLeftArrow();
+  }
+
+  private checkForScrollLeftArrow(){
+    this.resourceCanScrollLeft = this.resourceScroll < 0;
   }
 
   private numResourcesVisible(): number {
