@@ -42,7 +42,7 @@ export class ViewDetailComponent implements OnInit{
   @Output()
   public clicked = new EventEmitter();
 
-  private queryItems: QueryItem[] = [];
+  public queryItems: QueryItem[] = [];
 
   public ngOnInit(){
       this.createQueryItems();
