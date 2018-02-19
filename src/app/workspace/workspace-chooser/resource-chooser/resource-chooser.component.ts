@@ -18,7 +18,7 @@
  */
 
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
-import {Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChange, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, QueryList, SimpleChange, ViewChild, ViewChildren} from '@angular/core';
 import {isNullOrUndefined} from 'util';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
 import {NotificationService} from '../../../core/notifications/notification.service';
@@ -73,6 +73,9 @@ type ResourceModel = OrganizationModel | ProjectModel;
   ]
 })
 export class ResourceChooserComponent implements OnChanges {
+
+  @ViewChildren('icon')
+  public icons: QueryList<ElementRef>;
 
   @ViewChild('resourceContainer')
   public resourceContainer: ElementRef;
@@ -357,10 +360,17 @@ export class ResourceChooserComponent implements OnChanges {
         resource[property] = contentTrim;
         if (this.isNewCodeValid(resource.code)) {
           setTimeout(() => {
-            this.onResourcePickerClick(resource);
+            this.showPicker(resource);
           }, 200);
         }
       }// else do nothing
+    }
+  }
+
+  public showPicker(resource: ResourceModel){
+    const element = this.icons.find(icon => icon.nativeElement.id === this.getResourceIdentificator(resource));
+    if (element) {
+      element.nativeElement.click();
     }
   }
 
@@ -371,7 +381,7 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   public onResourcePickerBlur(resource: ResourceModel) {
-    if (this.modifiedResourceId !== this.getResourceIdentificator(resource)) {
+    if (!this.modifiedResourceId || this.modifiedResourceId !== this.getResourceIdentificator(resource)) {
       return;
     }
 
@@ -389,13 +399,14 @@ export class ResourceChooserComponent implements OnChanges {
       this.resourceNew.emit(resource);
     }
 
+    this.modifiedResourceId = null;
   }
 
   private shouldUpdateResource(resource: ResourceModel): boolean {
     return (this.lastIcon && resource.icon !== this.lastIcon) || (this.lastColor && resource.color !== this.lastColor);
   }
 
-  private getResourceIdentificator(resource: ResourceModel): string {
+  public getResourceIdentificator(resource: ResourceModel): string {
     return resource.id || resource.correlationId;
   }
 

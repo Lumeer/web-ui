@@ -185,6 +185,10 @@ $bookmark-border-color: #bdbdbd;
 
 }
 
+.uninitialized-dropdown {
+    transform: translate3d(0px, 0px, 0px) !important;
+}
+
 [contenteditable=true]:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
