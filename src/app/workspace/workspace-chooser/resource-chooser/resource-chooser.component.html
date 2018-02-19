@@ -66,12 +66,14 @@
 
                 <div class="dropdown">
                   <i (click)="onResourcePickerClick(resource)"
-                     (clickOutside)="onResourcePickerBlur(resource)"
+                     (clickOutside)="!resource.id ? onResourcePickerBlur(resource) : null"
                      class="fa-3x {{resource.icon}}"
-                     data-toggle="dropdown"
+                     [attr.data-toggle]="!resource.id ? 'dropdown' : ''"
+                     id="{{getResourceIdentificator(resource)}}"
+                     #icon
                      aria-hidden="true"></i>
                   <div *ngIf="!resource.id"
-                       class="dropdown-menu dropdown-menu-right">
+                       class="dropdown-menu dropdown-menu-right uninitialized-dropdown">
                     <color-picker class="dropdown-item" [color]="resource.color"
                                   (selectedChange)="onNewColor(resource, $event)"></color-picker>
                     <div class="dropdown-divider"></div>
