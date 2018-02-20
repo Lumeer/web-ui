@@ -52,7 +52,8 @@ import {TruncatePipe} from './truncate.pipe';
   ],
   exports: [
     SearchBoxComponent,
-    HighlightPipe
+    HighlightPipe,
+    QueryItemComponent
   ]
 })
 export class SearchBoxModule {

@@ -22,6 +22,7 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {ViewConfigModel, ViewModel} from './view.model';
+import {ViewFilters} from "./view.filters";
 
 export interface ViewsState extends EntityState<ViewModel> {
 
@@ -43,7 +44,4 @@ export const selectViewsDictionary = createSelector(selectViewsState, viewsAdapt
 export const selectViewConfig = createSelector(selectViewsState, views => views.config);
 export const selectViewSearchConfig = createSelector(selectViewConfig, config => config.search);
 export const selectViewSmartDocConfig = createSelector(selectViewConfig, config => config.smartdoc);
-export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (views, query): ViewModel[] => {
-  // TODO query
-  return views.filter(view => typeof(view) !== 'function');
-});
+export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (views, query): ViewModel[] => ViewFilters.filterByQuery(views, query));

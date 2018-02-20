@@ -19,40 +19,81 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {Router} from "@angular/router";
 
-import {View} from '../../../../core/dto/view';
-import {Subscription} from 'rxjs/Subscription';
-import {map, switchMap} from 'rxjs/operators';
-import {SearchService} from '../../../../core/rest/search.service';
 import {AppState} from '../../../../core/store/app.state';
-import {DeprecatedQueryConverter} from '../../../../shared/utils/query-converter';
-import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
+import {Observable} from "rxjs/Observable";
+import {selectViewsByQuery} from "../../../../core/store/views/views.state";
+import {ViewsAction} from "../../../../core/store/views/views.action";
+import {selectNavigation} from "../../../../core/store/navigation/navigation.state";
+import {Subscription} from "rxjs/Subscription";
+import {Workspace} from "../../../../core/store/navigation/workspace.model";
+import {ViewModel} from "../../../../core/store/views/view.model";
+import {selectAllCollections} from "../../../../core/store/collections/collections.state";
+import {selectAllLinkTypes} from "../../../../core/store/link-types/link-types.state";
+import {QueryData} from "../../../../shared/search-box/query-data";
+import {LinkTypesAction} from "../../../../core/store/link-types/link-types.action";
+import {filter} from "rxjs/operators";
+import {isNullOrUndefined} from "util";
 
 @Component({
   templateUrl: './search-views.component.html'
 })
 export class SearchViewsComponent implements OnInit, OnDestroy {
 
-  public views: View[];
+  public views$: Observable<ViewModel[]>;
 
-  private routerSubscription: Subscription;
+  private navigationSubscription: Subscription;
+  private dataSubscription: Subscription;
 
-  constructor(private searchService: SearchService,
+  private workspace: Workspace;
+  private queryData: QueryData;
+
+  constructor(private router: Router,
               private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.routerSubscription = this.store.select(selectNavigation).pipe(
-      map(navigation => navigation.query),
-      map(query => DeprecatedQueryConverter.removeLinksFromQuery(query)),
-      switchMap(query => this.searchService.searchViews(query)),
-    ).subscribe(views => this.views = views);
+    this.views$ = this.store.select(selectViewsByQuery);
+    this.subscribeToNavigation();
+    this.subscribeToData();
+
+    this.getData();
   }
 
   public ngOnDestroy() {
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
     }
+    if (this.dataSubscription) {
+      this.dataSubscription.unsubscribe();
+    }
+  }
+
+  private subscribeToNavigation() {
+    this.navigationSubscription = this.store.select(selectNavigation).pipe(
+      filter(navigation => !isNullOrUndefined(navigation.workspace))
+    ).subscribe(
+      navigation => {
+        this.workspace = navigation.workspace;
+        this.store.dispatch(new ViewsAction.Get({query: navigation.query}));
+      }
+    );
+  }
+
+  private subscribeToData() {
+    this.dataSubscription = Observable.combineLatest(
+      this.store.select(selectAllCollections),
+      this.store.select(selectAllLinkTypes)
+    ).subscribe(([collections, linkTypes]) => this.queryData = {collections, linkTypes});
+  }
+
+  private getData() {
+    this.store.dispatch(new LinkTypesAction.Get({query: {}}));
+  }
+
+  public showView(view: ViewModel) {
+    this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}]);
   }
 
 }

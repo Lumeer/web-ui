@@ -1,9 +1,12 @@
-<div class="mt-2" *ngIf="views">
-  <div *ngIf="views.length == 0" class="alert alert-warning" i18n="@@search.result.empty">
+<div class="mt-2" *ngIf="views$ | async as views">
+  <ng-container *ngIf="views.length; else noViews">
+    <view-detail *ngFor="let view of views"
+                 [view]="view"
+                 [queryData]="queryData"
+                 (clicked)="showView(view)">
+    </view-detail>
+  </ng-container>
+  <ng-template class="alert alert-warning" #noViews i18n="@@search.perspective.result.empty">
     We are sorry, but we have not found anything. Please do a more accurate search.
-  </div>
-
-  <div *ngIf="views.length > 0" class="alert alert-warning">
-    Views search results page has not been implemented yet.
-  </div>
+  </ng-template>
 </div>

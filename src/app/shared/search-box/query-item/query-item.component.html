@@ -8,8 +8,8 @@
 
   <span [class.font-weight-bold]="isCollectionItem()"
         [title]="queryItem.text"
-        class="ml-1">
-    {{queryItem.text | truncate:20}}
+        class="ml-1 text-truncate">
+    {{queryItem.text}}
   </span>
 
   <attribute-condition *ngIf="isAttributeItem()"
