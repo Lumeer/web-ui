@@ -22,9 +22,8 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
-import {ConfiguredAttribute} from '../../collection/config/tab/attribute-list/configured-attribute';
 import {Attribute} from '../dto/attribute';
 
 import {Collection} from '../dto/collection';
@@ -44,7 +43,7 @@ export class CollectionService extends PermissionService {
   }
 
   public createCollection(collection: Collection): Observable<Collection> {
-    return this.httpClient.post<Collection>(this.apiPrefix(), this.toDto(collection));
+    return this.httpClient.post<Collection>(this.apiPrefix(), collection);
   }
 
   public updateCollection(collection: Collection, collectionCode?: string): Observable<Collection> {
@@ -53,7 +52,7 @@ export class CollectionService extends PermissionService {
     }
 
     this.homePageService.addLastUsedCollection(collectionCode).subscribe();
-    return this.httpClient.put(`${this.apiPrefix()}/${collectionCode}`, this.toDto(collection)).pipe(
+    return this.httpClient.put(`${this.apiPrefix()}/${collectionCode}`, collection).pipe(
       catchError(this.handleError),
       switchMap(collection => this.homePageService.checkFavoriteCollection(collection))
     );
@@ -128,7 +127,7 @@ export class CollectionService extends PermissionService {
 
   public updateAttribute(collectionCode: string, fullName: string, attribute: Attribute): Observable<Attribute> {
     this.homePageService.addLastUsedCollection(collectionCode).subscribe();
-    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, this.attributeToDto(attribute)).pipe(
+    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, attribute).pipe(
       catchError(CollectionService.handleGlobalError)
     );
   }
@@ -145,32 +144,6 @@ export class CollectionService extends PermissionService {
     const collectionCode = this.workspace.collectionCode;
 
     return `${this.apiPrefix()}/${collectionCode}`;
-  }
-
-  private toDto(collection: Collection): Collection {
-    let dtoAttributes = [];
-    if (collection.attributes) {
-      dtoAttributes = collection.attributes.map(this.attributeToDto);
-    }
-
-    // TODO send desctiption to the server too
-    return {
-      code: collection.code,
-      name: collection.name,
-      color: collection.color,
-      icon: collection.icon,
-      permissions: collection.permissions,
-      attributes: dtoAttributes
-    };
-  }
-
-  private attributeToDto(attribute: Attribute | ConfiguredAttribute): Attribute {
-    return {
-      constraints: attribute.constraints,
-      fullName: attribute.fullName,
-      name: attribute.name,
-      usageCount: attribute.usageCount
-    };
   }
 
   private apiPrefix(): string {
@@ -190,4 +163,5 @@ export class CollectionService extends PermissionService {
   private convertCodesToCollections(codes: string[]): Observable<Collection[]> {
     return Observable.combineLatest(codes.map(code => this.getCollection(code)));
   }
+
 }

@@ -18,7 +18,7 @@
     transition: box-shadow $animation-duration, transform $animation-duration;
   }
 
-  .post-it:hover{
+  .post-it:hover {
     box-shadow: $shadow-default;
 
     .opacity-content {
@@ -100,25 +100,13 @@
   }
 
   .card-footer {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-
-    height: 35px;
+    border: none;
+    outline: none;
+    padding-top: 0;
 
     width: 100%;
     color: inherit;
     font-size: 20px;
-    border: none;
-    outline: none !important;
-    padding-top: 0;
-  }
-
-  textarea {
-    resize: none;
-    border: none;
-    outline: none;
-    overflow: hidden;
   }
 
 }

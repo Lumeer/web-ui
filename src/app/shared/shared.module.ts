@@ -34,6 +34,7 @@ import {PostItCollectionsComponent} from './post-it-collections/post-it-collecti
 import {SearchBoxModule} from './search-box/search-box.module';
 import {SizeSliderComponent} from './slider/size-slider.component';
 import {LayoutItem} from './utils/layout/layout-item.directive';
+import {PostItCollectionNameComponent} from './post-it-collections/collection-name/post-it-collection-name.component';
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import {LayoutItem} from './utils/layout/layout-item.directive';
     PermissionsComponent,
     PermissionsTableComponent,
     PostItCollectionsComponent,
+    PostItCollectionNameComponent,
     SizeSliderComponent,
     CommentsComponent,
     LinksComponent,

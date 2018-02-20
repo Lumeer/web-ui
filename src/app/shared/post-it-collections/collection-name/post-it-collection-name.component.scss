@@ -1,0 +1,22 @@
+@import "../../variables";
+
+:host {
+  display: block;
+}
+
+.card-footer {
+  border: none;
+  outline: none;
+  padding-top: 0;
+
+  width: 100%;
+  color: inherit;
+  font-size: 20px;
+}
+
+div {
+  transition: max-height $animation-duration;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
