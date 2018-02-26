@@ -33,7 +33,7 @@ export class CollectionQueryItem implements QueryItem {
   }
 
   public get value(): string {
-    return this.collection.code; // TODO use collectionID
+    return this.collection.id;
   }
 
   public get icons(): string[] {

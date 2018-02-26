@@ -282,7 +282,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private updateDocument(postIt: PostItDocumentModel) {
     this.store.dispatch(new UpdateData(
       {
-        collectionCode: postIt.document.collectionCode,
+        collectionId: postIt.document.collectionId,
         documentId: postIt.document.id,
         data: postIt.document.data
       }

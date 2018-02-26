@@ -21,7 +21,7 @@ export interface Workspace {
 
   organizationCode?: string;
   projectCode?: string;
-  collectionCode?: string;
+  collectionId?: string;
   viewCode?: string;
 
 }

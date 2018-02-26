@@ -98,7 +98,6 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       }),
       skipWhile(({collections, linkTypes}) => {
         const collectionIds = new Set(collections.map(collection => collection.id));
-        const collectionCodes = new Set(collections.map(collection => collection.code));
         const linkTypeIds = new Set(linkTypes.map(linkType => {
           linkType.collectionIds.forEach(collectionId => collectionIds.add(collectionId));
           return linkType.id;
@@ -106,7 +105,6 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
         return !query ||
           !query.collectionIds.every(collectionId => collectionIds.has(collectionId)) ||
-          !query.collectionCodes.every(collectionCode => collectionCodes.has(collectionCode)) ||
           !query.linkTypeIds.every(linkTypeId => linkTypeIds.has(linkTypeId));
       })
     );

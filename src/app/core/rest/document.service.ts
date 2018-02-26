@@ -45,13 +45,13 @@ export class DocumentService {
   }
 
   public createDocument(document: Document): Observable<Document> {
-    return this.httpClient.post(this.apiPrefix(document.collectionCode), document, {
+    return this.httpClient.post(this.apiPrefix(document.collectionId), document, {
       observe: 'response',
       responseType: 'text'
     }).pipe(
       catchError(error => this.handleGlobalError(error)),
       map(response => response.headers.get('Location').split('/').pop()),
-      tap(id => this.addLastUsed(document.collectionCode, id)),
+      tap(id => this.addLastUsed(document.collectionId, id)),
       switchMap(id => {
         document.id = id;
         return Observable.of(document);
@@ -61,19 +61,19 @@ export class DocumentService {
 
   public updateDocument(document: Document): Observable<Document> {
     this.addLastUsed(document.collectionCode, document.id);
-    return this.httpClient.put<Document>(`${this.apiPrefix(document.collectionCode)}/${document.id}/data`, document.data)
+    return this.httpClient.put<Document>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data)
       .pipe(
         catchError(error => this.handleGlobalError(error)),
         map(returnedDocument => {
-          return {...returnedDocument, collectionCode: document.collectionCode};
+          return {...returnedDocument, collectionId: document.collectionId};
         }),
         switchMap(document => this.homePageService.checkFavoriteDocument(document))
       );
   }
 
   public patchDocumentData(document: Document): Observable<Document> {
-    this.addLastUsed(document.collectionCode, document.id);
-    return this.httpClient.patch<Document>(`${this.apiPrefix(document.collectionCode)}/${document.id}/data`, document.data)
+    this.addLastUsed(document.collectionId, document.id);
+    return this.httpClient.patch<Document>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data)
       .pipe(
         catchError(error => this.handleGlobalError(error)),
         switchMap(document => this.homePageService.checkFavoriteDocument(document))
@@ -82,21 +82,21 @@ export class DocumentService {
 
   public toggleDocumentFavorite(document: Document): Observable<boolean> {
     if (document.favorite) {
-      return this.homePageService.removeFavoriteDocument(document.collectionCode, document.id);
+      return this.homePageService.removeFavoriteDocument(document.collectionId, document.id);
     }
-    return this.homePageService.addFavoriteDocument(document.collectionCode, document.id);
+    return this.homePageService.addFavoriteDocument(document.collectionId, document.id);
   }
 
-  public removeDocument(collectionCode: string, documentId: string): Observable<HttpResponse<any>> {
-    this.removeLastUsedAndFavorite(collectionCode, documentId);
+  public removeDocument(collectionId: string, documentId: string): Observable<HttpResponse<any>> {
+    this.removeLastUsedAndFavorite(collectionId, documentId);
     return this.httpClient.delete(
-      `${this.apiPrefix(collectionCode)}/${documentId}`,
+      `${this.apiPrefix(collectionId)}/${documentId}`,
       {observe: 'response', responseType: 'text'}
     ).pipe(catchError(error => this.handleGlobalError(error)));
   }
 
-  public getDocument(collectionCode: string, documentId: string): Observable<Document> {
-    return this.httpClient.get<Document>(`${this.apiPrefix(collectionCode)}/${documentId}`)
+  public getDocument(collectionId: string, documentId: string): Observable<Document> {
+    return this.httpClient.get<Document>(`${this.apiPrefix(collectionId)}/${documentId}`)
       .pipe(
         catchError(error => this.handleGlobalError(error)),
         switchMap(document => this.homePageService.checkFavoriteDocument(document))
@@ -115,7 +115,7 @@ export class DocumentService {
     );
   }
 
-  public getDocuments(collectionCode: string, pageNumber?: number, pageSize?: number): Observable<Document[]> {
+  public getDocuments(collectionId: string, pageNumber?: number, pageSize?: number): Observable<Document[]> {
     const queryParams = new HttpParams();
 
     if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
@@ -123,18 +123,18 @@ export class DocumentService {
         .set('size', pageSize.toString());
     }
 
-    return this.httpClient.get<Document[]>(this.apiPrefix(collectionCode), {params: queryParams})
+    return this.httpClient.get<Document[]>(this.apiPrefix(collectionId), {params: queryParams})
       .pipe(
         catchError(error => this.handleGlobalError(error)),
         switchMap(documents => this.homePageService.checkFavoriteDocuments(documents))
       );
   }
 
-  private apiPrefix(collectionCode: string): string {
+  private apiPrefix(collectionId: string): string {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
+    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionId}/documents`;
   }
 
   private handleGlobalError(error: HttpErrorResponse): ErrorObservable {
@@ -143,20 +143,20 @@ export class DocumentService {
 
   private convertCodesToDocuments(codes: string[]): Observable<Document[]> {
     return Observable.combineLatest(codes.map(code => {
-      const [collectionCode, documentId] = code.split(' ', 2);
-      return this.getDocument(collectionCode, documentId);
+      const [collectionId, documentId] = code.split(' ', 2);
+      return this.getDocument(collectionId, documentId);
     }));
   }
 
-  private addLastUsed(collectionCode: string, id: string) {
-    this.homePageService.addLastUsedCollection(collectionCode);
-    this.homePageService.addLastUsedDocument(collectionCode, id);
+  private addLastUsed(collectionId: string, id: string) {
+    this.homePageService.addLastUsedCollection(collectionId);
+    this.homePageService.addLastUsedDocument(collectionId, id);
   }
 
-  private removeLastUsedAndFavorite(collectionCode: string, id: string) {
-    this.homePageService.addLastUsedCollection(collectionCode);
-    this.homePageService.removeLastUsedDocument(collectionCode, id);
-    this.homePageService.removeFavoriteDocument(collectionCode, id);
+  private removeLastUsedAndFavorite(collectionId: string, id: string) {
+    this.homePageService.addLastUsedCollection(collectionId);
+    this.homePageService.removeLastUsedDocument(collectionId, id);
+    this.homePageService.removeFavoriteDocument(collectionId, id);
   }
 
 }

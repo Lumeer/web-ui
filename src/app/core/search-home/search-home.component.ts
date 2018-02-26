@@ -83,7 +83,7 @@ export class SearchHomeComponent implements OnInit, OnDestroy {
 
   private fetchCollectionsForDocuments(documents: Document[]): Observable<SearchDocument[]> {
     const docs: SearchDocument[] = documents.map(doc => this.convertToSearchDocument(doc));
-    const collectionCodes = Array.from(new Set(documents.map(doc => doc.collectionCode)));
+    const collectionCodes = Array.from(new Set(documents.map(doc => doc.collectionId)));
     const observables = collectionCodes.map(code => this.collectionService.getCollection(code));
     return Observable.combineLatest(observables)
       .pipe(
@@ -94,7 +94,7 @@ export class SearchHomeComponent implements OnInit, OnDestroy {
   private initCollectionsInDocuments(collections: Collection[], documents: SearchDocument[]): SearchDocument[] {
     for (let collection of collections) {
       for (let document of documents) {
-        if (document.document.collectionCode === collection.code) {
+        if (document.document.collectionId === collection.id) {
           document.collectionIcon = collection.icon;
           document.collectionName = collection.name;
           document.collectionColor = collection.color;
@@ -113,8 +113,8 @@ export class SearchHomeComponent implements OnInit, OnDestroy {
     return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
-  public documentsQuery(collectionCode: string): string {
-    const query: Query = {collectionCodes: [collectionCode]};
+  public documentsQuery(collectionId: string): string {
+    const query: Query = {collectionIds: [collectionId]};
     return QueryConverter.toString(query);
   }
 

@@ -35,7 +35,7 @@ export class QueryItemsConverter {
 
   public static toQueryString(queryItems: QueryItem[]): string {
     const query: QueryModel = {
-      collectionCodes: [],
+      collectionIds: [],
       documentIds: [],
       filters: [],
       linkTypeIds: []
@@ -47,7 +47,7 @@ export class QueryItemsConverter {
           query.filters.push((queryItem as AttributeQueryItem).getFilter());
           return;
         case QueryItemType.Collection:
-          query.collectionCodes.push((queryItem as CollectionQueryItem).collection.code); // TODO use collectionIds
+          query.collectionIds.push((queryItem as CollectionQueryItem).collection.id);
           return;
         case QueryItemType.Document:
           query.documentIds.push((queryItem as DocumentQueryItem).documentId);
@@ -86,8 +86,7 @@ export class QueryItemsConverter {
 
   private createCollectionItems(query: QueryModel): QueryItem[] {
     return this.data.collections.filter(collection => {
-      return (query.collectionIds && query.collectionIds.includes(collection.id)) ||
-        (query.collectionCodes && query.collectionCodes.includes(collection.code));
+      return (query.collectionIds && query.collectionIds.includes(collection.id));
     }).map(collection => new CollectionQueryItem(collection));
   }
 

@@ -47,41 +47,37 @@ export class CollectionService extends PermissionService {
     return this.httpClient.post<Collection>(this.apiPrefix(), this.toDto(collection));
   }
 
-  public updateCollection(collection: Collection, collectionCode?: string): Observable<Collection> {
-    if (!collectionCode) {
-      collectionCode = collection.code;
-    }
-
-    this.homePageService.addLastUsedCollection(collectionCode).subscribe();
-    return this.httpClient.put(`${this.apiPrefix()}/${collectionCode}`, this.toDto(collection)).pipe(
+  public updateCollection(collection: Collection): Observable<Collection> {
+    this.homePageService.addLastUsedCollection(collection.id).subscribe();
+    return this.httpClient.put(`${this.apiPrefix()}/${collection.id}`, this.toDto(collection)).pipe(
       catchError(this.handleError),
       switchMap(collection => this.homePageService.checkFavoriteCollection(collection))
     );
   }
 
-  public removeCollection(collectionCode: string): Observable<string> {
-    this.homePageService.removeFavoriteCollection(collectionCode).subscribe();
-    this.homePageService.removeLastUsedCollection(collectionCode).subscribe();
-    this.homePageService.removeLastUsedDocuments(collectionCode).subscribe();
-    this.homePageService.removeFavoriteDocuments(collectionCode).subscribe();
+  public removeCollection(collectionId: string): Observable<string> {
+    this.homePageService.removeFavoriteCollection(collectionId).subscribe();
+    this.homePageService.removeLastUsedCollection(collectionId).subscribe();
+    this.homePageService.removeLastUsedDocuments(collectionId).subscribe();
+    this.homePageService.removeFavoriteDocuments(collectionId).subscribe();
     return this.httpClient.delete(
-      `${this.apiPrefix()}/${collectionCode}`,
+      `${this.apiPrefix()}/${collectionId}`,
       {observe: 'response', responseType: 'text'}
     ).pipe(
-      map(() => collectionCode),
+      map(() => collectionId),
       catchError(this.handleError)
     );
   }
 
   public toggleCollectionFavorite(collection: Collection): Observable<boolean> {
     if (collection.favorite) {
-      return this.homePageService.removeFavoriteCollection(collection.code);
+      return this.homePageService.removeFavoriteCollection(collection.id);
     }
-    return this.homePageService.addFavoriteCollection(collection.code);
+    return this.homePageService.addFavoriteCollection(collection.id);
   }
 
-  public getCollection(collectionCode: string): Observable<Collection> {
-    return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionCode}`).pipe(
+  public getCollection(collectionId: string): Observable<Collection> {
+    return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionId}`).pipe(
       catchError(CollectionService.handleGlobalError),
       switchMap(collection => this.homePageService.checkFavoriteCollection(collection))
     );
@@ -89,13 +85,13 @@ export class CollectionService extends PermissionService {
 
   public getLastUsedCollections(): Observable<Collection[]> {
     return this.homePageService.getLastUsedCollections().pipe(
-      switchMap(codes => this.convertCodesToCollections(codes))
+      switchMap(ids => this.convertIdsToCollections(ids))
     );
   }
 
   public getFavoriteCollections(): Observable<Collection[]> {
     return this.homePageService.getFavoriteCollections().pipe(
-      switchMap(codes => this.convertCodesToCollections(codes))
+      switchMap(ids => this.convertIdsToCollections(ids))
     );
   }
 
@@ -120,31 +116,31 @@ export class CollectionService extends PermissionService {
   /**
    * @deprecated Get attributes from collection instead.
    */
-  public getAttributes(collectionCode: string): Observable<Attribute[]> {
-    return this.httpClient.get<Attribute[]>(`${this.apiPrefix()}/${collectionCode}/attributes`).pipe(
+  public getAttributes(collectionId: string): Observable<Attribute[]> {
+    return this.httpClient.get<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`).pipe(
       catchError(CollectionService.handleGlobalError)
     );
   }
 
-  public updateAttribute(collectionCode: string, fullName: string, attribute: Attribute): Observable<Attribute> {
-    this.homePageService.addLastUsedCollection(collectionCode).subscribe();
-    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`, this.attributeToDto(attribute)).pipe(
+  public updateAttribute(collectionId: string, fullName: string, attribute: Attribute): Observable<Attribute> {
+    this.homePageService.addLastUsedCollection(collectionId).subscribe();
+    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionId}/attributes/${fullName}`, this.attributeToDto(attribute)).pipe(
       catchError(CollectionService.handleGlobalError)
     );
   }
 
-  public removeAttribute(collectionCode: string, fullName: string): Observable<HttpResponse<any>> {
-    this.homePageService.addLastUsedCollection(collectionCode).subscribe();
+  public removeAttribute(collectionId: string, fullName: string): Observable<HttpResponse<any>> {
+    this.homePageService.addLastUsedCollection(collectionId).subscribe();
     return this.httpClient.delete(
-      `${this.apiPrefix()}/${collectionCode}/attributes/${fullName}`,
+      `${this.apiPrefix()}/${collectionId}/attributes/${fullName}`,
       {observe: 'response', responseType: 'text'}
     );
   }
 
   protected actualApiPrefix() {
-    const collectionCode = this.workspace.collectionCode;
+    const collectionId = this.workspace.collectionId;
 
-    return `${this.apiPrefix()}/${collectionCode}`;
+    return `${this.apiPrefix()}/${collectionId}`;
   }
 
   private toDto(collection: Collection): Collection {
@@ -153,7 +149,7 @@ export class CollectionService extends PermissionService {
       dtoAttributes = collection.attributes.map(this.attributeToDto);
     }
 
-    // TODO send desctiption to the server too
+    // TODO send description to the server too
     return {
       code: collection.code,
       name: collection.name,
@@ -187,7 +183,7 @@ export class CollectionService extends PermissionService {
     return CollectionService.handleGlobalError(error);
   }
 
-  private convertCodesToCollections(codes: string[]): Observable<Collection[]> {
-    return Observable.combineLatest(codes.map(code => this.getCollection(code)));
+  private convertIdsToCollections(ids: string[]): Observable<Collection[]> {
+    return Observable.combineLatest(ids.map(id => this.getCollection(id)));
   }
 }

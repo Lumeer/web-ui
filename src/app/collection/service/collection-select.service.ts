@@ -41,8 +41,8 @@ export class CollectionSelectService {
   constructor(private collectionService: CollectionService) {
   }
 
-  public select(collectionCode: string): Observable<Collection> {
-    return this.collectionService.getCollection(collectionCode).pipe(
+  public select(collectionId: string): Observable<Collection> {
+    return this.collectionService.getCollection(collectionId).pipe(
       tap(collection => this.copyCollection(collection, this.selection)),
       map(collection => this.selection)
     );

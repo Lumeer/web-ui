@@ -122,8 +122,8 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
         this.getData(query);
 
         if (!this.embedded && !smartDocConfig) {
-          const collectionCode = query && query.collectionCodes ? query.collectionCodes[0] : null;
-          return this.getCollectionByCode(collectionCode).pipe(map(collection => {
+          const collectionId = query && query.collectionIds ? query.collectionIds[0] : null;
+          return this.getCollectionById(collectionId).pipe(map(collection => {
             this.collection = collection;
             const defaultSmartDoc: SmartDocModel = {
               collectionId: collection.id,
@@ -192,9 +192,7 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
 
   private filterDocuments(documents: DocumentModel[]): DocumentModel[] {
     return documents.filter(doc => {
-      if (!this.query || (
-          (!this.query.collectionCodes || !this.query.collectionCodes.includes(doc.collectionCode)) &&
-          (!this.query.collectionIds || !this.query.collectionIds.includes(doc.collectionId)))
+      if (!this.query || (!this.query.collectionIds || !this.query.collectionIds.includes(doc.collectionId))
       ) {
         return false;
       }
@@ -244,9 +242,9 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
     }
   }
 
-  private getCollectionByCode(collectionCode: string): Observable<CollectionModel> {
+  private getCollectionById(collectionId: string): Observable<CollectionModel> {
     return this.collections$.pipe(
-      map(collections => collections.find(collection => collection.code === collectionCode)),
+      map(collections => collections.find(collection => collection.id === collectionId)),
       skipWhile(collection => !collection),
       first()
     );
@@ -255,12 +253,11 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
   private getData(query: QueryModel) {
     this.store.dispatch(new CollectionsAction.Get({query: {}}));
     this.store.dispatch(new DocumentsAction.Get({query: query}));
-    this.store.dispatch(new LinkTypesAction.Get({query: {collectionCodes: query.collectionCodes, collectionIds: query.collectionIds}}));
+    this.store.dispatch(new LinkTypesAction.Get({query: {collectionIds: query.collectionIds}}));
   }
 
   public isDisplayable(): boolean {
-    return this.query && ((this.query.collectionCodes && this.query.collectionCodes.length === 1)
-      || (this.query.collectionIds && this.query.collectionIds.length === 1));
+    return this.query && this.query.collectionIds && this.query.collectionIds.length === 1;
   }
 
   public onSizeChange(size: SizeType) {

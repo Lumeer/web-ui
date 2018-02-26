@@ -90,7 +90,7 @@ export class CollectionsEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.CreateFailure>(CollectionsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(action => new NotificationsAction.Error({message: 'Failed to create file'}))
+    map(() => new NotificationsAction.Error({message: 'Failed to create file'}))
   );
 
   @Effect()
@@ -98,7 +98,7 @@ export class CollectionsEffects {
     switchMap(action => {
       const collectionDto = CollectionConverter.toDto(action.payload.collection);
 
-      return this.collectionService.createCollection(collectionDto).pipe(
+      return this.collectionService.updateCollection(collectionDto).pipe(
         map((dto: Collection) => CollectionConverter.fromDto(dto))
       );
     }),
@@ -114,8 +114,8 @@ export class CollectionsEffects {
 
   @Effect()
   public delete$: Observable<Action> = this.actions$.ofType<CollectionsAction.Delete>(CollectionsActionType.DELETE).pipe(
-    switchMap(action => this.collectionService.removeCollection(action.payload.collectionCode)),
-    map(collectionCode => new CollectionsAction.DeleteSuccess({collectionCode: collectionCode})),
+    switchMap(action => this.collectionService.removeCollection(action.payload.collectionId)),
+    map(collectionId => new CollectionsAction.DeleteSuccess({collectionId: collectionId})),
     catchError((error) => Observable.of(new CollectionsAction.DeleteFailure({error: error})))
   );
 
@@ -130,12 +130,12 @@ export class CollectionsEffects {
     switchMap(action => {
       const attributeDto = CollectionConverter.toAttributeDto(action.payload.attribute);
 
-      return this.collectionService.updateAttribute(action.payload.collectionCode, action.payload.attributeId, attributeDto).pipe(
+      return this.collectionService.updateAttribute(action.payload.collectionId, action.payload.attributeId, attributeDto).pipe(
         map(result => ({action, attribute: CollectionConverter.fromAttributeDto(result)}))
       );
     }),
     map(({action, attribute}) => new CollectionsAction.ChangeAttributeSuccess(
-      {collectionCode: action.payload.collectionCode, attributeId: action.payload.attributeId, attribute: attribute}
+      {collectionId: action.payload.collectionId, attributeId: action.payload.attributeId, attribute: attribute}
     )),
     catchError((error) => Observable.of(new CollectionsAction.ChangeAttributeFailure({error: error})))
   );
@@ -149,7 +149,7 @@ export class CollectionsEffects {
 
   @Effect()
   public removeAttribute$: Observable<Action> = this.actions$.ofType<CollectionsAction.RemoveAttribute>(CollectionsActionType.REMOVE_ATTRIBUTE).pipe(
-    switchMap(action => this.collectionService.removeAttribute(action.payload.collectionCode, action.payload.attributeId).pipe(
+    switchMap(action => this.collectionService.removeAttribute(action.payload.collectionId, action.payload.attributeId).pipe(
       map(() => action)
     )),
     map(action => new CollectionsAction.RemoveAttributeSuccess(action.payload)),
@@ -179,7 +179,7 @@ export class CollectionsEffects {
       }
     }),
     map(({action, permission}) => new CollectionsAction.ChangePermissionSuccess(
-      {collectionCode: action.payload.collectionCode, type: action.payload.type, permission: permission}
+      {collectionId: action.payload.collectionId, type: action.payload.type, permission: permission}
     )),
     catchError((error) => Observable.of(new CollectionsAction.ChangePermissionFailure({error: error})))
   );

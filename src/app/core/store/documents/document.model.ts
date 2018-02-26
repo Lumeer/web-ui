@@ -22,7 +22,6 @@ import {CollectionModel} from '../collections/collection.model';
 export interface DocumentModel {
 
   id?: string;
-  collectionCode: string;
   collectionId: string;
   collection?: CollectionModel;
   data: { [attributeId: string]: any };

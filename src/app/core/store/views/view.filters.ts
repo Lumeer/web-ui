@@ -34,10 +34,6 @@ export class ViewFilters {
       filtered = filtered.filter(view => view.name.toLowerCase().includes(query.fulltext.toLowerCase()));
     }
 
-    if (query.collectionCodes && query.collectionCodes.length > 0) {
-      filtered = filtered.filter(view => view.query && ViewFilters.intersection(view.query.collectionCodes, query.collectionCodes).length > 0);
-    }
-
     if (query.collectionIds && query.collectionIds.length > 0) {
       filtered = filtered.filter(view => view.query && ViewFilters.intersection(view.query.collectionIds, query.collectionIds).length > 0);
     }

@@ -18,6 +18,7 @@
  */
 
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../core/store/app.state';
@@ -53,7 +54,6 @@ export class PostItAddDocumentComponent implements OnInit, OnDestroy {
     this.createPostIt.emit({
       collection: this.selectedCollection,
       collectionId: this.selectedCollection.id,
-      collectionCode: this.selectedCollection.code,
       correlationId: CorrelationIdGenerator.generate(),
       data: this.dataWithAttributeNames()
     });

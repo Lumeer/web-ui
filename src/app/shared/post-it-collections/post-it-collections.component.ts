@@ -195,7 +195,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   private getCollection(postIt: PostItCollectionModel): void {
-    this.collectionService.getCollection(postIt.collection.code)
+    this.collectionService.getCollection(postIt.collection.id)
       .subscribe(
         collection => {
           postIt.collection = CollectionConverter.fromDto(collection);
@@ -279,7 +279,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   private sendRemoveCollectionRequest(deletedCollectionPostIt: PostItCollectionModel): void {
     this.postItToDelete = deletedCollectionPostIt;
 
-    this.collectionService.removeCollection(deletedCollectionPostIt.collection.code).pipe(
+    this.collectionService.removeCollection(deletedCollectionPostIt.collection.id).pipe(
       finalize(() => this.postItToDelete = null)
     ).subscribe(
       response => this.notificationService.success('File removed'),
@@ -323,11 +323,11 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public emptyQuery(): boolean {
-    return !this.query || (this.query && this.query.collectionCodes && this.query.collectionCodes.length === 0);
+    return !this.query || (this.query && this.query.collectionIds && this.query.collectionIds.length === 0);
   }
 
-  public documentsQuery(collectionCode: string): string {
-    const query: Query = {collectionCodes: [collectionCode]};
+  public documentsQuery(collectionId: string): string {
+    const query: Query = {collectionIds: [collectionId]};
     return QueryConverter.toString(query);
   }
 
