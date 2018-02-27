@@ -22,7 +22,7 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, first, map, switchMap, tap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {ConfiguredAttribute} from '../../collection/config/tab/attribute-list/configured-attribute';
 import {Attribute} from '../dto/attribute';
@@ -32,6 +32,8 @@ import {BadInputError} from '../error/bad-input.error';
 import {AppState} from '../store/app.state';
 import {HomePageService} from './home-page.service';
 import {PermissionService} from './permission.service';
+import {selectCollectionsDictionary} from "../store/collections/collections.state";
+import {CollectionModel} from "../store/collections/collection.model";
 
 // TODO add add support for Default Attribute
 @Injectable()
@@ -83,13 +85,13 @@ export class CollectionService extends PermissionService {
     );
   }
 
-  public getLastUsedCollections(): Observable<Collection[]> {
+  public getLastUsedCollections(): Observable<CollectionModel[]> {
     return this.homePageService.getLastUsedCollections().pipe(
       switchMap(ids => this.convertIdsToCollections(ids))
     );
   }
 
-  public getFavoriteCollections(): Observable<Collection[]> {
+  public getFavoriteCollections(): Observable<CollectionModel[]> {
     return this.homePageService.getFavoriteCollections().pipe(
       switchMap(ids => this.convertIdsToCollections(ids))
     );
@@ -183,7 +185,13 @@ export class CollectionService extends PermissionService {
     return CollectionService.handleGlobalError(error);
   }
 
-  private convertIdsToCollections(ids: string[]): Observable<Collection[]> {
-    return Observable.combineLatest(ids.map(id => this.getCollection(id)));
+  private convertIdsToCollections(ids: string[]): Observable<CollectionModel[]> {
+    return this.store.select(selectCollectionsDictionary).pipe(
+      first(),
+      map(collectionsDictionary => {
+        return ids.map(id => collectionsDictionary[id])
+          .filter(collection => collection)
+      })
+    );
   }
 }

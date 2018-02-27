@@ -60,7 +60,7 @@ export class DocumentService {
   }
 
   public updateDocument(document: Document): Observable<Document> {
-    this.addLastUsed(document.collectionCode, document.id);
+    this.addLastUsed(document.collectionId, document.id);
     return this.httpClient.put<Document>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data)
       .pipe(
         catchError(error => this.handleGlobalError(error)),
@@ -105,13 +105,13 @@ export class DocumentService {
 
   public getLastUsedDocuments(): Observable<Document[]> {
     return this.homePageService.getLastUsedDocuments().pipe(
-      switchMap(codes => this.convertCodesToDocuments(codes))
+      switchMap(ids => this.convertIdsToDocuments(ids))
     );
   }
 
   public getFavoriteDocuments(): Observable<Document[]> {
     return this.homePageService.getFavoriteDocuments().pipe(
-      switchMap(codes => this.convertCodesToDocuments(codes))
+      switchMap(ids => this.convertIdsToDocuments(ids))
     );
   }
 
@@ -141,9 +141,9 @@ export class DocumentService {
     throw new LumeerError(error.message);
   }
 
-  private convertCodesToDocuments(codes: string[]): Observable<Document[]> {
-    return Observable.combineLatest(codes.map(code => {
-      const [collectionId, documentId] = code.split(' ', 2);
+  private convertIdsToDocuments(ids: string[]): Observable<Document[]> {
+    return Observable.combineLatest(ids.map(id => {
+      const [collectionId, documentId] = id.split(' ', 2);
       return this.getDocument(collectionId, documentId);
     }));
   }

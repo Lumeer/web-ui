@@ -184,7 +184,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   private finishCreatingCollection(postIt: PostItCollectionModel, collection: CollectionModel): void {
-    postIt.collection.code = collection.code;
+    postIt.collection.id = collection.id;
     postIt.initialized = true;
 
     this.notificationService.success('File created');

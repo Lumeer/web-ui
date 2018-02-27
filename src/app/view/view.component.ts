@@ -113,6 +113,8 @@ export class ViewComponent implements OnInit, OnDestroy {
       perspective: null,
       config: {}
     };
+
+    console.log(this.view);
   }
 
   public onSave(name: string) {

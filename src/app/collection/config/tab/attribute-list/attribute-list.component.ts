@@ -114,7 +114,7 @@ export class AttributeListComponent {
     const attributeFullNamePath = attribute.fullName.split('.');
     attribute.name = attributeFullNamePath[attributeFullNamePath.length - 1];
 
-    this.collectionService.updateAttribute(this.collection.code, this.editedAttributeFullName, attribute)
+    this.collectionService.updateAttribute(this.collection.id, this.editedAttributeFullName, attribute)
       .subscribe(
         attribute => {
           if (!isNullOrUndefined(index)) {

@@ -51,7 +51,7 @@ export const selectDocumentsByQuery = createSelector(
 
     return documents
       .map(document => {
-        return {...document, collection: collections[document.collectionCode]};
+        return {...document, collection: collections[document.collectionId]};
       });
   }
 );
@@ -64,7 +64,7 @@ export function selectDocumentsByCustomQuery(query: QueryModel) {
 
       return DocumentsFilters.filterByQuery(documents, query)
         .map(document => {
-          return {...document, collection: collections[document.collectionCode]};
+          return {...document, collection: collections[document.collectionId]};
         });
     }
   );

@@ -85,14 +85,9 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public changeCollection(collectionId: string): void {
-    const collectionCode = this.collections[collectionId].code;
-    if (!collectionCode) {
-      return;
-    }
-
     this.collectionSelectService
-      .select(collectionCode).pipe(
-      switchMap(collection => this.router.navigate([this.workspacePath(), 'f', collection.code, 'linktypes']))
+      .select(collectionId).pipe(
+      switchMap(collection => this.router.navigate([this.workspacePath(), 'f', collection.id, 'linktypes']))
     ).subscribe(
       navigated => this.initializeLinkTypes(),
       error => this.notificationService.error('Failed switching file')
@@ -100,7 +95,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public emptyLinkType(): LinkTypeModel {
-    return new LinkTypeModel(null, this.collection.code);
+    return new LinkTypeModel(null, this.collection.id);
   }
 
   public addLinkType(): void {

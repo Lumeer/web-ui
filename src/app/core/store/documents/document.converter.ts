@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Document} from '../../dto/document';
+import {Document} from '../../dto';
 import {DocumentModel} from './document.model';
 
 export class DocumentConverter {
@@ -28,7 +28,6 @@ export class DocumentConverter {
 
     return {
       id: dto.id,
-      collectionCode: dto.collectionCode,
       collectionId: dto.collectionId,
       data: data,
       favorite: dto.favorite,
@@ -45,7 +44,6 @@ export class DocumentConverter {
     return {
       id: model.id,
       collectionId: model.collectionId,
-      collectionCode: model.collectionCode,
       data: model.data,
       favorite: model.favorite
     };
