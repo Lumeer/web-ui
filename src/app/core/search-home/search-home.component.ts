@@ -71,7 +71,7 @@ export class SearchHomeComponent implements OnInit, OnDestroy {
   }
 
   public defaultAttribute(document: DocumentModel): string {
-    return document && document.data && document.data ? Object.values(document.data)[0] : '';
+    return document && document.data ? Object.values(document.data)[0] : '';
   }
 
   private subscribeData() {

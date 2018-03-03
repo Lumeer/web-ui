@@ -115,7 +115,7 @@ export class CollectionsEffects {
   @Effect()
   public delete$: Observable<Action> = this.actions$.ofType<CollectionsAction.Delete>(CollectionsActionType.DELETE).pipe(
     switchMap(action => this.collectionService.removeCollection(action.payload.collectionId)),
-    map(collectionId => new CollectionsAction.DeleteSuccess({collectionId: collectionId})),
+    map(collectionId => new CollectionsAction.DeleteSuccess({collectionId})),
     catchError((error) => Observable.of(new CollectionsAction.DeleteFailure({error: error})))
   );
 
