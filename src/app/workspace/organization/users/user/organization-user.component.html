@@ -1,0 +1,68 @@
+<td class="px-1">
+  <i class="fa fa-caret-right large-text text-success"
+     [class.fa-rotate-90]="expanded"
+     aria-hidden="true"
+     title="{{ expanded ? 'Close' : 'Open' }}"
+     i18n-title="@@organizations.user.expand"
+     (click)="expandedChange.emit()"></i>
+</td>
+
+<td class="px-1">
+  <input class="form-control edit-border" #nameInput
+         type="text"
+         tabindex="1"
+         placeholder="Username"
+         [ngModel]="user.name"
+         (blur)="updateUserName(nameInput.value)">
+</td>
+
+<td class="px-1">
+  <input class="form-control edit-border"
+         type="email"
+         tabindex="1"
+         placeholder="User email"
+         [ngModel]="user.email"
+         readonly>
+</td>
+
+<td class="px-1 text-center">
+  <div class="custom-control custom-control-inline custom-checkbox">
+    <input type="checkbox"
+           class="custom-control-input"
+           id="Create_proj_{{ user.id }}"
+           [ngModel]="hasWritePermission()"
+           (change)="changeWritePermission()">
+    <label class="custom-control-label my-1"
+           for="Create_proj_{{ user.id }}">
+    </label>
+  </div>
+</td>
+
+<td class="px-1 text-center">
+  <div class="custom-control custom-control-inline custom-checkbox">
+    <input type="checkbox"
+           class="custom-control-input"
+           id="Manage_org_{{ user.id }}"
+           [ngModel]="hasManagePermission()"
+           (change)="changeManagePermission()">
+    <label class="custom-control-label my-1"
+           for="Manage_org_{{ user.id }}">
+    </label>
+  </div>
+</td>
+
+<td class="px-1">
+  <i class="fas fa-fw {{ blocked ? 'fa-volume-mute' : 'fa-volume-up' }} text-danger mx-2 clickable"
+     aria-hidden="true"
+     title="{{ blocked ? 'Unblock' : 'Temporarily Block' }} User"
+     i18n-title="@@organizations.users.block"
+     (click)="blockUser()"></i>
+</td>
+
+<td class="px-1">
+  <i class="fas fa-fw fa-trash text-danger mx-2 clickable"
+     aria-hidden="true"
+     title="Remove User"
+     i18n-title="@@organizations.users.remove"
+     (click)="removeUser()"></i>
+</td>

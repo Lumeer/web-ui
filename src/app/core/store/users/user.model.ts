@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {GroupModel} from '../groups/group.model';
+
 export interface UserModel {
 
   id?: string;
+  name: string;
   email: string;
-  name?: string;
-
-  groupIds: string[];
+  groups: GroupModel[];
 
 }

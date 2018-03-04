@@ -28,6 +28,12 @@ import {Project} from '../../core/dto/project';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
+import {UsersAction} from '../../core/store/users/users.action';
+import {GroupsAction} from '../../core/store/groups/groups.action';
+import {Observable} from 'rxjs/Observable';
+import {selectAllUsers} from '../../core/store/users/users.state';
+import {map} from 'rxjs/operators';
 
 @Component({
   templateUrl: './organization-settings.component.html',
@@ -40,6 +46,7 @@ export class OrganizationSettingsComponent implements OnInit {
   public organizationCode: string;
   private originalOrganizationCode: string;
   public projectsCount: number;
+  public userCount$: Observable<number>;
 
   @ViewChild('organizationDescription')
   public organizationDescription: ElementRef;
@@ -52,6 +59,13 @@ export class OrganizationSettingsComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.store.dispatch(new OrganizationsAction.Get());
+    this.store.dispatch(new UsersAction.Get());
+    this.store.dispatch(new GroupsAction.Get());
+
+    this.userCount$ = this.store.select(selectAllUsers)
+      .pipe(map(users => users.length));
+
     this.organization = new Organization();
     this.store.select(selectWorkspace).subscribe(workspace => {
         this.organizationCode = workspace.organizationCode;

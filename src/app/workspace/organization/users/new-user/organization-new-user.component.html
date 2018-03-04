@@ -1,0 +1,40 @@
+<td class="px-1">
+  <i class="fa fa-caret-right large-text"
+     aria-hidden="true"></i>
+</td>
+
+<td class="px-1">
+  <input class="form-control edit-border"
+         type="text"
+         tabindex="1"
+         placeholder="Username"
+         [(ngModel)]="name"
+         required>
+</td>
+
+<td class="px-1">
+  <input class="form-control edit-border"
+         type="email"
+         tabindex="1"
+         placeholder="User email"
+         [(ngModel)]="email"
+         required>
+</td>
+
+<td class="px-1 text-center">
+</td>
+
+<td class="px-1 text-center">
+</td>
+
+<td class="px-1">
+</td>
+
+<td class="px-1">
+  <i class="fas fa-fw fa-plus text-success  mx-2 clickable"
+     aria-hidden="true"
+     title="Add User"
+     i18n-title="@@organizations.users.add"
+     (click)="addUser()">
+  </i>
+</td>

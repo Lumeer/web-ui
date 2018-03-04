@@ -21,6 +21,7 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {OrganizationModel} from './organization.model';
+import {selectWorkspace} from '../navigation/navigation.state';
 
 export interface OrganizationsState extends EntityState<OrganizationModel> {
 
@@ -40,6 +41,10 @@ export const selectOrganizationsDictionary = createSelector(selectOrganizationsS
 export const selectSelectedOrganizationId = createSelector(selectOrganizationsState, organizationsState => organizationsState.selectedOrganizationId);
 export const selectSelectedOrganization = createSelector(selectOrganizationsDictionary, selectSelectedOrganizationId, (organizations, selectedId) => {
   return selectedId ? organizations[selectedId] : null;
+});
+
+export const selectOrganizationFromUrl = createSelector(selectWorkspace, selectAllOrganizations, (workspace, organizations) => {
+  return organizations.find(organization => organization.code === workspace.organizationCode);
 });
 
 export const selectOrganizationByCode = (code) => createSelector(selectAllOrganizations, organizations => {

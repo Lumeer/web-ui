@@ -25,16 +25,20 @@ export class UserConverter {
   public static fromDto(dto: User): UserModel {
     return {
       id: dto.id,
-      email: dto.username,
-      groupIds: dto.groups
+      name: dto.name,
+      email: dto.email,
+      groups: dto.groups.map(group => {
+        return {name: group};
+      })
     };
   }
 
   public static toDto(user: UserModel): User {
     return {
       id: user.id,
-      username: user.email,
-      groups: user.groupIds
+      name: user.name,
+      email: user.email,
+      groups: user.groups.map(group => group.name)
     };
   }
 

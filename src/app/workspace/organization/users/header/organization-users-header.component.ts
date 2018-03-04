@@ -17,23 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Group} from '../../dto/group';
-import {GroupModel} from './group.model';
+import {Component, Input} from '@angular/core';
+import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
 
-export class GroupConverter {
+@Component({
+  selector: 'organization-users-header',
+  templateUrl: './organization-users-header.component.html',
+  styleUrls: ['./organization-users-header.component.scss']
+})
+export class OrganizationUsersHeaderComponent {
 
-  public static fromDto(dto: Group): GroupModel {
-    return {
-      id: dto.id,
-      name: dto.name
-    };
-  }
-
-  public static toDto(group: GroupModel): Group {
-    return {
-      id: group.id,
-      name: group.name
-    };
-  }
+  @Input()
+  public organization: OrganizationModel;
 
 }
