@@ -21,17 +21,27 @@
                title="Edit name of the organization"
                #name="ngModel" required minlength="3" maxlength="24">
 
-        <small class="text-danger" [hidden]="name.valid || (name.pristine  )">
+        <small class="text-danger" [hidden]="name.valid || (name.pristine)"  i18n="@@header.organization.warning">
           Name is required (from 3 to 24 characters).
         </small>
 
         <div class="float-right document-count color-class ml-auto">
-          <a i18n-title="@@organization.projects.count" class="count" title="Number of projects in this organization"
-             [style.color]="organization.color" [routerLink]="['/workspace']">
+          <a class="count mr-3"
+             title="Number of organization users"
+             i18n-title="@@header.organization.people"
+             [style.color]="organization.color">
+            <i class="far fa-user" aria-hidden="true"></i>
+            <span>{{ userCount$ | async }}</span>
+          </a>
+
+          <a i18n-title="@@organization.projects.count"
+             class="count"
+             title="Number of projects in this organization"
+             [style.color]="organization.color"
+             [routerLink]="['/workspace']">
             <i class="far fa-edit" aria-hidden="true"></i>
             <span>{{ projectsCount }}</span>
           </a>
-
         </div>
       </div>
 
