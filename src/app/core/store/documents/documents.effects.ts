@@ -107,7 +107,7 @@ export class DocumentsEffects {
     switchMap(action => {
       const documentDto: Document = {
         id: action.payload.documentId,
-        collectionCode: action.payload.collectionCode,
+        collectionId: action.payload.collectionId,
         data: action.payload.data
       };
 
@@ -127,7 +127,7 @@ export class DocumentsEffects {
 
   @Effect()
   public delete$: Observable<Action> = this.actions$.ofType<DocumentsAction.Delete>(DocumentsActionType.DELETE).pipe(
-    switchMap(action => this.documentService.removeDocument(action.payload.collectionCode, action.payload.documentId).pipe(
+    switchMap(action => this.documentService.removeDocument(action.payload.collectionId, action.payload.documentId).pipe(
       map(() => action)
     )),
     map(action => new DocumentsAction.DeleteSuccess({documentId: action.payload.documentId})),

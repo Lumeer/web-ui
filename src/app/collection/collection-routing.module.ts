@@ -32,7 +32,7 @@ import {WorkspaceGuard} from '../workspace/workspace.guard';
 
 const collectionRoutes: Routes = [
   {
-    path: 'w/:organizationCode/:projectCode/f/:collectionCode',
+    path: 'w/:organizationCode/:projectCode/f/:collectionId',
     canActivate:[WorkspaceGuard],
     component: CollectionConfigComponent,
     children: [

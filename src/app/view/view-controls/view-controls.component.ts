@@ -143,7 +143,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   private isSingleCollectionInQuery(): boolean {
     const query = this.view.query;
-    return query && query.collectionCodes && query.collectionCodes.length === 1;
+    return query && query.collectionIds && query.collectionIds.length === 1;
   }
 
   public canShowPerspective(perspective: Perspective): boolean {

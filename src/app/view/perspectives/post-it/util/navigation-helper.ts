@@ -67,7 +67,7 @@ export class NavigationHelper {
   }
 
   public hasOneCollection(): boolean {
-    return Boolean(this.queryHelper && this.queryHelper.currentCollectionCode());
+    return Boolean(this.queryHelper && this.queryHelper.currentCollectionId());
   }
 
   public validNavigation(): boolean {

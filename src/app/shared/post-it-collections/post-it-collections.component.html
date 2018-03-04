@@ -39,7 +39,7 @@
       <a class="icon" [style.color]="postIt.collection.color"
          [title]="postIt.collection.name"
          [routerLink]="postIt.initialized ? [workspacePath(), 'view', 'postit'] : null"
-         [queryParams]="postIt.initialized ? { query: documentsQuery(postIt.collection.code) } : null"
+         [queryParams]="postIt.initialized ? { query: documentsQuery(postIt.collection.id) } : null"
          [attr.data-toggle]="postIt.initialized ? '' : 'dropdown'"
          (click)="lastClickedPostIt = postIt">
         <i class="fa-6x {{ postIt.collection.icon }}" aria-hidden="true"></i>
@@ -53,7 +53,7 @@
       <div *ngIf="postIt.initialized" class="document-count opacity-content clickable">
         <a title="Record Count" i18n-title="@@collection.document.count"
            [routerLink]="[workspacePath(), 'view', 'postit']"
-           [queryParams]="{ query: documentsQuery(postIt.collection.code) }">
+           [queryParams]="{ query: documentsQuery(postIt.collection.id) }">
           <i class="far fa-file" aria-hidden="true"></i>&nbsp;{{ postIt.collection.documentsCount }}
         </a>
       </div>
@@ -72,7 +72,7 @@
         <ng-container *ngIf="postIt.initialized">
           <a title="Configure" i18n-title="@@collection.button.configure"
              class="rounded-left text-success"
-             [routerLink]="[workspacePath(), 'f', postIt.collection.code, 'attributes']">
+             [routerLink]="[workspacePath(), 'f', postIt.collection.id, 'attributes']">
             <i class="fa fa-fw fa-cog" aria-hidden="true"></i></a>
 
           <a title="Icon picker" i18n-title="@@collection.button.icon"

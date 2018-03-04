@@ -153,14 +153,14 @@ export namespace CollectionsAction {
   export class Delete implements Action {
     public readonly type = CollectionsActionType.DELETE;
 
-    public constructor(public payload: { collectionCode: string }) {
+    public constructor(public payload: { collectionId: string }) {
     }
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = CollectionsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: { collectionCode: string }) {
+    public constructor(public payload: { collectionId: string }) {
     }
   }
 
@@ -174,14 +174,14 @@ export namespace CollectionsAction {
   export class ChangeAttribute implements Action {
     public readonly type = CollectionsActionType.CHANGE_ATTRIBUTE;
 
-    public constructor(public payload: { collectionCode: string, attributeId: string, attribute: AttributeModel }) {
+    public constructor(public payload: { collectionId: string, attributeId: string, attribute: AttributeModel }) {
     }
   }
 
   export class ChangeAttributeSuccess implements Action {
     public readonly type = CollectionsActionType.CHANGE_ATTRIBUTE_SUCCESS;
 
-    public constructor(public payload: { collectionCode: string, attributeId: string, attribute: AttributeModel }) {
+    public constructor(public payload: { collectionId: string, attributeId: string, attribute: AttributeModel }) {
     }
   }
 
@@ -195,14 +195,14 @@ export namespace CollectionsAction {
   export class RemoveAttribute implements Action {
     public readonly type = CollectionsActionType.REMOVE_ATTRIBUTE;
 
-    public constructor(public payload: { collectionCode: string, attributeId: string }) {
+    public constructor(public payload: { collectionId: string, attributeId: string }) {
     }
   }
 
   export class RemoveAttributeSuccess implements Action {
     public readonly type = CollectionsActionType.REMOVE_ATTRIBUTE_SUCCESS;
 
-    public constructor(public payload: { collectionCode: string, attributeId: string }) {
+    public constructor(public payload: { collectionId: string, attributeId: string }) {
     }
   }
 
@@ -216,14 +216,14 @@ export namespace CollectionsAction {
   export class ChangePermission implements Action {
     public readonly type = CollectionsActionType.CHANGE_PERMISSION;
 
-    public constructor(public payload: { collectionCode: string, type: PermissionType, permission: PermissionModel }) {
+    public constructor(public payload: { collectionId: string, type: PermissionType, permission: PermissionModel }) {
     }
   }
 
   export class ChangePermissionSuccess implements Action {
     public readonly type = CollectionsActionType.CHANGE_PERMISSION_SUCCESS;
 
-    public constructor(public payload: { collectionCode: string, type: PermissionType, permission: PermissionModel }) {
+    public constructor(public payload: { collectionId: string, type: PermissionType, permission: PermissionModel }) {
     }
   }
 
@@ -237,14 +237,14 @@ export namespace CollectionsAction {
   export class RemovePermission implements Action {
     public readonly type = CollectionsActionType.REMOVE_PERMISSION;
 
-    public constructor(public payload: { collectionCode: string, type: PermissionType, name: string }) {
+    public constructor(public payload: { collectionId: string, type: PermissionType, name: string }) {
     }
   }
 
   export class RemovePermissionSuccess implements Action {
     public readonly type = CollectionsActionType.REMOVE_PERMISSION_SUCCESS;
 
-    public constructor(public payload: { collectionCode: string, type: PermissionType, name: string }) {
+    public constructor(public payload: { collectionId: string, type: PermissionType, name: string }) {
     }
   }
 

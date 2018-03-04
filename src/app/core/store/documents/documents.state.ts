@@ -50,9 +50,8 @@ export const selectDocumentsByQuery = createSelector(
     documents = DocumentsFilters.filterByQuery(documents, query);
 
     return documents
-      .filter(document => typeof(document) !== 'function')
       .map(document => {
-        return {...document, collection: collections[document.collectionCode]};
+        return {...document, collection: collections[document.collectionId]};
       });
   }
 );
@@ -62,11 +61,10 @@ export function selectDocumentsByCustomQuery(query: QueryModel) {
     selectAllDocuments,
     selectCollectionsDictionary,
     (documents, collections): DocumentModel[] => {
-      documents = documents.filter(document => typeof(document) !== 'function');
 
       return DocumentsFilters.filterByQuery(documents, query)
         .map(document => {
-          return {...document, collection: collections[document.collectionCode]};
+          return {...document, collection: collections[document.collectionId]};
         });
     }
   );

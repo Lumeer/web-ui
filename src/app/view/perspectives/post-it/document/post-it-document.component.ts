@@ -204,7 +204,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   public documentPrefix(): string {
     const workspace = this.navigationHelper.workspacePrefix();
-    const collection = `f/${this.postItModel.document.collectionCode}`;
+    const collection = `f/${this.postItModel.document.collectionId}`;
     const document = `r/${this.postItModel.document.id}`;
 
     return `${workspace}/${collection}/${document}`;
@@ -213,7 +213,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   public confirmDeletion(): void {
     if (this.postItModel.initialized) {
       this.store.dispatch(new DeleteConfirm({
-        collectionCode: this.postItModel.document.collectionCode,
+        collectionId: this.postItModel.document.collectionId,
         documentId: this.postItModel.document.id
       }));
 

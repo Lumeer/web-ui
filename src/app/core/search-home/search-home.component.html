@@ -33,7 +33,7 @@
   <div class="d-flex flex-column">
     <div *ngFor="let collection of collections">
       <a [routerLink]="[workspacePath(), 'view', 'postit']"
-         [queryParams]="{ query: documentsQuery(collection.code) }">
+         [queryParams]="{ query: documentsQuery(collection.id) }">
         <i class="{{collection.icon}} fa-fw" [style.color]="collection.color" aria-hidden="true"></i>
         <span class="ml-1 font-weight-bold" [style.color]="collection.color">{{collection.name}}</span>
       </a>
@@ -48,7 +48,7 @@
   <h5 i18n="@@search.recent.documents">Records</h5>
   <div class="d-flex flex-column">
     <div *ngFor="let document of documents">
-      <i class="{{document.collectionIcon}} fa-fw" [style.color]="document.collectionColor" aria-hidden="true"></i>
+      <i class="{{document.collection?.icon}} fa-fw" [style.color]="document.collection?.color" aria-hidden="true"></i>
       <span class="ml-1">{{defaultAttribute(document)}}</span>
     </div>
   </div>

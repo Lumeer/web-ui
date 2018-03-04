@@ -94,7 +94,7 @@ export class TableBodyCellComponent implements OnChanges {
     }
     if (changes.hasOwnProperty('row') && this.row.documents.length === 0) {
       const doc = new Document();
-      doc.collectionCode = this.row.part.collection.code;
+      doc.collectionId = this.row.part.collection.id;
       doc.data = {};
       this.row.documents.push(doc);
     }
@@ -297,7 +297,7 @@ export class TableBodyCellComponent implements OnChanges {
     const usedDocuments: Document[] = [].concat.apply([], this.row.previousLinkedRow.nextLinkedRows.map(row => row.documents));
 
     // TODO use document service instead
-    return this.tableManagerService.documents.filter(doc => doc.collectionCode === this.row.part.collection.code && !usedDocuments.includes(doc));
+    return this.tableManagerService.documents.filter(doc => doc.collectionId === this.row.part.collection.id && !usedDocuments.includes(doc));
     // && doc.data[this.attribute.fullName] && doc.data[this.attribute.fullName].toLowerCase().startsWith(prefix.toLowerCase()));
   }
 

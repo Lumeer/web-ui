@@ -30,9 +30,9 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
     case CollectionsActionType.CREATE_SUCCESS:
       return collectionsAdapter.addOne(action.payload.collection, state);
     case CollectionsActionType.UPDATE_SUCCESS:
-      return collectionsAdapter.updateOne({id: action.payload.collection.code, changes: action.payload.collection}, state);
+      return collectionsAdapter.updateOne({id: action.payload.collection.id, changes: action.payload.collection}, state);
     case CollectionsActionType.DELETE_SUCCESS:
-      return collectionsAdapter.removeOne(action.payload.collectionCode, state);
+      return collectionsAdapter.removeOne(action.payload.collectionId, state);
     case CollectionsActionType.CHANGE_ATTRIBUTE_SUCCESS:
       return onChangeAttributeSuccess(state, action);
     case CollectionsActionType.REMOVE_ATTRIBUTE_SUCCESS:
@@ -49,7 +49,7 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
 }
 
 function onChangeAttributeSuccess(state: CollectionsState, action: CollectionsAction.ChangeAttributeSuccess): CollectionsState {
-  const attributes = state.entities[action.payload.collectionCode].attributes.slice();
+  const attributes = state.entities[action.payload.collectionId].attributes.slice();
   const index = attributes.findIndex(attr => attr.id === action.payload.attributeId);
   if (index) {
     attributes.splice(index, 1, action.payload.attribute);
@@ -57,29 +57,29 @@ function onChangeAttributeSuccess(state: CollectionsState, action: CollectionsAc
     attributes.push(action.payload.attribute); // TODO preserve order
   }
 
-  return collectionsAdapter.updateOne({id: action.payload.collectionCode, changes: {attributes: attributes}}, state);
+  return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
 }
 
 function onRemoveAttributeSuccess(state: CollectionsState, action: CollectionsAction.RemoveAttributeSuccess): CollectionsState {
-  const attributes = state.entities[action.payload.collectionCode].attributes.slice();
+  const attributes = state.entities[action.payload.collectionId].attributes.slice();
   const index = attributes.findIndex(attr => attr.id === action.payload.attributeId);
   if (index) {
     attributes.splice(index, 1);
   }
 
-  return collectionsAdapter.updateOne({id: action.payload.collectionCode, changes: {attributes: attributes}}, state);
+  return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
 }
 
 function onChangePermissionSuccess(state: CollectionsState, action: CollectionsAction.ChangePermissionSuccess): CollectionsState {
-  const collection = state.entities[action.payload.collectionCode];
+  const collection = state.entities[action.payload.collectionId];
   const permissions = PermissionsHelper.changePermission(collection.permissions, action.payload.type, action.payload.permission);
 
-  return collectionsAdapter.updateOne({id: action.payload.collectionCode, changes: {permissions: permissions}}, state);
+  return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {permissions: permissions}}, state);
 }
 
 function onRemovePermissionSuccess(state: CollectionsState, action: CollectionsAction.RemovePermissionSuccess): CollectionsState {
-  const collection = state.entities[action.payload.collectionCode];
+  const collection = state.entities[action.payload.collectionId];
   const permissions = PermissionsHelper.removePermission(collection.permissions, action.payload.type, action.payload.name);
 
-  return collectionsAdapter.updateOne({id: action.payload.collectionCode, changes: {permissions: permissions}}, state);
+  return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {permissions: permissions}}, state);
 }

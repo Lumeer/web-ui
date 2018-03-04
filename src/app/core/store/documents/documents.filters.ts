@@ -39,12 +39,12 @@ export class DocumentsFilters {
     }
 
     return documents.filter(document => {
-      return query.collectionCodes.includes(document.collectionCode) || query.collectionIds.includes(document.collectionId);
+      return query.collectionIds.includes(document.collectionId);
     });
   }
 
   private static hasCollectionsFilter(query: QueryModel): boolean {
-    return Boolean((query.collectionCodes && query.collectionCodes.length) || (query.collectionIds && query.collectionIds.length));
+    return query.collectionIds && query.collectionIds.length > 0;
   }
 
   private static filterByFulltext(documents: DocumentModel[], query: QueryModel): DocumentModel[] {

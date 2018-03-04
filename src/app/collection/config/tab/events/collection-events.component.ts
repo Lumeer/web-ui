@@ -58,7 +58,7 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
   }
 
   public getEvents(): void {
-    this.eventService.getEvents(this.collection.code).subscribe(
+    this.eventService.getEvents(this.collection.id).subscribe(
       events => this.events = events.map(event => new EventModel(event)),
       error => this.notificationService.error('Failed fetching Events')
     );
@@ -79,7 +79,7 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
     }
 
     eventModel.initializing = true;
-    this.eventService.createEvent(this.collection.code, eventModel.data).pipe(
+    this.eventService.createEvent(this.collection.id, eventModel.data).pipe(
       finalize(() => eventModel.initializing = false)
     ).subscribe(
       id => {

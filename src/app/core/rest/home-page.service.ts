@@ -61,60 +61,60 @@ export class HomePageService {
     return Observable.of(this.getForWorkspace(FAVORITE_COLLECTIONS));
   }
 
-  public addLastUsedDocument(collectionCode: string, id: string): Observable<boolean> {
-    this.addItem(LAST_USED_DOCUMENTS, this.documentValue(collectionCode, id));
+  public addLastUsedDocument(collectionId: string, id: string): Observable<boolean> {
+    this.addItem(LAST_USED_DOCUMENTS, this.documentValue(collectionId, id));
     return Observable.of(true);
   }
 
-  public removeLastUsedDocument(collectionCode: string, id: string): Observable<boolean> {
-    this.removeItem(LAST_USED_DOCUMENTS, this.documentValue(collectionCode, id));
+  public removeLastUsedDocument(collectionId: string, id: string): Observable<boolean> {
+    this.removeItem(LAST_USED_DOCUMENTS, this.documentValue(collectionId, id));
     return Observable.of(true);
   }
 
-  public removeLastUsedDocuments(collectionCode: string): Observable<boolean> {
-    this.removeItem(LAST_USED_DOCUMENTS, collectionCode);
+  public removeLastUsedDocuments(collectionId: string): Observable<boolean> {
+    this.removeItem(LAST_USED_DOCUMENTS, collectionId);
     return Observable.of(true);
   }
 
-  public addFavoriteDocument(collectionCode: string, id: string): Observable<boolean> {
-    this.addItem(FAVORITE_DOCUMENTS, this.documentValue(collectionCode, id));
+  public addFavoriteDocument(collectionId: string, id: string): Observable<boolean> {
+    this.addItem(FAVORITE_DOCUMENTS, this.documentValue(collectionId, id));
     return Observable.of(true);
   }
 
-  public removeFavoriteDocument(collectionCode: string, id: string): Observable<boolean> {
-    this.removeItem(FAVORITE_DOCUMENTS, this.documentValue(collectionCode, id));
+  public removeFavoriteDocument(collectionId: string, id: string): Observable<boolean> {
+    this.removeItem(FAVORITE_DOCUMENTS, this.documentValue(collectionId, id));
     return Observable.of(true);
   }
 
-  public removeFavoriteDocuments(collectionCode: string): Observable<boolean> {
-    this.removeItem(FAVORITE_DOCUMENTS, collectionCode);
+  public removeFavoriteDocuments(collectionId: string): Observable<boolean> {
+    this.removeItem(FAVORITE_DOCUMENTS, collectionId);
     return Observable.of(true);
   }
 
-  public addLastUsedCollection(code: string): Observable<boolean> {
-    this.addItem(LAST_USED_COLLECTIONS, code);
+  public addLastUsedCollection(collectionId: string): Observable<boolean> {
+    this.addItem(LAST_USED_COLLECTIONS, collectionId);
     return Observable.of(true);
   }
 
-  public removeLastUsedCollection(code: string): Observable<boolean> {
-    this.removeItem(LAST_USED_COLLECTIONS, code);
+  public removeLastUsedCollection(collectionId: string): Observable<boolean> {
+    this.removeItem(LAST_USED_COLLECTIONS, collectionId);
     return Observable.of(true);
   }
 
-  public addFavoriteCollection(code: string): Observable<boolean> {
-    this.addItem(FAVORITE_COLLECTIONS, code);
+  public addFavoriteCollection(collectionId: string): Observable<boolean> {
+    this.addItem(FAVORITE_COLLECTIONS, collectionId);
     return Observable.of(true);
   }
 
-  public removeFavoriteCollection(code: string): Observable<boolean> {
-    this.removeItem(FAVORITE_COLLECTIONS, code);
+  public removeFavoriteCollection(collectionId: string): Observable<boolean> {
+    this.removeItem(FAVORITE_COLLECTIONS, collectionId);
     return Observable.of(true);
   }
 
   public checkFavoriteDocument(document: Document): Observable<Document> {
     return this.getFavoriteDocuments().pipe(
       switchMap(codes => {
-        document.favorite = codes.includes(this.documentValue(document.collectionCode, document.id));
+        document.favorite = codes.includes(this.documentValue(document.collectionId, document.id));
         return Observable.of(document);
       })
     );
@@ -124,7 +124,7 @@ export class HomePageService {
     return this.getFavoriteDocuments().pipe(
       switchMap(codes => {
         for (let document of documents) {
-          document.favorite = codes.includes(this.documentValue(document.collectionCode, document.id));
+          document.favorite = codes.includes(this.documentValue(document.collectionId, document.id));
         }
         return Observable.of(documents);
       })
@@ -134,7 +134,7 @@ export class HomePageService {
   public checkFavoriteCollection(collection: Collection): Observable<Collection> {
     return this.getFavoriteCollections().pipe(
       switchMap(codes => {
-        collection.favorite = codes.includes(collection.code);
+        collection.favorite = codes.includes(collection.id);
         return Observable.of(collection);
       })
     );
@@ -144,19 +144,19 @@ export class HomePageService {
     return this.getFavoriteCollections().pipe(
       switchMap(codes => {
         for (let collection of collections) {
-          collection.favorite = codes.includes(collection.code);
+          collection.favorite = codes.includes(collection.id);
         }
         return Observable.of(collections);
       })
     );
   }
 
-  private addItem(param: string, code: string) {
+  private addItem(param: string, id: string) {
     const resource = LocalStorage.get(param) || {};
     const workspaceKey = this.workspaceKey();
     let items = resource[workspaceKey] || [];
-    items = items.filter(item => item !== code);
-    items.unshift(code);
+    items = items.filter(item => item !== id);
+    items.unshift(id);
     if (items.length > MAX_SAVED_ITEMS) {
       items.splice(MAX_SAVED_ITEMS, items.length - MAX_SAVED_ITEMS);
     }
@@ -164,11 +164,11 @@ export class HomePageService {
     LocalStorage.set(param, resource);
   }
 
-  private removeItem(param: string, code: string) {
+  private removeItem(param: string, id: string) {
     const resource = LocalStorage.get(param) || {};
     const workspaceKey = this.workspaceKey();
     let items = resource[workspaceKey] || [];
-    items = items.filter(item => !item.startsWith(code));
+    items = items.filter(item => !item.startsWith(id));
     resource[workspaceKey] = items;
     LocalStorage.set(param, resource);
   }
@@ -183,8 +183,8 @@ export class HomePageService {
     return `${this.workspace.organizationCode}-${this.workspace.projectCode}`;
   }
 
-  private documentValue(collectionCode: string, id: string) {
-    return `${collectionCode} ${id}`;
+  private documentValue(collectionId: string, id: string) {
+    return `${collectionId} ${id}`;
   }
 
 }

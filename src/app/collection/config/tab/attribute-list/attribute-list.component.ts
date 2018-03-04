@@ -103,7 +103,7 @@ export class AttributeListComponent {
     newAttribute.fullName = newAttributeName;
     newAttribute.name = newAttributeName;
 
-    this.collectionService.updateAttribute(this.collection.code, newAttributeName, newAttribute)
+    this.collectionService.updateAttribute(this.collection.id, newAttributeName, newAttribute)
       .subscribe(
         attribute => this.collection.attributes.push(attribute),
         error => this.notificationService.error('Failed creating attribute')
@@ -114,7 +114,7 @@ export class AttributeListComponent {
     const attributeFullNamePath = attribute.fullName.split('.');
     attribute.name = attributeFullNamePath[attributeFullNamePath.length - 1];
 
-    this.collectionService.updateAttribute(this.collection.code, this.editedAttributeFullName, attribute)
+    this.collectionService.updateAttribute(this.collection.id, this.editedAttributeFullName, attribute)
       .subscribe(
         attribute => {
           if (!isNullOrUndefined(index)) {
@@ -127,7 +127,7 @@ export class AttributeListComponent {
 
   public removeAttribute(attribute: ConfiguredAttribute, index?: number): void {
     const removed = this.collection.attributes[index];
-    this.collectionService.removeAttribute(this.collection.code, this.editedAttributeFullName)
+    this.collectionService.removeAttribute(this.collection.id, this.editedAttributeFullName)
       .subscribe(
         () => this.collection.attributes.splice(index, 1),
         error => console.error(error)

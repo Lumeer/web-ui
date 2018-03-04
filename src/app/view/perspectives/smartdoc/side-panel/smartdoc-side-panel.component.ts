@@ -60,7 +60,7 @@ export class SmartDocSidePanelComponent {
                      private router: Router,
                      private store: Store<AppState>) {
     this.collections$ = this.store.select(selectAllCollections).pipe(
-      map(collections => collections.filter(collection => collection && collection.code))
+      map(collections => collections.filter(collection => collection && collection.id))
     );
     this.linkTypes$ = this.store.select(selectAllLinkTypes);
   }

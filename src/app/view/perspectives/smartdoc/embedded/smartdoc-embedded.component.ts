@@ -129,7 +129,7 @@ export class SmartDocEmbeddedComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private createDocumentIdsFilters(documentIds: string[]): string[] {
-    return documentIds.map(id => [this.document.collectionCode, 'id', '=' + id].join(':'));
+    return documentIds.map(id => [this.document.collectionId, 'id', '=' + id].join(':'));
   }
 
   private getLinkedDocumentIds(linkInstances: LinkInstanceModel[]): string[] {

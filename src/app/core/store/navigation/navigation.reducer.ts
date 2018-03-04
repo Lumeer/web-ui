@@ -36,7 +36,7 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
     workspace: {
       organizationCode: params.get('organizationCode'),
       projectCode: params.get('projectCode'),
-      collectionCode: params.get('collectionCode'),
+      collectionId: params.get('collectionId'),
       viewCode: params.get('vc')
     },
     perspective: perspectivesMap[extractPerspectiveIdFromUrl(action.payload.routerState.url)],

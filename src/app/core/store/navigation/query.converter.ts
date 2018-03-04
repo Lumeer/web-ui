@@ -25,7 +25,6 @@ export class QueryConverter {
 
   public static fromDto(dto: Query): QueryModel {
     return {
-      collectionCodes: dto.collectionCodes,
       collectionIds: dto.collectionIds,
       documentIds: dto.documentIds,
       filters: dto.filters,
@@ -39,7 +38,6 @@ export class QueryConverter {
 
   public static toDto(model: QueryModel): Query {
     return {
-      collectionCodes: model.collectionCodes,
       collectionIds: model.collectionIds,
       documentIds: model.documentIds,
       linkTypeIds: model.linkTypeIds,
@@ -64,7 +62,6 @@ export class QueryConverter {
     const parsedQuery = stringQuery ? JSON.parse(stringQuery) : {};
     const query: QueryModel = parsedQuery ? parsedQuery : {};
 
-    query.collectionCodes = query.collectionCodes || [];
     query.collectionIds = query.collectionIds || [];
     query.documentIds = query.documentIds || [];
     query.filters = query.filters || [];

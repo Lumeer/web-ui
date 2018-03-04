@@ -38,7 +38,7 @@
          title="Number of records in this file"
          [style.color]="collection.color"
          [routerLink]="[workspacePath(), 'view', 'postit']"
-         [queryParams]="{ query: documentsQuery(collection.code) }">
+         [queryParams]="{ query: documentsQuery(collection.id) }">
         <i class="far fa-file" aria-hidden="true"></i>
         <span>{{ collection.documentsCount }}</span>
       </a>

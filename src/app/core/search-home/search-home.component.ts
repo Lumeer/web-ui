@@ -29,10 +29,16 @@ import {Workspace} from '../store/navigation/workspace.model';
 import {Router} from '@angular/router';
 import {Query} from 'app/core/dto/query';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
-import {map, switchMap} from 'rxjs/operators';
+import {first, map, switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs/Observable';
 import {SearchDocument} from '../../view/perspectives/search/documents/search-document';
 import {Subscription} from 'rxjs/Subscription';
+import {selectAllCollections, selectCollectionsDictionary} from "../store/collections/collections.state";
+import {Dictionary} from "@ngrx/entity/src/models";
+import {CollectionModel} from "../store/collections/collection.model";
+import {DocumentModel} from "../store/documents/document.model";
+import {CollectionConverter} from "../store/collections/collection.converter";
+import {DocumentConverter} from "../store/documents/document.converter";
 
 @Component({
   selector: 'search-home',
@@ -41,34 +47,21 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class SearchHomeComponent implements OnInit, OnDestroy {
 
-  public lastUsedDocuments: SearchDocument[];
-  public favoriteDocuments: SearchDocument[];
-  public lastUsedCollections: Collection[];
-  public favoriteCollections: Collection[];
+  public lastUsedDocuments: DocumentModel[];
+  public favoriteDocuments: DocumentModel[];
+  public lastUsedCollections: CollectionModel[];
+  public favoriteCollections: CollectionModel[];
 
   private workspace: Workspace;
   private workspaceSubscription: Subscription;
 
   constructor(private collectionService: CollectionService,
               private store: Store<AppState>,
-              private documentService: DocumentService,
-              private router: Router) {
+              private documentService: DocumentService) {
   }
 
   public ngOnInit() {
-    this.workspaceSubscription = this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
-    this.collectionService.getLastUsedCollections()
-      .subscribe(collections => this.lastUsedCollections = collections);
-    this.documentService.getLastUsedDocuments()
-      .pipe(
-        switchMap(documents => this.fetchCollectionsForDocuments(documents))
-      ).subscribe(documents => this.lastUsedDocuments = documents);
-    this.collectionService.getFavoriteCollections()
-      .subscribe(collections => this.favoriteCollections = collections);
-    this.documentService.getFavoriteDocuments()
-      .pipe(
-        switchMap(documents => this.fetchCollectionsForDocuments(documents))
-      ).subscribe(documents => this.favoriteDocuments = documents);
+    this.subscribeData();
   }
 
   public ngOnDestroy() {
@@ -77,44 +70,43 @@ export class SearchHomeComponent implements OnInit, OnDestroy {
     }
   }
 
-  public defaultAttribute(document: SearchDocument): string {
-    return document && document.document && document.document.data ? Object.values(document.document.data)[0] : '';
+  public defaultAttribute(document: DocumentModel): string {
+    return document && document.data ? Object.values(document.data)[0] : '';
   }
 
-  private fetchCollectionsForDocuments(documents: Document[]): Observable<SearchDocument[]> {
-    const docs: SearchDocument[] = documents.map(doc => this.convertToSearchDocument(doc));
-    const collectionCodes = Array.from(new Set(documents.map(doc => doc.collectionCode)));
-    const observables = collectionCodes.map(code => this.collectionService.getCollection(code));
-    return Observable.combineLatest(observables)
-      .pipe(
-        map(collections => this.initCollectionsInDocuments(collections, docs))
-      );
+  private subscribeData() {
+    this.workspaceSubscription = this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+    this.collectionService.getLastUsedCollections()
+      .subscribe(collections => this.lastUsedCollections = collections);
+    this.collectionService.getFavoriteCollections()
+      .subscribe(collections => this.favoriteCollections = collections);
+
+    Observable.combineLatest(
+      this.documentService.getLastUsedDocuments(),
+      this.documentService.getFavoriteDocuments(),
+      this.store.select(selectCollectionsDictionary).pipe(first())
+    ).subscribe(([lastUsedDocuments, favoriteDocuments, collections]) => this.initDocumentsWithCollections(lastUsedDocuments, favoriteDocuments, collections))
   }
 
-  private initCollectionsInDocuments(collections: Collection[], documents: SearchDocument[]): SearchDocument[] {
-    for (let collection of collections) {
-      for (let document of documents) {
-        if (document.document.collectionCode === collection.code) {
-          document.collectionIcon = collection.icon;
-          document.collectionName = collection.name;
-          document.collectionColor = collection.color;
-        }
-      }
-    }
-    return documents;
+  private initDocumentsWithCollections(lastUsedDocuments: Document[], favoriteDocuments: Document[], collections: Dictionary<CollectionModel>) {
+    this.lastUsedDocuments = this.mapDocumentsWithCollections(lastUsedDocuments, collections);
+    this.favoriteDocuments = this.mapDocumentsWithCollections(favoriteDocuments, collections);
   }
 
-  private convertToSearchDocument(document: Document): SearchDocument {
-    delete document.data['_id'];
-    return {document: document};
+  private mapDocumentsWithCollections(documents: Document[], collections: Dictionary<CollectionModel>): DocumentModel[] {
+    return documents.map(document => {
+        let documentModel = DocumentConverter.fromDto(document);
+        documentModel.collection = collections[documentModel.collectionId];
+        return documentModel;
+    });
   }
 
   public workspacePath(): string {
     return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
-  public documentsQuery(collectionCode: string): string {
-    const query: Query = {collectionCodes: [collectionCode]};
+  public documentsQuery(collectionId: string): string {
+    const query: Query = {collectionIds: [collectionId]};
     return QueryConverter.toString(query);
   }
 

@@ -116,7 +116,7 @@ export namespace DocumentsAction {
   export class UpdateData implements Action {
     public readonly type = DocumentsActionType.UPDATE_DATA;
 
-    public constructor(public payload: { collectionCode: string, documentId: string, data: any }) {
+    public constructor(public payload: { collectionId: string, documentId: string, data: any }) {
     }
   }
 
@@ -137,14 +137,14 @@ export namespace DocumentsAction {
   export class Delete implements Action {
     public readonly type = DocumentsActionType.DELETE;
 
-    public constructor(public payload: { collectionCode: string, documentId: string }) {
+    public constructor(public payload: { collectionId: string, documentId: string }) {
     }
   }
 
   export class DeleteConfirm implements Action {
     public readonly type = DocumentsActionType.DELETE_CONFIRM;
 
-    public constructor(public payload: { collectionCode: string, documentId: string }) {
+    public constructor(public payload: { collectionId: string, documentId: string }) {
     }
   }
 

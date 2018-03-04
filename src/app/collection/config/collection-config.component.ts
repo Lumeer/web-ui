@@ -44,8 +44,6 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
 
   public collection: Collection;
 
-  public initialCollectionCode: string;
-
   private workspaceSubscription: Subscription;
   private workspace: Workspace;
 
@@ -59,9 +57,9 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.workspaceSubscription = this.store.select(selectWorkspace).pipe(
       tap(workspace => this.workspace = workspace),
-      map(workspace => workspace.collectionCode),
-      filter(collectionCode => !!collectionCode),
-      switchMap(collectionCode => this.collectionSelectService.select(collectionCode)),
+      map(workspace => workspace.collectionId),
+      filter(collectionId => !!collectionId),
+      switchMap(collectionId => this.collectionSelectService.select(collectionId)),
       tap(collection => this.collection = collection)
     ).subscribe(
       collection => null,
@@ -79,7 +77,7 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
   }
 
   public removeCollection(): void {
-    this.collectionService.removeCollection(this.collection.code).subscribe(
+    this.collectionService.removeCollection(this.collection.id).subscribe(
       () => this.goToCollectionsPage(),
       error => this.notificationService.error('Failed removing file')
     );
@@ -105,8 +103,8 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
     this.router.navigate([this.workspacePath(), 'files']);
   }
 
-  public documentsQuery(collectionCode: string): string {
-    const query: Query = {collectionCodes: [collectionCode]};
+  public documentsQuery(collectionId: string): string {
+    const query: Query = {collectionIds: [collectionId]};
     return QueryConverter.toString(query);
   }
 

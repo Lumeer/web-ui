@@ -27,11 +27,12 @@ import {HomeComponent} from './core/home.component';
 import {PageNotFoundComponent} from './core/page-not-found/page-not-found.component';
 import {SearchHomeComponent} from './core/search-home/search-home.component';
 import {WorkspaceGuard} from './workspace/workspace.guard';
+import {CollectionsGuard} from "./core/store/collections/collections.guard";
 
 const appRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/search',
-    canActivate: [WorkspaceGuard],
+    canActivate: [WorkspaceGuard, CollectionsGuard],
     component: SearchHomeComponent,
     data: {
       searchBoxHidden: true

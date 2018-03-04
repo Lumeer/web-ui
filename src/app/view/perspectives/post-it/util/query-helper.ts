@@ -37,12 +37,12 @@ export class QueryHelper {
     return Boolean(this.query);
   }
 
-  public currentCollectionCode(): string {
-    if (!this.query || !this.query.collectionCodes) {
+  public currentCollectionId(): string {
+    if (!this.query || !this.query.collectionIds) {
       return null;
     }
 
-    return this.query.collectionCodes[0];
+    return this.query.collectionIds[0];
   }
 
   public queryWithPagination(pageNumber: number, editable: boolean): QueryModel {

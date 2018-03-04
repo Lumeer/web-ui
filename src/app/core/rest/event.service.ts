@@ -42,8 +42,8 @@ export class EventService {
     this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
-  public createEvent(collectionCode: string, event: Event): Observable<string> {
-    const collectionKey = `${collectionCode}_${EVENTS_KEY}`;
+  public createEvent(collectionId: string, event: Event): Observable<string> {
+    const collectionKey = `${collectionId}_${EVENTS_KEY}`;
     const events = LocalStorage.get(collectionKey) || [];
 
     event.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
@@ -54,8 +54,8 @@ export class EventService {
     return Observable.of(event.id);
   }
 
-  public updateEvent(collectionCode: string, id: string, event: Event): Observable<Event> {
-    const collectionKey = `${collectionCode}_${EVENTS_KEY}`;
+  public updateEvent(collectionId: string, id: string, event: Event): Observable<Event> {
+    const collectionKey = `${collectionId}_${EVENTS_KEY}`;
     const events = LocalStorage.get(collectionKey) || [];
 
     const updatedEventIndex = events.findIndex(event => id === event.id);
@@ -66,8 +66,8 @@ export class EventService {
     return Observable.of(event);
   }
 
-  public deleteEvent(collectionCode: string, id: string): Observable<void> {
-    const collectionKey = `${collectionCode}_${EVENTS_KEY}`;
+  public deleteEvent(collectionId: string, id: string): Observable<void> {
+    const collectionKey = `${collectionId}_${EVENTS_KEY}`;
     const events = LocalStorage.get(collectionKey) || [];
 
     const deletedEventIndex = events.findIndex(event => id === event.id);
@@ -78,8 +78,8 @@ export class EventService {
     return Observable.empty();
   }
 
-  public getEvents(collectionCode: string): Observable<Event[]> {
-    const collectionKey = `${collectionCode}_${EVENTS_KEY}`;
+  public getEvents(collectionId: string): Observable<Event[]> {
+    const collectionKey = `${collectionId}_${EVENTS_KEY}`;
     const events = LocalStorage.get(collectionKey) || [];
 
     return Observable.of(events);

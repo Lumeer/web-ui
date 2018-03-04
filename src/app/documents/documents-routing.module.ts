@@ -25,7 +25,7 @@ import {DocumentsComponent} from './documents.component';
 
 const documentRoutes: Routes = [
   {
-    path: 'w/:organizationCode/:projectCode/f/:collectionCode/records',
+    path: 'w/:organizationCode/:projectCode/f/:collectionId/records',
     canActivate:[WorkspaceGuard],
     component: DocumentsComponent
   }

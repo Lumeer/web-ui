@@ -75,7 +75,6 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   public parts: TablePart[] = [];
 
   private subscription: Subscription;
-  private collectionsSubscription: Subscription;
 
   public ngOnInit() {
     if (this.embedded && this.query) {
@@ -106,23 +105,13 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
       return;
     }
 
-    this.collectionsSubscription = this.store.select(selectCollectionsDictionary)
-      .pipe(first())
-      .subscribe(collectionsMap => {
-        if (this.query.collectionCodes) {
-          this.query.collectionIds = this.query.collectionCodes.map(code => collectionsMap[code].id);
-        }
-        this.createDefaultConfigFromQuery();
-        this.fetchDataAndCreateTable();
-      });
+    this.createDefaultConfigFromQuery();
+    this.fetchDataAndCreateTable();
   }
 
   public ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();
-    }
-    if (this.collectionsSubscription){
-      this.collectionsSubscription.unsubscribe();
     }
   }
 
@@ -161,9 +150,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   }
 
   public isDisplayable(): boolean {
-    return this.query && (
-      (this.query.collectionCodes && this.query.collectionCodes.length === 1) || (this.query.collectionIds && this.query.collectionIds.length === 1)
-    );
+    return this.query && this.query.collectionIds && this.query.collectionIds.length === 1;
   }
 
   public extractConfig(): any {
@@ -203,7 +190,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   }
 
   public onDeleteDocument(doc: Document) {
-    this.documentService.removeDocument(doc.collectionCode, doc.id).subscribe(() => {
+    this.documentService.removeDocument(doc.collectionId, doc.id).subscribe(() => {
       const index = this.tableManagerService.documents.indexOf(doc);
       this.tableManagerService.documents.splice(index, 1);
     });
@@ -228,17 +215,17 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   private createAttribute(collection: Collection, attribute: Attribute) {
     attribute.fullName = AttributeHelper.generateAttributeId(attribute.name);
 
-    this.collectionService.updateAttribute(collection.code, attribute.fullName, attribute).subscribe(() => {
+    this.collectionService.updateAttribute(collection.id, attribute.fullName, attribute).subscribe(() => {
       collection.attributes.push(attribute);
     });
   }
 
   private updateAttribute(collection: Collection, attribute: Attribute) {
-    this.collectionService.updateAttribute(collection.code, attribute.fullName, attribute).subscribe();
+    this.collectionService.updateAttribute(collection.id, attribute.fullName, attribute).subscribe();
   }
 
   private deleteAttribute(collection: Collection, attribute: Attribute) {
-    this.collectionService.removeAttribute(collection.code, attribute.fullName).subscribe(() => {
+    this.collectionService.removeAttribute(collection.id, attribute.fullName).subscribe(() => {
       AttributeHelper.removeAttributeFromArray(attribute, collection.attributes);
     });
   }
