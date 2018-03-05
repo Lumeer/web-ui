@@ -23,7 +23,7 @@ import {ProjectModel} from './project.model';
 
 export class ProjectConverter {
 
-  public static fromDto(dto: Project, organizationId: string, correlationId?: string,): ProjectModel {
+  public static fromDto(dto: Project, organizationId: string, correlationId?: string): ProjectModel {
     return {
       id: dto.id,
       organizationId: organizationId,
@@ -31,6 +31,7 @@ export class ProjectConverter {
       name: dto.name,
       icon: dto.icon,
       color: dto.color,
+      description: dto.description,
       correlationId: correlationId,
       permissions: PermissionsConverter.fromDto(dto.permissions)
     };
@@ -41,7 +42,8 @@ export class ProjectConverter {
       code: project.code,
       name: project.name,
       icon: project.icon,
-      color: project.color
+      color: project.color,
+      description: project.description
     };
   }
 

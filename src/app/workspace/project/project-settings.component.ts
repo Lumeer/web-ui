@@ -52,8 +52,6 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.project = new Project();
-
     this.store.select(selectWorkspace).pipe(
       filter(workspace => !!(workspace.organizationCode && workspace.projectCode))
     ).subscribe(workspace => {

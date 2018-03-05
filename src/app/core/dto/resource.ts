@@ -19,20 +19,14 @@
 
 import {Permissions} from './permissions';
 
-export class Resource {
+export interface Resource {
 
-  public id?: string;
-  public code: string = '';
-  public name: string = '';
-  public color: string = '';
-  public icon: string = '';
-  public permissions?: Permissions;
-
-  constructor(code: string, name: string, color: string, icon: string){
-    this.code = code;
-    this.name = name;
-    this.color = color;
-    this.icon = icon;
-  }
+  id?: string;
+  code: string;
+  name: string;
+  color: string;
+  icon: string;
+  description: string;
+  permissions?: Permissions;
 
 }

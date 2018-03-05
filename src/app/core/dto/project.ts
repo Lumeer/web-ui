@@ -19,10 +19,5 @@
 
 import {Resource} from './resource';
 
-export class Project extends Resource {
-
-  constructor() {
-    super('', '', '', '');
-  }
-
+export interface Project extends Resource {
 }

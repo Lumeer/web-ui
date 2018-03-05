@@ -52,7 +52,6 @@ export class OrganizationSettingsComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.organization = new Organization();
     this.store.select(selectWorkspace).subscribe(workspace => {
         this.organizationCode = workspace.organizationCode;
         if (this.organizationCode) {

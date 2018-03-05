@@ -249,7 +249,8 @@ export class ResourceChooserComponent implements OnChanges {
       code: '',
       color: DEFAULT_COLOR,
       icon: DEFAULT_ICON,
-      correlationId: CorrelationIdGenerator.generate()
+      correlationId: CorrelationIdGenerator.generate(),
+      description: ''
     });
     this.compute();
     this.checkVisibilityNewResource();
@@ -392,12 +393,21 @@ export class ResourceChooserComponent implements OnChanges {
     this.modifiedResourceId = null;
   }
 
+  public onDescriptionBlur(resource: ResourceModel, newDescription: string){
+    const resourceModel = {...resource, description: newDescription};
+    this.resourceUpdate.emit(resourceModel);
+  }
+
   private shouldUpdateResource(resource: ResourceModel): boolean {
     return (this.lastIcon && resource.icon !== this.lastIcon) || (this.lastColor && resource.color !== this.lastColor);
   }
 
   public getResourceIdentificator(resource: ResourceModel): string {
     return resource.id || resource.correlationId;
+  }
+
+  public getResource(id: string){
+    return this.findResource(id);
   }
 
   private findResource(identificator: string): ResourceModel {

@@ -3,4 +3,8 @@
 .container {
   max-width: 1000px;
   overflow-x: hidden;
+
+  .fixed-bottom {
+    left: auto;
+  }
 }

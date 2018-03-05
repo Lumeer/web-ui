@@ -28,6 +28,7 @@ export interface ProjectModel {
   name: string;
   color: string;
   icon: string;
+  description: string;
 
   permissions?: PermissionsModel;
 
