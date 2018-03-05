@@ -28,17 +28,16 @@
   <div *ngFor="let collection of collections; trackBy:trackByCollection" #postItElement
        layout-item [layout]="layout"
        class="layout-item card post-it"
+       [class.selected]="selectedCollection == collection"
        [class.uninitialized]="!collection.id"
-       [style.border-color]="collection.color"
-       (click)="lastClickedCollection = collection">
+       [style.border-color]="collection.color">
 
     <div class="card-body text-center">
       <a class="icon" [style.color]="collection.color"
          [title]="collection.name"
          [routerLink]="collection.id ? [workspacePath(), 'view', 'postit'] : null"
          [queryParams]="collection.id ? { query: queryForCollectionDocuments(collection.id) } : null"
-         [attr.data-toggle]="collection.id ? '' : 'dropdown'"
-         (click)="lastClickedCollection = collection">
+         [attr.data-toggle]="collection.id ? '' : 'dropdown'">
         <i class="fa-6x {{ collection.icon }}" aria-hidden="true"></i>
       </a>
       <div class="dropdown-menu dropdown-menu-right uninitialized-dropdown">
@@ -73,8 +72,7 @@
             <i class="fa fa-fw fa-cog" aria-hidden="true"></i></a>
 
           <a title="Icon picker" i18n-title="@@collection.button.icon"
-             class="rounded-left text-success" data-toggle="dropdown"
-             (click)="lastClickedCollection = collection">
+             class="rounded-left text-success" data-toggle="dropdown">
             <i class="fa fa-fw fa-eye-dropper" aria-hidden="true"></i></a>
           <div class="dropdown-menu dropdown-menu-right">
             <color-picker class="dropdown-item" [(color)]="collection.color"
@@ -97,7 +95,9 @@
 
     <post-it-collection-name
       [collection]="collection"
-      (changed)="onCollectionNameChanged(collection, $event)">
+      (changed)="onCollectionNameChanged(collection, $event)"
+      (selected)="onCollectionSelect(collection)"
+      (unselected)="onCollectionUnselect()">
     </post-it-collection-name>
   </div>
 

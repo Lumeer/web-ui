@@ -49,6 +49,14 @@ export enum CollectionsActionType {
   DELETE_SUCCESS = '[Collections] Delete :: Success',
   DELETE_FAILURE = '[Collections] Delete :: Failure',
 
+  ADD_FAVORITE = '[Collections] Add Favorite',
+  ADD_FAVORITE_SUCCESS = '[Collections] Add Favorite :: Success',
+  ADD_FAVORITE_FAILURE = '[Collections] Add Favorite :: Failure',
+
+  REMOVE_FAVORITE = '[Collections] Remove Favorite',
+  REMOVE_FAVORITE_SUCCESS = '[Collections] Remove Favorite :: Success',
+  REMOVE_FAVORITE_FAILURE = '[Collections] Remove Favorite :: Failure',
+
   CHANGE_ATTRIBUTE = '[Collections] Change Attribute',
   CHANGE_ATTRIBUTE_SUCCESS = '[Collections] Change Attribute :: Success',
   CHANGE_ATTRIBUTE_FAILURE = '[Collections] Change Attribute :: Failure',
@@ -197,6 +205,48 @@ export namespace CollectionsAction {
     }
   }
 
+  export class AddFavorite implements Action {
+    public readonly type = CollectionsActionType.ADD_FAVORITE;
+
+    public constructor(public payload: { collectionId: string }) {
+    }
+  }
+
+  export class AddFavoriteSuccess implements Action {
+    public readonly type = CollectionsActionType.ADD_FAVORITE_SUCCESS;
+
+    public constructor(public payload: { collectionId: string }) {
+    }
+  }
+
+  export class AddFavoriteFailure implements Action {
+    public readonly type = CollectionsActionType.ADD_FAVORITE_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
+  export class RemoveFavorite implements Action {
+    public readonly type = CollectionsActionType.REMOVE_FAVORITE;
+
+    public constructor(public payload: { collectionId: string }) {
+    }
+  }
+
+  export class RemoveFavoriteSuccess implements Action {
+    public readonly type = CollectionsActionType.REMOVE_FAVORITE_SUCCESS;
+
+    public constructor(public payload: { collectionId: string }) {
+    }
+  }
+
+  export class RemoveFavoriteFailure implements Action {
+    public readonly type = CollectionsActionType.REMOVE_FAVORITE_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
   export class ChangeAttribute implements Action {
     public readonly type = CollectionsActionType.CHANGE_ATTRIBUTE;
 
@@ -295,6 +345,8 @@ export namespace CollectionsAction {
     Import | ImportSuccess | ImportFailure |
     Update | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure |
+    AddFavorite | AddFavoriteSuccess | AddFavoriteFailure |
+    RemoveFavorite | RemoveFavoriteSuccess | RemoveFavoriteFailure |
     ChangeAttribute | ChangeAttributeSuccess | ChangeAttributeFailure |
     RemoveAttribute | RemoveAttributeSuccess | RemoveAttributeFailure |
     ChangePermission | ChangePermissionSuccess | ChangePermissionFailure |

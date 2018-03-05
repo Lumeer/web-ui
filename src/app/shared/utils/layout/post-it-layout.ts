@@ -24,7 +24,7 @@ export class PostItLayout {
 
   protected layout: any;
 
-  protected insertingElementsAtIndex: number = -1;
+  protected insertingElementsAtIndex: number = 2;
 
   constructor(protected containerClassName: string, protected parameters: PostItLayoutConfig, protected zone: NgZone) {
     this.addContainerClassIdentifierIfMissing();

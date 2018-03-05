@@ -6,6 +6,7 @@
      title="{{collectionName}}"
      (input)="collectionName = $event.target.textContent"
      (blur)="onNameBlurred()"
+     (focus)="onNameSelected()"
      (keydown.enter)="collectionNameInput.blur()"
      (keydown.Escape)="collectionNameInput.blur()">
 </div>

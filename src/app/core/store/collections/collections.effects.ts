@@ -31,6 +31,7 @@ import {PermissionsConverter} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions.model';
 import {CollectionConverter} from './collection.converter';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
+import {HomePageService} from "../../rest/home-page.service";
 
 @Injectable()
 export class CollectionsEffects {
@@ -119,7 +120,7 @@ export class CollectionsEffects {
         map((dto: Collection) => CollectionConverter.fromDto(dto))
       );
     }),
-    map(collection => new CollectionsAction.CreateSuccess({collection: collection})),
+    map(collection => new CollectionsAction.UpdateSuccess({collection: collection})),
     catchError((error) => Observable.of(new CollectionsAction.CreateFailure({error: error})))
   );
 
@@ -140,6 +141,36 @@ export class CollectionsEffects {
   public deleteFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.DeleteFailure>(CollectionsActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
     map(() => new NotificationsAction.Error({message: 'Failed to delete file'}))
+  );
+
+  @Effect()
+  public addFavorite$: Observable<Action> = this.actions$.ofType<CollectionsAction.AddFavorite>(CollectionsActionType.ADD_FAVORITE).pipe(
+    switchMap(action => this.homePageService.addFavoriteCollection(action.payload.collectionId).pipe(
+      map(() => action.payload.collectionId)
+    )),
+    map((collectionId) => new CollectionsAction.AddFavoriteSuccess({collectionId})),
+    catchError((error) => Observable.of(new CollectionsAction.AddFavoriteFailure({error: error})))
+  );
+
+  @Effect()
+  public addFavoriteFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.AddFavoriteFailure>(CollectionsActionType.ADD_FAVORITE_FAILURE).pipe(
+    tap(action => console.error(action.payload.error)),
+    map(() => new NotificationsAction.Error({message: 'Failed to add collection to favorite'}))
+  );
+
+  @Effect()
+  public removeFavorite$: Observable<Action> = this.actions$.ofType<CollectionsAction.RemoveFavorite>(CollectionsActionType.REMOVE_FAVORITE).pipe(
+    switchMap(action => this.homePageService.removeFavoriteCollection(action.payload.collectionId).pipe(
+      map(() => action.payload.collectionId)
+    )),
+    map((collectionId) => new CollectionsAction.RemoveFavoriteSuccess({collectionId})),
+    catchError((error) => Observable.of(new CollectionsAction.RemoveFavoriteFailure({error: error})))
+  );
+
+  @Effect()
+  public removeFavoriteFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.RemoveFavoriteFailure>(CollectionsActionType.REMOVE_FAVORITE_FAILURE).pipe(
+    tap(action => console.error(action.payload.error)),
+    map(() => new NotificationsAction.Error({message: 'Failed to remove collection from favorite'}))
   );
 
   @Effect()
@@ -230,6 +261,7 @@ export class CollectionsEffects {
 
   constructor(private actions$: Actions,
               private collectionService: CollectionService,
+              private homePageService: HomePageService,
               private importService: ImportService,
               private searchService: SearchService) {
   }

@@ -42,10 +42,7 @@ import {selectCollectionsByQuery} from '../../core/store/collections/collections
 @Component({
   selector: 'post-it-collections',
   templateUrl: './post-it-collections.component.html',
-  styleUrls: ['./post-it-collections.component.scss'],
-  host: {
-    '(document:click)': 'onClick($event)'
-  }
+  styleUrls: ['./post-it-collections.component.scss']
 })
 export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -60,7 +57,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public collections: CollectionModel[];
 
-  public lastClickedCollection: CollectionModel;
+  public selectedCollection: CollectionModel;
 
   public dragging: boolean = false;
 
@@ -88,6 +85,16 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.layout.initialize();
   }
 
+  public ngOnDestroy() {
+    if (this.navigationSubscription) {
+      this.navigationSubscription.unsubscribe();
+    }
+
+    if (this.collectionsSubscription) {
+      this.collectionsSubscription.unsubscribe();
+    }
+  }
+
   private createLayout() {
     const config = new PostItLayoutConfig();
     config.dragEnabled = false;
@@ -108,36 +115,32 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   private subscribeOnCollections() {
     this.collectionsSubscription = this.store.select(selectCollectionsByQuery).subscribe(collections => {
-      this.collections = collections.concat(this.unitializedCollections());
+      const corrIds: string[] = collections.filter(res => res.correlationId).map(res => res.correlationId);
+      const newCollections = this.collections ? this.collections.filter(collection => !collection.id && !corrIds.includes(collection.correlationId)) : [];
+      this.collections = newCollections.concat(collections.slice());
     });
   }
 
   public toggleFavorite(collection: CollectionModel) {
-    const collectionCopy = {...collection};
-    collectionCopy.favourite = !collectionCopy.favourite;
+    if (collection.favourite) {
+      this.store.dispatch(new CollectionsAction.RemoveFavorite({collectionId: collection.id}));
+    } else {
+      this.store.dispatch(new CollectionsAction.AddFavorite({collectionId: collection.id}));
+    }
+    collection.favourite = !collection.favourite;
+  }
 
-    this.store.dispatch(new CollectionsAction.Update({collection: collectionCopy}));
+  public onCollectionSelect(collection: CollectionModel) {
+    this.selectedCollection = collection;
+  }
+
+  public onCollectionUnselect() {
+    this.selectedCollection = null;
   }
 
   public newPostIt() {
-    this.collections.push(this.createDefaultCollection());
-  }
-
-  public createDefaultCollection() {
-    return {
-      name: '',
-      color: DEFAULT_COLOR,
-      icon: DEFAULT_ICON
-    };
-  }
-
-  public createPostIt(collection: CollectionModel) {
-    collection.correlationId = CorrelationIdGenerator.generate();
-    this.store.dispatch(new CollectionsAction.Create({collection}));
-  }
-
-  public updateCollection(collection: CollectionModel) {
-    this.store.dispatch(new CollectionsAction.Update({collection}));
+    const collection = {...this.createDefaultCollection(), correlationId: CorrelationIdGenerator.generate()};
+    this.collections.unshift(collection);
   }
 
   public fileChange(files: FileList) {
@@ -159,6 +162,15 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     const collection = {...this.createDefaultCollection(), name};
     const importedCollection = {collection, data: result};
     this.store.dispatch(new CollectionsAction.Import({format, importedCollection}));
+  }
+
+  private createDefaultCollection() {
+    return {
+      name: '',
+      color: DEFAULT_COLOR,
+      icon: DEFAULT_ICON,
+      description: ''
+    };
   }
 
   public handleDragEnter() {
@@ -193,7 +205,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   private deleteUninitializedPostIt(collection: CollectionModel) {
-    this.collections = this.collections.filter(postIt => postIt !== collection);
+    this.collections = this.collections.filter(coll => coll.correlationId !== collection.correlationId);
   }
 
   public onCollectionNameChanged(collection: CollectionModel, newName: string) {
@@ -202,26 +214,16 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     if (collection.id) {
       this.updateCollection(collectionCopy);
     } else {
-      this.createPostIt(collectionCopy);
+      this.createCollection(collectionCopy);
     }
   }
 
-  private unitializedCollections(): CollectionModel[] {
-    return this.collections && this.collections.filter(this.uninitializedPostIt) || [];
+  public updateCollection(collection: CollectionModel) {
+    this.store.dispatch(new CollectionsAction.Update({collection}));
   }
 
-  private uninitializedPostIt(collection: CollectionModel): boolean {
-    return !collection.id && !collection.correlationId;
-  }
-
-  public onClick(event: MouseEvent) {
-    if (!this.clickedOnPostIt(event)) {
-      this.lastClickedCollection = null;
-    }
-  }
-
-  private clickedOnPostIt(event: MouseEvent): boolean {
-    return this.postItElements && this.postItElements.find(postIt => postIt.nativeElement.contains(event.target)) !== undefined;
+  public createCollection(collection: CollectionModel) {
+    this.store.dispatch(new CollectionsAction.Create({collection}));
   }
 
   public hasManageRole(collection: CollectionModel): boolean {
@@ -247,21 +249,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public trackByCollection(index: number, collection: CollectionModel): number {
-    return HashCodeGenerator.hashString(PostItCollectionsComponent.postItIdentifier(collection));
-  }
-
-  private static postItIdentifier(collection: CollectionModel): string {
-    return collection.id || collection.correlationId;
-  }
-
-  public ngOnDestroy() {
-    if (this.navigationSubscription) {
-      this.navigationSubscription.unsubscribe();
-    }
-
-    if (this.collectionsSubscription) {
-      this.collectionsSubscription.unsubscribe();
-    }
+    return HashCodeGenerator.hashString(collection.id || collection.correlationId);
   }
 
 }

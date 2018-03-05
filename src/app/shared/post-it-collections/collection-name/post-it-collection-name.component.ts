@@ -32,8 +32,9 @@ export class PostItCollectionNameComponent {
 
   @Input() public collection: CollectionModel;
 
-  @Output()
-  public changed = new EventEmitter<string>();
+  @Output() public changed = new EventEmitter<string>();
+  @Output() public selected = new EventEmitter();
+  @Output() public unselected = new EventEmitter();
 
   public ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
     if (changes['collection']) {
@@ -44,6 +45,11 @@ export class PostItCollectionNameComponent {
   public onNameBlurred() {
     this.collectionName = this.collectionName.trim();
     this.changed.emit(this.collectionName);
+    this.unselected.emit();
+  }
+
+  public onNameSelected() {
+    this.selected.emit();
   }
 
 }

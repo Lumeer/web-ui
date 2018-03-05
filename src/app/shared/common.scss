@@ -24,6 +24,14 @@ ul {
   list-style-type: none;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-text {
+  cursor: text;
+}
+
 .edit-border {
   background: transparent;
   border: 1px solid transparent !important;
@@ -119,6 +127,7 @@ input {
 .muuri {
   position: relative;
 }
+
 .muuri-item {
   position: absolute;
   z-index: 1;
@@ -127,15 +136,19 @@ input {
     z-index: 2;
   }
 }
+
 .muuri-item.muuri-item-dragging {
   z-index: 4;
 }
+
 .muuri-item.muuri-item-releasing {
   z-index: 3;
 }
+
 .muuri-item.muuri-item-hidden {
   z-index: 0;
 }
+
 .muuri-item-content {
   position: relative;
 }
