@@ -20,12 +20,8 @@
 import {Project} from './project';
 import {Resource} from './resource';
 
-export class Organization extends Resource {
+export interface Organization extends Resource {
 
-  public projects?: Project[];
-
-  constructor(){
-    super('','','','');
-  }
+  projects?: Project[];
 
 }

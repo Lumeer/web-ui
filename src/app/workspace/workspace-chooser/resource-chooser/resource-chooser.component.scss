@@ -93,7 +93,7 @@ $bookmark-border-color: #bdbdbd;
             transition: box-shadow $animation-duration;
           }
 
-          .unitialized{
+          .unitialized {
             border-style: dashed;
           }
 
@@ -186,7 +186,7 @@ $bookmark-border-color: #bdbdbd;
 }
 
 .uninitialized-dropdown {
-    transform: translate3d(0px, 0px, 0px) !important;
+  transform: translate3d(0px, 0px, 0px) !important;
 }
 
 [contenteditable=true]:empty:before {
@@ -201,12 +201,14 @@ $bookmark-border-color: #bdbdbd;
 
 .description {
   width: 100%;
+  max-height: 80px;
 
   .text {
     width: 100%;
     cursor: text;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 17px;
-    outline-color: $success;
   }
 }
 

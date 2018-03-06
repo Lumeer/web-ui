@@ -30,6 +30,7 @@ export class OrganizationConverter {
       name: dto.name,
       icon: dto.icon,
       color: dto.color,
+      description: dto.description,
       correlationId: correlationId,
       permissions: PermissionsConverter.fromDto(dto.permissions)
     };
@@ -40,7 +41,8 @@ export class OrganizationConverter {
       code: organization.code,
       name: organization.name,
       icon: organization.icon,
-      color: organization.color
+      color: organization.color,
+      description: organization.description
     };
   }
 

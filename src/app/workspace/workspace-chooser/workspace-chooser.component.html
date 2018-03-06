@@ -25,7 +25,7 @@
     </resource-chooser>
   </div>
   <div class="my-4 py-2" [style.height]="'3.5em'"></div>
-  <div class="my-4 py-2 px-5 d-flex justify-content-end fixed-bottom container"
+  <div class="m-5 d-flex justify-content-end fixed-bottom"
        *ngIf="selectedOrganizationId && selectedProjectId"
        [@animateOpacityFromUp]="'in'">
     <button type="button" class="btn btn-lg btn-success py-2 px-4 font-weight-bold" (click)="onSaveActiveItems()">
