@@ -23,7 +23,8 @@
          (blur)="name.scrollTo(0,0); onNewColectionName(name.textContent)"
          [style.color]="collection.color"
          contenteditable="true"
-         placeholder="Collection name"
+         placeholder="Set name"
+         i18n-placeholder="@@collection.name.placeholder"
          [attr.spellcheck]="false"
          i18n-title="@@header.collection.name"
          title="Edit name of the file"
@@ -63,7 +64,7 @@
     </div>
 
   </div>
-  
+
   <ul class="nav nav-tabs px-5" *ngIf="collection">
     <li role="presentation" class="nav-item">
       <a [routerLink]="['attributes']"

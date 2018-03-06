@@ -33,7 +33,7 @@ import {Role} from '../../shared/permissions/role';
 import {CollectionSelectService} from '../service/collection-select.service';
 import {CollectionModel} from "../../core/store/collections/collection.model";
 import {CollectionsAction} from "../../core/store/collections/collections.action";
-import {selectCollection} from "../../core/store/collections/collections.state";
+import {selectCollectionByWorkspace} from "../../core/store/collections/collections.state";
 import {CollectionConverter} from "../../core/store/collections/collection.converter";
 import {isNullOrUndefined} from "util";
 import {PermissionModel} from "../../core/store/permissions/permissions.model";
@@ -60,7 +60,7 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.workspaceSubscription = this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
 
-    this.collectionSubscription = this.store.select(selectCollection)
+    this.collectionSubscription = this.store.select(selectCollectionByWorkspace)
       .pipe(filter(collection => !isNullOrUndefined(collection)))
       .subscribe(collection => {
         this.collection = collection;

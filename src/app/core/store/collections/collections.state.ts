@@ -46,7 +46,7 @@ export const selectCollectionsByQuery = createSelector(selectCollectionsDictiona
   return !query || query.collectionIds.length === 0 ? Object.values(collections) : query.collectionIds.map(id => collections[id]);
 });
 
-export const selectCollection = createSelector(selectCollectionsDictionary, selectWorkspace, (collections, workspace) => {
+export const selectCollectionByWorkspace = createSelector(selectCollectionsDictionary, selectWorkspace, (collections, workspace) => {
   return workspace.collectionId ? collections[workspace.collectionId] : null;
 });
 
