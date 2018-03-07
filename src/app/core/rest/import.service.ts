@@ -29,6 +29,7 @@ import {catchError} from 'rxjs/operators';
 import {Workspace} from '../store/navigation/workspace.model';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
+import {ImportedCollection} from "../dto/imported-collection";
 
 @Injectable()
 export class ImportService {
@@ -40,10 +41,10 @@ export class ImportService {
     this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
-  public importFile(format: string, data: string, name: string): Observable<Collection> {
-    const queryParams = new HttpParams().set('format', format).set('name', name);
+  public importFile(format: string, importedCollection: ImportedCollection): Observable<Collection> {
+    const queryParams = new HttpParams().set('format', format);
 
-    return this.http.post<Collection>(this.apiPrefix(), data, {params: queryParams})
+    return this.http.post<Collection>(this.apiPrefix(), importedCollection, {params: queryParams})
       .pipe(catchError(ImportService.handleGlobalError));
   }
 

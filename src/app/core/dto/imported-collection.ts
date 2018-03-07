@@ -17,12 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionModel} from '../../core/store/collections/collection.model';
+import {Collection} from "./collection";
 
-export class PostItCollectionModel {
+export interface ImportedCollection {
 
-  public collection: CollectionModel;
-  public initializing: boolean;
-  public initialized: boolean;
+  collection: Collection;
+  data: String;
 
 }

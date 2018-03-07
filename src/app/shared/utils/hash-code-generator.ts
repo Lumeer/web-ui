@@ -22,7 +22,7 @@ export class HashCodeGenerator {
   public static hashString(str: string): number {
     let hash = 0;
 
-    if (str.length === 0) {
+    if (!str || str.length === 0) {
       return hash;
     }
 

@@ -154,7 +154,8 @@ export class NewCollectionDialogComponent implements OnInit, OnDestroy {
     const collection: CollectionModel = {
       name: this.collectionNameInput.value,
       color: this.color,
-      icon: this.icon
+      icon: this.icon,
+      description: ''
     };
     const nextAction = this.linkedCollection ? this.createLinkTypeAction() : null;
     return new CollectionsAction.Create({collection, nextAction});

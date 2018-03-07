@@ -1,0 +1,43 @@
+@import "../../variables";
+
+$name-collapsed: 42px;
+$name-expanded: 300px;
+
+:host {
+  display: block;
+}
+
+.card-footer {
+  border: none;
+  outline: none;
+  padding-top: 0;
+
+  width: 100%;
+  color: inherit;
+  font-size: 20px;
+}
+
+.name {
+  transition: max-height $animation-duration;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: $name-collapsed;
+  white-space: nowrap;
+
+  &:hover, &:focus {
+    max-height: $name-expanded;
+    white-space: normal;
+    text-overflow: unset;
+  }
+}
+
+[contenteditable=true]:empty:before {
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  color: $grey-color;
+}
+
+[contenteditable]:focus {
+  outline: 0 solid transparent;
+}

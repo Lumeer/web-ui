@@ -21,6 +21,7 @@ import {Action} from '@ngrx/store';
 import {QueryModel} from '../navigation/query.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 import {AttributeModel, CollectionModel} from './collection.model';
+import {ImportedCollection} from "../../dto/imported-collection";
 
 export enum CollectionsActionType {
 
@@ -36,6 +37,10 @@ export enum CollectionsActionType {
   CREATE_SUCCESS = '[Collections] Create :: Success',
   CREATE_FAILURE = '[Collections] Create :: Failure',
 
+  IMPORT = '[Collections] Import',
+  IMPORT_SUCCESS = '[Collections] Import :: Success',
+  IMPORT_FAILURE = '[Collections] Import :: Failure',
+
   UPDATE = '[Collections] Update',
   UPDATE_SUCCESS = '[Collections] Update :: Success',
   UPDATE_FAILURE = '[Collections] Update :: Failure',
@@ -43,6 +48,14 @@ export enum CollectionsActionType {
   DELETE = '[Collections] Delete',
   DELETE_SUCCESS = '[Collections] Delete :: Success',
   DELETE_FAILURE = '[Collections] Delete :: Failure',
+
+  ADD_FAVORITE = '[Collections] Add Favorite',
+  ADD_FAVORITE_SUCCESS = '[Collections] Add Favorite :: Success',
+  ADD_FAVORITE_FAILURE = '[Collections] Add Favorite :: Failure',
+
+  REMOVE_FAVORITE = '[Collections] Remove Favorite',
+  REMOVE_FAVORITE_SUCCESS = '[Collections] Remove Favorite :: Success',
+  REMOVE_FAVORITE_FAILURE = '[Collections] Remove Favorite :: Failure',
 
   CHANGE_ATTRIBUTE = '[Collections] Change Attribute',
   CHANGE_ATTRIBUTE_SUCCESS = '[Collections] Change Attribute :: Success',
@@ -129,6 +142,27 @@ export namespace CollectionsAction {
     }
   }
 
+  export class Import implements Action {
+    public readonly type = CollectionsActionType.IMPORT;
+
+    public constructor(public payload: { format: string, importedCollection: ImportedCollection }) {
+    }
+  }
+
+  export class ImportSuccess implements Action {
+    public readonly type = CollectionsActionType.IMPORT_SUCCESS;
+
+    public constructor(public payload: { collection: CollectionModel }) {
+    }
+  }
+
+  export class ImportFailure implements Action {
+    public readonly type = CollectionsActionType.IMPORT_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
   export class Update implements Action {
     public readonly type = CollectionsActionType.UPDATE;
 
@@ -166,6 +200,48 @@ export namespace CollectionsAction {
 
   export class DeleteFailure implements Action {
     public readonly type = CollectionsActionType.DELETE_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
+  export class AddFavorite implements Action {
+    public readonly type = CollectionsActionType.ADD_FAVORITE;
+
+    public constructor(public payload: { collectionId: string }) {
+    }
+  }
+
+  export class AddFavoriteSuccess implements Action {
+    public readonly type = CollectionsActionType.ADD_FAVORITE_SUCCESS;
+
+    public constructor(public payload: { collectionId: string }) {
+    }
+  }
+
+  export class AddFavoriteFailure implements Action {
+    public readonly type = CollectionsActionType.ADD_FAVORITE_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
+  export class RemoveFavorite implements Action {
+    public readonly type = CollectionsActionType.REMOVE_FAVORITE;
+
+    public constructor(public payload: { collectionId: string }) {
+    }
+  }
+
+  export class RemoveFavoriteSuccess implements Action {
+    public readonly type = CollectionsActionType.REMOVE_FAVORITE_SUCCESS;
+
+    public constructor(public payload: { collectionId: string }) {
+    }
+  }
+
+  export class RemoveFavoriteFailure implements Action {
+    public readonly type = CollectionsActionType.REMOVE_FAVORITE_FAILURE;
 
     public constructor(public payload: { error: any }) {
     }
@@ -266,8 +342,11 @@ export namespace CollectionsAction {
     Get | GetSuccess | GetFailure |
     GetNames | GetNamesSuccess | GetNamesFailure |
     Create | CreateSuccess | CreateFailure |
+    Import | ImportSuccess | ImportFailure |
     Update | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure |
+    AddFavorite | AddFavoriteSuccess | AddFavoriteFailure |
+    RemoveFavorite | RemoveFavoriteSuccess | RemoveFavoriteFailure |
     ChangeAttribute | ChangeAttributeSuccess | ChangeAttributeFailure |
     RemoveAttribute | RemoveAttributeSuccess | RemoveAttributeFailure |
     ChangePermission | ChangePermissionSuccess | ChangePermissionFailure |

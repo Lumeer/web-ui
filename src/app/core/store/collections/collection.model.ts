@@ -36,7 +36,7 @@ export interface CollectionModel {
   code?: string;
 
   name: string;
-  description?: string;
+  description: string;
 
   icon: string;
   color: string;

@@ -8,10 +8,6 @@
   font-size: 22px;
 }
 
-.icon {
-  margin-right: 20px;
-}
-
 .dropdown-menu {
   width: 230px;
   .dropdown-item {
@@ -28,7 +24,14 @@
   background-color: transparent;
   outline: none;
   font-size: 30px;
-  width: 300px;
+  white-space: nowrap;
+  cursor: text;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
+  &:focus {
+    text-overflow: clip;
+  }
 }
 
 .code {
@@ -56,12 +59,6 @@
   transition: color $animation-color-duration;
 }
 
-.fa-file {
-  font-size: 20px;
-  margin-right: 15px;
-  margin-left: auto;
-}
-
 .count {
   font-size: 20px;
 }
@@ -74,21 +71,25 @@
 
   .text {
     font-size: 17px;
-    outline-color: $success;
-    margin-right: 20px;
     overflow: hidden;
-    height: 50px;
+    max-height: 50px;
   }
 
   .edit {
     opacity: 0;
     transition: opacity $animation-duration;
-    margin-right: 5px;
-
-    &:hover {
-      color: $success;
-    }
   }
+
+  [contenteditable=true]:empty:before {
+    content: attr(placeholder);
+    display: block; /* For Firefox */
+    color: $grey-color;
+  }
+
+  [contenteditable]:focus {
+    outline: 0 solid transparent;
+  }
+
 }
 
 .whole {
