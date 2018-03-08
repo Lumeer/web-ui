@@ -34,6 +34,7 @@ import {WorkspaceService} from './workspace.service';
 import {OrganizationUsersComponent} from './organization/users/organization-users.component';
 import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
 import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
+import {OrganizationSettingsGuard} from "./organization/organization-settings.guard";
 
 @NgModule({
   imports: [
@@ -58,7 +59,8 @@ import {OrganizationRegistrationComponent} from './organization/registration/org
   ],
   providers: [
     WorkspaceService,
-    WorkspaceSelectGuard
+    WorkspaceSelectGuard,
+    OrganizationSettingsGuard
   ]
 })
 export class WorkspaceModule {

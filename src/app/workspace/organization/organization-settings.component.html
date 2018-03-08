@@ -1,98 +1,103 @@
-<div class="container-fluid" *ngIf="organization">
-  <div class="row">
-    <div class="col"></div>
-    <div class="whole col-12 col-lg-11 col-xl-10" [style.opacity]="initialized() ? '1' : '0'">
-      <div class="d-flex flex-row justify-content-start">
-        <a class="fas fa-chevron-left bigger mr-2" [routerLink]="['/workspace']"></a>
-        <i class="color-class fa-fw {{ organization.icon }} organization-icon clickable"
-           [style.color]="organization.color"
-           data-toggle="dropdown"></i>
-        <div *ngIf="initialized()" class="dropdown-menu">
-          <color-picker class="dropdown-item" [(color)]="organization.color"
-                        (selectedChange)="updateOrganization()"></color-picker>
-          <div class="dropdown-divider"></div>
-          <icon-picker class="dropdown-item" [(icon)]="organization.icon"
-                       (selectedChange)="updateOrganization()"></icon-picker>
-        </div>
-
-        <input class="color-class name edit-border" [(ngModel)]="organization.name" (blur)="name.valid && updateOrganizationName()"
-               name="name"
-               [style.color]="organization.color" i18n-title="@@header.organization.name"
-               title="Edit name of the organization"
-               #name="ngModel" required minlength="3" maxlength="24">
-
-        <small class="text-danger" [hidden]="name.valid || (name.pristine  )">
-          Name is required (from 3 to 24 characters).
-        </small>
-
-        <div class="float-right document-count color-class ml-auto">
-          <a i18n-title="@@organization.projects.count" class="count" title="Number of projects in this organization"
-             [style.color]="organization.color" [routerLink]="['/workspace']">
-            <i class="far fa-edit" aria-hidden="true"></i>
-            <span>{{ projectsCount }}</span>
-          </a>
-
-        </div>
-      </div>
-
-      <div class="d-flex flex-row justify-content-start">
-        <input class="color-class code edit-border" [(ngModel)]="organization.code"
-               name="code"
-               (blur)=" code.valid && updateOrganizationCode()"
-               [style.color]="organization.color" i18n-title="@@header.organization.code"
-               title="Edit code of the organization"
-               #code="ngModel" required minlength="3" maxlength="6">
-
-        <small class="text-danger" [hidden]="code.valid || (code.pristine  )">
-          Code is required (from 3 to 6 characters).
-        </small>
-
-        <a (click)="confirmDeletion()"
-           class="text-danger rounded-left ml-auto"
-           title="Remove organization">
-          <i class="fas fa-fw fa-trash" aria-hidden="true"></i>
-        </a>
-      </div>
-
-      <div class="description d-flex py-3">
-        <div class="text flex-grow-2 edit-border" contenteditable="true"
-             #organizationDescription>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
-          finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
-          vel augue.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
-          finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
-          vel augue.
-        </div>
-      </div>
-      <ul class="nav nav-tabs">
-        <li role="presentation" class="nav-item">
-          <a [routerLink]="'users'"
-             routerLinkActive="active"
-             class="nav-link"
-             i18n="@@organizations.tab.users">Users</a>
-        </li>
-        <li role="presentation" class="nav-item">
-          <a [routerLink]="'groups'"
-             routerLinkActive="active"
-             class="nav-link"
-             i18n="@@organizations.tab.groups">Groups</a>
-        </li>
-        <li role="presentation" class="nav-item">
-          <a [routerLink]="'registration'"
-             routerLinkActive="active"
-             class="nav-link"
-             i18n="@@organizations.tab.registration">Registration</a>
-        </li>
-        <li role="presentation" class="nav-item">
-          <a [routerLink]="'permissions'"
-             routerLinkActive="active"
-             class="nav-link"
-             i18n="@@organizations.tab.permissions">Permissions</a>
-        </li>
-      </ul>
-      <router-outlet></router-outlet>
+<div class="col-12 col-lg-11 col-xl-10" *ngIf="organization">
+  <div class="d-flex flex-row justify-content-start align-items-center">
+    <a class="fas fa-chevron-left chevron mr-2"
+       title="Back" i18n-title="@@organization.settings.back"
+       [routerLink]="['/workspace']"></a>
+    <i class="fa-fw {{ organization.icon }} cursor-pointer"
+       [style.fontSize.rem]="2"
+       [style.color]="organization.color" data-toggle="dropdown"></i>
+    <div class="dropdown-menu">
+      <color-picker class="dropdown-item" [(color)]="organization.color"
+                    (selectedChange)="updateOrganization()"></color-picker>
+      <div class="dropdown-divider"></div>
+      <icon-picker class="dropdown-item" [(icon)]="organization.icon"
+                   (selectedChange)="updateOrganization()"></icon-picker>
     </div>
-    <div class="col"></div>
+
+    <input-box
+      [initialValue]="organization.name"
+      [color]="organization.color"
+      [canStayEmpty]="false"
+      [fontSizeRem]="2"
+      [maxLines]="1"
+      [title]="'Organization name'"
+      [placeholder]="'Organization name'"
+      (newValue)="onNewName($event)">
+    </input-box>
+
+    <div class="d-flex flex-row flex-nowrap align-items-center ml-auto">
+      <div class="d-flex flex-row flex-nowrap align-items-center mr-3"
+           [style.color]="organization.color"
+           title="Number of users" i18n-title="@@organization.settings.users.count">
+        <i class="far fa-user mr-1" aria-hidden="true"></i>
+        <span>{{ userCount$ | async }}</span>
+      </div>
+
+      <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer"
+           [style.color]="organization.color"
+           (click)="onProjectsClick()"
+           title="Number of projects" i18n-title="@@organization.settings.projects.count">
+        <i class="far fa-edit mr-1" aria-hidden="true"></i>
+        <span>{{ projectsCount$ | async }}</span>
+      </div>
+    </div>
   </div>
+
+  <div class="d-flex flex-row justify-content-start align-items-center">
+    <input-box
+      [initialValue]="organization.code"
+      [color]="organization.color"
+      [canStayEmpty]="false"
+      [fontSizeRem]="1.5"
+      [maxLines]="1"
+      [title]="'Organization code'"
+      [placeholder]="'Organization code'"
+      (newValue)="onNewCode($event)">
+    </input-box>
+
+    <a (click)="onDelete()"
+       class="text-danger rounded-left ml-auto"
+       title="Delete organization" i18n-title="@@organization.settings.delete">
+      <i class="fas fa-fw fa-trash" aria-hidden="true"></i>
+    </a>
+  </div>
+
+  <input-box
+    class="d-flex pb-3 pt-1"
+    [initialValue]="organization.description"
+    [canStayEmpty]="true"
+    [fontSizeRem]="1"
+    [maxLines]="2"
+    [title]="'Organization description'"
+    [placeholder]="'Organization description'"
+    (newValue)="onNewDescription($event)">
+  </input-box>
+
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="nav-item">
+      <a [routerLink]="'users'"
+         routerLinkActive="active"
+         class="nav-link"
+         i18n="@@organizations.tab.users">Users</a>
+    </li>
+    <li role="presentation" class="nav-item">
+      <a [routerLink]="'groups'"
+         routerLinkActive="active"
+         class="nav-link"
+         i18n="@@organizations.tab.groups">Groups</a>
+    </li>
+    <li role="presentation" class="nav-item">
+      <a [routerLink]="'registration'"
+         routerLinkActive="active"
+         class="nav-link"
+         i18n="@@organizations.tab.registration">Registration</a>
+    </li>
+    <li role="presentation" class="nav-item">
+      <a [routerLink]="'permissions'"
+         routerLinkActive="active"
+         class="nav-link"
+         i18n="@@organizations.tab.permissions">Permissions</a>
+    </li>
+  </ul>
+  <router-outlet></router-outlet>
 </div>

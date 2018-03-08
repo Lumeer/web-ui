@@ -35,6 +35,7 @@ import {SearchBoxModule} from './search-box/search-box.module';
 import {SizeSliderComponent} from './slider/size-slider.component';
 import {LayoutItem} from './utils/layout/layout-item.directive';
 import {PostItCollectionNameComponent} from './post-it-collections/collection-name/post-it-collection-name.component';
+import {InputBoxComponent} from "./input-box/input-box.component";
 
 @NgModule({
   imports: [
@@ -55,7 +56,8 @@ import {PostItCollectionNameComponent} from './post-it-collections/collection-na
     LinksComponent,
     PerspectiveDirective,
     LayoutItem,
-    ModalDialogComponent
+    ModalDialogComponent,
+    InputBoxComponent
   ],
   exports: [
     CommonModule,
@@ -68,7 +70,8 @@ import {PostItCollectionNameComponent} from './post-it-collections/collection-na
     LinksComponent,
     PerspectiveDirective,
     SearchBoxModule,
-    ModalDialogComponent
+    ModalDialogComponent,
+    InputBoxComponent
   ]
 })
 export class SharedModule {

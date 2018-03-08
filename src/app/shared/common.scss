@@ -35,12 +35,16 @@ ul {
 .edit-border {
   background: transparent;
   border: 1px solid transparent !important;
+  transition: border-color $animation-color-duration;
 
   border-radius: $border-radius-small;
   &:hover {
     border: 1px solid #bfbfbf !important;
   }
   &:focus {
+    border: 1px solid $primary !important;
+  }
+  &.focused {
     border: 1px solid $primary !important;
   }
 }

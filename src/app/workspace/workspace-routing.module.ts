@@ -28,6 +28,7 @@ import {WorkspaceSelectGuard} from './workspace-select.guard';
 import {OrganizationUsersComponent} from './organization/users/organization-users.component';
 import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
 import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
+import {OrganizationSettingsGuard} from "./organization/organization-settings.guard";
 
 const workspaceRoutes: Routes = [
   {
@@ -48,6 +49,7 @@ const workspaceRoutes: Routes = [
   {
     path: 'organization/:organizationCode',
     component: OrganizationSettingsComponent,
+    canActivate: [OrganizationSettingsGuard],
     children: [
       {
         path: 'users',

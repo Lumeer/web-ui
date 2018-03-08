@@ -17,141 +17,143 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 
-import {Organization} from '../../core/dto/organization';
-import {OrganizationService} from '../../core/rest/organization.service';
-import {ProjectService} from '../../core/rest/project.service';
-import {Project} from '../../core/dto/project';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
-import {selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
+import {UsersAction} from '../../core/store/users/users.action';
+import {GroupsAction} from '../../core/store/groups/groups.action';
+import {Observable} from 'rxjs/Observable';
+import {selectAllUsers} from '../../core/store/users/users.state';
+import {filter, map} from 'rxjs/operators';
+import {OrganizationModel} from "../../core/store/organizations/organization.model";
+import {Subscription} from "rxjs/Subscription";
+import {selectOrganizationByWorkspace} from "../../core/store/organizations/organizations.state";
+import {isNullOrUndefined} from "util";
+import {selectProjectsForWorkspace} from "../../core/store/projects/projects.state";
+import {ProjectsAction} from "../../core/store/projects/projects.action";
+import {RouterAction} from "../../core/store/router/router.action";
 
 @Component({
   templateUrl: './organization-settings.component.html',
   styleUrls: ['./organization-settings.component.scss']
 })
-export class OrganizationSettingsComponent implements OnInit {
+export class OrganizationSettingsComponent implements OnInit, OnDestroy {
 
-  public originalOrganizationName: string;
-  public organization: Organization;
-  public organizationCode: string;
-  private originalOrganizationCode: string;
-  public projectsCount: number;
+  public userCount$: Observable<number>;
+  public projectsCount$: Observable<number>;
+  public organization: OrganizationModel;
 
-  @ViewChild('organizationDescription')
-  public organizationDescription: ElementRef;
+  private organizationSubscription: Subscription;
 
-  constructor(private organizationService: OrganizationService,
-              private router: Router,
+  constructor(private router: Router,
               private store: Store<AppState>,
-              private projectService: ProjectService,
               private notificationService: NotificationService) {
   }
 
-  public ngOnInit(): void {
-    this.store.select(selectWorkspace).subscribe(workspace => {
-        this.organizationCode = workspace.organizationCode;
-        if (this.organizationCode) {
-          this.getOrganization();
-        }
-      },
-      error => {
-        this.notificationService.error('Error loading organization');
-      }
-    );
+  public ngOnInit() {
+    this.dispatchEvents();
+    this.subscribeToStore();
   }
 
-  private getOrganization(): void {
-    this.organizationService.getOrganization(this.organizationCode)
-      .subscribe((organization: Organization) => {
-          this.originalOrganizationCode = organization.code;
-          this.organization = organization;
-          this.getNumberOfProjects();
-          this.originalOrganizationName = this.organization.name;
-        },
-        error => {
-          this.notificationService.error('Error getting the organization');
-        }
-      );
-  }
-
-  public updateOrganization(): void {
-    this.organizationService.editOrganization(this.organizationCode, this.organization)
-      .subscribe(success => null,
-        error => {
-          this.notificationService.error('Error updating organization');
-        });
-  }
-
-  public updateOrganizationName(): void {
-    if (this.organization.name === this.originalOrganizationName) {
-      return;
+  public ngOnDestroy() {
+    if (this.organizationSubscription) {
+      this.organizationSubscription.unsubscribe();
     }
-    this.organizationService.editOrganization(this.organizationCode, this.organization)
-      .subscribe(success => {
-          this.notificationService.success(`Organization's name was successfully updated`);
-          this.originalOrganizationName = this.organization.name;
-        },
-        error => {
-          this.notificationService.error('Error updating organization');
-        });
   }
 
-  public updateOrganizationCode(): void {
-    if (this.organizationCode === this.originalOrganizationCode) {
-      return;
+  private dispatchEvents() {
+    this.store.dispatch(new UsersAction.Get());
+    this.store.dispatch(new GroupsAction.Get());
+  }
+
+  private subscribeToStore() {
+    this.userCount$ = this.store.select(selectAllUsers)
+      .pipe(map(users => users ? users.length : 0));
+
+    this.projectsCount$ = this.store.select(selectProjectsForWorkspace)
+      .pipe(map(projects => projects ? projects.length : 0));
+
+    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+      .pipe(filter(organization => !isNullOrUndefined(organization)))
+      .subscribe(organization => {
+        this.checkOrganizationFromStore(organization);
+        this.organization = organization;
+      });
+  }
+
+  private checkOrganizationFromStore(organization: OrganizationModel) {
+    if (isNullOrUndefined(this.organization)) {
+      this.store.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
+    } else if (this.organization.code !== organization.code) {
+      this.updateWorkspaceUrl(this.organization);
     }
-    this.organizationService.editOrganization(this.originalOrganizationCode, this.organization)
-      .subscribe((response) => {
-          this.notificationService.success('Organization\'s code was successfully updated');
-          this.originalOrganizationCode = this.organization.code;
-          this.organizationCode = this.organization.code;
-          this.router.navigate(['/organization', this.organization.code]);
-        },
-        error => {
-          this.notificationService.error('Error editing the organization');
-        }
-      );
   }
 
-  private goBack(): void {
-    this.router.navigate(['/workspace']);
-  }
-
-  public onDelete(): void {
-    this.organizationService.deleteOrganization(this.organizationCode)
-      .subscribe(
-        text => this.goBack(),
-        error => {
-          this.notificationService.error('An error occurred during deletion of the organization');
-        }
-      );
-  }
-
-  public delete(): void {
-    this.onDelete();
-  }
-
-  public getNumberOfProjects(): void {
-    this.projectService.getProjects(this.organizationCode).subscribe((projects: Project[]) => (this.projectsCount = projects.length));
-  }
-
-  public initialized(): boolean {
-    return !(this.organization.code === '' && this.organization.name === '' && this.organization.icon === '' && this.organization.color === '');
-  }
-
-  public confirmDeletion(): void {
+  public onDelete() {
     this.notificationService.confirm(
       'Deleting an organization will permanently remove it.',
       'Delete Organization?',
       [
-        {text: 'Yes', action: () => this.onDelete(), bold: false},
+        {text: 'Yes', action: () => this.deleteOrganization(), bold: false},
         {text: 'No'}
       ]
     );
+  }
+
+  private deleteOrganization() {
+    if (isNullOrUndefined(this.organization)) {
+      return;
+    }
+
+    this.store.dispatch(new OrganizationsAction.Delete({organizationId: this.organization.id}));
+    this.goBack();
+  }
+
+  public onNewDescription(newDescription: string) {
+    if (isNullOrUndefined(this.organization)) {
+      return;
+    }
+
+    const organizationCopy = {...this.organization, description: newDescription};
+    this.updateOrganization(organizationCopy);
+  }
+
+  public onNewName(newName: string) {
+    if (isNullOrUndefined(this.organization)) {
+      return;
+    }
+
+    const organizationCopy = {...this.organization, name: newName};
+    this.updateOrganization(organizationCopy);
+  }
+
+  public onNewCode(newCode: string) {
+    if (isNullOrUndefined(this.organization)) {
+      return;
+    }
+
+    const organizationCopy = {...this.organization, code: newCode};
+    this.updateOrganization(organizationCopy);
+  }
+
+  private updateOrganization(organization: OrganizationModel) {
+    this.store.dispatch(new OrganizationsAction.Update({organization}))
+  }
+
+  private updateWorkspaceUrl(organization: OrganizationModel) {
+    this.store.dispatch(new RouterAction.Go({path: ['/organization', organization.code, 'users']}));
+  }
+
+  public onProjectsClick() {
+    this.goBack();
+  }
+
+  private goBack(): void {
+    this.store.dispatch(new RouterAction.Go({path: ['/workspace']}));
   }
 
 }

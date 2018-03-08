@@ -26,7 +26,7 @@ export class GroupConverter {
     return {
       id: dto.id,
       name: dto.name,
-      description: dto.description
+      users: dto.users
     };
   }
 
@@ -34,7 +34,7 @@ export class GroupConverter {
     return {
       id: group.id,
       name: group.name,
-      description: group.description
+      users: group.users
     };
   }
 

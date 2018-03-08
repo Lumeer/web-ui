@@ -1,0 +1,23 @@
+<div class="edit-border"
+     [style.paddingTop.rem]="mPaddingRem"
+     [style.paddingBottom.rem]="mPaddingRem"
+     #inputParent>
+
+  <div class="input-box"
+       [textContent]="mCurrentValue"
+       (blur)="input.scrollTo(0,0); onNewValue(input.textContent)"
+       [style.color]="color"
+       [style.fontSize.rem]="mFontSizeRem"
+       [style.maxHeight.rem]="mMaxHeightRem"
+       [style.paddingLeft.rem]="mPaddingRem"
+       [style.paddingRight.rem]="mPaddingRem"
+       (focus)="onFocus()"
+       contenteditable="true"
+       [attr.placeholder]="mPlaceholder"
+       [attr.title]="title"
+       (keydown.enter)="input.blur()"
+       (keydown.Escape)="input.textContent = mCurrentValue; input.blur()"
+       [attr.spellcheck]="false" #input>
+  </div>
+
+</div>

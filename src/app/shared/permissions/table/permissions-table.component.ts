@@ -79,7 +79,7 @@ export class PermissionsTableComponent implements OnInit {
 
   public allEntities(): string[] {
     return this.entities
-      .map(entity => entity.name)
+      .map(entity => entity.id)
       .concat(this.possibleEntities);
   }
 
@@ -138,7 +138,7 @@ export class PermissionsTableComponent implements OnInit {
   private getNotUsedEntities(entities: Object[], propertyName: string) {
     const tmpEntities = entities.map(group => group[propertyName]);
     for (const entity of this.entities) {
-      const index = tmpEntities.indexOf(entity.name);
+      const index = tmpEntities.indexOf(entity.id);
       if (index !== -1) {
         tmpEntities.splice(index, 1);
       }
@@ -172,7 +172,7 @@ export class PermissionsTableComponent implements OnInit {
       throw Error('unknown resource type');
     }
 
-    const permission: Permission = {name: selectedName, roles: this.addedRoles};
+    const permission: Permission = {id: selectedName, roles: this.addedRoles};
     updatePermissions(permission).subscribe();
     this.entities.push(permission);
     this.possibleEntities.splice(this.possibleEntities.indexOf(selectedName), 1);
@@ -266,7 +266,7 @@ export class PermissionsTableComponent implements OnInit {
     } else {
       this.entities[index].roles.splice(this.entities[index].roles.indexOf(role), 1);
     }
-    const permission: Permission = {name: this.entities[index].name, roles: this.entities[index].roles};
+    const permission: Permission = {id: this.entities[index].id, roles: this.entities[index].roles};
     updatePermissions(permission).subscribe();
   }
 
