@@ -17,13 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {OrganizationModel} from "../organizations/organization.model";
+import {isNullOrUndefined} from "util";
+import {UserModel} from "./user.model";
 
-@Component({
-  selector: 'organization-user-filter',
-  templateUrl: './organization-user-filter.component.html',
-  styleUrls: ['./organization-user-filter.component.scss']
-})
-export class OrganizationUserFilterComponent {
+export class UserFilters {
 
+  public static filterByOrganization(users: UserModel[], organization: OrganizationModel): UserModel[] {
+    if (isNullOrUndefined(organization)) {
+      return [];
+    }
+
+    return users.filter(user => user.groupsMap[organization.id]);
+  }
+
+  public static filterByFilter(users: UserModel[], filter: string): UserModel[] {
+    const filtered = users.slice();
+    if (!filter) {
+      return filtered;
+    }
+    const filterTrim = filter.toLowerCase().trim();
+
+    return filtered.filter(user => user.name.toLowerCase().includes(filterTrim) || user.email.toLowerCase().includes(filterTrim));
+  }
 }

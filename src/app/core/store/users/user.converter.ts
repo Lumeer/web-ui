@@ -27,9 +27,7 @@ export class UserConverter {
       id: dto.id,
       name: dto.name,
       email: dto.email,
-      groups: dto.groups.map(group => {
-        return {name: group};
-      })
+      groupsMap: dto.groups
     };
   }
 
@@ -38,7 +36,7 @@ export class UserConverter {
       id: user.id,
       name: user.name,
       email: user.email,
-      groups: user.groups.map(group => group.name)
+      groups: user.groupsMap
     };
   }
 

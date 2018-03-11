@@ -17,35 +17,54 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 
-import {UserService} from '../../../core/rest';
-import {User} from '../../../core/dto';
 import {KeyCode} from '../../../shared/key-code';
 import {HtmlModifier} from '../../../shared/utils/html-modifier';
 import {NotificationService} from '../../../core/notifications/notification.service';
+import {UserModel} from "../../../core/store/users/user.model";
+import {Store} from "@ngrx/store";
+import {AppState} from "../../../core/store/app.state";
+import {Subscription} from "rxjs/Subscription";
+import {selectOrganizationByWorkspace} from "../../../core/store/organizations/organizations.state";
+import {isNullOrUndefined} from "util";
+import {filter} from "rxjs/operators";
+import {OrganizationModel} from "../../../core/store/organizations/organization.model";
+import {UsersAction} from "../../../core/store/users/users.action";
+import {selectAllUsers} from "../../../core/store/users/users.state";
 
 @Component({
   selector: 'share-dialog',
   templateUrl: './share-dialog.component.html',
   styleUrls: ['./share-dialog.component.scss']
 })
-export class ShareDialogComponent implements OnInit {
+export class ShareDialogComponent implements OnInit, OnDestroy {
 
   public emails: string[] = [];
   public text = '';
 
-  public users: User[] = [];
+  public users: UserModel[] = [];
   public suggestions: string[];
 
+  private organization: OrganizationModel;
+  private organizationSubscription: Subscription;
+  private usersSubscription: Subscription;
+
   public constructor(private notificationService: NotificationService,
-                     private userService: UserService) {
+                     private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.userService.getUsers().subscribe((users: User[]) => {
-      this.users = users;
-    });
+    this.subscribeData();
+  }
+
+  public ngOnDestroy() {
+    if (this.organizationSubscription) {
+      this.organizationSubscription.unsubscribe();
+    }
+    if (this.usersSubscription) {
+      this.usersSubscription.unsubscribe();
+    }
   }
 
   public onKeyUp(event: KeyboardEvent) {
@@ -112,6 +131,19 @@ export class ShareDialogComponent implements OnInit {
 
   public removeHtmlComments(html: HTMLElement): string {
     return HtmlModifier.removeHtmlComments(html);
+  }
+
+  private subscribeData() {
+    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+      .pipe(filter(organization => !isNullOrUndefined(organization)))
+      .subscribe(organization => {
+        if (isNullOrUndefined(this.organization) || this.organization.id != organization.id) {
+          this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
+        }
+        this.organization = organization;
+      });
+    this.usersSubscription = this.store.select(selectAllUsers)
+      .subscribe(users => this.users = users);
   }
 
 }

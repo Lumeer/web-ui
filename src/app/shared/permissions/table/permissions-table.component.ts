@@ -32,6 +32,13 @@ import {ViewService} from '../../../core/rest/view.service';
 import {EntityType} from '../entity-type';
 import {ResourceType} from '../resource-type';
 import {Role} from '../role';
+import {OrganizationModel} from "../../../core/store/organizations/organization.model";
+import {Subscription} from "rxjs/Subscription";
+import {filter} from "rxjs/operators";
+import {isNullOrUndefined} from "util";
+import {selectOrganizationByWorkspace} from "../../../core/store/organizations/organizations.state";
+import {AppState} from "../../../core/store/app.state";
+import {Store} from "@ngrx/store";
 
 const ROLES = {
   [ResourceType.Organization]: [Role.Read, Role.Write, Role.Manage],
@@ -60,16 +67,20 @@ export class PermissionsTableComponent implements OnInit {
   public addedRoles: string[] = [];
   public rolesCheckbox: { [role: string]: boolean };
 
+  private organization: OrganizationModel;
+  private organizationSubscription: Subscription;
+
   public constructor(private organizationService: OrganizationService,
                      private projectService: ProjectService,
                      private usersService: UserService,
                      private groupService: GroupService,
                      private collectionService: CollectionService,
-                     private viewService: ViewService) {
+                     private viewService: ViewService,
+                     private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.setPermissionsForResource(this.resourceType);
+    this.subscribeData();
 
     this.roles = ROLES[this.resourceType];
 
@@ -79,7 +90,7 @@ export class PermissionsTableComponent implements OnInit {
 
   public allEntities(): string[] {
     return this.entities
-      .map(entity => entity.id)
+      .map(entity => entity.name)
       .concat(this.possibleEntities);
   }
 
@@ -115,7 +126,7 @@ export class PermissionsTableComponent implements OnInit {
   private getOtherEntities(entityType: string) {
     switch (entityType) {
       case EntityType.Users:
-        this.usersService.getUsers().subscribe(
+        this.usersService.getUsers(this.organization.id).subscribe(
           (userEntities: User[]) => {
             this.possibleEntities = this.getNotUsedEntities(userEntities, 'username');
           }
@@ -138,7 +149,7 @@ export class PermissionsTableComponent implements OnInit {
   private getNotUsedEntities(entities: Object[], propertyName: string) {
     const tmpEntities = entities.map(group => group[propertyName]);
     for (const entity of this.entities) {
-      const index = tmpEntities.indexOf(entity.id);
+      const index = tmpEntities.indexOf(entity.name);
       if (index !== -1) {
         tmpEntities.splice(index, 1);
       }
@@ -172,7 +183,7 @@ export class PermissionsTableComponent implements OnInit {
       throw Error('unknown resource type');
     }
 
-    const permission: Permission = {id: selectedName, roles: this.addedRoles};
+    const permission: Permission = {name: selectedName, roles: this.addedRoles};
     updatePermissions(permission).subscribe();
     this.entities.push(permission);
     this.possibleEntities.splice(this.possibleEntities.indexOf(selectedName), 1);
@@ -261,13 +272,26 @@ export class PermissionsTableComponent implements OnInit {
       throw Error('unknown resource type');
     }
 
+    const entity = this.entities[index];
     if (addPermision) {
-      this.entities[index].roles.push(role);
+      entity.roles.push(role);
     } else {
-      this.entities[index].roles.splice(this.entities[index].roles.indexOf(role), 1);
+      entity.roles.splice(entity.roles.indexOf(role), 1);
     }
-    const permission: Permission = {id: this.entities[index].id, roles: this.entities[index].roles};
+
+    const permission: Permission = {name: entity.name, roles: this.entities[index].roles};
     updatePermissions(permission).subscribe();
   }
 
+  private subscribeData() {
+    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+      .pipe(filter(organization => !isNullOrUndefined(organization)))
+      .subscribe(organization => {
+        if (isNullOrUndefined(this.organization) || this.organization.id != organization.id) {
+          this.setPermissionsForResource(this.resourceType);
+        }
+        this.organization = organization
+      });
+
+  }
 }

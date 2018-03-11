@@ -24,8 +24,6 @@ import {Store} from '@ngrx/store';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {UsersAction} from '../../core/store/users/users.action';
-import {GroupsAction} from '../../core/store/groups/groups.action';
 import {Observable} from 'rxjs/Observable';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {filter, map} from 'rxjs/operators';
@@ -34,8 +32,8 @@ import {Subscription} from "rxjs/Subscription";
 import {selectOrganizationByWorkspace} from "../../core/store/organizations/organizations.state";
 import {isNullOrUndefined} from "util";
 import {selectProjectsForWorkspace} from "../../core/store/projects/projects.state";
-import {ProjectsAction} from "../../core/store/projects/projects.action";
 import {RouterAction} from "../../core/store/router/router.action";
+import {UsersAction} from "../../core/store/users/users.action";
 
 @Component({
   templateUrl: './organization-settings.component.html',
@@ -55,19 +53,14 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.dispatchEvents();
     this.subscribeToStore();
+    this.dispatchActions();
   }
 
   public ngOnDestroy() {
     if (this.organizationSubscription) {
       this.organizationSubscription.unsubscribe();
     }
-  }
-
-  private dispatchEvents() {
-    this.store.dispatch(new UsersAction.Get());
-    this.store.dispatch(new GroupsAction.Get());
   }
 
   private subscribeToStore() {
@@ -79,18 +72,11 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
 
     this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
       .pipe(filter(organization => !isNullOrUndefined(organization)))
-      .subscribe(organization => {
-        this.checkOrganizationFromStore(organization);
-        this.organization = organization;
-      });
+      .subscribe(organization => this.organization = organization);
   }
 
-  private checkOrganizationFromStore(organization: OrganizationModel) {
-    if (isNullOrUndefined(this.organization)) {
-      this.store.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
-    } else if (this.organization.code !== organization.code) {
-      this.updateWorkspaceUrl(this.organization);
-    }
+  private dispatchActions() {
+    this.store.dispatch(new UsersAction.ClearFilter());
   }
 
   public onDelete() {
@@ -122,30 +108,44 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     this.updateOrganization(organizationCopy);
   }
 
-  public onNewName(newName: string) {
+  public onNewName(name: string) {
     if (isNullOrUndefined(this.organization)) {
       return;
     }
 
-    const organizationCopy = {...this.organization, name: newName};
+    const organizationCopy = {...this.organization, name};
     this.updateOrganization(organizationCopy);
   }
 
-  public onNewCode(newCode: string) {
+  public onNewCode(code: string) {
     if (isNullOrUndefined(this.organization)) {
       return;
     }
 
-    const organizationCopy = {...this.organization, code: newCode};
+    const organizationCopy = {...this.organization, code};
+    this.updateOrganization(organizationCopy);
+  }
+
+  public onNewIcon(icon: string) {
+    if (isNullOrUndefined(this.organization)) {
+      return;
+    }
+
+    const organizationCopy = {...this.organization, icon};
+    this.updateOrganization(organizationCopy);
+  }
+
+  public onNewColor(color: string) {
+    if (isNullOrUndefined(this.organization)) {
+      return;
+    }
+
+    const organizationCopy = {...this.organization, color};
     this.updateOrganization(organizationCopy);
   }
 
   private updateOrganization(organization: OrganizationModel) {
     this.store.dispatch(new OrganizationsAction.Update({organization}))
-  }
-
-  private updateWorkspaceUrl(organization: OrganizationModel) {
-    this.store.dispatch(new RouterAction.Go({path: ['/organization', organization.code, 'users']}));
   }
 
   public onProjectsClick() {

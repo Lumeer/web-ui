@@ -21,13 +21,16 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, map, switchMap, tap, withLatestFrom, flatMap} from 'rxjs/operators';
 import {OrganizationService} from '../../rest';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {selectOrganizationsDictionary} from './organizations.state';
+import {RouterAction} from "../router/router.action";
+import {ActivatedRoute, Router} from "@angular/router";
+import {RouteFinder} from "../../../shared/utils/route-finder";
 
 @Injectable()
 export class OrganizationsEffects {
@@ -74,12 +77,26 @@ export class OrganizationsEffects {
       const organizationDto = OrganizationConverter.toDto(action.payload.organization);
       const oldOrganization = organizationEntities[action.payload.organization.id];
       return this.organizationService.editOrganization(oldOrganization.code, organizationDto).pipe(
-        map(dto => ({action, organization: OrganizationConverter.fromDto(dto)}))
+        map(dto => ({action, organization: OrganizationConverter.fromDto(dto), oldOrganization}))
       );
     }),
-    map(({action, organization}) => new OrganizationsAction.UpdateSuccess({
-      organization: {...organization, id: action.payload.organization.id}
-    })),
+    flatMap(({action, organization, oldOrganization}) => {
+      const actions: Action[] = [new OrganizationsAction.UpdateSuccess({organization: {...organization, id: action.payload.organization.id}})];
+
+      const paramMap = RouteFinder.getFirstChildRouteWithParams(this.router.routerState.root.snapshot).paramMap;
+      const orgCodeInRoute = paramMap.get('organizationCode');
+
+      if (orgCodeInRoute && orgCodeInRoute === oldOrganization.code && organization.code !== oldOrganization.code) {
+        const paths = this.router.routerState.snapshot.url.split("/").filter(path => path);
+        const index = paths.indexOf(oldOrganization.code, 1);
+        if(index !== -1){
+          paths[index] = organization.code;
+          actions.push(new RouterAction.Go({path: paths}))
+        }
+      }
+
+      return actions;
+    }),
     catchError(error => Observable.of(new OrganizationsAction.UpdateFailure({error: error})))
   );
 
@@ -109,6 +126,7 @@ export class OrganizationsEffects {
   );
 
   constructor(private store$: Store<AppState>,
+              private router: Router,
               private actions$: Actions,
               private organizationService: OrganizationService) {
   }

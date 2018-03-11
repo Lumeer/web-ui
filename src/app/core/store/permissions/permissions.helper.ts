@@ -24,7 +24,7 @@ export class PermissionsHelper {
   public static changePermission(permissions: PermissionsModel, type: PermissionType, permission: PermissionModel): PermissionsModel {
     const entityPermissions: PermissionModel[] = permissions ? permissions[type].slice() : [];
 
-    const index = entityPermissions.findIndex(p => p.id === permission.id);
+    const index = entityPermissions.findIndex(p => p.name === permission.name);
     if (index) {
       entityPermissions.splice(index, 1, permission);
     } else {
@@ -39,7 +39,7 @@ export class PermissionsHelper {
   public static removePermission(permissions: PermissionsModel, type: PermissionType, name: string): PermissionsModel {
     const entityPermissions: PermissionModel[] = permissions ? permissions[type].slice() : [];
 
-    const index = entityPermissions.findIndex(p => p.id === name);
+    const index = entityPermissions.findIndex(p => p.name === name);
     if (index) {
       entityPermissions.splice(index, 1);
     }

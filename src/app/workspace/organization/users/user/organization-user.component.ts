@@ -18,10 +18,9 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+
 import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
 import {UserModel} from '../../../../core/store/users/user.model';
-import {Role} from '../../../../shared/permissions/role';
-import {PermissionModel} from '../../../../core/store/permissions/permissions.model';
 
 @Component({
   selector: 'organization-user',
@@ -53,73 +52,12 @@ export class OrganizationUserComponent {
 
   public blocked: boolean;
 
-  public updateUserName(newName: string) {
-    this.userUpdated.emit({...this.user, name: newName});
+  public onNewName(name: string) {
+    this.userUpdated.emit({...this.user, name});
   }
 
-  public hasWritePermission(): boolean {
-    return this.hasPermission(Role.Write);
-  }
-
-  public hasManagePermission(): boolean {
-    return this.hasPermission(Role.Manage);
-  }
-
-  private hasPermission(role: Role): boolean {
-    const permissions = this.userPermissions();
-    return permissions.roles.includes(role);
-  }
-
-  private userPermissions(): PermissionModel {
-    let permissions = this.organization.permissions.users.find(userPermissions => {
-      return userPermissions.id === this.user.email;
-    });
-
-    if (permissions === undefined) {
-      permissions = this.addUserPermissions();
-    }
-
-    return permissions;
-  }
-
-  private addUserPermissions(): PermissionModel {
-    const createdPermissions: PermissionModel = {
-      id: this.user.email,
-      roles: []
-    };
-
-    this.organization.permissions.users.push(createdPermissions);
-    return createdPermissions;
-  }
-
-  public changeWritePermission() {
-    this.changePermission(Role.Write);
-  }
-
-  public changeManagePermission() {
-    this.changePermission(Role.Manage);
-  }
-
-  private changePermission(changedRole: Role) {
-    if (this.hasPermission(changedRole)) {
-      this.removePermission(changedRole);
-    } else {
-      this.addPermission(changedRole);
-    }
-  }
-
-  private addPermission(addedRole: Role) {
-    const permissions = this.userPermissions();
-    permissions.roles.push(addedRole);
-
-    this.permissionsUpdated.emit(this.organization);
-  }
-
-  private removePermission(removedRole: Role) {
-    const permissions = this.userPermissions();
-    permissions.roles = permissions.roles.filter(role => role !== removedRole);
-
-    this.permissionsUpdated.emit(this.organization);
+  public onNewEmail(email: string) {
+    this.userUpdated.emit({...this.user, email});
   }
 
   public blockUser() {

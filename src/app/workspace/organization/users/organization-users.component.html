@@ -1,23 +1,18 @@
-<div class="container" *ngIf="(organization$ | async) as organization">
+<div class="p-2" *ngIf="organization">
   <organization-users-header
     [organization]="organization">
   </organization-users-header>
 
   <organization-user-list
-    *ngIf="(users$ | async)?.length else emptyResult"
     class="pt-2"
+    [usersFilter]="usersFilter$ | async"
     [organization]="organization"
     [users]="users$ | async"
     [groups]="groups$ | async"
     (userCreated)="onUserCreated($event)"
     (userUpdated)="onUserUpdated($event)"
     (userDeleted)="onUserDeleted($event)"
-    (permissionsChanged)="onPermissionsChanged($event)">
+    (filterChanged)="onUserFilterChanged($event)">
   </organization-user-list>
 
-  <ng-template #emptyResult>
-    <h3 class="mx-auto text-center pt-4 text-muted huge-text" i18n="@@organizations.users.no.result">
-      Organization has no users...
-    </h3>
-  </ng-template>
 </div>

@@ -32,7 +32,7 @@ export class UsersEffects {
 
   @Effect()
   public get$: Observable<Action> = this.actions$.ofType<UsersAction.Get>(UsersActionType.GET).pipe(
-    switchMap(() => this.userService.getUsers().pipe(
+    switchMap((action) => this.userService.getUsers(action.payload.organizationId).pipe(
       map(dtos => dtos.map(dto => UserConverter.fromDto(dto)))
     )),
     map(users => new UsersAction.GetSuccess({users: users})),
@@ -50,7 +50,7 @@ export class UsersEffects {
     switchMap(action => {
       const userDto = UserConverter.toDto(action.payload.user);
 
-      return this.userService.createUser(userDto).pipe(
+      return this.userService.createUser(action.payload.organizationId, userDto).pipe(
         map(dto => UserConverter.fromDto(dto))
       );
     }),
@@ -69,7 +69,7 @@ export class UsersEffects {
     switchMap(action => {
       const userDto = UserConverter.toDto(action.payload.user);
 
-      return this.userService.updateUser(userDto.id, userDto).pipe(
+      return this.userService.updateUser(action.payload.organizationId, userDto.id, userDto).pipe(
         map(dto => UserConverter.fromDto(dto))
       );
     }),
@@ -85,7 +85,7 @@ export class UsersEffects {
 
   @Effect()
   public delete$: Observable<Action> = this.actions$.ofType<UsersAction.Delete>(UsersActionType.DELETE).pipe(
-    switchMap(action => this.userService.deleteUser(action.payload.userId).pipe(
+    switchMap(action => this.userService.deleteUser(action.payload.organizationId, action.payload.userId).pipe(
       map(() => action)
     )),
     map(action => new UsersAction.DeleteSuccess(action.payload)),

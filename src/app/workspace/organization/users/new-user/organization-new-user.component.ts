@@ -17,8 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {UserModel} from '../../../../core/store/users/user.model';
+import {OrganizationSettingsGuard} from "../../organization-settings.guard";
+import {OrganizationModel} from "../../../../core/store/organizations/organization.model";
 
 @Component({
   selector: 'organization-new-user',
@@ -27,6 +29,9 @@ import {UserModel} from '../../../../core/store/users/user.model';
 })
 export class OrganizationNewUserComponent {
 
+  @Input()
+  public organization: OrganizationModel;
+
   @Output()
   public userCreated = new EventEmitter<UserModel>();
 
@@ -34,14 +39,27 @@ export class OrganizationNewUserComponent {
 
   public email: string;
 
-  public addUser() {
+  public onAddUser() {
+    // TODO validate
+    this.addUser();
+  }
+
+  private addUser() {
     const newUser: UserModel = {
       name: this.name,
       email: this.email,
-      groups: []
+      groupsMap: {}
     };
+    newUser.groupsMap[this.organization.id] = [];
 
     this.userCreated.emit(newUser);
+
+    this.clearInputs();
+  }
+
+  private clearInputs(){
+    this.name = '';
+    this.email = '';
   }
 
 }

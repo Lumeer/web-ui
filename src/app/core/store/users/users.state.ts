@@ -21,14 +21,39 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {UserModel} from './user.model';
+import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
+import {selectAllGroups} from "../groups/groups.state";
+import {UserFilters} from "./user.filters";
+import {GroupModel} from "../groups/group.model";
 
 export interface UsersState extends EntityState<UserModel> {
+
+  filter: string
 
 }
 
 export const usersAdapter = createEntityAdapter<UserModel>();
 
-export const initialUsersState: UsersState = usersAdapter.getInitialState();
+export const initialUsersState: UsersState = usersAdapter.getInitialState({filter: null});
 
 export const selectUsersState = (state: AppState) => state.users;
 export const selectAllUsers = createSelector(selectUsersState, usersAdapter.getSelectors().selectAll);
+export const selectUsersFilter = createSelector(selectUsersState, (state: UsersState) => state.filter);
+
+export const selectUsersForWorkspace = createSelector(selectAllUsers, selectAllGroups, selectOrganizationByWorkspace, (users, groups, organization) => {
+  const usersObjects = users.filter(user => typeof user === 'object');
+
+  return UserFilters.filterByOrganization(usersObjects, organization)
+    .map(user => mapGroupsOnUser(user, organization.id, groups));
+});
+
+export const selectUsersForWorkspaceAndFilter = createSelector(selectUsersForWorkspace, selectUsersFilter,
+  (users, filter) => UserFilters.filterByFilter(users, filter));
+
+
+export function mapGroupsOnUser(user: UserModel, organizationId: string, groups: GroupModel[]) {
+  const groupIds = user.groupsMap[organizationId];
+  user.groups = groups.filter(group => groupIds.includes(group.id));
+  return user;
+}
+

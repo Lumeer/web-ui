@@ -38,6 +38,9 @@ export enum UsersActionType {
   DELETE_SUCCESS = '[Users] Delete :: Success',
   DELETE_FAILURE = '[Users] Delete :: Failure',
 
+  UPDATE_FILTER = '[Users] Update Filter',
+  CLEAR_FILTER = '[Users] Clear Filter',
+
   CLEAR = '[Users] Clear'
 
 }
@@ -46,6 +49,9 @@ export namespace UsersAction {
 
   export class Get implements Action {
     public readonly type = UsersActionType.GET;
+
+    public constructor(public payload: { organizationId: string }) {
+    }
   }
 
   export class GetSuccess implements Action {
@@ -65,7 +71,7 @@ export namespace UsersAction {
   export class Create implements Action {
     public readonly type = UsersActionType.CREATE;
 
-    public constructor(public payload: { user: UserModel }) {
+    public constructor(public payload: { organizationId: string, user: UserModel }) {
     }
   }
 
@@ -86,7 +92,7 @@ export namespace UsersAction {
   export class Update implements Action {
     public readonly type = UsersActionType.UPDATE;
 
-    public constructor(public payload: { user: UserModel }) {
+    public constructor(public payload: { organizationId: string, user: UserModel }) {
     }
   }
 
@@ -107,7 +113,7 @@ export namespace UsersAction {
   export class Delete implements Action {
     public readonly type = UsersActionType.DELETE;
 
-    public constructor(public payload: { userId: string }) {
+    public constructor(public payload: { organizationId: string, userId: string }) {
     }
   }
 
@@ -125,6 +131,17 @@ export namespace UsersAction {
     }
   }
 
+  export class UpdateFilter implements Action {
+    public readonly type = UsersActionType.UPDATE_FILTER;
+
+    public constructor(public payload: { filter: string }) {
+    }
+  }
+
+  export class ClearFilter implements Action {
+    public readonly type = UsersActionType.CLEAR_FILTER;
+  }
+
   export class Clear implements Action {
     public readonly type = UsersActionType.CLEAR;
 
@@ -135,5 +152,6 @@ export namespace UsersAction {
   export type All = Get | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure | Clear;
+    Delete | DeleteSuccess | DeleteFailure |
+    UpdateFilter | ClearFilter | Clear;
 }

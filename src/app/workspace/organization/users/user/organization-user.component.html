@@ -1,68 +1,44 @@
-<td class="px-1">
-  <i class="fa fa-caret-right large-text text-success"
-     [class.fa-rotate-90]="expanded"
-     aria-hidden="true"
-     title="{{ expanded ? 'Close' : 'Open' }}"
-     i18n-title="@@organizations.user.expand"
-     (click)="expandedChange.emit()"></i>
-</td>
+<div class="row">
+  <div class="col-5 col-md-4 col-lg-3 d-flex flex-row flex-nowrap align-items-center">
+    <i class="fa fa-caret-right clickable mr-1"
+       [class.fa-rotate-90]="expanded"
+       aria-hidden="true"
+       title="{{ expanded ? 'Close' : 'Open' }}"
+       i18n-title="@@organizations.user.expand"
+       (click)="expandedChange.emit()"></i>
 
-<td class="px-1">
-  <input class="form-control edit-border" #nameInput
-         type="text"
-         tabindex="1"
-         placeholder="Username"
-         [ngModel]="user.name"
-         (blur)="updateUserName(nameInput.value)">
-</td>
-
-<td class="px-1">
-  <input class="form-control edit-border"
-         type="email"
-         tabindex="1"
-         placeholder="User email"
-         [ngModel]="user.email"
-         readonly>
-</td>
-
-<td class="px-1 text-center">
-  <div class="custom-control custom-control-inline custom-checkbox">
-    <input type="checkbox"
-           class="custom-control-input"
-           id="Create_proj_{{ user.id }}"
-           [ngModel]="hasWritePermission()"
-           (change)="changeWritePermission()">
-    <label class="custom-control-label my-1"
-           for="Create_proj_{{ user.id }}">
-    </label>
+    <input-box
+      class="flex-grow-2"
+      [placeholder]="'Name'"
+      [maxLines]="1"
+      [canStayEmpty]="true"
+      [initialValue]="user.name"
+      (newValue)="onNewName($event)">
+    </input-box>
   </div>
-</td>
 
-<td class="px-1 text-center">
-  <div class="custom-control custom-control-inline custom-checkbox">
-    <input type="checkbox"
-           class="custom-control-input"
-           id="Manage_org_{{ user.id }}"
-           [ngModel]="hasManagePermission()"
-           (change)="changeManagePermission()">
-    <label class="custom-control-label my-1"
-           for="Manage_org_{{ user.id }}">
-    </label>
+  <div class="col-5 col-md-4 col-lg-3">
+    <input-box
+      [placeholder]="'User email'"
+      [maxLines]="1"
+      [canStayEmpty]="true"
+      [initialValue]="user.email"
+      (newValue)="onNewEmail($event)">
+    </input-box>
   </div>
-</td>
 
-<td class="px-1">
-  <i class="fas fa-fw {{ blocked ? 'fa-volume-mute' : 'fa-volume-up' }} text-danger mx-2 clickable"
-     aria-hidden="true"
-     title="{{ blocked ? 'Unblock' : 'Temporarily Block' }} User"
-     i18n-title="@@organizations.users.block"
-     (click)="blockUser()"></i>
-</td>
+  <div class="col-2 col-md-4 col-lg-6 d-flex flex-nowrap flex-row-reverse align-items-center">
+    <i class="fas fa-fw fa-trash text-danger mx-2 cursor-pointer"
+       aria-hidden="true"
+       title="Remove User"
+       i18n-title="@@organizations.users.remove"
+       (click)="removeUser()"></i>
 
-<td class="px-1">
-  <i class="fas fa-fw fa-trash text-danger mx-2 clickable"
-     aria-hidden="true"
-     title="Remove User"
-     i18n-title="@@organizations.users.remove"
-     (click)="removeUser()"></i>
-</td>
+    <i class="fas fa-fw {{ blocked ? 'fa-volume-mute' : 'fa-volume-up' }} text-danger mx-2 cursor-pointer"
+       aria-hidden="true"
+       title="{{ blocked ? 'Unblock' : 'Temporarily Block' }} User"
+       i18n-title="@@organizations.users.block"
+       (click)="blockUser()"></i>
+  </div>
+
+</div>

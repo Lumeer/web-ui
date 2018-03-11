@@ -29,6 +29,9 @@ import {RouterAction} from "../../core/store/router/router.action";
 import {isNullOrUndefined} from "util";
 import {OrganizationModel} from "../../core/store/organizations/organization.model";
 import {Role} from "../../shared/permissions/role";
+import {ProjectsAction} from "../../core/store/projects/projects.action";
+import {GroupsAction} from "../../core/store/groups/groups.action";
+import {UsersAction} from "../../core/store/users/users.action";
 
 @Injectable()
 export class OrganizationSettingsGuard implements CanActivate {
@@ -46,23 +49,42 @@ export class OrganizationSettingsGuard implements CanActivate {
     return this.workspaceService.getOrganizationFromStoreOrApi(organizationCode).pipe(
       switchMap(organization => {
         if (isNullOrUndefined(organization)) {
-          this.dispatchErrorActions();
+          this.dispatchErrorActionsNotExist();
           return Observable.of(false);
         }
-        return Observable.of(this.checkManageRole(organization));
+
+        if (!this.hasManageRole(organization)) {
+          this.dispatchErrorActionsNotPermission();
+          return Observable.of(false);
+        }
+        this.dispatchDataEvents(organization);
+        return Observable.of(true);
       })
     );
   }
 
-  private checkManageRole(organization: OrganizationModel): boolean {
+  private hasManageRole(organization: OrganizationModel): boolean {
     return organization.permissions && organization.permissions.users.length === 1
       && organization.permissions.users[0].roles.some(r => r === Role.Manage.toString());
   }
 
 
-  private dispatchErrorActions() {
-    this.store.dispatch(new RouterAction.Go({path: ['workspace']}));
-    this.store.dispatch(new NotificationsAction.Error({message: 'Organization does not exist'}));
+  private dispatchErrorActionsNotExist() {
+    this.dispatchErrorActions('Organization does not exist');
   }
 
+  private dispatchErrorActionsNotPermission() {
+    this.dispatchErrorActions('You do not have permission to access this organization');
+  }
+
+  private dispatchErrorActions(message: string) {
+    this.store.dispatch(new RouterAction.Go({path: ['workspace']}));
+    this.store.dispatch(new NotificationsAction.Error({message}));
+  }
+
+  private dispatchDataEvents(organization: OrganizationModel) {
+    this.store.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
+    this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
+    this.store.dispatch(new GroupsAction.Get());
+  }
 }

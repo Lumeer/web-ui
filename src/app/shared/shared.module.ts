@@ -19,7 +19,7 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {CommentsComponent} from './comments/comments.component';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
@@ -35,7 +35,8 @@ import {SearchBoxModule} from './search-box/search-box.module';
 import {SizeSliderComponent} from './slider/size-slider.component';
 import {LayoutItem} from './utils/layout/layout-item.directive';
 import {PostItCollectionNameComponent} from './post-it-collections/collection-name/post-it-collection-name.component';
-import {InputBoxComponent} from "./input-box/input-box.component";
+import {InputBoxComponent} from "./input/input-box/input-box.component";
+import {FilterBoxComponent} from "./input/filter-box/filter-box.component";
 
 @NgModule({
   imports: [
@@ -57,7 +58,8 @@ import {InputBoxComponent} from "./input-box/input-box.component";
     PerspectiveDirective,
     LayoutItem,
     ModalDialogComponent,
-    InputBoxComponent
+    InputBoxComponent,
+    FilterBoxComponent
   ],
   exports: [
     CommonModule,
@@ -71,7 +73,8 @@ import {InputBoxComponent} from "./input-box/input-box.component";
     PerspectiveDirective,
     SearchBoxModule,
     ModalDialogComponent,
-    InputBoxComponent
+    InputBoxComponent,
+    FilterBoxComponent
   ]
 })
 export class SharedModule {

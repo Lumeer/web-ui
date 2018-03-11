@@ -22,11 +22,12 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import 'rxjs/add/observable/of';
 import {Observable} from 'rxjs/Observable';
-import {LocalStorage} from '../../shared/utils/local-storage';
 import {Group} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
+import {isNullOrUndefined} from "util";
+import {filter, map} from "rxjs/operators";
 
 @Injectable()
 export class GroupService {
@@ -35,59 +36,30 @@ export class GroupService {
 
   constructor(private httpClient: HttpClient,
               private store: Store<AppState>) {
-    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+    this.store.select(selectWorkspace)
+      .pipe(filter(workspace => !isNullOrUndefined(workspace)))
+      .subscribe(workspace => this.workspace = workspace);
   }
 
   public createGroup(group: Group): Observable<Group> {
-    const groups = LocalStorage.get(this.webStorageKey()) || {};
-
-    group.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
-    groups[group.id] = group;
-
-    LocalStorage.set(this.webStorageKey(), groups);
-
-    return Observable.of(group);
+    return this.httpClient.post<Group>(this.apiPrefix(), group);
   }
 
   public updateGroup(id: string, group: Group): Observable<Group> {
-    const groups = LocalStorage.get(this.webStorageKey()) || {};
-
-    delete groups[id];
-    groups[group.id] = group;
-
-    LocalStorage.set(this.webStorageKey(), groups);
-
-    return Observable.of(group);
+    return this.httpClient.put<Group>(this.apiPrefix(id), group);
   }
 
-  public deleteGroup(id: string): Observable<void> {
-    const groups = LocalStorage.get(this.webStorageKey()) || {};
-
-    delete groups[id];
-
-    LocalStorage.set(this.webStorageKey(), groups);
-
-    return Observable.empty();
-  }
-
-  public getGroupById(id: string): Observable<Group> {
-    const groups = LocalStorage.get(this.webStorageKey()) || {};
-
-    return Observable.of(groups[id]);
+  public deleteGroup(id: string): Observable<string> {
+    return this.httpClient.delete(this.apiPrefix(id), {observe: 'response', responseType: 'text'})
+      .pipe(map(() => id));
   }
 
   public getGroups(): Observable<Group[]> {
-    const groups: { [id: string]: Group } = LocalStorage.get(this.webStorageKey()) || {};
-
-    return Observable.of(Object.values(groups));
+    return this.httpClient.get<Group[]>(this.apiPrefix());
   }
 
-  private webStorageKey(): string {
-    return `groups-${this.workspace.organizationCode}`;
-  }
-
-  private apiPrefix(): string {
-    return `/${API_URL}/rest/organizations/${this.workspace.organizationCode}/groups`;
+  private apiPrefix(groupId?: string): string {
+    return `/${API_URL}/rest/organizations/${this.workspace.organizationCode}/groups${groupId ? `/${groupId}` : ''}`;
   }
 
 }

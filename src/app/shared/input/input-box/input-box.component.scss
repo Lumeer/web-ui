@@ -1,4 +1,4 @@
-@import '../../shared/variables';
+@import '../../variables';
 
 .input-box {
   cursor: text;
@@ -15,7 +15,7 @@
 [contenteditable=true]:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
-  color: $grey-color;
+  color: $grey-darker-color;
 }
 
 [contenteditable]:focus {

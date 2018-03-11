@@ -26,7 +26,7 @@ export enum PermissionType {
 
 export interface PermissionModel {
 
-  id: string;
+  name: string;
   roles: string[];
 
 }

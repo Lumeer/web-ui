@@ -38,6 +38,9 @@ export class OrganizationUserListComponent {
   @Input()
   public groups: GroupModel[];
 
+  @Input()
+  public usersFilter: string;
+
   @Output()
   public userCreated = new EventEmitter<UserModel>();
 
@@ -48,7 +51,7 @@ export class OrganizationUserListComponent {
   public userDeleted = new EventEmitter<UserModel>();
 
   @Output()
-  public permissionsChanged = new EventEmitter<OrganizationModel>();
+  public filterChanged = new EventEmitter<string>();
 
   public expanded: { [email: string]: boolean } = {};
 

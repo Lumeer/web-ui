@@ -1,45 +1,33 @@
-<table>
-  <thead class="thead-light medium-text">
-  <tr>
-    <td colspan="3">
-      <organization-user-filter>
-      </organization-user-filter>
-    </td>
-    <td class="px-2"
-        i18n="@@organizations.user.roles.create">
-      Create Project
-    </td>
-    <td class="px-2"
-        i18n="@@organizations.user.roles.manage">
-      Manage Organization
-    </td>
-    <td colspan="3">
-    </td>
-  </tr>
-  </thead>
-  <tbody>
-  <ng-container *ngFor="let user of users">
+<div class="row">
+  <div class="col-6 col-md-4 col-lg-3 py-2">
+    <filter-box
+      [value]="usersFilter"
+      [placeholder]="'Filter users'"
+      (textChange)="filterChanged.emit($event)">
+    </filter-box>
+  </div>
+</div>
+<organization-new-user
+  [organization]="organization"
+  (userCreated)="userCreated.emit($event)">
+</organization-new-user>
 
-    <organization-user
-      [organization]="organization"
-      [user]="user"
-      [expanded]="expanded[user.email]"
-      (expandedChange)="(expanded[user.email] = !expanded[user.email])"
-      (userUpdated)="userUpdated.emit(user)"
-      (userDeleted)="userDeleted.emit(user)"
-      (permissionsUpdated)="permissionsChanged.emit(organization)">
-    </organization-user>
+<ng-container *ngFor="let user of users">
 
-    <organization-user-groups
-      *ngIf="expanded[user.email]"
-      [user]="user"
-      [groups]="groups"
-      (groupAdded)="userUpdated.emit(user)">
-    </organization-user-groups>
+  <organization-user
+    [organization]="organization"
+    [user]="user"
+    [expanded]="expanded[user.email]"
+    (expandedChange)="(expanded[user.email] = !expanded[user.email])"
+    (userUpdated)="userUpdated.emit($event)"
+    (userDeleted)="userDeleted.emit($event)">
+  </organization-user>
 
-  </ng-container>
-  <organization-new-user
-    (userCreated)="userCreated.emit($event)">
-  </organization-new-user>
-  </tbody>
-</table>
+  <organization-user-groups
+    *ngIf="expanded[user.email]"
+    [user]="user"
+    [groups]="groups"
+    (groupAdded)="userUpdated.emit($event)">
+  </organization-user-groups>
+
+</ng-container>

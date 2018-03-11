@@ -1,4 +1,4 @@
-<div class="col-12 col-lg-11 col-xl-10" *ngIf="organization">
+<div class="col-12 col-lg-11 col-xl-10 m-auto" *ngIf="organization">
   <div class="d-flex flex-row justify-content-start align-items-center">
     <a class="fas fa-chevron-left chevron mr-2"
        title="Back" i18n-title="@@organization.settings.back"
@@ -7,11 +7,11 @@
        [style.fontSize.rem]="2"
        [style.color]="organization.color" data-toggle="dropdown"></i>
     <div class="dropdown-menu">
-      <color-picker class="dropdown-item" [(color)]="organization.color"
-                    (selectedChange)="updateOrganization()"></color-picker>
+      <color-picker class="dropdown-item" [color]="organization.color"
+                    (selectedChange)="onNewColor($event)"></color-picker>
       <div class="dropdown-divider"></div>
-      <icon-picker class="dropdown-item" [(icon)]="organization.icon"
-                   (selectedChange)="updateOrganization()"></icon-picker>
+      <icon-picker class="dropdown-item" [icon]="organization.icon"
+                   (selectedChange)="onNewIcon($event)"></icon-picker>
     </div>
 
     <input-box

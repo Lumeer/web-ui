@@ -24,6 +24,7 @@ export interface UserModel {
   id?: string;
   name: string;
   email: string;
-  groups: GroupModel[];
+  groupsMap: { [organizationId: string]: string[]; };
+  groups?: GroupModel[];
 
 }

@@ -1,0 +1,15 @@
+@import '../../../shared/variables';
+
+.filter-text:focus {
+  text-overflow: clip;
+}
+
+[contenteditable=true]:empty:before {
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  color: $grey-darker-color;
+}
+
+[contenteditable]:focus {
+  outline: 0 solid transparent;
+}
