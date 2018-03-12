@@ -48,12 +48,12 @@ export class InputBoxComponent implements OnInit {
   @Output() public newValue: EventEmitter<string> = new EventEmitter();
   @Output() public emptyValue: EventEmitter<void> = new EventEmitter();
 
-  private mCurrentValue: string;
-  private mFontSizeRem: number;
-  private mMaxHeightRem: number;
-  private mPlaceholder: string;
-  private mLineHeight: number;
-  private mPaddingRem: number;
+  public mCurrentValue: string;
+  public mFontSizeRem: number;
+  public mMaxHeightRem: number;
+  public mPlaceholder: string;
+  public mLineHeight: number;
+  public mPaddingRem: number;
 
   public ngOnInit() {
     this.computeProperties();
