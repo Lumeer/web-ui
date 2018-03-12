@@ -18,9 +18,10 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+
 import {UserModel} from '../../../../core/store/users/user.model';
-import {OrganizationSettingsGuard} from "../../organization-settings.guard";
 import {OrganizationModel} from "../../../../core/store/organizations/organization.model";
+import {Validator} from "../../../../shared/utils/validator";
 
 @Component({
   selector: 'organization-new-user',
@@ -36,12 +37,28 @@ export class OrganizationNewUserComponent {
   public userCreated = new EventEmitter<UserModel>();
 
   public name: string;
-
   public email: string;
+  public showNameWarning: boolean = false;
+  public showEmailWarning: boolean = false;
 
   public onAddUser() {
-    // TODO validate
+    if (!this.name) {
+      this.showNameWarning = true;
+      return;
+    }
+    if (!this.email || !Validator.validateEmail(this.email)) {
+      this.showEmailWarning = true;
+      return;
+    }
     this.addUser();
+  }
+
+  public onNameFocus() {
+    this.showNameWarning = false;
+  }
+
+  public onEmailFocus() {
+    this.showEmailWarning = false;
   }
 
   private addUser() {
@@ -57,7 +74,7 @@ export class OrganizationNewUserComponent {
     this.clearInputs();
   }
 
-  private clearInputs(){
+  private clearInputs() {
     this.name = '';
     this.email = '';
   }

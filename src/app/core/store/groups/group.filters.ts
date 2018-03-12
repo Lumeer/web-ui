@@ -17,21 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {createSelector} from '@ngrx/store';
-import {AppState} from '../app.state';
-import {GroupModel} from './group.model';
-import {GroupFilters} from "./group.filters";
+import {GroupModel} from "./group.model";
 
-export interface GroupsState extends EntityState<GroupModel> {
+export class GroupFilters {
+
+  public static filterFunctions(groups: GroupModel[]) {
+    return groups.filter(group => typeof group === 'object');
+  }
 
 }
-
-export const groupsAdapter = createEntityAdapter<GroupModel>();
-
-export const initialGroupsState: GroupsState = groupsAdapter.getInitialState();
-
-export const selectGroupsState = (state: AppState) => state.groups;
-
-const selectAllGroupsRaw = createSelector(selectGroupsState, groupsAdapter.getSelectors().selectAll);
-export const selectAllGroups = createSelector(selectAllGroupsRaw, groups => GroupFilters.filterFunctions(groups));

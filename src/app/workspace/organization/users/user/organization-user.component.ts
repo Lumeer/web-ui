@@ -21,6 +21,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
 import {UserModel} from '../../../../core/store/users/user.model';
+import {Validator} from "../../../../shared/utils/validator";
 
 @Component({
   selector: 'organization-user',
@@ -51,12 +52,17 @@ export class OrganizationUserComponent {
   public permissionsUpdated = new EventEmitter<OrganizationModel>();
 
   public blocked: boolean;
+  public showEmailWarning: boolean;
 
   public onNewName(name: string) {
     this.userUpdated.emit({...this.user, name});
   }
 
   public onNewEmail(email: string) {
+    if (!Validator.validateEmail(email)) {
+      this.showEmailWarning = true;
+      return;
+    }
     this.userUpdated.emit({...this.user, email});
   }
 
@@ -66,6 +72,10 @@ export class OrganizationUserComponent {
 
   public removeUser() {
     this.userDeleted.emit(this.user);
+  }
+
+  public onEmailFocus() {
+    this.showEmailWarning = false;
   }
 
 }

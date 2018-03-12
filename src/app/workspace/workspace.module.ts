@@ -40,6 +40,7 @@ import {OrganizationUserComponent} from './organization/users/user/organization-
 import {OrganizationUsersHeaderComponent} from './organization/users/header/organization-users-header.component';
 import {OrganizationUserGroupsComponent} from './organization/users/groups/organization-user-groups.component';
 import {OrganizationNewUserComponent} from './organization/users/new-user/organization-new-user.component';
+import {GroupsSuggestionsComponent} from "./organization/users/groups/suggestions/groups-suggestions.component";
 
 @NgModule({
   imports: [
@@ -62,7 +63,8 @@ import {OrganizationNewUserComponent} from './organization/users/new-user/organi
     OrganizationSettingsComponent,
     ProjectSettingsComponent,
     WorkspaceChooserComponent,
-    ResourceChooserComponent
+    ResourceChooserComponent,
+    GroupsSuggestionsComponent
   ],
   exports: [
     WorkspaceChooserComponent

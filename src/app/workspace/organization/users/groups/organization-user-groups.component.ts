@@ -20,6 +20,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {UserModel} from '../../../../core/store/users/user.model';
 import {GroupModel} from '../../../../core/store/groups/group.model';
+import {OrganizationModel} from "../../../../core/store/organizations/organization.model";
 
 @Component({
   selector: 'organization-user-groups',
@@ -34,17 +35,57 @@ export class OrganizationUserGroupsComponent {
   @Input()
   public groups: GroupModel[];
 
+  @Input()
+  public organization: OrganizationModel;
+
   @Output()
-  public groupAdded = new EventEmitter<GroupModel>();
+  public userUpdate = new EventEmitter<UserModel>();
 
-  public newGroupName: string;
+  public searchGroupText: string;
+  public suggesting: boolean;
 
-  public addGroup() {
-    const newGroup: GroupModel = {name: this.newGroupName};
-    this.user.groups.push(newGroup);
+  public onBlur() {
+    this.suggesting = false;
+  }
 
-    this.groupAdded.emit(this.user);
-    this.newGroupName = '';
+  public onFocus() {
+    this.suggesting = true;
+  }
+
+  public onRemoveGroup(group: GroupModel) {
+    const userCopy = {...this.user};
+    userCopy.groupsMap[this.organization.id] = userCopy.groupsMap[this.organization.id].filter(id => id !== group.id);
+
+    this.userUpdate.emit(userCopy);
+  }
+
+  public onSelectedGroup(group: GroupModel) {
+    this.searchGroupText = '';
+    this.addGroup(group);
+  }
+
+  public getSuggestedGroups(): GroupModel[] {
+    if (!this.suggesting || !this.searchGroupText) {
+      return [];
+    }
+    const searchTextLowerCase = this.searchGroupText.toLowerCase().trim();
+    return this.filterUserGroups()
+      .filter(group => group.name.toLowerCase().includes(searchTextLowerCase));
+  }
+
+  private filterUserGroups(): GroupModel[] {
+    const groupIds = this.user.groupsMap[this.organization.id] || [];
+    return this.groups.filter(group => !groupIds.includes(group.id));
+  }
+
+  private addGroup(group: GroupModel) {
+    const userCopy = {...this.user};
+    if (!userCopy.groupsMap[this.organization.id]) {
+      userCopy.groupsMap[this.organization.id] = [];
+    }
+    userCopy.groupsMap[this.organization.id].push(group.id);
+
+    this.userUpdate.emit(userCopy);
   }
 
 }

@@ -37,6 +37,7 @@ import {LayoutItem} from './utils/layout/layout-item.directive';
 import {PostItCollectionNameComponent} from './post-it-collections/collection-name/post-it-collection-name.component';
 import {InputBoxComponent} from "./input/input-box/input-box.component";
 import {FilterBoxComponent} from "./input/filter-box/filter-box.component";
+import {TagComponent} from "./tag/tag.component";
 
 @NgModule({
   imports: [
@@ -59,7 +60,8 @@ import {FilterBoxComponent} from "./input/filter-box/filter-box.component";
     LayoutItem,
     ModalDialogComponent,
     InputBoxComponent,
-    FilterBoxComponent
+    FilterBoxComponent,
+    TagComponent
   ],
   exports: [
     CommonModule,
@@ -74,7 +76,8 @@ import {FilterBoxComponent} from "./input/filter-box/filter-box.component";
     SearchBoxModule,
     ModalDialogComponent,
     InputBoxComponent,
-    FilterBoxComponent
+    FilterBoxComponent,
+    TagComponent
   ]
 })
 export class SharedModule {

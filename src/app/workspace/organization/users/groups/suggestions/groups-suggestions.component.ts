@@ -17,21 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {createSelector} from '@ngrx/store';
-import {AppState} from '../app.state';
-import {GroupModel} from './group.model';
-import {GroupFilters} from "./group.filters";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
+import {GroupModel} from "../../../../../core/store/groups/group.model";
 
-export interface GroupsState extends EntityState<GroupModel> {
+@Component({
+  selector: 'group-suggestions',
+  templateUrl: './groups-suggestions.component.html',
+  styleUrls: ['./groups-suggestions.component.scss'],
+})
+export class GroupsSuggestionsComponent {
+
+  @Input() public groups: GroupModel[];
+
+  @Output() public selectGroup = new EventEmitter<GroupModel>();
+
+  public onSelectGroup(group: GroupModel) {
+    this.selectGroup.emit(group);
+  }
 
 }
-
-export const groupsAdapter = createEntityAdapter<GroupModel>();
-
-export const initialGroupsState: GroupsState = groupsAdapter.getInitialState();
-
-export const selectGroupsState = (state: AppState) => state.groups;
-
-const selectAllGroupsRaw = createSelector(selectGroupsState, groupsAdapter.getSelectors().selectAll);
-export const selectAllGroups = createSelector(selectAllGroupsRaw, groups => GroupFilters.filterFunctions(groups));

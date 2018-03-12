@@ -17,21 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {createSelector} from '@ngrx/store';
-import {AppState} from '../app.state';
-import {GroupModel} from './group.model';
-import {GroupFilters} from "./group.filters";
+export class Validator {
 
-export interface GroupsState extends EntityState<GroupModel> {
-
+  public static validateEmail(email: string): Boolean {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
 }
-
-export const groupsAdapter = createEntityAdapter<GroupModel>();
-
-export const initialGroupsState: GroupsState = groupsAdapter.getInitialState();
-
-export const selectGroupsState = (state: AppState) => state.groups;
-
-const selectAllGroupsRaw = createSelector(selectGroupsState, groupsAdapter.getSelectors().selectAll);
-export const selectAllGroups = createSelector(selectAllGroupsRaw, groups => GroupFilters.filterFunctions(groups));

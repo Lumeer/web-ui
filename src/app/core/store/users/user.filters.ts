@@ -23,6 +23,10 @@ import {UserModel} from "./user.model";
 
 export class UserFilters {
 
+  public static filterFunctions(users: UserModel[]) {
+    return users.filter(user => typeof user === 'object');
+  }
+
   public static filterByOrganization(users: UserModel[], organization: OrganizationModel): UserModel[] {
     if (isNullOrUndefined(organization)) {
       return [];

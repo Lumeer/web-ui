@@ -1,21 +1,31 @@
-<td>
-  <div class="vertical-line">
-  </div>
-</td>
-<td colspan="3">
-  <div class="d-flex">
-    <div i18n="@@organizations.user.roles.groups"
-         class="my-auto pl-4">
-      Groups:
-    </div>
-    <input *ngFor="let group of user.groups"
-           class="form-check edit-border p-1 mx-1"
-           [(ngModel)]="group.name">
+<div class="d-flex flex-row flex-nowrap" #parent>
+  <div class="vertical-line ml-2"
+       [style.height]="parent.clientHeight+'px'"></div>
+  <span i18n="@@organizations.user.roles.groups" class="align-self-center ml-4">
+    Groups:
+  </span>
 
-    <input class="form-check edit-border p-1 mx-1"
-           [(ngModel)]="newGroupName"
-           (keydown.enter)="addGroup()">
+  <div class="ml-2 d-flex flex-wrap flex-row flex-grow-2">
+    <tag *ngFor="let group of user.groups"
+         class="mr-1"
+         [readonly]="false"
+         [value]="group.name"
+         (remove)="onRemoveGroup(group)">
+    </tag>
+
+    <input
+      #groupInput
+      class="border-0 no-outline"
+      [(ngModel)]="searchGroupText"
+      (blur)="onBlur()"
+      (focus)="onFocus()"
+      placeholder="Add group" i18n-placeholder="@@organization.user.groups.add"/>
   </div>
-</td>
-<td colspan="3">
-</td>
+
+</div>
+
+<group-suggestions
+  [groups]="getSuggestedGroups()"
+  (selectGroup)="onSelectedGroup($event)">
+</group-suggestions>
+

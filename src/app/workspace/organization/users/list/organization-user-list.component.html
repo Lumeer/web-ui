@@ -12,7 +12,7 @@
   (userCreated)="userCreated.emit($event)">
 </organization-new-user>
 
-<ng-container *ngFor="let user of users">
+<div *ngFor="let user of users; let isLast = last" [class.mb-2]="!isLast">
 
   <organization-user
     [organization]="organization"
@@ -25,9 +25,10 @@
 
   <organization-user-groups
     *ngIf="expanded[user.email]"
+    [organization]="organization"
     [user]="user"
     [groups]="groups"
-    (groupAdded)="userUpdated.emit($event)">
+    (userUpdate)="userUpdated.emit($event)">
   </organization-user-groups>
 
-</ng-container>
+</div>

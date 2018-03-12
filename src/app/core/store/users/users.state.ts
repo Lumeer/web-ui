@@ -37,21 +37,20 @@ export const usersAdapter = createEntityAdapter<UserModel>();
 export const initialUsersState: UsersState = usersAdapter.getInitialState({filter: null});
 
 export const selectUsersState = (state: AppState) => state.users;
-export const selectAllUsers = createSelector(selectUsersState, usersAdapter.getSelectors().selectAll);
+
+const selectAllUsersRaw = createSelector(selectUsersState, usersAdapter.getSelectors().selectAll);
+export const selectAllUsers = createSelector(selectAllUsersRaw, users => UserFilters.filterFunctions(users));
 export const selectUsersFilter = createSelector(selectUsersState, (state: UsersState) => state.filter);
 
 export const selectUsersForWorkspace = createSelector(selectAllUsers, selectAllGroups, selectOrganizationByWorkspace, (users, groups, organization) => {
-  const usersObjects = users.filter(user => typeof user === 'object');
-
-  return UserFilters.filterByOrganization(usersObjects, organization)
+  return UserFilters.filterByOrganization(users, organization)
     .map(user => mapGroupsOnUser(user, organization.id, groups));
 });
 
 export const selectUsersForWorkspaceAndFilter = createSelector(selectUsersForWorkspace, selectUsersFilter,
   (users, filter) => UserFilters.filterByFilter(users, filter));
 
-
-export function mapGroupsOnUser(user: UserModel, organizationId: string, groups: GroupModel[]) {
+function mapGroupsOnUser(user: UserModel, organizationId: string, groups: GroupModel[]) {
   const groupIds = user.groupsMap[organizationId];
   user.groups = groups.filter(group => groupIds.includes(group.id));
   return user;
