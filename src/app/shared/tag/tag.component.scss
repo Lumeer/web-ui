@@ -1,0 +1,18 @@
+@import "../variables";
+
+.tag {
+  border: 1px solid $primary;
+  border-radius: $border-radius-base;
+
+  &:hover .remove {
+    opacity: 1;
+  }
+
+  .remove {
+    opacity: 0;
+    cursor: pointer;
+    color: $primary;
+    transition: opacity $animation-duration;
+  }
+
+}

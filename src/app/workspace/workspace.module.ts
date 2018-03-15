@@ -34,6 +34,12 @@ import {WorkspaceService} from './workspace.service';
 import {OrganizationUsersComponent} from './organization/users/organization-users.component';
 import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
 import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
+import {OrganizationSettingsGuard} from "./organization/organization-settings.guard";
+import {OrganizationUserListComponent} from './organization/users/list/organization-user-list.component';
+import {OrganizationUserComponent} from './organization/users/user/organization-user.component';
+import {OrganizationUserGroupsComponent} from './organization/users/groups/organization-user-groups.component';
+import {OrganizationNewUserComponent} from './organization/users/new-user/organization-new-user.component';
+import {GroupsSuggestionsComponent} from "./organization/users/groups/suggestions/groups-suggestions.component";
 
 @NgModule({
   imports: [
@@ -45,20 +51,26 @@ import {OrganizationRegistrationComponent} from './organization/registration/org
   declarations: [
     OrganizationPermissionsComponent,
     OrganizationUsersComponent,
+    OrganizationUserListComponent,
+    OrganizationUserGroupsComponent,
+    OrganizationUserComponent,
+    OrganizationNewUserComponent,
     OrganizationGroupsComponent,
     OrganizationRegistrationComponent,
     ProjectPermissionsComponent,
     OrganizationSettingsComponent,
     ProjectSettingsComponent,
     WorkspaceChooserComponent,
-    ResourceChooserComponent
+    ResourceChooserComponent,
+    GroupsSuggestionsComponent
   ],
   exports: [
     WorkspaceChooserComponent
   ],
   providers: [
     WorkspaceService,
-    WorkspaceSelectGuard
+    WorkspaceSelectGuard,
+    OrganizationSettingsGuard
   ]
 })
 export class WorkspaceModule {

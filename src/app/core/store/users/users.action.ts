@@ -46,6 +46,9 @@ export namespace UsersAction {
 
   export class Get implements Action {
     public readonly type = UsersActionType.GET;
+
+    public constructor(public payload: { organizationId: string }) {
+    }
   }
 
   export class GetSuccess implements Action {
@@ -65,7 +68,7 @@ export namespace UsersAction {
   export class Create implements Action {
     public readonly type = UsersActionType.CREATE;
 
-    public constructor(public payload: { user: UserModel }) {
+    public constructor(public payload: { organizationId: string, user: UserModel }) {
     }
   }
 
@@ -86,7 +89,7 @@ export namespace UsersAction {
   export class Update implements Action {
     public readonly type = UsersActionType.UPDATE;
 
-    public constructor(public payload: { user: UserModel }) {
+    public constructor(public payload: { organizationId: string, user: UserModel }) {
     }
   }
 
@@ -107,7 +110,7 @@ export namespace UsersAction {
   export class Delete implements Action {
     public readonly type = UsersActionType.DELETE;
 
-    public constructor(public payload: { userId: string }) {
+    public constructor(public payload: { organizationId: string, userId: string }) {
     }
   }
 
@@ -124,7 +127,6 @@ export namespace UsersAction {
     public constructor(public payload: { error: any }) {
     }
   }
-
 
   export class Clear implements Action {
     public readonly type = UsersActionType.CLEAR;

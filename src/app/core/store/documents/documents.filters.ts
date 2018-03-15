@@ -24,6 +24,7 @@ import {DocumentModel} from './document.model';
 export class DocumentsFilters {
 
   public static filterByQuery(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
+    documents = documents.filter(document => typeof(document) === 'object');
     if (!query) {
       return documents;
     }

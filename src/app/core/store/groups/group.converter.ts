@@ -25,16 +25,14 @@ export class GroupConverter {
   public static fromDto(dto: Group): GroupModel {
     return {
       id: dto.id,
-      name: dto.name,
-      description: dto.description
+      name: dto.name
     };
   }
 
   public static toDto(group: GroupModel): Group {
     return {
       id: group.id,
-      name: group.name,
-      description: group.description
+      name: group.name
     };
   }
 

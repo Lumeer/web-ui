@@ -22,6 +22,7 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {selectQuery, selectWorkspace} from '../navigation/navigation.state';
 import {CollectionModel} from './collection.model';
+import {isNullOrUndefined} from "util";
 
 export interface CollectionsState extends EntityState<CollectionModel> {
 
@@ -43,7 +44,9 @@ export const selectAllCollections = createSelector(selectCollectionsState, colle
 export const selectCollectionsDictionary = createSelector(selectCollectionsState, collectionsAdapter.getSelectors().selectEntities);
 export const selectCollectionsLoaded = createSelector(selectCollectionsState, (state: CollectionsState) => state.loaded);
 export const selectCollectionsByQuery = createSelector(selectCollectionsDictionary, selectQuery, (collections, query) => {
-  return !query || query.collectionIds.length === 0 ? Object.values(collections) : query.collectionIds.map(id => collections[id]);
+  delete collections['undefined'];
+  return query && query.collectionIds && query.collectionIds.length > 0 ? query.collectionIds.map(id => collections[id])
+    : Object.values(collections);
 });
 
 export const selectCollectionByWorkspace = createSelector(selectCollectionsDictionary, selectWorkspace, (collections, workspace) => {

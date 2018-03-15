@@ -21,6 +21,7 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {GroupModel} from './group.model';
+import {GroupFilters} from "./group.filters";
 
 export interface GroupsState extends EntityState<GroupModel> {
 
@@ -31,4 +32,6 @@ export const groupsAdapter = createEntityAdapter<GroupModel>();
 export const initialGroupsState: GroupsState = groupsAdapter.getInitialState();
 
 export const selectGroupsState = (state: AppState) => state.groups;
-export const selectAllGroups = createSelector(selectGroupsState, groupsAdapter.getSelectors().selectAll);
+
+const selectAllGroupsRaw = createSelector(selectGroupsState, groupsAdapter.getSelectors().selectAll);
+export const selectAllGroups = createSelector(selectAllGroupsRaw, groups => GroupFilters.filterFunctions(groups));

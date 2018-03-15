@@ -17,10 +17,70 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../core/store/app.state';
+import {Observable} from 'rxjs/Observable';
+import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
+import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {UserModel} from '../../../core/store/users/user.model';
+import {filter, map} from 'rxjs/operators';
+import {selectAllGroups} from '../../../core/store/groups/groups.state';
+import {GroupModel} from '../../../core/store/groups/group.model';
+import {UsersAction} from '../../../core/store/users/users.action';
+import {Subscription} from "rxjs/Subscription";
+import {isNullOrUndefined} from "util";
+import {selectUsersForWorkspace} from "../../../core/store/users/users.state";
 
 @Component({
-  templateUrl: './organization-users.component.html'
+  templateUrl: './organization-users.component.html',
+  styleUrls: ['./organization-users.component.scss']
 })
-export class OrganizationUsersComponent {
+export class OrganizationUsersComponent implements OnInit, OnDestroy {
+
+  public users$: Observable<UserModel[]>;
+  public groups$: Observable<GroupModel[]>;
+
+  public organization: OrganizationModel;
+
+  private organizationSubscription: Subscription;
+
+  constructor(private store: Store<AppState>) {
+  }
+
+  public ngOnInit() {
+    this.subscribeData();
+  }
+
+  public ngOnDestroy() {
+    if (this.organizationSubscription) {
+      this.organizationSubscription.unsubscribe()
+    }
+  }
+
+  private sortUsers(users: UserModel[]): UserModel[] {
+    return users.sort((user1, user2) => user1.name.localeCompare(user2.name));
+  }
+
+  public onUserCreated(user: UserModel) {
+    this.store.dispatch(new UsersAction.Create({organizationId: this.organization.id, user: user}));
+  }
+
+  public onUserUpdated(user: UserModel) {
+    this.store.dispatch(new UsersAction.Update({organizationId: this.organization.id, user: user}));
+  }
+
+  public onUserDeleted(user: UserModel) {
+    this.store.dispatch(new UsersAction.Delete({organizationId: this.organization.id, userId: user.id}));
+  }
+
+  private subscribeData() {
+    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+      .pipe(filter(organization => !isNullOrUndefined(organization)))
+      .subscribe(organization => this.organization = organization);
+    this.users$ = this.store.select(selectUsersForWorkspace).pipe(map(this.sortUsers));
+    this.groups$ = this.store.select(selectAllGroups);
+  }
+
 }

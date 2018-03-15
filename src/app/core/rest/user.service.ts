@@ -21,63 +21,36 @@ import {Injectable} from '@angular/core';
 import 'rxjs/add/observable/of';
 
 import {Observable} from 'rxjs/Observable';
-import {LocalStorage} from '../../shared/utils/local-storage';
 import {User} from '../dto';
-
-const USERS_KEY = 'users';
+import {HttpClient} from "@angular/common/http";
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class UserService {
 
-  public createUser(user: User): Observable<User> {
-    const users = LocalStorage.get(USERS_KEY) || {};
-
-    user.id = String(Math.floor(Math.random() * 1000000000000000) + 1);
-    users[user.id] = user;
-
-    LocalStorage.set(USERS_KEY, users);
-
-    return Observable.of(user);
+  constructor(private httpClient: HttpClient) {
   }
 
-  public updateUser(id: string, user: User): Observable<User> {
-    const users = LocalStorage.get(USERS_KEY) || {};
-
-    delete users[id];
-    users[user.id] = user;
-
-    LocalStorage.set(USERS_KEY, users);
-
-    return Observable.of(user);
+  public createUser(organizationId: string, user: User): Observable<User> {
+    return this.httpClient.post<User>(this.apiPrefix(organizationId), user);
   }
 
-  public deleteUser(id: string): Observable<void> {
-    const users = LocalStorage.get(USERS_KEY) || {};
-
-    delete users[id];
-
-    LocalStorage.set(USERS_KEY, users);
-
-    return Observable.empty();
+  public updateUser(organizationId: string, id: string, user: User): Observable<User> {
+    return this.httpClient.put<User>(this.apiPrefix(organizationId, user.id), user);
   }
 
-  public getUserById(id: string): Observable<User> {
-    const usersMap = LocalStorage.get(USERS_KEY) || {};
-
-    return Observable.of(usersMap[id]);
+  public deleteUser(organizationId: string, id: string): Observable<string> {
+    return this.httpClient.delete(this.apiPrefix(organizationId, id), {observe: 'response', responseType: 'text'})
+      .pipe(map(() => id));
   }
 
-  public getUsersByGroup(groupId: string): Observable<User[]> {
-    const usersMap: { [id: string]: User } = LocalStorage.get(USERS_KEY) || {};
-    const users = Object.values(usersMap).filter(user => user.groups.includes(groupId));
-
-    return Observable.of(users);
+  public getUsers(organizationId: string): Observable<User[]> {
+    return this.httpClient.get<User[]>(this.apiPrefix(organizationId));
   }
 
-  public getUsers(): Observable<User[]> {
-    const usersMap: { [id: string]: User } = LocalStorage.get(USERS_KEY) || {};
 
-    return Observable.of(Object.values(usersMap));
+  private apiPrefix(organizationId: string, userId?: string): string {
+    return `/${API_URL}/rest/organizations/${organizationId}/users${userId ? `/${userId}` : ''}`;
   }
 
 }
