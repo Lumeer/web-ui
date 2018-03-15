@@ -54,7 +54,6 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.subscribeToStore();
-    this.dispatchActions();
   }
 
   public ngOnDestroy() {
@@ -73,10 +72,6 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
       .pipe(filter(organization => !isNullOrUndefined(organization)))
       .subscribe(organization => this.organization = organization);
-  }
-
-  private dispatchActions() {
-    this.store.dispatch(new UsersAction.ClearFilter());
   }
 
   public onDelete() {

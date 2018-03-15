@@ -92,6 +92,7 @@ export class OrganizationsEffects {
         if(index !== -1){
           paths[index] = organization.code;
           actions.push(new RouterAction.Go({path: paths}))
+          // TODO extract as
         }
       }
 

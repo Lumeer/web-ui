@@ -1,9 +1,8 @@
 <div class="row">
   <div class="col-6 col-md-4 col-lg-3 py-2">
     <filter-box
-      [value]="usersFilter"
       [placeholder]="'Filter users'"
-      (textChange)="filterChanged.emit($event)">
+      (textChange)="onFilterChanged($event)">
     </filter-box>
   </div>
 </div>
@@ -12,7 +11,7 @@
   (userCreated)="userCreated.emit($event)">
 </organization-new-user>
 
-<div *ngFor="let user of users; let isLast = last" [class.mb-2]="!isLast">
+<div *ngFor="let user of filterUsers(users); let isLast = last" [class.mb-2]="!isLast">
 
   <organization-user
     [organization]="organization"

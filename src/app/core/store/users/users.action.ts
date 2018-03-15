@@ -38,9 +38,6 @@ export enum UsersActionType {
   DELETE_SUCCESS = '[Users] Delete :: Success',
   DELETE_FAILURE = '[Users] Delete :: Failure',
 
-  UPDATE_FILTER = '[Users] Update Filter',
-  CLEAR_FILTER = '[Users] Clear Filter',
-
   CLEAR = '[Users] Clear'
 
 }
@@ -131,17 +128,6 @@ export namespace UsersAction {
     }
   }
 
-  export class UpdateFilter implements Action {
-    public readonly type = UsersActionType.UPDATE_FILTER;
-
-    public constructor(public payload: { filter: string }) {
-    }
-  }
-
-  export class ClearFilter implements Action {
-    public readonly type = UsersActionType.CLEAR_FILTER;
-  }
-
   export class Clear implements Action {
     public readonly type = UsersActionType.CLEAR;
 
@@ -152,6 +138,5 @@ export namespace UsersAction {
   export type All = Get | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure |
-    UpdateFilter | ClearFilter | Clear;
+    Delete | DeleteSuccess | DeleteFailure | Clear;
 }

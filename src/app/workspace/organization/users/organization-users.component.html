@@ -1,18 +1,9 @@
-<div class="p-2" *ngIf="organization">
-  <organization-users-header
-    [organization]="organization">
-  </organization-users-header>
-
-  <organization-user-list
-    class="pt-2"
-    [usersFilter]="usersFilter$ | async"
-    [organization]="organization"
-    [users]="users$ | async"
-    [groups]="groups$ | async"
-    (userCreated)="onUserCreated($event)"
-    (userUpdated)="onUserUpdated($event)"
-    (userDeleted)="onUserDeleted($event)"
-    (filterChanged)="onUserFilterChanged($event)">
-  </organization-user-list>
-
-</div>
+<organization-user-list
+  *ngIf="organization"
+  [organization]="organization"
+  [users]="users$ | async"
+  [groups]="groups$ | async"
+  (userCreated)="onUserCreated($event)"
+  (userUpdated)="onUserUpdated($event)"
+  (userDeleted)="onUserDeleted($event)">
+</organization-user-list>

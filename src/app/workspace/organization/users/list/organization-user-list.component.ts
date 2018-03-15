@@ -18,9 +18,11 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+
 import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
 import {UserModel} from '../../../../core/store/users/user.model';
 import {GroupModel} from '../../../../core/store/groups/group.model';
+import {UserFilters} from "../../../../core/store/users/user.filters";
 
 @Component({
   selector: 'organization-user-list',
@@ -38,9 +40,6 @@ export class OrganizationUserListComponent {
   @Input()
   public groups: GroupModel[];
 
-  @Input()
-  public usersFilter: string;
-
   @Output()
   public userCreated = new EventEmitter<UserModel>();
 
@@ -50,9 +49,15 @@ export class OrganizationUserListComponent {
   @Output()
   public userDeleted = new EventEmitter<UserModel>();
 
-  @Output()
-  public filterChanged = new EventEmitter<string>();
-
   public expanded: { [email: string]: boolean } = {};
+  public userFilter: string;
+
+  public onFilterChanged(filter: string) {
+    this.userFilter = filter;
+  }
+
+  public filterUsers(users: UserModel[]): UserModel[] {
+    return UserFilters.filterByFilter(users, this.userFilter);
+  }
 
 }

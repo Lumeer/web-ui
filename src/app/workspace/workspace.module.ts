@@ -37,7 +37,6 @@ import {OrganizationRegistrationComponent} from './organization/registration/org
 import {OrganizationSettingsGuard} from "./organization/organization-settings.guard";
 import {OrganizationUserListComponent} from './organization/users/list/organization-user-list.component';
 import {OrganizationUserComponent} from './organization/users/user/organization-user.component';
-import {OrganizationUsersHeaderComponent} from './organization/users/header/organization-users-header.component';
 import {OrganizationUserGroupsComponent} from './organization/users/groups/organization-user-groups.component';
 import {OrganizationNewUserComponent} from './organization/users/new-user/organization-new-user.component';
 import {GroupsSuggestionsComponent} from "./organization/users/groups/suggestions/groups-suggestions.component";
@@ -56,7 +55,6 @@ import {GroupsSuggestionsComponent} from "./organization/users/groups/suggestion
     OrganizationUserGroupsComponent,
     OrganizationUserComponent,
     OrganizationNewUserComponent,
-    OrganizationUsersHeaderComponent,
     OrganizationGroupsComponent,
     OrganizationRegistrationComponent,
     ProjectPermissionsComponent,

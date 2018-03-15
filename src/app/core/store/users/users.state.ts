@@ -28,8 +28,6 @@ import {GroupModel} from "../groups/group.model";
 
 export interface UsersState extends EntityState<UserModel> {
 
-  filter: string
-
 }
 
 export const usersAdapter = createEntityAdapter<UserModel>();
@@ -40,15 +38,11 @@ export const selectUsersState = (state: AppState) => state.users;
 
 const selectAllUsersRaw = createSelector(selectUsersState, usersAdapter.getSelectors().selectAll);
 export const selectAllUsers = createSelector(selectAllUsersRaw, users => UserFilters.filterFunctions(users));
-export const selectUsersFilter = createSelector(selectUsersState, (state: UsersState) => state.filter);
 
 export const selectUsersForWorkspace = createSelector(selectAllUsers, selectAllGroups, selectOrganizationByWorkspace, (users, groups, organization) => {
   return UserFilters.filterByOrganization(users, organization)
     .map(user => mapGroupsOnUser(user, organization.id, groups));
 });
-
-export const selectUsersForWorkspaceAndFilter = createSelector(selectUsersForWorkspace, selectUsersFilter,
-  (users, filter) => UserFilters.filterByFilter(users, filter));
 
 function mapGroupsOnUser(user: UserModel, organizationId: string, groups: GroupModel[]) {
   const groupIds = user.groupsMap[organizationId];

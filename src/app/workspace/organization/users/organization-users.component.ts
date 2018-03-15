@@ -18,19 +18,20 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {Observable} from 'rxjs/Observable';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
 import {OrganizationModel} from '../../../core/store/organizations/organization.model';
 import {UserModel} from '../../../core/store/users/user.model';
-import {selectUsersFilter, selectUsersForWorkspaceAndFilter} from '../../../core/store/users/users.state';
 import {filter, map} from 'rxjs/operators';
 import {selectAllGroups} from '../../../core/store/groups/groups.state';
 import {GroupModel} from '../../../core/store/groups/group.model';
 import {UsersAction} from '../../../core/store/users/users.action';
 import {Subscription} from "rxjs/Subscription";
 import {isNullOrUndefined} from "util";
+import {selectUsersForWorkspace} from "../../../core/store/users/users.state";
 
 @Component({
   templateUrl: './organization-users.component.html',
@@ -40,7 +41,6 @@ export class OrganizationUsersComponent implements OnInit, OnDestroy {
 
   public users$: Observable<UserModel[]>;
   public groups$: Observable<GroupModel[]>;
-  public usersFilter$: Observable<string>;
 
   public organization: OrganizationModel;
 
@@ -75,17 +75,12 @@ export class OrganizationUsersComponent implements OnInit, OnDestroy {
     this.store.dispatch(new UsersAction.Delete({organizationId: this.organization.id, userId: user.id}));
   }
 
-  public onUserFilterChanged(value: string) {
-    this.store.dispatch(new UsersAction.UpdateFilter({filter: value}));
-  }
-
   private subscribeData() {
     this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
       .pipe(filter(organization => !isNullOrUndefined(organization)))
       .subscribe(organization => this.organization = organization);
-    this.users$ = this.store.select(selectUsersForWorkspaceAndFilter).pipe(map(this.sortUsers));
+    this.users$ = this.store.select(selectUsersForWorkspace).pipe(map(this.sortUsers));
     this.groups$ = this.store.select(selectAllGroups);
-    this.usersFilter$ = this.store.select(selectUsersFilter);
   }
 
 }

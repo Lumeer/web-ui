@@ -21,7 +21,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
 import {UserModel} from '../../../../core/store/users/user.model';
-import {Validator} from "../../../../shared/utils/validator";
+import {Validator} from "../../../../core/validators/validator";
 
 @Component({
   selector: 'organization-user',
