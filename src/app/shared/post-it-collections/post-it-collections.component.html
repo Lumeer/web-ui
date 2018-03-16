@@ -46,7 +46,7 @@
         <icon-picker class="dropdown-item" [(icon)]="collection.icon"></icon-picker>
       </div>
 
-      <div *ngIf="collection.id" class="document-count opacity-content clickable">
+      <div *ngIf="collection.id" class="document-count opacity-content clickable" [ngClass]="{'panel-visible' : panelVisible}"> 
         <a title="Record Count" i18n-title="@@collection.document.count"
            [routerLink]="[workspacePath(), 'view', 'postit']"
            [queryParams]="{ query: queryForCollectionDocuments(collection.id) }">
@@ -54,7 +54,7 @@
         </a>
       </div>
 
-      <div *ngIf="collection.id" class="text-warning toggle-favorite opacity-content clickable"
+      <div *ngIf="collection.id" class="text-warning toggle-favorite opacity-content clickable" [ngClass]="{'panel-visible' : panelVisible}"
            [class.always-visible]="collection.favourite">
         <a title="{{collection.favourite ?  'Remove from favorites' : 'Add to favorites'}}"
            i18n-title="@@collection.favorite" (click)="toggleFavorite(collection)">
@@ -63,7 +63,7 @@
         </a>
       </div>
 
-      <div class="buttons opacity-content d-flex flex-column"
+      <div class="buttons opacity-content d-flex flex-column" [ngClass]="{'panel-visible' : panelVisible}"
            [style.top]="'50px'">
         <ng-container *ngIf="collection.id">
           <a title="Configure" i18n-title="@@collection.button.configure"
@@ -72,7 +72,7 @@
             <i class="fa fa-fw fa-cog" aria-hidden="true"></i></a>
 
           <a title="Icon picker" i18n-title="@@collection.button.icon"
-             class="rounded-left text-success" data-toggle="dropdown">
+             class="rounded-left text-success" data-toggle="dropdown" (click)="panelVisible = !panelVisible">
             <i class="fa fa-fw fa-eye-dropper" aria-hidden="true"></i></a>
           <div class="dropdown-menu dropdown-menu-right">
             <color-picker class="dropdown-item" [(color)]="collection.color"

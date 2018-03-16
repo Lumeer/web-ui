@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren, HostListener} from '@angular/core';
 import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
 import {Store} from '@ngrx/store';
 
@@ -61,6 +61,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public dragging: boolean = false;
 
+  public panelVisible: boolean = false;
+
   private layout: PostItLayout;
 
   private workspace: Workspace;
@@ -100,6 +102,15 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     config.dragEnabled = false;
 
     this.layout = new PostItLayout('post-it-collection-layout', config, this.zone);
+  }
+
+  /**
+   * Handler to change the flag to remove opacity css on elements
+   * @param targetElement 
+   */
+  @HostListener('document:click', ['$event.target'])
+  public documentClicked(targetElement) {
+    this.panelVisible = false;
   }
 
   private subscribeOnNavigation() {
