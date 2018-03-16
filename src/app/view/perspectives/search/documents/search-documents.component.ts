@@ -20,7 +20,7 @@
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {map, skipWhile, tap} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 
 import {Subscription} from 'rxjs/Subscription';
 import {isArray, isNullOrUndefined, isObject} from 'util';
@@ -71,7 +71,8 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
     this.querySubscription = this.store.select(selectQuery)
       .pipe(
-        skipWhile(query => isNullOrUndefined(query)),
+        filter(query => isNullOrUndefined(query)),
+        map(query => ({...query, page: 0, pageSize: 100})), // TODO implement pagination logic
         tap(query => this.store.dispatch(new DocumentsAction.Get({query}))),
         tap(() => this.store.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: []}})))
       ).subscribe();
