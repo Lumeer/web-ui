@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkQueryItem} from 'app/shared/search-box/query-item/model/link.query-item';
+import {LinkQueryItem} from './model/link.query-item';
 import {QueryConverter} from '../../../core/store/navigation/query.converter';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {QueryData} from '../query-data';

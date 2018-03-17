@@ -27,7 +27,7 @@ import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
 import {Router} from '@angular/router';
-import {Query} from 'app/core/dto/query';
+import {Query} from '../dto';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {first, map, switchMap} from 'rxjs/operators';
 import {Observable} from 'rxjs/Observable';
