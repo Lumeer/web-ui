@@ -83,8 +83,9 @@ function renameChildAttributes(attributes: AttributeModel[], oldParentId: string
 }
 
 function onRemoveAttributeSuccess(state: CollectionsState, action: CollectionsAction.RemoveAttributeSuccess): CollectionsState {
+  const attributeId = action.payload.attributeId;
   const attributes = state.entities[action.payload.collectionId].attributes
-    .filter(attribute => !attribute.id.startsWith(action.payload.attributeId));
+    .filter(attribute => attribute.id !== attributeId && !attribute.id.startsWith(attributeId + '.'));
 
   return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
 }
