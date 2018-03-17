@@ -20,24 +20,36 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {QueryModel} from '../navigation/query.model';
+import {selectCollectionsDictionary} from '../collections/collections.state';
 import {LinkTypeModel} from './link-type.model';
 
 export interface LinkTypesState extends EntityState<LinkTypeModel> {
 
-  queries: QueryModel[];
+  loaded: boolean;
 
 }
 
 export const linkTypesAdapter = createEntityAdapter<LinkTypeModel>();
 
 export const initialLinkTypesState: LinkTypesState = linkTypesAdapter.getInitialState({
-  queries: []
+  loaded: false
 });
 
 export const selectLinkTypesState = (state: AppState) => state.linkTypes;
 
 export const selectAllLinkTypes = createSelector(selectLinkTypesState, linkTypesAdapter.getSelectors().selectAll);
 export const selectLinkTypesDictionary = createSelector(selectLinkTypesState, linkTypesAdapter.getSelectors().selectEntities);
-export const selectLinkTypesQueries = createSelector(selectLinkTypesState, linkTypesState => linkTypesState.queries);
+export const selectLinkTypesLoaded = createSelector(selectLinkTypesState, linkTypesState => linkTypesState.loaded);
+
 export const selectLinkTypeById = (linkTypeId: string) => createSelector(selectLinkTypesDictionary, linkTypes => linkTypes[linkTypeId]);
+export const selectLinkTypeWithCollections = (linkTypeId: string) =>
+  createSelector(selectLinkTypeById(linkTypeId), selectCollectionsDictionary, (linkType, collectionsMap) => ({
+      ...linkType, collections: [
+        collectionsMap[linkType.collectionIds[0]],
+        collectionsMap[linkType.collectionIds[1]]
+      ]
+    } as LinkTypeModel)
+  );
+
+export const selectLinkTypesByCollectionId = (collectionId: string) =>
+  createSelector(selectAllLinkTypes, linkTypes => linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId)));

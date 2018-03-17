@@ -44,4 +44,6 @@ export const selectViewsDictionary = createSelector(selectViewsState, viewsAdapt
 export const selectViewConfig = createSelector(selectViewsState, views => views.config);
 export const selectViewSearchConfig = createSelector(selectViewConfig, config => config.search);
 export const selectViewSmartDocConfig = createSelector(selectViewConfig, config => config.smartdoc);
+export const selectViewTableConfig = createSelector(selectViewConfig, config => config.table);
+export const selectViewTable2Config = createSelector(selectViewConfig, config => config.table2);
 export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (views, query): ViewModel[] => ViewFilters.filterByQuery(views, query));

@@ -21,6 +21,7 @@ import {Perspective} from '../../../view/perspectives/perspective';
 import {QueryModel} from '../navigation/query.model';
 import {PermissionsModel} from '../permissions/permissions.model';
 import {SmartDocModel} from '../smartdoc/smartdoc.model';
+import {TableConfig} from '../tables/table.model';
 
 export interface ViewModel {
 
@@ -40,6 +41,7 @@ export interface ViewConfigModel {
   postit?: PostItConfigModel;
   search?: SearchConfigModel;
   table?: TableConfigModel;
+  table2?: TableConfig;
   smartdoc?: SmartDocModel;
 
 }

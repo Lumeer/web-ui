@@ -20,19 +20,22 @@
 import {AfterViewInit, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
 import {filter, withLatestFrom} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
-import {AppState} from '../../../../../core/store/app.state';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
-import {selectAllCollections} from '../../../../../core/store/collections/collections.state';
-import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
-import {LinkTypesAction} from '../../../../../core/store/link-types/link-types.action';
-import {selectLinkCollectionIds} from '../../../../../core/store/navigation/navigation.state';
-import {SmartDocAction} from '../../../../../core/store/smartdoc/smartdoc.action';
-import {SmartDocPartModel, SmartDocPartType} from '../../../../../core/store/smartdoc/smartdoc.model';
-import {SelectedSmartDocPart, selectSelectedSmartDocPart} from '../../../../../core/store/smartdoc/smartdoc.state';
-import {Perspective} from '../../../perspective';
+import {AppState} from '../../../core/store/app.state';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {selectAllCollections} from '../../../core/store/collections/collections.state';
+import {LinkTypeModel} from '../../../core/store/link-types/link-type.model';
+import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
+import {NavigationAction} from '../../../core/store/navigation/navigation.action';
+import {selectLinkCollectionIds, selectPerspective} from '../../../core/store/navigation/navigation.state';
+import {SmartDocAction} from '../../../core/store/smartdoc/smartdoc.action';
+import {SmartDocPartModel, SmartDocPartType} from '../../../core/store/smartdoc/smartdoc.model';
+import {SelectedSmartDocPart, selectSelectedSmartDocPart} from '../../../core/store/smartdoc/smartdoc.state';
+import {DEFAULT_TABLE_ID} from '../../../core/store/tables/table.model';
+import {TablesAction} from '../../../core/store/tables/tables.action';
+import {Perspective} from '../../../view/perspectives/perspective';
 
 declare let $: any;
 
@@ -46,10 +49,12 @@ export class NewLinkDialogComponent implements OnInit, OnDestroy, AfterViewInit 
   public id = 'newLinkDialogModal';
 
   private collections: CollectionModel[];
-  private collectionsSubscription: Subscription;
 
   private selectedSmartDocPart: SelectedSmartDocPart;
-  private smartDocSubscription: Subscription;
+
+  private perspective: Perspective;
+
+  private subscriptions = new Subscription();
 
   public form: FormGroup;
   public linkTypeFormGroup: FormGroup;
@@ -83,24 +88,36 @@ export class NewLinkDialogComponent implements OnInit, OnDestroy, AfterViewInit 
   public ngOnInit() {
     this.form.reset();
 
+    this.subscribeToPerspective();
     this.subscribeToSelectedSmartDocPart();
     this.subscribeToLinkCollectionIds();
   }
 
+  private subscribeToPerspective() {
+    this.subscriptions.add(
+      this.store.select(selectPerspective).subscribe(perspective => this.perspective = perspective)
+    );
+  }
+
   private subscribeToSelectedSmartDocPart() {
-    this.smartDocSubscription = this.store.select(selectSelectedSmartDocPart).pipe(
-      filter(selectedPart => !!selectedPart)
-    ).subscribe(selectedPart => this.selectedSmartDocPart = selectedPart);
+    this.subscriptions.add(
+      this.store.select(selectSelectedSmartDocPart).pipe(
+        withLatestFrom(this.store.select(selectPerspective)),
+        filter(([selectedPart, perspective]) => !!selectedPart && perspective === Perspective.SmartDoc)
+      ).subscribe(([selectedPart]) => this.selectedSmartDocPart = selectedPart)
+    );
   }
 
   private subscribeToLinkCollectionIds() {
-    this.collectionsSubscription = this.store.select(selectLinkCollectionIds).pipe(
-      filter(linkCollectionIds => !!linkCollectionIds),
-      withLatestFrom(this.store.select(selectAllCollections))
-    ).subscribe(([linkCollectionIds, collections]) => {
-      this.collections = collections.filter(collection => linkCollectionIds.includes(collection.id));
-      this.form.reset();
-    });
+    this.subscriptions.add(
+      this.store.select(selectLinkCollectionIds).pipe(
+        filter(linkCollectionIds => !!linkCollectionIds),
+        withLatestFrom(this.store.select(selectAllCollections))
+      ).subscribe(([linkCollectionIds, collections]) => {
+        this.collections = collections.filter(collection => linkCollectionIds.includes(collection.id));
+        this.form.reset();
+      })
+    );
   }
 
   public ngAfterViewInit() {
@@ -125,12 +142,7 @@ export class NewLinkDialogComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   public ngOnDestroy() {
-    if (this.collectionsSubscription) {
-      this.collectionsSubscription.unsubscribe();
-    }
-    if (this.smartDocSubscription) {
-      this.smartDocSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   public colors(): string[] {
@@ -155,11 +167,20 @@ export class NewLinkDialogComponent implements OnInit, OnDestroy, AfterViewInit 
       name: this.linkNameInput.value,
       collectionIds: [this.collections[0].id, this.collections[1].id]
     };
-    const nextAction = this.selectedSmartDocPart ? this.createAddSmartDocPartAction() : null;
-    return new LinkTypesAction.Create({linkType, nextAction});
+    return new LinkTypesAction.Create({linkType, nextAction: this.createNextAction()});
   }
 
-  private createAddSmartDocPartAction() {
+  private createNextAction(): Action {
+    if (this.perspective === Perspective.SmartDoc && this.selectedSmartDocPart) {
+      return this.createAddSmartDocPartAction();
+    }
+    if (this.perspective === Perspective.Table2) {
+      return new NavigationAction.AddLinkToQuery({linkTypeId: null});
+    }
+    return null;
+  }
+
+  private createAddSmartDocPartAction(): SmartDocAction.AddPart {
     const part: SmartDocPartModel = {
       type: SmartDocPartType.Embedded,
       perspective: Perspective.Table
@@ -168,6 +189,13 @@ export class NewLinkDialogComponent implements OnInit, OnDestroy, AfterViewInit 
       partPath: this.selectedSmartDocPart.path,
       partIndex: this.selectedSmartDocPart.partIndex + 1,
       part
+    });
+  }
+
+  private createTablePartAction(): TablesAction.CreatePart {
+    return new TablesAction.CreatePart({
+      tableId: DEFAULT_TABLE_ID, // TODO maybe detect instead
+      linkTypeId: null
     });
   }
 

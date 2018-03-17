@@ -34,6 +34,7 @@ import {LinkInstancesEffects} from './link-instances/link-instances.effects';
 import {linkInstancesReducer} from './link-instances/link-instances.reducer';
 import {LinkTypesEffects} from './link-types/link-types.effects';
 import {linkTypesReducer} from './link-types/link-types.reducer';
+import {NavigationEffects} from './navigation/navigation.effects';
 import {navigationReducer} from './navigation/navigation.reducer';
 import {NotificationsEffects} from './notifications/notifications.effects';
 import {OrganizationsEffects} from './organizations/organizations.effects';
@@ -66,6 +67,7 @@ const effects = [
   GroupsEffects,
   LinkInstancesEffects,
   LinkTypesEffects,
+  NavigationEffects,
   NotificationsEffects,
   OrganizationsEffects,
   ProjectsEffects,

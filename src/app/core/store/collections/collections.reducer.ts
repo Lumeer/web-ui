@@ -18,6 +18,7 @@
  */
 
 import {PermissionsHelper} from '../permissions/permissions.helper';
+import {AttributeModel} from './collection.model';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
 import {collectionsAdapter, CollectionsState, initialCollectionsState} from './collections.state';
 
@@ -55,23 +56,35 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
 }
 
 function onChangeAttributeSuccess(state: CollectionsState, action: CollectionsAction.ChangeAttributeSuccess): CollectionsState {
-  const attributes = state.entities[action.payload.collectionId].attributes.slice();
+  let attributes = state.entities[action.payload.collectionId].attributes.slice();
   const index = attributes.findIndex(attr => attr.id === action.payload.attributeId);
-  if (index) {
+  if (index >= 0) {
     attributes.splice(index, 1, action.payload.attribute);
   } else {
     attributes.push(action.payload.attribute); // TODO preserve order
   }
 
+  if (action.payload.attributeId !== action.payload.attribute.id) {
+    attributes = renameChildAttributes(attributes, action.payload.attributeId, action.payload.attribute.id);
+  }
+
   return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
 }
 
+function renameChildAttributes(attributes: AttributeModel[], oldParentId: string, newParentId: string): AttributeModel[] {
+  const prefix = oldParentId + '.';
+  return attributes.map(attribute => {
+    if (attribute.id.startsWith(prefix)) {
+      const [, suffix] = attribute.id.split(oldParentId, 2);
+      return {...attribute, id: newParentId + suffix};
+    }
+    return attribute;
+  });
+}
+
 function onRemoveAttributeSuccess(state: CollectionsState, action: CollectionsAction.RemoveAttributeSuccess): CollectionsState {
-  const attributes = state.entities[action.payload.collectionId].attributes.slice();
-  const index = attributes.findIndex(attr => attr.id === action.payload.attributeId);
-  if (index) {
-    attributes.splice(index, 1);
-  }
+  const attributes = state.entities[action.payload.collectionId].attributes
+    .filter(attribute => !attribute.id.startsWith(action.payload.attributeId));
 
   return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
 }

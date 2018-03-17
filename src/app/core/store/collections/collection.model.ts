@@ -25,7 +25,7 @@ export interface AttributeModel {
   name: string;
 
   constraints: string[]; // TODO use complex objects instead
-  usageCount: number;
+  usageCount?: number;
   intermediate?: boolean;
 
 }

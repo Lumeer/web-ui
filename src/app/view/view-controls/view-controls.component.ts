@@ -126,7 +126,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   public onCopy() {
     const path: any[] = ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', this.view.perspective];
     this.store.dispatch(new RouterAction.Go({
-      path, query: {
+      path, queryParams: {
         query: QueryConverter.toString(this.view.query),
         viewName: `${this.view.name}`
       }

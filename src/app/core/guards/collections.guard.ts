@@ -24,9 +24,9 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {of} from 'rxjs/observable/of';
 import {tap, filter, take, switchMap, catchError} from 'rxjs/operators';
-import {AppState} from '../app.state';
-import {selectCollectionsLoaded} from './collections.state';
-import {CollectionsAction} from './collections.action';
+import {AppState} from '../store/app.state';
+import {selectCollectionsLoaded} from '../store/collections/collections.state';
+import {CollectionsAction} from '../store/collections/collections.action';
 
 @Injectable()
 export class CollectionsGuard implements CanActivate {

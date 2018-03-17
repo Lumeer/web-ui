@@ -23,17 +23,17 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
-import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../../../core/constants';
-import {AppState} from '../../../../../core/store/app.state';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
-import {CollectionsAction} from '../../../../../core/store/collections/collections.action';
-import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
-import {LinkTypesAction} from '../../../../../core/store/link-types/link-types.action';
-import {SmartDocAction} from '../../../../../core/store/smartdoc/smartdoc.action';
-import {SmartDocPartModel, SmartDocPartType} from '../../../../../core/store/smartdoc/smartdoc.model';
-import {SelectedSmartDocPart, selectSelectedSmartDocPart} from '../../../../../core/store/smartdoc/smartdoc.state';
-import {CollectionValidators} from '../../../../../core/validators/collection.validators';
-import {Perspective} from '../../../perspective';
+import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
+import {AppState} from '../../../core/store/app.state';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {CollectionsAction} from '../../../core/store/collections/collections.action';
+import {LinkTypeModel} from '../../../core/store/link-types/link-type.model';
+import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
+import {SmartDocAction} from '../../../core/store/smartdoc/smartdoc.action';
+import {SmartDocPartModel, SmartDocPartType} from '../../../core/store/smartdoc/smartdoc.model';
+import {SelectedSmartDocPart, selectSelectedSmartDocPart} from '../../../core/store/smartdoc/smartdoc.state';
+import {CollectionValidators} from '../../../core/validators/collection.validators';
+import {Perspective} from '../../../view/perspectives/perspective';
 
 declare let $: any;
 

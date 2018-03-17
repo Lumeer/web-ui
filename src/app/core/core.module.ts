@@ -28,6 +28,7 @@ import {SnotifyComponent, SnotifyModule, SnotifyService, ToastDefaults} from 'ng
 import {SharedModule} from '../shared/shared.module';
 import {WorkspaceGuard} from '../workspace/workspace.guard';
 import {LumeerErrorHandler} from './error/lumeer-error.handler';
+import {GuardsModule} from './guards/guards.module';
 import {HomeComponent} from './home.component';
 import {NotificationService} from './notifications/notification.service';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
@@ -60,7 +61,8 @@ import {CollectionValidators} from './validators/collection.validators';
     RouterModule,
     SharedModule,
     SnotifyModule,
-    ClickOutsideModule
+    ClickOutsideModule,
+    GuardsModule
   ],
   declarations: [
     TopPanelComponent,

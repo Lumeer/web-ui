@@ -156,3 +156,19 @@ input {
 .muuri-item-content {
   position: relative;
 }
+
+.table-border-top {
+  border-top: 1px solid $table-border-color;
+}
+
+.table-border-bottom {
+  border-bottom: 1px solid $table-border-color;
+}
+
+.table-border-right {
+  border-right: 1px solid $table-border-color;
+}
+
+.table-border-left {
+  border-left: 1px solid $table-border-color;
+}

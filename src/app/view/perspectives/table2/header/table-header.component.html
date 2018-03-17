@@ -1,0 +1,12 @@
+<div class="d-flex">
+  <ng-container *ngFor="let part of table.parts; trackBy: trackByPartIndex">
+    <table-header-collection *ngIf="part.collectionId"
+                             [table]="table"
+                             [part]="part">
+    </table-header-collection>
+    <table-header-link *ngIf="part.linkTypeId"
+                       [table]="table"
+                       [part]="part">
+    </table-header-link>
+  </ng-container>
+</div>

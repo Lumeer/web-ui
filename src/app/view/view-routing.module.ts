@@ -19,7 +19,8 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {CollectionsGuard} from '../core/store/collections/collections.guard';
+import {CollectionsGuard} from '../core/guards/collections.guard';
+import {LinkTypesGuard} from '../core/guards/link-types.guard';
 import {WorkspaceGuard} from '../workspace/workspace.guard';
 import {Perspective} from './perspectives/perspective';
 import {PostItPerspectiveComponent} from './perspectives/post-it/post-it-perspective.component';
@@ -31,6 +32,7 @@ import {SearchPerspectiveComponent} from './perspectives/search/search-perspecti
 import {SearchViewsComponent} from './perspectives/search/views/search-views.component';
 import {SmartDocPerspectiveComponent} from './perspectives/smartdoc/smartdoc-perspective.component';
 import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
+import {Table2PerspectiveComponent} from './perspectives/table2/table2-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
 import {ViewGuard} from './view.guard';
@@ -38,7 +40,7 @@ import {ViewGuard} from './view.guard';
 const viewRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/view',
-    canActivate: [WorkspaceGuard, CollectionsGuard],
+    canActivate: [WorkspaceGuard, CollectionsGuard, LinkTypesGuard],
     component: ViewComponent,
     children: [
       {
@@ -79,6 +81,10 @@ const viewRoutes: Routes = [
       {
         path: Perspective.Table,
         component: TablePerspectiveComponent
+      },
+      {
+        path: Perspective.Table2,
+        component: Table2PerspectiveComponent
       },
       {
         path: Perspective.SmartDoc,
