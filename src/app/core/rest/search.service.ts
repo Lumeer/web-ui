@@ -63,13 +63,6 @@ export class SearchService {
   public searchDocuments(query: Query): Observable<Document[]> {
     return this.http.post<Document[]>(`${this.searchPath()}/documents`, query)
       .pipe(
-        map(documents => { // TODO remove after backend supports pagination
-          if (isNullOrUndefined(query.page) || isNullOrUndefined(query.pageSize)) {
-            return documents;
-          }
-
-          return documents.slice(query.page * query.pageSize, (query.page + 1) * query.pageSize);
-        }),
         catchError(SearchService.handleError),
         switchMap(documents => this.homePageService.checkFavoriteDocuments(documents)));
   }

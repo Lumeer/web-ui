@@ -252,7 +252,8 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
 
   private getData(query: QueryModel) {
     this.store.dispatch(new CollectionsAction.Get({query: {}}));
-    this.store.dispatch(new DocumentsAction.Get({query: query}));
+    const queryWithPagination = {...query, page: 0, pageSize: 100}; // TODO implement pagination logic
+    this.store.dispatch(new DocumentsAction.Get({query: queryWithPagination}));
     this.store.dispatch(new LinkTypesAction.Get({query: {collectionIds: query.collectionIds}}));
   }
 

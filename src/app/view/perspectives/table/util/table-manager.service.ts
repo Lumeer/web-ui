@@ -56,7 +56,7 @@ export class TableManagerService {
 
     return Observable.combineLatest(
       this.searchService.searchCollections({}), // TODO get collections on link suggestions
-      this.searchService.searchDocuments({collectionIds: collectionIds}),
+      this.searchService.searchDocuments({collectionIds: collectionIds, page: 0, pageSize: 100}),
       this.linkTypeService.getLinkTypes({collectionIds: collectionIds}),
       this.linkInstanceService.getLinkInstances({linkTypeIds: linkTypeIds})
     ).pipe(
