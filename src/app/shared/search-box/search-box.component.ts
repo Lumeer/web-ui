@@ -20,7 +20,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {ViewQueryItem} from 'app/shared/search-box/query-item/model/view.query-item';
+import {ViewQueryItem} from './query-item/model/view.query-item';
 import {Observable} from 'rxjs/Observable';
 import {flatMap, map, skipWhile} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';

@@ -21,7 +21,7 @@ import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, View
 import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
 import {Store} from '@ngrx/store';
 
-import {PostItLayoutConfig} from 'app/shared/utils/layout/post-it-layout-config';
+import {PostItLayoutConfig} from '../utils/layout/post-it-layout-config';
 import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../core/store/app.state';
