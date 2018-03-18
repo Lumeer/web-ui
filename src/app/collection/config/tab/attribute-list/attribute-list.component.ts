@@ -18,7 +18,7 @@
  */
 
 import {Component, Input} from '@angular/core';
-import {NotificationService} from 'app/core/notifications/notification.service';
+import {NotificationService} from '../../../../core/notifications/notification.service';
 import {isNullOrUndefined} from 'util';
 import {Collection} from '../../../../core/dto/collection';
 import {CollectionService} from '../../../../core/rest/collection.service';

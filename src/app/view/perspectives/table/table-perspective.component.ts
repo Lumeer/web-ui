@@ -19,8 +19,8 @@
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {DocumentModel} from 'app/core/store/documents/document.model';
-import {AttributeHelper} from 'app/shared/utils/attribute-helper';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {AttributeHelper} from '../../../shared/utils/attribute-helper';
 import {Subscription} from 'rxjs';
 import {Observable} from 'rxjs/Observable';
 import {first, map, switchMap, withLatestFrom} from 'rxjs/operators';
