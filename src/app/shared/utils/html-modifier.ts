@@ -39,3 +39,7 @@ export class HtmlModifier {
   }
 
 }
+
+export function stripedBackground(color: string, stripeColor: string): string {
+  return `repeating-linear-gradient(-45deg, ${color}, ${color} 10px, ${stripeColor} 10px, ${stripeColor} 20px)`;
+}

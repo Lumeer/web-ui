@@ -1,0 +1,23 @@
+<div class="dropdown h-100">
+  <a class="d-block h-100"
+     data-toggle="dropdown">
+    <icons-presenter [colors]="colors()"
+                     [icons]="icons()"
+                     [title]="linkType.name">
+    </icons-presenter>
+  </a>
+
+  <div class="dropdown-menu">
+    <a *ngIf="switchingEnabled"
+       (click)="switchParts.emit()"
+       class="dropdown-item">
+      <i class="fa fa-fw fa-exchange mr-1"></i>
+      <span i18n="@@table.header.switch.parts">Switch parts</span>
+    </a>
+    <a (click)="removePart.emit()"
+       class="dropdown-item">
+      <i class="fa fa-fw fa-times text-danger mr-1"></i>
+      <span i18n="@@table.header.remove.part">Remove part</span>
+    </a>
+  </div>
+</div>

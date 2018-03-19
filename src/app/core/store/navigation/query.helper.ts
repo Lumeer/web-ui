@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {deepArrayEquals, getArrayDifference, isArraySubset} from '../../../shared/utils/array.utils';
 import {QueryConverter} from './query.converter';
 import {QueryModel} from './query.model';
 
@@ -26,4 +27,21 @@ export class QueryHelper {
     return QueryConverter.toString(first) === QueryConverter.toString(second);
   }
 
+}
+
+export function hasQueryNewLink(oldQuery: QueryModel, newQuery: QueryModel) {
+  if (!deepArrayEquals(oldQuery.collectionIds, newQuery.collectionIds)) {
+    return false;
+  }
+
+  return newQuery.linkTypeIds.length > oldQuery.linkTypeIds.length
+    && isArraySubset(newQuery.linkTypeIds, oldQuery.linkTypeIds);
+}
+
+export function getNewLinkTypeIdFromQuery(oldQuery: QueryModel, newQuery: QueryModel): string {
+  const linkTypeIds = getArrayDifference(newQuery.linkTypeIds, oldQuery.linkTypeIds);
+  if (linkTypeIds.length !== 1) {
+    throw Error('No new link type IDs');
+  }
+  return linkTypeIds[0];
 }

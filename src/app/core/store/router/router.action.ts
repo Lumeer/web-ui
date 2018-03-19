@@ -18,6 +18,7 @@
  */
 
 import {NavigationExtras} from '@angular/router';
+import {Params} from '@angular/router/src/shared';
 import {Action} from '@ngrx/store';
 
 export enum RouterActionType {
@@ -33,7 +34,7 @@ export namespace RouterAction {
 
     constructor(public payload: {
       path: any[];
-      query?: object;
+      queryParams?: Params;
       extras?: NavigationExtras;
     }) {
     }

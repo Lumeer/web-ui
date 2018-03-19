@@ -1,0 +1,24 @@
+<div mwlResizable
+     [enableGhostResize]="true"
+     [ghostElementPositioning]="'absolute'"
+     [resizeEdges]="resizeEdges()"
+     [resizeSnapGrid]="{left: 10, right: 10}"
+     [style.width]="width()"
+     [validateResize]="validateResize.bind(this)"
+     (resizeEnd)="onResizeEnd($event)">
+  <div class="d-flex flex-column">
+    <table-single-column [table]="table"
+                         [cursor]="cursor"
+                         [column]="column.parent"
+                         [leaf]="!column.children.length"
+                         [style.height]="height()"
+                         class="d-block">
+    </table-single-column>
+    <table-column-group *ngIf="column.children.length"
+                        [table]="table"
+                        [cursor]="cursor"
+                        [columns]="column.children"
+                        class="d-block">
+    </table-column-group>
+  </div>
+</div>

@@ -22,9 +22,9 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {CommentsComponent} from './comments/comments.component';
+import {DialogsModule} from './dialogs/dialogs.module';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 import {LinksComponent} from './links/links.component';
-import {ModalDialogComponent} from './modal-dialog/modal-dialog.component';
 
 import {PermissionsComponent} from './permissions/permissions.component';
 import {PermissionsTableComponent} from './permissions/table/permissions-table.component';
@@ -46,7 +46,8 @@ import {TagComponent} from "./tag/tag.component";
     RouterModule,
     PickerModule,
     DragAndDropModule,
-    SearchBoxModule
+    SearchBoxModule,
+    DialogsModule
   ],
   declarations: [
     PermissionsComponent,
@@ -58,7 +59,6 @@ import {TagComponent} from "./tag/tag.component";
     LinksComponent,
     PerspectiveDirective,
     LayoutItem,
-    ModalDialogComponent,
     InputBoxComponent,
     FilterBoxComponent,
     TagComponent
@@ -74,10 +74,10 @@ import {TagComponent} from "./tag/tag.component";
     LinksComponent,
     PerspectiveDirective,
     SearchBoxModule,
-    ModalDialogComponent,
     InputBoxComponent,
     FilterBoxComponent,
-    TagComponent
+    TagComponent,
+    DialogsModule
   ]
 })
 export class SharedModule {

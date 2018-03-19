@@ -53,4 +53,6 @@ export const selectCollectionByWorkspace = createSelector(selectCollectionsDicti
   return workspace.collectionId ? collections[workspace.collectionId] : null;
 });
 
+export const selectCollectionById = (id: string) => createSelector(selectCollectionsDictionary, collectionsDictionary => collectionsDictionary[id]);
+
 export const selectCollectionNames = createSelector(selectCollectionsState, (state: CollectionsState) => state.collectionNames);

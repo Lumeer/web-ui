@@ -21,26 +21,23 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {catchError, flatMap, map, mergeMap, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, flatMap, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
+import {NavigationAction} from '../navigation/navigation.action';
 import {QueryConverter} from '../navigation/query.converter';
-import {QueryHelper} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {SmartDocAction} from '../smartdoc/smartdoc.action';
 import {LinkTypeConverter} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
-import {selectLinkTypesQueries} from './link-types.state';
 
 @Injectable()
 export class LinkTypesEffects {
 
   @Effect()
   public get$: Observable<Action> = this.actions$.ofType<LinkTypesAction.Get>(LinkTypesActionType.GET).pipe(
-    withLatestFrom(this.store$.select(selectLinkTypesQueries)),
-    skipWhile(([action, queries]) => queries.some(query => QueryHelper.equal(query, action.payload.query))),
-    switchMap(([action]) => {
+    switchMap((action) => {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
       return this.linkTypeService.getLinkTypes(queryDto).pipe(
@@ -78,6 +75,10 @@ export class LinkTypesEffects {
 
       if (nextAction && nextAction instanceof SmartDocAction.AddPart) {
         nextAction.payload.part.linkTypeId = linkType.id;
+        actions.push(nextAction);
+      }
+      if (nextAction && nextAction instanceof NavigationAction.AddLinkToQuery) {
+        nextAction.payload.linkTypeId = linkType.id;
         actions.push(nextAction);
       }
 

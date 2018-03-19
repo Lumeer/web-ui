@@ -23,12 +23,7 @@ import {initialLinkTypesState, linkTypesAdapter, LinkTypesState} from './link-ty
 export function linkTypesReducer(state: LinkTypesState = initialLinkTypesState, action: LinkTypesAction.All): LinkTypesState {
   switch (action.type) {
     case LinkTypesActionType.GET_SUCCESS:
-      const queriesState = {...state, queries: state.queries.concat(action.payload.query)};
-      if (action.payload.linkTypes.length > 0) {
-        return linkTypesAdapter.addMany(action.payload.linkTypes, queriesState);
-      } else {
-        return queriesState;
-      }
+      return linkTypesAdapter.addMany(action.payload.linkTypes, {...state, loaded: true});
     case LinkTypesActionType.CREATE_SUCCESS:
       return linkTypesAdapter.addOne(action.payload.linkType, state);
     case LinkTypesActionType.UPDATE_SUCCESS:

@@ -182,9 +182,15 @@ export class CollectionsEffects {
         map(result => ({action, attribute: CollectionConverter.fromAttributeDto(result)}))
       );
     }),
-    map(({action, attribute}) => new CollectionsAction.ChangeAttributeSuccess(
-      {collectionId: action.payload.collectionId, attributeId: action.payload.attributeId, attribute: attribute}
-    )),
+    flatMap(({action, attribute}) => {
+      const actions: Action[] = [new CollectionsAction.ChangeAttributeSuccess(
+        {collectionId: action.payload.collectionId, attributeId: action.payload.attributeId, attribute: attribute}
+      )];
+      if (action.payload.nextAction) {
+        actions.push(action.payload.nextAction);
+      }
+      return actions;
+    }),
     catchError((error) => Observable.of(new CollectionsAction.ChangeAttributeFailure({error: error})))
   );
 

@@ -30,10 +30,6 @@ import {DragAndDropModule} from '../../../shared/drag-and-drop/drag-and-drop.mod
 import {PickerModule} from '../../../shared/picker/picker.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {SmartDocBottomPanelComponent} from './bottom-panel/smartdoc-bottom-panel.component';
-import {CollectionNameInputComponent} from './dialogs/collection-name-input/collection-name-input.component';
-import {LinkNameInputComponent} from './dialogs/link-name-input/link-name-input.component';
-import {NewCollectionDialogComponent} from './dialogs/new-collection-dialog/new-collection-dialog.component';
-import {NewLinkDialogComponent} from './dialogs/new-link-dialog/new-link-dialog.component';
 import {SmartDocDocumentComponent} from './document/smartdoc-document.component';
 import {SmartDocEmbeddedComponent} from './embedded/smartdoc-embedded.component';
 import {SmartDocSidePanelComponent} from './side-panel/smartdoc-side-panel.component';
@@ -50,8 +46,7 @@ import {SmartDocTextComponent} from './text/smartdoc-text.component';
     QuillModule,
     ClickOutsideModule,
     DragAndDropModule,
-    PickerModule,
-    ReactiveFormsModule
+    PickerModule
   ],
   declarations: [
     SmartDocDocumentComponent,
@@ -61,11 +56,7 @@ import {SmartDocTextComponent} from './text/smartdoc-text.component';
     SmartDocSidePanelComponent,
     SmartDocBottomPanelComponent,
     SafeHtmlPipe,
-    SmartDocPartComponent,
-    NewCollectionDialogComponent,
-    CollectionNameInputComponent,
-    LinkNameInputComponent,
-    NewLinkDialogComponent
+    SmartDocPartComponent
   ],
   entryComponents: [
     SmartDocPerspectiveComponent,

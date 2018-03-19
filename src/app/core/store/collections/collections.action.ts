@@ -250,7 +250,7 @@ export namespace CollectionsAction {
   export class ChangeAttribute implements Action {
     public readonly type = CollectionsActionType.CHANGE_ATTRIBUTE;
 
-    public constructor(public payload: { collectionId: string, attributeId: string, attribute: AttributeModel }) {
+    public constructor(public payload: { collectionId: string, attributeId: string, attribute: AttributeModel, nextAction?: Action }) {
     }
   }
 

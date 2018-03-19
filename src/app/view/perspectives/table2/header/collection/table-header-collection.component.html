@@ -1,0 +1,9 @@
+<div class="d-flex flex-column">
+  <table-caption [collection]="collection$ | async"></table-caption>
+  <table-column-group [table]="table"
+                      [cursor]="getCursor()"
+                      [columns]="part.columns"
+                      [class.table-border-left]="part.index === 0"
+                      class="d-block table-border-top">
+  </table-column-group>
+</div>

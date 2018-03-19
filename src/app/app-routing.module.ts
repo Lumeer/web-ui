@@ -27,7 +27,7 @@ import {HomeComponent} from './core/home.component';
 import {PageNotFoundComponent} from './core/page-not-found/page-not-found.component';
 import {SearchHomeComponent} from './core/search-home/search-home.component';
 import {WorkspaceGuard} from './workspace/workspace.guard';
-import {CollectionsGuard} from "./core/store/collections/collections.guard";
+import {CollectionsGuard} from "./core/guards/collections.guard";
 
 const appRoutes: Routes = [
   {

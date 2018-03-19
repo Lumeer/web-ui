@@ -22,7 +22,7 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {ViewQueryItem} from './query-item/model/view.query-item';
 import {Observable} from 'rxjs/Observable';
-import {flatMap, map, skipWhile} from 'rxjs/operators';
+import {filter, flatMap, map} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../core/store/app.state';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
@@ -96,16 +96,15 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
           linkTypes: linkTypes.filter(linkType => linkType && linkType.id) // TODO remove after NgRx bug is fixed
         };
       }),
-      skipWhile(({collections, linkTypes}) => {
+      filter(({collections, linkTypes}) => {
         const collectionIds = new Set(collections.map(collection => collection.id));
-        const linkTypeIds = new Set(linkTypes.map(linkType => {
-          linkType.collectionIds.forEach(collectionId => collectionIds.add(collectionId));
-          return linkType.id;
-        }));
+        const linkTypeIds = new Set(linkTypes.map(linkType => linkType.id));
+        const linkCollectionIds: string[] = linkTypes.reduce((collectionIds, linkType) => collectionIds.concat(linkType.collectionIds), []);
 
-        return !query ||
-          !query.collectionIds.every(collectionId => collectionIds.has(collectionId)) ||
-          !query.linkTypeIds.every(linkTypeId => linkTypeIds.has(linkTypeId));
+        return query &&
+          query.collectionIds.every(collectionId => collectionIds.has(collectionId)) &&
+          query.linkTypeIds.every(linkTypeId => linkTypeIds.has(linkTypeId)) &&
+          linkCollectionIds.every(collectionId => collectionIds.has(collectionId));
       })
     );
   }
