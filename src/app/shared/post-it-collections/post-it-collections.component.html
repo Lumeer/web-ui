@@ -25,13 +25,12 @@
     </div>
   </ng-container>
 
-  <div *ngFor="let collection of collections; trackBy:trackByCollection" #postItElement
+  <div *ngFor="let collection of collections; trackBy:trackByCollection; let idx = index" #postItElement
        layout-item [layout]="layout"
        class="layout-item card post-it"
        [class.selected]="selectedCollection == collection"
        [class.uninitialized]="!collection.id"
        [style.border-color]="collection.color">
-
     <div class="card-body text-center">
       <a class="icon" [style.color]="collection.color"
          [title]="collection.name"
@@ -46,7 +45,7 @@
         <icon-picker class="dropdown-item" [(icon)]="collection.icon"></icon-picker>
       </div>
 
-      <div *ngIf="collection.id" class="document-count opacity-content clickable" [ngClass]="{'panel-visible' : panelVisible}"> 
+      <div *ngIf="collection.id" class="document-count opacity-content clickable" [ngClass]="{'panel-visible' : panelVisible && focusedPanel == idx}"> 
         <a title="Record Count" i18n-title="@@collection.document.count"
            [routerLink]="[workspacePath(), 'view', 'postit']"
            [queryParams]="{ query: queryForCollectionDocuments(collection.id) }">
@@ -54,7 +53,7 @@
         </a>
       </div>
 
-      <div *ngIf="collection.id" class="text-warning toggle-favorite opacity-content clickable" [ngClass]="{'panel-visible' : panelVisible}"
+      <div *ngIf="collection.id" class="text-warning toggle-favorite opacity-content clickable" [ngClass]="{'panel-visible' : panelVisible && focusedPanel == idx}"
            [class.always-visible]="collection.favourite">
         <a title="{{collection.favourite ?  'Remove from favorites' : 'Add to favorites'}}"
            i18n-title="@@collection.favorite" (click)="toggleFavorite(collection)">
@@ -63,7 +62,7 @@
         </a>
       </div>
 
-      <div class="buttons opacity-content d-flex flex-column" [ngClass]="{'panel-visible' : panelVisible}"
+      <div class="buttons opacity-content d-flex flex-column" [ngClass]="{'panel-visible' : panelVisible && focusedPanel == idx}"
            [style.top]="'50px'">
         <ng-container *ngIf="collection.id">
           <a title="Configure" i18n-title="@@collection.button.configure"
@@ -72,8 +71,8 @@
             <i class="fa fa-fw fa-cog" aria-hidden="true"></i></a>
 
           <a title="Icon picker" i18n-title="@@collection.button.icon"
-             class="rounded-left text-success" data-toggle="dropdown" (click)="panelVisible = !panelVisible">
-            <i class="fa fa-fw fa-eye-dropper" aria-hidden="true"></i></a>
+             class="rounded-left text-success" data-toggle="dropdown">
+            <i class="fa fa-fw fa-eye-dropper" aria-hidden="true" (click)="togglePanelVisible($event, idx);"></i></a>
           <div class="dropdown-menu dropdown-menu-right">
             <color-picker class="dropdown-item" [(color)]="collection.color"
                           (selectedChange)="updateCollection(collection)"></color-picker>

@@ -62,6 +62,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   public dragging: boolean = false;
 
   public panelVisible: boolean = false;
+  
+  public clickedComponent:any;
 
   private layout: PostItLayout;
 
@@ -73,8 +75,11 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   private collectionsSubscription: Subscription;
 
+  private focusedPanel:number;
+
   constructor(private store: Store<AppState>,
-              private zone: NgZone) {
+              private zone: NgZone,
+              private _elementRef : ElementRef) {
   }
 
   public ngOnInit() {
@@ -97,6 +102,16 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
+  togglePanelVisible(event, index){
+    this.clickedComponent = event.target;
+    if(this.focusedPanel == index){
+      this.panelVisible = !this.panelVisible;
+    }else{
+      this.panelVisible = true;
+    }
+    this.focusedPanel = index;
+  }
+
   private createLayout() {
     const config = new PostItLayoutConfig();
     config.dragEnabled = false;
@@ -110,7 +125,9 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
    */
   @HostListener('document:click', ['$event.target'])
   public documentClicked(targetElement) {
-    this.panelVisible = false;
+    if (this.clickedComponent && targetElement != this.clickedComponent) {
+      this.panelVisible = false;
+    }
   }
 
   private subscribeOnNavigation() {
