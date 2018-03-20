@@ -6,35 +6,35 @@
         <li role="presentation" class="nav-item">
           <a [routerLink]="'all'"
              [queryParams]="{query: stringifyQuery()}"
-             routerLinkActive="active"
+             [class.active]="isLinkActive('all')"
              class="nav-link"
              i18n="@@search.tab.all">All</a>
         </li>
         <li role="presentation" class="nav-item">
           <a [routerLink]="'files'"
              [queryParams]="{query: stringifyQuery()}"
-             routerLinkActive="active"
+             [class.active]="isLinkActive('files')"
              class="nav-link"
              i18n="@@search.tab.collections">Files</a>
         </li>
         <li role="presentation" class="nav-item">
           <a [routerLink]="'records'"
              [queryParams]="{query: stringifyQuery()}"
-             routerLinkActive="active"
+             [class.active]="isLinkActive('records')"
              class="nav-link"
              i18n="@@search.tab.documents">Records</a>
         </li>
         <li role="presentation" class="nav-item">
           <a [routerLink]="'links'"
              [queryParams]="{query: stringifyQuery()}"
-             routerLinkActive="active"
+             [class.active]="isLinkActive('links')"
              class="nav-link"
              i18n="@@search.tab.links">Links</a>
         </li>
         <li role="presentation" class="nav-item">
           <a [routerLink]="'views'"
              [queryParams]="{query: stringifyQuery()}"
-             routerLinkActive="active"
+             [class.active]="isLinkActive('views')"
              class="nav-link"
              i18n="@@search.tab.views">Views</a>
         </li>
