@@ -9,7 +9,6 @@
       </a>
       <a *ngIf="isWorkspaceSet()"
          [routerLink]="[workspacePath(), 'view', 'search', 'files']"
-         [queryParams]="{query: '{}'}"
          title="See all files" i18n-title="@@panel.button.home">
         <i class="fa fa-lg fa-home align-middle home-button"></i>
       </a>

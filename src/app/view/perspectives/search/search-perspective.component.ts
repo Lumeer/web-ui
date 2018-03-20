@@ -19,6 +19,7 @@
 
 import {Component} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {ActivatedRoute} from '@angular/router';
 import {AppState} from '../../../core/store/app.state';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
@@ -34,7 +35,7 @@ export class SearchPerspectiveComponent {
 
   private workspace: Workspace;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private activatedRoute: ActivatedRoute) {
   }
 
   public ngOnInit() {
@@ -42,6 +43,10 @@ export class SearchPerspectiveComponent {
       this.workspace = navigation.workspace;
       this.query = navigation.query;
     });
+  }
+
+  public isLinkActive(url: string): boolean {
+    return (this.activatedRoute.firstChild.snapshot.url.join('/').includes(url));
   }
 
   public viewPath(searchTab: string): string[] {
