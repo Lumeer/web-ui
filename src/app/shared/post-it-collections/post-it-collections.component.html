@@ -28,7 +28,7 @@
   <div *ngFor="let collection of collections; trackBy:trackByCollection; let idx = index" #postItElement
        layout-item [layout]="layout"
        class="layout-item card post-it"
-       [class.selected]="selectedCollection == collection"
+       [class.selected]="selectedCollection == collection || (panelVisible && focusedPanel == idx)"
        [class.uninitialized]="!collection.id"
        [style.border-color]="collection.color">
     <div class="card-body text-center">
