@@ -17,16 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class Document {
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
 
-  public id: string;
-  public collectionId: string;
-  public creationDate?: object;
-  public updateDate?: object;
-  public createdBy?: string;
-  public updatedBy?: string;
-  public dataVersion?: number;
-  public data: {[attribute: string]: any} = {};
-  public favorite?: boolean;
+export interface CollectionAttributePair {
+
+  collection: CollectionModel;
+  attributeId: string;
 
 }

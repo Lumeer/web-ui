@@ -17,16 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class Document {
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
-  public id: string;
-  public collectionId: string;
-  public creationDate?: object;
-  public updateDate?: object;
-  public createdBy?: string;
-  public updatedBy?: string;
-  public dataVersion?: number;
-  public data: {[attribute: string]: any} = {};
-  public favorite?: boolean;
+export class CreationDateSorter {
+
+  public sortData(documents: DocumentModel[]): DocumentModel[] {
+    if (documents) {
+      return this.copy(documents).sort((a, b) => {
+        // return a.creationDate.localeCompare(b.creationDate);
+        return 1;
+      });
+
+    } else {
+      return [];
+    }
+  }
+
+  private copy(documents: DocumentModel[]): DocumentModel[] {
+    return documents.slice();
+  }
 
 }

@@ -17,16 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class Document {
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {CreationDateSorter} from '../sorter/creation-date-sorter';
+import {DataSorter} from '../sorter/data-sorter';
 
-  public id: string;
-  public collectionId: string;
-  public creationDate?: object;
-  public updateDate?: object;
-  public createdBy?: string;
-  public updatedBy?: string;
-  public dataVersion?: number;
-  public data: {[attribute: string]: any} = {};
-  public favorite?: boolean;
+export abstract class ChartVisualizer {
+
+  protected data = [];
+
+  protected style = {};
+
+  protected sorter: DataSorter = new CreationDateSorter();
+
+  constructor(protected chartElement) {
+  }
+
+  public abstract update(documents: DocumentModel[], attributeX: string, attributeY: string);
+
+  public setSorter(newSorter: DataSorter) {
+    this.sorter = newSorter;
+  }
+
+  public abstract showChart();
 
 }

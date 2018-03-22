@@ -58,6 +58,7 @@
     "ngx-contextmenu": "^4.1.2",
     "ngx-quill": "^2.1.2",
     "parchment": "^1.1.4",
+    "plotly.js": "^1.34.0",
     "quill": "^1.3.6",
     "quill-delta-to-html": "^0.5.7",
     "respond": "^0.9.0",
