@@ -17,26 +17,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Directive, ElementRef, Input, OnDestroy} from '@angular/core';
-import {PostItLayout} from './post-it-layout';
+import {Directive, HostBinding, HostListener, Input} from '@angular/core';
 
 @Directive({
-  selector: '[layout-item]'
+  selector: '[remove-placeholder-on-focus]'
 })
-export class LayoutItem implements AfterViewInit, OnDestroy {
+export class RemovePlaceholderOnFocusDirective {
+
+  @HostListener('blur')
+  public onBlur() {
+    this.focused = false;
+  }
+
+  @HostListener('focus')
+  public onFocus() {
+    this.focused = true;
+  }
 
   @Input()
-  public layout: PostItLayout;
+  @HostBinding('attr.placeholder')
+  public get placeholder() {
+    if (this.focused) {
+      return '';
 
-  constructor(private element: ElementRef) {
+    } else {
+      return this.placeholderText;
+    }
   }
 
-  public ngAfterViewInit(): void {
-    this.layout.add(this.element.nativeElement);
+  public set placeholder(value: string) {
+    if (value) {
+      this.placeholderText = value;
+    }
   }
 
-  public ngOnDestroy(): void {
-    this.layout.remove(this.element.nativeElement);
-  }
+  private focused = false;
+
+  private placeholderText = '';
 
 }

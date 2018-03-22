@@ -35,9 +35,10 @@ import {SearchBoxModule} from './search-box/search-box.module';
 import {SizeSliderComponent} from './slider/size-slider.component';
 import {LayoutItem} from './utils/layout/layout-item.directive';
 import {PostItCollectionNameComponent} from './post-it-collections/collection-name/post-it-collection-name.component';
-import {InputBoxComponent} from "./input/input-box/input-box.component";
-import {FilterBoxComponent} from "./input/filter-box/filter-box.component";
-import {TagComponent} from "./tag/tag.component";
+import {InputBoxComponent} from './input/input-box/input-box.component';
+import {FilterBoxComponent} from './input/filter-box/filter-box.component';
+import {TagComponent} from './tag/tag.component';
+import {RemovePlaceholderOnFocusDirective} from './placeholder/remove-placeholder-on-focus';
 
 @NgModule({
   imports: [
@@ -58,6 +59,7 @@ import {TagComponent} from "./tag/tag.component";
     CommentsComponent,
     LinksComponent,
     PerspectiveDirective,
+    RemovePlaceholderOnFocusDirective,
     LayoutItem,
     InputBoxComponent,
     FilterBoxComponent,
@@ -73,6 +75,7 @@ import {TagComponent} from "./tag/tag.component";
     CommentsComponent,
     LinksComponent,
     PerspectiveDirective,
+    RemovePlaceholderOnFocusDirective,
     SearchBoxModule,
     InputBoxComponent,
     FilterBoxComponent,
