@@ -85,7 +85,7 @@
                    [attr.id]="'constraint' + idx"
                    [style.width]="((input.value.length + 1) * 8) + 'px'"
                    (blur)="updateAttribute(attribute)"/>
-            <i class="fas fa-trash remove font-weight-light" aria-hidden="true"
+            <i class="fas fa-times remove font-weight-light" aria-hidden="true"
                (click)="removeConstraint(attribute, idx)"
                title="Remove Constraint"
                i18n="@@collection.config.tab.attributes.constraint.remove"></i>
