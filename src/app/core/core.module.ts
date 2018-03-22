@@ -44,7 +44,6 @@ import {ProjectService} from './rest/project.service';
 import {SearchService} from './rest/search.service';
 import {UserService} from './rest/user.service';
 import {ViewService} from './rest/view.service';
-import {SearchHomeComponent} from './search-home/search-home.component';
 import {AppStoreModule} from './store/app-store.module';
 
 import {TopPanelComponent} from './top-panel/top-panel.component';
@@ -65,8 +64,7 @@ import {CollectionValidators} from './validators/collection.validators';
   ],
   declarations: [
     TopPanelComponent,
-    HomeComponent,
-    SearchHomeComponent
+    HomeComponent
   ],
   providers: [
     CollectionService,
@@ -93,7 +91,6 @@ import {CollectionValidators} from './validators/collection.validators';
   exports: [
     TopPanelComponent,
     HomeComponent,
-    SearchHomeComponent,
     SnotifyComponent
   ]
 })

@@ -43,6 +43,7 @@ import {ViewsAction} from '../../core/store/views/views.action';
 import {UserSettingsService} from '../../core/user-settings.service';
 import {Role} from '../../shared/permissions/role';
 import {ResourceItemType} from './resource-chooser/resource-item-type';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'workspace-chooser',
@@ -78,6 +79,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(private store: Store<AppState>,
+              private router: Router,
               private userSettingsService: UserSettingsService) {
   }
 
@@ -196,7 +198,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
           if (organization && project) {
             this.updateDefaultWorkspace(organization, project);
             this.clearStore();
-            this.store.dispatch(new RouterAction.Go({path: ['w', organization.code, project.code, 'files']}));
+            this.router.navigate(['/w', organization.code, project.code, 'view', 'search', 'files']);
           }
         });
     }

@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
     const userSettings = this.userSettingsService.getUserSettings();
 
     if (userSettings.defaultOrganization && userSettings.defaultProject) {
-      this.router.navigate(['/w', userSettings.defaultOrganization, userSettings.defaultProject, 'search']);
+      this.router.navigate(['/w', userSettings.defaultOrganization, userSettings.defaultProject, 'view', 'search']);
     } else {
       this.router.navigate(['/workspace']);
     }
