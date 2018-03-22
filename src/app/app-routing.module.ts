@@ -22,12 +22,11 @@ import {RouterModule, Routes} from '@angular/router';
 import {StoreRouterConnectingModule} from '@ngrx/router-store';
 import {Angulartics2Module} from 'angulartics2';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
+import {CollectionsGuard} from './core/guards/collections.guard';
+import {PageNotFoundGuard} from './core/guards/page-not-found.guard';
 import {HomeComponent} from './core/home.component';
-
-import {PageNotFoundComponent} from './core/page-not-found/page-not-found.component';
 import {SearchHomeComponent} from './core/search-home/search-home.component';
 import {WorkspaceGuard} from './workspace/workspace.guard';
-import {CollectionsGuard} from "./core/guards/collections.guard";
 
 const appRoutes: Routes = [
   {
@@ -45,7 +44,8 @@ const appRoutes: Routes = [
   },
   {
     path: '**',
-    component: PageNotFoundComponent
+    canActivate: [PageNotFoundGuard],
+    component: HomeComponent
   }
 ];
 

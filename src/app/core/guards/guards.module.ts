@@ -21,6 +21,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {CollectionsGuard} from './collections.guard';
 import {LinkTypesGuard} from './link-types.guard';
+import {PageNotFoundGuard} from './page-not-found.guard';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import {LinkTypesGuard} from './link-types.guard';
   declarations: [],
   providers: [
     CollectionsGuard,
-    LinkTypesGuard
+    LinkTypesGuard,
+    PageNotFoundGuard
   ]
 })
 export class GuardsModule {

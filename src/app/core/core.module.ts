@@ -31,7 +31,6 @@ import {LumeerErrorHandler} from './error/lumeer-error.handler';
 import {GuardsModule} from './guards/guards.module';
 import {HomeComponent} from './home.component';
 import {NotificationService} from './notifications/notification.service';
-import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {CollectionService} from './rest/collection.service';
 import {DocumentService} from './rest/document.service';
 import {EventService} from './rest/event.service';
@@ -67,7 +66,6 @@ import {CollectionValidators} from './validators/collection.validators';
   declarations: [
     TopPanelComponent,
     HomeComponent,
-    PageNotFoundComponent,
     SearchHomeComponent
   ],
   providers: [
@@ -95,7 +93,6 @@ import {CollectionValidators} from './validators/collection.validators';
   exports: [
     TopPanelComponent,
     HomeComponent,
-    PageNotFoundComponent,
     SearchHomeComponent,
     SnotifyComponent
   ]
