@@ -20,20 +20,20 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Observable} from 'rxjs/Observable';
+import {filter, map} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
+import {isNullOrUndefined} from 'util';
 
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
+import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {Observable} from 'rxjs/Observable';
+import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
+import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
+import {RouterAction} from '../../core/store/router/router.action';
 import {selectAllUsers} from '../../core/store/users/users.state';
-import {filter, map} from 'rxjs/operators';
-import {OrganizationModel} from "../../core/store/organizations/organization.model";
-import {Subscription} from "rxjs/Subscription";
-import {selectOrganizationByWorkspace} from "../../core/store/organizations/organizations.state";
-import {isNullOrUndefined} from "util";
-import {selectProjectsForWorkspace} from "../../core/store/projects/projects.state";
-import {RouterAction} from "../../core/store/router/router.action";
-import {UsersAction} from "../../core/store/users/users.action";
 
 @Component({
   templateUrl: './organization-settings.component.html',
@@ -47,7 +47,8 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
 
   private organizationSubscription: Subscription;
 
-  constructor(private router: Router,
+  constructor(private i18n: I18n,
+              private router: Router,
               private store: Store<AppState>,
               private notificationService: NotificationService) {
   }
@@ -75,12 +76,17 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   public onDelete() {
+    const message = this.i18n({id: 'organization.delete.dialog.message', value: 'Organization is about to be permanently deleted.'});
+    const title = this.i18n({id: 'organization.delete.dialog.title', value: 'Delete organization?'});
+    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+
     this.notificationService.confirm(
-      'Deleting an organization will permanently remove it.',
-      'Delete Organization?',
+      message,
+      title,
       [
-        {text: 'Yes', action: () => this.deleteOrganization(), bold: false},
-        {text: 'No'}
+        {text: yesButtonText, action: () => this.deleteOrganization(), bold: false},
+        {text: noButtonText}
       ]
     );
   }
@@ -140,7 +146,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   private updateOrganization(organization: OrganizationModel) {
-    this.store.dispatch(new OrganizationsAction.Update({organization}))
+    this.store.dispatch(new OrganizationsAction.Update({organization}));
   }
 
   public onProjectsClick() {

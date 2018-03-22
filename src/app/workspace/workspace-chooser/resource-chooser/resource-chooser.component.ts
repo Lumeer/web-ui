@@ -19,6 +19,7 @@
 
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 import {Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, QueryList, SimpleChange, ViewChild, ViewChildren} from '@angular/core';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {isNullOrUndefined} from 'util';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
 import {NotificationService} from '../../../core/notifications/notification.service';
@@ -112,7 +113,8 @@ export class ResourceChooserComponent implements OnChanges {
   public modifiedResourceId: string;
   public syncingCorrIds: string[] = [];
 
-  public constructor(private notificationService: NotificationService) {
+  public constructor(private i18n: I18n,
+                     private notificationService: NotificationService) {
   }
 
   public ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
@@ -219,7 +221,7 @@ export class ResourceChooserComponent implements OnChanges {
     this.checkForScrollLeftArrow();
   }
 
-  private checkForScrollLeftArrow(){
+  private checkForScrollLeftArrow() {
     this.resourceCanScrollLeft = this.resourceScroll < 0;
   }
 
@@ -262,9 +264,23 @@ export class ResourceChooserComponent implements OnChanges {
 
   public onResourceDelete(resource: ResourceModel) {
     if (resource.id) {
-      this.notificationService.confirm(`Are you sure you want to remove the ${this.resourceType} ${resource.code}?`, 'Delete?', [
-        {text: 'Yes', action: () => this.resourceDelete.emit(resource.id), bold: false},
-        {text: 'No'}
+      const message = this.i18n(
+        {
+          id: 'resource.delete.dialog.message',
+          value: 'Are you sure you want to remove the {resourceType, select, Project {project} Organization {organization}}} {{resourceCode}}?'
+        },
+        {
+          resourceType: this.resourceType,
+          resourceCode: resource.code
+        }
+      );
+      const title = this.i18n({id: 'resource.delete.dialog.title', value: 'Delete?'});
+      const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+      const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+
+      this.notificationService.confirm(message, title, [
+        {text: yesButtonText, action: () => this.resourceDelete.emit(resource.id), bold: false},
+        {text: noButtonText}
       ]);
     } else {
       this.newResources = this.newResources.filter(newRes => newRes.correlationId !== resource.correlationId);
@@ -307,7 +323,15 @@ export class ResourceChooserComponent implements OnChanges {
       element.classList.remove(warningStyle);
     } else {
       element.classList.add(warningStyle);
-      this.warningMessage.emit(`${this.resourceType} with code ${newCode} already exist`);
+
+      const message = this.i18n({
+        id: 'resource.already.exist',
+        value: '{resourceType, select, Project {Project} Organization {Organization}}} with code {{resourceCode}} already exist'
+      }, {
+        resourceType: this.resourceType,
+        resourceCode: newCode
+      });
+      this.warningMessage.emit(message);
       return;
     }
 
@@ -358,7 +382,7 @@ export class ResourceChooserComponent implements OnChanges {
     }
   }
 
-  public showPicker(resource: ResourceModel){
+  public showPicker(resource: ResourceModel) {
     const element = this.icons.find(icon => icon.nativeElement.id === this.getResourceIdentificator(resource));
     if (element) {
       element.nativeElement.click();
@@ -393,7 +417,7 @@ export class ResourceChooserComponent implements OnChanges {
     this.modifiedResourceId = null;
   }
 
-  public onDescriptionBlur(resource: ResourceModel, newDescription: string){
+  public onDescriptionBlur(resource: ResourceModel, newDescription: string) {
     const resourceModel = {...resource, description: newDescription};
     this.resourceUpdate.emit(resourceModel);
   }
@@ -406,7 +430,7 @@ export class ResourceChooserComponent implements OnChanges {
     return resource.id || resource.correlationId;
   }
 
-  public getResource(id: string){
+  public getResource(id: string) {
     return this.findResource(id);
   }
 

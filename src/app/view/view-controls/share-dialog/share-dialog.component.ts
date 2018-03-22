@@ -18,20 +18,21 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {filter} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
+import {isNullOrUndefined} from 'util';
+import {NotificationService} from '../../../core/notifications/notification.service';
+import {AppState} from '../../../core/store/app.state';
+import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
+import {UserModel} from '../../../core/store/users/user.model';
+import {UsersAction} from '../../../core/store/users/users.action';
+import {selectAllUsers} from '../../../core/store/users/users.state';
 
 import {KeyCode} from '../../../shared/key-code';
 import {HtmlModifier} from '../../../shared/utils/html-modifier';
-import {NotificationService} from '../../../core/notifications/notification.service';
-import {UserModel} from "../../../core/store/users/user.model";
-import {Store} from "@ngrx/store";
-import {AppState} from "../../../core/store/app.state";
-import {Subscription} from "rxjs/Subscription";
-import {selectOrganizationByWorkspace} from "../../../core/store/organizations/organizations.state";
-import {isNullOrUndefined} from "util";
-import {filter} from "rxjs/operators";
-import {OrganizationModel} from "../../../core/store/organizations/organization.model";
-import {UsersAction} from "../../../core/store/users/users.action";
-import {selectAllUsers} from "../../../core/store/users/users.state";
 
 @Component({
   selector: 'share-dialog',
@@ -50,7 +51,8 @@ export class ShareDialogComponent implements OnInit, OnDestroy {
   private organizationSubscription: Subscription;
   private usersSubscription: Subscription;
 
-  public constructor(private notificationService: NotificationService,
+  public constructor(private i18n: I18n,
+                     private notificationService: NotificationService,
                      private store: Store<AppState>) {
   }
 
@@ -126,7 +128,8 @@ export class ShareDialogComponent implements OnInit, OnDestroy {
   }
 
   public share() {
-    this.notificationService.success('View has been shared with the selected users');
+    const message = this.i18n({id: 'view.shared.success', value: 'View has been shared with the selected users'});
+    this.notificationService.success(message);
   }
 
   public removeHtmlComments(html: HTMLElement): string {

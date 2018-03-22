@@ -20,6 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {UserService} from '../../rest';
@@ -42,7 +43,10 @@ export class UsersEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<UsersAction.GetFailure>(UsersActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to get users'}))
+    map(() => {
+      const message = this.i18n({id: 'users.get.fail', value: 'Failed to get users'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -61,7 +65,10 @@ export class UsersEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<UsersAction.CreateFailure>(UsersActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to create user'}))
+    map(() => {
+      const message = this.i18n({id: 'user.create.fail', value: 'Failed to create user'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -80,7 +87,10 @@ export class UsersEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<UsersAction.UpdateFailure>(UsersActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to update user'}))
+    map(() => {
+      const message = this.i18n({id: 'user.update.fail', value: 'Failed to update user'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -95,10 +105,14 @@ export class UsersEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<UsersAction.DeleteFailure>(UsersActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to delete user'}))
+    map(() => {
+      const message = this.i18n({id: 'user.delete.fail', value: 'Failed to delete user'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   constructor(private actions$: Actions,
+              private i18n: I18n,
               private userService: UserService) {
   }
 

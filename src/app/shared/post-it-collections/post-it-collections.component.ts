@@ -17,27 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren, HostListener} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
 import {Store} from '@ngrx/store';
-
-import {PostItLayoutConfig} from '../utils/layout/post-it-layout-config';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
+import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {selectCollectionsByQuery} from '../../core/store/collections/collections.state';
+import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
-import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
-import {Role} from '../permissions/role';
-import {PostItLayout} from '../utils/layout/post-it-layout';
-import {HashCodeGenerator} from '../utils/hash-code-generator';
-import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {selectCollectionsByQuery} from '../../core/store/collections/collections.state';
+import {Role} from '../permissions/role';
+import {HashCodeGenerator} from '../utils/hash-code-generator';
+import {PostItLayout} from '../utils/layout/post-it-layout';
+
+import {PostItLayoutConfig} from '../utils/layout/post-it-layout-config';
 
 @Component({
   selector: 'post-it-collections',
@@ -62,8 +63,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   public dragging: boolean = false;
 
   public panelVisible: boolean = false;
-  
-  public clickedComponent:any;
+
+  public clickedComponent: any;
 
   private layout: PostItLayout;
 
@@ -75,11 +76,12 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   private collectionsSubscription: Subscription;
 
-  private focusedPanel:number;
+  private focusedPanel: number;
 
-  constructor(private store: Store<AppState>,
+  constructor(private i18n: I18n,
+              private store: Store<AppState>,
               private zone: NgZone,
-              private _elementRef : ElementRef) {
+              private _elementRef: ElementRef) {
   }
 
   public ngOnInit() {
@@ -102,11 +104,11 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  togglePanelVisible(event, index){
+  togglePanelVisible(event, index) {
     this.clickedComponent = event.target;
-    if(this.focusedPanel == index){
+    if (this.focusedPanel == index) {
       this.panelVisible = !this.panelVisible;
-    }else{
+    } else {
       this.panelVisible = true;
     }
     this.focusedPanel = index;
@@ -121,7 +123,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   /**
    * Handler to change the flag to remove opacity css on elements
-   * @param targetElement 
+   * @param targetElement
    */
   @HostListener('document:click', ['$event.target'])
   public documentClicked(targetElement) {
@@ -182,7 +184,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       };
       reader.readAsText(file);
     } else {
-      this.store.dispatch(new NotificationsAction.Error({message: 'File input is empty'}));
+      const message = this.i18n({id: 'collection.import.file.empty', value: 'File input is empty'});
+      this.store.dispatch(new NotificationsAction.Error({message}));
     }
   }
 
@@ -224,10 +227,13 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   private deleteInitializedPostIt(collection: CollectionModel) {
+    const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
+    const message = this.i18n({id: 'collection.delete.dialog.message', value: 'Do you really want to remove the file?'});
+
     this.store.dispatch(new NotificationsAction.Confirm(
       {
-        title: 'Delete?',
-        message: 'Are you sure you want to remove the file?',
+        title,
+        message,
         action: new CollectionsAction.Delete({collectionId: collection.id})
       }));
   }

@@ -20,6 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {GroupService} from '../../rest';
@@ -42,7 +43,10 @@ export class GroupsEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<GroupsAction.GetFailure>(GroupsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to get groups'}))
+    map(() => {
+      const message = this.i18n({id: 'groups.get.fail', value: 'Failed to get groups'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -61,7 +65,10 @@ export class GroupsEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<GroupsAction.CreateFailure>(GroupsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to create group'}))
+    map(() => {
+      const message = this.i18n({id: 'group.create.fail', value: 'Failed to create group'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -80,7 +87,10 @@ export class GroupsEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<GroupsAction.UpdateFailure>(GroupsActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to update group'}))
+    map(() => {
+      const message = this.i18n({id: 'group.update.fail', value: 'Failed to update group'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -95,11 +105,15 @@ export class GroupsEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<GroupsAction.DeleteFailure>(GroupsActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to delete group'}))
+    map(() => {
+      const message = this.i18n({id: 'group.delete.fail', value: 'Failed to delete group'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   constructor(private actions$: Actions,
-              private groupService: GroupService) {
+              private groupService: GroupService,
+              private i18n: I18n) {
   }
 
 }

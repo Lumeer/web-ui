@@ -18,6 +18,7 @@
  */
 
 import {Component, Input} from '@angular/core';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {isNullOrUndefined} from 'util';
 import {Collection} from '../../../../core/dto/collection';
@@ -68,6 +69,7 @@ export class AttributeListComponent {
   public selectedSuggestionIndex = -1;
 
   constructor(private collectionService: CollectionService,
+              private i18n: I18n,
               private notificationService: NotificationService) {
   }
 
@@ -106,7 +108,10 @@ export class AttributeListComponent {
     this.collectionService.updateAttribute(this.collection.id, newAttributeName, newAttribute)
       .subscribe(
         attribute => this.collection.attributes.push(attribute),
-        error => this.notificationService.error('Failed creating attribute')
+        () => {
+          const message = this.i18n({id: 'collection.attribute.create.fail', value: 'Failed creating attribute'});
+          this.notificationService.error(message);
+        }
       );
   }
 

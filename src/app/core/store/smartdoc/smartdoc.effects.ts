@@ -20,6 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {map, withLatestFrom, flatMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
@@ -82,11 +83,16 @@ export class SmartDocEffects {
 
   @Effect()
   public removePartConfirm$: Observable<Action> = this.actions$.ofType<SmartDocAction.RemovePartConfirm>(SmartDocActionType.REMOVE_PART_CONFIRM).pipe(
-    map((action: SmartDocAction.RemovePartConfirm) => new NotificationsAction.Confirm({
-      title: 'Remove part',
-      message: 'Do you really want to remove this template part?',
-      action: new SmartDocAction.RemovePart(action.payload)
-    }))
+    map((action: SmartDocAction.RemovePartConfirm) => {
+      const title = this.i18n({id: 'smartdoc.remove.part.dialog.title', value: 'Remove part'});
+      const message = this.i18n({id: 'smartdoc.remove.part.dialog.message', value: 'Do you really want to remove this template part?'});
+
+      return new NotificationsAction.Confirm({
+        title,
+        message,
+        action: new SmartDocAction.RemovePart(action.payload)
+      })
+    })
   );
 
   @Effect()
@@ -114,6 +120,7 @@ export class SmartDocEffects {
   );
 
   constructor(private actions$: Actions,
+              private i18n: I18n,
               private store$: Store<AppState>) {
   }
 

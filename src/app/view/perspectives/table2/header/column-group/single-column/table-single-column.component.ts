@@ -18,7 +18,8 @@
  */
 
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../core/store/collections/collection.model';
@@ -78,7 +79,8 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
 
   public subscriptions: Subscription = new Subscription();
 
-  public constructor(private store: Store<AppState>) {
+  public constructor(private i18n: I18n,
+                     private store: Store<AppState>) {
   }
 
   public ngOnInit() {
@@ -236,12 +238,15 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
 
   private showRemoveConfirm() {
     const removeAction = new TablesAction.RemoveColumn({cursor: this.cursor});
-    const confirmAction = new NotificationsAction.Confirm({
-      title: 'Delete this column?',
-      message: 'Deleting a column will permanently remove the attribute from the file.',
-      action: removeAction
-    });
+    const confirmAction = this.createConfirmAction(removeAction);
     this.store.dispatch(confirmAction);
+  }
+
+  private createConfirmAction(action: Action): NotificationsAction.Confirm {
+    const title = this.i18n({id: 'table.delete.column.dialog.title', value: 'Delete this column?'});
+    const message = this.i18n({id: 'table.delete.column.dialog.message', value: 'Deleting a column will permanently remove the attribute from the file.'});
+
+    return new NotificationsAction.Confirm({title, message, action});
   }
 
   private removeUninitializedColumn() {

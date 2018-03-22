@@ -22,7 +22,6 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {first, map, skipWhile} from 'rxjs/operators';
-import {NotificationService} from '../../../../core/notifications/notification.service';
 import {AppState} from '../../../../core/store/app.state';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {selectAllCollections} from '../../../../core/store/collections/collections.state';
@@ -56,8 +55,7 @@ export class SmartDocSidePanelComponent {
   public collections$: Observable<CollectionModel[]>;
   public linkTypes$: Observable<LinkTypeModel[]>;
 
-  public constructor(private notificationService: NotificationService,
-                     private router: Router,
+  public constructor(private router: Router,
                      private store: Store<AppState>) {
     this.collections$ = this.store.select(selectAllCollections).pipe(
       map(collections => collections.filter(collection => collection && collection.id))

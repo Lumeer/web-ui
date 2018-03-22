@@ -17,26 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from "@angular/core";
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from "@angular/router";
-import {AppState} from "../../core/store/app.state";
-import {WorkspaceService} from "../workspace.service";
-import {Observable} from "rxjs/Observable";
-import {Store} from "@ngrx/store";
-import {switchMap} from "rxjs/operators";
-import {NotificationsAction} from "../../core/store/notifications/notifications.action";
-import {RouterAction} from "../../core/store/router/router.action";
-import {isNullOrUndefined} from "util";
-import {OrganizationModel} from "../../core/store/organizations/organization.model";
-import {Role} from "../../shared/permissions/role";
-import {ProjectsAction} from "../../core/store/projects/projects.action";
-import {GroupsAction} from "../../core/store/groups/groups.action";
-import {UsersAction} from "../../core/store/users/users.action";
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Observable} from 'rxjs/Observable';
+import {switchMap} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
+import {AppState} from '../../core/store/app.state';
+import {GroupsAction} from '../../core/store/groups/groups.action';
+import {NotificationsAction} from '../../core/store/notifications/notifications.action';
+import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {RouterAction} from '../../core/store/router/router.action';
+import {UsersAction} from '../../core/store/users/users.action';
+import {Role} from '../../shared/permissions/role';
+import {WorkspaceService} from '../workspace.service';
 
 @Injectable()
 export class OrganizationSettingsGuard implements CanActivate {
 
-  public constructor(private router: Router,
+  public constructor(private i18n: I18n,
+                     private router: Router,
                      private workspaceService: WorkspaceService,
                      private store: Store<AppState>) {
   }
@@ -70,11 +72,16 @@ export class OrganizationSettingsGuard implements CanActivate {
 
 
   private dispatchErrorActionsNotExist() {
-    this.dispatchErrorActions('Organization does not exist');
+    const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});
+    this.dispatchErrorActions(message);
   }
 
   private dispatchErrorActionsNotPermission() {
-    this.dispatchErrorActions('You do not have permission to access this organization');
+    const message = this.i18n({
+      id: 'organization.permission.missing',
+      value: 'You do not have permission to access this organization'
+    });
+    this.dispatchErrorActions(message);
   }
 
   private dispatchErrorActions(message: string) {

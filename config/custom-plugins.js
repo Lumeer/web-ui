@@ -16,7 +16,8 @@ const definePlugin = new DefinePlugin(
     LUMEER_ENV: JSON.stringify(LUMEER_ENV),
     API_URL: JSON.stringify(LUMEER_ENGINE),
     BUILD_NUMBER: JSON.stringify(BUILD_NUMBER),
-    PUBLIC_PATH: JSON.stringify(PUBLIC_PATH)
+    PUBLIC_PATH: JSON.stringify(PUBLIC_PATH),
+    I18N_PATH: JSON.stringify(I18N_PATH)
   }
 );
 

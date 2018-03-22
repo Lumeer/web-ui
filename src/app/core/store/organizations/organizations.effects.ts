@@ -20,6 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {catchError, map, switchMap, tap, withLatestFrom, flatMap} from 'rxjs/operators';
 import {OrganizationService} from '../../rest';
@@ -47,7 +48,10 @@ export class OrganizationsEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.GetFailure>(OrganizationsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to get organizations'}))
+    map(() => {
+      const message = this.i18n({id: 'organizations.get.fail', value: 'Failed to get organizations'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -67,7 +71,10 @@ export class OrganizationsEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.CreateFailure>(OrganizationsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to create organization'}))
+    map(() => {
+      const message = this.i18n({id: 'organization.create.fail', value: 'Failed to create organization'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -104,7 +111,10 @@ export class OrganizationsEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.UpdateFailure>(OrganizationsActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to update organization'}))
+    map(() => {
+      const message = this.i18n({id: 'organization.update.fail', value: 'Failed to update organization'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -123,10 +133,14 @@ export class OrganizationsEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.DeleteFailure>(OrganizationsActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to delete organization'}))
+    map(() => {
+      const message = this.i18n({id: 'organization.delete.fail', value: 'Failed to delete organization'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
-  constructor(private store$: Store<AppState>,
+  constructor(private i18n: I18n,
+              private store$: Store<AppState>,
               private router: Router,
               private actions$: Actions,
               private organizationService: OrganizationService) {

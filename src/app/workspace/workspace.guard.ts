@@ -21,18 +21,20 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
 import {Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {switchMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
-import {WorkspaceService} from './workspace.service';
 import {AppState} from '../core/store/app.state';
 import {NotificationsAction} from '../core/store/notifications/notifications.action';
 import {RouterAction} from '../core/store/router/router.action';
+import {WorkspaceService} from './workspace.service';
 
 @Injectable()
 export class WorkspaceGuard implements CanActivate {
 
-  public constructor(private router: Router,
+  public constructor(private i18n: I18n,
+                     private router: Router,
                      private workspaceService: WorkspaceService,
                      private store: Store<AppState>) {
   }
@@ -68,6 +70,8 @@ export class WorkspaceGuard implements CanActivate {
 
   private dispatchErrorActions() {
     this.store.dispatch(new RouterAction.Go({path: ['workspace']}));
-    this.store.dispatch(new NotificationsAction.Error({message: 'Organization or project does not exist'}));
+
+    const message = this.i18n({id: 'workspace.not.exist', value: 'Organization or project does not exist'});
+    this.store.dispatch(new NotificationsAction.Error({message}));
   }
 }
