@@ -19,25 +19,22 @@
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {AttributeHelper} from '../../../shared/utils/attribute-helper';
 import {Subscription} from 'rxjs';
 import {Observable} from 'rxjs/Observable';
-import {first, map, switchMap, withLatestFrom} from 'rxjs/operators';
+import {map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {Attribute, Collection, Document, LinkInstance, LinkType, Query} from '../../../core/dto';
-import {NotificationService} from '../../../core/notifications/notification.service';
 import {CollectionService, DocumentService, LinkInstanceService, LinkTypeService} from '../../../core/rest';
 import {AppState} from '../../../core/store/app.state';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {DocumentModel} from '../../../core/store/documents/document.model';
 import {selectNavigation, selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {TableConfigModel, ViewConfigModel} from '../../../core/store/views/view.model';
 import {selectViewConfig, selectViewsDictionary, selectViewsState} from '../../../core/store/views/views.state';
+import {AttributeHelper} from '../../../shared/utils/attribute-helper';
 import {PerspectiveComponent} from '../perspective.component';
 import {AttributeChangeEvent, DataChangeEvent, LinkInstanceEvent, TableLinkEvent} from './event';
 import {TablePart} from './model';
 import {TableManagerService} from './util/table-manager.service';
-import {selectCollectionsDictionary} from "../../../core/store/collections/collections.state";
 
 @Component({
   selector: 'table-perspective',
@@ -67,7 +64,6 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
               private documentService: DocumentService,
               private linkInstanceService: LinkInstanceService,
               private linkTypeService: LinkTypeService,
-              private notificationService: NotificationService,
               private store: Store<AppState>,
               private tableManagerService: TableManagerService) {
   }
@@ -257,9 +253,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   }
 
   public onDeleteLinkInstance(linkInstanceId: string) {
-    this.linkInstanceService.deleteLinkInstance(linkInstanceId).subscribe(() => {
-      this.notificationService.success('Link has been deleted!');
-    });
+    this.linkInstanceService.deleteLinkInstance(linkInstanceId).subscribe();
   }
 
   private createLinkInstance(linkType: LinkType, documents: [Document, Document]) {
@@ -272,7 +266,6 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
     this.linkInstanceService.createLinkInstance(linkInstance).subscribe((instance: LinkInstance) => {
       linkInstance.id = instance.id;
       this.tableManagerService.linkInstances.push(linkInstance);
-      this.notificationService.success('Link has been created!');
     });
   }
 

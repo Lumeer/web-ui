@@ -19,27 +19,30 @@
 
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../notifications/notification.service';
 
 @Injectable()
 export class PageNotFoundGuard implements CanActivate {
 
-  constructor(private notificationService: NotificationService,
+  constructor(private i18n: I18n,
+              private notificationService: NotificationService,
               private router: Router) {
   }
 
   public canActivate(next: ActivatedRouteSnapshot,
                      state: RouterStateSnapshot): boolean {
     const [, w, organizationCode, projectCode] = state.url.split('/');
-    console.log('guarding', organizationCode, projectCode);
 
     if (w === 'w' && organizationCode && projectCode) {
       this.router.navigate(['w', organizationCode, projectCode, 'view', 'search']);
-      this.notificationService.error('Page not found');
     } else {
       this.router.navigate(['workspace']);
-      this.notificationService.error('Page not found');
     }
+
+    const message = this.i18n({id: 'page.not.found', value: 'Page not found'});
+    this.notificationService.error(message);
+
     return false;
   }
 }

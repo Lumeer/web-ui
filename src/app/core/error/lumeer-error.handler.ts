@@ -20,7 +20,6 @@
 import {ErrorHandler, Injectable} from '@angular/core';
 
 import {LumeerError} from './lumeer.error';
-import {NotificationService} from '../notifications/notification.service';
 
 /**
  * This class provides handling unexpecting errors
@@ -28,12 +27,9 @@ import {NotificationService} from '../notifications/notification.service';
 @Injectable()
 export class LumeerErrorHandler implements ErrorHandler {
 
-  constructor(private notificationService: NotificationService) {
-  }
-
   public handleError(error: LumeerError): void {
+    // TODO use Rollbar or something similar
     console.error(error);
-    this.notificationService.error(error.message);
   }
 
 }

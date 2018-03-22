@@ -20,6 +20,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 import {Collection, Project} from '../../core/dto';
 import {CollectionService, ProjectService} from '../../core/rest';
@@ -44,7 +45,8 @@ export class ProjectSettingsComponent implements OnInit {
   public projectDescription: ElementRef;
   private originalProjectName: string;
 
-  constructor(private projectService: ProjectService,
+  constructor(private i18n: I18n,
+              private projectService: ProjectService,
               private router: Router,
               private store: Store<AppState>,
               private collectionService: CollectionService,
@@ -71,7 +73,8 @@ export class ProjectSettingsComponent implements OnInit {
           this.originalProjectName = this.project.name;
         },
         error => {
-          this.notificationService.error('Error getting project');
+          const message = this.i18n({id: 'project.get.fail', value: 'Failed to get project.'});
+          this.notificationService.error(message);
         }
       )
     ;
@@ -81,7 +84,8 @@ export class ProjectSettingsComponent implements OnInit {
     this.projectService.editProject(this.organizationCode, this.projectCode, this.project).subscribe(
       success => null,
       error => {
-        this.notificationService.error('Error updating project');
+        const message = this.i18n({id: 'project.update.fail', value: 'Failed to update project.'});
+        this.notificationService.error(message);
       });
   }
 
@@ -91,11 +95,11 @@ export class ProjectSettingsComponent implements OnInit {
     }
     this.projectService.editProject(this.organizationCode, this.projectCode, this.project)
       .subscribe(success => {
-          this.notificationService.success('Project\'s name was successfully updated');
           this.originalProjectName = this.project.name;
         },
         error => {
-          this.notificationService.error('Error updating project');
+          const message = this.i18n({id: 'project.update.fail', value: 'Failed to update project.'});
+          this.notificationService.error(message);
         });
   }
 
@@ -111,7 +115,8 @@ export class ProjectSettingsComponent implements OnInit {
         this.router.navigate(['/organization', this.organizationCode, 'project', this.project.code]);
       },
       error => {
-        this.notificationService.error('Error updating project\'s code');
+        const message = this.i18n({id: 'project.update.fail', value: 'Failed to update project.'});
+        this.notificationService.error(message);
       }
     );
   }
@@ -125,7 +130,8 @@ export class ProjectSettingsComponent implements OnInit {
       .subscribe(
         text => this.goBack(),
         error => {
-          this.notificationService.error('An error occurred during deletion of the organization');
+          const message = this.i18n({id: 'project.delete.fail', value: 'Failed to delete project.'});
+          this.notificationService.error(message);
         }
       );
   }
@@ -144,12 +150,17 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public confirmDeletion(): void {
+    const message = this.i18n({id: 'project.delete.dialog.message', value: 'Project is about to be permanently deleted.'});
+    const title = this.i18n({id: 'project.delete.dialog.title', value: 'Delete project?'});
+    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+
     this.notificationService.confirm(
-      'Deleting an project will permanently remove it.',
-      'Delete Project?',
+      message,
+      title,
       [
-        {text: 'Yes', action: () => this.onDelete(), bold: false},
-        {text: 'No'}
+        {text: yesButtonText, action: () => this.onDelete(), bold: false},
+        {text: noButtonText}
       ]
     );
   }

@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule, TRANSLATIONS} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular';
 import {ContextMenuModule} from 'ngx-contextmenu';
 import {AppRoutingModule} from './app-routing.module';
@@ -30,6 +31,9 @@ import {CoreModule} from './core/core.module';
 import {DocumentsModule} from './documents/documents.module';
 import {ViewModule} from './view/view.module';
 import {WorkspaceModule} from './workspace/workspace.module';
+
+declare const require; // Use the require method provided by webpack
+const translations = require(`raw-loader!../../${I18N_PATH}`);
 
 @NgModule({
   imports: [
@@ -50,7 +54,12 @@ import {WorkspaceModule} from './workspace/workspace.module';
       useFactory: appInitializer,
       multi: true,
       deps: [KeycloakService]
-    }
+    },
+    {
+      provide: TRANSLATIONS,
+      useFactory: () => translations
+    },
+    I18n
   ],
   declarations: [
     AppComponent

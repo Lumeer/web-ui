@@ -20,6 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {catchError, flatMap, map, mergeMap, switchMap, tap} from 'rxjs/operators';
 import {LinkTypeService} from '../../rest';
@@ -57,7 +58,10 @@ export class LinkTypesEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.GetFailure>(LinkTypesActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to create link'}))
+    map(() => {
+      const message = this.i18n({id: 'link.types.get.fail', value: 'Failed to get links'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -90,7 +94,10 @@ export class LinkTypesEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.CreateFailure>(LinkTypesActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to create link'}))
+    map(() => {
+      const message = this.i18n({id: 'link.type.create.fail', value: 'Failed to create link'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -109,7 +116,10 @@ export class LinkTypesEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.UpdateFailure>(LinkTypesActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to update link'}))
+    map(() => {
+      const message = this.i18n({id: 'link.type.update.fail', value: 'Failed to update link'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -122,10 +132,14 @@ export class LinkTypesEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.DeleteFailure>(LinkTypesActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to delete link'}))
+    map(() => {
+      const message = this.i18n({id: 'link.type.delete.fail', value: 'Failed to delete link'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   constructor(private actions$: Actions,
+              private i18n: I18n,
               private linkTypeService: LinkTypeService,
               private store$: Store<AppState>) {
   }

@@ -20,6 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {catchError, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {Document} from '../../dto';
@@ -54,7 +55,10 @@ export class DocumentsEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.GetFailure>(DocumentsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to get records'}))
+    map(() => {
+      const message = this.i18n({id: 'documents.get.fail', value: 'Failed to get records'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -73,7 +77,10 @@ export class DocumentsEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.CreateFailure>(DocumentsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to create record'}))
+    map(() => {
+      const message = this.i18n({id: 'document.create.fail', value: 'Failed to create record'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -99,7 +106,10 @@ export class DocumentsEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.UpdateFailure>(DocumentsActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to update record'}))
+    map(() => {
+      const message = this.i18n({id: 'document.update.fail', value: 'Failed to update record'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -122,7 +132,10 @@ export class DocumentsEffects {
   @Effect()
   public updateDataFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.UpdateDataFailure>(DocumentsActionType.UPDATE_DATA_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to update data'}))
+    map(() => {
+      const message = this.i18n({id: 'document.update.fail', value: 'Failed to update record'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -136,21 +149,30 @@ export class DocumentsEffects {
 
   @Effect()
   public deleteConfirm$: Observable<Action> = this.actions$.ofType<DocumentsAction.DeleteConfirm>(DocumentsActionType.DELETE_CONFIRM).pipe(
-    map((action: DocumentsAction.DeleteConfirm) => new NotificationsAction.Confirm({
-      title: 'Remove document',
-      message: 'Do you really want to remove this document?',
-      action: new DocumentsAction.Delete(action.payload)
-    }))
+    map((action: DocumentsAction.DeleteConfirm) => {
+      const title = this.i18n({id: 'document.delete.dialog.title', value: 'Delete document'});
+      const message = this.i18n({id: 'document.delete.dialog.message', value: 'Do you really want to delete this document?'});
+
+      return new NotificationsAction.Confirm({
+        title,
+        message,
+        action: new DocumentsAction.Delete(action.payload)
+      });
+    })
   );
 
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.DeleteFailure>(DocumentsActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to delete record'}))
+    map(() => {
+      const message = this.i18n({id: 'document.delete.fail', value: 'Failed to delete record'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   constructor(private actions$: Actions,
               private documentService: DocumentService,
+              private i18n: I18n,
               private searchService: SearchService,
               private store$: Store<AppState>) {
   }

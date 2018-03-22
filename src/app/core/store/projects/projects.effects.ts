@@ -20,6 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {catchError, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {ProjectService} from '../../rest';
@@ -49,7 +50,10 @@ export class ProjectsEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.GetFailure>(ProjectsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to get projects'}))
+    map(() => {
+      const message = this.i18n({id: 'projects.get.fail', value: 'Failed to get projects'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -71,7 +75,10 @@ export class ProjectsEffects {
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.CreateFailure>(ProjectsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to create project'}))
+    map(() => {
+      const message = this.i18n({id: 'project.create.fail', value: 'Failed to create project'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -94,7 +101,10 @@ export class ProjectsEffects {
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.UpdateFailure>(ProjectsActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to update project'}))
+    map(() => {
+      const message = this.i18n({id: 'project.update.fail', value: 'Failed to update project'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -114,10 +124,14 @@ export class ProjectsEffects {
   @Effect()
   public deleteFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.DeleteFailure>(ProjectsActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to delete project'}))
+    map(() => {
+      const message = this.i18n({id: 'project.delete.fail', value: 'Failed to delete project'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   constructor(private actions$: Actions,
+              private i18n: I18n,
               private projectService: ProjectService,
               private store$: Store<AppState>) {
   }

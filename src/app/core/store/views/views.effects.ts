@@ -20,6 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {catchError, flatMap, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
@@ -64,7 +65,10 @@ export class ViewsEffects {
   @Effect()
   public getFailure$: Observable<Action> = this.actions$.ofType<ViewsAction.GetFailure>(ViewsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to get view'}))
+    map(() => {
+      const message = this.i18n({id: 'views.get.fail', value: 'Failed to get views'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -83,16 +87,22 @@ export class ViewsEffects {
   @Effect()
   public createSuccess$: Observable<Action> = this.actions$.ofType(ViewsActionType.CREATE_SUCCESS).pipe(
     withLatestFrom(this.store$.select(selectWorkspace)),
-    flatMap(([action, workspace]: [ViewsAction.CreateSuccess, Workspace]) => [
-      new NotificationsAction.Success({message: 'View has been created'}),
-      new RouterAction.Go({path: ['w', workspace.organizationCode, workspace.projectCode, 'view', {vc: action.payload.view.code}]})
-    ])
+    flatMap(([action, workspace]: [ViewsAction.CreateSuccess, Workspace]) => {
+      const message = this.i18n({id: 'view.create.success', value: 'View has been created'});
+      return [
+        new NotificationsAction.Success({message}),
+        new RouterAction.Go({path: ['w', workspace.organizationCode, workspace.projectCode, 'view', {vc: action.payload.view.code}]})
+      ];
+    })
   );
 
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.ofType<ViewsAction.CreateFailure>(ViewsActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to create view'}))
+    map(() => {
+      const message = this.i18n({id: 'view.create.fail', value: 'Failed to create view'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
@@ -118,20 +128,26 @@ export class ViewsEffects {
         this.store$.dispatch(action.payload.nextAction);
       }
     }),
-    map(() => new NotificationsAction.Success({message: 'View has been updated'}))
+    map(() => {
+      const message = this.i18n({id: 'view.update.success', value: 'View has been updated'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   @Effect()
   public updateFailure$: Observable<Action> = this.actions$.ofType<ViewsAction.UpdateFailure>(ViewsActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
-    map(() => new NotificationsAction.Error({message: 'Failed to update view'}))
+    map(() => {
+      const message = this.i18n({id: 'view.update.fail', value: 'Failed to update view'});
+      return new NotificationsAction.Error({message});
+    })
   );
 
   constructor(private actions$: Actions,
+              private i18n: I18n,
               private store$: Store<AppState>,
               private viewService: ViewService,
-              private searchService: SearchService
-  ) {
+              private searchService: SearchService) {
   }
 
 }

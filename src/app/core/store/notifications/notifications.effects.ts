@@ -20,6 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SnotifyButton} from 'ng-snotify';
 import {Observable} from 'rxjs/Observable';
 import {tap} from 'rxjs/operators';
@@ -33,9 +34,12 @@ export class NotificationsEffects {
   @Effect({dispatch: false})
   public confirm$: Observable<Action> = this.actions.ofType(NotificationsActionType.CONFIRM).pipe(
     tap((action: NotificationsAction.Confirm) => {
+      const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+      const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+
       const buttons: SnotifyButton[] = [
-        {text: 'Yes', action: () => this.store$.dispatch(action.payload.action)},
-        {text: 'No'}
+        {text: yesButtonText, action: () => this.store$.dispatch(action.payload.action)},
+        {text: noButtonText}
       ];
       this.notificationService.confirm(action.payload.message, action.payload.title, buttons);
     })
@@ -57,6 +61,7 @@ export class NotificationsEffects {
   );
 
   constructor(private actions: Actions,
+              private i18n: I18n,
               private notificationService: NotificationService,
               private store$: Store<AppState>) {
   }

@@ -20,23 +20,24 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
+import {isNullOrUndefined} from 'util';
 import {Query} from '../../core/dto';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
+import {CollectionConverter} from '../../core/store/collections/collection.converter';
+import {CollectionModel} from '../../core/store/collections/collection.model';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {Workspace} from '../../core/store/navigation/workspace.model';
+import {PermissionModel} from '../../core/store/permissions/permissions.model';
 import {Role} from '../../shared/permissions/role';
 import {CollectionSelectService} from '../service/collection-select.service';
-import {CollectionModel} from "../../core/store/collections/collection.model";
-import {CollectionsAction} from "../../core/store/collections/collections.action";
-import {selectCollectionByWorkspace} from "../../core/store/collections/collections.state";
-import {CollectionConverter} from "../../core/store/collections/collection.converter";
-import {isNullOrUndefined} from "util";
-import {PermissionModel} from "../../core/store/permissions/permissions.model";
 
 @Component({
   selector: 'collection-config',
@@ -52,6 +53,7 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
   private workspace: Workspace;
 
   constructor(private collectionSelectService: CollectionSelectService,
+              private i18n: I18n,
               private notificationService: NotificationService,
               private router: Router,
               private store: Store<AppState>) {
@@ -65,7 +67,7 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
       .subscribe(collection => {
         this.collection = collection;
         this.collectionSelectService.selectCollection(CollectionConverter.toDto(this.collection));
-      })
+      });
   }
 
   public ngOnDestroy(): void {
@@ -88,7 +90,10 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
   }
 
   public confirmDeletion(): void {
-    this.notificationService.confirm('Are you sure you want to remove the file?', 'Delete?', [
+    const message = this.i18n({id: 'collection.delete.dialog.message', value: 'Are you sure you want to remove the file?'});
+    const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
+
+    this.notificationService.confirm(message, title, [
       {text: 'Yes', action: () => this.removeCollection(), bold: false},
       {text: 'No'}
     ]);
