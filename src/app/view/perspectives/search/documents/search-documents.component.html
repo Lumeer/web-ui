@@ -1,5 +1,5 @@
 <div class="mt-2" *ngIf="(documents$ | async) as documents">
-  <div *ngIf="!documents.length" class="alert alert-warning" i18n="@@search.result.empty">
+  <div *ngIf="!documents.length && loaded" class="alert alert-warning" i18n="@@search.result.empty">
     We are sorry, but we have not found anything. Please do a more accurate search.
   </div>
   <div *ngIf="documents.length">

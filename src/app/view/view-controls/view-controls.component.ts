@@ -29,6 +29,7 @@ import {RouterAction} from '../../core/store/router/router.action';
 import {ViewModel} from '../../core/store/views/view.model';
 import {selectViewConfig} from '../../core/store/views/views.state';
 import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
+import {ViewsAction} from "../../core/store/views/views.action";
 
 @Component({
   selector: 'view-controls',
@@ -116,6 +117,8 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     }
     path.push(perspective);
 
+    this.dispatchActionsOnChangePerspective(perspective);
+
     this.store.dispatch(new RouterAction.Go({path, extras: {queryParamsHandling: 'merge'}}));
   }
 
@@ -153,6 +156,12 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
         return this.isSingleCollectionInQuery();
       default:
         return true;
+    }
+  }
+
+  private dispatchActionsOnChangePerspective(perspective: string) {
+    if (perspective === Perspective.Search.valueOf()) {
+      this.store.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: []}}));
     }
   }
 

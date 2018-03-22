@@ -29,7 +29,7 @@ import {Document} from '../dto/document';
 import {View} from '../dto/view';
 import {SuggestionType} from '../dto/suggestion-type';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, switchMap} from 'rxjs/operators';
+import {catchError, filter, map, switchMap} from 'rxjs/operators';
 import {Workspace} from '../store/navigation/workspace.model';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
@@ -44,7 +44,11 @@ export class SearchService {
   constructor(private http: HttpClient,
               private store: Store<AppState>,
               private homePageService: HomePageService) {
-    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+    this.store.select(selectWorkspace)
+      .pipe(
+        filter(workspace => !!workspace && !!workspace.organizationCode && !!workspace.projectCode)
+      )
+      .subscribe(workspace => this.workspace = workspace);
   }
 
   public suggest(text: string, type: SuggestionType): Observable<Suggestions> {
