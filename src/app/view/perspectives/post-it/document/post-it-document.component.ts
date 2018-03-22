@@ -202,14 +202,6 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     this.store.dispatch(new Update({document: this.postItModel.document, toggleFavourite: true}));
   }
 
-  public documentPrefix(): string {
-    const workspace = this.navigationHelper.workspacePrefix();
-    const collection = `f/${this.postItModel.document.collectionId}`;
-    const document = `r/${this.postItModel.document.id}`;
-
-    return `${workspace}/${collection}/${document}`;
-  }
-
   public confirmDeletion(): void {
     if (this.postItModel.initialized) {
       this.store.dispatch(new DeleteConfirm({
@@ -233,6 +225,11 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
         this.postItModel
       );
     });
+  }
+
+  public removeValue() {
+    const selectedRow = this.selectionHelper.selection.row;
+    this.attributePairs[selectedRow].value = '';
   }
 
   private refreshDataAttributePairs(): void {
