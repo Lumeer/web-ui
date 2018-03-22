@@ -59,17 +59,6 @@ const collectionRoutes: Routes = [
         pathMatch: 'full'
       }
     ]
-  },
-  {
-    path: 'w/:organizationCode/:projectCode/files',
-    canActivate:[WorkspaceGuard],
-    component: CollectionComponent,
-    children: [
-      {
-        path: '',
-        component: CollectionListComponent
-      }
-    ]
   }
 ];
 

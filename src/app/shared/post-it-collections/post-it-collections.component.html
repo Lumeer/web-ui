@@ -30,6 +30,7 @@
        class="layout-item card post-it"
        [class.selected]="selectedCollection == collection"
        [class.uninitialized]="!collection.id"
+       [class.initialized]="collection.id"
        [style.border-color]="collection.color">
     <div class="card-body text-center">
       <a class="icon" [style.color]="collection.color"
@@ -45,7 +46,7 @@
         <icon-picker class="dropdown-item" [(icon)]="collection.icon"></icon-picker>
       </div>
 
-      <div *ngIf="collection.id" class="document-count opacity-content clickable" [ngClass]="{'panel-visible' : panelVisible && focusedPanel == idx}"> 
+      <div *ngIf="collection.id" class="document-count opacity-content clickable" [ngClass]="{'panel-visible' : panelVisible && focusedPanel == idx}">
         <a title="Record Count" i18n-title="@@collection.document.count"
            [routerLink]="[workspacePath(), 'view', 'postit']"
            [queryParams]="{ query: queryForCollectionDocuments(collection.id) }">

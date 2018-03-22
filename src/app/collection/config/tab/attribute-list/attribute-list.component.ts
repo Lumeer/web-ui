@@ -27,6 +27,7 @@ import * as Const from '../constraints';
 
 import {ConfiguredAttribute} from './configured-attribute';
 import {ConstraintSuggestion} from './constraint-suggestion';
+import {Attribute} from '../../../../core/dto';
 
 @Component({
   selector: 'attribute-list',
@@ -73,12 +74,11 @@ export class AttributeListComponent {
               private notificationService: NotificationService) {
   }
 
-  private emptyAttribute(): ConfiguredAttribute {
+  private emptyAttribute(): Attribute {
     return {
       constraints: [],
       name: '',
       fullName: '',
-      newConstraint: '',
       usageCount: 0
     };
   }
@@ -196,7 +196,7 @@ export class AttributeListComponent {
 
     this.suggestions = Const.constraints.map(flattenConstraints)
       .reduce(flatten, [])
-      .filter(suggestion => startsWith(suggestion.name, this.activeAttribute.newConstraint))
+      .filter(suggestion => startsWith(suggestion.name, this.activeAttribute['newConstraint']))
       .filter(suggestion => !this.activeAttribute.constraints.find(constraint => startsWith(constraint, suggestion.name)))
       .slice(0, 5);
   }

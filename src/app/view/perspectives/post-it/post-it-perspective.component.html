@@ -6,7 +6,7 @@
                 (createPostIt)="createPostIt($event)"></add-document>
 
   <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByDocument"
-                    class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : null }}"
+                    class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : 'initialized' }}"
                     [attr.order]="postIt.order"
                     [postItModel]="postItWithIndex(postIt, idx)"
                     [perspectiveId]="perspectiveId"

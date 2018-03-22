@@ -104,9 +104,9 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  togglePanelVisible(event, index) {
+  public togglePanelVisible(event, index) {
     this.clickedComponent = event.target;
-    if (this.focusedPanel == index) {
+    if (this.focusedPanel === index) {
       this.panelVisible = !this.panelVisible;
     } else {
       this.panelVisible = true;
@@ -244,6 +244,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public onCollectionNameChanged(collection: CollectionModel, newName: string) {
     const collectionCopy = {...collection, name: newName};
+
+    if (!collection.name) {
+      return;
+    }
 
     if (collection.id) {
       this.updateCollection(collectionCopy);

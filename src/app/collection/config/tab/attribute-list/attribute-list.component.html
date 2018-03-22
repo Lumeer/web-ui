@@ -30,7 +30,7 @@
                class="lumeer ml-2 rounded"
                src="../../../../..{{publicPath()}}img/lumeer-logo.png"/>
 
-          <div *ngIf="activeAttribute.newConstraint && lumeerSuggestions.length"
+          <div *ngIf="activeAttribute['newConstraint'] && lumeerSuggestions.length"
                class="dropdown-menu suggestion-list show"
                id="suggestions-dropdown">
             <h6 class="dropdown-header">Lumeer suggests:</h6>
@@ -85,7 +85,7 @@
                    [attr.id]="'constraint' + idx"
                    [style.width]="((input.value.length + 1) * 8) + 'px'"
                    (blur)="updateAttribute(attribute)"/>
-            <i class="fas fa-trash remove font-weight-light" aria-hidden="true"
+            <i class="fas fa-times remove font-weight-light" aria-hidden="true"
                (click)="removeConstraint(attribute, idx)"
                title="Remove Constraint"
                i18n="@@collection.config.tab.attributes.constraint.remove"></i>
@@ -93,13 +93,13 @@
           <div class="dropdown input-box">
             <input class="px-2 my-1 ml-1 border-0"
                    [attr.id]="attribute.fullName + 'addAttribute'"
-                   [(ngModel)]="attribute.newConstraint"
+                   [(ngModel)]="attribute['newConstraint']"
                    (ngModelChange)="refreshSuggestions(); selectedSuggestionIndex = -1"
                    (focus)="activeAttribute = attribute"
-                   (keyup.enter)="attribute.newConstraint && addConstraint(attribute, attribute.newConstraint)"
+                   (keyup.enter)="attribute['newConstraint'] && addConstraint(attribute, attribute['newConstraint'])"
                    (keydown.backspace)="constraintBackspace(attribute)"
                    placeholder="{{ attribute.constraints.length ? '...' : '+' }}"/>
-            <div *ngIf="attribute.newConstraint && suggestions.length"
+            <div *ngIf="attribute['newConstraint'] && suggestions.length"
                  class="dropdown-menu show">
             <span *ngFor="let suggestion of suggestions; let suggestionIdx = index"
                   class="dropdown-item"

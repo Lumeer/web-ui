@@ -49,17 +49,19 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyboardClick(event: KeyboardEvent) {
-    if (!this.isNavigationKey(event.keyCode)) {
-      return;
+    if (this.isNavigationKey(event.keyCode)) {
+      this.handleNavigationKeydown();
     }
+  }
 
+  private handleNavigationKeydown() {
     if (this.selectionHelper) {
       this.selectionHelper.initializeIfNeeded();
     }
   }
 
   private isNavigationKey(keyCode: number): boolean {
-    return [KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.Enter].includes(keyCode);
+    return [KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.Enter, KeyCode.Tab].includes(keyCode);
   }
 
   @Input()
@@ -260,6 +262,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
     if (newDocument) {
       this.focusDocument(newDocument);
+      this.createdDocumentCorrelationId = null;
     }
   }
 
