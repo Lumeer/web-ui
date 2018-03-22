@@ -46,7 +46,7 @@ export class SearchService {
               private homePageService: HomePageService) {
     this.store.select(selectWorkspace)
       .pipe(
-        filter(workspace => !isNullOrUndefined(workspace) && !isNullOrUndefined(workspace.organizationCode) && !isNullOrUndefined(workspace.projectCode))
+        filter(workspace => !!workspace && !!workspace.organizationCode && !!workspace.projectCode)
       )
       .subscribe(workspace => this.workspace = workspace);
   }
