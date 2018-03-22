@@ -202,14 +202,6 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     this.store.dispatch(new Update({document: this.postItModel.document, toggleFavourite: true}));
   }
 
-  public documentPrefix(): string {
-    const workspace = this.navigationHelper.workspacePrefix();
-    const collection = `f/${this.postItModel.document.collectionId}`;
-    const document = `r/${this.postItModel.document.id}`;
-
-    return `${workspace}/${collection}/${document}`;
-  }
-
   public confirmDeletion(): void {
     if (this.postItModel.initialized) {
       this.store.dispatch(new DeleteConfirm({
@@ -235,6 +227,11 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
+  public removeValue() {
+    const selectedRow = this.selectionHelper.selection.row;
+    this.attributePairs[selectedRow].value = '';
+  }
+
   private refreshDataAttributePairs(): void {
     if (!this.postItModel.document.data) {
       this.postItModel.document.data = {};
@@ -243,12 +240,12 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     this.attributePairs = Object.entries(this.postItModel.document.data)
       .sort(([attribute1, value1], [attribute2, value2]) => attribute1.localeCompare(attribute2))
       .map(([attribute, value]) => {
-      return {
-        attribute: attribute,
-        previousAttributeName: attribute,
-        value: isString(value) ? value : JSON.stringify(value, null, 2)
-      };
-    });
+        return {
+          attribute: attribute,
+          previousAttributeName: attribute,
+          value: isString(value) ? value : JSON.stringify(value, null, 2)
+        };
+      });
   }
 
   public unusedAttributes(): AttributeModel[] {

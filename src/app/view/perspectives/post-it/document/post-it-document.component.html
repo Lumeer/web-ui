@@ -39,6 +39,8 @@
               (keydown.ArrowDown)="selectionHelper.moveSelection(0, 1)"
               (keydown.F2)="selectionHelper.setEditMode(true); selectionHelper.focus()"
               (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
+              (keydown.backspace)="removeAttributePair()"
+              (keydown.delete)="removeAttributePair()"
               (click)="clickOnAttributePair(0, row)">
 
           <input class="border-0"
@@ -60,6 +62,8 @@
               (keydown.ArrowDown)="selectionHelper.moveSelection(0, 1)"
               (keydown.F2)="selectionHelper.setEditMode(true); selectionHelper.focus()"
               (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
+              (keydown.backspace)="removeValue()"
+              (keydown.delete)="removeValue()"
               (click)="clickOnAttributePair(1, row)">
 
         <input class="border-0"

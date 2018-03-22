@@ -30,6 +30,11 @@
     z-index: $z-index-hovered;
   }
 
+  .initialized {
+    padding-top: 0.75px;
+    padding-bottom: 0.75px;
+  }
+
   .selected {
     z-index: $z-index-selected;
   }
@@ -38,6 +43,7 @@
     transition: transform $animation-duration, color $animation-color-duration;
     background: transparent;
     border-color: transparent;
+    height: 181.5px;
 
     &:hover {
       color: $success;

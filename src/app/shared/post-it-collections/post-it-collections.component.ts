@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren, HostListener} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
 import {Store} from '@ngrx/store';
 
@@ -62,8 +62,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   public dragging: boolean = false;
 
   public panelVisible: boolean = false;
-  
-  public clickedComponent:any;
+
+  public clickedComponent: any;
 
   private layout: PostItLayout;
 
@@ -75,11 +75,11 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   private collectionsSubscription: Subscription;
 
-  private focusedPanel:number;
+  private focusedPanel: number;
 
   constructor(private store: Store<AppState>,
               private zone: NgZone,
-              private _elementRef : ElementRef) {
+              private _elementRef: ElementRef) {
   }
 
   public ngOnInit() {
@@ -102,11 +102,11 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  togglePanelVisible(event, index){
+  public togglePanelVisible(event, index) {
     this.clickedComponent = event.target;
-    if(this.focusedPanel == index){
+    if (this.focusedPanel === index) {
       this.panelVisible = !this.panelVisible;
-    }else{
+    } else {
       this.panelVisible = true;
     }
     this.focusedPanel = index;
@@ -121,7 +121,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   /**
    * Handler to change the flag to remove opacity css on elements
-   * @param targetElement 
+   * @param targetElement
    */
   @HostListener('document:click', ['$event.target'])
   public documentClicked(targetElement) {
@@ -238,6 +238,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public onCollectionNameChanged(collection: CollectionModel, newName: string) {
     const collectionCopy = {...collection, name: newName};
+
+    if (!collection.name) {
+      return;
+    }
 
     if (collection.id) {
       this.updateCollection(collectionCopy);
