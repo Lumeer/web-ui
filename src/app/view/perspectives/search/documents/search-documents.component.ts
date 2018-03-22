@@ -28,12 +28,14 @@ import {CollectionService, SearchService} from '../../../../core/rest';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
+import {selectDocumentsByQuery, selectDocumentsQueries} from '../../../../core/store/documents/documents.state';
 import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
 import {UserSettingsService} from '../../../../core/user-settings.service';
 import {SizeType} from '../../../../shared/slider/size-type';
+import {QueryHelper} from "../../../../core/store/navigation/query.helper";
+import {QueryModel} from "../../../../core/store/navigation/query.model";
 
 @Component({
   templateUrl: './search-documents.component.html',
@@ -56,9 +58,10 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public size: SizeType;
   public documents$: Observable<DocumentModel[]>;
   public expandedDocumentIds: string[] = [];
+  public loaded: boolean = false;
 
-  private querySubscription: Subscription;
-  private searchConfigSubscription: Subscription;
+  private currentQuery: QueryModel;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(private searchService: SearchService,
               private store: Store<AppState>,
@@ -67,29 +70,12 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    let userSettings = this.userSettingsService.getUserSettings();
-    this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
-    this.querySubscription = this.store.select(selectQuery)
-      .pipe(
-        filter(query => isNullOrUndefined(query)),
-        map(query => ({...query, page: 0, pageSize: 100})), // TODO implement pagination logic
-        tap(query => this.store.dispatch(new DocumentsAction.Get({query}))),
-        tap(() => this.store.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: []}})))
-      ).subscribe();
-    this.documents$ = this.store.select(selectDocumentsByQuery).pipe(
-      map(documents => documents.filter(doc => doc.id))
-    );
-    this.searchConfigSubscription = this.store.select(selectViewSearchConfig)
-      .subscribe(config => this.expandedDocumentIds = config.expandedDocumentIds.slice());
+    this.initSettings();
+    this.subscribeData();
   }
 
   public ngOnDestroy() {
-    if (this.querySubscription) {
-      this.querySubscription.unsubscribe();
-    }
-    if (this.searchConfigSubscription) {
-      this.searchConfigSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   public onSizeChange(newSize: SizeType) {
@@ -235,4 +221,33 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     return html;
   }
 
+  private initSettings() {
+    let userSettings = this.userSettingsService.getUserSettings();
+    this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
+  }
+
+  private subscribeData() {
+    const querySubscription = this.store.select(selectQuery)
+      .pipe(
+        filter(query => !isNullOrUndefined(query)),
+        map(query => ({...query, page: 0, pageSize: 100})), // TODO implement pagination logic
+        tap(query => this.store.dispatch(new DocumentsAction.Get({query}))),
+      ).subscribe(query => this.currentQuery = query);
+    this.subscriptions.add(querySubscription);
+
+    const searchConfigSubscription = this.store.select(selectViewSearchConfig)
+      .subscribe(config => this.expandedDocumentIds = config && config.expandedDocumentIds.slice() || []);
+    this.subscriptions.add(searchConfigSubscription);
+
+    const loadedSubscription = this.store.select(selectDocumentsQueries)
+      .pipe(
+        map(queries => queries.filter(query => QueryHelper.equal(query, this.currentQuery)))
+      )
+      .subscribe(queries => this.loaded = queries && queries.length > 0);
+    this.subscriptions.add(loadedSubscription);
+
+    this.documents$ = this.store.select(selectDocumentsByQuery).pipe(
+      map(documents => documents.filter(doc => doc.id))
+    );
+  }
 }

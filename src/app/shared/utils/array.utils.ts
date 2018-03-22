@@ -50,3 +50,9 @@ export function getArrayDifference<T>(bigArray: T[], smallArray: T[]): T[] {
 
   return bigArray.filter(item => !smallArray.includes(item));
 }
+
+export function arrayIntersection(array1: string[], array2: string[]): string[] {
+  const a = array1 || [];
+  const b = array2 || [];
+  return a.filter(x => b.indexOf(x) !== -1);
+}

@@ -20,6 +20,7 @@
 import {QueryModel} from "../navigation/query.model";
 import {ViewModel} from "./view.model";
 import {isNullOrUndefined} from "util";
+import {arrayIntersection} from "../../../shared/utils/array.utils";
 
 export class ViewFilters {
 
@@ -35,15 +36,9 @@ export class ViewFilters {
     }
 
     if (query.collectionIds && query.collectionIds.length > 0) {
-      filtered = filtered.filter(view => view.query && ViewFilters.intersection(view.query.collectionIds, query.collectionIds).length > 0);
+      filtered = filtered.filter(view => view.query && arrayIntersection(view.query.collectionIds, query.collectionIds).length > 0);
     }
 
     return filtered;
-  }
-
-  private static intersection(array1: string[], array2: string[]): string[] {
-    const a = array1 || [];
-    const b = array2 || [];
-    return a.filter(x => b.indexOf(x) !== -1);
   }
 }
