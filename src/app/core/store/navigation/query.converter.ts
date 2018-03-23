@@ -59,7 +59,7 @@ export class QueryConverter {
   }
 
   public static fromString(stringQuery: string): QueryModel {
-    const parsedQuery = stringQuery ? JSON.parse(stringQuery) : {};
+    const parsedQuery = stringQuery ? this.parseStringQuery(stringQuery) : {};
     const query: QueryModel = parsedQuery ? parsedQuery : {};
 
     query.collectionIds = query.collectionIds || [];
@@ -70,6 +70,14 @@ export class QueryConverter {
     query.page = isNullOrUndefined(query.page) ? null : query.page;
 
     return query;
+  }
+
+  private static parseStringQuery(stringQuery: string) {
+    try {
+      return JSON.parse(stringQuery);
+    } catch (e) {
+      return null;
+    }
   }
 
 }

@@ -21,6 +21,8 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {CollectionsGuard} from '../core/guards/collections.guard';
 import {LinkTypesGuard} from '../core/guards/link-types.guard';
+import {ViewExistGuard} from '../core/guards/view/view-exist.guard';
+import {ViewsLoadedGuard} from '../core/guards/view/views-loaded.guard';
 import {WorkspaceGuard} from '../workspace/workspace.guard';
 import {Perspective} from './perspectives/perspective';
 import {PostItPerspectiveComponent} from './perspectives/post-it/post-it-perspective.component';
@@ -35,12 +37,12 @@ import {TablePerspectiveComponent} from './perspectives/table/table-perspective.
 import {Table2PerspectiveComponent} from './perspectives/table2/table2-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
-import {ViewGuard} from './view.guard';
+import {ViewRedirectGuard} from '../core/guards/view/view-redirect.guard';
 
 const viewRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/view',
-    canActivate: [WorkspaceGuard, CollectionsGuard, LinkTypesGuard],
+    canActivate: [WorkspaceGuard, CollectionsGuard, LinkTypesGuard, ViewsLoadedGuard, ViewExistGuard],
     component: ViewComponent,
     children: [
       {
@@ -93,7 +95,7 @@ const viewRoutes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        canActivate: [ViewGuard],
+        canActivate: [ViewRedirectGuard],
         component: ViewLoadingComponent
       }
     ]

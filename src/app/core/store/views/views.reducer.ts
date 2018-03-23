@@ -23,7 +23,7 @@ import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
 export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
   switch (action.type) {
     case ViewsActionType.GET_SUCCESS:
-      return viewsAdapter.addMany(action.payload.views, state);
+      return viewsAdapter.addMany(action.payload.views, {...state, loaded: true});
     case ViewsActionType.CREATE_SUCCESS:
       return viewsAdapter.addOne(action.payload.view, state);
     case ViewsActionType.UPDATE_SUCCESS:

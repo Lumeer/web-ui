@@ -26,6 +26,7 @@ import {ViewFilters} from "./view.filters";
 
 export interface ViewsState extends EntityState<ViewModel> {
 
+  loaded: boolean;
   config: ViewConfigModel;
 
 }
@@ -33,6 +34,7 @@ export interface ViewsState extends EntityState<ViewModel> {
 export const viewsAdapter = createEntityAdapter<ViewModel>({selectId: view => view.code});
 
 export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
+  loaded: false,
   config: {}
 });
 
@@ -40,6 +42,9 @@ export const selectViewsState = (state: AppState) => state.views;
 
 export const selectAllViews = createSelector(selectViewsState, viewsAdapter.getSelectors().selectAll);
 export const selectViewsDictionary = createSelector(selectViewsState, viewsAdapter.getSelectors().selectEntities);
+export const selectViewByCode = (code: string) => createSelector(selectViewsDictionary, viewsMap => viewsMap[code]);
+
+export const selectViewsLoaded = createSelector(selectViewsState, state => state.loaded);
 
 export const selectViewConfig = createSelector(selectViewsState, views => views.config);
 export const selectViewSearchConfig = createSelector(selectViewConfig, config => config.search);

@@ -22,6 +22,9 @@ import {NgModule} from '@angular/core';
 import {CollectionsGuard} from './collections.guard';
 import {LinkTypesGuard} from './link-types.guard';
 import {PageNotFoundGuard} from './page-not-found.guard';
+import {ViewExistGuard} from './view/view-exist.guard';
+import {ViewRedirectGuard} from './view/view-redirect.guard';
+import {ViewsLoadedGuard} from './view/views-loaded.guard';
 
 @NgModule({
   imports: [
@@ -31,7 +34,10 @@ import {PageNotFoundGuard} from './page-not-found.guard';
   providers: [
     CollectionsGuard,
     LinkTypesGuard,
-    PageNotFoundGuard
+    PageNotFoundGuard,
+    ViewExistGuard,
+    ViewsLoadedGuard,
+    ViewRedirectGuard
   ]
 })
 export class GuardsModule {
