@@ -36,8 +36,11 @@ export class ProjectService extends PermissionService {
       throw new LumeerError('Organization not set');
     }
 
-    return this.httpClient.get<Project[]>(this.apiPrefix(orgCode)).pipe(
-      catchError(ProjectService.catchGetProjectsError)
+    return this.httpClient.get<Project[]>(this.apiPrefix(orgCode));
+  }
+
+  public getProjectCodes(orgCode: string): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.apiPrefix(orgCode)}/info/codes`).pipe(
     );
   }
 
@@ -91,11 +94,4 @@ export class ProjectService extends PermissionService {
     return this.apiPrefix(orgCode, projCode);
   }
 
-  private static catchGetProjectsError(error: HttpErrorResponse): ErrorObservable {
-    if (error instanceof Error) {
-      throw new NetworkError();
-    } else {
-      throw new FetchFailedError('Projects');
-    }
-  }
 }

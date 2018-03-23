@@ -26,27 +26,34 @@ import {ProjectModel} from './project.model';
 export interface ProjectsState extends EntityState<ProjectModel> {
 
   selectedProjectId: string;
+  projectCodes: { [organizationId: string]: string[] };
 
 }
 
 export const projectsAdapter = createEntityAdapter<ProjectModel>({selectId: project => project.id});
 
 export const initialProjectsState: ProjectsState = projectsAdapter.getInitialState({
-  selectedProjectId: null
+  selectedProjectId: null,
+  projectCodes: {}
 });
 
 export const selectProjectsState = (state: AppState) => state.projects;
 export const selectAllProjects = createSelector(selectProjectsState, projectsAdapter.getSelectors().selectAll);
 export const selectProjectsDictionary = createSelector(selectProjectsState, projectsAdapter.getSelectors().selectEntities);
 export const selectSelectedProjectId = createSelector(selectProjectsState, projectsState => projectsState.selectedProjectId);
+export const selectProjectsCodes = createSelector(selectProjectsState, projectState => projectState.projectCodes);
+export const selectProjectsCodesForSelectedOrganization = createSelector(selectProjectsCodes, selectSelectedOrganizationId, (projectCodes, selectedOrganizationId) => {
+  return projectCodes[selectedOrganizationId] || [];
+});
+
 export const selectProjectsForSelectedOrganization = createSelector(selectAllProjects, selectSelectedOrganizationId, (projects, organizationId) => {
   return projects.filter(project => project.organizationId === organizationId);
 });
-export const selectSelectedProject = createSelector(selectProjectsDictionary, selectSelectedProjectId, (projects, selectedId)=>{
+export const selectSelectedProject = createSelector(selectProjectsDictionary, selectSelectedProjectId, (projects, selectedId) => {
   return selectedId ? projects[selectedId] : null;
 });
 
-export const selectProjectsForWorkspace = createSelector(selectAllProjects, selectOrganizationByWorkspace, (projects, organization) =>{
+export const selectProjectsForWorkspace = createSelector(selectAllProjects, selectOrganizationByWorkspace, (projects, organization) => {
   return organization ? projects.filter(project => project.organizationId === organization.id) : [];
 });
 

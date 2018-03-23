@@ -32,7 +32,7 @@ import {ResourceItemType} from './resource-item-type';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
-const warningStyle = 'lmr-warning';
+const warningStyle = 'border-danger';
 
 type ResourceModel = OrganizationModel | ProjectModel;
 
@@ -88,6 +88,7 @@ export class ResourceChooserComponent implements OnChanges {
   @Input() public resources: ResourceModel[];
   @Input() public selectedId: string;
   @Input() public canCreateResource: boolean;
+  @Input() public usedCodes: string[];
 
   @Output() public resourceDelete: EventEmitter<string> = new EventEmitter();
   @Output() public resourceSelect: EventEmitter<string> = new EventEmitter();
@@ -448,6 +449,6 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private isNewCodeValid(code: string): boolean {
-    return this.resources.findIndex(res => res.code === code) === -1;
+    return !this.usedCodes.includes(code);
   }
 }

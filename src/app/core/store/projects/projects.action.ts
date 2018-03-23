@@ -26,6 +26,10 @@ export enum ProjectsActionType {
   GET_SUCCESS = '[Projects] Get :: Success',
   GET_FAILURE = '[Projects] Get :: Failure',
 
+  GET_CODES = '[Projects] Get codes',
+  GET_CODES_SUCCESS = '[Projects] Get codes :: Success',
+  GET_CODES_FAILURE = '[Projects] Get codes :: Failure',
+
   CREATE = '[Projects] Create',
   CREATE_SUCCESS = '[Projects] Create :: Success',
   CREATE_FAILURE = '[Projects] Create :: Failure',
@@ -60,6 +64,27 @@ export namespace ProjectsAction {
 
   export class GetFailure implements Action {
     public readonly type = ProjectsActionType.GET_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
+  export class GetCodes implements Action {
+    public readonly type = ProjectsActionType.GET_CODES;
+
+    public constructor(public payload: { organizationId: string }) {
+    }
+  }
+
+  export class GetCodesSuccess implements Action {
+    public readonly type = ProjectsActionType.GET_CODES_SUCCESS;
+
+    public constructor(public payload: { organizationId: string, projectCodes: string[] }) {
+    }
+  }
+
+  export class GetCodesFailure implements Action {
+    public readonly type = ProjectsActionType.GET_CODES_FAILURE;
 
     public constructor(public payload: { error: any }) {
     }
@@ -137,6 +162,7 @@ export namespace ProjectsAction {
 
   export type All = Select |
     Get | GetSuccess | GetFailure |
+    GetCodes | GetCodesSuccess | GetCodesFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure;
