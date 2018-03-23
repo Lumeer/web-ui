@@ -81,7 +81,7 @@ export class QueryConverter {
   }
 
   public static parseFilter(filter: string): AttributeFilter {
-    const [collectionId, attributeName, condition] = filter.split(":", 3);
+    const [collectionId, attributeId, condition] = filter.split(":", 3);
 
     const [conditionTypeString, value] = condition.replace(/ +/g, ' ').split(' ', 2);
 
@@ -90,7 +90,7 @@ export class QueryConverter {
       return null;
     }
 
-    return {collectionId, conditionType, attributeName, value};
+    return {collectionId, conditionType, attributeId, value};
   }
 
 }

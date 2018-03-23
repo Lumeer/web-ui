@@ -65,16 +65,14 @@ function filterDocumentsByFilters(documents: DocumentModel[], query: QueryModel)
 }
 
 function documentMeetsFilters(document: DocumentModel, filters: AttributeFilter[]): boolean {
-  let meets = true;
-  filters.forEach(filter => meets = meets && documentMeetFilter(document, filter));
-  return meets;
+  return filters.every(filter => documentMeetFilter(document, filter));
 }
 
 function documentMeetFilter(document: DocumentModel, filter: AttributeFilter): boolean {
   if (document.collectionId !== filter.collectionId) {
     return true;
   }
-  const data = document.data[filter.attributeName];
+  const data = document.data[filter.attributeId];
   switch (filter.conditionType) {
     case ConditionType.Equals:
       return data === filter.value;
