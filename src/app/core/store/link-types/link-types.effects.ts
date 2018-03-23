@@ -59,7 +59,7 @@ export class LinkTypesEffects {
   public getFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.GetFailure>(LinkTypesActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'link.types.get.fail', value: 'Failed to get links'});
+      const message = this.i18n({id: 'link.types.get.fail', value: 'Failed to get link types'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -95,7 +95,7 @@ export class LinkTypesEffects {
   public createFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.CreateFailure>(LinkTypesActionType.CREATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'link.type.create.fail', value: 'Failed to create link'});
+      const message = this.i18n({id: 'link.type.create.fail', value: 'Failed to create link type'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -117,7 +117,7 @@ export class LinkTypesEffects {
   public updateFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.UpdateFailure>(LinkTypesActionType.UPDATE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'link.type.update.fail', value: 'Failed to update link'});
+      const message = this.i18n({id: 'link.type.update.fail', value: 'Failed to update link type'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -133,7 +133,7 @@ export class LinkTypesEffects {
   public deleteFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.DeleteFailure>(LinkTypesActionType.DELETE_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'link.type.delete.fail', value: 'Failed to delete link'});
+      const message = this.i18n({id: 'link.type.delete.fail', value: 'Failed to delete link type'});
       return new NotificationsAction.Error({message});
     })
   );

@@ -150,8 +150,8 @@ export class DocumentsEffects {
   @Effect()
   public deleteConfirm$: Observable<Action> = this.actions$.ofType<DocumentsAction.DeleteConfirm>(DocumentsActionType.DELETE_CONFIRM).pipe(
     map((action: DocumentsAction.DeleteConfirm) => {
-      const title = this.i18n({id: 'document.delete.dialog.title', value: 'Delete document'});
-      const message = this.i18n({id: 'document.delete.dialog.message', value: 'Do you really want to delete this document?'});
+      const title = this.i18n({id: 'document.delete.dialog.title', value: 'Delete record'});
+      const message = this.i18n({id: 'document.delete.dialog.message', value: 'Do you really want to delete this record?'});
 
       return new NotificationsAction.Confirm({
         title,

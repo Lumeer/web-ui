@@ -3,7 +3,7 @@
     <i class="fa fa-caret-right clickable mr-1"
        [class.fa-rotate-90]="expanded"
        aria-hidden="true"
-       title="{{ expanded ? 'Close' : 'Open' }}"
+       title="{{ expanded ? 'Collapse' : 'Expand' }}"
        i18n-title="@@organizations.user.expand"
        (click)="expandedChange.emit()"></i>
 
@@ -29,7 +29,7 @@
     </input-box>
 
     <i *ngIf="showEmailWarning" class="fa fa-exclamation-triangle align-self-center ml-1 text-warning"
-       title="Email is in bad format" i18n-title="@@organization.user.email.incorrect"
+       title="Wrong email" i18n-title="@@organization.user.email.incorrect"
        aria-hidden="true"></i>
   </div>
 

@@ -184,7 +184,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       };
       reader.readAsText(file);
     } else {
-      const message = this.i18n({id: 'collection.import.file.empty', value: 'File input is empty'});
+      const message = this.i18n({id: 'collection.import.file.empty', value: 'Imported file is empty'});
       this.store.dispatch(new NotificationsAction.Error({message}));
     }
   }
