@@ -1,0 +1,9 @@
+{
+  "xliffmergeOptions": {
+    "srcDir": "src/i18n",
+    "genDir": "src/i18n",
+    "defaultLanguage": "en",
+    "i18nFile": "messages.xlf",
+    "useSourceAsTarget": true
+  }
+}

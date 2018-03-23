@@ -17,7 +17,8 @@ const definePlugin = new DefinePlugin(
     API_URL: JSON.stringify(LUMEER_ENGINE),
     BUILD_NUMBER: JSON.stringify(BUILD_NUMBER),
     PUBLIC_PATH: JSON.stringify(PUBLIC_PATH),
-    I18N_PATH: JSON.stringify(I18N_PATH)
+    I18N_PATH: JSON.stringify(I18N_PATH),
+    I18N_FORMAT: JSON.stringify(I18N_FORMAT)
   }
 );
 
@@ -64,8 +65,8 @@ const angularCompilerPlugin = new AngularCompilerPlugin(
   {
     "sourceMap": true,
     "mainPath": "main.ts",
-    "i18nInFile": I18N_LOCALE ? I18N_PATH : null,
-    "i18nInFormat": I18N_LOCALE ? I18N_FORMAT : null,
+    "i18nInFile": I18N_PATH,
+    "i18nInFormat": I18N_FORMAT,
     "locale": I18N_LOCALE,
     "platform": 0,
     "missingTranslation": "warning",

@@ -16,7 +16,7 @@
       Collection name needs to have at least {{collectionNameInput.errors.minlength.requiredLength}} characters.
     </div>
     <div *ngIf="collectionNameInput.errors && collectionNameInput.errors.uniqueName"
-         i18n="@@validation.collection.name.short">
+         i18n="@@validation.collection.name.unique">
       Collection name must be unique.
     </div>
   </div>

@@ -120,10 +120,9 @@ If you add or modify elements with `i18n`, make sure you run the following comma
 npm run i18n
 ```
 
-It will generate a new version of `messages.xlf` file in `src/i18n` folder.
-Look at the changes (git diff) and apply them to other languages (such as `messages.cs.xlf`).
+It will generate a new version of `messages.xlf` file in `src/i18n` folder and merge the changes to the files for other languages (such as `messages.cs.xlf`).
 
-Preferably, you should also provide a translation to these languages by adding `<target>` element to each new translation unit.
+Preferably, you should also provide a translation to these languages by changing `<target>` element content as well as removing its `state="new"` attribute in each newly added translation unit.
 If you do not speak those languages, ask maintainers for a translation when you send a pull-request.
 
 ### Attribute Binding

@@ -62,40 +62,6 @@
           <context context-type="sourcefile">app/core/top-panel/top-panel.component.ts</context>
           <context context-type="linenumber">84</context>
         </context-group>
-      </trans-unit><trans-unit id="search.recent.header" datatype="html">
-        <source>Recently used</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/core/search-home/search-home.component.ts</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.recent.views" datatype="html">
-        <source>Views</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/core/search-home/search-home.component.ts</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/core/search-home/search-home.component.ts</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.favorites.header" datatype="html">
-        <source>Favorites</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/core/search-home/search-home.component.ts</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.recent.collections" datatype="html">
-        <source>Files</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/core/search-home/search-home.component.ts</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.recent.documents" datatype="html">
-        <source>Records</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/core/search-home/search-home.component.ts</context>
-          <context context-type="linenumber">48</context>
-        </context-group>
       </trans-unit><trans-unit id="workspace.button.apply" datatype="html">
         <source>Use project</source>
         <context-group purpose="location">
@@ -182,31 +148,31 @@
         <source>Record Count</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit><trans-unit id="collection.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{collection.favourite ?  &apos;Remove from favorites&apos; : &apos;Add to favorites&apos;}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit><trans-unit id="collection.button.configure" datatype="html">
         <source>Configure</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit><trans-unit id="collection.button.icon" datatype="html">
         <source>Icon picker</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">74</context>
         </context-group>
       </trans-unit><trans-unit id="collection.button.remove" datatype="html">
         <source>Remove File</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit><trans-unit id="tag.remove" datatype="html">
         <source>Remove tag</source>
@@ -308,6 +274,10 @@
           <context context-type="sourcefile">app/shared/dialogs/collection-name-input/collection-name-input.component.ts</context>
           <context context-type="linenumber">15</context>
         </context-group>
+      </trans-unit><trans-unit id="validation.collection.name.unique" datatype="html">
+        <source>
+      Collection name must be unique.
+    </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/dialogs/collection-name-input/collection-name-input.component.ts</context>
           <context context-type="linenumber">19</context>
