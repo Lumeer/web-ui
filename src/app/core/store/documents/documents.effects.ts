@@ -186,7 +186,7 @@ export class DocumentsEffects {
 
     const addedAttributes = Object.keys(document.data);
 
-    collectionCopy.attributes = this.incrementOrAddAttributesInCollection(collectionCopy.attributes, addedAttributes);
+    collectionCopy.attributes = this.updateAttributesInColection(collectionCopy.attributes, addedAttributes, []);
 
     return new CollectionsAction.UpdateSuccess({collection: collectionCopy});
   }
@@ -200,10 +200,7 @@ export class DocumentsEffects {
     const addedAttributesIds = newAttributesIds.filter(attr => !oldAttributesIds.includes(attr));
     const removedAttributesIds = oldAttributesIds.filter(attr => !newAttributesIds.includes(attr));
 
-    let newAttributes = this.incrementOrAddAttributesInCollection(collectionCopy.attributes, addedAttributesIds);
-    newAttributes = this.decrementAttributesInCollection(newAttributes, removedAttributesIds);
-
-    collectionCopy.attributes = newAttributes;
+    collectionCopy.attributes = this.updateAttributesInColection(collectionCopy.attributes, addedAttributesIds, removedAttributesIds);
 
     return new CollectionsAction.UpdateSuccess({collection: collectionCopy});
   }
@@ -213,33 +210,27 @@ export class DocumentsEffects {
 
     const deletedAttributes = Object.keys(document.data);
 
-    collectionCopy.attributes = this.decrementAttributesInCollection(collectionCopy.attributes, deletedAttributes);
+    collectionCopy.attributes = this.updateAttributesInColection(collectionCopy.attributes, [], deletedAttributes);
 
     return new CollectionsAction.UpdateSuccess({collection: collectionCopy});
   }
 
-  private decrementAttributesInCollection(attributes: AttributeModel[], attributeIds: string[]): AttributeModel[] {
-    return attributes.map(attribute => {
-        if (attributeIds.includes(attribute.id)) {
-          return {...attribute, usageCount: Math.max(attribute.usageCount - 1, 0)};
-        }
-        return attribute;
-      }
-    );
-  }
-
-  private incrementOrAddAttributesInCollection(attributes: AttributeModel[], attributeIds: string[]): AttributeModel[] {
+  private updateAttributesInColection(attributes: AttributeModel[], attributeToInc: string[], attributeToDec: string[]): AttributeModel[] {
     const newAttributes = attributes.map(attribute => {
-        const attributeIndex = attributeIds.indexOf(attribute.id);
-        if (attributeIndex !== -1) {
-          attributeIds.splice(attributeIndex, 1);
-          return {...attribute, usageCount: attribute.usageCount + 1};
+        if (attributeToDec.includes(attribute.id)) {
+          return {...attribute, usageCount: Math.max(attribute.usageCount - 1, 0)};
+        } else {
+          const attributeIndex = attributeToInc.indexOf(attribute.id);
+          if (attributeIndex !== -1) {
+            attributeToInc.splice(attributeIndex, 1);
+            return {...attribute, usageCount: attribute.usageCount + 1};
+          }
         }
         return attribute;
       }
     );
 
-    attributeIds.map(attributeId => ({id: attributeId, name: attributeId, constraints: [], usageCount: 1}))
+    attributeToInc.map(attributeId => ({id: attributeId, name: attributeId, constraints: [], usageCount: 1}))
       .forEach(attribute => newAttributes.push(attribute));
 
     return newAttributes;
