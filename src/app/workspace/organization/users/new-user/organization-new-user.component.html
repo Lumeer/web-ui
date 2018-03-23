@@ -14,7 +14,7 @@
     </input-box>
 
     <i *ngIf="showNameWarning" class="fa fa-exclamation-triangle align-self-center ml-1 text-warning"
-       title="Name is in bad format" i18n-title="@@organization.user.name.incorrect"
+       title="Wrong name (invalid characters or too short)" i18n-title="@@organization.user.name.incorrect"
        aria-hidden="true"></i>
   </div>
 
@@ -30,7 +30,7 @@
     </input-box>
 
     <i *ngIf="showEmailWarning" class="fa fa-exclamation-triangle align-self-center ml-1 text-warning"
-       title="Email is in bad format" i18n-title="@@organization.user.email.incorrect"
+       title="Wrong email" i18n-title="@@organization.user.email.incorrect"
        aria-hidden="true"></i>
   </div>
   <div class="col-2 col-md-4 col-lg-6 d-flex flex-nowrap flex-row-reverse align-items-center">
