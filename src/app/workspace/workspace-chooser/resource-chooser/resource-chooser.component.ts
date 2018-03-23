@@ -31,7 +31,7 @@ import {ResourceItemType} from './resource-item-type';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
-const warningStyle = 'lmr-warning';
+const warningStyle = 'border-danger';
 
 type ResourceModel = OrganizationModel | ProjectModel;
 

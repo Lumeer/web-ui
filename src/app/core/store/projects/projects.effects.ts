@@ -67,7 +67,7 @@ export class ProjectsEffects {
   );
 
   @Effect({dispatch: false})
-  public getCodes$Failure$: Observable<Action> = this.actions$.ofType<ProjectsAction.GetCodesFailure>(ProjectsActionType.GET_CODES_FAILURE).pipe(
+  public getCodesFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.GetCodesFailure>(ProjectsActionType.GET_CODES_FAILURE).pipe(
     tap((action: ProjectsAction.GetCodesFailure) => console.error(action.payload.error))
   );
 
