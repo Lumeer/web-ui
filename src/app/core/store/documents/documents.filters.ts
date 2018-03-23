@@ -18,50 +18,87 @@
  */
 
 import {isNullOrUndefined} from 'util';
-import {QueryModel} from '../navigation/query.model';
+import {AttributeFilter, ConditionType, QueryModel} from '../navigation/query.model';
 import {DocumentModel} from './document.model';
+import {QueryConverter} from "../navigation/query.converter";
 
-export class DocumentsFilters {
-
-  public static filterByQuery(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
-    documents = documents.filter(document => typeof(document) === 'object');
-    if (!query) {
-      return documents;
-    }
-
-    let filteredDocuments = this.filterByCollections(documents, query);
-    filteredDocuments = this.filterByFulltext(filteredDocuments, query);
-    return this.paginate(filteredDocuments, query);
-  };
-
-  private static filterByCollections(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
-    if (!this.hasCollectionsFilter(query)) {
-      return documents;
-    }
-
-    return documents.filter(document => {
-      return query.collectionIds.includes(document.collectionId);
-    });
+export function filterDocumentsByQuery(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
+  documents = documents.filter(document => typeof(document) === 'object');
+  if (!query) {
+    return documents;
   }
 
-  private static hasCollectionsFilter(query: QueryModel): boolean {
-    return query.collectionIds && query.collectionIds.length > 0;
-  }
+  let filteredDocuments = filterDocumentsByCollections(documents, query);
+  filteredDocuments = filterDocumentsByFulltext(filteredDocuments, query);
+  filteredDocuments = filterDocumentsByFilters(filteredDocuments, query);
 
-  private static filterByFulltext(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
-    if (!query.fulltext) {
-      return documents;
-    }
-
-    return documents.filter(document => Object.values(document.data).some(value => value.includes(query.fulltext)));
-  }
-
-  private static paginate(documents: DocumentModel[], query: QueryModel) {
-    if (isNullOrUndefined(query.page) || isNullOrUndefined(query.pageSize)) {
-      return documents;
-    }
-
-    return documents.slice(query.page * query.pageSize, (query.page + 1) * query.pageSize);
-  }
-
+  return paginate(filteredDocuments, query);
 }
+
+function filterDocumentsByCollections(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
+  if (!hasCollectionsFilter(query)) {
+    return documents;
+  }
+
+  return documents.filter(document => {
+    return query.collectionIds.includes(document.collectionId);
+  });
+}
+
+function filterDocumentsByFulltext(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
+  if (!query.fulltext) {
+    return documents;
+  }
+
+  return documents.filter(document => Object.values(document.data).some(value => value.includes(query.fulltext)));
+}
+
+function filterDocumentsByFilters(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
+  if (!query.filters || query.filters.length == 0) {
+    return documents;
+  }
+
+  const filters = query.filters.map(filter => QueryConverter.parseFilter(filter))
+    .filter(filter => !isNullOrUndefined(filter));
+
+  return documents.filter(document => documentMeetsFilters(document, filters));
+}
+
+function documentMeetsFilters(document: DocumentModel, filters: AttributeFilter[]): boolean {
+  return filters.every(filter => documentMeetFilter(document, filter));
+}
+
+function documentMeetFilter(document: DocumentModel, filter: AttributeFilter): boolean {
+  if (document.collectionId !== filter.collectionId) {
+    return true;
+  }
+  const data = document.data[filter.attributeId];
+  switch (filter.conditionType) {
+    case ConditionType.Equals:
+      return data === filter.value;
+    case ConditionType.NotEquals:
+      return data !== filter.value;
+    case ConditionType.GreaterThan:
+      return data > filter.value;
+    case ConditionType.GreaterThanEquals:
+      return data >= filter.value;
+    case ConditionType.LowerThan:
+      return data < filter.value;
+    case ConditionType.LowerThanEquals:
+      return data <= filter.value;
+  }
+  return true;
+}
+
+function hasCollectionsFilter(query: QueryModel): boolean {
+  return query.collectionIds && query.collectionIds.length > 0;
+}
+
+function paginate(documents: DocumentModel[], query: QueryModel) {
+  if (isNullOrUndefined(query.page) || isNullOrUndefined(query.pageSize)) {
+    return documents;
+  }
+
+  return documents.slice(query.page * query.pageSize, (query.page + 1) * query.pageSize);
+}
+

@@ -176,7 +176,7 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
     }
 
     // if (!unique && this.attribute) {
-    //   this.attributeName = this.attribute.name;
+    //   this.attributeId = this.attribute.name;
     // }
   }
 
