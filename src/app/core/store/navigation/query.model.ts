@@ -56,7 +56,7 @@ const LteVariants = ['<=', 'lte'];
 const GtVariants = ['>', 'gt'];
 const GteVariants = ['>=', 'gte'];
 
-export function conditionFromString(condition: String): ConditionType {
+export function conditionFromString(condition: string): ConditionType {
   const conditionLowerCase = condition.toLowerCase();
   if (EqVariants.includes(conditionLowerCase)) {
     return ConditionType.Equals;
