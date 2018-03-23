@@ -22,7 +22,7 @@ import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, map, skipWhile, switchMap, tap, withLatestFrom, flatMap} from 'rxjs/operators';
 import {Document} from '../../dto';
 import {DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
@@ -32,7 +32,12 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {DocumentConverter} from './document.converter';
 import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
-import {selectDocumentsQueries} from './documents.state';
+import {selectDocumentsDictionary, selectDocumentsQueries} from './documents.state';
+import {selectCollectionsDictionary} from "../collections/collections.state";
+import {CollectionsAction} from "../collections/collections.action";
+import {AttributeModel, CollectionModel} from "../collections/collection.model";
+import {forEach} from "@angular/router/src/utils/collection";
+import {extractAttributeName} from "../../../shared/utils/attribute.utils";
 
 @Injectable()
 export class DocumentsEffects {
@@ -70,7 +75,12 @@ export class DocumentsEffects {
         map(dto => DocumentConverter.fromDto(dto, action.payload.document.correlationId))
       );
     }),
-    map(document => new DocumentsAction.CreateSuccess({document: document})),
+    withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+    flatMap(([document, collectionEntities]) => {
+      const collection = collectionEntities[document.collectionId];
+      return [new DocumentsAction.CreateSuccess({document}),
+        this.createAddCollectionAttributesAction(collection, document)];
+    }),
     catchError((error) => Observable.of(new DocumentsAction.CreateFailure({error: error})))
   );
 
@@ -90,7 +100,7 @@ export class DocumentsEffects {
 
       if (action.payload.toggleFavourite) {
         return this.documentService.toggleDocumentFavorite(documentDto).pipe(
-          map(success => {
+          map(() => {
             action.payload.document.favorite = !action.payload.document.favorite;
             return action.payload.document;
           })
@@ -120,12 +130,19 @@ export class DocumentsEffects {
         collectionId: action.payload.collectionId,
         data: action.payload.data
       };
-
       return this.documentService.updateDocument(documentDto).pipe(
         map(dto => DocumentConverter.fromDto(dto))
       );
     }),
-    map(document => new DocumentsAction.UpdateDataSuccess({document: document})),
+    withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+    withLatestFrom(this.store$.select(selectDocumentsDictionary)),
+    flatMap(([[document, collectionEntities], documentEntities]) => {
+      const collection = collectionEntities[document.collectionId];
+      const oldDocument = documentEntities[document.id];
+
+      return [new DocumentsAction.UpdateDataSuccess({document}),
+        this.createUpdateCollectionAttributesAction(collection, document, oldDocument)];
+    }),
     catchError((error) => Observable.of(new DocumentsAction.UpdateDataFailure({error: error})))
   );
 
@@ -140,10 +157,20 @@ export class DocumentsEffects {
 
   @Effect()
   public delete$: Observable<Action> = this.actions$.ofType<DocumentsAction.Delete>(DocumentsActionType.DELETE).pipe(
-    switchMap(action => this.documentService.removeDocument(action.payload.collectionId, action.payload.documentId).pipe(
-      map(() => action)
-    )),
-    map(action => new DocumentsAction.DeleteSuccess({documentId: action.payload.documentId})),
+    switchMap(action => {
+      return this.documentService.removeDocument(action.payload.collectionId, action.payload.documentId).pipe(
+        map(() => action.payload)
+      )
+    }),
+    withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+    withLatestFrom(this.store$.select(selectDocumentsDictionary)),
+    flatMap(([[payload, collectionEntities], documentEntities]) => {
+      const collection = collectionEntities[payload.collectionId];
+      const oldDocument = documentEntities[payload.documentId];
+
+      return [new DocumentsAction.DeleteSuccess({documentId: oldDocument.id}),
+        this.createRemoveCollectionsAttributesAction(collection, oldDocument)];
+    }),
     catchError((error) => Observable.of(new DocumentsAction.DeleteFailure({error: error})))
   );
 
@@ -175,6 +202,61 @@ export class DocumentsEffects {
               private i18n: I18n,
               private searchService: SearchService,
               private store$: Store<AppState>) {
+  }
+
+  private createAddCollectionAttributesAction(collection: CollectionModel, document: DocumentModel): Action {
+    const collectionCopy = {...collection, documentsCount: collection.documentsCount + 1};
+
+    const addedAttributes = Object.keys(document.data);
+
+    collectionCopy.attributes = this.updateAttributesInColection(collectionCopy.attributes, addedAttributes, []);
+
+    return new CollectionsAction.UpdateSuccess({collection: collectionCopy});
+  }
+
+  private createUpdateCollectionAttributesAction(collection: CollectionModel, document: DocumentModel, oldDocument: DocumentModel): Action {
+    const collectionCopy = {...collection};
+
+    const oldAttributesIds = Object.keys(oldDocument.data);
+    const newAttributesIds = Object.keys(document.data);
+
+    const addedAttributesIds = newAttributesIds.filter(attr => !oldAttributesIds.includes(attr));
+    const removedAttributesIds = oldAttributesIds.filter(attr => !newAttributesIds.includes(attr));
+
+    collectionCopy.attributes = this.updateAttributesInColection(collectionCopy.attributes, addedAttributesIds, removedAttributesIds);
+
+    return new CollectionsAction.UpdateSuccess({collection: collectionCopy});
+  }
+
+  private createRemoveCollectionsAttributesAction(collection: CollectionModel, document: DocumentModel): Action {
+    const collectionCopy = {...collection, documentsCount: Math.max(collection.documentsCount - 1, 0)};
+
+    const deletedAttributes = Object.keys(document.data);
+
+    collectionCopy.attributes = this.updateAttributesInColection(collectionCopy.attributes, [], deletedAttributes);
+
+    return new CollectionsAction.UpdateSuccess({collection: collectionCopy});
+  }
+
+  private updateAttributesInColection(attributes: AttributeModel[], attributeToInc: string[], attributeToDec: string[]): AttributeModel[] {
+    const newAttributes = attributes.map(attribute => {
+        if (attributeToDec.includes(attribute.id)) {
+          return {...attribute, usageCount: Math.max(attribute.usageCount - 1, 0)};
+        } else {
+          const attributeIndex = attributeToInc.indexOf(attribute.id);
+          if (attributeIndex !== -1) {
+            attributeToInc.splice(attributeIndex, 1);
+            return {...attribute, usageCount: attribute.usageCount + 1};
+          }
+        }
+        return attribute;
+      }
+    );
+
+    attributeToInc.map(attributeId => ({id: attributeId, name: extractAttributeName(attributeId), constraints: [], usageCount: 1}))
+      .forEach(attribute => newAttributes.push(attribute));
+
+    return newAttributes;
   }
 
 }

@@ -40,10 +40,6 @@ export function isArraySubset(superset: any[], subset: any[]): boolean {
 }
 
 export function getArrayDifference<T>(bigArray: T[], smallArray: T[]): T[] {
-  if (bigArray.length === smallArray.length) {
-    return [];
-  }
-
   if (bigArray.length < smallArray.length) {
     return getArrayDifference(smallArray, bigArray);
   }
@@ -54,5 +50,5 @@ export function getArrayDifference<T>(bigArray: T[], smallArray: T[]): T[] {
 export function arrayIntersection<T>(array1: T[], array2: T[]): T[] {
   const a = array1 || [];
   const b = array2 || [];
-  return a.filter(x => b.indexOf(x) !== -1);
+  return a.filter(x => b.includes(x));
 }
