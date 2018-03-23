@@ -53,6 +53,24 @@ export class ProjectsEffects {
   );
 
   @Effect()
+  public getCodes$: Observable<Action> = this.actions$.ofType<ProjectsAction.GetCodes>(ProjectsActionType.GET_CODES).pipe(
+    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    switchMap(([action, organizationsEntities]) => {
+      const organization = organizationsEntities[action.payload.organizationId];
+      return this.projectService.getProjectCodes(organization.code).pipe(
+        map(projectCodes => ({projectCodes, organizationId: action.payload.organizationId}))
+      )
+    }),
+    map(({projectCodes, organizationId}) => new ProjectsAction.GetCodesSuccess({organizationId, projectCodes})),
+    catchError((error) => Observable.of(new ProjectsAction.GetCodesFailure({error: error})))
+  );
+
+  @Effect({dispatch: false})
+  public getCodes$Failure$: Observable<Action> = this.actions$.ofType<ProjectsAction.GetCodesFailure>(ProjectsActionType.GET_CODES_FAILURE).pipe(
+    tap((action: ProjectsAction.GetCodesFailure) => console.error(action.payload.error))
+  );
+
+  @Effect()
   public create$: Observable<Action> = this.actions$.ofType<ProjectsAction.Create>(ProjectsActionType.CREATE).pipe(
     withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
     switchMap(([action, organizationsEntities]) => {

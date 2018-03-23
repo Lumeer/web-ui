@@ -24,8 +24,12 @@ export function organizationsReducer(state: OrganizationsState = initialOrganiza
   switch (action.type) {
     case OrganizationsActionType.GET_SUCCESS:
       return organizationsAdapter.addAll(action.payload.organizations, state);
+    case OrganizationsActionType.GET_CODES_SUCCESS:
+      return {...state, organizationCodes: action.payload.organizationCodes};
     case OrganizationsActionType.CREATE_SUCCESS:
-      return organizationsAdapter.addOne(action.payload.organization, state);
+      const newState = organizationsAdapter.addOne(action.payload.organization, state);
+      const organizationCodes = [...state.organizationCodes, action.payload.organization.code];
+      return {...newState, organizationCodes};
     case OrganizationsActionType.UPDATE_SUCCESS:
       return organizationsAdapter.updateOne({id: action.payload.organization.id, changes: action.payload.organization}, state);
     case OrganizationsActionType.DELETE_SUCCESS:

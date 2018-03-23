@@ -81,7 +81,7 @@
                                  (selectedChange)="onNewIcon(resource, $event)"></icon-picker>
                   </div>
                 </div>
-                <div class="card-title code p-1" contenteditable="true"
+                <div class="card-title code my-2" contenteditable="true"
                      (blur)="code.scrollTo(0,0); onCodeBlur(code, resource)"
                      (click)="$event.stopPropagation()"
                      (keydown)="onKeyDown($event, code)"

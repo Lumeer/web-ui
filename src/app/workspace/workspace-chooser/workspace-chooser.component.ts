@@ -33,10 +33,10 @@ import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {selectAllOrganizations, selectOrganizationById, selectSelectedOrganization, selectSelectedOrganizationId} from '../../core/store/organizations/organizations.state';
+import {selectAllOrganizations, selectOrganizationById, selectOrganizationCodes, selectSelectedOrganization, selectSelectedOrganizationId} from '../../core/store/organizations/organizations.state';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {selectProjectById, selectProjectsForSelectedOrganization, selectSelectedProject, selectSelectedProjectId} from '../../core/store/projects/projects.state';
+import {selectProjectById, selectProjectCodesForSelectedOrganization, selectProjectsForSelectedOrganization, selectSelectedProject, selectSelectedProjectId} from '../../core/store/projects/projects.state';
 import {RouterAction} from '../../core/store/router/router.action';
 import {UsersAction} from '../../core/store/users/users.action';
 import {ViewsAction} from '../../core/store/views/views.action';
@@ -72,6 +72,8 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   public organizations$: Observable<OrganizationModel[]>;
   public projects$: Observable<ProjectModel[]>;
   public canCreateProjects$: Observable<boolean>;
+  public organizationNames$: Observable<string[]>;
+  public projectNames$: Observable<string[]>;
 
   public selectedOrganizationId: string;
   public selectedProjectId: string;
@@ -85,23 +87,28 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.bindData();
-    this.subscribeCodes();
+    this.subscribeSelectedChange();
+
+    this.store.dispatch(new OrganizationsAction.GetCodes());
     this.store.dispatch(new OrganizationsAction.Get());
   }
 
   private bindData() {
     this.organizations$ = this.store.select(selectAllOrganizations);
     this.projects$ = this.store.select(selectProjectsForSelectedOrganization);
+    this.organizationNames$ = this.store.select(selectOrganizationCodes);
+    this.projectNames$ = this.store.select(selectProjectCodesForSelectedOrganization);
     this.canCreateProjects$ = this.store.select(selectSelectedOrganization).pipe(
       map(organization => organization && this.hasManageRole(organization))
     );
   }
 
-  private subscribeCodes() {
+  private subscribeSelectedChange() {
     this.subscriptions.push(
       this.store.select(selectSelectedOrganizationId).subscribe(id => {
         this.selectedOrganizationId = id;
         if (id) {
+          this.store.dispatch(new ProjectsAction.GetCodes({organizationId: id}));
           this.store.dispatch(new ProjectsAction.Get({organizationId: id}));
         }
       }),

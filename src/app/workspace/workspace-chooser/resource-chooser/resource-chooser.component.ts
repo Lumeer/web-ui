@@ -87,6 +87,7 @@ export class ResourceChooserComponent implements OnChanges {
   @Input() public resources: ResourceModel[];
   @Input() public selectedId: string;
   @Input() public canCreateResource: boolean;
+  @Input() public usedCodes: string[];
 
   @Output() public resourceDelete: EventEmitter<string> = new EventEmitter();
   @Output() public resourceSelect: EventEmitter<string> = new EventEmitter();
@@ -424,6 +425,6 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private isNewCodeValid(code: string): boolean {
-    return this.resources.findIndex(res => res.code === code) === -1;
+    return !this.usedCodes.includes(code);
   }
 }

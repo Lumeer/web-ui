@@ -26,6 +26,10 @@ export enum OrganizationsActionType {
   GET_SUCCESS = '[Organizations] Get :: Success',
   GET_FAILURE = '[Organizations] Get :: Failure',
 
+  GET_CODES = '[Organizations] Get codes',
+  GET_CODES_SUCCESS = '[Organizations] Get codes :: Success',
+  GET_CODES_FAILURE = '[Organizations] Get codes :: Failure',
+
   CREATE = '[Organizations] Create',
   CREATE_SUCCESS = '[Organizations] Create :: Success',
   CREATE_FAILURE = '[Organizations] Create :: Failure',
@@ -57,6 +61,24 @@ export namespace OrganizationsAction {
 
   export class GetFailure implements Action {
     public readonly type = OrganizationsActionType.GET_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
+  export class GetCodes implements Action {
+    public readonly type = OrganizationsActionType.GET_CODES;
+  }
+
+  export class GetCodesSuccess implements Action {
+    public readonly type = OrganizationsActionType.GET_CODES_SUCCESS;
+
+    public constructor(public payload: { organizationCodes: string[] }) {
+    }
+  }
+
+  export class GetCodesFailure implements Action {
+    public readonly type = OrganizationsActionType.GET_CODES_FAILURE;
 
     public constructor(public payload: { error: any }) {
     }
@@ -134,6 +156,7 @@ export namespace OrganizationsAction {
 
   export type All = Select |
     Get | GetSuccess | GetFailure |
+    GetCodes | GetCodesSuccess | GetCodesFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure;

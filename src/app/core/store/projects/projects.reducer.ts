@@ -19,13 +19,25 @@
 
 import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {initialProjectsState, projectsAdapter, ProjectsState} from './projects.state';
+import {OrganizationsActionType} from "../organizations/organizations.action";
+import {organizationsAdapter} from "../organizations/organizations.state";
 
 export function projectsReducer(state: ProjectsState = initialProjectsState, action: ProjectsAction.All): ProjectsState {
   switch (action.type) {
     case ProjectsActionType.GET_SUCCESS:
       return projectsAdapter.addMany(action.payload.projects, state);
+    case ProjectsActionType.GET_CODES_SUCCESS:
+      const projectCodes = {...state.projectCodes};
+      projectCodes[action.payload.organizationId] = action.payload.projectCodes;
+      return {...state, projectCodes};
     case ProjectsActionType.CREATE_SUCCESS:
-      return projectsAdapter.addOne(action.payload.project, state);
+      const project = action.payload.project;
+      const newState = projectsAdapter.addOne(project, state);
+
+      const projectCodesCopy = {...state.projectCodes};
+      projectCodesCopy[project.organizationId].push(project.code);
+
+      return {...newState, projectCodes: projectCodesCopy};
     case ProjectsActionType.UPDATE_SUCCESS:
       return projectsAdapter.updateOne({id: action.payload.project.id, changes: action.payload.project}, state);
     case ProjectsActionType.DELETE_SUCCESS:

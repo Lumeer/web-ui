@@ -31,8 +31,11 @@ import {PermissionService} from './permission.service';
 export class OrganizationService extends PermissionService {
 
   public getOrganizations(): Observable<Organization[]> {
-    return this.httpClient.get<Organization[]>(this.apiPrefix()).pipe(
-      catchError(OrganizationService.catchGetCollectionsError)
+    return this.httpClient.get<Organization[]>(this.apiPrefix());
+  }
+
+  public getOrganizationsCodes(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.apiPrefix()}/info/codes`).pipe(
     );
   }
 
@@ -60,14 +63,6 @@ export class OrganizationService extends PermissionService {
 
   private apiPrefix(code?: string): string {
     return `/${API_URL}/rest/organizations${code ? `/${code}` : ''}`;
-  }
-
-  private static catchGetCollectionsError(error: HttpErrorResponse): ErrorObservable {
-    if (error instanceof Error) {
-      throw new NetworkError();
-    } else {
-      throw new FetchFailedError('Organizations');
-    }
   }
 
 }

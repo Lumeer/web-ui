@@ -29,7 +29,7 @@ import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {selectOrganizationsDictionary} from './organizations.state';
 import {RouterAction} from "../router/router.action";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {RouteFinder} from "../../../shared/utils/route-finder";
 
 @Injectable()
@@ -48,6 +48,18 @@ export class OrganizationsEffects {
   public getFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.GetFailure>(OrganizationsActionType.GET_FAILURE).pipe(
     tap(action => console.error(action.payload.error)),
     map(() => new NotificationsAction.Error({message: 'Failed to get organizations'}))
+  );
+
+  @Effect()
+  public getCodes$: Observable<Action> = this.actions$.ofType<OrganizationsAction.GetCodes>(OrganizationsActionType.GET_CODES).pipe(
+    switchMap(() => this.organizationService.getOrganizationsCodes()),
+    map((organizationCodes) => new OrganizationsAction.GetCodesSuccess({organizationCodes})),
+    catchError((error) => Observable.of(new OrganizationsAction.GetCodesFailure({error: error})))
+  );
+
+  @Effect({dispatch: false})
+  public getCodes$Failure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.GetCodesFailure>(OrganizationsActionType.GET_CODES_FAILURE).pipe(
+    tap((action: OrganizationsAction.GetCodesFailure) => console.error(action.payload.error))
   );
 
   @Effect()
@@ -89,7 +101,7 @@ export class OrganizationsEffects {
       if (orgCodeInRoute && orgCodeInRoute === oldOrganization.code && organization.code !== oldOrganization.code) {
         const paths = this.router.routerState.snapshot.url.split("/").filter(path => path);
         const index = paths.indexOf(oldOrganization.code, 1);
-        if(index !== -1){
+        if (index !== -1) {
           paths[index] = organization.code;
           actions.push(new RouterAction.Go({path: paths}))
           // TODO extract as
