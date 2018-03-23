@@ -31,13 +31,7 @@ export function projectsReducer(state: ProjectsState = initialProjectsState, act
       projectCodes[action.payload.organizationId] = action.payload.projectCodes;
       return {...state, projectCodes};
     case ProjectsActionType.CREATE_SUCCESS:
-      const project = action.payload.project;
-      const newState = projectsAdapter.addOne(project, state);
-
-      const projectCodesCopy = {...state.projectCodes};
-      projectCodesCopy[project.organizationId].push(project.code);
-
-      return {...newState, projectCodes: projectCodesCopy};
+      return projectsAdapter.addOne(action.payload.project, state);
     case ProjectsActionType.UPDATE_SUCCESS:
       return projectsAdapter.updateOne({id: action.payload.project.id, changes: action.payload.project}, state);
     case ProjectsActionType.DELETE_SUCCESS:

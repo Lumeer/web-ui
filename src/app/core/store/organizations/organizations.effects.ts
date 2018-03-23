@@ -27,7 +27,7 @@ import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
-import {selectOrganizationsDictionary} from './organizations.state';
+import {selectOrganizationCodes, selectOrganizationsDictionary} from './organizations.state';
 import {RouterAction} from "../router/router.action";
 import {Router} from "@angular/router";
 import {RouteFinder} from "../../../shared/utils/route-finder";
@@ -72,7 +72,12 @@ export class OrganizationsEffects {
         map(dto => OrganizationConverter.fromDto(dto, correlationId))
       );
     }),
-    map(organization => new OrganizationsAction.CreateSuccess({organization: organization})),
+    withLatestFrom(this.store$.select(selectOrganizationCodes)),
+    flatMap(([organization, organizationCodes]) => {
+      const codes = [...organizationCodes, organization.code];
+      return [new OrganizationsAction.CreateSuccess({organization}),
+        new OrganizationsAction.GetCodesSuccess({organizationCodes: codes})];
+    }),
     catchError(error => Observable.of(new OrganizationsAction.CreateFailure({error: error})))
   );
 
@@ -89,11 +94,14 @@ export class OrganizationsEffects {
       const organizationDto = OrganizationConverter.toDto(action.payload.organization);
       const oldOrganization = organizationEntities[action.payload.organization.id];
       return this.organizationService.editOrganization(oldOrganization.code, organizationDto).pipe(
-        map(dto => ({action, organization: OrganizationConverter.fromDto(dto), oldOrganization}))
+        map(dto => ({organization: OrganizationConverter.fromDto(dto), oldOrganization}))
       );
     }),
-    flatMap(({action, organization, oldOrganization}) => {
-      const actions: Action[] = [new OrganizationsAction.UpdateSuccess({organization: {...organization, id: action.payload.organization.id}})];
+    withLatestFrom(this.store$.select(selectOrganizationCodes)),
+    flatMap(([{organization, oldOrganization}, organizationCodes]) => {
+      const actions: Action[] = [new OrganizationsAction.UpdateSuccess({organization: {...organization, id: organization.id}})];
+      const codes = organizationCodes.map(code => code === oldOrganization.code ? organization.code : code);
+      actions.push(new OrganizationsAction.GetCodesSuccess({organizationCodes: codes}));
 
       const paramMap = RouteFinder.getFirstChildRouteWithParams(this.router.routerState.root.snapshot).paramMap;
       const orgCodeInRoute = paramMap.get('organizationCode');
@@ -125,10 +133,16 @@ export class OrganizationsEffects {
     switchMap(([action, organizationEntities]) => {
       const organization = organizationEntities[action.payload.organizationId];
       return this.organizationService.deleteOrganization(organization.code).pipe(
-        map(() => action)
+        map(() => ({action, deletedOrganizationCode: organization.code}))
       );
     }),
-    map(action => new OrganizationsAction.DeleteSuccess(action.payload)),
+    withLatestFrom(this.store$.select(selectOrganizationCodes)),
+    flatMap(([{action, deletedOrganizationCode}, organizationCodes]) => {
+      const codes = organizationCodes.filter(code => code !== deletedOrganizationCode);
+
+      return [new OrganizationsAction.DeleteSuccess(action.payload),
+        new OrganizationsAction.GetCodesSuccess({organizationCodes: codes})];
+    }),
     catchError(error => Observable.of(new OrganizationsAction.DeleteFailure({error: error})))
   );
 

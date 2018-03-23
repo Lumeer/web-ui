@@ -41,8 +41,9 @@ export const selectProjectsState = (state: AppState) => state.projects;
 export const selectAllProjects = createSelector(selectProjectsState, projectsAdapter.getSelectors().selectAll);
 export const selectProjectsDictionary = createSelector(selectProjectsState, projectsAdapter.getSelectors().selectEntities);
 export const selectSelectedProjectId = createSelector(selectProjectsState, projectsState => projectsState.selectedProjectId);
-export const selectProjectCodesForSelectedOrganization = createSelector(selectProjectsState, selectSelectedOrganizationId, (projectsState, selectedOrganizationId) => {
-  return projectsState.projectCodes[selectedOrganizationId] || [];
+export const selectProjectsCodes = createSelector(selectProjectsState, projectState => projectState.projectCodes);
+export const selectProjectsCodesForSelectedOrganization = createSelector(selectProjectsCodes, selectSelectedOrganizationId, (projectCodes, selectedOrganizationId) => {
+  return projectCodes[selectedOrganizationId] || [];
 });
 
 export const selectProjectsForSelectedOrganization = createSelector(selectAllProjects, selectSelectedOrganizationId, (projects, organizationId) => {

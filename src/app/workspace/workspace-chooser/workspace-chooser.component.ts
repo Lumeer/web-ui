@@ -36,7 +36,7 @@ import {OrganizationsAction} from '../../core/store/organizations/organizations.
 import {selectAllOrganizations, selectOrganizationById, selectOrganizationCodes, selectSelectedOrganization, selectSelectedOrganizationId} from '../../core/store/organizations/organizations.state';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {selectProjectById, selectProjectCodesForSelectedOrganization, selectProjectsForSelectedOrganization, selectSelectedProject, selectSelectedProjectId} from '../../core/store/projects/projects.state';
+import {selectProjectById, selectProjectsCodesForSelectedOrganization, selectProjectsForSelectedOrganization, selectSelectedProject, selectSelectedProjectId} from '../../core/store/projects/projects.state';
 import {RouterAction} from '../../core/store/router/router.action';
 import {UsersAction} from '../../core/store/users/users.action';
 import {ViewsAction} from '../../core/store/views/views.action';
@@ -97,7 +97,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     this.organizations$ = this.store.select(selectAllOrganizations);
     this.projects$ = this.store.select(selectProjectsForSelectedOrganization);
     this.organizationNames$ = this.store.select(selectOrganizationCodes);
-    this.projectNames$ = this.store.select(selectProjectCodesForSelectedOrganization);
+    this.projectNames$ = this.store.select(selectProjectsCodesForSelectedOrganization);
     this.canCreateProjects$ = this.store.select(selectSelectedOrganization).pipe(
       map(organization => organization && this.hasManageRole(organization))
     );
