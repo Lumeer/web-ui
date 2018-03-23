@@ -205,8 +205,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   public confirmDeletion(): void {
     if (this.postItModel.initialized) {
       this.store.dispatch(new DeleteConfirm({
-        collectionId: this.postItModel.document.collectionId,
-        documentId: this.postItModel.document.id
+        document: this.postItModel.document
       }));
 
     } else {

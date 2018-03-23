@@ -137,14 +137,14 @@ export namespace DocumentsAction {
   export class Delete implements Action {
     public readonly type = DocumentsActionType.DELETE;
 
-    public constructor(public payload: { collectionId: string, documentId: string }) {
+    public constructor(public payload: { document: DocumentModel}) {
     }
   }
 
   export class DeleteConfirm implements Action {
     public readonly type = DocumentsActionType.DELETE_CONFIRM;
 
-    public constructor(public payload: { collectionId: string, documentId: string }) {
+    public constructor(public payload: { document: DocumentModel}) {
     }
   }
 
