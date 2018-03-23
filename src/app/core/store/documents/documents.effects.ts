@@ -31,10 +31,11 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {DocumentConverter} from './document.converter';
 import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
-import {selectDocumentsQueries} from './documents.state';
+import {selectDocumentsDictionary, selectDocumentsQueries} from './documents.state';
 import {selectCollectionsDictionary} from "../collections/collections.state";
 import {CollectionsAction} from "../collections/collections.action";
-import {CollectionModel} from "../collections/collection.model";
+import {AttributeModel, CollectionModel} from "../collections/collection.model";
+import {forEach} from "@angular/router/src/utils/collection";
 
 @Injectable()
 export class DocumentsEffects {
@@ -122,10 +123,11 @@ export class DocumentsEffects {
         map(dto => DocumentConverter.fromDto(dto))
       );
     }),
-    withLatestFrom(this.store$),
-    flatMap(([document, state]) => {
-      const collection = state.collections.entities[document.collectionId];
-      const oldDocument = state.documents.entities[document.id];
+    withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+    withLatestFrom(this.store$.select(selectDocumentsDictionary)),
+    flatMap(([[document, collectionEntities], documentEntities]) => {
+      const collection = collectionEntities[document.collectionId];
+      const oldDocument = documentEntities[document.id];
 
       return [new DocumentsAction.UpdateDataSuccess({document}),
         this.createUpdateCollectionAttributesAction(collection, document, oldDocument)];
@@ -142,17 +144,18 @@ export class DocumentsEffects {
   @Effect()
   public delete$: Observable<Action> = this.actions$.ofType<DocumentsAction.Delete>(DocumentsActionType.DELETE).pipe(
     switchMap(action => {
-      const document = action.payload.document;
-
-      return this.documentService.removeDocument(document.collectionId, document.id).pipe(
-        map(() => document)
+      return this.documentService.removeDocument(action.payload.collectionId, action.payload.documentId).pipe(
+        map(() => action.payload)
       )
     }),
     withLatestFrom(this.store$.select(selectCollectionsDictionary)),
-    flatMap(([document, collectionEntities]) => {
-      const collection = collectionEntities[document.collectionId];
-      return [new DocumentsAction.DeleteSuccess({documentId: document.id}),
-        this.createRemoveCollectionsAttributesAction(collection, document)];
+    withLatestFrom(this.store$.select(selectDocumentsDictionary)),
+    flatMap(([[payload, collectionEntities], documentEntities]) => {
+      const collection = collectionEntities[payload.collectionId];
+      const oldDocument = documentEntities[payload.documentId];
+
+      return [new DocumentsAction.DeleteSuccess({documentId: oldDocument.id}),
+        this.createRemoveCollectionsAttributesAction(collection, oldDocument)];
     }),
     catchError((error) => Observable.of(new DocumentsAction.DeleteFailure({error: error})))
   );
@@ -183,7 +186,7 @@ export class DocumentsEffects {
 
     const addedAttributes = Object.keys(document.data);
 
-    this.incrementOrAddAttributesInCollection(collectionCopy, addedAttributes);
+    collectionCopy.attributes = this.incrementOrAddAttributesInCollection(collectionCopy.attributes, addedAttributes);
 
     return new CollectionsAction.UpdateSuccess({collection: collectionCopy});
   }
@@ -191,14 +194,16 @@ export class DocumentsEffects {
   private createUpdateCollectionAttributesAction(collection: CollectionModel, document: DocumentModel, oldDocument: DocumentModel): Action {
     const collectionCopy = {...collection};
 
-    const oldAttributes = Object.keys(oldDocument.data);
-    const newAttributes = Object.keys(document.data);
+    const oldAttributesIds = Object.keys(oldDocument.data);
+    const newAttributesIds = Object.keys(document.data);
 
-    const addedAttributes = newAttributes.filter(attr => !oldAttributes.includes(attr));
-    const removedAttributes = oldAttributes.filter(attr => !newAttributes.includes(attr));
+    const addedAttributesIds = newAttributesIds.filter(attr => !oldAttributesIds.includes(attr));
+    const removedAttributesIds = oldAttributesIds.filter(attr => !newAttributesIds.includes(attr));
 
-    this.incrementOrAddAttributesInCollection(collectionCopy, addedAttributes);
-    this.decrementAttributesInCollection(collectionCopy, removedAttributes);
+    let newAttributes = this.incrementOrAddAttributesInCollection(collectionCopy.attributes, addedAttributesIds);
+    newAttributes = this.decrementAttributesInCollection(newAttributes, removedAttributesIds);
+
+    collectionCopy.attributes = newAttributes;
 
     return new CollectionsAction.UpdateSuccess({collection: collectionCopy});
   }
@@ -207,34 +212,37 @@ export class DocumentsEffects {
     const collectionCopy = {...collection, documentsCount: Math.max(collection.documentsCount - 1, 0)};
 
     const deletedAttributes = Object.keys(document.data);
-    this.decrementAttributesInCollection(collectionCopy, deletedAttributes);
+
+    collectionCopy.attributes = this.decrementAttributesInCollection(collectionCopy.attributes, deletedAttributes);
 
     return new CollectionsAction.UpdateSuccess({collection: collectionCopy});
   }
 
-  private decrementAttributesInCollection(collection: CollectionModel, attributeIds: string[]) {
-    collection.attributes = collection.attributes.map(attribute => {
+  private decrementAttributesInCollection(attributes: AttributeModel[], attributeIds: string[]): AttributeModel[] {
+    return attributes.map(attribute => {
         if (attributeIds.includes(attribute.id)) {
-          attribute.usageCount = Math.max(attribute.usageCount - 1, 0);
+          return {...attribute, usageCount: Math.max(attribute.usageCount - 1, 0)};
         }
         return attribute;
       }
     );
   }
 
-  private incrementOrAddAttributesInCollection(collection: CollectionModel, attributeIds: string[]) {
-    collection.attributes = collection.attributes.map(attribute => {
+  private incrementOrAddAttributesInCollection(attributes: AttributeModel[], attributeIds: string[]): AttributeModel[] {
+    const newAttributes = attributes.map(attribute => {
         const attributeIndex = attributeIds.indexOf(attribute.id);
         if (attributeIndex !== -1) {
-          attribute.usageCount = attribute.usageCount + 1;
           attributeIds.splice(attributeIndex, 1);
+          return {...attribute, usageCount: attribute.usageCount + 1};
         }
         return attribute;
       }
     );
 
-    const newAttributes = attributeIds.map(attributeId => ({id: attributeId, name: attributeId, constraints: [], usageCount: 1}));
-    collection.attributes.push(...newAttributes);
+    attributeIds.map(attributeId => ({id: attributeId, name: attributeId, constraints: [], usageCount: 1}))
+      .forEach(attribute => newAttributes.push(attribute));
+
+    return newAttributes;
   }
 
 }
