@@ -53,6 +53,9 @@ export const angularticsSettings = {
   pageTracking: {
     clearIds: true,
     idsRegExp: new RegExp('^[0-9a-z]{24}$')
+  },
+  ga: {
+    anonymizeIp: true
   }
 };
 
