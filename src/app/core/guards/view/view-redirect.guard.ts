@@ -21,16 +21,15 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {map, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
-import {AppState} from '../core/store/app.state';
-import {selectNavigation} from '../core/store/navigation/navigation.state';
-import {ViewsAction} from '../core/store/views/views.action';
-import {selectViewsDictionary} from '../core/store/views/views.state';
-import {QueryConverter} from '../core/store/navigation/query.converter';
-import {Perspective} from './perspectives/perspective';
+import {map, skipWhile, switchMap, take, withLatestFrom} from 'rxjs/operators';
+import {AppState} from '../../store/app.state';
+import {selectWorkspace} from '../../store/navigation/navigation.state';
+import {QueryConverter} from '../../store/navigation/query.converter';
+import {selectViewByCode, selectViewsLoaded} from '../../store/views/views.state';
+import {Perspective} from '../../../view/perspectives/perspective';
 
 @Injectable()
-export class ViewGuard implements CanActivate {
+export class ViewRedirectGuard implements CanActivate {
 
   public constructor(private router: Router,
                      private store: Store<AppState>) {
@@ -40,14 +39,12 @@ export class ViewGuard implements CanActivate {
                      state: RouterStateSnapshot): Observable<boolean> {
     const viewCode = next.paramMap.get('vc');
 
-    this.store.dispatch(new ViewsAction.GetByCode({viewCode: viewCode}));
-
-    return this.store.select(selectViewsDictionary).pipe(
-      withLatestFrom(this.store.select(selectNavigation)),
-      skipWhile(([views]) => !(viewCode in views)),
-      tap(([views, navigation]) => {
-        const workspace = navigation.workspace;
-        const view = views[workspace.viewCode];
+    return this.store.select(selectViewsLoaded).pipe(
+      skipWhile((loaded) => !loaded),
+      switchMap(() => this.store.select(selectViewByCode(viewCode))),
+      take(1),
+      withLatestFrom(this.store.select(selectWorkspace)),
+      map(([view, workspace]) => {
         const perspective = view && view.perspective ? view.perspective : Perspective.Search;
         const query = view ? QueryConverter.toString(view.query) : null;
 
@@ -57,9 +54,10 @@ export class ViewGuard implements CanActivate {
         }
         viewPath.push(perspective);
 
-        this.router.navigate(viewPath, {queryParams: {query: query}});
-      }),
-      map(a => true)
+        this.router.navigate(viewPath, {queryParams: {query}});
+
+        return false;
+      })
     );
   }
 

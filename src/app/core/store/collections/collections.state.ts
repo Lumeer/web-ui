@@ -22,7 +22,6 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {selectQuery, selectWorkspace} from '../navigation/navigation.state';
 import {CollectionModel} from './collection.model';
-import {isNullOrUndefined} from "util";
 
 export interface CollectionsState extends EntityState<CollectionModel> {
 

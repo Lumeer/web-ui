@@ -29,7 +29,7 @@ import {Workspace} from '../core/store/navigation/workspace.model';
 import {RouterAction} from '../core/store/router/router.action';
 import {ViewModel} from '../core/store/views/view.model';
 import {ViewsAction} from '../core/store/views/views.action';
-import {selectAllViews, selectViewConfig, selectViewsDictionary} from '../core/store/views/views.state';
+import {selectAllViews, selectViewByCode, selectViewConfig, selectViewsDictionary} from '../core/store/views/views.state';
 
 declare var $: any;
 
@@ -60,8 +60,6 @@ export class ViewComponent implements OnInit, OnDestroy {
       if (!navigation.workspace) {
         return;
       }
-
-      this.store.dispatch(new ViewsAction.Get({query: {}}));
 
       if (navigation.workspace.viewCode) {
         this.loadView(navigation.workspace.viewCode);
@@ -95,10 +93,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   private loadView(code: string) {
-    this.store.dispatch(new ViewsAction.GetByCode({viewCode: code}));
-
-    this.viewSubscription = this.store.select(selectViewsDictionary).pipe(
-      map(views => views[code]),
+    this.viewSubscription = this.store.select(selectViewByCode(code)).pipe(
       skipWhile(view => !view)
     ).subscribe(view => {
       this.view = {...view};

@@ -33,7 +33,6 @@ import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewRoutingModule} from './view-routing.module';
 import {ViewComponent} from './view.component';
-import {ViewGuard} from './view.guard';
 
 @NgModule({
   imports: [
@@ -54,9 +53,6 @@ import {ViewGuard} from './view.guard';
     ViewControlsComponent,
     ViewLoadingComponent,
     OverwriteViewDialogComponent
-  ],
-  providers: [
-    ViewGuard
   ]
 })
 export class ViewModule {
