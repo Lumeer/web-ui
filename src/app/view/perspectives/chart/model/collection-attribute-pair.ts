@@ -18,10 +18,48 @@
  */
 
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+
+type Pair = [CollectionModel, string];
 
 export interface CollectionAttributePair {
 
   collection: CollectionModel;
   attributeId: string;
 
+}
+
+export function createCollectionAttributePairs(documents: DocumentModel[]): CollectionAttributePair[] {
+  return documents
+    .map(document => this.packDocument(document))
+    .reduce((result, current) => result.concat(current), [])
+    .reduce((result, pair) => this.reducePairs(result, pair), [])
+    .map(pair => this.pairToCollectionAttributePair(pair));
+}
+
+function packDocument(document: DocumentModel): Pair[] {
+  const collection = document.collection;
+  const attributes = Object.keys(document.data);
+
+  return attributes.map(attribute => [collection, attribute] as Pair);
+}
+
+function reducePairs(result: Pair[], pair: Pair) {
+  if (!result.find(resultPair => this.equal(resultPair, pair))) {
+    result.push(pair);
+  }
+
+  return result;
+}
+
+function equal(pairA: Pair, pairB: Pair): boolean {
+  return pairA[0] === pairB[0] &&
+    pairA[1] === pairB[1];
+}
+
+function pairToCollectionAttributePair(pair: Pair): CollectionAttributePair {
+  return {
+    collection: pair[0],
+    attributeId: pair[1]
+  };
 }

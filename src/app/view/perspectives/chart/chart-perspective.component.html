@@ -1,7 +1,7 @@
 <div *ngIf="!isDisplayable()"
      class="alert alert-warning"
      role="alert"
-     i18n="@@smartdoc.query.invalid">Your query results cannot be shown using chart perspective. The query
+     i18n="@@chart.query.invalid">Your query results cannot be shown using chart perspective. The query
   needs to specify exactly one file.
 </div>
 
@@ -18,7 +18,7 @@
         [@slide]
         [attributes]="documentAttributes"
         [preSelected]="attributeY"
-        [emptyDescription]="'Y Axis'"
+        [emptyDescription]="'Y ' + axisTitle()"
         (attributeSelected)="attributeY = $event"
         (mouseenter)="pickerHovered = true"
         (mouseleave)="pickerHovered = false">
@@ -34,7 +34,7 @@
     <div class="text-center mt-2">
       <attribute-select
         [attributes]="documentAttributes"
-        [emptyDescription]="'X Axis'"
+        [emptyDescription]="'X ' + axisTitle()"
         (attributeSelected)="attributeX = $event">
       </attribute-select>
     </div>
@@ -42,6 +42,6 @@
   </div>
 </ng-container>
 
-<ng-template #loading>
+<ng-template #loading i18n-title="@@chart.loading">
   Loading...
 </ng-template>

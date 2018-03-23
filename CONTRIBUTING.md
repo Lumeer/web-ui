@@ -117,7 +117,7 @@ You can find [some examples](https://github.com/Lumeer/web-ui/blob/24d7fcf79b047
 If you add or modify elements with `i18n`, make sure you run the following command before creating a commit:
 
 ```
-npm run i18n
+$ npm run i18n
 ```
 
 It will generate a new version of `messages.xlf` file in `src/i18n` folder and merge the changes to the files for other languages (such as `messages.cs.xlf`).
@@ -125,12 +125,18 @@ It will generate a new version of `messages.xlf` file in `src/i18n` folder and m
 Preferably, you should also provide a translation to these languages by changing `<target>` element content as well as removing its `state="new"` attribute in each newly added translation unit.
 If you do not speak those languages, ask maintainers for a translation when you send a pull-request.
 
-### Adding NPM packages
+### Adding Non-Angular NPM packages
 
 ```
-npm install <package name> --save
+$ npm install <package name> --save
 ```
+And if possible download the types too.
+```
+$ npm install @types/<package name> --save
+```
+
 Then add the package to `.angular-cli.json` under `"scripts"` key to include it in Angular CLI compilation:
+
 ```
 "scripts": [
   "../node_modules/<path to module javascript>"
@@ -154,7 +160,7 @@ You need to rebuild the project after the change in order for your package to be
 npm run-script build
 ```
 
-### Adding Views
+### Adding Perspectives
 
 Create a new perspective in `view/perspectives/<perspective name>` with its own code component and module.
 The module needs to provide the perspective component:
@@ -192,13 +198,6 @@ Add it to `view-routing.module.ts` to map perspective name to it's component:
 If your perspective should not be visible at all times (like when it needs a selected collection).
 Update `canShowPerspective` in `view-controls.component.ts` to reflect this constraint. And add a
 `isDisplayable()` check in your perspective to make sure, users won't be able to access it using URL.
-
-Lastly add the component to view module `view.module.ts`:
-```
-imports: [
-  <your perspective module,
-  ...
-```
 
 ### Attribute Binding
 

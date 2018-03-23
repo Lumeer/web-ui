@@ -23,7 +23,7 @@ export class CreationDateSorter {
 
   public sortData(documents: DocumentModel[]): DocumentModel[] {
     if (documents) {
-      return this.copy(documents).sort((a, b) => {
+      return documents.slice().sort((a, b) => {
         // return a.creationDate.localeCompare(b.creationDate);
         return 1;
       });
@@ -31,10 +31,6 @@ export class CreationDateSorter {
     } else {
       return [];
     }
-  }
-
-  private copy(documents: DocumentModel[]): DocumentModel[] {
-    return documents.slice();
   }
 
 }

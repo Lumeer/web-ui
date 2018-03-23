@@ -27,9 +27,9 @@ import {selectNavigation} from '../../../core/store/navigation/navigation.state'
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {Packer} from './model/collection-attribute-pair-packer';
-import {CollectionAttributePair} from './model/collection-attribute-pair';
+import {CollectionAttributePair, createCollectionAttributePairs} from './model/collection-attribute-pair';
 import {animate, style, transition, trigger} from '@angular/animations';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'chart-perspective',
@@ -72,16 +72,15 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   public pickerHovered: boolean;
 
-  private attributePairPacker = new Packer();
-
   private query: QueryModel;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>,
+              private i18n: I18n) {
   }
 
   private usableAttributes(): CollectionAttributePair[] {
     if (this.documents) {
-      return this.attributePairPacker.pack(this.documents);
+      return createCollectionAttributePairs(this.documents);
     } else {
       return [];
     }
@@ -118,6 +117,10 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private dataSubscription() {
     return this.store.select(selectDocumentsByQuery).subscribe(documents => this.documents = documents);
+  }
+
+  public axisTitle(): string {
+    return this.i18n({id: 'chart.axis.name', value: 'Axis'});
   }
 
   public isDisplayable(): boolean {
