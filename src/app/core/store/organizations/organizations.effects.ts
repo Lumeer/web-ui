@@ -58,7 +58,7 @@ export class OrganizationsEffects {
   );
 
   @Effect({dispatch: false})
-  public getCodes$Failure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.GetCodesFailure>(OrganizationsActionType.GET_CODES_FAILURE).pipe(
+  public getCodesFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.GetCodesFailure>(OrganizationsActionType.GET_CODES_FAILURE).pipe(
     tap((action: OrganizationsAction.GetCodesFailure) => console.error(action.payload.error))
   );
 
