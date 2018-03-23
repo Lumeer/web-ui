@@ -26,6 +26,7 @@ export function appInitializer(keycloak: KeycloakService): () => Promise<any> {
       try {
         if (!KeycloakSettings.isDisabled()) {
           await keycloak.init({config: KeycloakSettings.getConfig()});
+          await keycloak.getToken();
         }
         resolve();
       } catch (error) {
