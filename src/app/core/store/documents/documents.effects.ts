@@ -36,6 +36,7 @@ import {selectCollectionsDictionary} from "../collections/collections.state";
 import {CollectionsAction} from "../collections/collections.action";
 import {AttributeModel, CollectionModel} from "../collections/collection.model";
 import {forEach} from "@angular/router/src/utils/collection";
+import {extractAttributeName} from "../../../shared/utils/attribute.utils";
 
 @Injectable()
 export class DocumentsEffects {
@@ -230,7 +231,7 @@ export class DocumentsEffects {
       }
     );
 
-    attributeToInc.map(attributeId => ({id: attributeId, name: attributeId, constraints: [], usageCount: 1}))
+    attributeToInc.map(attributeId => ({id: attributeId, name: extractAttributeName(attributeId), constraints: [], usageCount: 1}))
       .forEach(attribute => newAttributes.push(attribute));
 
     return newAttributes;
