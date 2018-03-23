@@ -25,7 +25,9 @@ import {selectQuery} from '../navigation/navigation.state';
 import {QueryModel} from '../navigation/query.model';
 
 import {DocumentModel} from './document.model';
-import {DocumentsFilters} from './documents.filters';
+import {filterDocumentsByQuery} from './documents.filters';
+import {CollectionModel} from "../collections/collection.model";
+import {Dictionary} from "@ngrx/entity/src/models";
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   queries: QueryModel[];
@@ -42,30 +44,17 @@ export const selectDocumentsState = (state: AppState) => state.documents;
 export const selectAllDocuments = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectAll);
 export const selectDocumentsDictionary = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectEntities);
 export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
-export const selectDocumentsByQuery = createSelector(
-  selectAllDocuments,
-  selectCollectionsDictionary,
-  selectQuery,
-  (documents, collections, query): DocumentModel[] => {
-    documents = DocumentsFilters.filterByQuery(documents, query);
-
-    return documents
-      .map(document => {
-        return {...document, collection: collections[document.collectionId]};
-      });
-  }
+export const selectDocumentsByQuery = createSelector(selectAllDocuments, selectCollectionsDictionary, selectQuery,
+  (documents, collections, query): DocumentModel[] => filterDocuments(documents, collections, query)
 );
 
-export function selectDocumentsByCustomQuery(query: QueryModel) {
-  return createSelector(
-    selectAllDocuments,
-    selectCollectionsDictionary,
-    (documents, collections): DocumentModel[] => {
+export const selectDocumentsByCustomQuery = (query: QueryModel) => createSelector(selectAllDocuments, selectCollectionsDictionary,
+  (documents, collections): DocumentModel[] => filterDocuments(documents, collections, query)
+);
 
-      return DocumentsFilters.filterByQuery(documents, query)
-        .map(document => {
-          return {...document, collection: collections[document.collectionId]};
-        });
-    }
-  );
+function filterDocuments(documents: DocumentModel[], collections: Dictionary<CollectionModel>, query: QueryModel): DocumentModel[] {
+  return filterDocumentsByQuery(documents, query)
+    .map(document => {
+      return {...document, collection: collections[document.collectionId]};
+    });
 }

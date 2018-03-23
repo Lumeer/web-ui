@@ -19,7 +19,7 @@
 
 import {isNullOrUndefined} from 'util';
 import {Query} from '../../dto';
-import {QueryModel} from './query.model';
+import {AttributeFilter, conditionFromString, ConditionType, QueryModel} from './query.model';
 
 export class QueryConverter {
 
@@ -80,4 +80,19 @@ export class QueryConverter {
     }
   }
 
+  public static parseFilter(filter: string): AttributeFilter {
+    const [collectionId, attributeName, condition] = filter.split(":", 3);
+
+    const [conditionTypeString, value] = condition.replace(/ +/g, ' ').split(' ', 2);
+
+    const conditionType = conditionFromString(conditionTypeString.trim().toLowerCase());
+    if (conditionType == null) {
+      return null;
+    }
+
+    return {collectionId, conditionType, attributeName, value};
+  }
+
 }
+
+
