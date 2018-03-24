@@ -31,10 +31,10 @@ export interface CollectionAttributePair {
 
 export function createCollectionAttributePairs(documents: DocumentModel[]): CollectionAttributePair[] {
   return documents
-    .map(document => this.packDocument(document))
+    .map(document => packDocument(document))
     .reduce((result, current) => result.concat(current), [])
-    .reduce((result, pair) => this.reducePairs(result, pair), [])
-    .map(pair => this.pairToCollectionAttributePair(pair));
+    .reduce((result, pair) => reducePairs(result, pair), [])
+    .map(pair => pairToCollectionAttributePair(pair));
 }
 
 function packDocument(document: DocumentModel): Pair[] {
@@ -45,7 +45,7 @@ function packDocument(document: DocumentModel): Pair[] {
 }
 
 function reducePairs(result: Pair[], pair: Pair) {
-  if (!result.find(resultPair => this.equal(resultPair, pair))) {
+  if (!result.find(resultPair => equal(resultPair, pair))) {
     result.push(pair);
   }
 
