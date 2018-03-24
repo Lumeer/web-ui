@@ -20,7 +20,7 @@
                       (removed)="deletePostIt(postIt)"
                       (changes)="postItChanged(postIt)"></post-it-document>
 
-    <label *ngIf="!editable && navigationHelper.hasQuery() && !postIts.length"
+    <label *ngIf="(!hasSingleCollection() || !hasCreateRights()) && !postIts.length"
            class="label-centered"
            i18n="@@document.list.empty">Nothing To Show</label>
   </div>
