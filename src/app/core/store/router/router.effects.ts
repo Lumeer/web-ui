@@ -20,7 +20,7 @@
 import {Location} from '@angular/common';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {map, tap} from 'rxjs/operators';
 import {RouterAction, RouterActionType} from './router.action';
 
@@ -28,18 +28,21 @@ import {RouterAction, RouterActionType} from './router.action';
 export class RouterEffects {
 
   @Effect({dispatch: false})
-  public navigate$ = this.actions$.ofType(RouterActionType.GO).pipe(
-    map((action: RouterAction.Go) => action.payload),
+  public navigate$ = this.actions$.pipe(
+    ofType<RouterAction.Go>(RouterActionType.GO),
+    map(action => action.payload),
     tap(({path, queryParams, extras}) => this.router.navigate(path, {queryParams, ...extras}))
   );
 
   @Effect({dispatch: false})
-  public navigateBack$ = this.actions$.ofType(RouterActionType.BACK).pipe(
+  public navigateBack$ = this.actions$.pipe(
+    ofType(RouterActionType.BACK),
     tap(() => this.location.back())
   );
 
   @Effect({dispatch: false})
-  public navigateForward$ = this.actions$.ofType(RouterActionType.FORWARD).pipe(
+  public navigateForward$ = this.actions$.pipe(
+    ofType(RouterActionType.FORWARD),
     tap(() => this.location.forward())
   );
 

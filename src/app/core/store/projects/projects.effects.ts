@@ -18,27 +18,28 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, skipWhile, switchMap, tap, withLatestFrom, flatMap} from 'rxjs/operators';
+import {catchError, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
 import {ProjectService} from '../../rest';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
 import {ProjectConverter} from './project.converter';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
-import {selectProjectsCodes} from "./projects.state";
+import {selectProjectsCodes} from './projects.state';
 
 @Injectable()
 export class ProjectsEffects {
 
   @Effect()
-  public get$: Observable<Action> = this.actions$.ofType<ProjectsAction.Get>(ProjectsActionType.GET).pipe(
+  public get$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.Get>(ProjectsActionType.GET),
     withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
     skipWhile(([action, organizationsEntities]) => !organizationsEntities[action.payload.organizationId]),
-    switchMap(([action, organizationsEntities]) => {
+    mergeMap(([action, organizationsEntities]) => {
       const organization = organizationsEntities[action.payload.organizationId];
       return this.projectService.getProjects(organization.code).pipe(
         map(dtos => dtos.map(dto => ProjectConverter.fromDto(dto, action.payload.organizationId)))
@@ -49,7 +50,8 @@ export class ProjectsEffects {
   );
 
   @Effect()
-  public getFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.GetFailure>(ProjectsActionType.GET_FAILURE).pipe(
+  public getFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.GetFailure>(ProjectsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'projects.get.fail', value: 'Failed to get projects'});
@@ -58,27 +60,30 @@ export class ProjectsEffects {
   );
 
   @Effect()
-  public getCodes$: Observable<Action> = this.actions$.ofType<ProjectsAction.GetCodes>(ProjectsActionType.GET_CODES).pipe(
+  public getCodes$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.GetCodes>(ProjectsActionType.GET_CODES),
     withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
-    switchMap(([action, organizationsEntities]) => {
+    mergeMap(([action, organizationsEntities]) => {
       const organization = organizationsEntities[action.payload.organizationId];
       return this.projectService.getProjectCodes(organization.code).pipe(
         map(projectCodes => ({projectCodes, organizationId: action.payload.organizationId}))
-      )
+      );
     }),
     map(({projectCodes, organizationId}) => new ProjectsAction.GetCodesSuccess({organizationId, projectCodes})),
     catchError((error) => Observable.of(new ProjectsAction.GetCodesFailure({error: error})))
   );
 
   @Effect({dispatch: false})
-  public getCodesFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.GetCodesFailure>(ProjectsActionType.GET_CODES_FAILURE).pipe(
+  public getCodesFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.GetCodesFailure>(ProjectsActionType.GET_CODES_FAILURE),
     tap((action: ProjectsAction.GetCodesFailure) => console.error(action.payload.error))
   );
 
   @Effect()
-  public create$: Observable<Action> = this.actions$.ofType<ProjectsAction.Create>(ProjectsActionType.CREATE).pipe(
+  public create$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.Create>(ProjectsActionType.CREATE),
     withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
-    switchMap(([action, organizationsEntities]) => {
+    mergeMap(([action, organizationsEntities]) => {
       const organization = organizationsEntities[action.payload.project.organizationId];
       const correlationId = action.payload.project.correlationId;
       const projectDto = ProjectConverter.toDto(action.payload.project);
@@ -97,7 +102,8 @@ export class ProjectsEffects {
   );
 
   @Effect()
-  public createFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.CreateFailure>(ProjectsActionType.CREATE_FAILURE).pipe(
+  public createFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.CreateFailure>(ProjectsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'project.create.fail', value: 'Failed to create project'});
@@ -106,14 +112,15 @@ export class ProjectsEffects {
   );
 
   @Effect()
-  public update$: Observable<Action> = this.actions$.ofType<ProjectsAction.Update>(ProjectsActionType.UPDATE).pipe(
+  public update$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.Update>(ProjectsActionType.UPDATE),
     withLatestFrom(this.store$),
-    switchMap(([action, state]) => {
+    mergeMap(([action, state]) => {
       const organization = state.organizations.entities[action.payload.project.organizationId];
       const oldProject = state.projects.entities[action.payload.project.id];
       const projectDto = ProjectConverter.toDto(action.payload.project);
       return this.projectService.editProject(organization.code, oldProject.code, projectDto).pipe(
-        map(dto => ({ project: ProjectConverter.fromDto(dto, action.payload.project.organizationId), oldProject}))
+        map(dto => ({project: ProjectConverter.fromDto(dto, action.payload.project.organizationId), oldProject}))
       );
     }),
     withLatestFrom(this.store$.select(selectProjectsCodes)),
@@ -127,7 +134,8 @@ export class ProjectsEffects {
   );
 
   @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.UpdateFailure>(ProjectsActionType.UPDATE_FAILURE).pipe(
+  public updateFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.UpdateFailure>(ProjectsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'project.update.fail', value: 'Failed to update project'});
@@ -136,9 +144,10 @@ export class ProjectsEffects {
   );
 
   @Effect()
-  public delete$: Observable<Action> = this.actions$.ofType<ProjectsAction.Delete>(ProjectsActionType.DELETE).pipe(
+  public delete$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.Delete>(ProjectsActionType.DELETE),
     withLatestFrom(this.store$),
-    switchMap(([action, state]) => {
+    mergeMap(([action, state]) => {
       const organization = state.organizations.entities[action.payload.organizationId];
       const project = state.projects.entities[action.payload.projectId];
       return this.projectService.deleteProject(organization.code, project.code).pipe(
@@ -155,7 +164,8 @@ export class ProjectsEffects {
   );
 
   @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.ofType<ProjectsAction.DeleteFailure>(ProjectsActionType.DELETE_FAILURE).pipe(
+  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.DeleteFailure>(ProjectsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'project.delete.fail', value: 'Failed to delete project'});

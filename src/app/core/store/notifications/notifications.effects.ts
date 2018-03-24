@@ -18,11 +18,10 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SnotifyButton} from 'ng-snotify';
-import {Observable} from 'rxjs/Observable';
 import {tap} from 'rxjs/operators';
 import {NotificationService} from '../../notifications/notification.service';
 import {AppState} from '../app.state';
@@ -32,8 +31,9 @@ import {NotificationsAction, NotificationsActionType} from './notifications.acti
 export class NotificationsEffects {
 
   @Effect({dispatch: false})
-  public confirm$: Observable<Action> = this.actions.ofType(NotificationsActionType.CONFIRM).pipe(
-    tap((action: NotificationsAction.Confirm) => {
+  public confirm$ = this.actions.pipe(
+    ofType<NotificationsAction.Confirm>(NotificationsActionType.CONFIRM),
+    tap(action => {
       const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
       const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
@@ -46,18 +46,21 @@ export class NotificationsEffects {
   );
 
   @Effect({dispatch: false})
-  public error$: Observable<Action> = this.actions.ofType(NotificationsActionType.ERROR).pipe(
-    tap((action: NotificationsAction.Error) => this.notificationService.error(action.payload.message))
+  public error$ = this.actions.pipe(
+    ofType<NotificationsAction.Error>(NotificationsActionType.ERROR),
+    tap(action => this.notificationService.error(action.payload.message))
   );
 
   @Effect({dispatch: false})
-  public success$: Observable<Action> = this.actions.ofType(NotificationsActionType.SUCCESS).pipe(
-    tap((action: NotificationsAction.Success) => this.notificationService.success(action.payload.message))
+  public success$ = this.actions.pipe(
+    ofType<NotificationsAction.Success>(NotificationsActionType.SUCCESS),
+    tap(action => this.notificationService.success(action.payload.message))
   );
 
   @Effect({dispatch: false})
-  public warning$: Observable<Action> = this.actions.ofType(NotificationsActionType.WARNING).pipe(
-    tap((action: NotificationsAction.Warning) => this.notificationService.warning(action.payload.message))
+  public warning$ = this.actions.pipe(
+    ofType<NotificationsAction.Warning>(NotificationsActionType.WARNING),
+    tap(action => this.notificationService.warning(action.payload.message))
   );
 
   constructor(private actions: Actions,

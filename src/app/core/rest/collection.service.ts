@@ -23,15 +23,15 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {catchError, first, map, switchMap} from 'rxjs/operators';
+import {catchError, first, map, mergeMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {Attribute, Collection} from '../dto';
 import {BadInputError} from '../error/bad-input.error';
 import {AppState} from '../store/app.state';
+import {CollectionModel} from '../store/collections/collection.model';
+import {selectCollectionsDictionary} from '../store/collections/collections.state';
 import {HomePageService} from './home-page.service';
 import {PermissionService} from './permission.service';
-import {selectCollectionsDictionary} from "../store/collections/collections.state";
-import {CollectionModel} from "../store/collections/collection.model";
 
 // TODO add add support for Default Attribute
 @Injectable()
@@ -51,7 +51,7 @@ export class CollectionService extends PermissionService {
     this.homePageService.addLastUsedCollection(collection.id).subscribe();
     return this.httpClient.put(`${this.apiPrefix()}/${collection.id}`, collection).pipe(
       catchError(this.handleError),
-      switchMap(collection => this.homePageService.checkFavoriteCollection(collection))
+      mergeMap(collection => this.homePageService.checkFavoriteCollection(collection))
     );
   }
 
@@ -79,19 +79,19 @@ export class CollectionService extends PermissionService {
   public getCollection(collectionId: string): Observable<Collection> {
     return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionId}`).pipe(
       catchError(CollectionService.handleGlobalError),
-      switchMap(collection => this.homePageService.checkFavoriteCollection(collection))
+      mergeMap(collection => this.homePageService.checkFavoriteCollection(collection))
     );
   }
 
   public getLastUsedCollections(): Observable<CollectionModel[]> {
     return this.homePageService.getLastUsedCollections().pipe(
-      switchMap(ids => this.convertIdsToCollections(ids))
+      mergeMap(ids => this.convertIdsToCollections(ids))
     );
   }
 
   public getFavoriteCollections(): Observable<CollectionModel[]> {
     return this.homePageService.getFavoriteCollections().pipe(
-      switchMap(ids => this.convertIdsToCollections(ids))
+      mergeMap(ids => this.convertIdsToCollections(ids))
     );
   }
 
@@ -105,7 +105,7 @@ export class CollectionService extends PermissionService {
 
     return this.httpClient.get<Collection[]>(this.apiPrefix(), {params: queryParams}).pipe(
       catchError(CollectionService.handleGlobalError),
-      switchMap(collections => this.homePageService.checkFavoriteCollections(collections))
+      mergeMap(collections => this.homePageService.checkFavoriteCollections(collections))
     );
   }
 
@@ -162,7 +162,7 @@ export class CollectionService extends PermissionService {
       first(),
       map(collectionsDictionary => {
         return ids.map(id => collectionsDictionary[id])
-          .filter(collection => collection)
+          .filter(collection => collection);
       })
     );
   }

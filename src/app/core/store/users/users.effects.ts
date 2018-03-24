@@ -18,11 +18,11 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {UserService} from '../../rest';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {UserConverter} from './user.converter';
@@ -32,8 +32,9 @@ import {UsersAction, UsersActionType} from './users.action';
 export class UsersEffects {
 
   @Effect()
-  public get$: Observable<Action> = this.actions$.ofType<UsersAction.Get>(UsersActionType.GET).pipe(
-    switchMap((action) => this.userService.getUsers(action.payload.organizationId).pipe(
+  public get$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.Get>(UsersActionType.GET),
+    mergeMap((action) => this.userService.getUsers(action.payload.organizationId).pipe(
       map(dtos => dtos.map(dto => UserConverter.fromDto(dto)))
     )),
     map(users => new UsersAction.GetSuccess({users: users})),
@@ -41,7 +42,8 @@ export class UsersEffects {
   );
 
   @Effect()
-  public getFailure$: Observable<Action> = this.actions$.ofType<UsersAction.GetFailure>(UsersActionType.GET_FAILURE).pipe(
+  public getFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.GetFailure>(UsersActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'users.get.fail', value: 'Failed to get users'});
@@ -50,8 +52,9 @@ export class UsersEffects {
   );
 
   @Effect()
-  public create$: Observable<Action> = this.actions$.ofType<UsersAction.Create>(UsersActionType.CREATE).pipe(
-    switchMap(action => {
+  public create$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.Create>(UsersActionType.CREATE),
+    mergeMap(action => {
       const userDto = UserConverter.toDto(action.payload.user);
 
       return this.userService.createUser(action.payload.organizationId, userDto).pipe(
@@ -63,7 +66,8 @@ export class UsersEffects {
   );
 
   @Effect()
-  public createFailure$: Observable<Action> = this.actions$.ofType<UsersAction.CreateFailure>(UsersActionType.CREATE_FAILURE).pipe(
+  public createFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.CreateFailure>(UsersActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'user.create.fail', value: 'Failed to create user'});
@@ -72,8 +76,9 @@ export class UsersEffects {
   );
 
   @Effect()
-  public update$: Observable<Action> = this.actions$.ofType<UsersAction.Update>(UsersActionType.UPDATE).pipe(
-    switchMap(action => {
+  public update$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.Update>(UsersActionType.UPDATE),
+    mergeMap(action => {
       const userDto = UserConverter.toDto(action.payload.user);
 
       return this.userService.updateUser(action.payload.organizationId, userDto.id, userDto).pipe(
@@ -85,7 +90,8 @@ export class UsersEffects {
   );
 
   @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.ofType<UsersAction.UpdateFailure>(UsersActionType.UPDATE_FAILURE).pipe(
+  public updateFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.UpdateFailure>(UsersActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'user.update.fail', value: 'Failed to update user'});
@@ -94,8 +100,9 @@ export class UsersEffects {
   );
 
   @Effect()
-  public delete$: Observable<Action> = this.actions$.ofType<UsersAction.Delete>(UsersActionType.DELETE).pipe(
-    switchMap(action => this.userService.deleteUser(action.payload.organizationId, action.payload.userId).pipe(
+  public delete$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.Delete>(UsersActionType.DELETE),
+    mergeMap(action => this.userService.deleteUser(action.payload.organizationId, action.payload.userId).pipe(
       map(() => action)
     )),
     map(action => new UsersAction.DeleteSuccess(action.payload)),
@@ -103,7 +110,8 @@ export class UsersEffects {
   );
 
   @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.ofType<UsersAction.DeleteFailure>(UsersActionType.DELETE_FAILURE).pipe(
+  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.DeleteFailure>(UsersActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'user.delete.fail', value: 'Failed to delete user'});

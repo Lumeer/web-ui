@@ -21,8 +21,9 @@ import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, switchMap, take, tap} from 'rxjs/operators';
-import {isNullOrUndefined} from "util";
+import {catchError, map, mergeMap, take, tap} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
+import {OrganizationService, ProjectService} from '../core/rest';
 import {AppState} from '../core/store/app.state';
 import {OrganizationConverter} from '../core/store/organizations/organization.converter';
 import {OrganizationModel} from '../core/store/organizations/organization.model';
@@ -32,7 +33,6 @@ import {ProjectConverter} from '../core/store/projects/project.converter';
 import {ProjectModel} from '../core/store/projects/project.model';
 import {ProjectsAction} from '../core/store/projects/projects.action';
 import {selectAllProjects} from '../core/store/projects/projects.state';
-import {OrganizationService, ProjectService} from '../core/rest';
 
 @Injectable()
 export class WorkspaceService {
@@ -44,7 +44,7 @@ export class WorkspaceService {
 
   public getOrganizationFromStoreOrApi(code: string): Observable<OrganizationModel> {
     return this.getOrganizationFromStore(code).pipe(
-      switchMap(organization => {
+      mergeMap(organization => {
         if (!isNullOrUndefined(organization)) {
           return Observable.of(organization);
         }
@@ -73,7 +73,7 @@ export class WorkspaceService {
 
   public getProjectFromStoreOrApi(orgCode: string, orgId: string, projCode: string): Observable<ProjectModel> {
     return this.getProjectFromStore(projCode).pipe(
-      switchMap(project => {
+      mergeMap(project => {
         if (!isNullOrUndefined(project)) {
           return Observable.of(project);
         }

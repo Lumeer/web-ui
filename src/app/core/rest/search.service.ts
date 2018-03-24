@@ -17,23 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Suggestions} from '../dto/suggestions';
-import {Query} from '../dto/query';
-import {Collection} from '../dto/collection';
-import {LumeerError} from '../error/lumeer.error';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {Document} from '../dto/document';
-import {View} from '../dto/view';
-import {SuggestionType} from '../dto/suggestion-type';
 import {Observable} from 'rxjs/Observable';
-import {catchError, filter, map, switchMap} from 'rxjs/operators';
-import {Workspace} from '../store/navigation/workspace.model';
+import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
+import {catchError, filter, mergeMap} from 'rxjs/operators';
+import {Collection} from '../dto/collection';
+import {Document} from '../dto/document';
+import {Query} from '../dto/query';
+import {SuggestionType} from '../dto/suggestion-type';
+import {Suggestions} from '../dto/suggestions';
+import {View} from '../dto/view';
+import {LumeerError} from '../error/lumeer.error';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
-import {isNullOrUndefined} from 'util';
+import {Workspace} from '../store/navigation/workspace.model';
 import {HomePageService} from './home-page.service';
 
 @Injectable()
@@ -60,7 +59,7 @@ export class SearchService {
     return this.http.post<Collection[]>(`${this.searchPath()}/collections`, query)
       .pipe(
         catchError(SearchService.handleError),
-        switchMap(collections => this.homePageService.checkFavoriteCollections(collections))
+        mergeMap(collections => this.homePageService.checkFavoriteCollections(collections))
       );
   }
 
@@ -68,7 +67,7 @@ export class SearchService {
     return this.http.post<Document[]>(`${this.searchPath()}/documents`, query)
       .pipe(
         catchError(SearchService.handleError),
-        switchMap(documents => this.homePageService.checkFavoriteDocuments(documents)));
+        mergeMap(documents => this.homePageService.checkFavoriteDocuments(documents)));
   }
 
   public searchViews(query: Query): Observable<View[]> {
