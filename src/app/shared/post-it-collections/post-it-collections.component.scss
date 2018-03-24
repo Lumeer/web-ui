@@ -39,17 +39,6 @@
     z-index: $z-index-selected;
   }
 
-  .add-post-it {
-    transition: transform $animation-duration, color $animation-color-duration;
-    background: transparent;
-    border-color: transparent;
-    height: 181.5px;
-
-    &:hover {
-      color: $success;
-    }
-  }
-
   .opacity-content {
     transition: opacity $animation-color-duration;
     opacity: 0;

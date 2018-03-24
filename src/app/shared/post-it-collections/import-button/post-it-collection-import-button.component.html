@@ -1,0 +1,24 @@
+<button type="button"
+        class="btn btn-outline-{{ disabled ? 'secondary' : 'primary' }}"
+        ondragover="return false;"
+        title="{{ disabled ? 'You need a right to add files' : 'Import file' }}"
+        i18n-title="@@collection.post.it.import.title"
+        (click)="fileInput.click()"
+        (drop)="handleDrop($event)"
+        (dragenter)="dragging = true"
+        (dragleave)="dragging = false"
+        [class.dragging]="dragging"
+        [class.disabled]="disabled"
+        [attr.disabled]="disabled ? true : null"
+        [attr.aria-disabed]="disabled">
+  <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+  <span class="font-weight-bold"
+        i18n="@@collection.post.it.import">Import File
+  </span>
+  <input hidden
+         type="file"
+         #fileInput
+         (click)="$event.stopPropagation()"
+         (change)="fileChange($event.target.files)"
+         accept=".csv, text/csv">
+</button>

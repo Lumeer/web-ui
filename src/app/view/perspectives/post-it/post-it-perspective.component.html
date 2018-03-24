@@ -1,26 +1,33 @@
-<div class="post-it-document-layout d-flex mx-5" #layout>
+<div class="mx-5" #layout>
+  <div class="m-2">
+    <add-document
+      [attr.order]="-10000"
+      [hasCollection]="hasSingleCollection()"
+      [hasRights]="hasCreateRights()"
+      (createPostIt)="createPostIt($event)">
+    </add-document>
+  </div>
 
-  <add-document *ngIf="isAddButtonShown()"
-                class="layout-item"
-                [attr.order]="-10000"
-                (createPostIt)="createPostIt($event)"></add-document>
+  <div class="post-it-document-layout">
+    <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByDocument"
+                      class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : 'initialized' }}"
+                      [attr.order]="postIt.order"
+                      [postItModel]="postItWithIndex(postIt, idx)"
+                      [perspectiveId]="perspectiveId"
+                      [layoutManager]="layoutManager"
+                      [selectionHelper]="selectionHelper"
+                      [navigationHelper]="navigationHelper"
+                      (removed)="deletePostIt(postIt)"
+                      (changes)="postItChanged(postIt)"></post-it-document>
 
-  <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByDocument"
-                    class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : 'initialized' }}"
-                    [attr.order]="postIt.order"
-                    [postItModel]="postItWithIndex(postIt, idx)"
-                    [perspectiveId]="perspectiveId"
-                    [layoutManager]="layoutManager"
-                    [selectionHelper]="selectionHelper"
-                    [navigationHelper]="navigationHelper"
-                    (removed)="deletePostIt(postIt)"
-                    (changes)="postItChanged(postIt)"></post-it-document>
-
-  <label *ngIf="!editable && navigationHelper.hasQuery() && !postIts.length"
-         class="label-centered"
-         i18n="@@document.list.empty">Nothing To Show</label>
+    <label *ngIf="!editable && navigationHelper.hasQuery() && !postIts.length"
+           class="label-centered"
+           i18n="@@document.list.empty">Nothing To Show</label>
+  </div>
 </div>
 
-<div class="fading loading-text text-center py-5" [style.opacity]="infiniteScroll.isLoading() ? 1 : 0">
+<div class="fading loading-text text-center py-5"
+     [style.opacity]="infiniteScroll.isLoading() ? 1 : 0"
+     i18n="@@documents.post.it.loading">
   Loading...
 </div>

@@ -22,14 +22,14 @@ import {Actions, Effect} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, skipWhile, switchMap, tap, withLatestFrom, flatMap} from 'rxjs/operators';
+import {catchError, flatMap, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {ProjectService} from '../../rest';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
 import {ProjectConverter} from './project.converter';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
-import {selectProjectsCodes} from "./projects.state";
+import {selectProjectsCodes} from './projects.state';
 
 @Injectable()
 export class ProjectsEffects {
@@ -113,7 +113,7 @@ export class ProjectsEffects {
       const oldProject = state.projects.entities[action.payload.project.id];
       const projectDto = ProjectConverter.toDto(action.payload.project);
       return this.projectService.editProject(organization.code, oldProject.code, projectDto).pipe(
-        map(dto => ({ project: ProjectConverter.fromDto(dto, action.payload.project.organizationId), oldProject}))
+        map(dto => ({project: ProjectConverter.fromDto(dto, action.payload.project.organizationId), oldProject}))
       );
     }),
     withLatestFrom(this.store$.select(selectProjectsCodes)),
