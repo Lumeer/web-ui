@@ -1,10 +1,10 @@
-<div *ngIf="collections && collections.length == 0 && !editable"
+<div *ngIf="collections && collections.length == 0 && !hasCreateRights()"
      class="alert alert-warning mt-2"
      i18n="@@search.result.empty">
   We are sorry, but we have not found anything. Please do a more accurate search.
 </div>
 
-<div *ngIf="(collections && collections.length > 0) || editable"
+<div *ngIf="(collections && collections.length > 0) || hasCreateRights()"
      class="mx-4">
 
   <div class="d-flex m-2">
