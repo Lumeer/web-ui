@@ -245,13 +245,9 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   public onCollectionNameChanged(collection: CollectionModel, newName: string) {
     const collectionCopy = {...collection, name: newName};
 
-    if (!collection.name) {
-      return;
-    }
-
     if (collection.id) {
       this.updateCollection(collectionCopy);
-    } else {
+    } else if (newName) {
       this.createCollection(collectionCopy);
     }
   }
