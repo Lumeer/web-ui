@@ -68,7 +68,7 @@ export class PostItCollectionImportButtonComponent {
 
   private importData(result: string, name: string, format: string) {
     const newCollection = {...this.emptyCollection(), name};
-    const importedCollection = {newCollection, data: result};
+    const importedCollection = {collection: newCollection, data: result};
 
     this.import.emit({format, importedCollection});
   }
