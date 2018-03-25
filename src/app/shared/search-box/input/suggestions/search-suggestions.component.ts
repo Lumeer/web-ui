@@ -20,7 +20,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {catchError, debounceTime, map, startWith, switchMap, withLatestFrom} from 'rxjs/operators';
+import {catchError, debounceTime, map, mergeMap, startWith, switchMap, withLatestFrom} from 'rxjs/operators';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {Suggestions, SuggestionType} from '../../../../core/dto';
@@ -107,7 +107,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
       debounceTime(300),
       switchMap(text => this.retrieveSuggestions(text)),
       withLatestFrom(this.store.select(selectAllCollections)),
-      switchMap(([suggestions, collections]) => SuggestionsConverter.convertSuggestionsToQueryItems(suggestions, collections)),
+      mergeMap(([suggestions, collections]) => SuggestionsConverter.convertSuggestionsToQueryItems(suggestions, collections)),
       map(queryItems => this.filterViewQueryItems(queryItems)),
       map(queryItems => this.addFulltextSuggestion(queryItems)),
       map(queryItems => this.filterUsedQueryItems(queryItems)),

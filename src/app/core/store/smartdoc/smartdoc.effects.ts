@@ -18,11 +18,11 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {map, withLatestFrom, flatMap} from 'rxjs/operators';
+import {flatMap, map, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {SmartDocUtils} from '../../../view/perspectives/smartdoc/smartdoc.utils';
 import {AppState} from '../app.state';
@@ -36,7 +36,8 @@ import {SmartDocModel} from './smartdoc.model';
 export class SmartDocEffects {
 
   @Effect()
-  public addPart$: Observable<Action> = this.actions$.ofType<SmartDocAction.AddPart>(SmartDocActionType.ADD_PART).pipe(
+  public addPart$: Observable<Action> = this.actions$.pipe(
+    ofType<SmartDocAction.AddPart>(SmartDocActionType.ADD_PART),
     withLatestFrom(this.store$.select(selectViewSmartDocConfig)),
     map(([action, smartDocConfig]) => {
       const config = SmartDocEffects.modifyInnerSmartDoc(smartDocConfig, action.payload.partPath, innerSmartDoc => {
@@ -52,7 +53,8 @@ export class SmartDocEffects {
   );
 
   @Effect()
-  public updatePart$: Observable<Action> = this.actions$.ofType<SmartDocAction.UpdatePart>(SmartDocActionType.UPDATE_PART).pipe(
+  public updatePart$: Observable<Action> = this.actions$.pipe(
+    ofType<SmartDocAction.UpdatePart>(SmartDocActionType.UPDATE_PART),
     withLatestFrom(this.store$.select(selectViewSmartDocConfig)),
     map(([action, smartDocConfig]) => {
       const config = SmartDocEffects.modifyInnerSmartDoc(smartDocConfig, action.payload.partPath, innerSmartDoc => {
@@ -64,7 +66,8 @@ export class SmartDocEffects {
   );
 
   @Effect()
-  public removePart$: Observable<Action> = this.actions$.ofType<SmartDocAction.RemovePart>(SmartDocActionType.REMOVE_PART).pipe(
+  public removePart$: Observable<Action> = this.actions$.pipe(
+    ofType<SmartDocAction.RemovePart>(SmartDocActionType.REMOVE_PART),
     withLatestFrom(this.store$.select(selectViewSmartDocConfig)),
     flatMap(([action, smartDocConfig]) => {
       const config = SmartDocEffects.modifyInnerSmartDoc(smartDocConfig, action.payload.partPath, innerSmartDoc => {
@@ -75,14 +78,15 @@ export class SmartDocEffects {
       const actions: Action[] = [new ViewsAction.ChangeSmartDocConfig({config})];
       if (action.payload.last) {
         const part = SmartDocUtils.createEmptyTextPart();
-        actions.push(new SmartDocAction.AddPart({partPath: action.payload.partPath, part}))
+        actions.push(new SmartDocAction.AddPart({partPath: action.payload.partPath, part}));
       }
       return actions;
     })
   );
 
   @Effect()
-  public removePartConfirm$: Observable<Action> = this.actions$.ofType<SmartDocAction.RemovePartConfirm>(SmartDocActionType.REMOVE_PART_CONFIRM).pipe(
+  public removePartConfirm$: Observable<Action> = this.actions$.pipe(
+    ofType<SmartDocAction.RemovePartConfirm>(SmartDocActionType.REMOVE_PART_CONFIRM),
     map((action: SmartDocAction.RemovePartConfirm) => {
       const title = this.i18n({id: 'smartdoc.remove.part.dialog.title', value: 'Remove part'});
       const message = this.i18n({id: 'smartdoc.remove.part.dialog.message', value: 'Do you really want to remove this template part?'});
@@ -91,12 +95,13 @@ export class SmartDocEffects {
         title,
         message,
         action: new SmartDocAction.RemovePart(action.payload)
-      })
+      });
     })
   );
 
   @Effect()
-  public movePart$: Observable<Action> = this.actions$.ofType<SmartDocAction.MovePart>(SmartDocActionType.MOVE_PART).pipe(
+  public movePart$: Observable<Action> = this.actions$.pipe(
+    ofType<SmartDocAction.MovePart>(SmartDocActionType.MOVE_PART),
     withLatestFrom(this.store$.select(selectViewSmartDocConfig)),
     map(([action, smartDocConfig]) => {
       const config = SmartDocEffects.modifyInnerSmartDoc(smartDocConfig, action.payload.partPath, innerSmartDoc => {
@@ -108,7 +113,8 @@ export class SmartDocEffects {
   );
 
   @Effect()
-  public orderDocuments$: Observable<Action> = this.actions$.ofType<SmartDocAction.OrderDocuments>(SmartDocActionType.ORDER_DOCUMENTS).pipe(
+  public orderDocuments$: Observable<Action> = this.actions$.pipe(
+    ofType<SmartDocAction.OrderDocuments>(SmartDocActionType.ORDER_DOCUMENTS),
     withLatestFrom(this.store$.select(selectViewSmartDocConfig)),
     map(([action, smartDocConfig]) => {
       const config = SmartDocEffects.modifyInnerSmartDoc(smartDocConfig, action.payload.partPath, innerSmartDoc => {

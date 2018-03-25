@@ -22,7 +22,7 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 
 import {Document} from '../dto/document';
@@ -52,7 +52,7 @@ export class DocumentService {
       catchError(error => this.handleGlobalError(error)),
       map(response => response.headers.get('Location').split('/').pop()),
       tap(id => this.addLastUsed(document.collectionId, id)),
-      switchMap(id => {
+      mergeMap(id => {
         document.id = id;
         return Observable.of(document);
       })
@@ -67,7 +67,7 @@ export class DocumentService {
         map(returnedDocument => {
           return {...returnedDocument, collectionId: document.collectionId};
         }),
-        switchMap(document => this.homePageService.checkFavoriteDocument(document))
+        mergeMap(document => this.homePageService.checkFavoriteDocument(document))
       );
   }
 
@@ -76,7 +76,7 @@ export class DocumentService {
     return this.httpClient.patch<Document>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data)
       .pipe(
         catchError(error => this.handleGlobalError(error)),
-        switchMap(document => this.homePageService.checkFavoriteDocument(document))
+        mergeMap(document => this.homePageService.checkFavoriteDocument(document))
       );
   }
 
@@ -99,19 +99,19 @@ export class DocumentService {
     return this.httpClient.get<Document>(`${this.apiPrefix(collectionId)}/${documentId}`)
       .pipe(
         catchError(error => this.handleGlobalError(error)),
-        switchMap(document => this.homePageService.checkFavoriteDocument(document))
+        mergeMap(document => this.homePageService.checkFavoriteDocument(document))
       );
   }
 
   public getLastUsedDocuments(): Observable<Document[]> {
     return this.homePageService.getLastUsedDocuments().pipe(
-      switchMap(ids => this.convertIdsToDocuments(ids))
+      mergeMap(ids => this.convertIdsToDocuments(ids))
     );
   }
 
   public getFavoriteDocuments(): Observable<Document[]> {
     return this.homePageService.getFavoriteDocuments().pipe(
-      switchMap(ids => this.convertIdsToDocuments(ids))
+      mergeMap(ids => this.convertIdsToDocuments(ids))
     );
   }
 
@@ -126,7 +126,7 @@ export class DocumentService {
     return this.httpClient.get<Document[]>(this.apiPrefix(collectionId), {params: queryParams})
       .pipe(
         catchError(error => this.handleGlobalError(error)),
-        switchMap(documents => this.homePageService.checkFavoriteDocuments(documents))
+        mergeMap(documents => this.homePageService.checkFavoriteDocuments(documents))
       );
   }
 

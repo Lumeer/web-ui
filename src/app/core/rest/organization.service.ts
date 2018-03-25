@@ -17,14 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {catchError, map, switchMap} from 'rxjs/operators';
 import {Organization} from '../dto';
-import {FetchFailedError} from '../error/fetch-failed.error';
-import {NetworkError} from '../error/network.error';
 import {PermissionService} from './permission.service';
 
 @Injectable()
