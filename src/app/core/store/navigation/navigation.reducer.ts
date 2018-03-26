@@ -19,29 +19,26 @@
 
 import {ROUTER_CANCEL, ROUTER_NAVIGATION, RouterCancelAction, RouterNavigationAction} from '@ngrx/router-store';
 import {perspectivesMap} from '../../../view/perspectives/perspective';
-import {QueryConverter} from './query.converter';
-import {RouteFinder} from '../../../shared/utils/route-finder';
+import {RouterStateUrl} from '../router/lumeer-router-state-serializer';
 import {NavigationState} from './navigation.state';
+import {QueryConverter} from './query.converter';
 
-function onRouterNavigation(state: NavigationState, action: RouterNavigationAction): NavigationState {
-  const route = action.payload.routerState.root;
-  // TODO harvest params, queryParams, and data from all route nodes in the tree
-  const params = RouteFinder.getFirstChildRouteWithParams(route).paramMap;
-  const queryParams = route.queryParamMap;
+function onRouterNavigation(state: NavigationState, action: RouterNavigationAction<RouterStateUrl>): NavigationState {
+  const {data, params, queryParams, url} = action.payload.routerState;
 
-  const linkCollectionIds = queryParams.get('linkCollectionIds');
+  const linkCollectionIds = queryParams['linkCollectionIds'];
 
   return {
-    query: QueryConverter.fromString(queryParams.get('query')),
+    query: QueryConverter.fromString(queryParams['query']),
     workspace: {
-      organizationCode: params.get('organizationCode'),
-      projectCode: params.get('projectCode'),
-      collectionId: params.get('collectionId'),
-      viewCode: params.get('vc')
+      organizationCode: params['organizationCode'],
+      projectCode: params['projectCode'],
+      collectionId: params['collectionId'],
+      viewCode: params['vc']
     },
-    perspective: perspectivesMap[extractPerspectiveIdFromUrl(action.payload.routerState.url)],
-    searchBoxHidden: RouteFinder.getDeepestChildRoute(route).data['searchBoxHidden'],
-    viewName: queryParams.get('viewName'),
+    perspective: perspectivesMap[extractPerspectiveIdFromUrl(url)],
+    searchBoxHidden: data['searchBoxHidden'],
+    viewName: queryParams['viewName'],
     linkCollectionIds: linkCollectionIds ? linkCollectionIds.split(',') : null
   };
 }
@@ -56,7 +53,7 @@ function onRouterCancel(state: NavigationState, action: RouterCancelAction<Navig
   return (action as RouterCancelAction<NavigationState>).payload.storeState;
 }
 
-export function navigationReducer(state: NavigationState, action: RouterNavigationAction | RouterCancelAction<NavigationState>): NavigationState {
+export function navigationReducer(state: NavigationState, action: RouterNavigationAction<RouterStateUrl> | RouterCancelAction<NavigationState>): NavigationState {
   switch (action.type) {
     case ROUTER_NAVIGATION:
       return onRouterNavigation(state, action);
