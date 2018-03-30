@@ -1035,53 +1035,53 @@
     Groups:
   </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/groups/organization-user-groups.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/groups/user-groups.component.ts</context>
           <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit><trans-unit id="organization.user.groups.add" datatype="html">
         <source>Add group</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/groups/organization-user-groups.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/groups/user-groups.component.ts</context>
           <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.user.expand" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ expanded ? &apos;Close&apos; : &apos;Open&apos; }}"/></source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/user/organization-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/user/user.component.ts</context>
           <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit><trans-unit id="organization.user.email.incorrect" datatype="html">
         <source>Email is in bad format</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/user/organization-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/user/user.component.ts</context>
           <context context-type="linenumber">32</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/new-user/organization-new-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/new-user/new-user.component.ts</context>
           <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.users.remove" datatype="html">
         <source>Remove User</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/user/organization-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/user/user.component.ts</context>
           <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.users.block" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ blocked ? &apos;Unblock&apos; : &apos;Temporarily Block&apos; }}"/> User</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/user/organization-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/user/user.component.ts</context>
           <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit><trans-unit id="organization.user.name.incorrect" datatype="html">
         <source>Name is in bad format</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/new-user/organization-new-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/new-user/new-user.component.ts</context>
           <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.users.add" datatype="html">
         <source>Add User</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/new-user/organization-new-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/new-user/new-user.component.ts</context>
           <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit><trans-unit id="organization.settings.back" datatype="html">

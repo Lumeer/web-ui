@@ -23,7 +23,9 @@ import {initialOrganizationsState, organizationsAdapter, OrganizationsState} fro
 export function organizationsReducer(state: OrganizationsState = initialOrganizationsState, action: OrganizationsAction.All): OrganizationsState {
   switch (action.type) {
     case OrganizationsActionType.GET_SUCCESS:
-      return organizationsAdapter.addAll(action.payload.organizations, state);
+      return {...organizationsAdapter.addAll(action.payload.organizations, state), loaded: true};
+    case OrganizationsActionType.GET_ONE_SUCCESS:
+      return organizationsAdapter.addOne(action.payload.organization, state);
     case OrganizationsActionType.GET_CODES_SUCCESS:
       return {...state, organizationCodes: action.payload.organizationCodes};
     case OrganizationsActionType.CREATE_SUCCESS:

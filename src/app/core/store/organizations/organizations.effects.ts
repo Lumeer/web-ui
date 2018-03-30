@@ -23,7 +23,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, flatMap, map, mergeMap, filter, tap, withLatestFrom} from 'rxjs/operators';
 import {RouteFinder} from '../../../shared/utils/route-finder';
 import {OrganizationService} from '../../rest';
 import {AppState} from '../app.state';
@@ -31,7 +31,8 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {RouterAction} from '../router/router.action';
 import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
-import {selectOrganizationCodes, selectOrganizationsDictionary} from './organizations.state';
+import {selectOrganizationCodes, selectOrganizationsDictionary, selectOrganizationsLoaded} from './organizations.state';
+import {isNullOrUndefined} from "util";
 
 @Injectable()
 export class OrganizationsEffects {
@@ -39,6 +40,8 @@ export class OrganizationsEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<OrganizationsAction.Get>(OrganizationsActionType.GET),
+    withLatestFrom(this.store$.select(selectOrganizationsLoaded)),
+    filter(([action, loaded]) => !loaded),
     mergeMap(() => this.organizationService.getOrganizations().pipe(
       map(dtos => dtos.map(dto => OrganizationConverter.fromDto(dto)))
     )),
@@ -59,6 +62,8 @@ export class OrganizationsEffects {
   @Effect()
   public getCodes$: Observable<Action> = this.actions$.pipe(
     ofType<OrganizationsAction.GetCodes>(OrganizationsActionType.GET_CODES),
+    withLatestFrom(this.store$.select(selectOrganizationCodes)),
+    filter(([action, codes]) => isNullOrUndefined(codes)),
     mergeMap(() => this.organizationService.getOrganizationsCodes()),
     map((organizationCodes) => new OrganizationsAction.GetCodesSuccess({organizationCodes})),
     catchError((error) => Observable.of(new OrganizationsAction.GetCodesFailure({error: error})))

@@ -25,7 +25,7 @@ import {LumeerError} from '../../../../core/error/lumeer.error';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {KeyCode} from '../../../../shared/key-code';
-import {Role} from '../../../../shared/permissions/role';
+import {Role} from '../../../../core/model/role';
 import {PostItLayout} from '../../../../shared/utils/layout/post-it-layout';
 import {AttributePair} from '../document-data/attribute-pair';
 import {PostItDocumentModel} from '../document-data/post-it-document-model';

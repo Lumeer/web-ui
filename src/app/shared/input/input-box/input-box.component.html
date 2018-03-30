@@ -1,9 +1,10 @@
-<div class="edit-border"
+<div [class.edit-border]="editable"
      [style.paddingTop.rem]="mPaddingRem"
      [style.paddingBottom.rem]="mPaddingRem"
      #inputParent>
 
   <div class="input-box"
+       [class.cursor-text]="editable"
        [textContent]="mCurrentValue"
        (blur)="input.scrollTo(0,0); onNewValue(input.textContent)"
        [style.color]="color"
@@ -12,7 +13,7 @@
        [style.paddingLeft.rem]="mPaddingRem"
        [style.paddingRight.rem]="mPaddingRem"
        (focus)="onFocus()"
-       contenteditable="true"
+       [attr.contenteditable]="editable"
        [attr.placeholder]="mPlaceholder"
        [attr.title]="title"
        (keydown.enter)="input.blur()"

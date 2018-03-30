@@ -29,6 +29,7 @@ export class ViewConverter {
     return {
       code: dto.code,
       name: dto.name,
+      description: dto.description,
       query: QueryConverter.fromDto(dto.query),
       perspective: perspectivesMap[dto.perspective],
       config: dto.config,
@@ -42,7 +43,8 @@ export class ViewConverter {
       name: model.name,
       query: QueryConverter.toDto(model.query),
       perspective: model.perspective,
-      config: model.config
+      config: model.config,
+      description: model.description
     };
   }
 

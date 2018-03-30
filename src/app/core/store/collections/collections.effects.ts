@@ -19,10 +19,10 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action} from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, flatMap, map, mergeMap, tap} from 'rxjs/operators';
+import {catchError, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {Collection, Permission} from '../../dto';
 import {CollectionService, ImportService, SearchService} from '../../rest';
 import {HomePageService} from '../../rest/home-page.service';
@@ -33,6 +33,8 @@ import {PermissionsConverter} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions.model';
 import {CollectionConverter} from './collection.converter';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
+import {selectCollectionsLoaded} from "./collections.state";
+import {AppState} from "../app.state";
 
 @Injectable()
 export class CollectionsEffects {
@@ -40,6 +42,9 @@ export class CollectionsEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.Get>(CollectionsActionType.GET),
+    withLatestFrom(this.store$.select(selectCollectionsLoaded)),
+    filter(([action, loaded]) => !loaded),
+    map(([action]) => action),
     mergeMap((action) => {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
@@ -320,6 +325,7 @@ export class CollectionsEffects {
   );
 
   constructor(private actions$: Actions,
+              private store$: Store<AppState>,
               private collectionService: CollectionService,
               private homePageService: HomePageService,
               private i18n: I18n,

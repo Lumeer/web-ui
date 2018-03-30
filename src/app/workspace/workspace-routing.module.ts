@@ -19,30 +19,30 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+
 import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
 import {OrganizationSettingsComponent} from './organization/organization-settings.component';
 import {ProjectSettingsComponent} from './project/project-settings.component';
-import {ProjectPermissionsComponent} from './project/permissions/project-permissions.component';
-import {OrganizationPermissionsComponent} from './organization/permissions/organization-permissions.component';
+import {ProjectUsersComponent} from './project/users/project-users.component';
 import {WorkspaceSelectGuard} from './workspace-select.guard';
-import {OrganizationUsersComponent} from './organization/users/organization-users.component';
-import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
-import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
 import {OrganizationSettingsGuard} from "./organization/organization-settings.guard";
 import {OrganizationDetailComponent} from "./organization/detail/organization-detail.component";
+import {OrganizationUsersComponent} from "./organization/users/organization-users.component";
+import {ProjectSettingsGuard} from "./project/project-settings.guard";
 
 const workspaceRoutes: Routes = [
   {
     path: 'organization/:organizationCode/project/:projectCode',
     component: ProjectSettingsComponent,
+    canActivate: [ProjectSettingsGuard],
     children: [
       {
-        path: 'permissions',
-        component: ProjectPermissionsComponent
+        path: 'users',
+        component: ProjectUsersComponent
       },
       {
         path: '',
-        redirectTo: 'permissions',
+        redirectTo: 'users',
         pathMatch: 'full'
       }
     ]
@@ -59,18 +59,6 @@ const workspaceRoutes: Routes = [
       {
         path: 'users',
         component: OrganizationUsersComponent
-      },
-      {
-        path: 'groups',
-        component: OrganizationGroupsComponent
-      },
-      {
-        path: 'registration',
-        component: OrganizationRegistrationComponent
-      },
-      {
-        path: 'permissions',
-        component: OrganizationPermissionsComponent
       },
       {
         path: '',

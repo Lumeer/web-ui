@@ -27,7 +27,6 @@ import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {GroupsAction} from '../../core/store/groups/groups.action';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
@@ -38,10 +37,9 @@ import {ProjectModel} from '../../core/store/projects/project.model';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {selectProjectById, selectProjectsCodesForSelectedOrganization, selectProjectsForSelectedOrganization, selectSelectedProject, selectSelectedProjectId} from '../../core/store/projects/projects.state';
 import {RouterAction} from '../../core/store/router/router.action';
-import {UsersAction} from '../../core/store/users/users.action';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {UserSettingsService} from '../../core/user-settings.service';
-import {Role} from '../../shared/permissions/role';
+import {Role} from '../../core/model/role';
 import {ResourceItemType} from './resource-chooser/resource-item-type';
 import {Router} from "@angular/router";
 
@@ -226,10 +224,8 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   private clearStore() {
     this.store.dispatch(new CollectionsAction.Clear());
     this.store.dispatch(new DocumentsAction.Clear());
-    this.store.dispatch(new GroupsAction.Clear());
     this.store.dispatch(new LinkInstancesAction.Clear());
     this.store.dispatch(new LinkTypesAction.Clear());
-    this.store.dispatch(new UsersAction.Clear());
     this.store.dispatch(new ViewsAction.Clear());
   }
 

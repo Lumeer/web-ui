@@ -29,6 +29,8 @@ export enum CollectionsActionType {
   GET_SUCCESS = '[Collections] Get :: Success',
   GET_FAILURE = '[Collections] Get :: Failure',
 
+  GET_ONE_SUCCESS = '[Collections] Get one :: Success',
+
   GET_NAMES = '[Collections] Get Collection Names',
   GET_NAMES_SUCCESS = '[Collections] Get Collection Names :: Success',
   GET_NAMES_FAILURE = '[Collections] Get Collection Names :: Failure',
@@ -97,6 +99,13 @@ export namespace CollectionsAction {
     public readonly type = CollectionsActionType.GET_FAILURE;
 
     public constructor(public payload: { error: any }) {
+    }
+  }
+
+  export class GetOneSuccess implements Action {
+    public readonly type = CollectionsActionType.GET_ONE_SUCCESS;
+
+    public constructor(public payload: { collection: CollectionModel }) {
     }
   }
 
@@ -339,7 +348,7 @@ export namespace CollectionsAction {
   }
 
   export type All =
-    Get | GetSuccess | GetFailure |
+    Get | GetSuccess | GetFailure | GetOneSuccess |
     GetNames | GetNamesSuccess | GetNamesFailure |
     Create | CreateSuccess | CreateFailure |
     Import | ImportSuccess | ImportFailure |

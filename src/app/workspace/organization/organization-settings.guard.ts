@@ -19,20 +19,19 @@
 
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {mergeMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
-import {GroupsAction} from '../../core/store/groups/groups.action';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {RouterAction} from '../../core/store/router/router.action';
 import {UsersAction} from '../../core/store/users/users.action';
-import {Role} from '../../shared/permissions/role';
 import {WorkspaceService} from '../workspace.service';
+import {resourceHasManageRole} from '../../shared/utils/resource.utils';
 
 @Injectable()
 export class OrganizationSettingsGuard implements CanActivate {
@@ -55,7 +54,7 @@ export class OrganizationSettingsGuard implements CanActivate {
           return Observable.of(false);
         }
 
-        if (!this.hasManageRole(organization)) {
+        if (!resourceHasManageRole(organization)) {
           this.dispatchErrorActionsNotPermission();
           return Observable.of(false);
         }
@@ -63,11 +62,6 @@ export class OrganizationSettingsGuard implements CanActivate {
         return Observable.of(true);
       })
     );
-  }
-
-  private hasManageRole(organization: OrganizationModel): boolean {
-    return organization.permissions && organization.permissions.users.length === 1
-      && organization.permissions.users[0].roles.some(r => r === Role.Manage.toString());
   }
 
   private dispatchErrorActionsNotExist() {
@@ -84,13 +78,13 @@ export class OrganizationSettingsGuard implements CanActivate {
   }
 
   private dispatchErrorActions(message: string) {
-    this.store.dispatch(new RouterAction.Go({path: ['workspace']}));
+    this.router.navigate(['/workspace']);
     this.store.dispatch(new NotificationsAction.Error({message}));
   }
 
   private dispatchDataEvents(organization: OrganizationModel) {
     this.store.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
     this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
-    this.store.dispatch(new GroupsAction.Get());
+    //this.store.dispatch(new GroupsAction.Get());
   }
 }

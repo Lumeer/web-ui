@@ -25,7 +25,11 @@ import {organizationsAdapter} from "../organizations/organizations.state";
 export function projectsReducer(state: ProjectsState = initialProjectsState, action: ProjectsAction.All): ProjectsState {
   switch (action.type) {
     case ProjectsActionType.GET_SUCCESS:
-      return projectsAdapter.addMany(action.payload.projects, state);
+      const loaded = {...state.loaded};
+      loaded[action.payload.organizationId] = true;
+      return {...projectsAdapter.addMany(action.payload.projects, state), loaded};
+    case ProjectsActionType.GET_ONE_SUCCESS:
+      return projectsAdapter.addOne(action.payload.project, state);
     case ProjectsActionType.GET_CODES_SUCCESS:
       const projectCodes = {...state.projectCodes};
       projectCodes[action.payload.organizationId] = action.payload.projectCodes;

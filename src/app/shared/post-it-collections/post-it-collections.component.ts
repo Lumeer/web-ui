@@ -31,7 +31,7 @@ import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
-import {Role} from '../permissions/role';
+import {Role} from '../../core/model/role';
 import {HashCodeGenerator} from '../utils/hash-code-generator';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {PostItLayoutConfig} from '../utils/layout/post-it-layout-config';

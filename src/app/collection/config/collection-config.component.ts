@@ -36,7 +36,7 @@ import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {PermissionModel} from '../../core/store/permissions/permissions.model';
-import {Role} from '../../shared/permissions/role';
+import {Role} from '../../core/model/role';
 import {CollectionSelectService} from '../service/collection-select.service';
 
 @Component({
@@ -60,7 +60,9 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.workspaceSubscription = this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+    this.workspaceSubscription = this.store.select(selectWorkspace).pipe(
+      filter(workspace => !isNullOrUndefined(workspace))
+    ).subscribe(workspace => this.workspace = workspace);
 
     this.collectionSubscription = this.store.select(selectCollectionByWorkspace)
       .pipe(filter(collection => !isNullOrUndefined(collection)))
@@ -116,7 +118,7 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
   }
 
   public goToCollectionsPage(): void {
-    this.router.navigate([this.workspacePath(), 'files']);
+    this.router.navigate([this.workspacePath(), 'view','search','files']);
   }
 
   public documentsQuery(collectionId: string): string {

@@ -22,14 +22,15 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {ProjectService} from '../../rest';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
 import {ProjectConverter} from './project.converter';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
-import {selectProjectsCodes} from './projects.state';
+import {selectProjectsCodes, selectProjectsLoaded} from './projects.state';
+import {isNullOrUndefined} from "util";
 
 @Injectable()
 export class ProjectsEffects {
@@ -37,16 +38,22 @@ export class ProjectsEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.Get>(ProjectsActionType.GET),
+    withLatestFrom(this.store$.select(selectProjectsLoaded)),
     withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
-    skipWhile(([action, organizationsEntities]) => !organizationsEntities[action.payload.organizationId]),
-    mergeMap(([action, organizationsEntities]) => {
-      const organization = organizationsEntities[action.payload.organizationId];
+    filter(([[action, projectsLoaded], organizationsEntities]) => {
+      const organizationId = action.payload.organizationId;
+      return !projectsLoaded[organizationId] && !isNullOrUndefined(organizationsEntities[organizationId]);
+    }),
+    map(([[action, projectsLoaded], organizationsEntities]) => ({action, organizationsEntities})),
+    mergeMap(({action, organizationsEntities}) => {
+      const organizationId = action.payload.organizationId;
+      const organization = organizationsEntities[organizationId];
       return this.projectService.getProjects(organization.code).pipe(
-        map(dtos => dtos.map(dto => ProjectConverter.fromDto(dto, action.payload.organizationId)))
+        map(dtos => ({organizationId, projects: dtos.map(dto => ProjectConverter.fromDto(dto, organizationId))}))
       );
     }),
-    map(projects => new ProjectsAction.GetSuccess({projects: projects})),
-    catchError(error => Observable.of(new ProjectsAction.GetFailure({error: error})))
+    map(payload => new ProjectsAction.GetSuccess(payload)),
+    catchError(error => Observable.of(new ProjectsAction.GetFailure({error})))
   );
 
   @Effect()
@@ -62,8 +69,14 @@ export class ProjectsEffects {
   @Effect()
   public getCodes$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.GetCodes>(ProjectsActionType.GET_CODES),
+    withLatestFrom(this.store$.select(selectProjectsCodes)),
     withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
-    mergeMap(([action, organizationsEntities]) => {
+    filter(([[action, projectCodes], organizationsEntities]) => {
+      const organizationId = action.payload.organizationId;
+      return isNullOrUndefined(projectCodes[organizationId]) && !isNullOrUndefined(organizationsEntities[organizationId]);
+    }),
+    map(([[action], organizationsEntities]) => ({action, organizationsEntities})),
+    mergeMap(({action, organizationsEntities}) => {
       const organization = organizationsEntities[action.payload.organizationId];
       return this.projectService.getProjectCodes(organization.code).pipe(
         map(projectCodes => ({projectCodes, organizationId: action.payload.organizationId}))

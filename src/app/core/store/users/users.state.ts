@@ -27,17 +27,20 @@ import {UserFilters} from "./user.filters";
 import {GroupModel} from "../groups/group.model";
 
 export interface UsersState extends EntityState<UserModel> {
-
+  loaded: boolean;
 }
 
 export const usersAdapter = createEntityAdapter<UserModel>();
 
-export const initialUsersState: UsersState = usersAdapter.getInitialState({filter: null});
+export const initialUsersState: UsersState = usersAdapter.getInitialState({
+  loaded: false
+});
 
 export const selectUsersState = (state: AppState) => state.users;
 
 const selectAllUsersRaw = createSelector(selectUsersState, usersAdapter.getSelectors().selectAll);
 export const selectAllUsers = createSelector(selectAllUsersRaw, users => UserFilters.filterFunctions(users));
+export const selectUsersLoaded = createSelector(selectUsersState, usersState => usersState.loaded);
 
 export const selectUsersForWorkspace = createSelector(selectAllUsers, selectAllGroups, selectOrganizationByWorkspace, (users, groups, organization) => {
   return UserFilters.filterByOrganization(users, organization)

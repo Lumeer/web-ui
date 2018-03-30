@@ -1,0 +1,9 @@
+<user-list
+  *ngIf="organization"
+  [resourceType]="resourceType"
+  [organization]="organization"
+  [users]="users$ | async"
+  (userCreated)="onUserCreated($event)"
+  (userUpdated)="onUserUpdated($event)"
+  (userDeleted)="onUserDeleted($event)">
+</user-list>

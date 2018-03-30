@@ -27,7 +27,7 @@ import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generat
 import {OrganizationModel} from '../../../core/store/organizations/organization.model';
 import {ProjectModel} from '../../../core/store/projects/project.model';
 import {KeyCode} from '../../../shared/key-code';
-import {Role} from '../../../shared/permissions/role';
+import {Role} from '../../../core/model/role';
 import {ResourceItemType} from './resource-item-type';
 
 const squareSize: number = 200;

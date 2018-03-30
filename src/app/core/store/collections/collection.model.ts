@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PermissionsModel} from '../permissions/permissions.model';
+import {ResourceModel} from "../../model/resource.model";
 
 export interface AttributeModel {
 
@@ -30,21 +30,10 @@ export interface AttributeModel {
 
 }
 
-export interface CollectionModel {
-
-  id?: string;
-  code?: string;
-
-  name: string;
-  description: string;
-
-  icon: string;
-  color: string;
+export interface CollectionModel extends ResourceModel {
 
   attributes?: AttributeModel[];
   defaultAttributeId?: string;
-
-  permissions?: PermissionsModel;
 
   documentsCount?: number;
 
