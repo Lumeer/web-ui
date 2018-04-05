@@ -32,6 +32,7 @@ import {CollectionModel} from '../store/collections/collection.model';
 import {selectCollectionsDictionary} from '../store/collections/collections.state';
 import {HomePageService} from './home-page.service';
 import {PermissionService} from './permission.service';
+import {environment} from '../../../environments/environment';
 
 // TODO add add support for Default Attribute
 @Injectable()
@@ -147,7 +148,7 @@ export class CollectionService extends PermissionService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
+    return `/${environment.API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
   }
 
   private handleError(error: HttpErrorResponse): ErrorObservable {

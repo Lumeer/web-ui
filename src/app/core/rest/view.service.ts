@@ -23,6 +23,7 @@ import {Observable} from 'rxjs/Observable';
 import {isNullOrUndefined} from 'util';
 import {View} from '../dto';
 import {PermissionService} from './permission.service';
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class ViewService extends PermissionService {
@@ -59,7 +60,7 @@ export class ViewService extends PermissionService {
     let organizationCode = this.workspace.organizationCode;
     let projectCode = this.workspace.projectCode;
 
-    const viewsPath = `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/views`;
+    const viewsPath = `/${environment.API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/views`;
     return code ? viewsPath.concat('/', code) : viewsPath;
   }
 }

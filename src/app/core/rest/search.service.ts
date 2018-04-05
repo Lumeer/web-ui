@@ -34,6 +34,7 @@ import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
 import {HomePageService} from './home-page.service';
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class SearchService {
@@ -77,7 +78,7 @@ export class SearchService {
   }
 
   private searchPath(): string {
-    return `/${API_URL}/rest/organizations/${this.workspace.organizationCode}/projects/${this.workspace.projectCode}/search`;
+    return `/${environment.API_URL}/rest/organizations/${this.workspace.organizationCode}/projects/${this.workspace.projectCode}/search`;
   }
 
   private static handleError(error: HttpErrorResponse): ErrorObservable {

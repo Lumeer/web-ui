@@ -31,6 +31,7 @@ import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
 import {HomePageService} from './home-page.service';
+import {environment} from '../../../environments/environment';
 
 // TODO send data attribute without '_id'
 @Injectable()
@@ -134,7 +135,7 @@ export class DocumentService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionId}/documents`;
+    return `/${environment.API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionId}/documents`;
   }
 
   private handleGlobalError(error: HttpErrorResponse): ErrorObservable {

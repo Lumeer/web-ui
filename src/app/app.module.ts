@@ -31,9 +31,10 @@ import {CoreModule} from './core/core.module';
 import {DocumentsModule} from './documents/documents.module';
 import {ViewModule} from './view/view.module';
 import {WorkspaceModule} from './workspace/workspace.module';
+import {environment} from '../environments/environment';
 
 declare const require; // Use the require method provided by webpack
-const translations = require(`raw-loader!../../${I18N_PATH}`);
+const translations = require(`raw-loader!../../${environment.I18N_PATH}`);
 
 @NgModule({
   imports: [
@@ -61,7 +62,7 @@ const translations = require(`raw-loader!../../${I18N_PATH}`);
     },
     {
       provide: TRANSLATIONS_FORMAT,
-      useValue: I18N_FORMAT
+      useValue: environment.I18N_FORMAT
     },
     I18n
   ],

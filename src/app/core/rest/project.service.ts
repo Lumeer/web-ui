@@ -23,6 +23,7 @@ import {Observable} from 'rxjs/Observable';
 import {Project} from '../dto';
 import {LumeerError} from '../error/lumeer.error';
 import {PermissionService} from './permission.service';
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class ProjectService extends PermissionService {
@@ -80,7 +81,7 @@ export class ProjectService extends PermissionService {
   }
 
   private apiPrefix(orgCode: string, projCode?: string): string {
-    return `/${API_URL}/rest/organizations/${orgCode}/projects${projCode ? `/${projCode}` : ''}`;
+    return `/${environment.API_URL}/rest/organizations/${orgCode}/projects${projCode ? `/${projCode}` : ''}`;
   }
 
   protected actualApiPrefix(): string {

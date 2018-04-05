@@ -24,6 +24,7 @@ import {Observable} from 'rxjs/Observable';
 import {User} from '../dto';
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class UserService {
@@ -50,7 +51,7 @@ export class UserService {
 
 
   private apiPrefix(organizationId: string, userId?: string): string {
-    return `/${API_URL}/rest/organizations/${organizationId}/users${userId ? `/${userId}` : ''}`;
+    return `/${environment.API_URL}/rest/organizations/${organizationId}/users${userId ? `/${userId}` : ''}`;
   }
 
 }
