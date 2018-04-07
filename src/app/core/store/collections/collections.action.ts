@@ -19,7 +19,7 @@
 
 import {Action} from '@ngrx/store';
 import {QueryModel} from '../navigation/query.model';
-import {PermissionModel, PermissionType} from '../permissions/permissions.model';
+import {PermissionModel, PermissionsModel, PermissionType} from '../permissions/permissions.model';
 import {AttributeModel, CollectionModel} from './collection.model';
 import {ImportedCollection} from "../../dto/imported-collection";
 
@@ -66,6 +66,10 @@ export enum CollectionsActionType {
   REMOVE_ATTRIBUTE = '[Collections] Remove Attribute',
   REMOVE_ATTRIBUTE_SUCCESS = '[Collections] Remove Attribute :: Success',
   REMOVE_ATTRIBUTE_FAILURE = '[Collections] Remove Attribute :: Failure',
+
+  GET_PERMISSIONS = '[Collections] Get Permissions',
+  GET_PERMISSIONS_SUCCESS = '[Collections] Get Permissions :: Success',
+  GET_PERMISSIONS_FAILURE = '[Collections] Get Permissions :: Failure',
 
   CHANGE_PERMISSION = '[Collections] Change Permission',
   CHANGE_PERMISSION_SUCCESS = '[Collections] Change Permission :: Success',
@@ -298,6 +302,27 @@ export namespace CollectionsAction {
     }
   }
 
+  export class GetPermissions implements Action {
+    public readonly type = CollectionsActionType.GET_PERMISSIONS;
+
+    public constructor(public payload: { collectionId: string }) {
+    }
+  }
+
+  export class GetPermissionsSuccess implements Action {
+    public readonly type = CollectionsActionType.GET_PERMISSIONS_SUCCESS;
+
+    public constructor(public payload: { collectionId: string, permissions: PermissionsModel }) {
+    }
+  }
+
+  export class GetPermissionsFailure implements Action {
+    public readonly type = CollectionsActionType.GET_PERMISSIONS_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
   export class ChangePermission implements Action {
     public readonly type = CollectionsActionType.CHANGE_PERMISSION;
 
@@ -358,6 +383,7 @@ export namespace CollectionsAction {
     RemoveFavorite | RemoveFavoriteSuccess | RemoveFavoriteFailure |
     ChangeAttribute | ChangeAttributeSuccess | ChangeAttributeFailure |
     RemoveAttribute | RemoveAttributeSuccess | RemoveAttributeFailure |
+    GetPermissions | GetPermissionsSuccess | GetPermissionsFailure |
     ChangePermission | ChangePermissionSuccess | ChangePermissionFailure |
     RemovePermission | RemovePermissionSuccess | RemovePermissionFailure | Clear;
 }

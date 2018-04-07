@@ -23,13 +23,17 @@ import {usersAdapter, UsersState, initialUsersState} from './users.state';
 export function usersReducer(state: UsersState = initialUsersState, action: UsersAction.All): UsersState {
   switch (action.type) {
     case UsersActionType.GET_SUCCESS:
-      return {...usersAdapter.addAll(action.payload.users, state), loaded: true};
+      return {...usersAdapter.addAll(action.payload.users, state), loadedForOrganizationId: action.payload.organizationId};
+    case UsersActionType.GET_CURRENT_USER_SUCCESS:
+      return {...state, currentUser: action.payload.user};
     case UsersActionType.CREATE_SUCCESS:
       return usersAdapter.addOne(action.payload.user, state);
     case UsersActionType.UPDATE_SUCCESS:
       return usersAdapter.updateOne({id: action.payload.user.id, changes: action.payload.user}, state);
     case UsersActionType.DELETE_SUCCESS:
       return usersAdapter.removeOne(action.payload.userId, state);
+    case UsersActionType.CLEAR_USERS:
+      return usersAdapter.removeAll(state);
     case UsersActionType.CLEAR:
       return initialUsersState;
     default:

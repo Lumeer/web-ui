@@ -18,6 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
+
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -266,6 +267,18 @@ export class CollectionsEffects {
       const message = this.i18n({id: 'collection.remove.attribute.fail', value: 'Failed to remove attribute'});
       return new NotificationsAction.Error({message});
     })
+  );
+
+  @Effect()
+  public getPermissions$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.GetPermissions>(CollectionsActionType.GET_PERMISSIONS),
+    mergeMap(action => this.collectionService.getPermissions().pipe(
+      map(permissions => ({action, permissions: PermissionsConverter.fromDto(permissions)}))
+    )),
+    map(({action, permissions}) => new CollectionsAction.GetPermissionsSuccess({
+      collectionId: action.payload.collectionId, permissions
+    })),
+    catchError((error) => Observable.of(new CollectionsAction.GetPermissionsFailure({error})))
   );
 
   @Effect()

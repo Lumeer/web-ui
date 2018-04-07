@@ -46,6 +46,8 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
       return onChangeAttributeSuccess(state, action);
     case CollectionsActionType.REMOVE_ATTRIBUTE_SUCCESS:
       return onRemoveAttributeSuccess(state, action);
+    case CollectionsActionType.GET_PERMISSIONS_SUCCESS:
+      return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {permissions: action.payload.permissions}}, state);
     case CollectionsActionType.CHANGE_PERMISSION_SUCCESS:
       return onChangePermissionSuccess(state, action);
     case CollectionsActionType.REMOVE_PERMISSION_SUCCESS:

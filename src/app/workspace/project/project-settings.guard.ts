@@ -23,7 +23,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {map, mergeMap} from 'rxjs/operators';
+import {map, mergeMap, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
@@ -31,7 +31,9 @@ import {OrganizationModel} from '../../core/store/organizations/organization.mod
 import {UsersAction} from '../../core/store/users/users.action';
 import {WorkspaceService} from '../workspace.service';
 import {ProjectModel} from '../../core/store/projects/project.model';
-import {resourceHasManageRole} from '../../shared/utils/resource.utils';
+import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
+import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
 
 @Injectable()
 export class ProjectSettingsGuard implements CanActivate {
@@ -61,13 +63,14 @@ export class ProjectSettingsGuard implements CanActivate {
 
   private checkProject(organization: OrganizationModel, projectCode: string): Observable<boolean> {
     return this.workspaceService.getProjectFromStoreOrApi(organization.code, organization.id, projectCode).pipe(
-      map(project => {
+      withLatestFrom(this.store.select(selectCurrentUserForWorkspace)),
+      map(([project, user]) => {
         if (isNullOrUndefined(project)) {
           this.dispatchErrorActionsNotExist();
           return false;
         }
 
-        if (!resourceHasManageRole(project)) {
+        if (!userHasManageRoleInResource(user, project)) {
           this.dispatchErrorActionsNotPermission();
           return false;
         }
@@ -97,6 +100,7 @@ export class ProjectSettingsGuard implements CanActivate {
 
   private dispatchDataEvents(organization: OrganizationModel, project: ProjectModel) {
     this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
+    this.store.dispatch(new ProjectsAction.GetPermissions({projectId: project.id}));
     //this.store.dispatch(new GroupsAction.Get());
   }
 }

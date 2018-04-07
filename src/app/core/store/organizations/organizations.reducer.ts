@@ -19,6 +19,7 @@
 
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {initialOrganizationsState, organizationsAdapter, OrganizationsState} from './organizations.state';
+import {PermissionsHelper} from '../permissions/permissions.helper';
 
 export function organizationsReducer(state: OrganizationsState = initialOrganizationsState, action: OrganizationsAction.All): OrganizationsState {
   switch (action.type) {
@@ -36,7 +37,18 @@ export function organizationsReducer(state: OrganizationsState = initialOrganiza
       return organizationsAdapter.removeOne(action.payload.organizationId, state);
     case OrganizationsActionType.SELECT:
       return {...state, selectedOrganizationId: action.payload.organizationId};
+    case OrganizationsActionType.GET_PERMISSIONS_SUCCESS:
+      return organizationsAdapter.updateOne({id: action.payload.organizationId, changes: {permissions: action.payload.permissions}}, state);
+    case OrganizationsActionType.CHANGE_PERMISSION_SUCCESS:
+      return onChangePermissionSuccess(state, action);
     default:
       return state;
   }
+}
+
+function onChangePermissionSuccess(state: OrganizationsState, action: OrganizationsAction.ChangePermissionSuccess): OrganizationsState {
+  const organization = state.entities[action.payload.organizationId];
+  const permissions = PermissionsHelper.changePermission(organization.permissions, action.payload.type, action.payload.permission);
+
+  return organizationsAdapter.updateOne({id: action.payload.organizationId, changes: {permissions: permissions}}, state);
 }

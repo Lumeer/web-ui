@@ -20,8 +20,40 @@
 
 import {ResourceModel} from '../../core/model/resource.model';
 import {Role} from '../../core/model/role';
+import {UserModel} from '../../core/store/users/user.model';
+import {PermissionModel} from '../../core/store/permissions/permissions.model';
 
-export function resourceHasManageRole(resource: ResourceModel): boolean {
-  return resource.permissions && resource.permissions.users.length === 1
-    && resource.permissions.users[0].roles.some(r => r === Role.Manage.toString());
+export function userHasManageRoleInResource(user: UserModel, resource: ResourceModel): boolean {
+  return userHasRoleInResource(user, resource, Role.Manage);
+}
+
+export function userHasRoleInResource(user: UserModel, resource: ResourceModel, role: string): boolean {
+  return userRolesInResource(user, resource).includes(role);
+}
+
+export function userRolesInResource(user: UserModel, resource: ResourceModel): string[] {
+  const permissions = resource && resource.permissions || {users: [], groups: []};
+  const allUserRoles = userRoles(user, permissions.users);
+  allUserRoles.push(...userGroupRoles(user, permissions.groups));
+  return allUserRoles;
+}
+
+function userRoles(user: UserModel, permissions: PermissionModel[]): string[] {
+  return permissions.reduce((allRoles, permission) => {
+    if (permission.id === user.id) {
+      allRoles.push(...permission.roles);
+    }
+    return allRoles;
+  }, []);
+}
+
+function userGroupRoles(user: UserModel, permissions: PermissionModel[]): string[] {
+  const userGroups = (user.groups || []).map(group => group.id);
+
+  return permissions.reduce((allRoles, permission) => {
+    if (userGroups.includes(permission.id)) {
+      allRoles.push(...permission.roles);
+    }
+    return allRoles;
+  }, []);
 }

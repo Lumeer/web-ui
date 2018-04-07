@@ -23,7 +23,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {mergeMap} from 'rxjs/operators';
+import {mergeMap, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
@@ -31,7 +31,9 @@ import {OrganizationModel} from '../../core/store/organizations/organization.mod
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {UsersAction} from '../../core/store/users/users.action';
 import {WorkspaceService} from '../workspace.service';
-import {resourceHasManageRole} from '../../shared/utils/resource.utils';
+import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
+import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
+import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 
 @Injectable()
 export class OrganizationSettingsGuard implements CanActivate {
@@ -48,13 +50,14 @@ export class OrganizationSettingsGuard implements CanActivate {
     const organizationCode = next.paramMap.get('organizationCode');
 
     return this.workspaceService.getOrganizationFromStoreOrApi(organizationCode).pipe(
-      mergeMap(organization => {
+      withLatestFrom(this.store.select(selectCurrentUserForWorkspace)),
+      mergeMap(([organization, user]) => {
         if (isNullOrUndefined(organization)) {
           this.dispatchErrorActionsNotExist();
           return Observable.of(false);
         }
 
-        if (!resourceHasManageRole(organization)) {
+        if (!userHasManageRoleInResource(user, organization)) {
           this.dispatchErrorActionsNotPermission();
           return Observable.of(false);
         }
@@ -83,6 +86,7 @@ export class OrganizationSettingsGuard implements CanActivate {
   }
 
   private dispatchDataEvents(organization: OrganizationModel) {
+    this.store.dispatch(new OrganizationsAction.GetPermissions({organizationId: organization.id}));
     this.store.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
     this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
     //this.store.dispatch(new GroupsAction.Get());

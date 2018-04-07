@@ -54,12 +54,7 @@ export class UserComponent {
   @Output()
   public permissionsUpdated = new EventEmitter<OrganizationModel>();
 
-  public blocked: boolean;
   public showEmailWarning: boolean;
-
-  public onNewName(name: string) {
-    this.userUpdated.emit({...this.user, name});
-  }
 
   public onNewEmail(email: string) {
     if (!Validator.validateEmail(email)) {
@@ -69,16 +64,37 @@ export class UserComponent {
     this.userUpdated.emit({...this.user, email});
   }
 
-  public blockUser() {
-    this.blocked = !this.blocked;
+  public onEmailFocus() {
+    this.showEmailWarning = false;
   }
 
   public removeUser() {
     this.userDeleted.emit(this.user);
   }
 
-  public onEmailFocus() {
-    this.showEmailWarning = false;
+  public toggleReadPermission(){
+
   }
+
+  public toggleManagePermission(){
+
+  }
+
+  public toggleWritePermission(){
+
+  }
+
+  public toggleSharePermission(){
+
+  }
+
+  public toggleClonePermission(){
+
+  }
+
+  public toggleCommentPermission(){
+
+  }
+
 
 }

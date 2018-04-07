@@ -18,6 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
+
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -31,6 +32,9 @@ import {ProjectConverter} from './project.converter';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {selectProjectsCodes, selectProjectsLoaded} from './projects.state';
 import {isNullOrUndefined} from "util";
+import {Permission} from '../../dto';
+import {PermissionType} from '../permissions/permissions.model';
+import {PermissionsConverter} from '../permissions/permissions.converter';
 
 @Injectable()
 export class ProjectsEffects {
@@ -184,6 +188,40 @@ export class ProjectsEffects {
       const message = this.i18n({id: 'project.delete.fail', value: 'Failed to delete project'});
       return new NotificationsAction.Error({message});
     })
+  );
+
+  @Effect()
+  public getPermissions$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.GetPermissions>(ProjectsActionType.GET_PERMISSIONS),
+    mergeMap(action => this.projectService.getPermissions().pipe(
+      map(permissions => ({action, permissions: PermissionsConverter.fromDto(permissions)}))
+    )),
+    map(({action, permissions}) => new ProjectsAction.GetPermissionsSuccess({
+      projectId: action.payload.projectId, permissions
+    })),
+    catchError((error) => Observable.of(new ProjectsAction.GetPermissionsFailure({error})))
+  );
+
+  @Effect()
+  public changePermission$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.ChangePermission>(ProjectsActionType.CHANGE_PERMISSION),
+    mergeMap(action => {
+      const permissionDto: Permission = PermissionsConverter.toPermissionDto(action.payload.permission);
+
+      if (action.payload.type === PermissionType.Users) {
+        return this.projectService.updateUserPermission(permissionDto).pipe(
+          map(permission => ({action, permission: PermissionsConverter.fromPermissionDto(permission)}))
+        );
+      } else {
+        return this.projectService.updateGroupPermission(permissionDto).pipe(
+          map(permission => ({action, permission: PermissionsConverter.fromPermissionDto(permission)}))
+        );
+      }
+    }),
+    map(({action, permission}) => new ProjectsAction.ChangePermissionSuccess(
+      {projectId: action.payload.projectId, type: action.payload.type, permission}
+    )),
+    catchError((error) => Observable.of(new ProjectsAction.ChangePermissionFailure({error: error})))
   );
 
   constructor(private actions$: Actions,

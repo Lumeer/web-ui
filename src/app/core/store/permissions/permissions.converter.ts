@@ -47,14 +47,14 @@ export class PermissionsConverter {
 
   public static fromPermissionDto(dto: Permission): PermissionModel {
     return {
-      name: dto.name,
+      id: dto.id,
       roles: dto.roles
     };
   }
 
   public static toPermissionDto(permission: PermissionModel): Permission {
     return {
-      name: permission.name,
+      id: permission.id,
       roles: permission.roles
     };
   }

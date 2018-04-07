@@ -19,7 +19,7 @@
 
 import {Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {filter} from 'rxjs/operators';
+import {filter, map, withLatestFrom} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -42,6 +42,10 @@ import {Permission} from '../../../core/dto';
 import {Role} from '../../../shared/permissions/role';
 import Create = DocumentsAction.Create;
 import UpdateData = DocumentsAction.UpdateData;
+import {Observable} from 'rxjs/Observable';
+import {selectCollectionByWorkspace} from '../../../core/store/collections/collections.state';
+import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
+import {userRolesInResource} from '../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'post-it-perspective',
@@ -95,6 +99,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public selectionHelper: SelectionHelper;
 
+  public collectionRoles$: Observable<string[]>;
+
   private deletionHelper: DeletionHelper;
 
   private layoutManager: PostItLayout;
@@ -140,6 +146,12 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
     this.deletionHelper = new DeletionHelper(this.store, this.postIts);
     this.deletionHelper.initialize();
+
+    this.collectionRoles$ = this.store.select(selectCollectionByWorkspace).pipe(
+      withLatestFrom(this.store.select(selectCurrentUserForWorkspace)),
+      filter(([collection, user]) => !isNullOrUndefined(collection)),
+      map(([collection, user]) => userRolesInResource(user, collection))
+    )
   }
 
   private reinitializePostIts(): void {

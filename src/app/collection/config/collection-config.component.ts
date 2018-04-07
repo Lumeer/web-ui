@@ -35,8 +35,6 @@ import {selectCollectionByWorkspace} from '../../core/store/collections/collecti
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {Workspace} from '../../core/store/navigation/workspace.model';
-import {PermissionModel} from '../../core/store/permissions/permissions.model';
-import {Role} from '../../core/model/role';
 import {CollectionSelectService} from '../service/collection-select.service';
 
 @Component({
@@ -108,17 +106,8 @@ export class CollectionConfigComponent implements OnInit, OnDestroy {
     }
   }
 
-  public hasManageRole(collection: CollectionModel): boolean {
-    return this.hasRole(collection, Role.Manage);
-  }
-
-  private hasRole(collection: CollectionModel, role: string): boolean {
-    return collection.permissions && collection.permissions.users
-      .some((permission: PermissionModel) => permission.roles.includes(role));
-  }
-
   public goToCollectionsPage(): void {
-    this.router.navigate([this.workspacePath(), 'view','search','files']);
+    this.router.navigate([this.workspacePath(), 'view', 'search', 'files']);
   }
 
   public documentsQuery(collectionId: string): string {

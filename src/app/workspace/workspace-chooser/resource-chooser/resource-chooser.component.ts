@@ -27,12 +27,12 @@ import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generat
 import {OrganizationModel} from '../../../core/store/organizations/organization.model';
 import {ProjectModel} from '../../../core/store/projects/project.model';
 import {KeyCode} from '../../../shared/key-code';
-import {Role} from '../../../core/model/role';
 import {ResourceItemType} from './resource-item-type';
+import {Role} from '../../../core/model/role';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
-const warningStyle = 'border-danger';
+const warningStyle = ['border', 'border-danger', 'rounded'];
 
 type ResourceModel = OrganizationModel | ProjectModel;
 
@@ -86,6 +86,7 @@ export class ResourceChooserComponent implements OnChanges {
 
   @Input() public resourceType: ResourceItemType;
   @Input() public resources: ResourceModel[];
+  @Input() public resourcesRoles: { [id: string]: string[] };
   @Input() public selectedId: string;
   @Input() public canCreateResource: boolean;
   @Input() public usedCodes: string[];
@@ -307,8 +308,12 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   public hasManageRole(resource: ResourceModel): boolean {
-    return resource.permissions && resource.permissions.users.length === 1
-      && resource.permissions.users[0].roles.some(r => r === Role.Manage.toString());
+    return this.hasRole(resource, Role.Manage);
+  }
+
+  private hasRole(resource: ResourceModel, role: string): boolean {
+    const roles = this.resourcesRoles && this.resourcesRoles[resource.id] || [];
+    return roles.includes(role);
   }
 
   public onKeyDown(event: KeyboardEvent, element: HTMLElement) {
@@ -319,11 +324,11 @@ export class ResourceChooserComponent implements OnChanges {
 
   public onCodeBlur(element: HTMLElement, resource: ResourceModel) {
     const newCode = element.textContent.trim();
-    const isValid = this.resources.filter(res => res.id !== resource.id).findIndex(res => res.code === newCode) === -1;
+    const isValid = this.isNewCodeValid(newCode);
     if (isValid) {
-      element.classList.remove(warningStyle);
+      element.classList.remove(...warningStyle);
     } else {
-      element.classList.add(warningStyle);
+      element.classList.add(...warningStyle);
 
       const message = this.i18n({
         id: 'resource.already.exist',

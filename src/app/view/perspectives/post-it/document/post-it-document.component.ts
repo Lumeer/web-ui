@@ -18,9 +18,9 @@
  */
 
 import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 import {isString} from 'util';
-import {Permission} from '../../../../core/dto';
 import {LumeerError} from '../../../../core/error/lumeer.error';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
@@ -94,6 +94,9 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     this._postItModel = value;
     this.refreshDataAttributePairs();
   }
+
+  @Input()
+  public collectionRoles: string[];
 
   @Input()
   public perspectiveId: string;
@@ -263,13 +266,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public hasWriteRole(): boolean {
-    return this.hasRole(Role.Write);
-  }
-
-  private hasRole(role: string): boolean {
-    const collection = this.postItModel.document.collection;
-    const permissions = collection && collection.permissions || {users: [], groups: []};
-    return permissions.users.some((permission: Permission) => permission.roles.includes(role));
+    return this.collectionRoles.includes(Role.Write)
   }
 
   public ngOnDestroy(): void {

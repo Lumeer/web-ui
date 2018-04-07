@@ -62,7 +62,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   private sortUsers(users: UserModel[]): UserModel[] {
-    return users.sort((user1, user2) => user1.name.localeCompare(user2.name));
+    return users.sort((user1, user2) => user1.email.localeCompare(user2.email));
   }
 
   public onUserCreated(user: UserModel) {

@@ -49,8 +49,7 @@ export class CollectionService extends PermissionService {
 
   public updateCollection(collection: Collection): Observable<Collection> {
     this.homePageService.addLastUsedCollection(collection.id).subscribe();
-    return this.httpClient.put(`${this.apiPrefix()}/${collection.id}`, collection).pipe(
-      catchError(this.handleError),
+    return this.httpClient.put<Collection>(`${this.apiPrefix()}/${collection.id}`, collection).pipe(
       mergeMap(collection => this.homePageService.checkFavoriteCollection(collection))
     );
   }
@@ -64,8 +63,7 @@ export class CollectionService extends PermissionService {
       `${this.apiPrefix()}/${collectionId}`,
       {observe: 'response', responseType: 'text'}
     ).pipe(
-      map(() => collectionId),
-      catchError(this.handleError)
+      map(() => collectionId)
     );
   }
 
@@ -78,7 +76,6 @@ export class CollectionService extends PermissionService {
 
   public getCollection(collectionId: string): Observable<Collection> {
     return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionId}`).pipe(
-      catchError(CollectionService.handleGlobalError),
       mergeMap(collection => this.homePageService.checkFavoriteCollection(collection))
     );
   }
@@ -104,7 +101,6 @@ export class CollectionService extends PermissionService {
     }
 
     return this.httpClient.get<Collection[]>(this.apiPrefix(), {params: queryParams}).pipe(
-      catchError(CollectionService.handleGlobalError),
       mergeMap(collections => this.homePageService.checkFavoriteCollections(collections))
     );
   }
@@ -117,16 +113,12 @@ export class CollectionService extends PermissionService {
    * @deprecated Get attributes from collection instead.
    */
   public getAttributes(collectionId: string): Observable<Attribute[]> {
-    return this.httpClient.get<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`).pipe(
-      catchError(CollectionService.handleGlobalError)
-    );
+    return this.httpClient.get<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`);
   }
 
   public updateAttribute(collectionId: string, fullName: string, attribute: Attribute): Observable<Attribute> {
     this.homePageService.addLastUsedCollection(collectionId).subscribe();
-    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionId}/attributes/${fullName}`, attribute).pipe(
-      catchError(CollectionService.handleGlobalError)
-    );
+    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionId}/attributes/${fullName}`, attribute);
   }
 
   public removeAttribute(collectionId: string, fullName: string): Observable<HttpResponse<any>> {
@@ -148,13 +140,6 @@ export class CollectionService extends PermissionService {
     const projectCode = this.workspace.projectCode;
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
-  }
-
-  private handleError(error: HttpErrorResponse): ErrorObservable {
-    if (error.status === 400) {
-      throw new BadInputError('Name already exists');
-    }
-    return CollectionService.handleGlobalError(error);
   }
 
   private convertIdsToCollections(ids: string[]): Observable<CollectionModel[]> {

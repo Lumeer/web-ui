@@ -42,7 +42,7 @@ export const selectAllOrganizations = createSelector(selectOrganizationsState, o
 export const selectOrganizationsDictionary = createSelector(selectOrganizationsState, organizationsAdapter.getSelectors().selectEntities);
 export const selectOrganizationsLoaded = createSelector(selectOrganizationsState, organizationState => organizationState.loaded);
 export const selectSelectedOrganizationId = createSelector(selectOrganizationsState, organizationsState => organizationsState.selectedOrganizationId);
-export const selectOrganizationCodes = createSelector(selectOrganizationsState, organizationState => organizationState.organizationCodes || []);
+export const selectOrganizationCodes = createSelector(selectOrganizationsState, organizationState => organizationState.organizationCodes);
 export const selectSelectedOrganization = createSelector(selectOrganizationsDictionary, selectSelectedOrganizationId, (organizations, selectedId) => {
   return selectedId ? organizations[selectedId] : null;
 });

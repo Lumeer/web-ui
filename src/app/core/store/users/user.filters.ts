@@ -42,6 +42,6 @@ export class UserFilters {
     }
 
     const filterTrim = filter.toLowerCase().trim();
-    return filtered.filter(user => user.name.toLowerCase().includes(filterTrim) || user.email.toLowerCase().includes(filterTrim));
+    return filtered.filter(user => user.email.toLowerCase().includes(filterTrim));
   }
 }

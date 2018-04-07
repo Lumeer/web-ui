@@ -30,6 +30,7 @@ export class PostItCollectionNameComponent {
 
   public collectionName: string;
 
+  @Input() public editable: boolean;
   @Input() public collection: CollectionModel;
 
   @Output() public changed = new EventEmitter<string>();

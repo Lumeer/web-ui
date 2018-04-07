@@ -19,6 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
+
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -33,6 +34,9 @@ import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {selectOrganizationCodes, selectOrganizationsDictionary, selectOrganizationsLoaded} from './organizations.state';
 import {isNullOrUndefined} from "util";
+import {Permission} from '../../dto';
+import {PermissionType} from '../permissions/permissions.model';
+import {PermissionsConverter} from '../permissions/permissions.converter';
 
 @Injectable()
 export class OrganizationsEffects {
@@ -178,6 +182,40 @@ export class OrganizationsEffects {
       const message = this.i18n({id: 'organization.delete.fail', value: 'Failed to delete organization'});
       return new NotificationsAction.Error({message});
     })
+  );
+
+  @Effect()
+  public getPermissions$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.GetPermissions>(OrganizationsActionType.GET_PERMISSIONS),
+    mergeMap(action => this.organizationService.getPermissions().pipe(
+      map(permissions => ({action, permissions: PermissionsConverter.fromDto(permissions)}))
+    )),
+    map(({action, permissions}) => new OrganizationsAction.GetPermissionsSuccess({
+      organizationId: action.payload.organizationId, permissions
+    })),
+    catchError((error) => Observable.of(new OrganizationsAction.GetPermissionsFailure({error})))
+  );
+
+  @Effect()
+  public changePermission$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.ChangePermission>(OrganizationsActionType.CHANGE_PERMISSION),
+    mergeMap(action => {
+      const permissionDto: Permission = PermissionsConverter.toPermissionDto(action.payload.permission);
+
+      if (action.payload.type === PermissionType.Users) {
+        return this.organizationService.updateUserPermission(permissionDto).pipe(
+          map(permission => ({action, permission: PermissionsConverter.fromPermissionDto(permission)}))
+        );
+      } else {
+        return this.organizationService.updateGroupPermission(permissionDto).pipe(
+          map(permission => ({action, permission: PermissionsConverter.fromPermissionDto(permission)}))
+        );
+      }
+    }),
+    map(({action, permission}) => new OrganizationsAction.ChangePermissionSuccess(
+      {organizationId: action.payload.organizationId, type: action.payload.type, permission}
+    )),
+    catchError((error) => Observable.of(new OrganizationsAction.ChangePermissionFailure({error: error})))
   );
 
   constructor(private i18n: I18n,

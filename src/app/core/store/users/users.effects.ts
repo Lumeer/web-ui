@@ -28,7 +28,8 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {UserConverter} from './user.converter';
 import {UsersAction, UsersActionType} from './users.action';
 import {AppState} from "../app.state";
-import {selectUsersLoaded} from "./users.state";
+import {GlobalService} from '../../rest/global.service';
+import {selectUsersLoadedForOrganization} from './users.state';
 
 @Injectable()
 export class UsersEffects {
@@ -36,13 +37,16 @@ export class UsersEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.Get>(UsersActionType.GET),
-    withLatestFrom(this.store$.select(selectUsersLoaded)),
-    filter(([action, loaded]) => !loaded),
-    map(([action,loaded]) => action),
-    mergeMap((action) => this.userService.getUsers(action.payload.organizationId).pipe(
-      map(dtos => dtos.map(dto => UserConverter.fromDto(dto)))
+    withLatestFrom(this.store$.select(selectUsersLoadedForOrganization)),
+    filter(([action, loadedOrganizationId]) => loadedOrganizationId !== action.payload.organizationId),
+    map(([action, loaded]) => action),
+    mergeMap(action => Observable.of(this.store$.dispatch(new UsersAction.ClearUsers())).pipe(
+      map(() => action)
     )),
-    map(users => new UsersAction.GetSuccess({users: users})),
+    mergeMap(action => this.userService.getUsers(action.payload.organizationId).pipe(
+      map(dtos => ({organizationId: action.payload.organizationId, users: dtos.map(dto => UserConverter.fromDto(dto))}))
+    )),
+    map(({organizationId, users}) => new UsersAction.GetSuccess({organizationId, users})),
     catchError(error => Observable.of(new UsersAction.GetFailure({error: error})))
   );
 
@@ -54,6 +58,15 @@ export class UsersEffects {
       const message = this.i18n({id: 'users.get.fail', value: 'Failed to get users'});
       return new NotificationsAction.Error({message});
     })
+  );
+
+  @Effect()
+  public getCurrentUser$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.GetCurrentUser>(UsersActionType.GET_CURRENT_USER),
+    mergeMap(() => this.globalService.getCurrentUser().pipe(
+      map(user => UserConverter.fromDto(user))
+    )),
+    map(user => new UsersAction.GetCurrentUserSuccess({user}))
   );
 
   @Effect()
@@ -127,7 +140,8 @@ export class UsersEffects {
   constructor(private actions$: Actions,
               private i18n: I18n,
               private store$: Store<AppState>,
-              private userService: UserService) {
+              private userService: UserService,
+              private globalService: GlobalService) {
   }
 
 }

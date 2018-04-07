@@ -35,7 +35,8 @@ import {NotificationsAction} from '../core/store/notifications/notifications.act
 import {UsersAction} from '../core/store/users/users.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {selectAllOrganizations} from '../core/store/organizations/organizations.state';
-import {resourceHasManageRole} from '../shared/utils/resource.utils';
+import {userHasManageRoleInResource} from '../shared/utils/resource.utils';
+import {selectCurrentUserForWorkspace} from '../core/store/users/users.state';
 
 @Injectable()
 export class CollectionSettingsGuard implements CanActivate {
@@ -52,19 +53,20 @@ export class CollectionSettingsGuard implements CanActivate {
 
     return this.getCollectionFromStoreOrApi(collectionId).pipe(
       withLatestFrom(this.store.select(selectAllOrganizations)),
-      mergeMap(([collection, organizations]) => {
+      withLatestFrom(this.store.select(selectCurrentUserForWorkspace)),
+      mergeMap(([[collection, organizations], user]) => {
         if (isNullOrUndefined(collection)) {
           this.dispatchErrorActionsNotExist();
           return Observable.of(false);
         }
 
-        if (!resourceHasManageRole(collection)) {
+        if (!userHasManageRoleInResource(user, collection)) {
           this.dispatchErrorActionsNotPermission();
           return Observable.of(false);
         }
 
         const organization = organizations.find(org => org.code === organizationCode);
-        this.dispatchDataEvents(organization);
+        this.dispatchDataEvents(organization, collection);
         return Observable.of(true);
       })
     );
@@ -89,8 +91,9 @@ export class CollectionSettingsGuard implements CanActivate {
     this.store.dispatch(new NotificationsAction.Error({message}));
   }
 
-  private dispatchDataEvents(organization: OrganizationModel) {
+  private dispatchDataEvents(organization: OrganizationModel, collection: CollectionModel) {
     this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
+    this.store.dispatch(new CollectionsAction.GetPermissions({collectionId: collection.id}));
     //this.store.dispatch(new GroupsAction.Get());
   }
 

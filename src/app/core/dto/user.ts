@@ -20,7 +20,7 @@
 export interface User {
 
   id?: string;
-  name: string;
+  name?: string;
   email: string;
   groups: { [organizationId: string]: string[] };
 

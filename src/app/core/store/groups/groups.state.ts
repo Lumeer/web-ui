@@ -35,3 +35,5 @@ export const selectGroupsState = (state: AppState) => state.groups;
 
 const selectAllGroupsRaw = createSelector(selectGroupsState, groupsAdapter.getSelectors().selectAll);
 export const selectAllGroups = createSelector(selectAllGroupsRaw, groups => GroupFilters.filterFunctions(groups));
+
+export const selectGroupsDictionary = createSelector(selectGroupsState, groupsAdapter.getSelectors().selectEntities);

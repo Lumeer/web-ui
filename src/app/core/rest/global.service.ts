@@ -17,30 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {CollectionsGuard} from './collections.guard';
-import {LinkTypesGuard} from './link-types.guard';
-import {PageNotFoundGuard} from './page-not-found.guard';
-import {ViewExistGuard} from './view/view-exist.guard';
-import {ViewRedirectGuard} from './view/view-redirect.guard';
-import {ViewsLoadedGuard} from './view/views-loaded.guard';
-import {AuthGuard} from './auth.guard';
+import {Injectable} from '@angular/core';
 
-@NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: [],
-  providers: [
-    CollectionsGuard,
-    LinkTypesGuard,
-    PageNotFoundGuard,
-    ViewExistGuard,
-    ViewsLoadedGuard,
-    ViewRedirectGuard,
-    AuthGuard
-  ]
-})
-export class GuardsModule {
+import {Observable} from 'rxjs/Observable';
+import {User} from '../dto';
+import {HttpClient} from "@angular/common/http";
+import 'rxjs/add/observable/of';
+
+@Injectable()
+export class GlobalService {
+
+  constructor(private httpClient: HttpClient) {
+  }
+
+  public getCurrentUser(): Observable<User> {
+    return this.httpClient.get<User>(`${this.apiPrefix()}/currentUser`);
+  }
+
+  private apiPrefix(): string {
+    return `/${API_URL}/rest/global`;
+  }
+
 }

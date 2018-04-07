@@ -27,11 +27,12 @@ import {CollectionAttributesComponent} from './config/tab/attributes/collection-
 import {CollectionEventsComponent} from './config/tab/events/collection-events.component';
 import {CollectionLinkTypesComponent} from './config/tab/link-types/collection-link-types.component';
 import {WorkspaceGuard} from '../workspace/workspace.guard';
+import {AuthGuard} from '../core/guards/auth.guard';
 
 const collectionRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/f/:collectionId',
-    canActivate:[WorkspaceGuard, CollectionSettingsGuard],
+    canActivate:[AuthGuard, WorkspaceGuard, CollectionSettingsGuard],
     component: CollectionConfigComponent,
     children: [
       {

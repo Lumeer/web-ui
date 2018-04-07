@@ -26,6 +26,9 @@ export enum UsersActionType {
   GET_SUCCESS = '[Users] Get :: Success',
   GET_FAILURE = '[Users] Get :: Failure',
 
+  GET_CURRENT_USER = '[Users] Get current user',
+  GET_CURRENT_USER_SUCCESS = '[Users] Get current user:: Success',
+
   CREATE = '[Users] Create',
   CREATE_SUCCESS = '[Users] Create :: Success',
   CREATE_FAILURE = '[Users] Create :: Failure',
@@ -38,7 +41,8 @@ export enum UsersActionType {
   DELETE_SUCCESS = '[Users] Delete :: Success',
   DELETE_FAILURE = '[Users] Delete :: Failure',
 
-  CLEAR = '[Users] Clear'
+  CLEAR = '[Users] Clear',
+  CLEAR_USERS = '[Users] Clear users'
 
 }
 
@@ -54,7 +58,18 @@ export namespace UsersAction {
   export class GetSuccess implements Action {
     public readonly type = UsersActionType.GET_SUCCESS;
 
-    public constructor(public payload: { users: UserModel[] }) {
+    public constructor(public payload: { organizationId: string, users: UserModel[] }) {
+    }
+  }
+
+  export class GetCurrentUser implements Action {
+    public readonly type = UsersActionType.GET_CURRENT_USER;
+  }
+
+  export class GetCurrentUserSuccess implements Action {
+    public readonly type = UsersActionType.GET_CURRENT_USER_SUCCESS;
+
+    public constructor(public payload: { user: UserModel }) {
     }
   }
 
@@ -135,8 +150,16 @@ export namespace UsersAction {
     }
   }
 
+  export class ClearUsers implements Action {
+    public readonly type = UsersActionType.CLEAR_USERS;
+
+    public constructor() {
+    }
+  }
+
   export type All = Get | GetSuccess | GetFailure |
+    GetCurrentUser | GetCurrentUserSuccess |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure | Clear;
+    Delete | DeleteSuccess | DeleteFailure | Clear | ClearUsers;
 }
