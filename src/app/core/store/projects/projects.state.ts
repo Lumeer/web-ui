@@ -66,6 +66,6 @@ export const selectProjectById = (id) => createSelector(selectProjectsDictionary
   return projects[id];
 });
 
-export const selectProjectByWorkspace = createSelector(selectWorkspace, selectAllProjects, (workspace, projects) => {
+export const selectProjectByWorkspace = createSelector(selectWorkspace, selectProjectsForWorkspace, (workspace, projects) => {
   return workspace ? projects.find(project => project.code === workspace.projectCode) : null;
 });
