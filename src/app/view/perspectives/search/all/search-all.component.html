@@ -1,7 +1,7 @@
 <div class="mt-2">
-  <ng-container *ngIf="loading()">
-    <div i18n="@@search.all.loading">Loading...</div>
-  </ng-container>
+  <div *ngIf="loading()" i18n="@@search.all.loading">
+    Loading...
+  </div>
 
   <ng-container *ngIf="!loading()">
     <div *ngIf="emptySearch()" class="alert alert-warning" i18n="@@search.result.empty">

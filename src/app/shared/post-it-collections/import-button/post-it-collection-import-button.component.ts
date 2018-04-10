@@ -18,8 +18,6 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({

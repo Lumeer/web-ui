@@ -26,14 +26,12 @@ import {SearchService} from '../../../../core/rest';
 
 import {AppState} from '../../../../core/store/app.state';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
 import {NavigationState, selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {ViewModel} from '../../../../core/store/views/view.model';
-import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewsByQuery} from '../../../../core/store/views/views.state';
 
 @Component({

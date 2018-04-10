@@ -37,15 +37,11 @@ import {NotificationsAction} from '../../core/store/notifications/notifications.
 import {PostItLayoutConfig} from '../utils/layout/post-it-layout-config';
 import {PostItLayout} from '../utils/layout/post-it-layout';
 import {ProjectModel} from '../../core/store/projects/project.model';
-import {selectOrganizationByWorkspace} from "../../core/store/organizations/organizations.state";
 import {isNullOrUndefined} from "util";
-import {OrganizationModel} from "../../core/store/organizations/organization.model";
 import {selectProjectByWorkspace} from "../../core/store/projects/projects.state";
 import {CorrelationIdGenerator} from "../../core/store/correlation-id.generator";
 import {DEFAULT_COLOR, DEFAULT_ICON} from "../../core/constants";
 import {NotificationService} from "../../core/notifications/notification.service";
-import {ImportedCollection} from "../../core/dto/imported-collection";
-import {Collection} from "../../core/dto";
 
 @Component({
   selector: 'post-it-collections',
