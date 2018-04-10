@@ -48,6 +48,7 @@ export const selectViewsLoaded = createSelector(selectViewsState, state => state
 
 export const selectViewConfig = createSelector(selectViewsState, views => views.config);
 export const selectViewSearchConfig = createSelector(selectViewConfig, config => config.search);
+export const selectViewPostItConfig = createSelector(selectViewConfig, config => config.postit);
 export const selectViewSmartDocConfig = createSelector(selectViewConfig, config => config.smartdoc);
 export const selectViewTableConfig = createSelector(selectViewConfig, config => config.table);
 export const selectViewTable2Config = createSelector(selectViewConfig, config => config.table2);
