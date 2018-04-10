@@ -30,28 +30,13 @@ import {CollectionModel} from '../../../core/store/collections/collection.model'
 export class PostItCollectionAddButtonComponent {
 
   @Output()
-  public clicked = new EventEmitter<CollectionModel>();
+  public clicked = new EventEmitter();
 
   @Input()
   public disabled: boolean;
 
   public add() {
-    const newCollection = {
-      ...this.emptyCollection(),
-      correlationId: CorrelationIdGenerator.generate()
-    };
-
-    this.clicked.emit(newCollection);
-  }
-
-  private emptyCollection(): CollectionModel {
-    return {
-      name: '',
-      color: DEFAULT_COLOR,
-      icon: DEFAULT_ICON,
-      description: '',
-      attributes: []
-    };
+    this.clicked.emit();
   }
 
 }

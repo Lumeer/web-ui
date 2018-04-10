@@ -1,11 +1,9 @@
 <button type="button"
-        class="btn btn-outline-{{ disabled ? 'secondary' : 'primary'}}"
-        title="{{ disabled ? 'You need a right to add files' : 'Add file' }}"
+        class="btn btn-outline-success"
+        *ngIf="!disabled"
+        title="Add file"
         i18n-title="@@collection.post.it.create.title"
-        (click)="add()"
-        [class.disabled]="disabled"
-        [attr.disabled]="disabled ? true : null"
-        [attr.aria-disabled]="disabled">
+        (click)="add()">
   <i class="fa fa-plus-circle" aria-hidden="true"></i>
   <span class="font-weight-bold" i18n="@@collection.post.it.add">Add File</span>
 </button>

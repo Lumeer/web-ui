@@ -71,9 +71,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       map(navigation => navigation.query),
       filter(query => !isNullOrUndefined(query)),
       map(query => ({...query, page: 0, pageSize: 100})), // TODO implement pagination logic
-      tap(query => this.store.dispatch(new CollectionsAction.Get({query}))),
-      tap(query => this.store.dispatch(new DocumentsAction.Get({query}))),
-      tap(query => this.store.dispatch(new ViewsAction.Get({query})))
+      tap(query => this.store.dispatch(new DocumentsAction.Get({query})))
     ).subscribe();
   }
 

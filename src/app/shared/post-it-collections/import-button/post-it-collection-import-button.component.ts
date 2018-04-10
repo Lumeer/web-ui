@@ -25,12 +25,12 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 @Component({
   selector: 'post-it-collection-import-button',
   templateUrl: './post-it-collection-import-button.component.html',
-  styleUrls: ['./post-it-collection-import-button.component.scss']
+  styleUrls: []
 })
 export class PostItCollectionImportButtonComponent {
 
   @Output()
-  public import = new EventEmitter();
+  public import = new EventEmitter<{result: string, name: string, format: string}>();
 
   @Output()
   public error = new EventEmitter<string>();
@@ -56,7 +56,7 @@ export class PostItCollectionImportButtonComponent {
       const indexOfSuffix = file.name.lastIndexOf('.');
       const name = indexOfSuffix !== -1 ? file.name.substring(0, indexOfSuffix) : file.name;
       reader.onloadend = () => {
-        this.importData(reader.result, name, 'csv');
+        this.import.emit({ result: reader.result, name, format: 'csv' });
       };
       reader.readAsText(file);
 
@@ -65,22 +65,4 @@ export class PostItCollectionImportButtonComponent {
       this.error.emit(message);
     }
   }
-
-  private importData(result: string, name: string, format: string) {
-    const newCollection = {...this.emptyCollection(), name};
-    const importedCollection = {collection: newCollection, data: result};
-
-    this.import.emit({format, importedCollection});
-  }
-
-  private emptyCollection(): CollectionModel {
-    return {
-      name: '',
-      color: DEFAULT_COLOR,
-      icon: DEFAULT_ICON,
-      description: '',
-      attributes: []
-    };
-  }
-
 }

@@ -11,7 +11,7 @@
     <post-it-collection-add-button
       class="m-2"
       [disabled]="!hasCreateRights()"
-      (clicked)="newCollection($event)">
+      (clicked)="newCollection()">
     </post-it-collection-add-button>
 
     <post-it-collection-import-button
@@ -19,7 +19,7 @@
       [disabled]="!hasCreateRights()"
       [i18n]="i18n"
       (error)="notifyOfError($event)"
-      (import)="importPayload($event)">
+      (import)="onImportCollection($event)">
     </post-it-collection-import-button>
   </div>
 

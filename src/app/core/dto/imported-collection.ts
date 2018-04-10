@@ -18,10 +18,11 @@
  */
 
 import {Collection} from './collection';
+import {CollectionModel} from "../store/collections/collection.model";
 
 export interface ImportedCollection {
 
-  collection: Collection;
-  data: String;
+  collection: CollectionModel;
+  data: string;
 
 }

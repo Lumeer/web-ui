@@ -41,6 +41,11 @@ import {selectOrganizationByWorkspace} from "../../core/store/organizations/orga
 import {isNullOrUndefined} from "util";
 import {OrganizationModel} from "../../core/store/organizations/organization.model";
 import {selectProjectByWorkspace} from "../../core/store/projects/projects.state";
+import {CorrelationIdGenerator} from "../../core/store/correlation-id.generator";
+import {DEFAULT_COLOR, DEFAULT_ICON} from "../../core/constants";
+import {NotificationService} from "../../core/notifications/notification.service";
+import {ImportedCollection} from "../../core/dto/imported-collection";
+import {Collection} from "../../core/dto";
 
 @Component({
   selector: 'post-it-collections',
@@ -92,7 +97,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   constructor(public i18n: I18n,
               private store: Store<AppState>,
-              private zone: NgZone) {
+              private zone: NgZone,
+              private notificationService: NotificationService,) {
   }
 
   public ngOnInit() {
@@ -182,8 +188,23 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  public newCollection(collection: CollectionModel) {
-    this.collections.unshift(collection);
+  public newCollection() {
+    const newCollection = {
+      ...this.emptyCollection(),
+      correlationId: CorrelationIdGenerator.generate()
+    };
+
+    this.collections.unshift(newCollection);
+  }
+
+  private emptyCollection(): CollectionModel {
+    return {
+      name: '',
+      color: DEFAULT_COLOR,
+      icon: DEFAULT_ICON,
+      description: '',
+      attributes: []
+    };
   }
 
   private deleteInitializedPostIt(collection: CollectionModel) {
@@ -252,11 +273,14 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public notifyOfError(message: string) {
-    this.store.dispatch(new NotificationsAction.Error({message}));
+    this.notificationService.error(message);
   }
 
-  public importPayload(payload) {
-    this.store.dispatch(new CollectionsAction.Import(payload));
+  public onImportCollection(importInfo: {result: string, name: string, format: string}) {
+    const newCollection = {...this.emptyCollection(), name: importInfo.name};
+    const importedCollection = {collection: newCollection, data: importInfo.result};
+
+    this.store.dispatch(new CollectionsAction.Import({format: importInfo.format, importedCollection}));
   }
 
 }
