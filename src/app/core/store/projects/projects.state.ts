@@ -20,8 +20,9 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {selectOrganizationByWorkspace, selectSelectedOrganizationId} from '../organizations/organizations.state';
+import {selectAllOrganizations, selectOrganizationByWorkspace, selectSelectedOrganizationId} from '../organizations/organizations.state';
 import {ProjectModel} from './project.model';
+import {selectWorkspace} from "../navigation/navigation.state";
 
 export interface ProjectsState extends EntityState<ProjectModel> {
 
@@ -63,4 +64,8 @@ export const selectProjectByCode = (code) => createSelector(selectAllProjects, p
 
 export const selectProjectById = (id) => createSelector(selectProjectsDictionary, projects => {
   return projects[id];
+});
+
+export const selectProjectByWorkspace = createSelector(selectWorkspace, selectProjectsForWorkspace, (workspace, projects) => {
+  return workspace ? projects.find(project => project.code === workspace.projectCode) : null;
 });

@@ -1,6 +1,6 @@
 <div class="mt-2">
   <ng-container *ngIf="loading()">
-    Loading...
+    <div i18n="@@search.all.loading">Loading...</div>
   </ng-container>
 
   <ng-container *ngIf="!loading()">
@@ -8,24 +8,24 @@
       We are sorry, but we have not found anything. Please do a more accurate search.
     </div>
     <div *ngIf="collections.length > 0">
-      <div class="h3 ml-3 my-2">
+      <div class="h3 ml-3 my-2" i18n="@@search.all.files">
         Files
       </div>
-      <post-it-collections [editable]="false" class="perspective"></post-it-collections>
+      <post-it-collections class="perspective"></post-it-collections>
     </div>
     <div *ngIf="documents.length > 0">
       <hr *ngIf="collections.length > 0">
-      <div class="h3 ml-3 my-2">
+      <div class="h3 ml-3 my-2" i18n="@@search.all.records">
         Records
       </div>
-      <post-it-perspective [editable]="false" [useOwnScrollbar]="true" class="perspective"></post-it-perspective>
+      <post-it-perspective [useOwnScrollbar]="true" class="perspective"></post-it-perspective>
     </div>
     <div *ngIf="views.length > 0">
       <hr *ngIf="collections.length > 0 || documents.length > 0">
-      <div class="h3 ml-3 my-2">
+      <div class="h3 ml-3 my-2" i18n="@@search.all.views">
         Views
       </div>
-      <div class="alert alert-warning">
+      <div class="alert alert-warning" i18n="@@search.all.views.warning">
         Views perspective has not been implemented yet.
       </div>
     </div>

@@ -31,7 +31,6 @@ export class PostItSortingLayout extends PostItLayout {
 
     super(containerClassName, parameters, zone);
     this.setSortingParameters(selectorOfDraggableElements, sortFunction);
-    this.insertingElementsAtIndex = 1;
   }
 
   private setSortingParameters(selectorOfDraggableElements: string, sortFunction: (item: any, element: HTMLElement) => number) {

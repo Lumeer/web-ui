@@ -17,12 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from './collection';
-import {CollectionModel} from "../store/collections/collection.model";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generator';
+import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
 
-export interface ImportedCollection {
+@Component({
+  selector: 'post-it-collection-add-button',
+  templateUrl: './post-it-collection-add-button.component.html',
+  styleUrls: ['./post-it-collection-add-button.component.scss']
+})
+export class PostItCollectionAddButtonComponent {
 
-  collection: CollectionModel;
-  data: string;
+  @Output()
+  public clicked = new EventEmitter();
+
+  @Input()
+  public disabled: boolean;
+
+  public add() {
+    this.clicked.emit();
+  }
 
 }
