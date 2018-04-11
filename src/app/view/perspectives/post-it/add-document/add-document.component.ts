@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
@@ -33,6 +33,12 @@ import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.gene
   styleUrls: ['./add-document.component.scss']
 })
 export class PostItAddDocumentComponent implements OnInit, OnDestroy {
+
+  @Input()
+  public hasCollection: boolean;
+
+  @Input()
+  public hasRights: boolean;
 
   @Output()
   public createPostIt = new EventEmitter<DocumentModel>();
@@ -67,6 +73,10 @@ export class PostItAddDocumentComponent implements OnInit, OnDestroy {
     });
 
     return result;
+  }
+
+  public disabled(): boolean {
+    return !this.hasRights || !this.hasCollection;
   }
 
   public ngOnDestroy(): void {

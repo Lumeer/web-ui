@@ -45,15 +45,15 @@ export class QueryHelper {
     return this.query.collectionIds[0];
   }
 
-  public queryWithPagination(pageNumber: number, editable: boolean): QueryModel {
+  public queryWithPagination(pageNumber: number): QueryModel {
     const queryWithPagination = {...this.query};
     queryWithPagination.page = pageNumber;
-    queryWithPagination.pageSize = this.pageSize(editable, pageNumber);
+    queryWithPagination.pageSize = this.pageSize(pageNumber);
     return QueryConverter.fromDto(queryWithPagination);
   }
 
-  private pageSize(editable: boolean, pageNumber: number): number {
-    const addDocumentOffset = Number(editable && pageNumber === 0);
-    return this.getDocumentsPerRow() * 3 - addDocumentOffset;
+  private pageSize(pageNumber: number): number {
+    return this.getDocumentsPerRow() * 3;
   }
+
 }

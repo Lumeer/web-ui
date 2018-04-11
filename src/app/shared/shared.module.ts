@@ -39,6 +39,8 @@ import {InputBoxComponent} from './input/input-box/input-box.component';
 import {FilterBoxComponent} from './input/filter-box/filter-box.component';
 import {TagComponent} from './tag/tag.component';
 import {RemovePlaceholderOnFocusDirective} from './placeholder/remove-placeholder-on-focus';
+import {PostItCollectionAddButtonComponent} from './post-it-collections/add-button/post-it-collection-add-button.component';
+import {PostItCollectionImportButtonComponent} from './post-it-collections/import-button/post-it-collection-import-button.component';
 
 @NgModule({
   imports: [
@@ -55,6 +57,8 @@ import {RemovePlaceholderOnFocusDirective} from './placeholder/remove-placeholde
     PermissionsTableComponent,
     PostItCollectionsComponent,
     PostItCollectionNameComponent,
+    PostItCollectionAddButtonComponent,
+    PostItCollectionImportButtonComponent,
     SizeSliderComponent,
     CommentsComponent,
     LinksComponent,
