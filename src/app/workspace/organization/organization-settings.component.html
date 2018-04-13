@@ -75,6 +75,12 @@
 
   <ul class="nav nav-tabs">
     <li role="presentation" class="nav-item">
+      <a [routerLink]="'detail'"
+         routerLinkActive="active"
+         class="nav-link"
+         i18n="@@organizations.tab.detail">Detail</a>
+    </li>
+    <li role="presentation" class="nav-item">
       <a [routerLink]="'users'"
          routerLinkActive="active"
          class="nav-link"

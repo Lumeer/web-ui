@@ -29,6 +29,7 @@ import {initialProjectsState, ProjectsState} from './projects/projects.state';
 import {RouterStateUrl} from './router/lumeer-router-state-serializer';
 import {initialUsersState, UsersState} from './users/users.state';
 import {initialViewsState, ViewsState} from './views/views.state';
+import {ContactsState, initialContactsState} from "./organizations/contact/contacts.state";
 
 export interface AppState {
 
@@ -39,6 +40,7 @@ export interface AppState {
   linkTypes: LinkTypesState;
   navigation: NavigationState;
   organizations: OrganizationsState;
+  contacts: ContactsState;
   projects: ProjectsState;
   router: RouterReducerState<RouterStateUrl>;
   users: UsersState;
@@ -55,6 +57,7 @@ export function initialAppState(): AppState {
     linkTypes: initialLinkTypesState,
     navigation: initialNavigationState,
     organizations: initialOrganizationsState,
+    contacts: initialContactsState,
     projects: initialProjectsState,
     router: null,
     users: initialUsersState,

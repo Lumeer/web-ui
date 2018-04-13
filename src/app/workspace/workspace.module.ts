@@ -40,6 +40,8 @@ import {OrganizationUserComponent} from './organization/users/user/organization-
 import {OrganizationUserGroupsComponent} from './organization/users/groups/organization-user-groups.component';
 import {OrganizationNewUserComponent} from './organization/users/new-user/organization-new-user.component';
 import {GroupsSuggestionsComponent} from "./organization/users/groups/suggestions/groups-suggestions.component";
+import {OrganizationDetailComponent} from "./organization/detail/organization-detail.component";
+import { ContactFormComponent } from './organization/detail/contact-form/contact-form/contact-form.component';
 
 @NgModule({
   imports: [
@@ -49,6 +51,7 @@ import {GroupsSuggestionsComponent} from "./organization/users/groups/suggestion
     ClickOutsideModule
   ],
   declarations: [
+    OrganizationDetailComponent,
     OrganizationPermissionsComponent,
     OrganizationUsersComponent,
     OrganizationUserListComponent,
@@ -62,7 +65,8 @@ import {GroupsSuggestionsComponent} from "./organization/users/groups/suggestion
     ProjectSettingsComponent,
     WorkspaceChooserComponent,
     ResourceChooserComponent,
-    GroupsSuggestionsComponent
+    GroupsSuggestionsComponent,
+    ContactFormComponent
   ],
   exports: [
     WorkspaceChooserComponent
