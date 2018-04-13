@@ -23,7 +23,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 @Component({
   selector: 'post-it-collection-import-button',
   templateUrl: './post-it-collection-import-button.component.html',
-  styleUrls: []
+  styleUrls: ['./post-it-collection-import-button.component.scss']
 })
 export class PostItCollectionImportButtonComponent {
 

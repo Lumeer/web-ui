@@ -4,18 +4,17 @@
   We are sorry, but we have not found anything. Please do a more accurate search.
 </div>
 
-<div *ngIf="(collections && collections.length > 0) || hasCreateRights()"
-     class="mx-4">
+<div *ngIf="(collections && collections.length > 0) || hasCreateRights()">
 
-  <div class="d-flex m-2">
+  <div class="d-flex mt-2 mb-1">
     <post-it-collection-add-button
-      class="m-2"
+      class="ml-1"
       [disabled]="!hasCreateRights()"
       (clicked)="newCollection()">
     </post-it-collection-add-button>
 
     <post-it-collection-import-button
-      class="m-2"
+      class="ml-2"
       [disabled]="!hasCreateRights()"
       [i18n]="i18n"
       (error)="notifyOfError($event)"
