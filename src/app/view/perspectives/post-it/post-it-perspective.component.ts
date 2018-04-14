@@ -18,6 +18,7 @@
  */
 
 import {Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 import {filter, map, withLatestFrom} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
@@ -37,15 +38,12 @@ import {ATTRIBUTE_COLUMN, SelectionHelper, VALUE_COLUMN} from './util/selection-
 import {isNullOrUndefined} from 'util';
 import {KeyCode} from '../../../shared/key-code';
 import {HashCodeGenerator} from '../../../shared/utils/hash-code-generator';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
-import {Permission} from '../../../core/dto';
-import {Role} from '../../../shared/permissions/role';
 import Create = DocumentsAction.Create;
 import UpdateData = DocumentsAction.UpdateData;
-import {Observable} from 'rxjs/Observable';
-import {selectCollectionByWorkspace} from '../../../core/store/collections/collections.state';
+import {selectCollectionsByQuery} from '../../../core/store/collections/collections.state';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
 import {userRolesInResource} from '../../../shared/utils/resource.utils';
+import {Role} from '../../../core/model/role';
 
 @Component({
   selector: 'post-it-perspective',
@@ -99,13 +97,13 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public selectionHelper: SelectionHelper;
 
-  public collectionRoles$: Observable<string[]>;
+  public collectionRoles: string[];
 
   private deletionHelper: DeletionHelper;
 
   private layoutManager: PostItLayout;
 
-  private pageSubscriptions: Subscription[] = [];
+  private subscriptions: Subscription[] = [];
 
   private createdDocumentCorrelationId: string;
 
@@ -147,11 +145,12 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.deletionHelper = new DeletionHelper(this.store, this.postIts);
     this.deletionHelper.initialize();
 
-    this.collectionRoles$ = this.store.select(selectCollectionByWorkspace).pipe(
+    const subscription = this.store.select(selectCollectionsByQuery).pipe(
       withLatestFrom(this.store.select(selectCurrentUserForWorkspace)),
-      filter(([collection, user]) => !isNullOrUndefined(collection)),
-      map(([collection, user]) => userRolesInResource(user, collection))
-    )
+      filter(([collections, user]) => !isNullOrUndefined(collections) && collections.length === 1),
+      map(([collections, user]) => userRolesInResource(user, collections[0]))
+    ).subscribe(roles => this.collectionRoles = roles);
+    this.subscriptions.push(subscription);
   }
 
   private reinitializePostIts(): void {
@@ -163,7 +162,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.allLoaded = false;
     this.page = 0;
     this.postIts.splice(0);
-    this.pageSubscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   public fetchQueryDocuments(queryModel: QueryModel): void {
@@ -175,12 +174,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public hasCreateRights(): boolean {
-    return this.postIts[0] && this.collectionHasWriteRole(this.postIts[0].document.collection);
-  }
-
-  public collectionHasWriteRole(collection: CollectionModel): boolean {
-    const permissions = collection && collection.permissions || {users: [], groups: []};
-    return permissions.users.some((permission: Permission) => permission.roles.includes(Role.Write));
+    return this.collectionRoles && this.collectionRoles.includes(Role.Write);
   }
 
   private checkAllLoaded(documents: DocumentModel[]): void {
@@ -251,7 +245,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       filter(() => this.canFetchDocuments())
     ).subscribe(documents => this.updateLayoutWithDocuments(documents));
 
-    this.pageSubscriptions.push(subscription);
+    this.subscriptions.push(subscription);
   }
 
   private canFetchDocuments() {
@@ -373,7 +367,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       this.infiniteScroll.destroy();
     }
 
-    this.pageSubscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
 }

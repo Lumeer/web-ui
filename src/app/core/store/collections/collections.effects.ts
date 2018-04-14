@@ -284,7 +284,6 @@ export class CollectionsEffects {
   @Effect()
   public changePermission$ = this.actions$.pipe(
     ofType<CollectionsAction.ChangePermission>(CollectionsActionType.CHANGE_PERMISSION),
-    tap(action => this.store$.dispatch(new CollectionsAction.ChangePermissionSuccess(action.payload))),
     concatMap(action => {
       const permissionDto: Permission = PermissionsConverter.toPermissionDto(action.payload.permission);
 

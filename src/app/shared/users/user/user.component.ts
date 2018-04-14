@@ -17,24 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 
 import {UserModel} from '../../../core/store/users/user.model';
 import {Validator} from "../../../core/validators/validator";
 import {Role} from '../../../core/model/role';
 import {ResourceType} from '../../../core/model/resource-type';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
+import {debounceTime, filter} from 'rxjs/operators';
+import {deepArrayEquals} from '../../utils/array.utils';
+import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'user',
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss']
+  templateUrl: './user.component.html'
 })
-export class UserComponent {
+export class UserComponent implements OnInit, OnDestroy {
 
   @Input() public resourceType: ResourceType;
 
   @Input() public editable: boolean;
+
+  @Input() public changeRoles: boolean;
 
   @Input() public user: UserModel;
 
@@ -50,11 +56,31 @@ export class UserComponent {
 
   @Output() public userDeleted = new EventEmitter<UserModel>();
 
-  @Output() public rolesUpdate = new EventEmitter<string[]>();
+  @Output() public rolesUpdate = new EventEmitter<{ roles: string[], onlyStore: boolean }>();
 
   public showEmailWarning: boolean;
 
+  private lastSincedUserRoles: string[];
+  private rolesChange$ = new Subject<string[]>();
+  private rolesChangeSubscription: Subscription;
+
   constructor(private i18n: I18n) {
+  }
+
+  public ngOnInit() {
+    this.rolesChangeSubscription = this.rolesChange$.pipe(
+      debounceTime(1000),
+      filter(newRoles => !deepArrayEquals(newRoles, this.lastSincedUserRoles))
+    ).subscribe(newRoles => {
+      this.lastSincedUserRoles = null;
+      this.rolesUpdate.emit({roles: newRoles, onlyStore: false});
+    });
+  }
+
+  public ngOnDestroy() {
+    if (this.rolesChangeSubscription) {
+      this.rolesChangeSubscription.unsubscribe();
+    }
   }
 
   public onNewEmail(email: string) {
@@ -121,13 +147,22 @@ export class UserComponent {
   }
 
   public toggleRole(role: string) {
+    if (!this.changeRoles) {
+      return;
+    }
+
+    if (isNullOrUndefined(this.lastSincedUserRoles)) {
+      this.lastSincedUserRoles = this.userRoles;
+    }
+
     let newRoles;
     if (this.userRoles.includes(role)) {
       newRoles = this.userRoles.filter(r => r !== role)
     } else {
       newRoles = [...this.userRoles, role];
     }
-    this.rolesUpdate.emit(newRoles);
+    this.rolesChange$.next(newRoles);
+    this.rolesUpdate.emit({roles: newRoles, onlyStore: true});
   }
 
 

@@ -6,7 +6,7 @@
     </filter-box>
   </div>
 </div>
-<new-user *ngIf="canEditUsers()"
+<new-user *ngIf="canAddUsers()"
           (userCreated)="userCreated.emit($event)">
 </new-user>
 
@@ -15,7 +15,8 @@
   <user
     [resourceType]="resourceType"
     [user]="user"
-    [editable]="canEditUsers()"
+    [editable]="canEditUser(user.id)"
+    [changeRoles]="canChangeRoles(user.id)"
     [expanded]="expanded[user.email]"
     [userRoles]="getUserRoles(user.id)"
     (expandedChange)="(expanded[user.email] = !expanded[user.email])"

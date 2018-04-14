@@ -44,7 +44,8 @@ import {CorrelationIdGenerator} from "../../core/store/correlation-id.generator"
 import {DEFAULT_COLOR, DEFAULT_ICON} from "../../core/constants";
 import {NotificationService} from "../../core/notifications/notification.service";
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {userRolesInResource} from '../utils/resource.utils';
+import {userHasRoleInResource, userRolesInResource} from '../utils/resource.utils';
+import {UserModel} from '../../core/store/users/user.model';
 
 
 @Component({
@@ -85,6 +86,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   private workspace: Workspace;
 
   private project: ProjectModel;
+
+  private currentUser: UserModel;
 
   private query: QueryModel;
 
@@ -163,6 +166,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       const corrIds: string[] = collections.filter(res => res.correlationId).map(res => res.correlationId);
       const newCollections = this.collections ? this.collections.filter(collection => !collection.id && !corrIds.includes(collection.correlationId)) : [];
       this.collections = newCollections.concat(collections.slice());
+      this.currentUser = user;
       this.collectionRoles = collections.reduce((roles, collection) => {
         roles[collection.id] = userRolesInResource(user, collection);
         return roles;
@@ -253,7 +257,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public hasCreateRights(): boolean {
-    return this.project && this.hasRole(this.project, Role.Write);
+    return this.project && this.currentUser && userHasRoleInResource(this.currentUser, this.project, Role.Write);
   }
 
   public hasManageRole(collection: CollectionModel): boolean {

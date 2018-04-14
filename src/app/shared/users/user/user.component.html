@@ -21,7 +21,7 @@
 
     <i *ngFor="let role of getRoles()"
        class="fas fa-fw {{getIconForRole(role)}} cursor-pointer mx-1"
-       [ngClass]="(hasRole(role)) ? 'icon-selected' : 'icon'"
+       [ngClass]="(hasRole(role)) ? 'clickable' : 'clickable-unselected'"
        aria-hidden="true"
        [title]="getTitleForRole(role)"
        (click)="toggleRole(role)">

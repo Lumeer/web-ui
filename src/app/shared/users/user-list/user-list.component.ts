@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute, Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {UserModel} from '../../../core/store/users/user.model';
 import {filterUsersByFilter} from "../../../core/store/users/user.filters";
@@ -35,6 +35,8 @@ export class UserListComponent {
 
   @Input() public users: UserModel[];
 
+  @Input() public currentUser: UserModel;
+
   @Input() public permissions: PermissionsModel;
 
   @Output() public userCreated = new EventEmitter<string>();
@@ -43,7 +45,11 @@ export class UserListComponent {
 
   @Output() public userDeleted = new EventEmitter<UserModel>();
 
-  @Output() public userPermissionChange = new EventEmitter<{ newPermission: PermissionModel, currentPermission: PermissionModel }>();
+  @Output() public userPermissionChange = new EventEmitter<{
+    newPermission: PermissionModel,
+    currentPermission: PermissionModel,
+    onlyStore: boolean
+  }>();
 
   public expanded: { [email: string]: boolean } = {};
   public userFilter: string;
@@ -56,8 +62,24 @@ export class UserListComponent {
     return filterUsersByFilter(users, this.userFilter);
   }
 
-  public canEditUsers(): boolean {
+  public canAddUsers(): boolean {
     return this.resourceType === ResourceType.Organization;
+  }
+
+  public canEditUser(userId: string): boolean {
+    return this.resourceType === ResourceType.Organization && !this.isCurrentUser(userId);
+  }
+
+  public canChangeRoles(userId: string): boolean {
+    return !this.isCurrentUser(userId);
+  }
+
+  private isCurrentUser(userId: string): boolean {
+    return userId === this.getCurrentUserId();
+  }
+
+  private getCurrentUserId(): string {
+    return this.currentUser && this.currentUser.id || '';
   }
 
   public getUserPermission(userId: string): PermissionModel {
@@ -69,9 +91,9 @@ export class UserListComponent {
     return userPermission && userPermission.roles || [];
   }
 
-  public onUserRolesChanged(userId: string, roles: string[]) {
+  public onUserRolesChanged(userId: string, data: { roles: string[], onlyStore: boolean }) {
     const currentPermission = this.getUserPermission(userId);
-    const newPermission = {id: userId, roles};
-    this.userPermissionChange.emit({newPermission, currentPermission});
+    const newPermission = {id: userId, roles: data.roles};
+    this.userPermissionChange.emit({newPermission, currentPermission, onlyStore: data.onlyStore});
   }
 }

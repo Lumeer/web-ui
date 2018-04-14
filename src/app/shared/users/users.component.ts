@@ -28,7 +28,7 @@ import {filter, map, tap} from 'rxjs/operators';
 import {UsersAction} from '../../core/store/users/users.action';
 import {Subscription} from "rxjs/Subscription";
 import {isNullOrUndefined} from "util";
-import {selectUsersForWorkspace} from "../../core/store/users/users.state";
+import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from "../../core/store/users/users.state";
 import {ResourceType} from "../../core/model/resource-type";
 import {ResourceModel} from '../../core/model/resource.model';
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
@@ -49,6 +49,8 @@ export class UsersComponent implements OnInit, OnDestroy {
   public permissions$: Observable<PermissionsModel>;
 
   public users$: Observable<UserModel[]>;
+
+  public currentUser$: Observable<UserModel>;
 
   public organizationId: string;
 
@@ -88,19 +90,46 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.store.dispatch(new UsersAction.Delete({organizationId: this.organizationId, userId: user.id}));
   }
 
-  public onUserPermissionChanged(data: { newPermission: PermissionModel, currentPermission: PermissionModel }) {
-    const payload = {type: PermissionType.Users, permission: data.newPermission, currentPermission: data.currentPermission};
+  public onUserPermissionChanged(data: { newPermission: PermissionModel, currentPermission: PermissionModel, onlyStore: boolean }) {
+    if (data.onlyStore) {
+      this.changeUserPermissionOnlyStore(data);
+    } else {
+      this.changeUserPermission(data);
+    }
+  }
+
+  public changeUserPermissionOnlyStore(data: { newPermission: PermissionModel }) {
+    const payload = {type: PermissionType.Users, permission: data.newPermission};
     switch (this.resourceType) {
       case ResourceType.Organization: {
-        this.store.dispatch(new OrganizationsAction.ChangePermission({...payload, organizationId: this.resourceId}))
+        this.store.dispatch(new OrganizationsAction.ChangePermissionSuccess({...payload, organizationId: this.resourceId}));
         break;
       }
       case ResourceType.Project: {
-        this.store.dispatch(new ProjectsAction.ChangePermission({...payload, projectId: this.resourceId}))
+        this.store.dispatch(new ProjectsAction.ChangePermissionSuccess({...payload, projectId: this.resourceId}));
         break;
       }
       case ResourceType.Collection: {
-        this.store.dispatch(new CollectionsAction.ChangePermission({...payload, collectionId: this.resourceId}))
+        this.store.dispatch(new CollectionsAction.ChangePermissionSuccess({...payload, collectionId: this.resourceId}));
+        break;
+      }
+
+    }
+  }
+
+  public changeUserPermission(data: { newPermission: PermissionModel, currentPermission: PermissionModel }) {
+    const payload = {type: PermissionType.Users, permission: data.newPermission, currentPermission: data.currentPermission};
+    switch (this.resourceType) {
+      case ResourceType.Organization: {
+        this.store.dispatch(new OrganizationsAction.ChangePermission({...payload, organizationId: this.resourceId}));
+        break;
+      }
+      case ResourceType.Project: {
+        this.store.dispatch(new ProjectsAction.ChangePermission({...payload, projectId: this.resourceId}));
+        break;
+      }
+      case ResourceType.Collection: {
+        this.store.dispatch(new CollectionsAction.ChangePermission({...payload, collectionId: this.resourceId}));
         break;
       }
 
@@ -115,6 +144,7 @@ export class UsersComponent implements OnInit, OnDestroy {
       )
       .subscribe(organizationId => this.organizationId = organizationId);
     this.users$ = this.store.select(selectUsersForWorkspace).pipe(map(this.sortUsers));
+    this.currentUser$ = this.store.select(selectCurrentUserForWorkspace);
 
     this.permissions$ = this.store.select(this.getSelector()).pipe(
       filter(resource => !isNullOrUndefined(resource)),

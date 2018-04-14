@@ -140,6 +140,15 @@ input {
   }
 }
 
+.clickable-unselected {
+  color: $grey-color;
+
+  &:hover {
+    color: $grey-darker-color;
+  }
+}
+
+
 .pointer-events-none {
   pointer-events: none;
 }

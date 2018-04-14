@@ -1,6 +1,7 @@
 <user-list
   *ngIf="organizationId"
   [resourceType]="resourceType"
+  [currentUser]="currentUser$ | async"
   [users]="users$ | async"
   [permissions]="permissions$ | async"
   (userCreated)="onNewUser($event)"

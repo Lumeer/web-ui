@@ -199,7 +199,6 @@ export class OrganizationsEffects {
   @Effect()
   public changePermission$ = this.actions$.pipe(
     ofType<OrganizationsAction.ChangePermission>(OrganizationsActionType.CHANGE_PERMISSION),
-    tap(action => this.store$.dispatch(new OrganizationsAction.ChangePermissionSuccess(action.payload))),
     concatMap(action => {
       const permissionDto: Permission = PermissionsConverter.toPermissionDto(action.payload.permission);
 
