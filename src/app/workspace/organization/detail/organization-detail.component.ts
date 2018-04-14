@@ -22,13 +22,15 @@ import {ContactModel} from "../../../core/store/organizations/contact/contact.mo
 import {ContactFormComponent} from "./contact-form/contact-form/contact-form.component";
 import {Store} from "@ngrx/store";
 import {Router} from "@angular/router";
-import {NotificationService} from "../../../core/notifications/notification.service";
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {AppState} from "../../../core/store/app.state";
 import {Subscription} from "rxjs/Subscription";
 import {selectContactByCode} from "../../../core/store/organizations/contact/contacts.state";
-import {OrganizationSettingsComponent} from "../organization-settings.component";
 import {ContactsAction} from "../../../core/store/organizations/contact/contacts.action";
+import {OrganizationModel} from "../../../core/store/organizations/organization.model";
+import {selectOrganizationByWorkspace} from "../../../core/store/organizations/organizations.state";
+import {isNullOrUndefined} from "util";
+import {filter} from "rxjs/operators";
 
 @Component({
   templateUrl: './organization-detail.component.html'
@@ -40,15 +42,16 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
 
   private contactSubscription: Subscription;
 
+  private organization: OrganizationModel;
+  private organizationSubscription: Subscription;
+
   constructor(private i18n: I18n,
               private router: Router,
-              private store: Store<AppState>,
-              private notificationService: NotificationService,
-              private organizationSettingsComponent: OrganizationSettingsComponent) {
+              private store: Store<AppState>) {
   }
 
   updateContact($event: ContactModel) {
-    this.store.dispatch(new ContactsAction.SetContact({ organizationId: $event.code, contact: $event }));
+    this.store.dispatch(new ContactsAction.SetContact({ organizationCode: $event.code, contact: $event }));
   }
 
   ngOnInit(): void {
@@ -57,7 +60,12 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToStore() {
-    this.contactSubscription = this.store.select(selectContactByCode(this.organizationSettingsComponent.organization.code))
+    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+      .pipe(filter(organization => !isNullOrUndefined(organization)))
+      .subscribe(organization => this.organization = organization);
+
+    this.contactSubscription = this.store.select(selectContactByCode(this.organization.code))
+      .pipe(filter(contact => !isNullOrUndefined(contact)))
       .subscribe(contact => this.contactForm.setContact(contact));
   }
 
@@ -65,9 +73,13 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
     if (this.contactSubscription) {
       this.contactSubscription.unsubscribe();
     }
+
+    if (this.organizationSubscription) {
+      this.organizationSubscription.unsubscribe();
+    }
   }
 
   private requestData() {
-    this.store.dispatch(new ContactsAction.GetContact({ organizationId: this.organizationSettingsComponent.organization.code }));
+    this.store.dispatch(new ContactsAction.GetContact({ organizationCode: this.organization.code }));
   }
 }

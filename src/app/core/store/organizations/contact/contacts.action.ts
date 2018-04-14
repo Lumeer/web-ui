@@ -35,7 +35,7 @@ export namespace ContactsAction {
   export class GetContact implements Action {
     public readonly type = ContactsActionType.GET_CONTACT;
 
-    public constructor(public payload: { organizationId: string }) {
+    public constructor(public payload: { organizationCode: string }) {
     }
   }
 
@@ -56,7 +56,7 @@ export namespace ContactsAction {
   export class SetContact implements Action {
     public readonly type = ContactsActionType.SET_CONTACT;
 
-    public constructor(public payload: { organizationId: string, contact: ContactModel }) {
+    public constructor(public payload: { organizationCode: string, contact: ContactModel }) {
     }
   }
 
