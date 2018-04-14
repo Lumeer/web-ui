@@ -202,7 +202,7 @@ export namespace ProjectsAction {
   export class ChangePermission implements Action {
     public readonly type = ProjectsActionType.CHANGE_PERMISSION;
 
-    public constructor(public payload: { projectId: string, type: PermissionType, permission: PermissionModel }) {
+    public constructor(public payload: { projectId: string, type: PermissionType, permission: PermissionModel, currentPermission: PermissionModel }) {
     }
   }
 
@@ -216,7 +216,7 @@ export namespace ProjectsAction {
   export class ChangePermissionFailure implements Action {
     public readonly type = ProjectsActionType.CHANGE_PERMISSION_FAILURE;
 
-    public constructor(public payload: { error: any }) {
+    public constructor(public payload: { projectId: string, type: PermissionType, permission: PermissionModel, error: any }) {
     }
   }
 

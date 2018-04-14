@@ -1,1 +1,17 @@
 @import '../../variables';
+
+.icon-selected {
+  color: $link-color;
+
+  &:hover {
+    color: $grey-color;
+  }
+}
+
+.icon {
+  color: $grey-color;
+
+  &:hover {
+    color: $link-color;
+  }
+}

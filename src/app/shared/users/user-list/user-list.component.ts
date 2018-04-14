@@ -17,13 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Attribute, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {OrganizationModel} from '../../../core/store/organizations/organization.model';
 import {UserModel} from '../../../core/store/users/user.model';
-import {GroupModel} from '../../../core/store/groups/group.model';
-import {UserFilters} from "../../../core/store/users/user.filters";
+import {filterUsersByFilter} from "../../../core/store/users/user.filters";
 import {ResourceType} from '../../../core/model/resource-type';
+import {PermissionModel, PermissionsModel} from '../../../core/store/permissions/permissions.model';
 
 @Component({
   selector: 'user-list',
@@ -32,23 +31,19 @@ import {ResourceType} from '../../../core/model/resource-type';
 })
 export class UserListComponent {
 
-  @Input()
-  public resourceType: ResourceType;
+  @Input() public resourceType: ResourceType;
 
-  @Input()
-  public organization: OrganizationModel;
+  @Input() public users: UserModel[];
 
-  @Input()
-  public users: UserModel[];
+  @Input() public permissions: PermissionsModel;
 
-  @Output()
-  public userCreated = new EventEmitter<UserModel>();
+  @Output() public userCreated = new EventEmitter<string>();
 
-  @Output()
-  public userUpdated = new EventEmitter<UserModel>();
+  @Output() public userUpdated = new EventEmitter<UserModel>();
 
-  @Output()
-  public userDeleted = new EventEmitter<UserModel>();
+  @Output() public userDeleted = new EventEmitter<UserModel>();
+
+  @Output() public userPermissionChange = new EventEmitter<{ newPermission: PermissionModel, currentPermission: PermissionModel }>();
 
   public expanded: { [email: string]: boolean } = {};
   public userFilter: string;
@@ -58,10 +53,25 @@ export class UserListComponent {
   }
 
   public filterUsers(users: UserModel[]): UserModel[] {
-    return UserFilters.filterByFilter(users, this.userFilter);
+    return filterUsersByFilter(users, this.userFilter);
   }
 
   public canEditUsers(): boolean {
     return this.resourceType === ResourceType.Organization;
+  }
+
+  public getUserPermission(userId: string): PermissionModel {
+    return this.permissions && this.permissions.users && this.permissions.users.find(perm => perm.id === userId);
+  }
+
+  public getUserRoles(userId: string): string[] {
+    const userPermission = this.getUserPermission(userId);
+    return userPermission && userPermission.roles || [];
+  }
+
+  public onUserRolesChanged(userId: string, roles: string[]) {
+    const currentPermission = this.getUserPermission(userId);
+    const newPermission = {id: userId, roles};
+    this.userPermissionChange.emit({newPermission, currentPermission});
   }
 }

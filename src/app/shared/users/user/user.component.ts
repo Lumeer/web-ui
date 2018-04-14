@@ -19,9 +19,11 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {OrganizationModel} from '../../../core/store/organizations/organization.model';
 import {UserModel} from '../../../core/store/users/user.model';
 import {Validator} from "../../../core/validators/validator";
+import {Role} from '../../../core/model/role';
+import {ResourceType} from '../../../core/model/resource-type';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'user',
@@ -30,31 +32,30 @@ import {Validator} from "../../../core/validators/validator";
 })
 export class UserComponent {
 
-  @Input()
-  public organization: OrganizationModel;
+  @Input() public resourceType: ResourceType;
 
-  @Input()
-  public editable: boolean;
+  @Input() public editable: boolean;
 
-  @Input()
-  public user: UserModel;
+  @Input() public user: UserModel;
 
-  @Input()
-  public expanded: boolean;
+  @Input() public expanded: boolean;
 
-  @Output()
-  public expandedChange = new EventEmitter();
+  @Input() public userRoles: string[];
 
-  @Output()
-  public userUpdated = new EventEmitter<UserModel>();
+  @Input() public groupRoles: string[];
 
-  @Output()
-  public userDeleted = new EventEmitter<UserModel>();
+  @Output() public expandedChange = new EventEmitter();
 
-  @Output()
-  public permissionsUpdated = new EventEmitter<OrganizationModel>();
+  @Output() public userUpdated = new EventEmitter<UserModel>();
+
+  @Output() public userDeleted = new EventEmitter<UserModel>();
+
+  @Output() public rolesUpdate = new EventEmitter<string[]>();
 
   public showEmailWarning: boolean;
+
+  constructor(private i18n: I18n) {
+  }
 
   public onNewEmail(email: string) {
     if (!Validator.validateEmail(email)) {
@@ -72,28 +73,61 @@ export class UserComponent {
     this.userDeleted.emit(this.user);
   }
 
-  public toggleReadPermission(){
-
+  public getRoles(): Role[] {
+    switch (this.resourceType) {
+      case ResourceType.Organization:
+        return [Role.Read, Role.Manage, Role.Write];
+      case ResourceType.Project:
+        return [Role.Read, Role.Manage, Role.Write];
+      case ResourceType.Collection:
+        return [Role.Read, Role.Manage, Role.Write, Role.Share];
+      case ResourceType.View:
+        return [Role.Manage, Role.Clone, Role.Read];
+      default:
+        return [];
+    }
   }
 
-  public toggleManagePermission(){
-
+  public getIconForRole(role: Role): string {
+    switch (role) {
+      case Role.Read:
+        return 'fa-book';
+      case Role.Manage:
+        return 'fa-cog';
+      case Role.Write:
+        return 'fa-pencil';
+      case Role.Clone:
+        return 'fa-clone';
+      case Role.Comment:
+        return 'fa-comment-alt';
+      case Role.Share:
+        return 'fa-share-square';
+      default:
+        return '';
+    }
   }
 
-  public toggleWritePermission(){
-
+  public getTitleForRole(role: Role): string {
+    return this.i18n({
+      id: 'user.permission.icon',
+      value: '{role, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share}}'
+    }, {
+      role: role
+    });
   }
 
-  public toggleSharePermission(){
-
+  public hasRole(role: Role): boolean {
+    return this.userRoles.includes(role);
   }
 
-  public toggleClonePermission(){
-
-  }
-
-  public toggleCommentPermission(){
-
+  public toggleRole(role: string) {
+    let newRoles;
+    if (this.userRoles.includes(role)) {
+      newRoles = this.userRoles.filter(r => r !== role)
+    } else {
+      newRoles = [...this.userRoles, role];
+    }
+    this.rolesUpdate.emit(newRoles);
   }
 
 

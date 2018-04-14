@@ -44,13 +44,15 @@ export function projectsReducer(state: ProjectsState = initialProjectsState, act
     case ProjectsActionType.GET_PERMISSIONS_SUCCESS:
       return projectsAdapter.updateOne({id: action.payload.projectId, changes: {permissions: action.payload.permissions}}, state);
     case ProjectsActionType.CHANGE_PERMISSION_SUCCESS:
-      return onChangePermissionSuccess(state, action);
+      return onChangePermission(state, action);
+    case ProjectsActionType.CHANGE_PERMISSION_FAILURE:
+      return onChangePermission(state, action);
     default:
       return state;
   }
 }
 
-function onChangePermissionSuccess(state: ProjectsState, action: ProjectsAction.ChangePermissionSuccess): ProjectsState {
+function onChangePermission(state: ProjectsState, action: ProjectsAction.ChangePermissionSuccess | ProjectsAction.ChangePermissionFailure): ProjectsState {
   const project = state.entities[action.payload.projectId];
   const permissions = PermissionsHelper.changePermission(project.permissions, action.payload.type, action.payload.permission);
 

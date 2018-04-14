@@ -56,6 +56,7 @@ import {GroupsSuggestionsComponent} from '../shared/users/user-groups/suggestion
     OrganizationDetailComponent,
     ProjectUsersComponent,
     OrganizationUsersComponent,
+    OrganizationGroupsComponent,
     OrganizationRegistrationComponent,
     OrganizationGroupsComponent,
     OrganizationSettingsComponent,

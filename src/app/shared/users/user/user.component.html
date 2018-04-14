@@ -17,42 +17,16 @@
        aria-hidden="true"></i>
   </div>
 
-  <div class="col-4 col-md-5 col-lg-6 d-flex flex-row flex-nowrap align-items-center">
-    <i class="fas fa-fw fa-book clickable mx-1"
-       aria-hidden="true"
-       title="Read"
-       i18n-title="@@organizations.users.permission.read"
-       (click)="toggleReadPermission()"></i>
+  <div class="col-4 col-md-5 col-lg-6 d-flex flex-row flex-nowrap align-items-center justify-content-center">
 
-    <i class="fas fa-fw fa-cog clickable mx-1"
+    <i *ngFor="let role of getRoles()"
+       class="fas fa-fw {{getIconForRole(role)}} cursor-pointer mx-1"
+       [ngClass]="(hasRole(role)) ? 'icon-selected' : 'icon'"
        aria-hidden="true"
-       title="Manage"
-       i18n-title="@@organizations.users.permission.manage"
-       (click)="toggleManagePermission()"></i>
+       [title]="getTitleForRole(role)"
+       (click)="toggleRole(role)">
+    </i>
 
-    <i class="fas fa-fw fa-pencil clickable mx-1"
-       aria-hidden="true"
-       title="Write"
-       i18n-title="@@organizations.users.permission.write"
-       (click)="toggleWritePermission()"></i>
-
-    <i class="fas fa-fw fa-share-square clickable mx-1"
-       aria-hidden="true"
-       title="Share"
-       i18n-title="@@organizations.users.permission.share"
-       (click)="toggleSharePermission()"></i>
-
-    <i class="fas fa-fw fa-clone clickable mx-1"
-       aria-hidden="true"
-       title="Clone"
-       i18n-title="@@organizations.users.permission.clone"
-       (click)="toggleClonePermission()"></i>
-
-    <i class="fas fa-fw fa-comment-alt clickable mx-1"
-       aria-hidden="true"
-       title="Comment"
-       i18n-title="@@organizations.users.permission.comment"
-       (click)="toggleCommentPermission()"></i>
   </div>
 
   <div class="col-2 col-md-2 col-lg-2 d-flex flex-nowrap flex-row-reverse align-items-center">

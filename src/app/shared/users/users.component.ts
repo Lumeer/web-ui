@@ -17,34 +17,42 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Attribute, Component, Input, OnDestroy, OnInit} from '@angular/core';
 
-import {Store} from '@ngrx/store';
+import {MemoizedSelector, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {Observable} from 'rxjs/Observable';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
-import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {UserModel} from '../../core/store/users/user.model';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 import {UsersAction} from '../../core/store/users/users.action';
 import {Subscription} from "rxjs/Subscription";
 import {isNullOrUndefined} from "util";
 import {selectUsersForWorkspace} from "../../core/store/users/users.state";
 import {ResourceType} from "../../core/model/resource-type";
+import {ResourceModel} from '../../core/model/resource.model';
+import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
+import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
+import {PermissionModel, PermissionsModel, PermissionType} from '../../core/store/permissions/permissions.model';
+import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
 
 @Component({
   selector: 'users',
-  templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss']
+  templateUrl: './users.component.html'
 })
 export class UsersComponent implements OnInit, OnDestroy {
 
-  @Input()
-  public resourceType: ResourceType;
+  @Input() public resourceType: ResourceType;
+
+  public permissions$: Observable<PermissionsModel>;
 
   public users$: Observable<UserModel[]>;
 
-  public organization: OrganizationModel;
+  public organizationId: string;
+
+  public resourceId: string;
 
   private organizationSubscription: Subscription;
 
@@ -65,23 +73,66 @@ export class UsersComponent implements OnInit, OnDestroy {
     return users.sort((user1, user2) => user1.email.localeCompare(user2.email));
   }
 
-  public onUserCreated(user: UserModel) {
-    this.store.dispatch(new UsersAction.Create({organizationId: this.organization.id, user: user}));
+  public onNewUser(email: string) {
+    const user: UserModel = {email, groupsMap: {}};
+    user.groupsMap[this.organizationId] = [];
+
+    this.store.dispatch(new UsersAction.Create({organizationId: this.organizationId, user}));
   }
 
   public onUserUpdated(user: UserModel) {
-    this.store.dispatch(new UsersAction.Update({organizationId: this.organization.id, user: user}));
+    this.store.dispatch(new UsersAction.Update({organizationId: this.organizationId, user}));
   }
 
   public onUserDeleted(user: UserModel) {
-    this.store.dispatch(new UsersAction.Delete({organizationId: this.organization.id, userId: user.id}));
+    this.store.dispatch(new UsersAction.Delete({organizationId: this.organizationId, userId: user.id}));
+  }
+
+  public onUserPermissionChanged(data: { newPermission: PermissionModel, currentPermission: PermissionModel }) {
+    const payload = {type: PermissionType.Users, permission: data.newPermission, currentPermission: data.currentPermission};
+    switch (this.resourceType) {
+      case ResourceType.Organization: {
+        this.store.dispatch(new OrganizationsAction.ChangePermission({...payload, organizationId: this.resourceId}))
+        break;
+      }
+      case ResourceType.Project: {
+        this.store.dispatch(new ProjectsAction.ChangePermission({...payload, projectId: this.resourceId}))
+        break;
+      }
+      case ResourceType.Collection: {
+        this.store.dispatch(new CollectionsAction.ChangePermission({...payload, collectionId: this.resourceId}))
+        break;
+      }
+
+    }
   }
 
   private subscribeData() {
     this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
-      .pipe(filter(organization => !isNullOrUndefined(organization)))
-      .subscribe(organization => this.organization = organization);
+      .pipe(
+        filter(organization => !isNullOrUndefined(organization)),
+        map(organization => organization.id)
+      )
+      .subscribe(organizationId => this.organizationId = organizationId);
     this.users$ = this.store.select(selectUsersForWorkspace).pipe(map(this.sortUsers));
+
+    this.permissions$ = this.store.select(this.getSelector()).pipe(
+      filter(resource => !isNullOrUndefined(resource)),
+      tap(resource => this.resourceId = resource.id),
+      map(resource => resource.permissions)
+    );
+  }
+
+  private getSelector(): MemoizedSelector<AppState, ResourceModel> {
+    switch (this.resourceType) {
+      case ResourceType.Organization:
+        return selectOrganizationByWorkspace;
+      case ResourceType.Project:
+        return selectProjectByWorkspace;
+      case ResourceType.Collection:
+        return selectCollectionByWorkspace;
+      // TODO case ResourceType.View: return selectViewByWorkspace
+    }
   }
 
 }

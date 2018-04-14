@@ -23,7 +23,7 @@ import {AppState} from '../app.state';
 import {UserModel} from './user.model';
 import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
 import {selectAllGroups, selectGroupsDictionary} from "../groups/groups.state";
-import {UserFilters} from "./user.filters";
+import {filterUserFunctions, filterUsersByOrganization} from "./user.filters";
 import {GroupModel} from "../groups/group.model";
 import {OrganizationModel} from '../organizations/organization.model';
 import {Dictionary} from '@ngrx/entity/src/models';
@@ -44,7 +44,7 @@ export const initialUsersState: UsersState = usersAdapter.getInitialState({
 export const selectUsersState = (state: AppState) => state.users;
 
 const selectAllUsersRaw = createSelector(selectUsersState, usersAdapter.getSelectors().selectAll);
-export const selectAllUsers = createSelector(selectAllUsersRaw, users => UserFilters.filterFunctions(users));
+export const selectAllUsers = createSelector(selectAllUsersRaw, users => filterUserFunctions(users));
 export const selectUsersLoadedForOrganization = createSelector(selectUsersState, usersState => usersState.loadedForOrganizationId);
 
 export const selectCurrentUser = createSelector(selectUsersState, usersState => usersState.currentUser);
@@ -59,7 +59,7 @@ export const selectCurrentUserForOrganization = (organization: OrganizationModel
   });
 
 export const selectUsersForWorkspace = createSelector(selectAllUsers, selectGroupsDictionary, selectOrganizationByWorkspace, (users, groups, organization) => {
-  return UserFilters.filterByOrganization(users, organization)
+  return filterUsersByOrganization(users, organization)
     .map(user => mapGroupsOnUser(user, organization.id, groups));
 });
 

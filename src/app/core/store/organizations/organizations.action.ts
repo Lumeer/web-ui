@@ -196,21 +196,21 @@ export namespace OrganizationsAction {
   export class ChangePermission implements Action {
     public readonly type = OrganizationsActionType.CHANGE_PERMISSION;
 
-    public constructor(public payload: { organizationId: string, type: PermissionType, permission: PermissionModel }) {
+    public constructor(public payload: { organizationId: string, type: PermissionType, permission: PermissionModel, currentPermission: PermissionModel }) {
     }
   }
 
   export class ChangePermissionSuccess implements Action {
     public readonly type = OrganizationsActionType.CHANGE_PERMISSION_SUCCESS;
 
-    public constructor(public payload: { organizationId: string, type: PermissionType, permission: PermissionModel }) {
+    public constructor(public payload: { organizationId: string, type: PermissionType, permission: PermissionModel}) {
     }
   }
 
   export class ChangePermissionFailure implements Action {
     public readonly type = OrganizationsActionType.CHANGE_PERMISSION_FAILURE;
 
-    public constructor(public payload: { error: any }) {
+    public constructor(public payload: { organizationId: string, type: PermissionType, permission: PermissionModel, error: any }) {
     }
   }
 

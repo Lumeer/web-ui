@@ -17,24 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 
-import {UserModel} from '../../../core/store/users/user.model';
-import {OrganizationModel} from "../../../core/store/organizations/organization.model";
 import {Validator} from "../../../core/validators/validator";
 
 @Component({
   selector: 'new-user',
-  templateUrl: './new-user.component.html',
-  styleUrls: ['./new-user.component.scss']
+  templateUrl: './new-user.component.html'
 })
 export class NewUserComponent {
 
-  @Input()
-  public organization: OrganizationModel;
-
-  @Output()
-  public userCreated = new EventEmitter<UserModel>();
+  @Output() public userCreated = new EventEmitter<string>();
 
   public email: string;
   public showEmailWarning: boolean = false;
@@ -52,14 +45,7 @@ export class NewUserComponent {
   }
 
   private addUser() {
-    const newUser: UserModel = {
-      email: this.email,
-      groupsMap: {}
-    };
-    newUser.groupsMap[this.organization.id] = [];
-
-    this.userCreated.emit(newUser);
-
+    this.userCreated.emit(this.email);
     this.clearInputs();
   }
 

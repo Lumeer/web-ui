@@ -40,13 +40,15 @@ export function organizationsReducer(state: OrganizationsState = initialOrganiza
     case OrganizationsActionType.GET_PERMISSIONS_SUCCESS:
       return organizationsAdapter.updateOne({id: action.payload.organizationId, changes: {permissions: action.payload.permissions}}, state);
     case OrganizationsActionType.CHANGE_PERMISSION_SUCCESS:
-      return onChangePermissionSuccess(state, action);
+      return onChangePermission(state, action);
+    case OrganizationsActionType.CHANGE_PERMISSION_FAILURE:
+      return onChangePermission(state, action);
     default:
       return state;
   }
 }
 
-function onChangePermissionSuccess(state: OrganizationsState, action: OrganizationsAction.ChangePermissionSuccess): OrganizationsState {
+function onChangePermission(state: OrganizationsState, action: OrganizationsAction.ChangePermissionSuccess | OrganizationsAction.ChangePermissionFailure): OrganizationsState {
   const organization = state.entities[action.payload.organizationId];
   const permissions = PermissionsHelper.changePermission(organization.permissions, action.payload.type, action.payload.permission);
 
