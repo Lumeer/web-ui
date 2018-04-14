@@ -17,23 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {Attribute} from './attribute';
-export {Collection} from './collection';
-export {Contact} from './contact';
-export {Document} from './document';
-export {Event} from './Event';
-export {Group} from './group';
-export {LinkInstance} from './link-instance';
-export {LinkType} from './link-type';
-export {LinkedAttribute} from './linked-attribute';
-export {Organization} from './organization';
-export {Permission} from './permission';
-export {Permissions} from './permissions';
-export {Project} from './project';
-export {Query} from './query';
-export {Resource} from './resource';
-export {SuggestionType} from './suggestion-type';
-export {Suggestions} from './suggestions';
-export {UserSettings} from './user.settings';
-export {User} from './user';
-export {View} from './view';
+export interface Contact {
+
+  id?: string;
+  organizationId: string;
+  company: string;
+  firstName: string;
+  lastName: string;
+  address1: string;
+  address2: string;
+  city: string;
+  zip: string;
+  state: string;
+  country: string;
+  email: string;
+  phone: string;
+  ic: string;
+  dic: string;
+
+}

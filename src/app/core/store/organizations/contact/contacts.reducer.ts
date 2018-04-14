@@ -17,23 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {Attribute} from './attribute';
-export {Collection} from './collection';
-export {Contact} from './contact';
-export {Document} from './document';
-export {Event} from './Event';
-export {Group} from './group';
-export {LinkInstance} from './link-instance';
-export {LinkType} from './link-type';
-export {LinkedAttribute} from './linked-attribute';
-export {Organization} from './organization';
-export {Permission} from './permission';
-export {Permissions} from './permissions';
-export {Project} from './project';
-export {Query} from './query';
-export {Resource} from './resource';
-export {SuggestionType} from './suggestion-type';
-export {Suggestions} from './suggestions';
-export {UserSettings} from './user.settings';
-export {User} from './user';
-export {View} from './view';
+import {ContactsAction, ContactsActionType} from "./contacts.action";
+import {contactsAdapter, ContactsState, initialContactsState} from "./contacts.state";
+
+export function contactsReducer(state: ContactsState = initialContactsState, action: ContactsAction.All): ContactsState {
+  switch (action.type) {
+    case ContactsActionType.GET_CONTACT_SUCCESS:
+      return contactsAdapter.upsertOne({id: action.payload.contact.organizationId, changes: action.payload.contact}, state);
+    case ContactsActionType.SET_CONTACT_SUCCESS:
+      return contactsAdapter.upsertOne({id: action.payload.contact.organizationId, changes: action.payload.contact}, state);
+    default:
+      return state;
+  }
+}
