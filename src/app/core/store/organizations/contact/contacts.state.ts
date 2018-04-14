@@ -25,13 +25,13 @@ import {AppState} from "../../app.state";
 export interface ContactsState extends EntityState<ContactModel> {
 }
 
-export const contactsAdapter = createEntityAdapter<ContactModel>({selectId: contact => contact.code});
+export const contactsAdapter = createEntityAdapter<ContactModel>({selectId: contact => contact.organizationId});
 
 export const initialContactsState: ContactsState = contactsAdapter.getInitialState({
 });
 
 export const selectContactsState = (state: AppState) => state.contacts;
 export const selectAllContacts = createSelector(selectContactsState, contactsAdapter.getSelectors().selectAll);
-export const selectContactByCode = (code) => createSelector(selectAllContacts, contacts => {
-  return contacts.find(contact => contact.code === code);
+export const selectContactByOrganizationId = (organizationId) => createSelector(selectAllContacts, contacts => {
+  return contacts.find(contact => contact.organizationId === organizationId);
 });

@@ -20,7 +20,7 @@
 export interface Contact {
 
   id?: string;
-  code: string;
+  organizationId: string;
   company: string;
   firstName: string;
   lastName: string;

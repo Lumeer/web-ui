@@ -25,7 +25,7 @@ export class ContactConverter {
   public static fromDto(dto: Contact): ContactModel {
     return {
       id: dto.id,
-      code: dto.code,
+      organizationId: dto.organizationId,
       company: dto.company,
       firstName: dto.firstName,
       lastName: dto.lastName,
@@ -45,7 +45,7 @@ export class ContactConverter {
   public static toDto(contact: ContactModel): Contact {
     return {
       id: contact.id,
-      code: contact.code,
+      organizationId: contact.organizationId,
       company: contact.company,
       firstName: contact.firstName,
       lastName: contact.lastName,
