@@ -41,6 +41,7 @@ import {TagComponent} from './tag/tag.component';
 import {RemovePlaceholderOnFocusDirective} from './placeholder/remove-placeholder-on-focus';
 import {PostItCollectionAddButtonComponent} from './post-it-collections/add-button/post-it-collection-add-button.component';
 import {PostItCollectionImportButtonComponent} from './post-it-collections/import-button/post-it-collection-import-button.component';
+import {SliderComponent} from './slider/slider.component';
 
 @NgModule({
   imports: [
@@ -67,7 +68,8 @@ import {PostItCollectionImportButtonComponent} from './post-it-collections/impor
     LayoutItem,
     InputBoxComponent,
     FilterBoxComponent,
-    TagComponent
+    TagComponent,
+    SliderComponent
   ],
   exports: [
     CommonModule,
@@ -84,7 +86,8 @@ import {PostItCollectionImportButtonComponent} from './post-it-collections/impor
     InputBoxComponent,
     FilterBoxComponent,
     TagComponent,
-    DialogsModule
+    DialogsModule,
+    SliderComponent
   ]
 })
 export class SharedModule {
