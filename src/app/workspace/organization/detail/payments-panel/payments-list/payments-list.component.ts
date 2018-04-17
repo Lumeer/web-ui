@@ -17,35 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'slider',
-  templateUrl: './slider.component.html',
-  styleUrls: ['./slider.component.scss']
+  selector: 'payments-list',
+  templateUrl: './payments-list.component.html',
+  styleUrls: ['./payments-list.component.scss']
 })
-export class SliderComponent implements OnInit {
+export class PaymentsListComponent implements OnInit {
 
-  @Input("values")
-  public values: string;
-
-  @Input("default")
-  public defaultValue: number = 0;
-
-  @Output("onSlide")
-  public onSlide = new EventEmitter<{position: number, value: string}>();
-
-  public splitValues: string[];
-
-  constructor() {
-  }
+  constructor() { }
 
   ngOnInit() {
-    this.splitValues = this.values.split("|");
-    this.onSlide.emit({position: this.defaultValue, value: this.splitValues[this.defaultValue]});
   }
 
-  public onSlideChange($event) {
-    this.onSlide.emit({position: +$event.target.value, value: this.splitValues[$event.target.value]});
-  }
 }

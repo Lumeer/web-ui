@@ -45,8 +45,6 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
   private organization: OrganizationModel;
   private organizationSubscription: Subscription;
 
-  public subscriptionLength: string;
-
   constructor(private i18n: I18n,
               private router: Router,
               private store: Store<AppState>) {
@@ -85,8 +83,4 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ContactsAction.GetContact({ organizationCode: this.organization.code }));
   }
 
-  sliderValue($event) {
-    this.subscriptionLength = $event.value;
-    console.log($event);
-  }
 }

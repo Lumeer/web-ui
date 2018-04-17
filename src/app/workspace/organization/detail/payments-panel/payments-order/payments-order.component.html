@@ -1,0 +1,10 @@
+<div class="my-4">
+  <h5 i18n="@@organizations.tab.detail.order.order">Service Order</h5>
+  <slider
+    i18n-values="@@organizations.tab.detail.order.values"
+    values="1 month|2 months|3 months|6 months|1 year|2 years|3 years"
+    default="4"
+    (onSlide)="sliderValue($event)">
+  </slider>
+  <input type="text" [value]="subscriptionLength">
+</div>

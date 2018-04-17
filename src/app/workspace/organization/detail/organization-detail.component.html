@@ -1,3 +1,8 @@
-<contact-form #contactForm (updateContact)="updateContact($event)"></contact-form>
-<slider values="ahoj|jak|se|mas" (onSlide)="sliderValue($event)"></slider>
-<input type="text" [value]="subscriptionLength">
+<div class="row">
+  <div class="col-7">
+    <contact-form #contactForm (updateContact)="updateContact($event)"></contact-form>
+  </div>
+  <div class="col-5">
+    <payments-panel></payments-panel>
+  </div>
+</div>
