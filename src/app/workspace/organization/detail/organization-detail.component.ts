@@ -50,11 +50,11 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
               private store: Store<AppState>) {
   }
 
-  updateContact($event: ContactModel) {
+  public updateContact($event: ContactModel) {
     this.store.dispatch(new ContactsAction.SetContact({ organizationCode: this.organization.code, contact: $event }));
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.subscribeToStore();
     this.requestData();
   }
@@ -69,7 +69,7 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
       .subscribe(contact => this.contactForm.setContact(contact));
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     if (this.contactSubscription) {
       this.contactSubscription.unsubscribe();
     }

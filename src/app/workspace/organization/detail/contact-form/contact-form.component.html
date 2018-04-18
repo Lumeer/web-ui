@@ -1,93 +1,66 @@
 <div class="my-4">
   <h5 i18n="@@organizations.tab.detail.contact.invoicingContact">Invoicing Contact</h5>
   <form #invoicingContactForm="ngForm">
-    <div class="form-group row">
-      <label for="company" class="col-sm-5 col-form-label" i18n="@@organizations.tab.detail.contact.company">Company Name</label>
-      <div class="col-sm-7">
-        <input type="text" ngModel name="company" class="form-control form-control-sm" id="company">
+    <div class="form-row">
+      <div class="form-group col">
+        <input type="text" ngModel name="company" i18n-placeholder="@@organizations.tab.detail.contact.company" placeholder="Company Name" class="form-control form-control-sm" id="company">
       </div>
     </div>
-    <div class="form-group row">
-      <label for="firstName" class="col-sm-5 col-form-label" i18n="@@organizations.tab.detail.contact.firstName">First Name</label>
-      <div class="col-sm-7">
-        <input type="text" ngModel name="firstName" class="form-control form-control-sm" id="firstName">
+    <div class="form-row">
+      <div class="form-group col-6">
+          <input type="text" ngModel name="firstName" i18n-placeholder="@@organizations.tab.detail.contact.firstName" placeholder="First Name" class="form-control form-control-sm" id="firstName">
+      </div>
+      <div class="form-group col-6">
+          <input type="text" ngModel name="lastName" i18n-placeholder="@@organizations.tab.detail.contact.lastName" placeholder="Last Name" class="form-control form-control-sm" id="lastName">
       </div>
     </div>
-    <div class="form-group row">
-      <label for="lastName" class="col-sm-5 col-form-label" i18n="@@organizations.tab.detail.contact.lastName">Last Name</label>
-      <div class="col-sm-7">
-        <input type="text" ngModel name="lastName" class="form-control form-control-sm" id="lastName">
+    <div class="form-row">
+      <div class="form-group col-6">
+        <input type="text" ngModel name="address1" i18n-placeholder="@@organizations.tab.detail.contact.address1" placeholder="Building/Appartment/Office" class="form-control form-control-sm" id="address1">
+      </div>
+      <div class="form-group col-6">
+        <input type="text" ngModel name="address2" i18n-placeholder="@@organizations.tab.detail.contact.address2" placeholder="Street" class="form-control form-control-sm" id="address2">
       </div>
     </div>
-    <div class="form-group row">
-      <label for="address1" class="col-sm-5 col-form-label" i18n="@@organizations.tab.detail.contact.address1">Building/Appartment/Office</label>
-      <div class="col-sm-7">
-        <input type="text" ngModel name="address1" class="form-control form-control-sm" id="address1">
+    <div class="form-row">
+      <div class="form-group col-3">
+        <input type="text" ngModel name="city" i18n-placeholder="@@organizations.tab.detail.contact.city" placeholder="City" class="form-control form-control-sm" id="city">
       </div>
-    </div>
-    <div class="form-group row">
-      <label for="address2" class="col-sm-5 col-form-label" i18n="@@organizations.tab.detail.contact.address2">Street</label>
-      <div class="col-sm-7">
-        <input type="text" ngModel name="address2" class="form-control form-control-sm" id="address2">
+      <div class="form-group col-3">
+        <input type="text" ngModel name="zip" i18n-placeholder="@@organizations.tab.detail.contact.zip" placeholder="ZIP" class="form-control form-control-sm" id="zip">
       </div>
-    </div>
-    <div class="form-group row">
-      <label for="city" class="col-sm-5 col-form-label" i18n="@@organizations.tab.detail.contact.city">City</label>
-      <div class="col-sm-7">
-        <input type="text" ngModel name="city" class="form-control form-control-sm" id="city">
+      <div class="form-group col-3">
+        <input type="text" ngModel name="state" i18n-placeholder="@@organizations.tab.detail.contact.state" placeholder="State" class="form-control form-control-sm" id="state">
       </div>
-    </div>
-    <div class="form-group row">
-      <label for="zip" class="col-sm-5 col-form-label" i18n="@@organizations.tab.detail.contact.zip">ZIP</label>
-      <div class="col-sm-7">
-        <input type="text" ngModel name="zip" class="form-control form-control-sm" id="zip">
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="state" class="col-sm-5 col-form-label" i18n="@@organizations.tab.detail.contact.state">State</label>
-      <div class="col-sm-7">
-        <input type="text" ngModel name="state" class="form-control form-control-sm" id="state">
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="country" class="col-sm-5 col-form-label" i18n="@@organizations.tab.detail.contact.country">Country</label>
-      <div class="col-sm-7">
-        <select  ngModel name="country" class="form-control form-control-sm" id="country">
+      <div class="form-group col-3">
+        <select ngModel name="country" class="form-control form-control-sm" id="country" i18n-title="@@organizations.tab.detail.contact.country" title="Select country">
           <option *ngFor="let c of countries">{{c}}</option>
         </select>
       </div>
     </div>
-    <div class="form-group row">
-      <label for="email" class="col-sm-5 col-form-label" i18n="@@organizations.tab.detail.contact.email">E-mail</label>
-      <div class="col-sm-7">
-        <input type="text" ngModel name="email" class="form-control form-control-sm" id="email" #email="ngModel" email>
+    <div class="form-row">
+      <div class="form-group col-6">
+        <input type="text" ngModel name="email" i18n-placeholder="@@organizations.tab.detail.contact.email" placeholder="E-mail" class="form-control form-control-sm" id="email" #email="ngModel" email>
         <small id="emailValid" class="invalid-message" *ngIf="email.invalid && (email.dirty || email.touched)" i18n="@@organizations.tab.detail.contact.email.invalid">
           Please enter a valid e-mail address (e.g. alan@turing.com).
         </small>
       </div>
-    </div>
-    <div class="form-group row">
-      <label for="phone" class="col-sm-5 col-form-label" i18n="@@organizations.tab.detail.contact.phone">Phone</label>
-      <div class="col-sm-7">
-        <input type="text" ngModel name="phone" class="form-control form-control-sm" id="phone" #phone="ngModel" pattern="[-+0-9/ ]*">
+      <div class="form-group col-6">
+        <input type="text" ngModel name="phone" i18n-placeholder="@@organizations.tab.detail.contact.phone" placeholder="Phone" class="form-control form-control-sm" id="phone" #phone="ngModel" pattern="[-+0-9/ ]*">
         <small id="phoneValid" class="invalid-message" *ngIf="phone.invalid && (phone.dirty || phone.touched)" i18n="@@organizations.tab.detail.contact.phone.invalid">
           Please enter a phone number that contains only numbers, characters +-/ and spaces.
         </small>
       </div>
     </div>
-    <div class="form-group row">
-      <label for="ic" class="col-sm-5 col-form-label" i18n="@@organizations.tab.detail.contact.ic">Company Reg. No.</label>
-      <div class="col-sm-7">
-        <input type="text" ngModel name="ic" class="form-control form-control-sm" id="ic" #ic="ngModel" pattern="[0-9 ]*">
+    <div class="form-row">
+      <div class="form-group col-6">
+        <input type="text" ngModel name="ic" i18n-placeholder="@@organizations.tab.detail.contact.ic" placeholder="Company Reg. No." class="form-control form-control-sm" id="ic" #ic="ngModel" pattern="[0-9 ]*">
         <small id="icValid" class="invalid-message" *ngIf="ic.invalid && (ic.dirty || ic.touched)" i18n="@@organizations.tab.detail.contact.ic.invalid">
           Please enter only numbers and spaces.
         </small>
       </div>
-    </div>
-    <div class="form-group row">
-      <label for="dic" class="col-sm-5 col-form-label" i18n="@@organizations.tab.detail.contact.dic">Tax Ident. No.</label>
-      <div class="col-sm-7">
-        <input type="text" ngModel name="dic" class="form-control form-control-sm" id="dic">
+      <div class="form-group col-6">
+        <input type="text" ngModel name="dic" i18n-placeholder="@@organizations.tab.detail.contact.dic" placeholder="Tax Ident. No." class="form-control form-control-sm" id="dic">
       </div>
     </div>
     <div class="text-right">

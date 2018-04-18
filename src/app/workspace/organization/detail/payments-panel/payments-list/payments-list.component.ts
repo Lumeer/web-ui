@@ -28,7 +28,7 @@ export class PaymentsListComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  public ngOnInit() {
   }
 
 }

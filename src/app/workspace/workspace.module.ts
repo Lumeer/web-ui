@@ -45,6 +45,7 @@ import {ContactFormComponent} from './organization/detail/contact-form/contact-f
 import {PaymentsPanelComponent} from './organization/detail/payments-panel/payments-panel.component';
 import {PaymentsOrderComponent} from './organization/detail/payments-panel/payments-order/payments-order.component';
 import {PaymentsListComponent} from './organization/detail/payments-panel/payments-list/payments-list.component';
+import {PaymentsStateComponent} from './organization/detail/payments-panel/payments-state/payments-state.component';
 
 @NgModule({
   imports: [
@@ -72,7 +73,8 @@ import {PaymentsListComponent} from './organization/detail/payments-panel/paymen
     ContactFormComponent,
     PaymentsPanelComponent,
     PaymentsOrderComponent,
-    PaymentsListComponent
+    PaymentsListComponent,
+    PaymentsStateComponent
   ],
   exports: [
     WorkspaceChooserComponent

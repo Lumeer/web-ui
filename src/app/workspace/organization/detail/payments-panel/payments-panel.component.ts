@@ -28,7 +28,7 @@ export class PaymentsPanelComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  public ngOnInit() {
   }
 
 }

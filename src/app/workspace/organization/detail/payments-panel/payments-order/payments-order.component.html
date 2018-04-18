@@ -1,31 +1,16 @@
-<ul class="list-group">
-  <li class="list-group-item list-group-item-light text-sm-center">You are on <strong>Trial</strong> program now.</li>
-  <li class="list-group-item list-group-item-success text-lg-center" i18n="@@organizations.tab.detail.order.getBusiness">Get Lumeer for Business!</li>
-  <li class="list-group-item"><i class="far fa-list-ul"></i> All features included</li>
-  <li class="list-group-item"><i class="far fa-check-circle"></i> <em>Verified</em> updates and new features</li>
-  <li class="list-group-item"><i class="far fa-envelope"></i> <em>Next business day</em> e-mail support</li>
-  <li class="list-group-item"><i class="fas fa-database"></i> Data backup and <em>next business day recovery</em></li>
-  <li class="list-group-item"><i class="fas fa-server"></i> <em>Powerful</em> shared server resources</li>
-  <li class="list-group-item"><i class="far fa-file"></i> <em>Unlimited</em> projects, users and tables</li>
-  <li class="list-group-item"><i class="far fa-clone"></i> Limited data (1,000,000 records in total)</li>
-</ul>
-<!--ul class="list-group">
-  <li class="list-group-item list-group-item-success text-lg-center" i18n="@@organizations.tab.detail.order.onBusiness">Congratulations, <strong>Business</strong> program active!</li>
-  <li class="list-group-item list-group-item-light text-sm-center"><strong>Business</strong> active until February 27th 2019</li>
-  <li class="list-group-item"><i class="far fa-list-ul"></i> All features included</li>
-  <li class="list-group-item"><i class="far fa-check-circle"></i> <em>Verified</em> updates and new features</li>
-  <li class="list-group-item"><i class="far fa-envelope"></i> <em>Next business day</em> e-mail support</li>
-  <li class="list-group-item"><i class="fas fa-database"></i> Data backup and <em>next business day recovery</em></li>
-  <li class="list-group-item"><i class="fas fa-server"></i> <em>Powerful</em> shared server resources</li>
-  <li class="list-group-item"><i class="far fa-file"></i> <em>Unlimited</em> projects, users and tables</li>
-  <li class="list-group-item"><i class="far fa-clone"></i> Limited data (1,000,000 records in total)</li>
-</ul-->
-<h5>Order Lumeer for Business!</h5>
-<form #orderForm="ngForm">
+<h5 i18n="@@organizations.tab.detail.order.get">Get Lumeer for Business now!</h5>
+<button *ngIf="discountAmount > 0" type="button" class="btn btn-lg btn-danger">
+  {{discountDescription}} <span class="badge badge-success">-{{discountAmount}}%</span>
+</button>
+<form #orderForm="ngForm" class="mt-4">
   <div class="form-group">
-    <label for="subscriptionLength">Subscription Length</label>
+    <label for="subscriptionLength" i18n="@@organizations.tab.detail.order.duration">Subscription Duration</label>
     <div class="form-control">
-      <div>{{subscriptionLength}}</div>
+      <div i18n="@@organizations.tab.detail.order.perUserMonth">{{subscriptionLength}} =
+        <del *ngIf="discountAmount > 0">{{discountInfoPerUser}}</del>
+        <strong>{{prefix}}{{pricePerUser}}{{suffix}}</strong> per user and month
+        <span *ngIf="discount" class="badge badge-pill badge-success" i18n="@@organizations.tab.detail.order.bestOffer">-17% Best offer!</span>
+      </div>
       <slider
         i18n-values="@@organizations.tab.detail.order.values"
         values="1 month|2 months|3 months|6 months|1 year|2 years|3 years"
@@ -36,34 +21,44 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="numberOfUsers">Number of Users in your Organization</label>
-    <input class="form-control" type="number" min="10" max="99" id="numberOfUsers" [value]="numberOfUsers" required ngModel name="users" #users="ngModel"/>
-    <small id="usersValidMin" class="invalid-message" *ngIf="+(users.value) < 10 || (users.invalid && (users.dirty || users.touched))" i18n="@@organizations.tab.detail.order.users.invalidMin">
+    <label for="numberOfUsers" i18n="@@organizations.tab.detail.order.users">Number of Users in your Organization</label>
+    <input class="form-control" type="number" [(ngModel)]="numberOfUsers" (input)="updatePrice()"
+           min="10" max="100" required id="numberOfUsers" name="users" ngModel #users="ngModel" pattern="[0-9][0-9]"
+           />
+    <small id="usersValidMin" class="invalid-message" *ngIf="numberOfUsers < 10" i18n="@@organizations.tab.detail.order.users.invalidMin">
       Minimal order is 10 users.
     </small>
-    <small id="usersValidMax" class="invalid-message" *ngIf="+(users.value) > 99 || (users.invalid && (users.dirty || users.touched))" i18n="@@organizations.tab.detail.order.users.invalidMax">
+    <small id="usersValidMax" class="invalid-message" *ngIf="numberOfUsers > 99" i18n="@@organizations.tab.detail.order.users.invalidMax">
       For orders of more than 99 users please contact our <a href="mailto:support@lumeer.io">support</a>.
     </small>
-    {{+users.value}}
   </div>
   <div class="form-group">
     <label>Currency</label>
     <div class="form-control">
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="currency" id="currency1" value="EUR" checked>
+        <input class="form-check-input" [(ngModel)]="currency" (change)="updatePrice()" type="radio" name="currency" id="currency1" value="EUR" checked>
         <label class="form-check-label" for="currency1">€ (EUR)</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="currency" id="currency2" value="USD">
+        <input class="form-check-input" [(ngModel)]="currency" (change)="updatePrice()" type="radio" name="currency" id="currency2" value="USD">
         <label class="form-check-label" for="currency2">$ (USD)</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="currency" id="currency3" value="CZK">
+        <input class="form-check-input" [(ngModel)]="currency" (change)="updatePrice()" type="radio" name="currency" id="currency3" value="CZK">
         <label class="form-check-label" for="currency3">Kč (CZK)</label>
       </div>
     </div>
   </div>
   <div class="text-right">
-    <button type="submit" class="btn btn-success mb-2" i18n="@@organizations.tab.detail.order.orderBtn" [disabled]="+users.value < 10 || +users.value > 99 || !orderForm.form.dirty || !orderForm.valid">Order</button>
+    <a href="mailto:support@lumeer.io" *ngIf="numberOfUsers >= 100">
+      <button class="btn btn-lg btn-success mb-2">Contact us for more users!</button>
+    </a>
+    <button *ngIf="numberOfUsers < 100" type="submit" (click)="placeOrder()"
+            class="btn btn-lg btn-success mb-2"
+            i18n="@@organizations.tab.detail.order.orderBtn"
+            [disabled]="!orderForm.valid">
+      Get Lumeer only for <del *ngIf="discountAmount > 0">{{prefix}}{{discountInfo | number:'1.2-2'}}{{suffix}}</del>
+      <strong>{{prefix}}{{price | number:'1.2-2'}}{{suffix}}</strong>!
+    </button>
   </div>
 </form>
