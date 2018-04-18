@@ -34,8 +34,8 @@ export class PaymentsOrderComponent implements OnInit {
   private static USD_FULL = 9.9;
   private static USD_SALE = 8.3;
 
-  private discountAmount = 50;
-  private discountDescription: string;
+  public discountAmount = 50;
+  public discountDescription: string;
 
   @Output()
   public pay = new EventEmitter<{users: number, months: number, currency: string, amount: number}>();
@@ -53,7 +53,7 @@ export class PaymentsOrderComponent implements OnInit {
 
   public pricePerUser: number = PaymentsOrderComponent.EUR_SALE;
   private months: number = 12;
-  private discount: boolean = true;
+  public discount: boolean = true;
   public discountInfoPerUser: string = '';
   public discountInfo: number = 0;
 
