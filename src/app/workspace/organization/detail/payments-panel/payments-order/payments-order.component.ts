@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'payments-order',
@@ -27,6 +28,8 @@ import { Component, OnInit } from '@angular/core';
 export class PaymentsOrderComponent implements OnInit {
 
   public subscriptionLength: string;
+
+  public numberOfUsers: number = 10;
 
   constructor() { }
 

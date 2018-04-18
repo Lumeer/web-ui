@@ -41,10 +41,10 @@ import {OrganizationUserGroupsComponent} from './organization/users/groups/organ
 import {OrganizationNewUserComponent} from './organization/users/new-user/organization-new-user.component';
 import {GroupsSuggestionsComponent} from "./organization/users/groups/suggestions/groups-suggestions.component";
 import {OrganizationDetailComponent} from "./organization/detail/organization-detail.component";
-import { ContactFormComponent } from './organization/detail/contact-form/contact-form/contact-form.component';
-import { PaymentsPanelComponent } from './organization/detail/payments-panel/payments-panel.component';
-import { PaymentsOrderComponent } from './organization/detail/payments-panel/payments-order/payments-order.component';
-import { PaymentsListComponent } from './organization/detail/payments-panel/payments-list/payments-list.component';
+import {ContactFormComponent} from './organization/detail/contact-form/contact-form.component';
+import {PaymentsPanelComponent} from './organization/detail/payments-panel/payments-panel.component';
+import {PaymentsOrderComponent} from './organization/detail/payments-panel/payments-order/payments-order.component';
+import {PaymentsListComponent} from './organization/detail/payments-panel/payments-list/payments-list.component';
 
 @NgModule({
   imports: [
