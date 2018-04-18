@@ -1,0 +1,4 @@
+<input type="range" min="0" [max]="splitValues.length - 1" value="{{defaultValue}}" list="slider-data" (change)="onSlideChange($event)" (input)="onSlideChange($event)">
+<datalist id="slider-data">
+  <option *ngFor="let o of splitValues" value="{{o}}"></option>
+</datalist>

@@ -19,7 +19,7 @@
 
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ContactModel} from "../../../core/store/organizations/contact/contact.model";
-import {ContactFormComponent} from "./contact-form/contact-form/contact-form.component";
+import {ContactFormComponent} from "./contact-form/contact-form.component";
 import {Store} from "@ngrx/store";
 import {Router} from "@angular/router";
 import {I18n} from "@ngx-translate/i18n-polyfill";
@@ -50,11 +50,11 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
               private store: Store<AppState>) {
   }
 
-  updateContact($event: ContactModel) {
+  public updateContact($event: ContactModel) {
     this.store.dispatch(new ContactsAction.SetContact({ organizationCode: this.organization.code, contact: $event }));
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.subscribeToStore();
     this.requestData();
   }
@@ -69,7 +69,7 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
       .subscribe(contact => this.contactForm.setContact(contact));
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     if (this.contactSubscription) {
       this.contactSubscription.unsubscribe();
     }
@@ -82,4 +82,5 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
   private requestData() {
     this.store.dispatch(new ContactsAction.GetContact({ organizationCode: this.organization.code }));
   }
+
 }

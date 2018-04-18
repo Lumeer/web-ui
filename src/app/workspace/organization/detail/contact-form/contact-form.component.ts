@@ -18,10 +18,10 @@
  */
 
 import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {ContactModel} from "../../../../../core/store/organizations/contact/contact.model";
 import {NgForm} from "@angular/forms";
-import {OrganizationSettingsComponent} from "../../../organization-settings.component";
-import {CountriesData} from "../../../../../core/store/organizations/contact/countries.data";
+import {ContactModel} from "../../../../core/store/organizations/contact/contact.model";
+import {CountriesData} from "../../../../core/store/organizations/contact/countries.data";
+import {OrganizationSettingsComponent} from "../../organization-settings.component";
 
 @Component({
   selector: 'contact-form',
