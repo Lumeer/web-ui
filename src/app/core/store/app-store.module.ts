@@ -48,6 +48,7 @@ import {ViewsEffects} from './views/views.effects';
 import {viewsReducer} from './views/views.reducer';
 import {contactsReducer} from "./organizations/contact/contacts.reducer";
 import {ContactsEffects} from "./organizations/contact/contacts.effects";
+import { environment } from '../../../environments/environment';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -84,7 +85,7 @@ const effects = [
   imports: [
     StoreModule.forRoot(reducers, {initialState: initialAppState}),
     EffectsModule.forRoot(effects),
-    LUMEER_ENV === 'development' ? StoreDevtoolsModule.instrument({maxAge: 10}) : []
+    environment.LUMEER_ENV === 'development' ? StoreDevtoolsModule.instrument({maxAge: 10}) : []
   ],
   declarations: []
 })

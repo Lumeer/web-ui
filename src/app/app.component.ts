@@ -22,6 +22,8 @@ import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import {KeycloakService} from 'keycloak-angular';
 
 import {SnotifyService} from 'ng-snotify';
+import {Title} from '@angular/platform-browser';
+import {environment} from '../environments/environment';
 
 @Component({
   selector: 'lmr-app',
@@ -35,7 +37,9 @@ export class AppComponent implements OnInit {
 
   constructor(private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
               private keycloakService: KeycloakService,
+              private titleService: Title,
               private notificationService: SnotifyService) {
+    this.titleService.setTitle(environment.LUMEER_TITLE);
     this.setUpGoogleAnalytics();
   }
 

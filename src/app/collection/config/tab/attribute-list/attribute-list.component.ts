@@ -28,6 +28,7 @@ import * as Const from '../constraints';
 import {ConfiguredAttribute} from './configured-attribute';
 import {ConstraintSuggestion} from './constraint-suggestion';
 import {Attribute} from '../../../../core/dto';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'attribute-list',
@@ -274,7 +275,7 @@ export class AttributeListComponent {
   }
 
   public publicPath(): string {
-    return PUBLIC_PATH;
+    return environment.PUBLIC_PATH;
   }
 
 }

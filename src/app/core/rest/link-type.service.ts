@@ -28,6 +28,7 @@ import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
 import {map} from "rxjs/operators";
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class LinkTypeService {
@@ -61,7 +62,7 @@ export class LinkTypeService {
     const projectCode = this.workspace.projectCode;
     const suffix = id ? `/${id}` : '';
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/link-types${suffix}`;
+    return `/${environment.API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/link-types${suffix}`;
   }
 
 }

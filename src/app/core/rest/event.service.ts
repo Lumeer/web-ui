@@ -28,6 +28,7 @@ import {LocalStorage} from '../../shared/utils/local-storage';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
+import {environment} from '../../../environments/environment';
 
 const EVENTS_KEY = 'events';
 
@@ -89,7 +90,7 @@ export class EventService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
+    return `/${environment.API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
   }
 
   private handleGlobalError(error: HttpErrorResponse): LumeerError {

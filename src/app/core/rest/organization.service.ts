@@ -22,6 +22,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Contact, Organization} from '../dto';
 import {PermissionService} from './permission.service';
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class OrganizationService extends PermissionService {
@@ -66,7 +67,7 @@ export class OrganizationService extends PermissionService {
   }
 
   private apiPrefix(code?: string): string {
-    return `/${API_URL}/rest/organizations${code ? `/${code}` : ''}`;
+    return `/${environment.API_URL}/rest/organizations${code ? `/${code}` : ''}`;
   }
 
 }

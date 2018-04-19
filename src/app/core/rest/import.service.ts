@@ -30,6 +30,7 @@ import {Workspace} from '../store/navigation/workspace.model';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {ImportedCollection} from "../dto/imported-collection";
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class ImportService {
@@ -56,7 +57,7 @@ export class ImportService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/import`;
+    return `/${environment.API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/import`;
   }
 
 }

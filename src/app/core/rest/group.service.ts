@@ -28,6 +28,7 @@ import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
 import {isNullOrUndefined} from "util";
 import {filter, map} from "rxjs/operators";
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class GroupService {
@@ -59,7 +60,7 @@ export class GroupService {
   }
 
   private apiPrefix(groupId?: string): string {
-    return `/${API_URL}/rest/organizations/${this.workspace.organizationCode}/groups${groupId ? `/${groupId}` : ''}`;
+    return `/${environment.API_URL}/rest/organizations/${this.workspace.organizationCode}/groups${groupId ? `/${groupId}` : ''}`;
   }
 
 }

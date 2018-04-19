@@ -34,6 +34,7 @@ import {selectProjectByCode} from '../store/projects/projects.state';
 import {RouterAction} from '../store/router/router.action';
 import {UserSettingsService} from '../user-settings.service';
 import {first} from 'rxjs/operators';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'top-panel',
@@ -51,7 +52,7 @@ export class TopPanelComponent implements OnInit {
 
   public notificationsDisabled: boolean;
 
-  public buildNumber = BUILD_NUMBER;
+  public buildNumber = environment.BUILD_NUMBER;
 
   constructor(private store: Store<AppState>,
               private router: Router,
@@ -119,7 +120,7 @@ export class TopPanelComponent implements OnInit {
   }
 
   public publicPath(): string {
-    return PUBLIC_PATH;
+    return environment.PUBLIC_PATH;
   }
 
 }

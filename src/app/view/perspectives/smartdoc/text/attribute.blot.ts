@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QuillEditor from 'quill';
+import * as Quill from 'quill';
 import EmbedType from 'quill/blots/embed';
 
-let Embed: EmbedType = QuillEditor.import('blots/embed');
+let Embed: EmbedType = Quill.import('blots/embed');
 
 export class AttributeBlot extends Embed {
 
