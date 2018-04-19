@@ -22,6 +22,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Contact, Organization} from '../dto';
 import {PermissionService} from './permission.service';
+import {ServiceLimits} from "../dto/service-limits";
 
 @Injectable()
 export class OrganizationService extends PermissionService {
@@ -57,6 +58,10 @@ export class OrganizationService extends PermissionService {
 
   public setOrganizationContact(code: string, contact: Contact): Observable<Contact> {
     return this.httpClient.put<Contact>(`${this.apiPrefix(code)}/contact`, contact);
+  }
+
+  public getServiceLimits(code: string): Observable<ServiceLimits> {
+    return this.httpClient.get<ServiceLimits>(`${this.apiPrefix(code)}/serviceLimits`);
   }
 
   protected actualApiPrefix(): string {

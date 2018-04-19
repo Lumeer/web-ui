@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from "@angular/core";
-import {catchError, map, mergeMap, tap} from "rxjs/operators";
+import {catchError, map, mergeMap, skipWhile, tap, withLatestFrom} from "rxjs/operators";
 import {Actions, Effect, ofType} from "@ngrx/effects";
 import {Action, Store} from "@ngrx/store";
 import {Router} from "@angular/router";
@@ -28,15 +28,25 @@ import {NotificationsAction} from "../../notifications/notifications.action";
 import {Observable} from "rxjs/Observable";
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {ServiceLimitsAction, ServiceLimitsActionType} from "./service-limits.action";
+import {ServiceLimitsConverter} from "./service-limits.converter";
+import {selectOrganizationsDictionary} from "../organizations.state";
 
 @Injectable()
 export class ServiceLimitsEffects {
-/*  @Effect()
+
+  @Effect()
   public getServiceLimits$: Observable<Action> = this.actions$.pipe(
     ofType<ServiceLimitsAction.GetServiceLimits>(ServiceLimitsActionType.GET_SERVICE_LIMITS),
-    mergeMap(action => this.organizationService.getOrganizationContact(action.payload.organizationCode)),
-    map(contact => new ContactsAction.GetContactSuccess({ contact: ContactConverter.fromDto(contact) })),
-    catchError(error => Observable.of(new ContactsAction.GetContactFailure({error: error})))
+    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    skipWhile(([action, organizationsEntities]) => !organizationsEntities[action.payload.organizationId]),
+    mergeMap(([action, organizationsEntities]) => {
+      const organization = organizationsEntities[action.payload.organizationId];
+      return this.organizationService.getServiceLimits(organization.code).pipe(
+        map(dto => ServiceLimitsConverter.fromDto(action.payload.organizationId, dto))
+      );
+    }),
+    map(serviceLimits => new ServiceLimitsAction.GetServiceLimitsSuccess({ serviceLimits: serviceLimits })),
+    catchError(error => Observable.of(new ServiceLimitsAction.GetServiceLimitsFailure({error: error})))
   );
 
   @Effect()
@@ -44,11 +54,11 @@ export class ServiceLimitsEffects {
     ofType<ServiceLimitsAction.GetServiceLimitsFailure>(ServiceLimitsActionType.GET_SERVICE_LIMITS_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.contact.get.fail', value: 'Cannot read contact information'});
+      const message = this.i18n({id: 'organization.serviceLimits.get.fail', value: 'Cannot read information about your service level and subscription'});
       return new NotificationsAction.Error({message});
     })
   );
-*/
+
   constructor(private i18n: I18n,
               private store$: Store<AppState>,
               private router: Router,

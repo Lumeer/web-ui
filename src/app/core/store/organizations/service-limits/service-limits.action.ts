@@ -32,7 +32,7 @@ export namespace ServiceLimitsAction {
   export class GetServiceLimits implements Action {
     public readonly type = ServiceLimitsActionType.GET_SERVICE_LIMITS;
 
-    public constructor(public payload: { organizationCode: string }) {
+    public constructor(public payload: { organizationId: string }) {
     }
   }
 
