@@ -17,13 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface ServiceLimitsModel {
-  organizationId: string,
+export interface Payment {
+  id: string,
+  date: number,
+  amount: number,
+  paymentId: string,
+  start: number,
+  validUntil: number,
+  state: string,
   serviceLevel: string,
   users: number,
-  projects: number,
-  files: number,
-  documents: number,
-  dbSizeMb: number,
-  validUntil: Date
+  language: string,
+  currency: string,
+  gwUrl: string
 }

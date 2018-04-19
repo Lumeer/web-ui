@@ -24,5 +24,5 @@ export interface ServiceLimits {
   files: number,
   documents: number,
   dbSizeMb: number,
-  validUntil: string
+  validUntil: number
 }

@@ -57,7 +57,7 @@
             class="btn btn-lg btn-success mb-2"
             i18n="@@organizations.tab.detail.order.orderBtn"
             [disabled]="!orderForm.valid">
-      Get Lumeer only for <del *ngIf="discountAmount > 0">{{prefix}}{{discountInfo | number:'1.2-2'}}{{suffix}}</del>
+      Get Lumeer for only <del *ngIf="discountAmount > 0">{{prefix}}{{discountInfo | number:'1.2-2'}}{{suffix}}</del>
       <strong>{{prefix}}{{price | number:'1.2-2'}}{{suffix}}</strong>!
     </button>
   </div>

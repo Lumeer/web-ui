@@ -29,7 +29,7 @@
 </ul>
 <ul *ngIf="serviceLimits?.serviceLevel == 'BASIC'" class="list-group">
   <li class="list-group-item list-group-item-success text-lg-center" i18n="@@organizations.tab.detail.order.onBusiness">Congratulations, <strong>Business</strong> program active!</li>
-  <li class="list-group-item list-group-item-light text-sm-center"><strong>Business</strong> active until February 27th 2019</li>
+  <li class="list-group-item list-group-item-light text-sm-center">Subscription is active until {{serviceLimits.validUntil | date : 'mediumDate'}}</li>
   <li class="list-group-item"><i class="far fa-list-ul"></i> All features included</li>
   <li class="list-group-item"><i class="far fa-check-circle"></i> <em>Verified</em> updates and new features</li>
   <li class="list-group-item"><i class="far fa-envelope"></i> <em>Next business day</em> e-mail support</li>

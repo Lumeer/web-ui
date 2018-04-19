@@ -17,33 +17,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ServiceLimits} from "../../../dto/service-limits";
-import {ServiceLimitsModel} from "./service-limits.model";
+import {Payment} from "../../../dto/payment";
+import {PaymentModel} from "./payment.model";
 
-export class ServiceLimitsConverter {
+export class PaymentConverter {
 
-  public static fromDto(organizationId: string, dto: ServiceLimits): ServiceLimitsModel {
+  public static fromDto(organizationId: string, dto: Payment): PaymentModel {
     return {
+      id: dto.id,
       organizationId: organizationId,
+      date: new Date(dto.date),
+      amount: dto.amount,
+      paymentId: dto.paymentId,
+      start: new Date(dto.start),
+      validUntil: new Date(dto.validUntil),
+      state: dto.state,
       serviceLevel: dto.serviceLevel,
       users: dto.users,
-      projects: dto.projects,
-      files: dto.files,
-      documents: dto.documents,
-      dbSizeMb: dto.dbSizeMb,
-      validUntil: new Date(dto.validUntil)
+      language: dto.language,
+      currency: dto.currency,
+      gwUrl: dto.gwUrl
     };
   }
 
-  public static toDto(model: ServiceLimitsModel): ServiceLimits {
+  public static toDto(model: PaymentModel): Payment {
     return {
+      id: model.id,
+      date: model.date.getTime(),
+      amount: model.amount,
+      paymentId: model.paymentId,
+      start: model.start.getTime(),
+      validUntil: model.validUntil.getTime(),
+      state: model.state,
       serviceLevel: model.serviceLevel,
       users: model.users,
-      projects: model.projects,
-      files: model.files,
-      documents: model.documents,
-      dbSizeMb: model.dbSizeMb,
-      validUntil: model.validUntil.getTime()
+      language: model.language,
+      currency: model.currency,
+      gwUrl: model.gwUrl
     };
   }
 }
