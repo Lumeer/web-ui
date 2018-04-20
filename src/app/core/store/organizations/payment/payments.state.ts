@@ -26,7 +26,7 @@ import {selectSelectedOrganizationId} from "../organizations.state";
 export interface PaymentsState extends EntityState<PaymentModel> {
 }
 
-export const paymentsAdapter = createEntityAdapter<PaymentModel>({selectId: payment => payment.organizationId});
+export const paymentsAdapter = createEntityAdapter<PaymentModel>({selectId: payment => payment.id});
 
 export const initialPaymentsState: PaymentsState = paymentsAdapter.getInitialState({
 });
@@ -38,5 +38,5 @@ export const selectPaymentsByOrganizationId = (organizationId) => createSelector
 });
 //export const sllkl = createSelector(selectSelectedOrganizationId, (organizationId) => selectPaymentsByOrganizationId(organizationId));
 export const selectPaymentsForSelectedOrganization = createSelector(selectAllPayments, selectSelectedOrganizationId, (payments, organizationId) => {
-  return payments.filter(payment => payment.organizationId === organizationId);
+  return payments.filter(payment => payment.organizationId === organizationId).sort((a, b) => b.validUntil.getTime() - a.validUntil.getTime());
 });

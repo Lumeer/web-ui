@@ -27,10 +27,8 @@ import {I18n} from "@ngx-translate/i18n-polyfill";
 import {AppState} from "../../../../../core/store/app.state";
 import {OrganizationModel} from "../../../../../core/store/organizations/organization.model";
 import {Subscription} from "rxjs/Subscription";
-import {selectContactByOrganizationId} from "../../../../../core/store/organizations/contact/contacts.state";
 import {selectServiceLimitsByOrganizationId} from "../../../../../core/store/organizations/service-limits/service-limits.state";
 import {ServiceLimitsModel} from "../../../../../core/store/organizations/service-limits/service-limits.model";
-import {ContactsAction} from "../../../../../core/store/organizations/contact/contacts.action";
 import {ServiceLimitsAction} from "../../../../../core/store/organizations/service-limits/service-limits.action";
 
 @Component({
@@ -40,12 +38,11 @@ import {ServiceLimitsAction} from "../../../../../core/store/organizations/servi
 })
 export class PaymentsStateComponent implements OnInit, OnDestroy {
 
-  private serviceLimitsSubscription: Subscription;
-
   private organization: OrganizationModel;
   private organizationSubscription: Subscription;
 
   private serviceLimits: ServiceLimitsModel;
+  private serviceLimitsSubscription: Subscription;
 
   constructor(private i18n: I18n,
               private router: Router,
@@ -74,6 +71,10 @@ export class PaymentsStateComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     if (this.organizationSubscription) {
       this.organizationSubscription.unsubscribe();
+    }
+
+    if (this.serviceLimitsSubscription) {
+      this.serviceLimitsSubscription.unsubscribe();
     }
   }
 

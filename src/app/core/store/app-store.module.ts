@@ -50,6 +50,8 @@ import {contactsReducer} from "./organizations/contact/contacts.reducer";
 import {ContactsEffects} from "./organizations/contact/contacts.effects";
 import {serviceLimitsReducer} from "./organizations/service-limits/service-limits.reducer";
 import {ServiceLimitsEffects} from "./organizations/service-limits/service-limits.effects";
+import {paymentsReducer} from "./organizations/payment/payments.reducer";
+import {PaymentsEffects} from "./organizations/payment/payments.effects";
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -61,6 +63,7 @@ const reducers: ActionReducerMap<AppState> = {
   organizations: organizationsReducer,
   contacts: contactsReducer,
   serviceLimits: serviceLimitsReducer,
+  payments: paymentsReducer,
   projects: projectsReducer,
   router: routerReducer,
   users: usersReducer,
@@ -78,6 +81,7 @@ const effects = [
   OrganizationsEffects,
   ContactsEffects,
   ServiceLimitsEffects,
+  PaymentsEffects,
   ProjectsEffects,
   RouterEffects,
   UsersEffects,

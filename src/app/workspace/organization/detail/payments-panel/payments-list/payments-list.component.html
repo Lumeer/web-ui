@@ -9,15 +9,33 @@
           <th>Service Level</th>
           <th># Users</th>
           <th>Price</th>
+          <th>State</th>
+          <th>Valid from</th>
           <th>Valid until</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr *ngFor="let payment of payments">
+          <td>{{ payment.date | date : 'shortDate'}}</td>
+          <td>
+            <span *ngIf="payment.serviceLevel == 'FREE'" class="badge badge-pill badge-danger p-2">Trial</span>
+            <span *ngIf="payment.serviceLevel != 'FREE'" class="badge badge-pill badge-success p-2">Business</span>
+          </td>
+          <td>{{ payment.users }}</td>
+          <td>{{ payment.currency }} {{ payment.amount | number:'1.2-2' }}</td>
+          <td>{{ payment.state == 'PAID' ? 'Paid' : 'Ordered' }}</td>
+          <td>{{ payment.start | date : 'shortDate'}}</td>
+          <td>{{ payment.validUntil | date : 'shortDate' }}</td>
+        </tr>
+        <tr *ngIf="!payments">
+          <td colspan="7" class="text-center">You never had a chance to see Lumeer for <strong>Business</strong>. Give it a try today!</td>
+        </tr>
+        <!--tr>
           <td>2018-02-20</td>
           <td><span class="badge badge-pill badge-success p-2">Business</span></td>
           <td>10</td>
           <td>€402.00</td>
+          <td>Ordered</td>
           <td>2019-02-19</td>
         </tr>
         <tr>
@@ -25,8 +43,9 @@
           <td><span class="badge badge-pill badge-success p-2">Business</span></td>
           <td>20</td>
           <td>€804.00</td>
+          <td>Paid</td>
           <td>2018-02-19</td>
-        </tr>
+        </tr-->
       </tbody>
     </table>
   </div>

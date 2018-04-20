@@ -1,7 +1,7 @@
 <h5 i18n="@@organizations.tab.detail.order.get">Get Lumeer for Business now!</h5>
-<button *ngIf="discountAmount > 0" type="button" class="btn btn-lg btn-danger">
+<div style="cursor: default;" *ngIf="discountAmount > 0" class="btn btn-lg btn-danger">
   {{discountDescription}} <span class="badge badge-success">-{{discountAmount}}%</span>
-</button>
+</div>
 <form #orderForm="ngForm" class="mt-4">
   <div class="form-group">
     <label for="subscriptionLength" i18n="@@organizations.tab.detail.order.duration">Subscription Duration</label>

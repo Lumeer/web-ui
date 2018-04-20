@@ -23,6 +23,7 @@ import {Observable} from 'rxjs/Observable';
 import {Contact, Organization} from '../dto';
 import {PermissionService} from './permission.service';
 import {ServiceLimits} from "../dto/service-limits";
+import {Payment} from "../dto/payment";
 
 @Injectable()
 export class OrganizationService extends PermissionService {
@@ -62,6 +63,18 @@ export class OrganizationService extends PermissionService {
 
   public getServiceLimits(code: string): Observable<ServiceLimits> {
     return this.httpClient.get<ServiceLimits>(`${this.apiPrefix(code)}/serviceLimits`);
+  }
+
+  public getPayments(code: string): Observable<Payment[]> {
+    return this.httpClient.get<Payment[]>(`${this.apiPrefix(code)}/payments`);
+  }
+
+  public getPayment(code: string, paymentId: string): Observable<Payment> {
+    return this.httpClient.get<Payment>(`${this.apiPrefix(code)}/payment/${paymentId}`);
+  }
+
+  public createPayment(code: string, payment: Payment): Observable<Payment> {
+    return this.httpClient.post<Payment>(`${this.apiPrefix(code)}/payments`, payment);
   }
 
   protected actualApiPrefix(): string {
