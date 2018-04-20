@@ -28,7 +28,6 @@ import {AppState} from "../../../../core/store/app.state";
 import {isNullOrUndefined} from "util";
 import {filter} from "rxjs/operators";
 import {selectOrganizationByWorkspace} from "../../../../core/store/organizations/organizations.state";
-import {ServiceLimitsAction} from "../../../../core/store/organizations/service-limits/service-limits.action";
 import {PaymentsAction} from "../../../../core/store/organizations/payment/payments.action";
 import {ServiceLimitsModel} from "../../../../core/store/organizations/service-limits/service-limits.model";
 import {selectServiceLimitsByOrganizationId} from "../../../../core/store/organizations/service-limits/service-limits.state";
@@ -79,23 +78,12 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy {
   }
 
   public createPayment($event) {
-    //this.pay.emit({ months: this.months, users: this.numberOfUsers, amount: this.price, currency: this.currency });
-    let start: Date;
     let validUntil: Date;
 
-    if (this.serviceLimits.serviceLevel == 'FREE') {
-      start = new Date();
-    } else {
-      start = new Date(this.serviceLimits.validUntil.getTime() + 1000);
-    }
-
-    let month = start.getMonth() + $event.months;
-    let year = start.getFullYear() + Math.floor(month / 12);
-    month = month % 12;
-    validUntil = new Date(year, month, start.getDate(), start.getHours(), start.getMinutes(), start.getSeconds(), start.getMilliseconds());
+    validUntil = new Date($event.start.getFullYear(), $event.start.getMonth() + $event.months, $event.start.getDate(), 23, 59, 59, 999);
 
     let payment: PaymentModel = { date: new Date(), serviceLevel: 'BASIC', amount: $event.amount, currency: $event.currency,
-      start, validUntil, state: null, users: $event.users, language: this.languageCode, gwUrl: '',
+      start: $event.start, validUntil, state: null, users: $event.users, language: this.languageCode, gwUrl: '',
       paymentId: null, id: null, organizationId: this.organization.id };
     this.store.dispatch(new PaymentsAction.CreatePayment({ organizationId: this.organization.id, payment }));
   }

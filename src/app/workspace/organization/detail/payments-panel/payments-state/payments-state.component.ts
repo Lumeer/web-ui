@@ -67,7 +67,6 @@ export class PaymentsStateComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ServiceLimitsAction.GetServiceLimits({ organizationId: this.organization.id }));
   }
 
-
   public ngOnDestroy(): void {
     if (this.organizationSubscription) {
       this.organizationSubscription.unsubscribe();

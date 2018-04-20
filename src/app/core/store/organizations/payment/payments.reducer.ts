@@ -18,7 +18,7 @@
  */
 
 import {PaymentsAction, PaymentsActionType} from "./payments.action";
-import {initialPaymentsState, paymentsAdapter, PaymentsState} from "./payments.state";
+import {initialPaymentsState, paymentsAdapter, PaymentsState, selectAllPayments} from "./payments.state";
 
 export function paymentsReducer(state: PaymentsState = initialPaymentsState, action: PaymentsAction.All): PaymentsState {
   switch (action.type) {

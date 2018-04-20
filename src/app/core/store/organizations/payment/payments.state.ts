@@ -36,6 +36,9 @@ export const selectAllPayments = createSelector(selectPaymentsState, paymentsAda
 export const selectPaymentsByOrganizationId = (organizationId) => createSelector(selectAllPayments, payments => {
   return payments.filter(payment => payment.organizationId === organizationId);
 });
+export const selectPaymentsByOrganizationIdSorted = (organizationId) => createSelector(selectPaymentsByOrganizationId(organizationId), payments => {
+  return payments.sort((a, b) => b.validUntil.getTime() - a.validUntil.getTime())
+});
 //export const sllkl = createSelector(selectSelectedOrganizationId, (organizationId) => selectPaymentsByOrganizationId(organizationId));
 export const selectPaymentsForSelectedOrganization = createSelector(selectAllPayments, selectSelectedOrganizationId, (payments, organizationId) => {
   return payments.filter(payment => payment.organizationId === organizationId).sort((a, b) => b.validUntil.getTime() - a.validUntil.getTime());

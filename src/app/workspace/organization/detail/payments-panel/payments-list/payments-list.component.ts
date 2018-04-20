@@ -28,7 +28,7 @@ import {selectOrganizationByWorkspace} from "../../../../../core/store/organizat
 import {isNullOrUndefined} from "util";
 import {filter} from "rxjs/operators";
 import {PaymentModel} from "../../../../../core/store/organizations/payment/payment.model";
-import {selectPaymentsForSelectedOrganization} from "../../../../../core/store/organizations/payment/payments.state";
+import {selectAllPayments, selectPaymentsByOrganizationId, selectPaymentsByOrganizationIdSorted, selectPaymentsForSelectedOrganization} from "../../../../../core/store/organizations/payment/payments.state";
 import {PaymentsAction} from "../../../../../core/store/organizations/payment/payments.action";
 
 @Component({
@@ -58,7 +58,7 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
       .pipe(filter(organization => !isNullOrUndefined(organization)))
       .subscribe(organization => this.organization = organization);
 
-    this.paymentsSubscription = this.store.select(selectPaymentsForSelectedOrganization)
+    this.paymentsSubscription = this.store.select(selectPaymentsByOrganizationIdSorted(this.organization.id))
       .pipe(filter(payments => !isNullOrUndefined(payments) && payments.length > 0))
       .subscribe(payments => this.payments = payments);
   }
