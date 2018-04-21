@@ -1,0 +1,13 @@
+@import "../../../../../../../shared/variables";
+
+.link-cell {
+  color: $light;
+
+  &.striped {
+    color: $white;
+  }
+
+  &:hover {
+    color: $success;
+  }
+}

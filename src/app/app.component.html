@@ -1,7 +1,9 @@
-<div class="py-2 w-100">
-  <top-panel></top-panel>
-</div>
-<div class="w-100">
-  <router-outlet></router-outlet>
+<div class="d-flex flex-column h-100">
+  <div class="py-2 w-100">
+    <top-panel></top-panel>
+  </div>
+  <div class="w-100 flex-grow-2">
+    <router-outlet></router-outlet>
+  </div>
 </div>
 <ng-snotify></ng-snotify>

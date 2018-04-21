@@ -36,8 +36,7 @@ export enum DocumentsActionType {
   UPDATE_FAILURE = '[Documents] Update :: Failure',
 
   UPDATE_DATA = '[Documents] Update Data',
-  UPDATE_DATA_SUCCESS = '[Documents] Update Data :: Success',
-  UPDATE_DATA_FAILURE = '[Documents] Update Data :: Failure',
+  PATCH_DATA = '[Documents] Patch Data',
 
   DELETE = '[Documents] Delete',
   DELETE_CONFIRM = '[Documents] Delete :: Confirm',
@@ -74,7 +73,7 @@ export namespace DocumentsAction {
   export class Create implements Action {
     public readonly type = DocumentsActionType.CREATE;
 
-    public constructor(public payload: { document: DocumentModel }) {
+    public constructor(public payload: { document: DocumentModel, callback?: (documentId: string) => void }) {
     }
   }
 
@@ -120,31 +119,24 @@ export namespace DocumentsAction {
     }
   }
 
-  export class UpdateDataSuccess implements Action {
-    public readonly type = DocumentsActionType.UPDATE_DATA_SUCCESS;
+  export class PatchData implements Action {
+    public readonly type = DocumentsActionType.PATCH_DATA;
 
-    public constructor(public payload: { document: DocumentModel }) {
-    }
-  }
-
-  export class UpdateDataFailure implements Action {
-    public readonly type = DocumentsActionType.UPDATE_DATA_FAILURE;
-
-    public constructor(public payload: { error: any }) {
+    public constructor(public payload: { collectionId: string, documentId: string, data: any }) {
     }
   }
 
   export class Delete implements Action {
     public readonly type = DocumentsActionType.DELETE;
 
-    public constructor(public payload: { collectionId: string, documentId: string }) {
+    public constructor(public payload: { collectionId: string, documentId: string, nextAction?: Action }) {
     }
   }
 
   export class DeleteConfirm implements Action {
     public readonly type = DocumentsActionType.DELETE_CONFIRM;
 
-    public constructor(public payload: { collectionId: string, documentId: string }) {
+    public constructor(public payload: { collectionId: string, documentId: string, nextAction?: Action }) {
     }
   }
 
@@ -172,8 +164,7 @@ export namespace DocumentsAction {
   export type All =
     Get | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
-    Update | UpdateSuccess | UpdateFailure |
-    UpdateData | UpdateDataSuccess | UpdateDataFailure |
+    Update | UpdateData | PatchData | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure | DeleteConfirm |
     Clear;
 }

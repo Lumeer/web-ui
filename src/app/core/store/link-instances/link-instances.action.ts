@@ -36,6 +36,7 @@ export enum LinkInstancesActionType {
   UPDATE_FAILURE = '[Link Instances] Update :: Failure',
 
   DELETE = '[Link Instances] Delete',
+  DELETE_CONFIRM = '[Link Instances] Delete :: Confirm',
   DELETE_SUCCESS = '[Link Instances] Delete :: Success',
   DELETE_FAILURE = '[Link Instances] Delete :: Failure',
 
@@ -69,7 +70,7 @@ export namespace LinkInstancesAction {
   export class Create implements Action {
     public readonly type = LinkInstancesActionType.CREATE;
 
-    public constructor(public payload: { linkInstance: LinkInstanceModel }) {
+    public constructor(public payload: { linkInstance: LinkInstanceModel, callback?: (linkInstanceId: string) => void }) {
     }
   }
 
@@ -111,7 +112,14 @@ export namespace LinkInstancesAction {
   export class Delete implements Action {
     public readonly type = LinkInstancesActionType.DELETE;
 
-    public constructor(public payload: { linkInstanceId: string }) {
+    public constructor(public payload: { linkInstanceId: string, callback?: (linkInstanceId: string) => void }) {
+    }
+  }
+
+  export class DeleteConfirm implements Action {
+    public readonly type = LinkInstancesActionType.DELETE_CONFIRM;
+
+    public constructor(public payload: { linkInstanceId: string, callback?: (linkInstanceId: string) => void }) {
     }
   }
 
@@ -140,6 +148,6 @@ export namespace LinkInstancesAction {
     Get | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure | Clear;
+    Delete | DeleteConfirm | DeleteSuccess | DeleteFailure | Clear;
 
 }

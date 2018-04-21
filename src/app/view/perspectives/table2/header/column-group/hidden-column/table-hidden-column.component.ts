@@ -27,12 +27,11 @@ import {AttributeModel, CollectionModel} from '../../../../../../core/store/coll
 import {selectCollectionById} from '../../../../../../core/store/collections/collections.state';
 import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
 import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
-import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
+import {areTableHeaderCursorsEqual, TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableHiddenColumn, TableModel, TablePart} from '../../../../../../core/store/tables/table.model';
 import {getTableColumnWidth} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
-import {selectTableSelectedCell} from '../../../../../../core/store/tables/tables.state';
-import {deepArrayEquals} from '../../../../../../shared/utils/array.utils';
+import {selectTableCursor} from '../../../../../../core/store/tables/tables.state';
 import {HtmlModifier} from '../../../../../../shared/utils/html-modifier';
 import {DEFAULT_COLOR} from '../single-column/table-single-column.component';
 
@@ -65,9 +64,8 @@ export class TableHiddenColumnComponent implements OnInit, OnDestroy {
 
   private subscribeToSelection() {
     this.subscriptions.add(
-      this.store.select(selectTableSelectedCell(this.table.id)).subscribe(selectedCell => {
-        this.selected = selectedCell && selectedCell.partIndex === this.cursor.partIndex
-          && deepArrayEquals(selectedCell.columnPath, this.cursor.columnPath);
+      this.store.select(selectTableCursor).subscribe(cursor => {
+        this.selected = areTableHeaderCursorsEqual(cursor, this.cursor);
       })
     );
   }
@@ -121,7 +119,7 @@ export class TableHiddenColumnComponent implements OnInit, OnDestroy {
   }
 
   private selectColumn() {
-    this.store.dispatch(new TablesAction.SelectColumn({cursor: this.cursor}));
+    this.store.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
   }
 
   public onShowSingleColumn(attribute: AttributeModel) {

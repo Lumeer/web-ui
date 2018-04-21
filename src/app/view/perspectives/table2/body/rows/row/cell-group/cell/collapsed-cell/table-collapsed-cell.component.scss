@@ -1,0 +1,16 @@
+@import "../../../../../../../../../shared/variables";
+
+%highlighted {
+  position: relative;
+  z-index: $z-index-selected;
+}
+
+.selected {
+  @extend %highlighted;
+  outline: $primary solid 2px;
+}
+
+.affected {
+  @extend %highlighted;
+  outline: $warning solid 2px;
+}

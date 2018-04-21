@@ -1,0 +1,16 @@
+<div #editableCell
+     [attr.spellcheck]="false"
+     [attr.contenteditable]="edited"
+     [class.affected]="affected && !selected"
+     [class.selected]="selected"
+     [class.edited]="edited"
+     [style.cursor]="edited ? 'text' : 'default'"
+     [textContent]="value"
+     [title]="value ? value : ''"
+     (blur)="onBlur()"
+     (dblclick)="onDoubleClick()"
+     (keydown)="onKeyDown($event)"
+     (input)="onInput($event)"
+     class="editable-cell h-100 p-1 text-nowrap overflow-hidden"
+     tabindex="0">
+</div>

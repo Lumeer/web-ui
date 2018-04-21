@@ -28,9 +28,29 @@ export interface TableModel {
 
   parts: TablePart[];
 
-  selectedCell?: SelectedTableCell;
+  documentIds: Set<string>;
+  rows: TableRow[];
+  expanded?: boolean;
+
+  rowNumberWidth?: number;
 
 }
+
+export interface TableRow {
+
+  linkInstanceIds: string[];
+  documentIds: string[];
+
+  expanded?: boolean;
+  linkedRows?: TableRow[];
+
+}
+
+export const EMPTY_TABLE_ROW: TableRow = {
+  documentIds: [],
+  linkInstanceIds: [],
+  linkedRows: []
+};
 
 export interface TablePart {
 
@@ -41,12 +61,15 @@ export interface TablePart {
   columns: TableColumn[];
   columnDepth: number;
 
+  expanded?: boolean;
+
 }
 
 export enum TableColumnType {
 
   COMPOUND = 'compound',
-  HIDDEN = 'hidden'
+  HIDDEN = 'hidden',
+  SINGLE = 'single'
 
 }
 
@@ -56,7 +79,9 @@ export interface TableColumn {
 
 }
 
-export class TableSingleColumn {
+export class TableSingleColumn implements TableColumn {
+
+  public readonly type = TableColumnType.SINGLE;
 
   public constructor(public attributeId: string,
                      public width: number = DEFAULT_COLUMN_WIDTH) {
@@ -83,13 +108,6 @@ export class TableHiddenColumn implements TableColumn {
 
 }
 
-export interface SelectedTableCell {
-
-  partIndex: number;
-  columnPath: number[];
-
-}
-
 export interface TableConfig {
 
   parts: TableConfigPart[]
@@ -101,6 +119,7 @@ export interface TableConfigPart {
   collectionId?: string;
   linkTypeId?: string;
   columns: TableConfigColumn[];
+  expanded?: boolean;
 
 }
 

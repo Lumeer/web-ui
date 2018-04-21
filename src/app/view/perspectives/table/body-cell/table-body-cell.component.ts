@@ -23,7 +23,7 @@ import {NotificationService} from '../../../../core/notifications/notification.s
 import {DocumentConverter} from '../../../../core/store/documents/document.converter';
 import {KeyCode} from '../../../../shared/key-code';
 import {HtmlModifier} from '../../../../shared/utils/html-modifier';
-import {KeyCodeHelper} from '../../../../shared/utils/key-code.helper';
+import {isKeyPrintable} from '../../../../shared/utils/key-code.helper';
 import {Direction} from '../../post-it/document-data/direction';
 import {DataChangeEvent, LinkInstanceEvent, TableCursorEvent} from '../event';
 
@@ -222,7 +222,7 @@ export class TableBodyCellComponent implements OnChanges {
         this.saveDataChanges();
         return;
       default:
-        if (!KeyCodeHelper.isPrintable(event.keyCode)) {
+        if (!isKeyPrintable(event.keyCode)) {
           return;
         }
 

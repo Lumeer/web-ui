@@ -21,7 +21,7 @@ import {copyAndSpliceArray, getLastFromArray} from '../../../shared/utils/array.
 import {filterDirectAttributeChildren, findAttributeById, splitAttributeId} from '../../../shared/utils/attribute.utils';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {LinkTypeModel} from '../link-types/link-type.model';
-import {TableColumn, TableColumnType, TableCompoundColumn, TableConfig, TableConfigColumn, TableConfigPart, TableHiddenColumn, TableModel, TablePart, TableSingleColumn} from './table.model';
+import {TableColumn, TableColumnType, TableCompoundColumn, TableConfig, TableConfigColumn, TableConfigPart, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
 
 export function findTableColumn(columns: TableColumn[], path: number[]): TableColumn {
   const index = getColumnIndex(path);
@@ -199,6 +199,17 @@ export function splitColumnPath(path: number[]): { parentPath: number[], columnI
   };
 }
 
+export function splitRowPath(rowPath: number[]): { parentPath: number[], rowIndex: number } {
+  if (!rowPath || !rowPath.length) {
+    throw Error('Invalid table column path');
+  }
+
+  return {
+    parentPath: rowPath.slice(0, -1),
+    rowIndex: rowPath[rowPath.length - 1]
+  };
+}
+
 export function mergeHiddenColumns(column1: TableHiddenColumn, column2: TableHiddenColumn): TableHiddenColumn {
   const attributeIds = column1.attributeIds.concat(column2.attributeIds);
   return new TableHiddenColumn(attributeIds);
@@ -278,10 +289,12 @@ export const HIDDEN_COLUMN_WIDTH = 8;
 
 export function getTableColumnWidth(column: TableColumn): number {
   switch (column.type) {
-    case TableColumnType.HIDDEN:
-      return HIDDEN_COLUMN_WIDTH;
     case TableColumnType.COMPOUND:
       return getCompoundColumnWidth(column as TableCompoundColumn);
+    case TableColumnType.HIDDEN:
+      return HIDDEN_COLUMN_WIDTH;
+    case TableColumnType.SINGLE:
+      return (column as TableSingleColumn).width;
   }
 }
 
@@ -318,4 +331,78 @@ export function hasLastTableColumnChildHidden(column: TableCompoundColumn): bool
   }
 
   return lastColumn.type === TableColumnType.HIDDEN;
+}
+
+export function filterLeafColumns(columns: TableColumn[]): TableColumn[] {
+  return columns.reduce<TableColumn[]>((leafColumns, column) => {
+    if (column.type === TableColumnType.HIDDEN) {
+      return leafColumns.concat(column);
+    }
+    if (column.type === TableColumnType.COMPOUND) {
+      const compoundColumn = column as TableCompoundColumn;
+      if (compoundColumn.children.length) {
+        return filterLeafColumns(compoundColumn.children);
+      }
+      return leafColumns.concat(compoundColumn.parent);
+    }
+    return leafColumns;
+  }, []);
+}
+
+export function calculateColumnsWidth(columns: TableColumn[]): number {
+  return columns.reduce((width, column) => width + getTableColumnWidth(column), 0);
+}
+
+export function findTableRow(rows: TableRow[], rowPath: number[]): TableRow {
+  if (!rowPath || rowPath.length === 0) {
+    return null;
+  }
+
+  const [index, ...childPath] = rowPath;
+  const row = rows[index];
+
+  if (childPath.length === 0) {
+    return row;
+  }
+
+  return row && findTableRow(row.linkedRows, childPath);
+}
+
+export function getTableRowsByPart(rows: TableRow[], currentIndex: number, partIndex: number): TableRow[] {
+  if (currentIndex === partIndex) {
+    return rows;
+  }
+
+  return rows.reduce((linkedRows, row) => {
+    if (row.linkedRows && row.linkedRows.length > 0) {
+      return linkedRows.concat(row.linkedRows);
+    }
+    return linkedRows;
+  }, []);
+}
+
+export function calculateRowNumber(table: TableModel, rowIndex: number): number {
+  if (rowIndex === 0) {
+    return 1;
+  }
+
+  const previousRow = table.rows[rowIndex - 1];
+  return calculateRowNumber(table, rowIndex - 1) + countLinkedRows(previousRow);
+}
+
+export function countLinkedRows(row: TableRow): number {
+  if (!row.linkedRows || row.linkedRows.length === 0) {
+    return 1;
+  }
+
+  return row.linkedRows.reduce((count, linkedRow) => count + countLinkedRows(linkedRow), 0);
+}
+
+export function isTableRowStriped(rowPath: number[]): boolean {
+  const {parentPath, rowIndex} = splitRowPath(rowPath);
+  if (parentPath.length === 0) {
+    return rowIndex % 2 === 1;
+  }
+
+  return isTableRowStriped(parentPath) ? rowIndex % 2 === 0 : rowIndex % 2 === 1;
 }
