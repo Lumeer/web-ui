@@ -25,12 +25,11 @@ import {Router} from "@angular/router";
 import {selectServiceLimitsByOrganizationId} from "../../../../../core/store/organizations/service-limits/service-limits.state";
 import {Subscription} from "rxjs/Subscription";
 import {filter} from "rxjs/operators";
-import {ServiceLimitsModel} from "../../../../../core/store/organizations/service-limits/service-limits.model";
 import {isNullOrUndefined} from "util";
 import {AppState} from "../../../../../core/store/app.state";
 import {selectOrganizationByWorkspace} from "../../../../../core/store/organizations/organizations.state";
-import {ServiceLimitsAction} from "../../../../../core/store/organizations/service-limits/service-limits.action";
 import {DatePipe} from "@angular/common";
+import {ServiceLimitsModel} from "../../../../../core/store/organizations/service-limits/service-limits.model";
 
 @Component({
   selector: 'payments-order',
@@ -77,6 +76,9 @@ export class PaymentsOrderComponent implements OnInit {
 
   private serviceLimitsSubscription: Subscription;
 
+  public trial: boolean = true; // are we on a trial subscription?
+  public serviceLimits: ServiceLimitsModel;
+
   constructor(private i18n: I18n,
               private router: Router,
               private store: Store<AppState>) {
@@ -95,9 +97,13 @@ export class PaymentsOrderComponent implements OnInit {
     this.serviceLimitsSubscription = this.store.select(selectServiceLimitsByOrganizationId(this.organization.id))
       .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
       .subscribe(serviceLimits => {
+        this.serviceLimits = serviceLimits;
         if (serviceLimits.serviceLevel == 'FREE') {
+          this.trial = true;
           this.setStartDate(PaymentsOrderComponent.floorDate(new Date()));
         } else {
+          this.trial = false;
+          this.numberOfUsers = this.serviceLimits.users;
           this.setStartDate(new Date(serviceLimits.validUntil.getTime() + 1));
         }
       });

@@ -29,7 +29,7 @@ export function paymentsReducer(state: PaymentsState = initialPaymentsState, act
       action.payload.payments.forEach(payment => updates.push({ id: payment.id, changes: payment }));
       return paymentsAdapter.upsertMany(updates, state);
     case PaymentsActionType.CREATE_PAYMENT_SUCCESS:
-      return paymentsAdapter.upsertOne({id: action.payload.payment.id, changes: action.payload.payment}, state);
+      return paymentsAdapter.upsertOne({id: action.payload.payment.id, changes: action.payload.payment}, { ...state, lastCreatedPayment: action.payload.payment });
     default:
       return state;
   }

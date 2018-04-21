@@ -21,16 +21,18 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PaymentModel} from "../../../../core/store/organizations/payment/payment.model";
 import {OrganizationModel} from "../../../../core/store/organizations/organization.model";
 import {Subscription} from "rxjs/Subscription";
-import {Store} from "@ngrx/store";
+import {ActionsSubject, Store} from "@ngrx/store";
 import {Router} from "@angular/router";
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {AppState} from "../../../../core/store/app.state";
 import {isNullOrUndefined} from "util";
 import {filter} from "rxjs/operators";
 import {selectOrganizationByWorkspace} from "../../../../core/store/organizations/organizations.state";
-import {PaymentsAction} from "../../../../core/store/organizations/payment/payments.action";
+import {PaymentsAction, PaymentsActionType} from "../../../../core/store/organizations/payment/payments.action";
 import {ServiceLimitsModel} from "../../../../core/store/organizations/service-limits/service-limits.model";
 import {selectServiceLimitsByOrganizationId} from "../../../../core/store/organizations/service-limits/service-limits.state";
+import {ContactsActionType} from "../../../../core/store/organizations/contact/contacts.action";
+import {selectLastCreatedPayment} from "../../../../core/store/organizations/payment/payments.state";
 
 @Component({
   selector: 'payments-panel',
@@ -47,14 +49,20 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy {
 
   private readonly languageCode: string = 'en';
 
+  public lastPayment: PaymentModel;
+  private paymentCreatedSubscription: Subscription;
+  private lastCreatedPayment: Subscription;
+
   constructor(private i18n: I18n,
               private router: Router,
-              private store: Store<AppState>) {
+              private store: Store<AppState>,
+              private actionsSubject: ActionsSubject) {
     this.languageCode = this.i18n({ id: 'organization.payments.lang.code', value: 'en' });
   }
 
   public ngOnInit() {
     this.subscribeToStore();
+    this.subscribeToActions();
   }
 
   public subscribeToStore() {
@@ -65,6 +73,10 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy {
     this.serviceLimitsSubscription = this.store.select(selectServiceLimitsByOrganizationId(this.organization.id))
       .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
       .subscribe(serviceLimits => this.serviceLimits = serviceLimits);
+
+    this.lastCreatedPayment = this.store.select(selectLastCreatedPayment)
+      .pipe(filter(payment => !isNullOrUndefined(payment)))
+      .subscribe(payment => this.lastPayment = payment);
   }
 
   public ngOnDestroy(): void {
@@ -75,6 +87,14 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy {
     if (this.serviceLimitsSubscription) {
       this.serviceLimitsSubscription.unsubscribe();
     }
+
+    if (this.paymentCreatedSubscription) {
+      this.paymentCreatedSubscription.unsubscribe();
+    }
+
+    if (this.lastCreatedPayment) {
+      this.lastCreatedPayment.unsubscribe();
+    }
   }
 
   public createPayment($event) {
@@ -83,9 +103,19 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy {
     validUntil = new Date($event.start.getFullYear(), $event.start.getMonth() + $event.months, $event.start.getDate(), 23, 59, 59, 999);
 
     let payment: PaymentModel = { date: new Date(), serviceLevel: 'BASIC', amount: $event.amount, currency: $event.currency,
-      start: $event.start, validUntil, state: null, users: $event.users, language: this.languageCode, gwUrl: '',
+      start: $event.start, validUntil, state: 'CREATED', users: $event.users, language: this.languageCode, gwUrl: '',
       paymentId: null, id: null, organizationId: this.organization.id };
     this.store.dispatch(new PaymentsAction.CreatePayment({ organizationId: this.organization.id, payment }));
   }
+
+  private subscribeToActions() {
+    this.paymentCreatedSubscription = this.actionsSubject.subscribe(data => {
+      if (data.type === PaymentsActionType.CREATE_PAYMENT_SUCCESS) {
+        console.log("pajoment created");
+        console.log(this.lastPayment);
+      }
+    });
+  }
+
 
 }

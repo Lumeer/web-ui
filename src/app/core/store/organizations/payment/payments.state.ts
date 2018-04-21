@@ -24,11 +24,13 @@ import {PaymentModel} from "./payment.model";
 import {selectSelectedOrganizationId} from "../organizations.state";
 
 export interface PaymentsState extends EntityState<PaymentModel> {
+  lastCreatedPayment: PaymentModel;
 }
 
 export const paymentsAdapter = createEntityAdapter<PaymentModel>({selectId: payment => payment.id});
 
 export const initialPaymentsState: PaymentsState = paymentsAdapter.getInitialState({
+  lastCreatedPayment: null
 });
 
 export const selectPaymentsState = (state: AppState) => state.payments;
@@ -39,6 +41,7 @@ export const selectPaymentsByOrganizationId = (organizationId) => createSelector
 export const selectPaymentsByOrganizationIdSorted = (organizationId) => createSelector(selectPaymentsByOrganizationId(organizationId), payments => {
   return payments.sort((a, b) => b.validUntil.getTime() - a.validUntil.getTime())
 });
+export const selectLastCreatedPayment = createSelector(selectPaymentsState, state => state.lastCreatedPayment);
 //export const sllkl = createSelector(selectSelectedOrganizationId, (organizationId) => selectPaymentsByOrganizationId(organizationId));
 export const selectPaymentsForSelectedOrganization = createSelector(selectAllPayments, selectSelectedOrganizationId, (payments, organizationId) => {
   return payments.filter(payment => payment.organizationId === organizationId).sort((a, b) => b.validUntil.getTime() - a.validUntil.getTime());

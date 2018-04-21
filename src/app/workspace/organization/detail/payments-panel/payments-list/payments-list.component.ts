@@ -20,7 +20,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {OrganizationModel} from "../../../../../core/store/organizations/organization.model";
 import {Subscription} from "rxjs/Subscription";
-import {Store} from "@ngrx/store";
+import {ActionsSubject, Store} from "@ngrx/store";
 import {Router} from "@angular/router";
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {AppState} from "../../../../../core/store/app.state";
@@ -28,8 +28,9 @@ import {selectOrganizationByWorkspace} from "../../../../../core/store/organizat
 import {isNullOrUndefined} from "util";
 import {filter} from "rxjs/operators";
 import {PaymentModel} from "../../../../../core/store/organizations/payment/payment.model";
-import {selectAllPayments, selectPaymentsByOrganizationId, selectPaymentsByOrganizationIdSorted, selectPaymentsForSelectedOrganization} from "../../../../../core/store/organizations/payment/payments.state";
-import {PaymentsAction} from "../../../../../core/store/organizations/payment/payments.action";
+import {selectPaymentsByOrganizationIdSorted} from "../../../../../core/store/organizations/payment/payments.state";
+import {PaymentsAction, PaymentsActionType} from "../../../../../core/store/organizations/payment/payments.action";
+import {ServiceLimitsAction} from "../../../../../core/store/organizations/service-limits/service-limits.action";
 
 @Component({
   selector: 'payments-list',
@@ -44,12 +45,16 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
   public payments: PaymentModel[];
   private paymentsSubscription: Subscription;
 
+  private getPaymentSubscription: Subscription;
+
   constructor(private i18n: I18n,
               private router: Router,
-              private store: Store<AppState>) { }
+              private store: Store<AppState>,
+              private actionsSubject: ActionsSubject) { }
 
   public ngOnInit() {
     this.subscribeToStore();
+    this.subscribeToActions();
     this.requestData();
   }
 
@@ -75,6 +80,22 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
     if (this.paymentsSubscription) {
       this.paymentsSubscription.unsubscribe();
     }
+
+    if (this.getPaymentSubscription) {
+      this.getPaymentSubscription.unsubscribe();
+    }
   }
 
+  public refreshPayment(paymentId: string) {
+    this.store.dispatch(new PaymentsAction.GetPayment({ organizationId: this.organization.id, paymentId }));
+  }
+
+  private subscribeToActions() {
+    this.getPaymentSubscription = this.actionsSubject.subscribe(data => {
+      if (data.type === PaymentsActionType.GET_PAYMENT_SUCCESS) {
+        // we have a new payment state obtained through manual button, refresh service limits as well
+        this.store.dispatch(new ServiceLimitsAction.GetServiceLimits({ organizationId: this.organization.id }));
+      }
+    });
+  }
 }
