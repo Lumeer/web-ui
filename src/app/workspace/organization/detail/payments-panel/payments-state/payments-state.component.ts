@@ -41,7 +41,7 @@ export class PaymentsStateComponent implements OnInit, OnDestroy {
   private organization: OrganizationModel;
   private organizationSubscription: Subscription;
 
-  private serviceLimits: ServiceLimitsModel;
+  public serviceLimits: ServiceLimitsModel;
   private serviceLimitsSubscription: Subscription;
 
   constructor(private i18n: I18n,
