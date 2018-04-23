@@ -17,16 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class Document {
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
-  public id: string;
-  public collectionId: string;
-  public creationDate?: object;
-  public updateDate?: object;
-  public createdBy?: string;
-  public updatedBy?: string;
-  public dataVersion?: number;
-  public data: {[attribute: string]: any} = {};
-  public favorite?: boolean;
+export abstract class DataSorter {
+
+  public abstract sortData(documents: DocumentModel[]): DocumentModel[];
 
 }

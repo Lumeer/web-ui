@@ -17,16 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class Document {
+import {NgModule} from '@angular/core';
+import {SharedModule} from '../../../shared/shared.module';
+import {RouterModule} from '@angular/router';
+import {ChartPerspectiveComponent} from './chart-perspective.component';
+import {AttributeSelectComponent} from './components/attribute-select/attribute-select.component';
+import {ChartVisualizationComponent} from './components/chart-visualization/chart-visualization.component';
 
-  public id: string;
-  public collectionId: string;
-  public creationDate?: object;
-  public updateDate?: object;
-  public createdBy?: string;
-  public updatedBy?: string;
-  public dataVersion?: number;
-  public data: {[attribute: string]: any} = {};
-  public favorite?: boolean;
+@NgModule({
+  imports: [
+    SharedModule,
+    RouterModule
+  ],
+  declarations: [
+    ChartPerspectiveComponent,
+    AttributeSelectComponent,
+    ChartVisualizationComponent
+  ],
+  entryComponents: [
+    ChartPerspectiveComponent
+  ],
+  exports: [
+    ChartPerspectiveComponent
+  ]
+})
+export class ChartPerspectiveModule {
 
 }
