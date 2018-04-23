@@ -31,7 +31,6 @@ import {selectOrganizationByWorkspace} from "../../../../core/store/organization
 import {PaymentsAction, PaymentsActionType} from "../../../../core/store/organizations/payment/payments.action";
 import {ServiceLimitsModel} from "../../../../core/store/organizations/service-limits/service-limits.model";
 import {selectServiceLimitsByOrganizationId} from "../../../../core/store/organizations/service-limits/service-limits.state";
-import {ContactsActionType} from "../../../../core/store/organizations/contact/contacts.action";
 import {selectLastCreatedPayment} from "../../../../core/store/organizations/payment/payments.state";
 
 @Component({

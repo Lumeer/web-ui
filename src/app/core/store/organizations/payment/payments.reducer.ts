@@ -25,8 +25,7 @@ export function paymentsReducer(state: PaymentsState = initialPaymentsState, act
     case PaymentsActionType.GET_PAYMENT_SUCCESS:
       return paymentsAdapter.upsertOne({id: action.payload.payment.id, changes: action.payload.payment}, state);
     case PaymentsActionType.GET_PAYMENTS_SUCCESS:
-      let updates = [];
-      action.payload.payments.forEach(payment => updates.push({ id: payment.id, changes: payment }));
+      const updates = action.payload.payments.map(payment => ({ id: payment.id, changes: payment }));
       return paymentsAdapter.upsertMany(updates, state);
     case PaymentsActionType.CREATE_PAYMENT_SUCCESS:
       return paymentsAdapter.upsertOne({id: action.payload.payment.id, changes: action.payload.payment}, { ...state, lastCreatedPayment: action.payload.payment });

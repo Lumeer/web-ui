@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from "@angular/core";
-import {catchError, map, mergeMap, skipWhile, tap, withLatestFrom} from "rxjs/operators";
+import {catchError, map, mergeMap, tap} from "rxjs/operators";
 import {Actions, Effect, ofType} from "@ngrx/effects";
 import {Action, Store} from "@ngrx/store";
 import {Router} from "@angular/router";
@@ -27,7 +27,6 @@ import {OrganizationService} from "../../../rest";
 import {NotificationsAction} from "../../notifications/notifications.action";
 import {Observable} from "rxjs/Observable";
 import {I18n} from "@ngx-translate/i18n-polyfill";
-import {selectOrganizationsDictionary} from "../organizations.state";
 import {PaymentsAction, PaymentsActionType} from "./payments.action";
 import {PaymentConverter} from "./payment.converter";
 
@@ -37,11 +36,8 @@ export class PaymentsEffects {
   @Effect()
   public getPayments$: Observable<Action> = this.actions$.pipe(
     ofType<PaymentsAction.GetPayments>(PaymentsActionType.GET_PAYMENTS),
-    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
-    skipWhile(([action, organizationsEntities]) => !organizationsEntities[action.payload.organizationId]),
-    mergeMap(([action, organizationsEntities]) => {
-      const organization = organizationsEntities[action.payload.organizationId];
-      return this.organizationService.getPayments(organization.code).pipe(
+    mergeMap(action => {
+      return this.organizationService.getPayments().pipe(
         map(dtos => dtos.map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto))))
     }),
     map(payments => new PaymentsAction.GetPaymentsSuccess({ payments: payments })),
@@ -61,11 +57,8 @@ export class PaymentsEffects {
   @Effect()
   public getPayment$: Observable<Action> = this.actions$.pipe(
     ofType<PaymentsAction.GetPayment>(PaymentsActionType.GET_PAYMENT),
-    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
-    skipWhile(([action, organizationsEntities]) => !organizationsEntities[action.payload.organizationId]),
-    mergeMap(([action, organizationsEntities]) => {
-      const organization = organizationsEntities[action.payload.organizationId];
-      return this.organizationService.getPayment(organization.code, action.payload.paymentId).pipe(
+    mergeMap(action => {
+      return this.organizationService.getPayment(action.payload.paymentId).pipe(
         map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)))
     }),
     map(payment => new PaymentsAction.GetPaymentSuccess({ payment: payment })),
@@ -85,11 +78,8 @@ export class PaymentsEffects {
   @Effect()
   public createPayment$: Observable<Action> = this.actions$.pipe(
     ofType<PaymentsAction.CreatePayment>(PaymentsActionType.CREATE_PAYMENT),
-    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
-    skipWhile(([action, organizationsEntities]) => !organizationsEntities[action.payload.organizationId]),
-    mergeMap(([action, organizationsEntities]) => {
-      const organization = organizationsEntities[action.payload.organizationId];
-      return this.organizationService.createPayment(organization.code, PaymentConverter.toDto(action.payload.payment)).pipe(
+    mergeMap(action => {
+      return this.organizationService.createPayment(PaymentConverter.toDto(action.payload.payment)).pipe(
         map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)))
     }),
     map(payment => new PaymentsAction.CreatePaymentSuccess({ payment: payment })),

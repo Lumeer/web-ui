@@ -54,6 +54,9 @@ export class ContactFormComponent implements OnInit, OnDestroy {
     this.contactSaveSuccessSubscription = this.actionsSubject.subscribe(data => {
       if (data.type === ContactsActionType.SET_CONTACT_SUCCESS) {
         this.savingState = false;
+      } else if (data.type === ContactsActionType.SET_CONTACT_FAILURE) {
+        this.savingState = false;
+        this.invoicingContact.form.markAsDirty();
       }
     });
   }

@@ -21,7 +21,8 @@ import {createEntityAdapter, EntityState} from "@ngrx/entity";
 import {createSelector} from "@ngrx/store";
 import {AppState} from "../../app.state";
 import {PaymentModel} from "./payment.model";
-import {selectSelectedOrganizationId} from "../organizations.state";
+import {selectOrganizationByWorkspace, selectSelectedOrganizationId} from "../organizations.state";
+import {selectWorkspace} from "../../navigation/navigation.state";
 
 export interface PaymentsState extends EntityState<PaymentModel> {
   lastCreatedPayment: PaymentModel;
@@ -35,14 +36,10 @@ export const initialPaymentsState: PaymentsState = paymentsAdapter.getInitialSta
 
 export const selectPaymentsState = (state: AppState) => state.payments;
 export const selectAllPayments = createSelector(selectPaymentsState, paymentsAdapter.getSelectors().selectAll);
-export const selectPaymentsByOrganizationId = (organizationId) => createSelector(selectAllPayments, payments => {
-  return payments.filter(payment => payment.organizationId === organizationId);
+export const selectPaymentsByWorkspace = createSelector(selectAllPayments, selectOrganizationByWorkspace, (payments, organization) => {
+  return payments.filter(payment => payment.organizationId === organization.id);
 });
-export const selectPaymentsByOrganizationIdSorted = (organizationId) => createSelector(selectPaymentsByOrganizationId(organizationId), payments => {
+export const selectPaymentsByOrganizationIdSorted = createSelector(selectPaymentsByWorkspace, payments => {
   return payments.sort((a, b) => b.validUntil.getTime() - a.validUntil.getTime())
 });
 export const selectLastCreatedPayment = createSelector(selectPaymentsState, state => state.lastCreatedPayment);
-//export const sllkl = createSelector(selectSelectedOrganizationId, (organizationId) => selectPaymentsByOrganizationId(organizationId));
-export const selectPaymentsForSelectedOrganization = createSelector(selectAllPayments, selectSelectedOrganizationId, (payments, organizationId) => {
-  return payments.filter(payment => payment.organizationId === organizationId).sort((a, b) => b.validUntil.getTime() - a.validUntil.getTime());
-});

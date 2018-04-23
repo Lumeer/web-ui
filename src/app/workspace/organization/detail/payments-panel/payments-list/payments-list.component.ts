@@ -63,7 +63,7 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
       .pipe(filter(organization => !isNullOrUndefined(organization)))
       .subscribe(organization => this.organization = organization);
 
-    this.paymentsSubscription = this.store.select(selectPaymentsByOrganizationIdSorted(this.organization.id))
+    this.paymentsSubscription = this.store.select(selectPaymentsByOrganizationIdSorted)
       .pipe(filter(payments => !isNullOrUndefined(payments) && payments.length > 0))
       .subscribe(payments => this.payments = payments);
   }
