@@ -1,0 +1,12 @@
+@import "../../../../../shared/variables";
+
+i {
+  margin-right: 5px;
+}
+
+button {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 160px;
+  white-space: nowrap;
+}

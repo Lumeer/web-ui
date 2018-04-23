@@ -117,13 +117,87 @@ You can find [some examples](https://github.com/Lumeer/web-ui/blob/24d7fcf79b047
 If you add or modify elements with `i18n`, make sure you run the following command before creating a commit:
 
 ```
-npm run i18n
+$ npm run i18n
 ```
 
 It will generate a new version of `messages.xlf` file in `src/i18n` folder and merge the changes to the files for other languages (such as `messages.cs.xlf`).
 
 Preferably, you should also provide a translation to these languages by changing `<target>` element content as well as removing its `state="new"` attribute in each newly added translation unit.
 If you do not speak those languages, ask maintainers for a translation when you send a pull-request.
+
+### Adding Non-Angular NPM packages
+
+```
+$ npm install <package name> --save
+```
+And if possible download the types too.
+```
+$ npm install @types/<package name> --save
+```
+
+Then add the package to `.angular-cli.json` under `"scripts"` key to include it in Angular CLI compilation:
+
+```
+"scripts": [
+  "../node_modules/<path to module javascript>"
+]
+```
+Also add the module to `vendor.ts` for webpack compilation:
+```
+import '../node_modules/<path to module javascript>';
+```
+If the module provides any classes for use, declare their types in `typings.d.ts`:
+```
+declare var <class name>: any;
+```
+Lastly add it to `polyfill.ts` if for browser mapping the module to its name:
+```
+window['<class name>'] = require('../node_modules/<path to module javascript>');
+```
+
+You need to rebuild the project after the change in order for your package to be included:
+```
+npm run-script build
+```
+
+### Adding Perspectives
+
+Create a new perspective in `view/perspectives/<perspective name>` with its own code component and module.
+The module needs to provide the perspective component:
+```
+declarations: [
+  <perspective component>
+],
+entryComponents: [
+  <perspective component>
+],
+exports: [
+  <perspective component>
+]
+```
+
+Add the perspective name and icon in the `perspective.ts` file. 
+(You can find your icon in icon palette when choosing collection icon, and just copy its name)
+
+In the `view-controls.component.html` add the perspective to the selection of views in two places:
+```
+<span ...>{perspective, select, <your perspective name> {<displayed name>} graph {Graph} ...}</span>
+```
+and few lines below in `<ng-container *ngFor="let perspective of perspectives()">`:
+```
+<span ...>{perspective, select, <your perspective name> {<displayed name>} graph {Graph} ...}</span>
+```
+Add it to `view-routing.module.ts` to map perspective name to it's component:
+```
+{
+  path: Perspective.<your perspective name>,
+  component: <perspecive component>
+},
+```
+
+If your perspective should not be visible at all times (like when it needs a selected collection).
+Update `canShowPerspective` in `view-controls.component.ts` to reflect this constraint. And add a
+`isDisplayable()` check in your perspective to make sure, users won't be able to access it using URL.
 
 ### Attribute Binding
 
