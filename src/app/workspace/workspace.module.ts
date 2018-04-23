@@ -40,6 +40,12 @@ import {OrganizationUserComponent} from './organization/users/user/organization-
 import {OrganizationUserGroupsComponent} from './organization/users/groups/organization-user-groups.component';
 import {OrganizationNewUserComponent} from './organization/users/new-user/organization-new-user.component';
 import {GroupsSuggestionsComponent} from "./organization/users/groups/suggestions/groups-suggestions.component";
+import {OrganizationDetailComponent} from "./organization/detail/organization-detail.component";
+import {ContactFormComponent} from './organization/detail/contact-form/contact-form.component';
+import {PaymentsPanelComponent} from './organization/detail/payments-panel/payments-panel.component';
+import {PaymentsOrderComponent} from './organization/detail/payments-panel/payments-order/payments-order.component';
+import {PaymentsListComponent} from './organization/detail/payments-panel/payments-list/payments-list.component';
+import {PaymentsStateComponent} from './organization/detail/payments-panel/payments-state/payments-state.component';
 
 @NgModule({
   imports: [
@@ -49,6 +55,7 @@ import {GroupsSuggestionsComponent} from "./organization/users/groups/suggestion
     ClickOutsideModule
   ],
   declarations: [
+    OrganizationDetailComponent,
     OrganizationPermissionsComponent,
     OrganizationUsersComponent,
     OrganizationUserListComponent,
@@ -62,7 +69,12 @@ import {GroupsSuggestionsComponent} from "./organization/users/groups/suggestion
     ProjectSettingsComponent,
     WorkspaceChooserComponent,
     ResourceChooserComponent,
-    GroupsSuggestionsComponent
+    GroupsSuggestionsComponent,
+    ContactFormComponent,
+    PaymentsPanelComponent,
+    PaymentsOrderComponent,
+    PaymentsListComponent,
+    PaymentsStateComponent
   ],
   exports: [
     WorkspaceChooserComponent

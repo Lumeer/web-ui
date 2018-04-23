@@ -18,11 +18,11 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, flatMap, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, flatMap, map, mergeMap, tap} from 'rxjs/operators';
 import {Collection, Permission} from '../../dto';
 import {CollectionService, ImportService, SearchService} from '../../rest';
 import {HomePageService} from '../../rest/home-page.service';
@@ -38,8 +38,9 @@ import {CollectionsAction, CollectionsActionType} from './collections.action';
 export class CollectionsEffects {
 
   @Effect()
-  public get$: Observable<Action> = this.actions$.ofType<CollectionsAction.Get>(CollectionsActionType.GET).pipe(
-    switchMap((action) => {
+  public get$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.Get>(CollectionsActionType.GET),
+    mergeMap((action) => {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
       return this.searchService.searchCollections(queryDto).pipe(
@@ -51,7 +52,8 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public getFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.GetFailure>(CollectionsActionType.GET_FAILURE).pipe(
+  public getFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.GetFailure>(CollectionsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collections.get.fail', value: 'Failed to get files'});
@@ -60,20 +62,23 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public getNames$: Observable<Action> = this.actions$.ofType<CollectionsAction.GetNames>(CollectionsActionType.GET_NAMES).pipe(
-    switchMap(() => this.collectionService.getAllCollectionNames()),
+  public getNames$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.GetNames>(CollectionsActionType.GET_NAMES),
+    mergeMap(() => this.collectionService.getAllCollectionNames()),
     map((collectionNames) => new CollectionsAction.GetNamesSuccess({collectionNames})),
     catchError((error) => Observable.of(new CollectionsAction.GetNamesFailure({error: error})))
   );
 
   @Effect({dispatch: false})
-  public getNamesFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.GetNamesFailure>(CollectionsActionType.GET_NAMES_FAILURE).pipe(
+  public getNamesFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.GetNamesFailure>(CollectionsActionType.GET_NAMES_FAILURE),
     tap((action: CollectionsAction.GetNamesFailure) => console.error(action.payload.error))
   );
 
   @Effect()
-  public create$: Observable<Action> = this.actions$.ofType<CollectionsAction.Create>(CollectionsActionType.CREATE).pipe(
-    switchMap(action => {
+  public create$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.Create>(CollectionsActionType.CREATE),
+    mergeMap(action => {
       const collectionDto = CollectionConverter.toDto(action.payload.collection);
 
       return this.collectionService.createCollection(collectionDto).pipe(
@@ -93,7 +98,8 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public createFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.CreateFailure>(CollectionsActionType.CREATE_FAILURE).pipe(
+  public createFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.CreateFailure>(CollectionsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.create.fail', value: 'Failed to create file'});
@@ -102,8 +108,9 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public import$: Observable<Action> = this.actions$.ofType<CollectionsAction.Import>(CollectionsActionType.IMPORT).pipe(
-    switchMap(action => {
+  public import$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.Import>(CollectionsActionType.IMPORT),
+    mergeMap(action => {
       return this.importService.importFile(action.payload.format, action.payload.importedCollection).pipe(
         map(collection => CollectionConverter.fromDto(collection))
       );
@@ -113,7 +120,8 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public importFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.ImportFailure>(CollectionsActionType.IMPORT_FAILURE).pipe(
+  public importFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.ImportFailure>(CollectionsActionType.IMPORT_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.import.fail', value: 'Failed to import file'});
@@ -122,8 +130,9 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public update$: Observable<Action> = this.actions$.ofType<CollectionsAction.Update>(CollectionsActionType.UPDATE).pipe(
-    switchMap(action => {
+  public update$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.Update>(CollectionsActionType.UPDATE),
+    mergeMap(action => {
       const collectionDto = CollectionConverter.toDto(action.payload.collection);
 
       return this.collectionService.updateCollection(collectionDto).pipe(
@@ -135,7 +144,8 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE).pipe(
+  public updateFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.update.fail', value: 'Failed to update file'});
@@ -144,14 +154,16 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public delete$: Observable<Action> = this.actions$.ofType<CollectionsAction.Delete>(CollectionsActionType.DELETE).pipe(
-    switchMap(action => this.collectionService.removeCollection(action.payload.collectionId)),
+  public delete$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.Delete>(CollectionsActionType.DELETE),
+    mergeMap(action => this.collectionService.removeCollection(action.payload.collectionId)),
     map(collectionId => new CollectionsAction.DeleteSuccess({collectionId})),
     catchError((error) => Observable.of(new CollectionsAction.DeleteFailure({error: error})))
   );
 
   @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.DeleteFailure>(CollectionsActionType.DELETE_FAILURE).pipe(
+  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.DeleteFailure>(CollectionsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.delete.fail', value: 'Failed to delete file'});
@@ -160,8 +172,9 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public addFavorite$: Observable<Action> = this.actions$.ofType<CollectionsAction.AddFavorite>(CollectionsActionType.ADD_FAVORITE).pipe(
-    switchMap(action => this.homePageService.addFavoriteCollection(action.payload.collectionId).pipe(
+  public addFavorite$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.AddFavorite>(CollectionsActionType.ADD_FAVORITE),
+    mergeMap(action => this.homePageService.addFavoriteCollection(action.payload.collectionId).pipe(
       map(() => action.payload.collectionId)
     )),
     map((collectionId) => new CollectionsAction.AddFavoriteSuccess({collectionId})),
@@ -169,7 +182,8 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public addFavoriteFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.AddFavoriteFailure>(CollectionsActionType.ADD_FAVORITE_FAILURE).pipe(
+  public addFavoriteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.AddFavoriteFailure>(CollectionsActionType.ADD_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.add.favorite.fail', value: 'Failed to add favorite file'});
@@ -178,8 +192,9 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public removeFavorite$: Observable<Action> = this.actions$.ofType<CollectionsAction.RemoveFavorite>(CollectionsActionType.REMOVE_FAVORITE).pipe(
-    switchMap(action => this.homePageService.removeFavoriteCollection(action.payload.collectionId).pipe(
+  public removeFavorite$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.RemoveFavorite>(CollectionsActionType.REMOVE_FAVORITE),
+    mergeMap(action => this.homePageService.removeFavoriteCollection(action.payload.collectionId).pipe(
       map(() => action.payload.collectionId)
     )),
     map((collectionId) => new CollectionsAction.RemoveFavoriteSuccess({collectionId})),
@@ -187,7 +202,8 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public removeFavoriteFailure$: Observable<Action> = this.actions$.ofType<CollectionsAction.RemoveFavoriteFailure>(CollectionsActionType.REMOVE_FAVORITE_FAILURE).pipe(
+  public removeFavoriteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.RemoveFavoriteFailure>(CollectionsActionType.REMOVE_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.remove.favorite.fail', value: 'Failed to remove favorite file'});
@@ -196,8 +212,9 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public changeAttribute$: Observable<Action> = this.actions$.ofType<CollectionsAction.ChangeAttribute>(CollectionsActionType.CHANGE_ATTRIBUTE).pipe(
-    switchMap(action => {
+  public changeAttribute$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.ChangeAttribute>(CollectionsActionType.CHANGE_ATTRIBUTE),
+    mergeMap(action => {
       const attributeDto = CollectionConverter.toAttributeDto(action.payload.attribute);
 
       return this.collectionService.updateAttribute(action.payload.collectionId, action.payload.attributeId, attributeDto).pipe(
@@ -217,18 +234,19 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public changeAttributeFailure$: Observable<Action> = this.actions$
-    .ofType<CollectionsAction.ChangeAttributeFailure>(CollectionsActionType.CHANGE_ATTRIBUTE_FAILURE).pipe(
-      tap(action => console.error(action.payload.error)),
-      map(() => {
-        const message = this.i18n({id: 'collection.change.attribute.fail', value: 'Failed to change attribute'});
-        return new NotificationsAction.Error({message});
-      })
-    );
+  public changeAttributeFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.ChangeAttributeFailure>(CollectionsActionType.CHANGE_ATTRIBUTE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'collection.change.attribute.fail', value: 'Failed to change attribute'});
+      return new NotificationsAction.Error({message});
+    })
+  );
 
   @Effect()
-  public removeAttribute$: Observable<Action> = this.actions$.ofType<CollectionsAction.RemoveAttribute>(CollectionsActionType.REMOVE_ATTRIBUTE).pipe(
-    switchMap(action => this.collectionService.removeAttribute(action.payload.collectionId, action.payload.attributeId).pipe(
+  public removeAttribute$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.RemoveAttribute>(CollectionsActionType.REMOVE_ATTRIBUTE),
+    mergeMap(action => this.collectionService.removeAttribute(action.payload.collectionId, action.payload.attributeId).pipe(
       map(() => action)
     )),
     map(action => new CollectionsAction.RemoveAttributeSuccess(action.payload)),
@@ -236,18 +254,19 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public removeAttributeFailure$: Observable<Action> = this.actions$
-    .ofType<CollectionsAction.RemoveAttributeFailure>(CollectionsActionType.REMOVE_ATTRIBUTE_FAILURE).pipe(
-      tap(action => console.error(action.payload.error)),
-      map(() => {
-        const message = this.i18n({id: 'collection.remove.attribute.fail', value: 'Failed to remove attribute'});
-        return new NotificationsAction.Error({message});
-      })
-    );
+  public removeAttributeFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.RemoveAttributeFailure>(CollectionsActionType.REMOVE_ATTRIBUTE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'collection.remove.attribute.fail', value: 'Failed to remove attribute'});
+      return new NotificationsAction.Error({message});
+    })
+  );
 
   @Effect()
-  public changePermission$: Observable<Action> = this.actions$.ofType<CollectionsAction.ChangePermission>(CollectionsActionType.CHANGE_PERMISSION).pipe(
-    switchMap(action => {
+  public changePermission$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.ChangePermission>(CollectionsActionType.CHANGE_PERMISSION),
+    mergeMap(action => {
       const permissionDto: Permission = PermissionsConverter.toPermissionDto(action.payload.permission);
 
       if (action.payload.type === PermissionType.Users) {
@@ -267,18 +286,19 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public changePermissionFailure$: Observable<Action> = this.actions$
-    .ofType<CollectionsAction.ChangePermissionFailure>(CollectionsActionType.CHANGE_PERMISSION_FAILURE).pipe(
-      tap(action => console.error(action.payload.error)),
-      map(() => {
-        const message = this.i18n({id: 'collection.change.permission.fail', value: 'Failed to change file permission'});
-        return new NotificationsAction.Error({message});
-      })
-    );
+  public changePermissionFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.ChangePermissionFailure>(CollectionsActionType.CHANGE_PERMISSION_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'collection.change.permission.fail', value: 'Failed to change file permission'});
+      return new NotificationsAction.Error({message});
+    })
+  );
 
   @Effect()
-  public removePermission$: Observable<Action> = this.actions$.ofType<CollectionsAction.RemovePermission>(CollectionsActionType.REMOVE_PERMISSION).pipe(
-    switchMap(action => {
+  public removePermission$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.RemovePermission>(CollectionsActionType.REMOVE_PERMISSION),
+    mergeMap(action => {
       if (action.payload.type === PermissionType.Users) {
         return this.collectionService.removeUserPermission(action.payload.name).pipe(map(() => action));
       } else {
@@ -290,14 +310,14 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public removePermissionFailure$: Observable<Action> = this.actions$
-    .ofType<CollectionsAction.RemovePermissionFailure>(CollectionsActionType.REMOVE_PERMISSION_FAILURE).pipe(
-      tap(action => console.error(action.payload.error)),
-      map(() => {
-        const message = this.i18n({id: 'collection.remove.permission.fail', value: 'Failed to remove file permission'});
-        return new NotificationsAction.Error({message});
-      })
-    );
+  public removePermissionFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.RemovePermissionFailure>(CollectionsActionType.REMOVE_PERMISSION_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'collection.remove.permission.fail', value: 'Failed to remove file permission'});
+      return new NotificationsAction.Error({message});
+    })
+  );
 
   constructor(private actions$: Actions,
               private collectionService: CollectionService,

@@ -1,0 +1,11 @@
+button {
+  box-shadow: none ! important;
+}
+
+.form-control.ng-dirty.ng-invalid {
+  border: solid 1px #dc3545;
+}
+
+.invalid-message {
+  color: #dc3545 !important;
+}

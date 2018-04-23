@@ -19,11 +19,12 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {StoreRouterConnectingModule} from '@ngrx/router-store';
+import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {Angulartics2Module} from 'angulartics2';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import {PageNotFoundGuard} from './core/guards/page-not-found.guard';
 import {HomeComponent} from './core/home.component';
+import {LumeerRouterStateSerializer} from './core/store/router/lumeer-router-state-serializer';
 
 const appRoutes: Routes = [
   {
@@ -54,7 +55,13 @@ export const angularticsSettings = {
     StoreRouterConnectingModule,
     Angulartics2Module.forRoot([Angulartics2GoogleAnalytics], angularticsSettings)
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [
+    {
+      provide: RouterStateSerializer,
+      useClass: LumeerRouterStateSerializer
+    }
+  ]
 })
 export class AppRoutingModule {
 }

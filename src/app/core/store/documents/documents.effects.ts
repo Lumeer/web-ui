@@ -18,14 +18,18 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, skipWhile, switchMap, tap, withLatestFrom, flatMap} from 'rxjs/operators';
+import {catchError, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
+import {extractAttributeName} from '../../../shared/utils/attribute.utils';
 import {Document} from '../../dto';
 import {DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
+import {AttributeModel, CollectionModel} from '../collections/collection.model';
+import {CollectionsAction} from '../collections/collections.action';
+import {selectCollectionsDictionary} from '../collections/collections.state';
 import {QueryConverter} from '../navigation/query.converter';
 import {QueryHelper} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -33,20 +37,16 @@ import {DocumentConverter} from './document.converter';
 import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {selectDocumentsDictionary, selectDocumentsQueries} from './documents.state';
-import {selectCollectionsDictionary} from "../collections/collections.state";
-import {CollectionsAction} from "../collections/collections.action";
-import {AttributeModel, CollectionModel} from "../collections/collection.model";
-import {forEach} from "@angular/router/src/utils/collection";
-import {extractAttributeName} from "../../../shared/utils/attribute.utils";
 
 @Injectable()
 export class DocumentsEffects {
 
   @Effect()
-  public get$: Observable<Action> = this.actions$.ofType<DocumentsAction.Get>(DocumentsActionType.GET).pipe(
+  public get$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.Get>(DocumentsActionType.GET),
     withLatestFrom(this.store$.select(selectDocumentsQueries)),
     skipWhile(([action, queries]) => queries.some(query => QueryHelper.equal(query, action.payload.query))),
-    switchMap(([action]) => {
+    mergeMap(([action]) => {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
       return this.searchService.searchDocuments(queryDto).pipe(
@@ -58,7 +58,8 @@ export class DocumentsEffects {
   );
 
   @Effect()
-  public getFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.GetFailure>(DocumentsActionType.GET_FAILURE).pipe(
+  public getFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.GetFailure>(DocumentsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'documents.get.fail', value: 'Failed to get records'});
@@ -67,8 +68,9 @@ export class DocumentsEffects {
   );
 
   @Effect()
-  public create$: Observable<Action> = this.actions$.ofType<DocumentsAction.Create>(DocumentsActionType.CREATE).pipe(
-    switchMap(action => {
+  public create$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.Create>(DocumentsActionType.CREATE),
+    mergeMap(action => {
       const documentDto = DocumentConverter.toDto(action.payload.document);
 
       return this.documentService.createDocument(documentDto).pipe(
@@ -85,7 +87,8 @@ export class DocumentsEffects {
   );
 
   @Effect()
-  public createFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.CreateFailure>(DocumentsActionType.CREATE_FAILURE).pipe(
+  public createFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.CreateFailure>(DocumentsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'document.create.fail', value: 'Failed to create record'});
@@ -94,8 +97,9 @@ export class DocumentsEffects {
   );
 
   @Effect()
-  public update$: Observable<Action> = this.actions$.ofType<DocumentsAction.Update>(DocumentsActionType.UPDATE).pipe(
-    switchMap(action => {
+  public update$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.Update>(DocumentsActionType.UPDATE),
+    mergeMap(action => {
       const documentDto = DocumentConverter.toDto(action.payload.document);
 
       if (action.payload.toggleFavourite) {
@@ -114,7 +118,8 @@ export class DocumentsEffects {
   );
 
   @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.UpdateFailure>(DocumentsActionType.UPDATE_FAILURE).pipe(
+  public updateFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.UpdateFailure>(DocumentsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'document.update.fail', value: 'Failed to update record'});
@@ -123,8 +128,9 @@ export class DocumentsEffects {
   );
 
   @Effect()
-  public updateData$: Observable<Action> = this.actions$.ofType<DocumentsAction.UpdateData>(DocumentsActionType.UPDATE_DATA).pipe(
-    switchMap(action => {
+  public updateData$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.UpdateData>(DocumentsActionType.UPDATE_DATA),
+    mergeMap(action => {
       const documentDto: Document = {
         id: action.payload.documentId,
         collectionId: action.payload.collectionId,
@@ -147,7 +153,8 @@ export class DocumentsEffects {
   );
 
   @Effect()
-  public updateDataFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.UpdateDataFailure>(DocumentsActionType.UPDATE_DATA_FAILURE).pipe(
+  public updateDataFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.UpdateDataFailure>(DocumentsActionType.UPDATE_DATA_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'document.update.fail', value: 'Failed to update record'});
@@ -156,11 +163,12 @@ export class DocumentsEffects {
   );
 
   @Effect()
-  public delete$: Observable<Action> = this.actions$.ofType<DocumentsAction.Delete>(DocumentsActionType.DELETE).pipe(
-    switchMap(action => {
+  public delete$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.Delete>(DocumentsActionType.DELETE),
+    mergeMap(action => {
       return this.documentService.removeDocument(action.payload.collectionId, action.payload.documentId).pipe(
         map(() => action.payload)
-      )
+      );
     }),
     withLatestFrom(this.store$.select(selectCollectionsDictionary)),
     withLatestFrom(this.store$.select(selectDocumentsDictionary)),
@@ -175,7 +183,8 @@ export class DocumentsEffects {
   );
 
   @Effect()
-  public deleteConfirm$: Observable<Action> = this.actions$.ofType<DocumentsAction.DeleteConfirm>(DocumentsActionType.DELETE_CONFIRM).pipe(
+  public deleteConfirm$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.DeleteConfirm>(DocumentsActionType.DELETE_CONFIRM),
     map((action: DocumentsAction.DeleteConfirm) => {
       const title = this.i18n({id: 'document.delete.dialog.title', value: 'Delete record'});
       const message = this.i18n({id: 'document.delete.dialog.message', value: 'Do you really want to delete this record?'});
@@ -189,7 +198,8 @@ export class DocumentsEffects {
   );
 
   @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.ofType<DocumentsAction.DeleteFailure>(DocumentsActionType.DELETE_FAILURE).pipe(
+  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.DeleteFailure>(DocumentsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'document.delete.fail', value: 'Failed to delete record'});

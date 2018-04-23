@@ -58,8 +58,8 @@ export class NavigationHelper {
     });
   }
 
-  public queryWithPagination(page: number, editable: boolean): QueryModel {
-    return this.queryHelper.queryWithPagination(page, editable);
+  public queryWithPagination(page: number): QueryModel {
+    return this.queryHelper.queryWithPagination(page);
   }
 
   public hasQuery(): boolean {

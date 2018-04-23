@@ -18,11 +18,11 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {GroupService} from '../../rest';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {GroupConverter} from './group.converter';
@@ -32,8 +32,9 @@ import {GroupsAction, GroupsActionType} from './groups.action';
 export class GroupsEffects {
 
   @Effect()
-  public get$: Observable<Action> = this.actions$.ofType<GroupsAction.Get>(GroupsActionType.GET).pipe(
-    switchMap(() => this.groupService.getGroups().pipe(
+  public get$: Observable<Action> = this.actions$.pipe(
+    ofType<GroupsAction.Get>(GroupsActionType.GET),
+    mergeMap(() => this.groupService.getGroups().pipe(
       map(dtos => dtos.map(dto => GroupConverter.fromDto(dto)))
     )),
     map(groups => new GroupsAction.GetSuccess({groups: groups})),
@@ -41,7 +42,8 @@ export class GroupsEffects {
   );
 
   @Effect()
-  public getFailure$: Observable<Action> = this.actions$.ofType<GroupsAction.GetFailure>(GroupsActionType.GET_FAILURE).pipe(
+  public getFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<GroupsAction.GetFailure>(GroupsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'groups.get.fail', value: 'Failed to get groups'});
@@ -50,8 +52,9 @@ export class GroupsEffects {
   );
 
   @Effect()
-  public create$: Observable<Action> = this.actions$.ofType<GroupsAction.Create>(GroupsActionType.CREATE).pipe(
-    switchMap(action => {
+  public create$: Observable<Action> = this.actions$.pipe(
+    ofType<GroupsAction.Create>(GroupsActionType.CREATE),
+    mergeMap(action => {
       const groupDto = GroupConverter.toDto(action.payload.group);
 
       return this.groupService.createGroup(groupDto).pipe(
@@ -63,7 +66,8 @@ export class GroupsEffects {
   );
 
   @Effect()
-  public createFailure$: Observable<Action> = this.actions$.ofType<GroupsAction.CreateFailure>(GroupsActionType.CREATE_FAILURE).pipe(
+  public createFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<GroupsAction.CreateFailure>(GroupsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'group.create.fail', value: 'Failed to create group'});
@@ -72,8 +76,9 @@ export class GroupsEffects {
   );
 
   @Effect()
-  public update$: Observable<Action> = this.actions$.ofType<GroupsAction.Update>(GroupsActionType.UPDATE).pipe(
-    switchMap(action => {
+  public update$: Observable<Action> = this.actions$.pipe(
+    ofType<GroupsAction.Update>(GroupsActionType.UPDATE),
+    mergeMap(action => {
       const groupDto = GroupConverter.toDto(action.payload.group);
 
       return this.groupService.updateGroup(groupDto.id, groupDto).pipe(
@@ -85,7 +90,8 @@ export class GroupsEffects {
   );
 
   @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.ofType<GroupsAction.UpdateFailure>(GroupsActionType.UPDATE_FAILURE).pipe(
+  public updateFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<GroupsAction.UpdateFailure>(GroupsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'group.update.fail', value: 'Failed to update group'});
@@ -94,8 +100,9 @@ export class GroupsEffects {
   );
 
   @Effect()
-  public delete$: Observable<Action> = this.actions$.ofType<GroupsAction.Delete>(GroupsActionType.DELETE).pipe(
-    switchMap(action => this.groupService.deleteGroup(action.payload.groupId).pipe(
+  public delete$: Observable<Action> = this.actions$.pipe(
+    ofType<GroupsAction.Delete>(GroupsActionType.DELETE),
+    mergeMap(action => this.groupService.deleteGroup(action.payload.groupId).pipe(
       map(() => action)
     )),
     map(action => new GroupsAction.DeleteSuccess(action.payload)),
@@ -103,7 +110,8 @@ export class GroupsEffects {
   );
 
   @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.ofType<GroupsAction.DeleteFailure>(GroupsActionType.DELETE_FAILURE).pipe(
+  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<GroupsAction.DeleteFailure>(GroupsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'group.delete.fail', value: 'Failed to delete group'});

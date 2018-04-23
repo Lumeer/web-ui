@@ -37,6 +37,9 @@ import {ATTRIBUTE_COLUMN, SelectionHelper, VALUE_COLUMN} from './util/selection-
 import {isNullOrUndefined} from 'util';
 import {KeyCode} from '../../../shared/key-code';
 import {HashCodeGenerator} from '../../../shared/utils/hash-code-generator';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {Permission} from '../../../core/dto';
+import {Role} from '../../../shared/permissions/role';
 import Create = DocumentsAction.Create;
 import UpdateData = DocumentsAction.UpdateData;
 
@@ -46,6 +49,8 @@ import UpdateData = DocumentsAction.UpdateData;
   styleUrls: ['./post-it-perspective.component.scss']
 })
 export class PostItPerspectiveComponent implements OnInit, OnDestroy {
+
+  private _useOwnScrollbar = false;
 
   @HostListener('document:keydown', ['$event'])
   public onKeyboardClick(event: KeyboardEvent) {
@@ -65,11 +70,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   @Input()
-  public editable: boolean = true;
-
-  private _useOwnScrollbar = false;
-
-  @Input()
   public get useOwnScrollbar(): boolean {
     return this._useOwnScrollbar;
   }
@@ -87,7 +87,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public infiniteScroll: InfiniteScroll;
 
-  public perspectiveId: string;
+  public perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
 
   public postIts: PostItDocumentModel[] = [];
 
@@ -113,8 +113,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
-
     this.layoutManager = new PostItSortingLayout(
       '.post-it-document-layout',
       new PostItLayoutConfig(),
@@ -160,8 +158,17 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.store.dispatch(new DocumentsAction.Get({query: queryModel}));
   }
 
-  public isAddButtonShown(): boolean {
-    return this.editable && this.navigationHelper.hasOneCollection();
+  public hasSingleCollection(): boolean {
+    return this.navigationHelper.hasOneCollection();
+  }
+
+  public hasCreateRights(): boolean {
+    return this.postIts[0] && this.collectionHasWriteRole(this.postIts[0].document.collection);
+  }
+
+  public collectionHasWriteRole(collection: CollectionModel): boolean {
+    const permissions = collection && collection.permissions || {users: [], groups: []};
+    return permissions.users.some((permission: Permission) => permission.roles.includes(Role.Write));
   }
 
   private checkAllLoaded(documents: DocumentModel[]): void {
@@ -177,7 +184,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private getPostIts(): void {
     this.infiniteScroll.startLoading();
 
-    const queryModel = this.navigationHelper.queryWithPagination(this.page++, this.editable);
+    const queryModel = this.navigationHelper.queryWithPagination(this.page++);
     this.fetchQueryDocuments(queryModel);
     this.subscribeOnDocuments(queryModel);
   }

@@ -17,14 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
+import {HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {catchError, map, switchMap} from 'rxjs/operators';
-import {Organization} from '../dto';
-import {FetchFailedError} from '../error/fetch-failed.error';
-import {NetworkError} from '../error/network.error';
+import {Contact, Organization} from '../dto';
 import {PermissionService} from './permission.service';
 
 @Injectable()
@@ -53,6 +49,14 @@ export class OrganizationService extends PermissionService {
 
   public editOrganization(code: string, organization: Organization): Observable<Organization> {
     return this.httpClient.put<Organization>(this.apiPrefix(code), organization);
+  }
+
+  public getOrganizationContact(code: string): Observable<Contact> {
+    return this.httpClient.get<Contact>(`${this.apiPrefix(code)}/contact`);
+  }
+
+  public setOrganizationContact(code: string, contact: Contact): Observable<Contact> {
+    return this.httpClient.put<Contact>(`${this.apiPrefix(code)}/contact`, contact);
   }
 
   protected actualApiPrefix(): string {

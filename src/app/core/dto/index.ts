@@ -19,6 +19,7 @@
 
 export {Attribute} from './attribute';
 export {Collection} from './collection';
+export {Contact} from './contact';
 export {Document} from './document';
 export {Event} from './Event';
 export {Group} from './group';

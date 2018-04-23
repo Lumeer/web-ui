@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {filter, first, flatMap, map, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators';
+import {concatMap, filter, first, flatMap, map, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators';
 import {splitAttributeId} from '../../../shared/utils/attribute.utils';
 import {AppState} from '../app.state';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
@@ -78,7 +78,7 @@ export class TablesEffects {
   @Effect()
   public destroyTable$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.DestroyTable>(TablesActionType.DESTROY_TABLE),
-    switchMap(action => this.store$.select(selectTableById(action.payload.tableId)).pipe(
+    concatMap(action => this.store$.select(selectTableById(action.payload.tableId)).pipe(
       first()
     )),
     flatMap(table => {
@@ -95,15 +95,15 @@ export class TablesEffects {
   @Effect()
   public createPart$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.CreatePart>(TablesActionType.CREATE_PART),
-    switchMap(action => this.store$.select(selectTableById(action.payload.tableId)).pipe(
+    mergeMap(action => this.store$.select(selectTableById(action.payload.tableId)).pipe(
       first(),
       map(table => ({action, table}))
     )),
-    switchMap(item => this.store$.select(selectLinkTypeById(item.action.payload.linkTypeId)).pipe(
+    mergeMap(item => this.store$.select(selectLinkTypeById(item.action.payload.linkTypeId)).pipe(
       first(),
       map(linkType => ({...item, linkType}))
     )),
-    switchMap(item => {
+    mergeMap(item => {
       const parts = item.table.parts;
       const lastPart = parts[parts.length - 1];
 
@@ -174,7 +174,7 @@ export class TablesEffects {
   @Effect()
   public splitColumn$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.SplitColumn>(TablesActionType.SPLIT_COLUMN),
-    switchMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
+    mergeMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
       first(),
       mergeMap(table => {
         const part = table.parts[action.payload.cursor.partIndex];
@@ -291,7 +291,7 @@ export class TablesEffects {
   @Effect()
   public removeColumn$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.RemoveColumn>(TablesActionType.REMOVE_COLUMN),
-    switchMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
+    mergeMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
       first(),
       map(table => ({action, table}))
     )),
@@ -310,7 +310,7 @@ export class TablesEffects {
   @Effect()
   public renameColumn$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.RenameColumn>(TablesActionType.RENAME_COLUMN),
-    switchMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
+    mergeMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
       first(),
       map(table => ({action, table}))
     )),
@@ -349,7 +349,7 @@ export class TablesEffects {
   @Effect()
   public resizeColumn$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.ResizeColumn>(TablesActionType.RESIZE_COLUMN),
-    switchMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
+    mergeMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
       first(),
       map(table => {
         const part: TablePart = table.parts[action.payload.cursor.partIndex];
@@ -368,7 +368,7 @@ export class TablesEffects {
   @Effect()
   public moveCursor$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.MoveCursor>(TablesActionType.MOVE_CURSOR),
-    switchMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
+    concatMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
       first(),
       map(table => ({action, table}))
     )),

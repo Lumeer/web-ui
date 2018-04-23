@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {switchMap} from 'rxjs/operators';
+import {mergeMap} from 'rxjs/operators';
 import {LocalStorage} from '../../shared/utils/local-storage';
 import {Collection, Document} from '../dto';
 import {AppState} from '../store/app.state';
@@ -113,7 +113,7 @@ export class HomePageService {
 
   public checkFavoriteDocument(document: Document): Observable<Document> {
     return this.getFavoriteDocuments().pipe(
-      switchMap(codes => {
+      mergeMap(codes => {
         document.favorite = codes.includes(this.documentValue(document.collectionId, document.id));
         return Observable.of(document);
       })
@@ -122,7 +122,7 @@ export class HomePageService {
 
   public checkFavoriteDocuments(documents: Document[]): Observable<Document[]> {
     return this.getFavoriteDocuments().pipe(
-      switchMap(codes => {
+      mergeMap(codes => {
         for (let document of documents) {
           document.favorite = codes.includes(this.documentValue(document.collectionId, document.id));
         }
@@ -133,7 +133,7 @@ export class HomePageService {
 
   public checkFavoriteCollection(collection: Collection): Observable<Collection> {
     return this.getFavoriteCollections().pipe(
-      switchMap(codes => {
+      mergeMap(codes => {
         collection.favorite = codes.includes(collection.id);
         return Observable.of(collection);
       })
@@ -142,7 +142,7 @@ export class HomePageService {
 
   public checkFavoriteCollections(collections: Collection[]): Observable<Collection[]> {
     return this.getFavoriteCollections().pipe(
-      switchMap(codes => {
+      mergeMap(codes => {
         for (let collection of collections) {
           collection.favorite = codes.includes(collection.id);
         }

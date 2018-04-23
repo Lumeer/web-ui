@@ -29,6 +29,7 @@ import {OrganizationUsersComponent} from './organization/users/organization-user
 import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
 import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
 import {OrganizationSettingsGuard} from "./organization/organization-settings.guard";
+import {OrganizationDetailComponent} from "./organization/detail/organization-detail.component";
 
 const workspaceRoutes: Routes = [
   {
@@ -52,6 +53,10 @@ const workspaceRoutes: Routes = [
     canActivate: [OrganizationSettingsGuard],
     children: [
       {
+        path: 'detail',
+        component: OrganizationDetailComponent
+      },
+      {
         path: 'users',
         component: OrganizationUsersComponent
       },
@@ -69,7 +74,7 @@ const workspaceRoutes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'users',
+        redirectTo: 'detail',
         pathMatch: 'full'
       }
     ]

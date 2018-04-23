@@ -1,0 +1,64 @@
+<h5 i18n="@@organizations.tab.detail.order.get">Get Lumeer for Business now!</h5>
+<button *ngIf="discountAmount > 0" type="button" class="btn btn-lg btn-danger">
+  {{discountDescription}} <span class="badge badge-success">-{{discountAmount}}%</span>
+</button>
+<form #orderForm="ngForm" class="mt-4">
+  <div class="form-group">
+    <label for="subscriptionLength" i18n="@@organizations.tab.detail.order.duration">Subscription Duration</label>
+    <div class="form-control">
+      <div i18n="@@organizations.tab.detail.order.perUserMonth">{{subscriptionLength}} =
+        <del *ngIf="discountAmount > 0">{{discountInfoPerUser}}</del>
+        <strong>{{prefix}}{{pricePerUser}}{{suffix}}</strong> per user and month
+        <span *ngIf="discount" class="badge badge-pill badge-success" i18n="@@organizations.tab.detail.order.bestOffer">-17% Best offer!</span>
+      </div>
+      <slider
+        i18n-values="@@organizations.tab.detail.order.values"
+        values="1 month|2 months|3 months|6 months|1 year|2 years|3 years"
+        default="4"
+        id="subscriptionLength"
+        (onSlide)="sliderValue($event)">
+      </slider>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="numberOfUsers" i18n="@@organizations.tab.detail.order.users">Number of Users in your Organization</label>
+    <input class="form-control" type="number" [(ngModel)]="numberOfUsers" (input)="updatePrice()"
+           min="10" max="100" required id="numberOfUsers" name="users" ngModel #users="ngModel" pattern="[0-9][0-9]"
+           />
+    <small id="usersValidMin" class="invalid-message" *ngIf="numberOfUsers < 10" i18n="@@organizations.tab.detail.order.users.invalidMin">
+      Minimal order is 10 users.
+    </small>
+    <small id="usersValidMax" class="invalid-message" *ngIf="numberOfUsers > 99" i18n="@@organizations.tab.detail.order.users.invalidMax">
+      For orders of more than 99 users please contact our <a href="mailto:support@lumeer.io">support</a>.
+    </small>
+  </div>
+  <div class="form-group">
+    <label>Currency</label>
+    <div class="form-control">
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" [(ngModel)]="currency" (change)="updatePrice()" type="radio" name="currency" id="currency1" value="EUR" checked>
+        <label class="form-check-label" for="currency1">€ (EUR)</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" [(ngModel)]="currency" (change)="updatePrice()" type="radio" name="currency" id="currency2" value="USD">
+        <label class="form-check-label" for="currency2">$ (USD)</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" [(ngModel)]="currency" (change)="updatePrice()" type="radio" name="currency" id="currency3" value="CZK">
+        <label class="form-check-label" for="currency3">Kč (CZK)</label>
+      </div>
+    </div>
+  </div>
+  <div class="text-right">
+    <a href="mailto:support@lumeer.io" *ngIf="numberOfUsers >= 100">
+      <button class="btn btn-lg btn-success mb-2">Contact us for more users!</button>
+    </a>
+    <button *ngIf="numberOfUsers < 100" type="submit" (click)="placeOrder()"
+            class="btn btn-lg btn-success mb-2"
+            i18n="@@organizations.tab.detail.order.orderBtn"
+            [disabled]="!orderForm.valid">
+      Get Lumeer only for <del *ngIf="discountAmount > 0">{{prefix}}{{discountInfo | number:'1.2-2'}}{{suffix}}</del>
+      <strong>{{prefix}}{{price | number:'1.2-2'}}{{suffix}}</strong>!
+    </button>
+  </div>
+</form>

@@ -18,11 +18,11 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, flatMap, map, mergeMap, switchMap, tap} from 'rxjs/operators';
+import {catchError, flatMap, map, mergeMap, tap} from 'rxjs/operators';
 import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
@@ -37,8 +37,9 @@ import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 export class LinkTypesEffects {
 
   @Effect()
-  public get$: Observable<Action> = this.actions$.ofType<LinkTypesAction.Get>(LinkTypesActionType.GET).pipe(
-    switchMap((action) => {
+  public get$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkTypesAction.Get>(LinkTypesActionType.GET),
+    mergeMap((action) => {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
       return this.linkTypeService.getLinkTypes(queryDto).pipe(
@@ -56,7 +57,8 @@ export class LinkTypesEffects {
   );
 
   @Effect()
-  public getFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.GetFailure>(LinkTypesActionType.GET_FAILURE).pipe(
+  public getFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkTypesAction.GetFailure>(LinkTypesActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'link.types.get.fail', value: 'Failed to get link types'});
@@ -65,8 +67,9 @@ export class LinkTypesEffects {
   );
 
   @Effect()
-  public create$: Observable<Action> = this.actions$.ofType<LinkTypesAction.Create>(LinkTypesActionType.CREATE).pipe(
-    switchMap(action => {
+  public create$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkTypesAction.Create>(LinkTypesActionType.CREATE),
+    mergeMap(action => {
       const linkTypeDto = LinkTypeConverter.toDto(action.payload.linkType);
 
       return this.linkTypeService.createLinkType(linkTypeDto).pipe(
@@ -92,7 +95,8 @@ export class LinkTypesEffects {
   );
 
   @Effect()
-  public createFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.CreateFailure>(LinkTypesActionType.CREATE_FAILURE).pipe(
+  public createFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkTypesAction.CreateFailure>(LinkTypesActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'link.type.create.fail', value: 'Failed to create link type'});
@@ -101,8 +105,9 @@ export class LinkTypesEffects {
   );
 
   @Effect()
-  public update$: Observable<Action> = this.actions$.ofType<LinkTypesAction.Update>(LinkTypesActionType.UPDATE).pipe(
-    switchMap(action => {
+  public update$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkTypesAction.Update>(LinkTypesActionType.UPDATE),
+    mergeMap(action => {
       const linkTypeDto = LinkTypeConverter.toDto(action.payload.linkType);
 
       return this.linkTypeService.updateLinkType(action.payload.linkType.id, linkTypeDto).pipe(
@@ -114,7 +119,8 @@ export class LinkTypesEffects {
   );
 
   @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.UpdateFailure>(LinkTypesActionType.UPDATE_FAILURE).pipe(
+  public updateFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkTypesAction.UpdateFailure>(LinkTypesActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'link.type.update.fail', value: 'Failed to update link type'});
@@ -123,14 +129,16 @@ export class LinkTypesEffects {
   );
 
   @Effect()
-  public delete$: Observable<Action> = this.actions$.ofType(LinkTypesActionType.DELETE).pipe(
-    switchMap((action: LinkTypesAction.Delete) => this.linkTypeService.deleteLinkType(action.payload.linkTypeId)),
+  public delete$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkTypesAction.Delete>(LinkTypesActionType.DELETE),
+    mergeMap(action => this.linkTypeService.deleteLinkType(action.payload.linkTypeId)),
     map(linkTypeId => new LinkTypesAction.DeleteSuccess({linkTypeId: linkTypeId})),
     catchError((error) => Observable.of(new LinkTypesAction.DeleteFailure({error: error})))
   );
 
   @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.ofType<LinkTypesAction.DeleteFailure>(LinkTypesActionType.DELETE_FAILURE).pipe(
+  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkTypesAction.DeleteFailure>(LinkTypesActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'link.type.delete.fail', value: 'Failed to delete link type'});

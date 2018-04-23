@@ -1,7 +1,8 @@
 <div #collectionNameInput
      class="card-footer text-center font-weight-bold bg-transparent name"
      contenteditable="true"
-     placeholder="Set name" i18n-placeholder="@@collection.name.placeholder"
+     placeholder="Set name"
+     i18n-placeholder="@@collection.name.placeholder"
      [textContent]="collectionName"
      title="{{collectionName}}"
      (input)="collectionName = $event.target.textContent"

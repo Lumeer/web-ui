@@ -18,27 +18,28 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
+import {Router} from '@angular/router';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, switchMap, tap, withLatestFrom, flatMap} from 'rxjs/operators';
+import {catchError, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {RouteFinder} from '../../../shared/utils/route-finder';
 import {OrganizationService} from '../../rest';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {RouterAction} from '../router/router.action';
 import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {selectOrganizationCodes, selectOrganizationsDictionary} from './organizations.state';
-import {RouterAction} from "../router/router.action";
-import {Router} from "@angular/router";
-import {RouteFinder} from "../../../shared/utils/route-finder";
 
 @Injectable()
 export class OrganizationsEffects {
 
   @Effect()
-  public get$: Observable<Action> = this.actions$.ofType<OrganizationsAction.Get>(OrganizationsActionType.GET).pipe(
-    switchMap(() => this.organizationService.getOrganizations().pipe(
+  public get$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.Get>(OrganizationsActionType.GET),
+    mergeMap(() => this.organizationService.getOrganizations().pipe(
       map(dtos => dtos.map(dto => OrganizationConverter.fromDto(dto)))
     )),
     map(organizations => new OrganizationsAction.GetSuccess({organizations: organizations})),
@@ -46,7 +47,8 @@ export class OrganizationsEffects {
   );
 
   @Effect()
-  public getFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.GetFailure>(OrganizationsActionType.GET_FAILURE).pipe(
+  public getFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.GetFailure>(OrganizationsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'organizations.get.fail', value: 'Failed to get organizations'});
@@ -55,20 +57,23 @@ export class OrganizationsEffects {
   );
 
   @Effect()
-  public getCodes$: Observable<Action> = this.actions$.ofType<OrganizationsAction.GetCodes>(OrganizationsActionType.GET_CODES).pipe(
-    switchMap(() => this.organizationService.getOrganizationsCodes()),
+  public getCodes$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.GetCodes>(OrganizationsActionType.GET_CODES),
+    mergeMap(() => this.organizationService.getOrganizationsCodes()),
     map((organizationCodes) => new OrganizationsAction.GetCodesSuccess({organizationCodes})),
     catchError((error) => Observable.of(new OrganizationsAction.GetCodesFailure({error: error})))
   );
 
   @Effect({dispatch: false})
-  public getCodesFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.GetCodesFailure>(OrganizationsActionType.GET_CODES_FAILURE).pipe(
+  public getCodesFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.GetCodesFailure>(OrganizationsActionType.GET_CODES_FAILURE),
     tap((action: OrganizationsAction.GetCodesFailure) => console.error(action.payload.error))
   );
 
   @Effect()
-  public create$: Observable<Action> = this.actions$.ofType<OrganizationsAction.Create>(OrganizationsActionType.CREATE).pipe(
-    switchMap(action => {
+  public create$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.Create>(OrganizationsActionType.CREATE),
+    mergeMap(action => {
       const correlationId = action.payload.organization.correlationId;
       const organizationDto = OrganizationConverter.toDto(action.payload.organization);
 
@@ -86,7 +91,8 @@ export class OrganizationsEffects {
   );
 
   @Effect()
-  public createFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.CreateFailure>(OrganizationsActionType.CREATE_FAILURE).pipe(
+  public createFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.CreateFailure>(OrganizationsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'organization.create.fail', value: 'Failed to create organization'});
@@ -95,9 +101,10 @@ export class OrganizationsEffects {
   );
 
   @Effect()
-  public update$: Observable<Action> = this.actions$.ofType<OrganizationsAction.Update>(OrganizationsActionType.UPDATE).pipe(
+  public update$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.Update>(OrganizationsActionType.UPDATE),
     withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
-    switchMap(([action, organizationEntities]) => {
+    mergeMap(([action, organizationEntities]) => {
       const organizationDto = OrganizationConverter.toDto(action.payload.organization);
       const oldOrganization = organizationEntities[action.payload.organization.id];
       return this.organizationService.editOrganization(oldOrganization.code, organizationDto).pipe(
@@ -114,11 +121,11 @@ export class OrganizationsEffects {
       const orgCodeInRoute = paramMap.get('organizationCode');
 
       if (orgCodeInRoute && orgCodeInRoute === oldOrganization.code && organization.code !== oldOrganization.code) {
-        const paths = this.router.routerState.snapshot.url.split("/").filter(path => path);
+        const paths = this.router.routerState.snapshot.url.split('/').filter(path => path);
         const index = paths.indexOf(oldOrganization.code, 1);
         if (index !== -1) {
           paths[index] = organization.code;
-          actions.push(new RouterAction.Go({path: paths}))
+          actions.push(new RouterAction.Go({path: paths}));
           // TODO extract as
         }
       }
@@ -129,7 +136,8 @@ export class OrganizationsEffects {
   );
 
   @Effect()
-  public updateFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.UpdateFailure>(OrganizationsActionType.UPDATE_FAILURE).pipe(
+  public updateFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.UpdateFailure>(OrganizationsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'organization.update.fail', value: 'Failed to update organization'});
@@ -138,9 +146,10 @@ export class OrganizationsEffects {
   );
 
   @Effect()
-  public delete$: Observable<Action> = this.actions$.ofType<OrganizationsAction.Delete>(OrganizationsActionType.DELETE).pipe(
+  public delete$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.Delete>(OrganizationsActionType.DELETE),
     withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
-    switchMap(([action, organizationEntities]) => {
+    mergeMap(([action, organizationEntities]) => {
       const organization = organizationEntities[action.payload.organizationId];
       return this.organizationService.deleteOrganization(organization.code).pipe(
         map(() => ({action, deletedOrganizationCode: organization.code}))
@@ -157,7 +166,8 @@ export class OrganizationsEffects {
   );
 
   @Effect()
-  public deleteFailure$: Observable<Action> = this.actions$.ofType<OrganizationsAction.DeleteFailure>(OrganizationsActionType.DELETE_FAILURE).pipe(
+  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.DeleteFailure>(OrganizationsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'organization.delete.fail', value: 'Failed to delete organization'});

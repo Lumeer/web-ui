@@ -17,28 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
-import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {selectCollectionsByQuery} from '../../core/store/collections/collections.state';
-import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
-import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {Role} from '../permissions/role';
 import {HashCodeGenerator} from '../utils/hash-code-generator';
-import {PostItLayout} from '../utils/layout/post-it-layout';
-
+import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {PostItLayoutConfig} from '../utils/layout/post-it-layout-config';
+import {PostItLayout} from '../utils/layout/post-it-layout';
+import {ProjectModel} from '../../core/store/projects/project.model';
+import {isNullOrUndefined} from "util";
+import {selectProjectByWorkspace} from "../../core/store/projects/projects.state";
+import {CorrelationIdGenerator} from "../../core/store/correlation-id.generator";
+import {DEFAULT_COLOR, DEFAULT_ICON} from "../../core/constants";
+import {NotificationService} from "../../core/notifications/notification.service";
 
 @Component({
   selector: 'post-it-collections',
@@ -47,8 +50,16 @@ import {PostItLayoutConfig} from '../utils/layout/post-it-layout-config';
 })
 export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @Input()
-  public editable: boolean = true;
+  /**
+   * Handler to change the flag to remove opacity css on elements
+   * @param targetElement
+   */
+  @HostListener('document:click', ['$event.target'])
+  public documentClicked(targetElement) {
+    if (this.clickedComponent && targetElement !== this.clickedComponent) {
+      this.panelVisible = false;
+    }
+  }
 
   @ViewChildren('textArea')
   public nameInputs: QueryList<ElementRef>;
@@ -60,8 +71,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public selectedCollection: CollectionModel;
 
-  public dragging: boolean = false;
-
   public panelVisible: boolean = false;
 
   public clickedComponent: any;
@@ -70,18 +79,22 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   private workspace: Workspace;
 
+  private project: ProjectModel;
+
   private query: QueryModel;
 
   private navigationSubscription: Subscription;
 
   private collectionsSubscription: Subscription;
 
+  private projectSubscription: Subscription;
+
   private focusedPanel: number;
 
-  constructor(private i18n: I18n,
+  constructor(public i18n: I18n,
               private store: Store<AppState>,
               private zone: NgZone,
-              private _elementRef: ElementRef) {
+              private notificationService: NotificationService,) {
   }
 
   public ngOnInit() {
@@ -102,6 +115,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     if (this.collectionsSubscription) {
       this.collectionsSubscription.unsubscribe();
     }
+
+    if (this.projectSubscription) {
+      this.projectSubscription.unsubscribe();
+    }
   }
 
   public togglePanelVisible(event, index) {
@@ -121,26 +138,17 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.layout = new PostItLayout('post-it-collection-layout', config, this.zone);
   }
 
-  /**
-   * Handler to change the flag to remove opacity css on elements
-   * @param targetElement
-   */
-  @HostListener('document:click', ['$event.target'])
-  public documentClicked(targetElement) {
-    if (this.clickedComponent && targetElement != this.clickedComponent) {
-      this.panelVisible = false;
-    }
-  }
-
   private subscribeOnNavigation() {
     this.navigationSubscription = this.store.select(selectNavigation).pipe(
       filter(navigation => Boolean(navigation && navigation.workspace && navigation.workspace.organizationCode && navigation.workspace.projectCode))
     ).subscribe(navigation => {
       this.workspace = navigation.workspace;
       this.query = navigation.query;
-
-      this.store.dispatch(new CollectionsAction.Get({query: this.query}));
     });
+
+    this.projectSubscription = this.store.select(selectProjectByWorkspace).pipe(
+      filter(project => !isNullOrUndefined(project)
+      )).subscribe(project => this.project = project);
   }
 
   private subscribeOnCollections() {
@@ -168,62 +176,31 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.selectedCollection = null;
   }
 
-  public newPostIt() {
-    const collection = {...this.createDefaultCollection(), correlationId: CorrelationIdGenerator.generate()};
-    this.collections.unshift(collection);
-  }
-
-  public fileChange(files: FileList) {
-    if (files.length) {
-      const file = files[0];
-      const reader = new FileReader();
-      const indexOfSuffix = file.name.lastIndexOf('.');
-      const name = indexOfSuffix !== -1 ? file.name.substring(0, indexOfSuffix) : file.name;
-      reader.onloadend = () => {
-        this.importData(reader.result, name, 'csv');
-      };
-      reader.readAsText(file);
-    } else {
-      const message = this.i18n({id: 'collection.import.file.empty', value: 'Imported file is empty'});
-      this.store.dispatch(new NotificationsAction.Error({message}));
-    }
-  }
-
-  private importData(result: string, name: string, format: string) {
-    const collection = {...this.createDefaultCollection(), name};
-    const importedCollection = {collection, data: result};
-    this.store.dispatch(new CollectionsAction.Import({format, importedCollection}));
-  }
-
-  private createDefaultCollection() {
-    return {
-      name: '',
-      color: DEFAULT_COLOR,
-      icon: DEFAULT_ICON,
-      description: ''
-    };
-  }
-
-  public handleDragEnter() {
-    this.dragging = true;
-  }
-
-  public handleDragLeave() {
-    this.dragging = false;
-  }
-
-  public handleDrop(event) {
-    event.preventDefault();
-    this.dragging = false;
-    this.fileChange(event.dataTransfer.files);
-  }
-
   public confirmDeletion(collection: CollectionModel) {
     if (collection.id) {
       this.deleteInitializedPostIt(collection);
     } else {
       this.deleteUninitializedPostIt(collection);
     }
+  }
+
+  public newCollection() {
+    const newCollection = {
+      ...this.emptyCollection(),
+      correlationId: CorrelationIdGenerator.generate()
+    };
+
+    this.collections.unshift(newCollection);
+  }
+
+  private emptyCollection(): CollectionModel {
+    return {
+      name: '',
+      color: DEFAULT_COLOR,
+      icon: DEFAULT_ICON,
+      description: '',
+      attributes: []
+    };
   }
 
   private deleteInitializedPostIt(collection: CollectionModel) {
@@ -243,11 +220,12 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public onCollectionNameChanged(collection: CollectionModel, newName: string) {
-    const collectionCopy = {...collection, name: newName};
-
-    if (!collection.name) {
+    // Don't update until there is some name
+    if (!newName) {
       return;
     }
+
+    const collectionCopy = {...collection, name: newName};
 
     if (collection.id) {
       this.updateCollection(collectionCopy);
@@ -264,21 +242,21 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.store.dispatch(new CollectionsAction.Create({collection}));
   }
 
+  public hasCreateRights(): boolean {
+    return this.project && this.hasRole(this.project, Role.Write);
+  }
+
   public hasManageRole(collection: CollectionModel): boolean {
     return this.hasRole(collection, Role.Manage);
   }
 
-  private hasRole(collection: CollectionModel, role: string) {
+  private hasRole(collection: CollectionModel | ProjectModel, role: string) {
     return collection.permissions && collection.permissions.users
       .some(permission => permission.roles.includes(role));
   }
 
   public workspacePath(): string {
     return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
-  }
-
-  public emptyQuery(): boolean {
-    return !this.query || (this.query && this.query.collectionIds && this.query.collectionIds.length === 0);
   }
 
   public queryForCollectionDocuments(collectionId: string): string {
@@ -288,6 +266,17 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public trackByCollection(index: number, collection: CollectionModel): number {
     return HashCodeGenerator.hashString(collection.id || collection.correlationId);
+  }
+
+  public notifyOfError(message: string) {
+    this.notificationService.error(message);
+  }
+
+  public onImportCollection(importInfo: {result: string, name: string, format: string}) {
+    const newCollection = {...this.emptyCollection(), name: importInfo.name};
+    const importedCollection = {collection: newCollection, data: importInfo.result};
+
+    this.store.dispatch(new CollectionsAction.Import({format: importInfo.format, importedCollection}));
   }
 
 }

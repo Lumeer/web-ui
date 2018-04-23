@@ -22,7 +22,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {switchMap} from 'rxjs/operators';
+import {mergeMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
 import {GroupsAction} from '../../core/store/groups/groups.action';
@@ -49,7 +49,7 @@ export class OrganizationSettingsGuard implements CanActivate {
     const organizationCode = next.paramMap.get('organizationCode');
 
     return this.workspaceService.getOrganizationFromStoreOrApi(organizationCode).pipe(
-      switchMap(organization => {
+      mergeMap(organization => {
         if (isNullOrUndefined(organization)) {
           this.dispatchErrorActionsNotExist();
           return Observable.of(false);
@@ -69,7 +69,6 @@ export class OrganizationSettingsGuard implements CanActivate {
     return organization.permissions && organization.permissions.users.length === 1
       && organization.permissions.users[0].roles.some(r => r === Role.Manage.toString());
   }
-
 
   private dispatchErrorActionsNotExist() {
     const message = this.i18n({id: 'organization.not.exist', value: 'Organization does not exist'});

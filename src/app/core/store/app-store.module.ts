@@ -46,6 +46,8 @@ import {UsersEffects} from './users/users.effects';
 import {usersReducer} from './users/users.reducer';
 import {ViewsEffects} from './views/views.effects';
 import {viewsReducer} from './views/views.reducer';
+import {contactsReducer} from "./organizations/contact/contacts.reducer";
+import {ContactsEffects} from "./organizations/contact/contacts.effects";
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -55,6 +57,7 @@ const reducers: ActionReducerMap<AppState> = {
   linkTypes: linkTypesReducer,
   navigation: navigationReducer,
   organizations: organizationsReducer,
+  contacts: contactsReducer,
   projects: projectsReducer,
   router: routerReducer,
   users: usersReducer,
@@ -70,6 +73,7 @@ const effects = [
   NavigationEffects,
   NotificationsEffects,
   OrganizationsEffects,
+  ContactsEffects,
   ProjectsEffects,
   RouterEffects,
   UsersEffects,
