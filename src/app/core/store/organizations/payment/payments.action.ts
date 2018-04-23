@@ -40,7 +40,7 @@ export namespace PaymentsAction {
   export class GetPayment implements Action {
     public readonly type = PaymentsActionType.GET_PAYMENT;
 
-    public constructor(public payload: { organizationId: string, paymentId: string }) {
+    public constructor(public payload: { organizationId: string, paymentId: string, nextAction?: Action }) {
     }
   }
 

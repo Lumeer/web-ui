@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from "@angular/core";
-import {catchError, map, mergeMap, tap} from "rxjs/operators";
+import {catchError, flatMap, map, mergeMap, tap} from "rxjs/operators";
 import {Actions, Effect, ofType} from "@ngrx/effects";
 import {Action, Store} from "@ngrx/store";
 import {Router} from "@angular/router";
@@ -29,6 +29,7 @@ import {Observable} from "rxjs/Observable";
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {PaymentsAction, PaymentsActionType} from "./payments.action";
 import {PaymentConverter} from "./payment.converter";
+import {ServiceLimitsAction} from "../service-limits/service-limits.action";
 
 @Injectable()
 export class PaymentsEffects {
@@ -59,9 +60,17 @@ export class PaymentsEffects {
     ofType<PaymentsAction.GetPayment>(PaymentsActionType.GET_PAYMENT),
     mergeMap(action => {
       return this.organizationService.getPayment(action.payload.paymentId).pipe(
-        map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)))
+        map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
+        map(payment => ({ payment, nextAction: action.payload.nextAction })))
     }),
-    map(payment => new PaymentsAction.GetPaymentSuccess({ payment: payment })),
+    flatMap(({ payment, nextAction }) => {
+      const actions: Action[] = [new PaymentsAction.GetPaymentSuccess({ payment: payment })];
+      if (nextAction && nextAction instanceof ServiceLimitsAction.GetServiceLimits) {
+        nextAction.payload.organizationId = payment.organizationId;
+        actions.push(nextAction);
+      }
+      return actions;
+    }),
     catchError(error => Observable.of(new PaymentsAction.GetPaymentFailure({error: error})))
   );
 
