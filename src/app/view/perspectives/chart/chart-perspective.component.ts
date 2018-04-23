@@ -119,8 +119,12 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     return this.store.select(selectDocumentsByQuery).subscribe(documents => this.documents = documents);
   }
 
-  public axisTitle(): string {
-    return this.i18n({id: 'chart.axis.name', value: 'Axis'});
+  public xAxisTitle(): string {
+    return this.i18n({id: 'chart.axis.x.name', value: 'X Axis'});
+  }
+
+  public yAxisTitle(): string {
+    return this.i18n({id: 'chart.axis.y.name', value: 'Y Axis'});
   }
 
   public isDisplayable(): boolean {

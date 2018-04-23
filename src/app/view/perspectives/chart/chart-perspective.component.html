@@ -18,7 +18,7 @@
         [@slide]
         [attributes]="documentAttributes"
         [preSelected]="attributeY"
-        [emptyDescription]="'Y ' + axisTitle()"
+        [emptyDescription]="yAxisTitle()"
         (attributeSelected)="attributeY = $event"
         (mouseenter)="pickerHovered = true"
         (mouseleave)="pickerHovered = false">
@@ -34,7 +34,7 @@
     <div class="text-center mt-2">
       <attribute-select
         [attributes]="documentAttributes"
-        [emptyDescription]="'X ' + axisTitle()"
+        [emptyDescription]="xAxisTitle()"
         (attributeSelected)="attributeX = $event">
       </attribute-select>
     </div>
@@ -42,6 +42,6 @@
   </div>
 </ng-container>
 
-<ng-template #loading i18n-title="@@chart.loading">
+<span #loading i18n="@@chart.loading">
   Loading...
-</ng-template>
+</span>
