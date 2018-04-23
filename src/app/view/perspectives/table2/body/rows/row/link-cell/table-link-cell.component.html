@@ -1,0 +1,20 @@
+<div class="table-border-right table-border-bottom h-100 p-1">
+  <div [style.width]="width()"
+       [class.striped]="striped"
+       class="link-cell h-100">
+    <a *ngIf="expendable()"
+       (click)="onExpand()"
+       (keyup.enter)="onExpand()"
+       class="d-flex h-100 m-0"
+       title="Expand" i18n-title="@@table.link.expand">
+      <i class="fa fa-expand m-auto"></i>
+    </a>
+    <a *ngIf="collapsible()"
+       (click)="onCollapse()"
+       (keyup.enter)="onCollapse()"
+       class="d-flex h-100 m-0"
+       title="Collapse" i18n-title="@@table.link.collapse">
+      <i class="fa fa-compress m-auto"></i>
+    </a>
+  </div>
+</div>

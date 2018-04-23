@@ -27,8 +27,8 @@ export function deepArrayEquals(array1: any[], array2: any[]): boolean {
   return JSON.stringify(array1) === JSON.stringify(array2);
 }
 
-export function arrayStartsWith(parent: any[], child: any[]): boolean {
-  return parent.join().startsWith(child.join());
+export function arrayStartsWith(longer: any[], shorter: any[]): boolean {
+  return longer && shorter && longer.join().startsWith(shorter.join());
 }
 
 export function getLastFromArray<T>(array: T[]): T {

@@ -22,8 +22,8 @@ export enum Perspective {
   Chart = 'chart',
   Search = 'search',
   SmartDoc = 'smartdoc',
-  Table = 'table',
-  Table2 = 'table2'
+  Table = 'table-old',
+  Table2 = 'table'
 }
 
 export const perspectivesMap: { [id: string]: Perspective } = {

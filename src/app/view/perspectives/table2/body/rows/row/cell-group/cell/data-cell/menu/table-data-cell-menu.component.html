@@ -1,0 +1,32 @@
+<context-menu #contextMenu>
+  <ng-template (execute)="edit.emit()"
+               contextMenuItem>
+    <i class="fa fa-fw fa-edit mr-1" aria-hidden="true"></i>
+    <span i18n="@@table.body.row.edit">Edit value</span>
+  </ng-template>
+  <ng-template contextMenuItem
+               divider="true"></ng-template>
+  <ng-template (execute)="addRow.emit(0)"
+               contextMenuItem>
+    <i class="fa fa-fw fa-arrow-alt-circle-up text-success mr-1" aria-hidden="true"></i>
+    <span i18n="@@table.body.row.add.above">Add row above</span>
+  </ng-template>
+  <ng-template (execute)="addRow.emit(1)"
+               contextMenuItem>
+    <i class="fa fa-fw fa-arrow-alt-circle-down text-success mr-1" aria-hidden="true"></i>
+    <span i18n="@@table.body.row.add.below">Add row below</span>
+  </ng-template>
+  <ng-template contextMenuItem
+               divider="true"></ng-template>
+  <ng-template *ngIf="created && cursor.partIndex > 0"
+               (execute)="unlinkRow.emit()"
+               contextMenuItem>
+    <i class="fa fa-fw fa-unlink text-warning mr-1" aria-hidden="true"></i>
+    <span i18n="@@table.body.row.unlink">Unlink row</span>
+  </ng-template>
+  <ng-template (execute)="removeRow.emit()"
+               contextMenuItem>
+    <i class="fas fa-fw fa-trash text-danger mr-1" aria-hidden="true"></i>
+    <span i18n="@@table.body.row.remove">Remove row</span>
+  </ng-template>
+</context-menu>

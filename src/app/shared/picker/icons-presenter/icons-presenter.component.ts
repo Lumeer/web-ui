@@ -21,7 +21,8 @@ import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'icons-presenter',
-  templateUrl: './icons-presenter.component.html'
+  templateUrl: './icons-presenter.component.html',
+  styleUrls: ['./icons-presenter.component.scss']
 })
 export class IconsPresenterComponent {
 

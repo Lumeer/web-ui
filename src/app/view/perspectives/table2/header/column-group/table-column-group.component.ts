@@ -17,15 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, NgZone, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, NgZone, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../../core/store/app.state';
-import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
-import {SelectedTableCell, TableColumn, TableColumnType, TableCompoundColumn, TableModel} from '../../../../../core/store/tables/table.model';
+import {isTableColumnSubPath, TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
+import {TableColumn, TableColumnType, TableCompoundColumn, TableModel} from '../../../../../core/store/tables/table.model';
 import {calculateColumnRowspan} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
-import {selectTableSelectedCell} from '../../../../../core/store/tables/tables.state';
+import {selectTableCursor} from '../../../../../core/store/tables/tables.state';
 import {arrayStartsWith, deepArrayEquals} from '../../../../../shared/utils/array.utils';
 import {ColumnLayout} from '../../../../../shared/utils/layout/column-layout';
 
@@ -55,7 +55,8 @@ export class TableColumnGroupComponent implements OnChanges, OnInit, OnDestroy {
 
   public subscriptions: Subscription = new Subscription();
 
-  public constructor(private store: Store<AppState>,
+  public constructor(private changeDetector: ChangeDetectorRef,
+                     private store: Store<AppState>,
                      private zone: NgZone) {
   }
 
@@ -65,18 +66,16 @@ export class TableColumnGroupComponent implements OnChanges, OnInit, OnDestroy {
 
   private subscribeToSelected() {
     this.subscriptions.add(
-      this.store.select(selectTableSelectedCell(this.table.id)).subscribe((selectedCell: SelectedTableCell) => {
-        if (this.isColumnFromGroupSelected(selectedCell)) {
-          this.selectedColumnPath = selectedCell.columnPath;
+      this.store.select(selectTableCursor).subscribe((cursor) => {
+        if (isTableColumnSubPath(this.cursor, cursor)) {
+          this.selectedColumnPath = cursor.columnPath;
         } else {
           this.selectedColumnPath = null;
         }
+
+        this.changeDetector.detectChanges();
       })
     );
-  }
-
-  private isColumnFromGroupSelected(selectedCell: SelectedTableCell): boolean {
-    return selectedCell && selectedCell.partIndex === this.cursor.partIndex && arrayStartsWith(selectedCell.columnPath, this.cursor.columnPath);
   }
 
   public ngOnDestroy() {

@@ -18,32 +18,33 @@
  */
 
 import {Direction} from '../../../shared/direction';
-import {containCompoundColumn, findTableColumn, getTableColumns, splitColumnPath} from './table.utils';
-import {TableColumn, TableColumnType, TableCompoundColumn, TableModel, TablePart} from './table.model';
+import {arrayStartsWith, deepArrayEquals, getLastFromArray} from '../../../shared/utils/array.utils';
+import {TableColumn, TableColumnType, TableCompoundColumn, TableModel, TablePart, TableRow} from './table.model';
+import {containCompoundColumn, findTableColumn, findTableRow, getTableColumns, splitColumnPath, splitRowPath} from './table.utils';
 
 export interface TableHeaderCursor {
 
   tableId: string;
   partIndex: number;
-  columnPath: number[];
+  columnPath?: number[];
 
 }
 
 export interface TableBodyCursor {
 
   tableId: string;
+  rowPath?: number[];
   partIndex: number;
-  columnIndex: number;
-  rowNumber: number;
+  columnIndex?: number;
 
 }
 
-export type TableCursor = TableHeaderCursor;
+export type TableCursor = TableHeaderCursor & TableBodyCursor;
 
 export function moveTableCursor(table: TableModel, cursor: TableCursor, direction: Direction): TableCursor {
   switch (direction) {
     case Direction.Up:
-      return moveTableCursorUp(cursor);
+      return moveTableCursorUp(table, cursor);
     case Direction.Down:
       return moveTableCursorDown(table, cursor);
     case Direction.Left:
@@ -53,7 +54,61 @@ export function moveTableCursor(table: TableModel, cursor: TableCursor, directio
   }
 }
 
-function moveTableCursorUp(cursor: TableCursor): TableCursor {
+function moveTableCursorUp(table: TableModel, cursor: TableCursor): TableCursor {
+  if (cursor.columnPath) {
+    return moveTableHeaderCursorUp(cursor);
+  }
+
+  return moveTableBodyCursorUp(table, cursor);
+}
+
+function moveTableBodyCursorUp(table: TableModel, cursor: TableBodyCursor): TableCursor {
+  const parentRowPath = getPreviousParentRowPath(cursor.rowPath);
+  const parentRow = findTableRow(table.rows, parentRowPath);
+
+  if (!parentRow) {
+    return {
+      tableId: cursor.tableId,
+      partIndex: cursor.partIndex,
+      columnPath: [cursor.columnIndex] // TODO nested attributes
+    };
+  }
+
+  const {rowPath} = findLastLinkedRow(parentRow, parentRowPath, cursor.rowPath.length);
+  return {...cursor, rowPath};
+}
+
+function getPreviousParentRowPath(rowPath: number[]): number[] {
+  if (rowPath.length === 0) {
+    return null;
+  }
+
+  const {parentPath, rowIndex} = splitRowPath(rowPath);
+
+  if (rowIndex > 0) {
+    return parentPath.concat(rowIndex - 1);
+  }
+
+  return getPreviousParentRowPath(parentPath);
+}
+
+function findLastLinkedRow(row: TableRow, rowPath: number[], depth: number): { row: TableRow, rowPath: number[] } {
+  if (rowPath.length === depth) {
+    return {row, rowPath};
+  }
+
+  // TODO just workaround for not existing rows
+  if (!row.linkedRows || row.linkedRows.length === 0) {
+    const tail = Array(depth - rowPath.length).fill(0);
+    return {row: null, rowPath: rowPath.concat(tail)};
+  }
+
+  const nextRow = getLastFromArray(row.linkedRows);
+  const nextRowPath = rowPath.concat(row.linkedRows.length - 1);
+  return findLastLinkedRow(nextRow, nextRowPath, depth);
+}
+
+function moveTableHeaderCursorUp(cursor: TableHeaderCursor): TableCursor {
   const {parentPath} = splitColumnPath(cursor.columnPath);
 
   if (parentPath.length > 0) {
@@ -64,6 +119,39 @@ function moveTableCursorUp(cursor: TableCursor): TableCursor {
 }
 
 function moveTableCursorDown(table: TableModel, cursor: TableCursor): TableCursor {
+  if (cursor.columnPath) {
+    return moveTableHeaderCursorDown(table, cursor);
+  }
+
+  return moveTableBodyCursorDown(table, cursor);
+}
+
+function moveTableBodyCursorDown(table: TableModel, cursor: TableBodyCursor): TableCursor {
+  const parentRowPath = getNextParentRowPath(table, cursor.rowPath);
+  if (!parentRowPath) {
+    return cursor;
+  }
+
+  const tail = Array(cursor.rowPath.length - parentRowPath.length).fill(0);
+  return {...cursor, rowPath: parentRowPath.concat(tail)};
+}
+
+function getNextParentRowPath(table: TableModel, rowPath: number[]): number[] {
+  if (rowPath.length === 0) {
+    return null;
+  }
+
+  const {parentPath, rowIndex} = splitRowPath(rowPath);
+  const nextRowPath = parentPath.concat(rowIndex + 1);
+  const row = findTableRow(table.rows, nextRowPath);
+  if (row) {
+    return nextRowPath;
+  }
+
+  return getNextParentRowPath(table, parentPath);
+}
+
+function moveTableHeaderCursorDown(table: TableModel, cursor: TableHeaderCursor): TableCursor {
   const part: TablePart = table.parts[cursor.partIndex];
   const column: TableCompoundColumn = findTableColumn(part.columns, cursor.columnPath) as TableCompoundColumn;
 
@@ -73,10 +161,42 @@ function moveTableCursorDown(table: TableModel, cursor: TableCursor): TableCurso
     return {...cursor, columnPath: cursor.columnPath.concat(index)};
   }
 
-  return cursor;
+  return {
+    tableId: cursor.tableId,
+    partIndex: cursor.partIndex,
+    columnIndex: cursor.columnPath[0], // TODO nested attributes
+    rowPath: Array((cursor.partIndex / 2) + 1).fill(0) // TODO check link instance parts
+  };
 }
 
 function moveTableCursorLeft(table: TableModel, cursor: TableCursor): TableCursor {
+  if (cursor.columnPath) {
+    return moveTableHeaderCursorLeft(table, cursor);
+  }
+
+  return moveTableBodyCursorLeft(table, cursor);
+}
+
+function moveTableBodyCursorLeft(table: TableModel, cursor: TableBodyCursor): TableCursor {
+  if (cursor.columnIndex > 0) {
+    return {...cursor, columnIndex: cursor.columnIndex - 1};
+  }
+
+  if (cursor.partIndex === 0) {
+    return cursor;
+  }
+
+  const partIndex = cursor.partIndex - 2; // TODO link instance parts
+
+  return {
+    tableId: cursor.tableId,
+    partIndex,
+    columnIndex: table.parts[partIndex].columns.length - 1, // TODO nested attributes
+    rowPath: cursor.rowPath.slice(0, -1)
+  };
+}
+
+function moveTableHeaderCursorLeft(table: TableModel, cursor: TableHeaderCursor): TableCursor {
   const part = table.parts[cursor.partIndex];
 
   const parent = findLeftParentColumn(part.columns, cursor.columnPath);
@@ -141,6 +261,33 @@ function findDirectLeftSibling(columns: TableColumn[], path: number[]): { column
 }
 
 function moveTableCursorRight(table: TableModel, cursor: TableCursor): TableCursor {
+  if (cursor.columnPath) {
+    return moveTableHeaderCursorRight(table, cursor);
+  }
+
+  return moveTableBodyCursorRight(table, cursor);
+}
+
+function moveTableBodyCursorRight(table: TableModel, cursor: TableBodyCursor): TableCursor {
+  const lastColumnIndex = table.parts[cursor.partIndex].columns.length - 1;
+  if (cursor.columnIndex < lastColumnIndex) {
+    return {...cursor, columnIndex: cursor.columnIndex + 1};
+  }
+
+  const partIndex = cursor.partIndex + 2; // TODO link instance parts
+  if (table.parts.length - 1 < partIndex) {
+    return cursor;
+  }
+
+  return {
+    tableId: cursor.tableId,
+    partIndex,
+    columnIndex: 0,
+    rowPath: cursor.rowPath.concat(0)
+  };
+}
+
+function moveTableHeaderCursorRight(table: TableModel, cursor: TableHeaderCursor): TableCursor {
   const part = table.parts[cursor.partIndex];
   const nextParent = findNextParentColumn(part.columns, cursor.columnPath);
   if (nextParent) {
@@ -203,4 +350,26 @@ function findSideMostColumn(column: TableCompoundColumn, cursor: TableCursor, le
   const nextColumn = column.children[index] as TableCompoundColumn; // TODO different types of columns
   const nextCursor = {...cursor, columnPath: cursor.columnPath.concat(index)};
   return findSideMostColumn(nextColumn, nextCursor, level, right);
+}
+
+export function areTableHeaderCursorsEqual(cursor1: TableHeaderCursor, cursor2: TableHeaderCursor): boolean {
+  return cursor1 && cursor2
+    && cursor1.tableId === cursor2.tableId
+    && cursor1.partIndex === cursor2.partIndex
+    && deepArrayEquals(cursor1.columnPath, cursor2.columnPath);
+}
+
+export function isTableColumnSubPath(parent: TableHeaderCursor, child: TableHeaderCursor): boolean {
+  return parent && child
+    && parent.tableId === child.tableId
+    && parent.partIndex === child.partIndex
+    && arrayStartsWith(child.columnPath, parent.columnPath);
+}
+
+export function areTableBodyCursorsEqual(cursor1: TableBodyCursor, cursor2: TableBodyCursor): boolean {
+  return cursor1 && cursor2
+    && cursor1.tableId === cursor2.tableId
+    && deepArrayEquals(cursor1.rowPath, cursor2.rowPath)
+    && cursor1.partIndex === cursor2.partIndex
+    && cursor1.columnIndex === cursor2.columnIndex;
 }
