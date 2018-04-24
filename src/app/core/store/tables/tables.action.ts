@@ -20,8 +20,9 @@
 import {Action} from '@ngrx/store';
 import {Direction} from '../../../shared/direction';
 import {QueryModel} from '../navigation/query.model';
-import {TableCursor, TableHeaderCursor} from './table-cursor';
-import {TableColumn, TableConfig, TableModel, TablePart} from './table.model';
+import {TableBodyCursor, TableCursor, TableHeaderCursor} from './table-cursor';
+import {TableColumn, TableConfig, TableModel, TablePart, TableRow} from './table.model';
+import {EditedAttribute} from './tables.state';
 
 export enum TablesActionType {
 
@@ -44,7 +45,6 @@ export enum TablesActionType {
   RENAME_COLUMN = '[Tables] Rename Column',
   RESIZE_COLUMN = '[Tables] Resize Column',
   REMOVE_COLUMN = '[Tables] Remove Column',
-  SELECT_COLUMN = '[Tables] Select Column',
 
   GROUP_BY_COLUMN = '[Tables] Group By Column',
   SORT_BY_COLUMN = '[Tables] Sort By Column',
@@ -52,23 +52,26 @@ export enum TablesActionType {
   LOAD_ROWS = '[Tables] Load Rows',
   DISPOSE_ROWS = '[Tables] Dispose Rows',
 
-  ADD_ROW = '[Tables] Add Row',
+  ADD_ROWS = '[Tables] Add Rows',
+  ADD_LINKED_ROWS = '[Tables] Add Linked Rows',
+  REPLACE_ROWS = '[Tables] Replace Rows',
   MOVE_ROW = '[Tables] Move Row',
   UNLINK_ROW = '[Tables] Unlink Row',
   REMOVE_ROW = '[Tables] Remove Row',
   SELECT_ROW = '[Tables] Select Row',
 
-  EXPAND_LINK = '[Tables] Expand link',
-  COLLAPSE_LINK = '[Tables] Collapse link',
+  EXPAND_ROWS = '[Tables] Expand Rows',
+  COLLAPSE_ROWS = '[Tables] Collapse Rows',
 
   EDIT_CELL = '[Tables] Edit Cell',
   COPY_CELL = '[Tables] Copy Cell',
   PASTE_CELL = '[Tables] Paste Cell',
   MOVE_CELL = '[Tables] Move Cell',
-  SELECT_CELLS = '[Tables] Select Cells',
 
+  SET_CURSOR = '[Tables] Set Cursor',
   MOVE_CURSOR = '[Tables] Move Cursor',
-  DESELECT = '[Tables] Deselect',
+
+  SET_EDITED_ATTRIBUTE = '[Tables] Set Edited Document',
 
   ADD_FUNCTION = '[Tables] Add Function',
   REMOVE_FUNCTION = '[Tables] Remove Function',
@@ -201,10 +204,52 @@ export namespace TablesAction {
     }
   }
 
-  export class SelectColumn implements TableCursorAction {
-    public readonly type = TablesActionType.SELECT_COLUMN;
+  export class ReplaceRows implements Action {
+    public readonly type = TablesActionType.REPLACE_ROWS;
 
-    public constructor(public payload: { cursor: TableHeaderCursor }) {
+    public constructor(public payload: { cursor: TableBodyCursor, rows: TableRow[], deleteCount: number }) {
+    }
+  }
+
+  export class AddRows implements Action {
+    public readonly type = TablesActionType.ADD_ROWS;
+
+    public constructor(public payload: { cursor: TableBodyCursor, rows: TableRow[] }) {
+    }
+  }
+
+  export class AddLinkedRows implements Action {
+    public readonly type = TablesActionType.ADD_LINKED_ROWS;
+
+    public constructor(public payload: { cursor: TableBodyCursor, linkedRows: TableRow[] }) {
+    }
+  }
+
+  export class RemoveRow implements Action {
+    public readonly type = TablesActionType.REMOVE_ROW;
+
+    public constructor(public payload: { cursor: TableBodyCursor }) {
+    }
+  }
+
+  export class CollapseRows implements Action {
+    public readonly type = TablesActionType.COLLAPSE_ROWS;
+
+    public constructor(public payload: { cursor: TableBodyCursor }) {
+    }
+  }
+
+  export class ExpandRows implements Action {
+    public readonly type = TablesActionType.EXPAND_ROWS;
+
+    public constructor(public payload: { cursor: TableBodyCursor }) {
+    }
+  }
+
+  export class SetCursor implements TableCursorAction {
+    public readonly type = TablesActionType.SET_CURSOR;
+
+    public constructor(public payload: { cursor: TableCursor }) {
     }
   }
 
@@ -215,10 +260,10 @@ export namespace TablesAction {
     }
   }
 
-  export class Deselect implements Action {
-    public readonly type = TablesActionType.DESELECT;
+  export class SetEditedAttribute implements Action {
+    public readonly type = TablesActionType.SET_EDITED_ATTRIBUTE;
 
-    public constructor(public payload: { tableId: string }) {
+    public constructor(public payload: { editedAttribute: EditedAttribute }) {
     }
   }
 
@@ -227,5 +272,8 @@ export namespace TablesAction {
     AddColumn | SplitColumn | ReplaceColumns | RemoveColumn |
     HideColumn | ShowColumns |
     MoveColumn | RenameColumn | ResizeColumn |
-    SelectColumn | MoveCursor | Deselect;
+    ReplaceRows | AddRows | AddLinkedRows | RemoveRow |
+    CollapseRows | ExpandRows |
+    SetCursor | MoveCursor |
+    SetEditedAttribute;
 }

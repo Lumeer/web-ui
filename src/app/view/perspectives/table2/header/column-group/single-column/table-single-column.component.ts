@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Subscription} from 'rxjs/Subscription';
@@ -27,17 +27,16 @@ import {selectCollectionById} from '../../../../../../core/store/collections/col
 import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
 import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
 import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
-import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
-import {SelectedTableCell, TableColumn, TableCompoundColumn, TableModel, TablePart, TableSingleColumn} from '../../../../../../core/store/tables/table.model';
+import {areTableHeaderCursorsEqual, TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
+import {TableColumn, TableCompoundColumn, TableModel, TablePart, TableSingleColumn} from '../../../../../../core/store/tables/table.model';
 import {findTableColumn, splitColumnPath} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
-import {selectTableSelectedCell} from '../../../../../../core/store/tables/tables.state';
+import {selectTableCursor} from '../../../../../../core/store/tables/tables.state';
 import {Direction} from '../../../../../../shared/direction';
 import {KeyCode} from '../../../../../../shared/key-code';
-import {deepArrayEquals} from '../../../../../../shared/utils/array.utils';
 import {extractAttributeName, extractAttributeParentId, filterAttributesByDepth, generateAttributeId, splitAttributeId} from '../../../../../../shared/utils/attribute.utils';
 import {HtmlModifier, stripedBackground} from '../../../../../../shared/utils/html-modifier';
-import {KeyCodeHelper} from '../../../../../../shared/utils/key-code.helper';
+import {isKeyPrintable} from '../../../../../../shared/utils/key-code.helper';
 import {TableAttributeNameComponent} from './attribute-name/table-attribute-name.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
 
@@ -80,6 +79,7 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
   public subscriptions: Subscription = new Subscription();
 
   public constructor(private i18n: I18n,
+                     private changeDetector: ChangeDetectorRef,
                      private store: Store<AppState>) {
   }
 
@@ -90,11 +90,12 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
 
   private subscribeToSelected() {
     this.subscriptions.add(
-      this.store.select(selectTableSelectedCell(this.cursor.tableId))
-        .subscribe((selectedCell: SelectedTableCell) => {
-          this.selected = selectedCell && selectedCell.partIndex === this.cursor.partIndex
-            && deepArrayEquals(selectedCell.columnPath, this.cursor.columnPath);
+      this.store.select(selectTableCursor)
+        .subscribe(cursor => {
+          this.selected = areTableHeaderCursorsEqual(cursor, this.cursor);
           this.edited = this.selected ? this.edited : false;
+
+          this.changeDetector.detectChanges();
 
           // TODO probably better to do in action
           if (this.selected && this.table.parts.length === 1 && this.cursor.columnPath.length === 1
@@ -302,7 +303,7 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
 
   public onClick() {
     if (!this.selected) {
-      this.store.dispatch(new TablesAction.SelectColumn({cursor: this.cursor}));
+      this.store.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
     }
   }
 
@@ -349,7 +350,7 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
         this.showRemoveConfirm();
         return;
       default:
-        if (!KeyCodeHelper.isPrintable(event.keyCode)) {
+        if (!isKeyPrintable(event.keyCode)) {
           return;
         }
 

@@ -24,11 +24,27 @@ import {StoreModule} from '@ngrx/store';
 import {ResizableModule} from 'angular-resizable-element';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {ContextMenuModule} from 'ngx-contextmenu';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {TablesEffects} from '../../../core/store/tables/tables.effects';
 import {tablesReducer} from '../../../core/store/tables/tables.reducer';
 import {initialTablesState, TABLE_FEATURE_NAME} from '../../../core/store/tables/tables.state';
 import {PickerModule} from '../../../shared/picker/picker.module';
 import {SharedModule} from '../../../shared/shared.module';
+import {TableRowGroupFooterComponent} from './body/row-group/footer/table-row-group-footer.component';
+import {TableRowGroupHeaderComponent} from './body/row-group/header/table-row-group-header.component';
+import {TableRowGroupComponent} from './body/row-group/table-row-group.component';
+import {TableCollapsedCellComponent} from './body/rows/row/cell-group/cell/collapsed-cell/table-collapsed-cell.component';
+import {TableDataCellMenuComponent} from './body/rows/row/cell-group/cell/data-cell/menu/table-data-cell-menu.component';
+import {TableDataCellSuggestionsComponent} from './body/rows/row/cell-group/cell/data-cell/suggestions/table-data-cell-suggestions.component';
+import {TableDataCellComponent} from './body/rows/row/cell-group/cell/data-cell/table-data-cell.component';
+import {TableEditableCellComponent} from './body/rows/row/cell-group/cell/editable-cell/table-editable-cell.component';
+import {TableCellComponent} from './body/rows/row/cell-group/cell/table-cell.component';
+import {TableCellGroupComponent} from './body/rows/row/cell-group/table-cell-group.component';
+import {TableLinkCellComponent} from './body/rows/row/link-cell/table-link-cell.component';
+import {TableRowNumbersComponent} from './body/rows/row/row-numbers/table-row-numbers.component';
+import {TableRowComponent} from './body/rows/row/table-row.component';
+import {TableRowsComponent} from './body/rows/table-rows.component';
+import {TableBodyComponent} from './body/table-body.component';
 import {TableCaptionComponent} from './header/collection/caption/table-caption.component';
 import {TableHeaderCollectionComponent} from './header/collection/table-header-collection.component';
 import {TableCompoundColumnComponent} from './header/column-group/compound-column/table-compound-column.component';
@@ -52,7 +68,8 @@ import {Table2PerspectiveComponent} from './table2-perspective.component';
     EffectsModule.forFeature([TablesEffects]),
     ContextMenuModule,
     ClickOutsideModule,
-    ResizableModule
+    ResizableModule,
+    InfiniteScrollModule
   ],
   declarations: [
     Table2PerspectiveComponent,
@@ -67,7 +84,25 @@ import {Table2PerspectiveComponent} from './table2-perspective.component';
     TableHiddenColumnComponent,
     TableAttributeNameComponent,
     TableColumnContextMenuComponent,
-    TableAttributeSuggestionsComponent
+    TableAttributeSuggestionsComponent,
+    TableBodyComponent,
+    TableRowGroupComponent,
+    TableRowGroupHeaderComponent,
+    TableRowGroupFooterComponent,
+    TableRowComponent,
+    TableCellGroupComponent,
+    TableDataCellComponent,
+    TableLinkCellComponent,
+    TableRowsComponent,
+    TableCellComponent,
+    TableEditableCellComponent,
+    TableDataCellMenuComponent,
+    TableCollapsedCellComponent,
+    TableRowNumbersComponent,
+    TableDataCellSuggestionsComponent
+  ],
+  exports: [
+    Table2PerspectiveComponent
   ]
 })
 export class Table2PerspectiveModule {

@@ -1,0 +1,47 @@
+<div *ngIf="!isDisplayable()"
+     class="alert alert-warning"
+     role="alert"
+     i18n="@@chart.query.invalid">Your query results cannot be shown using chart perspective. The query
+  needs to specify exactly one file.
+</div>
+
+<ng-container *ngIf="isDisplayable()">
+  <div *ngIf="documents; else loading" class="container">
+
+    <div class="d-flex"
+         (mouseenter)="chartHovered = true"
+         (mouseleave)="chartHovered = false">
+
+      <attribute-select
+        *ngIf="chartHovered || pickerHovered"
+        class="align-self-center mr-1"
+        [@slide]
+        [attributes]="documentAttributes"
+        [preSelected]="attributeY"
+        [emptyDescription]="yAxisTitle()"
+        (attributeSelected)="attributeY = $event"
+        (mouseenter)="pickerHovered = true"
+        (mouseleave)="pickerHovered = false">
+      </attribute-select>
+
+      <chart-visualization
+        [documents]="documents"
+        [attributeX]="attributeX"
+        [attributeY]="attributeY">
+      </chart-visualization>
+    </div>
+
+    <div class="text-center mt-2">
+      <attribute-select
+        [attributes]="documentAttributes"
+        [emptyDescription]="xAxisTitle()"
+        (attributeSelected)="attributeX = $event">
+      </attribute-select>
+    </div>
+
+  </div>
+</ng-container>
+
+<span #loading i18n="@@chart.loading">
+  Loading...
+</span>

@@ -21,12 +21,15 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {concatMap, filter, first, flatMap, map, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators';
+import {concatMap, filter, first, flatMap, map, mergeMap, skipWhile, withLatestFrom} from 'rxjs/operators';
+import {getArrayDifference} from '../../../shared/utils/array.utils';
 import {splitAttributeId} from '../../../shared/utils/attribute.utils';
 import {AppState} from '../app.state';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {CollectionsAction} from '../collections/collections.action';
-import {selectAllCollections, selectCollectionById} from '../collections/collections.state';
+import {selectAllCollections, selectCollectionById, selectCollectionsLoaded} from '../collections/collections.state';
+import {DocumentsAction} from '../documents/documents.action';
+import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {LinkTypeHelper} from '../link-types/link-type.helper';
 import {selectLinkTypeById} from '../link-types/link-types.state';
 import {selectQuery} from '../navigation/navigation.state';
@@ -37,8 +40,8 @@ import {ViewsAction} from '../views/views.action';
 import {selectViewTable2Config} from '../views/views.state';
 import {moveTableCursor} from './table-cursor';
 import {convertTableToConfig} from './table.converter';
-import {DEFAULT_TABLE_ID, TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TablePart, TableSingleColumn} from './table.model';
-import {createCollectionPart, createLinkPart, createTableColumnsBySiblingAttributeIds, extendHiddenColumn, findTableColumn, getAttributeIdFromColumn, mergeHiddenColumns, renameTableColumn, resizeLastColumnChild, splitColumnPath} from './table.utils';
+import {DEFAULT_TABLE_ID, EMPTY_TABLE_ROW, TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
+import {createCollectionPart, createLinkPart, createTableColumnsBySiblingAttributeIds, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, renameTableColumn, resizeLastColumnChild, splitColumnPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {selectTableById} from './tables.state';
 
@@ -50,7 +53,10 @@ export class TablesEffects {
     ofType<TablesAction.CreateTable>(TablesActionType.CREATE_TABLE),
     withLatestFrom(
       this.store$.select(selectViewTable2Config),
-      this.store$.select(selectAllCollections)
+      this.store$.select(selectCollectionsLoaded).pipe(
+        skipWhile(loaded => !loaded),
+        mergeMap(() => this.store$.select(selectAllCollections))
+      )
     ),
     flatMap(([action, config, collections]) => {
       const query: QueryModel = action.payload.query;
@@ -61,7 +67,10 @@ export class TablesEffects {
       const createTableAction: Action = new TablesAction.AddTable({
         table: {
           id: action.payload.tableId,
-          parts: [part]
+          parts: [part],
+          documentIds: new Set<string>(),
+          rows: [EMPTY_TABLE_ROW],
+          rowNumberWidth: 40 // TODO calculate dynamically
         }
       });
 
@@ -71,6 +80,18 @@ export class TablesEffects {
         config
       }));
 
+      if (createPartActions.length === 0 && part.columns.length === 0) {
+        const column = new TableCompoundColumn(new TableSingleColumn('A'), []);
+        const addColumnAction = new TablesAction.AddColumn({
+          cursor: {
+            tableId: action.payload.tableId,
+            partIndex: 0,
+            columnPath: [0]
+          },
+          column
+        });
+        return [createTableAction].concat(addColumnAction);
+      }
       return [createTableAction].concat(createPartActions);
     })
   );
@@ -113,15 +134,27 @@ export class TablesEffects {
         map(collection => ({...item, collection}))
       );
     }),
-    map(({action, table, linkType, collection}) => {
+    mergeMap(({action, table, linkType, collection}) => {
       const lastIndex = table.parts.length - 1;
       const linkTypePart = createLinkPart(linkType, lastIndex + 1, action.payload.config);
       const collectionPart = createCollectionPart(collection, lastIndex + 2, action.payload.config);
 
-      return new TablesAction.AddPart({
-        tableId: table.id,
-        parts: [linkTypePart, collectionPart]
-      });
+      return [
+        new TablesAction.AddPart({
+          tableId: table.id,
+          parts: [linkTypePart, collectionPart]
+        }),
+        new DocumentsAction.Get({
+          query: {
+            collectionIds: [collection.id]
+          }
+        }),
+        new LinkInstancesAction.Get({
+          query: {
+            linkTypeIds: [linkType.id]
+          }
+        })
+      ];
     })
   );
 
@@ -197,7 +230,7 @@ export class TablesEffects {
       const secondChildAttributeAction = createSecondChildAttributeAction(collection, oldAttribute, childNames[1], parentAttributeAction);
       const firstChildAttributeAction = createFirstChildAttributeAction(collection, oldAttribute, childNames[0], secondChildAttributeAction);
 
-      const deselectAction = new TablesAction.Deselect({tableId: action.payload.cursor.tableId});
+      const deselectAction = new TablesAction.SetCursor({cursor: null});
       return [firstChildAttributeAction, deselectAction];
     })
   );
@@ -280,9 +313,15 @@ export class TablesEffects {
 
       const columns = createTableColumnsBySiblingAttributeIds(attributes, action.payload.attributeIds);
 
+      const attributeIds = getArrayDifference(hiddenColumn.attributeIds, action.payload.attributeIds);
+      if (attributeIds.length > 0) {
+        const updatedHiddenColumn: TableHiddenColumn = {...hiddenColumn, attributeIds};
+        columns.push(updatedHiddenColumn);
+      }
+
       return new TablesAction.ReplaceColumns({
         cursor: action.payload.cursor,
-        deleteCount: Number(hiddenColumn.attributeIds.length !== attributes.length),
+        deleteCount: 1,
         columns
       });
     })
@@ -366,6 +405,41 @@ export class TablesEffects {
   );
 
   @Effect()
+  public collapseRows$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.MoveCursor>(TablesActionType.COLLAPSE_ROWS),
+    mergeMap(action => this.getLatestTable(action)),
+    mergeMap(({action, table}) => {
+      const {cursor} = action.payload;
+
+      const row = findTableRow(table.rows, cursor.rowPath);
+      if (!row) {
+        return [];
+      }
+
+      const updatedRow: TableRow = {...row, linkedRows: [], expanded: false};
+      return [new TablesAction.ReplaceRows({cursor, rows: [updatedRow], deleteCount: 1})];
+    })
+  );
+
+  @Effect()
+  public expandRows$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.MoveCursor>(TablesActionType.EXPAND_ROWS),
+    mergeMap(action => this.getLatestTable(action)),
+    mergeMap(({action, table}) => {
+      const {cursor} = action.payload;
+
+      const row = findTableRow(table.rows, cursor.rowPath);
+      if (!row) {
+        return [];
+      }
+
+      const updatedRow: TableRow = {...row, linkedRows: [], expanded: true};
+
+      return [new TablesAction.ReplaceRows({cursor, rows: [updatedRow], deleteCount: 1})];
+    })
+  );
+
+  @Effect()
   public moveCursor$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.MoveCursor>(TablesActionType.MOVE_CURSOR),
     concatMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
@@ -374,7 +448,7 @@ export class TablesEffects {
     )),
     map(({action, table}) => {
       const cursor = moveTableCursor(table, action.payload.cursor, action.payload.direction);
-      return new TablesAction.SelectColumn({cursor});
+      return new TablesAction.SetCursor({cursor});
     })
   );
 

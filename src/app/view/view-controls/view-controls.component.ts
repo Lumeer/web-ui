@@ -151,9 +151,12 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public canShowPerspective(perspective: Perspective): boolean {
     switch (perspective) {
-      case Perspective.Table:
+      case Perspective.Table2:
       case Perspective.SmartDoc:
+      case Perspective.Chart:
         return this.isSingleCollectionInQuery();
+      case Perspective.Table:
+        return false;
       default:
         return true;
     }

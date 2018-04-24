@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
@@ -126,7 +126,21 @@ export class Table2PerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public onClickOutside() {
-    this.store.dispatch(new TablesAction.Deselect({tableId: this.tableId}));
+    this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
+  }
+
+  public isDisplayable(): boolean {
+    return this.query && this.query.collectionIds.length === 1;
+  }
+
+  public height(element: ElementRef): string {
+    if (this.table.id !== DEFAULT_TABLE_ID) {
+      return 'auto';
+    }
+
+    const {top} = element['getBoundingClientRect']();
+    const height = window.innerHeight - top;
+    return `${height}px`;
   }
 
 }

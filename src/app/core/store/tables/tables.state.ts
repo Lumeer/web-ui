@@ -19,21 +19,45 @@
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
+import {TableCursor} from './table-cursor';
 import {TableModel} from './table.model';
+import {filterLeafColumns} from './table.utils';
 
 export const TABLE_FEATURE_NAME = 'tables';
 
 export interface TablesState extends EntityState<TableModel> {
+
+  cursor: TableCursor;
+  editedAttribute: EditedAttribute;
+
+}
+
+export interface EditedAttribute {
+
+  documentId: string;
+  attributeId: string;
+
 }
 
 export const tablesAdapter = createEntityAdapter<TableModel>({selectId: table => table.id});
 
 export function initialTablesState(): TablesState {
-  return tablesAdapter.getInitialState();
+  return tablesAdapter.getInitialState({
+    cursor: null,
+    editedAttribute: null
+  });
 }
 
 export const selectTablesState = createFeatureSelector<TablesState>(TABLE_FEATURE_NAME);
 
 export const selectTablesDictionary = createSelector(selectTablesState, tablesAdapter.getSelectors().selectEntities);
-export const selectTableById = (tableId) => createSelector(selectTablesDictionary, tablesDictionary => tablesDictionary[tableId]);
-export const selectTableSelectedCell = (tableId) => createSelector(selectTableById(tableId), table => table ? table.selectedCell : null);
+export const selectTableById = (tableId: string) =>
+  createSelector(selectTablesDictionary, tablesDictionary => tablesDictionary[tableId]);
+
+export const selectTableCursor = createSelector(selectTablesState, state => state.cursor);
+export const selectEditedAttribute = createSelector(selectTablesState, state => state.editedAttribute);
+
+export const selectTablePart = (tableId: string, partIndex: number) =>
+  createSelector(selectTableById(tableId), table => table ? table.parts[partIndex] : null);
+export const selectTablePartLeafColumns = (tableId: string, partIndex: number) =>
+  createSelector(selectTablePart(tableId, partIndex), part => part ? filterLeafColumns(part.columns) : []);

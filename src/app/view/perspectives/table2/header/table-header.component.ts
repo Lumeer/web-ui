@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {TableModel, TablePart} from '../../../../core/store/tables/table.model';
 
 @Component({
@@ -26,18 +26,17 @@ import {TableModel, TablePart} from '../../../../core/store/tables/table.model';
   styleUrls: ['./table-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableHeaderComponent implements OnInit {
+export class TableHeaderComponent {
 
   @Input()
   public table: TableModel;
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
   public trackByPartIndex(index: number, part: TablePart): number {
     return part.index;
+  }
+
+  public rowNumberWidth(): string {
+    return `${this.table.rowNumberWidth}px`;
   }
 
 }

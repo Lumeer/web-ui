@@ -1,0 +1,24 @@
+<div [style.width]="width()"
+     (keydown)="onKeyDown($event)"
+     (mousedown)="onMouseDown()"
+     class="table-border-right table-border-bottom h-100">
+  <ng-container *ngIf="isSingleColumn()">
+    <table-data-cell *ngIf="!isCollapsed()"
+                     [column]="column"
+                     [cursor]="cursor"
+                     [document]="documents ? documents[0] : null"
+                     [linkInstance]="linkInstances ? linkInstances[0] : null"
+                     [selected]="selected"
+                     [table]="table"
+                     class="d-block h-100">
+    </table-data-cell>
+    <table-collapsed-cell *ngIf="isCollapsed()"
+                          [column]="column"
+                          [cursor]="cursor"
+                          [documents]="documents"
+                          [linkInstances]="linkInstances"
+                          [selected]="selected"
+                          class="d-block h-100">
+    </table-collapsed-cell>
+  </ng-container>
+</div>

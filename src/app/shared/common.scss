@@ -5,6 +5,22 @@
   -webkit-user-select: auto !important;
 }
 
+html {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  counter-reset: row-number;
+  height: 100%;
+  margin: 0;
+}
+
+.row-number::before {
+  counter-increment: row-number;
+  content: counter(row-number);
+}
+
 a {
   cursor: pointer;
   transition: color $animation-color-duration;
@@ -171,4 +187,8 @@ input {
 
 .table-border-left {
   border-left: 1px solid $table-border-color;
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }
