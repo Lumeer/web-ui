@@ -3,7 +3,7 @@
     <payments-state></payments-state>
   </div>
   <div class="col-6">
-    <payments-order></payments-order>
+    <payments-order (pay)="createPayment($event)"></payments-order>
   </div>
 </div>
 <div class="row">

@@ -30,7 +30,7 @@ import {OrganizationModel} from "../../../core/store/organizations/organization.
 import {selectOrganizationByWorkspace} from "../../../core/store/organizations/organizations.state";
 import {isNullOrUndefined} from "util";
 import {filter} from "rxjs/operators";
-import {selectContactByOrganizationId} from "../../../core/store/organizations/contact/contacts.state";
+import {selectContactByOrganizationId, selectContactByWorkspace} from "../../../core/store/organizations/contact/contacts.state";
 
 @Component({
   templateUrl: './organization-detail.component.html'
@@ -64,7 +64,7 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
       .pipe(filter(organization => !isNullOrUndefined(organization)))
       .subscribe(organization => this.organization = organization);
 
-    this.contactSubscription = this.store.select(selectContactByOrganizationId(this.organization.id))
+    this.contactSubscription = this.store.select(selectContactByWorkspace)
       .pipe(filter(contact => !isNullOrUndefined(contact)))
       .subscribe(contact => this.contactForm.setContact(contact));
   }

@@ -2,30 +2,34 @@
   <h5 i18n="@@organizations.tab.detail.payments.payments">Previous Orders</h5>
   <div class="table-responsive">
     <table class="table table-striped">
-      <caption>List of previous orders</caption>
+      <caption i18n="@@organizations.tab.detail.payments.list">List of previous orders</caption>
       <thead>
         <tr>
-          <th>Placed on</th>
-          <th>Service Level</th>
-          <th># Users</th>
-          <th>Price</th>
-          <th>Valid until</th>
+          <th i18n="@@organizations.tab.detail.payments.title.placedOn">Placed on</th>
+          <th i18n="@@organizations.tab.detail.payments.title.serviceLevel">Service Level</th>
+          <th i18n="@@organizations.tab.detail.payments.title.users"># Users</th>
+          <th i18n="@@organizations.tab.detail.payments.title.price">Price</th>
+          <th i18n="@@organizations.tab.detail.payments.title.state">State</th>
+          <th i18n="@@organizations.tab.detail.payments.title.validFrom">Valid from</th>
+          <th i18n="@@organizations.tab.detail.payments.title.validUntil">Valid until</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>2018-02-20</td>
-          <td><span class="badge badge-pill badge-success p-2">Business</span></td>
-          <td>10</td>
-          <td>€402.00</td>
-          <td>2019-02-19</td>
+        <tr *ngFor="let payment of payments">
+          <td>{{ payment.date | date : 'shortDate'}}</td>
+          <td>
+            <span *ngIf="payment.serviceLevel === 'FREE'" class="badge badge-pill badge-danger p-2" i18n="@@organizations.tab.detail.payments.trial">Trial</span>
+            <span *ngIf="payment.serviceLevel !== 'FREE'" class="badge badge-pill badge-success p-2" i18n="@@organizations.tab.detail.payments.business">Business</span>
+          </td>
+          <td>{{ payment.users }}</td>
+          <td>{{ payment.currency }} {{ payment.amount | number:'1.2-2' }}</td>
+          <td *ngIf="payment.state === 'PAID'" i18n="@@organizations.tab.detail.payments.paid">Paid</td>
+          <td *ngIf="payment.state !== 'PAID'"><span i18n="@@organizations.tab.detail.payments.ordered">Ordered</span> <button type="button" class="btn btn-sm btn-success" (click)="refreshPayment(payment.paymentId)"><i class="fas fa-sync-alt"></i></button></td>
+          <td>{{ payment.start | date : 'shortDate'}}</td>
+          <td>{{ payment.validUntil | date : 'shortDate' }}</td>
         </tr>
-        <tr>
-          <td>2017-02-20</td>
-          <td><span class="badge badge-pill badge-success p-2">Business</span></td>
-          <td>20</td>
-          <td>€804.00</td>
-          <td>2018-02-19</td>
+        <tr *ngIf="!payments">
+          <td colspan="7" class="text-center" i18n="@@organizations.tab.detail.payments.giveItATry">You've never had a chance to see Lumeer for <strong>Business</strong>. Give it a try today!</td>
         </tr>
       </tbody>
     </table>

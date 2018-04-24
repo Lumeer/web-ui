@@ -22,6 +22,10 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Contact, Organization} from '../dto';
 import {PermissionService} from './permission.service';
+import {ServiceLimits} from "../dto/service-limits";
+import {Payment} from "../dto/payment";
+import {selectWorkspace} from "../store/navigation/navigation.state";
+import {AppState} from "../store/app.state";
 
 @Injectable()
 export class OrganizationService extends PermissionService {
@@ -57,6 +61,22 @@ export class OrganizationService extends PermissionService {
 
   public setOrganizationContact(code: string, contact: Contact): Observable<Contact> {
     return this.httpClient.put<Contact>(`${this.apiPrefix(code)}/contact`, contact);
+  }
+
+  public getServiceLimits(): Observable<ServiceLimits> {
+    return this.httpClient.get<ServiceLimits>(`${this.actualApiPrefix()}/serviceLimits`);
+  }
+
+  public getPayments(): Observable<Payment[]> {
+    return this.httpClient.get<Payment[]>(`${this.actualApiPrefix()}/payments`);
+  }
+
+  public getPayment(paymentId: string): Observable<Payment> {
+    return this.httpClient.get<Payment>(`${this.actualApiPrefix()}/payment/${paymentId}`);
+  }
+
+  public createPayment(payment: Payment): Observable<Payment> {
+    return this.httpClient.post<Payment>(`${this.actualApiPrefix()}/payments`, payment);
   }
 
   protected actualApiPrefix(): string {
