@@ -79,6 +79,10 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
   }
 
   public refreshPayment(paymentId: string) {
-    this.store.dispatch(new PaymentsAction.GetPayment({ organizationId: this.organization.id, paymentId, nextAction: new ServiceLimitsAction.GetServiceLimits({ organizationId: null }) }));
+    this.store.dispatch(new PaymentsAction.GetPayment({
+      organizationId: this.organization.id,
+      paymentId,
+      nextAction: new ServiceLimitsAction.GetServiceLimits({ organizationId: this.organization.id })
+    }));
   }
 }

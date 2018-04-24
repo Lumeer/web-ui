@@ -65,8 +65,7 @@ export class PaymentsEffects {
     }),
     flatMap(({ payment, nextAction }) => {
       const actions: Action[] = [new PaymentsAction.GetPaymentSuccess({ payment: payment })];
-      if (nextAction && nextAction instanceof ServiceLimitsAction.GetServiceLimits) {
-        nextAction.payload.organizationId = payment.organizationId;
+      if (nextAction) {
         actions.push(nextAction);
       }
       return actions;
