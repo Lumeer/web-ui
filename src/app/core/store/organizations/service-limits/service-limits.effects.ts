@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from "@angular/core";
-import {catchError, map, mergeMap, skipWhile, tap, withLatestFrom} from "rxjs/operators";
+import {catchError, map, mergeMap, tap} from "rxjs/operators";
 import {Actions, Effect, ofType} from "@ngrx/effects";
 import {Action, Store} from "@ngrx/store";
 import {Router} from "@angular/router";
@@ -29,7 +29,6 @@ import {Observable} from "rxjs/Observable";
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {ServiceLimitsAction, ServiceLimitsActionType} from "./service-limits.action";
 import {ServiceLimitsConverter} from "./service-limits.converter";
-import {selectOrganizationsDictionary} from "../organizations.state";
 
 @Injectable()
 export class ServiceLimitsEffects {
@@ -37,11 +36,8 @@ export class ServiceLimitsEffects {
   @Effect()
   public getServiceLimits$: Observable<Action> = this.actions$.pipe(
     ofType<ServiceLimitsAction.GetServiceLimits>(ServiceLimitsActionType.GET_SERVICE_LIMITS),
-    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
-    skipWhile(([action, organizationsEntities]) => !organizationsEntities[action.payload.organizationId]),
-    mergeMap(([action, organizationsEntities]) => {
-      const organization = organizationsEntities[action.payload.organizationId];
-      return this.organizationService.getServiceLimits(organization.code).pipe(
+    mergeMap(action => {
+      return this.organizationService.getServiceLimits().pipe(
         map(dto => ServiceLimitsConverter.fromDto(action.payload.organizationId, dto))
       );
     }),
