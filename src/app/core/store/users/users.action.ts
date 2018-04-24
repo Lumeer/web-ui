@@ -42,7 +42,6 @@ export enum UsersActionType {
   DELETE_FAILURE = '[Users] Delete :: Failure',
 
   CLEAR = '[Users] Clear',
-  CLEAR_USERS = '[Users] Clear users'
 
 }
 
@@ -150,16 +149,9 @@ export namespace UsersAction {
     }
   }
 
-  export class ClearUsers implements Action {
-    public readonly type = UsersActionType.CLEAR_USERS;
-
-    public constructor() {
-    }
-  }
-
   export type All = Get | GetSuccess | GetFailure |
     GetCurrentUser | GetCurrentUserSuccess |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure | Clear | ClearUsers;
+    Delete | DeleteSuccess | DeleteFailure | Clear;
 }

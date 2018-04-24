@@ -42,7 +42,6 @@ import {OrganizationUsersComponent} from "./organization/users/organization-user
 import {UsersModule} from "../shared/users/users.module";
 import {ProjectSettingsGuard} from "./project/project-settings.guard";
 import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
-import {GroupsSuggestionsComponent} from '../shared/users/user-groups/suggestions/groups-suggestions.component';
 
 @NgModule({
   imports: [
@@ -63,7 +62,6 @@ import {GroupsSuggestionsComponent} from '../shared/users/user-groups/suggestion
     ProjectSettingsComponent,
     WorkspaceChooserComponent,
     ResourceChooserComponent,
-    GroupsSuggestionsComponent,
     ContactFormComponent,
     PaymentsPanelComponent,
     PaymentsOrderComponent,

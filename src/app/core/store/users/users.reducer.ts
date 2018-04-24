@@ -32,8 +32,6 @@ export function usersReducer(state: UsersState = initialUsersState, action: User
       return usersAdapter.updateOne({id: action.payload.user.id, changes: action.payload.user}, state);
     case UsersActionType.DELETE_SUCCESS:
       return usersAdapter.removeOne(action.payload.userId, state);
-    case UsersActionType.CLEAR_USERS:
-      return usersAdapter.removeAll(state);
     case UsersActionType.CLEAR:
       return initialUsersState;
     default:

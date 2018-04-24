@@ -22,12 +22,11 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 
 import {CollectionService} from '../core/rest';
 import {Observable} from 'rxjs/Observable';
-import {catchError, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
-import {selectAllCollections} from "../core/store/collections/collections.state";
+import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {selectCollectionById, selectCollectionsLoaded} from "../core/store/collections/collections.state";
 import {Store} from "@ngrx/store";
 import {AppState} from '../core/store/app.state';
 import {CollectionModel} from '../core/store/collections/collection.model';
-import {CollectionConverter} from '../core/store/collections/collection.converter';
 import {CollectionsAction} from '../core/store/collections/collections.action';
 import {isNullOrUndefined} from 'util';
 import {OrganizationModel} from '../core/store/organizations/organization.model';
@@ -37,6 +36,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {selectAllOrganizations} from '../core/store/organizations/organizations.state';
 import {userHasManageRoleInResource} from '../shared/utils/resource.utils';
 import {selectCurrentUserForWorkspace} from '../core/store/users/users.state';
+import {of} from 'rxjs/observable/of';
 
 @Injectable()
 export class CollectionSettingsGuard implements CanActivate {
@@ -51,24 +51,38 @@ export class CollectionSettingsGuard implements CanActivate {
     const organizationCode = next.paramMap.get("organizationCode");
     const collectionId = next.paramMap.get('collectionId');
 
-    return this.getCollectionFromStoreOrApi(collectionId).pipe(
+    return this.loadCollections().pipe(
+      mergeMap(() => this.store.select(selectCollectionById(collectionId))),
       withLatestFrom(this.store.select(selectAllOrganizations)),
       withLatestFrom(this.store.select(selectCurrentUserForWorkspace)),
-      mergeMap(([[collection, organizations], user]) => {
+      map(([[collection, organizations], user]) => {
         if (isNullOrUndefined(collection)) {
           this.dispatchErrorActionsNotExist();
-          return Observable.of(false);
+          return false;
         }
 
         if (!userHasManageRoleInResource(user, collection)) {
           this.dispatchErrorActionsNotPermission();
-          return Observable.of(false);
+          return false;
         }
 
         const organization = organizations.find(org => org.code === organizationCode);
         this.dispatchDataEvents(organization, collection);
-        return Observable.of(true);
-      })
+        return true;
+      }),
+      catchError(() => of(false))
+    );
+  }
+
+  private loadCollections(): Observable<boolean> {
+    return this.store.select(selectCollectionsLoaded).pipe(
+      tap(loaded => {
+        if (!loaded) {
+          this.store.dispatch(new CollectionsAction.Get({query: {}}));
+        }
+      }),
+      filter(loaded => loaded),
+      take(1)
     );
   }
 
@@ -93,36 +107,7 @@ export class CollectionSettingsGuard implements CanActivate {
 
   private dispatchDataEvents(organization: OrganizationModel, collection: CollectionModel) {
     this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
-    this.store.dispatch(new CollectionsAction.GetPermissions({collectionId: collection.id}));
     //this.store.dispatch(new GroupsAction.Get());
-  }
-
-  public getCollectionFromStoreOrApi(id: string): Observable<CollectionModel> {
-    return this.getCollectionFromStore(id).pipe(
-      mergeMap(collection => {
-        if (!isNullOrUndefined(collection)) {
-          return Observable.of(collection);
-        }
-        return this.getCollectionFromApi(id);
-      })
-    );
-  }
-
-  private getCollectionFromApi(id: string): Observable<CollectionModel> {
-    return this.collectionService.getCollection(id).pipe(
-      map(collection => CollectionConverter.fromDto(collection)),
-      tap(collection => this.store.dispatch(new CollectionsAction.GetOneSuccess({collection}))),
-      catchError(() => {
-        return Observable.of(undefined);
-      })
-    );
-  }
-
-  private getCollectionFromStore(id: string): Observable<CollectionModel> {
-    return this.store.select(selectAllCollections).pipe(
-      map(collections => collections.find(coll => coll.id === id)),
-      take(1)
-    );
   }
 
 }

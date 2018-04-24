@@ -86,7 +86,6 @@ export class OrganizationSettingsGuard implements CanActivate {
   }
 
   private dispatchDataEvents(organization: OrganizationModel) {
-    this.store.dispatch(new OrganizationsAction.GetPermissions({organizationId: organization.id}));
     this.store.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
     this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
     //this.store.dispatch(new GroupsAction.Get());

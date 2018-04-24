@@ -191,18 +191,6 @@ export class ProjectsEffects {
   );
 
   @Effect()
-  public getPermissions$: Observable<Action> = this.actions$.pipe(
-    ofType<ProjectsAction.GetPermissions>(ProjectsActionType.GET_PERMISSIONS),
-    mergeMap(action => this.projectService.getPermissions().pipe(
-      map(permissions => ({action, permissions: PermissionsConverter.fromDto(permissions)}))
-    )),
-    map(({action, permissions}) => new ProjectsAction.GetPermissionsSuccess({
-      projectId: action.payload.projectId, permissions
-    })),
-    catchError((error) => Observable.of(new ProjectsAction.GetPermissionsFailure({error})))
-  );
-
-  @Effect()
   public changePermission$ = this.actions$.pipe(
     ofType<ProjectsAction.ChangePermission>(ProjectsActionType.CHANGE_PERMISSION),
     concatMap(action => {

@@ -19,7 +19,7 @@
 
 import {Action} from '@ngrx/store';
 import {OrganizationModel} from './organization.model';
-import {PermissionModel, PermissionsModel, PermissionType} from '../permissions/permissions.model';
+import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 
 export enum OrganizationsActionType {
 
@@ -46,10 +46,6 @@ export enum OrganizationsActionType {
   DELETE_FAILURE = '[Organizations] Delete :: Failure',
 
   SELECT = '[Organizations] Select',
-
-  GET_PERMISSIONS = '[Organizations] Get Permissions',
-  GET_PERMISSIONS_SUCCESS = '[Organizations] Get Permissions :: Success',
-  GET_PERMISSIONS_FAILURE = '[Organizations] Get Permissions :: Failure',
 
   CHANGE_PERMISSION = '[Organizations] Change Permission',
   CHANGE_PERMISSION_SUCCESS = '[Organizations] Change Permission :: Success',
@@ -172,27 +168,6 @@ export namespace OrganizationsAction {
     }
   }
 
-  export class GetPermissions implements Action {
-    public readonly type = OrganizationsActionType.GET_PERMISSIONS;
-
-    public constructor(public payload: { organizationId: string }) {
-    }
-  }
-
-  export class GetPermissionsSuccess implements Action {
-    public readonly type = OrganizationsActionType.GET_PERMISSIONS_SUCCESS;
-
-    public constructor(public payload: { organizationId: string, permissions: PermissionsModel }) {
-    }
-  }
-
-  export class GetPermissionsFailure implements Action {
-    public readonly type = OrganizationsActionType.GET_PERMISSIONS_FAILURE;
-
-    public constructor(public payload: { error: any }) {
-    }
-  }
-
   export class ChangePermission implements Action {
     public readonly type = OrganizationsActionType.CHANGE_PERMISSION;
 
@@ -220,6 +195,5 @@ export namespace OrganizationsAction {
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure  | Select |
-    GetPermissions | GetPermissionsSuccess | GetPermissionsFailure |
     ChangePermission | ChangePermissionSuccess | ChangePermissionFailure;
 }

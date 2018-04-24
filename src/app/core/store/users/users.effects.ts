@@ -40,9 +40,6 @@ export class UsersEffects {
     withLatestFrom(this.store$.select(selectUsersLoadedForOrganization)),
     filter(([action, loadedOrganizationId]) => loadedOrganizationId !== action.payload.organizationId),
     map(([action, loaded]) => action),
-    mergeMap(action => Observable.of(this.store$.dispatch(new UsersAction.ClearUsers())).pipe(
-      map(() => action)
-    )),
     mergeMap(action => this.userService.getUsers(action.payload.organizationId).pipe(
       map(dtos => ({organizationId: action.payload.organizationId, users: dtos.map(dto => UserConverter.fromDto(dto))}))
     )),

@@ -37,8 +37,6 @@ export function organizationsReducer(state: OrganizationsState = initialOrganiza
       return organizationsAdapter.removeOne(action.payload.organizationId, state);
     case OrganizationsActionType.SELECT:
       return {...state, selectedOrganizationId: action.payload.organizationId};
-    case OrganizationsActionType.GET_PERMISSIONS_SUCCESS:
-      return organizationsAdapter.updateOne({id: action.payload.organizationId, changes: {permissions: action.payload.permissions}}, state);
     case OrganizationsActionType.CHANGE_PERMISSION_SUCCESS:
       return onChangePermission(state, action);
     case OrganizationsActionType.CHANGE_PERMISSION_FAILURE:

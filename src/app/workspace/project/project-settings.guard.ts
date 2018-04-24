@@ -100,7 +100,6 @@ export class ProjectSettingsGuard implements CanActivate {
 
   private dispatchDataEvents(organization: OrganizationModel, project: ProjectModel) {
     this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
-    this.store.dispatch(new ProjectsAction.GetPermissions({projectId: project.id}));
     //this.store.dispatch(new GroupsAction.Get());
   }
 }

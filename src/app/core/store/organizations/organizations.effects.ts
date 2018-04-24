@@ -185,18 +185,6 @@ export class OrganizationsEffects {
   );
 
   @Effect()
-  public getPermissions$: Observable<Action> = this.actions$.pipe(
-    ofType<OrganizationsAction.GetPermissions>(OrganizationsActionType.GET_PERMISSIONS),
-    mergeMap(action => this.organizationService.getPermissions().pipe(
-      map(permissions => ({action, permissions: PermissionsConverter.fromDto(permissions)}))
-    )),
-    map(({action, permissions}) => new OrganizationsAction.GetPermissionsSuccess({
-      organizationId: action.payload.organizationId, permissions
-    })),
-    catchError((error) => Observable.of(new OrganizationsAction.GetPermissionsFailure({error})))
-  );
-
-  @Effect()
   public changePermission$ = this.actions$.pipe(
     ofType<OrganizationsAction.ChangePermission>(OrganizationsActionType.CHANGE_PERMISSION),
     concatMap(action => {

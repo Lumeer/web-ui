@@ -41,8 +41,6 @@ export function projectsReducer(state: ProjectsState = initialProjectsState, act
       return projectsAdapter.removeOne(action.payload.projectId, state);
     case ProjectsActionType.SELECT:
       return {...state, selectedProjectId: action.payload.projectId};
-    case ProjectsActionType.GET_PERMISSIONS_SUCCESS:
-      return projectsAdapter.updateOne({id: action.payload.projectId, changes: {permissions: action.payload.permissions}}, state);
     case ProjectsActionType.CHANGE_PERMISSION_SUCCESS:
       return onChangePermission(state, action);
     case ProjectsActionType.CHANGE_PERMISSION_FAILURE:

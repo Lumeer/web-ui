@@ -270,18 +270,6 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public getPermissions$: Observable<Action> = this.actions$.pipe(
-    ofType<CollectionsAction.GetPermissions>(CollectionsActionType.GET_PERMISSIONS),
-    mergeMap(action => this.collectionService.getPermissions().pipe(
-      map(permissions => ({action, permissions: PermissionsConverter.fromDto(permissions)}))
-    )),
-    map(({action, permissions}) => new CollectionsAction.GetPermissionsSuccess({
-      collectionId: action.payload.collectionId, permissions
-    })),
-    catchError((error) => Observable.of(new CollectionsAction.GetPermissionsFailure({error})))
-  );
-
-  @Effect()
   public changePermission$ = this.actions$.pipe(
     ofType<CollectionsAction.ChangePermission>(CollectionsActionType.CHANGE_PERMISSION),
     concatMap(action => {

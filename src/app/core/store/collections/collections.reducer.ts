@@ -26,8 +26,6 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
   switch (action.type) {
     case CollectionsActionType.GET_SUCCESS:
       return {...collectionsAdapter.addMany(action.payload.collections, state), loaded: true};
-    case CollectionsActionType.GET_ONE_SUCCESS:
-      return collectionsAdapter.addOne(action.payload.collection, state);
     case CollectionsActionType.GET_NAMES_SUCCESS:
       return {...state, collectionNames: action.payload.collectionNames};
     case CollectionsActionType.CREATE_SUCCESS:
@@ -46,8 +44,6 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
       return onChangeAttributeSuccess(state, action);
     case CollectionsActionType.REMOVE_ATTRIBUTE_SUCCESS:
       return onRemoveAttributeSuccess(state, action);
-    case CollectionsActionType.GET_PERMISSIONS_SUCCESS:
-      return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {permissions: action.payload.permissions}}, state);
     case CollectionsActionType.CHANGE_PERMISSION_SUCCESS:
       return onChangePermission(state, action);
     case CollectionsActionType.CHANGE_PERMISSION_FAILURE:
