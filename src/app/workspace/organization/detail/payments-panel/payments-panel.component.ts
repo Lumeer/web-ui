@@ -30,7 +30,7 @@ import {filter} from "rxjs/operators";
 import {selectOrganizationByWorkspace} from "../../../../core/store/organizations/organizations.state";
 import {PaymentsAction, PaymentsActionType} from "../../../../core/store/organizations/payment/payments.action";
 import {ServiceLimitsModel} from "../../../../core/store/organizations/service-limits/service-limits.model";
-import {selectServiceLimitsByOrganizationId} from "../../../../core/store/organizations/service-limits/service-limits.state";
+import {selectServiceLimitsByWorkspace} from "../../../../core/store/organizations/service-limits/service-limits.state";
 import {selectLastCreatedPayment} from "../../../../core/store/organizations/payment/payments.state";
 
 @Component({
@@ -69,7 +69,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy {
       .pipe(filter(organization => !isNullOrUndefined(organization)))
       .subscribe(organization => this.organization = organization);
 
-    this.serviceLimitsSubscription = this.store.select(selectServiceLimitsByOrganizationId(this.organization.id))
+    this.serviceLimitsSubscription = this.store.select(selectServiceLimitsByWorkspace)
       .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
       .subscribe(serviceLimits => this.serviceLimits = serviceLimits);
 

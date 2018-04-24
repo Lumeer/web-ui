@@ -21,6 +21,7 @@ import {createEntityAdapter, EntityState} from "@ngrx/entity";
 import {createSelector} from "@ngrx/store";
 import {AppState} from "../../app.state";
 import {ServiceLimitsModel} from "./service-limits.model";
+import {selectOrganizationByWorkspace} from "../organizations.state";
 
 export interface ServiceLimitsState extends EntityState<ServiceLimitsModel> {
 }
@@ -34,4 +35,7 @@ export const selectServiceLimitsState = (state: AppState) => state.serviceLimits
 export const selectAllServiceLimits = createSelector(selectServiceLimitsState, serviceLimitsAdapter.getSelectors().selectAll);
 export const selectServiceLimitsByOrganizationId = (organizationId) => createSelector(selectAllServiceLimits, serviceLimits => {
   return serviceLimits.find(serviceLimit => serviceLimit.organizationId === organizationId);
+});
+export const selectServiceLimitsByWorkspace = createSelector(selectAllServiceLimits, selectOrganizationByWorkspace, (serviceLimits, organization) => {
+  return serviceLimits.find(serviceLimit => serviceLimit.organizationId === organization.id);
 });

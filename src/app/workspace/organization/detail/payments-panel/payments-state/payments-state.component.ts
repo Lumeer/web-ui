@@ -27,7 +27,7 @@ import {I18n} from "@ngx-translate/i18n-polyfill";
 import {AppState} from "../../../../../core/store/app.state";
 import {OrganizationModel} from "../../../../../core/store/organizations/organization.model";
 import {Subscription} from "rxjs/Subscription";
-import {selectServiceLimitsByOrganizationId} from "../../../../../core/store/organizations/service-limits/service-limits.state";
+import {selectServiceLimitsByWorkspace} from "../../../../../core/store/organizations/service-limits/service-limits.state";
 import {ServiceLimitsModel} from "../../../../../core/store/organizations/service-limits/service-limits.model";
 import {ServiceLimitsAction} from "../../../../../core/store/organizations/service-limits/service-limits.action";
 
@@ -58,7 +58,7 @@ export class PaymentsStateComponent implements OnInit, OnDestroy {
       .pipe(filter(organization => !isNullOrUndefined(organization)))
       .subscribe(organization => this.organization = organization);
 
-    this.serviceLimitsSubscription = this.store.select(selectServiceLimitsByOrganizationId(this.organization.id))
+    this.serviceLimitsSubscription = this.store.select(selectServiceLimitsByWorkspace)
       .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
       .subscribe(serviceLimits => this.serviceLimits = serviceLimits);
   }

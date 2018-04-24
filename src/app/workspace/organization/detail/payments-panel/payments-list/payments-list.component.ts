@@ -28,7 +28,7 @@ import {selectOrganizationByWorkspace} from "../../../../../core/store/organizat
 import {isNullOrUndefined} from "util";
 import {filter} from "rxjs/operators";
 import {PaymentModel} from "../../../../../core/store/organizations/payment/payment.model";
-import {selectPaymentsByOrganizationIdSorted} from "../../../../../core/store/organizations/payment/payments.state";
+import {selectPaymentsByWorkspaceSorted} from "../../../../../core/store/organizations/payment/payments.state";
 import {PaymentsAction} from "../../../../../core/store/organizations/payment/payments.action";
 import {ServiceLimitsAction} from "../../../../../core/store/organizations/service-limits/service-limits.action";
 
@@ -59,7 +59,7 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
       .pipe(filter(organization => !isNullOrUndefined(organization)))
       .subscribe(organization => this.organization = organization);
 
-    this.paymentsSubscription = this.store.select(selectPaymentsByOrganizationIdSorted)
+    this.paymentsSubscription = this.store.select(selectPaymentsByWorkspaceSorted)
       .pipe(filter(payments => !isNullOrUndefined(payments) && payments.length > 0))
       .subscribe(payments => this.payments = payments);
   }

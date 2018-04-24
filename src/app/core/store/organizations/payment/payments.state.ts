@@ -21,8 +21,7 @@ import {createEntityAdapter, EntityState} from "@ngrx/entity";
 import {createSelector} from "@ngrx/store";
 import {AppState} from "../../app.state";
 import {PaymentModel} from "./payment.model";
-import {selectOrganizationByWorkspace, selectSelectedOrganizationId} from "../organizations.state";
-import {selectWorkspace} from "../../navigation/navigation.state";
+import {selectOrganizationByWorkspace} from "../organizations.state";
 
 export interface PaymentsState extends EntityState<PaymentModel> {
   lastCreatedPayment: PaymentModel;
@@ -39,7 +38,7 @@ export const selectAllPayments = createSelector(selectPaymentsState, paymentsAda
 export const selectPaymentsByWorkspace = createSelector(selectAllPayments, selectOrganizationByWorkspace, (payments, organization) => {
   return payments.filter(payment => payment.organizationId === organization.id);
 });
-export const selectPaymentsByOrganizationIdSorted = createSelector(selectPaymentsByWorkspace, payments => {
+export const selectPaymentsByWorkspaceSorted = createSelector(selectPaymentsByWorkspace, payments => {
   return payments.sort((a, b) => b.validUntil.getTime() - a.validUntil.getTime())
 });
 export const selectLastCreatedPayment = createSelector(selectPaymentsState, state => state.lastCreatedPayment);

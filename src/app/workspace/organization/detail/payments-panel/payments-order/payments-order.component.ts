@@ -19,15 +19,13 @@
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {I18n} from "@ngx-translate/i18n-polyfill";
-import {OrganizationModel} from "../../../../../core/store/organizations/organization.model";
 import {Store} from "@ngrx/store";
 import {Router} from "@angular/router";
-import {selectServiceLimitsByOrganizationId} from "../../../../../core/store/organizations/service-limits/service-limits.state";
+import {selectServiceLimitsByWorkspace} from "../../../../../core/store/organizations/service-limits/service-limits.state";
 import {Subscription} from "rxjs/Subscription";
 import {filter} from "rxjs/operators";
 import {isNullOrUndefined} from "util";
 import {AppState} from "../../../../../core/store/app.state";
-import {selectOrganizationByWorkspace} from "../../../../../core/store/organizations/organizations.state";
 import {DatePipe} from "@angular/common";
 import {ServiceLimitsModel} from "../../../../../core/store/organizations/service-limits/service-limits.model";
 
@@ -71,9 +69,6 @@ export class PaymentsOrderComponent implements OnInit {
   public discountInfoPerUser: string = '';
   public discountInfo: number = 0;
 
-  private organization: OrganizationModel;
-  private organizationSubscription: Subscription;
-
   private serviceLimitsSubscription: Subscription;
 
   public trial: boolean = true; // are we on a trial subscription?
@@ -90,11 +85,7 @@ export class PaymentsOrderComponent implements OnInit {
   }
 
   private subscribeToStore() {
-    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
-      .pipe(filter(organization => !isNullOrUndefined(organization)))
-      .subscribe(organization => this.organization = organization);
-
-    this.serviceLimitsSubscription = this.store.select(selectServiceLimitsByOrganizationId(this.organization.id))
+    this.serviceLimitsSubscription = this.store.select(selectServiceLimitsByWorkspace)
       .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
       .subscribe(serviceLimits => {
         this.serviceLimits = serviceLimits;
@@ -119,10 +110,6 @@ export class PaymentsOrderComponent implements OnInit {
   }
 
   public ngOnDestroy(): void {
-    if (this.organizationSubscription) {
-      this.organizationSubscription.unsubscribe();
-    }
-
     if (this.serviceLimitsSubscription) {
       this.serviceLimitsSubscription.unsubscribe();
     }
