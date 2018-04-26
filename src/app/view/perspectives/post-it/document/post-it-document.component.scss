@@ -78,6 +78,10 @@
     width: 100%;
     pointer-events: none;
     text-overflow: ellipsis;
+
+    &:focus {
+      text-overflow: clip;
+    }
   }
 
   input:read-only:focus {
