@@ -37,6 +37,7 @@ import {filter} from "rxjs/operators";
 import {isNullOrUndefined} from "util";
 
 @Component({
+  selector: 'search-views',
   templateUrl: './search-views.component.html'
 })
 export class SearchViewsComponent implements OnInit, OnDestroy {
