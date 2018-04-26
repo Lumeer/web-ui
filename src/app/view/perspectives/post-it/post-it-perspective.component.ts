@@ -174,7 +174,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public hasSingleCollection(): boolean {
-    //console.log(this.getCollectionIds());
     return this.getCollectionIds().length === 1;
   }
 
