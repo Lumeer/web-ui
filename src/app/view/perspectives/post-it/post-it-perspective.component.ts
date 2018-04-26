@@ -20,7 +20,7 @@
 import {Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {filter, map, withLatestFrom} from 'rxjs/operators';
+import {filter, map, tap, withLatestFrom} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -97,7 +97,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public selectionHelper: SelectionHelper;
 
-  public collectionRoles: string[];
+  public collectionRoles: { [collectionId: string]: string[] };
 
   private deletionHelper: DeletionHelper;
 
@@ -110,6 +110,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private allLoaded: boolean;
 
   private page = 0;
+
+  private collectionsSubscription: Subscription;
 
   constructor(private store: Store<AppState>,
               private zone: NgZone,
@@ -145,12 +147,14 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.deletionHelper = new DeletionHelper(this.store, this.postIts);
     this.deletionHelper.initialize();
 
-    const subscription = this.store.select(selectCollectionsByQuery).pipe(
-      withLatestFrom(this.store.select(selectCurrentUserForWorkspace)),
-      filter(([collections, user]) => !isNullOrUndefined(collections) && collections.length === 1),
-      map(([collections, user]) => userRolesInResource(user, collections[0]))
-    ).subscribe(roles => this.collectionRoles = roles);
-    this.subscriptions.push(subscription);
+    this.collectionsSubscription = this.store.select(selectCollectionsByQuery).pipe(
+      withLatestFrom(this.store.select(selectCurrentUserForWorkspace))
+    ).subscribe(([collections, user]) => {
+      this.collectionRoles = collections.reduce((roles, collection) => {
+        roles[collection.id] = userRolesInResource(user, collection);
+        return roles;
+      }, {})
+    });
   }
 
   private reinitializePostIts(): void {
@@ -170,11 +174,17 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public hasSingleCollection(): boolean {
-    return this.navigationHelper.hasOneCollection();
+    //console.log(this.getCollectionIds());
+    return this.getCollectionIds().length === 1;
   }
 
   public hasCreateRights(): boolean {
-    return this.collectionRoles && this.collectionRoles.includes(Role.Write);
+    const keys = this.getCollectionIds();
+    return keys.length === 1 && this.collectionRoles[keys[0]].includes(Role.Write);
+  }
+
+  private getCollectionIds(): string[] {
+    return this.collectionRoles && Object.keys(this.collectionRoles) || []
   }
 
   private checkAllLoaded(documents: DocumentModel[]): void {
@@ -346,6 +356,10 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return Math.max(1, Math.floor(layoutWidth / postItWidth));
   }
 
+  private getCollectionRoles(postIt: PostItDocumentModel): string[] {
+    return this.collectionRoles && this.collectionRoles[postIt.document.collectionId] || [];
+  }
+
   private sortByOrder(item: any, element: HTMLElement): number {
     return Number(element.getAttribute('order'));
   }
@@ -365,6 +379,10 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
     if (this.infiniteScroll) {
       this.infiniteScroll.destroy();
+    }
+
+    if (this.collectionsSubscription) {
+      this.collectionsSubscription.unsubscribe();
     }
 
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
