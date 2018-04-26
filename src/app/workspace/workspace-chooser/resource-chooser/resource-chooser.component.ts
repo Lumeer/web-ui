@@ -269,7 +269,7 @@ export class ResourceChooserComponent implements OnChanges {
       const message = this.i18n(
         {
           id: 'resource.delete.dialog.message',
-          value: 'Are you sure you want to remove the {resourceType, select, Project {project} Organization {organization}} {{resourceCode}}?'
+          value: 'Are you sure you want to remove {resourceType, select, Project {project} Organization {organization}} {{resourceCode}}?'
         },
         {
           resourceType: this.resourceType,
@@ -332,7 +332,7 @@ export class ResourceChooserComponent implements OnChanges {
 
       const message = this.i18n({
         id: 'resource.already.exist',
-        value: '{resourceType, select, Project {Project} Organization {Organization} } with code {{resourceCode}} already exist'
+        value: '{resourceType, select, Project {Project} Organization {Organization}} with code {{resourceCode}} already exist'
       }, {
         resourceType: this.resourceType,
         resourceCode: newCode

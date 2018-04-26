@@ -266,7 +266,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public hasWriteRole(): boolean {
-    return this.collectionRoles.includes(Role.Write)
+    return this.collectionRoles && this.collectionRoles.includes(Role.Write)
   }
 
   public ngOnDestroy(): void {
