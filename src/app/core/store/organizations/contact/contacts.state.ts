@@ -38,5 +38,5 @@ export const selectContactByOrganizationId = (organizationId) => createSelector(
   return contacts.find(contact => contact.organizationId === organizationId);
 });
 export const selectContactByWorkspace = createSelector(selectAllContacts, selectOrganizationByWorkspace, (contacts, organization) => {
-  return contacts.find(contact => contact.organizationId === organization.id);
+  return contacts.find(contact => organization && (contact.organizationId === organization.id));
 });

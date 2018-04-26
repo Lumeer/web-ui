@@ -37,5 +37,5 @@ export const selectServiceLimitsByOrganizationId = (organizationId) => createSel
   return serviceLimits.find(serviceLimit => serviceLimit.organizationId === organizationId);
 });
 export const selectServiceLimitsByWorkspace = createSelector(selectAllServiceLimits, selectOrganizationByWorkspace, (serviceLimits, organization) => {
-  return serviceLimits.find(serviceLimit => serviceLimit.organizationId === organization.id);
+  return serviceLimits.find(serviceLimit => organization && (serviceLimit.organizationId === organization.id));
 });
