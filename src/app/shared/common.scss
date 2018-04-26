@@ -141,6 +141,7 @@ input {
 }
 
 .clickable-unselected {
+  cursor: pointer;
   color: $grey-color;
 
   &:hover {
@@ -148,6 +149,13 @@ input {
   }
 }
 
+.selected {
+  color: $link-color;
+}
+
+.unselected {
+  color: $grey-color;
+}
 
 .pointer-events-none {
   pointer-events: none;

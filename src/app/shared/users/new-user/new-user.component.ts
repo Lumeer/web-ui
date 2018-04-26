@@ -20,6 +20,7 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 
 import {Validator} from "../../../core/validators/validator";
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'new-user',
@@ -31,6 +32,9 @@ export class NewUserComponent {
 
   public email: string;
   public showEmailWarning: boolean = false;
+
+  constructor(private i18n: I18n) {
+  }
 
   public onAddUser() {
     if (!this.email || !Validator.validateEmail(this.email)) {
@@ -53,4 +57,10 @@ export class NewUserComponent {
     this.email = '';
   }
 
+  public emailPlaceHolder() {
+    return this.i18n({
+      id: 'user.add.placeholder',
+      value: 'Write user email here'
+    });
+  }
 }

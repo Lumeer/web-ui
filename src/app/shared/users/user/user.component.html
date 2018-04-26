@@ -5,7 +5,7 @@
       class="flex-grow-2"
       [placeholder]="'User email'"
       [maxLines]="1"
-      [editable]="editable"
+      [editable]="false"
       [canStayEmpty]="false"
       [initialValue]="user.email"
       (focus)="onEmailFocus()"
@@ -20,8 +20,9 @@
   <div class="col-4 col-md-5 col-lg-6 d-flex flex-row flex-nowrap align-items-center justify-content-center">
 
     <i *ngFor="let role of getRoles()"
-       class="fas fa-fw {{getIconForRole(role)}} cursor-pointer mx-1"
-       [ngClass]="(hasRole(role)) ? 'clickable' : 'clickable-unselected'"
+       class="fas fa-fw {{getIconForRole(role)}} mx-1"
+       [ngClass]="(hasRole(role)) ?  (changeRoles ? 'clickable': 'selected')
+                                  :  (changeRoles ? 'clickable-unselected' : 'unselected')"
        aria-hidden="true"
        [title]="getTitleForRole(role)"
        (click)="toggleRole(role)">
