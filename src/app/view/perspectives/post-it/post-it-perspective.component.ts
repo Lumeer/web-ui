@@ -31,19 +31,19 @@ import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
 import {PostItLayoutConfig} from '../../../shared/utils/layout/post-it-layout-config';
 import {PostItSortingLayout} from '../../../shared/utils/layout/post-it-sorting-layout';
 import {PostItDocumentModel} from './document-data/post-it-document-model';
-import {DeletionHelper} from './util/deletion-helper';
 import {InfiniteScroll} from './util/infinite-scroll';
 import {NavigationHelper} from './util/navigation-helper';
 import {ATTRIBUTE_COLUMN, SelectionHelper, VALUE_COLUMN} from './util/selection-helper';
 import {isNullOrUndefined} from 'util';
 import {KeyCode} from '../../../shared/key-code';
 import {HashCodeGenerator} from '../../../shared/utils/hash-code-generator';
-import Create = DocumentsAction.Create;
-import UpdateData = DocumentsAction.UpdateData;
 import {selectCollectionsByQuery} from '../../../core/store/collections/collections.state';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
 import {userRolesInResource} from '../../../shared/utils/resource.utils';
 import {Role} from '../../../core/model/role';
+import Create = DocumentsAction.Create;
+import UpdateData = DocumentsAction.UpdateData;
+import {DeletionHelper} from "./util/deletion-helper";
 
 @Component({
   selector: 'post-it-perspective',
@@ -109,8 +109,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private allLoaded: boolean;
 
-  private page = 0;
-
   private collectionsSubscription: Subscription;
 
   constructor(private store: Store<AppState>,
@@ -119,6 +117,15 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.createLayoutManager();
+    this.createInfiniteScroll();
+    this.createDefectionHelper();
+    this.createSelectionHelper();
+    this.createNavigationHelper();
+    this.createCollectionsSubscription();
+  }
+
+  private createLayoutManager() {
     this.layoutManager = new PostItSortingLayout(
       '.post-it-document-layout',
       new PostItLayoutConfig(),
@@ -126,27 +133,38 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       'post-it-document',
       this.zone
     );
+  }
 
+  private createInfiniteScroll() {
     this.infiniteScroll = new InfiniteScroll(
       () => this.loadMoreOnInfiniteScroll(),
       this.element.nativeElement,
       this.useOwnScrollbar
     );
     this.infiniteScroll.initialize();
+  }
 
+  private createSelectionHelper() {
     this.selectionHelper = new SelectionHelper(
       this.postIts,
       () => this.documentsPerRow(),
       this.perspectiveId
     );
+  }
 
-    this.navigationHelper = new NavigationHelper(this.store, () => this.documentsPerRow());
-    this.navigationHelper.setCallback(() => this.reinitializePostIts());
-    this.navigationHelper.initialize();
-
+  private createDefectionHelper() {
     this.deletionHelper = new DeletionHelper(this.store, this.postIts);
     this.deletionHelper.initialize();
+  }
 
+  private createNavigationHelper() {
+    this.navigationHelper = new NavigationHelper(this.store, () => this.documentsPerRow());
+    this.navigationHelper.onChange(() => this.resetToInitialState());
+    this.navigationHelper.onValidNavigation(() => this.getPostIts());
+    this.navigationHelper.initialize();
+  }
+
+  private createCollectionsSubscription() {
     this.collectionsSubscription = this.store.select(selectCollectionsByQuery).pipe(
       withLatestFrom(this.store.select(selectCurrentUserForWorkspace))
     ).subscribe(([collections, user]) => {
@@ -157,16 +175,11 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     });
   }
 
-  private reinitializePostIts(): void {
-    this.resetToInitialState();
-    this.getPostIts();
-  }
-
   private resetToInitialState(): void {
     this.allLoaded = false;
-    this.page = 0;
-    this.postIts.splice(0);
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.subscriptions.splice(0);
+    this.postIts.splice(0);
   }
 
   public fetchQueryDocuments(queryModel: QueryModel): void {
@@ -199,7 +212,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private getPostIts(): void {
     this.infiniteScroll.startLoading();
 
-    const queryModel = this.navigationHelper.queryWithPagination(this.page++);
+    const page = this.subscriptions.length;
+    const queryModel = this.navigationHelper.queryWithPagination(page);
     this.fetchQueryDocuments(queryModel);
     this.subscribeOnDocuments(queryModel);
   }
@@ -252,7 +266,9 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeOnDocuments(queryModel: QueryModel) {
     const subscription = this.store.select(selectDocumentsByCustomQuery(queryModel)).pipe(
       filter(() => this.canFetchDocuments())
-    ).subscribe(documents => this.updateLayoutWithDocuments(documents));
+    ).subscribe(documents => {
+      this.updateLayoutWithDocuments(documents)
+    });
 
     this.subscriptions.push(subscription);
   }
@@ -261,22 +277,22 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return this.navigationHelper.validNavigation();
   }
 
-  private updateLayoutWithDocuments(documents) {
-    setTimeout(() => {
-      this.checkAllLoaded(documents);
-      this.addDocumentsNotInLayout(documents);
-      this.focusNewDocumentIfPresent(documents);
+  private updateLayoutWithDocuments(documents: DocumentModel[]) {
+    this.checkAllLoaded(documents);
+    this.addDocumentsNotInLayout(documents);
+    this.focusNewDocumentIfPresent(documents);
 
-      this.infiniteScroll.finishLoading();
-      this.layoutManager.refresh();
-    });
+    this.infiniteScroll.finishLoading();
+    this.layoutManager.refresh();
   }
 
   private addDocumentsNotInLayout(documents: DocumentModel[]): void {
     const usedDocumentIDs = new Set(this.postIts.map(postIt => postIt.document.id));
     documents
       .filter(documentModel => !usedDocumentIDs.has(documentModel.id))
-      .forEach(documentModel => this.postIts.push(this.documentModelToPostItModel(documentModel)));
+      .forEach(documentModel => {
+        this.postIts.push(this.documentModelToPostItModel(documentModel))
+      });
   }
 
   private focusNewDocumentIfPresent(documents: DocumentModel[]): void {
@@ -301,7 +317,9 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private findPostItOfDocument(document: DocumentModel): PostItDocumentModel {
-    return this.postIts.find(postIt => postIt.document.id === document.id);
+    return this.postIts
+      .filter(postIt => postIt !== null)
+      .find(postIt => postIt.document.id === document.id);
   }
 
   private updateDocument(postIt: PostItDocumentModel) {
@@ -368,10 +386,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (this.deletionHelper) {
-      this.deletionHelper.destroy();
-    }
-
     if (this.navigationHelper) {
       this.navigationHelper.destroy();
     }

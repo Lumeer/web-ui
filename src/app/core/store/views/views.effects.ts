@@ -138,7 +138,7 @@ export class ViewsEffects {
     }),
     map(() => {
       const message = this.i18n({id: 'view.update.success', value: 'View has been updated'});
-      return new NotificationsAction.Error({message});
+      return new NotificationsAction.Success({message});
     })
   );
 
