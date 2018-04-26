@@ -1783,12 +1783,12 @@
         </context-group>
       <target state="final">Delete project?</target></trans-unit>
       <trans-unit id="resource.delete.dialog.message" datatype="html">
-        <source>Are you sure you want to remove the <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/>} <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>?</source>
+        <source>Are you sure you want to remove the <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      <target state="final">Are you sure you want to remove the <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/>} <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>?</target></trans-unit>
+      <target state="final">Are you sure you want to remove the <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>?</target></trans-unit>
       <trans-unit id="c1dabeb20cd0254d114378e48b6935c201f7bc83" datatype="html">
         <source>{VAR_SELECT, select, Project {project} Organization {organization} }</source>
         <context-group purpose="location">
@@ -1804,12 +1804,12 @@
         </context-group>
       <target state="final">Delete?</target></trans-unit>
       <trans-unit id="resource.already.exist" datatype="html">
-        <source><x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/>} with code <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/> already exist</source>
+        <source><x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> with code <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/> already exist</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      <target state="final"><x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/>} with code <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/> already exist</target></trans-unit>
+      <target state="final"><x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> with code <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/> already exist</target></trans-unit>
       <trans-unit id="58775813a58809f3f97252cf82697e494bc913b9" datatype="html">
         <source>{VAR_SELECT, select, Project {Project} Organization {Organization} }</source>
         <context-group purpose="location">
