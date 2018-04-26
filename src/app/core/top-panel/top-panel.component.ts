@@ -21,19 +21,20 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
 import {HtmlModifier} from '../../shared/utils/html-modifier';
 import {KeycloakSettings} from '../keycloak.settings';
 import {AppState} from '../store/app.state';
 import {selectNavigation} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
+import {OrganizationModel} from '../store/organizations/organization.model';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {selectOrganizationByWorkspace} from '../store/organizations/organizations.state';
+import {ProjectModel} from '../store/projects/project.model';
 import {ProjectsAction} from '../store/projects/projects.action';
+import {selectProjectByWorkspace} from '../store/projects/projects.state';
 import {RouterAction} from '../store/router/router.action';
 import {UserSettingsService} from '../user-settings.service';
-import {first} from 'rxjs/operators';
-import {selectProjectByWorkspace} from "../store/projects/projects.state";
 
 @Component({
   selector: 'top-panel',
@@ -48,6 +49,10 @@ export class TopPanelComponent implements OnInit {
   public notifications = 0;
 
   public workspace: Workspace;
+  public organization: OrganizationModel;
+  public project: ProjectModel;
+
+  private subscriptions = new Subscription();
 
   public notificationsDisabled: boolean;
 
@@ -59,11 +64,36 @@ export class TopPanelComponent implements OnInit {
   }
 
   public ngOnInit() {
-    this.store.select(selectNavigation).subscribe(navigation => {
-      this.workspace = navigation.workspace;
-      this.searchBoxHidden = navigation.searchBoxHidden;
-    });
+    this.subscribeToNavigation();
+    this.subscribeToOrganization();
+    this.subscribeToProject();
+
     this.notificationsDisabled = this.userSettingsService.getUserSettings().notificationsDisabled;
+  }
+
+  private subscribeToNavigation() {
+    this.subscriptions.add(
+      this.store.select(selectNavigation).subscribe(navigation => {
+        this.workspace = navigation.workspace;
+        this.searchBoxHidden = navigation.searchBoxHidden;
+      })
+    );
+  }
+
+  private subscribeToOrganization() {
+    this.subscriptions.add(
+      this.store.select(selectOrganizationByWorkspace).subscribe(organization => this.organization = organization)
+    );
+  }
+
+  private subscribeToProject() {
+    this.subscriptions.add(
+      this.store.select(selectProjectByWorkspace).subscribe(project => this.project = project)
+    );
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   public disableNotifications() {
@@ -81,17 +111,11 @@ export class TopPanelComponent implements OnInit {
   }
 
   private goToWorkspace(selectProject: boolean) {
-    Observable.combineLatest(
-      this.store.select(selectOrganizationByWorkspace),
-      this.store.select(selectProjectByWorkspace)
-    ).pipe(first())
-      .subscribe(([organization, project]) => {
-        if (organization && project) {
-          this.store.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
-          this.store.dispatch(new ProjectsAction.Select({projectId: selectProject ? project.id : null}));
-          this.store.dispatch(new RouterAction.Go({path: ['workspace']}));
-        }
-      });
+    if (this.organization && this.project) {
+      this.store.dispatch(new OrganizationsAction.Select({organizationId: this.organization.id}));
+      this.store.dispatch(new ProjectsAction.Select({projectId: selectProject ? this.project.id : null}));
+      this.store.dispatch(new RouterAction.Go({path: ['workspace']}));
+    }
   }
 
   public isWorkspaceSet(): boolean {
