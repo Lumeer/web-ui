@@ -22,10 +22,10 @@ import {Permissions} from './permissions';
 export interface Resource {
 
   id?: string;
-  code: string;
+  code?: string;
   name: string;
-  color: string;
-  icon: string;
+  color?: string;
+  icon?: string;
   description: string;
   permissions?: Permissions;
 

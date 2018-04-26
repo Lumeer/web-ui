@@ -63,8 +63,7 @@ export class WorkspaceService {
   private getOrganizationFromApi(code: string): Observable<OrganizationModel> {
     return this.organizationService.getOrganization(code).pipe(
       map(organization => OrganizationConverter.fromDto(organization)),
-      tap(organization => this.store.dispatch(new OrganizationsAction.GetSuccess({organizations: [organization]}))),
-      map(organization => organization),
+      tap(organization => this.store.dispatch(new OrganizationsAction.GetOneSuccess({organization}))),
       catchError(() => {
         return Observable.of(undefined);
       })
@@ -92,8 +91,7 @@ export class WorkspaceService {
   private getProjectFromApi(orgCode: string, orgId: string, projCode: string): Observable<ProjectModel> {
     return this.projectService.getProject(orgCode, projCode).pipe(
       map(project => ProjectConverter.fromDto(project, orgId)),
-      tap(project => this.store.dispatch(new ProjectsAction.GetSuccess({projects: [project]}))),
-      map(project => project),
+      tap(project => this.store.dispatch(new ProjectsAction.GetOneSuccess({project}))),
       catchError(() => {
         return Observable.of(undefined);
       })

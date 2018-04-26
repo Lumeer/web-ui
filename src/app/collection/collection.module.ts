@@ -26,19 +26,21 @@ import {CollectionRoutingModule} from './collection-routing.module';
 import {CollectionConfigComponent} from './config/collection-config.component';
 import {CollectionLinkTypesComponent} from './config/tab/link-types/collection-link-types.component';
 import {CollectionAttributesComponent} from './config/tab/attributes/collection-attributes.component';
-import {CollectionAccessRightsComponent} from './config/tab/access-rights/collection-access-rights.component';
+import {CollectionUsersComponent} from './config/tab/users/collection-users.component';
 import {CollectionEventsComponent} from './config/tab/events/collection-events.component';
-import {CollectionManageRoleGuard} from './collection-managed-role.guard';
+import {CollectionSettingsGuard} from './collection-settings.guard';
 import {LinkAttributeListComponent} from './config/tab/link-attribute-list/link-attribute-list.component';
 import {AttributeListComponent} from './config/tab/attribute-list/attribute-list.component';
 import {CollectionTabComponent} from './config/tab/collection-tab.component';
 import {PickerModule} from '../shared/picker/picker.module';
 import {CollectionSelectService} from './service/collection-select.service';
+import {UsersModule} from "../shared/users/users.module";
 
 @NgModule({
   imports: [
     SharedModule,
     CollectionRoutingModule,
+    UsersModule,
     PickerModule
   ],
   declarations: [
@@ -48,13 +50,13 @@ import {CollectionSelectService} from './service/collection-select.service';
     CollectionTabComponent,
     CollectionListComponent,
     CollectionConfigComponent,
-    CollectionAccessRightsComponent,
+    CollectionUsersComponent,
     CollectionAttributesComponent,
     CollectionEventsComponent,
     CollectionLinkTypesComponent
   ],
   providers: [
-    CollectionManageRoleGuard,
+    CollectionSettingsGuard,
     CollectionSelectService
   ]
 })

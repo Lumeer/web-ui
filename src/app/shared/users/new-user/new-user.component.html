@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-6 col-md-5 col-lg-4 d-flex flex-row flex-nowrap">
+    <input-box
+      class="flex-grow-2"
+      [placeholder]="'User email'"
+      [canStayEmpty]="true"
+      [maxLines]="1"
+      [initialValue]="email"
+      (focus)="onEmailFocus()"
+      (newValue)="email = $event">
+    </input-box>
+
+    <i *ngIf="showEmailWarning" class="fa fa-exclamation-triangle align-self-center ml-1 text-warning"
+       title="Wrong email" i18n-title="@@organization.user.email.incorrect"
+       aria-hidden="true"></i>
+  </div>
+  <div class="col-6 col-md-7 col-lg-8 d-flex flex-nowrap flex-row-reverse align-items-center">
+    <i class="fas fa-fw fa-plus mx-2 clickable"
+       aria-hidden="true"
+       title="Add User"
+       i18n-title="@@organizations.users.add"
+       (click)="onAddUser()">
+    </i>
+  </div>
+</div>

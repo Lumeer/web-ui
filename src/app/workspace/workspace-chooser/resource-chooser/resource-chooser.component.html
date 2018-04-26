@@ -26,7 +26,7 @@
            [style.left]="resourceScroll + 'px'"
            [style.width]="resourceWidth + 'px'">
 
-        <div class="tab d-flex" *ngFor="let resource of resources.concat(newResources); let ix = index"
+        <div class="tab d-flex" *ngFor="let resource of resources.concat(newResources)"
              (click)="onResourceSelected(resource.id)">
           <div class="post-it align-self-center">
             <div class="card square" [class.unitialized]="!resource.id"></div>

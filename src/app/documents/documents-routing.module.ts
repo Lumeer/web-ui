@@ -22,11 +22,12 @@ import {RouterModule, Routes} from '@angular/router';
 
 import {WorkspaceGuard} from '../workspace/workspace.guard';
 import {DocumentsComponent} from './documents.component';
+import {AuthGuard} from '../core/guards/auth.guard';
 
 const documentRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/f/:collectionId/records',
-    canActivate:[WorkspaceGuard],
+    canActivate:[AuthGuard, WorkspaceGuard],
     component: DocumentsComponent
   }
 ];

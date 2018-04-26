@@ -19,15 +19,15 @@
 
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 import {Component, OnDestroy, OnInit} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {first, map} from 'rxjs/operators';
+import {filter, first, map, mergeMap, withLatestFrom} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {GroupsAction} from '../../core/store/groups/groups.action';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
@@ -38,12 +38,14 @@ import {ProjectModel} from '../../core/store/projects/project.model';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {selectProjectById, selectProjectsCodesForSelectedOrganization, selectProjectsForSelectedOrganization, selectSelectedProject, selectSelectedProjectId} from '../../core/store/projects/projects.state';
 import {RouterAction} from '../../core/store/router/router.action';
-import {UsersAction} from '../../core/store/users/users.action';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {UserSettingsService} from '../../core/user-settings.service';
-import {Role} from '../../shared/permissions/role';
 import {ResourceItemType} from './resource-chooser/resource-item-type';
 import {Router} from "@angular/router";
+import {userHasManageRoleInResource, userRolesInResource} from '../../shared/utils/resource.utils';
+import {UserModel} from '../../core/store/users/user.model';
+import {mapGroupsOnUser, selectCurrentUser, selectCurrentUserForOrganization} from '../../core/store/users/users.state';
+import {selectAllGroups, selectGroupsDictionary} from '../../core/store/groups/groups.state';
 
 @Component({
   selector: 'workspace-chooser',
@@ -70,11 +72,15 @@ import {Router} from "@angular/router";
 export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   public organizations$: Observable<OrganizationModel[]>;
-  public projects$: Observable<ProjectModel[]>;
-  public canCreateProjects$: Observable<boolean>;
-  public organizationNames$: Observable<string[]>;
-  public projectNames$: Observable<string[]>;
+  public organizationCodes$: Observable<string[]>;
+  public organizationsRoles$: Observable<{ [organizationId: string]: string[] }>;
 
+  public projects$: Observable<ProjectModel[]>;
+  public projectCodes$: Observable<string[]>;
+  public projectRoles$: Observable<{ [projectId: string]: string[] }>;
+  public canCreateProjects$: Observable<boolean>;
+
+  public currentUser: UserModel;
   public selectedOrganizationId: string;
   public selectedProjectId: string;
 
@@ -87,35 +93,10 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.bindData();
-    this.subscribeSelectedChange();
+    this.subscribeData();
 
     this.store.dispatch(new OrganizationsAction.GetCodes());
     this.store.dispatch(new OrganizationsAction.Get());
-  }
-
-  private bindData() {
-    this.organizations$ = this.store.select(selectAllOrganizations);
-    this.projects$ = this.store.select(selectProjectsForSelectedOrganization);
-    this.organizationNames$ = this.store.select(selectOrganizationCodes);
-    this.projectNames$ = this.store.select(selectProjectsCodesForSelectedOrganization);
-    this.canCreateProjects$ = this.store.select(selectSelectedOrganization).pipe(
-      map(organization => organization && this.hasManageRole(organization))
-    );
-  }
-
-  private subscribeSelectedChange() {
-    this.subscriptions.push(
-      this.store.select(selectSelectedOrganizationId).subscribe(id => {
-        this.selectedOrganizationId = id;
-        if (id) {
-          this.store.dispatch(new ProjectsAction.GetCodes({organizationId: id}));
-          this.store.dispatch(new ProjectsAction.Get({organizationId: id}));
-        }
-      }),
-      this.store.select(selectSelectedProjectId).subscribe(id => {
-        this.selectedProjectId = id;
-      })
-    );
   }
 
   public ngOnDestroy() {
@@ -190,11 +171,6 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     }
   }
 
-  public hasManageRole(organization: OrganizationModel) {
-    return organization.permissions && organization.permissions.users.length === 1
-      && organization.permissions.users[0].roles.some(r => r === Role.Manage.toString());
-  }
-
   public onSaveActiveItems() {
     if (!isNullOrUndefined(this.selectedOrganizationId) && !isNullOrUndefined(this.selectedProjectId)) {
       Observable.combineLatest(
@@ -226,10 +202,8 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   private clearStore() {
     this.store.dispatch(new CollectionsAction.Clear());
     this.store.dispatch(new DocumentsAction.Clear());
-    this.store.dispatch(new GroupsAction.Clear());
     this.store.dispatch(new LinkInstancesAction.Clear());
     this.store.dispatch(new LinkTypesAction.Clear());
-    this.store.dispatch(new UsersAction.Clear());
     this.store.dispatch(new ViewsAction.Clear());
   }
 
@@ -238,6 +212,63 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     userSettings.defaultOrganization = organization.code;
     userSettings.defaultProject = project.code;
     this.userSettingsService.updateUserSettings(userSettings);
+  }
+
+  private bindData() {
+    this.organizations$ = this.store.select(selectAllOrganizations);
+    this.organizationCodes$ = this.store.select(selectOrganizationCodes).pipe(
+      map(codes => codes || [])
+    );
+
+    this.organizationsRoles$ = this.organizations$.pipe(
+      withLatestFrom(this.store.select(selectCurrentUser)),
+      withLatestFrom(this.store.select(selectGroupsDictionary)),
+      map(([[organizations, user], groups]) => organizations.reduce((map, organization) => {
+        const userWithGroups = mapGroupsOnUser(user, organization.id, groups);
+        map[organization.id] = userRolesInResource(userWithGroups, organization);
+        return map;
+      }, {}))
+    );
+
+    this.projects$ = this.store.select(selectProjectsForSelectedOrganization);
+    this.projectCodes$ = this.store.select(selectProjectsCodesForSelectedOrganization).pipe(
+      map(codes => codes || [])
+    );
+    this.projectRoles$ = this.projects$.pipe(
+      mergeMap(projects => this.selectOrganizationAndCurrentUser().pipe(
+        map(({organization, user}) => projects.reduce((map, project) => {
+          map[project.id] = userRolesInResource(user, project);
+          return map;
+        }, {}))
+      ))
+    );
+    this.canCreateProjects$ = this.selectOrganizationAndCurrentUser().pipe(
+      map(({organization, user}) => userHasManageRoleInResource(user, organization))
+    );
+  }
+
+  private selectOrganizationAndCurrentUser(): Observable<({ organization: OrganizationModel, user: UserModel })> {
+    return this.store.select(selectSelectedOrganization).pipe(
+      filter(organization => !isNullOrUndefined(organization)),
+      mergeMap(organization => this.store.select(selectCurrentUserForOrganization(organization)).pipe(
+        map(user => ({organization, user}))
+      ))
+    );
+  }
+
+  private subscribeData() {
+    this.subscriptions.push(
+      this.store.select(selectSelectedOrganizationId).subscribe(id => {
+        this.selectedOrganizationId = id;
+        if (id) {
+          this.store.dispatch(new ProjectsAction.GetCodes({organizationId: id}));
+          this.store.dispatch(new ProjectsAction.Get({organizationId: id}));
+        }
+      }),
+      this.store.select(selectSelectedProjectId).subscribe(id => {
+        this.selectedProjectId = id;
+      })
+    );
   }
 
 }

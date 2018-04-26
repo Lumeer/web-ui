@@ -23,7 +23,9 @@ import {usersAdapter, UsersState, initialUsersState} from './users.state';
 export function usersReducer(state: UsersState = initialUsersState, action: UsersAction.All): UsersState {
   switch (action.type) {
     case UsersActionType.GET_SUCCESS:
-      return usersAdapter.addAll(action.payload.users, state);
+      return {...usersAdapter.addAll(action.payload.users, state), loadedForOrganizationId: action.payload.organizationId};
+    case UsersActionType.GET_CURRENT_USER_SUCCESS:
+      return {...state, currentUser: action.payload.user};
     case UsersActionType.CREATE_SUCCESS:
       return usersAdapter.addOne(action.payload.user, state);
     case UsersActionType.UPDATE_SUCCESS:

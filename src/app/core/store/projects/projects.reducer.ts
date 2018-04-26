@@ -19,13 +19,16 @@
 
 import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {initialProjectsState, projectsAdapter, ProjectsState} from './projects.state';
-import {OrganizationsActionType} from "../organizations/organizations.action";
-import {organizationsAdapter} from "../organizations/organizations.state";
+import {PermissionsHelper} from '../permissions/permissions.helper';
 
 export function projectsReducer(state: ProjectsState = initialProjectsState, action: ProjectsAction.All): ProjectsState {
   switch (action.type) {
     case ProjectsActionType.GET_SUCCESS:
-      return projectsAdapter.addMany(action.payload.projects, state);
+      const loaded = {...state.loaded};
+      loaded[action.payload.organizationId] = true;
+      return {...projectsAdapter.addMany(action.payload.projects, state), loaded};
+    case ProjectsActionType.GET_ONE_SUCCESS:
+      return projectsAdapter.addOne(action.payload.project, state);
     case ProjectsActionType.GET_CODES_SUCCESS:
       const projectCodes = {...state.projectCodes};
       projectCodes[action.payload.organizationId] = action.payload.projectCodes;
@@ -38,7 +41,18 @@ export function projectsReducer(state: ProjectsState = initialProjectsState, act
       return projectsAdapter.removeOne(action.payload.projectId, state);
     case ProjectsActionType.SELECT:
       return {...state, selectedProjectId: action.payload.projectId};
+    case ProjectsActionType.CHANGE_PERMISSION_SUCCESS:
+      return onChangePermission(state, action);
+    case ProjectsActionType.CHANGE_PERMISSION_FAILURE:
+      return onChangePermission(state, action);
     default:
       return state;
   }
+}
+
+function onChangePermission(state: ProjectsState, action: ProjectsAction.ChangePermissionSuccess | ProjectsAction.ChangePermissionFailure): ProjectsState {
+  const project = state.entities[action.payload.projectId];
+  const permissions = PermissionsHelper.changePermission(project.permissions, action.payload.type, action.payload.permission);
+
+  return projectsAdapter.updateOne({id: action.payload.projectId, changes: {permissions: permissions}}, state);
 }

@@ -22,7 +22,7 @@ import {GroupModel} from '../groups/group.model';
 export interface UserModel {
 
   id?: string;
-  name: string;
+  name?: string;
   email: string;
   groupsMap: { [organizationId: string]: string[]; };
   groups?: GroupModel[];

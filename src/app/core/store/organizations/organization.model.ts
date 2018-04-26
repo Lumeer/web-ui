@@ -17,19 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PermissionsModel} from '../permissions/permissions.model';
+import {ResourceModel} from "../../model/resource.model";
 
-export interface OrganizationModel {
-
-  id?: string; // TODO use in the future
-
-  code: string;
-  name: string;
-  color: string;
-  icon: string;
-  description: string;
-
-  permissions?: PermissionsModel;
+export interface OrganizationModel extends ResourceModel{
 
   correlationId?: string;
 

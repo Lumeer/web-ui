@@ -39,11 +39,12 @@ import {Table2PerspectiveComponent} from './perspectives/table2/table2-perspecti
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
 import {ViewRedirectGuard} from '../core/guards/view/view-redirect.guard';
+import {AuthGuard} from '../core/guards/auth.guard';
 
 const viewRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/view',
-    canActivate: [WorkspaceGuard, CollectionsGuard, LinkTypesGuard, ViewsLoadedGuard, ViewExistGuard],
+    canActivate: [AuthGuard, WorkspaceGuard, CollectionsGuard, LinkTypesGuard, ViewsLoadedGuard, ViewExistGuard],
     component: ViewComponent,
     children: [
       {

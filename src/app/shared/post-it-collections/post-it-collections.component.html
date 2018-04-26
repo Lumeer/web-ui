@@ -97,6 +97,7 @@
 
       <post-it-collection-name
         [collection]="collection"
+        [editable]="hasWriteRole(collection) || !collection.id"
         (changed)="onCollectionNameChanged(collection, $event)"
         (selected)="onCollectionSelect(collection)"
         (unselected)="onCollectionUnselect()">

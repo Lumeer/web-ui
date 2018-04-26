@@ -42,6 +42,7 @@ export class InputBoxComponent implements OnInit {
   @Input() public canStayEmpty: boolean;
   @Input() public placeholder: string;
   @Input() public title: string;
+  @Input() public editable: boolean = true;
 
   @Output() public focus: EventEmitter<void> = new EventEmitter();
   @Output() public blur: EventEmitter<void> = new EventEmitter();

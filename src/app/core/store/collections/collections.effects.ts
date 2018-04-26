@@ -18,11 +18,12 @@
  */
 
 import {Injectable} from '@angular/core';
+
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action} from '@ngrx/store';
+import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, flatMap, map, mergeMap, tap} from 'rxjs/operators';
+import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {Collection, Permission} from '../../dto';
 import {CollectionService, ImportService, SearchService} from '../../rest';
 import {HomePageService} from '../../rest/home-page.service';
@@ -33,6 +34,8 @@ import {PermissionsConverter} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions.model';
 import {CollectionConverter} from './collection.converter';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
+import {selectCollectionsLoaded} from "./collections.state";
+import {AppState} from "../app.state";
 
 @Injectable()
 export class CollectionsEffects {
@@ -40,6 +43,9 @@ export class CollectionsEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.Get>(CollectionsActionType.GET),
+    withLatestFrom(this.store$.select(selectCollectionsLoaded)),
+    filter(([action, loaded]) => !loaded),
+    map(([action]) => action),
     mergeMap((action) => {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
@@ -264,25 +270,25 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public changePermission$: Observable<Action> = this.actions$.pipe(
+  public changePermission$ = this.actions$.pipe(
     ofType<CollectionsAction.ChangePermission>(CollectionsActionType.CHANGE_PERMISSION),
-    mergeMap(action => {
+    concatMap(action => {
       const permissionDto: Permission = PermissionsConverter.toPermissionDto(action.payload.permission);
 
+      let observable;
       if (action.payload.type === PermissionType.Users) {
-        return this.collectionService.updateUserPermission(permissionDto).pipe(
-          map(permission => ({action, permission: PermissionsConverter.fromPermissionDto(permission)}))
-        );
+        observable = this.collectionService.updateUserPermission(permissionDto);
       } else {
-        return this.collectionService.updateGroupPermission(permissionDto).pipe(
-          map(permission => ({action, permission: PermissionsConverter.fromPermissionDto(permission)}))
-        );
+        observable = this.collectionService.updateGroupPermission(permissionDto);
       }
-    }),
-    map(({action, permission}) => new CollectionsAction.ChangePermissionSuccess(
-      {collectionId: action.payload.collectionId, type: action.payload.type, permission: permission}
-    )),
-    catchError((error) => Observable.of(new CollectionsAction.ChangePermissionFailure({error: error})))
+      return observable.pipe(
+        concatMap(() => Observable.of()),
+        catchError((error) => {
+          const payload = {collectionId: action.payload.collectionId, type: action.payload.type, permission: action.payload.currentPermission, error};
+          return Observable.of(new CollectionsAction.ChangePermissionFailure(payload))
+        })
+      )
+    })
   );
 
   @Effect()
@@ -295,31 +301,8 @@ export class CollectionsEffects {
     })
   );
 
-  @Effect()
-  public removePermission$: Observable<Action> = this.actions$.pipe(
-    ofType<CollectionsAction.RemovePermission>(CollectionsActionType.REMOVE_PERMISSION),
-    mergeMap(action => {
-      if (action.payload.type === PermissionType.Users) {
-        return this.collectionService.removeUserPermission(action.payload.name).pipe(map(() => action));
-      } else {
-        return this.collectionService.removeGroupPermission(action.payload.name).pipe(map(() => action));
-      }
-    }),
-    map(action => new CollectionsAction.RemovePermissionSuccess(action.payload)),
-    catchError((error) => Observable.of(new CollectionsAction.RemovePermissionFailure({error: error})))
-  );
-
-  @Effect()
-  public removePermissionFailure$: Observable<Action> = this.actions$.pipe(
-    ofType<CollectionsAction.RemovePermissionFailure>(CollectionsActionType.REMOVE_PERMISSION_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'collection.remove.permission.fail', value: 'Failed to remove file permission'});
-      return new NotificationsAction.Error({message});
-    })
-  );
-
   constructor(private actions$: Actions,
+              private store$: Store<AppState>,
               private collectionService: CollectionService,
               private homePageService: HomePageService,
               private i18n: I18n,

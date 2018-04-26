@@ -20,20 +20,19 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
-import {CollectionManageRoleGuard} from './collection-managed-role.guard';
-import {CollectionComponent} from './collection.component';
+import {CollectionSettingsGuard} from './collection-settings.guard';
 import {CollectionConfigComponent} from './config/collection-config.component';
-import {CollectionAccessRightsComponent} from './config/tab/access-rights/collection-access-rights.component';
+import {CollectionUsersComponent} from './config/tab/users/collection-users.component';
 import {CollectionAttributesComponent} from './config/tab/attributes/collection-attributes.component';
 import {CollectionEventsComponent} from './config/tab/events/collection-events.component';
 import {CollectionLinkTypesComponent} from './config/tab/link-types/collection-link-types.component';
-import {CollectionListComponent} from './list/collection-list.component';
 import {WorkspaceGuard} from '../workspace/workspace.guard';
+import {AuthGuard} from '../core/guards/auth.guard';
 
 const collectionRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/f/:collectionId',
-    canActivate:[WorkspaceGuard],
+    canActivate:[AuthGuard, WorkspaceGuard, CollectionSettingsGuard],
     component: CollectionConfigComponent,
     children: [
       {
@@ -49,9 +48,8 @@ const collectionRoutes: Routes = [
         component: CollectionEventsComponent
       },
       {
-        path: 'permissions',
-        component: CollectionAccessRightsComponent,
-        canActivate: [CollectionManageRoleGuard]
+        path: 'users',
+        component: CollectionUsersComponent
       },
       {
         path: '',

@@ -28,12 +28,12 @@ import {AppState} from '../store/app.state';
 import {selectNavigation} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
-import {selectOrganizationByCode} from '../store/organizations/organizations.state';
+import {selectOrganizationByWorkspace} from '../store/organizations/organizations.state';
 import {ProjectsAction} from '../store/projects/projects.action';
-import {selectProjectByCode} from '../store/projects/projects.state';
 import {RouterAction} from '../store/router/router.action';
 import {UserSettingsService} from '../user-settings.service';
 import {first} from 'rxjs/operators';
+import {selectProjectByWorkspace} from "../store/projects/projects.state";
 
 @Component({
   selector: 'top-panel',
@@ -82,16 +82,16 @@ export class TopPanelComponent implements OnInit {
 
   private goToWorkspace(selectProject: boolean) {
     Observable.combineLatest(
-      this.store.select(selectOrganizationByCode(this.workspace.organizationCode)),
-      this.store.select(selectProjectByCode(this.workspace.projectCode))
+      this.store.select(selectOrganizationByWorkspace),
+      this.store.select(selectProjectByWorkspace)
     ).pipe(first())
       .subscribe(([organization, project]) => {
-      if (organization && project) {
-        this.store.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
-        this.store.dispatch(new ProjectsAction.Select({projectId: selectProject ? project.id : null}));
-        this.store.dispatch(new RouterAction.Go({path: ['workspace']}));
-      }
-    });
+        if (organization && project) {
+          this.store.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
+          this.store.dispatch(new ProjectsAction.Select({projectId: selectProject ? project.id : null}));
+          this.store.dispatch(new RouterAction.Go({path: ['workspace']}));
+        }
+      });
   }
 
   public isWorkspaceSet(): boolean {

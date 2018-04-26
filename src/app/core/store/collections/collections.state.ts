@@ -49,7 +49,7 @@ export const selectCollectionsByQuery = createSelector(selectCollectionsDictiona
 });
 
 export const selectCollectionByWorkspace = createSelector(selectCollectionsDictionary, selectWorkspace, (collections, workspace) => {
-  return workspace.collectionId ? collections[workspace.collectionId] : null;
+  return workspace && workspace.collectionId ? collections[workspace.collectionId] : null;
 });
 
 export const selectCollectionById = (id: string) => createSelector(selectCollectionsDictionary, collectionsDictionary => collectionsDictionary[id]);

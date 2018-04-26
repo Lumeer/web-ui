@@ -49,6 +49,7 @@ import {AppStoreModule} from './store/app-store.module';
 import {TopPanelComponent} from './top-panel/top-panel.component';
 import {UserSettingsService} from './user-settings.service';
 import {CollectionValidators} from './validators/collection.validators';
+import {GlobalService} from './rest/global.service';
 
 @NgModule({
   imports: [
@@ -81,6 +82,7 @@ import {CollectionValidators} from './validators/collection.validators';
     LinkTypeService,
     EventService,
     HomePageService,
+    GlobalService,
     {provide: ErrorHandler, useClass: LumeerErrorHandler},
     {provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     SnotifyService,
