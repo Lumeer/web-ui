@@ -127,8 +127,6 @@ export class SelectionHelper {
 
     this.handleBoundarySelections();
 
-    console.log(this.selection);
-
     this.focus();
   }
 
