@@ -149,9 +149,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public clickOnAttributePair(column: number, row: number): void {
-    const enableEditMode = this.selectionHelper.wasPreviouslySelected(column, row, this.postItModel.document.id);
-
-    this.selectionHelper.setEditMode(enableEditMode);
+    this.selectionHelper.setEditMode(false);
     this.selectionHelper.select(column, row, this.postItModel);
   }
 

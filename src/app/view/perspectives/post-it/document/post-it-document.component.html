@@ -41,7 +41,7 @@
               (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
               (keydown.backspace)="removeAttributePair()"
               (keydown.delete)="removeAttributePair()"
-              (click)="clickOnAttributePair(0, row)">
+              (focus)="clickOnAttributePair(0, row)">
 
           <input class="border-0"
                  [class.font-weight-bold]="isDefaultAttribute(attributePair.attribute)"
@@ -51,7 +51,8 @@
                  (keydown.F2)="selectionHelper.setEditMode(false); selectionHelper.focus()"
                  (keydown.Escape)="selectionHelper.setEditMode(false); selectionHelper.focus()"
                  (keydown.enter)="onEnterKeyPressedInEditMode()"
-                 (blur)="updateAttribute(attributePair)">
+                 (blur)="updateAttribute(attributePair)"
+                 (click)="selectionHelper.setEditMode(true)">
         </span>
 
         <span id="{{ perspectiveId }}{{ postItModel.index }}[1, {{ row }}]"
@@ -65,7 +66,7 @@
               (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
               (keydown.backspace)="removeValue()"
               (keydown.delete)="removeValue()"
-              (click)="clickOnAttributePair(1, row)">
+              (focus)="clickOnAttributePair(1, row)">
 
         <input class="border-0"
                [(ngModel)]="attributePair.value"
@@ -73,7 +74,8 @@
                (keydown.F2)="selectionHelper.setEditMode(false); selectionHelper.focus()"
                (keydown.Escape)="selectionHelper.setEditMode(false); selectionHelper.focus()"
                (keydown.enter)="onEnterKeyPressedInEditMode()"
-               (blur)="updateValue(attributePair)">
+               (blur)="updateValue(attributePair)"
+               (click)="selectionHelper.setEditMode(true)">
        </span>
       </li>
 
@@ -87,7 +89,7 @@
               (keydown.ArrowDown)="selectionHelper.moveSelection(0, 1)"
               (keydown.F2)="selectionHelper.setEditMode(true); selectionHelper.focus()"
               (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
-              (click)="selectionHelper.setEditMode(true); this.selectionHelper.select(0, attributePairs.length, postItModel)">
+              (focus)="selectionHelper.setEditMode(true); this.selectionHelper.select(0, attributePairs.length, postItModel)">
 
           <input class="border-0" remove-placeholder-on-focus #newAttributeInput
                  placeholder=" + "

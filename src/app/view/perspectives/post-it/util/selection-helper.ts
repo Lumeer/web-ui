@@ -127,6 +127,8 @@ export class SelectionHelper {
 
     this.handleBoundarySelections();
 
+    console.log(this.selection);
+
     this.focus();
   }
 
@@ -267,12 +269,6 @@ export class SelectionHelper {
 
   private lastRow(): number {
     return Object.entries(this.selectedPostIt.document.data).length;
-  }
-
-  public wasPreviouslySelected(column: number, row: number, postItId: string): boolean {
-    return column === this.selection.column &&
-      row === this.selection.row &&
-      postItId === this.selection.documentId;
   }
 
 }

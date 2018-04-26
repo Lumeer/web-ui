@@ -69,8 +69,13 @@
     font-style: italic;
   }
 
-  span:focus, span input:focus {
+  span:focus input, span input:focus {
     outline: auto !important;
+    pointer-events: auto;
+  }
+
+  span input:focus {
+    box-shadow: $shadow-down;
   }
 
   input {
