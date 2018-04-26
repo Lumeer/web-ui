@@ -20,7 +20,7 @@
 import {Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {filter, map, tap, withLatestFrom} from 'rxjs/operators';
+import {filter, withLatestFrom} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
