@@ -45,7 +45,9 @@ import {Router} from "@angular/router";
 import {userHasManageRoleInResource, userRolesInResource} from '../../shared/utils/resource.utils';
 import {UserModel} from '../../core/store/users/user.model';
 import {mapGroupsOnUser, selectCurrentUser, selectCurrentUserForOrganization} from '../../core/store/users/users.state';
-import {selectAllGroups, selectGroupsDictionary} from '../../core/store/groups/groups.state';
+import {selectGroupsDictionary} from '../../core/store/groups/groups.state';
+
+const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'aturing@lumeer.io'];
 
 @Component({
   selector: 'workspace-chooser',
@@ -74,6 +76,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   public organizations$: Observable<OrganizationModel[]>;
   public organizationCodes$: Observable<string[]>;
   public organizationsRoles$: Observable<{ [organizationId: string]: string[] }>;
+  public canCreateOrganizations$: Observable<boolean>;
 
   public projects$: Observable<ProjectModel[]>;
   public projectCodes$: Observable<string[]>;
@@ -84,7 +87,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   public selectedOrganizationId: string;
   public selectedProjectId: string;
 
-  private subscriptions: Subscription[] = [];
+  private subscriptions = new Subscription();
 
   constructor(private store: Store<AppState>,
               private router: Router,
@@ -100,7 +103,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
+    this.subscriptions.unsubscribe();
   }
 
   public onSelectOrganization(id: string) {
@@ -229,6 +232,9 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
         return map;
       }, {}))
     );
+    this.canCreateOrganizations$ = this.store.select(selectCurrentUser).pipe(
+      map(user => allowedEmails.includes(user.email))
+    );
 
     this.projects$ = this.store.select(selectProjectsForSelectedOrganization);
     this.projectCodes$ = this.store.select(selectProjectsCodesForSelectedOrganization).pipe(
@@ -257,18 +263,17 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    this.subscriptions.push(
-      this.store.select(selectSelectedOrganizationId).subscribe(id => {
-        this.selectedOrganizationId = id;
-        if (id) {
-          this.store.dispatch(new ProjectsAction.GetCodes({organizationId: id}));
-          this.store.dispatch(new ProjectsAction.Get({organizationId: id}));
-        }
-      }),
+    this.subscriptions.add(this.store.select(selectSelectedOrganizationId).subscribe(id => {
+      this.selectedOrganizationId = id;
+      if (id) {
+        this.store.dispatch(new ProjectsAction.GetCodes({organizationId: id}));
+        this.store.dispatch(new ProjectsAction.Get({organizationId: id}));
+      }
+    }));
+    this.subscriptions.add(
       this.store.select(selectSelectedProjectId).subscribe(id => {
         this.selectedProjectId = id;
       })
     );
   }
-
 }
