@@ -3,7 +3,7 @@
                     [resourceType]="organizationItemType()"
                     [resources]="organizations$ | async"
                     [resourcesRoles]="organizationsRoles$ | async"
-                    [canCreateResource]="true"
+                    [canCreateResource]="canCreateOrganizations$ | async"
                     [usedCodes]="organizationCodes$ | async"
                     (warningMessage)="onWarningMessage($event)"
                     (resourceDelete)="onDeleteOrganization($event)"
