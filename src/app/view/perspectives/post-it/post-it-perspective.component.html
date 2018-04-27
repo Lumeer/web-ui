@@ -1,7 +1,6 @@
 <div class="mx-5" #layout>
   <div class="m-2">
     <add-document
-      [attr.order]="-10000"
       [hasCollection]="hasSingleCollection()"
       [hasRights]="hasCreateRights()"
       (createPostIt)="createPostIt($event)">

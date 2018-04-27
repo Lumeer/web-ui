@@ -94,7 +94,7 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   private loadView(code: string) {
     this.viewSubscription = this.store.select(selectViewByCode(code)).pipe(
-      skipWhile(view => !view)
+      filter(view => Boolean(view))
     ).subscribe(view => {
       this.view = {...view};
       this.store.dispatch(new ViewsAction.ChangeConfig({config: view.config}));

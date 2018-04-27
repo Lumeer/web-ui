@@ -34,18 +34,26 @@ export class NavigationHelper {
 
   private workspaceHelper: WorkspaceHelper;
 
-  private callback: () => void = () => null;
+  private changeCallback: () => void = () => null;
+
+  private validNavigationCallback: () => void = () => null;
 
   constructor(private store: Store<AppState>, private getDocumentsPerRow: () => number) {
   }
 
-  public setCallback(newCallback: () => void): void {
-    this.callback = newCallback;
+  public onChange(callback: () => void): void {
+    this.changeCallback = callback;
+  }
+
+  public onValidNavigation(callback: () => void): void {
+    this.validNavigationCallback = callback;
   }
 
   private callCallback(): void {
+    this.changeCallback();
+
     if (this.validNavigation()) {
-      this.callback();
+      this.validNavigationCallback();
     }
   }
 
