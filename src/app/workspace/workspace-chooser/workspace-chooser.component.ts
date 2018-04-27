@@ -42,13 +42,14 @@ import {ViewsAction} from '../../core/store/views/views.action';
 import {UserSettingsService} from '../../core/user-settings.service';
 import {ResourceItemType} from './resource-chooser/resource-item-type';
 import {Router} from "@angular/router";
-import {userHasManageRoleInResource, userRolesInResource} from '../../shared/utils/resource.utils';
+import {userHasRoleInResource, userRolesInResource} from '../../shared/utils/resource.utils';
 import {UserModel} from '../../core/store/users/user.model';
 import {mapGroupsOnUser, selectCurrentUser, selectCurrentUserForOrganization} from '../../core/store/users/users.state';
 import {selectGroupsDictionary} from '../../core/store/groups/groups.state';
 import {ServiceLimitsAction} from '../../core/store/organizations/service-limits/service-limits.action';
 import {selectAllServiceLimits} from '../../core/store/organizations/service-limits/service-limits.state';
 import {ServiceLimitsModel} from '../../core/store/organizations/service-limits/service-limits.model';
+import {Role} from '../../core/model/role';
 
 const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'aturing@lumeer.io'];
 
