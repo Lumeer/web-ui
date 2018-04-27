@@ -4,9 +4,9 @@
      placeholder="Set name" i18n-placeholder="@@collection.name.placeholder"
      [textContent]="collectionName"
      title="{{collectionName}}"
-     (input)="collectionName = $event.target.textContent"
-     (blur)="onNameBlurred()"
+     (blur)="onNameBlurred(collectionNameInput.textContent)"
      (focus)="onNameSelected()"
+     [attr.spellcheck]="false"
      (keydown.enter)="collectionNameInput.blur()"
      (keydown.Escape)="collectionNameInput.blur()">
 </div>
