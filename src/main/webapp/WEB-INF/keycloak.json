@@ -4,8 +4,6 @@
   "ssl-required": "all",
   "resource": "engine",
   "public-client": true,
-  "disable-trust-manager": "false",
-  "truststore": "${lumeer.keycloak.truststore}",
-  "truststore-password": "geheim",
+  "disable-trust-manager": "true",
   "enable-cors": true
 }
