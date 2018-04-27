@@ -17,10 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ServiceLevelType} from './service-level-type';
-
 export interface ServiceLimits {
-  serviceLevel: ServiceLevelType,
+  serviceLevel: string,
   users: number,
   projects: number,
   files: number,

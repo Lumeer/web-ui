@@ -90,7 +90,7 @@ export class PaymentsOrderComponent implements OnInit {
       .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
       .subscribe(serviceLimits => {
         this.serviceLimits = serviceLimits;
-        if (serviceLimits.serviceLevel == ServiceLevelType.FREE) {
+        if (serviceLimits.serviceLevel === ServiceLevelType.FREE) {
           this.trial = true;
           this.setStartDate(PaymentsOrderComponent.floorDate(new Date()));
         } else {

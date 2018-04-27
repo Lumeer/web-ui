@@ -80,11 +80,11 @@ export class PaymentsStateComponent implements OnInit, OnDestroy {
     }
   }
 
-  private isFree(): boolean {
+  public isFree(): boolean {
     return this.serviceLimits && this.serviceLimits.serviceLevel === ServiceLevelType.FREE;
   }
 
-  private isBasic(): boolean {
+  public isBasic(): boolean {
     return this.serviceLimits && this.serviceLimits.serviceLevel === ServiceLevelType.BASIC;
   }
 
