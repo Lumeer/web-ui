@@ -324,6 +324,10 @@ export class ResourceChooserComponent implements OnChanges {
 
   public onCodeBlur(element: HTMLElement, resource: ResourceModel) {
     const newCode = element.textContent.trim();
+    if (newCode === resource.code) {
+      return;
+    }
+
     const isValid = this.isNewCodeValid(newCode);
     if (isValid) {
       element.classList.remove(...warningStyle);
@@ -341,50 +345,45 @@ export class ResourceChooserComponent implements OnChanges {
       return;
     }
 
-    const property = 'code';
-    const propertyOther = 'name';
-    if (resource.hasOwnProperty(property) && resource.hasOwnProperty(propertyOther)) {
-      this.onFieldBlur(element, resource, property, propertyOther);
+    this.updateCode(newCode, resource, element);
+  }
+
+  private updateCode(newCode: string, resource: ResourceModel, element: HTMLElement) {
+    if (resource.id) {
+      if (newCode.length === 0) {
+        element.textContent = resource.code;
+      } else {
+        const resourceModel = {...resource, code: newCode};
+        this.resourceUpdate.emit(resourceModel);
+      }
+    } else {
+      resource.code = newCode;
+      if (resource.icon === DEFAULT_ICON && resource.color === DEFAULT_COLOR) {
+        setTimeout(() => {
+          this.showPicker(resource);
+        }, 200);
+      } else {
+        this.syncingCorrIds.push(resource.correlationId);
+        this.resourceNew.emit(resource);
+      }
     }
   }
 
   public onNameBlur(element: HTMLElement, resource: ResourceModel) {
-    const property = 'name';
-    const propertyOther = 'code';
-    if (resource.hasOwnProperty(property) && resource.hasOwnProperty(propertyOther)) {
-      this.onFieldBlur(element, resource, property, propertyOther);
+    const newName = element.textContent.trim();
+    if (newName === resource.name) {
+      return;
     }
+
+    this.updateName(newName, resource);
   }
 
-  private onFieldBlur(element: HTMLElement, resource: ResourceModel, property: string, propertyOther: string) {
-    const contentTrim = element.textContent.trim();
-    const contentTrimLength = contentTrim.length;
-    const propertyLength = resource[property].length;
-
+  public updateName(newName: string, resource: ResourceModel) {
     if (resource.id) {
-      // we know, that code is not empty
-      if (contentTrimLength === 0) {
-        element.textContent = resource[property];
-      } else {
-        if (contentTrim !== resource[property]) {
-          const resourceModel = {...resource};
-          resourceModel[property] = contentTrim;
-          this.resourceUpdate.emit(resourceModel);
-        }
-      }
+      const resourceModel = {...resource, name: newName};
+      this.resourceUpdate.emit(resourceModel);
     } else {
-      if (resource[propertyOther].length === 0) {
-        resource[property] = contentTrim;
-      } else if (contentTrimLength == 0 && propertyLength > 0) {
-        element.textContent = resource[property];
-      } else if (contentTrimLength > 0 && propertyLength == 0) {
-        resource[property] = contentTrim;
-        if (this.isNewCodeValid(resource.code)) {
-          setTimeout(() => {
-            this.showPicker(resource);
-          }, 200);
-        }
-      }// else do nothing
+      resource.name = newName;
     }
   }
 
@@ -405,7 +404,6 @@ export class ResourceChooserComponent implements OnChanges {
     if (!this.modifiedResourceId || this.modifiedResourceId !== this.getResourceIdentificator(resource)) {
       return;
     }
-
     if (resource.id) {
       if (this.shouldUpdateResource(resource)) {
         const resourceModel = {
@@ -415,7 +413,7 @@ export class ResourceChooserComponent implements OnChanges {
         };
         this.resourceUpdate.emit(resourceModel);
       }
-    } else if (!this.syncingCorrIds.includes(resource.correlationId) && resource.code && resource.name) {
+    } else if (!this.syncingCorrIds.includes(resource.correlationId) && resource.code) {
       this.syncingCorrIds.push(resource.correlationId);
       this.resourceNew.emit(resource);
     }
