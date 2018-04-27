@@ -15,6 +15,8 @@
     </div>
 
     <input-box
+      class="flex-grow-2 px-2"
+      [style.width]="1+'px'"
       [initialValue]="organization.name"
       [color]="organization.color"
       [canStayEmpty]="false"
@@ -43,8 +45,11 @@
     </div>
   </div>
 
-  <div class="d-flex flex-row justify-content-start align-items-center">
+  <div class="d-flex flex-row justify-content-start align-items-center py-2">
+
     <input-box
+      class="flex-grow-2 px-2"
+      [style.width]="1+'px'"
       [initialValue]="organization.code"
       [color]="organization.color"
       [canStayEmpty]="false"
@@ -67,7 +72,7 @@
     [initialValue]="organization.description"
     [canStayEmpty]="true"
     [fontSizeRem]="1"
-    [maxLines]="2"
+    [maxLines]="4"
     [title]="'Organization description'"
     [placeholder]="'Organization description'"
     (newValue)="onNewDescription($event)">

@@ -1,9 +1,11 @@
-<div [class.edit-border]="editable"
+<div class="input"
+     [class.input-border]="editable && isMultiLine()"
+     [class.input-border-bottom]="editable && !isMultiLine()"
      [style.paddingTop.rem]="mPaddingRem"
      [style.paddingBottom.rem]="mPaddingRem"
      #inputParent>
 
-  <div class="input-box"
+  <div [ngClass]="isMultiLine() ? 'input-box-multiline' : 'input-box'"
        [class.cursor-text]="editable"
        [textContent]="mCurrentValue"
        (blur)="input.scrollTo(0,0); onNewValue(input.textContent)"
@@ -13,6 +15,7 @@
        [style.paddingLeft.rem]="mPaddingRem"
        [style.paddingRight.rem]="mPaddingRem"
        (focus)="onFocus()"
+       (click)="$event.stopPropagation()"
        [attr.contenteditable]="editable"
        [attr.placeholder]="mPlaceholder"
        [attr.title]="title"

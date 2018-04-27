@@ -123,8 +123,10 @@ export class OrganizationsEffects {
     withLatestFrom(this.store$.select(selectOrganizationCodes)),
     flatMap(([{organization, oldOrganization}, organizationCodes]) => {
       const actions: Action[] = [new OrganizationsAction.UpdateSuccess({organization: {...organization, id: organization.id}})];
-      const codes = organizationCodes.map(code => code === oldOrganization.code ? organization.code : code);
-      actions.push(new OrganizationsAction.GetCodesSuccess({organizationCodes: codes}));
+      if (organizationCodes) {
+        const codes = organizationCodes.map(code => code === oldOrganization.code ? organization.code : code);
+        actions.push(new OrganizationsAction.GetCodesSuccess({organizationCodes: codes}));
+      }
 
       const paramMap = RouteFinder.getFirstChildRouteWithParams(this.router.routerState.root.snapshot).paramMap;
       const orgCodeInRoute = paramMap.get('organizationCode');
