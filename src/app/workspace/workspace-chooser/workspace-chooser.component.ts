@@ -42,10 +42,14 @@ import {ViewsAction} from '../../core/store/views/views.action';
 import {UserSettingsService} from '../../core/user-settings.service';
 import {ResourceItemType} from './resource-chooser/resource-item-type';
 import {Router} from "@angular/router";
-import {userHasManageRoleInResource, userRolesInResource} from '../../shared/utils/resource.utils';
+import {userHasRoleInResource, userRolesInResource} from '../../shared/utils/resource.utils';
 import {UserModel} from '../../core/store/users/user.model';
 import {mapGroupsOnUser, selectCurrentUser, selectCurrentUserForOrganization} from '../../core/store/users/users.state';
 import {selectGroupsDictionary} from '../../core/store/groups/groups.state';
+import {ServiceLimitsAction} from '../../core/store/organizations/service-limits/service-limits.action';
+import {selectAllServiceLimits} from '../../core/store/organizations/service-limits/service-limits.state';
+import {ServiceLimitsModel} from '../../core/store/organizations/service-limits/service-limits.model';
+import {Role} from '../../core/model/role';
 
 const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'aturing@lumeer.io'];
 
@@ -77,6 +81,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   public organizationCodes$: Observable<string[]>;
   public organizationsRoles$: Observable<{ [organizationId: string]: string[] }>;
   public canCreateOrganizations$: Observable<boolean>;
+  public serviceLimits$: Observable<ServiceLimitsModel[]>;
 
   public projects$: Observable<ProjectModel[]>;
   public projectCodes$: Observable<string[]>;
@@ -100,6 +105,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
     this.store.dispatch(new OrganizationsAction.GetCodes());
     this.store.dispatch(new OrganizationsAction.Get());
+    this.store.dispatch(new ServiceLimitsAction.GetAll());
   }
 
   public ngOnDestroy() {
@@ -235,6 +241,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     this.canCreateOrganizations$ = this.store.select(selectCurrentUser).pipe(
       map(user => allowedEmails.includes(user.email))
     );
+    this.serviceLimits$ = this.store.select(selectAllServiceLimits);
 
     this.projects$ = this.store.select(selectProjectsForSelectedOrganization);
     this.projectCodes$ = this.store.select(selectProjectsCodesForSelectedOrganization).pipe(
@@ -249,7 +256,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
       ))
     );
     this.canCreateProjects$ = this.selectOrganizationAndCurrentUser().pipe(
-      map(({organization, user}) => userHasManageRoleInResource(user, organization))
+      map(({organization, user}) => userHasRoleInResource(user, organization, Role.Write))
     );
   }
 

@@ -19,13 +19,14 @@
 
 import {ServiceLimits} from "../../../dto/service-limits";
 import {ServiceLimitsModel} from "./service-limits.model";
+import {serviceLevelMap, ServiceLevelType} from '../../../dto/service-level-type';
 
 export class ServiceLimitsConverter {
 
   public static fromDto(organizationId: string, dto: ServiceLimits): ServiceLimitsModel {
     return {
       organizationId: organizationId,
-      serviceLevel: dto.serviceLevel,
+      serviceLevel: serviceLevelMap[dto.serviceLevel],
       users: dto.users,
       projects: dto.projects,
       files: dto.files,

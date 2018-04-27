@@ -7,7 +7,7 @@
 
     <div class="px-3" *ngIf="resources.length == 0 && !canCreateResource"
          i18n="@@resource.chooser.empty">
-      There are no {resourceType, select, organization {organizations} project {projects}} and you are not allowed to
+      There are no {resourceType, select, Organization {organizations} Project {projects}} and you are not allowed to
       create new ones.
     </div>
 
@@ -32,6 +32,10 @@
             <div class="card square" [class.unitialized]="!resource.id"></div>
             <div class="card text-center content border-0" [style.color]="resource.color">
               <div class="card-body">
+
+                <ng-container *ngIf="!isSelected(resource) && hasServiceLevel(resource)">
+                  <ng-container *ngTemplateOutlet="ribbon; context: { $implicit: resource}"></ng-container>
+                </ng-container>
 
                 <div class="d-flex flex-column settings">
                   <ng-container *ngIf="resource.id">
@@ -105,7 +109,11 @@
             </div>
           </div>
           <div class="align-self-stretch border border-bottom-0 rounded-top bookmark"
-               *ngIf="resource.id === selectedId" [@animateVisible]="'in'"></div>
+               *ngIf="isSelected(resource)" [@animateVisible]="'in'">
+            <ng-container *ngIf="hasServiceLevel(resource)">
+              <ng-container *ngTemplateOutlet="ribbon; context: { $implicit: resource}"></ng-container>
+            </ng-container>
+          </div>
 
         </div>
 
@@ -152,3 +160,9 @@
   </div>
 
 </div>
+
+<ng-template #ribbon let-resource>
+  <div class="ribbon" [class.red]="isFreeServiceLevel(resource)">
+    <span>{{serviceLevelTitle(resource)}}</span>
+  </div>
+</ng-template>

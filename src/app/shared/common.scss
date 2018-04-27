@@ -133,10 +133,10 @@ input {
 
 .clickable {
   cursor: pointer;
-  color: $link-color;
+  color: $success;
 
   &:hover {
-    color: $link-hover-color;
+    color: darken($success, 20%);
   }
 }
 
@@ -147,14 +147,6 @@ input {
   &:hover {
     color: $grey-darker-color;
   }
-}
-
-.selected {
-  color: $link-color;
-}
-
-.unselected {
-  color: $grey-color;
 }
 
 .pointer-events-none {

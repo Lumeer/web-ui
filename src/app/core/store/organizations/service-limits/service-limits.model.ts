@@ -17,9 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {ServiceLevelType} from '../../../dto/service-level-type';
+
 export interface ServiceLimitsModel {
   organizationId: string,
-  serviceLevel: string,
+  serviceLevel: ServiceLevelType,
   users: number,
   projects: number,
   files: number,

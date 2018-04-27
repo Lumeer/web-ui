@@ -18,11 +18,12 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
+
 import {selectOrganizationByWorkspace} from "../../../../../core/store/organizations/organizations.state";
 import {isNullOrUndefined} from "util";
 import {filter} from "rxjs/operators";
 import {Store} from "@ngrx/store";
-import {Router} from "@angular/router";
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {AppState} from "../../../../../core/store/app.state";
 import {OrganizationModel} from "../../../../../core/store/organizations/organization.model";
@@ -30,6 +31,7 @@ import {Subscription} from "rxjs/Subscription";
 import {selectServiceLimitsByWorkspace} from "../../../../../core/store/organizations/service-limits/service-limits.state";
 import {ServiceLimitsModel} from "../../../../../core/store/organizations/service-limits/service-limits.model";
 import {ServiceLimitsAction} from "../../../../../core/store/organizations/service-limits/service-limits.action";
+import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
 
 @Component({
   selector: 'payments-state',
@@ -46,7 +48,8 @@ export class PaymentsStateComponent implements OnInit, OnDestroy {
 
   constructor(private i18n: I18n,
               private router: Router,
-              private store: Store<AppState>) { }
+              private store: Store<AppState>) {
+  }
 
   public ngOnInit() {
     this.subscribeToStore();
@@ -64,7 +67,7 @@ export class PaymentsStateComponent implements OnInit, OnDestroy {
   }
 
   private requestData() {
-    this.store.dispatch(new ServiceLimitsAction.GetServiceLimits({ organizationId: this.organization.id }));
+    this.store.dispatch(new ServiceLimitsAction.GetServiceLimits({organizationId: this.organization.id}));
   }
 
   public ngOnDestroy(): void {
@@ -75,6 +78,14 @@ export class PaymentsStateComponent implements OnInit, OnDestroy {
     if (this.serviceLimitsSubscription) {
       this.serviceLimitsSubscription.unsubscribe();
     }
+  }
+
+  public isFree(): boolean {
+    return this.serviceLimits && this.serviceLimits.serviceLevel === ServiceLevelType.FREE;
+  }
+
+  public isBasic(): boolean {
+    return this.serviceLimits && this.serviceLimits.serviceLevel === ServiceLevelType.BASIC;
   }
 
 }

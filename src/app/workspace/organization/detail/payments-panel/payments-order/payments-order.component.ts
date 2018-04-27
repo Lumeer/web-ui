@@ -28,6 +28,7 @@ import {isNullOrUndefined} from "util";
 import {AppState} from "../../../../../core/store/app.state";
 import {DatePipe} from "@angular/common";
 import {ServiceLimitsModel} from "../../../../../core/store/organizations/service-limits/service-limits.model";
+import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
 
 @Component({
   selector: 'payments-order',
@@ -89,7 +90,7 @@ export class PaymentsOrderComponent implements OnInit {
       .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
       .subscribe(serviceLimits => {
         this.serviceLimits = serviceLimits;
-        if (serviceLimits.serviceLevel == 'FREE') {
+        if (serviceLimits.serviceLevel === ServiceLevelType.FREE) {
           this.trial = true;
           this.setStartDate(PaymentsOrderComponent.floorDate(new Date()));
         } else {

@@ -32,7 +32,8 @@ import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'user',
-  templateUrl: './user.component.html'
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.scss']
 })
 export class UserComponent implements OnInit, OnDestroy {
 

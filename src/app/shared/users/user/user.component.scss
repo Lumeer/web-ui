@@ -1,0 +1,9 @@
+@import "../../../shared/variables";
+
+.selected {
+  color: $success;
+}
+
+.unselected {
+  color: $grey-color;
+}
