@@ -17,9 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 export enum ServiceLevelType {
 
   FREE = 'FREE',
   BASIC = 'BASIC'
 
 }
+
+export const serviceLevelMap: { [id: string]: ServiceLevelType } = {
+  [ServiceLevelType.FREE]: ServiceLevelType.FREE,
+  [ServiceLevelType.BASIC]: ServiceLevelType.BASIC
+};
