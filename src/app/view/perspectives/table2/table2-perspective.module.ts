@@ -37,7 +37,6 @@ import {TableCollapsedCellComponent} from './body/rows/row/cell-group/cell/colla
 import {TableDataCellMenuComponent} from './body/rows/row/cell-group/cell/data-cell/menu/table-data-cell-menu.component';
 import {TableDataCellSuggestionsComponent} from './body/rows/row/cell-group/cell/data-cell/suggestions/table-data-cell-suggestions.component';
 import {TableDataCellComponent} from './body/rows/row/cell-group/cell/data-cell/table-data-cell.component';
-import {TableEditableCellComponent} from './body/rows/row/cell-group/cell/editable-cell/table-editable-cell.component';
 import {TableCellComponent} from './body/rows/row/cell-group/cell/table-cell.component';
 import {TableCellGroupComponent} from './body/rows/row/cell-group/table-cell-group.component';
 import {TableLinkCellComponent} from './body/rows/row/link-cell/table-link-cell.component';
@@ -49,7 +48,6 @@ import {TableCaptionComponent} from './header/collection/caption/table-caption.c
 import {TableHeaderCollectionComponent} from './header/collection/table-header-collection.component';
 import {TableCompoundColumnComponent} from './header/column-group/compound-column/table-compound-column.component';
 import {TableHiddenColumnComponent} from './header/column-group/hidden-column/table-hidden-column.component';
-import {TableAttributeNameComponent} from './header/column-group/single-column/attribute-name/table-attribute-name.component';
 import {TableAttributeSuggestionsComponent} from './header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './header/column-group/single-column/context-menu/table-column-context-menu.component';
 import {TableSingleColumnComponent} from './header/column-group/single-column/table-single-column.component';
@@ -57,6 +55,7 @@ import {TableColumnGroupComponent} from './header/column-group/table-column-grou
 import {TableLinkInfoComponent} from './header/link/info/table-link-info.component';
 import {TableHeaderLinkComponent} from './header/link/table-header-link.component';
 import {TableHeaderComponent} from './header/table-header.component';
+import {TableEditableCellComponent} from './shared/editable-cell/table-editable-cell.component';
 import {Table2PerspectiveComponent} from './table2-perspective.component';
 
 @NgModule({
@@ -82,7 +81,6 @@ import {Table2PerspectiveComponent} from './table2-perspective.component';
     TableCompoundColumnComponent,
     TableLinkInfoComponent,
     TableHiddenColumnComponent,
-    TableAttributeNameComponent,
     TableColumnContextMenuComponent,
     TableAttributeSuggestionsComponent,
     TableBodyComponent,

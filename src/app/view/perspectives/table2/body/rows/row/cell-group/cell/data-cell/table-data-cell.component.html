@@ -4,9 +4,8 @@
                      [selected]="selected"
                      [value]="value()"
                      (valueChange)="onValueChange($event)"
-                     (valueSave)="onValueSave($event)"
                      (editStart)="onEditStart()"
-                     (editEnd)="onEditEnd()"
+                     (editEnd)="onEditEnd($event)"
                      class="d-block h-100">
 </table-editable-cell>
 

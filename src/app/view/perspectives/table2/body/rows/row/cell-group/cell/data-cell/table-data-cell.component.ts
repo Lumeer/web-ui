@@ -32,7 +32,7 @@ import {findTableRow, splitRowPath} from '../../../../../../../../../core/store/
 import {TablesAction} from '../../../../../../../../../core/store/tables/tables.action';
 import {selectEditedAttribute} from '../../../../../../../../../core/store/tables/tables.state';
 import {TableColumnContextMenuComponent} from '../../../../../../header/column-group/single-column/context-menu/table-column-context-menu.component';
-import {TableEditableCellComponent} from '../editable-cell/table-editable-cell.component';
+import {TableEditableCellComponent} from '../../../../../../shared/editable-cell/table-editable-cell.component';
 
 @Component({
   selector: 'table-data-cell',
@@ -95,8 +95,30 @@ export class TableDataCellComponent implements OnInit {
     this.editedValue = value;
   }
 
-  public onValueSave(value: string) {
-    if (this.linkCreated) {
+  public onEditStart() {
+    if (this.document.id) {
+      this.store.dispatch(new TablesAction.SetEditedAttribute({
+        editedAttribute: {
+          documentId: this.document.id,
+          attributeId: this.column.attributeId
+        }
+      }));
+    }
+  }
+
+  public onEditEnd(value: string) {
+    this.clearEditedAttribute();
+    this.saveData(value);
+  }
+
+  private clearEditedAttribute() {
+    if (this.document.id) {
+      this.store.dispatch(new TablesAction.SetEditedAttribute({editedAttribute: null}));
+    }
+  }
+
+  private saveData(value: string) {
+    if (this.linkCreated || this.value() === value) {
       return;
     }
 
@@ -231,23 +253,6 @@ export class TableDataCellComponent implements OnInit {
       documentIds: [previousRow.documentIds[0], document.id]
     };
     this.store.dispatch(new LinkInstancesAction.Create({linkInstance}));
-  }
-
-  public onEditStart() {
-    if (this.document.id) {
-      this.store.dispatch(new TablesAction.SetEditedAttribute({
-        editedAttribute: {
-          documentId: this.document.id,
-          attributeId: this.column.attributeId
-        }
-      }));
-    }
-  }
-
-  public onEditEnd() {
-    if (this.document.id) {
-      this.store.dispatch(new TablesAction.SetEditedAttribute({editedAttribute: null}));
-    }
   }
 
 }
