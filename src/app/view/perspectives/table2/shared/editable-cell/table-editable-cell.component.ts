@@ -18,9 +18,9 @@
  */
 
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
-import {KeyCode} from '../../../../../../../../../shared/key-code';
-import {HtmlModifier} from '../../../../../../../../../shared/utils/html-modifier';
-import {isKeyPrintable} from '../../../../../../../../../shared/utils/key-code.helper';
+import {KeyCode} from '../../../../../shared/key-code';
+import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
+import {isKeyPrintable} from '../../../../../shared/utils/key-code.helper';
 
 @Component({
   selector: 'table-editable-cell',
@@ -46,13 +46,10 @@ export class TableEditableCellComponent implements OnChanges {
   public valueChange = new EventEmitter<string>();
 
   @Output()
-  public valueSave = new EventEmitter<string>();
-
-  @Output()
   public editStart = new EventEmitter();
 
   @Output()
-  public editEnd = new EventEmitter();
+  public editEnd = new EventEmitter<string>();
 
   @ViewChild('editableCell')
   public editableCell: ElementRef;
@@ -153,11 +150,8 @@ export class TableEditableCellComponent implements OnChanges {
     this.edited = false;
 
     const value = this.editableCell.nativeElement.textContent;
-    if (value !== this.value) {
-      this.valueSave.emit(value);
-    }
+    this.editEnd.emit(value);
 
-    this.editEnd.emit();
     this.changeDetector.detectChanges(); // TODO maybe not needed
   }
 

@@ -36,16 +36,14 @@ import {Direction} from '../../../../../../shared/direction';
 import {KeyCode} from '../../../../../../shared/key-code';
 import {extractAttributeName, extractAttributeParentId, filterAttributesByDepth, generateAttributeId, splitAttributeId} from '../../../../../../shared/utils/attribute.utils';
 import {HtmlModifier, stripedBackground} from '../../../../../../shared/utils/html-modifier';
-import {isKeyPrintable} from '../../../../../../shared/utils/key-code.helper';
-import {TableAttributeNameComponent} from './attribute-name/table-attribute-name.component';
+import {TableEditableCellComponent} from '../../../shared/editable-cell/table-editable-cell.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
 
 export const DEFAULT_COLOR = '#ffffff';
 
 @Component({
   selector: 'table-single-column',
-  templateUrl: './table-single-column.component.html',
-  styleUrls: ['./table-single-column.component.scss']
+  templateUrl: './table-single-column.component.html'
 })
 export class TableSingleColumnComponent implements OnInit, OnDestroy {
 
@@ -61,8 +59,8 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
   @Input()
   public leaf: boolean;
 
-  @ViewChild(TableAttributeNameComponent)
-  public attributeNameComponent: TableAttributeNameComponent;
+  @ViewChild(TableEditableCellComponent)
+  public editableCellComponent: TableEditableCellComponent;
 
   @ViewChild(TableColumnContextMenuComponent)
   public contextMenuComponent: TableColumnContextMenuComponent;
@@ -160,40 +158,39 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
     return color;
   }
 
-  public onAttributeNameBlur() {
-    this.stopEditing();
+  public value(): string {
+    return this.attribute ? this.attribute.name : extractAttributeName(this.column.attributeId);
   }
 
-  private startEditing() {
+  public onValueChange(attributeName: string) {
+    this.attributeName = attributeName;
+  }
+
+  public onEditStart() {
     this.edited = true;
   }
 
-  private stopEditing() {
+  public onEditEnd(attributeName: string) {
     this.edited = false;
-    const unique = this.isUniqueAttributeName();
 
-    if (this.hasAttributeNameChanged() && unique) {
-      this.renameColumn();
+    if (this.hasAttributeNameChanged(attributeName) && this.isUniqueAttributeName(attributeName)) {
+      this.renameColumn(attributeName);
     }
-
-    // if (!unique && this.attribute) {
-    //   this.attributeId = this.attribute.name;
-    // }
   }
 
-  private renameColumn() {
-    this.store.dispatch(new TablesAction.RenameColumn({cursor: this.cursor, name: this.attributeName}));
+  private renameColumn(attributeName: string) {
+    this.store.dispatch(new TablesAction.RenameColumn({cursor: this.cursor, name: attributeName}));
   }
 
-  private hasAttributeNameChanged(): boolean {
-    return this.attributeName && ((this.attribute && this.attributeName !== this.attribute.name) || !this.attribute);
+  private hasAttributeNameChanged(attributeName: string): boolean {
+    return attributeName && ((this.attribute && attributeName !== this.attribute.name) || !this.attribute);
   }
 
-  public isUniqueAttributeName(): boolean {
+  public isUniqueAttributeName(attributeName: string): boolean {
     if (this.cursor.columnPath.length === 1) {
       return filterAttributesByDepth(this.getAttributes(), 1)
         .filter(attribute => this.attribute ? this.attribute.id !== attribute.id : true)
-        .every(attribute => attribute.name !== this.attributeName);
+        .every(attribute => attribute.name !== attributeName);
     }
 
     const parent = findTableColumn(this.getPart().columns, this.cursor.columnPath.slice(0, -1)) as TableCompoundColumn;
@@ -201,7 +198,7 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
     return this.getAttributes()
       .filter(attribute => attribute.id.startsWith(prefix))
       .filter(attribute => this.attribute ? this.attribute.id !== attribute.id : true)
-      .every(attribute => attribute.name !== this.attributeName);
+      .every(attribute => attribute.name !== attributeName);
   }
 
   public onAdd(next: boolean) {
@@ -218,7 +215,7 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
   }
 
   public onEdit() {
-    this.startEditing();
+    this.editableCellComponent.startEditing();
   }
 
   public onHide() {
@@ -301,37 +298,13 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
     return [];
   }
 
-  public onClick() {
+  public onMouseDown() {
     if (!this.selected) {
       this.store.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
     }
   }
 
-  public onDoubleClick() {
-    if (!this.edited) {
-      this.startEditing();
-    }
-  }
-
   public onKeyDown(event: KeyboardEvent) {
-    if (this.edited) {
-      this.onKeyDownInEditMode(event);
-    } else {
-      this.onKeyDownInSelectionMode(event);
-    }
-  }
-
-  private onKeyDownInEditMode(event: KeyboardEvent) {
-    switch (event.keyCode) {
-      case KeyCode.Enter:
-      case KeyCode.Escape:
-        this.stopEditing();
-        event.preventDefault();
-        return;
-    }
-  }
-
-  private onKeyDownInSelectionMode(event: KeyboardEvent, unchangeable?: boolean) {
     switch (event.keyCode) {
       case KeyCode.LeftArrow:
         return this.store.dispatch(new TablesAction.MoveCursor({cursor: this.cursor, direction: Direction.Left}));
@@ -341,25 +314,6 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
         return this.store.dispatch(new TablesAction.MoveCursor({cursor: this.cursor, direction: Direction.Right}));
       case KeyCode.DownArrow:
         return this.store.dispatch(new TablesAction.MoveCursor({cursor: this.cursor, direction: Direction.Down}));
-      case KeyCode.Enter:
-      case KeyCode.Backspace:
-        this.startEditing();
-        event.preventDefault();
-        return;
-      case KeyCode.Delete:
-        this.showRemoveConfirm();
-        return;
-      default:
-        if (!isKeyPrintable(event.keyCode)) {
-          return;
-        }
-
-        event.preventDefault();
-        this.startEditing();
-        const attributeNameElement = this.attributeNameComponent.attributeNameInput.nativeElement;
-        if (!attributeNameElement.textContent) {
-          attributeNameElement.textContent = event.key;
-        }
     }
   }
 
