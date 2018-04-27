@@ -22,12 +22,34 @@ import {ServiceLimitsModel} from "./service-limits.model";
 
 export enum ServiceLimitsActionType {
 
-  GET_SERVICE_LIMITS = '[Organizations] Get Service Limits',
-  GET_SERVICE_LIMITS_SUCCESS = '[Organizations] Get Service Limits :: Success',
-  GET_SERVICE_LIMITS_FAILURE = '[Organizations] Get Service Limits :: Failure',
+  GET_ALL = '[ServiceLimits] Get All',
+  GET_ALL_SUCCESS = '[ServiceLimits] Get All :: Success',
+  GET_ALL_FAILURE = '[ServiceLimits] Get All :: Failure',
+
+  GET_SERVICE_LIMITS = '[ServiceLimits] Get',
+  GET_SERVICE_LIMITS_SUCCESS = '[ServiceLimits] Get :: Success',
+  GET_SERVICE_LIMITS_FAILURE = '[ServiceLimits] Get :: Failure',
 }
 
 export namespace ServiceLimitsAction {
+
+  export class GetAll implements Action {
+    public readonly type = ServiceLimitsActionType.GET_ALL;
+  }
+
+  export class GetAllSuccess implements Action {
+    public readonly type = ServiceLimitsActionType.GET_ALL_SUCCESS;
+
+    public constructor(public payload: { allServiceLimits: ServiceLimitsModel[] }) {
+    }
+  }
+
+  export class GetAllFailure implements Action {
+    public readonly type = ServiceLimitsActionType.GET_ALL_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
 
   export class GetServiceLimits implements Action {
     public readonly type = ServiceLimitsActionType.GET_SERVICE_LIMITS;
@@ -50,5 +72,6 @@ export namespace ServiceLimitsAction {
     }
   }
 
-  export type All = GetServiceLimits | GetServiceLimitsSuccess | GetServiceLimitsFailure;
+  export type All = GetAll | GetAllSuccess | GetAllFailure |
+    GetServiceLimits | GetServiceLimitsSuccess | GetServiceLimitsFailure;
 }

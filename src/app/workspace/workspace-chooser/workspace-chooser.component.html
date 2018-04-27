@@ -4,6 +4,7 @@
                     [resources]="organizations$ | async"
                     [resourcesRoles]="organizationsRoles$ | async"
                     [canCreateResource]="canCreateOrganizations$ | async"
+                    [serviceLimits]="serviceLimits$ | async"
                     [usedCodes]="organizationCodes$ | async"
                     (warningMessage)="onWarningMessage($event)"
                     (resourceDelete)="onDeleteOrganization($event)"

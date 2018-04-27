@@ -26,8 +26,7 @@ import {PermissionModel, PermissionsModel} from '../../../core/store/permissions
 
 @Component({
   selector: 'user-list',
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss']
+  templateUrl: './user-list.component.html'
 })
 export class UserListComponent {
 

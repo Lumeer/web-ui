@@ -34,6 +34,31 @@ import {ServiceLimitsConverter} from "./service-limits.converter";
 export class ServiceLimitsEffects {
 
   @Effect()
+  public getAll$: Observable<Action> = this.actions$.pipe(
+    ofType<ServiceLimitsAction.GetAll>(ServiceLimitsActionType.GET_ALL),
+    mergeMap(() => {
+      return this.organizationService.getAllServiceLimits().pipe(
+        map(mapOfLimits => Object.keys(mapOfLimits).reduce((acc, organizationId) => {
+          acc.push(ServiceLimitsConverter.fromDto(organizationId, mapOfLimits[organizationId]));
+          return acc;
+        }, []))
+      );
+    }),
+    map(serviceLimits => new ServiceLimitsAction.GetAllSuccess({allServiceLimits: serviceLimits})),
+    catchError(error => Observable.of(new ServiceLimitsAction.GetAllFailure({error: error})))
+  );
+
+  @Effect()
+  public getAllFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<ServiceLimitsAction.GetAllFailure>(ServiceLimitsActionType.GET_ALL_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'organization.serviceLimits.getAll.fail', value: 'Cannot read information about your service levels and subscriptions'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
   public getServiceLimits$: Observable<Action> = this.actions$.pipe(
     ofType<ServiceLimitsAction.GetServiceLimits>(ServiceLimitsActionType.GET_SERVICE_LIMITS),
     mergeMap(action => {
@@ -41,7 +66,7 @@ export class ServiceLimitsEffects {
         map(dto => ServiceLimitsConverter.fromDto(action.payload.organizationId, dto))
       );
     }),
-    map(serviceLimits => new ServiceLimitsAction.GetServiceLimitsSuccess({ serviceLimits: serviceLimits })),
+    map(serviceLimits => new ServiceLimitsAction.GetServiceLimitsSuccess({serviceLimits: serviceLimits})),
     catchError(error => Observable.of(new ServiceLimitsAction.GetServiceLimitsFailure({error: error})))
   );
 

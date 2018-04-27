@@ -17,16 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {initialServiceLimitsState, serviceLimitsAdapter, ServiceLimitsState} from "./service-limits.state";
-import {ServiceLimitsAction, ServiceLimitsActionType} from "./service-limits.action";
+export enum ServiceLevelType {
 
-export function serviceLimitsReducer(state: ServiceLimitsState = initialServiceLimitsState, action: ServiceLimitsAction.All): ServiceLimitsState {
-  switch (action.type) {
-    case ServiceLimitsActionType.GET_ALL_SUCCESS:
-      return serviceLimitsAdapter.addAll(action.payload.allServiceLimits, state);
-    case ServiceLimitsActionType.GET_SERVICE_LIMITS_SUCCESS:
-      return serviceLimitsAdapter.upsertOne({id: action.payload.serviceLimits.organizationId, changes: action.payload.serviceLimits}, state);
-    default:
-      return state;
-  }
+  FREE = 'FREE',
+  BASIC = 'BASIC'
+
 }

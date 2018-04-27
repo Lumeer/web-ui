@@ -29,6 +29,8 @@ import {ProjectModel} from '../../../core/store/projects/project.model';
 import {KeyCode} from '../../../shared/key-code';
 import {ResourceItemType} from './resource-item-type';
 import {Role} from '../../../core/model/role';
+import {ServiceLimitsModel} from '../../../core/store/organizations/service-limits/service-limits.model';
+import {ServiceLevelType} from '../../../core/dto/service-level-type';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
@@ -86,6 +88,7 @@ export class ResourceChooserComponent implements OnChanges {
 
   @Input() public resourceType: ResourceItemType;
   @Input() public resources: ResourceModel[];
+  @Input() public serviceLimits: ServiceLimitsModel[];
   @Input() public resourcesRoles: { [id: string]: string[] };
   @Input() public selectedId: string;
   @Input() public canCreateResource: boolean;
@@ -423,6 +426,10 @@ export class ResourceChooserComponent implements OnChanges {
     this.modifiedResourceId = null;
   }
 
+  public isSelected(resource: ResourceModel): boolean {
+    return resource.id === this.selectedId;
+  }
+
   public onDescriptionBlur(resource: ResourceModel, newDescription: string) {
     const resourceModel = {...resource, description: newDescription};
     this.resourceUpdate.emit(resourceModel);
@@ -438,6 +445,33 @@ export class ResourceChooserComponent implements OnChanges {
 
   public getResource(id: string) {
     return this.findResource(id);
+  }
+
+  public serviceLevelTitle(resource: ResourceModel): string{
+    const serviceLevel = this.getServiceLevel(resource);
+    return this.i18n({
+      id: 'resource.chooser.serviceLevel',
+      value: '{serviceLevel, select, FREE {Trial} BASIC {Business}}'
+    }, {
+      serviceLevel: serviceLevel
+    });
+  }
+
+  public isFreeServiceLevel(resource: ResourceModel): boolean {
+    return this.getServiceLevel(resource) === ServiceLevelType.FREE;
+  }
+
+  public hasServiceLevel(resource: ResourceModel): boolean {
+    return this.resourceType === ResourceItemType.Organization && !isNullOrUndefined(this.getServiceLevel(resource));
+  }
+
+  private getServiceLevel(organization: OrganizationModel): ServiceLevelType {
+    const serviceLimits = this.getServiceLimits(organization);
+    return serviceLimits && serviceLimits.serviceLevel;
+  }
+
+  private getServiceLimits(organization: OrganizationModel): ServiceLimitsModel {
+    return this.serviceLimits && this.serviceLimits.find(limit => limit.organizationId === organization.id);
   }
 
   private findResource(identificator: string): ResourceModel {

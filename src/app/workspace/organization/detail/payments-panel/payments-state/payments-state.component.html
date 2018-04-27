@@ -1,4 +1,4 @@
-<ul *ngIf="serviceLimits?.serviceLevel == 'FREE'" class="list-group">
+<ul *ngIf="isFree()" class="list-group">
   <li class="list-group-item list-group-item-light text-sm-center" i18n="@@organizations.tab.detail.state.trial">You are on <strong>Trial</strong> program now.</li>
   <li class="list-group-item list-group-item-success text-lg-center" i18n="@@organizations.tab.detail.state.getBusiness">Get Lumeer for Business!</li>
   <li class="list-group-item">
@@ -29,7 +29,7 @@
     <span class="small text-danger" i18n="@@organizations.tab.detail.state.dataLimit.warn">Now you have only {{serviceLimits?.documents}} records available.</span>
   </li>
 </ul>
-<ul *ngIf="serviceLimits?.serviceLevel == 'BASIC'" class="list-group">
+<ul *ngIf="isBasic()" class="list-group">
   <li class="list-group-item list-group-item-success text-lg-center" i18n="@@organizations.tab.detail.order.onBusiness">Congratulations, <strong>Business</strong> program active!</li>
   <li class="list-group-item list-group-item-light text-sm-center" i18n="@@organizations.tab.detail.basic.active">Subscription is active until {{serviceLimits.validUntil | date : 'mediumDate'}}</li>
   <li class="list-group-item" i18n="@@organizations.tab.detail.basic.allInclusive">
