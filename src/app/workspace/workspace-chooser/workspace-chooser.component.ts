@@ -255,7 +255,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
       ))
     );
     this.canCreateProjects$ = this.selectOrganizationAndCurrentUser().pipe(
-      map(({organization, user}) => userHasManageRoleInResource(user, organization))
+      map(({organization, user}) => userHasRoleInResource(user, organization, Role.Write))
     );
   }
 
