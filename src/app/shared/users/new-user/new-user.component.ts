@@ -60,7 +60,7 @@ export class NewUserComponent {
   public emailPlaceHolder() {
     return this.i18n({
       id: 'user.add.placeholder',
-      value: 'Write user email here'
+      value: 'Type email to invite another user'
     });
   }
 }
