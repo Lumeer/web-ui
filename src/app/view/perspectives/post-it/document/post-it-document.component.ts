@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {isString} from 'util';
@@ -40,7 +40,7 @@ import Update = DocumentsAction.Update;
   templateUrl: './post-it-document.component.html',
   styleUrls: ['./post-it-document.component.scss']
 })
-export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PostItDocumentComponent implements OnInit {
 
   @HostListener('focusout')
   public onFocusOut(): void {
@@ -102,9 +102,6 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   public perspectiveId: string;
 
   @Input()
-  public layoutManager: PostItLayout;
-
-  @Input()
   public navigationHelper: NavigationHelper;
 
   @Input()
@@ -142,10 +139,6 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
         key.preventDefault();
       }
     }, capture);
-  }
-
-  public ngAfterViewInit(): void {
-    this.layoutManager.add(this.element.nativeElement);
   }
 
   public clickOnAttributePair(column: number, row: number): void {
@@ -265,10 +258,6 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   public hasWriteRole(): boolean {
     return this.collectionRoles && this.collectionRoles.includes(Role.Write)
-  }
-
-  public ngOnDestroy(): void {
-    this.layoutManager.remove(this.element.nativeElement);
   }
 
 }

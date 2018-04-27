@@ -17,29 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Directive, ElementRef, Input, OnDestroy} from '@angular/core';
-import {PostItLayout} from './post-it-layout';
+import {Store} from '@ngrx/store';
+import {Subscription} from 'rxjs/Subscription';
+import {AppState} from '../../../../core/store/app.state';
+import {PostItConfigModel} from '../../../../core/store/views/view.model';
+import {selectViewPostItConfig} from '../../../../core/store/views/views.state';
 
-@Directive({
-  selector: '[layout-item]'
-})
-export class LayoutItem implements AfterViewInit, OnDestroy {
+export class ConfigHelper {
 
-  @Input()
-  public layout: PostItLayout;
+  private postItConfig: PostItConfigModel;
 
-  @Input()
-  public insertedAt: number;
+  private subscription: Subscription;
 
-  constructor(private element: ElementRef) {
+  constructor(private store: Store<AppState>) {
   }
 
-  public ngAfterViewInit(): void {
-    this.layout.addItem(this.element.nativeElement, this.insertedAt);
+  public initialize(): void {
+    this.subscription = this.store.select(selectViewPostItConfig).subscribe((postItConfig: PostItConfigModel) => {
+      this.postItConfig = postItConfig;
+      console.log(this.postItConfig);
+    });
   }
 
-  public ngOnDestroy(): void {
-    this.layout.removeItem(this.element.nativeElement);
+  public unsubscribe(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
 }

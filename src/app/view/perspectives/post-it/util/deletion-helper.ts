@@ -46,7 +46,7 @@ export class DeletionHelper {
     this.postIts.splice(postIt.index, 1);
   }
 
-  public destroy(): void {
+  public unsubscribe(): void {
     if (this.documentsSubscription) {
       this.documentsSubscription.unsubscribe();
     }

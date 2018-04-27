@@ -18,14 +18,46 @@
  */
 
 import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {isNullOrUndefined} from "util";
+import {ATTRIBUTE_COLUMN, VALUE_COLUMN} from "../util/selection-helper";
+import {HashCodeGenerator} from "../../../../shared/utils/hash-code-generator";
 
 export class PostItDocumentModel {
 
   public index: number;
   public document: DocumentModel;
 
-  public order = 1;
   public updating = false;
   public initialized: boolean;
+
+  public preferredColumn(): number {
+    const attributes = Object.keys(this.document.data);
+    if (attributes.length === 0) {
+      return ATTRIBUTE_COLUMN;
+    }
+
+    return VALUE_COLUMN;
+  }
+
+  public inInitialState(): boolean {
+    const isUninitialized = !this.initialized;
+    const hasInitialAttributes = Object.keys(this.document.data).length === this.document.collection.attributes.length;
+    const hasInitialValues = Object.values(this.document.data).every(value => value === '');
+
+    return isUninitialized && hasInitialAttributes && hasInitialValues;
+  }
+
+  public hasDocument(document: DocumentModel): boolean {
+    return this.document.id === document.id
+  }
+
+  public withIndex(index: number): PostItDocumentModel {
+    this.index = index;
+    return this;
+  }
+
+  public hash(): number {
+    return HashCodeGenerator.hashString(this.document.correlationId || this.document.id);
+  }
 
 }

@@ -17,86 +17,87 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgZone} from '@angular/core';
-import {PostItLayoutConfig} from './post-it-layout-config';
+import {NgZone} from "@angular/core";
 
 export class PostItLayout {
 
-  protected layout: any;
+  private grid = null;
+  private dragOrder = [];
 
-  protected insertingElementsAtIndex: number = 0;
-
-  constructor(protected containerClassName: string, protected parameters: PostItLayoutConfig, protected zone: NgZone) {
-    this.addContainerClassIdentifierIfMissing();
+  constructor(private gridElement: any,
+              private dragEnabled: boolean,
+              private zone: NgZone) {
+    this.initGrid();
   }
 
-  private addContainerClassIdentifierIfMissing(): void {
-    if (!this.containerClassName.startsWith('.')) {
-      this.containerClassName = '.' + this.containerClassName;
-    }
-  }
-
-  public initialize(): void {
-    this.isInitializedAffterAttempt();
-  }
-
-  public add(element: HTMLElement): void {
-    if (!this.isInitializedAffterAttempt()) {
-      return;
-    }
-
-    this.zone.runOutsideAngular(() => {
-      this.layout.add(element, {index: this.insertingElementsAtIndex});
-      this.relayout();
+  private initGrid() {
+    this.runSafely(() => {
+      this.grid = new window['Muuri'](
+        this.gridElement,
+        {
+          layoutDuration: 400,
+          layoutEasing: 'ease',
+          dragEnabled: this.dragEnabled,
+          dragSortInterval: 500,
+          dragReleaseDuration: 500,
+          dragReleaseEasing: 'ease',
+          layoutOnResize: 500,
+          layoutOnInit: true,
+          layout: {
+            fillGaps: false,
+            horizontal: false,
+            alignRight: false,
+            alignBottom: false,
+            rounding: true
+          },
+          dragStartPredicate: {
+            distance: 0,
+            delay: 0,
+            handle: false
+          },
+          dragSort: true,
+          dragSortPredicate: {
+            threshold: 50,
+            action: 'move'
+          },
+        }
+      ).on('move', () => this.updateIndices())
+        .on('sort', () => this.updateIndices());
     });
   }
 
-  public remove(element: HTMLElement): void {
-    if (!this.isInitializedAffterAttempt()) {
-      return;
-    }
-
-    this.zone.runOutsideAngular(() => {
-      this.layout.remove(element);
-      this.relayout();
+  public addItem(newElement: any, index: number) {
+    this.runSafely(() => {
+      const added = this.grid.add(newElement, {index: index});
+      this.dragOrder.splice(index, 0, added);
+      this.updateIndices()
     });
   }
 
-  protected relayout(): void {
-    setTimeout(() => {
-      this.layout
-        .refreshItems()
-        .synchronize()
-        .layout();
+  public removeItem(removed: any) {
+    this.runSafely(() => {
+      this.grid.remove(removed, {removeElements: true});
+
+      const itemIndex = this.dragOrder.indexOf(removed);
+      if (itemIndex > -1) {
+        this.dragOrder.splice(itemIndex, 1);
+      }
+
+      this.updateIndices();
     });
   }
 
-  public refresh(): void {
-    if (this.isInitializedAffterAttempt()) {
-      this.relayout();
-    }
-  }
-
-  protected isInitializedAffterAttempt(): boolean {
-    if (!this.containerExists()) {
-      return false;
-    }
-
-    if (!this.layout) {
-      this.createLayout();
-    }
-
-    return true;
-  }
-
-  private createLayout(): void {
-    this.zone.runOutsideAngular(() => {
-      this.layout = new window['Muuri'](this.containerClassName, this.parameters);
+  private updateIndices() {
+    this.runSafely(() => {
+      this.grid.getItems().forEach((item, i) => {
+        item.getElement().setAttribute('order', i);
+        item.getElement().querySelector('.TEST') && (item.getElement().querySelector('.TEST').innerHTML = i);
+      });
     });
   }
 
-  protected containerExists(): boolean {
-    return !!(document.querySelector(this.containerClassName));
+  private runSafely(fun: () => void) {
+    this.zone.runOutsideAngular(() => fun());
   }
 
 }

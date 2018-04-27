@@ -19,7 +19,6 @@
 
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
-import {LumeerError} from '../../../../core/error/lumeer.error';
 import {AppState} from '../../../../core/store/app.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
@@ -70,14 +69,6 @@ export class NavigationHelper {
     return this.queryHelper.queryWithPagination(page);
   }
 
-  public hasQuery(): boolean {
-    return this.queryHelper.hasQuery();
-  }
-
-  public hasOneCollection(): boolean {
-    return Boolean(this.queryHelper && this.queryHelper.currentCollectionId());
-  }
-
   public validNavigation(): boolean {
     return Boolean(
       this.workspaceHelper &&
@@ -87,15 +78,7 @@ export class NavigationHelper {
     );
   }
 
-  public workspacePrefix(): string {
-    if (!this.validNavigation()) {
-      throw new LumeerError('Navigation is invalid');
-    }
-
-    return `/w/${this.workspaceHelper.workspace.organizationCode}/${this.workspaceHelper.workspace.projectCode}`;
-  }
-
-  public destroy(): void {
+  public unsubscribe(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }

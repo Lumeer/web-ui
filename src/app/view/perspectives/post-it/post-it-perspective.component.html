@@ -7,18 +7,21 @@
     </add-document>
   </div>
 
-  <div class="post-it-document-layout">
-    <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByDocument"
-                      class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : 'initialized' }}"
-                      [attr.order]="postIt.order"
-                      [collectionRoles]="getCollectionRoles(postIt)"
-                      [postItModel]="postItWithIndex(postIt, idx)"
-                      [perspectiveId]="perspectiveId"
-                      [layoutManager]="layoutManager"
-                      [selectionHelper]="selectionHelper"
-                      [navigationHelper]="navigationHelper"
-                      (removed)="deletePostIt(postIt)"
-                      (changes)="postItChanged(postIt)"></post-it-document>
+  <div class="post-it-document-layout" #layoutGrid>
+    <ng-container *ngIf="layoutManager">
+      <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByDocument"
+                        layout-item
+                        [layout]="layoutManager"
+                        [insertedAt]="postIt.initialized ? MAX_SAFE_INTEGER : 0"
+                        class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : 'initialized' }}"
+                        [collectionRoles]="getCollectionRoles(postIt)"
+                        [postItModel]="postIt.withIndex(idx)"
+                        [perspectiveId]="perspectiveId"
+                        [selectionHelper]="selectionHelper"
+                        [navigationHelper]="navigationHelper"
+                        (removed)="deletePostIt(postIt)"
+                        (changes)="postItChanged(postIt)"></post-it-document>
+    </ng-container>
 
     <label *ngIf="(!hasSingleCollection() || !hasCreateRights()) && !postIts.length"
            class="label-centered"
