@@ -108,6 +108,10 @@ $bookmark-border-color: #bdbdbd;
               z-index: $z-index-hovered;
             }
 
+            &.selected-resource {
+              z-index: $z-index-selected;
+            }
+
             .settings {
               position: absolute;
               right: 5px;

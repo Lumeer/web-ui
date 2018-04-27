@@ -30,7 +30,9 @@
              (click)="onResourceSelected(resource.id)">
           <div class="post-it align-self-center">
             <div class="card square" [class.unitialized]="!resource.id"></div>
-            <div class="card text-center content border-0" [style.color]="resource.color">
+            <div [class.selected-resource]="isResourceModified(resource)"
+                 [style.color]="resource.color"
+                 class="card text-center content border-0">
               <div class="card-body">
 
                 <ng-container *ngIf="!isSelected(resource) && hasServiceLevel(resource)">
