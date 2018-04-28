@@ -31,10 +31,10 @@ import {ResourceItemType} from './resource-item-type';
 import {Role} from '../../../core/model/role';
 import {ServiceLimitsModel} from '../../../core/store/organizations/service-limits/service-limits.model';
 import {ServiceLevelType} from '../../../core/dto/service-level-type';
+import {InputBoxComponent} from '../../../shared/input/input-box/input-box.component';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
-const warningStyle = ['border', 'border-danger', 'rounded'];
 
 type ResourceModel = OrganizationModel | ProjectModel;
 
@@ -325,17 +325,12 @@ export class ResourceChooserComponent implements OnChanges {
     }
   }
 
-  public onCodeBlur(element: HTMLElement, resource: ResourceModel) {
-    const newCode = element.textContent.trim();
-    if (newCode === resource.code) {
-      return;
-    }
-
+  public onCodeBlur(component: InputBoxComponent, newCode: string, resource: ResourceModel) {
     const isValid = this.isNewCodeValid(newCode);
     if (isValid) {
-      element.classList.remove(...warningStyle);
+      component.removeWarningBorder();
     } else {
-      element.classList.add(...warningStyle);
+      component.setWarningBorder();
 
       const message = this.i18n({
         id: 'resource.already.exist',
@@ -348,17 +343,13 @@ export class ResourceChooserComponent implements OnChanges {
       return;
     }
 
-    this.updateCode(newCode, resource, element);
+    this.updateCode(newCode, resource);
   }
 
-  private updateCode(newCode: string, resource: ResourceModel, element: HTMLElement) {
+  private updateCode(newCode: string, resource: ResourceModel) {
     if (resource.id) {
-      if (newCode.length === 0) {
-        element.textContent = resource.code;
-      } else {
-        const resourceModel = {...resource, code: newCode};
-        this.resourceUpdate.emit(resourceModel);
-      }
+      const resourceModel = {...resource, code: newCode};
+      this.resourceUpdate.emit(resourceModel);
     } else {
       resource.code = newCode;
       if (resource.icon === DEFAULT_ICON && resource.color === DEFAULT_COLOR) {
@@ -372,16 +363,7 @@ export class ResourceChooserComponent implements OnChanges {
     }
   }
 
-  public onNameBlur(element: HTMLElement, resource: ResourceModel) {
-    const newName = element.textContent.trim();
-    if (newName === resource.name) {
-      return;
-    }
-
-    this.updateName(newName, resource);
-  }
-
-  public updateName(newName: string, resource: ResourceModel) {
+  public onNameBlur(newName: string, resource: ResourceModel) {
     if (resource.id) {
       const resourceModel = {...resource, name: newName};
       this.resourceUpdate.emit(resourceModel);
@@ -445,13 +427,34 @@ export class ResourceChooserComponent implements OnChanges {
     return this.findResource(id);
   }
 
-  public serviceLevelTitle(resource: ResourceModel): string{
+  public serviceLevelTitle(resource: ResourceModel): string {
     const serviceLevel = this.getServiceLevel(resource);
     return this.i18n({
       id: 'resource.chooser.serviceLevel',
       value: '{serviceLevel, select, FREE {Trial} BASIC {Business}}'
     }, {
       serviceLevel: serviceLevel
+    });
+  }
+
+  public getCodePlaceholder(): string {
+    return this.i18n({
+      id: 'resource.postit.code',
+      value: 'Set code'
+    });
+  }
+
+  public getNamePlaceholder(): string {
+    return this.i18n({
+      id: 'resource.postit.name',
+      value: 'Fill in name'
+    });
+  }
+
+  public getDescriptionPlaceholder(): string {
+    return this.i18n({
+      id: 'resource.description',
+      value: 'Fill in description'
     });
   }
 

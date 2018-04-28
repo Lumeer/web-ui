@@ -142,10 +142,12 @@ export class ProjectsEffects {
     }),
     withLatestFrom(this.store$.select(selectProjectsCodes)),
     flatMap(([{project, oldProject}, projectCodes]) => {
-      const codes = projectCodes[project.organizationId].map(code => code === oldProject.code ? project.code : code);
-      return [new ProjectsAction.UpdateSuccess({project: {...project, id: project.id}}),
-        new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes})
-      ];
+      const actions: Action[] = [new ProjectsAction.UpdateSuccess({project: {...project, id: project.id}})];
+      if (projectCodes) {
+        const codes = projectCodes[project.organizationId].map(code => code === oldProject.code ? project.code : code);
+        actions.push(new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes}));
+      }
+      return actions;
     }),
     catchError(error => Observable.of(new ProjectsAction.UpdateFailure({error: error})))
   );
