@@ -38,9 +38,7 @@ import {Workspace} from '../../core/store/navigation/workspace.model';
 import {CollectionSelectService} from '../service/collection-select.service';
 
 @Component({
-  selector: 'collection-config',
-  templateUrl: './collection-config.component.html',
-  styleUrls: ['./collection-config.component.scss']
+  templateUrl: './collection-config.component.html'
 })
 export class CollectionConfigComponent implements OnInit, OnDestroy {
 
