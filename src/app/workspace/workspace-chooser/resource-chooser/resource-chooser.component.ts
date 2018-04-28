@@ -406,6 +406,10 @@ export class ResourceChooserComponent implements OnChanges {
     this.modifiedResourceId = null;
   }
 
+  public isResourceModified(resource: ResourceModel): boolean {
+    return this.modifiedResourceId === this.getResourceIdentificator(resource);
+  }
+
   public isSelected(resource: ResourceModel): boolean {
     return resource.id === this.selectedId;
   }
