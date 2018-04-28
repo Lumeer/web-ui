@@ -16,9 +16,8 @@
       <span>{{ userCount$ | async }}</span>
     </div>
 
-    <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer"
+    <div class="d-flex flex-row flex-nowrap align-items-center"
          [style.color]="project.color"
-         (click)="onProjectsClick()"
          title="Number of collections" i18n-title="@@project.settings.collections.count">
       <i class="far fa-edit mr-1" aria-hidden="true"></i>
       <span>{{ collectionsCount$ | async }}</span>

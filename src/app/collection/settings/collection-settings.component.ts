@@ -22,7 +22,7 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
-import {filter} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {isNullOrUndefined} from 'util';
 import {Query} from '../../core/dto';
@@ -36,6 +36,8 @@ import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {ResourceType} from '../../core/model/resource-type';
 import {Perspective} from '../../view/perspectives/perspective';
+import {Observable} from 'rxjs/Observable';
+import {selectAllUsers} from '../../core/store/users/users.state';
 
 @Component({
   templateUrl: './collection-settings.component.html'
@@ -43,6 +45,7 @@ import {Perspective} from '../../view/perspectives/perspective';
 export class CollectionSettingsComponent implements OnInit, OnDestroy {
 
   public collection: CollectionModel;
+  public userCount$: Observable<number>;
 
   private subscription = new Subscription();
   private workspace: Workspace;
@@ -53,18 +56,8 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
               private store: Store<AppState>) {
   }
 
-  public ngOnInit(): void {
-    const sub1 = this.store.select(selectWorkspace).pipe(
-      filter(workspace => !isNullOrUndefined(workspace))
-    ).subscribe(workspace => this.workspace = workspace);
-    this.subscription.add(sub1);
-
-    const sub2 = this.store.select(selectCollectionByWorkspace)
-      .pipe(filter(collection => !isNullOrUndefined(collection)))
-      .subscribe(collection => {
-        this.collection = collection;
-      });
-    this.subscription.add(sub2);
+  public ngOnInit(){
+    this.subscribeToStore();
   }
 
   public ngOnDestroy(): void {
@@ -131,6 +124,23 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
 
   public onDocumentsClick() {
     this.router.navigate([this.workspacePath(), 'view', Perspective.PostIt], {queryParams: {query: this.documentsQuery(this.collection.id)}})
+  }
+
+  private subscribeToStore(){
+    this.userCount$ = this.store.select(selectAllUsers)
+      .pipe(map(users => users ? users.length : 0));
+
+    const sub1 = this.store.select(selectWorkspace).pipe(
+      filter(workspace => !isNullOrUndefined(workspace))
+    ).subscribe(workspace => this.workspace = workspace);
+    this.subscription.add(sub1);
+
+    const sub2 = this.store.select(selectCollectionByWorkspace)
+      .pipe(filter(collection => !isNullOrUndefined(collection)))
+      .subscribe(collection => {
+        this.collection = collection;
+      });
+    this.subscription.add(sub2);
   }
 
 }

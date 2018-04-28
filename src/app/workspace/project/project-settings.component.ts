@@ -34,6 +34,7 @@ import {ProjectModel} from '../../core/store/projects/project.model';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {selectAllCollections} from '../../core/store/collections/collections.state';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
 
 @Component({
   templateUrl: './project-settings.component.html'
@@ -44,7 +45,7 @@ export class ProjectSettingsComponent implements OnInit {
   public collectionsCount$: Observable<number>;
   public project: ProjectModel;
 
-  private projectSubscription: Subscription;
+  private subscription = new Subscription();
 
   constructor(private i18n: I18n,
               private router: Router,
@@ -57,9 +58,9 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public ngOnDestroy() {
-    if (this.projectSubscription) {
-      this.projectSubscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
+
+    this.store.dispatch(new CollectionsAction.Clear());
   }
 
   private subscribeToStore() {
@@ -69,9 +70,10 @@ export class ProjectSettingsComponent implements OnInit {
     this.collectionsCount$ = this.store.select(selectAllCollections)
       .pipe(map(collections => collections ? collections.length : 0));
 
-    this.projectSubscription = this.store.select(selectProjectByWorkspace)
+    this.subscription.add(this.store.select(selectProjectByWorkspace)
       .pipe(filter(project => !isNullOrUndefined(project)))
-      .subscribe(project => this.project = project);
+      .subscribe(project => this.project = project)
+    );
   }
 
   public getResourceType(): ResourceType {
@@ -95,7 +97,7 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   private deleteProject() {
-    this.store.dispatch(new ProjectsAction.Delete({organizationId: this.project.id, projectId: this.project.id}));
+    this.store.dispatch(new ProjectsAction.Delete({organizationId: this.project.organizationId, projectId: this.project.id}));
     this.goBack();
   }
 
@@ -126,10 +128,6 @@ export class ProjectSettingsComponent implements OnInit {
 
   private updateProject(project: ProjectModel) {
     this.store.dispatch(new ProjectsAction.Update({project}));
-  }
-
-  public onProjectsClick() {
-    this.goBack();
   }
 
   public goBack(): void {
