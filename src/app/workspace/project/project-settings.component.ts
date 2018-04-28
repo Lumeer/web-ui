@@ -17,27 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
-import {Collection, Project} from '../../core/dto';
-import {CollectionService, ProjectService} from '../../core/rest';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
-import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {filter, map} from 'rxjs/operators';
-import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {Observable} from 'rxjs/Observable';
 import {ResourceType} from '../../core/model/resource-type';
-import {selectProjectByWorkspace, selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
+import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {isNullOrUndefined} from "util";
 import {Subscription} from 'rxjs/Subscription';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {selectAllCollections} from '../../core/store/collections/collections.state';
 
 @Component({
   templateUrl: './project-settings.component.html'
@@ -70,8 +66,8 @@ export class ProjectSettingsComponent implements OnInit {
     this.userCount$ = this.store.select(selectAllUsers)
       .pipe(map(users => users ? users.length : 0));
 
-    // this.collectionsCount$ = this.store.select(selectProjectsForWorkspace)
-    //   .pipe(map(projects => projects ? projects.length : 0));
+    this.collectionsCount$ = this.store.select(selectAllCollections)
+      .pipe(map(collections => collections ? collections.length : 0));
 
     this.projectSubscription = this.store.select(selectProjectByWorkspace)
       .pipe(filter(project => !isNullOrUndefined(project)))

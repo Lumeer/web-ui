@@ -19,16 +19,14 @@
 
 import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {finalize, map, switchMap} from 'rxjs/operators';
 
+import {Store} from '@ngrx/store';
+import {finalize, map} from 'rxjs/operators';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../../core/constants';
 import {Collection} from '../../../../core/dto';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {CollectionService, LinkTypeService} from '../../../../core/rest';
 import {AppState} from '../../../../core/store/app.state';
-
-import {CollectionSelectService} from '../../../service/collection-select.service';
 import {CollectionTabComponent} from '../collection-tab.component';
 import {LinkTypeModel} from './LinkTypeModel';
 
@@ -49,12 +47,10 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   constructor(private linkTypeService: LinkTypeService,
               private router: Router,
               collectionService: CollectionService,
-              collectionSelectService: CollectionSelectService,
               notificationService: NotificationService,
               store: Store<AppState>) {
     super(
       collectionService,
-      collectionSelectService,
       notificationService,
       store
     );
@@ -85,13 +81,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public changeCollection(collectionId: string): void {
-    this.collectionSelectService
-      .select(collectionId).pipe(
-      switchMap(collection => this.router.navigate([this.workspacePath(), 'f', collection.id, 'linktypes']))
-    ).subscribe(
-      navigated => this.initializeLinkTypes(),
-      error => this.notificationService.error('Failed switching file')
-    );
+    this.router.navigate([this.workspacePath(), 'f', collectionId, 'linktypes']);
   }
 
   public emptyLinkType(): LinkTypeModel {

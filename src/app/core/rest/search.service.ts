@@ -55,8 +55,8 @@ export class SearchService {
       {params: new HttpParams().set('text', text).set('type', type.toString())});
   }
 
-  public searchCollections(query: Query): Observable<Collection[]> {
-    return this.http.post<Collection[]>(`${this.searchPath()}/collections`, query)
+  public searchCollections(query: Query, workspace?: Workspace): Observable<Collection[]> {
+    return this.http.post<Collection[]>(`${this.searchPath(workspace)}/collections`, query)
       .pipe(
         catchError(SearchService.handleError),
         mergeMap(collections => this.homePageService.checkFavoriteCollections(collections))
@@ -76,8 +76,9 @@ export class SearchService {
     );
   }
 
-  private searchPath(): string {
-    return `/${API_URL}/rest/organizations/${this.workspace.organizationCode}/projects/${this.workspace.projectCode}/search`;
+  private searchPath(workspace?: Workspace): string {
+    const w = workspace || this.workspace;
+    return `/${API_URL}/rest/organizations/${w.organizationCode}/projects/${w.projectCode}/search`;
   }
 
   private static handleError(error: HttpErrorResponse): ErrorObservable {
