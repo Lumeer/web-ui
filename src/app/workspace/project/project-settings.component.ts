@@ -27,129 +27,62 @@ import {CollectionService, ProjectService} from '../../core/rest';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
-import {filter} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
+import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
+import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {Observable} from 'rxjs/Observable';
+import {ResourceType} from '../../core/model/resource-type';
+import {selectProjectByWorkspace, selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
+import {isNullOrUndefined} from "util";
+import {Subscription} from 'rxjs/Subscription';
+import {ProjectModel} from '../../core/store/projects/project.model';
+import {selectAllUsers} from '../../core/store/users/users.state';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
 
 @Component({
-  templateUrl: './project-settings.component.html',
-  styleUrls: ['./project-settings.component.scss']
+  templateUrl: './project-settings.component.html'
 })
 export class ProjectSettingsComponent implements OnInit {
 
-  public project: Project;
-  private organizationCode: string;
-  public projectCode: string;
-  private originalProjectCode: string;
-  public collectionsCount: number;
+  public userCount$: Observable<number>;
+  public collectionsCount$: Observable<number>;
+  public project: ProjectModel;
 
-  @ViewChild('projectDescription')
-  public projectDescription: ElementRef;
-  private originalProjectName: string;
+  private projectSubscription: Subscription;
 
   constructor(private i18n: I18n,
-              private projectService: ProjectService,
               private router: Router,
               private store: Store<AppState>,
-              private collectionService: CollectionService,
               private notificationService: NotificationService) {
   }
 
-  public ngOnInit(): void {
-    this.store.select(selectWorkspace).pipe(
-      filter(workspace => !!(workspace.organizationCode && workspace.projectCode))
-    ).subscribe(workspace => {
-      this.organizationCode = workspace.organizationCode;
-      this.projectCode = workspace.projectCode;
-      this.getProject();
-      this.originalProjectCode = this.projectCode;
-    });
+  public ngOnInit() {
+    this.subscribeToStore();
   }
 
-  private getProject(): void {
-    this.projectService.getProject(this.organizationCode, this.projectCode)
-      .subscribe(
-        (project: Project) => {
-          this.project = project;
-          this.getNumberOfCollections();
-          this.originalProjectName = this.project.name;
-        },
-        error => {
-          const message = this.i18n({id: 'project.get.fail', value: 'Failed to get project.'});
-          this.notificationService.error(message);
-        }
-      )
-    ;
-  }
-
-  public updateProject(): void {
-    this.projectService.editProject(this.organizationCode, this.projectCode, this.project).subscribe(
-      success => null,
-      error => {
-        const message = this.i18n({id: 'project.update.fail', value: 'Failed to update project.'});
-        this.notificationService.error(message);
-      });
-  }
-
-  public updateProjectName(): void {
-    if (this.project.name === this.originalProjectName) {
-      return;
+  public ngOnDestroy() {
+    if (this.projectSubscription) {
+      this.projectSubscription.unsubscribe();
     }
-    this.projectService.editProject(this.organizationCode, this.projectCode, this.project)
-      .subscribe(success => {
-          this.originalProjectName = this.project.name;
-        },
-        error => {
-          const message = this.i18n({id: 'project.update.fail', value: 'Failed to update project.'});
-          this.notificationService.error(message);
-        });
   }
 
-  public updateProjectCode() {
-    if (this.projectCode === this.originalProjectCode) {
-      return;
-    }
-    this.projectService.editProject(this.organizationCode, this.originalProjectCode, this.project).subscribe(
-      (response) => {
-        this.notificationService.success('Project\'s code was successfully updated');
-        this.originalProjectCode = this.project.code;
-        this.projectCode = this.project.code;
-        this.router.navigate(['/organization', this.organizationCode, 'project', this.project.code]);
-      },
-      error => {
-        const message = this.i18n({id: 'project.update.fail', value: 'Failed to update project.'});
-        this.notificationService.error(message);
-      }
-    );
+  private subscribeToStore() {
+    this.userCount$ = this.store.select(selectAllUsers)
+      .pipe(map(users => users ? users.length : 0));
+
+    // this.collectionsCount$ = this.store.select(selectProjectsForWorkspace)
+    //   .pipe(map(projects => projects ? projects.length : 0));
+
+    this.projectSubscription = this.store.select(selectProjectByWorkspace)
+      .pipe(filter(project => !isNullOrUndefined(project)))
+      .subscribe(project => this.project = project);
   }
 
-  private goBack(): void {
-    this.router.navigate(['/workspace']);
+  public getResourceType(): ResourceType {
+    return ResourceType.Project;
   }
 
   public onDelete(): void {
-    this.projectService.deleteProject(this.organizationCode, this.projectCode)
-      .subscribe(
-        text => this.goBack(),
-        error => {
-          const message = this.i18n({id: 'project.delete.fail', value: 'Failed to delete project.'});
-          this.notificationService.error(message);
-        }
-      );
-  }
-
-  public getNumberOfCollections(): void {
-    this.collectionService.getCollections().subscribe((collections: Collection[]) =>
-      (this.collectionsCount = collections.length));
-  }
-
-  public workspacePath(): string {
-    return `/w/${this.organizationCode}/${this.project.code}`;
-  }
-
-  public initialized(): boolean {
-    return !(this.project.code === '' && this.project.name === '' && this.project.icon === '' && this.project.color === '');
-  }
-
-  public confirmDeletion(): void {
     const message = this.i18n({id: 'project.delete.dialog.message', value: 'Project is about to be permanently deleted.'});
     const title = this.i18n({id: 'project.delete.dialog.title', value: 'Delete project?'});
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
@@ -159,9 +92,51 @@ export class ProjectSettingsComponent implements OnInit {
       message,
       title,
       [
-        {text: yesButtonText, action: () => this.onDelete(), bold: false},
+        {text: yesButtonText, action: () => this.deleteProject(), bold: false},
         {text: noButtonText}
       ]
     );
+  }
+
+  private deleteProject() {
+    this.store.dispatch(new ProjectsAction.Delete({organizationId: this.project.id, projectId: this.project.id}));
+    this.goBack();
+  }
+
+  public onNewDescription(newDescription: string) {
+    const projectCopy = {...this.project, description: newDescription};
+    this.updateProject(projectCopy);
+  }
+
+  public onNewName(name: string) {
+    const projectCopy = {...this.project, name};
+    this.updateProject(projectCopy);
+  }
+
+  public onNewCode(code: string) {
+    const projectCopy = {...this.project, code};
+    this.updateProject(projectCopy);
+  }
+
+  public onNewIcon(icon: string) {
+    const projectCopy = {...this.project, icon};
+    this.updateProject(projectCopy);
+  }
+
+  public onNewColor(color: string) {
+    const projectCopy = {...this.project, color};
+    this.updateProject(projectCopy);
+  }
+
+  private updateProject(project: ProjectModel) {
+    this.store.dispatch(new ProjectsAction.Update({project}));
+  }
+
+  public onProjectsClick() {
+    this.goBack();
+  }
+
+  public goBack(): void {
+    this.router.navigate(['/workspace']);
   }
 }

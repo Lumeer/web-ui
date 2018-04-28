@@ -17,33 +17,85 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {ResourceType} from '../../../core/model/resource-type';
 import {ResourceModel} from '../../../core/model/resource.model';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'resource-header',
-  templateUrl: './resource-header.component.html'
+  templateUrl: './resource-header.component.html',
+  styleUrls: ['./resource-header.component.scss']
+
 })
-export class ResourceHeaderComponent implements OnInit {
+export class ResourceHeaderComponent {
 
   @Input() public resourceType: ResourceType;
+  @Input() public resource: ResourceModel;
 
   @Output() codeChange: EventEmitter<string> = new EventEmitter();
   @Output() nameChange: EventEmitter<string> = new EventEmitter();
   @Output() descriptionChange: EventEmitter<string> = new EventEmitter();
+  @Output() iconChange: EventEmitter<string> = new EventEmitter();
+  @Output() colorChange: EventEmitter<string> = new EventEmitter();
+  @Output() delete = new EventEmitter();
   @Output() back = new EventEmitter();
 
-  public resource: ResourceModel;
-
-
-  public ngOnInit() {
-    this.subscribeData();
+  constructor(private i18n: I18n) {
   }
 
-  private subscribeData() {
+  public isCodeVisible(): boolean {
+    return [ResourceType.Organization, ResourceType.Project].includes(this.resourceType);
+  }
 
+  public onBack() {
+    this.back.emit();
+  }
+
+  public onDelete() {
+    this.delete.emit();
+  }
+
+  public onNewColor(color: string) {
+    this.colorChange.emit(color);
+  }
+
+  public onNewIcon(icon: string) {
+    this.iconChange.emit(icon);
+  }
+
+  public onNewCode(code: string) {
+    this.codeChange.emit(code);
+  }
+
+  public onNewName(name: string) {
+    this.nameChange.emit(name);
+  }
+
+  public onNewDescription(description: string) {
+    this.descriptionChange.emit(description);
+  }
+
+  public getCodePlaceholder(): string {
+    return this.i18n({
+      id: 'resource.postit.code',
+      value: 'Set code'
+    });
+  }
+
+  public getNamePlaceholder(): string {
+    return this.i18n({
+      id: 'resource.postit.name',
+      value: 'Fill in name'
+    });
+  }
+
+  public getDescriptionPlaceholder(): string {
+    return this.i18n({
+      id: 'resource.description',
+      value: 'Fill in description'
+    });
   }
 
 }

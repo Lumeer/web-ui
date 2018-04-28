@@ -40,6 +40,7 @@ import {SliderComponent} from './slider/slider.component';
 import {UsersModule} from "./users/users.module";
 import {TagModule} from "./tag/tag.module";
 import {InputModule} from "./input/input.module";
+import {ResourceHeaderComponent} from './resource/header/resource-header.component';
 
 @NgModule({
   imports: [
@@ -66,7 +67,8 @@ import {InputModule} from "./input/input.module";
     RemovePlaceholderOnFocusDirective,
     LayoutItem,
     SliderComponent,
-    LayoutItem
+    LayoutItem,
+    ResourceHeaderComponent
   ],
   exports: [
     CommonModule,
@@ -83,7 +85,8 @@ import {InputModule} from "./input/input.module";
     SliderComponent,
     TagModule,
     InputModule,
-    DialogsModule
+    DialogsModule,
+    ResourceHeaderComponent
   ]
 })
 export class SharedModule {

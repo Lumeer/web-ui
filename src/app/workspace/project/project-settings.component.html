@@ -1,77 +1,37 @@
-<div class="container-fluid" *ngIf="project">
-  <div class="row">
-    <div class="col"></div>
-    <div class="whole col-12 col-lg-11 col-xl-10" [style.opacity]="initialized() ? '1' : '0'">
-      <div class="d-flex flex-row justify-content-start">
-        <a class="fas fa-chevron-left bigger mr-2" [routerLink]="['/workspace']"></a>
-        <i class="color-class fa-fw {{ project.icon }} project-icon clickable" [style.color]="project.color"
-           data-toggle="dropdown"></i>
-        <div *ngIf="initialized()" class="dropdown-menu">
-          <color-picker class="dropdown-item" [(color)]="project.color"
-                        (selectedChange)="updateProject()"></color-picker>
-          <div class="dropdown-divider"></div>
-          <icon-picker class="dropdown-item" [(icon)]="project.icon"
-                       (selectedChange)="updateProject()"></icon-picker>
-        </div>
-
-        <input class="color-class name edit-border" [(ngModel)]="project.name" (blur)="name.valid && updateProjectName()"
-               name="name"
-               [style.color]="project.color" i18n-title="@@header.project.name" title="Edit name of the project"
-               #name="ngModel" required minlength="3" maxlength="24">
-
-        <small class="text-danger" [hidden]="name.valid || (name.pristine  )">
-          Name is required (from 3 to 24 characters).
-        </small>
-
-        <div class="float-right document-count color-class ml-auto">
-          <a class="count" i18n-title="@@collections.count" title="Number of files in this project"
-             [style.color]="project.color" [routerLink]="[workspacePath(), 'files']">
-            <i class="far fa-table" aria-hidden="true"></i>
-            <span>{{ collectionsCount }}</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="d-flex flex-row justify-content-start">
-
-        <input class="color-class code edit-border" [(ngModel)]="project.code"
-               name="code"
-               (blur)=" code.valid && updateProjectCode()"
-               [style.color]="project.color" i18n-title="@@header.project.code" title="Edit code of the project"
-               #code="ngModel" required minlength="3" maxlength="6">
-
-        <small class="text-danger" [hidden]="code.valid || (code.pristine  )">
-          Code is required (from 3 to 6 characters).
-        </small>
-
-        <a (click)="confirmDeletion()"
-           class="text-danger rounded-left ml-auto"
-           title="Remove project">
-          <i class="fas fa-fw fa-trash" aria-hidden="true"></i>
-        </a>
-
-      </div>
-
-      <div class="description d-flex py-3">
-        <div class="text flex-grow-2 edit-border" contenteditable="true"
-             #projectDescription>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
-          finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
-          vel augue.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit amet neque tristique, dignissim mi sed,
-          finibus nisl. Cras tempor, nisl id malesuada finibus, dui mi interdum urna, nec pellentesque libero augue
-          vel augue.
-        </div>
-      </div>
-      <ul class="nav nav-tabs">
-        <li role="presentation" class="nav-item">
-          <a routerLink="users" routerLinkActive="active" class="nav-link">
-            Users
-          </a>
-        </li>
-      </ul>
-      <router-outlet></router-outlet>
+<div class="col-12 col-lg-11 col-xl-10 m-auto" *ngIf="project">
+  <resource-header
+    [resource]="project"
+    [resourceType]="getResourceType()"
+    (back)="goBack()"
+    (delete)="onDelete()"
+    (colorChange)="onNewColor($event)"
+    (iconChange)="onNewIcon($event)"
+    (descriptionChange)="onNewDescription($event)"
+    (nameChange)="onNewName($event)"
+    (codeChange)="onNewCode($event)">
+    <div class="d-flex flex-row flex-nowrap align-items-center mr-3"
+         [style.color]="project.color"
+         title="Number of users" i18n-title="@@project.settings.users.count">
+      <i class="far fa-user mr-1" aria-hidden="true"></i>
+      <span>{{ userCount$ | async }}</span>
     </div>
-    <div class="col"></div>
-  </div>
+
+    <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer"
+         [style.color]="project.color"
+         (click)="onProjectsClick()"
+         title="Number of collections" i18n-title="@@project.settings.collections.count">
+      <i class="far fa-edit mr-1" aria-hidden="true"></i>
+      <span>{{ collectionsCount$ | async }}</span>
+    </div>
+  </resource-header>
+
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="nav-item">
+      <a [routerLink]="'users'"
+         routerLinkActive="active"
+         class="nav-link"
+         i18n="@@project.settings.tab.users">Users</a>
+    </li>
+  </ul>
+  <router-outlet></router-outlet>
 </div>
