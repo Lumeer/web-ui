@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+import 'rxjs/add/observable/of';
 
 import {Observable} from 'rxjs/Observable';
+import {environment} from '../../../environments/environment';
 import {User} from '../dto';
-import {HttpClient} from "@angular/common/http";
-import 'rxjs/add/observable/of';
 
 @Injectable()
 export class GlobalService {
@@ -35,7 +36,7 @@ export class GlobalService {
   }
 
   private apiPrefix(): string {
-    return `/${API_URL}/rest/global`;
+    return `/${environment.API_URL}/rest/global`;
   }
 
 }
