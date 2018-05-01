@@ -20,8 +20,6 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
-import {Angulartics2Module} from 'angulartics2';
-import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import {PageNotFoundGuard} from './core/guards/page-not-found.guard';
 import {HomeComponent} from './core/home.component';
 import {LumeerRouterStateSerializer} from './core/store/router/lumeer-router-state-serializer';
@@ -39,21 +37,10 @@ const appRoutes: Routes = [
   }
 ];
 
-export const angularticsSettings = {
-  pageTracking: {
-    clearIds: true,
-    idsRegExp: new RegExp('^[0-9a-z]{24}$')
-  },
-  ga: {
-    anonymizeIp: true
-  }
-};
-
 @NgModule({
   imports: [
     RouterModule.forRoot(appRoutes),
-    StoreRouterConnectingModule,
-    Angulartics2Module.forRoot([Angulartics2GoogleAnalytics], angularticsSettings)
+    StoreRouterConnectingModule
   ],
   exports: [RouterModule],
   providers: [
