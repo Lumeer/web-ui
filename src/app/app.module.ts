@@ -21,6 +21,8 @@ import {APP_INITIALIZER, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@ang
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Angulartics2Module, Angulartics2Settings} from 'angulartics2';
+import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular';
 import {ContextMenuModule} from 'ngx-contextmenu';
 import {AppRoutingModule} from './app-routing.module';
@@ -35,6 +37,17 @@ import {WorkspaceModule} from './workspace/workspace.module';
 declare const require; // Use the require method provided by webpack
 const translations = require(`raw-loader!../../${I18N_PATH}`);
 
+export const angularticsSettings: Partial<Angulartics2Settings> = {
+  developerMode: LUMEER_ENV !== 'production',
+  pageTracking: {
+    clearIds: true,
+    idsRegExp: new RegExp('^[0-9a-z]{24}$')
+  },
+  ga: {
+    anonymizeIp: true
+  }
+};
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -46,7 +59,8 @@ const translations = require(`raw-loader!../../${I18N_PATH}`);
     KeycloakAngularModule,
     ViewModule,
     WorkspaceModule,
-    AppRoutingModule // needs to stay last
+    AppRoutingModule, // needs to stay almost last
+    Angulartics2Module.forRoot([Angulartics2GoogleAnalytics], angularticsSettings)
   ],
   providers: [
     {
