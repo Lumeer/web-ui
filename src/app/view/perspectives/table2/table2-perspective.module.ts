@@ -56,6 +56,7 @@ import {TableLinkInfoComponent} from './header/link/info/table-link-info.compone
 import {TableHeaderLinkComponent} from './header/link/table-header-link.component';
 import {TableHeaderComponent} from './header/table-header.component';
 import {TableEditableCellComponent} from './shared/editable-cell/table-editable-cell.component';
+import {TablePerspectiveRoutingModule} from './table-perspective-routing.module';
 import {Table2PerspectiveComponent} from './table2-perspective.component';
 
 @NgModule({
@@ -68,7 +69,8 @@ import {Table2PerspectiveComponent} from './table2-perspective.component';
     ContextMenuModule,
     ClickOutsideModule,
     ResizableModule,
-    InfiniteScrollModule
+    InfiniteScrollModule,
+    TablePerspectiveRoutingModule
   ],
   declarations: [
     Table2PerspectiveComponent,

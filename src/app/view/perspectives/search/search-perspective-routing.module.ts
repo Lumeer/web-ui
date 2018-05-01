@@ -18,53 +18,56 @@
  */
 
 import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
-import {SearchBoxModule} from '../../../shared/search-box/search-box.module';
-import {SharedModule} from '../../../shared/shared.module';
-import {PostItPerspectiveModule} from '../post-it/post-it-perspective.module';
+import {RouterModule, Routes} from '@angular/router';
 import {SearchAllComponent} from './all/search-all.component';
 import {SearchCollectionsComponent} from './collections/search-collections.component';
 import {SearchDocumentsComponent} from './documents/search-documents.component';
 import {SearchLinksComponent} from './links/search-links.component';
-import {SearchPerspectiveRoutingModule} from './search-perspective-routing.module';
 import {SearchPerspectiveComponent} from './search-perspective.component';
-import {SearchResultsDirective} from './search-results.directive';
 import {SearchViewsComponent} from './views/search-views.component';
-import {ViewDetailComponent} from './views/view-detail/view-detail.component';
+
+const searchRoutes: Routes = [
+  {
+    path: '',
+    component: SearchPerspectiveComponent,
+    children: [
+      {
+        path: 'all',
+        component: SearchAllComponent
+      },
+      {
+        path: 'files',
+        component: SearchCollectionsComponent
+      },
+      {
+        path: 'records',
+        component: SearchDocumentsComponent
+      },
+      {
+        path: 'links',
+        component: SearchLinksComponent
+      },
+      {
+        path: 'views',
+        component: SearchViewsComponent
+      },
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'all'
+      }
+    ]
+  }
+];
 
 @NgModule({
   imports: [
-    RouterModule,
-    SharedModule,
-    PostItPerspectiveModule,
-    SearchBoxModule,
-    SearchPerspectiveRoutingModule
-  ],
-  declarations: [
-    SearchAllComponent,
-    SearchCollectionsComponent,
-    SearchDocumentsComponent,
-    SearchLinksComponent,
-    SearchPerspectiveComponent,
-    SearchResultsDirective,
-    SearchViewsComponent,
-    ViewDetailComponent
-  ],
-  entryComponents: [
-    SearchAllComponent,
-    SearchCollectionsComponent,
-    SearchDocumentsComponent,
-    SearchLinksComponent,
-    SearchPerspectiveComponent,
-    SearchViewsComponent
+    RouterModule.forChild(searchRoutes)
   ],
   exports: [
-    SearchPerspectiveComponent,
-    ViewDetailComponent
+    RouterModule
   ]
 })
-export class SearchPerspectiveModule {
+export class SearchPerspectiveRoutingModule {
 
 }
-
-export default SearchPerspectiveModule;

@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {newPlot} from 'plotly.js';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ChartVisualizer} from './chart-visualizer';
 
@@ -81,7 +82,7 @@ export class LineVisualizer extends ChartVisualizer {
 
   public showChart() {
     const shownElement = this.chartElement.nativeElement;
-    Plotly.newPlot(shownElement, this.data, this.style);
+    newPlot(shownElement, this.data, this.style);
   }
 
 }

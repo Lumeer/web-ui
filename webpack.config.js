@@ -10,6 +10,7 @@ const rxPaths = require('rxjs/_esm5/path-mapping');
 
 const { NoEmitOnErrorsPlugin, SourceMapDevToolPlugin, NamedModulesPlugin } = require('webpack');
 const { BaseHrefWebpackPlugin, NamedLazyChunksWebpackPlugin } = require('@angular/cli/plugins/webpack');
+const AngularNamedLazyChunksWebpackPlugin = require('angular-named-lazy-chunks-webpack-plugin');
 const { CommonsChunkPlugin } = require('webpack').optimize;
 const { LicenseWebpackPlugin } = require('license-webpack-plugin');
 
@@ -423,6 +424,7 @@ module.exports = {
       "async": "common"
     }),
     new NamedModulesPlugin({}),
+    new AngularNamedLazyChunksWebpackPlugin(),
     new LicenseWebpackPlugin({
       "licenseFilenames": [
         "LICENSE",
