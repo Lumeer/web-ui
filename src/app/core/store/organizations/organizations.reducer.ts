@@ -19,11 +19,14 @@
 
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {initialOrganizationsState, organizationsAdapter, OrganizationsState} from './organizations.state';
+import {PermissionsHelper} from '../permissions/permissions.helper';
 
 export function organizationsReducer(state: OrganizationsState = initialOrganizationsState, action: OrganizationsAction.All): OrganizationsState {
   switch (action.type) {
     case OrganizationsActionType.GET_SUCCESS:
-      return organizationsAdapter.addAll(action.payload.organizations, state);
+      return {...organizationsAdapter.addAll(action.payload.organizations, state), loaded: true};
+    case OrganizationsActionType.GET_ONE_SUCCESS:
+      return organizationsAdapter.addOne(action.payload.organization, state);
     case OrganizationsActionType.GET_CODES_SUCCESS:
       return {...state, organizationCodes: action.payload.organizationCodes};
     case OrganizationsActionType.CREATE_SUCCESS:
@@ -34,7 +37,18 @@ export function organizationsReducer(state: OrganizationsState = initialOrganiza
       return organizationsAdapter.removeOne(action.payload.organizationId, state);
     case OrganizationsActionType.SELECT:
       return {...state, selectedOrganizationId: action.payload.organizationId};
+    case OrganizationsActionType.CHANGE_PERMISSION_SUCCESS:
+      return onChangePermission(state, action);
+    case OrganizationsActionType.CHANGE_PERMISSION_FAILURE:
+      return onChangePermission(state, action);
     default:
       return state;
   }
+}
+
+function onChangePermission(state: OrganizationsState, action: OrganizationsAction.ChangePermissionSuccess | OrganizationsAction.ChangePermissionFailure): OrganizationsState {
+  const organization = state.entities[action.payload.organizationId];
+  const permissions = PermissionsHelper.changePermission(organization.permissions, action.payload.type, action.payload.permission);
+
+  return organizationsAdapter.updateOne({id: action.payload.organizationId, changes: {permissions: permissions}}, state);
 }

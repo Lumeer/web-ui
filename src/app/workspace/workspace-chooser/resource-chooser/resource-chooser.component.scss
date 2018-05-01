@@ -108,6 +108,10 @@ $bookmark-border-color: #bdbdbd;
               z-index: $z-index-hovered;
             }
 
+            &.selected-resource {
+              z-index: $z-index-selected;
+            }
+
             .settings {
               position: absolute;
               right: 5px;
@@ -181,6 +185,69 @@ $bookmark-border-color: #bdbdbd;
 
 }
 
+.ribbon {
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  z-index: 1;
+  overflow: hidden;
+  width: 75px;
+  height: 75px;
+  text-align: right;
+}
+
+.ribbon span {
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  line-height: 20px;
+  transform: rotate(-45deg);
+  width: 100px;
+  display: block;
+  background: $success;
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 19px;
+  left: -21px;
+}
+
+.ribbon span::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: -1;
+  border: 3px solid $success;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.ribbon span::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: -1;
+  border: 3px solid $success;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+}
+
+.red span {
+  background: $danger;
+}
+
+.red span::before {
+  border-left-color: $danger;
+  border-top-color: $danger;
+}
+
+.red span::after {
+  border-right-color: $danger;
+  border-top-color: $danger;
+}
+
 .uninitialized-dropdown {
   transform: translate3d(0px, 0px, 0px) !important;
 }
@@ -193,18 +260,5 @@ $bookmark-border-color: #bdbdbd;
 
 [contenteditable]:focus {
   outline: 0 solid transparent;
-}
-
-.description {
-  width: 100%;
-  max-height: 80px;
-
-  .text {
-    width: 100%;
-    cursor: text;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 17px;
-  }
 }
 

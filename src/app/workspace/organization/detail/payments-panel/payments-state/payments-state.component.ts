@@ -17,18 +17,75 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
+
+import {selectOrganizationByWorkspace} from "../../../../../core/store/organizations/organizations.state";
+import {isNullOrUndefined} from "util";
+import {filter} from "rxjs/operators";
+import {Store} from "@ngrx/store";
+import {I18n} from "@ngx-translate/i18n-polyfill";
+import {AppState} from "../../../../../core/store/app.state";
+import {OrganizationModel} from "../../../../../core/store/organizations/organization.model";
+import {Subscription} from "rxjs/Subscription";
+import {selectServiceLimitsByWorkspace} from "../../../../../core/store/organizations/service-limits/service-limits.state";
+import {ServiceLimitsModel} from "../../../../../core/store/organizations/service-limits/service-limits.model";
+import {ServiceLimitsAction} from "../../../../../core/store/organizations/service-limits/service-limits.action";
+import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
 
 @Component({
   selector: 'payments-state',
   templateUrl: './payments-state.component.html',
   styleUrls: ['./payments-state.component.scss']
 })
-export class PaymentsStateComponent implements OnInit {
+export class PaymentsStateComponent implements OnInit, OnDestroy {
 
-  constructor() { }
+  private organization: OrganizationModel;
+  private organizationSubscription: Subscription;
+
+  public serviceLimits: ServiceLimitsModel;
+  private serviceLimitsSubscription: Subscription;
+
+  constructor(private i18n: I18n,
+              private router: Router,
+              private store: Store<AppState>) {
+  }
 
   public ngOnInit() {
+    this.subscribeToStore();
+    this.requestData();
+  }
+
+  private subscribeToStore() {
+    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+      .pipe(filter(organization => !isNullOrUndefined(organization)))
+      .subscribe(organization => this.organization = organization);
+
+    this.serviceLimitsSubscription = this.store.select(selectServiceLimitsByWorkspace)
+      .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
+      .subscribe(serviceLimits => this.serviceLimits = serviceLimits);
+  }
+
+  private requestData() {
+    this.store.dispatch(new ServiceLimitsAction.GetServiceLimits({organizationId: this.organization.id}));
+  }
+
+  public ngOnDestroy(): void {
+    if (this.organizationSubscription) {
+      this.organizationSubscription.unsubscribe();
+    }
+
+    if (this.serviceLimitsSubscription) {
+      this.serviceLimitsSubscription.unsubscribe();
+    }
+  }
+
+  public isFree(): boolean {
+    return this.serviceLimits && this.serviceLimits.serviceLevel === ServiceLevelType.FREE;
+  }
+
+  public isBasic(): boolean {
+    return this.serviceLimits && this.serviceLimits.serviceLevel === ServiceLevelType.BASIC;
   }
 
 }

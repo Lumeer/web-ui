@@ -18,17 +18,10 @@
  */
 
 import {Attribute} from './attribute';
-import {Permissions} from './permissions';
+import {Resource} from "./resource";
 
-export interface Collection {
+export interface Collection extends Resource {
 
-  id?: string;
-  code?: string;
-  name: string;
-  icon: string;
-  color: string;
-  description: string;
-  permissions?: Permissions;
   attributes?: Attribute[];
   defaultAttribute?: Attribute; // TODO implement on backend
   documentsCount?: number;

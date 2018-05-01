@@ -19,9 +19,10 @@
 
 import {Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
+
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {filter} from 'rxjs/operators';
+import {filter, withLatestFrom} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
@@ -31,7 +32,7 @@ import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
-import {Role} from '../permissions/role';
+import {Role} from '../../core/model/role';
 import {HashCodeGenerator} from '../utils/hash-code-generator';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {PostItLayoutConfig} from '../utils/layout/post-it-layout-config';
@@ -42,6 +43,10 @@ import {selectProjectByWorkspace} from "../../core/store/projects/projects.state
 import {CorrelationIdGenerator} from "../../core/store/correlation-id.generator";
 import {DEFAULT_COLOR, DEFAULT_ICON} from "../../core/constants";
 import {NotificationService} from "../../core/notifications/notification.service";
+import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
+import {userHasRoleInResource, userRolesInResource} from '../utils/resource.utils';
+import {UserModel} from '../../core/store/users/user.model';
+
 
 @Component({
   selector: 'post-it-collections',
@@ -68,6 +73,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   public postItElements: QueryList<ElementRef>;
 
   public collections: CollectionModel[];
+  public collectionRoles: { [collectionId: string]: string[] };
 
   public selectedCollection: CollectionModel;
 
@@ -80,6 +86,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   private workspace: Workspace;
 
   private project: ProjectModel;
+
+  private currentUser: UserModel;
 
   private query: QueryModel;
 
@@ -152,10 +160,17 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   private subscribeOnCollections() {
-    this.collectionsSubscription = this.store.select(selectCollectionsByQuery).subscribe(collections => {
+    this.collectionsSubscription = this.store.select(selectCollectionsByQuery).pipe(
+      withLatestFrom(this.store.select(selectCurrentUserForWorkspace))
+    ).subscribe(([collections, user]) => {
       const corrIds: string[] = collections.filter(res => res.correlationId).map(res => res.correlationId);
       const newCollections = this.collections ? this.collections.filter(collection => !collection.id && !corrIds.includes(collection.correlationId)) : [];
       this.collections = newCollections.concat(collections.slice());
+      this.currentUser = user;
+      this.collectionRoles = collections.reduce((roles, collection) => {
+        roles[collection.id] = userRolesInResource(user, collection);
+        return roles;
+      }, {})
     });
   }
 
@@ -224,12 +239,11 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     if (!newName) {
       return;
     }
-
     const collectionCopy = {...collection, name: newName};
 
     if (collection.id) {
       this.updateCollection(collectionCopy);
-    } else {
+    } else if (newName) {
       this.createCollection(collectionCopy);
     }
   }
@@ -243,16 +257,20 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public hasCreateRights(): boolean {
-    return this.project && this.hasRole(this.project, Role.Write);
+    return this.project && this.currentUser && userHasRoleInResource(this.currentUser, this.project, Role.Write);
   }
 
   public hasManageRole(collection: CollectionModel): boolean {
     return this.hasRole(collection, Role.Manage);
   }
 
-  private hasRole(collection: CollectionModel | ProjectModel, role: string) {
-    return collection.permissions && collection.permissions.users
-      .some(permission => permission.roles.includes(role));
+  public hasWriteRole(collection: CollectionModel): boolean {
+    return this.hasRole(collection, Role.Write);
+  }
+
+  private hasRole(collection: CollectionModel, role: string): boolean {
+    const roles = this.collectionRoles && this.collectionRoles[collection.id] || [];
+    return roles.includes(role);
   }
 
   public workspacePath(): string {
@@ -272,7 +290,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.notificationService.error(message);
   }
 
-  public onImportCollection(importInfo: {result: string, name: string, format: string}) {
+  public onImportCollection(importInfo: { result: string, name: string, format: string }) {
     const newCollection = {...this.emptyCollection(), name: importInfo.name};
     const importedCollection = {collection: newCollection, data: importInfo.result};
 

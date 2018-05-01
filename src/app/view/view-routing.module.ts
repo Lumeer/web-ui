@@ -34,20 +34,26 @@ import {SearchPerspectiveComponent} from './perspectives/search/search-perspecti
 import {SearchViewsComponent} from './perspectives/search/views/search-views.component';
 import {SmartDocPerspectiveComponent} from './perspectives/smartdoc/smartdoc-perspective.component';
 import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
+import {ChartPerspectiveComponent} from './perspectives/chart/chart-perspective.component';
 import {Table2PerspectiveComponent} from './perspectives/table2/table2-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
 import {ViewRedirectGuard} from '../core/guards/view/view-redirect.guard';
+import {AuthGuard} from '../core/guards/auth.guard';
 
 const viewRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/view',
-    canActivate: [WorkspaceGuard, CollectionsGuard, LinkTypesGuard, ViewsLoadedGuard, ViewExistGuard],
+    canActivate: [AuthGuard, WorkspaceGuard, CollectionsGuard, LinkTypesGuard, ViewsLoadedGuard, ViewExistGuard],
     component: ViewComponent,
     children: [
       {
         path: Perspective.PostIt,
         component: PostItPerspectiveComponent
+      },
+      {
+        path: Perspective.Chart,
+        component: ChartPerspectiveComponent
       },
       {
         path: Perspective.Search,

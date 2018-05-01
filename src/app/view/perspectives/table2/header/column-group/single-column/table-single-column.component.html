@@ -1,25 +1,22 @@
-<div class="table-border-right table-border-bottom h-100">
-  <div [class.selected]="selected"
-       [class.edited]="edited"
-       [contextMenu]="contextMenuElement()"
-       [style.background]="background()"
-       (mousedown)="onClick()"
-       (dblclick)="onDoubleClick()"
-       class="h-100">
-    <table-attribute-name [(name)]="attributeName"
-                          [readonly]="!edited"
-                          [selected]="selected"
-                          [class]="dragClass()"
-                          (blur)="onAttributeNameBlur()"
-                          (keyDown)="onKeyDown($event)">
-    </table-attribute-name>
-    <table-attribute-suggestions *ngIf="canShowSuggestions()"
-                                 [table]="table"
-                                 [cursor]="cursor"
-                                 [attributeId]="attributeId()"
-                                 [collection]="collection">
-    </table-attribute-suggestions>
-  </div>
+<div (keydown)="onKeyDown($event)"
+     (mousedown)="onMouseDown()"
+     class="table-border-right table-border-bottom h-100">
+  <table-editable-cell [contextMenu]="contextMenuElement()"
+                       [readonly]="!selected"
+                       [selected]="selected"
+                       [style.background]="background()"
+                       [value]="value()"
+                       (valueChange)="onValueChange($event)"
+                       (editStart)="onEditStart()"
+                       (editEnd)="onEditEnd($event)"
+                       class="d-block h-100 font-italic {{dragClass()}}">
+  </table-editable-cell>
+  <table-attribute-suggestions *ngIf="canShowSuggestions()"
+                               [attributeId]="attributeId()"
+                               [collection]="collection"
+                               [cursor]="cursor"
+                               [table]="table">
+  </table-attribute-suggestions>
 </div>
 
 <table-column-context-menu #contextMenu

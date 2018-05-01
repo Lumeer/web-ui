@@ -1,7 +1,8 @@
 <div class="container-fluid">
   <div class="row">
     <div class="panel-item col order-lg-1 d-flex justify-content-between">
-      <a href="index.html" class="d-flex">
+      <a [routerLink]="['/']"
+         class="d-flex">
         <img class="lumeer-logo" src="../../..{{publicPath()}}img/lumeer-logo.png">
         <div class="lumeer-header text-uppercase pl-2">
           Lumeer
@@ -18,16 +19,18 @@
       <div class="panel-item lead mr-2"
            *ngIf="isWorkspaceSet()">
         <span>
-          <a (click)="goToWorkspaceOrganization()"
-             tabindex
-             title="Organization" i18n-title="@@panel.workspace.organization">
-            {{workspace.organizationCode}}
+          <a *ngIf="organization"
+             (click)="goToWorkspaceOrganization()"
+             [title]="organization.name"
+             tabindex>
+            {{organization.code}}
           </a>
           <span class="mx-1">/</span>
-          <a (click)="goToWorkspaceProject()"
-             tabindex
-             title="Project" i18n-title="@@panel.workspace.project">
-            {{workspace.projectCode}}
+          <a *ngIf="project"
+             (click)="goToWorkspaceProject()"
+             [title]="project.name"
+             tabindex>
+            {{project.code}}
           </a>
         </span>
       </div>
@@ -80,9 +83,6 @@
             <i class="fas fa-fw fa-sign-in" data-fa-transform="left-4" aria-hidden="true"></i>
             <span i18n="@@menu.signOut">Sign Out</span>
           </a>
-          <span class="dropdown-item">
-            <span i18n="@@menu.licence">Licence</span>: {{this.licence}}
-          </span>
           <ng-container *ngIf="buildNumber">
             <div class="dropdown-divider"></div>
             <small class="dropdown-header py-0">Build #{{buildNumber}}</small>

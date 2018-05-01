@@ -90,12 +90,12 @@
         Events
       </a>
     </li>
-    <li *ngIf="hasManageRole(collection)" role="presentation" class="nav-item">
-      <a [routerLink]="['permissions']"
+    <li role="presentation" class="nav-item">
+      <a [routerLink]="['users']"
          routerLinkActive="active"
          class="nav-link"
          i18n="@@collection.config.tab.permissions">
-        Access Rights
+        Users
       </a>
     </li>
   </ul>

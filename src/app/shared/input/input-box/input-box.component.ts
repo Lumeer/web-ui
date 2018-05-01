@@ -18,11 +18,13 @@
  */
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChange, ViewChild} from "@angular/core";
 
+import {I18n} from '@ngx-translate/i18n-polyfill';
+
 const DEFAULT_FONT_SIZE = 1;
 const DEFAULT_MAX_LINES = 1;
 const DEFAULT_LINE_HEIGHT = 1.5;
 const DEFAULT_PADDING = 0.5;
-const DEFAULT_PLACEHOLDER = 'Write text here...';
+const warningStyle = ['border', 'border-danger', 'rounded'];
 
 @Component({
   selector: 'input-box',
@@ -42,6 +44,7 @@ export class InputBoxComponent implements OnInit {
   @Input() public canStayEmpty: boolean;
   @Input() public placeholder: string;
   @Input() public title: string;
+  @Input() public editable: boolean = true;
 
   @Output() public focus: EventEmitter<void> = new EventEmitter();
   @Output() public blur: EventEmitter<void> = new EventEmitter();
@@ -54,6 +57,9 @@ export class InputBoxComponent implements OnInit {
   public mPlaceholder: string;
   public mLineHeight: number;
   public mPaddingRem: number;
+
+  public constructor(private i18n: I18n) {
+  }
 
   public ngOnInit() {
     this.computeProperties();
@@ -68,9 +74,9 @@ export class InputBoxComponent implements OnInit {
     this.mFontSizeRem = this.fontSizeRem || DEFAULT_FONT_SIZE;
     const mMaxLines = this.maxLines || DEFAULT_MAX_LINES;
     this.mLineHeight = DEFAULT_LINE_HEIGHT;
-    this.mPaddingRem = this.paddingRem || DEFAULT_PADDING;
+    this.mPaddingRem = this.isMultiLine() ? this.paddingRem || DEFAULT_PADDING : 0;
     this.mMaxHeightRem = mMaxLines * DEFAULT_LINE_HEIGHT * this.mFontSizeRem;
-    this.mPlaceholder = this.placeholder || DEFAULT_PLACEHOLDER
+    this.mPlaceholder = this.placeholder || this.defaultPlaceholder();
   }
 
   public onNewValue(value: string) {
@@ -101,6 +107,25 @@ export class InputBoxComponent implements OnInit {
 
   public removeFocusFromInputParent() {
     this.inputParent.nativeElement.classList.remove('focused');
+  }
+
+  public isMultiLine(): boolean {
+    return this.maxLines > 1;
+  }
+
+  public setWarningBorder(){
+    this.input.nativeElement.classList.add(...warningStyle);
+  }
+
+  public removeWarningBorder(){
+    this.input.nativeElement.classList.remove(...warningStyle);
+  }
+
+  private defaultPlaceholder() {
+    return this.i18n({
+      id: 'inputBox.placeholder.default',
+      value: 'Write text here...'
+    });
   }
 
 }

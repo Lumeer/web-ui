@@ -20,9 +20,11 @@
 import {HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {Contact, Organization} from '../dto';
-import {PermissionService} from './permission.service';
 import {environment} from '../../../environments/environment';
+import {Contact, Organization} from '../dto';
+import {Payment} from '../dto/payment';
+import {ServiceLimits} from '../dto/service-limits';
+import {PermissionService} from './permission.service';
 
 @Injectable()
 export class OrganizationService extends PermissionService {
@@ -58,6 +60,26 @@ export class OrganizationService extends PermissionService {
 
   public setOrganizationContact(code: string, contact: Contact): Observable<Contact> {
     return this.httpClient.put<Contact>(`${this.apiPrefix(code)}/contact`, contact);
+  }
+
+  public getServiceLimits(): Observable<ServiceLimits> {
+    return this.httpClient.get<ServiceLimits>(`${this.actualApiPrefix()}/serviceLimits`);
+  }
+
+  public getAllServiceLimits(): Observable<{ [organizationId: string]: ServiceLimits }> {
+    return this.httpClient.get<{ [organizationId: string]: ServiceLimits }>(`${this.apiPrefix()}/serviceLimits`);
+  }
+
+  public getPayments(): Observable<Payment[]> {
+    return this.httpClient.get<Payment[]>(`${this.actualApiPrefix()}/payments`);
+  }
+
+  public getPayment(paymentId: string): Observable<Payment> {
+    return this.httpClient.get<Payment>(`${this.actualApiPrefix()}/payment/${paymentId}`);
+  }
+
+  public createPayment(payment: Payment): Observable<Payment> {
+    return this.httpClient.post<Payment>(`${this.actualApiPrefix()}/payments`, payment);
   }
 
   protected actualApiPrefix(): string {

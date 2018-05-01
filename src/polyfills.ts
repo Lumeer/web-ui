@@ -64,4 +64,4 @@ import './assets/js/custom.js';
 // import 'intl';  // Run `npm install --save intl`.
 
 window['Muuri'] = require('../node_modules/muuri/muuri.min.js');
-
+window['Plotly'] = require('../node_modules/plotly.js/dist/plotly.min.js');

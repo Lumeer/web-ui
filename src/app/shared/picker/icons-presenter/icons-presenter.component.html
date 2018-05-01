@@ -5,12 +5,13 @@
        aria-hidden="true"
        class="{{icons[0]}} fa-fw">
     </i>
-    <ng-container *ngSwitchCase="2">
+    <span *ngSwitchCase="2"
+          class="link-icons">
       <i [style.color]="colors[0]"
          class="{{icons[0]}} fa-xs fa-fw align-top">
       </i><!-- TODO remove space somehow
-     --><i [style.color]="colors[1]"
-           class="{{icons[1]}} fa-xs fa-fw align-bottom"></i>
-    </ng-container>
+   --><i [style.color]="colors[1]"
+         class="{{icons[1]}} fa-xs fa-fw align-bottom"></i><!-- TODO remove space somehow
+ --></span>
   </ng-container>
 </ng-container>

@@ -45,9 +45,9 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
     case CollectionsActionType.REMOVE_ATTRIBUTE_SUCCESS:
       return onRemoveAttributeSuccess(state, action);
     case CollectionsActionType.CHANGE_PERMISSION_SUCCESS:
-      return onChangePermissionSuccess(state, action);
-    case CollectionsActionType.REMOVE_PERMISSION_SUCCESS:
-      return onRemovePermissionSuccess(state, action);
+      return onChangePermission(state, action);
+    case CollectionsActionType.CHANGE_PERMISSION_FAILURE:
+      return onChangePermission(state, action);
     case CollectionsActionType.CLEAR:
       return initialCollectionsState;
     default:
@@ -90,16 +90,9 @@ function onRemoveAttributeSuccess(state: CollectionsState, action: CollectionsAc
   return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
 }
 
-function onChangePermissionSuccess(state: CollectionsState, action: CollectionsAction.ChangePermissionSuccess): CollectionsState {
+function onChangePermission(state: CollectionsState, action: CollectionsAction.ChangePermissionSuccess | CollectionsAction.ChangePermissionFailure): CollectionsState {
   const collection = state.entities[action.payload.collectionId];
   const permissions = PermissionsHelper.changePermission(collection.permissions, action.payload.type, action.payload.permission);
-
-  return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {permissions: permissions}}, state);
-}
-
-function onRemovePermissionSuccess(state: CollectionsState, action: CollectionsAction.RemovePermissionSuccess): CollectionsState {
-  const collection = state.entities[action.payload.collectionId];
-  const permissions = PermissionsHelper.removePermission(collection.permissions, action.payload.type, action.payload.name);
 
   return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {permissions: permissions}}, state);
 }

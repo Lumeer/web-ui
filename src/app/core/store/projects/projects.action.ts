@@ -19,12 +19,15 @@
 
 import {Action} from '@ngrx/store';
 import {ProjectModel} from './project.model';
+import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 
 export enum ProjectsActionType {
 
   GET = '[Projects] Get',
   GET_SUCCESS = '[Projects] Get :: Success',
   GET_FAILURE = '[Projects] Get :: Failure',
+
+  GET_ONE_SUCCESS = '[Projects] Get one :: Success',
 
   GET_CODES = '[Projects] Get codes',
   GET_CODES_SUCCESS = '[Projects] Get codes :: Success',
@@ -42,7 +45,11 @@ export enum ProjectsActionType {
   DELETE_SUCCESS = '[Projects] Delete :: Success',
   DELETE_FAILURE = '[Projects] Delete :: Failure',
 
-  SELECT = '[Projects] Select'
+  SELECT = '[Projects] Select',
+
+  CHANGE_PERMISSION = '[Projects] Change Permission',
+  CHANGE_PERMISSION_SUCCESS = '[Projects] Change Permission :: Success',
+  CHANGE_PERMISSION_FAILURE = '[Projects] Change Permission :: Failure'
 
 }
 
@@ -58,7 +65,7 @@ export namespace ProjectsAction {
   export class GetSuccess implements Action {
     public readonly type = ProjectsActionType.GET_SUCCESS;
 
-    public constructor(public payload: { projects: ProjectModel[] }) {
+    public constructor(public payload: { organizationId: string, projects: ProjectModel[] }) {
     }
   }
 
@@ -66,6 +73,13 @@ export namespace ProjectsAction {
     public readonly type = ProjectsActionType.GET_FAILURE;
 
     public constructor(public payload: { error: any }) {
+    }
+  }
+
+  export class GetOneSuccess implements Action {
+    public readonly type = ProjectsActionType.GET_ONE_SUCCESS;
+
+    public constructor(public payload: { project: ProjectModel }) {
     }
   }
 
@@ -160,10 +174,32 @@ export namespace ProjectsAction {
     }
   }
 
+  export class ChangePermission implements Action {
+    public readonly type = ProjectsActionType.CHANGE_PERMISSION;
+
+    public constructor(public payload: { projectId: string, type: PermissionType, permission: PermissionModel, currentPermission: PermissionModel }) {
+    }
+  }
+
+  export class ChangePermissionSuccess implements Action {
+    public readonly type = ProjectsActionType.CHANGE_PERMISSION_SUCCESS;
+
+    public constructor(public payload: { projectId: string, type: PermissionType, permission: PermissionModel }) {
+    }
+  }
+
+  export class ChangePermissionFailure implements Action {
+    public readonly type = ProjectsActionType.CHANGE_PERMISSION_FAILURE;
+
+    public constructor(public payload: { projectId: string, type: PermissionType, permission: PermissionModel, error: any }) {
+    }
+  }
+
   export type All = Select |
-    Get | GetSuccess | GetFailure |
+    Get | GetSuccess | GetFailure | GetOneSuccess |
     GetCodes | GetCodesSuccess | GetCodesFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure;
+    Delete | DeleteSuccess | DeleteFailure | Select |
+    ChangePermission | ChangePermissionSuccess | ChangePermissionFailure;
 }

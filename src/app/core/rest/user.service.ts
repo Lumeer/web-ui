@@ -49,7 +49,6 @@ export class UserService {
     return this.httpClient.get<User[]>(this.apiPrefix(organizationId));
   }
 
-
   private apiPrefix(organizationId: string, userId?: string): string {
     return `/${environment.API_URL}/rest/organizations/${organizationId}/users${userId ? `/${userId}` : ''}`;
   }

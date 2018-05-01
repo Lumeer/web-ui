@@ -1,7 +1,6 @@
 <div class="mx-5" #layout>
   <div class="m-2">
     <add-document
-      [attr.order]="-10000"
       [hasCollection]="hasSingleCollection()"
       [hasRights]="hasCreateRights()"
       (createPostIt)="createPostIt($event)">
@@ -12,6 +11,7 @@
     <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByDocument"
                       class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : 'initialized' }}"
                       [attr.order]="postIt.order"
+                      [collectionRoles]="getCollectionRoles(postIt)"
                       [postItModel]="postItWithIndex(postIt, idx)"
                       [perspectiveId]="perspectiveId"
                       [layoutManager]="layoutManager"

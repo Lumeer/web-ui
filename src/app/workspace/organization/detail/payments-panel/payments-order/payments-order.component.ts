@@ -19,6 +19,16 @@
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {I18n} from "@ngx-translate/i18n-polyfill";
+import {Store} from "@ngrx/store";
+import {Router} from "@angular/router";
+import {selectServiceLimitsByWorkspace} from "../../../../../core/store/organizations/service-limits/service-limits.state";
+import {Subscription} from "rxjs/Subscription";
+import {filter} from "rxjs/operators";
+import {isNullOrUndefined} from "util";
+import {AppState} from "../../../../../core/store/app.state";
+import {DatePipe} from "@angular/common";
+import {ServiceLimitsModel} from "../../../../../core/store/organizations/service-limits/service-limits.model";
+import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
 
 @Component({
   selector: 'payments-order',
@@ -38,13 +48,16 @@ export class PaymentsOrderComponent implements OnInit {
   public discountDescription: string;
 
   @Output()
-  public pay = new EventEmitter<{users: number, months: number, currency: string, amount: number}>();
+  public pay = new EventEmitter<{users: number, months: number, currency: string, amount: number, start: Date}>();
 
   public subscriptionLength: string;
 
   public numberOfUsers: number = 10;
 
   public currency: string = 'EUR';
+
+  public startDate: Date = new Date();
+  public startDateText: string;
 
   public price: number = 12 * this.numberOfUsers * PaymentsOrderComponent.EUR_SALE;
 
@@ -57,11 +70,50 @@ export class PaymentsOrderComponent implements OnInit {
   public discountInfoPerUser: string = '';
   public discountInfo: number = 0;
 
-  constructor(private i18n: I18n) {
-    this.discountDescription = this.i18n({ id: '', value: 'Beta Program discount for Early Adopters!' });
+  private serviceLimitsSubscription: Subscription;
+
+  public trial: boolean = true; // are we on a trial subscription?
+  public serviceLimits: ServiceLimitsModel;
+
+  constructor(private i18n: I18n,
+              private router: Router,
+              private store: Store<AppState>) {
+    this.discountDescription = this.i18n({ id: 'organizations.tab.detail.order.discount', value: 'Beta Program discount for Early Adopters!' });
   }
 
   public ngOnInit() {
+    this.subscribeToStore();
+  }
+
+  private subscribeToStore() {
+    this.serviceLimitsSubscription = this.store.select(selectServiceLimitsByWorkspace)
+      .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
+      .subscribe(serviceLimits => {
+        this.serviceLimits = serviceLimits;
+        if (serviceLimits.serviceLevel === ServiceLevelType.FREE) {
+          this.trial = true;
+          this.setStartDate(PaymentsOrderComponent.floorDate(new Date()));
+        } else {
+          this.trial = false;
+          this.numberOfUsers = this.serviceLimits.users;
+          this.setStartDate(new Date(serviceLimits.validUntil.getTime() + 1));
+        }
+      });
+  }
+
+  private static floorDate(d: Date) {
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+  }
+
+  private setStartDate(d: Date) {
+    this.startDate = d;
+    this.startDateText = new DatePipe('en-US').transform(d, 'yyyy-MM-dd'); // `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+  }
+
+  public ngOnDestroy(): void {
+    if (this.serviceLimitsSubscription) {
+      this.serviceLimitsSubscription.unsubscribe();
+    }
   }
 
   private calculatePrice() {
@@ -108,6 +160,13 @@ export class PaymentsOrderComponent implements OnInit {
   }
 
   public placeOrder() {
-    this.pay.emit({ months: this.months, users: this.numberOfUsers, amount: this.price, currency: this.currency });
+    this.pay.emit({ months: this.months, users: this.numberOfUsers, amount: this.price, currency: this.currency, start: this.startDate });
+  }
+
+  updateStartDate($event) {
+    let d = new Date($event.target.value);
+    if (!isNaN(d.getTime())) {
+      this.startDate = PaymentsOrderComponent.floorDate(d);
+    }
   }
 }

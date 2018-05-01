@@ -1,4 +1,6 @@
 <div class="d-flex">
+  <div [style.min-width]="rowNumberWidth()"
+       [style.width]="rowNumberWidth()"></div>
   <ng-container *ngFor="let part of table.parts; trackBy: trackByPartIndex">
     <table-header-collection *ngIf="part.collectionId"
                              [table]="table"

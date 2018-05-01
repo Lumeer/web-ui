@@ -1,0 +1,26 @@
+<div class="row mt-4">
+  <div class="col-6 col-md-5 col-lg-4 d-flex flex-row flex-nowrap justify-content-center">
+    <input-box
+      class="flex-grow-2"
+      [style.width]="'1px'"
+      [placeholder]="emailPlaceHolder()"
+      [canStayEmpty]="true"
+      [maxLines]="1"
+      [initialValue]="email"
+      (focus)="onEmailFocus()"
+      (newValue)="email = $event">
+    </input-box>
+
+    <i *ngIf="showEmailWarning" class="fa fa-exclamation-triangle align-self-center ml-1 text-warning"
+       title="Wrong email" i18n-title="@@organization.user.email.incorrect"
+       aria-hidden="true"></i>
+  </div>
+  <div class="col-6 col-md-7 col-lg-8 d-flex flex-nowrap flex-row align-items-center">
+    <button type="button"
+            class="btn btn-sm btn-success"
+            (click)="onAddUser()">
+      <i class="fas fa-plus"></i>
+      <span class="font-weight-bold" i18n="@@user.add.button">Invite user</span>
+    </button>
+  </div>
+</div>

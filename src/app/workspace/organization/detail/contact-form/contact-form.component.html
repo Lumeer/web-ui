@@ -41,8 +41,8 @@
     <div class="form-row">
       <div class="form-group col-6">
         <input type="text" ngModel name="email" i18n-placeholder="@@organizations.tab.detail.contact.email" placeholder="E-mail" class="form-control form-control-sm" id="email" #email="ngModel" email>
-        <small id="emailValid" class="invalid-message" *ngIf="email.invalid && (email.dirty || email.touched)" i18n="@@organizations.tab.detail.contact.email.invalid">
-          Please enter a valid e-mail address (e.g. alan@turing.com).
+        <small id="emailValid" class="invalid-message" *ngIf="email.invalid" i18n="@@organizations.tab.detail.contact.email.invalid">
+          Please enter a valid e-mail address (e.g. alan.turing@lumeer.io).
         </small>
       </div>
       <div class="form-group col-6">
@@ -64,7 +64,9 @@
       </div>
     </div>
     <div class="text-right">
-      <button type="submit" class="btn btn-success mb-2" i18n="@@organizations.tab.detail.contact.save" (click)="save()" [disabled]="!invoicingContactForm.form.dirty || !invoicingContactForm.valid">Save</button>
+      <button *ngIf="!savingState && invoicingContactForm.form.dirty" type="submit" class="btn btn-success mb-2" i18n="@@organizations.tab.detail.contact.save" (click)="save()" [disabled]="!invoicingContactForm.form.dirty || !invoicingContactForm.valid">Save</button>
+      <button *ngIf="savingState" type="submit" class="btn btn-success mb-2" i18n="@@organizations.tab.detail.contact.saving" [disabled]="true">Saving</button>
+      <button *ngIf="!savingState && !invoicingContactForm.form.dirty" type="submit" class="btn btn-success mb-2" i18n="@@organizations.tab.detail.contact.saved" [disabled]="true">Saved!</button>
     </div>
   </form>
 </div>

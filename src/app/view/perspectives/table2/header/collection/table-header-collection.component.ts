@@ -25,6 +25,7 @@ import {CollectionModel} from '../../../../../core/store/collections/collection.
 import {selectCollectionById} from '../../../../../core/store/collections/collections.state';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableModel, TablePart} from '../../../../../core/store/tables/table.model';
+import {calculateColumnsWidth, filterLeafColumns} from '../../../../../core/store/tables/table.utils';
 
 @Component({
   selector: 'table-header-collection',
@@ -56,6 +57,11 @@ export class TableHeaderCollectionComponent implements OnChanges {
       partIndex: this.part.index,
       columnPath: []
     };
+  }
+
+  public captionWidth(): string {
+    const width = calculateColumnsWidth(filterLeafColumns(this.part.columns));
+    return `${width}px`;
   }
 
 }

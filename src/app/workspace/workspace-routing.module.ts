@@ -19,30 +19,33 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+
 import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
 import {OrganizationSettingsComponent} from './organization/organization-settings.component';
 import {ProjectSettingsComponent} from './project/project-settings.component';
-import {ProjectPermissionsComponent} from './project/permissions/project-permissions.component';
-import {OrganizationPermissionsComponent} from './organization/permissions/organization-permissions.component';
+import {ProjectUsersComponent} from './project/users/project-users.component';
 import {WorkspaceSelectGuard} from './workspace-select.guard';
-import {OrganizationUsersComponent} from './organization/users/organization-users.component';
-import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
-import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
 import {OrganizationSettingsGuard} from "./organization/organization-settings.guard";
 import {OrganizationDetailComponent} from "./organization/detail/organization-detail.component";
+import {OrganizationUsersComponent} from "./organization/users/organization-users.component";
+import {ProjectSettingsGuard} from "./project/project-settings.guard";
+import {PageNotFoundGuard} from '../core/guards/page-not-found.guard';
+import {HomeComponent} from '../core/home.component';
+import {AuthGuard} from '../core/guards/auth.guard';
 
 const workspaceRoutes: Routes = [
   {
     path: 'organization/:organizationCode/project/:projectCode',
     component: ProjectSettingsComponent,
+    canActivate: [AuthGuard, ProjectSettingsGuard],
     children: [
       {
-        path: 'permissions',
-        component: ProjectPermissionsComponent
+        path: 'users',
+        component: ProjectUsersComponent
       },
       {
         path: '',
-        redirectTo: 'permissions',
+        redirectTo: 'users',
         pathMatch: 'full'
       }
     ]
@@ -50,7 +53,7 @@ const workspaceRoutes: Routes = [
   {
     path: 'organization/:organizationCode',
     component: OrganizationSettingsComponent,
-    canActivate: [OrganizationSettingsGuard],
+    canActivate: [AuthGuard, OrganizationSettingsGuard],
     children: [
       {
         path: 'detail',
@@ -61,18 +64,6 @@ const workspaceRoutes: Routes = [
         component: OrganizationUsersComponent
       },
       {
-        path: 'groups',
-        component: OrganizationGroupsComponent
-      },
-      {
-        path: 'registration',
-        component: OrganizationRegistrationComponent
-      },
-      {
-        path: 'permissions',
-        component: OrganizationPermissionsComponent
-      },
-      {
         path: '',
         redirectTo: 'detail',
         pathMatch: 'full'
@@ -81,7 +72,7 @@ const workspaceRoutes: Routes = [
   },
   {
     path: 'workspace',
-    canActivate: [WorkspaceSelectGuard],
+    canActivate: [AuthGuard, WorkspaceSelectGuard],
     component: WorkspaceChooserComponent,
     data: {
       searchBoxHidden: true

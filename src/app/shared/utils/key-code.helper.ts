@@ -58,10 +58,6 @@ const notPrintableKeys: number[] = [
   KeyCode.SelectKey
 ];
 
-export class KeyCodeHelper {
-
-  public static isPrintable(keyCode: number) {
-    return !notPrintableKeys.includes(keyCode);
-  }
-
+export function isKeyPrintable(keyCode: number): boolean {
+  return !notPrintableKeys.includes(keyCode);
 }

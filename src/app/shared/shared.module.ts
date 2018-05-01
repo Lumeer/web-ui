@@ -26,8 +26,6 @@ import {DialogsModule} from './dialogs/dialogs.module';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 import {LinksComponent} from './links/links.component';
 
-import {PermissionsComponent} from './permissions/permissions.component';
-import {PermissionsTableComponent} from './permissions/table/permissions-table.component';
 import {PerspectiveDirective} from './perspective.directive';
 import {PickerModule} from './picker/picker.module';
 import {PostItCollectionsComponent} from './post-it-collections/post-it-collections.component';
@@ -35,13 +33,13 @@ import {SearchBoxModule} from './search-box/search-box.module';
 import {SizeSliderComponent} from './slider/size-slider.component';
 import {LayoutItem} from './utils/layout/layout-item.directive';
 import {PostItCollectionNameComponent} from './post-it-collections/collection-name/post-it-collection-name.component';
-import {InputBoxComponent} from './input/input-box/input-box.component';
-import {FilterBoxComponent} from './input/filter-box/filter-box.component';
-import {TagComponent} from './tag/tag.component';
 import {RemovePlaceholderOnFocusDirective} from './placeholder/remove-placeholder-on-focus';
 import {PostItCollectionAddButtonComponent} from './post-it-collections/add-button/post-it-collection-add-button.component';
 import {PostItCollectionImportButtonComponent} from './post-it-collections/import-button/post-it-collection-import-button.component';
 import {SliderComponent} from './slider/slider.component';
+import {UsersModule} from "./users/users.module";
+import {TagModule} from "./tag/tag.module";
+import {InputModule} from "./input/input.module";
 
 @NgModule({
   imports: [
@@ -51,11 +49,12 @@ import {SliderComponent} from './slider/slider.component';
     PickerModule,
     DragAndDropModule,
     SearchBoxModule,
-    DialogsModule
+    UsersModule,
+    DialogsModule,
+    TagModule,
+    InputModule
   ],
   declarations: [
-    PermissionsComponent,
-    PermissionsTableComponent,
     PostItCollectionsComponent,
     PostItCollectionNameComponent,
     PostItCollectionAddButtonComponent,
@@ -66,28 +65,25 @@ import {SliderComponent} from './slider/slider.component';
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
     LayoutItem,
-    InputBoxComponent,
-    FilterBoxComponent,
-    TagComponent,
-    SliderComponent
+    SliderComponent,
+    LayoutItem
   ],
   exports: [
     CommonModule,
     DragAndDropModule,
     FormsModule,
-    PermissionsComponent,
     PostItCollectionsComponent,
     SizeSliderComponent,
     CommentsComponent,
     LinksComponent,
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
+    UsersModule,
     SearchBoxModule,
-    InputBoxComponent,
-    FilterBoxComponent,
-    TagComponent,
-    DialogsModule,
-    SliderComponent
+    SliderComponent,
+    TagModule,
+    InputModule,
+    DialogsModule
   ]
 })
 export class SharedModule {

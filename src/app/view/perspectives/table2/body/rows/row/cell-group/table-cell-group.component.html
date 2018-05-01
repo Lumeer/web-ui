@@ -1,0 +1,10 @@
+<div class="d-flex h-100">
+  <!-- TODO track by column attribute -->
+  <table-cell *ngFor="let column of columns$ | async; let columnIndex = index"
+              [column]="column"
+              [cursor]="createColumnCursor(columnIndex)"
+              [documents]="documents"
+              [linkInstances]="linkInstances"
+              [table]="table">
+  </table-cell>
+</div>

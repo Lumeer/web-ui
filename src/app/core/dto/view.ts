@@ -17,18 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Permissions} from './permissions';
 import {Query} from './query';
+import {Resource} from "./resource";
 
-export interface View {
-
-  code?: string;
-  name: string;
+export interface View extends Resource {
 
   perspective: string;
   query: Query;
   config: any; // TODO create DTO
-
-  permissions?: Permissions;
 
 }

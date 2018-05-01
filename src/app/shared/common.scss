@@ -5,6 +5,22 @@
   -webkit-user-select: auto !important;
 }
 
+html {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  counter-reset: row-number;
+  height: 100%;
+  margin: 0;
+}
+
+.row-number::before {
+  counter-increment: row-number;
+  content: counter(row-number);
+}
+
 a {
   cursor: pointer;
   transition: color $animation-color-duration;
@@ -117,10 +133,19 @@ input {
 
 .clickable {
   cursor: pointer;
-  color: $link-color;
+  color: $success;
 
   &:hover {
-    color: $link-hover-color;
+    color: darken($success, 20%);
+  }
+}
+
+.clickable-unselected {
+  cursor: pointer;
+  color: $grey-color;
+
+  &:hover {
+    color: $grey-darker-color;
   }
 }
 
@@ -171,4 +196,8 @@ input {
 
 .table-border-left {
   border-left: 1px solid $table-border-color;
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }

@@ -27,12 +27,14 @@ import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generat
 import {OrganizationModel} from '../../../core/store/organizations/organization.model';
 import {ProjectModel} from '../../../core/store/projects/project.model';
 import {KeyCode} from '../../../shared/key-code';
-import {Role} from '../../../shared/permissions/role';
 import {ResourceItemType} from './resource-item-type';
+import {Role} from '../../../core/model/role';
+import {ServiceLimitsModel} from '../../../core/store/organizations/service-limits/service-limits.model';
+import {ServiceLevelType} from '../../../core/dto/service-level-type';
+import {InputBoxComponent} from '../../../shared/input/input-box/input-box.component';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
-const warningStyle = 'border-danger';
 
 type ResourceModel = OrganizationModel | ProjectModel;
 
@@ -86,6 +88,8 @@ export class ResourceChooserComponent implements OnChanges {
 
   @Input() public resourceType: ResourceItemType;
   @Input() public resources: ResourceModel[];
+  @Input() public serviceLimits: ServiceLimitsModel[];
+  @Input() public resourcesRoles: { [id: string]: string[] };
   @Input() public selectedId: string;
   @Input() public canCreateResource: boolean;
   @Input() public usedCodes: string[];
@@ -268,7 +272,7 @@ export class ResourceChooserComponent implements OnChanges {
       const message = this.i18n(
         {
           id: 'resource.delete.dialog.message',
-          value: 'Are you sure you want to remove the {resourceType, select, Project {project} Organization {organization}}} {{resourceCode}}?'
+          value: 'Are you sure you want to remove {resourceType, select, Project {project} Organization {organization}} {{resourceCode}}?'
         },
         {
           resourceType: this.resourceType,
@@ -307,8 +311,12 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   public hasManageRole(resource: ResourceModel): boolean {
-    return resource.permissions && resource.permissions.users.length === 1
-      && resource.permissions.users[0].roles.some(r => r === Role.Manage.toString());
+    return this.hasRole(resource, Role.Manage);
+  }
+
+  private hasRole(resource: ResourceModel, role: string): boolean {
+    const roles = this.resourcesRoles && this.resourcesRoles[resource.id] || [];
+    return roles.includes(role);
   }
 
   public onKeyDown(event: KeyboardEvent, element: HTMLElement) {
@@ -317,17 +325,16 @@ export class ResourceChooserComponent implements OnChanges {
     }
   }
 
-  public onCodeBlur(element: HTMLElement, resource: ResourceModel) {
-    const newCode = element.textContent.trim();
-    const isValid = this.resources.filter(res => res.id !== resource.id).findIndex(res => res.code === newCode) === -1;
+  public onCodeBlur(component: InputBoxComponent, newCode: string, resource: ResourceModel) {
+    const isValid = this.isNewCodeValid(newCode);
     if (isValid) {
-      element.classList.remove(warningStyle);
+      component.removeWarningBorder();
     } else {
-      element.classList.add(warningStyle);
+      component.setWarningBorder();
 
       const message = this.i18n({
         id: 'resource.already.exist',
-        value: '{resourceType, select, Project {Project} Organization {Organization}}} with code {{resourceCode}} already exist'
+        value: '{resourceType, select, Project {Project} Organization {Organization}} with code {{resourceCode}} already exist'
       }, {
         resourceType: this.resourceType,
         resourceCode: newCode
@@ -336,50 +343,32 @@ export class ResourceChooserComponent implements OnChanges {
       return;
     }
 
-    const property = 'code';
-    const propertyOther = 'name';
-    if (resource.hasOwnProperty(property) && resource.hasOwnProperty(propertyOther)) {
-      this.onFieldBlur(element, resource, property, propertyOther);
-    }
+    this.updateCode(newCode, resource);
   }
 
-  public onNameBlur(element: HTMLElement, resource: ResourceModel) {
-    const property = 'name';
-    const propertyOther = 'code';
-    if (resource.hasOwnProperty(property) && resource.hasOwnProperty(propertyOther)) {
-      this.onFieldBlur(element, resource, property, propertyOther);
-    }
-  }
-
-  private onFieldBlur(element: HTMLElement, resource: ResourceModel, property: string, propertyOther: string) {
-    const contentTrim = element.textContent.trim();
-    const contentTrimLength = contentTrim.length;
-    const propertyLength = resource[property].length;
-
+  private updateCode(newCode: string, resource: ResourceModel) {
     if (resource.id) {
-      // we know, that code is not empty
-      if (contentTrimLength === 0) {
-        element.textContent = resource[property];
-      } else {
-        if (contentTrim !== resource[property]) {
-          const resourceModel = {...resource};
-          resourceModel[property] = contentTrim;
-          this.resourceUpdate.emit(resourceModel);
-        }
-      }
+      const resourceModel = {...resource, code: newCode};
+      this.resourceUpdate.emit(resourceModel);
     } else {
-      if (resource[propertyOther].length === 0) {
-        resource[property] = contentTrim;
-      } else if (contentTrimLength == 0 && propertyLength > 0) {
-        element.textContent = resource[property];
-      } else if (contentTrimLength > 0 && propertyLength == 0) {
-        resource[property] = contentTrim;
-        if (this.isNewCodeValid(resource.code)) {
-          setTimeout(() => {
-            this.showPicker(resource);
-          }, 200);
-        }
-      }// else do nothing
+      resource.code = newCode;
+      if (resource.icon === DEFAULT_ICON && resource.color === DEFAULT_COLOR) {
+        setTimeout(() => {
+          this.showPicker(resource);
+        }, 200);
+      } else {
+        this.syncingCorrIds.push(resource.correlationId);
+        this.resourceNew.emit(resource);
+      }
+    }
+  }
+
+  public onNameBlur(newName: string, resource: ResourceModel) {
+    if (resource.id) {
+      const resourceModel = {...resource, name: newName};
+      this.resourceUpdate.emit(resourceModel);
+    } else {
+      resource.name = newName;
     }
   }
 
@@ -400,7 +389,6 @@ export class ResourceChooserComponent implements OnChanges {
     if (!this.modifiedResourceId || this.modifiedResourceId !== this.getResourceIdentificator(resource)) {
       return;
     }
-
     if (resource.id) {
       if (this.shouldUpdateResource(resource)) {
         const resourceModel = {
@@ -410,12 +398,20 @@ export class ResourceChooserComponent implements OnChanges {
         };
         this.resourceUpdate.emit(resourceModel);
       }
-    } else if (!this.syncingCorrIds.includes(resource.correlationId) && resource.code && resource.name) {
+    } else if (!this.syncingCorrIds.includes(resource.correlationId) && resource.code) {
       this.syncingCorrIds.push(resource.correlationId);
       this.resourceNew.emit(resource);
     }
 
     this.modifiedResourceId = null;
+  }
+
+  public isResourceModified(resource: ResourceModel): boolean {
+    return this.modifiedResourceId === this.getResourceIdentificator(resource);
+  }
+
+  public isSelected(resource: ResourceModel): boolean {
+    return resource.id === this.selectedId;
   }
 
   public onDescriptionBlur(resource: ResourceModel, newDescription: string) {
@@ -433,6 +429,54 @@ export class ResourceChooserComponent implements OnChanges {
 
   public getResource(id: string) {
     return this.findResource(id);
+  }
+
+  public serviceLevelTitle(resource: ResourceModel): string {
+    const serviceLevel = this.getServiceLevel(resource);
+    return this.i18n({
+      id: 'resource.chooser.serviceLevel',
+      value: '{serviceLevel, select, FREE {Trial} BASIC {Business}}'
+    }, {
+      serviceLevel: serviceLevel
+    });
+  }
+
+  public getCodePlaceholder(): string {
+    return this.i18n({
+      id: 'resource.postit.code',
+      value: 'Set code'
+    });
+  }
+
+  public getNamePlaceholder(): string {
+    return this.i18n({
+      id: 'resource.postit.name',
+      value: 'Fill in name'
+    });
+  }
+
+  public getDescriptionPlaceholder(): string {
+    return this.i18n({
+      id: 'resource.description',
+      value: 'Fill in description'
+    });
+  }
+
+  public isFreeServiceLevel(resource: ResourceModel): boolean {
+    return this.getServiceLevel(resource) === ServiceLevelType.FREE;
+  }
+
+  public hasServiceLevel(resource: ResourceModel): boolean {
+    return this.resourceType === ResourceItemType.Organization && !isNullOrUndefined(this.getServiceLevel(resource));
+  }
+
+  private getServiceLevel(organization: OrganizationModel): ServiceLevelType {
+    const serviceLimits = this.getServiceLimits(organization);
+    return serviceLimits && serviceLimits.serviceLevel;
+  }
+
+  private getServiceLimits(organization: OrganizationModel): ServiceLimitsModel {
+    return this.serviceLimits && this.serviceLimits.find(limit => limit.organizationId === organization.id);
   }
 
   private findResource(identificator: string): ResourceModel {

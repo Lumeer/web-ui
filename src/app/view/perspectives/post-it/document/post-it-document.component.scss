@@ -69,24 +69,30 @@
     font-style: italic;
   }
 
-  span:focus, span input:focus {
+  span:focus input, span input:focus {
     outline: auto !important;
+    pointer-events: auto;
+  }
+
+  span input:focus {
+    box-shadow: $shadow-down;
   }
 
   input {
     padding: 0 3px;
     width: 100%;
     pointer-events: none;
+    text-overflow: ellipsis;
+
+    &:focus {
+      text-overflow: clip;
+    }
   }
 
   input:read-only:focus {
     background: inherit;
     color: inherit;
   }
-}
-
-.overflow-hidden {
-  overflow:hidden;
 }
 
 :host:hover {

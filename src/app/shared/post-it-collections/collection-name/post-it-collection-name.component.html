@@ -1,13 +1,12 @@
 <div #collectionNameInput
      class="card-footer text-center font-weight-bold bg-transparent name"
-     contenteditable="true"
-     placeholder="Set name"
-     i18n-placeholder="@@collection.name.placeholder"
+     [attr.contenteditable]="editable"
+     placeholder="Set name" i18n-placeholder="@@collection.name.placeholder"
      [textContent]="collectionName"
      title="{{collectionName}}"
-     (input)="collectionName = $event.target.textContent"
-     (blur)="onNameBlurred()"
+     (blur)="onNameBlurred(collectionNameInput.textContent)"
      (focus)="onNameSelected()"
+     [attr.spellcheck]="false"
      (keydown.enter)="collectionNameInput.blur()"
      (keydown.Escape)="collectionNameInput.blur()">
 </div>

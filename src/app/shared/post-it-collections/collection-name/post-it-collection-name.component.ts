@@ -28,23 +28,15 @@ import {CollectionModel} from '../../../core/store/collections/collection.model'
 })
 export class PostItCollectionNameComponent {
 
-  public collectionName: string;
-
-  @Input() public collection: CollectionModel;
+  @Input() public editable: boolean;
+  @Input() public collectionName: string;
 
   @Output() public changed = new EventEmitter<string>();
   @Output() public selected = new EventEmitter();
   @Output() public unselected = new EventEmitter();
 
-  public ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
-    if (changes['collection']) {
-      this.collectionName = this.collection.name;
-    }
-  }
-
-  public onNameBlurred() {
-    this.collectionName = this.collectionName.trim();
-    this.changed.emit(this.collectionName);
+  public onNameBlurred(value: string) {
+    this.changed.emit(value.trim());
     this.unselected.emit();
   }
 

@@ -19,20 +19,15 @@
 
 import {Perspective} from '../../../view/perspectives/perspective';
 import {QueryModel} from '../navigation/query.model';
-import {PermissionsModel} from '../permissions/permissions.model';
 import {SmartDocModel} from '../smartdoc/smartdoc.model';
 import {TableConfig} from '../tables/table.model';
+import {ResourceModel} from "../../model/resource.model";
 
-export interface ViewModel {
-
-  code?: string;
-  name: string;
+export interface ViewModel extends ResourceModel {
 
   perspective: Perspective;
   query: QueryModel;
   config: ViewConfigModel;
-
-  permissions?: PermissionsModel;
 
 }
 

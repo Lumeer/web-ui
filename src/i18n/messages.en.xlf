@@ -625,7 +625,7 @@
         </context-group>
       <target state="final">View does not exist!
       </target></trans-unit><trans-unit id="view.perspective.name" datatype="html">
-        <source>{VAR_SELECT, select, postit {Post-it} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document} }</source>
+        <source>{VAR_SELECT, select, postit {Post-it} chart {Chart} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
           <context context-type="linenumber">6</context>
@@ -634,7 +634,7 @@
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
           <context context-type="linenumber">14</context>
         </context-group>
-      <target state="final">{VAR_SELECT, select, postit {Post-it} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document} }</target></trans-unit><trans-unit id="view.perspective" datatype="html">
+      <target state="final">{VAR_SELECT, select, postit {Post-it} chart {Chart} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document} }</target></trans-unit><trans-unit id="view.perspective" datatype="html">
         <source>Perspective</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
@@ -1065,12 +1065,12 @@
       <target state="final">
               Switch to <x id="ICU" equiv-text="{perspective, select, postit {...} search {...} table {...} smartdoc {...}}"/>
             </target></trans-unit><trans-unit id="abc4319ac1103ff377168c129bb4ccd9dc9c182a" datatype="html">
-        <source>{VAR_SELECT, select, postit {post-it} search {search} table {table} smartdoc {smart document} }</source>
+        <source>{VAR_SELECT, select, postit {post-it} chart {chart} search {search} table {table} smartdoc {smart document} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/smartdoc/bottom-panel/smartdoc-bottom-panel.component.ts</context>
           <context context-type="linenumber">25</context>
         </context-group>
-      <target state="final">{VAR_SELECT, select, postit {post-it} search {search} table {table} smartdoc {smart document} }</target></trans-unit><trans-unit id="smartdoc.part.copy" datatype="html">
+      <target state="final">{VAR_SELECT, select, postit {post-it} chart {chart} search {search} table {table} smartdoc {smart document} }</target></trans-unit><trans-unit id="smartdoc.part.copy" datatype="html">
         <source>Copy part</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/smartdoc/bottom-panel/smartdoc-bottom-panel.component.ts</context>
@@ -1087,7 +1087,7 @@
     Groups:
   </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/groups/organization-user-groups.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/groups/user-groups.component.ts</context>
           <context context-type="linenumber">4</context>
         </context-group>
       <target state="final">
@@ -1095,47 +1095,47 @@
   </target></trans-unit><trans-unit id="organization.user.groups.add" datatype="html">
         <source>Add group</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/groups/organization-user-groups.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/groups/user-groups.component.ts</context>
           <context context-type="linenumber">22</context>
         </context-group>
       <target state="final">Add group</target></trans-unit><trans-unit id="organizations.user.expand" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ expanded ? 'Close' : 'Open' }}"/></source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/user/organization-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/user/user.component.ts</context>
           <context context-type="linenumber">6</context>
         </context-group>
       <target state="final"><x id="INTERPOLATION" equiv-text="{{ expanded ? 'Close' : 'Open' }}"/></target></trans-unit><trans-unit id="organization.user.email.incorrect" datatype="html">
         <source>Email is in bad format</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/user/organization-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/user/user.component.ts</context>
           <context context-type="linenumber">32</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/new-user/organization-new-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/new-user/new-user.component.ts</context>
           <context context-type="linenumber">33</context>
         </context-group>
       <target state="final">Email is in bad format</target></trans-unit><trans-unit id="organizations.users.remove" datatype="html">
         <source>Remove User</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/user/organization-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/user/user.component.ts</context>
           <context context-type="linenumber">39</context>
         </context-group>
       <target state="final">Remove User</target></trans-unit><trans-unit id="organizations.users.block" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ blocked ? 'Unblock' : 'Temporarily Block' }}"/> User</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/user/organization-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/user/user.component.ts</context>
           <context context-type="linenumber">45</context>
         </context-group>
       <target state="final"><x id="INTERPOLATION" equiv-text="{{ blocked ? 'Unblock' : 'Temporarily Block' }}"/> User</target></trans-unit><trans-unit id="organization.user.name.incorrect" datatype="html">
         <source>Name is in bad format</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/new-user/organization-new-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/new-user/new-user.component.ts</context>
           <context context-type="linenumber">17</context>
         </context-group>
       <target state="final">Name is in bad format</target></trans-unit><trans-unit id="organizations.users.add" datatype="html">
         <source>Add User</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/users/new-user/organization-new-user.component.ts</context>
+          <context context-type="sourcefile">app/workspace/organization/users/new-user/new-user.component.ts</context>
           <context context-type="linenumber">39</context>
         </context-group>
       <target state="final">Add User</target></trans-unit><trans-unit id="organization.settings.back" datatype="html">
@@ -1783,12 +1783,12 @@
         </context-group>
       <target state="final">Delete project?</target></trans-unit>
       <trans-unit id="resource.delete.dialog.message" datatype="html">
-        <source>Are you sure you want to remove the <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/>} <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>?</source>
+        <source>Are you sure you want to remove <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      <target state="final">Are you sure you want to remove the <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/>} <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>?</target></trans-unit>
+      <target state="final">Are you sure you want to remove <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>?</target></trans-unit>
       <trans-unit id="c1dabeb20cd0254d114378e48b6935c201f7bc83" datatype="html">
         <source>{VAR_SELECT, select, Project {project} Organization {organization} }</source>
         <context-group purpose="location">
@@ -1804,12 +1804,12 @@
         </context-group>
       <target state="final">Delete?</target></trans-unit>
       <trans-unit id="resource.already.exist" datatype="html">
-        <source><x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/>} with code <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/> already exist</source>
+        <source><x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> with code <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/> already exist</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      <target state="final"><x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/>} with code <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/> already exist</target></trans-unit>
+      <target state="final"><x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> with code <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/> already exist</target></trans-unit>
       <trans-unit id="58775813a58809f3f97252cf82697e494bc913b9" datatype="html">
         <source>{VAR_SELECT, select, Project {Project} Organization {Organization} }</source>
         <context-group purpose="location">

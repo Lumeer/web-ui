@@ -25,7 +25,7 @@ import {NotificationService} from '../../../../core/notifications/notification.s
 import {KeyCode} from '../../../../shared/key-code';
 import {AttributeHelper} from '../../../../shared/utils/attribute-helper';
 import {HtmlModifier} from '../../../../shared/utils/html-modifier';
-import {KeyCodeHelper} from '../../../../shared/utils/key-code.helper';
+import {isKeyPrintable} from '../../../../shared/utils/key-code.helper';
 import {LinkHelper} from '../../../../shared/utils/link-helper';
 import {TableLinkEvent} from '../event/table-link-event';
 
@@ -167,7 +167,7 @@ export class TableHeaderCellComponent {
         this.confirmRemove();
         return;
       default:
-        if (!KeyCodeHelper.isPrintable(event.keyCode)) {
+        if (!isKeyPrintable(event.keyCode)) {
           return;
         }
 

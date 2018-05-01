@@ -27,9 +27,9 @@ import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {RouterAction} from '../../core/store/router/router.action';
 import {ViewModel} from '../../core/store/views/view.model';
+import {ViewsAction} from '../../core/store/views/views.action';
 import {selectViewConfig} from '../../core/store/views/views.state';
 import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
-import {ViewsAction} from "../../core/store/views/views.action";
 
 @Component({
   selector: 'view-controls',
@@ -71,7 +71,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       this.perspective = navigation.perspective;
 
       if (navigation.viewName) {
-        this.viewNameInput.nativeElement.value = `${navigation.viewName} - copy`;
+        this.setViewNameInputValue(`${navigation.viewName} - copy`);
         this.nameChanged = true;
       }
     });
@@ -93,12 +93,18 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes.hasOwnProperty('view') && this.view) {
-      if (this.view.name) {
-        this.viewNameInput.nativeElement.value = this.view.name;
+    if (changes.hasOwnProperty('view')) {
+      if (this.view && this.view.name) {
+        this.setViewNameInputValue(this.view.name);
         this.nameChanged = false;
+      } else {
+        this.setViewNameInputValue('');
       }
     }
+  }
+
+  private setViewNameInputValue(value: string) {
+    this.viewNameInput.nativeElement.value = value;
   }
 
   public ngOnDestroy() {
@@ -151,9 +157,12 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public canShowPerspective(perspective: Perspective): boolean {
     switch (perspective) {
-      case Perspective.Table:
+      case Perspective.Table2:
       case Perspective.SmartDoc:
+      case Perspective.Chart:
         return this.isSingleCollectionInQuery();
+      case Perspective.Table:
+        return false;
       default:
         return true;
     }

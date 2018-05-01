@@ -21,27 +21,24 @@ import {OrganizationModel} from "../organizations/organization.model";
 import {isNullOrUndefined} from "util";
 import {UserModel} from "./user.model";
 
-export class UserFilters {
+export function filterUserFunctions(users: UserModel[]) {
+  return users.filter(user => typeof user === 'object');
+}
 
-  public static filterFunctions(users: UserModel[]) {
-    return users.filter(user => typeof user === 'object');
+export function filterUsersByOrganization(users: UserModel[], organization: OrganizationModel): UserModel[] {
+  if (isNullOrUndefined(organization)) {
+    return [];
   }
 
-  public static filterByOrganization(users: UserModel[], organization: OrganizationModel): UserModel[] {
-    if (isNullOrUndefined(organization)) {
-      return [];
-    }
+  return users.filter(user => user.groupsMap[organization.id]);
+}
 
-    return users.filter(user => user.groupsMap[organization.id]);
+export function filterUsersByFilter(users: UserModel[], filter: string): UserModel[] {
+  const filtered = users.slice();
+  if (!filter) {
+    return filtered;
   }
 
-  public static filterByFilter(users: UserModel[], filter: string): UserModel[] {
-    const filtered = users.slice();
-    if (!filter) {
-      return filtered;
-    }
-
-    const filterTrim = filter.toLowerCase().trim();
-    return filtered.filter(user => user.name.toLowerCase().includes(filterTrim) || user.email.toLowerCase().includes(filterTrim));
-  }
+  const filterTrim = filter.toLowerCase().trim();
+  return filtered.filter(user => user.email.toLowerCase().includes(filterTrim));
 }

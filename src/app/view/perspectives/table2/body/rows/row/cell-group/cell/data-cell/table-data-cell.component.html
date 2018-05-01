@@ -1,0 +1,27 @@
+<table-editable-cell [affected]="affected$ | async"
+                     [contextMenu]="contextMenuElement()"
+                     [readonly]="!selected"
+                     [selected]="selected"
+                     [value]="value()"
+                     (valueChange)="onValueChange($event)"
+                     (editStart)="onEditStart()"
+                     (editEnd)="onEditEnd($event)"
+                     class="d-block h-100">
+</table-editable-cell>
+
+<table-data-cell-suggestions *ngIf="suggestionsEnabled()"
+                             [column]="column"
+                             [cursor]="cursor"
+                             [table]="table"
+                             [value]="editedValue"
+                             (createLink)="onCreateLink($event)">
+</table-data-cell-suggestions>
+
+<table-data-cell-menu *ngIf="selected"
+                      [cursor]="cursor"
+                      [created]="isCreated()"
+                      (edit)="onEdit()"
+                      (addRow)="onAddRow($event)"
+                      (removeRow)="onRemoveRow()"
+                      (unlinkRow)="onUnlinkRow()">
+</table-data-cell-menu>

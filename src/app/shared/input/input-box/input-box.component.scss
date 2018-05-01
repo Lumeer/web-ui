@@ -1,15 +1,60 @@
 @import '../../variables';
 
-.input-box {
-  cursor: text;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  word-wrap: break-word;
-  word-break: break-all;
+.input {
+  background: transparent;
+  transition: border-color $animation-color-duration;
 
-  &:focus {
-    text-overflow: clip;
+  .input-box {
+    white-space: nowrap;
+    cursor: text;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    &:focus {
+      text-overflow: clip;
+    }
   }
+
+  .input-box-multiline {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap: break-word;
+    word-break: break-all;
+
+    &:focus {
+      text-overflow: clip;
+    }
+  }
+}
+
+.input-border {
+  border: 1px solid transparent !important;
+  border-radius: $border-radius-small;
+
+  &:hover {
+    border: 1px solid $grey-color !important;
+  }
+  &:focus {
+    border: 1px solid $grey-darker-color !important;
+  }
+  &.focused {
+    border: 1px solid $grey-darker-color !important;
+  }
+}
+
+.input-border-bottom {
+  border-bottom: 1px solid transparent !important;
+
+  &:hover {
+    border-bottom: 1px solid $grey-color !important;
+  }
+  &:focus {
+    border-bottom: 1px solid $grey-darker-color !important;
+  }
+  &.focused {
+    border-bottom: 1px solid $grey-darker-color !important;
+  }
+
 }
 
 [contenteditable=true]:empty:before {

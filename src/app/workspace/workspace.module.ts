@@ -23,53 +23,45 @@ import {ClickOutsideModule} from 'ng-click-outside';
 import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
 import {WorkspaceRoutingModule} from './workspace-routing.module';
 import {SharedModule} from '../shared/shared.module';
-import {OrganizationPermissionsComponent} from './organization/permissions/organization-permissions.component';
-import {ProjectPermissionsComponent} from './project/permissions/project-permissions.component';
+import {ProjectUsersComponent} from './project/users/project-users.component';
 import {OrganizationSettingsComponent} from './organization/organization-settings.component';
 import {ProjectSettingsComponent} from './project/project-settings.component';
 import {ResourceChooserComponent} from './workspace-chooser/resource-chooser/resource-chooser.component';
 import {PickerModule} from '../shared/picker/picker.module';
 import {WorkspaceSelectGuard} from './workspace-select.guard';
 import {WorkspaceService} from './workspace.service';
-import {OrganizationUsersComponent} from './organization/users/organization-users.component';
-import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
 import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
 import {OrganizationSettingsGuard} from "./organization/organization-settings.guard";
-import {OrganizationUserListComponent} from './organization/users/list/organization-user-list.component';
-import {OrganizationUserComponent} from './organization/users/user/organization-user.component';
-import {OrganizationUserGroupsComponent} from './organization/users/groups/organization-user-groups.component';
-import {OrganizationNewUserComponent} from './organization/users/new-user/organization-new-user.component';
-import {GroupsSuggestionsComponent} from "./organization/users/groups/suggestions/groups-suggestions.component";
 import {OrganizationDetailComponent} from "./organization/detail/organization-detail.component";
 import {ContactFormComponent} from './organization/detail/contact-form/contact-form.component';
 import {PaymentsPanelComponent} from './organization/detail/payments-panel/payments-panel.component';
 import {PaymentsOrderComponent} from './organization/detail/payments-panel/payments-order/payments-order.component';
 import {PaymentsListComponent} from './organization/detail/payments-panel/payments-list/payments-list.component';
 import {PaymentsStateComponent} from './organization/detail/payments-panel/payments-state/payments-state.component';
+import {OrganizationUsersComponent} from "./organization/users/organization-users.component";
+import {UsersModule} from "../shared/users/users.module";
+import {ProjectSettingsGuard} from "./project/project-settings.guard";
+import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
 
 @NgModule({
   imports: [
     SharedModule,
     WorkspaceRoutingModule,
+    UsersModule,
     PickerModule,
     ClickOutsideModule
   ],
   declarations: [
     OrganizationDetailComponent,
-    OrganizationPermissionsComponent,
+    ProjectUsersComponent,
     OrganizationUsersComponent,
-    OrganizationUserListComponent,
-    OrganizationUserGroupsComponent,
-    OrganizationUserComponent,
-    OrganizationNewUserComponent,
     OrganizationGroupsComponent,
     OrganizationRegistrationComponent,
-    ProjectPermissionsComponent,
+    OrganizationGroupsComponent,
     OrganizationSettingsComponent,
     ProjectSettingsComponent,
     WorkspaceChooserComponent,
     ResourceChooserComponent,
-    GroupsSuggestionsComponent,
     ContactFormComponent,
     PaymentsPanelComponent,
     PaymentsOrderComponent,
@@ -82,7 +74,8 @@ import {PaymentsStateComponent} from './organization/detail/payments-panel/payme
   providers: [
     WorkspaceService,
     WorkspaceSelectGuard,
-    OrganizationSettingsGuard
+    OrganizationSettingsGuard,
+    ProjectSettingsGuard
   ]
 })
 export class WorkspaceModule {

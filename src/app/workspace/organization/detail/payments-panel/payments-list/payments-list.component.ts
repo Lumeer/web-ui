@@ -17,18 +17,72 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {OrganizationModel} from "../../../../../core/store/organizations/organization.model";
+import {Subscription} from "rxjs/Subscription";
+import {Store} from "@ngrx/store";
+import {Router} from "@angular/router";
+import {I18n} from "@ngx-translate/i18n-polyfill";
+import {AppState} from "../../../../../core/store/app.state";
+import {selectOrganizationByWorkspace} from "../../../../../core/store/organizations/organizations.state";
+import {isNullOrUndefined} from "util";
+import {filter} from "rxjs/operators";
+import {PaymentModel} from "../../../../../core/store/organizations/payment/payment.model";
+import {selectPaymentsByWorkspaceSorted} from "../../../../../core/store/organizations/payment/payments.state";
+import {PaymentsAction} from "../../../../../core/store/organizations/payment/payments.action";
+import {ServiceLimitsAction} from "../../../../../core/store/organizations/service-limits/service-limits.action";
 
 @Component({
   selector: 'payments-list',
   templateUrl: './payments-list.component.html',
   styleUrls: ['./payments-list.component.scss']
 })
-export class PaymentsListComponent implements OnInit {
+export class PaymentsListComponent implements OnInit, OnDestroy {
 
-  constructor() { }
+  private organization: OrganizationModel;
+  private organizationSubscription: Subscription;
+
+  public payments: PaymentModel[];
+  private paymentsSubscription: Subscription;
+
+  constructor(private i18n: I18n,
+              private router: Router,
+              private store: Store<AppState>) { }
 
   public ngOnInit() {
+    this.subscribeToStore();
+    this.requestData();
   }
 
+  public subscribeToStore() {
+    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+      .pipe(filter(organization => !isNullOrUndefined(organization)))
+      .subscribe(organization => this.organization = organization);
+
+    this.paymentsSubscription = this.store.select(selectPaymentsByWorkspaceSorted)
+      .pipe(filter(payments => !isNullOrUndefined(payments) && payments.length > 0))
+      .subscribe(payments => this.payments = payments);
+  }
+
+  public requestData() {
+    this.store.dispatch(new PaymentsAction.GetPayments({ organizationId: this.organization.id }));
+  }
+
+  public ngOnDestroy(): void {
+    if (this.organizationSubscription) {
+      this.organizationSubscription.unsubscribe();
+    }
+
+    if (this.paymentsSubscription) {
+      this.paymentsSubscription.unsubscribe();
+    }
+  }
+
+  public refreshPayment(paymentId: string) {
+    this.store.dispatch(new PaymentsAction.GetPayment({
+      organizationId: this.organization.id,
+      paymentId,
+      nextAction: new ServiceLimitsAction.GetServiceLimits({ organizationId: this.organization.id })
+    }));
+  }
 }

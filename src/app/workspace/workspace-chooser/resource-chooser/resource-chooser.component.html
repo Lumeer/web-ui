@@ -7,7 +7,7 @@
 
     <div class="px-3" *ngIf="resources.length == 0 && !canCreateResource"
          i18n="@@resource.chooser.empty">
-      There are no {resourceType, select, organization {organizations} project {projects}} and you are not allowed to
+      There are no {resourceType, select, Organization {organizations} Project {projects}} and you are not allowed to
       create new ones.
     </div>
 
@@ -26,12 +26,18 @@
            [style.left]="resourceScroll + 'px'"
            [style.width]="resourceWidth + 'px'">
 
-        <div class="tab d-flex" *ngFor="let resource of resources.concat(newResources); let ix = index"
+        <div class="tab d-flex" *ngFor="let resource of resources.concat(newResources)"
              (click)="onResourceSelected(resource.id)">
           <div class="post-it align-self-center">
             <div class="card square" [class.unitialized]="!resource.id"></div>
-            <div class="card text-center content border-0" [style.color]="resource.color">
+            <div [class.selected-resource]="isResourceModified(resource)"
+                 [style.color]="resource.color"
+                 class="card text-center content border-0">
               <div class="card-body">
+
+                <ng-container *ngIf="!isSelected(resource) && hasServiceLevel(resource)">
+                  <ng-container *ngTemplateOutlet="ribbon; context: { $implicit: resource}"></ng-container>
+                </ng-container>
 
                 <div class="d-flex flex-column settings">
                   <ng-container *ngIf="resource.id">
@@ -81,31 +87,41 @@
                                  (selectedChange)="onNewIcon(resource, $event)"></icon-picker>
                   </div>
                 </div>
-                <div class="card-title code my-2" contenteditable="true"
-                     (blur)="code.scrollTo(0,0); onCodeBlur(code, resource)"
-                     (click)="$event.stopPropagation()"
-                     (keydown)="onKeyDown($event, code)"
-                     placeholder="Set code" i18n-placeholder="@@resource.postit.code"
-                     [title]="resource.code"
-                     [attr.spellcheck]="false"
-                     [textContent]="resource.code"
-                     #code>
+
+                <div class="py-2">
+                  <input-box
+                    #inputBoxCode
+                    [initialValue]="resource.code"
+                    [color]="resource.color"
+                    [canStayEmpty]="false"
+                    [fontSizeRem]="1.5"
+                    [maxLines]="1"
+                    [title]="resource.code"
+                    [placeholder]="getCodePlaceholder()"
+                    (newValue)="onCodeBlur(inputBoxCode, $event, resource)">
+                  </input-box>
                 </div>
-                <div class="card-subtitle name p-1" contenteditable="true"
-                     (blur)="name.scrollTo(0,0); onNameBlur(name, resource)"
-                     (click)="$event.stopPropagation()"
-                     (keydown)="onKeyDown($event, name)"
-                     placeholder="Fill in name" i18n-placeholder="@@resource.postit.name"
-                     [title]="resource.name"
-                     [attr.spellcheck]="false"
-                     [textContent]="resource.name"
-                     #name>
-                </div>
+
+                <input-box
+                  [initialValue]="resource.name"
+                  [color]="resource.color"
+                  [canStayEmpty]="true"
+                  [fontSizeRem]="1"
+                  [maxLines]="1"
+                  [title]="resource.name"
+                  [placeholder]="getNamePlaceholder()"
+                  (newValue)="onNameBlur($event, resource)">
+                </input-box>
+
               </div>
             </div>
           </div>
           <div class="align-self-stretch border border-bottom-0 rounded-top bookmark"
-               *ngIf="resource.id === selectedId" [@animateVisible]="'in'"></div>
+               *ngIf="isSelected(resource)" [@animateVisible]="'in'">
+            <ng-container *ngIf="hasServiceLevel(resource)">
+              <ng-container *ngTemplateOutlet="ribbon; context: { $implicit: resource}"></ng-container>
+            </ng-container>
+          </div>
 
         </div>
 
@@ -138,17 +154,26 @@
 
   </div>
 
-  <div class="description d-inline-flex pt-3 px-3" *ngIf="selectedId && getResource(selectedId) as selectedResource" [@animateOpacityFromUp]="'in'">
+  <div class="pt-3 px-3 d-flex" *ngIf="selectedId && getResource(selectedId) as selectedResource" [@animateOpacityFromUp]="'in'">
     <i class="fas fa-2x fa-quote-right pr-2 mt-2"></i>
-    <div class="text edit-border p-2" contenteditable="true"
-         (blur)="resourceDescription.scrollTo(0,0); onDescriptionBlur(selectedResource, resourceDescription.textContent)"
-         [attr.spellcheck]="false"
-         [title]="selectedResource.description || 'Fill in description'"
-         placeholder="Fill in description" i18n-placeholder="@@resource.description"
-         [textContent]="selectedResource.description"
-         (keydown.enter)="resourceDescription.blur()"
-         #resourceDescription>
-    </div>
+
+    <input-box
+      class="d-flex pb-3 pt-1"
+      [initialValue]="selectedResource.description"
+      [canStayEmpty]="true"
+      [fontSizeRem]="1"
+      [maxLines]="4"
+      [title]="selectedResource.description || getDescriptionPlaceholder()"
+      [placeholder]="getDescriptionPlaceholder()"
+      (newValue)="onDescriptionBlur(selectedResource, $event)">
+    </input-box>
+
   </div>
 
 </div>
+
+<ng-template #ribbon let-resource>
+  <div class="ribbon" [class.red]="isFreeServiceLevel(resource)">
+    <span>{{serviceLevelTitle(resource)}}</span>
+  </div>
+</ng-template>

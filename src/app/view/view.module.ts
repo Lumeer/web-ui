@@ -33,6 +33,7 @@ import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewRoutingModule} from './view-routing.module';
 import {ViewComponent} from './view.component';
+import {ChartPerspectiveModule} from './perspectives/chart/chart-perspective.module';
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import {ViewComponent} from './view.component';
     FormsModule,
     RouterModule,
     PostItPerspectiveModule,
+    ChartPerspectiveModule,
     SearchPerspectiveModule,
     TablePerspectiveModule,
     Table2PerspectiveModule,

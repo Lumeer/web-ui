@@ -599,8 +599,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="view.perspective.name" datatype="html">
-        <source>{VAR_SELECT, select, postit {Post-it} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document} }</source>
-        <target>{VAR_SELECT, select, postit {Lepíky} search {Hledání} table {Tabulka} smartdoc {Chytrý dokument} }</target>
+        <source>{VAR_SELECT, select, postit {Post-it} chart {Chart} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document} }</source>
+        <target>{VAR_SELECT, select, postit {Lepíky} chart {Graf} search {Hledání} table {Tabulka} table2 {Tabulka 2} smartdoc {Chytrý dokument} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
           <context context-type="linenumber">6</context>
@@ -1053,8 +1053,8 @@
     </context-group>
   </trans-unit>
   <trans-unit id="abc4319ac1103ff377168c129bb4ccd9dc9c182a" datatype="html">
-    <source>{VAR_SELECT, select, postit {post-it} search {search} table {table} smartdoc {smart document} }</source>
-    <target>{VAR_SELECT, select, postit {lepíky} search {hledání} table {tabulku} smartdoc {chytrý dokument} }</target>
+    <source>{VAR_SELECT, select, postit {post-it} chart {chart} search {search} table {table} smartdoc {smart document} }</source>
+    <target>{VAR_SELECT, select, postit {lepíky} chart {graf} search {hledání} table {tabulku} smartdoc {chytrý dokument} }</target>
     <context-group purpose="location">
       <context context-type="sourcefile">app/view/perspectives/smartdoc/bottom-panel/smartdoc-bottom-panel.component.ts</context>
       <context context-type="linenumber">25</context>

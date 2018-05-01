@@ -1,11 +1,9 @@
 <button type="button"
-        class="btn btn-outline-{{ disabled() ? 'secondary' : 'primary' }}"
-        title="{{ !hasRights ? 'You need a right to add records' : !hasCollection ? 'Specify file to add to in your searchbar' : 'Add Record' }}"
+        class="btn btn-sm btn-outline-success"
+        title="Add Record"
         i18n-title="@@collection.post.it.create.title"
-        (click)="onClick()"
-        [class.disabled]="disabled()"
-        [attr.disabled]="disabled() ? true : null"
-        [attr.aria-disabled]="disabled()">
+        *ngIf="!disabled()"
+        (click)="onClick()">
   <i class="fa fa-plus-circle" aria-hidden="true"></i>
   <span class="font-weight-bold" i18n="@@document.post.it.add">Add Record</span>
 </button>

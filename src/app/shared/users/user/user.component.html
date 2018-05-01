@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-6 col-md-5 col-lg-4 d-flex flex-row flex-nowrap align-items-center">
+
+    <input-box
+      class="flex-grow-2"
+      [placeholder]="'User email'"
+      [maxLines]="1"
+      [editable]="false"
+      [canStayEmpty]="false"
+      [initialValue]="user.email"
+      (focus)="onEmailFocus()"
+      (newValue)="onNewEmail($event)">
+    </input-box>
+
+    <i *ngIf="showEmailWarning" class="fa fa-exclamation-triangle align-self-center ml-1 text-warning"
+       title="Wrong email" i18n-title="@@organization.user.email.incorrect"
+       aria-hidden="true"></i>
+  </div>
+
+  <div class="col-4 col-md-5 col-lg-6 d-flex flex-row flex-nowrap align-items-center justify-content-center">
+
+    <i *ngFor="let role of getRoles()"
+       class="fas fa-fw {{getIconForRole(role)}} mx-1"
+       [ngClass]="(hasRole(role)) ?  (changeRoles ? 'clickable': 'selected')
+                                  :  (changeRoles ? 'clickable-unselected' : 'unselected')"
+       aria-hidden="true"
+       [title]="getTitleForRole(role)"
+       (click)="toggleRole(role)">
+    </i>
+
+  </div>
+
+  <div class="col-2 col-md-2 col-lg-2 d-flex flex-nowrap flex-row-reverse align-items-center">
+    <i class="fas fa-fw fa-trash text-danger mx-2 cursor-pointer"
+       *ngIf="editable"
+       aria-hidden="true"
+       title="Remove User"
+       i18n-title="@@organizations.users.remove"
+       (click)="removeUser()"></i>
+  </div>
+
+</div>

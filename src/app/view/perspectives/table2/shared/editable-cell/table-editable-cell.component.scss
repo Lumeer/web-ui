@@ -1,0 +1,30 @@
+@import "../../../../../shared/variables";
+
+%highlighted {
+  position: relative;
+  z-index: $z-index-selected;
+}
+
+.selected {
+  @extend %highlighted;
+  outline: $primary solid 2px;
+}
+
+.edited {
+  @extend %highlighted;
+  outline: $success solid 2px;
+}
+
+.affected {
+  @extend %highlighted;
+  outline: $warning solid 2px;
+}
+
+.invalid {
+  @extend %highlighted;
+  outline: $danger solid 2px;
+}
+
+//.editable-cell::before {
+//  content: '\00a0'; // keep empty row height on multiple linked rows
+//}
