@@ -18,31 +18,24 @@
  */
 
 import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
-import {SharedModule} from '../../../shared/shared.module';
-import {ChartPerspectiveRoutingModule} from './chart-perspective-routing.module';
+import {RouterModule, Routes} from '@angular/router';
 import {ChartPerspectiveComponent} from './chart-perspective.component';
-import {AttributeSelectComponent} from './components/attribute-select/attribute-select.component';
-import {ChartVisualizationComponent} from './components/chart-visualization/chart-visualization.component';
+
+const chartRoutes: Routes = [
+  {
+    path: '',
+    component: ChartPerspectiveComponent
+  }
+];
 
 @NgModule({
   imports: [
-    SharedModule,
-    RouterModule,
-    ChartPerspectiveRoutingModule
-  ],
-  declarations: [
-    ChartPerspectiveComponent,
-    AttributeSelectComponent,
-    ChartVisualizationComponent
-  ],
-  entryComponents: [
-    ChartPerspectiveComponent
+    RouterModule.forChild(chartRoutes)
   ],
   exports: [
-    ChartPerspectiveComponent
+    RouterModule
   ]
 })
-export class ChartPerspectiveModule {
+export class ChartPerspectiveRoutingModule {
 
 }

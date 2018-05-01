@@ -18,7 +18,6 @@
  */
 
 import {NgModule} from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
 import {EffectsModule} from '@ngrx/effects';
 import {StoreModule} from '@ngrx/store';
 import {ClickOutsideModule} from 'ng-click-outside';
@@ -34,6 +33,7 @@ import {SmartDocDocumentComponent} from './document/smartdoc-document.component'
 import {SmartDocEmbeddedComponent} from './embedded/smartdoc-embedded.component';
 import {SmartDocSidePanelComponent} from './side-panel/smartdoc-side-panel.component';
 import {SmartDocPartComponent} from './smartdoc-part/smartdoc-part.component';
+import {SmartDocPerspectiveRoutingModule} from './smartdoc-perspective-routing.module';
 import {SmartDocPerspectiveComponent} from './smartdoc-perspective.component';
 import {SafeHtmlPipe} from './text/safe-html.pipe';
 import {SmartDocTextComponent} from './text/smartdoc-text.component';
@@ -46,7 +46,8 @@ import {SmartDocTextComponent} from './text/smartdoc-text.component';
     QuillModule,
     ClickOutsideModule,
     DragAndDropModule,
-    PickerModule
+    PickerModule,
+    SmartDocPerspectiveRoutingModule
   ],
   declarations: [
     SmartDocDocumentComponent,
