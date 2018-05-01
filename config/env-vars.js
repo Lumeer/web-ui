@@ -6,7 +6,7 @@ const configFile = './src/environments/.env.json';
 const config ={};
 
 config.AOT = envVariables.AOT || false;
-config.LUMEER_ENGINE = envVariables.LUMEER_ENGINE || 'engine';
+config.LUMEER_ENGINE = envVariables.LUMEER_ENGINE || 'lumeer-engine';
 config.LUMEER_TITLE = 'Lumeer tool';
 config.OUTPUT_PATH = envVariables.OUTPUT_PATH || 'dist';
 config.I18N_FORMAT = envVariables.I18N_FORMAT || 'xlf';

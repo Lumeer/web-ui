@@ -66,6 +66,9 @@
     },
     "schematics": {
       "collection": "@ngrx/schematics"
+    },
+    "serve": {
+      "proxyConfig": "./config/proxy.conf.js"
     }
   }
 }
