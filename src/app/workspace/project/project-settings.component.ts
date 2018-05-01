@@ -33,8 +33,14 @@ import {Subscription} from 'rxjs/Subscription';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {selectAllCollections} from '../../core/store/collections/collections.state';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
+import {DocumentsAction} from '../../core/store/documents/documents.action';
+import {ViewsAction} from '../../core/store/views/views.action';
+import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
+import {Workspace} from '../../core/store/navigation/workspace.model';
+import {selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {Perspective} from '../../view/perspectives/perspective';
 
 @Component({
   templateUrl: './project-settings.component.html'
@@ -42,8 +48,8 @@ import {CollectionsAction} from '../../core/store/collections/collections.action
 export class ProjectSettingsComponent implements OnInit {
 
   public userCount$: Observable<number>;
-  public collectionsCount$: Observable<number>;
   public project: ProjectModel;
+  public workspace: Workspace;
 
   private subscription = new Subscription();
 
@@ -59,20 +65,20 @@ export class ProjectSettingsComponent implements OnInit {
 
   public ngOnDestroy() {
     this.subscription.unsubscribe();
-
-    this.store.dispatch(new CollectionsAction.Clear());
   }
 
   private subscribeToStore() {
     this.userCount$ = this.store.select(selectAllUsers)
       .pipe(map(users => users ? users.length : 0));
 
-    this.collectionsCount$ = this.store.select(selectAllCollections)
-      .pipe(map(collections => collections ? collections.length : 0));
-
     this.subscription.add(this.store.select(selectProjectByWorkspace)
       .pipe(filter(project => !isNullOrUndefined(project)))
       .subscribe(project => this.project = project)
+    );
+
+    this.subscription.add(this.store.select(selectWorkspace)
+      .pipe(filter(workspace => !isNullOrUndefined(workspace)))
+      .subscribe(workspace => this.workspace = workspace)
     );
   }
 
@@ -94,6 +100,23 @@ export class ProjectSettingsComponent implements OnInit {
         {text: noButtonText}
       ]
     );
+  }
+
+  public onCollectionsClick() {
+    const organizationCode = this.workspace && this.workspace.organizationCode;
+    const projectCode = this.project && this.project.code;
+    if (organizationCode && projectCode) {
+      this.clearStore();
+      this.router.navigate(['/w', organizationCode, projectCode, 'view', Perspective.Search, 'files']);
+    }
+  }
+
+  private clearStore() {
+    this.store.dispatch(new CollectionsAction.Clear());
+    this.store.dispatch(new DocumentsAction.Clear());
+    this.store.dispatch(new LinkInstancesAction.Clear());
+    this.store.dispatch(new LinkTypesAction.Clear());
+    this.store.dispatch(new ViewsAction.Clear());
   }
 
   private deleteProject() {

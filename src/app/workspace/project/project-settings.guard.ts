@@ -33,7 +33,6 @@ import {WorkspaceService} from '../workspace.service';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {CollectionsAction} from '../../core/store/collections/collections.action';
 
 @Injectable()
 export class ProjectSettingsGuard implements CanActivate {
@@ -99,9 +98,6 @@ export class ProjectSettingsGuard implements CanActivate {
   }
 
   private dispatchDataEvents(organization: OrganizationModel, project: ProjectModel) {
-    this.store.dispatch(new CollectionsAction.Clear());
-    const workspace = {organizationCode: organization.code, projectCode: project.code};
-    this.store.dispatch(new CollectionsAction.Get({query: {}, workspace}));
     this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
     //this.store.dispatch(new GroupsAction.Get());
   }
