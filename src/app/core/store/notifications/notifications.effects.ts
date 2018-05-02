@@ -46,6 +46,19 @@ export class NotificationsEffects {
   );
 
   @Effect({dispatch: false})
+  public info$ = this.actions.pipe(
+    ofType<NotificationsAction.Info>(NotificationsActionType.INFO),
+    tap(action => {
+      const okButtonText = this.i18n({id: 'button.ok', value: 'OK'});
+
+      const buttons: SnotifyButton[] = [
+        {text: okButtonText, bold: true }
+      ];
+      this.notificationService.confirm(action.payload.message, action.payload.title, buttons);
+    })
+  );
+
+  @Effect({dispatch: false})
   public error$ = this.actions.pipe(
     ofType<NotificationsAction.Error>(NotificationsActionType.ERROR),
     tap(action => this.notificationService.error(action.payload.message))

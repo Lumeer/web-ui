@@ -35,6 +35,7 @@ import {isNullOrUndefined} from "util";
 import {Permission} from '../../dto';
 import {PermissionType} from '../permissions/permissions.model';
 import {PermissionsConverter} from '../permissions/permissions.converter';
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Injectable()
 export class ProjectsEffects {
@@ -122,7 +123,11 @@ export class ProjectsEffects {
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.CreateFailure>(ProjectsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
-    map(() => {
+    map(action => {
+      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Trial Service' });
+        return new NotificationsAction.Info({ title, message: action.payload.error.error });
+      }
       const message = this.i18n({id: 'project.create.fail', value: 'Failed to create project'});
       return new NotificationsAction.Error({message});
     })

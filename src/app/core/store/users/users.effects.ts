@@ -30,6 +30,7 @@ import {UsersAction, UsersActionType} from './users.action';
 import {AppState} from "../app.state";
 import {GlobalService} from '../../rest/global.service';
 import {selectUsersLoadedForOrganization} from './users.state';
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Injectable()
 export class UsersEffects {
@@ -84,7 +85,11 @@ export class UsersEffects {
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.CreateFailure>(UsersActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
-    map(() => {
+    map(action => {
+      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Trial Service' });
+        return new NotificationsAction.Info({ title, message: action.payload.error.error });
+      }
       const message = this.i18n({id: 'user.create.fail', value: 'Failed to create user'});
       return new NotificationsAction.Error({message});
     })

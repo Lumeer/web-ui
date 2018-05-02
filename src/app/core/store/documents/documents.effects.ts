@@ -38,6 +38,7 @@ import {DocumentConverter} from './document.converter';
 import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {selectDocumentsDictionary, selectDocumentsQueries} from './documents.state';
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Injectable()
 export class DocumentsEffects {
@@ -114,7 +115,11 @@ export class DocumentsEffects {
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.CreateFailure>(DocumentsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
-    map(() => {
+    map(action => {
+      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Trial Service' });
+        return new NotificationsAction.Info({ title, message: action.payload.error.error });
+      }
       const message = this.i18n({id: 'document.create.fail', value: 'Failed to create record'});
       return new NotificationsAction.Error({message});
     })

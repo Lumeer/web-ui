@@ -36,6 +36,7 @@ import {CollectionConverter} from './collection.converter';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
 import {selectCollectionsLoaded} from "./collections.state";
 import {AppState} from "../app.state";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Injectable()
 export class CollectionsEffects {
@@ -107,7 +108,11 @@ export class CollectionsEffects {
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.CreateFailure>(CollectionsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
-    map(() => {
+    map(action => {
+      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Trial Service' });
+        return new NotificationsAction.Info({ title, message: action.payload.error.error });
+      }
       const message = this.i18n({id: 'collection.create.fail', value: 'Failed to create file'});
       return new NotificationsAction.Error({message});
     })
