@@ -11,7 +11,7 @@
     <label *ngIf="trial" for="subscriptionLength" i18n="@@organizations.tab.detail.order.duration">Subscription Duration</label>
     <label *ngIf="!trial" for="subscriptionLength" i18n="@@organizations.tab.detail.order.duration">Subscription Extension</label>
     <div class="form-control">
-      <div>{{subscriptionLength}} =
+      <div class="mb-2">{{subscriptionLength}} =
         <del *ngIf="discountAmount > 0">{{discountInfoPerUser}}</del>
         <strong>{{prefix}}{{pricePerUser}}{{suffix}}</strong>
         <span i18n="@@organizations.tab.detail.order.perUserMonth">per user and month</span>
