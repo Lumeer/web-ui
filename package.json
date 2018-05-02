@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Lumeer Web UI",
   "main": "index.js",
-  "config": {
-    "ENV_VAR": "echo $bla"
-  },
   "scripts": {
     "ng": "ng",
     "i18n": "npm run i18n-html && npm run i18n-ts && npm run i18n-merge",
