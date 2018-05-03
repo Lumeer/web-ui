@@ -17,27 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 
-import {Collection} from '../../../core/dto/collection';
-import {CollectionService} from '../../../core/rest/collection.service';
-import {CollectionSelectService} from '../../service/collection-select.service';
+import {CollectionService} from '../../../core/rest';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {AppState} from '../../../core/store/app.state';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {isNullOrUndefined} from "util";
+import {filter} from 'rxjs/operators';
+import {selectCollectionByWorkspace} from '../../../core/store/collections/collections.state';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {Subscription} from 'rxjs/Subscription';
 
 // Class can't be abstract because of an issue with compiler https://github.com/angular/angular/issues/13590
 @Component({template: ''})
-export class CollectionTabComponent implements OnInit {
+export class CollectionTabComponent implements OnInit, OnDestroy {
 
-  public collection: Collection;
+  public collection: CollectionModel;
 
   private workspace: Workspace;
 
+  private collectionSubscription = new Subscription();
+
   constructor(protected collectionService: CollectionService,
-              protected collectionSelectService: CollectionSelectService,
               protected notificationService: NotificationService,
               protected store: Store<AppState>) {
   }
@@ -45,7 +49,16 @@ export class CollectionTabComponent implements OnInit {
   public ngOnInit(): void {
     this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
 
-    this.collection = this.collectionSelectService.getSelected();
+    this.collectionSubscription.add(this.store.select(selectCollectionByWorkspace)
+      .pipe(filter(collection => !isNullOrUndefined(collection)))
+      .subscribe(collection => {
+        this.collection = collection;
+      })
+    )
+  }
+
+  public ngOnDestroy() {
+    this.collectionSubscription.unsubscribe();
   }
 
   protected workspacePath(): string {

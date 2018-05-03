@@ -52,7 +52,7 @@ export class CollectionsEffects {
     mergeMap((action) => {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
-      return this.searchService.searchCollections(queryDto).pipe(
+      return this.searchService.searchCollections(queryDto, action.payload.workspace).pipe(
         map((dtos: Collection[]) => dtos.map(dto => CollectionConverter.fromDto(dto))),
         map((collections) => new CollectionsAction.GetSuccess({collections: collections})),
         catchError((error) => Observable.of(new CollectionsAction.GetFailure({error: error})))

@@ -1,0 +1,64 @@
+<div class="d-flex flex-row justify-content-start align-items-center" *ngIf="resource">
+  <i class="fas fa-chevron-left chevron mr-2 cursor-pointer clickable"
+     title="Back" i18n-title="@@resource.settings.back"
+     (click)="onBack()"></i>
+  <i class="fa-fw {{ resource.icon }} cursor-pointer"
+     [style.fontSize.rem]="2"
+     [style.color]="resource.color" data-toggle="dropdown"></i>
+  <div class="dropdown-menu">
+    <color-picker class="dropdown-item" [color]="resource.color"
+                  (selectedChange)="onNewColor($event)"></color-picker>
+    <div class="dropdown-divider"></div>
+    <icon-picker class="dropdown-item" [icon]="resource.icon"
+                 (selectedChange)="onNewIcon($event)"></icon-picker>
+  </div>
+
+  <input-box
+    class="flex-grow-2 px-2"
+    [style.width]="'1px'"
+    [initialValue]="resource.name"
+    [color]="resource.color"
+    [canStayEmpty]="false"
+    [fontSizeRem]="2"
+    [maxLines]="1"
+    [title]="resource.name"
+    [placeholder]="getNamePlaceholder()"
+    (newValue)="onNewName($event)">
+  </input-box>
+
+  <div class="d-flex flex-row flex-nowrap align-items-center ml-auto">
+    <i class="fas fa-fw fa-trash text-danger mr-2 cursor-pointer"
+       (click)="onDelete()"
+       title="Delete" i18n-title="@@resource.settings.delete"
+       aria-hidden="true"></i>
+    <ng-content></ng-content>
+
+  </div>
+
+</div>
+
+<div class="col-12 col-md-6 col-xl-4 mr-auto py-2 px-0"
+     *ngIf="isCodeVisible()">
+  <input-box
+    [initialValue]="resource.code"
+    [color]="resource.color"
+    [canStayEmpty]="false"
+    [fontSizeRem]="1.5"
+    [maxLines]="1"
+    [title]="resource.code"
+    [placeholder]="getCodePlaceholder()"
+    (newValue)="onNewCode($event)">
+  </input-box>
+
+</div>
+
+<input-box
+  class="d-flex pb-3 pt-1"
+  [initialValue]="resource.description"
+  [canStayEmpty]="true"
+  [fontSizeRem]="1"
+  [maxLines]="2"
+  [title]="resource.description"
+  [placeholder]="getDescriptionPlaceholder()"
+  (newValue)="onNewDescription($event)">
+</input-box>

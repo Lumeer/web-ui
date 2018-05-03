@@ -23,18 +23,17 @@ import {SharedModule} from '../shared/shared.module';
 import {CollectionListComponent} from './list/collection-list.component';
 import {CollectionComponent} from './collection.component';
 import {CollectionRoutingModule} from './collection-routing.module';
-import {CollectionConfigComponent} from './config/collection-config.component';
-import {CollectionLinkTypesComponent} from './config/tab/link-types/collection-link-types.component';
-import {CollectionAttributesComponent} from './config/tab/attributes/collection-attributes.component';
-import {CollectionUsersComponent} from './config/tab/users/collection-users.component';
-import {CollectionEventsComponent} from './config/tab/events/collection-events.component';
+import {CollectionSettingsComponent} from './settings/collection-settings.component';
+import {CollectionLinkTypesComponent} from './settings/tab/link-types/collection-link-types.component';
+import {CollectionAttributesComponent} from './settings/tab/attributes/collection-attributes.component';
+import {CollectionUsersComponent} from './settings/tab/users/collection-users.component';
+import {CollectionEventsComponent} from './settings/tab/events/collection-events.component';
 import {CollectionSettingsGuard} from './collection-settings.guard';
-import {LinkAttributeListComponent} from './config/tab/link-attribute-list/link-attribute-list.component';
-import {AttributeListComponent} from './config/tab/attribute-list/attribute-list.component';
-import {CollectionTabComponent} from './config/tab/collection-tab.component';
+import {LinkAttributeListComponent} from './settings/tab/link-attribute-list/link-attribute-list.component';
+import {AttributeListComponent} from './settings/tab/attribute-list/attribute-list.component';
+import {CollectionTabComponent} from './settings/tab/collection-tab.component';
 import {PickerModule} from '../shared/picker/picker.module';
-import {CollectionSelectService} from './service/collection-select.service';
-import {UsersModule} from "../shared/users/users.module";
+import {UsersModule} from '../shared/users/users.module';
 
 @NgModule({
   imports: [
@@ -49,15 +48,14 @@ import {UsersModule} from "../shared/users/users.module";
     CollectionComponent,
     CollectionTabComponent,
     CollectionListComponent,
-    CollectionConfigComponent,
+    CollectionSettingsComponent,
     CollectionUsersComponent,
     CollectionAttributesComponent,
     CollectionEventsComponent,
     CollectionLinkTypesComponent
   ],
   providers: [
-    CollectionSettingsGuard,
-    CollectionSelectService
+    CollectionSettingsGuard
   ]
 })
 export class CollectionModule {

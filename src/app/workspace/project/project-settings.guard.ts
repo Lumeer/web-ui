@@ -33,7 +33,6 @@ import {WorkspaceService} from '../workspace.service';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {ProjectsAction} from '../../core/store/projects/projects.action';
 
 @Injectable()
 export class ProjectSettingsGuard implements CanActivate {

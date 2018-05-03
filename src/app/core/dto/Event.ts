@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {EventFireReason} from '../../collection/config/tab/events/model/event-fire-reason';
-import {EventCallback} from '../../collection/config/tab/events/model/event-callback';
-import {EventParameter} from '../../collection/config/tab/events/model/event-parameter';
+import {EventFireReason} from '../../collection/settings/tab/events/model/event-fire-reason';
+import {EventCallback} from '../../collection/settings/tab/events/model/event-callback';
+import {EventParameter} from '../../collection/settings/tab/events/model/event-parameter';
 
 export interface Event {
 

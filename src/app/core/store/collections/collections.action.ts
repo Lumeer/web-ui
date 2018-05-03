@@ -22,6 +22,7 @@ import {QueryModel} from '../navigation/query.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 import {AttributeModel, CollectionModel} from './collection.model';
 import {ImportedCollection} from "../../dto/imported-collection";
+import {Workspace} from '../navigation/workspace.model';
 
 export enum CollectionsActionType {
 
@@ -78,7 +79,7 @@ export namespace CollectionsAction {
   export class Get implements Action {
     public readonly type = CollectionsActionType.GET;
 
-    public constructor(public payload: { query: QueryModel }) {
+    public constructor(public payload: { query: QueryModel, workspace?: Workspace }) {
     }
   }
 

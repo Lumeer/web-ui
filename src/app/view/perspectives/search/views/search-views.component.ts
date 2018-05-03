@@ -32,7 +32,6 @@ import {ViewModel} from "../../../../core/store/views/view.model";
 import {selectAllCollections} from "../../../../core/store/collections/collections.state";
 import {selectAllLinkTypes} from "../../../../core/store/link-types/link-types.state";
 import {QueryData} from "../../../../shared/search-box/query-data";
-import {LinkTypesAction} from "../../../../core/store/link-types/link-types.action";
 import {filter} from "rxjs/operators";
 import {isNullOrUndefined} from "util";
 
@@ -58,8 +57,6 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
     this.views$ = this.store.select(selectViewsByQuery);
     this.subscribeToNavigation();
     this.subscribeToData();
-
-    this.getData();
   }
 
   public ngOnDestroy() {
@@ -87,10 +84,6 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
       this.store.select(selectAllCollections),
       this.store.select(selectAllLinkTypes)
     ).subscribe(([collections, linkTypes]) => this.queryData = {collections, linkTypes});
-  }
-
-  private getData() {
-    this.store.dispatch(new LinkTypesAction.Get({query: {}}));
   }
 
   public showView(view: ViewModel) {

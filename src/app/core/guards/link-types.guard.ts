@@ -27,6 +27,7 @@ import {catchError, filter, take, tap} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {CollectionsAction} from '../store/collections/collections.action';
 import {selectLinkTypesLoaded} from '../store/link-types/link-types.state';
+import {LinkTypesAction} from '../store/link-types/link-types.action';
 
 @Injectable()
 export class LinkTypesGuard implements CanActivate {
@@ -45,7 +46,7 @@ export class LinkTypesGuard implements CanActivate {
     return this.store.select(selectLinkTypesLoaded).pipe(
       tap(loaded => {
         if (!loaded) {
-          this.store.dispatch(new CollectionsAction.Get({query: {}}));
+          this.store.dispatch(new LinkTypesAction.Get({query: {}}));
         }
       }),
       filter(loaded => loaded),

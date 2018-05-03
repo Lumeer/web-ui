@@ -33,6 +33,7 @@ export class ProjectConverter {
       color: dto.color,
       description: dto.description,
       correlationId: correlationId,
+      collectionsCount: dto.collectionsCount,
       permissions: PermissionsConverter.fromDto(dto.permissions)
     };
   }

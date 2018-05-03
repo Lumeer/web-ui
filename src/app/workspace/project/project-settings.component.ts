@@ -17,139 +17,76 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
-import {Collection, Project} from '../../core/dto';
-import {CollectionService, ProjectService} from '../../core/rest';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
+import {filter, map} from 'rxjs/operators';
+import {Observable} from 'rxjs/Observable';
+import {ResourceType} from '../../core/model/resource-type';
+import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
+import {isNullOrUndefined} from "util";
+import {Subscription} from 'rxjs/Subscription';
+import {ProjectModel} from '../../core/store/projects/project.model';
+import {selectAllUsers} from '../../core/store/users/users.state';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
+import {DocumentsAction} from '../../core/store/documents/documents.action';
+import {ViewsAction} from '../../core/store/views/views.action';
+import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
+import {Workspace} from '../../core/store/navigation/workspace.model';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
-import {filter} from 'rxjs/operators';
+import {Perspective} from '../../view/perspectives/perspective';
 
 @Component({
-  templateUrl: './project-settings.component.html',
-  styleUrls: ['./project-settings.component.scss']
+  templateUrl: './project-settings.component.html'
 })
 export class ProjectSettingsComponent implements OnInit {
 
-  public project: Project;
-  private organizationCode: string;
-  public projectCode: string;
-  private originalProjectCode: string;
-  public collectionsCount: number;
+  public userCount$: Observable<number>;
+  public project: ProjectModel;
+  public workspace: Workspace;
 
-  @ViewChild('projectDescription')
-  public projectDescription: ElementRef;
-  private originalProjectName: string;
+  private subscription = new Subscription();
 
   constructor(private i18n: I18n,
-              private projectService: ProjectService,
               private router: Router,
               private store: Store<AppState>,
-              private collectionService: CollectionService,
               private notificationService: NotificationService) {
   }
 
-  public ngOnInit(): void {
-    this.store.select(selectWorkspace).pipe(
-      filter(workspace => !!(workspace.organizationCode && workspace.projectCode))
-    ).subscribe(workspace => {
-      this.organizationCode = workspace.organizationCode;
-      this.projectCode = workspace.projectCode;
-      this.getProject();
-      this.originalProjectCode = this.projectCode;
-    });
+  public ngOnInit() {
+    this.subscribeToStore();
   }
 
-  private getProject(): void {
-    this.projectService.getProject(this.organizationCode, this.projectCode)
-      .subscribe(
-        (project: Project) => {
-          this.project = project;
-          this.getNumberOfCollections();
-          this.originalProjectName = this.project.name;
-        },
-        error => {
-          const message = this.i18n({id: 'project.get.fail', value: 'Failed to get project.'});
-          this.notificationService.error(message);
-        }
-      )
-    ;
+  public ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
-  public updateProject(): void {
-    this.projectService.editProject(this.organizationCode, this.projectCode, this.project).subscribe(
-      success => null,
-      error => {
-        const message = this.i18n({id: 'project.update.fail', value: 'Failed to update project.'});
-        this.notificationService.error(message);
-      });
-  }
+  private subscribeToStore() {
+    this.userCount$ = this.store.select(selectAllUsers)
+      .pipe(map(users => users ? users.length : 0));
 
-  public updateProjectName(): void {
-    if (this.project.name === this.originalProjectName) {
-      return;
-    }
-    this.projectService.editProject(this.organizationCode, this.projectCode, this.project)
-      .subscribe(success => {
-          this.originalProjectName = this.project.name;
-        },
-        error => {
-          const message = this.i18n({id: 'project.update.fail', value: 'Failed to update project.'});
-          this.notificationService.error(message);
-        });
-  }
+    this.subscription.add(this.store.select(selectProjectByWorkspace)
+      .pipe(filter(project => !isNullOrUndefined(project)))
+      .subscribe(project => this.project = project)
+    );
 
-  public updateProjectCode() {
-    if (this.projectCode === this.originalProjectCode) {
-      return;
-    }
-    this.projectService.editProject(this.organizationCode, this.originalProjectCode, this.project).subscribe(
-      (response) => {
-        this.notificationService.success('Project\'s code was successfully updated');
-        this.originalProjectCode = this.project.code;
-        this.projectCode = this.project.code;
-        this.router.navigate(['/organization', this.organizationCode, 'project', this.project.code]);
-      },
-      error => {
-        const message = this.i18n({id: 'project.update.fail', value: 'Failed to update project.'});
-        this.notificationService.error(message);
-      }
+    this.subscription.add(this.store.select(selectWorkspace)
+      .pipe(filter(workspace => !isNullOrUndefined(workspace)))
+      .subscribe(workspace => this.workspace = workspace)
     );
   }
 
-  private goBack(): void {
-    this.router.navigate(['/workspace']);
+  public getResourceType(): ResourceType {
+    return ResourceType.Project;
   }
 
   public onDelete(): void {
-    this.projectService.deleteProject(this.organizationCode, this.projectCode)
-      .subscribe(
-        text => this.goBack(),
-        error => {
-          const message = this.i18n({id: 'project.delete.fail', value: 'Failed to delete project.'});
-          this.notificationService.error(message);
-        }
-      );
-  }
-
-  public getNumberOfCollections(): void {
-    this.collectionService.getCollections().subscribe((collections: Collection[]) =>
-      (this.collectionsCount = collections.length));
-  }
-
-  public workspacePath(): string {
-    return `/w/${this.organizationCode}/${this.project.code}`;
-  }
-
-  public initialized(): boolean {
-    return !(this.project.code === '' && this.project.name === '' && this.project.icon === '' && this.project.color === '');
-  }
-
-  public confirmDeletion(): void {
     const message = this.i18n({id: 'project.delete.dialog.message', value: 'Project is about to be permanently deleted.'});
     const title = this.i18n({id: 'project.delete.dialog.title', value: 'Delete project?'});
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
@@ -159,9 +96,64 @@ export class ProjectSettingsComponent implements OnInit {
       message,
       title,
       [
-        {text: yesButtonText, action: () => this.onDelete(), bold: false},
+        {text: yesButtonText, action: () => this.deleteProject(), bold: false},
         {text: noButtonText}
       ]
     );
+  }
+
+  public onCollectionsClick() {
+    const organizationCode = this.workspace && this.workspace.organizationCode;
+    const projectCode = this.project && this.project.code;
+    if (organizationCode && projectCode) {
+      this.clearStore();
+      this.router.navigate(['/w', organizationCode, projectCode, 'view', Perspective.Search, 'files']);
+    }
+  }
+
+  private clearStore() {
+    this.store.dispatch(new CollectionsAction.Clear());
+    this.store.dispatch(new DocumentsAction.Clear());
+    this.store.dispatch(new LinkInstancesAction.Clear());
+    this.store.dispatch(new LinkTypesAction.Clear());
+    this.store.dispatch(new ViewsAction.Clear());
+  }
+
+  private deleteProject() {
+    this.store.dispatch(new ProjectsAction.Delete({organizationId: this.project.organizationId, projectId: this.project.id}));
+    this.goBack();
+  }
+
+  public onNewDescription(newDescription: string) {
+    const projectCopy = {...this.project, description: newDescription};
+    this.updateProject(projectCopy);
+  }
+
+  public onNewName(name: string) {
+    const projectCopy = {...this.project, name};
+    this.updateProject(projectCopy);
+  }
+
+  public onNewCode(code: string) {
+    const projectCopy = {...this.project, code};
+    this.updateProject(projectCopy);
+  }
+
+  public onNewIcon(icon: string) {
+    const projectCopy = {...this.project, icon};
+    this.updateProject(projectCopy);
+  }
+
+  public onNewColor(color: string) {
+    const projectCopy = {...this.project, color};
+    this.updateProject(projectCopy);
+  }
+
+  private updateProject(project: ProjectModel) {
+    this.store.dispatch(new ProjectsAction.Update({project}));
+  }
+
+  public goBack(): void {
+    this.router.navigate(['/workspace']);
   }
 }

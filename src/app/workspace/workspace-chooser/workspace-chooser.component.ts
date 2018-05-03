@@ -50,6 +50,7 @@ import {ServiceLimitsAction} from '../../core/store/organizations/service-limits
 import {selectAllServiceLimits, selectServiceLimitsByOrganizationId} from '../../core/store/organizations/service-limits/service-limits.state';
 import {ServiceLimitsModel} from '../../core/store/organizations/service-limits/service-limits.model';
 import {Role} from '../../core/model/role';
+import {Perspective} from '../../view/perspectives/perspective';
 
 const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'aturing@lumeer.io'];
 
@@ -190,7 +191,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
           if (organization && project) {
             this.updateDefaultWorkspace(organization, project);
             this.clearStore();
-            this.router.navigate(['/w', organization.code, project.code, 'view', 'search', 'files']);
+            this.router.navigate(['/w', organization.code, project.code, 'view', Perspective.Search, 'files']);
           }
         });
     }

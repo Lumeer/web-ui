@@ -21,11 +21,11 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
 import {CollectionSettingsGuard} from './collection-settings.guard';
-import {CollectionConfigComponent} from './config/collection-config.component';
-import {CollectionUsersComponent} from './config/tab/users/collection-users.component';
-import {CollectionAttributesComponent} from './config/tab/attributes/collection-attributes.component';
-import {CollectionEventsComponent} from './config/tab/events/collection-events.component';
-import {CollectionLinkTypesComponent} from './config/tab/link-types/collection-link-types.component';
+import {CollectionSettingsComponent} from './settings/collection-settings.component';
+import {CollectionUsersComponent} from './settings/tab/users/collection-users.component';
+import {CollectionAttributesComponent} from './settings/tab/attributes/collection-attributes.component';
+import {CollectionEventsComponent} from './settings/tab/events/collection-events.component';
+import {CollectionLinkTypesComponent} from './settings/tab/link-types/collection-link-types.component';
 import {WorkspaceGuard} from '../workspace/workspace.guard';
 import {AuthGuard} from '../core/guards/auth.guard';
 
@@ -33,7 +33,7 @@ const collectionRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/f/:collectionId',
     canActivate:[AuthGuard, WorkspaceGuard, CollectionSettingsGuard],
-    component: CollectionConfigComponent,
+    component: CollectionSettingsComponent,
     children: [
       {
         path: 'attributes',
