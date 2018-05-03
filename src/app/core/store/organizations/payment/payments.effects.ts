@@ -29,7 +29,6 @@ import {Observable} from "rxjs/Observable";
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {PaymentsAction, PaymentsActionType} from "./payments.action";
 import {PaymentConverter} from "./payment.converter";
-import {ServiceLimitsAction} from "../service-limits/service-limits.action";
 
 @Injectable()
 export class PaymentsEffects {
@@ -39,10 +38,11 @@ export class PaymentsEffects {
     ofType<PaymentsAction.GetPayments>(PaymentsActionType.GET_PAYMENTS),
     mergeMap(action => {
       return this.organizationService.getPayments().pipe(
-        map(dtos => dtos.map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto))))
-    }),
-    map(payments => new PaymentsAction.GetPaymentsSuccess({ payments: payments })),
-    catchError(error => Observable.of(new PaymentsAction.GetPaymentsFailure({error: error})))
+        map(dtos => dtos.map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto))),
+        map(payments => new PaymentsAction.GetPaymentsSuccess({ payments: payments })),
+        catchError(error => Observable.of(new PaymentsAction.GetPaymentsFailure({error: error})))
+      )
+    })
   );
 
   @Effect()
@@ -61,16 +61,17 @@ export class PaymentsEffects {
     mergeMap(action => {
       return this.organizationService.getPayment(action.payload.paymentId).pipe(
         map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
-        map(payment => ({ payment, nextAction: action.payload.nextAction })))
-    }),
-    flatMap(({ payment, nextAction }) => {
-      const actions: Action[] = [new PaymentsAction.GetPaymentSuccess({ payment: payment })];
-      if (nextAction) {
-        actions.push(nextAction);
-      }
-      return actions;
-    }),
-    catchError(error => Observable.of(new PaymentsAction.GetPaymentFailure({error: error})))
+        map(payment => ({ payment, nextAction: action.payload.nextAction })),
+        flatMap(({ payment, nextAction }) => {
+          const actions: Action[] = [new PaymentsAction.GetPaymentSuccess({ payment: payment })];
+          if (nextAction) {
+            actions.push(nextAction);
+          }
+          return actions;
+        }),
+        catchError(error => Observable.of(new PaymentsAction.GetPaymentFailure({error: error})))
+      )
+    })
   );
 
   @Effect()
@@ -88,10 +89,11 @@ export class PaymentsEffects {
     ofType<PaymentsAction.CreatePayment>(PaymentsActionType.CREATE_PAYMENT),
     mergeMap(action => {
       return this.organizationService.createPayment(PaymentConverter.toDto(action.payload.payment)).pipe(
-        map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)))
-    }),
-    map(payment => new PaymentsAction.CreatePaymentSuccess({ payment: payment })),
-    catchError(error => Observable.of(new PaymentsAction.CreatePaymentFailure({error: error})))
+        map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
+        map(payment => new PaymentsAction.CreatePaymentSuccess({ payment: payment })),
+        catchError(error => Observable.of(new PaymentsAction.CreatePaymentFailure({error: error})))
+      )
+    })
   );
 
   @Effect()

@@ -35,10 +35,10 @@ export class GroupsEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<GroupsAction.Get>(GroupsActionType.GET),
     mergeMap(() => this.groupService.getGroups().pipe(
-      map(dtos => dtos.map(dto => GroupConverter.fromDto(dto)))
-    )),
-    map(groups => new GroupsAction.GetSuccess({groups: groups})),
-    catchError(error => Observable.of(new GroupsAction.GetFailure({error: error})))
+      map(dtos => dtos.map(dto => GroupConverter.fromDto(dto))),
+      map(groups => new GroupsAction.GetSuccess({groups: groups})),
+      catchError(error => Observable.of(new GroupsAction.GetFailure({error: error})))
+    ))
   );
 
   @Effect()
@@ -58,11 +58,11 @@ export class GroupsEffects {
       const groupDto = GroupConverter.toDto(action.payload.group);
 
       return this.groupService.createGroup(groupDto).pipe(
-        map(dto => GroupConverter.fromDto(dto))
+        map(dto => GroupConverter.fromDto(dto)),
+        map(group => new GroupsAction.CreateSuccess({group: group})),
+        catchError(error => Observable.of(new GroupsAction.CreateFailure({error: error})))
       );
     }),
-    map(group => new GroupsAction.CreateSuccess({group: group})),
-    catchError(error => Observable.of(new GroupsAction.CreateFailure({error: error})))
   );
 
   @Effect()
@@ -82,11 +82,11 @@ export class GroupsEffects {
       const groupDto = GroupConverter.toDto(action.payload.group);
 
       return this.groupService.updateGroup(groupDto.id, groupDto).pipe(
-        map(dto => GroupConverter.fromDto(dto))
+        map(dto => GroupConverter.fromDto(dto)),
+        map(group => new GroupsAction.UpdateSuccess({group: group})),
+        catchError(error => Observable.of(new GroupsAction.UpdateFailure({error: error})))
       );
     }),
-    map(group => new GroupsAction.UpdateSuccess({group: group})),
-    catchError(error => Observable.of(new GroupsAction.UpdateFailure({error: error})))
   );
 
   @Effect()
@@ -103,10 +103,10 @@ export class GroupsEffects {
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<GroupsAction.Delete>(GroupsActionType.DELETE),
     mergeMap(action => this.groupService.deleteGroup(action.payload.groupId).pipe(
-      map(() => action)
-    )),
-    map(action => new GroupsAction.DeleteSuccess(action.payload)),
-    catchError(error => Observable.of(new GroupsAction.DeleteFailure({error: error})))
+      map(() => action),
+      map(action => new GroupsAction.DeleteSuccess(action.payload)),
+      catchError(error => Observable.of(new GroupsAction.DeleteFailure({error: error})))
+    ))
   );
 
   @Effect()

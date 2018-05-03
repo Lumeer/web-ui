@@ -44,11 +44,11 @@ export class ViewsEffects {
     ofType<ViewsAction.Get>(ViewsActionType.GET),
     mergeMap((action) => {
       return this.searchService.searchViews(action.payload.query).pipe(
-        map((dtos: View[]) => dtos.map(dto => ViewConverter.convertToModel(dto)))
+        map((dtos: View[]) => dtos.map(dto => ViewConverter.convertToModel(dto))),
+        map((views: ViewModel[]) => new ViewsAction.GetSuccess({views})),
+        catchError((error) => Observable.of(new ViewsAction.GetFailure({error: error})))
       );
-    }),
-    map((views: ViewModel[]) => new ViewsAction.GetSuccess({views})),
-    catchError((error) => Observable.of(new ViewsAction.GetFailure({error: error})))
+    })
   );
 
   @Effect()
@@ -58,10 +58,10 @@ export class ViewsEffects {
     skipWhile(([action, views]) => action.payload.viewCode in views),
     mergeMap(([action]) => this.viewService.getView(action.payload.viewCode).pipe(
       skipWhile((dto: View) => isNullOrUndefined(dto)), // TODO can probably be removed once views are not stored in webstorage
-      map((dto: View) => ViewConverter.convertToModel(dto))
+      map((dto: View) => ViewConverter.convertToModel(dto)),
+      map((view: ViewModel) => new ViewsAction.GetSuccess({views: [view]})),
+      catchError((error) => Observable.of(new ViewsAction.GetFailure({error: error})))
     )),
-    map((view: ViewModel) => new ViewsAction.GetSuccess({views: [view]})),
-    catchError((error) => Observable.of(new ViewsAction.GetFailure({error: error})))
   );
 
   @Effect()
@@ -81,11 +81,11 @@ export class ViewsEffects {
       const viewDto = ViewConverter.convertToDto(action.payload.view);
 
       return this.viewService.createView(viewDto).pipe(
-        map(dto => ViewConverter.convertToModel(dto))
+        map(dto => ViewConverter.convertToModel(dto)),
+        map(view => new ViewsAction.CreateSuccess({view: view})),
+        catchError((error) => Observable.of(new ViewsAction.CreateFailure({error: error})))
       );
-    }),
-    map(view => new ViewsAction.CreateSuccess({view: view})),
-    catchError((error) => Observable.of(new ViewsAction.CreateFailure({error: error})))
+    })
   );
 
   @Effect()
@@ -117,15 +117,12 @@ export class ViewsEffects {
     mergeMap(action => {
       const viewDto = ViewConverter.convertToDto(action.payload.view);
 
-      return Observable.combineLatest(
-        Observable.of(action),
-        this.viewService.updateView(action.payload.viewCode, viewDto).pipe(
-          map(dto => ViewConverter.convertToModel(dto))
-        )
+      return this.viewService.updateView(action.payload.viewCode, viewDto).pipe(
+          map(dto => ViewConverter.convertToModel(dto)),
+          map((view) => new ViewsAction.UpdateSuccess({view: view, nextAction: action.payload.nextAction})),
+          catchError((error) => Observable.of(new ViewsAction.UpdateFailure({error: error})))
       );
     }),
-    map(([action, view]) => new ViewsAction.UpdateSuccess({view: view, nextAction: action.payload.nextAction})),
-    catchError((error) => Observable.of(new ViewsAction.UpdateFailure({error: error})))
   );
 
   @Effect()
