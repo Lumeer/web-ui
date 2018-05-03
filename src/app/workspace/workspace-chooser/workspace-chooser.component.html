@@ -22,7 +22,6 @@
                       [usedCodes]="projectCodes$ | async"
                       (warningMessage)="onWarningMessage($event)"
                       [canCreateResource]="canCreateProjects$ | async"
-                      [serviceLimits]="serviceLimits$ | async"
                       (resourceDelete)="onDeleteProject($event)"
                       (resourceSelect)="onSelectProject($event)"
                       (resourceNew)="onCreateProject($event)"

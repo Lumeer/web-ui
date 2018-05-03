@@ -246,9 +246,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
     this.projects$ = this.store.select(selectProjectsForSelectedOrganization);
     this.projectCodes$ = this.store.select(selectProjectsCodesForSelectedOrganization).pipe(
-      map(codes => {
-        return codes || [];
-      })
+      map(codes =>  codes || [] )
     );
     this.projectRoles$ = this.projects$.pipe(
       mergeMap(projects => this.selectOrganizationAndCurrentUser().pipe(
