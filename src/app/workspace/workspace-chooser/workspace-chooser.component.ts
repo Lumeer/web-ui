@@ -47,7 +47,7 @@ import {UserModel} from '../../core/store/users/user.model';
 import {mapGroupsOnUser, selectCurrentUser, selectCurrentUserForOrganization} from '../../core/store/users/users.state';
 import {selectGroupsDictionary} from '../../core/store/groups/groups.state';
 import {ServiceLimitsAction} from '../../core/store/organizations/service-limits/service-limits.action';
-import {selectAllServiceLimits} from '../../core/store/organizations/service-limits/service-limits.state';
+import {selectAllServiceLimits, selectServiceLimitsByOrganizationId} from '../../core/store/organizations/service-limits/service-limits.state';
 import {ServiceLimitsModel} from '../../core/store/organizations/service-limits/service-limits.model';
 import {Role} from '../../core/model/role';
 import {Perspective} from '../../view/perspectives/perspective';
@@ -246,7 +246,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
     this.projects$ = this.store.select(selectProjectsForSelectedOrganization);
     this.projectCodes$ = this.store.select(selectProjectsCodesForSelectedOrganization).pipe(
-      map(codes => codes || [])
+      map(codes =>  codes || [] )
     );
     this.projectRoles$ = this.projects$.pipe(
       mergeMap(projects => this.selectOrganizationAndCurrentUser().pipe(
@@ -257,7 +257,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
       ))
     );
     this.canCreateProjects$ = this.selectOrganizationAndCurrentUser().pipe(
-      map(({organization, user}) => userHasRoleInResource(user, organization, Role.Write))
+      map(({ organization, user }) => userHasRoleInResource(user, organization, Role.Write) )
     );
   }
 

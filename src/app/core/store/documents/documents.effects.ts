@@ -30,7 +30,6 @@ import {AppState} from '../app.state';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {CollectionsAction} from '../collections/collections.action';
 import {selectCollectionsDictionary} from '../collections/collections.state';
-import {LinkInstancesAction, LinkInstancesActionType} from '../link-instances/link-instances.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {QueryHelper} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -38,6 +37,9 @@ import {DocumentConverter} from './document.converter';
 import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {selectDocumentsDictionary, selectDocumentsQueries} from './documents.state';
+import {HttpErrorResponse} from "@angular/common/http";
+import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
+import {RouterAction} from "../router/router.action";
 
 @Injectable()
 export class DocumentsEffects {
@@ -51,11 +53,11 @@ export class DocumentsEffects {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
       return this.searchService.searchDocuments(queryDto).pipe(
-        map(dtos => dtos.map(dto => DocumentConverter.fromDto(dto)))
+        map(dtos => dtos.map(dto => DocumentConverter.fromDto(dto))),
+        map(documents => new DocumentsAction.GetSuccess({documents: documents})),
+        catchError((error) => Observable.of(new DocumentsAction.GetFailure({error: error})))
       );
-    }),
-    map(documents => new DocumentsAction.GetSuccess({documents: documents})),
-    catchError((error) => Observable.of(new DocumentsAction.GetFailure({error: error})))
+    })
   );
 
   @Effect()
@@ -75,46 +77,61 @@ export class DocumentsEffects {
       const documentDto = DocumentConverter.toDto(action.payload.document);
 
       return this.documentService.createDocument(documentDto).pipe(
-        map(dto => ({action, document: DocumentConverter.fromDto(dto, action.payload.document.correlationId)}))
+        map(dto => ({action, document: DocumentConverter.fromDto(dto, action.payload.document.correlationId)})),
+        withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+        tap(([{action, document}]) => {
+          const callback = action.payload.callback;
+          if (callback) {
+            callback(document.id);
+          }
+        }),
+        flatMap(([{document}, collectionEntities]) => {
+          const collection = collectionEntities[document.collectionId];
+          return [
+            new DocumentsAction.CreateSuccess({document}),
+            createSyncCollectionAction(collection, document, null)
+          ];
+        }),
+        // flatMap(([{action, document}, collectionEntities]) => {
+        //   const collection = collectionEntities[document.collectionId];
+        //   const actions: Action[] = [
+        //     new DocumentsAction.CreateSuccess({document}),
+        //     createSyncCollectionAction(collection, document, null)
+        //   ];
+        //
+        //   const nextAction = action.payload.nextAction;
+        //   if (nextAction && nextAction.type === LinkInstancesActionType.CREATE) {
+        //     (nextAction as LinkInstancesAction.Create).payload.linkInstance.documentIds[1] = document.id;
+        //     actions.push(nextAction);
+        //   }
+        //
+        //   return actions;
+        // }),
+        catchError((error) => Observable.of(new DocumentsAction.CreateFailure({error: error})))
       );
-    }),
-    withLatestFrom(this.store$.select(selectCollectionsDictionary)),
-    tap(([{action, document}]) => {
-      const callback = action.payload.callback;
-      if (callback) {
-        callback(document.id);
-      }
-    }),
-    flatMap(([{document}, collectionEntities]) => {
-      const collection = collectionEntities[document.collectionId];
-      return [
-        new DocumentsAction.CreateSuccess({document}),
-        createSyncCollectionAction(collection, document, null)
-      ];
-    }),
-    // flatMap(([{action, document}, collectionEntities]) => {
-    //   const collection = collectionEntities[document.collectionId];
-    //   const actions: Action[] = [
-    //     new DocumentsAction.CreateSuccess({document}),
-    //     createSyncCollectionAction(collection, document, null)
-    //   ];
-    //
-    //   const nextAction = action.payload.nextAction;
-    //   if (nextAction && nextAction.type === LinkInstancesActionType.CREATE) {
-    //     (nextAction as LinkInstancesAction.Create).payload.linkInstance.documentIds[1] = document.id;
-    //     actions.push(nextAction);
-    //   }
-    //
-    //   return actions;
-    // }),
-    catchError((error) => Observable.of(new DocumentsAction.CreateFailure({error: error})))
+    })
   );
 
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.CreateFailure>(DocumentsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
-    map(() => {
+    withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
+    map(([action, organization]) => {
+      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Trial Service' });
+        const message = this.i18n({
+          id: 'document.create.serviceLimits',
+          value: 'You are currently on the Trial plan which allows you to have only limited number of records. Do you want to upgrade to Business now?' });
+        return new NotificationsAction.Confirm({
+          title,
+          message,
+          action: new RouterAction.Go({
+            path: ['/organization', organization.code, 'detail'],
+            extras: { fragment: 'orderService' }
+          })
+        });
+      }
       const message = this.i18n({id: 'document.create.fail', value: 'Failed to create record'});
       return new NotificationsAction.Error({message});
     })
@@ -131,14 +148,14 @@ export class DocumentsEffects {
           map(() => {
             action.payload.document.favorite = !action.payload.document.favorite;
             return action.payload.document;
-          })
+          }),
+          map((document: DocumentModel) => new DocumentsAction.UpdateSuccess({document: document})),
+          catchError((error) => Observable.of(new DocumentsAction.UpdateFailure({error: error})))
         );
       }
 
       throw Error('not implemented on backend yet');
-    }),
-    map((document: DocumentModel) => new DocumentsAction.UpdateSuccess({document: document})),
-    catchError((error) => Observable.of(new DocumentsAction.UpdateFailure({error: error})))
+    })
   );
 
   @Effect()
@@ -161,21 +178,21 @@ export class DocumentsEffects {
         data: action.payload.data
       };
       return this.documentService.updateDocument(documentDto).pipe(
-        map(dto => DocumentConverter.fromDto(dto))
+        map(dto => DocumentConverter.fromDto(dto)),
+        withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+        withLatestFrom(this.store$.select(selectDocumentsDictionary)),
+        flatMap(([[document, collectionEntities], documentEntities]) => {
+          const collection = collectionEntities[document.collectionId];
+          const oldDocument = documentEntities[document.id];
+
+          return [
+            new DocumentsAction.UpdateSuccess({document}),
+            createSyncCollectionAction(collection, document, oldDocument)
+          ];
+        }),
+        catchError((error) => Observable.of(new DocumentsAction.UpdateFailure({error: error})))
       );
     }),
-    withLatestFrom(this.store$.select(selectCollectionsDictionary)),
-    withLatestFrom(this.store$.select(selectDocumentsDictionary)),
-    flatMap(([[document, collectionEntities], documentEntities]) => {
-      const collection = collectionEntities[document.collectionId];
-      const oldDocument = documentEntities[document.id];
-
-      return [
-        new DocumentsAction.UpdateSuccess({document}),
-        createSyncCollectionAction(collection, document, oldDocument)
-      ];
-    }),
-    catchError((error) => Observable.of(new DocumentsAction.UpdateFailure({error: error})))
   );
 
   @Effect()
@@ -188,21 +205,21 @@ export class DocumentsEffects {
         data: action.payload.data
       };
       return this.documentService.patchDocumentData(documentDto).pipe(
-        map(dto => DocumentConverter.fromDto(dto))
+        map(dto => DocumentConverter.fromDto(dto)),
+        withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+        withLatestFrom(this.store$.select(selectDocumentsDictionary)),
+        flatMap(([[document, collectionEntities], documentEntities]) => {
+          const collection = collectionEntities[document.collectionId];
+          const oldDocument = documentEntities[document.id];
+
+          return [
+            new DocumentsAction.UpdateSuccess({document}),
+            createSyncCollectionAction(collection, document, oldDocument)
+          ];
+        }),
+        catchError((error) => Observable.of(new DocumentsAction.UpdateFailure({error: error})))
       );
     }),
-    withLatestFrom(this.store$.select(selectCollectionsDictionary)),
-    withLatestFrom(this.store$.select(selectDocumentsDictionary)),
-    flatMap(([[document, collectionEntities], documentEntities]) => {
-      const collection = collectionEntities[document.collectionId];
-      const oldDocument = documentEntities[document.id];
-
-      return [
-        new DocumentsAction.UpdateSuccess({document}),
-        createSyncCollectionAction(collection, document, oldDocument)
-      ];
-    }),
-    catchError((error) => Observable.of(new DocumentsAction.UpdateFailure({error: error})))
   );
 
   @Effect()
@@ -210,27 +227,27 @@ export class DocumentsEffects {
     ofType<DocumentsAction.Delete>(DocumentsActionType.DELETE),
     mergeMap(action => {
       return this.documentService.removeDocument(action.payload.collectionId, action.payload.documentId).pipe(
-        map(() => action.payload)
+        map(() => action.payload),
+        withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+        withLatestFrom(this.store$.select(selectDocumentsDictionary)),
+        flatMap(([[payload, collectionEntities], documentEntities]) => {
+          const collection = collectionEntities[payload.collectionId];
+          const oldDocument = documentEntities[payload.documentId];
+
+          const actions: Action[] = [
+            new DocumentsAction.DeleteSuccess({documentId: oldDocument.id}),
+            createSyncCollectionAction(collection, null, oldDocument)
+          ];
+
+          if (payload.nextAction) {
+            actions.push(payload.nextAction);
+          }
+
+          return actions;
+        }),
+        catchError((error) => Observable.of(new DocumentsAction.DeleteFailure({error: error})))
       );
     }),
-    withLatestFrom(this.store$.select(selectCollectionsDictionary)),
-    withLatestFrom(this.store$.select(selectDocumentsDictionary)),
-    flatMap(([[payload, collectionEntities], documentEntities]) => {
-      const collection = collectionEntities[payload.collectionId];
-      const oldDocument = documentEntities[payload.documentId];
-
-      const actions: Action[] = [
-        new DocumentsAction.DeleteSuccess({documentId: oldDocument.id}),
-        createSyncCollectionAction(collection, null, oldDocument)
-      ];
-
-      if (payload.nextAction) {
-        actions.push(payload.nextAction);
-      }
-
-      return actions;
-    }),
-    catchError((error) => Observable.of(new DocumentsAction.DeleteFailure({error: error})))
   );
 
   @Effect()

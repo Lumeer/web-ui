@@ -22,6 +22,7 @@ import {Action} from '@ngrx/store';
 export enum NotificationsActionType {
 
   CONFIRM = '[Notifications] Confirm',
+  INFO = '[Notifications] Info',
   ERROR = '[Notifications] Error',
   SUCCESS = '[Notifications] Success',
   WARNING = '[Notifications] Warning'
@@ -34,6 +35,13 @@ export namespace NotificationsAction {
     public readonly type = NotificationsActionType.CONFIRM;
 
     public constructor(public payload: { title: string, message: string, action: Action }) {
+    }
+  }
+
+  export class Info implements Action {
+    public readonly type = NotificationsActionType.INFO;
+
+    public constructor(public payload: { title: string, message: string }) {
     }
   }
 

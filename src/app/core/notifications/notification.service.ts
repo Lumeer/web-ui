@@ -21,48 +21,60 @@ import {Injectable, NgZone} from '@angular/core';
 import {Snotify, SnotifyButton, SnotifyPosition, SnotifyService} from 'ng-snotify';
 import {Observable} from 'rxjs/Observable';
 import {UserSettingsService} from '../user-settings.service';
+import {I18n} from "@ngx-translate/i18n-polyfill";
 
 @Injectable()
 export class NotificationService {
 
   constructor(private zone: NgZone,
               private notifications: SnotifyService,
-              private userSettingsService: UserSettingsService) {
+              private userSettingsService: UserSettingsService,
+              private i18n: I18n) {
   }
 
   public simple(message: string): void {
     if (this.areNotificationsDisabled()) {
       return;
     }
-    this.zone.runOutsideAngular(() => this.notifications.simple(message, 'Hey'));
+    this.zone.runOutsideAngular(() =>
+      this.notifications.simple(message, this.i18n({ id: 'notification.service.Hey', value: 'Hey' }))
+    );
   }
 
   public success(message: string): void {
     if (this.areNotificationsDisabled()) {
       return;
     }
-    this.zone.runOutsideAngular(() => this.notifications.success(message, 'Success'));
+    this.zone.runOutsideAngular(() =>
+      this.notifications.success(message, this.i18n({ id: 'notification.service.Success', value: 'Success' }))
+    );
   }
 
   public info(message: string): void {
     if (this.areNotificationsDisabled()) {
       return;
     }
-    this.zone.runOutsideAngular(() => this.notifications.info(message, 'Info'));
+    this.zone.runOutsideAngular(() =>
+      this.notifications.info(message, this.i18n({ id: 'notification.service.Info', value: 'Info' }))
+    );
   }
 
   public warning(message: string): void {
     if (this.areNotificationsDisabled()) {
       return;
     }
-    this.zone.runOutsideAngular(() => this.notifications.warning(message, 'Warning'));
+    this.zone.runOutsideAngular(() =>
+      this.notifications.warning(message, this.i18n({ id: 'notification.service.Warning', value: 'Warning' }))
+    );
   }
 
   public error(message: string): void {
     if (this.areNotificationsDisabled()) {
       return;
     }
-    this.zone.runOutsideAngular(() => this.notifications.error(message, 'Error'));
+    this.zone.runOutsideAngular(() =>
+      this.notifications.error(message, this.i18n({ id: 'notification.service.Error', value: 'Error' }))
+    );
   }
 
   public async(message: string, finishAction: Promise<Snotify> | Observable<Snotify>): void {

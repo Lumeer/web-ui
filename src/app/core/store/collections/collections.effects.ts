@@ -36,6 +36,9 @@ import {CollectionConverter} from './collection.converter';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
 import {selectCollectionsLoaded} from "./collections.state";
 import {AppState} from "../app.state";
+import {HttpErrorResponse} from "@angular/common/http";
+import {RouterAction} from "../router/router.action";
+import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
 
 @Injectable()
 export class CollectionsEffects {
@@ -50,11 +53,11 @@ export class CollectionsEffects {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
       return this.searchService.searchCollections(queryDto, action.payload.workspace).pipe(
-        map((dtos: Collection[]) => dtos.map(dto => CollectionConverter.fromDto(dto)))
+        map((dtos: Collection[]) => dtos.map(dto => CollectionConverter.fromDto(dto))),
+        map((collections) => new CollectionsAction.GetSuccess({collections: collections})),
+        catchError((error) => Observable.of(new CollectionsAction.GetFailure({error: error})))
       );
-    }),
-    map((collections) => new CollectionsAction.GetSuccess({collections: collections})),
-    catchError((error) => Observable.of(new CollectionsAction.GetFailure({error: error})))
+    })
   );
 
   @Effect()
@@ -70,9 +73,10 @@ export class CollectionsEffects {
   @Effect()
   public getNames$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.GetNames>(CollectionsActionType.GET_NAMES),
-    mergeMap(() => this.collectionService.getAllCollectionNames()),
-    map((collectionNames) => new CollectionsAction.GetNamesSuccess({collectionNames})),
-    catchError((error) => Observable.of(new CollectionsAction.GetNamesFailure({error: error})))
+    mergeMap(() => this.collectionService.getAllCollectionNames().pipe(
+      map((collectionNames) => new CollectionsAction.GetNamesSuccess({collectionNames})),
+      catchError((error) => Observable.of(new CollectionsAction.GetNamesFailure({error: error})))
+    ))
   );
 
   @Effect({dispatch: false})
@@ -89,25 +93,40 @@ export class CollectionsEffects {
 
       return this.collectionService.createCollection(collectionDto).pipe(
         map(collection => CollectionConverter.fromDto(collection, action.payload.collection.correlationId)),
-        map(collection => ({collection, nextAction: action.payload.nextAction}))
+        map(collection => ({collection, nextAction: action.payload.nextAction})),
+        flatMap(({collection, nextAction}) => {
+          const actions: Action[] = [new CollectionsAction.CreateSuccess({collection})];
+          if (nextAction && nextAction instanceof LinkTypesAction.Create) {
+            nextAction.payload.linkType.collectionIds[1] = collection.id;
+            actions.push(nextAction);
+          }
+          return actions;
+        }),
+        catchError((error) => Observable.of(new CollectionsAction.CreateFailure({error: error})))
       );
-    }),
-    flatMap(({collection, nextAction}) => {
-      const actions: Action[] = [new CollectionsAction.CreateSuccess({collection})];
-      if (nextAction && nextAction instanceof LinkTypesAction.Create) {
-        nextAction.payload.linkType.collectionIds[1] = collection.id;
-        actions.push(nextAction);
-      }
-      return actions;
-    }),
-    catchError((error) => Observable.of(new CollectionsAction.CreateFailure({error: error})))
+    })
   );
 
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.CreateFailure>(CollectionsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
-    map(() => {
+    withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
+    map( ([action, organization]) => {
+      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Trial Service' });
+        const message = this.i18n({
+          id: 'collection.create.serviceLimits',
+          value: 'You are currently on the Trial plan which allows you to have only limited number of files. Do you want to upgrade to Business now?' });
+        return new NotificationsAction.Confirm({
+          title,
+          message,
+          action: new RouterAction.Go({
+            path: ['/organization', organization.code, 'detail'],
+            extras: { fragment: 'orderService' }
+          })
+        });
+      }
       const message = this.i18n({id: 'collection.create.fail', value: 'Failed to create file'});
       return new NotificationsAction.Error({message});
     })
@@ -118,18 +137,33 @@ export class CollectionsEffects {
     ofType<CollectionsAction.Import>(CollectionsActionType.IMPORT),
     mergeMap(action => {
       return this.importService.importFile(action.payload.format, action.payload.importedCollection).pipe(
-        map(collection => CollectionConverter.fromDto(collection))
+        map(collection => CollectionConverter.fromDto(collection)),
+        map(collection => new CollectionsAction.ImportSuccess({collection: collection})),
+        catchError((error) => Observable.of(new CollectionsAction.ImportFailure({error: error})))
       );
-    }),
-    map(collection => new CollectionsAction.ImportSuccess({collection: collection})),
-    catchError((error) => Observable.of(new CollectionsAction.ImportFailure({error: error})))
+    })
   );
 
   @Effect()
   public importFailure$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.ImportFailure>(CollectionsActionType.IMPORT_FAILURE),
     tap(action => console.error(action.payload.error)),
-    map(() => {
+    withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
+    map(([action, organization]) => {
+      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Trial Service' });
+        const message = this.i18n({
+          id: 'collection.create.serviceLimits',
+          value: 'You are currently on the Trial plan which allows you to have only limited number of files. Do you want to upgrade to Business now?' });
+        return new NotificationsAction.Confirm({
+          title,
+          message,
+          action: new RouterAction.Go({
+            path: ['/organization', organization.code, 'detail'],
+            extras: { fragment: 'orderService' }
+          })
+        });
+      }
       const message = this.i18n({id: 'collection.import.fail', value: 'Failed to import file'});
       return new NotificationsAction.Error({message});
     })
@@ -142,11 +176,11 @@ export class CollectionsEffects {
       const collectionDto = CollectionConverter.toDto(action.payload.collection);
 
       return this.collectionService.updateCollection(collectionDto).pipe(
-        map((dto: Collection) => CollectionConverter.fromDto(dto))
+        map((dto: Collection) => CollectionConverter.fromDto(dto)),
+        map(collection => new CollectionsAction.UpdateSuccess({collection: collection})),
+        catchError((error) => Observable.of(new CollectionsAction.CreateFailure({error: error})))
       );
-    }),
-    map(collection => new CollectionsAction.UpdateSuccess({collection: collection})),
-    catchError((error) => Observable.of(new CollectionsAction.CreateFailure({error: error})))
+    })
   );
 
   @Effect()
@@ -162,9 +196,10 @@ export class CollectionsEffects {
   @Effect()
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.Delete>(CollectionsActionType.DELETE),
-    mergeMap(action => this.collectionService.removeCollection(action.payload.collectionId)),
-    map(collectionId => new CollectionsAction.DeleteSuccess({collectionId})),
-    catchError((error) => Observable.of(new CollectionsAction.DeleteFailure({error: error})))
+    mergeMap(action => this.collectionService.removeCollection(action.payload.collectionId).pipe(
+      map(collectionId => new CollectionsAction.DeleteSuccess({collectionId})),
+      catchError((error) => Observable.of(new CollectionsAction.DeleteFailure({error: error})))
+    ))
   );
 
   @Effect()
@@ -181,10 +216,10 @@ export class CollectionsEffects {
   public addFavorite$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.AddFavorite>(CollectionsActionType.ADD_FAVORITE),
     mergeMap(action => this.homePageService.addFavoriteCollection(action.payload.collectionId).pipe(
-      map(() => action.payload.collectionId)
+      map(() => action.payload.collectionId),
+      map((collectionId) => new CollectionsAction.AddFavoriteSuccess({collectionId})),
+      catchError((error) => Observable.of(new CollectionsAction.AddFavoriteFailure({error: error})))
     )),
-    map((collectionId) => new CollectionsAction.AddFavoriteSuccess({collectionId})),
-    catchError((error) => Observable.of(new CollectionsAction.AddFavoriteFailure({error: error})))
   );
 
   @Effect()
@@ -201,10 +236,10 @@ export class CollectionsEffects {
   public removeFavorite$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.RemoveFavorite>(CollectionsActionType.REMOVE_FAVORITE),
     mergeMap(action => this.homePageService.removeFavoriteCollection(action.payload.collectionId).pipe(
-      map(() => action.payload.collectionId)
+      map(() => action.payload.collectionId),
+      map((collectionId) => new CollectionsAction.RemoveFavoriteSuccess({collectionId})),
+      catchError((error) => Observable.of(new CollectionsAction.RemoveFavoriteFailure({error: error})))
     )),
-    map((collectionId) => new CollectionsAction.RemoveFavoriteSuccess({collectionId})),
-    catchError((error) => Observable.of(new CollectionsAction.RemoveFavoriteFailure({error: error})))
   );
 
   @Effect()
@@ -224,19 +259,19 @@ export class CollectionsEffects {
       const attributeDto = CollectionConverter.toAttributeDto(action.payload.attribute);
 
       return this.collectionService.updateAttribute(action.payload.collectionId, action.payload.attributeId, attributeDto).pipe(
-        map(result => ({action, attribute: CollectionConverter.fromAttributeDto(result)}))
+        map(result => ({action, attribute: CollectionConverter.fromAttributeDto(result)})),
+        flatMap(({action, attribute}) => {
+          const actions: Action[] = [new CollectionsAction.ChangeAttributeSuccess(
+            {collectionId: action.payload.collectionId, attributeId: action.payload.attributeId, attribute: attribute}
+          )];
+          if (action.payload.nextAction) {
+            actions.push(action.payload.nextAction);
+          }
+          return actions;
+        }),
+        catchError((error) => Observable.of(new CollectionsAction.ChangeAttributeFailure({error: error})))
       );
-    }),
-    flatMap(({action, attribute}) => {
-      const actions: Action[] = [new CollectionsAction.ChangeAttributeSuccess(
-        {collectionId: action.payload.collectionId, attributeId: action.payload.attributeId, attribute: attribute}
-      )];
-      if (action.payload.nextAction) {
-        actions.push(action.payload.nextAction);
-      }
-      return actions;
-    }),
-    catchError((error) => Observable.of(new CollectionsAction.ChangeAttributeFailure({error: error})))
+    })
   );
 
   @Effect()
@@ -253,10 +288,10 @@ export class CollectionsEffects {
   public removeAttribute$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.RemoveAttribute>(CollectionsActionType.REMOVE_ATTRIBUTE),
     mergeMap(action => this.collectionService.removeAttribute(action.payload.collectionId, action.payload.attributeId).pipe(
-      map(() => action)
-    )),
-    map(action => new CollectionsAction.RemoveAttributeSuccess(action.payload)),
-    catchError((error) => Observable.of(new CollectionsAction.RemoveAttributeFailure({error: error})))
+      map(() => action),
+      map(action => new CollectionsAction.RemoveAttributeSuccess(action.payload)),
+      catchError((error) => Observable.of(new CollectionsAction.RemoveAttributeFailure({error: error})))
+    ))
   );
 
   @Effect()

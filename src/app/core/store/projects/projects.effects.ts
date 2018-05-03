@@ -27,7 +27,7 @@ import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFr
 import {ProjectService} from '../../rest';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {selectOrganizationsDictionary} from '../organizations/organizations.state';
+import {selectOrganizationsDictionary, selectSelectedOrganization} from '../organizations/organizations.state';
 import {ProjectConverter} from './project.converter';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {selectProjectsCodes, selectProjectsLoaded} from './projects.state';
@@ -35,9 +35,10 @@ import {isNullOrUndefined} from "util";
 import {Permission} from '../../dto';
 import {PermissionType} from '../permissions/permissions.model';
 import {PermissionsConverter} from '../permissions/permissions.converter';
-import {Router} from '@angular/router';
-import {RouterAction} from '../router/router.action';
+import {HttpErrorResponse} from "@angular/common/http";
+import {RouterAction} from "../router/router.action";
 import {RouteFinder} from '../../../shared/utils/route-finder';
+import {Router} from "@angular/router";
 
 @Injectable()
 export class ProjectsEffects {
@@ -56,11 +57,11 @@ export class ProjectsEffects {
       const organizationId = action.payload.organizationId;
       const organization = organizationsEntities[organizationId];
       return this.projectService.getProjects(organization.code).pipe(
-        map(dtos => ({organizationId, projects: dtos.map(dto => ProjectConverter.fromDto(dto, organizationId))}))
+        map(dtos => ({organizationId, projects: dtos.map(dto => ProjectConverter.fromDto(dto, organizationId))})),
+        map(payload => new ProjectsAction.GetSuccess(payload)),
+        catchError(error => Observable.of(new ProjectsAction.GetFailure({error})))
       );
-    }),
-    map(payload => new ProjectsAction.GetSuccess(payload)),
-    catchError(error => Observable.of(new ProjectsAction.GetFailure({error})))
+    })
   );
 
   @Effect()
@@ -86,11 +87,11 @@ export class ProjectsEffects {
     mergeMap(({action, organizationsEntities}) => {
       const organization = organizationsEntities[action.payload.organizationId];
       return this.projectService.getProjectCodes(organization.code).pipe(
-        map(projectCodes => ({projectCodes, organizationId: action.payload.organizationId}))
+        map(projectCodes => ({projectCodes, organizationId: action.payload.organizationId})),
+        map(({projectCodes, organizationId}) => new ProjectsAction.GetCodesSuccess({organizationId, projectCodes})),
+        catchError((error) => Observable.of(new ProjectsAction.GetCodesFailure({error: error})))
       );
-    }),
-    map(({projectCodes, organizationId}) => new ProjectsAction.GetCodesSuccess({organizationId, projectCodes})),
-    catchError((error) => Observable.of(new ProjectsAction.GetCodesFailure({error: error})))
+    })
   );
 
   @Effect({dispatch: false})
@@ -109,23 +110,38 @@ export class ProjectsEffects {
       const projectDto = ProjectConverter.toDto(action.payload.project);
 
       return this.projectService.createProject(organization.code, projectDto).pipe(
-        map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId, correlationId))
+        map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId, correlationId)),
+        withLatestFrom(this.store$.select(selectProjectsCodes)),
+        flatMap(([project, projectCodes]) => {
+          const codes = [...projectCodes[project.organizationId], project.code];
+          return [new ProjectsAction.CreateSuccess({project}),
+            new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes})];
+        }),
+        catchError(error => Observable.of(new ProjectsAction.CreateFailure({error: error})))
       );
-    }),
-    withLatestFrom(this.store$.select(selectProjectsCodes)),
-    flatMap(([project, projectCodes]) => {
-      const codes = [...projectCodes[project.organizationId], project.code];
-      return [new ProjectsAction.CreateSuccess({project}),
-        new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes})];
-    }),
-    catchError(error => Observable.of(new ProjectsAction.CreateFailure({error: error})))
+    })
   );
 
   @Effect()
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.CreateFailure>(ProjectsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
-    map(() => {
+    withLatestFrom(this.store$.select(selectSelectedOrganization)),
+    map(([action, organization]) => {
+      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Trial Service' });
+        const message = this.i18n({
+          id: 'project.create.serviceLimits',
+          value: 'You are currently on the Trial plan which allows you to have only one project. Do you want to upgrade to Business now?' });
+        return new NotificationsAction.Confirm({
+          title,
+          message,
+          action: new RouterAction.Go({
+            path: ['/organization', organization.code, 'detail'],
+            extras: { fragment: 'orderService' }
+          })
+        });
+      }
       const message = this.i18n({id: 'project.create.fail', value: 'Failed to create project'});
       return new NotificationsAction.Error({message});
     })
@@ -140,35 +156,33 @@ export class ProjectsEffects {
       const oldProject = state.projects.entities[action.payload.project.id];
       const projectDto = ProjectConverter.toDto(action.payload.project);
       return this.projectService.editProject(organization.code, oldProject.code, projectDto).pipe(
-        map(dto => ({project: ProjectConverter.fromDto(dto, action.payload.project.organizationId), oldProject}))
+        map(dto => ({project: ProjectConverter.fromDto(dto, action.payload.project.organizationId), oldProject})),
+        withLatestFrom(this.store$.select(selectProjectsCodes)),
+        flatMap(([{project, oldProject}, projectCodes]) => {
+          const actions: Action[] = [new ProjectsAction.UpdateSuccess({project: {...project, id: project.id}})];
+          const codesByOrg = projectCodes && projectCodes[project.organizationId];
+          if (codesByOrg) {
+            const codes = codesByOrg.map(code => code === oldProject.code ? project.code : code);
+            actions.push(new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes}));
+          }
+
+          const paramMap = RouteFinder.getFirstChildRouteWithParams(this.router.routerState.root.snapshot).paramMap;
+          const projCodeInRoute = paramMap.get('projectCode');
+
+          if (projCodeInRoute && projCodeInRoute === oldProject.code && project.code !== oldProject.code) {
+            const paths = this.router.routerState.snapshot.url.split('/').filter(path => path);
+            const index = paths.indexOf(oldProject.code, 3);
+            if (index !== -1) {
+              paths[index] = project.code;
+              actions.push(new RouterAction.Go({path: paths}));
+            }
+          }
+
+          return actions;
+        }),
+        catchError(error => Observable.of(new ProjectsAction.UpdateFailure({error: error})))
       );
-    }),
-    withLatestFrom(this.store$.select(selectProjectsCodes)),
-    flatMap(([{project, oldProject}, projectCodes]) => {
-      const actions: Action[] = [new ProjectsAction.UpdateSuccess({project: {...project, id: project.id}})];
-      const codesByOrg = projectCodes && projectCodes[project.organizationId];
-      if (codesByOrg) {
-        const codes = codesByOrg.map(code => code === oldProject.code ? project.code : code);
-        actions.push(new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes}));
-      }
-
-      const paramMap = RouteFinder.getFirstChildRouteWithParams(this.router.routerState.root.snapshot).paramMap;
-      const projCodeInRoute = paramMap.get('projectCode');
-
-      if (projCodeInRoute && projCodeInRoute === oldProject.code && project.code !== oldProject.code) {
-        const paths = this.router.routerState.snapshot.url.split('/').filter(path => path);
-        const index = paths.indexOf(oldProject.code, 3);
-        if (index !== -1) {
-          paths[index] = project.code;
-          actions.push(new RouterAction.Go({path: paths}));
-          // TODO extract as
-        }
-      }
-
-
-      return actions;
-    }),
-    catchError(error => Observable.of(new ProjectsAction.UpdateFailure({error: error})))
+    })
   );
 
   @Effect()
@@ -189,16 +203,16 @@ export class ProjectsEffects {
       const organization = state.organizations.entities[action.payload.organizationId];
       const project = state.projects.entities[action.payload.projectId];
       return this.projectService.deleteProject(organization.code, project.code).pipe(
-        map(() => ({action, deletedProjectCode: project.code}))
+        map(() => ({action, deletedProjectCode: project.code})),
+        withLatestFrom(this.store$.select(selectProjectsCodes)),
+        flatMap(([{action, deletedProjectCode}, projectCodes]) => {
+          const codes = projectCodes[action.payload.organizationId].filter(code => code !== deletedProjectCode);
+          return [new ProjectsAction.DeleteSuccess(action.payload),
+            new ProjectsAction.GetCodesSuccess({organizationId: action.payload.organizationId, projectCodes: codes})];
+        }),
+        catchError(error => Observable.of(new ProjectsAction.DeleteFailure({error: error})))
       );
-    }),
-    withLatestFrom(this.store$.select(selectProjectsCodes)),
-    flatMap(([{action, deletedProjectCode}, projectCodes]) => {
-      const codes = projectCodes[action.payload.organizationId].filter(code => code !== deletedProjectCode);
-      return [new ProjectsAction.DeleteSuccess(action.payload),
-        new ProjectsAction.GetCodesSuccess({organizationId: action.payload.organizationId, projectCodes: codes})];
-    }),
-    catchError(error => Observable.of(new ProjectsAction.DeleteFailure({error: error})))
+    })
   );
 
   @Effect()
