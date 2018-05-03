@@ -41,11 +41,11 @@ export class ServiceLimitsEffects {
         map(mapOfLimits => Object.keys(mapOfLimits).reduce((acc, organizationId) => {
           acc.push(ServiceLimitsConverter.fromDto(organizationId, mapOfLimits[organizationId]));
           return acc;
-        }, []))
+        }, [])),
+        map(serviceLimits => new ServiceLimitsAction.GetAllSuccess({allServiceLimits: serviceLimits})),
+        catchError(error => Observable.of(new ServiceLimitsAction.GetAllFailure({error: error})))
       );
-    }),
-    map(serviceLimits => new ServiceLimitsAction.GetAllSuccess({allServiceLimits: serviceLimits})),
-    catchError(error => Observable.of(new ServiceLimitsAction.GetAllFailure({error: error})))
+    })
   );
 
   @Effect()
@@ -63,11 +63,11 @@ export class ServiceLimitsEffects {
     ofType<ServiceLimitsAction.GetServiceLimits>(ServiceLimitsActionType.GET_SERVICE_LIMITS),
     mergeMap(action => {
       return this.organizationService.getServiceLimits().pipe(
-        map(dto => ServiceLimitsConverter.fromDto(action.payload.organizationId, dto))
+        map(dto => ServiceLimitsConverter.fromDto(action.payload.organizationId, dto)),
+        map(serviceLimits => new ServiceLimitsAction.GetServiceLimitsSuccess({serviceLimits: serviceLimits})),
+        catchError(error => Observable.of(new ServiceLimitsAction.GetServiceLimitsFailure({error: error})))
       );
-    }),
-    map(serviceLimits => new ServiceLimitsAction.GetServiceLimitsSuccess({serviceLimits: serviceLimits})),
-    catchError(error => Observable.of(new ServiceLimitsAction.GetServiceLimitsFailure({error: error})))
+    })
   );
 
   @Effect()
