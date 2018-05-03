@@ -24,7 +24,6 @@ import {CollectionTabComponent} from '../collection-tab.component';
 import {EventService} from '../../../../core/rest/event.service';
 import {CollectionService} from '../../../../core/rest/collection.service';
 import {Event} from '../../../../core/dto/Event';
-import {CollectionSelectService} from '../../../service/collection-select.service';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {EventModel} from './model/EventModel';
 import {EventFireReason} from './model/event-fire-reason';
@@ -41,12 +40,10 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
 
   constructor(private eventService: EventService,
               collectionService: CollectionService,
-              collectionSelectService: CollectionSelectService,
               notificationService: NotificationService,
               store: Store<AppState>) {
     super(
       collectionService,
-      collectionSelectService,
       notificationService,
       store
     );

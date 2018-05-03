@@ -20,4 +20,7 @@
 import {Resource} from './resource';
 
 export interface Project extends Resource {
+
+  collectionsCount?: number;
+
 }

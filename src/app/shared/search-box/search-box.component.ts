@@ -25,9 +25,7 @@ import {Observable} from 'rxjs/Observable';
 import {filter, flatMap, map} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../core/store/app.state';
-import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {selectAllCollections} from '../../core/store/collections/collections.state';
-import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
 import {selectNavigation, selectQuery} from '../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../core/store/navigation/query.model';
@@ -60,9 +58,6 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.subscribeToQuery();
     this.subscribeToNavigation();
-
-    this.getAllCollections();
-    this.getAllLinkTypes();
   }
 
   private subscribeToQuery() {
@@ -107,14 +102,6 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
           linkCollectionIds.every(collectionId => collectionIds.has(collectionId));
       })
     );
-  }
-
-  private getAllCollections() {
-    this.store.dispatch(new CollectionsAction.Get({query: {}}));
-  }
-
-  private getAllLinkTypes() {
-    this.store.dispatch(new LinkTypesAction.Get({query: {}}));
   }
 
   public ngOnDestroy() {

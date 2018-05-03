@@ -19,25 +19,24 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {filter, map} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {isNullOrUndefined} from 'util';
-
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
-import {RouterAction} from '../../core/store/router/router.action';
 import {selectAllUsers} from '../../core/store/users/users.state';
+import {ResourceType} from '../../core/model/resource-type';
 
 @Component({
-  templateUrl: './organization-settings.component.html',
-  styleUrls: ['./organization-settings.component.scss']
+  templateUrl: './organization-settings.component.html'
 })
 export class OrganizationSettingsComponent implements OnInit, OnDestroy {
 
@@ -75,6 +74,10 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
       .subscribe(organization => this.organization = organization);
   }
 
+  public getResourceType(): ResourceType {
+    return ResourceType.Organization;
+  }
+
   public onDelete() {
     const message = this.i18n({id: 'organization.delete.dialog.message', value: 'Organization is about to be permanently deleted.'});
     const title = this.i18n({id: 'organization.delete.dialog.title', value: 'Delete organization?'});
@@ -92,55 +95,31 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   private deleteOrganization() {
-    if (isNullOrUndefined(this.organization)) {
-      return;
-    }
-
     this.store.dispatch(new OrganizationsAction.Delete({organizationId: this.organization.id}));
     this.goBack();
   }
 
   public onNewDescription(newDescription: string) {
-    if (isNullOrUndefined(this.organization)) {
-      return;
-    }
-
     const organizationCopy = {...this.organization, description: newDescription};
     this.updateOrganization(organizationCopy);
   }
 
   public onNewName(name: string) {
-    if (isNullOrUndefined(this.organization)) {
-      return;
-    }
-
     const organizationCopy = {...this.organization, name};
     this.updateOrganization(organizationCopy);
   }
 
   public onNewCode(code: string) {
-    if (isNullOrUndefined(this.organization)) {
-      return;
-    }
-
     const organizationCopy = {...this.organization, code};
     this.updateOrganization(organizationCopy);
   }
 
   public onNewIcon(icon: string) {
-    if (isNullOrUndefined(this.organization)) {
-      return;
-    }
-
     const organizationCopy = {...this.organization, icon};
     this.updateOrganization(organizationCopy);
   }
 
   public onNewColor(color: string) {
-    if (isNullOrUndefined(this.organization)) {
-      return;
-    }
-
     const organizationCopy = {...this.organization, color};
     this.updateOrganization(organizationCopy);
   }
@@ -153,8 +132,8 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     this.goBack();
   }
 
-  private goBack(): void {
-    this.store.dispatch(new RouterAction.Go({path: ['/workspace']}));
+  public goBack(): void {
+    this.router.navigate(['/workspace']);
   }
 
 }

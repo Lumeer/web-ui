@@ -35,6 +35,9 @@ import {isNullOrUndefined} from "util";
 import {Permission} from '../../dto';
 import {PermissionType} from '../permissions/permissions.model';
 import {PermissionsConverter} from '../permissions/permissions.converter';
+import {Router} from '@angular/router';
+import {RouterAction} from '../router/router.action';
+import {RouteFinder} from '../../../shared/utils/route-finder';
 
 @Injectable()
 export class ProjectsEffects {
@@ -143,10 +146,26 @@ export class ProjectsEffects {
     withLatestFrom(this.store$.select(selectProjectsCodes)),
     flatMap(([{project, oldProject}, projectCodes]) => {
       const actions: Action[] = [new ProjectsAction.UpdateSuccess({project: {...project, id: project.id}})];
-      if (projectCodes) {
-        const codes = projectCodes[project.organizationId].map(code => code === oldProject.code ? project.code : code);
+      const codesByOrg = projectCodes && projectCodes[project.organizationId];
+      if (codesByOrg) {
+        const codes = codesByOrg.map(code => code === oldProject.code ? project.code : code);
         actions.push(new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes}));
       }
+
+      const paramMap = RouteFinder.getFirstChildRouteWithParams(this.router.routerState.root.snapshot).paramMap;
+      const projCodeInRoute = paramMap.get('projectCode');
+
+      if (projCodeInRoute && projCodeInRoute === oldProject.code && project.code !== oldProject.code) {
+        const paths = this.router.routerState.snapshot.url.split('/').filter(path => path);
+        const index = paths.indexOf(oldProject.code, 3);
+        if (index !== -1) {
+          paths[index] = project.code;
+          actions.push(new RouterAction.Go({path: paths}));
+          // TODO extract as
+        }
+      }
+
+
       return actions;
     }),
     catchError(error => Observable.of(new ProjectsAction.UpdateFailure({error: error})))
@@ -227,6 +246,7 @@ export class ProjectsEffects {
 
   constructor(private actions$: Actions,
               private i18n: I18n,
+              private router: Router,
               private projectService: ProjectService,
               private store$: Store<AppState>) {
   }
