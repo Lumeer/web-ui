@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {OrganizationModel} from "../../../../../core/store/organizations/organization.model";
 import {Subscription} from "rxjs/Subscription";
 import {Store} from "@ngrx/store";
@@ -38,6 +38,9 @@ import {ServiceLimitsAction} from "../../../../../core/store/organizations/servi
   styleUrls: ['./payments-list.component.scss']
 })
 export class PaymentsListComponent implements OnInit, OnDestroy {
+
+  @Output()
+  public repay = new EventEmitter<string>();
 
   private organization: OrganizationModel;
   private organizationSubscription: Subscription;
@@ -84,5 +87,9 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
       paymentId,
       nextAction: new ServiceLimitsAction.GetServiceLimits({ organizationId: this.organization.id })
     }));
+  }
+
+  public repayEvent(gwUrl: string) {
+    this.repay.emit(gwUrl);
   }
 }

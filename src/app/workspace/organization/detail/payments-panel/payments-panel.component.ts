@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {PaymentModel} from "../../../../core/store/organizations/payment/payment.model";
 import {OrganizationModel} from "../../../../core/store/organizations/organization.model";
 import {Subscription} from "rxjs/Subscription";
@@ -32,6 +32,7 @@ import {PaymentsAction, PaymentsActionType} from "../../../../core/store/organiz
 import {ServiceLimitsModel} from "../../../../core/store/organizations/service-limits/service-limits.model";
 import {selectServiceLimitsByWorkspace} from "../../../../core/store/organizations/service-limits/service-limits.state";
 import {selectLastCreatedPayment} from "../../../../core/store/organizations/payment/payments.state";
+import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
 
 @Component({
   selector: 'payments-panel',
@@ -39,6 +40,9 @@ import {selectLastCreatedPayment} from "../../../../core/store/organizations/pay
   styleUrls: ['./payments-panel.component.scss']
 })
 export class PaymentsPanelComponent implements OnInit, OnDestroy {
+
+  @ViewChild('goPayForm')
+  private goPayForm: ElementRef;
 
   private organization: OrganizationModel;
   private organizationSubscription: Subscription;
@@ -51,6 +55,8 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy {
   public lastPayment: PaymentModel;
   private paymentCreatedSubscription: Subscription;
   private lastCreatedPayment: Subscription;
+
+  public paymentGateway: string = 'https://gw.sandbox.gopay.com/gw/v3/dfgvmwTKK5hrJx2aGG8ZnFyBJhAvF';
 
   constructor(private i18n: I18n,
               private router: Router,
@@ -108,13 +114,17 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToActions() {
-    this.paymentCreatedSubscription = this.actionsSubject.subscribe(data => {
-      if (data.type === PaymentsActionType.CREATE_PAYMENT_SUCCESS) {
-        console.log("pajoment created");
-        console.log(this.lastPayment);
+    this.paymentCreatedSubscription = this.actionsSubject.subscribe(action => {
+      if (action.type === PaymentsActionType.CREATE_PAYMENT_SUCCESS) {
+        const newPaymentAction: CreatePaymentSuccess = action as CreatePaymentSuccess;
+        this.paymentGateway = newPaymentAction.payload.payment.gwUrl;
+        this.goPayForm.nativeElement.submit();
       }
     });
   }
 
-
+  public callGoPay($event: string) {
+    this.paymentGateway = $event;
+    this.goPayForm.nativeElement.submit();
+  }
 }

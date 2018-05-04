@@ -24,7 +24,15 @@
           <td>{{ payment.users }}</td>
           <td>{{ payment.currency }} {{ payment.amount | number:'1.2-2' }}</td>
           <td *ngIf="payment.state === 'PAID'" i18n="@@organizations.tab.detail.payments.paid">Paid</td>
-          <td *ngIf="payment.state !== 'PAID'"><span i18n="@@organizations.tab.detail.payments.ordered">Ordered</span> <button type="button" class="btn btn-sm btn-success" (click)="refreshPayment(payment.paymentId)"><i class="fas fa-sync-alt"></i></button></td>
+          <td *ngIf="payment.state !== 'PAID'">
+            <span i18n="@@organizations.tab.detail.payments.ordered">Ordered</span>
+            <button type="button" class="btn btn-sm btn-success" (click)="refreshPayment(payment.paymentId)" title="Refresh payment state" title.i18n="@@organizations.tab.detail.payments.refresh">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+            <button *ngIf="payment.state !== 'AUTHORIZED' " type="button" class="btn btn-sm btn-success" (click)="repayEvent(payment.gwUrl)" title="Try to pay again" title.i18n="@@organizations.tab.detail.payments.repay">
+              <i class="fas fa-credit-card"></i>
+            </button>
+          </td>
           <td>{{ payment.start | date : 'shortDate'}}</td>
           <td>{{ payment.validUntil | date : 'shortDate' }}</td>
         </tr>

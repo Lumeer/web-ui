@@ -8,6 +8,9 @@
 </div>
 <div class="row mt-4">
   <div class="col">
-    <payments-list></payments-list>
+    <payments-list (repay)="callGoPay($event)"></payments-list>
   </div>
 </div>
+<form #goPayForm [(action)]="paymentGateway" method="post" id="gopay-payment-button">
+  <script type="text/javascript" src="https://gw.sandbox.gopay.com/gp-gw/js/embed.js"></script>
+</form>
