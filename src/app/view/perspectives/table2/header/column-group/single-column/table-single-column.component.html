@@ -12,6 +12,7 @@
                        class="d-block h-100 font-italic {{dragClass()}}">
   </table-editable-cell>
   <table-attribute-suggestions *ngIf="canShowSuggestions()"
+                               [attribute]="attribute.name"
                                [attributeId]="attributeId()"
                                [collection]="collection"
                                [cursor]="cursor"

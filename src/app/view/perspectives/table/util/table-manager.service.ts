@@ -117,8 +117,8 @@ export class TableManagerService {
 
     const attributeIds = configPart.attributeIds.filter(id => id);
     if (configPart.attributeIds.length > 0) {
-      tablePart.shownAttributes = attributeIds.map(attrId => leafAttributes.find(attr => attr.fullName === attrId));
-      tablePart.hiddenAttributes = leafAttributes.filter(attr => !attributeIds.includes(attr.fullName));
+      tablePart.shownAttributes = attributeIds.map(attrId => leafAttributes.find(attr => attr.id === attrId));
+      tablePart.hiddenAttributes = leafAttributes.filter(attr => !attributeIds.includes(attr.id));
     } else {
       tablePart.shownAttributes = leafAttributes;
     }
@@ -138,7 +138,7 @@ export class TableManagerService {
   private initFirstColumn() {
     if (this.parts[0].shownAttributes.length === 0) {
       const attribute: Attribute = {
-        fullName: null,
+        id: null,
         name: AttributeHelper.generateAttributeName([]),
         constraints: [],
         usageCount: 0
@@ -247,7 +247,7 @@ export class TableManagerService {
   }
 
   private removeUninitializedColumns() {
-    this.parts.forEach(part => part.shownAttributes.filter(attr => !attr.fullName)
+    this.parts.forEach(part => part.shownAttributes.filter(attr => !attr.name)
       .forEach(attr => this.removeColumn(part, attr))
     );
   }
@@ -424,7 +424,7 @@ export class TableManagerService {
     const configParts = this.parts.map(part => {
       return {
         collectionId: part.collection.id,
-        attributeIds: part.shownAttributes.map(attr => attr.fullName).filter(id => id),
+        attributeIds: part.shownAttributes.map(attr => attr.id).filter(id => id),
         sortedBy: part.sorting ? part.sorting.attributeId : null,
         sortedDesc: part.sorting ? part.sorting.descending : null,
         linkTypeId: part.linkType ? part.linkType.id : null,
@@ -443,7 +443,7 @@ export class TableManagerService {
     const allAttributes = [].concat(part.shownAttributes).concat(part.hiddenAttributes);
 
     const attribute: Attribute = {
-      fullName: null,
+      id: null,
       name: AttributeHelper.generateAttributeName(allAttributes),
       constraints: [],
       usageCount: 0
@@ -458,8 +458,7 @@ export class TableManagerService {
     const attributes = part.shownAttributes;
 
     const attribute: Attribute = {
-      fullName: parentAttribute.fullName + '.',
-      name: parent.name,
+      name: parentAttribute.name + '.',
       constraints: [],
       usageCount: 0
     };
@@ -472,7 +471,7 @@ export class TableManagerService {
       return;
     }
 
-    const index = attributes.length - attributes.reverse().findIndex(attr => attr.fullName.startsWith(parentAttribute.fullName));
+    const index = attributes.length - attributes.reverse().findIndex(attr => attr.name.startsWith(parentAttribute.name));
     attributes.splice(index, 0, attribute);
 
     this.saveConfig();
@@ -495,13 +494,13 @@ export class TableManagerService {
 
   private filterLeafChildrenAttributes(all: Attribute[], parent: Attribute): Attribute[] {
     return all.filter(attr => !attr.intermediate)
-      .filter(attr => attr.fullName.startsWith(parent.fullName));
+      .filter(attr => attr.name.startsWith(parent.name));
   }
 
   public removeColumn(part: TablePart, attribute: Attribute) {
     AttributeHelper.removeAttributeFromArray(attribute, part.shownAttributes);
 
-    if (attribute.fullName) {
+    if (attribute.id) {
       AttributeHelper.removeAttributeFromArray(attribute, part.collection.attributes);
     }
 

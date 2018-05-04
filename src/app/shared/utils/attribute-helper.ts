@@ -63,7 +63,7 @@ export class AttributeHelper {
   }
 
   public static isAttributeInitialized(attribute: Attribute): boolean {
-    return !!attribute.fullName;
+    return !!attribute.id;
   }
 
 }

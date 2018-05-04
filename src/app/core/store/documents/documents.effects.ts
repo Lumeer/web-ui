@@ -23,7 +23,6 @@ import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {catchError, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
-import {extractAttributeName} from '../../../shared/utils/attribute.utils';
 import {Document} from '../../dto';
 import {DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
@@ -287,10 +286,10 @@ export class DocumentsEffects {
 function createSyncCollectionAction(collection: CollectionModel,
                                     newDocument: DocumentModel,
                                     oldDocument: DocumentModel): CollectionsAction.UpdateSuccess {
-  const newAttributeIds: string[] = newDocument && newDocument.data ? Object.keys(newDocument.data) : [];
-  const oldAttributeIds: string[] = oldDocument && oldDocument.data ? Object.keys(oldDocument.data) : [];
+  const newAttributeNames: string[] = newDocument && newDocument.data ? Object.keys(newDocument.data) : [];
+  const oldAttributeNames: string[] = oldDocument && oldDocument.data ? Object.keys(oldDocument.data) : [];
 
-  const attributes = updateAttributes(collection.attributes, newAttributeIds, oldAttributeIds);
+  const attributes = updateAttributes(collection.attributes, newAttributeNames, oldAttributeNames);
   const documentsCount = collection.documentsCount + (!oldDocument ? 1 : 0) - (!newDocument ? 1 : 0);
   const updatedCollection: CollectionModel = {...collection, attributes, documentsCount};
 
@@ -298,20 +297,21 @@ function createSyncCollectionAction(collection: CollectionModel,
 }
 
 function updateAttributes(attributes: AttributeModel[],
-                          newDocumentAttributeIds: string[],
-                          oldDocumentAttributeIds: string[]): AttributeModel[] {
-  const addedAttributeIds = newDocumentAttributeIds.filter(id => !oldDocumentAttributeIds.includes(id));
-  const removedAttributeIds = oldDocumentAttributeIds.filter(id => !newDocumentAttributeIds.includes(id));
+                          newDocumentAttributeNames: string[],
+                          oldDocumentAttributeNames: string[]): AttributeModel[] {
+  const addedAttributeNames = newDocumentAttributeNames.filter(name => !oldDocumentAttributeNames.includes(name));
+  const removedAttributeNames = oldDocumentAttributeNames.filter(name => !newDocumentAttributeNames.includes(name));
 
-  const attributeIds = attributes.map(attribute => attribute.id);
-  const createdAttributes = addedAttributeIds.filter(id => !attributeIds.includes(id))
-    .map(id => ({id, name: extractAttributeName(id), constraints: [], usageCount: 1}));
+  const attributeNames = attributes.map(attribute => attribute.name);
+  const createdAttributes = addedAttributeNames.filter(name => !attributeNames.includes(name))
+    .map(name => ({id: "?????", name, constraints: [], usageCount: 1}));
+  // TODO I don't have attribute id !!!!!!!!!!!!
 
   return attributes.map(attribute => {
-    if (addedAttributeIds.includes(attribute.id)) {
+    if (addedAttributeNames.includes(attribute.name)) {
       return {...attribute, usageCount: attribute.usageCount + 1};
     }
-    if (removedAttributeIds.includes(attribute.id)) {
+    if (removedAttributeNames.includes(attribute.name)) {
       return {...attribute, usageCount: Math.max(attribute.usageCount - 1, 0)};
     }
     return attribute;

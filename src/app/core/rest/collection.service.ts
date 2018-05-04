@@ -116,15 +116,20 @@ export class CollectionService extends PermissionService {
     return this.httpClient.get<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`);
   }
 
-  public updateAttribute(collectionId: string, fullName: string, attribute: Attribute): Observable<Attribute> {
+  public createAttribute(collectionId: string, attribute: Attribute): Observable<Attribute> {
     this.homePageService.addLastUsedCollection(collectionId).subscribe();
-    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionId}/attributes/${fullName}`, attribute);
+    return this.httpClient.post<Attribute>(`${this.apiPrefix()}/${collectionId}/attributes`, attribute);
   }
 
-  public removeAttribute(collectionId: string, fullName: string): Observable<HttpResponse<any>> {
+  public updateAttribute(collectionId: string, id: string, attribute: Attribute): Observable<Attribute> {
+    this.homePageService.addLastUsedCollection(collectionId).subscribe();
+    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionId}/attributes/${id}`, attribute);
+  }
+
+  public removeAttribute(collectionId: string, id: string): Observable<HttpResponse<any>> {
     this.homePageService.addLastUsedCollection(collectionId).subscribe();
     return this.httpClient.delete(
-      `${this.apiPrefix()}/${collectionId}/attributes/${fullName}`,
+      `${this.apiPrefix()}/${collectionId}/attributes/${id}`,
       {observe: 'response', responseType: 'text'}
     );
   }

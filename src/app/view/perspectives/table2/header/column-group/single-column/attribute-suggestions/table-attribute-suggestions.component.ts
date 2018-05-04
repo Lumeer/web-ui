@@ -62,6 +62,9 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   public cursor: TableHeaderCursor;
 
   @Input()
+  public attribute: string;
+
+  @Input()
   public attributeId: string;
 
   @Input()
@@ -74,8 +77,8 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('attributeId') && this.attributeId) {
-      this.attributeName = extractAttributeName(this.attributeId);
+    if (changes.hasOwnProperty('attribute') && this.attribute) {
+      this.attributeName = extractAttributeName(this.attribute);
     }
   }
 

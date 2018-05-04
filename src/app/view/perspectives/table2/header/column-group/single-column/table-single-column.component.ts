@@ -136,7 +136,7 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
 
   private initializeAttribute(attributes: AttributeModel[]) {
     this.attribute = this.findAttribute(attributes);
-    this.attributeName = this.attribute ? this.attribute.name : extractAttributeName(this.column.attributeId);
+    this.attributeName = this.attribute ? this.attribute.name : null;
   }
 
   public ngOnDestroy() {
@@ -159,7 +159,7 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
   }
 
   public value(): string {
-    return this.attribute ? this.attribute.name : extractAttributeName(this.column.attributeId);
+    return this.attribute ? this.attribute.name : null;
   }
 
   public onValueChange(attributeName: string) {

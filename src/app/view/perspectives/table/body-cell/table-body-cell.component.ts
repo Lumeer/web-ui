@@ -121,7 +121,7 @@ export class TableBodyCellComponent implements OnChanges {
   }
 
   private saveDataChanges() {
-    const oldValue = this.row.documents.length > 0 ? this.row.documents[0].data[this.attribute.fullName] : null;
+    const oldValue = this.row.documents.length > 0 ? this.row.documents[0].data[this.attribute.name] : null;
     const newValue = this.dataCell.nativeElement.textContent.trim();
 
     // TODO validate new value based on constraints

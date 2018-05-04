@@ -40,7 +40,7 @@ export function filterDirectAttributeChildren(attributes: AttributeModel[], pare
 }
 
 export function isDirectAttributeChild(parent: AttributeModel, potentialChild: AttributeModel): boolean {
-  return potentialChild.id.startsWith(parent.id) && getAttributeDepth(potentialChild) === getAttributeDepth(parent) + 1;
+  return potentialChild.name.startsWith(parent.name) && getAttributeDepth(potentialChild) === getAttributeDepth(parent) + 1;
 }
 
 export function hasAttributeChildren(attributes: AttributeModel[], parent: AttributeModel): boolean {
@@ -48,7 +48,7 @@ export function hasAttributeChildren(attributes: AttributeModel[], parent: Attri
 }
 
 export function getAttributeDepth(attribute: AttributeModel): number {
-  return attribute.id.split('.').length;
+  return attribute.name.split('.').length;
 }
 
 export function extractAttributeName(attributeId: string): string {
