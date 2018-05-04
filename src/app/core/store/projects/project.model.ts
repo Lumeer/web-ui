@@ -22,7 +22,6 @@ import {ResourceModel} from "../../model/resource.model";
 export interface ProjectModel extends ResourceModel {
 
   organizationId?: string;
-  correlationId?: string;
   collectionsCount?: number;
 
 }

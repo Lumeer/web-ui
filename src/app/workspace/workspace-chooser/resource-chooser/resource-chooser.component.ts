@@ -17,47 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChange, ViewChild} from '@angular/core';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
-import {Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, QueryList, SimpleChange, ViewChild, ViewChildren} from '@angular/core';
+
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {isNullOrUndefined} from 'util';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generator';
 import {OrganizationModel} from '../../../core/store/organizations/organization.model';
-import {ProjectModel} from '../../../core/store/projects/project.model';
 import {KeyCode} from '../../../shared/key-code';
-import {ResourceItemType} from './resource-item-type';
-import {Role} from '../../../core/model/role';
 import {ServiceLimitsModel} from '../../../core/store/organizations/service-limits/service-limits.model';
 import {ServiceLevelType} from '../../../core/dto/service-level-type';
-import {InputBoxComponent} from '../../../shared/input/input-box/input-box.component';
+import {ResourceType} from '../../../core/model/resource-type';
+import {ResourceModel} from '../../../core/model/resource.model';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
-
-type ResourceModel = OrganizationModel | ProjectModel;
 
 @Component({
   selector: 'resource-chooser',
   templateUrl: './resource-chooser.component.html',
   styleUrls: ['./resource-chooser.component.scss'],
   animations: [
-    trigger('animateVisible', [
-      state('in', style({opacity: 1})),
-      transition('void => *', [
-        animate(500, keyframes([
-          style({opacity: 0}),
-          style({opacity: 1})
-        ]))
-      ]),
-      transition('* => void', [
-        animate(500, keyframes([
-          style({opacity: 1}),
-          style({opacity: 0})
-        ]))
-      ])
-    ]),
     trigger('animateOpacityFromUp', [
       state('in', style({transform: 'translateY(0)', opacity: 1})),
       transition('void => *', [
@@ -77,16 +59,13 @@ type ResourceModel = OrganizationModel | ProjectModel;
 })
 export class ResourceChooserComponent implements OnChanges {
 
-  @ViewChildren('icon')
-  public icons: QueryList<ElementRef>;
-
   @ViewChild('resourceContainer')
   public resourceContainer: ElementRef;
 
   @ViewChild('resourceDescription')
   public resourceDescription: ElementRef;
 
-  @Input() public resourceType: ResourceItemType;
+  @Input() public resourceType: ResourceType;
   @Input() public resources: ResourceModel[];
   @Input() public serviceLimits: ServiceLimitsModel[];
   @Input() public resourcesRoles: { [id: string]: string[] };
@@ -113,9 +92,6 @@ export class ResourceChooserComponent implements OnChanges {
   public resourceLineSizes = [0, 0, 0];
   public resourceVisibleArrows = false;
 
-  public lastIcon: string;
-  public lastColor: string;
-  public modifiedResourceId: string;
   public syncingCorrIds: string[] = [];
 
   public constructor(private i18n: I18n,
@@ -293,30 +269,17 @@ export class ResourceChooserComponent implements OnChanges {
     }
   }
 
-  public onNewColor(resource: ResourceModel, color: string) {
-    if (resource.id) {
-      this.lastColor = color;
-    } else {
-      resource.color = color;
+  public onResourceCreate(resource: ResourceModel) {
+    if (this.syncingCorrIds.includes(resource.correlationId)) {
+      return;
     }
+
+    this.syncingCorrIds.push(resource.correlationId);
+    this.resourceNew.emit(resource);
   }
 
-
-  public onNewIcon(resource: ResourceModel, icon: string) {
-    if (resource.id) {
-      this.lastIcon = icon;
-    } else {
-      resource.icon = icon;
-    }
-  }
-
-  public hasManageRole(resource: ResourceModel): boolean {
-    return this.hasRole(resource, Role.Manage);
-  }
-
-  private hasRole(resource: ResourceModel, role: string): boolean {
-    const roles = this.resourcesRoles && this.resourcesRoles[resource.id] || [];
-    return roles.includes(role);
+  public onResourceUpdate(resource: ResourceModel) {
+    this.resourceUpdate.emit(resource);
   }
 
   public onKeyDown(event: KeyboardEvent, element: HTMLElement) {
@@ -325,93 +288,8 @@ export class ResourceChooserComponent implements OnChanges {
     }
   }
 
-  public onCodeBlur(component: InputBoxComponent, newCode: string, resource: ResourceModel) {
-    const isValid = this.isNewCodeValid(newCode);
-    if (isValid) {
-      component.removeWarningBorder();
-    } else {
-      component.setWarningBorder();
-
-      const message = this.i18n({
-        id: 'resource.already.exist',
-        value: '{resourceType, select, Project {Project} Organization {Organization}} with code {{resourceCode}} already exist'
-      }, {
-        resourceType: this.resourceType,
-        resourceCode: newCode
-      });
-      this.warningMessage.emit(message);
-      return;
-    }
-
-    this.updateCode(newCode, resource);
-  }
-
-  private updateCode(newCode: string, resource: ResourceModel) {
-    if (resource.id) {
-      const resourceModel = {...resource, code: newCode};
-      this.resourceUpdate.emit(resourceModel);
-    } else {
-      resource.code = newCode;
-      if (resource.icon === DEFAULT_ICON && resource.color === DEFAULT_COLOR) {
-        setTimeout(() => {
-          this.showPicker(resource);
-        }, 200);
-      } else {
-        this.syncingCorrIds.push(resource.correlationId);
-        this.resourceNew.emit(resource);
-      }
-    }
-  }
-
-  public onNameBlur(newName: string, resource: ResourceModel) {
-    if (resource.id) {
-      const resourceModel = {...resource, name: newName};
-      this.resourceUpdate.emit(resourceModel);
-    } else {
-      resource.name = newName;
-    }
-  }
-
-  public showPicker(resource: ResourceModel) {
-    const element = this.icons.find(icon => icon.nativeElement.id === this.getResourceIdentificator(resource));
-    if (element) {
-      element.nativeElement.click();
-    }
-  }
-
-  public onResourcePickerClick(resource: ResourceModel) {
-    this.modifiedResourceId = this.getResourceIdentificator(resource);
-    this.lastIcon = null;
-    this.lastColor = null;
-  }
-
-  public onResourcePickerBlur(resource: ResourceModel) {
-    if (!this.modifiedResourceId || this.modifiedResourceId !== this.getResourceIdentificator(resource)) {
-      return;
-    }
-    if (resource.id) {
-      if (this.shouldUpdateResource(resource)) {
-        const resourceModel = {
-          ...resource,
-          icon: this.lastIcon || resource.icon,
-          color: this.lastColor || resource.color
-        };
-        this.resourceUpdate.emit(resourceModel);
-      }
-    } else if (!this.syncingCorrIds.includes(resource.correlationId) && resource.code) {
-      this.syncingCorrIds.push(resource.correlationId);
-      this.resourceNew.emit(resource);
-    }
-
-    this.modifiedResourceId = null;
-  }
-
-  public isResourceModified(resource: ResourceModel): boolean {
-    return this.modifiedResourceId === this.getResourceIdentificator(resource);
-  }
-
-  public isSelected(resource: ResourceModel): boolean {
-    return resource.id === this.selectedId;
+  public getRoles(resource: ResourceModel) {
+    return this.resourcesRoles && this.resourcesRoles[resource.id] || [];
   }
 
   public onDescriptionBlur(resource: ResourceModel, newDescription: string) {
@@ -419,9 +297,6 @@ export class ResourceChooserComponent implements OnChanges {
     this.resourceUpdate.emit(resourceModel);
   }
 
-  private shouldUpdateResource(resource: ResourceModel): boolean {
-    return (this.lastIcon && resource.icon !== this.lastIcon) || (this.lastColor && resource.color !== this.lastColor);
-  }
 
   public getResourceIdentificator(resource: ResourceModel): string {
     return resource.id || resource.correlationId;
@@ -431,46 +306,11 @@ export class ResourceChooserComponent implements OnChanges {
     return this.findResource(id);
   }
 
-  public serviceLevelTitle(resource: ResourceModel): string {
-    const serviceLevel = this.getServiceLevel(resource);
-    return this.i18n({
-      id: 'resource.chooser.serviceLevel',
-      value: '{serviceLevel, select, FREE {Trial} BASIC {Business}}'
-    }, {
-      serviceLevel: serviceLevel
-    });
-  }
-
-  public getCodePlaceholder(): string {
-    return this.i18n({
-      id: 'resource.postit.code',
-      value: 'Set code'
-    });
-  }
-
-  public getNamePlaceholder(): string {
-    return this.i18n({
-      id: 'resource.postit.name',
-      value: 'Fill in name'
-    });
-  }
-
-  public getDescriptionPlaceholder(): string {
-    return this.i18n({
-      id: 'resource.description',
-      value: 'Fill in description'
-    });
-  }
-
-  public isFreeServiceLevel(resource: ResourceModel): boolean {
-    return this.getServiceLevel(resource) === ServiceLevelType.FREE;
-  }
-
   public hasServiceLevel(resource: ResourceModel): boolean {
-    return this.resourceType === ResourceItemType.Organization && !isNullOrUndefined(this.getServiceLevel(resource));
+    return this.resourceType === ResourceType.Organization && !isNullOrUndefined(this.getServiceLevel(resource));
   }
 
-  private getServiceLevel(organization: OrganizationModel): ServiceLevelType {
+  public getServiceLevel(organization: OrganizationModel): ServiceLevelType {
     const serviceLimits = this.getServiceLimits(organization);
     return serviceLimits && serviceLimits.serviceLevel;
   }
@@ -492,7 +332,11 @@ export class ResourceChooserComponent implements OnChanges {
     return length;
   }
 
-  private isNewCodeValid(code: string): boolean {
-    return !this.usedCodes.includes(code);
+  public getDescriptionPlaceholder(): string {
+    return this.i18n({
+      id: 'resource.description',
+      value: 'Fill in description'
+    });
   }
+
 }

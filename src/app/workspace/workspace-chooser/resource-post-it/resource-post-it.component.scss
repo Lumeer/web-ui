@@ -1,0 +1,159 @@
+@import "../../../shared/variables";
+
+$post-it-size: 170px;
+$post-it-margin: 15px;
+$bookmark-height: 220px;
+$bookmark-border-width: 1px;
+$bookmark-border-color: #bdbdbd;
+
+.dropdown-menu {
+  width: 230px;
+}
+
+.tab {
+  width: $post-it-size + 2*$post-it-margin;
+  height: $bookmark-height;
+
+  .bookmark {
+    border-width: $bookmark-border-width !important;
+    border-color: $bookmark-border-color !important;
+    width: $post-it-size + 2*$post-it-margin;
+    height: $bookmark-height;
+    background: #ffffff;
+    position: absolute;
+    z-index: 5;
+  }
+
+  .post-it {
+    width: $post-it-size;
+    height: $post-it-size;
+    cursor: pointer;
+    margin: 0 $post-it-margin;
+
+    &:hover {
+      .square {
+        box-shadow: $shadow-default;
+        -webkit-box-shadow: $shadow-default;
+        -moz-box-shadow: $shadow-default;
+      }
+
+      .content .settings {
+        opacity: 1 !important;
+      }
+    }
+
+    .square {
+      width: $post-it-size;
+      height: $post-it-size;
+      z-index: 1;
+      position: absolute !important;
+      background-color: transparent !important;
+      transition: box-shadow $animation-duration;
+    }
+
+    .unitialized {
+      border-style: dashed;
+    }
+
+    .content {
+      width: $post-it-size;
+      height: $post-it-size;
+      background: transparent;
+      z-index: 10;
+      position: absolute !important;
+
+      &:hover {
+        z-index: $z-index-hovered;
+      }
+
+      &.selected-resource {
+        z-index: $z-index-selected;
+      }
+
+      .settings {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+      }
+
+      .settings .fas {
+        color: $white;
+        transition: color $animation-duration;
+      }
+
+      &:hover {
+        .settings .fas {
+          color: inherit;
+        }
+      }
+    }
+  }
+}
+
+.ribbon {
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  z-index: 1;
+  overflow: hidden;
+  width: 75px;
+  height: 75px;
+  text-align: right;
+}
+
+.ribbon span {
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  line-height: 20px;
+  transform: rotate(-45deg);
+  width: 100px;
+  display: block;
+  background: $success;
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 19px;
+  left: -21px;
+}
+
+.ribbon span::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: -1;
+  border: 3px solid $success;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.ribbon span::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: -1;
+  border: 3px solid $success;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+}
+
+.red span {
+  background: $danger;
+}
+
+.red span::before {
+  border-left-color: $danger;
+  border-top-color: $danger;
+}
+
+.red span::after {
+  border-right-color: $danger;
+  border-top-color: $danger;
+}
+
+.uninitialized-dropdown {
+  transform: translate3d(0px, 0px, 0px) !important;
+}
+

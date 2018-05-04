@@ -19,8 +19,5 @@
 
 import {ResourceModel} from "../../model/resource.model";
 
-export interface OrganizationModel extends ResourceModel{
-
-  correlationId?: string;
-
+export interface OrganizationModel extends ResourceModel {
 }
