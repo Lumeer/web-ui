@@ -29,7 +29,10 @@ import {Observable} from "rxjs/Observable";
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {PaymentsAction, PaymentsActionType} from "./payments.action";
 import {PaymentConverter} from "./payment.converter";
-import {selectOrganizationById, selectOrganizationByWorkspace} from "../organizations.state";
+import {selectOrganizationByWorkspace} from "../organizations.state";
+import {PlatformLocation} from "@angular/common";
+import {isNullOrUndefined} from "util";
+import {BrowserPlatformLocation} from "@angular/platform-browser/src/browser/location/browser_platform_location";
 
 @Injectable()
 export class PaymentsEffects {
@@ -90,7 +93,7 @@ export class PaymentsEffects {
     ofType<PaymentsAction.CreatePayment>(PaymentsActionType.CREATE_PAYMENT),
     withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
     mergeMap(([action, organization]) => {
-      const returnUrl: string = this.router.createUrlTree(["/organization", organization.code, "detail"]).toString();
+      const returnUrl = isNullOrUndefined(action.payload.returnUrl) ? (this.location as BrowserPlatformLocation).location.href : action.payload.returnUrl;
       return this.organizationService.createPayment(PaymentConverter.toDto(action.payload.payment), returnUrl).pipe(
         map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
         map(payment => new PaymentsAction.CreatePaymentSuccess({ payment: payment })),
@@ -113,6 +116,7 @@ export class PaymentsEffects {
               private store$: Store<AppState>,
               private router: Router,
               private actions$: Actions,
-              private organizationService: OrganizationService) {
+              private organizationService: OrganizationService,
+              private location: PlatformLocation) {
   }
 }
