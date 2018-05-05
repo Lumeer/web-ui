@@ -16,14 +16,14 @@
   <input-box
     class="flex-grow-2 px-2"
     [style.width]="'1px'"
-    [initialValue]="resource.name"
+    [initialValue]="firstLineValue()"
     [color]="resource.color"
     [canStayEmpty]="false"
     [fontSizeRem]="2"
     [maxLines]="1"
-    [title]="resource.name"
-    [placeholder]="getNamePlaceholder()"
-    (newValue)="onNewName($event)">
+    [title]="firstLineValue()"
+    [placeholder]="firstLinePlaceholder()"
+    (newValue)="onNewFirstLine($event)">
   </input-box>
 
   <div class="d-flex flex-row flex-nowrap align-items-center ml-auto">
@@ -38,16 +38,16 @@
 </div>
 
 <div class="col-12 col-md-6 col-xl-4 mr-auto py-2 px-0"
-     *ngIf="isCodeVisible()">
+     *ngIf="hasVisibleCode()">
   <input-box
-    [initialValue]="resource.code"
+    [initialValue]="secondLineValue()"
     [color]="resource.color"
     [canStayEmpty]="false"
     [fontSizeRem]="1.5"
     [maxLines]="1"
-    [title]="resource.code"
-    [placeholder]="getCodePlaceholder()"
-    (newValue)="onNewCode($event)">
+    [title]="secondLineValue()"
+    [placeholder]="secondLinePlaceholder()"
+    (newValue)="onNewSecondLine($event)">
   </input-box>
 
 </div>

@@ -45,7 +45,7 @@ export class ResourceHeaderComponent {
   constructor(private i18n: I18n) {
   }
 
-  public isCodeVisible(): boolean {
+  public hasVisibleCode(): boolean {
     return [ResourceType.Organization, ResourceType.Project].includes(this.resourceType);
   }
 
@@ -57,6 +57,20 @@ export class ResourceHeaderComponent {
     this.delete.emit();
   }
 
+  public onNewFirstLine(value: string) {
+    if (this.hasVisibleCode()) {
+      this.codeChange.emit(value);
+    } else {
+      this.nameChange.emit(value);
+    }
+  }
+
+  public onNewSecondLine(value: string) {
+    if (this.hasVisibleCode()) {
+      this.nameChange.emit(value);
+    }
+  }
+
   public onNewColor(color: string) {
     this.colorChange.emit(color);
   }
@@ -65,17 +79,40 @@ export class ResourceHeaderComponent {
     this.iconChange.emit(icon);
   }
 
-  public onNewCode(code: string) {
-    this.codeChange.emit(code);
-  }
-
-  public onNewName(name: string) {
-    this.nameChange.emit(name);
-  }
-
   public onNewDescription(description: string) {
     this.descriptionChange.emit(description);
   }
+
+  public firstLinePlaceholder(): string {
+    if (this.hasVisibleCode()) {
+      return this.getCodePlaceholder();
+    } else {
+      return this.getNamePlaceholder();
+    }
+  }
+
+  public secondLinePlaceholder(): string {
+    if (this.hasVisibleCode()) {
+      return this.getNamePlaceholder();
+    }
+    return null;
+  }
+
+  public firstLineValue(): string {
+    if (this.hasVisibleCode()) {
+      return this.resource.code;
+    } else {
+      return this.resource.name;
+    }
+  }
+
+  public secondLineValue(): string {
+    if (this.hasVisibleCode()) {
+      return this.resource.name;
+    }
+    return null;
+  }
+
 
   public getCodePlaceholder(): string {
     return this.i18n({
