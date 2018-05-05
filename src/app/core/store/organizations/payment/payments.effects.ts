@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from "@angular/core";
-import {catchError, flatMap, map, mergeMap, tap} from "rxjs/operators";
+import {catchError, flatMap, map, mergeMap, tap, withLatestFrom} from "rxjs/operators";
 import {Actions, Effect, ofType} from "@ngrx/effects";
 import {Action, Store} from "@ngrx/store";
 import {Router} from "@angular/router";
@@ -29,6 +29,7 @@ import {Observable} from "rxjs/Observable";
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {PaymentsAction, PaymentsActionType} from "./payments.action";
 import {PaymentConverter} from "./payment.converter";
+import {selectOrganizationById, selectOrganizationByWorkspace} from "../organizations.state";
 
 @Injectable()
 export class PaymentsEffects {
@@ -87,8 +88,10 @@ export class PaymentsEffects {
   @Effect()
   public createPayment$: Observable<Action> = this.actions$.pipe(
     ofType<PaymentsAction.CreatePayment>(PaymentsActionType.CREATE_PAYMENT),
-    mergeMap(action => {
-      return this.organizationService.createPayment(PaymentConverter.toDto(action.payload.payment)).pipe(
+    withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
+    mergeMap(([action, organization]) => {
+      const returnUrl: string = this.router.createUrlTree(["/organization", organization.code, "detail"]).toString();
+      return this.organizationService.createPayment(PaymentConverter.toDto(action.payload.payment), returnUrl).pipe(
         map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
         map(payment => new PaymentsAction.CreatePaymentSuccess({ payment: payment })),
         catchError(error => Observable.of(new PaymentsAction.CreatePaymentFailure({error: error})))

@@ -79,8 +79,11 @@ export class OrganizationService extends PermissionService {
     return this.httpClient.get<Payment>(`${this.actualApiPrefix()}/payment/${paymentId}`);
   }
 
-  public createPayment(payment: Payment): Observable<Payment> {
-    return this.httpClient.post<Payment>(`${this.actualApiPrefix()}/payments`, payment);
+  public createPayment(payment: Payment, returnUrl: string): Observable<Payment> {
+    return this.httpClient.post<Payment>(`${this.actualApiPrefix()}/payments`, payment,
+      { headers: {
+        "RETURN_URL": returnUrl
+      }});
   }
 
   protected actualApiPrefix(): string {
