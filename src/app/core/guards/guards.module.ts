@@ -26,6 +26,7 @@ import {ViewExistGuard} from './view/view-exist.guard';
 import {ViewRedirectGuard} from './view/view-redirect.guard';
 import {ViewsLoadedGuard} from './view/views-loaded.guard';
 import {AuthGuard} from './auth.guard';
+import {AppRedirectGuard} from './app-redirect.guard';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import {AuthGuard} from './auth.guard';
     ViewExistGuard,
     ViewsLoadedGuard,
     ViewRedirectGuard,
-    AuthGuard
+    AuthGuard,
+    AppRedirectGuard
   ]
 })
 export class GuardsModule {

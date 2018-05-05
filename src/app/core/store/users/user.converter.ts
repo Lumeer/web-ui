@@ -18,7 +18,8 @@
  */
 
 import {User} from '../../dto';
-import {UserModel} from './user.model';
+import {DefaultWorkspaceModel, UserModel} from './user.model';
+import {DefaultWorkspace} from '../../dto/default-workspace';
 
 export class UserConverter {
 
@@ -27,7 +28,8 @@ export class UserConverter {
       id: dto.id,
       name: dto.name,
       email: dto.email,
-      groupsMap: dto.groups
+      groupsMap: dto.groups,
+      defaultWorkspace: dto.defaultWorkspace ? DefaultWorkspaceConverter.fromDto(dto.defaultWorkspace) : null
     };
   }
 
@@ -38,6 +40,28 @@ export class UserConverter {
       email: user.email,
       groups: user.groupsMap
     };
+  }
+
+}
+
+export class DefaultWorkspaceConverter {
+
+  public static fromDto(dto: DefaultWorkspace): DefaultWorkspaceModel {
+    return {
+      organizationId: dto.organizationId,
+      projectId: dto.projectId,
+      organizationCode: dto.organizationCode,
+      projectCode: dto.projectCode
+    }
+  }
+
+  public static toDto(model: DefaultWorkspaceModel): DefaultWorkspace {
+    return {
+      organizationId: model.organizationId,
+      projectId: model.projectId,
+      organizationCode: model.organizationCode,
+      projectCode: model.projectCode
+    }
   }
 
 }

@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+export interface DefaultWorkspace {
 
-@Component({
-  template: ''
-})
-export class HomeComponent {
+  organizationCode?: string;
+  organizationId: string;
+  projectCode?: string;
+  projectId: string;
 
 }
