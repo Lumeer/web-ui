@@ -40,9 +40,7 @@ export function documentsReducer(state: DocumentsState = initialDocumentsState, 
 }
 
 function findCollectionDocumentIds(state: DocumentsState, collectionId: string): string[] {
-  const ids: string[] = state.ids as string[];
-  const entities = state.entities;
-  return ids.map((id: string) => entities[id])
+  return Object.values(state.entities)
     .filter(document => document.collectionId === collectionId)
     .map(document => document.id);
 }
