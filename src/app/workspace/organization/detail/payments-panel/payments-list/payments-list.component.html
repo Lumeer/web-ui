@@ -18,14 +18,21 @@
         <tr *ngFor="let payment of payments">
           <td>{{ payment.date | date : 'shortDate'}}</td>
           <td>
-            <span *ngIf="payment.serviceLevel === 'FREE'" class="badge badge-pill badge-danger p-2" i18n="@@organizations.tab.detail.payments.trial">Trial</span>
+            <span *ngIf="payment.serviceLevel === 'FREE'" class="badge badge-pill badge-danger p-2" i18n="@@organizations.tab.detail.payments.trial">Free</span>
             <span *ngIf="payment.serviceLevel !== 'FREE'" class="badge badge-pill badge-success p-2" i18n="@@organizations.tab.detail.payments.business">Business</span>
           </td>
-          <td>{{ payment.users }}</td>
+          <td>
+            {{ payment.users }}
+            <button *ngIf="payment.state === 'PAID'" class="btn btn-sm btn-success" title="Add more users" titile.i18n="@@organizations.tab.detail.payments.addUsers" (click)="addUsers()">
+              <i class="fas fa-user-plus"></i>
+            </button>
+          </td>
           <td>{{ payment.currency }} {{ payment.amount | number:'1.2-2' }}</td>
-          <td *ngIf="payment.state === 'PAID'" i18n="@@organizations.tab.detail.payments.paid">Paid</td>
-          <td *ngIf="payment.state !== 'PAID'">
-            <span i18n="@@organizations.tab.detail.payments.ordered">Ordered</span>
+          <td *ngIf="payment.state === 'PAID'"><span class="badge badge-pill badge-success p-2" i18n="@@organizations.tab.detail.payments.paid">Paid</span></td>
+          <td *ngIf="payment.state === 'CANCELED'"><span class="badge badge-pill badge-light p-2" i18n="@@organizations.tab.detail.payments.canceled">Canceled</span></td>
+          <td *ngIf="payment.state === 'TIMEOUTED'"><span class="badge badge-pill badge-light p-2" i18n="@@organizations.tab.detail.payments.timeouted">Timeouted</span></td>
+          <td *ngIf="payment.state !== 'PAID' && payment.state !== 'CANCELED' && payment.state !== 'TIMEOUTED'">
+            <span class="badge badge-pill badge-danger p-2" i18n="@@organizations.tab.detail.payments.ordered">Ordered</span>
             <button type="button" class="btn btn-sm btn-success" (click)="refreshPayment(payment.paymentId)" title="Refresh payment state" title.i18n="@@organizations.tab.detail.payments.refresh">
               <i class="fas fa-sync-alt"></i>
             </button>

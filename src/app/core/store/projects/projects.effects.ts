@@ -129,10 +129,10 @@ export class ProjectsEffects {
     withLatestFrom(this.store$.select(selectSelectedOrganization)),
     map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
-        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Trial Service' });
+        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Free Service' });
         const message = this.i18n({
           id: 'project.create.serviceLimits',
-          value: 'You are currently on the Trial plan which allows you to have only one project. Do you want to upgrade to Business now?' });
+          value: 'You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?' });
         return new NotificationsAction.Confirm({
           title,
           message,
