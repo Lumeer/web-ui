@@ -39,6 +39,7 @@ import {AppState} from "../app.state";
 import {HttpErrorResponse} from "@angular/common/http";
 import {RouterAction} from "../router/router.action";
 import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
+import {DocumentsAction} from '../documents/documents.action';
 
 @Injectable()
 export class CollectionsEffects {
@@ -112,18 +113,19 @@ export class CollectionsEffects {
     ofType<CollectionsAction.CreateFailure>(CollectionsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
-    map( ([action, organization]) => {
+    map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
-        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Trial Service' });
+        const title = this.i18n({id: 'serviceLimits.trial', value: 'Trial Service'});
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
-          value: 'You are currently on the Trial plan which allows you to have only limited number of files. Do you want to upgrade to Business now?' });
+          value: 'You are currently on the Trial plan which allows you to have only limited number of files. Do you want to upgrade to Business now?'
+        });
         return new NotificationsAction.Confirm({
           title,
           message,
           action: new RouterAction.Go({
             path: ['/organization', organization.code, 'detail'],
-            extras: { fragment: 'orderService' }
+            extras: {fragment: 'orderService'}
           })
         });
       }
@@ -151,16 +153,17 @@ export class CollectionsEffects {
     withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
     map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
-        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Trial Service' });
+        const title = this.i18n({id: 'serviceLimits.trial', value: 'Trial Service'});
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
-          value: 'You are currently on the Trial plan which allows you to have only limited number of files. Do you want to upgrade to Business now?' });
+          value: 'You are currently on the Trial plan which allows you to have only limited number of files. Do you want to upgrade to Business now?'
+        });
         return new NotificationsAction.Confirm({
           title,
           message,
           action: new RouterAction.Go({
             path: ['/organization', organization.code, 'detail'],
-            extras: { fragment: 'orderService' }
+            extras: {fragment: 'orderService'}
           })
         });
       }
@@ -197,7 +200,9 @@ export class CollectionsEffects {
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.Delete>(CollectionsActionType.DELETE),
     mergeMap(action => this.collectionService.removeCollection(action.payload.collectionId).pipe(
-      map(collectionId => new CollectionsAction.DeleteSuccess({collectionId})),
+      flatMap(collectionId => [new CollectionsAction.DeleteSuccess({collectionId}),
+        new DocumentsAction.ClearByCollection({collectionId})
+      ]),
       catchError((error) => Observable.of(new CollectionsAction.DeleteFailure({error: error})))
     ))
   );
