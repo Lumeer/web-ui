@@ -38,5 +38,5 @@ export const initialSmartDocState: SmartDocState = {
 };
 
 export const selectSmartDocState = createFeatureSelector<SmartDocState>('smartDoc');
-
-export const selectSelectedSmartDocPart = createSelector(selectSmartDocState, templateState => templateState.selectedPart);
+// TODO why is this selector used in table?
+export const selectSelectedSmartDocPart = createSelector(selectSmartDocState, templateState => templateState && templateState.selectedPart);

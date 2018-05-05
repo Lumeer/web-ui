@@ -32,6 +32,7 @@ import {TableHiddenColumn, TableModel, TablePart} from '../../../../../../core/s
 import {getTableColumnWidth} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
 import {selectTableCursor} from '../../../../../../core/store/tables/tables.state';
+import {extractAttributeLastName} from '../../../../../../shared/utils/attribute.utils';
 import {HtmlModifier} from '../../../../../../shared/utils/html-modifier';
 import {DEFAULT_COLOR} from '../single-column/table-single-column.component';
 
@@ -139,6 +140,10 @@ export class TableHiddenColumnComponent implements OnInit, OnDestroy {
 
   private getPart(): TablePart {
     return this.table.parts[this.cursor.partIndex];
+  }
+
+  public extractAttributeLastName(name: string): string {
+    return extractAttributeLastName(name);
   }
 
 }

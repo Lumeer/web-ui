@@ -23,7 +23,6 @@ import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {concatMap, filter, first, flatMap, map, mergeMap, skipWhile, withLatestFrom} from 'rxjs/operators';
 import {getArrayDifference} from '../../../shared/utils/array.utils';
-import {splitAttributeId} from '../../../shared/utils/attribute.utils';
 import {AppState} from '../app.state';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {CollectionsAction} from '../collections/collections.action';
@@ -41,7 +40,7 @@ import {selectViewTable2Config} from '../views/views.state';
 import {moveTableCursor} from './table-cursor';
 import {convertTableToConfig} from './table.converter';
 import {DEFAULT_TABLE_ID, EMPTY_TABLE_ROW, TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
-import {createCollectionPart, createLinkPart, createTableColumnsBySiblingAttributeIds, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, renameTableColumn, resizeLastColumnChild, splitColumnPath} from './table.utils';
+import {createCollectionPart, createLinkPart, createTableColumnsBySiblingAttributeIds, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {selectTableById} from './tables.state';
 
@@ -81,7 +80,7 @@ export class TablesEffects {
       }));
 
       if (createPartActions.length === 0 && part.columns.length === 0) {
-        const column = new TableCompoundColumn(new TableSingleColumn('A'), []);
+        const column = new TableCompoundColumn(new TableSingleColumn(null, 'A'), []);
         const addColumnAction = new TablesAction.AddColumn({
           cursor: {
             tableId: action.payload.tableId,
@@ -347,45 +346,6 @@ export class TablesEffects {
   );
 
   @Effect()
-  public renameColumn$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.RenameColumn>(TablesActionType.RENAME_COLUMN),
-    mergeMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
-      first(),
-      map(table => ({action, table}))
-    )),
-    map(({action, table}) => {
-      const part: TablePart = table.parts[action.payload.cursor.partIndex];
-      const oldColumn = findTableColumn(part.columns, action.payload.cursor.columnPath);
-      const attributeId = getAttributeIdFromColumn(oldColumn);
-
-      const name = action.payload.name;
-
-      const {parentId} = splitAttributeId(attributeId);
-      const id = parentId ? `${parentId}.${name}` : name;
-      const attribute: AttributeModel = {id, name, constraints: []}; // TODO get constraints from existing attribute
-
-      const column = renameTableColumn(oldColumn as TableCompoundColumn, attributeId, id);
-      const nextAction = new TablesAction.ReplaceColumns({
-        cursor: action.payload.cursor,
-        deleteCount: 1,
-        columns: [column]
-      });
-
-      if (part.collectionId) {
-        return new CollectionsAction.ChangeAttribute({
-          collectionId: part.collectionId,
-          attributeId,
-          attribute,
-          nextAction
-        });
-      }
-      if (part.linkTypeId) {
-        // TODO
-      }
-    })
-  );
-
-  @Effect()
   public resizeColumn$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.ResizeColumn>(TablesActionType.RESIZE_COLUMN),
     mergeMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
@@ -399,6 +359,26 @@ export class TablesEffects {
           cursor: action.payload.cursor,
           deleteCount: 1,
           columns: [resizedColumn]
+        });
+      })
+    ))
+  );
+
+  @Effect()
+  public initColumn$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.InitColumn>(TablesActionType.INIT_COLUMN),
+    mergeMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
+      first(),
+      map(table => {
+        const part: TablePart = table.parts[action.payload.cursor.partIndex];
+        const column = findTableColumn(part.columns, action.payload.cursor.columnPath) as TableCompoundColumn;
+        const parent = {...column.parent, attributeId: action.payload.attributeId};
+        const initializedColumn = {...column, parent};
+
+        return new TablesAction.ReplaceColumns({
+          cursor: action.payload.cursor,
+          deleteCount: 1,
+          columns: [initializedColumn]
         });
       })
     ))

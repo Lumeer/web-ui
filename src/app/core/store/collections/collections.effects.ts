@@ -32,6 +32,7 @@ import {QueryConverter} from '../navigation/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions.model';
+import {TablesAction, TablesActionType} from '../tables/tables.action';
 import {CollectionConverter} from './collection.converter';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
 import {selectCollectionsLoaded} from "./collections.state";
@@ -269,8 +270,13 @@ export class CollectionsEffects {
           const actions: Action[] = [new CollectionsAction.CreateAttributeSuccess(
             {collectionId: action.payload.collectionId, attribute}
           )];
-          if (action.payload.nextAction) {
-            actions.push(action.payload.nextAction);
+
+          const {nextAction} = action.payload;
+          if (nextAction) {
+            if (nextAction.type === TablesActionType.INIT_COLUMN) {
+              (nextAction as TablesAction.InitColumn).payload.attributeId = attribute.id;
+            }
+            actions.push(nextAction);
           }
           return actions;
         }),

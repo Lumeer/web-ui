@@ -33,7 +33,7 @@ import {selectQuery} from '../../../../../../../core/store/navigation/navigation
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableModel} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
-import {extractAttributeName, findAttributeById} from '../../../../../../../shared/utils/attribute.utils';
+import {extractAttributeLastName, findAttributeById, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
 
 declare let $: any;
 
@@ -62,29 +62,26 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   public cursor: TableHeaderCursor;
 
   @Input()
-  public attribute: string;
-
-  @Input()
-  public attributeId: string;
+  public attributeName: string;
 
   @Input()
   public collection: CollectionModel;
 
-  public attributeName: string;
+  public lastName: string;
 
   public constructor(private router: Router,
                      private store: Store<AppState>) {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('attribute') && this.attribute) {
-      this.attributeName = extractAttributeName(this.attribute);
+    if (changes.hasOwnProperty('attributeName') && this.attributeName) {
+      this.lastName = extractAttributeLastName(this.attributeName);
     }
   }
 
   public attributeNotExists(): boolean {
     if (this.collection) {
-      return !findAttributeById(this.collection.attributes, this.attributeId);
+      return !findAttributeByName(this.collection.attributes, this.attributeName);
     }
     return false;
   }
@@ -134,7 +131,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
 
           return filtered.concat(
             collection.attributes
-              .filter(attribute => attribute.name.toLowerCase().startsWith(this.attributeName.toLowerCase()))
+              .filter(attribute => attribute.name.toLowerCase().startsWith(this.lastName.toLowerCase()))
               .map(attribute => ({linkType, collection, attribute}))
               .filter(newAttribute => filtered.every(existingAttribute => !equalLinkedAttributes(newAttribute, existingAttribute)))
           );
@@ -152,7 +149,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
 
         return filtered.concat(
           collection.attributes
-            .filter(attribute => attribute.name.toLowerCase().startsWith(this.attributeName.toLowerCase()))
+            .filter(attribute => attribute.name.toLowerCase().startsWith(this.lastName.toLowerCase()))
             .map(attribute => ({collection, attribute}))
             .filter(newAttribute => filtered.every(existingAttribute => !equalLinkedAttributes(newAttribute, existingAttribute)))
         );
