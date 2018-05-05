@@ -33,7 +33,7 @@ export interface DocumentsState extends EntityState<DocumentModel> {
   queries: QueryModel[];
 }
 
-export const documentsAdapter = createEntityAdapter<DocumentModel>();
+export const documentsAdapter = createEntityAdapter<DocumentModel>({selectId: document => document.id});
 
 export const initialDocumentsState: DocumentsState = documentsAdapter.getInitialState({
   queries: []

@@ -30,9 +30,17 @@ export function documentsReducer(state: DocumentsState = initialDocumentsState, 
       return documentsAdapter.updateOne({id: action.payload.document.id, changes: action.payload.document}, state);
     case DocumentsActionType.DELETE_SUCCESS:
       return documentsAdapter.removeOne(action.payload.documentId, state);
+    case DocumentsActionType.CLEAR_BY_COLLECTION:
+      return documentsAdapter.removeMany(findCollectionDocumentIds(state, action.payload.collectionId), state);
     case DocumentsActionType.CLEAR:
       return initialDocumentsState;
     default:
       return state;
   }
+}
+
+function findCollectionDocumentIds(state: DocumentsState, collectionId: string): string[] {
+  return Object.values(state.entities)
+    .filter(document => document.collectionId === collectionId)
+    .map(document => document.id);
 }

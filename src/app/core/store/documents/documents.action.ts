@@ -43,7 +43,8 @@ export enum DocumentsActionType {
   DELETE_SUCCESS = '[Documents] Delete :: Success',
   DELETE_FAILURE = '[Documents] Delete :: Failure',
 
-  CLEAR = '[Documents] Clear'
+  CLEAR = '[Documents] Clear',
+  CLEAR_BY_COLLECTION = '[Documents] Clear by collection'
 
 }
 
@@ -161,10 +162,17 @@ export namespace DocumentsAction {
     }
   }
 
+  export class ClearByCollection implements Action {
+    public readonly type = DocumentsActionType.CLEAR_BY_COLLECTION;
+
+    public constructor(public payload: { collectionId: string }) {
+    }
+  }
+
   export type All =
     Get | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateData | PatchData | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure | DeleteConfirm |
-    Clear;
+    Clear | ClearByCollection;
 }
