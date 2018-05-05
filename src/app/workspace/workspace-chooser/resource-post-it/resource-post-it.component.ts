@@ -257,7 +257,7 @@ export class ResourcePostItComponent {
   public serviceLevelTitle(): string {
     return this.i18n({
       id: 'resource.chooser.serviceLevel',
-      value: '{serviceLevel, select, FREE {Trial} BASIC {Business}}'
+      value: '{serviceLevel, select, FREE {Free} BASIC {Business}}'
     }, {
       serviceLevel: this.serviceLevel
     });

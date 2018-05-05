@@ -43,6 +43,7 @@ import {UsersModule} from "../shared/users/users.module";
 import {ProjectSettingsGuard} from "./project/project-settings.guard";
 import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
 import {ResourcePostItComponent} from './workspace-chooser/resource-post-it/resource-post-it.component';
+import {DatePipe} from "@angular/common";
 
 @NgModule({
   imports: [
@@ -77,7 +78,8 @@ import {ResourcePostItComponent} from './workspace-chooser/resource-post-it/reso
     WorkspaceService,
     WorkspaceSelectGuard,
     OrganizationSettingsGuard,
-    ProjectSettingsGuard
+    ProjectSettingsGuard,
+    DatePipe
   ]
 })
 export class WorkspaceModule {

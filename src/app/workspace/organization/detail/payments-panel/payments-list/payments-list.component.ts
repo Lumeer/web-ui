@@ -31,6 +31,7 @@ import {PaymentModel} from "../../../../../core/store/organizations/payment/paym
 import {selectPaymentsByWorkspaceSorted} from "../../../../../core/store/organizations/payment/payments.state";
 import {PaymentsAction} from "../../../../../core/store/organizations/payment/payments.action";
 import {ServiceLimitsAction} from "../../../../../core/store/organizations/service-limits/service-limits.action";
+import {NotificationsAction} from "../../../../../core/store/notifications/notifications.action";
 
 @Component({
   selector: 'payments-list',
@@ -91,5 +92,15 @@ export class PaymentsListComponent implements OnInit, OnDestroy {
 
   public repayEvent(gwUrl: string) {
     this.repay.emit(gwUrl);
+  }
+
+  public addUsers() {
+    this.store.dispatch(new NotificationsAction.Info({
+      title: this.i18n({ id: "organization.payments.addUsers.title", value: "Add Users" }),
+      message: this.i18n({
+        id: "organization.payments.addUsers.info",
+        value: "To add more users to your organization, please contact support@lumeer.io.",
+      })
+    }));
   }
 }

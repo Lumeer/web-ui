@@ -32,7 +32,9 @@ import {PaymentsAction, PaymentsActionType} from "../../../../core/store/organiz
 import {ServiceLimitsModel} from "../../../../core/store/organizations/service-limits/service-limits.model";
 import {selectServiceLimitsByWorkspace} from "../../../../core/store/organizations/service-limits/service-limits.state";
 import {selectLastCreatedPayment} from "../../../../core/store/organizations/payment/payments.state";
-import {DOCUMENT} from "@angular/common";
+import {DatePipe, DOCUMENT} from "@angular/common";
+import {NotificationsAction} from "../../../../core/store/notifications/notifications.action";
+import {ServiceLevelType} from "../../../../core/dto/service-level-type";
 import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
 
 @Component({
@@ -59,8 +61,9 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
               private store: Store<AppState>,
               private actionsSubject: ActionsSubject,
               @Inject(DOCUMENT) private document,
-              private elementRef: ElementRef) {
-    this.languageCode = this.i18n({ id: 'organization.payments.lang.code', value: 'en' });
+              private elementRef: ElementRef,
+              private datePipe: DatePipe) {
+    this.languageCode = this.i18n({id: 'organization.payments.lang.code', value: 'en'});
   }
 
   public ngOnInit() {
@@ -105,10 +108,33 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
 
     validUntil = new Date($event.start.getFullYear(), $event.start.getMonth() + $event.months, $event.start.getDate(), 23, 59, 59, 999);
 
-    let payment: PaymentModel = { date: new Date(), serviceLevel: 'BASIC', amount: $event.amount, currency: $event.currency,
+    let payment: PaymentModel = {
+      date: new Date(), serviceLevel: 'BASIC', amount: $event.amount, currency: $event.currency,
       start: $event.start, validUntil, state: 'CREATED', users: $event.users, language: this.languageCode, gwUrl: '',
-      paymentId: null, id: null, organizationId: this.organization.id };
-    this.store.dispatch(new PaymentsAction.CreatePayment({ organizationId: this.organization.id, payment }));
+      paymentId: null, id: null, organizationId: this.organization.id
+    };
+
+    if (this.serviceLimits.serviceLevel !== ServiceLevelType.FREE && this.checkDayOverlap(this.serviceLimits.validUntil, $event.start)) {
+      this.store.dispatch(new NotificationsAction.Confirm({
+        title: this.i18n({ id: "organization.payments.paidWarning.title", value: "Already Paid" }),
+        message: this.i18n({
+          id: "organization.payments.paidWarning.text",
+          value: "Your current subscription lasts until {{0}}. Are you sure you want to proceed with an order with earlier start date of {{1}}? In case you want to add more users, please contact support@lumeer.io.",
+        }, {
+          "0": this.datePipe.transform(this.serviceLimits.validUntil, "shortDate"),
+          "1": this.datePipe.transform($event.start, "shortDate")
+        }),
+        action: new PaymentsAction.CreatePayment({organizationId: this.organization.id, payment})
+      }));
+    } else {
+      this.store.dispatch(new PaymentsAction.CreatePayment({organizationId: this.organization.id, payment}));
+    }
+  }
+
+  private checkDayOverlap(serviceUntil: Date, newOrder: Date): boolean {
+    const serviceDay = new Date(serviceUntil.getFullYear(), serviceUntil.getMonth(), serviceUntil.getDate(), 23, 59, 59, 999);
+    const newOrderDay = new Date(newOrder.getFullYear(), newOrder.getMonth(), newOrder.getDate(), 0, 0, 0, 0);
+    return serviceDay.getTime() > newOrderDay.getTime();
   }
 
   private subscribeToActions() {
@@ -121,7 +147,9 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   public callGoPay($event: string) {
-    (window as any)._gopay.checkout({gatewayUrl: $event, inline: true});
+    if (!isNullOrUndefined($event) && $event !== "") {
+      (window as any)._gopay.checkout({gatewayUrl: $event, inline: true});
+    }
   }
 
   public ngAfterViewInit(): void {
