@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit} from '@angular/core';
 import {PaymentModel} from "../../../../core/store/organizations/payment/payment.model";
 import {OrganizationModel} from "../../../../core/store/organizations/organization.model";
 import {Subscription} from "rxjs/Subscription";
@@ -32,6 +32,7 @@ import {PaymentsAction, PaymentsActionType} from "../../../../core/store/organiz
 import {ServiceLimitsModel} from "../../../../core/store/organizations/service-limits/service-limits.model";
 import {selectServiceLimitsByWorkspace} from "../../../../core/store/organizations/service-limits/service-limits.state";
 import {selectLastCreatedPayment} from "../../../../core/store/organizations/payment/payments.state";
+import {DOCUMENT} from "@angular/common";
 import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
 
 @Component({
@@ -39,10 +40,7 @@ import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
   templateUrl: './payments-panel.component.html',
   styleUrls: ['./payments-panel.component.scss']
 })
-export class PaymentsPanelComponent implements OnInit, OnDestroy {
-
-  @ViewChild('goPayForm')
-  private goPayForm: ElementRef;
+export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private organization: OrganizationModel;
   private organizationSubscription: Subscription;
@@ -56,12 +54,12 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy {
   private paymentCreatedSubscription: Subscription;
   private lastCreatedPayment: Subscription;
 
-  public paymentGateway: string = 'https://gw.sandbox.gopay.com/gw/v3/dfgvmwTKK5hrJx2aGG8ZnFyBJhAvF';
-
   constructor(private i18n: I18n,
               private router: Router,
               private store: Store<AppState>,
-              private actionsSubject: ActionsSubject) {
+              private actionsSubject: ActionsSubject,
+              @Inject(DOCUMENT) private document,
+              private elementRef: ElementRef) {
     this.languageCode = this.i18n({ id: 'organization.payments.lang.code', value: 'en' });
   }
 
@@ -117,14 +115,19 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy {
     this.paymentCreatedSubscription = this.actionsSubject.subscribe(action => {
       if (action.type === PaymentsActionType.CREATE_PAYMENT_SUCCESS) {
         const newPaymentAction: CreatePaymentSuccess = action as CreatePaymentSuccess;
-        this.paymentGateway = newPaymentAction.payload.payment.gwUrl;
-        this.goPayForm.nativeElement.submit();
+        this.callGoPay(newPaymentAction.payload.payment.gwUrl);
       }
     });
   }
 
   public callGoPay($event: string) {
-    this.paymentGateway = $event;
-    this.goPayForm.nativeElement.submit();
+    (window as any)._gopay.checkout({gatewayUrl: $event, inline: true});
+  }
+
+  public ngAfterViewInit(): void {
+    const script = this.document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js';
+    this.elementRef.nativeElement.appendChild(script);
   }
 }
