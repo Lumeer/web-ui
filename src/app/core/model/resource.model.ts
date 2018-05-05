@@ -29,4 +29,6 @@ export interface ResourceModel {
   description?: string;
   permissions?: PermissionsModel;
 
+  correlationId?: string;
+
 }

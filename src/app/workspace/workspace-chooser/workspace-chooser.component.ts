@@ -40,7 +40,6 @@ import {selectProjectById, selectProjectsCodesForSelectedOrganization, selectPro
 import {RouterAction} from '../../core/store/router/router.action';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {UserSettingsService} from '../../core/user-settings.service';
-import {ResourceItemType} from './resource-chooser/resource-item-type';
 import {Router} from "@angular/router";
 import {userHasRoleInResource, userRolesInResource} from '../../shared/utils/resource.utils';
 import {UserModel} from '../../core/store/users/user.model';
@@ -51,6 +50,7 @@ import {selectAllServiceLimits, selectServiceLimitsByOrganizationId} from '../..
 import {ServiceLimitsModel} from '../../core/store/organizations/service-limits/service-limits.model';
 import {Role} from '../../core/model/role';
 import {Perspective} from '../../view/perspectives/perspective';
+import {ResourceType} from '../../core/model/resource-type';
 
 const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'aturing@lumeer.io'];
 
@@ -201,12 +201,12 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     this.store.dispatch(new NotificationsAction.Warning({message}));
   }
 
-  public organizationItemType(): ResourceItemType {
-    return ResourceItemType.Organization;
+  public organizationItemType(): ResourceType {
+    return ResourceType.Organization;
   }
 
-  public projectItemType(): ResourceItemType {
-    return ResourceItemType.Project;
+  public projectItemType(): ResourceType {
+    return ResourceType.Project;
   }
 
   private clearStore() {

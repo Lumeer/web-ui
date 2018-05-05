@@ -37,8 +37,6 @@ export interface CollectionModel extends ResourceModel {
 
   documentsCount?: number;
 
-  correlationId?: string;
-
   favourite?: boolean;
 
 }

@@ -26,104 +26,21 @@
            [style.left]="resourceScroll + 'px'"
            [style.width]="resourceWidth + 'px'">
 
-        <div class="tab d-flex" *ngFor="let resource of resources.concat(newResources)"
-             (click)="onResourceSelected(resource.id)">
-          <div class="post-it align-self-center">
-            <div class="card square" [class.unitialized]="!resource.id"></div>
-            <div [class.selected-resource]="isResourceModified(resource)"
-                 [style.color]="resource.color"
-                 class="card text-center content border-0">
-              <div class="card-body">
+        <resource-post-it
+          *ngFor="let resource of resources.concat(newResources)"
+          [resourceType]="resourceType"
+          [resource]="resource"
+          [isSelected]="selectedId === resource.id"
+          [restrictedCodes]="usedCodes"
+          [roles]="getRoles(resource)"
+          [serviceLevel]="hasServiceLevel(resource) ? getServiceLevel(resource) : null"
+          (create)="onResourceCreate($event)"
+          (update)="onResourceUpdate($event)"
+          (select)="onResourceSelected(resource.id)"
+          (delete)="onResourceDelete(resource)"
+          (settings)="onResourceSettings(resource.id)">
 
-                <ng-container *ngIf="!isSelected(resource) && hasServiceLevel(resource)">
-                  <ng-container *ngTemplateOutlet="ribbon; context: { $implicit: resource}"></ng-container>
-                </ng-container>
-
-                <div class="d-flex flex-column settings">
-                  <ng-container *ngIf="resource.id">
-                    <a class="text-success mb-1" *ngIf="hasManageRole(resource)"
-                       (click)="$event.stopPropagation(); onResourceSettings(resource.id)"
-                       title="Settings" i18n-title="@@resource.postit.settings">
-                      <i class="fas fa fa-cog clickable" aria-hidden="true"></i>
-                    </a>
-
-                    <div class="dropdown mb-1">
-                      <a class="text-success"
-                         (click)="onResourcePickerClick(resource)"
-                         (clickOutside)="onResourcePickerBlur(resource)"
-                         data-toggle="dropdown"
-                         title="Icon picker" i18n-title="@@resource.postit.picker">
-                        <i class="fas fa fa-eye-dropper clickable" aria-hidden="true"></i>
-                      </a>
-                      <div class="dropdown-menu dropdown-menu-right">
-                        <color-picker class="dropdown-item" [color]="resource.color"
-                                      (selectedChange)="onNewColor(resource, $event)"></color-picker>
-                        <div class="dropdown-divider"></div>
-                        <icon-picker class="dropdown-item" [icon]="resource.icon"
-                                     (selectedChange)="onNewIcon(resource, $event)"></icon-picker>
-                      </div>
-                    </div>
-                  </ng-container>
-                  <a class="text-danger" (click)="onResourceDelete(resource); $event.stopPropagation()"
-                     title="Remove" i18n-title="@@resource.postit.remove">
-                    <i class="fas fa fa-trash" aria-hidden="true"></i>
-                  </a>
-                </div>
-
-                <div class="dropdown">
-                  <i (click)="onResourcePickerClick(resource)"
-                     (clickOutside)="!resource.id ? onResourcePickerBlur(resource) : null"
-                     class="fa-3x {{resource.icon}}"
-                     [attr.data-toggle]="!resource.id ? 'dropdown' : ''"
-                     id="{{getResourceIdentificator(resource)}}"
-                     #icon
-                     aria-hidden="true"></i>
-                  <div *ngIf="!resource.id"
-                       class="dropdown-menu dropdown-menu-right uninitialized-dropdown">
-                    <color-picker class="dropdown-item" [color]="resource.color"
-                                  (selectedChange)="onNewColor(resource, $event)"></color-picker>
-                    <div class="dropdown-divider"></div>
-                    <icon-picker class="dropdown-item" [icon]="resource.icon"
-                                 (selectedChange)="onNewIcon(resource, $event)"></icon-picker>
-                  </div>
-                </div>
-
-                <div class="py-2">
-                  <input-box
-                    #inputBoxCode
-                    [initialValue]="resource.code"
-                    [color]="resource.color"
-                    [canStayEmpty]="false"
-                    [fontSizeRem]="1.5"
-                    [maxLines]="1"
-                    [title]="resource.code"
-                    [placeholder]="getCodePlaceholder()"
-                    (newValue)="onCodeBlur(inputBoxCode, $event, resource)">
-                  </input-box>
-                </div>
-
-                <input-box
-                  [initialValue]="resource.name"
-                  [color]="resource.color"
-                  [canStayEmpty]="true"
-                  [fontSizeRem]="1"
-                  [maxLines]="1"
-                  [title]="resource.name"
-                  [placeholder]="getNamePlaceholder()"
-                  (newValue)="onNameBlur($event, resource)">
-                </input-box>
-
-              </div>
-            </div>
-          </div>
-          <div class="align-self-stretch border border-bottom-0 rounded-top bookmark"
-               *ngIf="isSelected(resource)" [@animateVisible]="'in'">
-            <ng-container *ngIf="hasServiceLevel(resource)">
-              <ng-container *ngTemplateOutlet="ribbon; context: { $implicit: resource}"></ng-container>
-            </ng-container>
-          </div>
-
-        </div>
+        </resource-post-it>
 
         <div class="tab d-flex clickable" *ngIf="canCreateResource">
           <div class="post-it align-self-center" (click)="onCreateResource()">
@@ -171,9 +88,3 @@
   </div>
 
 </div>
-
-<ng-template #ribbon let-resource>
-  <div class="ribbon" [class.red]="isFreeServiceLevel(resource)">
-    <span>{{serviceLevelTitle(resource)}}</span>
-  </div>
-</ng-template>
