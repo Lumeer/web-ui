@@ -22,7 +22,7 @@ import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {first, map, mergeMap, switchMap} from 'rxjs/operators';
+import {filter, first, map, mergeMap, switchMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {WorkspaceService} from './workspace.service';
 import {AppState} from '../core/store/app.state';
@@ -89,6 +89,7 @@ export class WorkspaceSelectGuard implements CanActivate {
 
   private getDefaultWorkspace(): Observable<DefaultWorkspaceModel> {
     return this.store.select(selectCurrentUser).pipe(
+      filter(user => !isNullOrUndefined(user)),
       map(user => user.defaultWorkspace)
     );
   }

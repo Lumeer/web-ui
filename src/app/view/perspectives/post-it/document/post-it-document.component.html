@@ -22,7 +22,7 @@
      title="{{ postItModel.document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
      i18n-title="@@collection.document.favorite"
      [ngClass]="postItModel.document.favorite ? 'fas' : 'far'"
-     (click)="toggleDocumentFavorite()"></i>
+     (click)="toggleFavorite()"></i>
 </div>
 
 <div class="card-body p-2">

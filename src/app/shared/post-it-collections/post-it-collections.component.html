@@ -37,6 +37,7 @@
       (update)="updateCollection($event)"
       (create)="createCollection($event)"
       (delete)="confirmDeletion(collection)"
+      (favoriteChange)="onFavoriteChange(collection.id, $event)"
       (togglePanel)="togglePanelVisible($event, idx)">
     </post-it-collection>
 

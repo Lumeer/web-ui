@@ -26,7 +26,6 @@ import {map} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {Attribute, Collection} from '../dto';
 import {AppState} from '../store/app.state';
-import {HomePageService} from './home-page.service';
 import {PermissionService} from './permission.service';
 
 // TODO add add support for Default Attribute
@@ -34,8 +33,7 @@ import {PermissionService} from './permission.service';
 export class CollectionService extends PermissionService {
 
   constructor(protected httpClient: HttpClient,
-              protected store: Store<AppState>,
-              private homePageService: HomePageService) {
+              protected store: Store<AppState>) {
     super(httpClient, store);
   }
 

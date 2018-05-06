@@ -31,12 +31,19 @@ export enum DocumentsActionType {
   CREATE_SUCCESS = '[Documents] Create :: Success',
   CREATE_FAILURE = '[Documents] Create :: Failure',
 
-  UPDATE = '[Documents] Update',
   UPDATE_SUCCESS = '[Documents] Update :: Success',
   UPDATE_FAILURE = '[Documents] Update :: Failure',
 
   UPDATE_DATA = '[Documents] Update Data',
   PATCH_DATA = '[Documents] Patch Data',
+
+  ADD_FAVORITE = '[Documents] Add Favorite',
+  ADD_FAVORITE_SUCCESS = '[Documents] Add Favorite :: Success',
+  ADD_FAVORITE_FAILURE = '[Documents] Add Favorite :: Failure',
+
+  REMOVE_FAVORITE = '[Documents] Remove Favorite',
+  REMOVE_FAVORITE_SUCCESS = '[Documents] Remove Favorite :: Success',
+  REMOVE_FAVORITE_FAILURE = '[Documents] Remove Favorite :: Failure',
 
   DELETE = '[Documents] Delete',
   DELETE_CONFIRM = '[Documents] Delete :: Confirm',
@@ -89,13 +96,6 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.CREATE_FAILURE;
 
     public constructor(public payload: { error: any }) {
-    }
-  }
-
-  export class Update implements Action {
-    public readonly type = DocumentsActionType.UPDATE;
-
-    public constructor(public payload: { document: DocumentModel, toggleFavourite: boolean }) {
     }
   }
 
@@ -155,6 +155,48 @@ export namespace DocumentsAction {
     }
   }
 
+  export class AddFavorite implements Action {
+    public readonly type = DocumentsActionType.ADD_FAVORITE;
+
+    public constructor(public payload: { collectionId: string, documentId: string }) {
+    }
+  }
+
+  export class AddFavoriteSuccess implements Action {
+    public readonly type = DocumentsActionType.ADD_FAVORITE_SUCCESS;
+
+    public constructor(public payload: { documentId: string }) {
+    }
+  }
+
+  export class AddFavoriteFailure implements Action {
+    public readonly type = DocumentsActionType.ADD_FAVORITE_FAILURE;
+
+    public constructor(public payload: { documentId: string, error: any }) {
+    }
+  }
+
+  export class RemoveFavorite implements Action {
+    public readonly type = DocumentsActionType.REMOVE_FAVORITE;
+
+    public constructor(public payload: { collectionId: string, documentId: string }) {
+    }
+  }
+
+  export class RemoveFavoriteSuccess implements Action {
+    public readonly type = DocumentsActionType.REMOVE_FAVORITE_SUCCESS;
+
+    public constructor(public payload: { documentId: string }) {
+    }
+  }
+
+  export class RemoveFavoriteFailure implements Action {
+    public readonly type = DocumentsActionType.REMOVE_FAVORITE_FAILURE;
+
+    public constructor(public payload: { documentId: string, error: any }) {
+    }
+  }
+
   export class Clear implements Action {
     public readonly type = DocumentsActionType.CLEAR;
 
@@ -172,7 +214,9 @@ export namespace DocumentsAction {
   export type All =
     Get | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
-    Update | UpdateData | PatchData | UpdateSuccess | UpdateFailure |
+    AddFavorite | AddFavoriteSuccess | AddFavoriteFailure |
+    RemoveFavorite | RemoveFavoriteSuccess | RemoveFavoriteFailure |
+    UpdateData | PatchData | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure | DeleteConfirm |
     Clear | ClearByCollection;
 }

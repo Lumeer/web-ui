@@ -26,7 +26,6 @@ import {Observable} from 'rxjs/Observable';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {Collection, Permission} from '../../dto';
 import {CollectionService, ImportService, SearchService} from '../../rest';
-import {HomePageService} from '../../rest/home-page.service';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -393,7 +392,6 @@ export class CollectionsEffects {
   constructor(private actions$: Actions,
               private store$: Store<AppState>,
               private collectionService: CollectionService,
-              private homePageService: HomePageService,
               private i18n: I18n,
               private importService: ImportService,
               private searchService: SearchService) {

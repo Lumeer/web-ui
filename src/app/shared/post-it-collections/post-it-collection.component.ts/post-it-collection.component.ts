@@ -17,20 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {PostItLayout} from '../../utils/layout/post-it-layout';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {QueryConverter} from '../../../core/store/navigation/query.converter';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {Role} from '../../../core/model/role';
+import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
+import {isNullOrUndefined} from 'util';
+import {debounceTime, filter} from 'rxjs/operators';
 
 @Component({
   selector: 'post-it-collection',
   templateUrl: './post-it-collection.component.html',
   styleUrls: ['./post-it-collection.component.scss']
 })
-export class PostItCollectionComponent {
+export class PostItCollectionComponent implements OnInit, OnDestroy {
 
   @Input() public collection: CollectionModel;
   @Input() public layout: PostItLayout;
@@ -45,17 +49,37 @@ export class PostItCollectionComponent {
   @Output() public unselect = new EventEmitter();
   @Output() public delete = new EventEmitter();
   @Output() public togglePanel = new EventEmitter<any>();
-
+  @Output() public favoriteChange = new EventEmitter<{ favorite: boolean, onlyStore: boolean }>();
 
   public isPickerVisible: boolean = false;
   private lastIcon: string;
   private lastColor: string;
 
+  private lastSyncedFavorite: boolean;
+  private favoriteChange$ = new Subject<boolean>();
+  private favoriteChangeSubscription: Subscription;
+
+  public ngOnInit() {
+    this.favoriteChangeSubscription = this.favoriteChange$.pipe(
+      debounceTime(1000),
+      filter(favorite => favorite !== this.lastSyncedFavorite)
+    ).subscribe(favorite => {
+      this.lastSyncedFavorite = null;
+      this.favoriteChange.emit({favorite, onlyStore: false})
+    });
+  }
+
+  public ngOnDestroy() {
+    if (this.favoriteChangeSubscription) {
+      this.favoriteChangeSubscription.unsubscribe();
+    }
+  }
+
   public onNameChanged(name: string) {
     const resourceModel = {...this.collection, name};
-    if(this.collection.id) {
+    if (this.collection.id) {
       this.update.emit(resourceModel);
-    }else{
+    } else {
       this.create.emit(resourceModel);
     }
   }
@@ -72,14 +96,24 @@ export class PostItCollectionComponent {
     this.delete.emit();
   }
 
-
   public toggleFavorite() {
-    // TODO
+    if (isNullOrUndefined(this.lastSyncedFavorite)) {
+      this.lastSyncedFavorite = this.collection.favorite;
+    }
 
+    const value = !this.collection.favorite;
+    this.favoriteChange$.next(value);
+    this.favoriteChange.emit({favorite: value, onlyStore: true});
   }
 
   public togglePanelVisible(event) {
-    this.isPickerVisible = true;
+    if (this.isPickerVisible) {
+      this.onPickerBlur()
+    } else {
+      this.isPickerVisible = true;
+      this.lastIcon = null;
+      this.lastColor = null;
+    }
     this.togglePanel.emit(event);
   }
 

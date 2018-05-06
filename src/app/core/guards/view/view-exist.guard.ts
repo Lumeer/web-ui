@@ -72,6 +72,7 @@ export class ViewExistGuard implements CanActivate {
     this.router.navigate(['w', workspace.organizationCode, workspace.projectCode, 'view', 'search', 'views']);
     const message = this.i18n({id: 'view.not.found', value: 'View not found'});
     this.notificationsService.error(message);
+    console.log('view not found');
     return false;
   }
 
@@ -79,6 +80,7 @@ export class ViewExistGuard implements CanActivate {
     const perspective = view.perspective ? view.perspective : Perspective.Search;
     const query = QueryConverter.toString(view.query);
     this.router.navigate(['w', workspace.organizationCode, workspace.projectCode, 'view', {vc: view.code}, perspective,], {queryParams: {query}});
+    console.log('redirect to correct path');
     return false;
   }
 

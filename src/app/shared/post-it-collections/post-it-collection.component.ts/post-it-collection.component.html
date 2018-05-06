@@ -29,10 +29,10 @@
 
     <div *ngIf="collection.id" class="text-warning toggle-favorite opacity-content clickable"
          [ngClass]="{'panel-visible' : focused}"
-         [class.always-visible]="collection.favourite">
-      <a title="{{collection.favourite ?  'Remove from favorites' : 'Add to favorites'}}"
+         [class.always-visible]="collection.favorite">
+      <a title="{{collection.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
          i18n-title="@@collection.favorite" (click)="toggleFavorite()">
-        <i class="fa-star" [ngClass]="collection.favourite ? 'fas' : 'far'"
+        <i class="fa-star" [ngClass]="collection.favorite ? 'fas' : 'far'"
            aria-hidden="true"></i>
       </a>
     </div>

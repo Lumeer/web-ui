@@ -30,6 +30,14 @@ export function documentsReducer(state: DocumentsState = initialDocumentsState, 
       return documentsAdapter.updateOne({id: action.payload.document.id, changes: action.payload.document}, state);
     case DocumentsActionType.DELETE_SUCCESS:
       return documentsAdapter.removeOne(action.payload.documentId, state);
+    case DocumentsActionType.ADD_FAVORITE_SUCCESS:
+      return documentsAdapter.updateOne({id: action.payload.documentId, changes: {favorite: true}}, state);
+    case DocumentsActionType.REMOVE_FAVORITE_SUCCESS:
+      return documentsAdapter.updateOne({id: action.payload.documentId, changes: {favorite: false}}, state);
+    case DocumentsActionType.ADD_FAVORITE_FAILURE:
+      return documentsAdapter.updateOne({id: action.payload.documentId, changes: {favorite: false}}, state);
+    case DocumentsActionType.REMOVE_FAVORITE_FAILURE:
+      return documentsAdapter.updateOne({id: action.payload.documentId, changes: {favorite: true}}, state);
     case DocumentsActionType.CLEAR_BY_COLLECTION:
       return documentsAdapter.removeMany(findCollectionDocumentIds(state, action.payload.collectionId), state);
     case DocumentsActionType.CLEAR:

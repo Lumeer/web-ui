@@ -36,9 +36,13 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
     case CollectionsActionType.UPDATE_SUCCESS:
       return collectionsAdapter.updateOne({id: action.payload.collection.id, changes: action.payload.collection}, state);
     case CollectionsActionType.ADD_FAVORITE_SUCCESS:
-      return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favourite: true}}, state);
+      return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favorite: true}}, state);
     case CollectionsActionType.REMOVE_FAVORITE_SUCCESS:
-      return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favourite: false}}, state);
+      return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favorite: false}}, state);
+    case CollectionsActionType.ADD_FAVORITE_FAILURE:
+      return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favorite: false}}, state);
+    case CollectionsActionType.REMOVE_FAVORITE_FAILURE:
+      return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favorite: true}}, state);
     case CollectionsActionType.DELETE_SUCCESS:
       return collectionsAdapter.removeOne(action.payload.collectionId, state);
     case CollectionsActionType.CREATE_ATTRIBUTES_SUCCESS:

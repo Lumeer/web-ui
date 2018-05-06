@@ -47,6 +47,7 @@ import {DeletionHelper} from "./util/deletion-helper";
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
+import {Document} from '../../../core/dto';
 
 @Component({
   selector: 'post-it-perspective',
@@ -182,6 +183,23 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         return roles;
       }, {})
     });
+  }
+
+  public onFavoriteChange(document: Document, data: { favorite: boolean, onlyStore: boolean }) {
+    const {favorite, onlyStore} = data;
+    if (onlyStore) {
+      if (favorite) {
+        this.store.dispatch(new DocumentsAction.AddFavoriteSuccess({documentId: document.id}))
+      } else {
+        this.store.dispatch(new DocumentsAction.RemoveFavoriteSuccess({documentId: document.id}))
+      }
+    } else {
+      if (favorite) {
+        this.store.dispatch(new DocumentsAction.AddFavorite({collectionId: document.collectionId, documentId: document.id}))
+      } else {
+        this.store.dispatch(new DocumentsAction.RemoveFavorite({collectionId: document.collectionId, documentId: document.id}))
+      }
+    }
   }
 
   private resetToInitialState(): void {

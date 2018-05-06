@@ -23,7 +23,7 @@ import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {of} from 'rxjs/observable/of';
-import {tap, filter, take, switchMap, catchError} from 'rxjs/operators';
+import {tap, filter, take, catchError} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {selectCollectionsLoaded} from '../store/collections/collections.state';
 import {CollectionsAction} from '../store/collections/collections.action';
@@ -37,7 +37,6 @@ export class CollectionsGuard implements CanActivate {
   public canActivate(next: ActivatedRouteSnapshot,
                      state: RouterStateSnapshot): Observable<boolean> {
     return this.checkStore().pipe(
-      switchMap(() => of(true)),
       catchError(() => of(false))
     );
   }

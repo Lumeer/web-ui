@@ -32,7 +32,6 @@ import {View} from '../dto/view';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
-import {HomePageService} from './home-page.service';
 
 @Injectable()
 export class SearchService {

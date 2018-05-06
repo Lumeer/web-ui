@@ -23,7 +23,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {switchMap} from 'rxjs/operators';
+import {mergeMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../core/store/app.state';
 import {NotificationsAction} from '../core/store/notifications/notifications.action';
@@ -46,11 +46,12 @@ export class WorkspaceGuard implements CanActivate {
     const projectCode = next.paramMap.get('projectCode');
 
     return this.workspaceService.getOrganizationFromStoreOrApi(organizationCode).pipe(
-      switchMap(organization => {
+      mergeMap(organization => {
         if (isNullOrUndefined(organization)) {
           this.dispatchErrorActions();
           return Observable.of(false);
         }
+
         return this.checkProject(organizationCode, organization.id, projectCode);
       })
     );
@@ -58,7 +59,7 @@ export class WorkspaceGuard implements CanActivate {
 
   private checkProject(orgCode: string, orgId: string, projCode: string): Observable<boolean> {
     return this.workspaceService.getProjectFromStoreOrApi(orgCode, orgId, projCode).pipe(
-      switchMap(project => {
+      mergeMap(project => {
           if (isNullOrUndefined(project)) {
             this.dispatchErrorActions();
             return Observable.of(false);

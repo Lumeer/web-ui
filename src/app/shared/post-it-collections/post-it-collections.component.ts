@@ -213,6 +213,23 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       }));
   }
 
+  public onFavoriteChange(collectionId: string, data: { favorite: boolean, onlyStore: boolean }) {
+    const {favorite, onlyStore} = data;
+    if (onlyStore) {
+      if (favorite) {
+        this.store.dispatch(new CollectionsAction.AddFavoriteSuccess({collectionId}))
+      } else {
+        this.store.dispatch(new CollectionsAction.RemoveFavoriteSuccess({collectionId}))
+      }
+    } else {
+      if (favorite) {
+        this.store.dispatch(new CollectionsAction.AddFavorite({collectionId}))
+      } else {
+        this.store.dispatch(new CollectionsAction.RemoveFavorite({collectionId}))
+      }
+    }
+  }
+
   private deleteUninitializedPostIt(collection: CollectionModel) {
     this.collections = this.collections.filter(coll => coll.correlationId !== collection.correlationId);
   }
@@ -229,7 +246,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     return this.project && this.currentUser && userHasRoleInResource(this.currentUser, this.project, Role.Write);
   }
 
-  public getRoles(collection: CollectionModel): string[]{
+  public getRoles(collection: CollectionModel): string[] {
     return this.collectionRoles && this.collectionRoles[collection.id] || [];
   }
 
