@@ -1,5 +1,20 @@
 @import "../../variables";
 
+a.nav-link.active {
+  background-color: $success;
+  border: none;
+  border-radius: .25rem;
+}
+
+a.nav-link:hover {
+  border: none;
+  border-bottom: solid $success 02px;
+  -webkit-transition: border-bottom-color 1s ease;
+  -moz-transition: border-bottom-color 1s ease;
+  -o-transition: border-bottom-color 1s ease;
+  transition: border-bottom-color 1s ease;
+}
+
 :host {
   background: $secondary-color !important;
 

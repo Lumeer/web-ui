@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs" role="tablist" (click)="$event.stopPropagation()">
   <li *ngFor="let i of range(0, TABS)" (click)="tab = i" class="nav-item"><a
-    class="nav-link text-success {{ i === tab ? 'active' : null }}"><i class="fa-fw {{ tabIcon(i) }}"></i></a></li>
+    class="nav-link text-success {{ i === tab ? 'active' : null }}"><i class="fa-fw {{ i === tab ? 'fa-inverse' : null }} {{ tabIcon(i) }}"></i></a></li>
 </ul>
 
 <div class="tab-content">

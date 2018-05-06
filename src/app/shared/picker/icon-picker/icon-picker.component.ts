@@ -85,15 +85,19 @@ export class IconPickerComponent implements OnInit {
   }
 
   public tabIcon(tabIndex: number): string {
-    const iconsPerTab = this.icons.length / this.TABS;
+    const iconsPerTab = this.iconsPerTab(); //this.icons.length / this.TABS;
     const start = Math.floor(tabIndex * iconsPerTab);
     return this.icons[start];
   }
 
   public iconsInTab(tabIndex: number): string[] {
-    const iconsPerTab = this.icons.length / this.TABS;
+    const iconsPerTab = this.iconsPerTab(); //this.icons.length / this.TABS;
     const start = Math.floor(tabIndex * iconsPerTab);
     return this.icons.slice(start, start + iconsPerTab);
+  }
+
+  private iconsPerTab() {
+    return Math.ceil(this.icons.length / this.TABS / 9) * 9;
   }
 
 }

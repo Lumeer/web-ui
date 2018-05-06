@@ -10,7 +10,7 @@
      (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
 
 <label for="customColorInput{{ id }}"
-       class="w-100 large-text pl-2 py-0 my-0"
-       i18n="@@picker.color.custom">Custom Color...</label>
+       class="w-100 text-center mt-1 py-0 my-0"
+       i18n="@@picker.color.custom"><span class="btn btn-sm btn-success"><i class="far fa-eye-dropper"></i> Custom Color&hellip;</span></label>
 <input type="color" class="form-control" hidden id="customColorInput{{ id }}" [ngModel]="selected"
-       (ngModelChange)="$event !== selected && select($event)"/>
+       (ngModelChange)="$event !== selected && select($event)" />
