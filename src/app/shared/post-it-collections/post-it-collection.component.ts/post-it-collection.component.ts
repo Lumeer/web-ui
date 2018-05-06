@@ -52,8 +52,6 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
   @Output() public favoriteChange = new EventEmitter<{ favorite: boolean, onlyStore: boolean }>();
 
   public isPickerVisible: boolean = false;
-  private lastIcon: string;
-  private lastColor: string;
 
   private lastSyncedFavorite: boolean;
   private favoriteChange$ = new Subject<boolean>();
@@ -111,40 +109,18 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
       this.onPickerBlur()
     } else {
       this.isPickerVisible = true;
-      this.lastIcon = null;
-      this.lastColor = null;
     }
     this.togglePanel.emit(event);
-  }
-
-  public onNewColor(color: string) {
-    this.lastColor = color;
-  }
-
-  public onNewIcon(icon: string) {
-    this.lastIcon = icon;
   }
 
   public onPickerBlur() {
     if (!this.isPickerVisible) return;
 
     if (this.collection.id) {
-      if (this.shouldUpdateIcons()) {
-        const resourceModel = {
-          ...this.collection,
-          icon: this.lastIcon || this.collection.icon,
-          color: this.lastColor || this.collection.color
-        };
-        this.update.emit(resourceModel);
-      }
+      this.update.emit(this.collection);
     }
 
     this.isPickerVisible = false;
-  }
-
-  private shouldUpdateIcons(): boolean {
-    return (this.lastIcon && this.collection.icon !== this.lastIcon) ||
-      (this.lastColor && this.collection.color !== this.lastColor);
   }
 
   public workspacePath(): string {

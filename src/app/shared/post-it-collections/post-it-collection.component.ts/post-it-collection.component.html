@@ -51,11 +51,9 @@
           <i class="fa fa-fw fa-eye-dropper" aria-hidden="true" (click)="togglePanelVisible($event);"
              (clickOutside)="onPickerBlur()"></i></a>
         <div class="dropdown-menu dropdown-menu-right">
-          <color-picker class="dropdown-item" [color]="collection.color"
-                        (selectedChange)="onNewColor($event)"></color-picker>
+          <color-picker class="dropdown-item" [(color)]="collection.color"></color-picker>
           <div class="dropdown-divider"></div>
-          <icon-picker class="dropdown-item" [icon]="collection.icon"
-                       (selectedChange)="onNewIcon($event)"></icon-picker>
+          <icon-picker class="dropdown-item" [(icon)]="collection.icon"></icon-picker>
         </div>
       </ng-container>
 
