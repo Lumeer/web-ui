@@ -57,7 +57,7 @@
         </div>
       </ng-container>
 
-      <a *ngIf="!collection.id || hasManageRole(collection)"
+      <a *ngIf="!collection.id || hasManageRole()"
          (click)="onDelete()"
          class="text-danger rounded-left"
          title="Remove File" i18n-title="@@collection.button.remove">
