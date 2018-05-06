@@ -59,8 +59,7 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
 }
 
 function onCreateAttributeSuccess(state: CollectionsState, action: CollectionsAction.CreateAttributeSuccess): CollectionsState {
-  let attributes = state.entities[action.payload.collectionId].attributes.slice();
-  attributes.push(action.payload.attribute);
+  let attributes = state.entities[action.payload.collectionId].attributes.concat(action.payload.attribute);
   return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
 }
 
@@ -74,11 +73,7 @@ function onChangeAttributeSuccess(state: CollectionsState, action: CollectionsAc
     attributes.push(action.payload.attribute); // TODO preserve order
   }
 
-  if(!isNullOrUndefined(oldAttributeCopy)){
-
-  }
-
-  if (oldAttributeCopy.name !== action.payload.attribute.name) {
+  if (!isNullOrUndefined(oldAttributeCopy) && oldAttributeCopy.name !== action.payload.attribute.name) {
     attributes = renameChildAttributes(attributes, oldAttributeCopy.name, action.payload.attribute.name);
   }
 
@@ -90,7 +85,7 @@ function renameChildAttributes(attributes: AttributeModel[], oldParentName: stri
   return attributes.map(attribute => {
     if (attribute.name.startsWith(prefix)) {
       const [, suffix] = attribute.name.split(oldParentName, 2);
-      return {...attribute, id: newParentName + suffix};
+      return {...attribute, name: newParentName + suffix};
     }
     return attribute;
   });
