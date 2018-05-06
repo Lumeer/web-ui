@@ -118,10 +118,10 @@ export class CollectionsEffects {
     withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
     map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
-        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
+        const title = this.i18n({id: 'serviceLimits.trial', value: 'Trial Service'});
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
-          value: 'You are currently on the Free plan which allows you to have only limited number of files. Do you want to upgrade to Business now?'
+          value: 'You are currently on the Trial plan which allows you to have only limited number of files. Do you want to upgrade to Business now?'
         });
         return new NotificationsAction.Confirm({
           title,
@@ -156,10 +156,10 @@ export class CollectionsEffects {
     withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
     map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
-        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
+        const title = this.i18n({id: 'serviceLimits.trial', value: 'Trial Service'});
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
-          value: 'You are currently on the Free plan which allows you to have only limited number of files. Do you want to upgrade to Business now?'
+          value: 'You are currently on the Trial plan which allows you to have only limited number of files. Do you want to upgrade to Business now?'
         });
         return new NotificationsAction.Confirm({
           title,
@@ -221,12 +221,11 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public addFavorite$: Observable<Action> = this.actions$.pipe(
+  public addFavorite$ = this.actions$.pipe(
     ofType<CollectionsAction.AddFavorite>(CollectionsActionType.ADD_FAVORITE),
-    mergeMap(action => this.homePageService.addFavoriteCollection(action.payload.collectionId).pipe(
-      map(() => action.payload.collectionId),
-      map((collectionId) => new CollectionsAction.AddFavoriteSuccess({collectionId})),
-      catchError((error) => Observable.of(new CollectionsAction.AddFavoriteFailure({error: error})))
+    mergeMap(action => this.collectionService.addFavorite(action.payload.collectionId).pipe(
+      mergeMap(() => Observable.of()),
+      catchError((error) => Observable.of(new CollectionsAction.AddFavoriteFailure({collectionId: action.payload.collectionId, error: error})))
     )),
   );
 
@@ -241,12 +240,11 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public removeFavorite$: Observable<Action> = this.actions$.pipe(
+  public removeFavorite$ = this.actions$.pipe(
     ofType<CollectionsAction.RemoveFavorite>(CollectionsActionType.REMOVE_FAVORITE),
-    mergeMap(action => this.homePageService.removeFavoriteCollection(action.payload.collectionId).pipe(
-      map(() => action.payload.collectionId),
-      map((collectionId) => new CollectionsAction.RemoveFavoriteSuccess({collectionId})),
-      catchError((error) => Observable.of(new CollectionsAction.RemoveFavoriteFailure({error: error})))
+    mergeMap(action => this.collectionService.removeFavorite(action.payload.collectionId).pipe(
+      mergeMap(() => Observable.of()),
+      catchError((error) => Observable.of(new CollectionsAction.RemoveFavoriteFailure({collectionId: action.payload.collectionId, error: error})))
     )),
   );
 

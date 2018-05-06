@@ -149,12 +149,10 @@ export class DocumentService {
   }
 
   private addLastUsed(collectionId: string, id: string) {
-    this.homePageService.addLastUsedCollection(collectionId);
     this.homePageService.addLastUsedDocument(collectionId, id);
   }
 
   private removeLastUsedAndFavorite(collectionId: string, id: string) {
-    this.homePageService.addLastUsedCollection(collectionId);
     this.homePageService.removeLastUsedDocument(collectionId, id);
     this.homePageService.removeFavoriteDocument(collectionId, id);
   }

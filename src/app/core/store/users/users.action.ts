@@ -31,7 +31,6 @@ export enum UsersActionType {
   GET_CURRENT_USER_SUCCESS = '[Users] Get current user:: Success',
 
   SAVE_DEFAULT_WORKSPACE = '[Users] Save default workspace',
-  SAVE_CONTENT_SIZE = '[Users] Save content size',
 
   CREATE = '[Users] Create',
   CREATE_SUCCESS = '[Users] Create :: Success',
@@ -80,13 +79,6 @@ export namespace UsersAction {
     public readonly type = UsersActionType.SAVE_DEFAULT_WORKSPACE;
 
     public constructor(public payload: { defaultWorkspace: DefaultWorkspaceModel }) {
-    }
-  }
-
-  export class SaveContentSize implements Action {
-    public readonly type = UsersActionType.SAVE_CONTENT_SIZE;
-
-    public constructor(public payload: { sizeType: SizeType }) {
     }
   }
 
@@ -171,6 +163,6 @@ export namespace UsersAction {
     GetCurrentUser | GetCurrentUserSuccess |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    SaveDefaultWorkspace | SaveContentSize |
+    SaveDefaultWorkspace |
     Delete | DeleteSuccess | DeleteFailure | Clear;
 }

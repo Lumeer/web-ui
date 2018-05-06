@@ -24,7 +24,6 @@ import {User} from '../dto';
 import {HttpClient} from "@angular/common/http";
 import 'rxjs/add/observable/of';
 import {DefaultWorkspace} from '../dto/default-workspace';
-import {SizeType} from '../../shared/slider/size-type';
 
 @Injectable()
 export class GlobalService {
@@ -37,11 +36,7 @@ export class GlobalService {
   }
 
   public saveDefaultWorkspace(defaultWorkspace: DefaultWorkspace): Observable<any> {
-    return this.httpClient.put(`${this.apiPrefix()}/settings/workspace`, defaultWorkspace);
-  }
-
-  public saveContentSize(sizeType: SizeType): Observable<any> {
-    return this.httpClient.put(`${this.apiPrefix()}/settings/contentSize`, sizeType);
+    return this.httpClient.put(`${this.apiPrefix()}/workspace`, defaultWorkspace);
   }
 
   private apiPrefix(): string {

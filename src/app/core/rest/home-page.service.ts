@@ -28,9 +28,7 @@ import {selectWorkspace} from '../store/navigation/navigation.state';
 
 import {Workspace} from '../store/navigation/workspace.model';
 
-const LAST_USED_COLLECTIONS = 'lastUsedCollections';
 const LAST_USED_DOCUMENTS = 'lastUsedDocuments';
-const FAVORITE_COLLECTIONS = 'favoriteCollections';
 const FAVORITE_DOCUMENTS = 'favoriteDocuments';
 
 const MAX_SAVED_ITEMS = 10;
@@ -51,14 +49,6 @@ export class HomePageService {
 
   public getFavoriteDocuments(): Observable<string[]> {
     return Observable.of(this.getForWorkspace(FAVORITE_DOCUMENTS));
-  }
-
-  public getLastUsedCollections(): Observable<string[]> {
-    return Observable.of(this.getForWorkspace(LAST_USED_COLLECTIONS));
-  }
-
-  public getFavoriteCollections(): Observable<string[]> {
-    return Observable.of(this.getForWorkspace(FAVORITE_COLLECTIONS));
   }
 
   public addLastUsedDocument(collectionId: string, id: string): Observable<boolean> {
@@ -91,26 +81,6 @@ export class HomePageService {
     return Observable.of(true);
   }
 
-  public addLastUsedCollection(collectionId: string): Observable<boolean> {
-    this.addItem(LAST_USED_COLLECTIONS, collectionId);
-    return Observable.of(true);
-  }
-
-  public removeLastUsedCollection(collectionId: string): Observable<boolean> {
-    this.removeItem(LAST_USED_COLLECTIONS, collectionId);
-    return Observable.of(true);
-  }
-
-  public addFavoriteCollection(collectionId: string): Observable<boolean> {
-    this.addItem(FAVORITE_COLLECTIONS, collectionId);
-    return Observable.of(true);
-  }
-
-  public removeFavoriteCollection(collectionId: string): Observable<boolean> {
-    this.removeItem(FAVORITE_COLLECTIONS, collectionId);
-    return Observable.of(true);
-  }
-
   public checkFavoriteDocument(document: Document): Observable<Document> {
     return this.getFavoriteDocuments().pipe(
       mergeMap(codes => {
@@ -127,26 +97,6 @@ export class HomePageService {
           document.favorite = codes.includes(this.documentValue(document.collectionId, document.id));
         }
         return Observable.of(documents);
-      })
-    );
-  }
-
-  public checkFavoriteCollection(collection: Collection): Observable<Collection> {
-    return this.getFavoriteCollections().pipe(
-      mergeMap(codes => {
-        collection.favorite = codes.includes(collection.id);
-        return Observable.of(collection);
-      })
-    );
-  }
-
-  public checkFavoriteCollections(collections: Collection[]): Observable<Collection[]> {
-    return this.getFavoriteCollections().pipe(
-      mergeMap(codes => {
-        for (let collection of collections) {
-          collection.favorite = codes.includes(collection.id);
-        }
-        return Observable.of(collections);
       })
     );
   }

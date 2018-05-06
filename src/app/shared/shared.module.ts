@@ -28,19 +28,15 @@ import {LinksComponent} from './links/links.component';
 
 import {PerspectiveDirective} from './perspective.directive';
 import {PickerModule} from './picker/picker.module';
-import {PostItCollectionsComponent} from './post-it-collections/post-it-collections.component';
 import {SearchBoxModule} from './search-box/search-box.module';
 import {SizeSliderComponent} from './slider/size-slider.component';
-import {LayoutItem} from './utils/layout/layout-item.directive';
-import {PostItCollectionNameComponent} from './post-it-collections/collection-name/post-it-collection-name.component';
 import {RemovePlaceholderOnFocusDirective} from './placeholder/remove-placeholder-on-focus';
-import {PostItCollectionAddButtonComponent} from './post-it-collections/add-button/post-it-collection-add-button.component';
-import {PostItCollectionImportButtonComponent} from './post-it-collections/import-button/post-it-collection-import-button.component';
 import {SliderComponent} from './slider/slider.component';
 import {UsersModule} from "./users/users.module";
 import {TagModule} from "./tag/tag.module";
 import {InputModule} from "./input/input.module";
 import {ResourceHeaderComponent} from './resource/header/resource-header.component';
+import {PostItCollectionsModule} from './post-it-collections/post-it-collections.module';
 
 @NgModule({
   imports: [
@@ -53,28 +49,23 @@ import {ResourceHeaderComponent} from './resource/header/resource-header.compone
     UsersModule,
     DialogsModule,
     TagModule,
-    InputModule
+    InputModule,
+    PostItCollectionsModule
   ],
   declarations: [
-    PostItCollectionsComponent,
-    PostItCollectionNameComponent,
-    PostItCollectionAddButtonComponent,
-    PostItCollectionImportButtonComponent,
     SizeSliderComponent,
     CommentsComponent,
     LinksComponent,
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
-    LayoutItem,
     SliderComponent,
-    LayoutItem,
     ResourceHeaderComponent
   ],
   exports: [
     CommonModule,
     DragAndDropModule,
     FormsModule,
-    PostItCollectionsComponent,
+    PostItCollectionsModule,
     SizeSliderComponent,
     CommentsComponent,
     LinksComponent,

@@ -17,19 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {catchError, first, map, mergeMap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {Attribute, Collection} from '../dto';
-import {BadInputError} from '../error/bad-input.error';
 import {AppState} from '../store/app.state';
-import {CollectionModel} from '../store/collections/collection.model';
-import {selectCollectionsDictionary} from '../store/collections/collections.state';
 import {HomePageService} from './home-page.service';
 import {PermissionService} from './permission.service';
 
@@ -48,17 +44,10 @@ export class CollectionService extends PermissionService {
   }
 
   public updateCollection(collection: Collection): Observable<Collection> {
-    this.homePageService.addLastUsedCollection(collection.id).subscribe();
-    return this.httpClient.put<Collection>(`${this.apiPrefix()}/${collection.id}`, collection).pipe(
-      mergeMap(collection => this.homePageService.checkFavoriteCollection(collection))
-    );
+    return this.httpClient.put<Collection>(`${this.apiPrefix()}/${collection.id}`, collection);
   }
 
   public removeCollection(collectionId: string): Observable<string> {
-    this.homePageService.removeFavoriteCollection(collectionId).subscribe();
-    this.homePageService.removeLastUsedCollection(collectionId).subscribe();
-    this.homePageService.removeLastUsedDocuments(collectionId).subscribe();
-    this.homePageService.removeFavoriteDocuments(collectionId).subscribe();
     return this.httpClient.delete(
       `${this.apiPrefix()}/${collectionId}`,
       {observe: 'response', responseType: 'text'}
@@ -67,29 +56,16 @@ export class CollectionService extends PermissionService {
     );
   }
 
-  public toggleCollectionFavorite(collection: Collection): Observable<boolean> {
-    if (collection.favorite) {
-      return this.homePageService.removeFavoriteCollection(collection.id);
-    }
-    return this.homePageService.addFavoriteCollection(collection.id);
+  public addFavorite(collectionId: string): Observable<any> {
+    return this.httpClient.post(`${this.apiPrefix()}/${collectionId}/favorite`, {});
+  }
+
+  public removeFavorite(collectionId: string): Observable<any> {
+    return this.httpClient.delete(`${this.apiPrefix()}/${collectionId}/favorite`);
   }
 
   public getCollection(collectionId: string): Observable<Collection> {
-    return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionId}`).pipe(
-      mergeMap(collection => this.homePageService.checkFavoriteCollection(collection))
-    );
-  }
-
-  public getLastUsedCollections(): Observable<CollectionModel[]> {
-    return this.homePageService.getLastUsedCollections().pipe(
-      mergeMap(ids => this.convertIdsToCollections(ids))
-    );
-  }
-
-  public getFavoriteCollections(): Observable<CollectionModel[]> {
-    return this.homePageService.getFavoriteCollections().pipe(
-      mergeMap(ids => this.convertIdsToCollections(ids))
-    );
+    return this.httpClient.get<Collection>(`${this.apiPrefix()}/${collectionId}`);
   }
 
   public getCollections(pageNumber?: number, pageSize?: number): Observable<Collection[]> {
@@ -100,9 +76,7 @@ export class CollectionService extends PermissionService {
         .set('size', pageSize.toString());
     }
 
-    return this.httpClient.get<Collection[]>(this.apiPrefix(), {params: queryParams}).pipe(
-      mergeMap(collections => this.homePageService.checkFavoriteCollections(collections))
-    );
+    return this.httpClient.get<Collection[]>(this.apiPrefix(), {params: queryParams});
   }
 
   public getAllCollectionNames(): Observable<string[]> {
@@ -117,7 +91,6 @@ export class CollectionService extends PermissionService {
   }
 
   public createAttribute(collectionId: string, attribute: Attribute): Observable<Attribute> {
-    this.homePageService.addLastUsedCollection(collectionId).subscribe();
     return this.httpClient.post<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`, [attribute]).pipe(
       map(attributes => attributes[0])
     );
@@ -128,12 +101,10 @@ export class CollectionService extends PermissionService {
   }
 
   public updateAttribute(collectionId: string, id: string, attribute: Attribute): Observable<Attribute> {
-    this.homePageService.addLastUsedCollection(collectionId).subscribe();
     return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionId}/attributes/${id}`, attribute);
   }
 
   public removeAttribute(collectionId: string, id: string): Observable<HttpResponse<any>> {
-    this.homePageService.addLastUsedCollection(collectionId).subscribe();
     return this.httpClient.delete(
       `${this.apiPrefix()}/${collectionId}/attributes/${id}`,
       {observe: 'response', responseType: 'text'}
@@ -151,16 +122,6 @@ export class CollectionService extends PermissionService {
     const projectCode = this.workspace.projectCode;
 
     return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
-  }
-
-  private convertIdsToCollections(ids: string[]): Observable<CollectionModel[]> {
-    return this.store.select(selectCollectionsDictionary).pipe(
-      first(),
-      map(collectionsDictionary => {
-        return ids.map(id => collectionsDictionary[id])
-          .filter(collection => collection);
-      })
-    );
   }
 
 }
