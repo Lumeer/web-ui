@@ -109,7 +109,7 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
 
   public collectionRoles: { [collectionId: string]: string[] };
 
-  private layoutManager: PostItLayout;
+  public layoutManager: PostItLayout;
 
   private configHelper: ConfigHelper;
 
