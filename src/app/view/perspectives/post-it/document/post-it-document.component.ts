@@ -123,7 +123,7 @@ export class PostItDocumentComponent implements OnInit {
   public newAttributePair: AttributePair = new AttributePair();
 
   constructor(private store: Store<AppState>,
-              private element: ElementRef) {
+              public element: ElementRef) {
   }
 
   public ngOnInit(): void {

@@ -91,7 +91,6 @@ export class PostItLayout {
     this.runSafely(() => {
       this.grid.getItems().forEach((item, i) => {
         item.getElement().setAttribute('order', i);
-        item.getElement().querySelector('.TEST') && (item.getElement().querySelector('.TEST').innerHTML = i);
       });
     });
   }

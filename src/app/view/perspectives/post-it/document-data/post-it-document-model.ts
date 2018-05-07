@@ -25,6 +25,7 @@ import {HashCodeGenerator} from "../../../../shared/utils/hash-code-generator";
 export class PostItDocumentModel {
 
   public index: number;
+  public order: number;
   public document: DocumentModel;
 
   public updating = false;
@@ -52,7 +53,12 @@ export class PostItDocumentModel {
   }
 
   public withIndex(index: number): PostItDocumentModel {
-    this.index = index;
+    this.index = Number(index);
+    return this;
+  }
+
+  public withOrder(order: number): PostItDocumentModel {
+    this.order = Number(order);
     return this;
   }
 

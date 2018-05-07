@@ -9,13 +9,13 @@
 
   <div class="post-it-document-layout" #layoutGrid>
     <ng-container *ngIf="layoutManager">
-      <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByDocument"
+      <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByDocument" #postItReference
                         layout-item
                         [layout]="layoutManager"
                         [insertedAt]="postIt.initialized ? MAX_SAFE_INTEGER : 0"
                         class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : 'initialized' }}"
                         [collectionRoles]="getCollectionRoles(postIt)"
-                        [postItModel]="postIt.withIndex(idx)"
+                        [postItModel]="postIt.withIndex(idx) && postIt.withOrder(postItReference.element.nativeElement.getAttribute('order'))"
                         [perspectiveId]="perspectiveId"
                         [selectionHelper]="selectionHelper"
                         [navigationHelper]="navigationHelper"

@@ -35,7 +35,6 @@ export class ConfigHelper {
   public initialize(): void {
     this.subscription = this.store.select(selectViewPostItConfig).subscribe((postItConfig: PostItConfigModel) => {
       this.postItConfig = postItConfig;
-      console.log(this.postItConfig);
     });
   }
 
