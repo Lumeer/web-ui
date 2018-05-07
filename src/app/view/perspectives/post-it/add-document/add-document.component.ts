@@ -69,7 +69,7 @@ export class PostItAddDocumentComponent implements OnInit, OnDestroy {
     let result = {};
 
     this.selectedCollection.attributes.forEach((attribute: AttributeModel) => {
-      result[attribute.id] = '';
+      result[attribute.name] = '';
     });
 
     return result;

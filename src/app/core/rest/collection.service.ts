@@ -118,7 +118,13 @@ export class CollectionService extends PermissionService {
 
   public createAttribute(collectionId: string, attribute: Attribute): Observable<Attribute> {
     this.homePageService.addLastUsedCollection(collectionId).subscribe();
-    return this.httpClient.post<Attribute>(`${this.apiPrefix()}/${collectionId}/attributes`, attribute);
+    return this.httpClient.post<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`, [attribute]).pipe(
+      map(attributes => attributes[0])
+    );
+  }
+
+  public createAttributes(collectionId: string, attributes: Attribute[]): Observable<Attribute[]> {
+    return this.httpClient.post<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`, attributes)
   }
 
   public updateAttribute(collectionId: string, id: string, attribute: Attribute): Observable<Attribute> {

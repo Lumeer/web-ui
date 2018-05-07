@@ -129,5 +129,5 @@
 
 <datalist *ngIf="postItModel"
           id="{{ suggestionListId() }}">
-  <option *ngFor="let attribute of unusedAttributes()">{{ attribute.id }}</option>
+  <option *ngFor="let attribute of unusedAttributes()">{{ attribute.name }}</option>
 </datalist>
