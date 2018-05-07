@@ -22,11 +22,11 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 
 import {AppState} from '../store/app.state';
 import {Store} from '@ngrx/store';
-import {DefaultWorkspaceModel} from '../store/users/user.model';
 import {selectCurrentUser} from '../store/users/users.state';
 import {Observable} from 'rxjs/Observable';
 import {filter, map} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
+import {DefaultWorkspaceModel} from '../store/users/user.model';
+import {isNullOrUndefined} from "util";
 
 @Injectable()
 export class AppRedirectGuard implements CanActivate {
@@ -56,4 +56,5 @@ export class AppRedirectGuard implements CanActivate {
       map(user => user.defaultWorkspace)
     );
   }
+
 }

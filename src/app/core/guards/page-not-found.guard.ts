@@ -23,11 +23,12 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../notifications/notification.service';
 import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operators';
-import {DefaultWorkspaceModel} from '../store/users/user.model';
+import {filter, map} from 'rxjs/operators';
 import {selectCurrentUser} from '../store/users/users.state';
 import {AppState} from '../store/app.state';
 import {Store} from '@ngrx/store';
+import {DefaultWorkspaceModel} from '../store/users/user.model';
+import {isNullOrUndefined} from "util";
 
 @Injectable()
 export class PageNotFoundGuard implements CanActivate {
@@ -45,9 +46,11 @@ export class PageNotFoundGuard implements CanActivate {
     return this.getDefaultWorkspace().pipe(
       map(workspace => {
         const hasWorkspace = workspace && workspace.organizationCode && workspace.projectCode;
-        if (w === 'w' && organizationCode && projectCode && hasWorkspace) {
+        if (w === 'w' && organizationCode && projectCode) {
+          this.router.navigate(['w', organizationCode, projectCode, 'view', 'search']);
+        } else if(hasWorkspace) {
           this.router.navigate(['w', workspace.organizationCode, workspace.projectCode, 'view', 'search']);
-        } else {
+        }else{
           this.router.navigate(['workspace']);
         }
         const message = this.i18n({id: 'page.not.found', value: 'Page not found'});
@@ -61,7 +64,9 @@ export class PageNotFoundGuard implements CanActivate {
 
   private getDefaultWorkspace(): Observable<DefaultWorkspaceModel> {
     return this.store.select(selectCurrentUser).pipe(
+      filter(user => !isNullOrUndefined(user)),
       map(user => user.defaultWorkspace)
     );
   }
+
 }
