@@ -48,7 +48,6 @@ import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.sta
 import {userRolesInResource} from '../../../shared/utils/resource.utils';
 import {Role} from '../../../core/model/role';
 import {ConfigHelper} from "./util/config-helper";
-import {DeletionHelper} from "./util/deletion-helper";
 import Create = DocumentsAction.Create;
 import UpdateData = DocumentsAction.UpdateData;
 import {AfterViewInit} from "@angular/core/src/metadata/lifecycle_hooks";
@@ -110,15 +109,11 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
 
   public collectionRoles: { [collectionId: string]: string[] };
 
-  private deletionHelper: DeletionHelper;
-
   private layoutManager: PostItLayout;
 
   private configHelper: ConfigHelper;
 
   private subscriptions: Subscription[] = [];
-
-  private createdDocumentCorrelationId: string;
 
   private allLoaded: boolean;
 
@@ -133,7 +128,6 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
   public ngOnInit(): void {
     this.createConfigHelper();
     this.createInfiniteScroll();
-    this.createDefectionHelper();
     this.createSelectionHelper();
     this.createNavigationHelper();
     this.createCollectionsSubscription();
@@ -154,11 +148,6 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
       () => this.documentsPerRow(),
       this.perspectiveId
     );
-  }
-
-  private createDefectionHelper() {
-    this.deletionHelper = new DeletionHelper(this.store, this.postIts);
-    this.deletionHelper.initialize();
   }
 
   private createNavigationHelper() {
@@ -246,9 +235,8 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
   }
 
   private selectAndFocusCreatedPostIt(newPostIt: PostItDocumentModel) {
-    this.selectionHelper.select(newPostIt.preferredColumn(), 0, newPostIt);
     this.selectionHelper.setEditMode(true);
-    this.selectionHelper.focus();
+    this.selectionHelper.select(newPostIt.preferredColumn(), 0, newPostIt);
   }
 
   public postItChanged(changedPostIt: PostItDocumentModel): void {
@@ -281,27 +269,29 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
   private updateLayoutWithDocuments(documents: DocumentModel[]) {
     this.checkAllLoaded(documents);
     this.addDocumentsNotInLayout(documents);
-    this.focusNewDocumentIfPresent(documents);
+    this.initializeDocumentsInLayout(documents);
 
     this.infiniteScroll.finishLoading();
   }
 
   private addDocumentsNotInLayout(documents: DocumentModel[]): void {
-    const usedDocumentIDs = new Set(this.postIts.map(postIt => postIt.document.id));
+    const usedDocumentIDs = new Set(this.postIts.map(postIt => postIt.document.collectionId || postIt.document.id));
     documents
-      .filter(documentModel => !usedDocumentIDs.has(documentModel.id))
+      .filter(documentModel => !usedDocumentIDs.has(documentModel.collectionId || documentModel.id))
       .forEach(documentModel => {
         this.postIts.push(this.documentModelToPostItModel(documentModel))
       });
   }
 
-  private focusNewDocumentIfPresent(documents: DocumentModel[]): void {
-    const newDocument = documents.find(document => document.correlationId === this.createdDocumentCorrelationId);
-
-    if (newDocument) {
-      this.focusDocument(newDocument);
-      this.createdDocumentCorrelationId = null;
-    }
+  private initializeDocumentsInLayout(documents: DocumentModel[]): void {
+    this.postIts
+      .filter((postIt, index) => postIt.document.correlationId && !postIt.document.id)
+      .forEach((postIt, index) => {
+        const replacement = documents.find(documentModel => documentModel.correlationId === postIt.document.correlationId);
+        if (replacement) {
+          this.postIts[index] = this.documentModelToPostItModel(replacement);
+        }
+      });
   }
 
   private focusDocument(document: DocumentModel): void {
@@ -334,16 +324,13 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
 
   private initializePostIt(postItToInitialize: PostItDocumentModel): void {
     if (!postItToInitialize.updating) {
-      this.createdDocumentCorrelationId = postItToInitialize.document.correlationId;
       postItToInitialize.updating = true;
-
       this.store.dispatch(new Create({document: postItToInitialize.document}));
-      this.postIts.splice(this.postIts.indexOf(postItToInitialize), 1);
     }
   }
 
   public deletePostIt(postIt: PostItDocumentModel): void {
-    this.deletionHelper.deletePostIt(postIt);
+    this.postIts.splice(postIt.index, 1);
   }
 
   private documentModelToPostItModel(documentModel: DocumentModel): PostItDocumentModel {
@@ -369,7 +356,6 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public ngOnDestroy(): void {
-    this.unsubscribeIfPossible(this.deletionHelper);
     this.unsubscribeIfPossible(this.navigationHelper);
     this.unsubscribeIfPossible(this.configHelper);
     this.unsubscribeIfPossible(this.infiniteScroll);
@@ -377,7 +363,7 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  private unsubscribeIfPossible(helper: DeletionHelper | NavigationHelper | ConfigHelper | InfiniteScroll | Subscription) {
+  private unsubscribeIfPossible(helper: NavigationHelper | ConfigHelper | InfiniteScroll | Subscription) {
     if (helper) {
       helper.unsubscribe();
     }
