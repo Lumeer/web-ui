@@ -80,7 +80,7 @@
        </span>
       </li>
 
-      <li (click)="this.selectionHelper.select(0, attributePairs.length, postItModel); this.selectionHelper.setEditMode(true); selectionHelper.focus()">
+      <li>
         <span id="{{ perspectiveId }}{{ postItModel.index }}[0, {{ attributePairs.length }}]"
               class="attribute"
               [attr.tabindex]="postItModel.index * 1000 + attributePairs.length * 2"

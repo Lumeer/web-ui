@@ -168,20 +168,14 @@ export class SelectionHelper {
     newColumn = VALUE_COLUMN;
     newRow = newRow > this.lastRow() ? 0 : newRow;
 
-    const selectedDocument = this.postIts.find(postIt => {
-       console.log(postIt.order, this.selectedPostIt.order - 1)
-        return postIt.order === this.selectedPostIt.order - 1
-      });
+    const selectedDocument = this.postIts.find(postIt => postIt.order === this.selectedPostIt.order - 1);
     this.select(newColumn, newRow, selectedDocument);
   }
 
   private tryToSelectDocumentOnRight(newColumn: number, newRow: number): void {
     newColumn = ATTRIBUTE_COLUMN;
 
-    const selectedDocument = this.postIts.find(postIt => {
-      console.log(postIt.order, this.selectedPostIt.order + 1)
-        return postIt.order === this.selectedPostIt.order + 1
-      });
+    const selectedDocument = this.postIts.find(postIt => postIt.order === this.selectedPostIt.order + 1);
     this.select(newColumn, newRow, selectedDocument);
   }
 
@@ -199,11 +193,11 @@ export class SelectionHelper {
 
   private selectRow(row: number): void {
     if (row < 0) {
-      row = 0;
+      row = this.lastRow();
     }
 
     if (row > this.lastRow()) {
-      row = this.lastRow();
+      row = 0;
     }
 
     this.selection.row = row;
