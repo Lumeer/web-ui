@@ -52,13 +52,16 @@
 
 </div>
 
-<input-box
-  class="d-flex pb-3 pt-1"
-  [initialValue]="resource.description"
-  [canStayEmpty]="true"
-  [fontSizeRem]="1"
-  [maxLines]="2"
-  [title]="resource.description"
-  [placeholder]="getDescriptionPlaceholder()"
-  (newValue)="onNewDescription($event)">
-</input-box>
+<div class="pt-3 px-3 d-flex" [@animateOpacityFromUp]="'in'">
+  <i class="fas fa-2x fa-quote-right pr-2 mt-2"></i>
+  <input-box
+    class="d-flex pb-3 pt-1"
+    [initialValue]="resource.description"
+    [canStayEmpty]="true"
+    [fontSizeRem]="1"
+    [maxLines]="2"
+    [title]="resource.description"
+    [placeholder]="getDescriptionPlaceholder()"
+    (newValue)="onNewDescription($event)">
+  </input-box>
+</div>

@@ -20,6 +20,9 @@
 import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 
 import * as colors from './colors';
+import {I18n} from "@ngx-translate/i18n-polyfill";
+
+declare let $: any;
 
 @Component({
   selector: 'color-picker',
@@ -52,6 +55,11 @@ export class ColorPickerComponent implements OnInit {
 
   public id = new Date().valueOf();
 
+  public customColor = false;
+
+  constructor(private i18n: I18n) {
+  }
+
   public ngOnInit(): void {
     this.selected = this.color;
   }
@@ -78,6 +86,12 @@ export class ColorPickerComponent implements OnInit {
     return 'transparent';
   }
 
+  public isCustom() {
+    return this.greyscaleColors.indexOf(this.selected) < 0 &&
+      this.saturatedColors.indexOf(this.selected) < 0 &&
+      this.colors.indexOf(this.selected) < 0;
+  }
+
   public darken(color: string, amount: number): string {
     const hexToNumber = (start: number) => parseInt(color.substr(start, 2), 16);
     const subtractAmount = (num: number) => Math.max(0, (num - amount));
@@ -89,4 +103,24 @@ export class ColorPickerComponent implements OnInit {
     return `rgb(${darkerColors})`;
   }
 
+  public openSpectrum() {
+    const __this = this;
+
+    $(`#spectrum-picker-${this.id}`).spectrum({
+      color: this.color,
+      flat: false,
+      showInput: true,
+      cancelText: this.i18n({ id: "color-picker.cancelText", value: "Cancel" }),
+      chooseText:  this.i18n({ id: "color-picker.chooseText", value: "Choose" }),
+      preferredFormat: 'hex',
+      containerClassName: 'spectrum-container',
+      clickoutFiresChange: true,
+      change: function (color) {
+        __this.select(color.toHexString());
+      },
+      move: function (color) {
+        __this.preview(color.toHexString());
+      }
+    });
+  }
 }

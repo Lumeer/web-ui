@@ -201,3 +201,28 @@ input {
 .overflow-hidden {
   overflow: hidden;
 }
+
+ul.nav-u {
+  border-bottom: 1px solid $gray-300;
+}
+
+.nav-u .nav-item.show .nav-link, .nav-u .nav-link.active {
+  color: #495057;
+  background-color: #fff;
+  border-color: $success;
+}
+
+.nav-u .nav-link {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 3px solid transparent;
+}
+
+.spectrum-container {
+  border: none;
+  background-color: white;
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+}

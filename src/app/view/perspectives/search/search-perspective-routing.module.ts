@@ -43,10 +43,10 @@ const searchRoutes: Routes = [
         path: 'records',
         component: SearchDocumentsComponent
       },
-      {
+      /*{
         path: 'links',
         component: SearchLinksComponent
-      },
+      },*/
       {
         path: 'views',
         component: SearchViewsComponent
