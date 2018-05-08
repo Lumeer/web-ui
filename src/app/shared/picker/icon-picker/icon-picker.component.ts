@@ -52,6 +52,7 @@ export class IconPickerComponent implements OnInit {
 
   public ngOnInit(): void {
     this.selected = this.icon;
+    this.tab = Math.floor(this.icons.indexOf(this.selected) / this.iconsPerTab());
   }
 
   public preview(previewed: string) {

@@ -18,7 +18,7 @@
  */
 
 export const greyscale: string[] = [
-  '#0000000', '#444444', '#666666', '#999999', '#cccccc', '#eeeeee', '#f3f3f3', '#ffffff'
+  '#000000', '#444444', '#666666', '#999999', '#cccccc', '#eeeeee', '#f3f3f3'
 ];
 
 export const saturated: string[] = [
