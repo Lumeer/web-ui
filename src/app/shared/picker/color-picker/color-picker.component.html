@@ -1,6 +1,12 @@
 <div class="rounded" *ngFor="let colorOption of greyscaleColors" [style.background]="colorOption"
      [style.border-color]="colorHighlight(colorOption)"
      (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
+<div class="rounded control-icon {{!isCustom() ? 'mt-0 p-0' : ''}}"
+     [style.border-color]="isCustom() ? colorHighlight(selected) : 'transparent'"
+     [style.background]="isCustom() ? selected : 'transparent'"
+     id="spectrum-picker-{{id}}">
+  <i [style.color]="isCustom() ? 'transparent' : ''" class="far fa-crosshairs" (click)="openSpectrum()"></i>
+</div>
 <div class="rounded" *ngFor="let colorOption of saturatedColors" [style.background]="colorOption"
      [style.border-color]="colorHighlight(colorOption)"
      (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
@@ -8,9 +14,3 @@
 <div class="rounded" *ngFor="let colorOption of colors" [style.background]="colorOption"
      [style.border-color]="colorHighlight(colorOption)"
      (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
-
-<!--label for="customColorInput{{ id }}"
-       class="w-100 text-center mt-1 py-0 my-0"
-       i18n="@@picker.color.custom"><span class="btn btn-sm btn-success"><i class="far fa-eye-dropper"></i> Custom Color&hellip;</span></label>
-<input type="color" class="form-control" hidden id="customColorInput{{ id }}" [ngModel]="selected"
-       (ngModelChange)="$event !== selected && select($event)" /-->
