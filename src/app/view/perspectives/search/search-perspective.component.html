@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col"></div>
     <div class="col-12 col-lg-10 col-xl-9">
-      <ul class="nav nav-tabs">
+      <ul class="nav nav-u">
         <li role="presentation" class="nav-item">
           <a [routerLink]="'all'"
              [queryParams]="{query: stringifyQuery()}"
@@ -24,13 +24,13 @@
              class="nav-link"
              i18n="@@search.tab.documents">Records</a>
         </li>
-        <li role="presentation" class="nav-item">
+        <!--li role="presentation" class="nav-item">
           <a [routerLink]="'links'"
              [queryParams]="{query: stringifyQuery()}"
              [class.active]="isLinkActive('links')"
              class="nav-link"
              i18n="@@search.tab.links">Links</a>
-        </li>
+        </li-->
         <li role="presentation" class="nav-item">
           <a [routerLink]="'views'"
              [queryParams]="{query: stringifyQuery()}"
