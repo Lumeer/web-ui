@@ -19,14 +19,14 @@ th, td {
 }
 
 .h-35 {
-  height: 35% !important;
+  height: 35%;
 }
 
 .clickable-row {
   cursor: pointer;
 
-  &:hover {
-    color: $gray-500;
+  &:hover:not(.active) {
+    background-color: $gray-100;
   }
 }
 
@@ -36,4 +36,8 @@ tr.active {
 
 .color-success {
   color: $success;
+}
+
+.table-responsive {
+  resize: vertical;
 }
