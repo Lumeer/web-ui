@@ -18,7 +18,7 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {CollectionAttributePair} from '../../model/collection-attribute-pair';
+import {AxisSelectModel} from '../../model/axis-select-model';
 
 @Component({
   selector: 'attribute-select',
@@ -28,7 +28,7 @@ import {CollectionAttributePair} from '../../model/collection-attribute-pair';
 export class AttributeSelectComponent {
 
   @Input()
-  public attributes: CollectionAttributePair[];
+  public attributes: AxisSelectModel[];
 
   @Input()
   set preSelected(value: string) {
@@ -41,9 +41,9 @@ export class AttributeSelectComponent {
   @Output()
   public attributeSelected = new EventEmitter<string>();
 
-  public selectedAttribute: CollectionAttributePair;
+  public selectedAttribute: AxisSelectModel;
 
-  public selectAttribute(attribute: CollectionAttributePair) {
+  public selectAttribute(attribute: AxisSelectModel) {
     this.selectedAttribute = attribute;
     this.attributeSelected.emit(this.selectedAttribute.attributeId);
   }

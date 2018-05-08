@@ -68,7 +68,8 @@ export class LineVisualizer extends ChartVisualizer {
 
   private addBothAxisValues(trace: object) {
     const values = this.documents.map(document => {
-      return [document.data[this.attributeX], document.data[this.attributeY]];
+      return [document.data.find(d => d.attributeId === this.attributeX).value,
+        document.data.find(d => d.attributeId === this.attributeY).value];
     });
 
     trace['x'] = values.map(([valueX, valueY]) => valueX);
@@ -76,8 +77,7 @@ export class LineVisualizer extends ChartVisualizer {
   }
 
   private addSingleAxisValues(trace: object, attribute: string, axis: string) {
-    const values = this.documents.map(document => document.data[attribute]);
-    trace[axis] = values;
+    trace[axis] = this.documents.map(document => document.data.find(d => d.attributeId === attribute).value);
   }
 
   public showChart() {

@@ -266,7 +266,7 @@ export class SelectionHelper {
   }
 
   private lastRow(): number {
-    return Object.entries(this.selectedPostIt.document.data).length;
+    return this.selectedPostIt.document.data.length;
   }
 
 }

@@ -24,7 +24,7 @@ export interface DocumentModel {
   id?: string;
   collectionId: string;
   collection?: CollectionModel;
-  data: { [attributeId: string]: any };
+  data: DocumentDataModel[];
 
   favorite?: boolean;
 
@@ -36,4 +36,10 @@ export interface DocumentModel {
 
   correlationId?: string;
 
+}
+
+export interface DocumentDataModel {
+  attributeId?: string,
+  name?: string,
+  value?: any
 }

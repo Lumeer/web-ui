@@ -112,11 +112,11 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public createDefaultAttributeHtml(document: DocumentModel): string {
-    const data = document.data;
-    if (isNullOrUndefined(data)) {
+    const data = document.data || [];
+    if (data.length === 0) {
       return '';
     }
-    return this.valueHtml(Object.values(data)[0]);
+    return this.valueHtml(data[0].value);
   }
 
   public toggleDocument(document: DocumentModel) {
@@ -147,14 +147,12 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     if (isNullOrUndefined(document.data)) {
       return [];
     }
-    return this.getValuesFromArray(Object.values(document.data));
+    return this.getValuesFromArray(document.data.map(doc => doc.value));
   }
 
   private getValuesFromAny(value: any): string[] | string {
     if (isArray(value)) {
       return this.getValuesFromArray(value as any[]);
-    } else if (isObject(value)) {
-      return this.getValuesFromObject(value as Object);
     } else {
       return value as string;
     }
@@ -168,23 +166,16 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     return values;
   }
 
-  private getValuesFromObject(object: Object): string[] {
-    return this.getValuesFromArray(Object.values(object));
-  }
-
   public createEntriesHtml(document: DocumentModel): string {
     if (isNullOrUndefined(document.data)) {
       return '';
     }
 
-    return this.entriesHtml(Object.entries(document.data), document);
-  }
-
-  private entriesHtml(entries: [string, any][], document?: DocumentModel): string {
-    return entries
-      .map(([key, value]) => `${this.attributeHtml(key, document)}${this.valueHtml(value)}`)
+    return document.data
+      .map(data => `${this.attributeHtml(data.name, document)}${this.valueHtml(data.value)}`)
       .join(', ');
   }
+
 
   private attributeHtml(attribute: string, document: DocumentModel): string {
     return `<i class="${this.attributeHtmlClasses(attribute, document)}">${attribute}</i>: `;
@@ -203,8 +194,6 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
       return '';
     } else if (isArray(value)) {
       return `[${this.arrayHtml(value as any[])}]`;
-    } else if (isObject(value)) {
-      return `{${this.entriesHtml(Object.entries(value))}}`;
     } else {
       return `<span class="search-documents-value">${value.toString()}</span>`;
     }

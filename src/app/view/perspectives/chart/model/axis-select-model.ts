@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class AttributePair {
+export interface AxisSelectModel {
 
-  public attribute: string = '';
-  public previousAttributeName: string = '';
-  public value: string = '';
+  collectionIcon: string;
+  attributeId: string;
+  attributeName: string;
 
 }

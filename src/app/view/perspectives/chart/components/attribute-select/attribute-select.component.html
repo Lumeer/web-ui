@@ -7,8 +7,8 @@
           aria-haspopup="true"
           aria-expanded="false">
     <ng-container *ngIf="selectedAttribute; else nothingSelected">
-      <i class="{{ selectedAttribute.collection.icon }}"></i>
-      {{ selectedAttribute.attributeId }}
+      <i class="{{ selectedAttribute.collectionIcon}}"></i>
+      {{ selectedAttribute.attributeName }}
     </ng-container>
 
     <ng-template #nothingSelected>
@@ -22,8 +22,8 @@
             class="dropdown-item"
             type="button"
             (click)="selectAttribute(attribute)">
-      <i class="{{ attribute.collection.icon }}"></i>
-      {{ attribute.attributeId }}
+      <i class="{{ attribute.collectionIcon }}"></i>
+      {{ attribute.attributeName }}
     </button>
   </div>
 </div>

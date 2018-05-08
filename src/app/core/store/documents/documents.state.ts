@@ -28,6 +28,7 @@ import {QueryModel} from '../navigation/query.model';
 
 import {DocumentModel} from './document.model';
 import {filterDocumentsByQuery} from './documents.filters';
+import {isNullOrUndefined} from 'util';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   queries: QueryModel[];
@@ -52,13 +53,29 @@ export const selectDocumentsByCustomQuery = (query: QueryModel) => createSelecto
   (documents, collections): DocumentModel[] => filterDocuments(documents, collections, query)
 );
 
-export const selectDocumentById = (id: string) => createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);
-export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary,
-  documentsMap => ids.map(id => documentsMap[id]));
+export const selectDocumentById = (id: string) => createSelector(selectDocumentsDictionary, selectCollectionsDictionary, (documentsMap, collections) => {
+  const document = documentsMap[id];
+  return document && mapAttributeNames(document, collections) || null;
+});
+
+export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary, selectCollectionsDictionary, (documentsMap, collections) =>
+  ids.map(id => documentsMap[id])
+    .filter(document => !isNullOrUndefined(document))
+    .map(document => mapAttributeNames(document, collections))
+);
 
 function filterDocuments(documents: DocumentModel[], collections: Dictionary<CollectionModel>, query: QueryModel): DocumentModel[] {
   return filterDocumentsByQuery(documents, query)
-    .map(document => {
-      return {...document, collection: collections[document.collectionId]};
-    });
+    .map(document => mapAttributeNames(document, collections));
+}
+
+function mapAttributeNames(document: DocumentModel, collections: Dictionary<CollectionModel>): DocumentModel {
+  const collection = collections[document.collectionId];
+  const doc = {...document, collection};
+  const attributes = collection && collection.attributes || [];
+  doc.data && doc.data.forEach(d => {
+    const attribute = attributes.find(attr => attr.id === d.attributeId);
+    d.name = attribute && attribute.name || '';
+  });
+  return doc;
 }

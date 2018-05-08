@@ -20,20 +20,19 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {isString} from 'util';
-import {LumeerError} from '../../../../core/error/lumeer.error';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../core/model/role';
 import {PostItLayout} from '../../../../shared/utils/layout/post-it-layout';
-import {AttributePair} from '../document-data/attribute-pair';
 import {PostItDocumentModel} from '../document-data/post-it-document-model';
 import {NavigationHelper} from '../util/navigation-helper';
 import {SelectionHelper} from '../util/selection-helper';
 import {AttributeModel} from '../../../../core/store/collections/collection.model';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
 import Update = DocumentsAction.Update;
+import {isNullOrUndefined} from 'util';
+import {DocumentDataModel} from '../../../../core/store/documents/document.model';
 
 @Component({
   selector: 'post-it-document',
@@ -44,56 +43,20 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   @HostListener('focusout')
   public onFocusOut(): void {
-    if (this.shouldSuggestDeletion()) {
-      this.confirmDeletion();
-      this.changed = false;
-      return;
-    }
+    // if (this.shouldSuggestDeletion()) {
+    //   this.confirmDeletion();
+    //   this.changed = false;
+    //   return;
+    // }
 
     if (this.changed) {
-      this.checkforDuplicitAttributes();
-
       this.changed = false;
       this.changes.emit();
     }
   }
 
-  private shouldSuggestDeletion(): boolean {
-    return this.hasNoAttributes() && this.isInitialized();
-  }
-
-  private hasNoAttributes(): boolean {
-    return this.attributePairs.length === 0;
-  }
-
-  private isInitialized(): boolean {
-    return Boolean(this.postItModel && this._postItModel.document.id);
-  }
-
-  private checkforDuplicitAttributes(): void {
-    const attributesCount = Object.keys(this.postItModel.document.data).length;
-    const userWrittenAttributesCount = this.attributePairs.length;
-
-    if (attributesCount !== userWrittenAttributesCount) {
-      console.warn('You added more values to single attribute, we suggest refreshing');
-    }
-  }
-
-  private _postItModel: PostItDocumentModel;
-
   @Input()
-  public get postItModel() {
-    return this._postItModel;
-  }
-
-  public set postItModel(value) {
-    if (!value) {
-      throw new LumeerError('Invalid internal state');
-    }
-
-    this._postItModel = value;
-    this.refreshDataAttributePairs();
-  }
+  public postItModel: PostItDocumentModel;
 
   @Input()
   public collectionRoles: string[];
@@ -120,10 +83,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   public content: ElementRef;
 
   private changed: boolean;
-
-  public attributePairs: AttributePair[] = [];
-
-  public newAttributePair: AttributePair = new AttributePair();
+  private newData: DocumentDataModel = {name: '', value: ''};
 
   constructor(private store: Store<AppState>,
               private element: ElementRef) {
@@ -131,6 +91,22 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   public ngOnInit(): void {
     this.disableScrollOnNavigation();
+  }
+
+  public ngAfterViewInit(): void {
+    this.layoutManager.add(this.element.nativeElement);
+  }
+
+  private shouldSuggestDeletion(): boolean {
+    return this.hasNoAttributes() && this.isInitialized();
+  }
+
+  private hasNoAttributes(): boolean {
+    return this.postItModel && this.postItModel.document.data && this.postItModel.document.data.length === 0;
+  }
+
+  private isInitialized(): boolean {
+    return Boolean(this.postItModel && this.postItModel.document.id);
   }
 
   private disableScrollOnNavigation(): void {
@@ -144,10 +120,6 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     }, capture);
   }
 
-  public ngAfterViewInit(): void {
-    this.layoutManager.add(this.element.nativeElement);
-  }
-
   public clickOnAttributePair(column: number, row: number): void {
     this.selectionHelper.setEditMode(false);
     this.selectionHelper.select(column, row, this.postItModel);
@@ -158,14 +130,19 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public createAttributePair(): void {
-    this.postItModel.document.data[this.newAttributePair.attribute] = '';
+    const selectedAttribute = this.findAttributeByName(this.newData.name);
 
-    this.newAttributePair.value = '';
-    this.attributePairs.push(this.newAttributePair);
+    if (selectedAttribute) {
+      if (this.isAttributeUsed(selectedAttribute.id)) {
+        return;
+      }
 
-    this.newAttributePair = {} as AttributePair;
-    document.activeElement['value'] = '';
+      this.postItModel.document.data.push({...this.newData, attributeId: selectedAttribute.id});
+    } else {
+      this.postItModel.document.data.push({...this.newData});
+    }
 
+    this.newData = {name: '', value: ''};
     this.changed = true;
 
     setTimeout(() => {
@@ -173,30 +150,37 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
-  public updateAttribute(attributePair: AttributePair): void {
-    attributePair.attribute = attributePair.attribute.trim();
-
-    delete this.postItModel.document.data[attributePair.previousAttributeName];
-    attributePair.previousAttributeName = attributePair.attribute;
-
-    if (attributePair.attribute) {
-      this.postItModel.document.data[attributePair.attribute] = attributePair.value;
-
-    } else {
-      this.removeAttributePair();
+  public onUpdateAttribute(selectedRow: number): void {
+    const data = this.postItModel.document.data[selectedRow];
+    if (!data) {
+      return;
     }
 
     this.changed = true;
-  }
 
-  public updateValue(attributePair: AttributePair): void {
-    attributePair.value = attributePair.value.trim();
-
-    if (this.postItModel.document.data[attributePair.attribute] !== attributePair.value) {
-      this.changed = true;
+    data.name = data.name.trim();
+    if (!data.name) {
+      this.removeAttributePair(this.selectionHelper.selection.row);
+      return;
     }
 
-    this.postItModel.document.data[attributePair.attribute] = attributePair.value;
+    const selectedAttribute = this.findAttributeByName(data.name);
+    if (data.attributeId && selectedAttribute && selectedAttribute.id !== data.attributeId && this.isAttributeUsed(selectedAttribute.id)) {
+      const previousAttribute = this.findAttributeById(data.attributeId);
+      data.name = previousAttribute.name;
+    } else {
+      data.attributeId = selectedAttribute && selectedAttribute.id || null;
+    }
+  }
+
+  public updateValue(selectedRow: number): void {
+    const data = this.postItModel.document.data[selectedRow];
+    if (!data) {
+      return;
+    }
+
+    data.value = data.value.trim();
+    this.changed = true;
   }
 
   public toggleDocumentFavorite() {
@@ -215,9 +199,8 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
-  private removeAttributePair() {
-    const selectedRow = this.selectionHelper.selection.row;
-    this.attributePairs.splice(selectedRow, 1);
+  public removeAttributePair(selectedRow: number) {
+    this.postItModel.document.data.splice(selectedRow, 1);
 
     setTimeout(() => {
       this.selectionHelper.select(
@@ -228,39 +211,35 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
-  public removeValue() {
-    const selectedRow = this.selectionHelper.selection.row;
-    this.attributePairs[selectedRow].value = '';
-  }
-
-  private refreshDataAttributePairs(): void {
-    if (!this.postItModel.document.data) {
-      this.postItModel.document.data = {};
-    }
-
-    this.attributePairs = Object.entries(this.postItModel.document.data)
-      .sort(([attribute1, value1], [attribute2, value2]) => attribute1.localeCompare(attribute2))
-      .map(([attribute, value]) => {
-        return {
-          attribute: attribute,
-          previousAttributeName: attribute,
-          value: isString(value) ? value : JSON.stringify(value, null, 2)
-        };
-      });
+  public removeValue(selectedRow: number) {
+    this.postItModel.document.data[selectedRow].value = '';
   }
 
   public unusedAttributes(): AttributeModel[] {
     return this.postItModel.document.collection.attributes.filter(attribute => {
-      return this.postItModel.document.data[attribute.id] === undefined;
+      return isNullOrUndefined(this.postItModel.document.data.find(d => d.attributeId === attribute.id));
     });
+  }
+
+  public findAttributeByName(name: string): AttributeModel {
+    return this.postItModel.document.collection.attributes.find(attr => attr.name === name);
+  }
+
+  public findAttributeById(id: string): AttributeModel {
+    return this.postItModel.document.collection.attributes.find(attr => attr.id === id);
+  }
+
+
+  public isAttributeUsed(id: string) {
+    return this.postItModel.document.data.findIndex(d => d.attributeId === id) !== -1;
   }
 
   public suggestionListId(): string {
     return `${ this.perspectiveId }${ this.postItModel.document.id || 'uninitialized' }`;
   }
 
-  public isDefaultAttribute(attributeFullName: string): boolean {
-    return attributeFullName === this.postItModel.document.collection.defaultAttributeId;
+  public isDefaultAttribute(attributeId: string): boolean {
+    return attributeId === this.postItModel.document.collection.defaultAttributeId;
   }
 
   public hasWriteRole(): boolean {

@@ -83,11 +83,12 @@ export class SmartDocTextComponent {
   private addDataToDeltaForEdit(delta: DeltaStatic): DeltaStatic {
     const ops: DeltaOperation[] = delta.ops.map((op: DeltaOperation) => {
       if (op.insert && op.insert.attribute) {
+        const dataForAttr = this.document.data.find(d => d.attributeId === op.insert.attribute.id);
         return {
           insert: {
             attribute: {
               id: op.insert.attribute.id,
-              value: this.document.data[op.insert.attribute.id]
+              value: dataForAttr && dataForAttr.value || ''
             }
           },
           attributes: {
@@ -103,8 +104,9 @@ export class SmartDocTextComponent {
   public addDataToDeltaForRead(delta: DeltaStatic): DeltaStatic {
     const ops: DeltaOperation[] = delta.ops.map((op: DeltaOperation) => {
       if (op.insert && op.insert.attribute) {
+        const dataForAttr = this.document.data.find(d => d.attributeId === op.insert.attribute.id);
         return {
-          insert: this.document.data[op.insert.attribute.id]
+          insert: dataForAttr && dataForAttr.value || ''
         };
       }
       return op;
@@ -137,15 +139,20 @@ export class SmartDocTextComponent {
   }
 
   public documentAttributes(): AttributeModel[] {
-    const documentAttributeIds = Object.keys(this.document.data);
+    const documentAttributeIds = this.document.data.map(d => d.attributeId);
     return this.collection.attributes.filter(attr => documentAttributeIds.includes(attr.id));
   }
 
   public onAddAttribute(id: string) {
     const index = this.lastSelection ? this.lastSelection.index : 0;
-    const value = this.document.data[id];
+    const value = this.getAttributeValue(id);
     this.editor.insertEmbed(index, 'attribute', {id, value});
     this.editor.setSelection(index + 1, 0);
+  }
+
+  public getAttributeValue(id: string) {
+    const data = this.document.data.find(d => d.attributeId === id);
+    return data && data.value || '';
   }
 
   public getHtmlContent() {

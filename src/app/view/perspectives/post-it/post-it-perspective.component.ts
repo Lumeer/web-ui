@@ -234,8 +234,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createdPostItPreferredColumn(focusedPostIt: PostItDocumentModel): number {
-    const attributes = Object.keys(focusedPostIt.document.data);
-    if (attributes.length === 0) {
+    if (focusedPostIt.document.data.length === 0) {
       return ATTRIBUTE_COLUMN;
     }
 
@@ -257,8 +256,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private postItInInitialState(postIt: PostItDocumentModel): boolean {
     const isUninitialized = !postIt.initialized;
-    const hasInitialAttributes = Object.keys(postIt.document.data).length === postIt.document.collection.attributes.length;
-    const hasInitialValues = Object.values(postIt.document.data).every(value => value === '');
+    const hasInitialAttributes = postIt.document.data.length === postIt.document.collection.attributes.length;
+    const hasInitialValues = postIt.document.data.every(d => d.value === '');
 
     return isUninitialized && hasInitialAttributes && hasInitialValues;
   }
@@ -280,10 +279,21 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private updateLayoutWithDocuments(documents: DocumentModel[]) {
     this.checkAllLoaded(documents);
     this.addDocumentsNotInLayout(documents);
+    this.refreshExistingDocuments(documents);
     this.focusNewDocumentIfPresent(documents);
 
     this.infiniteScroll.finishLoading();
     this.layoutManager.refresh();
+  }
+
+  private refreshExistingDocuments(documents: DocumentModel[]) {
+    for (let document of documents) {
+      const index = this.postIts.findIndex(pi => pi.document.id === document.id);
+      if (index != -1) {
+        const postIt = {...this.postIts[index], document};
+        this.postIts.splice(index, 1, postIt);
+      }
+    }
   }
 
   private addDocumentsNotInLayout(documents: DocumentModel[]): void {
@@ -323,13 +333,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private updateDocument(postIt: PostItDocumentModel) {
-    this.store.dispatch(new UpdateData(
-      {
-        collectionId: postIt.document.collectionId,
-        documentId: postIt.document.id,
-        data: postIt.document.data
-      }
-    ));
+    this.store.dispatch(new UpdateData({document: postIt.document}));
   }
 
   private initializePostIt(postItToInitialize: PostItDocumentModel): void {

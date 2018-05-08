@@ -84,10 +84,12 @@ export class TableDataCellComponent implements OnInit {
   public value(): string {
     const attributeId = this.column.attributeId;
     if (this.document) {
-      return this.document.data[attributeId] || '';
+      const data = this.document.data.find(d => d.attributeId === attributeId);
+      return data && data.value || '';
     }
     if (this.linkInstance) {
-      return this.linkInstance.data[attributeId] || '';
+      const data = this.linkInstance.data.find(d => d.attributeId === attributeId);
+      return data && data.value || '';
     }
   }
 
@@ -123,23 +125,23 @@ export class TableDataCellComponent implements OnInit {
     }
 
     if (this.document) {
-      this.updateDocumentData(this.column.attributeId, value);
+      this.updateDocumentData(this.column.attributeId, this.column.attributeName, value);
     }
     if (this.linkInstance) {
-      this.updateLinkInstanceData(this.column.attributeId, value);
+      this.updateLinkInstanceData(this.column.attributeId, this.column.attributeName, value);
     }
   }
 
-  private updateDocumentData(key: string, value: string) {
+  private updateDocumentData(key: string, name: string, value: string) {
     if (this.document.id) {
-      this.updateDocument(key, value);
+      this.updateDocument(key, name, value);
     } else {
-      this.createDocument(key, value);
+      this.createDocument(key, name, value);
     }
   }
 
-  private createDocument(key: string, value: string) {
-    const data = {[key]: value};
+  private createDocument(key: string, name: string, value: string) {
+    const data = [{attributeId: key, name, value}];
     const document: DocumentModel = {...this.document, data};
 
     this.store.dispatch(new DocumentsAction.Create({
@@ -178,16 +180,16 @@ export class TableDataCellComponent implements OnInit {
     };
   }
 
-  private updateDocument(key: string, value: string) {
-    const data = {[key]: value};
-    this.store.dispatch(new DocumentsAction.PatchData({
+  private updateDocument(key: string, name: string, value: string) {
+    const document = {
       collectionId: this.document.collectionId,
-      documentId: this.document.id,
-      data
-    }));
+      id: this.document.id,
+      data: [{attributeId: key, name, value}]
+    };
+    this.store.dispatch(new DocumentsAction.PatchData({document}));
   }
 
-  private updateLinkInstanceData(key: string, value: string) {
+  private updateLinkInstanceData(key: string, name: string, value: string) {
     // TODO dispatch patch link instance action
   }
 

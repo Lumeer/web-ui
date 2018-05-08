@@ -79,7 +79,7 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
   private bindDocument(collectionId: string) {
     this.subscriptions.add(
       this.store.select(selectDocumentsByIds(this.row.documentIds))
-        .subscribe(documents => this.documents = documents && documents.length ? documents : [{collectionId, data: {}}])
+        .subscribe(documents => this.documents = documents && documents.length ? documents : [{collectionId, data: []}])
     );
   }
 

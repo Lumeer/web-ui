@@ -22,7 +22,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
 import {AppState} from '../../../../../../../../../core/store/app.state';
-import {DocumentModel} from '../../../../../../../../../core/store/documents/document.model';
+import {DocumentDataModel, DocumentModel} from '../../../../../../../../../core/store/documents/document.model';
 import {LinkInstanceModel} from '../../../../../../../../../core/store/link-instances/link-instance.model';
 import {TableBodyCursor} from '../../../../../../../../../core/store/tables/table-cursor';
 import {TableSingleColumn} from '../../../../../../../../../core/store/tables/table.model';
@@ -80,12 +80,13 @@ export class TableCollapsedCellComponent implements OnChanges {
   }
 
   public values(): string {
-    return this.data().map(data => data[this.column.attributeId])
+    return this.data().map(data => data.find(d => d.attributeId === this.column.attributeId))
       .filter(data => data)
+      .map(data => data.value)
       .join(', ');
   }
 
-  private data(): any[] {
+  private data(): DocumentDataModel[][] {
     if (this.documents) {
       return this.documents.map(document => document.data);
     }

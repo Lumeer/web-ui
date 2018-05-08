@@ -23,7 +23,8 @@ import {DocumentModel} from './document.model';
 import {QueryConverter} from "../navigation/query.converter";
 
 export function filterDocumentsByQuery(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
-  documents = documents.filter(document => typeof(document) === 'object');
+  documents = documents.filter(document => typeof(document) === 'object')
+    .filter(document => document);
   if (!query) {
     return documents;
   }
@@ -50,7 +51,7 @@ function filterDocumentsByFulltext(documents: DocumentModel[], query: QueryModel
     return documents;
   }
 
-  return documents.filter(document => Object.values(document.data).some(value => value.includes(query.fulltext)));
+  return documents.filter(document => document.data.map(d => d.value).some(value => value.includes(query.fulltext)));
 }
 
 function filterDocumentsByFilters(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
@@ -72,7 +73,8 @@ function documentMeetFilter(document: DocumentModel, filter: AttributeFilter): b
   if (document.collectionId !== filter.collectionId) {
     return true;
   }
-  const data = document.data[filter.attributeId];
+  const elem = document.data.find(d => d.attributeId === filter.attributeId);
+  const data = elem && elem.value || '';
   switch (filter.conditionType) {
     case ConditionType.Equals:
       return data === filter.value;

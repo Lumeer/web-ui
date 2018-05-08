@@ -22,9 +22,9 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../core/store/app.state';
-import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {DocumentDataModel, DocumentModel} from '../../../../core/store/documents/document.model';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 
 @Component({
@@ -65,14 +65,12 @@ export class PostItAddDocumentComponent implements OnInit, OnDestroy {
     });
   }
 
-  private dataWithAttributeNames(): { [attributeName: string]: string } {
-    let result = {};
-
-    this.selectedCollection.attributes.forEach((attribute: AttributeModel) => {
-      result[attribute.name] = '';
-    });
-
-    return result;
+  private dataWithAttributeNames(): DocumentDataModel[] {
+    if (!this.selectedCollection) {
+      return [];
+    }
+    return this.selectedCollection.attributes
+      .map(attr => ({attributeId: attr.id, name: attr.name, value: ''}));
   }
 
   public disabled(): boolean {
