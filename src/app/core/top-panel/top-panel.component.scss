@@ -29,7 +29,7 @@ $top-panel-height: 48px;
     color: $link-color;
 
     &:hover {
-      color: $link-hover-color;
+      color: lighten($link-color, 5%);
     }
   }
 }

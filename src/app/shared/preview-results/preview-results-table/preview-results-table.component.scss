@@ -1,7 +1,7 @@
 @import "../../variables";
 
 thead {
-  font-size: x-small;
+  font-size: small;
   color: $gray-500;
   font-style: italic;
   font-weight: bold;
@@ -16,10 +16,6 @@ th, td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.h-35 {
-  height: 35%;
 }
 
 .clickable-row {
@@ -40,4 +36,8 @@ tr.active {
 
 .table-responsive {
   resize: vertical;
+}
+
+.h-10em {
+  height: 10em;
 }

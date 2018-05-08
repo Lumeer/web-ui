@@ -26,6 +26,10 @@ a {
   transition: color $animation-color-duration;
 }
 
+a:hover {
+  color: lighten($link-color, 5%);
+}
+
 .flex-grow-2 {
   flex-grow: 2;
 }
@@ -136,7 +140,7 @@ input {
   color: $success;
 
   &:hover {
-    color: darken($success, 20%);
+    color: lighten($success, 20%);
   }
 }
 
@@ -145,7 +149,7 @@ input {
   color: $grey-color;
 
   &:hover {
-    color: $grey-darker-color;
+    color: lighten($grey-color, 20%);
   }
 }
 

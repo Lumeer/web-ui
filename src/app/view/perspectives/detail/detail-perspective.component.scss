@@ -5,3 +5,13 @@ p.title {
   font-weight: bold;
   color: $gray-600;
 }
+
+a.preview:before {
+  font-family: "Font Awesome 5 Pro";
+  font-weight:900;
+  content:"\f07c";
+  padding-right: 4px;
+}
+a.preview.collapsed:before {
+  content:"\f07b";
+}

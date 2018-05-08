@@ -1,8 +1,13 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <p class="title small text-uppercase mb-0">There are multiple results, please select one&hellip;</p>
+      <p class="title small text-uppercase mb-0"><a href="#preview-collapse" data-toggle="collapse" class="preview">There are multiple results, please select one&hellip;</a></p>
     </div>
   </div>
-  <preview-results></preview-results>
+  <div class="p-0 m-0 collapse show" id="preview-collapse">
+    <preview-results></preview-results>
+  </div>
+  <hr/>
+  <document-detail></document-detail>
+  <links-list></links-list>
 </div>

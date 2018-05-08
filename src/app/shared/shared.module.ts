@@ -44,6 +44,10 @@ import {ResourceHeaderComponent} from './resource/header/resource-header.compone
 import { PreviewResultsComponent } from './preview-results/preview-results.component';
 import { PreviewResultsTabsComponent } from './preview-results/preview-results-tabs/preview-results-tabs.component';
 import { PreviewResultsTableComponent } from './preview-results/preview-results-table/preview-results-table.component';
+import { DocumentDetailComponent } from './document/document-detail/document-detail.component';
+import { LinksListComponent } from './links/links-list/links-list.component';
+import { LinksListTabsComponent } from './links/links-list/links-list-tabs/links-list-tabs.component';
+import { LinksListTableComponent } from './links/links-list/links-list-table/links-list-table.component';
 
 @NgModule({
   imports: [
@@ -74,7 +78,11 @@ import { PreviewResultsTableComponent } from './preview-results/preview-results-
     ResourceHeaderComponent,
     PreviewResultsComponent,
     PreviewResultsTabsComponent,
-    PreviewResultsTableComponent
+    PreviewResultsTableComponent,
+    DocumentDetailComponent,
+    LinksListComponent,
+    LinksListTabsComponent,
+    LinksListTableComponent
   ],
   exports: [
     CommonModule,
@@ -93,7 +101,9 @@ import { PreviewResultsTableComponent } from './preview-results/preview-results-
     InputModule,
     DialogsModule,
     ResourceHeaderComponent,
-    PreviewResultsComponent
+    PreviewResultsComponent,
+    DocumentDetailComponent,
+    LinksListComponent
   ]
 })
 export class SharedModule {
