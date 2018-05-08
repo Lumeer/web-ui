@@ -1,0 +1,10 @@
+a.nav-link {
+  max-width: 10rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+ul.nav {
+  border-bottom: 0 transparent;
+}

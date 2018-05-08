@@ -17,37 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {PerspectiveComponent} from "../perspective.component";
-import {ViewConfigModel} from "../../../core/store/views/view.model";
-import {DocumentModel} from "../../../core/store/documents/document.model";
-import {QueryModel} from "../../../core/store/navigation/query.model";
+import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'detail-perspective',
-  templateUrl: './detail-perspective.component.html',
-  styleUrls: ['./detail-perspective.component.scss']
+  selector: 'preview-results',
+  templateUrl: './preview-results.component.html',
+  styleUrls: ['./preview-results.component.scss']
 })
-export class DetailPerspectiveComponent implements PerspectiveComponent, OnInit {
+export class PreviewResultsComponent implements OnInit {
 
-  @Input()
-  public linkedDocument: DocumentModel;
+  public collections: string[] = [
+    "Name1",
+    "name2",
+    "Name3 ja ja lsdjfh aljsdkf aljsd fajsdf ajds flajsdhfla dsfl ajsdf ajsdhf lasd fladsjhf jadsf ajdfhask",
+    "Name4 ja ja lsdjfh aljsdkf aljsd fajsdf ajds flajsdhfla dsfl ajsdf ajsdhf lasd fladsjhf jadsf ajdfhask",
+    "Name5 ja ja lsdjfh aljsdkf aljsd fajsdf ajds flajsdhfla dsfl ajsdf ajsdhf lasd fladsjhf jadsf ajdfhask"
+  ];
 
-  @Input()
-  public query: QueryModel;
-
-  @Input()
-  public config: ViewConfigModel = {};
-
-  @Input()
-  public embedded: boolean;
-
-  @Input()
-  public path: number[] = [];
+  public selectedCollection: string = "Name1";
 
   constructor() { }
 
-  ngOnInit() {
+  public ngOnInit() {
+  }
+
+  public selectCollection(collection: string) {
+    this.selectedCollection = collection;
   }
 
 }

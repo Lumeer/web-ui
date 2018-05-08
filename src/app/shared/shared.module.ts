@@ -41,6 +41,9 @@ import {UsersModule} from "./users/users.module";
 import {TagModule} from "./tag/tag.module";
 import {InputModule} from "./input/input.module";
 import {ResourceHeaderComponent} from './resource/header/resource-header.component';
+import { PreviewResultsComponent } from './preview-results/preview-results.component';
+import { PreviewResultsTabsComponent } from './preview-results/preview-results-tabs/preview-results-tabs.component';
+import { PreviewResultsTableComponent } from './preview-results/preview-results-table/preview-results-table.component';
 
 @NgModule({
   imports: [
@@ -68,7 +71,10 @@ import {ResourceHeaderComponent} from './resource/header/resource-header.compone
     LayoutItem,
     SliderComponent,
     LayoutItem,
-    ResourceHeaderComponent
+    ResourceHeaderComponent,
+    PreviewResultsComponent,
+    PreviewResultsTabsComponent,
+    PreviewResultsTableComponent
   ],
   exports: [
     CommonModule,
@@ -86,7 +92,8 @@ import {ResourceHeaderComponent} from './resource/header/resource-header.compone
     TagModule,
     InputModule,
     DialogsModule,
-    ResourceHeaderComponent
+    ResourceHeaderComponent,
+    PreviewResultsComponent
   ]
 })
 export class SharedModule {
