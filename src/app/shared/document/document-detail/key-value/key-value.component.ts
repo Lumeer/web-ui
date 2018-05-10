@@ -18,43 +18,51 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {I18n} from "@ngx-translate/i18n-polyfill";
 
 @Component({
-  selector: 'links-list-tabs',
-  templateUrl: './links-list-tabs.component.html',
-  styleUrls: ['./links-list-tabs.component.scss']
+  selector: 'key-value',
+  templateUrl: './key-value.component.html',
+  styleUrls: ['./key-value.component.scss']
 })
-export class LinksListTabsComponent implements OnInit {
+export class KeyValueComponent implements OnInit {
 
   @Input()
-  public links: string[];
+  public key: string;
 
   @Input()
-  public selectedLink: string;
+  public value: string;
 
   @Output()
-  public select = new EventEmitter<string>();
+  public keyChange = new EventEmitter<string>();
 
-  constructor() { }
+  @Output()
+  public valueChange = new EventEmitter<string>();
+
+  @Output()
+  public change = new EventEmitter<string[]>();
+
+  @Output()
+  public remove = new EventEmitter();
+
+  constructor(private i18n: I18n) { }
 
   public ngOnInit() {
   }
 
-  public selectLink(linkName: string) {
-    this.selectedLink = linkName;
-    this.select.emit(linkName);
+  public onNewKey($event: string) {
+    this.key = $event;
+    this.keyChange.emit($event);
+    this.change.emit([$event, this.value])
   }
 
-  public getLinkColors(linkName: string) {
-    const colors = [['#e06666', '#f6b26b'], ['#ffd966', '#93c47d'], ['#76a5af', '#6fa8dc'], ['#8e7cc3', '#c27ba0']];
-
-    return colors[this.links.indexOf(linkName)];
+  public onNewRowValue($event: string) {
+    this.value = $event;
+    this.valueChange.emit($event);
+    this.change.emit([this.key, $event]);
   }
 
-  public getLinkIcons(linkName: string) {
-    const icon = [['fas fa-cubes', 'fas fa-curling'], ['fas fa-cut', 'fas fa-database'], ['fas fa-deaf', 'fas fa-desktop'], ['fas fa-deaf', 'fas fa-cubes']];
-
-    return icon[this.links.indexOf(linkName)];
+  public invokeRemove() {
+    this.remove.emit();
   }
-
 }

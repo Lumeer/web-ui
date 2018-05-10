@@ -1,0 +1,19 @@
+@import "../../../variables";
+
+:host {
+
+  a.nav-link {
+    max-width: 15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:not(.active) {
+      color: $success;
+    }
+
+    &:hover:not(.active) {
+      color: lighten($success, 5%);
+    }
+  }
+}

@@ -1,5 +1,30 @@
-<div class="row">
+<div class="row mt-2 mb-2">
+  <div class="col-8 d-flex align-bottom align-self-end text-nowrap ellipsis">
+    <div class="align-text-bottom">
+      <h4 i18n="@@document.detail.heading">Document detail</h4>
+      <span class="small"><i class="fas {{icon}}" [style.color]="color"></i>&nbsp;{{collectionName}}</span>&nbsp;
+      <strong>{{summary}}</strong>
+    </div>
+  </div>
+  <div class="col small text-right d-flex align-bottom notice">
+    <div class="justify-content-end w-100">
+      Version 17<br/>
+      Created on 04/24/2018 by Alan Turing<br/>
+      Last modified on 05/09/2018 by Carl Gauss
+    </div>
+  </div>
+</div>
+<key-value *ngFor="let e of encoded; let idx = index;"
+           [key]="e[0]"
+           [value]="e[1]"
+           (change)="submitAttribute(idx, $event)"
+           (remove)="removeAttribute(idx)">
+</key-value>
+<div class="row border-top mb-4">
   <div class="col">
-    detail works!
+    <button class="btn btn-sm btn-success m-2" (click)="addAttrRow()">
+      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+      <span i18n="@@document.detail.attribute.add">Add</span>
+    </button>
   </div>
 </div>

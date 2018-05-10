@@ -48,6 +48,7 @@ import { DocumentDetailComponent } from './document/document-detail/document-det
 import { LinksListComponent } from './links/links-list/links-list.component';
 import { LinksListTabsComponent } from './links/links-list/links-list-tabs/links-list-tabs.component';
 import { LinksListTableComponent } from './links/links-list/links-list-table/links-list-table.component';
+import { KeyValueComponent } from './document/document-detail/key-value/key-value.component';
 
 @NgModule({
   imports: [
@@ -82,7 +83,8 @@ import { LinksListTableComponent } from './links/links-list/links-list-table/lin
     DocumentDetailComponent,
     LinksListComponent,
     LinksListTabsComponent,
-    LinksListTableComponent
+    LinksListTableComponent,
+    KeyValueComponent
   ],
   exports: [
     CommonModule,

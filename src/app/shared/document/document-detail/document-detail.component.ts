@@ -17,7 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {I18n} from "@ngx-translate/i18n-polyfill";
+import {NotificationService} from "../../../core/notifications/notification.service";
 
 @Component({
   selector: 'document-detail',
@@ -26,9 +28,62 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DocumentDetailComponent implements OnInit {
 
-  constructor() { }
+  @Input()
+  public icon: string = 'fa-curling';
 
-  ngOnInit() {
+  @Input()
+  public color: string = '#f6b26b';
+
+  @Input()
+  public collectionName: string = 'Name2';
+
+  @Input()
+  public summary: string = 'voluptatem sequi nesciunt. Neque porro';
+
+  @Input()
+  public document = { 'Attr1': 'accusantium', 'Attr2': 16, 'Attr3': 'voluptatem sequi nesciunt. Neque porro', 'Attr4': 'Quis autem vel'};
+
+  public encoded;
+
+  constructor(private i18n: I18n,
+              private notificationService: NotificationService) { }
+
+  public ngOnInit() {
+    this.encodeEntries()
   }
 
+  public encodeEntries() {
+    this.encoded = Object.entries(this.document);
+  }
+
+  public addAttrRow() {
+    this.encoded.push(["", ""]);
+  }
+
+  public submitAttribute(idx, $event: any) {
+    if ($event[0]) {
+      this.encoded[idx] = $event;
+      this.document[$event[0]] = $event[1];
+    }
+  }
+
+  public removeAttribute(idx) {
+    if (this.encoded[idx][0]) {
+      const message = this.i18n(
+        {
+          id: 'document.detail.attribute.remove.confirm',
+          value: 'Are you sure you want to delete this row?'
+        });
+      const title = this.i18n({id: 'resource.delete.dialog.title', value: 'Delete?'});
+      const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+      const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+
+      this.notificationService.confirm(message, title, [
+        {text: yesButtonText, action: () => this.encoded.splice(idx, 1), bold: false},
+        {text: noButtonText}
+      ]);
+    } else {
+      this.encoded.splice(idx, 1);
+    }
+  }
 }
