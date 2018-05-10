@@ -179,7 +179,7 @@ export class CollectionsEffects {
       const collectionDto = CollectionConverter.toDto(action.payload.collection);
 
       return this.collectionService.updateCollection(collectionDto).pipe(
-        map((dto: Collection) => CollectionConverter.fromDto(dto)),
+        map((dto: Collection) => CollectionConverter.fromDto(dto, action.payload.collection.correlationId)),
         map(collection => new CollectionsAction.UpdateSuccess({collection: collection})),
         catchError((error) => Observable.of(new CollectionsAction.CreateFailure({error: error})))
       );

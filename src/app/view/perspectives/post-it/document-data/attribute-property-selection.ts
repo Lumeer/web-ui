@@ -22,7 +22,5 @@ export interface AttributePropertySelection {
   row: number;
   column: number;
   editing: boolean;
-  documentId: string;
-  documentIndex: number;
 
 }

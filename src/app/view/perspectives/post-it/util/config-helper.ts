@@ -17,9 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum Axis {
+import {Store} from '@ngrx/store';
+import {Subscription} from 'rxjs/Subscription';
+import {AppState} from '../../../../core/store/app.state';
+import {PostItConfigModel} from '../../../../core/store/views/view.model';
+import {selectViewPostItConfig} from '../../../../core/store/views/views.state';
 
-  X = 'x',
-  Y = 'y'
+export class ConfigHelper {
+
+  private postItConfig: PostItConfigModel;
+
+  private subscription: Subscription;
+
+  constructor(private store: Store<AppState>) {
+  }
+
+  public initialize(): void {
+    this.subscription = this.store.select(selectViewPostItConfig).subscribe((postItConfig: PostItConfigModel) => {
+      this.postItConfig = postItConfig;
+    });
+  }
+
+  public unsubscribe(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 
 }

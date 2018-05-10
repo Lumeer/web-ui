@@ -17,7 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
 
 import {Store} from '@ngrx/store';
@@ -35,7 +46,6 @@ import {Workspace} from '../../core/store/navigation/workspace.model';
 import {Role} from '../../core/model/role';
 import {HashCodeGenerator} from '../utils/hash-code-generator';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {PostItLayoutConfig} from '../utils/layout/post-it-layout-config';
 import {PostItLayout} from '../utils/layout/post-it-layout';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {isNullOrUndefined} from "util";
@@ -55,10 +65,6 @@ import {UserModel} from '../../core/store/users/user.model';
 })
 export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  /**
-   * Handler to change the flag to remove opacity css on elements
-   * @param targetElement
-   */
   @HostListener('document:click', ['$event.target'])
   public documentClicked(targetElement) {
     if (this.clickedComponent && targetElement !== this.clickedComponent) {
@@ -66,13 +72,14 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  @ViewChildren('textArea')
-  public nameInputs: QueryList<ElementRef>;
-
   @ViewChildren('postItElement')
   public postItElements: QueryList<ElementRef>;
 
+  @ViewChild('postItLayout')
+  public postItLayout: ElementRef;
+
   public collections: CollectionModel[];
+
   public collectionRoles: { [collectionId: string]: string[] };
 
   public selectedCollection: CollectionModel;
@@ -101,18 +108,14 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   constructor(public i18n: I18n,
               private store: Store<AppState>,
+              private notificationService: NotificationService,
               private zone: NgZone,
-              private notificationService: NotificationService,) {
+              private changeDetector: ChangeDetectorRef) {
   }
 
   public ngOnInit() {
-    this.createLayout();
     this.subscribeOnNavigation();
     this.subscribeOnCollections();
-  }
-
-  public ngAfterViewInit() {
-    this.layout.initialize();
   }
 
   public ngOnDestroy() {
@@ -139,11 +142,13 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.focusedPanel = index;
   }
 
-  private createLayout() {
-    const config = new PostItLayoutConfig();
-    config.dragEnabled = false;
+  public ngAfterViewInit() {
+    this.createLayout();
+    this.changeDetector.detectChanges()
+  }
 
-    this.layout = new PostItLayout('post-it-collection-layout', config, this.zone);
+  private createLayout() {
+    this.layout = new PostItLayout(this.postItLayout.nativeElement, false, this.zone);
   }
 
   private subscribeOnNavigation() {
@@ -220,7 +225,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   private deleteInitializedPostIt(collection: CollectionModel) {
     const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
-    const message = this.i18n({id: 'collection.delete.dialog.message', value: 'Do you really want to remove the file?'});
+    const message = this.i18n({
+      id: 'collection.delete.dialog.message',
+      value: 'Do you really want to remove the file?'
+    });
 
     this.store.dispatch(new NotificationsAction.Confirm(
       {
@@ -283,7 +291,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public trackByCollection(index: number, collection: CollectionModel): number {
-    return HashCodeGenerator.hashString(collection.id || collection.correlationId);
+    return HashCodeGenerator.hashString(collection.correlationId || collection.id);
   }
 
   public notifyOfError(message: string) {

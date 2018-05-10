@@ -44,8 +44,6 @@ export class SelectionHelper {
     return {
       row: null,
       column: null,
-      documentId: null,
-      documentIndex: null,
       editing: false
     };
   }
@@ -118,10 +116,12 @@ export class SelectionHelper {
   }
 
   public select(column: number, row: number, postIt: PostItDocumentModel): void {
+    if (!postIt) {
+      return;
+    }
+
     this.selectedPostIt = postIt;
 
-    this.selection.documentId = postIt.document && postIt.document.id;
-    this.selection.documentIndex = postIt.index;
     this.selectRow(row);
     this.selectColumn(column);
 
@@ -168,44 +168,36 @@ export class SelectionHelper {
     newColumn = VALUE_COLUMN;
     newRow = newRow > this.lastRow() ? 0 : newRow;
 
-    if (this.selection.documentIndex - 1 >= 0) {
-      const selectedDocument = this.postIts[this.selection.documentIndex - 1];
-      this.select(newColumn, newRow, selectedDocument);
-    }
+    const selectedDocument = this.postIts.find(postIt => postIt.order === this.selectedPostIt.order - 1);
+    this.select(newColumn, newRow, selectedDocument);
   }
 
   private tryToSelectDocumentOnRight(newColumn: number, newRow: number): void {
     newColumn = ATTRIBUTE_COLUMN;
 
-    if (this.selection.documentIndex + 1 < this.postIts.length) {
-      const selectedDocument = this.postIts[this.selection.documentIndex + 1];
-      this.select(newColumn, newRow, selectedDocument);
-    }
+    const selectedDocument = this.postIts.find(postIt => postIt.order === this.selectedPostIt.order + 1);
+    this.select(newColumn, newRow, selectedDocument);
   }
 
   private tryToSelectDocumentOnUp(newColumn: number, newRow: number): void {
-    if (this.selection.documentIndex - this.getDocumentsPerRow() >= 0) {
-      const selectedDocument = this.postIts[this.selection.documentIndex - this.getDocumentsPerRow()];
-      this.select(newColumn, newRow, selectedDocument);
-    }
+    const selectedDocument = this.postIts.find(postIt => postIt.order === this.selectedPostIt.order - this.getDocumentsPerRow());
+    this.select(newColumn, newRow, selectedDocument);
   }
 
   private tryToSelectDocumentOnDown(newColumn: number, newRow: number): void {
     newRow = 0;
 
-    if (this.selection.documentIndex + this.getDocumentsPerRow() < this.postIts.length) {
-      const selectedDocument = this.postIts[this.selection.documentIndex + this.getDocumentsPerRow()];
-      this.select(newColumn, newRow, selectedDocument);
-    }
+    const selectedDocument = this.postIts.find(postIt => postIt.order === this.selectedPostIt.order + this.getDocumentsPerRow());
+    this.select(newColumn, newRow, selectedDocument);
   }
 
   private selectRow(row: number): void {
     if (row < 0) {
-      row = 0;
+      row = this.lastRow();
     }
 
     if (row > this.lastRow()) {
-      row = this.lastRow();
+      row = 0;
     }
 
     this.selection.row = row;
@@ -252,7 +244,7 @@ export class SelectionHelper {
   }
 
   private selectedInputId(): string {
-    return `${ this.perspectiveId }${ this.selection.documentIndex }[${ this.selection.column }, ${ this.selection.row }]`;
+    return `${ this.perspectiveId }${ this.selectedPostIt.index }[${ this.selection.column }, ${ this.selection.row }]`;
   }
 
   private leftOfDisabledInput(): boolean {
