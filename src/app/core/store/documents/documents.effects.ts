@@ -175,10 +175,10 @@ export class DocumentsEffects {
       const documentDto: Document = {
         id: action.payload.documentId,
         collectionId: action.payload.collectionId,
-        data: action.payload.data
+        data: action.payload.document.data
       };
       return this.documentService.updateDocument(documentDto).pipe(
-        map(dto => DocumentConverter.fromDto(dto)),
+        map(dto => DocumentConverter.fromDto(dto, action.payload.document.correlationId)),
         withLatestFrom(this.store$.select(selectCollectionsDictionary)),
         withLatestFrom(this.store$.select(selectDocumentsDictionary)),
         flatMap(([[document, collectionEntities], documentEntities]) => {

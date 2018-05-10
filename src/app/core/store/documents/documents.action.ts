@@ -116,7 +116,7 @@ export namespace DocumentsAction {
   export class UpdateData implements Action {
     public readonly type = DocumentsActionType.UPDATE_DATA;
 
-    public constructor(public payload: { collectionId: string, documentId: string, data: any }) {
+    public constructor(public payload: { collectionId: string, documentId: string, document: DocumentModel }) {
     }
   }
 

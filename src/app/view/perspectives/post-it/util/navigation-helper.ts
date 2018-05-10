@@ -65,8 +65,12 @@ export class NavigationHelper {
     });
   }
 
-  public queryWithPagination(page: number): QueryModel {
-    return this.queryHelper.queryWithPagination(page);
+  public queryForFetched(page: number): QueryModel {
+    return this.queryHelper.queryForFetched(page);
+  }
+
+  public queryForSubscription(page: number): QueryModel {
+    return this.queryHelper.queryForSubscription(page);
   }
 
   public validNavigation(): boolean {

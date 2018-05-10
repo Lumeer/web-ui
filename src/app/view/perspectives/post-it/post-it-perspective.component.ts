@@ -113,11 +113,13 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
 
   private configHelper: ConfigHelper;
 
-  private subscriptions: Subscription[] = [];
+  private documentsSubscription: Subscription;
 
   private allLoaded: boolean;
 
   private collectionsSubscription: Subscription;
+
+  private page: number;
 
   constructor(private store: Store<AppState>,
               private element: ElementRef,
@@ -182,10 +184,10 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
     this.layoutManager = new PostItLayout(this.layoutGridElement.nativeElement, true, this.zone);
   }
 
-  private resetToInitialState(): void {
+  private resetToInitialState() {
     this.allLoaded = false;
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
-    this.subscriptions.splice(0);
+    this.page = 0;
+    this.unsubscribeIfPossible(this.documentsSubscription);
     this.postIts.splice(0);
   }
 
@@ -206,10 +208,6 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
     return this.collectionRoles && Object.keys(this.collectionRoles) || []
   }
 
-  private checkAllLoaded(documents: DocumentModel[]): void {
-    this.allLoaded = documents.length === 0;
-  }
-
   private loadMoreOnInfiniteScroll(): void {
     if (!this.allLoaded && this.navigationHelper && this.navigationHelper.validNavigation()) {
       this.getPostIts();
@@ -219,24 +217,15 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
   private getPostIts(): void {
     this.infiniteScroll.startLoading();
 
-    const page = this.subscriptions.length;
-    const queryModel = this.navigationHelper.queryWithPagination(page);
-    this.fetchQueryDocuments(queryModel);
-    this.subscribeOnDocuments(queryModel);
+    this.fetchQueryDocuments(this.navigationHelper.queryForFetched(this.page));
+    this.subscribeOnDocuments(this.navigationHelper.queryForSubscription(this.page));
+
+    this.page++;
   }
 
   public createPostIt(document: DocumentModel): void {
     const newPostIt = this.documentModelToPostItModel(document);
     this.postIts.unshift(newPostIt);
-
-    setTimeout(() => {
-      this.selectAndFocusCreatedPostIt(newPostIt);
-    });
-  }
-
-  private selectAndFocusCreatedPostIt(newPostIt: PostItDocumentModel) {
-    this.selectionHelper.setEditMode(true);
-    this.selectionHelper.select(newPostIt.preferredColumn(), 0, newPostIt);
   }
 
   public postItChanged(changedPostIt: PostItDocumentModel): void {
@@ -253,63 +242,42 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
   }
 
   private subscribeOnDocuments(queryModel: QueryModel) {
-    const subscription = this.store.select(selectDocumentsByCustomQuery(queryModel)).pipe(
+    this.unsubscribeIfPossible(this.documentsSubscription);
+    this.documentsSubscription = this.store.select(selectDocumentsByCustomQuery(queryModel)).pipe(
       filter(() => this.canFetchDocuments())
     ).subscribe(documents => {
-      this.updateLayoutWithDocuments(documents)
+      this.checkAllLoaded(documents);
+      this.infiniteScroll.finishLoading();
+      
+      const newPostIts = documents.map(document => this.documentModelToPostItModel(document));      
+      this.updatePostIts(newPostIts);
+    });
+  }
+
+  private checkAllLoaded(documents: DocumentModel[]): void {
+    this.allLoaded = documents.length < this.documentsPerRow() * 3;
+  }
+
+  private updatePostIts(newPostIts: PostItDocumentModel[]) {
+    this.postIts.forEach((postIt, idx) => {
+      const mapped = newPostIts.find(newPostIt => newPostIt.hash() === postIt.hash());
+
+      if (postIt.document.id && mapped === undefined) {
+        this.deletePostIt(postIt);
+      } 
+      
+      else if (mapped) {
+        this.postIts[idx] = mapped;
+      }
     });
 
-    this.subscriptions.push(subscription);
+    newPostIts
+      .filter(newPostIt => this.postIts.find(postIt => postIt.hash() === newPostIt.hash()) === undefined)
+      .forEach(newPostIt => this.postIts.push(newPostIt));
   }
 
   private canFetchDocuments() {
     return this.navigationHelper.validNavigation();
-  }
-
-  private updateLayoutWithDocuments(documents: DocumentModel[]) {
-    this.checkAllLoaded(documents);
-    this.addDocumentsNotInLayout(documents);
-    this.initializeDocumentsInLayout(documents);
-
-    this.infiniteScroll.finishLoading();
-  }
-
-  private addDocumentsNotInLayout(documents: DocumentModel[]): void {
-    const usedDocumentIDs = new Set(this.postIts.map(postIt => postIt.document.collectionId || postIt.document.id));
-    documents
-      .filter(documentModel => !usedDocumentIDs.has(documentModel.collectionId || documentModel.id))
-      .forEach(documentModel => {
-        this.postIts.push(this.documentModelToPostItModel(documentModel))
-      });
-  }
-
-  private initializeDocumentsInLayout(documents: DocumentModel[]): void {
-    this.postIts
-      .filter((postIt, index) => postIt.document.correlationId && !postIt.document.id)
-      .forEach((postIt, index) => {
-        const replacement = documents.find(documentModel => documentModel.correlationId === postIt.document.correlationId);
-        if (replacement) {
-          this.postIts[index] = this.documentModelToPostItModel(replacement);
-        }
-      });
-  }
-
-  private focusDocument(document: DocumentModel): void {
-    const focusedPostIt = this.findPostItOfDocument(document);
-
-    setTimeout(() => {
-      this.selectPostIt(focusedPostIt);
-    });
-  }
-
-  private selectPostIt(focusedPostIt: PostItDocumentModel) {
-    this.selectionHelper.select(0, 0, focusedPostIt);
-  }
-
-  private findPostItOfDocument(document: DocumentModel): PostItDocumentModel {
-    return this.postIts
-      .filter(postIt => postIt !== null)
-      .find(postIt => postIt.hasDocument(document));
   }
 
   private updateDocument(postIt: PostItDocumentModel) {
@@ -317,7 +285,7 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
       {
         collectionId: postIt.document.collectionId,
         documentId: postIt.document.id,
-        data: postIt.document.data
+        document: postIt.document
       }
     ));
   }
@@ -360,7 +328,7 @@ export class PostItPerspectiveComponent implements OnInit, AfterViewInit, OnDest
     this.unsubscribeIfPossible(this.configHelper);
     this.unsubscribeIfPossible(this.infiniteScroll);
     this.unsubscribeIfPossible(this.collectionsSubscription);
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+    this.unsubscribeIfPossible(this.documentsSubscription);
   }
 
   private unsubscribeIfPossible(helper: NavigationHelper | ConfigHelper | InfiniteScroll | Subscription) {
