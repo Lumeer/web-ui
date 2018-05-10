@@ -261,43 +261,6 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public createAttribute$: Observable<Action> = this.actions$.pipe(
-    ofType<CollectionsAction.CreateAttribute>(CollectionsActionType.CREATE_ATTRIBUTE),
-    mergeMap(action => {
-      const attributeDto = CollectionConverter.toAttributeDto(action.payload.attribute);
-
-      return this.collectionService.createAttribute(action.payload.collectionId, attributeDto).pipe(
-        map(result => ({action, attribute: CollectionConverter.fromAttributeDto(result)})),
-        flatMap(({action, attribute}) => {
-          const actions: Action[] = [new CollectionsAction.CreateAttributeSuccess(
-            {collectionId: action.payload.collectionId, attribute}
-          )];
-
-          const {nextAction} = action.payload;
-          if (nextAction) {
-            if (nextAction.type === TablesActionType.INIT_COLUMN) {
-              (nextAction as TablesAction.InitColumn).payload.attributeId = attribute.id;
-            }
-            actions.push(nextAction);
-          }
-          return actions;
-        }),
-        catchError((error) => Observable.of(new CollectionsAction.CreateAttributeFailure({error: error})))
-      );
-    })
-  );
-
-  @Effect()
-  public createAttributeFailure$: Observable<Action> = this.actions$.pipe(
-    ofType<CollectionsAction.CreateAttributeFailure>(CollectionsActionType.CREATE_ATTRIBUTE_FAILURE),
-    tap(action => console.error(action.payload.error)),
-    map(() => {
-      const message = this.i18n({id: 'collection.create.attribute.fail', value: 'Failed to create attribute'});
-      return new NotificationsAction.Error({message});
-    })
-  );
-
-  @Effect()
   public createAttributes$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.CreateAttributes>(CollectionsActionType.CREATE_ATTRIBUTES),
     mergeMap(action => {
@@ -324,8 +287,9 @@ export class CollectionsEffects {
             } else if (nextAction.type === DocumentsActionType.PATCH_DATA) {
               const action = nextAction as DocumentsAction.PatchData;
               action.payload.document = convertNewAttributes(attributes, action);
+            } else if (nextAction.type === TablesActionType.INIT_COLUMN) {
+              (nextAction as TablesAction.InitColumn).payload.attributeId = attributes[0].id;
             }
-            actions.push(nextAction);
           }
           return actions;
         }),

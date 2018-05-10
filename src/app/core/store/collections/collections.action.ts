@@ -62,10 +62,6 @@ export enum CollectionsActionType {
   CHANGE_ATTRIBUTE_SUCCESS = '[Collections] Change Attribute :: Success',
   CHANGE_ATTRIBUTE_FAILURE = '[Collections] Change Attribute :: Failure',
 
-  CREATE_ATTRIBUTE = '[Collections] Create Attribute',
-  CREATE_ATTRIBUTE_SUCCESS = '[Collections] Create Attribute :: Success',
-  CREATE_ATTRIBUTE_FAILURE = '[Collections] Create Attribute :: Failure',
-
   CREATE_ATTRIBUTES = '[Collections] Create Attributes',
   CREATE_ATTRIBUTES_SUCCESS = '[Collections] Create Attributes :: Success',
   CREATE_ATTRIBUTES_FAILURE = '[Collections] Create Attributes :: Failure',
@@ -252,27 +248,6 @@ export namespace CollectionsAction {
     }
   }
 
-  export class CreateAttribute implements Action {
-    public readonly type = CollectionsActionType.CREATE_ATTRIBUTE;
-
-    public constructor(public payload: { collectionId: string, attribute: AttributeModel, nextAction?: Action }) {
-    }
-  }
-
-  export class CreateAttributeSuccess implements Action {
-    public readonly type = CollectionsActionType.CREATE_ATTRIBUTE_SUCCESS;
-
-    public constructor(public payload: { collectionId: string, attribute: AttributeModel }) {
-    }
-  }
-
-  export class CreateAttributeFailure implements Action {
-    public readonly type = CollectionsActionType.CREATE_ATTRIBUTE_FAILURE;
-
-    public constructor(public payload: { error: any }) {
-    }
-  }
-
   export class CreateAttributes implements Action {
     public readonly type = CollectionsActionType.CREATE_ATTRIBUTES;
 
@@ -374,7 +349,6 @@ export namespace CollectionsAction {
     AddFavorite | AddFavoriteSuccess | AddFavoriteFailure |
     RemoveFavorite | RemoveFavoriteSuccess | RemoveFavoriteFailure |
     CreateAttributes | CreateAttributesSuccess | CreateAttributesFailure |
-    CreateAttribute | CreateAttributeSuccess | CreateAttributeFailure |
     ChangeAttribute | ChangeAttributeSuccess | ChangeAttributeFailure |
     RemoveAttribute | RemoveAttributeSuccess | RemoveAttributeFailure |
     ChangePermission | ChangePermissionSuccess | ChangePermissionFailure | Clear;

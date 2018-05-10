@@ -41,8 +41,6 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
       return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favourite: false}}, state);
     case CollectionsActionType.DELETE_SUCCESS:
       return collectionsAdapter.removeOne(action.payload.collectionId, state);
-    case CollectionsActionType.CREATE_ATTRIBUTE_SUCCESS:
-      return onCreateAttributesSuccess(state, action.payload.collectionId, [action.payload.attribute]);
     case CollectionsActionType.CREATE_ATTRIBUTES_SUCCESS:
       return onCreateAttributesSuccess(state, action.payload.collectionId, action.payload.attributes);
     case CollectionsActionType.CHANGE_ATTRIBUTE_SUCCESS:

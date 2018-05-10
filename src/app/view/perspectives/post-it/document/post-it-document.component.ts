@@ -155,7 +155,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
       data.attributeName = previousAttribute.name;
     } else {
       data.attributeId = selectedAttribute && selectedAttribute.id || null;
-      if (isNullOrUndefined(data.attributeId)) {
+      if (isNullOrUndefined(data.attributeId) && isNullOrUndefined(data.correlationId)) {
         data.correlationId = CorrelationIdGenerator.generate();
       }
     }

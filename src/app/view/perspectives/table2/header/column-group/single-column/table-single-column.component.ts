@@ -206,9 +206,9 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
       attributeId: null
     });
 
-    this.store.dispatch(new CollectionsAction.CreateAttribute({
+    this.store.dispatch(new CollectionsAction.CreateAttributes({
       collectionId: this.collection.id,
-      attribute,
+      attributes: [attribute],
       nextAction
     }));
   }
