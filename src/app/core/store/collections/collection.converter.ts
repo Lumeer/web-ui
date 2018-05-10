@@ -32,7 +32,7 @@ export class CollectionConverter {
       description: dto.description,
       color: dto.color,
       icon: dto.icon,
-      attributes: dto.attributes ? dto.attributes.map(CollectionConverter.fromAttributeDto) : [],
+      attributes: dto.attributes ? dto.attributes.map(attr => CollectionConverter.fromAttributeDto(attr)) : [],
       defaultAttributeId: dto.defaultAttribute ? dto.defaultAttribute.id : null,
       permissions: dto.permissions ? PermissionsConverter.fromDto(dto.permissions) : null,
       documentsCount: dto.documentsCount,
@@ -63,13 +63,14 @@ export class CollectionConverter {
     };
   }
 
-  public static fromAttributeDto(attributeDto: Attribute): AttributeModel {
+  public static fromAttributeDto(attributeDto: Attribute, correlationId?: string): AttributeModel {
     return {
       id: attributeDto.id,
       name: attributeDto.name,
       // TODO convert 'intermediate' as well
       constraints: attributeDto.constraints,
-      usageCount: attributeDto.usageCount
+      usageCount: attributeDto.usageCount,
+      correlationId: correlationId
     };
   }
 

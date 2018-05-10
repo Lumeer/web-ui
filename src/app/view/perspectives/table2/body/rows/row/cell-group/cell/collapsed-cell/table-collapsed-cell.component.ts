@@ -80,13 +80,12 @@ export class TableCollapsedCellComponent implements OnChanges {
   }
 
   public values(): string {
-    return this.data().map(data => data.find(d => d.attributeId === this.column.attributeId))
+    return this.data().map(data => data[this.column.attributeId])
       .filter(data => data)
-      .map(data => data.value)
       .join(', ');
   }
 
-  private data(): DocumentDataModel[][] {
+  private data(): any[] {
     if (this.documents) {
       return this.documents.map(document => document.data);
     }

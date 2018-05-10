@@ -23,7 +23,6 @@ import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {catchError, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
-import {Document} from '../../dto';
 import {CollectionService, DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
@@ -39,8 +38,6 @@ import {selectDocumentById, selectDocumentsQueries} from './documents.state';
 import {HttpErrorResponse} from "@angular/common/http";
 import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
 import {RouterAction} from "../router/router.action";
-import {CollectionConverter} from '../collections/collection.converter';
-import {isNullOrUndefined} from 'util';
 
 @Injectable()
 export class DocumentsEffects {
@@ -74,10 +71,9 @@ export class DocumentsEffects {
   @Effect()
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Create>(DocumentsActionType.CREATE),
-    mergeMap((action) => saveNewAttributes(action.payload.document.collectionId, action.payload.document, this.collectionService).pipe(
-      map(({documentDto, attributes}) => ({action, documentDto, attributes}))
-    )),
-    mergeMap(({action, documentDto, attributes}) => {
+    mergeMap(action => {
+      const documentDto = DocumentConverter.toDto(action.payload.document);
+
       return this.documentService.createDocument(documentDto).pipe(
         map(dto => ({action, document: DocumentConverter.fromDto(dto, action.payload.document.correlationId)})),
         withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
@@ -88,9 +84,8 @@ export class DocumentsEffects {
           }
         }),
         flatMap(([{document}, collection]) => {
-          const collectionWithAttrs = {...collection, attributes: collection.attributes.concat(attributes)};
           return [
-            createSyncCollectionAction(collectionWithAttrs, document, null),
+            createSyncCollectionAction(collection, document, null),
             new DocumentsAction.CreateSuccess({document})
           ];
         }),
@@ -175,17 +170,16 @@ export class DocumentsEffects {
   @Effect()
   public updateData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.UpdateData>(DocumentsActionType.UPDATE_DATA),
-    mergeMap((action) => saveNewAttributes(action.payload.document.collectionId, action.payload.document, this.collectionService)),
-    mergeMap(({documentDto, attributes}) => {
+    mergeMap(action => {
+      const documentDto = DocumentConverter.toDto(action.payload.document);
       return this.documentService.updateDocument(documentDto).pipe(
         map(dto => DocumentConverter.fromDto(dto)),
         withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
         withLatestFrom(this.store$.select(selectDocumentById(documentDto.id))),
         flatMap(([[document, collection], oldDocument]) => {
 
-          const collectionWithAttrs = {...collection, attributes: collection.attributes.concat(attributes)};
           return [
-            createSyncCollectionAction(collectionWithAttrs, document, oldDocument),
+            createSyncCollectionAction(collection, document, oldDocument),
             new DocumentsAction.UpdateSuccess({document})
           ];
         }),
@@ -197,17 +191,15 @@ export class DocumentsEffects {
   @Effect()
   public patchData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.PatchData>(DocumentsActionType.PATCH_DATA),
-    mergeMap((action) => saveNewAttributes(action.payload.document.collectionId, action.payload.document, this.collectionService)),
-    mergeMap(({documentDto, attributes}) => {
+    mergeMap(action => {
+      const documentDto = DocumentConverter.toDto(action.payload.document);
       return this.documentService.patchDocumentData(documentDto).pipe(
         map(dto => DocumentConverter.fromDto(dto)),
         withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
         withLatestFrom(this.store$.select(selectDocumentById(documentDto.id))),
         flatMap(([[document, collection], oldDocument]) => {
-
-          const collectionWithAttrs = {...collection, attributes: collection.attributes.concat(attributes)};
           return [
-            createSyncCollectionAction(collectionWithAttrs, document, oldDocument),
+            createSyncCollectionAction(collection, document, oldDocument),
             new DocumentsAction.UpdateSuccess({document})
           ];
         }),
@@ -277,32 +269,11 @@ export class DocumentsEffects {
 
 }
 
-
-function saveNewAttributes(collectionId: string,
-                           document: DocumentModel,
-                           collectionService: CollectionService): Observable<{ documentDto: Document, attributes: AttributeModel[] }> {
-  const newAttributes = document.data.filter(d => isNullOrUndefined(d.attributeId))
-    .map(d => ({name: d.name, constraints: [], usageCount: 0}));
-  if (newAttributes.length === 0) {
-
-    const documentDto = DocumentConverter.toDto(document);
-    return Observable.of({documentDto, attributes: newAttributes});
-  } else {
-    return collectionService.createAttributes(collectionId, newAttributes).pipe(
-      map(attributes => {
-        const data = document.data.map(d => ({...d, attributeId: d.attributeId || attributes.find(attr => attr.name === d.name).id}));
-        const attributesModels = attributes.map(attr => CollectionConverter.fromAttributeDto(attr));
-        return {documentDto: DocumentConverter.toDto({...document, data}), attributes: attributesModels};
-      })
-    );
-  }
-}
-
 function createSyncCollectionAction(collection: CollectionModel,
                                     newDocument: DocumentModel,
                                     oldDocument: DocumentModel): CollectionsAction.UpdateSuccess {
-  const newAttributeIds: string[] = newDocument && newDocument.data ? newDocument.data.map(d => d.attributeId) : [];
-  const oldAttributeIds: string[] = oldDocument && oldDocument.data ? oldDocument.data.map(d => d.attributeId) : [];
+  const newAttributeIds: string[] = newDocument && newDocument.data ? Object.keys(newDocument.data) : [];
+  const oldAttributeIds: string[] = oldDocument && oldDocument.data ? Object.keys(oldDocument.data) : [];
 
   const attributes = updateAttributes(collection.attributes, newAttributeIds, oldAttributeIds);
   const documentsCount = collection.documentsCount + (!oldDocument ? 1 : 0) - (!newDocument ? 1 : 0);

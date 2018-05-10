@@ -33,6 +33,8 @@ import {TablesAction} from '../../../../../../../../../core/store/tables/tables.
 import {selectEditedAttribute} from '../../../../../../../../../core/store/tables/tables.state';
 import {TableColumnContextMenuComponent} from '../../../../../../header/column-group/single-column/context-menu/table-column-context-menu.component';
 import {TableEditableCellComponent} from '../../../../../../shared/editable-cell/table-editable-cell.component';
+import {isNullOrUndefined} from 'util';
+import {CollectionsAction} from '../../../../../../../../../core/store/collections/collections.action';
 
 @Component({
   selector: 'table-data-cell',
@@ -84,12 +86,10 @@ export class TableDataCellComponent implements OnInit {
   public value(): string {
     const attributeId = this.column.attributeId;
     if (this.document) {
-      const data = this.document.data.find(d => d.attributeId === attributeId);
-      return data && data.value || '';
+      return this.document.data[attributeId];
     }
     if (this.linkInstance) {
-      const data = this.linkInstance.data.find(d => d.attributeId === attributeId);
-      return data && data.value || '';
+      return this.linkInstance.data[attributeId];
     }
   }
 
@@ -140,14 +140,22 @@ export class TableDataCellComponent implements OnInit {
     }
   }
 
-  private createDocument(key: string, name: string, value: string) {
-    const data = [{attributeId: key, name, value}];
-    const document: DocumentModel = {...this.document, data};
+  private createDocument(attributeId: string, name: string, value: string) {
+    if (isNullOrUndefined(attributeId)) {
+      const document: DocumentModel = {...this.document, newData: {[name]: {value}}};
+      const createDocumentAction = new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback()});
+      const newAttribute = {name, constraints: []};
 
-    this.store.dispatch(new DocumentsAction.Create({
-      document,
-      callback: this.createLinkInstanceCallback()
-    }));
+      this.store.dispatch(new CollectionsAction.CreateAttributes(
+        {collectionId: this.document.collectionId, attributes: [newAttribute], nextAction: createDocumentAction})
+      );
+    } else {
+      const data = {[attributeId]: value};
+      const document: DocumentModel = {...this.document, data: data};
+
+      this.store.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback()}));
+    }
+
   }
 
   private createLinkInstanceCallback(): (documentId: string) => void {
@@ -180,13 +188,19 @@ export class TableDataCellComponent implements OnInit {
     };
   }
 
-  private updateDocument(key: string, name: string, value: string) {
-    const document = {
-      collectionId: this.document.collectionId,
-      id: this.document.id,
-      data: [{attributeId: key, name, value}]
-    };
-    this.store.dispatch(new DocumentsAction.PatchData({document}));
+  private updateDocument(attributeId: string, name: string, value: string) {
+    if (isNullOrUndefined(attributeId)) {
+      const document = {collectionId: this.document.collectionId, id: this.document.id, data: {}, newData: {[name]: {value}}};
+      const patchDocumentAction = new DocumentsAction.PatchData({document});
+      const newAttribute = {name, constraints: []};
+
+      this.store.dispatch(new CollectionsAction.CreateAttributes(
+        {collectionId: this.document.collectionId, attributes: [newAttribute], nextAction: patchDocumentAction})
+      );
+    } else {
+      const document = {collectionId: this.document.collectionId, id: this.document.id, data: {[attributeId]: value}};
+      this.store.dispatch(new DocumentsAction.PatchData({document}));
+    }
   }
 
   private updateLinkInstanceData(key: string, name: string, value: string) {

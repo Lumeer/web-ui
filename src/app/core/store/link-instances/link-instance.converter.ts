@@ -19,7 +19,6 @@
 
 import {LinkInstance} from '../../dto/link-instance';
 import {LinkInstanceModel} from './link-instance.model';
-import {DocumentDataConverter} from '../documents/document.converter';
 
 export class LinkInstanceConverter {
 
@@ -28,7 +27,7 @@ export class LinkInstanceConverter {
       id: dto.id,
       linkTypeId: dto.linkTypeId,
       documentIds: dto.documentIds,
-      data: DocumentDataConverter.fromDto(dto.data),
+      data: dto.data,
     };
   }
 
@@ -37,7 +36,7 @@ export class LinkInstanceConverter {
       id: model.id,
       linkTypeId: model.linkTypeId,
       documentIds: model.documentIds,
-      data: DocumentDataConverter.toDto(model.data)
+      data: model.data
     };
   }
 

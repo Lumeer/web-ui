@@ -25,7 +25,7 @@ export interface LinkInstanceModel {
   linkTypeId: string;
   documentIds: [string, string];
 
-  data?: DocumentDataModel[];
+  data?: { [attributeId: string]: any };
 
 }
 

@@ -24,7 +24,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../core/store/app.state';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
-import {DocumentDataModel, DocumentModel} from '../../../../core/store/documents/document.model';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 
 @Component({
@@ -58,19 +58,20 @@ export class PostItAddDocumentComponent implements OnInit, OnDestroy {
 
   public onClick(): void {
     this.createPostIt.emit({
-      collection: this.selectedCollection,
       collectionId: this.selectedCollection.id,
       correlationId: CorrelationIdGenerator.generate(),
-      data: this.dataWithAttributeNames()
+      data: this.createData()
     });
   }
 
-  private dataWithAttributeNames(): DocumentDataModel[] {
+  private createData(): { [attributeId: string]: any } {
     if (!this.selectedCollection) {
       return [];
     }
-    return this.selectedCollection.attributes
-      .map(attr => ({attributeId: attr.id, name: attr.name, value: ''}));
+    return this.selectedCollection.attributes.reduce((acc, attr)=>{
+      acc[attr.id] = '';
+      return acc;
+    }, {});
   }
 
   public disabled(): boolean {

@@ -51,7 +51,7 @@ function filterDocumentsByFulltext(documents: DocumentModel[], query: QueryModel
     return documents;
   }
 
-  return documents.filter(document => document.data.map(d => d.value).some(value => value.includes(query.fulltext)));
+  return documents.filter(document => Object.values(document.data).some(value => value.includes(query.fulltext)));
 }
 
 function filterDocumentsByFilters(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
@@ -73,8 +73,7 @@ function documentMeetFilter(document: DocumentModel, filter: AttributeFilter): b
   if (document.collectionId !== filter.collectionId) {
     return true;
   }
-  const elem = document.data.find(d => d.attributeId === filter.attributeId);
-  const data = elem && elem.value || '';
+  const data = document.data[filter.attributeId];
   switch (filter.conditionType) {
     case ConditionType.Equals:
       return data === filter.value;

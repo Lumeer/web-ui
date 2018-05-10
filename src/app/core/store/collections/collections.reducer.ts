@@ -42,7 +42,9 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
     case CollectionsActionType.DELETE_SUCCESS:
       return collectionsAdapter.removeOne(action.payload.collectionId, state);
     case CollectionsActionType.CREATE_ATTRIBUTE_SUCCESS:
-      return onCreateAttributeSuccess(state, action);
+      return onCreateAttributesSuccess(state, action.payload.collectionId, [action.payload.attribute]);
+    case CollectionsActionType.CREATE_ATTRIBUTES_SUCCESS:
+      return onCreateAttributesSuccess(state, action.payload.collectionId, action.payload.attributes);
     case CollectionsActionType.CHANGE_ATTRIBUTE_SUCCESS:
       return onChangeAttributeSuccess(state, action);
     case CollectionsActionType.REMOVE_ATTRIBUTE_SUCCESS:
@@ -58,9 +60,9 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
   }
 }
 
-function onCreateAttributeSuccess(state: CollectionsState, action: CollectionsAction.CreateAttributeSuccess): CollectionsState {
-  let attributes = state.entities[action.payload.collectionId].attributes.concat(action.payload.attribute);
-  return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
+function onCreateAttributesSuccess(state: CollectionsState, collectionId: string, attributes: AttributeModel[]): CollectionsState {
+  let newAttributes = state.entities[collectionId].attributes.concat(attributes);
+  return collectionsAdapter.updateOne({id: collectionId, changes: {attributes: newAttributes}}, state);
 }
 
 function onChangeAttributeSuccess(state: CollectionsState, action: CollectionsAction.ChangeAttributeSuccess): CollectionsState {

@@ -28,6 +28,8 @@ export interface AttributeModel {
   usageCount?: number;
   intermediate?: boolean;
 
+  correlationId?: string;
+
 }
 
 export interface CollectionModel extends ResourceModel {

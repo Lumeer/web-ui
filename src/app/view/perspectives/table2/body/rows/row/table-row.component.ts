@@ -171,7 +171,7 @@ export class TableRowComponent implements OnChanges, OnDestroy {
 
     return {
       collectionId: part.collectionId,
-      data: []
+      data: {}
     };
   }
 

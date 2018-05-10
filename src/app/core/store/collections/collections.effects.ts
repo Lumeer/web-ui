@@ -40,7 +40,9 @@ import {AppState} from "../app.state";
 import {HttpErrorResponse} from "@angular/common/http";
 import {RouterAction} from "../router/router.action";
 import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
-import {DocumentsAction} from '../documents/documents.action';
+import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
+import {DocumentModel} from '../documents/document.model';
+import {AttributeModel} from './collection.model';
 
 @Injectable()
 export class CollectionsEffects {
@@ -296,6 +298,53 @@ export class CollectionsEffects {
   );
 
   @Effect()
+  public createAttributes$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.CreateAttributes>(CollectionsActionType.CREATE_ATTRIBUTES),
+    mergeMap(action => {
+      const attributesDto = action.payload.attributes.map(attr => CollectionConverter.toAttributeDto(attr));
+      const correlationIdMap = action.payload.attributes.reduce((acc, attr) => {
+        acc[attr.name] = attr.correlationId;
+        return acc;
+      }, {});
+
+      return this.collectionService.createAttributes(action.payload.collectionId, attributesDto).pipe(
+        map(attributes => ({action, attributes: attributes.map(attr => CollectionConverter.fromAttributeDto(attr, correlationIdMap[attr.name]))})),
+        flatMap(({action, attributes}) => {
+          const actions: Action[] = [new CollectionsAction.CreateAttributesSuccess(
+            {collectionId: action.payload.collectionId, attributes}
+          )];
+          const {nextAction} = action.payload;
+          if (nextAction) {
+            if (nextAction.type === DocumentsActionType.CREATE) {
+              const action = nextAction as DocumentsAction.Create;
+              action.payload.document = convertNewAttributes(attributes, action);
+            } else if (nextAction.type === DocumentsActionType.UPDATE_DATA) {
+              const action = nextAction as DocumentsAction.UpdateData;
+              action.payload.document = convertNewAttributes(attributes, action);
+            } else if (nextAction.type === DocumentsActionType.PATCH_DATA) {
+              const action = nextAction as DocumentsAction.PatchData;
+              action.payload.document = convertNewAttributes(attributes, action);
+            }
+            actions.push(nextAction);
+          }
+          return actions;
+        }),
+        catchError((error) => Observable.of(new CollectionsAction.CreateAttributesFailure({error: error})))
+      );
+    })
+  );
+
+  @Effect()
+  public createAttributesFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.CreateAttributesFailure>(CollectionsActionType.CREATE_ATTRIBUTES_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'collection.create.attributes.fail', value: 'Failed to create attributes'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
   public changeAttribute$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.ChangeAttribute>(CollectionsActionType.CHANGE_ATTRIBUTE),
     mergeMap(action => {
@@ -388,4 +437,19 @@ export class CollectionsEffects {
               private searchService: SearchService) {
   }
 
+}
+
+
+function convertNewAttributes(attributes: AttributeModel[], action: DocumentsAction.Create | DocumentsAction.UpdateData | DocumentsAction.PatchData): DocumentModel {
+  const document = action.payload.document;
+  const newAttributes = Object.keys(document.newData).reduce((acc, attrName) => {
+    const attribute = attributes.find(attr => attr.name === attrName);
+    if (attribute) {
+      acc[attribute.id] = document.newData[attrName].value;
+    }
+    return acc;
+  }, {});
+
+  const newData = {...document.data, ...newAttributes};
+  return {...document, data: newData};
 }

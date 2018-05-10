@@ -18,8 +18,7 @@
  */
 
 import {Document} from '../../dto';
-import {DocumentDataModel, DocumentModel} from './document.model';
-import {isNullOrUndefined} from 'util';
+import {DocumentModel} from './document.model';
 
 export class DocumentConverter {
 
@@ -30,7 +29,7 @@ export class DocumentConverter {
     return {
       id: dto.id,
       collectionId: dto.collectionId,
-      data: DocumentDataConverter.fromDto(data),
+      data: data,
       favorite: dto.favorite,
       creationDate: dto.creationDate,
       updateDate: dto.updateDate,
@@ -45,25 +44,9 @@ export class DocumentConverter {
     return {
       id: model.id,
       collectionId: model.collectionId,
-      data: DocumentDataConverter.toDto(model.data),
+      data: model.data,
       favorite: model.favorite
     };
   }
 
-}
-
-export class DocumentDataConverter {
-
-  public static toDto(data: DocumentDataModel[]): { [attributeId: string]: any } {
-    return data.reduce((acc, docData) => {
-      if (!isNullOrUndefined(docData.attributeId)) {
-        acc[docData.attributeId] = docData.value;
-      }
-      return acc;
-    }, {})
-  }
-
-  public static fromDto(data: { [attributeId: string]: any }): DocumentDataModel[] {
-    return Object.entries(data).map(([key, value]) => ({attributeId: key, value}));
-  }
 }

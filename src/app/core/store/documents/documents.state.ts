@@ -45,37 +45,18 @@ export const selectDocumentsState = (state: AppState) => state.documents;
 export const selectAllDocuments = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectAll);
 export const selectDocumentsDictionary = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectEntities);
 export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
-export const selectDocumentsByQuery = createSelector(selectAllDocuments, selectCollectionsDictionary, selectQuery,
-  (documents, collections, query): DocumentModel[] => filterDocuments(documents, collections, query)
+export const selectDocumentsByQuery = createSelector(selectAllDocuments, selectQuery,
+  (documents, query): DocumentModel[] => filterDocuments(documents, query)
 );
 
-export const selectDocumentsByCustomQuery = (query: QueryModel) => createSelector(selectAllDocuments, selectCollectionsDictionary,
-  (documents, collections): DocumentModel[] => filterDocuments(documents, collections, query)
+export const selectDocumentsByCustomQuery = (query: QueryModel) => createSelector(selectAllDocuments,
+  (documents): DocumentModel[] => filterDocuments(documents, query)
 );
 
-export const selectDocumentById = (id: string) => createSelector(selectDocumentsDictionary, selectCollectionsDictionary, (documentsMap, collections) => {
-  const document = documentsMap[id];
-  return document && mapAttributeNames(document, collections) || null;
-});
+export const selectDocumentById = (id: string) => createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);
 
-export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary, selectCollectionsDictionary, (documentsMap, collections) =>
-  ids.map(id => documentsMap[id])
-    .filter(document => !isNullOrUndefined(document))
-    .map(document => mapAttributeNames(document, collections))
-);
+export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary,documentsMap=> ids.map(id => documentsMap[id]));
 
-function filterDocuments(documents: DocumentModel[], collections: Dictionary<CollectionModel>, query: QueryModel): DocumentModel[] {
-  return filterDocumentsByQuery(documents, query)
-    .map(document => mapAttributeNames(document, collections));
-}
-
-function mapAttributeNames(document: DocumentModel, collections: Dictionary<CollectionModel>): DocumentModel {
-  const collection = collections[document.collectionId];
-  const doc = {...document, collection};
-  const attributes = collection && collection.attributes || [];
-  doc.data && doc.data.forEach(d => {
-    const attribute = attributes.find(attr => attr.id === d.attributeId);
-    d.name = attribute && attribute.name || '';
-  });
-  return doc;
+function filterDocuments(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
+  return filterDocumentsByQuery(documents, query);
 }

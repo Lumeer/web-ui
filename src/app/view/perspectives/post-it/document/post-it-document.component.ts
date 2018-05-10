@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
@@ -28,11 +28,15 @@ import {PostItLayout} from '../../../../shared/utils/layout/post-it-layout';
 import {PostItDocumentModel} from '../document-data/post-it-document-model';
 import {NavigationHelper} from '../util/navigation-helper';
 import {SelectionHelper} from '../util/selection-helper';
-import {AttributeModel} from '../../../../core/store/collections/collection.model';
-import DeleteConfirm = DocumentsAction.DeleteConfirm;
+import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import Update = DocumentsAction.Update;
 import {isNullOrUndefined} from 'util';
-import {DocumentDataModel} from '../../../../core/store/documents/document.model';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {PostItRow} from './post-it-row';
+import {Subject} from 'rxjs/Subject';
+import {Subscription} from 'rxjs/Subscription';
+import {debounceTime} from 'rxjs/operators';
+import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 
 @Component({
   selector: 'post-it-document',
@@ -41,72 +45,51 @@ import {DocumentDataModel} from '../../../../core/store/documents/document.model
 })
 export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @HostListener('focusout')
-  public onFocusOut(): void {
-    // if (this.shouldSuggestDeletion()) {
-    //   this.confirmDeletion();
-    //   this.changed = false;
-    //   return;
-    // }
+  @Input() public postItModel: PostItDocumentModel;
+  @Input() public collection: CollectionModel;
+  @Input() public collectionRoles: string[];
+  @Input() public perspectiveId: string;
+  @Input() public layoutManager: PostItLayout;
+  @Input() public navigationHelper: NavigationHelper;
+  @Input() public selectionHelper: SelectionHelper;
 
-    if (this.changed) {
-      this.changed = false;
-      this.changes.emit();
-    }
-  }
+  @Output() public remove = new EventEmitter();
+  @Output() public changes = new EventEmitter<DocumentModel>();
 
-  @Input()
-  public postItModel: PostItDocumentModel;
+  @ViewChild('content') public content: ElementRef;
 
-  @Input()
-  public collectionRoles: string[];
-
-  @Input()
-  public perspectiveId: string;
-
-  @Input()
-  public layoutManager: PostItLayout;
-
-  @Input()
-  public navigationHelper: NavigationHelper;
-
-  @Input()
-  public selectionHelper: SelectionHelper;
-
-  @Output()
-  public removed = new EventEmitter();
-
-  @Output()
-  public changes = new EventEmitter();
-
-  @ViewChild('content')
-  public content: ElementRef;
-
-  private changed: boolean;
-  private newData: DocumentDataModel = {name: '', value: ''};
+  private postItRows: PostItRow[] = [];
+  private postItNewRow: PostItRow = {attributeName: '', value: ''};
+  private postItChange$ = new Subject<any>();
+  private postItChangeSubscription: Subscription;
 
   constructor(private store: Store<AppState>,
               private element: ElementRef) {
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collection) {
+      this.pairAttributes()
+    }
+    if (changes.postItModel) {
+      this.constructRows();
+    }
+    this.postItModel.numRows = this.postItRows.length;
   }
 
   public ngOnInit(): void {
     this.disableScrollOnNavigation();
   }
 
+  public ngOnDestroy(): void {
+    if (this.postItChangeSubscription) {
+      this.postItChangeSubscription.unsubscribe();
+    }
+    this.layoutManager.remove(this.element.nativeElement);
+  }
+
   public ngAfterViewInit(): void {
     this.layoutManager.add(this.element.nativeElement);
-  }
-
-  private shouldSuggestDeletion(): boolean {
-    return this.hasNoAttributes() && this.isInitialized();
-  }
-
-  private hasNoAttributes(): boolean {
-    return this.postItModel && this.postItModel.document.data && this.postItModel.document.data.length === 0;
-  }
-
-  private isInitialized(): boolean {
-    return Boolean(this.postItModel && this.postItModel.document.id);
   }
 
   private disableScrollOnNavigation(): void {
@@ -130,77 +113,81 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public createAttributePair(): void {
-    const selectedAttribute = this.findAttributeByName(this.newData.name);
+    const selectedAttribute = this.findAttributeByName(this.postItNewRow.attributeName);
 
     if (selectedAttribute) {
       if (this.isAttributeUsed(selectedAttribute.id)) {
         return;
       }
 
-      this.postItModel.document.data.push({...this.newData, attributeId: selectedAttribute.id});
+      this.postItRows.push({...this.postItNewRow, attributeId: selectedAttribute.id});
     } else {
-      this.postItModel.document.data.push({...this.newData});
+      this.postItRows.push({...this.postItNewRow, correlationId: CorrelationIdGenerator.generate()});
     }
 
-    this.newData = {name: '', value: ''};
-    this.changed = true;
+    this.postItModel.numRows = this.postItRows.length;
+
+    this.postItNewRow = {attributeName: '', value: ''};
+    this.onChange();
 
     setTimeout(() => {
-      this.selectionHelper.select(1, Number.MAX_SAFE_INTEGER, this.postItModel);
+      this.selectionHelper.select(1, this.postItRows.length, this.postItModel);
     });
   }
 
   public onUpdateAttribute(selectedRow: number): void {
-    const data = this.postItModel.document.data[selectedRow];
+    const data = this.postItRows[selectedRow];
     if (!data) {
       return;
     }
 
-    this.changed = true;
+    this.onChange();
 
-    data.name = data.name.trim();
-    if (!data.name) {
-      this.removeAttributePair(this.selectionHelper.selection.row);
+    data.attributeName = data.attributeName.trim();
+    if (!data.attributeName) {
+      this.removeRow(selectedRow);
       return;
     }
 
-    const selectedAttribute = this.findAttributeByName(data.name);
+    const selectedAttribute = this.findAttributeByName(data.attributeName);
     if (data.attributeId && selectedAttribute && selectedAttribute.id !== data.attributeId && this.isAttributeUsed(selectedAttribute.id)) {
       const previousAttribute = this.findAttributeById(data.attributeId);
-      data.name = previousAttribute.name;
+      data.attributeName = previousAttribute.name;
     } else {
       data.attributeId = selectedAttribute && selectedAttribute.id || null;
+      if (isNullOrUndefined(data.attributeId)) {
+        data.correlationId = CorrelationIdGenerator.generate();
+      }
     }
   }
 
   public updateValue(selectedRow: number): void {
-    const data = this.postItModel.document.data[selectedRow];
+    const data = this.postItRows[selectedRow];
     if (!data) {
       return;
     }
 
     data.value = data.value.trim();
-    this.changed = true;
+    this.onChange();
   }
 
   public toggleDocumentFavorite() {
     this.store.dispatch(new Update({document: this.postItModel.document, toggleFavourite: true}));
   }
 
-  public confirmDeletion(): void {
-    if (this.postItModel.initialized) {
-      this.store.dispatch(new DeleteConfirm({
-        collectionId: this.postItModel.document.collectionId,
-        documentId: this.postItModel.document.id
-      }));
-
-    } else {
-      this.removed.emit();
+  public onRemove(): void {
+    if (this.postItChangeSubscription) {
+      this.postItChangeSubscription.unsubscribe();
+      this.postItChangeSubscription = null;
     }
+
+    this.remove.emit();
   }
 
-  public removeAttributePair(selectedRow: number) {
-    this.postItModel.document.data.splice(selectedRow, 1);
+  public removeRow(selectedRow: number) {
+    this.postItRows.splice(selectedRow, 1);
+
+    this.postItModel.numRows = this.postItRows.length;
 
     setTimeout(() => {
       this.selectionHelper.select(
@@ -209,29 +196,32 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
         this.postItModel
       );
     });
+
+    if (this.postItRows.length === 0) {
+      this.onRemove();
+    }
   }
 
   public removeValue(selectedRow: number) {
-    this.postItModel.document.data[selectedRow].value = '';
+    this.postItRows[selectedRow].value = '';
   }
 
   public unusedAttributes(): AttributeModel[] {
-    return this.postItModel.document.collection.attributes.filter(attribute => {
-      return isNullOrUndefined(this.postItModel.document.data.find(d => d.attributeId === attribute.id));
+    return this.collection.attributes.filter(attribute => {
+      return isNullOrUndefined(this.postItRows.find(d => d.attributeId === attribute.id));
     });
   }
 
   public findAttributeByName(name: string): AttributeModel {
-    return this.postItModel.document.collection.attributes.find(attr => attr.name === name);
+    return this.collection.attributes.find(attr => attr.name === name);
   }
 
   public findAttributeById(id: string): AttributeModel {
-    return this.postItModel.document.collection.attributes.find(attr => attr.id === id);
+    return this.collection.attributes.find(attr => attr.id === id);
   }
 
-
   public isAttributeUsed(id: string) {
-    return this.postItModel.document.data.findIndex(d => d.attributeId === id) !== -1;
+    return this.postItRows.findIndex(d => d.attributeId === id) !== -1;
   }
 
   public suggestionListId(): string {
@@ -239,15 +229,70 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public isDefaultAttribute(attributeId: string): boolean {
-    return attributeId === this.postItModel.document.collection.defaultAttributeId;
+    return attributeId && attributeId === this.collection.defaultAttributeId;
   }
 
   public hasWriteRole(): boolean {
     return this.collectionRoles && this.collectionRoles.includes(Role.Write)
   }
 
-  public ngOnDestroy(): void {
-    this.layoutManager.remove(this.element.nativeElement);
+  private pairAttributes() {
+    if (isNullOrUndefined(this.collection)) {
+      return;
+    }
+
+    this.collection.attributes.forEach(attribute => {
+      const row = this.postItRows.find(row => row.correlationId && row.correlationId === attribute.correlationId);
+      if (row) {
+        row.attributeId = attribute.id;
+        row.correlationId = null;
+      }
+    });
   }
 
+  private constructRows() {
+    if (isNullOrUndefined(this.postItModel)) {
+      return;
+    }
+
+    Object.keys(this.postItModel.document.data).forEach(attributeId => {
+      const row = this.postItRows.find(row => row.attributeId === attributeId);
+      if (!row) {
+        const attribute = this.findAttributeById(attributeId);
+        const attributeName = attribute && attribute.name || '';
+        this.postItRows.push({attributeId, attributeName, value: this.postItModel.document.data[attributeId]});
+      }
+    });
+  }
+
+  private onChange() {
+    if (isNullOrUndefined(this.postItChangeSubscription)) {
+      this.initSubscription();
+    }
+    this.postItChange$.next();
+  }
+
+  private initSubscription() {
+    this.postItChangeSubscription = this.postItChange$.pipe(
+      debounceTime(3000),
+    ).subscribe(() => {
+      this.changes.emit(this.createUpdateDocument());
+    });
+  }
+
+  private createUpdateDocument(): DocumentModel {
+    const data: { [attributeId: string]: any } = this.postItRows.filter(row => row.attributeId).reduce((acc, row) => {
+      acc[row.attributeId] = row.value;
+      return acc;
+    }, {});
+
+
+    const newData: { [attributeName: string]: any } = this.postItRows.filter(row => isNullOrUndefined(row.attributeId))
+      .reduce((acc: { [attributeName: string]: any }, row) => {
+        acc[row.attributeName] = {value: row.value, correlationId: row.correlationId};
+        return acc;
+      }, {});
+
+    return {...this.postItModel.document, data, newData: Object.keys(newData).length > 0 ? newData : null};
+  }
 }

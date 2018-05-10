@@ -32,6 +32,7 @@ import {animate, style, transition, trigger} from '@angular/animations';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {selectCollectionsByQuery} from '../../../core/store/collections/collections.state';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
 
 @Component({
   selector: 'chart-perspective',
@@ -52,6 +53,8 @@ import {selectCollectionsByQuery} from '../../../core/store/collections/collecti
 export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private documents: DocumentModel[];
+
+  private collections: CollectionModel[];
 
   public axisSelectModel: AxisSelectModel[];
 
@@ -105,6 +108,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
       this.store.select(selectCollectionsByQuery)
     ).subscribe(([documents, collections]) => {
       this.documents = documents;
+      this.collections = collections;
       this.axisSelectModel = collections.reduce((acc, collection) => {
         return acc.concat(collection.attributes.map(attr => ({attributeId: attr.id, attributeName: attr.name, collectionIcon: collection.icon})));
       }, []);
