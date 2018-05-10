@@ -84,6 +84,7 @@ import {ResourceHeaderComponent} from './resource/header/resource-header.compone
     SearchBoxModule,
     SliderComponent,
     TagModule,
+    LayoutItem,
     InputModule,
     DialogsModule,
     ResourceHeaderComponent

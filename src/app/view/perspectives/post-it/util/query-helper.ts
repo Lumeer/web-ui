@@ -45,14 +45,25 @@ export class QueryHelper {
     return this.query.collectionIds[0];
   }
 
-  public queryWithPagination(pageNumber: number): QueryModel {
-    const queryWithPagination = {...this.query};
-    queryWithPagination.page = pageNumber;
-    queryWithPagination.pageSize = this.pageSize(pageNumber);
-    return QueryConverter.fromDto(queryWithPagination);
+  public queryForFetched(pageNumber: number): QueryModel {
+    const query = {
+      ...this.query,
+      page: pageNumber,
+      pageSize: this.pageSize()
+    };
+    return QueryConverter.fromDto(query);
+  }
+  
+  public queryForSubscription(pageNumber: number): QueryModel {
+    const query = {
+      ...this.query,
+      page: 0,
+      pageSize: this.pageSize() * (pageNumber + 1)
+    };
+    return QueryConverter.fromDto(query);
   }
 
-  private pageSize(pageNumber: number): number {
+  private pageSize(): number {
     return this.getDocumentsPerRow() * 3;
   }
 

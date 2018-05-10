@@ -1,4 +1,5 @@
 <div class="card-header d-inline-flex py-1 px-3">
+
   <span class="mr-1 d-flex overflow-hidden"
         [style.color]="postItModel.document.collection.color"
         [title]="postItModel.document.collection.name">
@@ -89,7 +90,7 @@
               (keydown.ArrowDown)="selectionHelper.moveSelection(0, 1)"
               (keydown.F2)="selectionHelper.setEditMode(true); selectionHelper.focus()"
               (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
-              (focus)="selectionHelper.setEditMode(true); this.selectionHelper.select(0, attributePairs.length, postItModel)">
+              (focus)="this.selectionHelper.select(0, attributePairs.length, postItModel)">
 
           <input class="border-0" remove-placeholder-on-focus #newAttributeInput
                  placeholder=" + "

@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare var $: any;
+
 export class InfiniteScroll {
 
   private gettingData: boolean;
@@ -54,7 +56,7 @@ export class InfiniteScroll {
   private setTrackedScrollbar() {
     this.userHitBottom = this.useParentScrollbar ?
       () => this.parent.scrollTop >= this.parent.scrollHeight - 400 :
-      () => window.innerHeight + window.scrollY >= document.body.offsetHeight - 550;
+      () => $(window).scrollTop() + $(window).height() > $(document).height() - 400;
   }
 
   public isLoading(): boolean {
@@ -79,7 +81,7 @@ export class InfiniteScroll {
     (window as any).removeEventListener('scroll', this.onScroll, this.scrollEventOptions);
   }
 
-  public destroy(): void {
+  public unsubscribe(): void {
     this.turnOffInfiniteScroll();
   }
 
