@@ -7,8 +7,8 @@
      class="data-cell"
      tabindex="0">
   <ng-container *ngFor="let doc of row.documents; last as isLast">
-    <ng-container *ngIf="doc.data[attribute.fullName]">
-      {{doc.data[attribute.fullName] + (isLast ? '' : ',')}}
+    <ng-container *ngIf="doc.data[attribute.name]">
+      {{doc.data[attribute.name] + (isLast ? '' : ',')}}
     </ng-container>
   </ng-container>
 </div>
@@ -19,7 +19,7 @@
      [class.highlighted]="highlighted"
      [contextMenu]="expandedContextMenu"
      [style.cursor]="editMode ? 'text' : 'default'"
-     [textContent]="row.documents[0].data[attribute.fullName]"
+     [textContent]="row.documents[0].data[attribute.name]"
      (dblclick)="switchEditMode(true)"
      (blur)="onBlur()"
      (focus)="onFocus()"
@@ -32,10 +32,10 @@
      class="dropdown">
   <div class="dropdown-menu show">
     <ng-container *ngFor="let doc of suggestLinkedDocuments()">
-      <a *ngIf="doc.data.hasOwnProperty([attribute.fullName])"
+      <a *ngIf="doc.data.hasOwnProperty([attribute.name])"
          (mousedown)="linkExistingDocument(doc)"
          class="dropdown-item">
-        {{doc.data[attribute.fullName] | highlight: dataCell.textContent}}
+        {{doc.data[attribute.name] | highlight: dataCell.textContent}}
       </a>
     </ng-container>
   </div>

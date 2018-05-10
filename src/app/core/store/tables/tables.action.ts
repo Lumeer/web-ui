@@ -42,9 +42,9 @@ export enum TablesActionType {
   SHOW_COLUMNS = '[Tables] Show Columns',
   HIDE_COLUMN = '[Tables] Hide Column',
   MOVE_COLUMN = '[Tables] Move Column',
-  RENAME_COLUMN = '[Tables] Rename Column',
   RESIZE_COLUMN = '[Tables] Resize Column',
   REMOVE_COLUMN = '[Tables] Remove Column',
+  INIT_COLUMN = '[Tables] Initialize Column',
 
   GROUP_BY_COLUMN = '[Tables] Group By Column',
   SORT_BY_COLUMN = '[Tables] Sort By Column',
@@ -190,17 +190,17 @@ export namespace TablesAction {
     }
   }
 
-  export class RenameColumn implements Action {
-    public readonly type = TablesActionType.RENAME_COLUMN;
-
-    public constructor(public payload: { cursor: TableHeaderCursor, name: string }) {
-    }
-  }
-
   export class ResizeColumn implements Action {
     public readonly type = TablesActionType.RESIZE_COLUMN;
 
     public constructor(public payload: { cursor: TableHeaderCursor, delta: number }) {
+    }
+  }
+
+  export class InitColumn implements Action {
+    public readonly type = TablesActionType.INIT_COLUMN;
+
+    public constructor(public payload: { cursor: TableHeaderCursor, attributeId: string }) {
     }
   }
 
@@ -271,7 +271,7 @@ export namespace TablesAction {
     CreatePart | AddPart | SwitchParts | RemovePart |
     AddColumn | SplitColumn | ReplaceColumns | RemoveColumn |
     HideColumn | ShowColumns |
-    MoveColumn | RenameColumn | ResizeColumn |
+    MoveColumn | ResizeColumn | InitColumn |
     ReplaceRows | AddRows | AddLinkedRows | RemoveRow |
     CollapseRows | ExpandRows |
     SetCursor | MoveCursor |

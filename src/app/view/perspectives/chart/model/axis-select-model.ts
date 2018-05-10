@@ -17,27 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DocumentModel {
+export interface AxisSelectModel {
 
-  id?: string;
-  collectionId: string;
-  data: { [attributeId: string]: any };
-  newData?: { [attributeName: string]: {value: any, correlationId?: string} };
+  collectionIcon: string;
+  attributeId: string;
+  attributeName: string;
 
-  favorite?: boolean;
-
-  creationDate?: object;
-  updateDate?: object;
-  createdBy?: string;
-  updatedBy?: string;
-  dataVersion?: number;
-
-  correlationId?: string;
-
-}
-
-export interface DocumentDataModel {
-  attributeId?: string,
-  name?: string,
-  value?: any
 }

@@ -21,12 +21,14 @@ import {ResourceModel} from "../../model/resource.model";
 
 export interface AttributeModel {
 
-  id: string;
+  id?: string;
   name: string;
 
   constraints: string[]; // TODO use complex objects instead
   usageCount?: number;
   intermediate?: boolean;
+
+  correlationId?: string;
 
 }
 

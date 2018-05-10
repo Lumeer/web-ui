@@ -7,13 +7,13 @@
      data-toggle="dropdown"></i>
   <div class="dropdown-menu">
     <h6 class="dropdown-header"
-         i18n="@@table.header.show.hidden.columns">Show hidden columns
+        i18n="@@table.header.show.hidden.columns">Show hidden columns
     </h6>
     <a *ngFor="let attribute of hiddenAttributes() | async"
        (click)="onShowSingleColumn(attribute)"
        class="dropdown-item">
-      <span>{{attribute.name}}</span>
-      <small class="text-secondary pl-1">({{attribute.id}})</small>
+      <span>{{extractAttributeLastName(attribute.name)}}</span>
+      <small class="text-secondary pl-1">({{attribute.name}})</small>
     </a>
     <a *ngIf="column.attributeIds.length > 1"
        (click)="onShowAllColumns()"

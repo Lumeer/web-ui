@@ -28,6 +28,7 @@ import {QueryModel} from '../navigation/query.model';
 
 import {DocumentModel} from './document.model';
 import {filterDocumentsByQuery} from './documents.filters';
+import {isNullOrUndefined} from 'util';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   queries: QueryModel[];
@@ -44,21 +45,18 @@ export const selectDocumentsState = (state: AppState) => state.documents;
 export const selectAllDocuments = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectAll);
 export const selectDocumentsDictionary = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectEntities);
 export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
-export const selectDocumentsByQuery = createSelector(selectAllDocuments, selectCollectionsDictionary, selectQuery,
-  (documents, collections, query): DocumentModel[] => filterDocuments(documents, collections, query)
+export const selectDocumentsByQuery = createSelector(selectAllDocuments, selectQuery,
+  (documents, query): DocumentModel[] => filterDocuments(documents, query)
 );
 
-export const selectDocumentsByCustomQuery = (query: QueryModel) => createSelector(selectAllDocuments, selectCollectionsDictionary,
-  (documents, collections): DocumentModel[] => filterDocuments(documents, collections, query)
+export const selectDocumentsByCustomQuery = (query: QueryModel) => createSelector(selectAllDocuments,
+  (documents): DocumentModel[] => filterDocuments(documents, query)
 );
 
 export const selectDocumentById = (id: string) => createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);
-export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary,
-  documentsMap => ids.map(id => documentsMap[id]));
 
-function filterDocuments(documents: DocumentModel[], collections: Dictionary<CollectionModel>, query: QueryModel): DocumentModel[] {
-  return filterDocumentsByQuery(documents, query)
-    .map(document => {
-      return {...document, collection: collections[document.collectionId]};
-    });
+export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary,documentsMap=> ids.map(id => documentsMap[id]));
+
+function filterDocuments(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
+  return filterDocumentsByQuery(documents, query);
 }

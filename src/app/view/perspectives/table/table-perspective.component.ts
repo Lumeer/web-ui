@@ -155,12 +155,12 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   }
 
   public onDataChange(event: DataChangeEvent) {
-    if (!event.attribute.fullName) {
+    if (!event.attribute.id) {
       this.createAttribute(event.collection, event.attribute);
     }
 
     const doc = event.document;
-    doc.data[event.attribute.fullName] = event.value;
+    doc.data[event.attribute.name] = event.value;
 
     if (doc.id) {
       this.updateDocument(doc);
@@ -197,7 +197,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   }
 
   public onRenameAttribute(event: AttributeChangeEvent) {
-    if (event.attribute.fullName) {
+    if (event.attribute.id) {
       this.updateAttribute(event.collection, event.attribute);
     } else {
       this.createAttribute(event.collection, event.attribute);
@@ -209,19 +209,17 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
   }
 
   private createAttribute(collection: Collection, attribute: Attribute) {
-    attribute.fullName = AttributeHelper.generateAttributeId(attribute.name);
-
-    this.collectionService.updateAttribute(collection.id, attribute.fullName, attribute).subscribe(() => {
+    this.collectionService.createAttribute(collection.id, attribute).subscribe(() => {
       collection.attributes.push(attribute);
     });
   }
 
   private updateAttribute(collection: Collection, attribute: Attribute) {
-    this.collectionService.updateAttribute(collection.id, attribute.fullName, attribute).subscribe();
+    this.collectionService.updateAttribute(collection.id, attribute.id, attribute).subscribe();
   }
 
   private deleteAttribute(collection: Collection, attribute: Attribute) {
-    this.collectionService.removeAttribute(collection.id, attribute.fullName).subscribe(() => {
+    this.collectionService.removeAttribute(collection.id, attribute.id).subscribe(() => {
       AttributeHelper.removeAttributeFromArray(attribute, collection.attributes);
     });
   }

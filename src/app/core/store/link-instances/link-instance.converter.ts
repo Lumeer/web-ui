@@ -27,7 +27,7 @@ export class LinkInstanceConverter {
       id: dto.id,
       linkTypeId: dto.linkTypeId,
       documentIds: dto.documentIds,
-      data: dto.data
+      data: dto.data,
     };
   }
 

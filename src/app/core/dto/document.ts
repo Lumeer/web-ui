@@ -26,7 +26,7 @@ export class Document {
   public createdBy?: string;
   public updatedBy?: string;
   public dataVersion?: number;
-  public data: {[attribute: string]: any} = {};
+  public data: { [attributeId: string]: any } = {};
   public favorite?: boolean;
 
 }

@@ -33,6 +33,8 @@ import {TablesAction} from '../../../../../../../../../core/store/tables/tables.
 import {selectEditedAttribute} from '../../../../../../../../../core/store/tables/tables.state';
 import {TableColumnContextMenuComponent} from '../../../../../../header/column-group/single-column/context-menu/table-column-context-menu.component';
 import {TableEditableCellComponent} from '../../../../../../shared/editable-cell/table-editable-cell.component';
+import {isNullOrUndefined} from 'util';
+import {CollectionsAction} from '../../../../../../../../../core/store/collections/collections.action';
 
 @Component({
   selector: 'table-data-cell',
@@ -84,10 +86,10 @@ export class TableDataCellComponent implements OnInit {
   public value(): string {
     const attributeId = this.column.attributeId;
     if (this.document) {
-      return this.document.data[attributeId] || '';
+      return this.document.data[attributeId];
     }
     if (this.linkInstance) {
-      return this.linkInstance.data[attributeId] || '';
+      return this.linkInstance.data[attributeId];
     }
   }
 
@@ -123,29 +125,37 @@ export class TableDataCellComponent implements OnInit {
     }
 
     if (this.document) {
-      this.updateDocumentData(this.column.attributeId, value);
+      this.updateDocumentData(this.column.attributeId, this.column.attributeName, value);
     }
     if (this.linkInstance) {
-      this.updateLinkInstanceData(this.column.attributeId, value);
+      this.updateLinkInstanceData(this.column.attributeId, this.column.attributeName, value);
     }
   }
 
-  private updateDocumentData(key: string, value: string) {
+  private updateDocumentData(key: string, name: string, value: string) {
     if (this.document.id) {
-      this.updateDocument(key, value);
+      this.updateDocument(key, name, value);
     } else {
-      this.createDocument(key, value);
+      this.createDocument(key, name, value);
     }
   }
 
-  private createDocument(key: string, value: string) {
-    const data = {[key]: value};
-    const document: DocumentModel = {...this.document, data};
+  private createDocument(attributeId: string, name: string, value: string) {
+    if (isNullOrUndefined(attributeId)) {
+      const document: DocumentModel = {...this.document, newData: {[name]: {value}}};
+      const createDocumentAction = new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback()});
+      const newAttribute = {name, constraints: []};
 
-    this.store.dispatch(new DocumentsAction.Create({
-      document,
-      callback: this.createLinkInstanceCallback()
-    }));
+      this.store.dispatch(new CollectionsAction.CreateAttributes(
+        {collectionId: this.document.collectionId, attributes: [newAttribute], nextAction: createDocumentAction})
+      );
+    } else {
+      const data = {[attributeId]: value};
+      const document: DocumentModel = {...this.document, data: data};
+
+      this.store.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback()}));
+    }
+
   }
 
   private createLinkInstanceCallback(): (documentId: string) => void {
@@ -178,16 +188,22 @@ export class TableDataCellComponent implements OnInit {
     };
   }
 
-  private updateDocument(key: string, value: string) {
-    const data = {[key]: value};
-    this.store.dispatch(new DocumentsAction.PatchData({
-      collectionId: this.document.collectionId,
-      documentId: this.document.id,
-      data
-    }));
+  private updateDocument(attributeId: string, name: string, value: string) {
+    if (isNullOrUndefined(attributeId)) {
+      const document = {collectionId: this.document.collectionId, id: this.document.id, data: {}, newData: {[name]: {value}}};
+      const patchDocumentAction = new DocumentsAction.PatchData({document});
+      const newAttribute = {name, constraints: []};
+
+      this.store.dispatch(new CollectionsAction.CreateAttributes(
+        {collectionId: this.document.collectionId, attributes: [newAttribute], nextAction: patchDocumentAction})
+      );
+    } else {
+      const document = {collectionId: this.document.collectionId, id: this.document.id, data: {[attributeId]: value}};
+      this.store.dispatch(new DocumentsAction.PatchData({document}));
+    }
   }
 
-  private updateLinkInstanceData(key: string, value: string) {
+  private updateLinkInstanceData(key: string, name: string, value: string) {
     // TODO dispatch patch link instance action
   }
 

@@ -87,7 +87,7 @@ export class SmartDocTextComponent {
           insert: {
             attribute: {
               id: op.insert.attribute.id,
-              value: this.document.data[op.insert.attribute.id]
+              value: this.getAttributeValue(op.insert.attribute.id)
             }
           },
           attributes: {
@@ -104,7 +104,7 @@ export class SmartDocTextComponent {
     const ops: DeltaOperation[] = delta.ops.map((op: DeltaOperation) => {
       if (op.insert && op.insert.attribute) {
         return {
-          insert: this.document.data[op.insert.attribute.id]
+          insert: this.getAttributeValue(op.insert.attribute.id)
         };
       }
       return op;
@@ -143,9 +143,13 @@ export class SmartDocTextComponent {
 
   public onAddAttribute(id: string) {
     const index = this.lastSelection ? this.lastSelection.index : 0;
-    const value = this.document.data[id];
+    const value = this.getAttributeValue(id);
     this.editor.insertEmbed(index, 'attribute', {id, value});
     this.editor.setSelection(index + 1, 0);
+  }
+
+  public getAttributeValue(id: string) : any{
+    return this.document.data[id];
   }
 
   public getHtmlContent() {

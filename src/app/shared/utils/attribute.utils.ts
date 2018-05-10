@@ -23,6 +23,10 @@ export function findAttributeById(attributes: AttributeModel[], attributeId: str
   return attributes.find(attribute => attribute.id === attributeId);
 }
 
+export function findAttributeByName(attributes: AttributeModel[], name: string): AttributeModel {
+  return attributes.find(attribute => attribute.name === name);
+}
+
 export function maxAttributeDepth(attributes: AttributeModel[]): number {
   return Math.max(...attributes.map(attribute => getAttributeDepth(attribute)));
 }
@@ -40,7 +44,7 @@ export function filterDirectAttributeChildren(attributes: AttributeModel[], pare
 }
 
 export function isDirectAttributeChild(parent: AttributeModel, potentialChild: AttributeModel): boolean {
-  return potentialChild.id.startsWith(parent.id) && getAttributeDepth(potentialChild) === getAttributeDepth(parent) + 1;
+  return potentialChild.name.startsWith(parent.name) && getAttributeDepth(potentialChild) === getAttributeDepth(parent) + 1;
 }
 
 export function hasAttributeChildren(attributes: AttributeModel[], parent: AttributeModel): boolean {
@@ -48,41 +52,39 @@ export function hasAttributeChildren(attributes: AttributeModel[], parent: Attri
 }
 
 export function getAttributeDepth(attribute: AttributeModel): number {
-  return attribute.id.split('.').length;
+  return attribute.name.split('.').length;
 }
 
-export function extractAttributeName(attributeId: string): string {
-  const {name} = splitAttributeId(attributeId);
-  return name;
+export function extractAttributeLastName(name: string): string {
+  return splitAttributeName(name).lastName;
 }
 
-export function extractAttributeParentId(attributeId: string): string {
-  const {parentId} = splitAttributeId(attributeId);
-  return parentId;
+export function extractAttributeParentName(name: string): string {
+  return splitAttributeName(name).parentName;
 }
 
-export function splitAttributeId(attributeId: string): { parentId: string, name: string } {
-  const parts = attributeId.split('.');
+export function splitAttributeName(name: string): { parentName: string, lastName: string } {
+  const parts = name.split('.');
   if (parts.length === 1) {
-    return {parentId: null, name: attributeId};
+    return {parentName: null, lastName: name};
   }
 
   return {
-    parentId: parts.slice(0, parts.length - 1).join('.'),
-    name: parts[parts.length - 1]
+    parentName: parts.slice(0, parts.length - 1).join('.'),
+    lastName: parts[parts.length - 1]
   };
 }
 
-export function generateAttributeId(otherAttributes: AttributeModel[], parentId?: string): string {
-  const existingIds = otherAttributes.map(attr => attr.id);
-  const prefix = parentId ? `${parentId}.` : '';
+export function generateAttributeName(otherAttributes: AttributeModel[], parentName?: string): string {
+  const existingNames = otherAttributes.map(attr => attr.name);
+  const prefix = parentName ? `${parentName}.` : '';
 
-  let name = 'A';
-  while (existingIds.includes(prefix + name)) {
-    name = increaseChar(name);
+  let lastName = 'A';
+  while (existingNames.includes(prefix + lastName)) {
+    lastName = increaseChar(lastName);
   }
 
-  return prefix + name;
+  return prefix + lastName;
 }
 
 export function increaseChar(name: string): string {

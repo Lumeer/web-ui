@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChange, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -98,11 +98,12 @@ export class ResourceChooserComponent implements OnChanges {
                      private notificationService: NotificationService) {
   }
 
-  public ngOnChanges(changes: { [propertyName: string]: SimpleChange }) {
-    if (changes['resources']) {
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.resources) {
       this.checkResources();
       this.compute();
-    } else if (changes['selectedId']) {
+    }
+    if (changes.selectedId) {
       this.computeResourceLines(this.getActiveIndex());
     }
   }

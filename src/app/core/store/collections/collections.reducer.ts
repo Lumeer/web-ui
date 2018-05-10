@@ -21,6 +21,7 @@ import {PermissionsHelper} from '../permissions/permissions.helper';
 import {AttributeModel} from './collection.model';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
 import {collectionsAdapter, CollectionsState, initialCollectionsState} from './collections.state';
+import {isNullOrUndefined} from 'util';
 
 export function collectionsReducer(state: CollectionsState = initialCollectionsState, action: CollectionsAction.All): CollectionsState {
   switch (action.type) {
@@ -40,6 +41,8 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
       return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favourite: false}}, state);
     case CollectionsActionType.DELETE_SUCCESS:
       return collectionsAdapter.removeOne(action.payload.collectionId, state);
+    case CollectionsActionType.CREATE_ATTRIBUTES_SUCCESS:
+      return onCreateAttributesSuccess(state, action.payload.collectionId, action.payload.attributes);
     case CollectionsActionType.CHANGE_ATTRIBUTE_SUCCESS:
       return onChangeAttributeSuccess(state, action);
     case CollectionsActionType.REMOVE_ATTRIBUTE_SUCCESS:
@@ -55,28 +58,34 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
   }
 }
 
+function onCreateAttributesSuccess(state: CollectionsState, collectionId: string, attributes: AttributeModel[]): CollectionsState {
+  let newAttributes = state.entities[collectionId].attributes.concat(attributes);
+  return collectionsAdapter.updateOne({id: collectionId, changes: {attributes: newAttributes}}, state);
+}
+
 function onChangeAttributeSuccess(state: CollectionsState, action: CollectionsAction.ChangeAttributeSuccess): CollectionsState {
   let attributes = state.entities[action.payload.collectionId].attributes.slice();
   const index = attributes.findIndex(attr => attr.id === action.payload.attributeId);
+  const oldAttributeCopy = index >= 0 ? {...attributes[index]} : null;
   if (index >= 0) {
     attributes.splice(index, 1, action.payload.attribute);
   } else {
     attributes.push(action.payload.attribute); // TODO preserve order
   }
 
-  if (action.payload.attributeId !== action.payload.attribute.id) {
-    attributes = renameChildAttributes(attributes, action.payload.attributeId, action.payload.attribute.id);
+  if (!isNullOrUndefined(oldAttributeCopy) && oldAttributeCopy.name !== action.payload.attribute.name) {
+    attributes = renameChildAttributes(attributes, oldAttributeCopy.name, action.payload.attribute.name);
   }
 
   return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
 }
 
-function renameChildAttributes(attributes: AttributeModel[], oldParentId: string, newParentId: string): AttributeModel[] {
-  const prefix = oldParentId + '.';
+function renameChildAttributes(attributes: AttributeModel[], oldParentName: string, newParentName: string): AttributeModel[] {
+  const prefix = oldParentName + '.';
   return attributes.map(attribute => {
-    if (attribute.id.startsWith(prefix)) {
-      const [, suffix] = attribute.id.split(oldParentId, 2);
-      return {...attribute, id: newParentId + suffix};
+    if (attribute.name.startsWith(prefix)) {
+      const [, suffix] = attribute.name.split(oldParentName, 2);
+      return {...attribute, name: newParentName + suffix};
     }
     return attribute;
   });

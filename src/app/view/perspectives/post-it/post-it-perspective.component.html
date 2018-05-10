@@ -11,14 +11,15 @@
     <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByDocument"
                       class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : 'initialized' }}"
                       [attr.order]="postIt.order"
+                      [collection]="getCollection(postIt)"
                       [collectionRoles]="getCollectionRoles(postIt)"
                       [postItModel]="postItWithIndex(postIt, idx)"
                       [perspectiveId]="perspectiveId"
                       [layoutManager]="layoutManager"
                       [selectionHelper]="selectionHelper"
                       [navigationHelper]="navigationHelper"
-                      (removed)="deletePostIt(postIt)"
-                      (changes)="postItChanged(postIt)"></post-it-document>
+                      (remove)="removePostIt(postIt)"
+                      (changes)="postItChanged(postIt, $event)"></post-it-document>
 
     <label *ngIf="(!hasSingleCollection() || !hasCreateRights()) && !postIts.length"
            class="label-centered"

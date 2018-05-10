@@ -44,6 +44,9 @@ import {Role} from '../../../core/model/role';
 import Create = DocumentsAction.Create;
 import UpdateData = DocumentsAction.UpdateData;
 import {DeletionHelper} from "./util/deletion-helper";
+import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {CollectionsAction} from '../../../core/store/collections/collections.action';
+import DeleteConfirm = DocumentsAction.DeleteConfirm;
 
 @Component({
   selector: 'post-it-perspective',
@@ -111,6 +114,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private collectionsSubscription: Subscription;
 
+  private collections: { [collectionId: string]: CollectionModel };
+
   constructor(private store: Store<AppState>,
               private zone: NgZone,
               private element: ElementRef) {
@@ -168,6 +173,10 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.collectionsSubscription = this.store.select(selectCollectionsByQuery).pipe(
       withLatestFrom(this.store.select(selectCurrentUserForWorkspace))
     ).subscribe(([collections, user]) => {
+      this.collections = collections.reduce((acc, coll) => {
+        acc[coll.id] = coll;
+        return acc;
+      }, {});
       this.collectionRoles = collections.reduce((roles, collection) => {
         roles[collection.id] = userRolesInResource(user, collection);
         return roles;
@@ -234,33 +243,50 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createdPostItPreferredColumn(focusedPostIt: PostItDocumentModel): number {
-    const attributes = Object.keys(focusedPostIt.document.data);
-    if (attributes.length === 0) {
+    if (Object.keys(focusedPostIt.document.data).length === 0) {
       return ATTRIBUTE_COLUMN;
     }
 
     return VALUE_COLUMN;
   }
 
-  public postItChanged(changedPostIt: PostItDocumentModel): void {
-    if (this.postItInInitialState(changedPostIt)) {
+  public postItChanged(changedPostIt: PostItDocumentModel, document: DocumentModel): void {
+    if (this.postItInInitialState(changedPostIt, document)) {
       return;
     }
 
     if (!changedPostIt.initialized) {
-      this.initializePostIt(changedPostIt);
+      this.initializePostIt(changedPostIt, document);
       return;
     }
 
-    this.updateDocument(changedPostIt);
+    this.updateDocument(document);
   }
 
-  private postItInInitialState(postIt: PostItDocumentModel): boolean {
-    const isUninitialized = !postIt.initialized;
-    const hasInitialAttributes = Object.keys(postIt.document.data).length === postIt.document.collection.attributes.length;
-    const hasInitialValues = Object.values(postIt.document.data).every(value => value === '');
+  public removePostIt(postIt: PostItDocumentModel) {
+    if (postIt.initialized) {
+      this.store.dispatch(new DeleteConfirm({
+        collectionId: postIt.document.collectionId,
+        documentId: postIt.document.id
+      }));
 
-    return isUninitialized && hasInitialAttributes && hasInitialValues;
+    } else {
+      this.deletionHelper.deletePostIt(postIt);
+    }
+  }
+
+  private postItInInitialState(postIt: PostItDocumentModel, document: DocumentModel): boolean {
+    const isUninitialized = !postIt.initialized;
+    const hasInitialAttributes = Object.keys(document.data).length === this.getCollection(postIt).attributes.length;
+    const hasInitialValues = Object.values(document.data).every(d => d.value === '');
+    const hasNotNewValues = isNullOrUndefined(document.newData) || Object.keys(document.newData).length === 0;
+
+    return isUninitialized && hasInitialAttributes && hasInitialValues && hasNotNewValues;
+  }
+
+  public getCollection(postIt: PostItDocumentModel): CollectionModel {
+    const collectionId = postIt && postIt.document && postIt.document.collectionId;
+    return collectionId && this.collections[collectionId];
   }
 
   private subscribeOnDocuments(queryModel: QueryModel) {
@@ -280,10 +306,21 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private updateLayoutWithDocuments(documents: DocumentModel[]) {
     this.checkAllLoaded(documents);
     this.addDocumentsNotInLayout(documents);
+    this.refreshExistingDocuments(documents);
     this.focusNewDocumentIfPresent(documents);
 
     this.infiniteScroll.finishLoading();
     this.layoutManager.refresh();
+  }
+
+  private refreshExistingDocuments(documents: DocumentModel[]) {
+    for (let document of documents) {
+      const index = this.postIts.findIndex(pi => pi.document.id === document.id);
+      if (index != -1) {
+        const postIt = {...this.postIts[index], document};
+        this.postIts.splice(index, 1, postIt);
+      }
+    }
   }
 
   private addDocumentsNotInLayout(documents: DocumentModel[]): void {
@@ -322,28 +359,43 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       .find(postIt => postIt.document.id === document.id);
   }
 
-  private updateDocument(postIt: PostItDocumentModel) {
-    this.store.dispatch(new UpdateData(
-      {
-        collectionId: postIt.document.collectionId,
-        documentId: postIt.document.id,
-        data: postIt.document.data
-      }
-    ));
-  }
+  private updateDocument(document: DocumentModel) {
+    if (document.newData) {
+      const action = new UpdateData({document});
+      const newAttributes = Object.keys(document.newData).map(name => ({name, constraints: [], correlationId: document.newData[name].correlationId}));
 
-  private initializePostIt(postItToInitialize: PostItDocumentModel): void {
-    if (!postItToInitialize.updating) {
-      this.createdDocumentCorrelationId = postItToInitialize.document.correlationId;
-      postItToInitialize.updating = true;
-
-      this.store.dispatch(new Create({document: postItToInitialize.document}));
-      this.postIts.splice(this.postIts.indexOf(postItToInitialize), 1);
+      this.store.dispatch(new CollectionsAction.CreateAttributes(
+        {collectionId: document.collectionId, attributes: newAttributes, nextAction: action})
+      );
+    } else {
+      this.store.dispatch(new UpdateData({document: document}));
     }
   }
 
-  public deletePostIt(postIt: PostItDocumentModel): void {
-    this.deletionHelper.deletePostIt(postIt);
+  private initializePostIt(postItToInitialize: PostItDocumentModel, document: DocumentModel): void {
+    if (postItToInitialize.updating) {
+      return;
+    }
+
+    this.createdDocumentCorrelationId = postItToInitialize.document.correlationId;
+    postItToInitialize.updating = true;
+
+    this.createDocument(document);
+    this.postIts.splice(this.postIts.indexOf(postItToInitialize), 1);
+
+  }
+
+  private createDocument(document: DocumentModel) {
+    if (document.newData) {
+      const action = new Create({document});
+      const newAttributes = Object.keys(document.newData).map(name => ({name, constraints: [], correlationId: document.newData[name].correlationId}));
+
+      this.store.dispatch(new CollectionsAction.CreateAttributes(
+        {collectionId: document.collectionId, attributes: newAttributes, nextAction: action})
+      );
+    } else {
+      this.store.dispatch(new Create({document: document}));
+    }
   }
 
   private documentModelToPostItModel(documentModel: DocumentModel): PostItDocumentModel {
@@ -373,7 +425,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return Math.max(1, Math.floor(layoutWidth / postItWidth));
   }
 
-  private getCollectionRoles(postIt: PostItDocumentModel): string[] {
+  public getCollectionRoles(postIt: PostItDocumentModel): string[] {
     return this.collectionRoles && this.collectionRoles[postIt.document.collectionId] || [];
   }
 

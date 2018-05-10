@@ -21,6 +21,7 @@ import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from 
 import {ChartVisualizer} from '../../visualizer/chart-visualizer';
 import {LineVisualizer} from '../../visualizer/line-visualizer';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {CollectionModel} from '../../../../../core/store/collections/collection.model';
 
 @Component({
   selector: 'chart-visualization',
@@ -28,6 +29,9 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
   styleUrls: ['./chart-visualization.component.scss']
 })
 export class ChartVisualizationComponent implements OnChanges {
+
+  @Input()
+  public collections: CollectionModel[];
 
   @Input()
   public documents: DocumentModel[];
@@ -62,7 +66,7 @@ export class ChartVisualizationComponent implements OnChanges {
   }
 
   public show() {
-    this.chartVisualizer.update(this.documents, this.attributeX, this.attributeY);
+    this.chartVisualizer.update(this.collections, this.documents, this.attributeX, this.attributeY);
     this.chartVisualizer.showChart();
   }
 

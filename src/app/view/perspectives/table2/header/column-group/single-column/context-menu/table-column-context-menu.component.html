@@ -36,13 +36,13 @@
     <span i18n="@@table.header.menu.add.column.previous">Add column left</span>
   </ng-template>
   <ng-template contextMenuItem divider="true"></ng-template>
-  <ng-template *ngIf="false && leaf && attribute"
+  <ng-template *ngIf="false && leaf && attribute.id"
                (execute)="split.emit()"
                contextMenuItem>
     <i class="fa fa-fw fa-columns text-warning mr-1" aria-hidden="true"></i>
     <span i18n="@@table.header.menu.split">Split column</span>
   </ng-template>
-  <ng-template *ngIf="attribute"
+  <ng-template *ngIf="attribute.id"
                contextMenuItem
                (execute)="hide.emit()">
     <i class="fa fa-fw fa-eye-slash mr-1" aria-hidden="true"></i>

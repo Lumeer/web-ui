@@ -1,4 +1,4 @@
-<div *ngIf="part.sorting && part.sorting.attributeId === attribute.fullName"
+<div *ngIf="part.sorting && part.sorting.attributeId === attribute.id"
      class="sort-symbol">
   <a (click)="onSort(!part.sorting.descending)">
     <i class="fa fa-fw"
@@ -10,8 +10,8 @@
 
 <div #attributeNameInput
      [attr.contenteditable]="editMode"
-     [class.pl-4]="part.sorting && part.sorting.attributeId === attribute.fullName"
-     [class.uninitialized]="!attribute.fullName"
+     [class.pl-4]="part.sorting && part.sorting.attributeId === attribute.id"
+     [class.uninitialized]="!attribute.id"
      [contextMenu]="contextMenu"
      [lmrDraggable]="{enabled: editable, data: part.shownAttributes.indexOf(attribute), zone: part.index}"
      [style.cursor]="editMode ? 'text' : 'default'"
@@ -26,7 +26,7 @@
 </div>
 
 <div class="dropdown">
-  <div *ngIf="editMode && attribute.name && !attribute.fullName"
+  <div *ngIf="editMode && attribute.name && !attribute.id"
        class="dropdown-menu show">
     <div class="dropdown-header"
          i18n="@@table.header.suggestion.attribute.new">Create new attribute

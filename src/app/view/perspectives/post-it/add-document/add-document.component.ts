@@ -22,7 +22,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../core/store/app.state';
-import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
@@ -58,21 +58,20 @@ export class PostItAddDocumentComponent implements OnInit, OnDestroy {
 
   public onClick(): void {
     this.createPostIt.emit({
-      collection: this.selectedCollection,
       collectionId: this.selectedCollection.id,
       correlationId: CorrelationIdGenerator.generate(),
-      data: this.dataWithAttributeNames()
+      data: this.createData()
     });
   }
 
-  private dataWithAttributeNames(): { [attributeName: string]: string } {
-    let result = {};
-
-    this.selectedCollection.attributes.forEach((attribute: AttributeModel) => {
-      result[attribute.id] = '';
-    });
-
-    return result;
+  private createData(): { [attributeId: string]: any } {
+    if (!this.selectedCollection) {
+      return [];
+    }
+    return this.selectedCollection.attributes.reduce((acc, attr)=>{
+      acc[attr.id] = '';
+      return acc;
+    }, {});
   }
 
   public disabled(): boolean {

@@ -23,6 +23,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../core/store/collections/collection.model';
+import {CollectionsAction} from '../../../../../../core/store/collections/collections.action';
 import {selectCollectionById} from '../../../../../../core/store/collections/collections.state';
 import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
 import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
@@ -34,7 +35,7 @@ import {TablesAction} from '../../../../../../core/store/tables/tables.action';
 import {selectTableCursor} from '../../../../../../core/store/tables/tables.state';
 import {Direction} from '../../../../../../shared/direction';
 import {KeyCode} from '../../../../../../shared/key-code';
-import {extractAttributeName, extractAttributeParentId, filterAttributesByDepth, generateAttributeId, splitAttributeId} from '../../../../../../shared/utils/attribute.utils';
+import {extractAttributeLastName, extractAttributeParentName, filterAttributesByDepth, generateAttributeName, splitAttributeName} from '../../../../../../shared/utils/attribute.utils';
 import {HtmlModifier, stripedBackground} from '../../../../../../shared/utils/html-modifier';
 import {TableEditableCellComponent} from '../../../shared/editable-cell/table-editable-cell.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
@@ -69,7 +70,7 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
   public linkType: LinkTypeModel;
 
   public attribute: AttributeModel;
-  public attributeName: string;
+  public lastName: string;
 
   public selected: boolean;
   public edited: boolean;
@@ -97,9 +98,9 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
 
           // TODO probably better to do in action
           if (this.selected && this.table.parts.length === 1 && this.cursor.columnPath.length === 1
-            && this.cursor.columnPath[0] === this.getPart().columns.length - 1 && this.attribute) {
-            const attributeId = generateAttributeId(this.getAttributes());
-            const column = new TableCompoundColumn(new TableSingleColumn(attributeId), []);
+            && this.cursor.columnPath[0] === this.getPart().columns.length - 1 && this.attribute && this.attribute.id) {
+            const attributeName = generateAttributeName(this.getAttributes());
+            const column = new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
             const cursor = {...this.cursor, columnPath: [this.cursor.columnPath[0] + 1]};
             this.store.dispatch(new TablesAction.AddColumn({cursor, column}));
           }
@@ -135,8 +136,8 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
   }
 
   private initializeAttribute(attributes: AttributeModel[]) {
-    this.attribute = this.findAttribute(attributes);
-    this.attributeName = this.attribute ? this.attribute.name : extractAttributeName(this.column.attributeId);
+    this.attribute = this.findAttribute(attributes) || {name: this.column.attributeName, constraints: []};
+    this.lastName = extractAttributeLastName(this.attribute.name);
   }
 
   public ngOnDestroy() {
@@ -151,54 +152,93 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
     const color = this.collection ? HtmlModifier.shadeColor(this.collection.color, .5) : DEFAULT_COLOR;
     const stripeColor = this.collection ? HtmlModifier.shadeColor(color, .25) : '#eeeeee';
 
-    if (!this.attribute || this.attribute.name !== this.attributeName) {
+    if (!this.attribute || !this.attribute.id || this.originalLastName() !== this.lastName) {
       return stripedBackground(color, stripeColor);
     }
 
     return color;
   }
 
-  public value(): string {
-    return this.attribute ? this.attribute.name : extractAttributeName(this.column.attributeId);
+  public originalLastName(): string {
+    return extractAttributeLastName(this.attribute.name);
   }
 
-  public onValueChange(attributeName: string) {
-    this.attributeName = attributeName;
+  public onValueChange(lastName: string) {
+    this.lastName = lastName;
   }
 
   public onEditStart() {
     this.edited = true;
   }
 
-  public onEditEnd(attributeName: string) {
+  public onEditEnd(lastName: string) {
     this.edited = false;
 
-    if (this.hasAttributeNameChanged(attributeName) && this.isUniqueAttributeName(attributeName)) {
-      this.renameColumn(attributeName);
+    if (this.hasAttributeNameChanged(lastName) && this.isUniqueAttributeName(lastName)) {
+      this.renameAttribute(lastName);
     }
   }
 
-  private renameColumn(attributeName: string) {
-    this.store.dispatch(new TablesAction.RenameColumn({cursor: this.cursor, name: attributeName}));
+  private renameAttribute(lastName: string) {
+    const parentName = extractAttributeParentName(this.attribute.name);
+    const name = parentName ? `${parentName}.${lastName}` : lastName;
+    const attribute = {...this.attribute, name};
+
+    if (this.collection) {
+      this.renameCollectionAttribute(attribute);
+    }
+    if (this.linkType) {
+      // TODO
+    }
   }
 
-  private hasAttributeNameChanged(attributeName: string): boolean {
-    return attributeName && ((this.attribute && attributeName !== this.attribute.name) || !this.attribute);
+  private renameCollectionAttribute(attribute: AttributeModel) {
+    if (this.attribute.id) {
+      this.updateCollectionAttribute(attribute);
+    } else {
+      this.createCollectionAttribute(attribute);
+    }
   }
 
-  public isUniqueAttributeName(attributeName: string): boolean {
+  private createCollectionAttribute(attribute: AttributeModel) {
+    const nextAction = new TablesAction.InitColumn({
+      cursor: this.cursor,
+      attributeId: null
+    });
+
+    this.store.dispatch(new CollectionsAction.CreateAttributes({
+      collectionId: this.collection.id,
+      attributes: [attribute],
+      nextAction
+    }));
+  }
+
+  private updateCollectionAttribute(attribute: AttributeModel) {
+    this.store.dispatch(new CollectionsAction.ChangeAttribute({
+      collectionId: this.collection.id,
+      attributeId: this.attribute.id,
+      attribute
+    }));
+  }
+
+  private hasAttributeNameChanged(lastName: string): boolean {
+    return lastName && this.attribute && ((this.attribute.id && lastName !== this.originalLastName()) || !this.attribute.id);
+  }
+
+  public isUniqueAttributeName(lastName: string): boolean {
     if (this.cursor.columnPath.length === 1) {
       return filterAttributesByDepth(this.getAttributes(), 1)
-        .filter(attribute => this.attribute ? this.attribute.id !== attribute.id : true)
-        .every(attribute => attribute.name !== attributeName);
+        .filter(attribute => this.attribute.id !== attribute.id)
+        .every(attribute => attribute.name !== lastName);
     }
 
-    const parent = findTableColumn(this.getPart().columns, this.cursor.columnPath.slice(0, -1)) as TableCompoundColumn;
-    const prefix = `${parent.parent.attributeId}.`;
+    const parentColumn = findTableColumn(this.getPart().columns, this.cursor.columnPath.slice(0, -1)) as TableCompoundColumn;
+    const parentAttribute = this.getAttributes().find(attribute => attribute.id === parentColumn.parent.attributeId);
+    const prefix = `${parentAttribute.name}.`;
     return this.getAttributes()
-      .filter(attribute => attribute.id.startsWith(prefix))
-      .filter(attribute => this.attribute ? this.attribute.id !== attribute.id : true)
-      .every(attribute => attribute.name !== attributeName);
+      .filter(attribute => attribute.name.startsWith(prefix))
+      .filter(attribute => this.attribute.id !== attribute.id)
+      .every(attribute => extractAttributeLastName(attribute.name) !== lastName);
   }
 
   public onAdd(next: boolean) {
@@ -209,9 +249,9 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
   }
 
   private createNewColumn(): TableColumn {
-    const {parentId} = splitAttributeId(this.column.attributeId);
-    const attributeId = generateAttributeId(this.getAttributes(), parentId);
-    return new TableCompoundColumn(new TableSingleColumn(attributeId), []);
+    const {parentName} = splitAttributeName(this.column.attributeId);
+    const attributeName = generateAttributeName(this.getAttributes(), parentName);
+    return new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
   }
 
   public onEdit() {
@@ -249,33 +289,6 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
 
   private removeUninitializedColumn() {
     this.store.dispatch(new TablesAction.RemoveColumn({cursor: this.cursor}));
-  }
-
-  public attributeId(): string {
-    if (this.attribute) {
-      return this.attribute.id;
-    }
-
-    const parentId = this.parentAttributeId();
-    if (parentId) {
-      return `${parentId}.${this.attributeName}`;
-    }
-
-    return this.attributeName;
-  }
-
-  private parentAttributeId(): string {
-    if (this.cursor.columnPath.length < 2) {
-      return null;
-    }
-
-    if (this.attribute) {
-      return extractAttributeParentId(this.attribute.id);
-    }
-
-    const {parentPath} = splitColumnPath(this.cursor.columnPath);
-    const parent = findTableColumn(this.getPart().columns, parentPath) as TableCompoundColumn;
-    return parent.parent.attributeId;
   }
 
   public dragClass(): string {
@@ -318,7 +331,20 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
   }
 
   public canShowSuggestions(): boolean {
-    return this.edited && this.collection && !this.attribute && this.attributeName && !this.parentAttributeId();
+    return this.edited && this.attribute && !this.attribute.id && this.lastName && !extractAttributeParentName(this.attribute.name);
+  }
+
+  public suggestedAttributeName(): string {
+    if (!this.attribute) {
+      return '';
+    }
+
+    const parentName = extractAttributeParentName(this.attribute.name);
+    if (parentName) {
+      return `${parentName}.${this.lastName}`;
+    }
+
+    return this.lastName;
   }
 
   private getPart(): TablePart {

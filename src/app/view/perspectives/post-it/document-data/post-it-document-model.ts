@@ -27,5 +27,6 @@ export class PostItDocumentModel {
   public order = 1;
   public updating = false;
   public initialized: boolean;
+  public numRows: number;
 
 }

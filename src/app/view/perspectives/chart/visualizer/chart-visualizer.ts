@@ -20,6 +20,7 @@
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CreationDateSorter} from '../sorter/creation-date-sorter';
 import {DataSorter} from '../sorter/data-sorter';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
 
 export abstract class ChartVisualizer {
 
@@ -32,7 +33,7 @@ export abstract class ChartVisualizer {
   constructor(protected chartElement) {
   }
 
-  public abstract update(documents: DocumentModel[], attributeX: string, attributeY: string);
+  public abstract update(collections: CollectionModel[], documents: DocumentModel[], attributeX: string, attributeY: string);
 
   public setSorter(newSorter: DataSorter) {
     this.sorter = newSorter;

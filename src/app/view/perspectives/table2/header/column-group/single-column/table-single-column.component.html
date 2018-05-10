@@ -1,18 +1,19 @@
 <div (keydown)="onKeyDown($event)"
      (mousedown)="onMouseDown()"
      class="table-border-right table-border-bottom h-100">
-  <table-editable-cell [contextMenu]="contextMenuElement()"
+  <table-editable-cell *ngIf="attribute"
+                       [contextMenu]="contextMenuElement()"
                        [readonly]="!selected"
                        [selected]="selected"
                        [style.background]="background()"
-                       [value]="value()"
+                       [value]="originalLastName()"
                        (valueChange)="onValueChange($event)"
                        (editStart)="onEditStart()"
                        (editEnd)="onEditEnd($event)"
                        class="d-block h-100 font-italic {{dragClass()}}">
   </table-editable-cell>
   <table-attribute-suggestions *ngIf="canShowSuggestions()"
-                               [attributeId]="attributeId()"
+                               [attributeName]="suggestedAttributeName()"
                                [collection]="collection"
                                [cursor]="cursor"
                                [table]="table">
@@ -20,6 +21,7 @@
 </div>
 
 <table-column-context-menu #contextMenu
+                           *ngIf="attribute && cursor"
                            [attribute]="attribute"
                            [cursor]="cursor"
                            [leaf]="leaf"
