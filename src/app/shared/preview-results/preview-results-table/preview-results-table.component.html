@@ -9,14 +9,14 @@
   <table class="table table-sm" id="preview-results-table">
     <thead>
       <tr>
-        <th *ngFor="let attr of attributes" scope="col" title="{{attr}}">{{attr}}</th>
+        <th *ngFor="let attr of collection.attributes" scope="col" title="{{attr.name}}">{{attr.name}}</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let r of data; let idx = index"
+      <tr *ngFor="let r of documents; let idx = index"
           class="clickable-row {{activeIndex == idx ? 'active' : ''}}"
-          (click)="activeIndex = idx">
-        <td *ngFor="let attr of attributes" title="{{r[attr]}}">{{r[attr]}}</td>
+          (click)="activate(idx)">
+        <td *ngFor="let attr of collection.attributes" title="{{r.data[attr.id]}}">{{r.data[attr.id]}}</td>
       </tr>
     </tbody>
   </table>

@@ -17,7 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {DocumentModel} from "../../../core/store/documents/document.model";
+import {CollectionModel} from "../../../core/store/collections/collection.model";
 
 @Component({
   selector: 'preview-results-table',
@@ -26,32 +28,25 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class PreviewResultsTableComponent implements OnInit {
 
-  public data = [
-    { 'Attr1': 'Sed ut', 'Attr2': 10, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'error sit', 'Attr2': 1, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'voluptatem', 'Attr2': 32, 'Attr3': 'et quasi architecto beatae vitae dicta', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'accusantium', 'Attr2': 16, 'Attr3': 'voluptatem sequi nesciunt. Neque porro', 'Attr4': 'Quis autem vel'},
-    { 'Attr1': 'doloremque', 'Attr2': 98, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'laudantium', 'Attr2': 456, 'Attr3': 'quaerat voluptatem. Ut enim', 'Attr4': 'dolor sit amet'},
-    { 'Attr1': 'eaque', 'Attr2': 78, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'ipsa quae', 'Attr2': 23, 'Attr3': 'nisi ut aliquid ex ea commodi consequatur?', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'ab illo', 'Attr2': 65, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'inventore', 'Attr2': 84, 'Attr3': 'in ea voluptate velit esse quam nihil', 'Attr4': 'vel illum qui dolorem'},
-    { 'Attr1': 'veritatis', 'Attr2': 72, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'et quasi', 'Attr2': 39, 'Attr3': 'corporis suscipit laboriosam, nisi', 'Attr4': 'totam rem aperiam'}
-  ]
-
-  public attributes = [ 'Attr1', 'Attr2', 'Attr3', 'Attr4', 'Some really very long attribute that does not fit the space'];
+  @Input()
+  public documents: DocumentModel[];
 
   @Input()
-  public collection: string = "Name1";
+  public collection: CollectionModel;
 
   @Input()
   public activeIndex = 0;
+
+  @Output()
+  public selectedDocument = new EventEmitter<DocumentModel>();
 
   constructor() { }
 
   public ngOnInit() {
   }
 
+  public activate(index: number) {
+    this.activeIndex = index;
+    this.selectedDocument.emit(this.documents[this.activeIndex]);
+  }
 }

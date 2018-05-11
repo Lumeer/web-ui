@@ -18,6 +18,7 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {CollectionModel} from "../../../core/store/collections/collection.model";
 
 @Component({
   selector: 'preview-results-tabs',
@@ -27,7 +28,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 export class PreviewResultsTabsComponent implements OnInit {
 
   @Input()
-  public collections: string[];
+  public collectionModels: CollectionModel[];
 
   @Input()
   public selectedCollection: string;
@@ -38,23 +39,14 @@ export class PreviewResultsTabsComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    if (!this.selectedCollection) {
+      this.selectCollection(this.collectionModels[0].id);
+    }
   }
 
-  public selectCollection(collection: string) {
-    this.selectedCollection = collection;
-    this.select.emit(collection);
-  }
-
-  public getCollectionColor(collection: string) {
-    const colors = ['#e06666', '#f6b26b', '#ffd966', '#93c47d', '#76a5af', '#6fa8dc', '#8e7cc3', '#c27ba0'];
-
-    return colors[this.collections.indexOf(collection)];
-  }
-
-  public getCollectionIcon(collection: string) {
-    const icon = ['fa-cubes', 'fa-curling', 'fa-cut', 'fa-database', 'fa-deaf', 'fa-desktop'];
-
-    return icon[this.collections.indexOf(collection)];
+  public selectCollection(collectionId: string) {
+    this.selectedCollection = collectionId;
+    this.select.emit(collectionId);
   }
 
 }

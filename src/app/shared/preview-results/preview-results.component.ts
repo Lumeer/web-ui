@@ -17,32 +17,110 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Subscription} from "rxjs/Subscription";
+import {Store} from "@ngrx/store";
+import {AppState} from "../../core/store/app.state";
+import {selectCollectionById, selectCollectionsByQuery} from "../../core/store/collections/collections.state";
+import {Observable} from "rxjs/Observable";
+import {CollectionModel} from "../../core/store/collections/collection.model";
+import {filter, map, take} from "rxjs/operators";
+import {isNullOrUndefined} from "util";
+import {DocumentModel} from "../../core/store/documents/document.model";
+import {selectDocumentsByCustomQuery, selectDocumentsByQuery} from "../../core/store/documents/documents.state";
+import {selectNavigation} from "../../core/store/navigation/navigation.state";
+import {QueryModel} from "../../core/store/navigation/query.model";
+import {Workspace} from "../../core/store/navigation/workspace.model";
+import {DocumentsAction} from "../../core/store/documents/documents.action";
 
 @Component({
   selector: 'preview-results',
   templateUrl: './preview-results.component.html',
   styleUrls: ['./preview-results.component.scss']
 })
-export class PreviewResultsComponent implements OnInit {
+export class PreviewResultsComponent implements OnInit, OnDestroy {
 
-  public collections: string[] = [
-    "Name1",
-    "name2",
-    "Name3 ja ja lsdjfh aljsdkf aljsd fajsdf ajds flajsdhfla dsfl ajsdf ajsdhf lasd fladsjhf jadsf ajdfhask",
-    "Name4 ja ja lsdjfh aljsdkf aljsd fajsdf ajds flajsdhfla dsfl ajsdf ajsdhf lasd fladsjhf jadsf ajdfhask",
-    "Name5 ja ja lsdjfh aljsdkf aljsd fajsdf ajds flajsdhfla dsfl ajsdf ajsdhf lasd fladsjhf jadsf ajdfhask"
-  ];
+  public selectedCollectionId: string;
 
-  public selectedCollection: string = "Name1";
+  public collectionModels$: Observable<CollectionModel[]>;
 
-  constructor() { }
+  public documents$: Observable<DocumentModel[]>;
+
+  public collection$: Observable<CollectionModel>;
+
+  private allSubscriptions = new Subscription();
+
+  private query: QueryModel;
+
+  private collectionQuery: QueryModel;
+
+  constructor(private store: Store<AppState>) { }
 
   public ngOnInit() {
+    this.bindData();
+    this.subscribeAll();
   }
 
-  public selectCollection(collection: string) {
-    this.selectedCollection = collection;
+  public ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  private bindData() {
+  }
+
+  private subscribeAll() {
+    this.collectionModels$ = this.store.select(selectCollectionsByQuery).pipe(
+      filter(collections => !isNullOrUndefined(collections) && collections.length > 0 )
+    );
+
+    this.allSubscriptions.add(this.store.select(selectNavigation).pipe(
+      filter(navigation => this.validWorkspace(navigation.workspace))
+    ).subscribe(navigation => this.updateNavigation(navigation.query)));
+
+    // initialize when we do not select anything
+    this.allSubscriptions.add(this.collectionModels$.pipe(filter(collections => !!collections), take(1))
+      .subscribe(collections => {
+        if (!this.selectedCollectionId) {
+          this.selectCollection(collections[0].id);
+        }
+      }));
+  }
+
+  private updateNavigation(query: QueryModel) {
+    this.query = query;
+    this.getData();
+  }
+
+  private validWorkspace(workspace: Workspace): boolean {
+    if (workspace && workspace.organizationCode && workspace.projectCode) {
+      return true;
+    }
+    return false;
+  }
+
+  private unsubscribeAll() {
+    this.allSubscriptions.unsubscribe();
+  }
+
+  public selectCollection(collectionId: string) {
+    this.selectedCollectionId = collectionId;
+    this.getData();
+  }
+
+  private updateDataSubscription() {
+    if (this.collectionQuery) {
+      this.documents$ = this.store.select(selectDocumentsByCustomQuery(this.collectionQuery));
+      this.collection$ = this.store.select(selectCollectionById(this.selectedCollectionId));
+    }
+  }
+
+  private getData() {
+    if (this.selectedCollectionId) {
+      this.collectionQuery = Object.assign({}, this.query,{ collectionIds: [this.selectedCollectionId], page: 0, pageSize: 100 });
+      console.log(this.collectionQuery);
+      this.updateDataSubscription();
+      this.store.dispatch(new DocumentsAction.Get({ query: this.collectionQuery }));
+    }
   }
 
 }

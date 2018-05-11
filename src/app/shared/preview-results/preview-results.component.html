@@ -1,10 +1,10 @@
-<div class="row justify-content-center">
+<div class="row justify-content-center" *ngIf="(collectionModels$ | async).length > 1">
   <div class="col">
-    <preview-results-tabs [collections]="collections" [selectedCollection]="selectedCollection" (select)="selectCollection($event)"></preview-results-tabs>
+    <preview-results-tabs [collectionModels]="collectionModels$ | async" (select)="selectCollection($event)"></preview-results-tabs>
   </div>
 </div>
 <div class="row justify-content-center">
   <div class="col">
-    <preview-results-table [collection]="selectedCollection"></preview-results-table>
+    <preview-results-table [documents]="documents$ | async" [collection]="collection$ | async"></preview-results-table>
   </div>
 </div>
