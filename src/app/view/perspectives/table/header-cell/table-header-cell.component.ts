@@ -89,7 +89,7 @@ export class TableHeaderCellComponent {
   }
 
   public onSort(descending: boolean) {
-    this.tableManagerService.sortRows(this.attribute.fullName, descending);
+    this.tableManagerService.sortRows(this.attribute.id, descending);
   }
 
   public switchEditMode(editMode: boolean) {

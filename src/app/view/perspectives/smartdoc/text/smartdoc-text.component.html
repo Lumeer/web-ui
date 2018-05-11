@@ -52,7 +52,7 @@
     <span class="ql-formats">
         <span class="ql-attribute">
           <button *ngFor="let attribute of documentAttributes()"
-                  [title]="document.data[attribute.id]"
+                  [title]="getAttributeValue(attribute.id)"
                   (click)="onAddAttribute(attribute.id)">
             {{attribute.name}}
           </button>

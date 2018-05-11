@@ -65,7 +65,7 @@ export class AttributeListComponent {
 
   public lumeerSuggestions: ConstraintSuggestion[] = [];
 
-  public editedAttributeFullName = '';
+  public editedAttributeId;
 
   public selectedSuggestionIndex = -1;
 
@@ -78,7 +78,6 @@ export class AttributeListComponent {
     return {
       constraints: [],
       name: '',
-      fullName: '',
       usageCount: 0
     };
   }
@@ -100,12 +99,11 @@ export class AttributeListComponent {
   }
 
   public createAttribute(newAttributeName: string): void {
-    this.newAttributeName = '';
     const newAttribute = this.emptyAttribute();
-    newAttribute.fullName = newAttributeName;
     newAttribute.name = newAttributeName;
+    this.newAttributeName = '';
 
-    this.collectionService.updateAttribute(this.collection.id, newAttributeName, newAttribute)
+    this.collectionService.createAttribute(this.collection.id , newAttribute)
       .subscribe(
         attribute => this.collection.attributes.push(attribute),
         () => {
@@ -116,10 +114,7 @@ export class AttributeListComponent {
   }
 
   public updateAttribute(attribute: ConfiguredAttribute, index?: number): void {
-    const attributeFullNamePath = attribute.fullName.split('.');
-    attribute.name = attributeFullNamePath[attributeFullNamePath.length - 1];
-
-    this.collectionService.updateAttribute(this.collection.id, this.editedAttributeFullName, attribute)
+    this.collectionService.updateAttribute(this.collection.id, this.editedAttributeId, attribute)
       .subscribe(
         attribute => {
           if (!isNullOrUndefined(index)) {
@@ -132,7 +127,7 @@ export class AttributeListComponent {
 
   public removeAttribute(attribute: ConfiguredAttribute, index?: number): void {
     const removed = this.collection.attributes[index];
-    this.collectionService.removeAttribute(this.collection.id, this.editedAttributeFullName)
+    this.collectionService.removeAttribute(this.collection.id, this.editedAttributeId)
       .subscribe(
         () => this.collection.attributes.splice(index, 1),
         error => console.error(error)
@@ -160,7 +155,7 @@ export class AttributeListComponent {
         document.getElementById('constraint' + (attribute.constraints.length - 1)).focus();
       });
     } else {
-      document.getElementById(attribute.fullName + 'addAttribute').focus();
+      document.getElementById(attribute.id).focus();
     }
   }
 
@@ -174,7 +169,7 @@ export class AttributeListComponent {
   }
 
   public matchesSearch(attribute: ConfiguredAttribute): boolean {
-    return attribute.fullName.includes(this.searched) ||
+    return attribute.name.includes(this.searched) ||
       this.formatNumber(attribute.usageCount).includes(this.searched) ||
       attribute.constraints.find(constraint => constraint.includes(this.searched)) !== undefined;
   }

@@ -23,7 +23,8 @@ import {DocumentModel} from './document.model';
 import {QueryConverter} from "../navigation/query.converter";
 
 export function filterDocumentsByQuery(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
-  documents = documents.filter(document => typeof(document) === 'object');
+  documents = documents.filter(document => typeof(document) === 'object')
+    .filter(document => document);
   if (!query) {
     return documents;
   }

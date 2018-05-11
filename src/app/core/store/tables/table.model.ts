@@ -84,6 +84,7 @@ export class TableSingleColumn implements TableColumn {
   public readonly type = TableColumnType.SINGLE;
 
   public constructor(public attributeId: string,
+                     public attributeName?: string,
                      public width: number = DEFAULT_COLUMN_WIDTH) {
   };
 

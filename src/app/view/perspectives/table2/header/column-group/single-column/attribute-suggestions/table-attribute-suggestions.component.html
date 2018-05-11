@@ -8,7 +8,7 @@
         <icons-presenter [colors]="[collection.color]"
                          [icons]="[collection.icon]">
         </icons-presenter>
-        <span>{{attributeName}}</span>
+        <span>{{lastName}}</span>
       </a>
     </ng-container>
 
@@ -26,7 +26,7 @@
         <icons-presenter [colors]="[linkedAttribute.collection.color]"
                          [icons]="[linkedAttribute.collection.icon]">
         </icons-presenter>
-        <span>{{linkedAttribute.collection.name}}.</span><span [innerHtml]="linkedAttribute.attribute.name | highlight: attributeName"></span>
+        <span>{{linkedAttribute.collection.name}}.</span><span [innerHtml]="linkedAttribute.attribute.name | highlight: lastName"></span>
         <small class="text-secondary ml-1">({{linkedAttribute.linkType.name}})</small>
       </a>
 
@@ -40,7 +40,7 @@
         <icons-presenter [colors]="[linkedAttribute.collection.color]"
                          [icons]="[linkedAttribute.collection.icon]">
         </icons-presenter>
-        <span>{{linkedAttribute.collection.name}}.</span><span [innerHtml]="linkedAttribute.attribute.name | highlight: attributeName"></span>
+        <span>{{linkedAttribute.collection.name}}.</span><span [innerHtml]="linkedAttribute.attribute.name | highlight: lastName"></span>
       </a>
     </ng-container>
   </div>

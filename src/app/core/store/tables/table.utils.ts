@@ -18,7 +18,7 @@
  */
 
 import {copyAndSpliceArray, getLastFromArray} from '../../../shared/utils/array.utils';
-import {filterDirectAttributeChildren, findAttributeById, splitAttributeId} from '../../../shared/utils/attribute.utils';
+import {filterDirectAttributeChildren, findAttributeById, findAttributeByName, splitAttributeName} from '../../../shared/utils/attribute.utils';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {LinkTypeModel} from '../link-types/link-type.model';
 import {TableColumn, TableColumnType, TableCompoundColumn, TableConfig, TableConfigColumn, TableConfigPart, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
@@ -92,15 +92,18 @@ export function createTableColumnsBySiblingAttributeIds(allAttributes: Attribute
     return [];
   }
 
-  const attributes = allAttributes
-    .filter(attribute => attributeIds.some(id => attribute.id.startsWith(id)));
+  const attributeNames = allAttributes.filter(attribute => attributeIds.includes(attribute.id))
+    .map(attribute => attribute.name);
 
-  const {parentId} = splitAttributeId(attributeIds[0]);
-  if (!parentId) {
+  const attributes = allAttributes
+    .filter(attribute => attributeNames.some(name => attribute.name.startsWith(name)));
+
+  const {parentName} = splitAttributeName(attributeNames[0]);
+  if (!parentName) {
     return createTableColumnsFromAttributes(attributes);
   }
 
-  const parent = findAttributeById(allAttributes, parentId);
+  const parent = findAttributeByName(allAttributes, parentName);
   return createTableColumnsFromAttributes(attributes, parent);
 }
 
@@ -133,7 +136,7 @@ function createColumnsFromConfig(columnsConfig: TableConfigColumn[],
         return columns;
       }
 
-      const parent = new TableSingleColumn(attributeId, column.width);
+      const parent = new TableSingleColumn(attributeId, null, column.width);
       // TODO should children not in config really appear instead of just parent?
       const children = createTableColumnsFromAttributes(allAttributes, attribute, column.children);
       return columns.concat(new TableCompoundColumn(parent, children));
@@ -171,21 +174,6 @@ export function maxColumnDepth(columns: TableColumn[]): number {
     }
     return 1;
   }));
-}
-
-export function renameTableColumn(column: TableCompoundColumn, oldParentId: string, newParentId: string): TableColumn {
-  const [, suffix] = column.parent.attributeId.split(oldParentId, 2);
-  const attributeId = newParentId + suffix;
-  const parent = {...column.parent, attributeId};
-
-  const children = column.children.map(child => {
-    if (child.type === TableColumnType.COMPOUND) {
-      return renameTableColumn(child as TableCompoundColumn, oldParentId, newParentId);
-    }
-    return child; // TODO rename attributes in hidden group as well
-  });
-
-  return new TableCompoundColumn(parent, children);
 }
 
 export function splitColumnPath(path: number[]): { parentPath: number[], columnIndex: number } {
@@ -272,7 +260,7 @@ export function calculateColumnRowspan(table: TableModel, partIndex: number, col
 
 export function resizeLastColumnChild(column: TableCompoundColumn, delta: number): TableCompoundColumn {
   const width = column.parent.width + (column.children.length ? 0 : delta);
-  const parent = new TableSingleColumn(column.parent.attributeId, width);
+  const parent = new TableSingleColumn(column.parent.attributeId, null, width);
 
   const children = column.children.map((child, index) => {
     // TODO what if the last child is hidden column?

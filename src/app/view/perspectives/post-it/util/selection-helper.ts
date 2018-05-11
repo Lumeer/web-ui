@@ -74,7 +74,7 @@ export class SelectionHelper {
     this.selection.editing = on;
   }
 
-  public selectNext(postIt: PostItDocumentModel): void {
+  public selectNext(postIt: PostItDocumentModel, currentRows?: number): void {
     this.selectedPostIt = postIt;
 
     switch (this.selection.column) {
@@ -266,7 +266,7 @@ export class SelectionHelper {
   }
 
   private lastRow(): number {
-    return Object.entries(this.selectedPostIt.document.data).length;
+    return this.selectedPostIt.numRows || Object.keys(this.selectedPostIt.document.data).length;
   }
 
 }

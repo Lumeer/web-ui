@@ -67,7 +67,7 @@
                (click)="showColumn(part, attribute)"
                class="dropdown-item">
             <span>{{attribute.name}}</span>
-            <small class="text-secondary pl-1">({{attribute.fullName}})</small>
+            <small class="text-secondary pl-1">({{attribute.name}})</small>
           </div>
           <div *ngIf="part.hiddenAttributes.length > 1"
                (click)="showAllColumns(part)"

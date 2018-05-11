@@ -23,20 +23,18 @@ import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
 import {catchError, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
-import {extractAttributeName} from '../../../shared/utils/attribute.utils';
-import {Document} from '../../dto';
-import {DocumentService, SearchService} from '../../rest';
+import {CollectionService, DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {CollectionsAction} from '../collections/collections.action';
-import {selectCollectionsDictionary} from '../collections/collections.state';
+import {selectCollectionById} from '../collections/collections.state';
 import {QueryConverter} from '../navigation/query.converter';
 import {QueryHelper} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {DocumentConverter} from './document.converter';
 import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
-import {selectDocumentsDictionary, selectDocumentsQueries} from './documents.state';
+import {selectDocumentById, selectDocumentsQueries} from './documents.state';
 import {HttpErrorResponse} from "@angular/common/http";
 import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
 import {RouterAction} from "../router/router.action";
@@ -78,18 +76,17 @@ export class DocumentsEffects {
 
       return this.documentService.createDocument(documentDto).pipe(
         map(dto => ({action, document: DocumentConverter.fromDto(dto, action.payload.document.correlationId)})),
-        withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+        withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
         tap(([{action, document}]) => {
           const callback = action.payload.callback;
           if (callback) {
             callback(document.id);
           }
         }),
-        flatMap(([{document}, collectionEntities]) => {
-          const collection = collectionEntities[document.collectionId];
+        flatMap(([{document}, collection]) => {
           return [
-            new DocumentsAction.CreateSuccess({document}),
-            createSyncCollectionAction(collection, document, null)
+            createSyncCollectionAction(collection, document, null),
+            new DocumentsAction.CreateSuccess({document})
           ];
         }),
         // flatMap(([{action, document}, collectionEntities]) => {
@@ -119,16 +116,17 @@ export class DocumentsEffects {
     withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
     map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
-        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Free Service' });
+        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'document.create.serviceLimits',
-          value: 'You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?' });
+          value: 'You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?'
+        });
         return new NotificationsAction.Confirm({
           title,
           message,
           action: new RouterAction.Go({
             path: ['/organization', organization.code, 'detail'],
-            extras: { fragment: 'orderService' }
+            extras: {fragment: 'orderService'}
           })
         });
       }
@@ -168,26 +166,21 @@ export class DocumentsEffects {
     })
   );
 
+
   @Effect()
   public updateData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.UpdateData>(DocumentsActionType.UPDATE_DATA),
     mergeMap(action => {
-      const documentDto: Document = {
-        id: action.payload.documentId,
-        collectionId: action.payload.collectionId,
-        data: action.payload.data
-      };
+      const documentDto = DocumentConverter.toDto(action.payload.document);
       return this.documentService.updateDocument(documentDto).pipe(
         map(dto => DocumentConverter.fromDto(dto)),
-        withLatestFrom(this.store$.select(selectCollectionsDictionary)),
-        withLatestFrom(this.store$.select(selectDocumentsDictionary)),
-        flatMap(([[document, collectionEntities], documentEntities]) => {
-          const collection = collectionEntities[document.collectionId];
-          const oldDocument = documentEntities[document.id];
+        withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
+        withLatestFrom(this.store$.select(selectDocumentById(documentDto.id))),
+        flatMap(([[document, collection], oldDocument]) => {
 
           return [
-            new DocumentsAction.UpdateSuccess({document}),
-            createSyncCollectionAction(collection, document, oldDocument)
+            createSyncCollectionAction(collection, document, oldDocument),
+            new DocumentsAction.UpdateSuccess({document})
           ];
         }),
         catchError((error) => Observable.of(new DocumentsAction.UpdateFailure({error: error})))
@@ -199,22 +192,15 @@ export class DocumentsEffects {
   public patchData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.PatchData>(DocumentsActionType.PATCH_DATA),
     mergeMap(action => {
-      const documentDto: Document = {
-        id: action.payload.documentId,
-        collectionId: action.payload.collectionId,
-        data: action.payload.data
-      };
+      const documentDto = DocumentConverter.toDto(action.payload.document);
       return this.documentService.patchDocumentData(documentDto).pipe(
         map(dto => DocumentConverter.fromDto(dto)),
-        withLatestFrom(this.store$.select(selectCollectionsDictionary)),
-        withLatestFrom(this.store$.select(selectDocumentsDictionary)),
-        flatMap(([[document, collectionEntities], documentEntities]) => {
-          const collection = collectionEntities[document.collectionId];
-          const oldDocument = documentEntities[document.id];
-
+        withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
+        withLatestFrom(this.store$.select(selectDocumentById(documentDto.id))),
+        flatMap(([[document, collection], oldDocument]) => {
           return [
-            new DocumentsAction.UpdateSuccess({document}),
-            createSyncCollectionAction(collection, document, oldDocument)
+            createSyncCollectionAction(collection, document, oldDocument),
+            new DocumentsAction.UpdateSuccess({document})
           ];
         }),
         catchError((error) => Observable.of(new DocumentsAction.UpdateFailure({error: error})))
@@ -228,11 +214,9 @@ export class DocumentsEffects {
     mergeMap(action => {
       return this.documentService.removeDocument(action.payload.collectionId, action.payload.documentId).pipe(
         map(() => action.payload),
-        withLatestFrom(this.store$.select(selectCollectionsDictionary)),
-        withLatestFrom(this.store$.select(selectDocumentsDictionary)),
-        flatMap(([[payload, collectionEntities], documentEntities]) => {
-          const collection = collectionEntities[payload.collectionId];
-          const oldDocument = documentEntities[payload.documentId];
+        withLatestFrom(this.store$.select(selectCollectionById(action.payload.collectionId))),
+        withLatestFrom(this.store$.select(selectDocumentById(action.payload.documentId))),
+        flatMap(([[payload, collection], oldDocument]) => {
 
           const actions: Action[] = [
             new DocumentsAction.DeleteSuccess({documentId: oldDocument.id}),
@@ -277,6 +261,7 @@ export class DocumentsEffects {
 
   constructor(private actions$: Actions,
               private documentService: DocumentService,
+              private collectionService: CollectionService,
               private i18n: I18n,
               private searchService: SearchService,
               private store$: Store<AppState>) {
@@ -300,12 +285,8 @@ function createSyncCollectionAction(collection: CollectionModel,
 function updateAttributes(attributes: AttributeModel[],
                           newDocumentAttributeIds: string[],
                           oldDocumentAttributeIds: string[]): AttributeModel[] {
-  const addedAttributeIds = newDocumentAttributeIds.filter(id => !oldDocumentAttributeIds.includes(id));
-  const removedAttributeIds = oldDocumentAttributeIds.filter(id => !newDocumentAttributeIds.includes(id));
-
-  const attributeIds = attributes.map(attribute => attribute.id);
-  const createdAttributes = addedAttributeIds.filter(id => !attributeIds.includes(id))
-    .map(id => ({id, name: extractAttributeName(id), constraints: [], usageCount: 1}));
+  const addedAttributeIds = newDocumentAttributeIds.filter(name => !oldDocumentAttributeIds.includes(name));
+  const removedAttributeIds = oldDocumentAttributeIds.filter(name => !newDocumentAttributeIds.includes(name));
 
   return attributes.map(attribute => {
     if (addedAttributeIds.includes(attribute.id)) {
@@ -315,5 +296,5 @@ function updateAttributes(attributes: AttributeModel[],
       return {...attribute, usageCount: Math.max(attribute.usageCount - 1, 0)};
     }
     return attribute;
-  }).concat(createdAttributes);
+  });
 }

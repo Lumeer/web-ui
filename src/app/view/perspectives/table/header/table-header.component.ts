@@ -92,19 +92,19 @@ export class TableHeaderComponent {
   }
 
   private getParentAttribute(collection: Collection, attribute: Attribute) {
-    const attributeParts = attribute.fullName.split('.');
+    const attributeParts = attribute.name.split('.');
     attributeParts.pop();
     const parentId = attributeParts.join('.');
-    return collection.attributes.find(attr => attr.fullName === parentId);
+    return collection.attributes.find(attr => attr.name === parentId);
   }
 
   private attributeDepth(attribute: Attribute) {
-    return attribute.fullName ? attribute.fullName.split('.').length : 1;
+    return attribute.name ? attribute.name.split('.').length : 1;
   }
 
   public countAttributeChildren(parent: Attribute, all: Attribute[]): number {
     const childDepth = this.attributeDepth(parent) + 1;
-    return this.attributesOfDepth(all, childDepth).filter(attr => attr.fullName.startsWith(parent.fullName)).length;
+    return this.attributesOfDepth(all, childDepth).filter(attr => attr.name.startsWith(parent.name)).length;
   }
 
   public showColumn(part: TablePart, attribute: Attribute) {

@@ -106,7 +106,7 @@ export class CollectionService extends PermissionService {
   }
 
   public getAllCollectionNames(): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.apiPrefix()}/info/names`);
+    return this.httpClient.get<string[]>(`${this.apiPrefix()}/names`);
   }
 
   /**
@@ -116,15 +116,26 @@ export class CollectionService extends PermissionService {
     return this.httpClient.get<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`);
   }
 
-  public updateAttribute(collectionId: string, fullName: string, attribute: Attribute): Observable<Attribute> {
+  public createAttribute(collectionId: string, attribute: Attribute): Observable<Attribute> {
     this.homePageService.addLastUsedCollection(collectionId).subscribe();
-    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionId}/attributes/${fullName}`, attribute);
+    return this.httpClient.post<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`, [attribute]).pipe(
+      map(attributes => attributes[0])
+    );
   }
 
-  public removeAttribute(collectionId: string, fullName: string): Observable<HttpResponse<any>> {
+  public createAttributes(collectionId: string, attributes: Attribute[]): Observable<Attribute[]> {
+    return this.httpClient.post<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`, attributes)
+  }
+
+  public updateAttribute(collectionId: string, id: string, attribute: Attribute): Observable<Attribute> {
+    this.homePageService.addLastUsedCollection(collectionId).subscribe();
+    return this.httpClient.put<Attribute>(`${this.apiPrefix()}/${collectionId}/attributes/${id}`, attribute);
+  }
+
+  public removeAttribute(collectionId: string, id: string): Observable<HttpResponse<any>> {
     this.homePageService.addLastUsedCollection(collectionId).subscribe();
     return this.httpClient.delete(
-      `${this.apiPrefix()}/${collectionId}/attributes/${fullName}`,
+      `${this.apiPrefix()}/${collectionId}/attributes/${id}`,
       {observe: 'response', responseType: 'text'}
     );
   }

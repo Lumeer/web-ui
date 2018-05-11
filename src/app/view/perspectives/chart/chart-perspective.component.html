@@ -16,7 +16,7 @@
         *ngIf="chartHovered || pickerHovered"
         class="align-self-center mr-1"
         [@slide]
-        [attributes]="documentAttributes"
+        [attributes]="axisSelectModel"
         [preSelected]="attributeY"
         [emptyDescription]="yAxisTitle()"
         (attributeSelected)="attributeY = $event"
@@ -25,6 +25,7 @@
       </attribute-select>
 
       <chart-visualization
+        [collections]="collections"
         [documents]="documents"
         [attributeX]="attributeX"
         [attributeY]="attributeY">
@@ -33,7 +34,7 @@
 
     <div class="text-center mt-2">
       <attribute-select
-        [attributes]="documentAttributes"
+        [attributes]="axisSelectModel"
         [emptyDescription]="xAxisTitle()"
         (attributeSelected)="attributeX = $event">
       </attribute-select>

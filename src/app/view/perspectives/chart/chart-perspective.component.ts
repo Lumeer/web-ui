@@ -27,9 +27,12 @@ import {selectNavigation} from '../../../core/store/navigation/navigation.state'
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {CollectionAttributePair, createCollectionAttributePairs} from './model/collection-attribute-pair';
+import {AxisSelectModel} from './model/axis-select-model';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Observable} from 'rxjs/Observable';
+import {selectCollectionsByQuery} from '../../../core/store/collections/collections.state';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
 
 @Component({
   selector: 'chart-perspective',
@@ -49,18 +52,11 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 })
 export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
-  private _documents: DocumentModel[];
+  private documents: DocumentModel[];
 
-  get documents() {
-    return this._documents;
-  }
+  private collections: CollectionModel[];
 
-  set documents(value) {
-    this._documents = value;
-    this.documentAttributes = this.usableAttributes();
-  }
-
-  public documentAttributes: CollectionAttributePair[];
+  public axisSelectModel: AxisSelectModel[];
 
   private subscriptions: Subscription;
 
@@ -76,14 +72,6 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<AppState>,
               private i18n: I18n) {
-  }
-
-  private usableAttributes(): CollectionAttributePair[] {
-    if (this.documents) {
-      return createCollectionAttributePairs(this.documents);
-    } else {
-      return [];
-    }
   }
 
   public ngOnInit() {
@@ -116,7 +104,15 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private dataSubscription() {
-    return this.store.select(selectDocumentsByQuery).subscribe(documents => this.documents = documents);
+    return Observable.combineLatest(this.store.select(selectDocumentsByQuery),
+      this.store.select(selectCollectionsByQuery)
+    ).subscribe(([documents, collections]) => {
+      this.documents = documents;
+      this.collections = collections;
+      this.axisSelectModel = collections.reduce((acc, collection) => {
+        return acc.concat(collection.attributes.map(attr => ({attributeId: attr.id, attributeName: attr.name, collectionIcon: collection.icon})));
+      }, []);
+    });
   }
 
   public xAxisTitle(): string {
