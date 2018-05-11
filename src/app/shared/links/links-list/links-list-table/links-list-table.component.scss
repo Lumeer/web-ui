@@ -21,6 +21,10 @@ th, td {
   }
 }
 
+.always-white, .always-white:hover {
+  background-color: white !important;
+}
+
 tr.active {
   background-color: $light;
 }

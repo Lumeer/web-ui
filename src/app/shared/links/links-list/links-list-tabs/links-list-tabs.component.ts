@@ -19,6 +19,8 @@
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
+declare const $: any;
+
 @Component({
   selector: 'links-list-tabs',
   templateUrl: './links-list-tabs.component.html',
@@ -55,6 +57,10 @@ export class LinksListTabsComponent implements OnInit {
     const icon = [['fas fa-cubes', 'fas fa-curling'], ['fas fa-cut', 'fas fa-database'], ['fas fa-deaf', 'fas fa-desktop'], ['fas fa-deaf', 'fas fa-cubes']];
 
     return icon[this.links.indexOf(linkName)];
+  }
+
+  public createNewLink() {
+    $(`#newLinkDialogModal`).modal('show');
   }
 
 }

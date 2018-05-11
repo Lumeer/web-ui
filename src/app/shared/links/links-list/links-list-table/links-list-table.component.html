@@ -26,7 +26,19 @@
       <tr *ngFor="let r of data; let idx = index"
           class="clickable-row"
           (click)="openLinked(idx)">
-        <td *ngFor="let attr of attributes; let i = index;" title="{{r[attr]}}" class="{{linkAttrCount == i && linkAttrCount > 0 ? 'border-left' : ''}}">{{r[attr]}}</td>
+        <td *ngFor="let attr of attributes; let i = index;"
+            title="{{r[attr]}}"
+            class="{{linkAttrCount == i && linkAttrCount > 0 ? 'border-left' : ''}} {{i < linkAttrCount ? 'always-white' : ''}}">
+          <input-box *ngIf="i < linkAttrCount"
+                     class="flex-grow-2 my-1"
+                     [maxLines]="1"
+                     [editable]="true"
+                     [canStayEmpty]="true"
+                     [initialValue]="r[attr]"
+                     (newValue)="r[attr] = $event">
+          </input-box>
+          <span *ngIf="i >= linkAttrCount">{{r[attr]}}</span>
+        </td>
       </tr>
     </tbody>
   </table>
