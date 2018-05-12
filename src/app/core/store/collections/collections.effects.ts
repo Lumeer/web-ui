@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
@@ -26,22 +27,21 @@ import {Observable} from 'rxjs/Observable';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {Collection, Permission} from '../../dto';
 import {CollectionService, ImportService, SearchService} from '../../rest';
+import {AppState} from '../app.state';
+import {DocumentModel} from '../documents/document.model';
+import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions.model';
+import {RouterAction} from '../router/router.action';
 import {TablesAction, TablesActionType} from '../tables/tables.action';
 import {CollectionConverter} from './collection.converter';
-import {CollectionsAction, CollectionsActionType} from './collections.action';
-import {selectCollectionsLoaded} from "./collections.state";
-import {AppState} from "../app.state";
-import {HttpErrorResponse} from "@angular/common/http";
-import {RouterAction} from "../router/router.action";
-import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
-import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
-import {DocumentModel} from '../documents/document.model';
 import {AttributeModel} from './collection.model';
+import {CollectionsAction, CollectionsActionType} from './collections.action';
+import {selectCollectionsLoaded} from './collections.state';
 
 @Injectable()
 export class CollectionsEffects {
@@ -270,10 +270,14 @@ export class CollectionsEffects {
       return this.collectionService.createAttributes(action.payload.collectionId, attributesDto).pipe(
         map(attributes => ({action, attributes: attributes.map(attr => CollectionConverter.fromAttributeDto(attr, correlationIdMap[attr.name]))})),
         flatMap(({action, attributes}) => {
+          const {callback, nextAction} = action.payload;
+          if (callback) {
+            callback(attributes);
+          }
+
           const actions: Action[] = [new CollectionsAction.CreateAttributesSuccess(
             {collectionId: action.payload.collectionId, attributes}
           )];
-          const {nextAction} = action.payload;
           if (nextAction) {
             if (nextAction.type === DocumentsActionType.CREATE) {
               const action = nextAction as DocumentsAction.Create;
@@ -287,6 +291,7 @@ export class CollectionsEffects {
             } else if (nextAction.type === TablesActionType.INIT_COLUMN) {
               (nextAction as TablesAction.InitColumn).payload.attributeId = attributes[0].id;
             }
+            actions.push(nextAction);
           }
           return actions;
         }),
@@ -373,9 +378,9 @@ export class CollectionsEffects {
         concatMap(() => Observable.of()),
         catchError((error) => {
           const payload = {collectionId: action.payload.collectionId, type: action.payload.type, permission: action.payload.currentPermission, error};
-          return Observable.of(new CollectionsAction.ChangePermissionFailure(payload))
+          return Observable.of(new CollectionsAction.ChangePermissionFailure(payload));
         })
-      )
+      );
     })
   );
 

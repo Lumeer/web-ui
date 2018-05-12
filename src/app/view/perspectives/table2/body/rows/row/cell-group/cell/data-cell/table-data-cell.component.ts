@@ -22,19 +22,19 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
 import {AppState} from '../../../../../../../../../core/store/app.state';
+import {AttributeModel} from '../../../../../../../../../core/store/collections/collection.model';
+import {CollectionsAction} from '../../../../../../../../../core/store/collections/collections.action';
 import {DocumentModel} from '../../../../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../../../../core/store/documents/documents.action';
 import {LinkInstanceModel} from '../../../../../../../../../core/store/link-instances/link-instance.model';
 import {LinkInstancesAction} from '../../../../../../../../../core/store/link-instances/link-instances.action';
-import {TableBodyCursor} from '../../../../../../../../../core/store/tables/table-cursor';
-import {EMPTY_TABLE_ROW, TableModel, TableRow, TableSingleColumn} from '../../../../../../../../../core/store/tables/table.model';
+import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../../../../../core/store/tables/table-cursor';
+import {EMPTY_TABLE_ROW, TableCompoundColumn, TableModel, TableRow, TableSingleColumn} from '../../../../../../../../../core/store/tables/table.model';
 import {findTableRow, splitRowPath} from '../../../../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../../../../core/store/tables/tables.action';
 import {selectEditedAttribute} from '../../../../../../../../../core/store/tables/tables.state';
 import {TableColumnContextMenuComponent} from '../../../../../../header/column-group/single-column/context-menu/table-column-context-menu.component';
 import {TableEditableCellComponent} from '../../../../../../shared/editable-cell/table-editable-cell.component';
-import {isNullOrUndefined} from 'util';
-import {CollectionsAction} from '../../../../../../../../../core/store/collections/collections.action';
 
 @Component({
   selector: 'table-data-cell',
@@ -132,30 +132,45 @@ export class TableDataCellComponent implements OnInit {
     }
   }
 
-  private updateDocumentData(key: string, name: string, value: string) {
+  private updateDocumentData(attributeId: string, attributeName: string, value: string) {
     if (this.document.id) {
-      this.updateDocument(key, name, value);
+      this.updateDocument(attributeId, attributeName, value);
     } else {
-      this.createDocument(key, name, value);
+      this.createDocument(attributeId, attributeName, value);
     }
   }
 
-  private createDocument(attributeId: string, name: string, value: string) {
-    if (isNullOrUndefined(attributeId)) {
-      const document: DocumentModel = {...this.document, newData: {[name]: {value}}};
+  private createDocument(attributeId: string, attributeName: string, value: string) {
+    if (!attributeId) {
+      const document: DocumentModel = {...this.document, newData: {[attributeName]: {value}}};
       const createDocumentAction = new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback()});
-      const newAttribute = {name, constraints: []};
+      const newAttribute = {name: attributeName, constraints: []};
 
-      this.store.dispatch(new CollectionsAction.CreateAttributes(
-        {collectionId: this.document.collectionId, attributes: [newAttribute], nextAction: createDocumentAction})
-      );
+      this.store.dispatch(new CollectionsAction.CreateAttributes({
+        collectionId: this.document.collectionId,
+        attributes: [newAttribute],
+        nextAction: createDocumentAction,
+        callback: this.replaceTableColumnCallback(attributeName)
+      }));
     } else {
       const data = {[attributeId]: value};
       const document: DocumentModel = {...this.document, data: data};
 
       this.store.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback()}));
     }
+  }
 
+  private replaceTableColumnCallback(attributeName: string): (attributes: AttributeModel[]) => void {
+    const {column, cursor} = findTableColumnWithCursor(this.table, this.cursor.partIndex, attributeName);
+
+    return attributes => {
+      const attribute = attributes.find(attribute => attribute.name === attributeName);
+      if (attribute) {
+        const parent: TableSingleColumn = new TableSingleColumn(attribute.id, null, column.parent.width);
+        const columns = [new TableCompoundColumn(parent, [])];
+        this.store.dispatch(new TablesAction.ReplaceColumns({cursor, deleteCount: 1, columns}));
+      }
+    };
   }
 
   private createLinkInstanceCallback(): (documentId: string) => void {
@@ -188,15 +203,18 @@ export class TableDataCellComponent implements OnInit {
     };
   }
 
-  private updateDocument(attributeId: string, name: string, value: string) {
-    if (isNullOrUndefined(attributeId)) {
-      const document = {collectionId: this.document.collectionId, id: this.document.id, data: {}, newData: {[name]: {value}}};
+  private updateDocument(attributeId: string, attributeName: string, value: string) {
+    if (!attributeId) {
+      const document = {collectionId: this.document.collectionId, id: this.document.id, data: {}, newData: {[attributeName]: {value}}};
       const patchDocumentAction = new DocumentsAction.PatchData({document});
-      const newAttribute = {name, constraints: []};
+      const newAttribute = {name: attributeName, constraints: []};
 
-      this.store.dispatch(new CollectionsAction.CreateAttributes(
-        {collectionId: this.document.collectionId, attributes: [newAttribute], nextAction: patchDocumentAction})
-      );
+      this.store.dispatch(new CollectionsAction.CreateAttributes({
+        collectionId: this.document.collectionId,
+        attributes: [newAttribute],
+        nextAction: patchDocumentAction,
+        callback: this.replaceTableColumnCallback(attributeName)
+      }));
     } else {
       const document = {collectionId: this.document.collectionId, id: this.document.id, data: {[attributeId]: value}};
       this.store.dispatch(new DocumentsAction.PatchData({document}));
