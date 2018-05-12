@@ -18,11 +18,11 @@
  */
 
 import {Action} from '@ngrx/store';
+import {ImportedCollection} from '../../dto/imported-collection';
 import {QueryModel} from '../navigation/query.model';
+import {Workspace} from '../navigation/workspace.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 import {AttributeModel, CollectionModel} from './collection.model';
-import {ImportedCollection} from "../../dto/imported-collection";
-import {Workspace} from '../navigation/workspace.model';
 
 export enum CollectionsActionType {
 
@@ -251,7 +251,7 @@ export namespace CollectionsAction {
   export class CreateAttributes implements Action {
     public readonly type = CollectionsActionType.CREATE_ATTRIBUTES;
 
-    public constructor(public payload: { collectionId: string, attributes: AttributeModel[], nextAction?: Action }) {
+    public constructor(public payload: { collectionId: string, attributes: AttributeModel[], nextAction?: Action, callback?: (attributes: AttributeModel[]) => void }) {
     }
   }
 
