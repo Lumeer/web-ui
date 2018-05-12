@@ -22,7 +22,7 @@ import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {first, map, switchMap} from 'rxjs/operators';
+import {filter, first, map, mergeMap, switchMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {WorkspaceService} from './workspace.service';
 import {AppState} from '../core/store/app.state';
@@ -31,6 +31,8 @@ import {selectSelectedOrganization} from '../core/store/organizations/organizati
 import {ProjectsAction} from '../core/store/projects/projects.action';
 import {selectSelectedProject} from '../core/store/projects/projects.state';
 import {UserSettingsService} from '../core/user-settings.service';
+import {DefaultWorkspaceModel} from '../core/store/users/user.model';
+import {selectCurrentUser} from '../core/store/users/users.state';
 
 @Injectable()
 export class WorkspaceSelectGuard implements CanActivate {
@@ -67,24 +69,30 @@ export class WorkspaceSelectGuard implements CanActivate {
   }
 
   private fetchDefault(): Observable<boolean> {
-    const userSettings = this.userSettingsService.getUserSettings();
-    const organizationCode = userSettings.defaultOrganization;
-    const projectCode = userSettings.defaultProject;
-    if (isNullOrUndefined(organizationCode) || isNullOrUndefined(projectCode)) {
-      return Observable.of(true);
-    }
-
-    return this.workspaceService.getOrganizationFromStoreOrApi(organizationCode).pipe(
-      switchMap(organization => {
-        if (isNullOrUndefined(organization)) {
-          this.clearCodesFromUserSettings();
+    return this.getDefaultWorkspace().pipe(
+      mergeMap(workspace => {
+        if (workspace && workspace.organizationCode && workspace.projectCode) {
+          return this.workspaceService.getOrganizationFromStoreOrApi(workspace.organizationCode).pipe(
+            switchMap(organization => {
+              if (isNullOrUndefined(organization)) {
+                return Observable.of(true);
+              }
+              return this.checkProject(workspace.organizationCode, organization.id, workspace.projectCode);
+            })
+          );
+        } else {
           return Observable.of(true);
         }
-        return this.checkProject(organizationCode, organization.id, projectCode);
       })
     );
   }
 
+  private getDefaultWorkspace(): Observable<DefaultWorkspaceModel> {
+    return this.store.select(selectCurrentUser).pipe(
+      filter(user => !isNullOrUndefined(user)),
+      map(user => user.defaultWorkspace)
+    );
+  }
 
   private checkProject(orgCode: string, orgId: string, projCode: string): Observable<boolean> {
     return this.workspaceService.getProjectFromStoreOrApi(orgCode, orgId, projCode).pipe(

@@ -38,7 +38,6 @@ export class AuthGuard implements CanActivate {
   public canActivate(next: ActivatedRouteSnapshot,
                      state: RouterStateSnapshot): Observable<boolean> {
     return this.checkStore().pipe(
-      switchMap(() => of(true)),
       catchError(() => of(false))
     );
   }

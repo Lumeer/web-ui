@@ -108,9 +108,13 @@ export class ResourcePostItComponent {
   }
 
   public onPickerClick() {
-    this.isPickerVisible = true;
-    this.lastIcon = null;
-    this.lastColor = null;
+    if (this.isPickerVisible) {
+      this.onPickerBlur()
+    } else {
+      this.isPickerVisible = true;
+      this.lastIcon = null;
+      this.lastColor = null;
+    }
   }
 
   public onPickerBlur() {

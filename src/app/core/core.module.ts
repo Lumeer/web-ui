@@ -35,7 +35,6 @@ import {CollectionService} from './rest/collection.service';
 import {DocumentService} from './rest/document.service';
 import {EventService} from './rest/event.service';
 import {GroupService} from './rest/group.service';
-import {HomePageService} from './rest/home-page.service';
 import {ImportService} from './rest/import.service';
 import {LinkInstanceService} from './rest/link-instance.service';
 import {LinkTypeService} from './rest/link-type.service';
@@ -81,7 +80,6 @@ import {GlobalService} from './rest/global.service';
     LinkInstanceService,
     LinkTypeService,
     EventService,
-    HomePageService,
     GlobalService,
     {provide: ErrorHandler, useClass: LumeerErrorHandler},
     {provide: 'SnotifyToastConfig', useValue: ToastDefaults},

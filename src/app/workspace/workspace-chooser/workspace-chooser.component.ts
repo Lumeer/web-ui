@@ -51,6 +51,7 @@ import {ServiceLimitsModel} from '../../core/store/organizations/service-limits/
 import {Role} from '../../core/model/role';
 import {Perspective} from '../../view/perspectives/perspective';
 import {ResourceType} from '../../core/model/resource-type';
+import {UsersAction} from '../../core/store/users/users.action';
 
 const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'aturing@lumeer.io'];
 
@@ -218,10 +219,8 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
   }
 
   private updateDefaultWorkspace(organization: OrganizationModel, project: ProjectModel) {
-    let userSettings = this.userSettingsService.getUserSettings();
-    userSettings.defaultOrganization = organization.code;
-    userSettings.defaultProject = project.code;
-    this.userSettingsService.updateUserSettings(userSettings);
+    const defaultWorkspace = {organizationId: organization.id, projectId: project.id};
+    this.store.dispatch(new UsersAction.SaveDefaultWorkspace({defaultWorkspace}));
   }
 
   private bindData() {
@@ -246,7 +245,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
     this.projects$ = this.store.select(selectProjectsForSelectedOrganization);
     this.projectCodes$ = this.store.select(selectProjectsCodesForSelectedOrganization).pipe(
-      map(codes =>  codes || [] )
+      map(codes => codes || [])
     );
     this.projectRoles$ = this.projects$.pipe(
       mergeMap(projects => this.selectOrganizationAndCurrentUser().pipe(
@@ -257,7 +256,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
       ))
     );
     this.canCreateProjects$ = this.selectOrganizationAndCurrentUser().pipe(
-      map(({ organization, user }) => userHasRoleInResource(user, organization, Role.Write) )
+      map(({organization, user}) => userHasRoleInResource(user, organization, Role.Write))
     );
   }
 

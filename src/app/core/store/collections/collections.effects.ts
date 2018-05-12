@@ -26,7 +26,6 @@ import {Observable} from 'rxjs/Observable';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {Collection, Permission} from '../../dto';
 import {CollectionService, ImportService, SearchService} from '../../rest';
-import {HomePageService} from '../../rest/home-page.service';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -221,12 +220,11 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public addFavorite$: Observable<Action> = this.actions$.pipe(
+  public addFavorite$ = this.actions$.pipe(
     ofType<CollectionsAction.AddFavorite>(CollectionsActionType.ADD_FAVORITE),
-    mergeMap(action => this.homePageService.addFavoriteCollection(action.payload.collectionId).pipe(
-      map(() => action.payload.collectionId),
-      map((collectionId) => new CollectionsAction.AddFavoriteSuccess({collectionId})),
-      catchError((error) => Observable.of(new CollectionsAction.AddFavoriteFailure({error: error})))
+    mergeMap(action => this.collectionService.addFavorite(action.payload.collectionId).pipe(
+      mergeMap(() => Observable.of()),
+      catchError((error) => Observable.of(new CollectionsAction.AddFavoriteFailure({collectionId: action.payload.collectionId, error: error})))
     )),
   );
 
@@ -241,12 +239,11 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public removeFavorite$: Observable<Action> = this.actions$.pipe(
+  public removeFavorite$ = this.actions$.pipe(
     ofType<CollectionsAction.RemoveFavorite>(CollectionsActionType.REMOVE_FAVORITE),
-    mergeMap(action => this.homePageService.removeFavoriteCollection(action.payload.collectionId).pipe(
-      map(() => action.payload.collectionId),
-      map((collectionId) => new CollectionsAction.RemoveFavoriteSuccess({collectionId})),
-      catchError((error) => Observable.of(new CollectionsAction.RemoveFavoriteFailure({error: error})))
+    mergeMap(action => this.collectionService.removeFavorite(action.payload.collectionId).pipe(
+      mergeMap(() => Observable.of()),
+      catchError((error) => Observable.of(new CollectionsAction.RemoveFavoriteFailure({collectionId: action.payload.collectionId, error: error})))
     )),
   );
 
@@ -395,7 +392,6 @@ export class CollectionsEffects {
   constructor(private actions$: Actions,
               private store$: Store<AppState>,
               private collectionService: CollectionService,
-              private homePageService: HomePageService,
               private i18n: I18n,
               private importService: ImportService,
               private searchService: SearchService) {

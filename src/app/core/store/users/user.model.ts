@@ -26,5 +26,13 @@ export interface UserModel {
   email: string;
   groupsMap: { [organizationId: string]: string[]; };
   groups?: GroupModel[];
+  defaultWorkspace?: DefaultWorkspaceModel;
 
+}
+
+export interface DefaultWorkspaceModel {
+  organizationCode?: string;
+  organizationId: string;
+  projectCode?: string;
+  projectId: string;
 }

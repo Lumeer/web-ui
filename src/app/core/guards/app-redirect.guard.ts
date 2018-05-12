@@ -18,38 +18,43 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
-import {of} from 'rxjs/observable/of';
-import {tap, filter, take, catchError} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
-import {selectCollectionsLoaded} from '../store/collections/collections.state';
-import {CollectionsAction} from '../store/collections/collections.action';
+import {Store} from '@ngrx/store';
+import {selectCurrentUser} from '../store/users/users.state';
+import {Observable} from 'rxjs/Observable';
+import {filter, map} from 'rxjs/operators';
+import {DefaultWorkspaceModel} from '../store/users/user.model';
+import {isNullOrUndefined} from "util";
 
 @Injectable()
-export class CollectionsGuard implements CanActivate {
+export class AppRedirectGuard implements CanActivate {
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>,
+              private router: Router) {
   }
 
   public canActivate(next: ActivatedRouteSnapshot,
                      state: RouterStateSnapshot): Observable<boolean> {
-    return this.checkStore().pipe(
-      catchError(() => of(false))
+
+    return this.getDefaultWorkspace().pipe(
+      map(workspace => {
+        if (workspace && workspace.organizationCode && workspace.projectCode) {
+          this.router.navigate(['w', workspace.organizationCode, workspace.projectCode, 'view', 'search']);
+        } else {
+          this.router.navigate(['workspace']);
+        }
+        return false
+      })
     );
   }
 
-  private checkStore(): Observable<boolean> {
-    return this.store.select(selectCollectionsLoaded).pipe(
-      tap(loaded => {
-        if (!loaded) {
-          this.store.dispatch(new CollectionsAction.Get({query: {}}));
-        }
-      }),
-      filter(loaded => loaded),
-      take(1)
+  private getDefaultWorkspace(): Observable<DefaultWorkspaceModel> {
+    return this.store.select(selectCurrentUser).pipe(
+      filter(user => !isNullOrUndefined(user)),
+      map(user => user.defaultWorkspace)
     );
   }
+
 }

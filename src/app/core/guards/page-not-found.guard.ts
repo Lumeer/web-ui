@@ -19,30 +19,54 @@
 
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../notifications/notification.service';
+import {Observable} from 'rxjs/Observable';
+import {filter, map} from 'rxjs/operators';
+import {selectCurrentUser} from '../store/users/users.state';
+import {AppState} from '../store/app.state';
+import {Store} from '@ngrx/store';
+import {DefaultWorkspaceModel} from '../store/users/user.model';
+import {isNullOrUndefined} from "util";
 
 @Injectable()
 export class PageNotFoundGuard implements CanActivate {
 
-  constructor(private i18n: I18n,
+  constructor(private store: Store<AppState>,
+              private i18n: I18n,
               private notificationService: NotificationService,
               private router: Router) {
   }
 
   public canActivate(next: ActivatedRouteSnapshot,
-                     state: RouterStateSnapshot): boolean {
+                     state: RouterStateSnapshot): Observable<boolean> {
     const [, w, organizationCode, projectCode] = state.url.split('/');
 
-    if (w === 'w' && organizationCode && projectCode) {
-      this.router.navigate(['w', organizationCode, projectCode, 'view', 'search']);
-    } else {
-      this.router.navigate(['workspace']);
-    }
+    return this.getDefaultWorkspace().pipe(
+      map(workspace => {
+        const hasWorkspace = workspace && workspace.organizationCode && workspace.projectCode;
+        if (w === 'w' && organizationCode && projectCode) {
+          this.router.navigate(['w', organizationCode, projectCode, 'view', 'search']);
+        } else if(hasWorkspace) {
+          this.router.navigate(['w', workspace.organizationCode, workspace.projectCode, 'view', 'search']);
+        }else{
+          this.router.navigate(['workspace']);
+        }
+        const message = this.i18n({id: 'page.not.found', value: 'Page not found'});
+        this.notificationService.error(message);
 
-    const message = this.i18n({id: 'page.not.found', value: 'Page not found'});
-    this.notificationService.error(message);
+        return false
+      })
+    );
 
-    return false;
   }
+
+  private getDefaultWorkspace(): Observable<DefaultWorkspaceModel> {
+    return this.store.select(selectCurrentUser).pipe(
+      filter(user => !isNullOrUndefined(user)),
+      map(user => user.defaultWorkspace)
+    );
+  }
+
 }

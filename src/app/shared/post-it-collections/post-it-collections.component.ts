@@ -29,8 +29,6 @@ import {CollectionModel} from '../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {selectCollectionsByQuery} from '../../core/store/collections/collections.state';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
-import {QueryConverter} from '../../core/store/navigation/query.converter';
-import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {Role} from '../../core/model/role';
 import {HashCodeGenerator} from '../utils/hash-code-generator';
@@ -69,9 +67,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   @ViewChildren('textArea')
   public nameInputs: QueryList<ElementRef>;
 
-  @ViewChildren('postItElement')
-  public postItElements: QueryList<ElementRef>;
-
   public collections: CollectionModel[];
   public collectionRoles: { [collectionId: string]: string[] };
 
@@ -88,8 +83,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   private project: ProjectModel;
 
   private currentUser: UserModel;
-
-  private query: QueryModel;
 
   private navigationSubscription: Subscription;
 
@@ -151,7 +144,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       filter(navigation => Boolean(navigation && navigation.workspace && navigation.workspace.organizationCode && navigation.workspace.projectCode))
     ).subscribe(navigation => {
       this.workspace = navigation.workspace;
-      this.query = navigation.query;
     });
 
     this.projectSubscription = this.store.select(selectProjectByWorkspace).pipe(
@@ -172,15 +164,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
         return roles;
       }, {})
     });
-  }
-
-  public toggleFavorite(collection: CollectionModel) {
-    if (collection.favourite) {
-      this.store.dispatch(new CollectionsAction.RemoveFavorite({collectionId: collection.id}));
-    } else {
-      this.store.dispatch(new CollectionsAction.AddFavorite({collectionId: collection.id}));
-    }
-    collection.favourite = !collection.favourite;
   }
 
   public onCollectionSelect(collection: CollectionModel) {
@@ -230,22 +213,25 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       }));
   }
 
-  private deleteUninitializedPostIt(collection: CollectionModel) {
-    this.collections = this.collections.filter(coll => coll.correlationId !== collection.correlationId);
+  public onFavoriteChange(collectionId: string, data: { favorite: boolean, onlyStore: boolean }) {
+    const {favorite, onlyStore} = data;
+    if (onlyStore) {
+      if (favorite) {
+        this.store.dispatch(new CollectionsAction.AddFavoriteSuccess({collectionId}))
+      } else {
+        this.store.dispatch(new CollectionsAction.RemoveFavoriteSuccess({collectionId}))
+      }
+    } else {
+      if (favorite) {
+        this.store.dispatch(new CollectionsAction.AddFavorite({collectionId}))
+      } else {
+        this.store.dispatch(new CollectionsAction.RemoveFavorite({collectionId}))
+      }
+    }
   }
 
-  public onCollectionNameChanged(collection: CollectionModel, newName: string) {
-    // Don't update until there is some name
-    if (!newName) {
-      return;
-    }
-    const collectionCopy = {...collection, name: newName};
-
-    if (collection.id) {
-      this.updateCollection(collectionCopy);
-    } else if (newName) {
-      this.createCollection(collectionCopy);
-    }
+  private deleteUninitializedPostIt(collection: CollectionModel) {
+    this.collections = this.collections.filter(coll => coll.correlationId !== collection.correlationId);
   }
 
   public updateCollection(collection: CollectionModel) {
@@ -260,26 +246,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     return this.project && this.currentUser && userHasRoleInResource(this.currentUser, this.project, Role.Write);
   }
 
-  public hasManageRole(collection: CollectionModel): boolean {
-    return this.hasRole(collection, Role.Manage);
-  }
-
-  public hasWriteRole(collection: CollectionModel): boolean {
-    return this.hasRole(collection, Role.Write);
-  }
-
-  private hasRole(collection: CollectionModel, role: string): boolean {
-    const roles = this.collectionRoles && this.collectionRoles[collection.id] || [];
-    return roles.includes(role);
-  }
-
-  public workspacePath(): string {
-    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
-  }
-
-  public queryForCollectionDocuments(collectionId: string): string {
-    const query: QueryModel = {collectionIds: [collectionId]};
-    return QueryConverter.toString(query);
+  public getRoles(collection: CollectionModel): string[] {
+    return this.collectionRoles && this.collectionRoles[collection.id] || [];
   }
 
   public trackByCollection(index: number, collection: CollectionModel): number {
