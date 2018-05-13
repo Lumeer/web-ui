@@ -15,17 +15,15 @@
       </tr>
     </thead>
     <tbody>
+      <tr *ngIf="documents.length === 0">
+        <td [attr.colspan]="collection.attributes.length" class="text-center" i18n="@@shared.preview.results.noResults">No documents found.</td>
+      </tr>
       <ng-container *ngFor="let r of documents; let idx = index">
         <tr *ngIf="documentOnPage(idx)" class="clickable-row {{activeIndex == idx ? 'active' : ''}}"
             (click)="activate(idx)">
           <td *ngFor="let attr of collection.attributes" title="{{r.data[attr.id]}}">{{r.data[attr.id]}}</td>
         </tr>
       </ng-container>
-      <!--tr *ngFor="let r of documents; let idx = index"
-          class="clickable-row {{activeIndex == idx ? 'active' : ''}}"
-          (click)="activate(idx)">
-        <td *ngFor="let attr of collection.attributes" title="{{r.data[attr.id]}}">{{r.data[attr.id]}}</td>
-      </tr-->
     </tbody>
   </table>
 </div>

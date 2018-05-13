@@ -28,25 +28,25 @@ import {CollectionModel} from "../../../core/store/collections/collection.model"
 export class PreviewResultsTabsComponent implements OnInit {
 
   @Input()
-  public collectionModels: CollectionModel[];
+  public collections: CollectionModel[];
 
   @Input()
   public selectedCollection: string;
 
   @Output()
-  public select = new EventEmitter<string>();
+  public select = new EventEmitter<CollectionModel>();
 
   constructor() { }
 
   ngOnInit() {
     if (!this.selectedCollection) {
-      this.selectCollection(this.collectionModels[0].id);
+      this.setActiveCollection(this.collections[0]);
     }
   }
 
-  public selectCollection(collectionId: string) {
-    this.selectedCollection = collectionId;
-    this.select.emit(collectionId);
+  public setActiveCollection(collection: CollectionModel) {
+    this.selectedCollection = collection.id;
+    this.select.emit(collection);
   }
 
 }

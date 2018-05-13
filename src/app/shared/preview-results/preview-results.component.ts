@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {Subscription} from "rxjs/Subscription";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../core/store/app.state";
 import {selectCollectionById, selectCollectionsByQuery} from "../../core/store/collections/collections.state";
 import {Observable} from "rxjs/Observable";
 import {CollectionModel} from "../../core/store/collections/collection.model";
-import {filter, map, take} from "rxjs/operators";
+import {filter, take} from "rxjs/operators";
 import {isNullOrUndefined} from "util";
 import {DocumentModel} from "../../core/store/documents/document.model";
-import {selectDocumentsByCustomQuery, selectDocumentsByQuery} from "../../core/store/documents/documents.state";
+import {selectDocumentsByCustomQuery} from "../../core/store/documents/documents.state";
 import {selectNavigation} from "../../core/store/navigation/navigation.state";
 import {QueryModel} from "../../core/store/navigation/query.model";
 import {Workspace} from "../../core/store/navigation/workspace.model";
@@ -42,7 +42,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
 
   public selectedCollectionId: string;
 
-  public collectionModels$: Observable<CollectionModel[]>;
+  public collections$: Observable<CollectionModel[]>;
 
   public documents$: Observable<DocumentModel[]>;
 
@@ -53,6 +53,12 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
   private query: QueryModel;
 
   private collectionQuery: QueryModel;
+
+  @Output()
+  public selectCollection = new EventEmitter<CollectionModel>();
+
+  @Output()
+  public selectDocument = new EventEmitter<DocumentModel>();
 
   constructor(private store: Store<AppState>) { }
 
@@ -69,8 +75,8 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
   }
 
   private subscribeAll() {
-    this.collectionModels$ = this.store.select(selectCollectionsByQuery).pipe(
-      filter(collections => !isNullOrUndefined(collections) && collections.length > 0 )
+    this.collections$ = this.store.select(selectCollectionsByQuery).pipe(
+      filter(collections => !isNullOrUndefined(collections) && collections.length > 0)
     );
 
     this.allSubscriptions.add(this.store.select(selectNavigation).pipe(
@@ -78,10 +84,10 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
     ).subscribe(navigation => this.updateNavigation(navigation.query)));
 
     // initialize when we do not select anything
-    this.allSubscriptions.add(this.collectionModels$.pipe(filter(collections => !!collections), take(1))
+    this.allSubscriptions.add(this.collections$.pipe(filter(collections => !!collections), take(1))
       .subscribe(collections => {
         if (!this.selectedCollectionId) {
-          this.selectCollection(collections[0].id);
+          this.setActiveCollection(collections[0]);
         }
       }));
   }
@@ -102,9 +108,10 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
     this.allSubscriptions.unsubscribe();
   }
 
-  public selectCollection(collectionId: string) {
-    this.selectedCollectionId = collectionId;
+  public setActiveCollection(collection: CollectionModel) {
+    this.selectedCollectionId = collection.id;
     this.getData();
+    this.selectCollection.emit(collection);
   }
 
   private updateDataSubscription() {
@@ -122,4 +129,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
     }
   }
 
+  private setActiveDocument($event: DocumentModel) {
+    this.selectDocument.emit($event);
+  }
 }
