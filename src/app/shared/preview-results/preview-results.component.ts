@@ -116,7 +116,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
 
   private getData() {
     if (this.selectedCollectionId) {
-      this.collectionQuery = Object.assign({}, this.query,{ collectionIds: [this.selectedCollectionId], page: 0, pageSize: 100 });
+      this.collectionQuery = Object.assign({}, this.query,{ collectionIds: [this.selectedCollectionId] });
       this.updateDataSubscription();
       this.store.dispatch(new DocumentsAction.Get({ query: this.collectionQuery }));
     }

@@ -28,6 +28,8 @@ import {CollectionModel} from "../../../core/store/collections/collection.model"
 })
 export class PreviewResultsTableComponent implements OnInit {
 
+  public PAGE_SIZE = 100;
+
   @Input()
   public documents: DocumentModel[];
 
@@ -37,16 +39,37 @@ export class PreviewResultsTableComponent implements OnInit {
   @Input()
   public activeIndex = 0;
 
+  public page = 0;
+
   @Output()
   public selectedDocument = new EventEmitter<DocumentModel>();
 
   constructor() { }
 
   public ngOnInit() {
+    this.activate(this.activeIndex);
   }
 
   public activate(index: number) {
     this.activeIndex = index;
+    this.page = this.activeIndex / this.PAGE_SIZE;
     this.selectedDocument.emit(this.documents[this.activeIndex]);
+  }
+
+  public selectPage(page: number) {
+    this.page = page;
+  }
+
+  public canActivatePage(page: number) {
+    return ((page < this.page) && (page >= 0)) ||
+      ((page > this.page) && (page < Math.ceil(this.documents.length / this.PAGE_SIZE)));
+  }
+
+  public documentOnPage(idx: number) {
+    return idx >= (this.page * this.PAGE_SIZE) && idx < ((this.page + 1) * this.PAGE_SIZE);
+  }
+
+  public pageEndIndex(page: number) {
+    return Math.min((page + 1) * 100, this.documents.length);
   }
 }
