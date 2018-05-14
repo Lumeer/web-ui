@@ -70,7 +70,7 @@ export namespace LinkTypesAction {
   export class Create implements Action {
     public readonly type = LinkTypesActionType.CREATE;
 
-    public constructor(public payload: { linkType: LinkTypeModel, nextAction?: Action }) {
+    public constructor(public payload: { linkType: LinkTypeModel, callback?: (linkType: LinkTypeModel) => void }) {
     }
   }
 

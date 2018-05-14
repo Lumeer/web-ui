@@ -33,6 +33,7 @@ import {CoreModule} from './core/core.module';
 import {DocumentsModule} from './documents/documents.module';
 import {ViewModule} from './view/view.module';
 import {WorkspaceModule} from './workspace/workspace.module';
+import { DialogModule } from './dialog/dialog.module';
 
 declare const require; // Use the require method provided by webpack
 const translations = require(`raw-loader!../../${I18N_PATH}`);
@@ -55,11 +56,12 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     ContextMenuModule.forRoot({useBootstrap4: true}),
     CoreModule,
     CollectionModule,
+    DialogModule,
     DocumentsModule,
     KeycloakAngularModule,
     ViewModule,
     WorkspaceModule,
-    AppRoutingModule, // needs to stay almost last
+    AppRoutingModule, // needs to be declared after all other routing modules
     Angulartics2Module.forRoot([Angulartics2GoogleAnalytics], angularticsSettings)
   ],
   providers: [

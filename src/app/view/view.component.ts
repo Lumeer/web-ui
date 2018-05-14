@@ -21,7 +21,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {Observable} from 'rxjs/Observable';
-import {filter, first, map, skipWhile, take} from 'rxjs/operators';
+import {filter, first, map, take} from 'rxjs/operators';
 import {Query} from '../core/dto';
 import {AppState} from '../core/store/app.state';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
@@ -29,9 +29,8 @@ import {Workspace} from '../core/store/navigation/workspace.model';
 import {RouterAction} from '../core/store/router/router.action';
 import {ViewModel} from '../core/store/views/view.model';
 import {ViewsAction} from '../core/store/views/views.action';
-import {selectAllViews, selectViewByCode, selectViewConfig, selectViewsDictionary} from '../core/store/views/views.state';
-
-declare var $: any;
+import {selectAllViews, selectViewByCode, selectViewConfig} from '../core/store/views/views.state';
+import {DialogService} from '../dialog/dialog.service';
 
 @Component({
   templateUrl: './view.component.html'
@@ -42,36 +41,29 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   public workspace: Workspace;
 
-  public existingView: ViewModel;
-  public newView: ViewModel;
+  private subscriptions = new Subscription();
 
-  private viewSubscription: Subscription;
-  private configSubscription: Subscription;
-  private navigationSubscription: Subscription;
-
-  constructor(private store: Store<AppState>) {
+  constructor(private dialogService: DialogService,
+              private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.navigationSubscription = this.store.select(selectNavigation).pipe(
-      filter(this.validNavigation)
-    ).subscribe(navigation => {
-      this.workspace = navigation.workspace;
-      if (!navigation.workspace) {
-        return;
-      }
+    this.subscriptions.add(
+      this.store.select(selectNavigation).pipe(
+        filter(this.validNavigation)
+      ).subscribe(navigation => {
+        this.workspace = navigation.workspace;
+        if (!navigation.workspace) {
+          return;
+        }
 
-      if (navigation.workspace.viewCode) {
-        this.loadView(navigation.workspace.viewCode);
-      } else {
-        this.loadQuery(navigation.query);
-      }
-    });
-
-    $('#overwriteViewDialogModal').on('hidden.bs.modal', () => {
-      this.existingView = null;
-      this.newView = null;
-    });
+        if (navigation.workspace.viewCode) {
+          this.loadView(navigation.workspace.viewCode);
+        } else {
+          this.loadQuery(navigation.query);
+        }
+      })
+    );
   }
 
   private validNavigation(navigation: NavigationState): boolean {
@@ -81,24 +73,18 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.viewSubscription) {
-      this.viewSubscription.unsubscribe();
-    }
-    if (this.configSubscription) {
-      this.configSubscription.unsubscribe();
-    }
-    if (this.navigationSubscription) {
-      this.navigationSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   private loadView(code: string) {
-    this.viewSubscription = this.store.select(selectViewByCode(code)).pipe(
-      filter(view => Boolean(view))
-    ).subscribe(view => {
-      this.view = {...view};
-      this.store.dispatch(new ViewsAction.ChangeConfig({config: view.config}));
-    });
+    this.subscriptions.add(
+      this.store.select(selectViewByCode(code)).pipe(
+        filter(view => Boolean(view))
+      ).subscribe(view => {
+        this.view = {...view};
+        this.store.dispatch(new ViewsAction.ChangeConfig({config: view.config}));
+      })
+    );
   }
 
   private loadQuery(query: Query) {
@@ -111,24 +97,26 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   public onSave(name: string) {
-    this.configSubscription = Observable.combineLatest(
-      this.store.select(selectViewConfig),
-      this.store.select(selectPerspective)
-    ).pipe(take(1)).subscribe(([config, perspective]) => {
-      const view: ViewModel = {...this.view, name, config, perspective};
+    this.subscriptions.add(
+      Observable.combineLatest(
+        this.store.select(selectViewConfig),
+        this.store.select(selectPerspective)
+      ).pipe(take(1)).subscribe(([config, perspective]) => {
+        const view: ViewModel = {...this.view, name, config, perspective};
 
-      if (view.code) {
-        this.updateView(view);
-      } else {
-        this.saveView(view);
-      }
-    });
+        if (view.code) {
+          this.updateView(view);
+        } else {
+          this.saveView(view);
+        }
+      })
+    );
   }
 
   private saveView(view: ViewModel) {
     this.getViewByName(view.name).subscribe(existingView => {
       if (existingView) {
-        this.openOverwriteDialog(existingView, view);
+        this.confirmAndUpdateView(existingView, view);
       } else {
         this.createView(view);
       }
@@ -142,14 +130,14 @@ export class ViewComponent implements OnInit, OnDestroy {
     );
   }
 
-  private openOverwriteDialog(existingView: ViewModel, newView: ViewModel) {
-    this.existingView = existingView;
-    this.newView = newView;
-
-    $('#overwriteViewDialogModal').modal('show');
+  private confirmAndUpdateView(existingView: ViewModel, newView: ViewModel) {
+    this.dialogService.openOverwriteViewDialog(existingView.code, () => {
+      const view = {...newView, id: existingView.id, code: existingView.code};
+      this.onConfirmOverwrite(view);
+    });
   }
 
-  public onConfirmOverwrite(view: ViewModel) {
+  private onConfirmOverwrite(view: ViewModel) {
     const path: any[] = ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}];
 
     this.store.dispatch(new ViewsAction.Update({

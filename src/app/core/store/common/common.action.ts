@@ -17,32 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {DialogType} from './dialog-type';
+import {Action} from '@ngrx/store';
 
-@Component({
-  selector: 'modal-dialog',
-  templateUrl: './modal-dialog.component.html'
-})
-export class ModalDialogComponent {
+export enum CommonActionType {
 
-  @Input()
-  public submitDisabled: boolean;
+  EXECUTE_CALLBACK = '[Common] Execute Callback'
 
-  @Input()
-  public id: string;
+}
 
-  @Input()
-  public type: DialogType;
+export namespace CommonAction {
 
-  @Input()
-  public width: number;
+  export class ExecuteCallback implements Action {
+    public readonly type = CommonActionType.EXECUTE_CALLBACK;
 
-  @Output()
-  public submit = new EventEmitter();
-
-  public onSubmit() {
-    this.submit.emit();
+    public constructor(public payload: { callback: () => void }) {
+    }
   }
 
 }

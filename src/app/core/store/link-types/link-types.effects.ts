@@ -22,14 +22,13 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {catchError, flatMap, map, mergeMap, tap} from 'rxjs/operators';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
+import {CommonAction} from '../common/common.action';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
-import {NavigationAction} from '../navigation/navigation.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {SmartDocAction} from '../smartdoc/smartdoc.action';
 import {LinkTypeConverter} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 
@@ -74,17 +73,12 @@ export class LinkTypesEffects {
 
       return this.linkTypeService.createLinkType(linkTypeDto).pipe(
         map(dto => LinkTypeConverter.fromDto(dto, action.payload.linkType.correlationId)),
-        map(linkType => ({linkType, nextAction: action.payload.nextAction})),
-        flatMap(({linkType, nextAction}) => {
+        mergeMap(linkType => {
           const actions: Action[] = [new LinkTypesAction.CreateSuccess({linkType: linkType})];
 
-          if (nextAction && nextAction instanceof SmartDocAction.AddPart) {
-            nextAction.payload.part.linkTypeId = linkType.id;
-            actions.push(nextAction);
-          }
-          if (nextAction && nextAction instanceof NavigationAction.AddLinkToQuery) {
-            nextAction.payload.linkTypeId = linkType.id;
-            actions.push(nextAction);
+          const {callback} = action.payload;
+          if (callback) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(linkType)}));
           }
 
           return actions;

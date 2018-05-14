@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {map, withLatestFrom} from 'rxjs/operators';
+import {first, map, mergeMap, skipWhile, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../app.state';
 import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
@@ -34,8 +34,12 @@ export class NavigationEffects {
   @Effect()
   public addLinkToQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.AddLinkToQuery>(NavigationActionType.ADD_LINK_TO_QUERY),
-    withLatestFrom(this.store$.select(selectQuery)),
-    map(([action, query]) => {
+    mergeMap(action => this.store$.select(selectQuery).pipe(
+      skipWhile(query => !query),
+      first(),
+      map(query => ({action, query}))
+    )),
+    map(({action, query}) => {
       const linkTypeIds = (query.linkTypeIds || []).concat(action.payload.linkTypeId);
 
       return new RouterAction.Go({

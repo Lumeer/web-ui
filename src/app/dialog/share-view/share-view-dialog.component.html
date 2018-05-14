@@ -1,6 +1,5 @@
-<modal-dialog [id]="'shareDialogModal'"
-              [type]="'success'"
-              (submit)="share()">
+<dialog-wrapper [type]="'success'"
+                (submit)="share()">
   <span class="title" i18n="@@view.share.dialog.title">Share View</span>
 
   <div class="body">
@@ -38,4 +37,4 @@
 
   <span class="button-cancel" i18n="@@view.share.dialog.button.close">Close</span>
   <span class="button-submit" i18n="@@view.share.dialog.button.share">Share</span>
-</modal-dialog>
+</dialog-wrapper>

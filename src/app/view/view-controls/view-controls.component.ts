@@ -29,6 +29,7 @@ import {RouterAction} from '../../core/store/router/router.action';
 import {ViewModel} from '../../core/store/views/view.model';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {selectViewConfig} from '../../core/store/views/views.state';
+import {DialogService} from '../../dialog/dialog.service';
 import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
 
 @Component({
@@ -56,7 +57,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   private configSubscription: Subscription;
   private navigationSubscription: Subscription;
 
-  constructor(private router: Router,
+  constructor(private dialogService: DialogService,
               private store: Store<AppState>) {
   }
 
@@ -140,6 +141,10 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
         viewName: `${this.view.name}`
       }
     }));
+  }
+
+  public onShareClick() {
+    this.dialogService.openShareViewDialog();
   }
 
   public perspectives(): string[] {
