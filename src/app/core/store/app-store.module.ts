@@ -26,6 +26,7 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {AppState, initialAppState} from './app.state';
 import {CollectionsEffects} from './collections/collections.effects';
 import {collectionsReducer} from './collections/collections.reducer';
+import {CommonEffects} from './common/common.effects';
 import {DocumentsEffects} from './documents/documents.effects';
 import {documentsReducer} from './documents/documents.reducer';
 import {GroupsEffects} from './groups/groups.effects';
@@ -37,8 +38,14 @@ import {linkTypesReducer} from './link-types/link-types.reducer';
 import {NavigationEffects} from './navigation/navigation.effects';
 import {navigationReducer} from './navigation/navigation.reducer';
 import {NotificationsEffects} from './notifications/notifications.effects';
+import {ContactsEffects} from './organizations/contact/contacts.effects';
+import {contactsReducer} from './organizations/contact/contacts.reducer';
 import {OrganizationsEffects} from './organizations/organizations.effects';
 import {organizationsReducer} from './organizations/organizations.reducer';
+import {PaymentsEffects} from './organizations/payment/payments.effects';
+import {paymentsReducer} from './organizations/payment/payments.reducer';
+import {ServiceLimitsEffects} from './organizations/service-limits/service-limits.effects';
+import {serviceLimitsReducer} from './organizations/service-limits/service-limits.reducer';
 import {ProjectsEffects} from './projects/projects.effects';
 import {projectsReducer} from './projects/projects.reducer';
 import {RouterEffects} from './router/router.effects';
@@ -46,12 +53,6 @@ import {UsersEffects} from './users/users.effects';
 import {usersReducer} from './users/users.reducer';
 import {ViewsEffects} from './views/views.effects';
 import {viewsReducer} from './views/views.reducer';
-import {contactsReducer} from "./organizations/contact/contacts.reducer";
-import {ContactsEffects} from "./organizations/contact/contacts.effects";
-import {serviceLimitsReducer} from "./organizations/service-limits/service-limits.reducer";
-import {ServiceLimitsEffects} from "./organizations/service-limits/service-limits.effects";
-import {paymentsReducer} from "./organizations/payment/payments.reducer";
-import {PaymentsEffects} from "./organizations/payment/payments.effects";
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -72,6 +73,7 @@ const reducers: ActionReducerMap<AppState> = {
 
 const effects = [
   CollectionsEffects,
+  CommonEffects,
   DocumentsEffects,
   GroupsEffects,
   LinkInstancesEffects,

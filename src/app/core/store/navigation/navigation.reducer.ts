@@ -18,15 +18,13 @@
  */
 
 import {ROUTER_CANCEL, ROUTER_NAVIGATION, RouterCancelAction, RouterNavigationAction} from '@ngrx/router-store';
-import {perspectivesMap} from '../../../view/perspectives/perspective';
+import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {RouterStateUrl} from '../router/lumeer-router-state-serializer';
 import {NavigationState} from './navigation.state';
 import {QueryConverter} from './query.converter';
 
 function onRouterNavigation(state: NavigationState, action: RouterNavigationAction<RouterStateUrl>): NavigationState {
   const {data, params, queryParams, url} = action.payload.routerState;
-
-  const linkCollectionIds = queryParams['linkCollectionIds'];
 
   return {
     query: QueryConverter.fromString(queryParams['query']),
@@ -39,14 +37,19 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
     perspective: perspectivesMap[extractPerspectiveIdFromUrl(url)],
     searchBoxHidden: data['searchBoxHidden'],
     viewName: queryParams['viewName'],
-    linkCollectionIds: linkCollectionIds ? linkCollectionIds.split(',') : null
   };
 }
 
 function extractPerspectiveIdFromUrl(url: string): string {
   const urlSegments = url.split('/');
   const viewIndex = urlSegments.findIndex(segment => segment.startsWith('view'));
-  return viewIndex && urlSegments.length > viewIndex + 1 ? urlSegments[viewIndex + 1].split('?')[0] : null;
+
+  if (viewIndex && urlSegments.length > viewIndex + 1) {
+    const perspectiveSegment = urlSegments[viewIndex + 1];
+    const perspectiveNames = Object.values(Perspective).join('|');
+    const regex = new RegExp(`^(${perspectiveNames}).*`);
+    return perspectiveSegment.replace(regex, '$1');
+  }
 }
 
 function onRouterCancel(state: NavigationState, action: RouterCancelAction<NavigationState>) {

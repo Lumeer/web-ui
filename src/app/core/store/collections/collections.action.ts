@@ -125,7 +125,7 @@ export namespace CollectionsAction {
   export class Create implements Action {
     public readonly type = CollectionsActionType.CREATE;
 
-    public constructor(public payload: { collection: CollectionModel, nextAction?: Action }) {
+    public constructor(public payload: { collection: CollectionModel, callback?: (collection: CollectionModel) => void }) {
     }
   }
 

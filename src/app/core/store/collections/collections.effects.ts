@@ -28,9 +28,9 @@ import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFr
 import {Collection, Permission} from '../../dto';
 import {CollectionService, ImportService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
+import {CommonAction} from '../common/common.action';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
-import {LinkTypesAction} from '../link-types/link-types.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
@@ -96,13 +96,15 @@ export class CollectionsEffects {
 
       return this.collectionService.createCollection(collectionDto).pipe(
         map(collection => CollectionConverter.fromDto(collection, action.payload.collection.correlationId)),
-        map(collection => ({collection, nextAction: action.payload.nextAction})),
-        flatMap(({collection, nextAction}) => {
+        map(collection => ({collection, action})),
+        mergeMap(({collection, action}) => {
           const actions: Action[] = [new CollectionsAction.CreateSuccess({collection})];
-          if (nextAction && nextAction instanceof LinkTypesAction.Create) {
-            nextAction.payload.linkType.collectionIds[1] = collection.id;
-            actions.push(nextAction);
+
+          const {callback} = action.payload;
+          if (callback) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(collection)}));
           }
+
           return actions;
         }),
         catchError((error) => Observable.of(new CollectionsAction.CreateFailure({error: error})))

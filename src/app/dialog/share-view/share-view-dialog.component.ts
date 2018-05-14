@@ -23,23 +23,22 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {isNullOrUndefined} from 'util';
-import {NotificationService} from '../../../core/notifications/notification.service';
-import {AppState} from '../../../core/store/app.state';
-import {OrganizationModel} from '../../../core/store/organizations/organization.model';
-import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
-import {UserModel} from '../../../core/store/users/user.model';
-import {UsersAction} from '../../../core/store/users/users.action';
-import {selectAllUsers} from '../../../core/store/users/users.state';
-
-import {KeyCode} from '../../../shared/key-code';
-import {HtmlModifier} from '../../../shared/utils/html-modifier';
+import {NotificationService} from '../../core/notifications/notification.service';
+import {AppState} from '../../core/store/app.state';
+import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
+import {UserModel} from '../../core/store/users/user.model';
+import {UsersAction} from '../../core/store/users/users.action';
+import {selectAllUsers} from '../../core/store/users/users.state';
+import {KeyCode} from '../../shared/key-code';
+import {HtmlModifier} from '../../shared/utils/html-modifier';
 
 @Component({
-  selector: 'share-dialog',
-  templateUrl: './share-dialog.component.html',
-  styleUrls: ['./share-dialog.component.scss']
+  selector: 'share-view-dialog',
+  templateUrl: './share-view-dialog.component.html',
+  styleUrls: ['./share-view-dialog.component.scss']
 })
-export class ShareDialogComponent implements OnInit, OnDestroy {
+export class ShareViewDialogComponent implements OnInit, OnDestroy {
 
   public emails: string[] = [];
   public text = '';

@@ -27,7 +27,7 @@ import {LinkType, Query} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
-import {map} from "rxjs/operators";
+import {filter, map} from 'rxjs/operators';
 
 @Injectable()
 export class LinkTypeService {
@@ -36,7 +36,9 @@ export class LinkTypeService {
 
   constructor(private httpClient: HttpClient,
               private store: Store<AppState>) {
-    this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+    this.store.select(selectWorkspace).pipe(
+      filter(workspace => !!workspace)
+    ).subscribe(workspace => this.workspace = workspace);
   }
 
   public createLinkType(linkType: LinkType): Observable<LinkType> {

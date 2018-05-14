@@ -1,0 +1,33 @@
+<div [style.width]="width + 'px'"
+     class="modal-content">
+  <div class="modal-header bg-{{type}} text-white rounded-top">
+    <h5 class="modal-title">
+      <ng-content select=".title"></ng-content>
+    </h5>
+    <button aria-label="Close"
+            class="close"
+            data-dismiss="modal"
+            type="button"
+            title="Close" i18n-title="@@dialog.close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ng-content select=".body"></ng-content>
+  </div>
+  <div class="modal-footer">
+    <button type="button"
+            class="btn btn-secondary"
+            data-dismiss="modal">
+      <ng-content select=".button-cancel"></ng-content>
+    </button>
+    <button [attr.aria-disabled]="submitDisabled"
+            [disabled]="submitDisabled"
+            (click)="onSubmit()"
+            type="button"
+            class="btn btn-{{type}}"
+            data-dismiss="modal">
+      <ng-content select=".button-submit"></ng-content>
+    </button>
+  </div>
+</div>

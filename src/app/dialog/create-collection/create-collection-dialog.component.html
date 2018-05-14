@@ -1,8 +1,7 @@
-<modal-dialog [submitDisabled]="!form.valid"
-              [id]="id"
-              [type]="'success'"
-              [width]="350"
-              (submit)="onSubmit()">
+<dialog-wrapper [submitDisabled]="!form.valid"
+                [type]="'success'"
+                [width]="350"
+                (submit)="onSubmit()">
   <span class="title" i18n="@@collection.new.dialog.title">Create new linked file</span>
 
   <div class="body">
@@ -26,4 +25,4 @@
 
   <span class="button-cancel" i18n="@@collection.new.dialog.button.cancel">Cancel</span>
   <span class="button-submit" i18n="@@collection.new.dialog.button.create">Create</span>
-</modal-dialog>
+</dialog-wrapper>

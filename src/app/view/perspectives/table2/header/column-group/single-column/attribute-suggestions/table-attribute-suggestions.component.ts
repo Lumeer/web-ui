@@ -18,7 +18,6 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
@@ -33,9 +32,8 @@ import {selectQuery} from '../../../../../../../core/store/navigation/navigation
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableModel} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
-import {extractAttributeLastName, findAttributeById, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
-
-declare let $: any;
+import {DialogService} from '../../../../../../../dialog/dialog.service';
+import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
 
 interface LinkedAttribute {
 
@@ -69,7 +67,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
 
   public lastName: string;
 
-  public constructor(private router: Router,
+  public constructor(private dialogService: DialogService,
                      private store: Store<AppState>) {
   }
 
@@ -104,13 +102,10 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   }
 
   public createLinkType({collection}: LinkedAttribute) {
-    this.router.navigate([], {
-      queryParams: {
-        linkCollectionIds: [this.collection.id, collection.id].join(',')
-      },
-      queryParamsHandling: 'merge'
+    const linkCollectionIds = [this.collection.id, collection.id].join(',');
+    this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => {
+      this.store.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
     });
-    $(`#newLinkDialogModal`).modal('show');
   }
 
   public suggestLinkedAttributes(): Observable<LinkedAttribute[]> {

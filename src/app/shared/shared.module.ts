@@ -22,7 +22,6 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {CommentsComponent} from './comments/comments.component';
-import {DialogsModule} from './dialogs/dialogs.module';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 import {LinksComponent} from './links/links.component';
 
@@ -47,7 +46,6 @@ import {PostItCollectionsModule} from './post-it-collections/post-it-collections
     DragAndDropModule,
     SearchBoxModule,
     UsersModule,
-    DialogsModule,
     TagModule,
     InputModule,
     PostItCollectionsModule
@@ -76,7 +74,6 @@ import {PostItCollectionsModule} from './post-it-collections/post-it-collections
     SliderComponent,
     TagModule,
     InputModule,
-    DialogsModule,
     ResourceHeaderComponent
   ]
 })
