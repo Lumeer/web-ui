@@ -20,6 +20,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {NotificationService} from "../../../core/notifications/notification.service";
+import {CollectionModel} from "../../../core/store/collections/collection.model";
+import {DocumentModel} from "../../../core/store/documents/document.model";
 
 @Component({
   selector: 'document-detail',
@@ -38,10 +40,16 @@ export class DocumentDetailComponent implements OnInit {
   public collectionName: string = 'Name2';
 
   @Input()
+  public collection: CollectionModel;
+
+  @Input('document')
+  public documentModel: DocumentModel;
+
+  @Input()
   public summary: string = 'voluptatem sequi nesciunt. Neque porro';
 
   @Input()
-  public document = { 'Attr1': 'accusantium', 'Attr2': 16, 'Attr3': 'voluptatem sequi nesciunt. Neque porro', 'Attr4': 'Quis autem vel'};
+  public tmpDocument = { 'Attr1': 'accusantium', 'Attr2': 16, 'Attr3': 'voluptatem sequi nesciunt. Neque porro', 'Attr4': 'Quis autem vel'};
 
   public encoded;
 
@@ -53,7 +61,7 @@ export class DocumentDetailComponent implements OnInit {
   }
 
   public encodeEntries() {
-    this.encoded = Object.entries(this.document);
+    this.encoded = Object.entries(this.tmpDocument);
   }
 
   public addAttrRow() {
@@ -63,7 +71,7 @@ export class DocumentDetailComponent implements OnInit {
   public submitAttribute(idx, $event: any) {
     if ($event[0]) {
       this.encoded[idx] = $event;
-      this.document[$event[0]] = $event[1];
+      this.tmpDocument[$event[0]] = $event[1];
     }
   }
 

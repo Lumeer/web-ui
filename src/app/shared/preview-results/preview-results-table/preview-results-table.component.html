@@ -18,7 +18,7 @@
       <tr *ngIf="documents.length === 0">
         <td [attr.colspan]="collection.attributes.length" class="text-center" i18n="@@shared.preview.results.noResults">No documents found.</td>
       </tr>
-      <ng-container *ngFor="let r of (documents | slice : (page * pageSize) : ((page + 1) * pageSize)); let idx = index">
+      <ng-container *ngFor="let r of (documents | slice : (page * pageSize) : ((page + 1) * pageSize)); trackBy: page; let idx = index;">
         <tr class="clickable-row {{activeIndex == idx + (page * pageSize) ? 'active' : ''}}"
             (click)="activate(idx + (page * pageSize))">
           <td *ngFor="let attr of collection.attributes" title="{{r.data[attr.id]}}">{{r.data[attr.id]}}</td>

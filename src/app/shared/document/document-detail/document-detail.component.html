@@ -2,7 +2,7 @@
   <div class="col-8 d-flex align-bottom align-self-end text-nowrap ellipsis">
     <div class="align-text-bottom">
       <h4 i18n="@@document.detail.heading">Document detail</h4>
-      <span class="small"><i class="fas {{icon}}" [style.color]="color"></i>&nbsp;{{collectionName}}</span>&nbsp;
+      <span class="small"><i class="fas {{collection?.icon}}" [style.color]="collection?.color"></i>&nbsp;{{collection?.name}}</span>&nbsp;
       <strong>{{summary}}</strong>
     </div>
   </div>
@@ -14,9 +14,9 @@
     </div>
   </div>
 </div>
-<key-value *ngFor="let e of encoded; let idx = index;"
-           [key]="e[0]"
-           [value]="e[1]"
+<key-value *ngFor="let attr of collection?.attributes; let idx = index;"
+           [key]="attr.name"
+           [value]="documentModel.data[attr.id]"
            (change)="submitAttribute(idx, $event)"
            (remove)="removeAttribute(idx)">
 </key-value>

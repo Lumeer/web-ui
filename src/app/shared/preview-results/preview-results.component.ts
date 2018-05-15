@@ -24,7 +24,7 @@ import {AppState} from "../../core/store/app.state";
 import {selectCollectionById, selectCollectionsByQuery} from "../../core/store/collections/collections.state";
 import {Observable} from "rxjs/Observable";
 import {CollectionModel} from "../../core/store/collections/collection.model";
-import {filter, take} from "rxjs/operators";
+import {filter, take, tap} from "rxjs/operators";
 import {isNullOrUndefined} from "util";
 import {DocumentModel} from "../../core/store/documents/document.model";
 import {selectDocumentsByCustomQuery} from "../../core/store/documents/documents.state";
@@ -118,6 +118,9 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
     if (this.collectionQuery) {
       this.documents$ = this.store.select(selectDocumentsByCustomQuery(this.collectionQuery));
       this.collection$ = this.store.select(selectCollectionById(this.selectedCollectionId));
+
+      this.allSubscriptions.add(this.documents$.pipe(filter(documents => !!documents && documents.length > 0), take(1))
+        .subscribe(documents => this.setActiveDocument(documents[0])));
     }
   }
 

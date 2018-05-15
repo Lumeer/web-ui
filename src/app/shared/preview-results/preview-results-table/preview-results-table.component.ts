@@ -69,10 +69,6 @@ export class PreviewResultsTableComponent implements OnInit {
       ((page > this.page) && (page < Math.ceil(this.documents.length / PreviewResultsTableComponent.PAGE_SIZE)));
   }
 
-  public documentOnPage(idx: number) {
-    return idx >= (this.page * PreviewResultsTableComponent.PAGE_SIZE) && idx < ((this.page + 1) * PreviewResultsTableComponent.PAGE_SIZE);
-  }
-
   public pageEndIndex(page: number) {
     return Math.min((page + 1) * 100, this.documents.length);
   }

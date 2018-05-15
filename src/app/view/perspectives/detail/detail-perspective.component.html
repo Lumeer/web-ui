@@ -5,9 +5,9 @@
     </div>
   </div>
   <div class="p-0 m-0 collapse show" id="preview-collapse">
-    <preview-results></preview-results>
+    <preview-results (selectCollection)="selectCollection($event)" (selectDocument)="selectDocument($event)"></preview-results>
     <hr/>
   </div>
-  <document-detail></document-detail>
+  <document-detail *ngIf="selectedDocument" [collection]="selectedCollection" [document]="selectedDocument"></document-detail>
   <links-list></links-list>
 </div>
