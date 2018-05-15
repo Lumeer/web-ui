@@ -21,6 +21,8 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DocumentModel} from "../../../core/store/documents/document.model";
 import {CollectionModel} from "../../../core/store/collections/collection.model";
 
+export const PAGE_SIZE = 100;
+
 @Component({
   selector: 'preview-results-table',
   templateUrl: './preview-results-table.component.html',
@@ -43,6 +45,8 @@ export class PreviewResultsTableComponent implements OnInit {
 
   @Output()
   public selectDocument = new EventEmitter<DocumentModel>();
+
+  public readonly pageSize = PAGE_SIZE;
 
   constructor() { }
 
