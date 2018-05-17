@@ -1,55 +1,72 @@
 <div class="my-4 table-responsive">
   <table class="table table-striped">
     <thead [style.background-color]="lightenColor(collection.color)">
-      <th></th>
-      <th i18n="@@collections.tab.attributes.attribute">Attribute</th>
-      <th i18n="@@collections.tab.attributes.usage">Usage</th>
-      <th>
-        <div class="form-control d-flex align-items-center" title="Search for attribute" i18n-title="@@collections.tab.attributes.search.title">
-          <input type="search" class="flex-grow-2" #searchInput
-                 placeholder="Type attribute name..."
-                 i18n-placeholder="@@collections.tab.attributes.search.placeholder"
-                 [(ngModel)]="searchString">
-          <i class="text-success fa fa-search cursor-pointer" (click)="searchInput.focus()"></i>
-        </div>
-      </th>
+      <tr>
+        <th></th>
+        <th i18n="@@collections.tab.attributes.attribute">Attribute</th>
+        <th i18n="@@collections.tab.attributes.usage">Usage</th>
+        <th>
+          <div class="form-control d-flex align-items-center" title="Search for attribute" i18n-title="@@collections.tab.attributes.search.title">
+            <input type="search" class="flex-grow-2" #searchInput
+                   placeholder="Type attribute name..."
+                   i18n-placeholder="@@collections.tab.attributes.search.placeholder"
+                   [(ngModel)]="searchString">
+            <i class="text-success fa fa-search cursor-pointer" (click)="searchInput.focus()"></i>
+          </div>
+        </th>
+      </tr>
     </thead>
     <tbody>
       <tr>
         <td></td>
-        <td colspan="3">
+        <td colspan="2">
           <input-box
             [canStayEmpty]="true"
             [placeholder]="attributePlaceholder"
             [initialValue]="newAttributeName"
-            (newValue)="onCreateAttribute($event); newAttributeInput.clearInputs()"
-            #newAttributeInput>
+            (newValue)="newAttributeName = $event"
+            (confirmedValue)="onCreateAttribute()">
           </input-box>
+        </td>
+        <td>
+          <button type="button"
+                  class="btn btn-sm btn-success float-right"
+                  (click)="onCreateAttribute()">
+            <i class="fas fa-plus"></i>
+            <span class="font-weight-bold" i18n="@@collection.tab.attributes.attribute.add">Add attribute</span>
+          </button>
         </td>
       </tr>
       <tr *ngFor="let attribute of attributes | attributeFilter:searchString">
         <th scope="row"
-            class="icon-hover {{ collection.defaultAttributeId === attribute.id ? 'visible' : null }}">
-          <i *ngIf="collection.defaultAttributeId === attribute.id"
-             class="fas fa-fw fa-check-circle"
+            class="icon-hover {{ isDefaultAttribute(attribute) ? 'visible' : null }}">
+          <i *ngIf="isDefaultAttribute(attribute); else notDefaultIcon"
+             class="fas fa-fw fa-check-circle cursor-pointer"
              title="Default attribute"
              i18n-title="@@collection.tab.attributes.attribute.default"></i>
-          <i *ngIf="collection.defaultAttributeId !== attribute.id"
-             class="fas fa-fw fa-check"
-             title="Set default attribute"
-             i18n-title="@@collection.tab.attributes.attribute.default.set"
-             (click)="setDefaultAttribute(attribute)"></i>
+          <ng-template #notDefaultIcon>
+            <i class="fas fa-fw fa-check cursor-pointer"
+               title="Set default attribute"
+               i18n-title="@@collection.tab.attributes.attribute.default.set"
+               (click)="setDefaultAttribute(attribute)"></i>
+          </ng-template>
         </th>
         <td>
           <input-box
+            [class.font-weight-bold]="isDefaultAttribute(attribute)"
             [canStayEmpty]="true"
             [title]="attribute.name"
             [placeholder]="attributePlaceholder"
             [initialValue]="attribute.name"
-            (newValue)="onNewAttributeName(attribute, $event)">
+            (newValue)="onNewAttributeName(attributeNameInput, attribute, $event)"
+            #attributeNameInput>
           </input-box>
         </td>
-        <td>{{attribute.usageCount}}</td>
+        <td>
+          <span [class.font-weight-bold]="isDefaultAttribute(attribute)">
+            {{attribute.usageCount}}
+          </span>
+        </td>
         <td>
           <div class="float-right icon-hover">
             <i class="fas fa-fw fa-trash text-danger cursor-pointer"

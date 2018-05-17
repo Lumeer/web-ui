@@ -30,6 +30,8 @@ import {filter} from 'rxjs/operators';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
 import {isNullOrUndefined} from "util";
 import {Subscription} from 'rxjs/Subscription';
+import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {InputBoxComponent} from '../../../../shared/input/input-box/input-box.component';
 
 @Component({
   templateUrl: './collection-attributes.component.html',
@@ -63,22 +65,31 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
     this.store.dispatch(new CollectionsAction.SetDefaultAttribute({collectionId: this.collection.id, attributeId: attribute.id}));
   }
 
-  public onCreateAttribute(name: string) {
+  public onCreateAttribute() {
+    const name = this.newAttributeName.trim();
     if (name === '') {
       return;
     }
     const attribute = {name, constraints: [], usageCount: 0};
-    // TODO optimistic
     this.store.dispatch(new CollectionsAction.CreateAttributes({collectionId: this.collection.id, attributes: [attribute]}));
+
+    this.newAttributeName = '';
   }
 
-  public onNewAttributeName(attribute: AttributeModel, newName: string) {
+  public isDefaultAttribute(attribute: AttributeModel): boolean {
+    return attribute.id === this.getDefaultAttributeId();
+  }
+
+  private getDefaultAttributeId(): string {
+    return getDefaultAttributeId(this.collection);
+  }
+
+  public onNewAttributeName(component: InputBoxComponent, attribute: AttributeModel, newName: string) {
     if (newName === '') {
       this.showAttributeDeleteDialog(attribute, () => {
-        // TODO set attributeName back
+        component.setValue(attribute.name);
       })
     } else {
-      // TODO optimistic
       const updatedAttribute = {...attribute, name: newName};
       this.store.dispatch(new CollectionsAction.ChangeAttribute({
         collectionId: this.collection.id,
@@ -110,7 +121,6 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
   }
 
   public deleteAttribute(attribute: AttributeModel) {
-    // TODO optimistic
     this.store.dispatch(new CollectionsAction.RemoveAttribute({collectionId: this.collection.id, attributeId: attribute.id}));
   }
 

@@ -49,6 +49,7 @@ export class InputBoxComponent implements OnInit {
   @Output() public focus: EventEmitter<void> = new EventEmitter();
   @Output() public blur: EventEmitter<void> = new EventEmitter();
   @Output() public newValue: EventEmitter<string> = new EventEmitter();
+  @Output() public confirmedValue: EventEmitter<string> = new EventEmitter();
   @Output() public emptyValue: EventEmitter<void> = new EventEmitter();
 
   public mCurrentValue: string;
@@ -79,26 +80,28 @@ export class InputBoxComponent implements OnInit {
     this.mPlaceholder = this.placeholder || this.defaultPlaceholder();
   }
 
-  public onNewValue(value: string) {
+  public onNewValue(value: string, afterEnter: boolean) {
     this.blur.emit();
     this.removeFocusFromInputParent();
 
-    if (value == this.mCurrentValue) {
-      return;
+    if (value !== this.mCurrentValue) {
+      if (value.length === 0 && !this.canStayEmpty) {
+        this.emptyValue.emit();
+        this.input.nativeElement.textContent = this.mCurrentValue;
+      } else {
+        this.mCurrentValue = value;
+        this.newValue.emit(value);
+      }
     }
 
-    if (value.length === 0 && !this.canStayEmpty) {
-      this.emptyValue.emit();
-      this.input.nativeElement.textContent = this.mCurrentValue;
-    } else {
-      this.mCurrentValue = value;
-      this.newValue.emit(value);
+    if (afterEnter) {
+      this.confirmedValue.emit(value);
     }
+
   }
 
-  public clearInputs(){
-    this.mCurrentValue = '';
-    this.input.nativeElement.textContent = this.mCurrentValue;
+  public setValue(value: string){
+    this.mCurrentValue = value;
   }
 
   public onFocus() {
@@ -118,11 +121,11 @@ export class InputBoxComponent implements OnInit {
     return this.maxLines > 1;
   }
 
-  public setWarningBorder(){
+  public setWarningBorder() {
     this.input.nativeElement.classList.add(...warningStyle);
   }
 
-  public removeWarningBorder(){
+  public removeWarningBorder() {
     this.input.nativeElement.classList.remove(...warningStyle);
   }
 

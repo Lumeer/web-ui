@@ -8,7 +8,8 @@
       [maxLines]="1"
       [initialValue]="email"
       (focus)="onEmailFocus()"
-      (newValue)="email = $event">
+      (newValue)="email = $event"
+      (confirmedValue)="onAddUser()">
     </input-box>
 
     <i *ngIf="showEmailWarning" class="fa fa-exclamation-triangle align-self-center ml-1 text-warning"

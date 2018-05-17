@@ -35,6 +35,7 @@ import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
 import {debounceTime, filter} from 'rxjs/operators';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
+import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 
 @Component({
   selector: 'post-it-document',
@@ -239,7 +240,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public isDefaultAttribute(attributeId: string): boolean {
-    return attributeId && attributeId === this.collection.defaultAttributeId;
+    return attributeId && attributeId === getDefaultAttributeId(this.collection);
   }
 
   public hasWriteRole(): boolean {
