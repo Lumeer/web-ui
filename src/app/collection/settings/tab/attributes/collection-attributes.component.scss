@@ -1,0 +1,34 @@
+@import "../../../../shared/variables";
+
+input {
+  border: 1px solid transparent;
+  outline: none;
+}
+
+table {
+  th {
+    vertical-align: middle;
+  }
+
+  tr {
+    .icon-hover {
+      transition: color $animation-color-duration;
+
+      i {
+        opacity: 0;
+      }
+
+      &:hover {
+        color: $success;
+      }
+    }
+
+    &:hover .icon-hover i {
+      opacity: 1;
+    }
+  }
+
+  .visible i {
+    opacity: 1 !important;
+  }
+}

@@ -41,7 +41,7 @@ import {TablesAction, TablesActionType} from '../tables/tables.action';
 import {CollectionConverter} from './collection.converter';
 import {AttributeModel} from './collection.model';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
-import {selectCollectionsLoaded} from './collections.state';
+import {selectCollectionsDictionary, selectCollectionsLoaded} from './collections.state';
 
 @Injectable()
 export class CollectionsEffects {
@@ -255,6 +255,32 @@ export class CollectionsEffects {
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.remove.favorite.fail', value: 'Failed to remove favorite file'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public setDefaultAttribute$ = this.actions$.pipe(
+    ofType<CollectionsAction.SetDefaultAttribute>(CollectionsActionType.SET_DEFAULT_ATTRIBUTE),
+    tap(action => this.store$.dispatch(new CollectionsAction.SetDefaultAttributeSuccess(action.payload))),
+    withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+    concatMap(([action, collections]) => {
+      const {collectionId, attributeId} = action.payload;
+      const collection = collections[collectionId];
+      const oldDefaultAttributeId = collection.defaultAttributeId;
+      return this.collectionService.setDefaultAttribute(collectionId, attributeId).pipe(
+        concatMap(() => Observable.of()),
+        catchError((error) => Observable.of(new CollectionsAction.SetDefaultAttributeFailure({error, collectionId, oldDefaultAttributeId})))
+      )
+    })
+  );
+
+  @Effect()
+  public setDefaultAttributeFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.SetDefaultAttributeFailure>(CollectionsActionType.SET_DEFAULT_ATTRIBUTE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'collection.attribute.default.set.fail', value: 'Failed to set default attribute id'});
       return new NotificationsAction.Error({message});
     })
   );

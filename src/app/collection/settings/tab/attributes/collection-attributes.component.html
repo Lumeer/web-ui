@@ -1,3 +1,64 @@
-<div class="mx-3">
-  <attribute-list [collection]="collection"></attribute-list>
+<div class="my-4 table-responsive">
+  <table class="table table-striped">
+    <thead [style.background-color]="lightenColor(collection.color)">
+      <th></th>
+      <th i18n="@@collections.tab.attributes.attribute">Attribute</th>
+      <th i18n="@@collections.tab.attributes.usage">Usage</th>
+      <th>
+        <div class="form-control d-flex align-items-center" title="Search for attribute" i18n-title="@@collections.tab.attributes.search.title">
+          <input type="search" class="flex-grow-2" #searchInput
+                 placeholder="Type attribute name..."
+                 i18n-placeholder="@@collections.tab.attributes.search.placeholder"
+                 [(ngModel)]="searchString">
+          <i class="text-success fa fa-search cursor-pointer" (click)="searchInput.focus()"></i>
+        </div>
+      </th>
+    </thead>
+    <tbody>
+      <tr>
+        <td></td>
+        <td colspan="3">
+          <input-box
+            [canStayEmpty]="true"
+            [placeholder]="attributePlaceholder"
+            [initialValue]="newAttributeName"
+            (newValue)="onCreateAttribute($event); newAttributeInput.clearInputs()"
+            #newAttributeInput>
+          </input-box>
+        </td>
+      </tr>
+      <tr *ngFor="let attribute of attributes | attributeFilter:searchString">
+        <th scope="row"
+            class="icon-hover {{ collection.defaultAttributeId === attribute.id ? 'visible' : null }}">
+          <i *ngIf="collection.defaultAttributeId === attribute.id"
+             class="fas fa-fw fa-check-circle"
+             title="Default attribute"
+             i18n-title="@@collection.tab.attributes.attribute.default"></i>
+          <i *ngIf="collection.defaultAttributeId !== attribute.id"
+             class="fas fa-fw fa-check"
+             title="Set default attribute"
+             i18n-title="@@collection.tab.attributes.attribute.default.set"
+             (click)="setDefaultAttribute(attribute)"></i>
+        </th>
+        <td>
+          <input-box
+            [canStayEmpty]="true"
+            [title]="attribute.name"
+            [placeholder]="attributePlaceholder"
+            [initialValue]="attribute.name"
+            (newValue)="onNewAttributeName(attribute, $event)">
+          </input-box>
+        </td>
+        <td>{{attribute.usageCount}}</td>
+        <td>
+          <div class="float-right icon-hover">
+            <i class="fas fa-fw fa-trash text-danger cursor-pointer"
+               (click)="onDeleteAttribute(attribute)"
+               title="Delete attribute" i18n-title="@@collection.tab.attributes.attribute.delete"
+               aria-hidden="true"></i>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

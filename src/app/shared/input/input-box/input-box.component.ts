@@ -87,13 +87,18 @@ export class InputBoxComponent implements OnInit {
       return;
     }
 
-    if (value.length == 0 && !this.canStayEmpty) {
+    if (value.length === 0 && !this.canStayEmpty) {
       this.emptyValue.emit();
       this.input.nativeElement.textContent = this.mCurrentValue;
     } else {
-      this.newValue.emit(value);
       this.mCurrentValue = value;
+      this.newValue.emit(value);
     }
+  }
+
+  public clearInputs(){
+    this.mCurrentValue = '';
+    this.input.nativeElement.textContent = this.mCurrentValue;
   }
 
   public onFocus() {

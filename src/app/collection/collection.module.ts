@@ -30,10 +30,10 @@ import {CollectionUsersComponent} from './settings/tab/users/collection-users.co
 import {CollectionEventsComponent} from './settings/tab/events/collection-events.component';
 import {CollectionSettingsGuard} from './collection-settings.guard';
 import {LinkAttributeListComponent} from './settings/tab/link-attribute-list/link-attribute-list.component';
-import {AttributeListComponent} from './settings/tab/attribute-list/attribute-list.component';
 import {CollectionTabComponent} from './settings/tab/collection-tab.component';
 import {PickerModule} from '../shared/picker/picker.module';
 import {UsersModule} from '../shared/users/users.module';
+import {AttributesPipe} from './settings/tab/attributes/attributes-pipe';
 
 @NgModule({
   imports: [
@@ -43,7 +43,7 @@ import {UsersModule} from '../shared/users/users.module';
     PickerModule
   ],
   declarations: [
-    AttributeListComponent,
+    AttributesPipe,
     LinkAttributeListComponent,
     CollectionComponent,
     CollectionTabComponent,

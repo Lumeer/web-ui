@@ -23,7 +23,7 @@ import {Resource} from "./resource";
 export interface Collection extends Resource {
 
   attributes?: Attribute[];
-  defaultAttribute?: Attribute; // TODO implement on backend
+  defaultAttributeId?: string;
   documentsCount?: number;
   favorite?: boolean;
 

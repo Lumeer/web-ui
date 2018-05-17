@@ -25,10 +25,11 @@ import {finalize, map} from 'rxjs/operators';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../../core/constants';
 import {Collection} from '../../../../core/dto';
 import {NotificationService} from '../../../../core/notifications/notification.service';
-import {CollectionService, LinkTypeService} from '../../../../core/rest';
+import {LinkTypeService} from '../../../../core/rest';
 import {AppState} from '../../../../core/store/app.state';
 import {CollectionTabComponent} from '../collection-tab.component';
 import {LinkTypeModel} from './LinkTypeModel';
+import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 
 @Component({
   selector: 'collection-link-types',
@@ -46,27 +47,19 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
 
   constructor(private linkTypeService: LinkTypeService,
               private router: Router,
-              collectionService: CollectionService,
-              notificationService: NotificationService,
+              private notificationService: NotificationService,
               store: Store<AppState>) {
-    super(
-      collectionService,
-      notificationService,
-      store
-    );
+    super(store);
   }
 
   public ngOnInit(): void {
     super.ngOnInit();
 
-    this.collectionService.getCollections().subscribe(
-      collections => {
-        collections.forEach(collection => this.collections[collection.id] = collection);
-        this.initializeLinkTypes();
-      },
-      error => {
-        this.notificationService.error('Failed fetching files');
-      }
+    this.store.select(selectAllCollections).subscribe(
+      collections => this.collections = collections.reduce((acc, coll) => {
+        acc[coll.id] = coll;
+        return acc;
+      }, {})
     );
   }
 

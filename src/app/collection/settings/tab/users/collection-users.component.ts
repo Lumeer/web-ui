@@ -23,11 +23,9 @@ import {CollectionTabComponent} from '../collection-tab.component';
 import {ResourceType} from "../../../../core/model/resource-type";
 
 @Component({
-  templateUrl: './collection-users.component.html',
-  styleUrls: ['./collection-users.component.scss']
+  templateUrl: './collection-users.component.html'
 })
 export class CollectionUsersComponent extends CollectionTabComponent {
-
 
   public getResourceType(): ResourceType {
     return ResourceType.Collection

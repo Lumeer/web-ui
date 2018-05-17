@@ -17,10 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute} from '../../../../core/dto/attribute';
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
+import {AttributeModel} from '../../../../core/store/collections/collection.model';
 
-export interface ConfiguredAttribute extends Attribute {
-
-  newConstraint: string;
-
+@Pipe({
+  name: 'attributeFilter'
+})
+@Injectable()
+export class AttributesPipe implements PipeTransform {
+  transform(attributes: AttributeModel[], value: string): any[] {
+    if (!attributes || !value) {
+      return attributes;
+    }
+    return attributes.filter(attr => attr.name.toLowerCase().includes(value.toLocaleLowerCase()));
+  }
 }
