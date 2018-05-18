@@ -49,7 +49,6 @@ export class InputBoxComponent implements OnInit {
   @Output() public focus: EventEmitter<void> = new EventEmitter();
   @Output() public blur: EventEmitter<void> = new EventEmitter();
   @Output() public newValue: EventEmitter<string> = new EventEmitter();
-  @Output() public confirmedValue: EventEmitter<string> = new EventEmitter();
   @Output() public emptyValue: EventEmitter<void> = new EventEmitter();
 
   public mCurrentValue: string;
@@ -71,7 +70,7 @@ export class InputBoxComponent implements OnInit {
   }
 
   private computeProperties() {
-    this.mCurrentValue = this.initialValue;
+    this.mCurrentValue = this.initialValue && this.initialValue.trim() || '';
     this.mFontSizeRem = this.fontSizeRem || DEFAULT_FONT_SIZE;
     const mMaxLines = this.maxLines || DEFAULT_MAX_LINES;
     this.mLineHeight = DEFAULT_LINE_HEIGHT;
@@ -80,7 +79,7 @@ export class InputBoxComponent implements OnInit {
     this.mPlaceholder = this.placeholder || this.defaultPlaceholder();
   }
 
-  public onNewValue(value: string, afterEnter: boolean) {
+  public onNewValue(value: string) {
     this.blur.emit();
     this.removeFocusFromInputParent();
 
@@ -93,11 +92,6 @@ export class InputBoxComponent implements OnInit {
         this.newValue.emit(value);
       }
     }
-
-    if (afterEnter) {
-      this.confirmedValue.emit(value);
-    }
-
   }
 
   public setValue(value: string){

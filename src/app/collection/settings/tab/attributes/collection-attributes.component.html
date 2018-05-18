@@ -1,34 +1,37 @@
-<div class="my-4 table-responsive">
+<div class="my-4">
   <table class="table table-striped">
     <thead [style.background-color]="lightenColor(collection.color)">
-      <tr>
-        <th></th>
-        <th i18n="@@collections.tab.attributes.attribute">Attribute</th>
-        <th i18n="@@collections.tab.attributes.usage">Usage</th>
-        <th>
-          <div class="form-control d-flex align-items-center" title="Search for attribute" i18n-title="@@collections.tab.attributes.search.title">
+      <tr class="d-flex">
+        <th class="col-1"></th>
+        <th class="col-5 d-flex align-items-center">
+          <span i18n="@@collections.tab.attributes.attribute">Attribute</span>
+        </th>
+        <th class="col-2 d-flex align-items-center">
+          <span i18n="@@collections.tab.attributes.usage">Usage</span>
+        </th>
+        <th class="col-4">
+          <div class="form-control d-flex align-items-center overflow-hidden" title="Search for attribute" i18n-title="@@collections.tab.attributes.search.title">
             <input type="search" class="flex-grow-2" #searchInput
-                   placeholder="Type attribute name..."
+                   width="100"
+                   placeholder="Search attribute..."
                    i18n-placeholder="@@collections.tab.attributes.search.placeholder"
                    [(ngModel)]="searchString">
-            <i class="text-success fa fa-search cursor-pointer" (click)="searchInput.focus()"></i>
           </div>
         </th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td></td>
-        <td colspan="2">
+      <tr class="d-flex">
+        <td class="col-1"></td>
+        <td class="col-8">
           <input-box
             [canStayEmpty]="true"
             [placeholder]="attributePlaceholder"
             [initialValue]="newAttributeName"
-            (newValue)="newAttributeName = $event"
-            (confirmedValue)="onCreateAttribute()">
+            (newValue)="newAttributeName = $event">
           </input-box>
         </td>
-        <td>
+        <td class="col-3">
           <button type="button"
                   class="btn btn-sm btn-success float-right"
                   (click)="onCreateAttribute()">
@@ -37,13 +40,15 @@
           </button>
         </td>
       </tr>
-      <tr *ngFor="let attribute of attributes | attributeFilter:searchString">
+      <tr class="d-flex" *ngFor="let attribute of attributes | attributeFilter:searchString">
         <th scope="row"
-            class="icon-hover {{ isDefaultAttribute(attribute) ? 'visible' : null }}">
+            class="icon-hover col-1 d-flex align-items-center justify-content-center"
+            [class.visible]="isDefaultAttribute(attribute)">
           <i *ngIf="isDefaultAttribute(attribute); else notDefaultIcon"
              class="fas fa-fw fa-check-circle cursor-pointer"
              title="Default attribute"
-             i18n-title="@@collection.tab.attributes.attribute.default"></i>
+             i18n-title="@@collection.tab.attributes.attribute.default"
+             (click)="setDefaultAttribute(attribute)"></i>
           <ng-template #notDefaultIcon>
             <i class="fas fa-fw fa-check cursor-pointer"
                title="Set default attribute"
@@ -51,7 +56,7 @@
                (click)="setDefaultAttribute(attribute)"></i>
           </ng-template>
         </th>
-        <td>
+        <td class="col-5">
           <input-box
             [class.font-weight-bold]="isDefaultAttribute(attribute)"
             [canStayEmpty]="true"
@@ -62,12 +67,12 @@
             #attributeNameInput>
           </input-box>
         </td>
-        <td>
+        <td class="col-2">
           <span [class.font-weight-bold]="isDefaultAttribute(attribute)">
             {{attribute.usageCount}}
           </span>
         </td>
-        <td>
+        <td class="col-4">
           <div class="float-right icon-hover">
             <i class="fas fa-fw fa-trash text-danger cursor-pointer"
                (click)="onDeleteAttribute(attribute)"

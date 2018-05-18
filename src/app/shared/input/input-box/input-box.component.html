@@ -18,7 +18,7 @@
        [attr.contenteditable]="editable"
        [attr.placeholder]="mPlaceholder"
        [attr.title]="title"
-       (keydown.enter)="onNewValue(input.textContent, true); input.blur()"
+       (keydown.enter)="input.blur()"
        (keydown.Escape)="input.textContent = mCurrentValue; input.blur()"
        [attr.spellcheck]="false" #input>
   </div>

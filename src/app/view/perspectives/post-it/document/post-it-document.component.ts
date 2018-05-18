@@ -270,8 +270,10 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
       const row = this.postItRows.find(row => row.attributeId === attributeId);
       if (!row) {
         const attribute = this.findAttributeById(attributeId);
-        const attributeName = attribute && attribute.name || '';
-        this.postItRows.push({attributeId, attributeName, value: this.postItModel.document.data[attributeId]});
+        if (attribute) {
+          const attributeName = attribute && attribute.name || '';
+          this.postItRows.push({attributeId, attributeName, value: this.postItModel.document.data[attributeId]});
+        }
       }
     });
   }

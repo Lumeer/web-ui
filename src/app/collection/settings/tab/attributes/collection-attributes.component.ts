@@ -62,6 +62,9 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
   }
 
   public setDefaultAttribute(attribute: AttributeModel) {
+    if (this.collection.defaultAttributeId === attribute.id) {
+      return;
+    }
     this.store.dispatch(new CollectionsAction.SetDefaultAttribute({collectionId: this.collection.id, attributeId: attribute.id}));
   }
 
