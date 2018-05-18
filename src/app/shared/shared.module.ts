@@ -23,7 +23,6 @@ import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {CommentsComponent} from './comments/comments.component';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
-import {LinksComponent} from './links/links.component';
 
 import {PerspectiveDirective} from './perspective.directive';
 import {PickerModule} from './picker/picker.module';
@@ -35,16 +34,7 @@ import {UsersModule} from "./users/users.module";
 import {TagModule} from "./tag/tag.module";
 import {InputModule} from "./input/input.module";
 import {ResourceHeaderComponent} from './resource/header/resource-header.component';
-import {PreviewResultsComponent} from './preview-results/preview-results.component';
-import {PreviewResultsTabsComponent} from './preview-results/preview-results-tabs/preview-results-tabs.component';
-import {PreviewResultsTableComponent} from './preview-results/preview-results-table/preview-results-table.component';
-import {DocumentDetailComponent} from './document/document-detail/document-detail.component';
-import {LinksListComponent} from './links/links-list/links-list.component';
-import {LinksListTabsComponent} from './links/links-list/links-list-tabs/links-list-tabs.component';
-import {LinksListTableComponent} from './links/links-list/links-list-table/links-list-table.component';
-import {KeyValueComponent} from './document/document-detail/key-value/key-value.component';
 import {PostItCollectionsModule} from './post-it-collections/post-it-collections.module';
-import {LayoutItem} from "./utils/layout/layout-item.directive";
 import {DocumentModule} from "./document/document.module";
 import {PreviewResultsModule} from "./preview-results/preview-results.module";
 import {LinksModule} from "./links/links.module";
@@ -71,8 +61,7 @@ import {LinksModule} from "./links/links.module";
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
     SliderComponent,
-    LayoutItem,
-    ResourceHeaderComponent
+    ResourceHeaderComponent,
   ],
   exports: [
     CommonModule,
@@ -88,10 +77,10 @@ import {LinksModule} from "./links/links.module";
     SliderComponent,
     TagModule,
     InputModule,
+    ResourceHeaderComponent,
     DocumentModule,
     PreviewResultsModule,
-    LinksModule,
-    ResourceHeaderComponent
+    LinksModule
   ]
 })
 export class SharedModule {

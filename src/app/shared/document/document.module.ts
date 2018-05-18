@@ -21,10 +21,12 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DocumentDetailComponent} from "./document-detail/document-detail.component";
 import {KeyValueComponent} from "./document-detail/key-value/key-value.component";
+import {InputModule} from "../input/input.module";
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    InputModule
   ],
   declarations: [
     DocumentDetailComponent,
