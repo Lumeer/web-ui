@@ -3,24 +3,31 @@
     <div class="align-text-bottom">
       <h4 i18n="@@document.detail.heading">Document detail</h4>
       <span class="small"><i class="fas {{collection?.icon}}" [style.color]="collection?.color"></i>&nbsp;{{collection?.name}}</span>&nbsp;
-      <strong>{{summary}}</strong>
+      <strong>{{collection.defaultAttributeId ? documentModel.data[collection.defaultAttributeId] : (collection.attributes.length > 0 ? documentModel.data[collection.attributes[0].id] : '')}}</strong>
     </div>
   </div>
   <div class="col small text-right d-flex align-bottom notice">
     <div class="justify-content-end w-100">
-      Version 17<br/>
-      Created on 04/24/2018 by Alan Turing<br/>
-      Last modified on 05/09/2018 by Carl Gauss
+      Version {{documentModel.dataVersion}}<br/>
+      Created on {{getNativeDate(documentModel.creationDate) | date : 'mediumDate'}} by {{createdBy$ | async}}<br/>
+      Last modified on {{getNativeDate(documentModel.updateDate) | date : 'mediumDate'}} by {{updatedBy$ | async}}
     </div>
   </div>
 </div>
-<key-value *ngFor="let attr of collection?.attributes; let idx = index;"
+<!--key-value *ngFor="let attr of collection?.attributes; let idx = index;"
            [key]="attr.name"
            [value]="userUpdates[attr.id] ? userUpdates[attr.id] : documentModel.data[attr.id]"
            [emitKeyPress]="true"
            (valueChange)="onValueChange(attr.id, $event)"
            (change)="submitAttribute(idx, $event)"
            (remove)="removeAttribute(idx)">
+</key-value-->
+<key-value *ngFor="let row of rows; let idx = index;"
+           [key]="row.name"
+           [value]="row.value"
+           [emitKeyPress]="true"
+           (change)="submitRowChange(idx, $event)"
+           (remove)="onRemoveRow(idx)">
 </key-value>
 <div class="row border-top mb-4">
   <div class="col">

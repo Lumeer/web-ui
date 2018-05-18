@@ -27,8 +27,16 @@ import {Store} from "@ngrx/store";
 import {AppState} from "../../../core/store/app.state";
 import {selectDocumentById} from "../../../core/store/documents/documents.state";
 import {DocumentsAction} from "../../../core/store/documents/documents.action";
-import {Observable} from "rxjs/Observable";
 import {IntervalObservable} from "rxjs/observable/IntervalObservable";
+import {selectCollectionById} from "../../../core/store/collections/collections.state";
+import {selectUserNameById} from "../../../core/store/users/users.state";
+import {filter, take} from "rxjs/operators";
+import {isNullOrUndefined} from "util";
+import {UsersAction} from "../../../core/store/users/users.action";
+import {selectOrganizationByWorkspace} from "../../../core/store/organizations/organizations.state";
+import {Observable} from "rxjs/Observable";
+import {CorrelationIdGenerator} from "../../../core/store/correlation-id.generator";
+import {CollectionsAction} from "../../../core/store/collections/collections.action";
 
 @Component({
   selector: 'document-detail',
@@ -43,15 +51,12 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   @Input('document')
   public documentModel: DocumentModel;
 
-  @Input()
-  public summary: string = 'voluptatem sequi nesciunt. Neque porro';
-
-  @Input()
-  public tmpDocument = { 'Attr1': 'accusantium', 'Attr2': 16, 'Attr3': 'voluptatem sequi nesciunt. Neque porro', 'Attr4': 'Quis autem vel'};
-
   public userUpdates = new Map();
 
-  public encoded;
+  public rows: {id?: string, name: string, value: string, correlationId: string}[] = [];
+
+  public createdBy$: Observable<string>;
+  public updatedBy$: Observable<string>;
 
   private subscriptions = new Subscription();
 
@@ -62,31 +67,144 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.subscriptions.add(this.store.select(selectDocumentById(this.documentModel.id)).subscribe(doc => {
       this.documentModel = doc;
+      this.encodeDocument();
     }));
+    this.subscriptions.add(this.store.select(selectCollectionById(this.collection.id)).subscribe(col => {
+      this.collection = col;
+      this.encodeDocument();
+    }));
+    this.subscriptions.add(IntervalObservable.create(200000).subscribe(() => this.patchDocument()));
 
-    this.subscriptions.add(IntervalObservable.create(2000).subscribe(() => this.patchDocument()));
+    this.createdBy$ = this.store.select(selectUserNameById(this.documentModel.createdBy))
+      .pipe(filter(name => !isNullOrUndefined(name)));
+    this.updatedBy$ = this.store.select(selectUserNameById(this.documentModel.updatedBy))
+      .pipe(filter(name => !isNullOrUndefined(name)));
 
-    this.encodeEntries()
+    this.subscriptions.add(this.store.select(selectOrganizationByWorkspace)
+      .pipe(filter(org => !isNullOrUndefined(org)), take(1))
+      .subscribe(org => this.store.dispatch(new UsersAction.Get({ organizationId: org.id} ))));
+
+    this.encodeDocument();
+  }
+
+  private encodeDocument() {
+    this.collection.attributes.forEach(attr => {
+      let row = this.getRowById(attr.id);
+      if (row) {
+        if (row.name !== attr.name) {
+          row.name = attr.name;
+        }
+        if (row.value !== this.documentModel.data[attr.id]) {
+          row.value = this.documentModel.data[attr.id];
+        }
+      } else {
+        row = this.getRowByCorrelationId(attr.correlationId);
+        if (row) {
+          row.id = attr.id;
+          if (row.name !== attr.name) {
+            row.name = attr.name;
+          }
+          if (row.value !== this.documentModel.data[attr.id]) {
+            row.value = this.documentModel.data[attr.id];
+          }
+        } else {
+          this.rows.push({ id: attr.id, name: attr.name, value: this.documentModel.data[attr.id], correlationId: attr.correlationId });
+        }
+      }
+    });
+  }
+
+  private getRowById(id: string) {
+    if (id) {
+      for (let row of this.rows) {
+        if (row.id === id) {
+          return row;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private getRowByCorrelationId(correlationId: string) {
+    if (correlationId) {
+      for (let row of this.rows) {
+        if (row.correlationId === correlationId) {
+          return row;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  public getNativeDate(dateObject) {
+    return new Date(dateObject.year, dateObject.monthValue, dateObject.dayOfMonth, dateObject.hour, dateObject.minute, dateObject.second).getTime();
+  }
+
+  private alreadyInCollection(attrName) {
+    for (let attr of this.collection.attributes) {
+      if (attr.name === attrName) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private patchDocument() {
+    // based on rows, figure out:
+    // 1) what attributes are new
+    // 2) what attributes are renamed
+    // 3) what values are updated
+    // ... and send corresponding updates
+
+    // remove updates that preserve the current value
     this.collection.attributes.forEach(attr => {
       if (this.userUpdates.get(attr.id)) {
         if (this.documentModel.data[attr.id] === this.userUpdates.get(attr.id)) {
           this.userUpdates.delete(attr.id);
-        } else {
         }
       }
     });
 
-    if (this.userUpdates.size > 0) {
-      let data = Object.assign({}, { ...this.documentModel.data });
-      this.userUpdates.forEach((v, k) => data[k] = v);
+    const documentUpdateAction = new DocumentsAction.UpdateData({ document: null });
 
-      this.store.dispatch(new DocumentsAction.UpdateData({
-        document: Object.assign({}, { ...this.documentModel }, { data })
-        })
+    // are there any updates to upload?
+    if (this.userUpdates.size > 0) {
+      let data = Object.assign({}, {...this.documentModel.data});
+      this.userUpdates.forEach((v, k) => data[k] = v);
+      documentUpdateAction.payload.document = Object.assign({}, {...this.documentModel}, {data});
+    }
+
+    // for new rows we must create attributes and then upload data
+    if (this.rows.length > 0) {
+      // keep only those rows with attr. name that is not null and not in conflict with existing attr. name
+      const newData: { [attributeName: string]: any } = this.rows
+        .filter(row => isNullOrUndefined(row.id) && !isNullOrUndefined(row.name) && !this.alreadyInCollection(row.name))
+        .reduce((acc: { [attributeName: string]: any }, row) => {
+          acc[row.name] = {value: row.value, correlationId: row.correlationId};
+          return acc;
+        }, {});
+      const newAttributes = Object.keys(newData).map(name => ({name, constraints: [], correlationId: newData[name].correlationId}));
+
+      console.log("=============")
+      console.log(newData);
+      console.log(newAttributes);
+      console.log(this.rows);
+
+      if (documentUpdateAction.payload.document) {
+        documentUpdateAction.payload.document.newData = newData;
+      } else {
+        documentUpdateAction.payload.document = Object.assign({}, {...this.documentModel}, { newData });
+      }
+
+      this.store.dispatch(new CollectionsAction.CreateAttributes(
+        {collectionId: this.documentModel.collectionId, attributes: newAttributes, nextAction: documentUpdateAction})
       );
+    } else {
+      if (documentUpdateAction.payload.document) {
+        this.store.dispatch(documentUpdateAction);
+      }
     }
   }
 
@@ -95,18 +213,12 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     this.patchDocument();
   }
 
-  public encodeEntries() {
-    this.encoded = Object.entries(this.tmpDocument);
-  }
-
   public addAttrRow() {
-    this.encoded.push(["", ""]);
+    this.rows.push({ name: "", value: "", correlationId: CorrelationIdGenerator.generate() });
   }
 
   public submitAttribute(idx, $event: any) {
     if ($event[0]) {
-      this.encoded[idx] = $event;
-      this.tmpDocument[$event[0]] = $event[1];
     }
   }
 
@@ -121,8 +233,8 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   public removeAttribute(idx) {
-    if (this.encoded[idx][0]) {
-      const message = this.i18n(
+   // if (this.encoded[idx][0]) {
+   /*   const message = this.i18n(
         {
           id: 'document.detail.attribute.remove.confirm',
           value: 'Are you sure you want to delete this row?'
@@ -134,10 +246,18 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
       this.notificationService.confirm(message, title, [
         {text: yesButtonText, action: () => this.encoded.splice(idx, 1), bold: false},
         {text: noButtonText}
-      ]);
-    } else {
-      this.encoded.splice(idx, 1);
-    }
+      ]);*/
+    //} else {
+    //  this.encoded.splice(idx, 1);
+    //}
   }
 
+  public onRemoveRow(idx) {
+    this.rows.splice(idx, 1);
+  }
+
+  public submitRowChange(idx, $event: string[]) {
+    this.rows[idx].name = $event[0];
+    this.rows[idx].value = $event[1];
+  }
 }
