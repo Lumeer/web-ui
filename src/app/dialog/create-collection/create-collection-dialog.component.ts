@@ -17,40 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {filter} from 'rxjs/operators';
+import {filter, map, mergeMap} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
-import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
-import {AppState} from '../../../core/store/app.state';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
-import {CollectionsAction} from '../../../core/store/collections/collections.action';
-import {LinkTypeModel} from '../../../core/store/link-types/link-type.model';
-import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
-import {SmartDocAction} from '../../../core/store/smartdoc/smartdoc.action';
-import {SmartDocPartModel, SmartDocPartType} from '../../../core/store/smartdoc/smartdoc.model';
-import {SelectedSmartDocPart, selectSelectedSmartDocPart} from '../../../core/store/smartdoc/smartdoc.state';
-import {CollectionValidators} from '../../../core/validators/collection.validators';
-import {Perspective} from '../../../view/perspectives/perspective';
-
-declare let $: any;
+import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
+import {AppState} from '../../core/store/app.state';
+import {CollectionModel} from '../../core/store/collections/collection.model';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {selectCollectionById} from '../../core/store/collections/collections.state';
+import {LinkTypeModel} from '../../core/store/link-types/link-type.model';
+import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
+import {CollectionValidators} from '../../core/validators/collection.validators';
+import {DialogService} from '../dialog.service';
 
 @Component({
-  selector: 'new-collection-dialog',
-  templateUrl: './new-collection-dialog.component.html'
+  selector: 'create-collection-dialog',
+  templateUrl: './create-collection-dialog.component.html'
 })
-export class NewCollectionDialogComponent implements OnInit, OnDestroy {
+export class CreateCollectionDialogComponent implements OnInit, OnDestroy {
 
-  @Input()
-  public id: string;
-
-  @Input()
   public linkedCollection: CollectionModel;
-
-  private selectedSmartDocPart: SelectedSmartDocPart;
-  private smartDocSubscription: Subscription;
 
   public form: FormGroup;
   public collectionFormGroup: FormGroup;
@@ -59,8 +48,11 @@ export class NewCollectionDialogComponent implements OnInit, OnDestroy {
   public color: string = DEFAULT_COLOR;
   public icon: string = DEFAULT_ICON;
 
+  private subscriptions = new Subscription();
+
   constructor(private collectionValidators: CollectionValidators,
-              private router: Router,
+              private dialogService: DialogService,
+              private route: ActivatedRoute,
               private store: Store<AppState>) {
     this.createForm();
   }
@@ -100,28 +92,20 @@ export class NewCollectionDialogComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.reset();
 
-    if (this.linkedCollection) {
-      this.subscribeToSelectedSmartDocPart();
-    }
-
-    if (!this.id) {
-      this.id = 'newCollectionDialogModal';
-    }
+    this.subscriptions.add(this.subscribeToLinkedCollection());
   }
 
-  private subscribeToSelectedSmartDocPart() {
-    this.smartDocSubscription = this.store.select(selectSelectedSmartDocPart).pipe(
-      filter(selectedPart => !!selectedPart)
-    ).subscribe(selectedPart => {
-      this.selectedSmartDocPart = selectedPart;
-      this.reset();
-    });
+  private subscribeToLinkedCollection(): Subscription {
+    return this.route.paramMap.pipe(
+      map(params => params.get('linkedCollectionId')),
+      filter(linkedCollectionId => !!linkedCollectionId),
+      mergeMap(linkedCollectionId => this.store.select(selectCollectionById(linkedCollectionId))),
+      filter(linkedCollection => !!linkedCollection)
+    ).subscribe(linkedCollection => this.linkedCollection = linkedCollection);
   }
 
   public ngOnDestroy() {
-    if (this.smartDocSubscription) {
-      this.smartDocSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   public reset() {
@@ -139,15 +123,13 @@ export class NewCollectionDialogComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit() {
-    const action = this.createCollectionAction();
-    this.store.dispatch(action);
+    const callback = this.dialogService.callback;
 
-    this.reset();
-    this.hide();
-  }
+    this.store.dispatch(this.createCollectionAction());
 
-  private hide() {
-    $(`#${this.id}`).modal('hide');
+    if (!callback) {
+      this.dialogService.closeDialog();
+    }
   }
 
   private createCollectionAction(): CollectionsAction.Create {
@@ -157,29 +139,22 @@ export class NewCollectionDialogComponent implements OnInit, OnDestroy {
       icon: this.icon,
       description: ''
     };
-    const nextAction = this.linkedCollection ? this.createLinkTypeAction() : null;
-    return new CollectionsAction.Create({collection, nextAction});
+    const callback = this.linkedCollection ? this.createLinkTypeCallback() : this.dialogService.callback;
+    return new CollectionsAction.Create({collection, callback});
   }
 
-  private createLinkTypeAction(): LinkTypesAction.Create {
+  private createLinkTypeCallback(): (collection: CollectionModel) => void {
     const linkType: LinkTypeModel = {
       name: this.linkNameInput.value,
       collectionIds: [this.linkedCollection.id, null]
     };
-    const nextAction = this.selectedSmartDocPart ? this.createAddSmartDocPartAction() : null;
-    return new LinkTypesAction.Create({linkType, nextAction});
-  }
+    const callback = this.dialogService.callback;
+    const store = this.store;
 
-  private createAddSmartDocPartAction() {
-    const part: SmartDocPartModel = {
-      type: SmartDocPartType.Embedded,
-      perspective: Perspective.Table
+    return collection => {
+      linkType.collectionIds[1] = collection.id;
+      store.dispatch(new LinkTypesAction.Create({linkType, callback}));
     };
-    return new SmartDocAction.AddPart({
-      partPath: this.selectedSmartDocPart.path,
-      partIndex: this.selectedSmartDocPart.partIndex + 1,
-      part
-    });
   }
 
   public onCollectionNameChange() {

@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
@@ -26,23 +27,21 @@ import {Observable} from 'rxjs/Observable';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {Collection, Permission} from '../../dto';
 import {CollectionService, ImportService, SearchService} from '../../rest';
-import {HomePageService} from '../../rest/home-page.service';
-import {LinkTypesAction} from '../link-types/link-types.action';
+import {AppState} from '../app.state';
+import {CommonAction} from '../common/common.action';
+import {DocumentModel} from '../documents/document.model';
+import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
 import {QueryConverter} from '../navigation/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions.model';
+import {RouterAction} from '../router/router.action';
 import {TablesAction, TablesActionType} from '../tables/tables.action';
 import {CollectionConverter} from './collection.converter';
-import {CollectionsAction, CollectionsActionType} from './collections.action';
-import {selectCollectionsLoaded} from "./collections.state";
-import {AppState} from "../app.state";
-import {HttpErrorResponse} from "@angular/common/http";
-import {RouterAction} from "../router/router.action";
-import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
-import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
-import {DocumentModel} from '../documents/document.model';
 import {AttributeModel} from './collection.model';
+import {CollectionsAction, CollectionsActionType} from './collections.action';
+import {selectCollectionsLoaded} from './collections.state';
 
 @Injectable()
 export class CollectionsEffects {
@@ -97,13 +96,15 @@ export class CollectionsEffects {
 
       return this.collectionService.createCollection(collectionDto).pipe(
         map(collection => CollectionConverter.fromDto(collection, action.payload.collection.correlationId)),
-        map(collection => ({collection, nextAction: action.payload.nextAction})),
-        flatMap(({collection, nextAction}) => {
+        map(collection => ({collection, action})),
+        mergeMap(({collection, action}) => {
           const actions: Action[] = [new CollectionsAction.CreateSuccess({collection})];
-          if (nextAction && nextAction instanceof LinkTypesAction.Create) {
-            nextAction.payload.linkType.collectionIds[1] = collection.id;
-            actions.push(nextAction);
+
+          const {callback} = action.payload;
+          if (callback) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(collection)}));
           }
+
           return actions;
         }),
         catchError((error) => Observable.of(new CollectionsAction.CreateFailure({error: error})))
@@ -221,12 +222,11 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public addFavorite$: Observable<Action> = this.actions$.pipe(
+  public addFavorite$ = this.actions$.pipe(
     ofType<CollectionsAction.AddFavorite>(CollectionsActionType.ADD_FAVORITE),
-    mergeMap(action => this.homePageService.addFavoriteCollection(action.payload.collectionId).pipe(
-      map(() => action.payload.collectionId),
-      map((collectionId) => new CollectionsAction.AddFavoriteSuccess({collectionId})),
-      catchError((error) => Observable.of(new CollectionsAction.AddFavoriteFailure({error: error})))
+    mergeMap(action => this.collectionService.addFavorite(action.payload.collectionId).pipe(
+      mergeMap(() => Observable.of()),
+      catchError((error) => Observable.of(new CollectionsAction.AddFavoriteFailure({collectionId: action.payload.collectionId, error: error})))
     )),
   );
 
@@ -241,12 +241,11 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public removeFavorite$: Observable<Action> = this.actions$.pipe(
+  public removeFavorite$ = this.actions$.pipe(
     ofType<CollectionsAction.RemoveFavorite>(CollectionsActionType.REMOVE_FAVORITE),
-    mergeMap(action => this.homePageService.removeFavoriteCollection(action.payload.collectionId).pipe(
-      map(() => action.payload.collectionId),
-      map((collectionId) => new CollectionsAction.RemoveFavoriteSuccess({collectionId})),
-      catchError((error) => Observable.of(new CollectionsAction.RemoveFavoriteFailure({error: error})))
+    mergeMap(action => this.collectionService.removeFavorite(action.payload.collectionId).pipe(
+      mergeMap(() => Observable.of()),
+      catchError((error) => Observable.of(new CollectionsAction.RemoveFavoriteFailure({collectionId: action.payload.collectionId, error: error})))
     )),
   );
 
@@ -273,10 +272,14 @@ export class CollectionsEffects {
       return this.collectionService.createAttributes(action.payload.collectionId, attributesDto).pipe(
         map(attributes => ({action, attributes: attributes.map(attr => CollectionConverter.fromAttributeDto(attr, correlationIdMap[attr.name]))})),
         flatMap(({action, attributes}) => {
+          const {callback, nextAction} = action.payload;
+          if (callback) {
+            callback(attributes);
+          }
+
           const actions: Action[] = [new CollectionsAction.CreateAttributesSuccess(
             {collectionId: action.payload.collectionId, attributes}
           )];
-          const {nextAction} = action.payload;
           if (nextAction) {
             if (nextAction.type === DocumentsActionType.CREATE) {
               const action = nextAction as DocumentsAction.Create;
@@ -290,6 +293,7 @@ export class CollectionsEffects {
             } else if (nextAction.type === TablesActionType.INIT_COLUMN) {
               (nextAction as TablesAction.InitColumn).payload.attributeId = attributes[0].id;
             }
+            actions.push(nextAction);
           }
           return actions;
         }),
@@ -376,9 +380,9 @@ export class CollectionsEffects {
         concatMap(() => Observable.of()),
         catchError((error) => {
           const payload = {collectionId: action.payload.collectionId, type: action.payload.type, permission: action.payload.currentPermission, error};
-          return Observable.of(new CollectionsAction.ChangePermissionFailure(payload))
+          return Observable.of(new CollectionsAction.ChangePermissionFailure(payload));
         })
-      )
+      );
     })
   );
 
@@ -395,7 +399,6 @@ export class CollectionsEffects {
   constructor(private actions$: Actions,
               private store$: Store<AppState>,
               private collectionService: CollectionService,
-              private homePageService: HomePageService,
               private i18n: I18n,
               private importService: ImportService,
               private searchService: SearchService) {

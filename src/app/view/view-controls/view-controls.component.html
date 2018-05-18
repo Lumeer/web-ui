@@ -50,12 +50,9 @@
      class="fal fa-lg fa-copy fa-fw text-secondary mx-1"
      title="Nothing to copy" i18n-title="@@view.button.copy.disabled">
   </i>
-  <button class="btn btn-outline-success ml-2"
+  <button (click)="onShareClick()"
+          class="btn btn-outline-success ml-2"
           type="button"
-          data-toggle="modal"
-          data-target="#shareDialogModal"
           i18n="@@view.button.share">Share
   </button>
 </form>
-
-<share-dialog></share-dialog>

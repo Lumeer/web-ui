@@ -1,0 +1,77 @@
+<div layout-item [layout]="layout"
+     class="layout-item card post-it"
+     [class.selected]="selected"
+     [class.uninitialized]="!collection.id"
+     [class.initialized]="collection.id"
+     [style.border-color]="collection.color">
+  <div class="card-body text-center">
+    <a class="icon" [style.color]="collection.color"
+       [title]="collection.name"
+       [routerLink]="collection.id ? [workspacePath(), 'view', 'postit'] : null"
+       [queryParams]="collection.id ? { query: queryForCollectionDocuments() } : null"
+       [attr.data-toggle]="collection.id ? '' : 'dropdown'">
+      <i class="fa-6x {{ collection.icon }}" aria-hidden="true"></i>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right uninitialized-dropdown">
+      <color-picker class="dropdown-item" [(color)]="collection.color"></color-picker>
+      <div class="dropdown-divider"></div>
+      <icon-picker class="dropdown-item" [(icon)]="collection.icon"></icon-picker>
+    </div>
+
+    <div *ngIf="collection.id" class="document-count opacity-content clickable"
+         [ngClass]="{'panel-visible' : focused}">
+      <a title="Record Count" i18n-title="@@collection.document.count"
+         [routerLink]="[workspacePath(), 'view', 'postit']"
+         [queryParams]="{ query: queryForCollectionDocuments() }">
+        <i class="far fa-file" aria-hidden="true"></i>&nbsp;{{ collection.documentsCount }}
+      </a>
+    </div>
+
+    <div *ngIf="collection.id" class="text-warning toggle-favorite opacity-content clickable"
+         [ngClass]="{'panel-visible' : focused}"
+         [class.always-visible]="collection.favorite">
+      <a title="{{collection.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
+         i18n-title="@@collection.favorite" (click)="toggleFavorite()">
+        <i class="fa-star" [ngClass]="collection.favorite ? 'fas' : 'far'"
+           aria-hidden="true"></i>
+      </a>
+    </div>
+
+    <div class="buttons opacity-content d-flex flex-column"
+         [ngClass]="{'panel-visible' : focused}"
+         [style.top]="'50px'">
+      <ng-container *ngIf="collection.id">
+        <a title="Configure" i18n-title="@@collection.button.configure"
+           class="rounded-left text-success"
+           [routerLink]="[workspacePath(), 'f', collection.id, 'attributes']">
+          <i class="fa fa-fw fa-cog" aria-hidden="true"></i></a>
+
+        <a title="Icon picker" i18n-title="@@collection.button.icon"
+           class="rounded-left text-success" data-toggle="dropdown">
+          <i class="fa fa-fw fa-eye-dropper" aria-hidden="true" (click)="togglePanelVisible($event);"
+             (clickOutside)="onPickerBlur()"></i></a>
+        <div class="dropdown-menu dropdown-menu-right">
+          <color-picker class="dropdown-item" [(color)]="collection.color"></color-picker>
+          <div class="dropdown-divider"></div>
+          <icon-picker class="dropdown-item" [(icon)]="collection.icon"></icon-picker>
+        </div>
+      </ng-container>
+
+      <a *ngIf="!collection.id || hasManageRole()"
+         (click)="onDelete()"
+         class="text-danger rounded-left"
+         title="Remove File" i18n-title="@@collection.button.remove">
+        <i class="fas fa-fw fa-trash" aria-hidden="true"></i>
+      </a>
+    </div>
+
+  </div>
+
+  <post-it-collection-name
+    [collectionName]="collection.name"
+    [editable]="hasWriteRole() || !collection.id"
+    (changed)="onNameChanged($event)"
+    (selected)="onNameSelect()"
+    (unselected)="onNameUnselect()">
+  </post-it-collection-name>
+</div>

@@ -61,7 +61,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
   public showEmailWarning: boolean;
 
-  private lastSincedUserRoles: string[];
+  private lastSyncedUserRoles: string[];
   private rolesChange$ = new Subject<string[]>();
   private rolesChangeSubscription: Subscription;
 
@@ -71,9 +71,9 @@ export class UserComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.rolesChangeSubscription = this.rolesChange$.pipe(
       debounceTime(1000),
-      filter(newRoles => !deepArrayEquals(newRoles, this.lastSincedUserRoles))
+      filter(newRoles => !deepArrayEquals(newRoles, this.lastSyncedUserRoles))
     ).subscribe(newRoles => {
-      this.lastSincedUserRoles = null;
+      this.lastSyncedUserRoles = null;
       this.rolesUpdate.emit({roles: newRoles, onlyStore: false});
     });
   }
@@ -152,8 +152,8 @@ export class UserComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (isNullOrUndefined(this.lastSincedUserRoles)) {
-      this.lastSincedUserRoles = this.userRoles;
+    if (isNullOrUndefined(this.lastSyncedUserRoles)) {
+      this.lastSyncedUserRoles = this.userRoles;
     }
 
     let newRoles;

@@ -18,7 +18,6 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {first, map, skipWhile} from 'rxjs/operators';
@@ -31,10 +30,9 @@ import {LinkTypeHelper} from '../../../../core/store/link-types/link-type.helper
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
 import {SmartDocModel, SmartDocPartModel, SmartDocPartType} from '../../../../core/store/smartdoc/smartdoc.model';
+import {DialogService} from '../../../../dialog/dialog.service';
 import {Perspective} from '../../perspective';
 import {SmartDocUtils} from '../smartdoc.utils';
-
-declare let $: any;
 
 @Component({
   selector: 'smartdoc-side-panel',
@@ -55,7 +53,7 @@ export class SmartDocSidePanelComponent {
   public collections$: Observable<CollectionModel[]>;
   public linkTypes$: Observable<LinkTypeModel[]>;
 
-  public constructor(private router: Router,
+  public constructor(private dialogService: DialogService,
                      private store: Store<AppState>) {
     this.collections$ = this.store.select(selectAllCollections).pipe(
       map(collections => collections.filter(collection => collection && collection.id))
@@ -98,13 +96,8 @@ export class SmartDocSidePanelComponent {
   }
 
   public addPartByCollection(collection: CollectionModel) {
-    this.router.navigate([], {
-      queryParams: {
-        linkCollectionIds: [this.collection.id, collection.id].join(',')
-      },
-      queryParamsHandling: 'merge'
-    });
-    $(`#newLinkDialogModal`).modal('show'); // TODO connect ids
+    const linkCollectionIds = [this.collection.id, collection.id].join(',');
+    this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => this.addTablePart(linkType));
   }
 
   public suggestLinkTypes(): Observable<LinkTypeModel[]> {
@@ -126,7 +119,16 @@ export class SmartDocSidePanelComponent {
   }
 
   public addPartWithNewCollection() {
-    $(`#newLinkedCollectionInSmartDocModal`).modal('show'); // TODO connect ids
+    this.dialogService.openCreateCollectionAndLinkDialog(this.collection.id, linkType => this.addTablePart(linkType));
+  }
+
+  private addTablePart(linkType: LinkTypeModel) {
+    const part: SmartDocPartModel = {
+      linkTypeId: linkType.id,
+      type: SmartDocPartType.Embedded,
+      perspective: Perspective.Table
+    };
+    this.addTemplatePart(part);
   }
 
 }

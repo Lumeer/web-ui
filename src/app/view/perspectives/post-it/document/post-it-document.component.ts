@@ -20,8 +20,8 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 
 import {Store} from '@ngrx/store';
+import {isNullOrUndefined} from 'util';
 import {AppState} from '../../../../core/store/app.state';
-import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../core/model/role';
 import {PostItLayout} from '../../../../shared/utils/layout/post-it-layout';
@@ -29,13 +29,11 @@ import {PostItDocumentModel} from '../document-data/post-it-document-model';
 import {NavigationHelper} from '../util/navigation-helper';
 import {SelectionHelper} from '../util/selection-helper';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
-import Update = DocumentsAction.Update;
-import {isNullOrUndefined} from 'util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {PostItRow} from './post-it-row';
 import {Subject} from 'rxjs/Subject';
 import {Subscription} from 'rxjs/Subscription';
-import {debounceTime} from 'rxjs/operators';
+import {debounceTime, filter} from 'rxjs/operators';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 
 @Component({
@@ -55,6 +53,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   @Output() public remove = new EventEmitter();
   @Output() public changes = new EventEmitter<DocumentModel>();
+  @Output() public favoriteChange = new EventEmitter<{ favorite: boolean, onlyStore: boolean }>();
 
   @ViewChild('content') public content: ElementRef;
 
@@ -62,6 +61,10 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   private postItNewRow: PostItRow = {attributeName: '', value: ''};
   private postItChange$ = new Subject<any>();
   private postItChangeSubscription: Subscription;
+
+  private lastSyncedFavorite: boolean;
+  private favoriteChange$ = new Subject<boolean>();
+  private favoriteChangeSubscription: Subscription;
 
   constructor(private store: Store<AppState>,
               private element: ElementRef) {
@@ -79,6 +82,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   public ngOnInit(): void {
     this.disableScrollOnNavigation();
+    this.initFavoriteSubscription();
   }
 
   public ngOnDestroy(): void {
@@ -171,8 +175,14 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     this.onChange();
   }
 
-  public toggleDocumentFavorite() {
-    this.store.dispatch(new Update({document: this.postItModel.document, toggleFavourite: true}));
+  public toggleFavorite() {
+    if (isNullOrUndefined(this.lastSyncedFavorite)) {
+      this.lastSyncedFavorite = this.postItModel.document.favorite;
+    }
+
+    const value = !this.postItModel.document.favorite;
+    this.favoriteChange$.next(value);
+    this.favoriteChange.emit({favorite: value, onlyStore: true});
   }
 
   public onRemove(): void {
@@ -294,5 +304,15 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
       }, {});
 
     return {...this.postItModel.document, data, newData: Object.keys(newData).length > 0 ? newData : null};
+  }
+
+  private initFavoriteSubscription() {
+    this.favoriteChangeSubscription = this.favoriteChange$.pipe(
+      debounceTime(1000),
+      filter(favorite => favorite !== this.lastSyncedFavorite)
+    ).subscribe(favorite => {
+      this.lastSyncedFavorite = null;
+      this.favoriteChange.emit({favorite, onlyStore: false})
+    });
   }
 }

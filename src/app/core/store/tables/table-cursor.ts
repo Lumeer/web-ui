@@ -373,3 +373,32 @@ export function areTableBodyCursorsEqual(cursor1: TableBodyCursor, cursor2: Tabl
     && cursor1.partIndex === cursor2.partIndex
     && cursor1.columnIndex === cursor2.columnIndex;
 }
+
+export function findTableColumnWithCursor(table: TableModel, partIndex: number, attributeName: string): { column: TableCompoundColumn, cursor: TableHeaderCursor } {
+  const columns = table.parts[partIndex].columns;
+  const startingCursor: TableHeaderCursor = {tableId: table.id, partIndex, columnPath: []};
+  const cursor = getTableHeaderCursor(columns, attributeName, startingCursor);
+  const column = findTableColumn(columns, cursor.columnPath) as TableCompoundColumn;
+  return {column, cursor};
+}
+
+function getTableHeaderCursor(columns: TableColumn[], attributeName: string, cursor: TableHeaderCursor): TableHeaderCursor {
+  return columns.reduce<TableHeaderCursor>((foundCursor, column, index) => {
+    if (foundCursor) {
+      return foundCursor;
+    }
+
+    if (column.type !== TableColumnType.COMPOUND) {
+      return null;
+    }
+
+    const currentCursor = {...cursor, columnPath: cursor.columnPath.concat(index)};
+
+    const compoundColumn = (column as TableCompoundColumn);
+    if (compoundColumn.parent.attributeName === attributeName) {
+      return currentCursor;
+    }
+
+    return getTableHeaderCursor(compoundColumn.children, attributeName, currentCursor);
+  }, null);
+}

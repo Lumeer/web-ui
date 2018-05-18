@@ -17,28 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-
-import {UserSettingsService} from './user-settings.service';
+import {Component} from '@angular/core';
 
 @Component({
   template: ''
 })
-export class HomeComponent implements OnInit {
-
-  constructor(private router: Router,
-              private userSettingsService: UserSettingsService) {
-  }
-
-  public ngOnInit(): void {
-    const userSettings = this.userSettingsService.getUserSettings();
-
-    if (userSettings.defaultOrganization && userSettings.defaultProject) {
-      this.router.navigate(['/w', userSettings.defaultOrganization, userSettings.defaultProject, 'view', 'search']);
-    } else {
-      this.router.navigate(['/workspace']);
-    }
-  }
+export class HomeComponent {
 
 }

@@ -17,23 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {catchError, filter, mergeMap} from 'rxjs/operators';
+import {filter} from 'rxjs/operators';
 import {Collection} from '../dto/collection';
 import {Document} from '../dto/document';
 import {Query} from '../dto/query';
 import {SuggestionType} from '../dto/suggestion-type';
 import {Suggestions} from '../dto/suggestions';
 import {View} from '../dto/view';
-import {LumeerError} from '../error/lumeer.error';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
-import {HomePageService} from './home-page.service';
 
 @Injectable()
 export class SearchService {
@@ -41,8 +39,7 @@ export class SearchService {
   private workspace: Workspace;
 
   constructor(private http: HttpClient,
-              private store: Store<AppState>,
-              private homePageService: HomePageService) {
+              private store: Store<AppState>) {
     this.store.select(selectWorkspace)
       .pipe(
         filter(workspace => !!workspace && !!workspace.organizationCode && !!workspace.projectCode)
@@ -56,33 +53,20 @@ export class SearchService {
   }
 
   public searchCollections(query: Query, workspace?: Workspace): Observable<Collection[]> {
-    return this.http.post<Collection[]>(`${this.searchPath(workspace)}/collections`, query)
-      .pipe(
-        catchError(SearchService.handleError),
-        mergeMap(collections => this.homePageService.checkFavoriteCollections(collections))
-      );
+    return this.http.post<Collection[]>(`${this.searchPath(workspace)}/collections`, query);
   }
 
   public searchDocuments(query: Query): Observable<Document[]> {
-    return this.http.post<Document[]>(`${this.searchPath()}/documents`, query)
-      .pipe(
-        catchError(SearchService.handleError),
-        mergeMap(documents => this.homePageService.checkFavoriteDocuments(documents)));
+    return this.http.post<Document[]>(`${this.searchPath()}/documents`, query);
   }
 
   public searchViews(query: Query): Observable<View[]> {
-    return this.http.post<View[]>(`${this.searchPath()}/views`, query).pipe(
-      catchError(SearchService.handleError)
-    );
+    return this.http.post<View[]>(`${this.searchPath()}/views`, query);
   }
 
   private searchPath(workspace?: Workspace): string {
     const w = workspace || this.workspace;
     return `/${API_URL}/rest/organizations/${w.organizationCode}/projects/${w.projectCode}/search`;
-  }
-
-  private static handleError(error: HttpErrorResponse): ErrorObservable {
-    throw new LumeerError(error.message);
   }
 
 }

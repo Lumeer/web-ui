@@ -302,7 +302,7 @@
 
     kc.hasRealmRole = function (role) {
       var access = kc.realmAccess;
-      return !!access && access.roles.indexOf(role) >= 0;
+      return !!access && access.userRoles.indexOf(role) >= 0;
     }
 
     kc.hasResourceRole = function(role, resource) {
@@ -311,7 +311,7 @@
       }
 
       var access = kc.resourceAccess[resource || kc.clientId];
-      return !!access && access.roles.indexOf(role) >= 0;
+      return !!access && access.userRoles.indexOf(role) >= 0;
     }
 
     kc.loadUserProfile = function() {

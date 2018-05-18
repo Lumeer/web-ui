@@ -18,6 +18,7 @@
                       [layoutManager]="layoutManager"
                       [selectionHelper]="selectionHelper"
                       [navigationHelper]="navigationHelper"
+                      (favoriteChange)="onFavoriteChange(postIt.document, $event)"
                       (remove)="removePostIt(postIt)"
                       (changes)="postItChanged(postIt, $event)"></post-it-document>
 

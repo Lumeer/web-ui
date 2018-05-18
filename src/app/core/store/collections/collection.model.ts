@@ -39,6 +39,6 @@ export interface CollectionModel extends ResourceModel {
 
   documentsCount?: number;
 
-  favourite?: boolean;
+  favorite?: boolean;
 
 }

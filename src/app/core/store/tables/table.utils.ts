@@ -18,7 +18,7 @@
  */
 
 import {copyAndSpliceArray, getLastFromArray} from '../../../shared/utils/array.utils';
-import {filterDirectAttributeChildren, findAttributeById, findAttributeByName, splitAttributeName} from '../../../shared/utils/attribute.utils';
+import {filterDirectAttributeChildren, findAttributeByName, splitAttributeName} from '../../../shared/utils/attribute.utils';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {LinkTypeModel} from '../link-types/link-type.model';
 import {TableColumn, TableColumnType, TableCompoundColumn, TableConfig, TableConfigColumn, TableConfigPart, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';

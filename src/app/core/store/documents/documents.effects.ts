@@ -18,6 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
+
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -135,24 +136,42 @@ export class DocumentsEffects {
     })
   );
 
+
   @Effect()
-  public update$: Observable<Action> = this.actions$.pipe(
-    ofType<DocumentsAction.Update>(DocumentsActionType.UPDATE),
-    mergeMap(action => {
-      const documentDto = DocumentConverter.toDto(action.payload.document);
+  public addFavorite$ = this.actions$.pipe(
+    ofType<DocumentsAction.AddFavorite>(DocumentsActionType.ADD_FAVORITE),
+    mergeMap(action => this.documentService.addFavorite(action.payload.collectionId, action.payload.documentId).pipe(
+      mergeMap(() => Observable.of()),
+      catchError((error) => Observable.of(new DocumentsAction.AddFavoriteFailure({documentId: action.payload.documentId, error: error})))
+    )),
+  );
 
-      if (action.payload.toggleFavourite) {
-        return this.documentService.toggleDocumentFavorite(documentDto).pipe(
-          map(() => {
-            action.payload.document.favorite = !action.payload.document.favorite;
-            return action.payload.document;
-          }),
-          map((document: DocumentModel) => new DocumentsAction.UpdateSuccess({document: document})),
-          catchError((error) => Observable.of(new DocumentsAction.UpdateFailure({error: error})))
-        );
-      }
+  @Effect()
+  public addFavoriteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.AddFavoriteFailure>(DocumentsActionType.ADD_FAVORITE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'document.add.favorite.fail', value: 'Failed to add favorite record'});
+      return new NotificationsAction.Error({message});
+    })
+  );
 
-      throw Error('not implemented on backend yet');
+  @Effect()
+  public removeFavorite$ = this.actions$.pipe(
+    ofType<DocumentsAction.RemoveFavorite>(DocumentsActionType.REMOVE_FAVORITE),
+    mergeMap(action => this.documentService.removeFavorite(action.payload.collectionId, action.payload.documentId).pipe(
+      mergeMap(() => Observable.of()),
+      catchError((error) => Observable.of(new DocumentsAction.RemoveFavoriteFailure({documentId: action.payload.documentId, error: error})))
+    )),
+  );
+
+  @Effect()
+  public removeFavoriteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.RemoveFavoriteFailure>(DocumentsActionType.REMOVE_FAVORITE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'document.remove.favorite.fail', value: 'Failed to remove favorite record'});
+      return new NotificationsAction.Error({message});
     })
   );
 

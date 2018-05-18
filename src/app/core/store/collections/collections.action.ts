@@ -18,11 +18,11 @@
  */
 
 import {Action} from '@ngrx/store';
+import {ImportedCollection} from '../../dto/imported-collection';
 import {QueryModel} from '../navigation/query.model';
+import {Workspace} from '../navigation/workspace.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 import {AttributeModel, CollectionModel} from './collection.model';
-import {ImportedCollection} from "../../dto/imported-collection";
-import {Workspace} from '../navigation/workspace.model';
 
 export enum CollectionsActionType {
 
@@ -125,7 +125,7 @@ export namespace CollectionsAction {
   export class Create implements Action {
     public readonly type = CollectionsActionType.CREATE;
 
-    public constructor(public payload: { collection: CollectionModel, nextAction?: Action }) {
+    public constructor(public payload: { collection: CollectionModel, callback?: (collection: CollectionModel) => void }) {
     }
   }
 
@@ -223,7 +223,7 @@ export namespace CollectionsAction {
   export class AddFavoriteFailure implements Action {
     public readonly type = CollectionsActionType.ADD_FAVORITE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
+    public constructor(public payload: { collectionId: string, error: any }) {
     }
   }
 
@@ -244,14 +244,14 @@ export namespace CollectionsAction {
   export class RemoveFavoriteFailure implements Action {
     public readonly type = CollectionsActionType.REMOVE_FAVORITE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
+    public constructor(public payload: { collectionId: string, error: any }) {
     }
   }
 
   export class CreateAttributes implements Action {
     public readonly type = CollectionsActionType.CREATE_ATTRIBUTES;
 
-    public constructor(public payload: { collectionId: string, attributes: AttributeModel[], nextAction?: Action }) {
+    public constructor(public payload: { collectionId: string, attributes: AttributeModel[], nextAction?: Action, callback?: (attributes: AttributeModel[]) => void }) {
     }
   }
 

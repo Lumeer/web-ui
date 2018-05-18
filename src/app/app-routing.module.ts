@@ -23,16 +23,19 @@ import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-s
 import {PageNotFoundGuard} from './core/guards/page-not-found.guard';
 import {HomeComponent} from './core/home.component';
 import {LumeerRouterStateSerializer} from './core/store/router/lumeer-router-state-serializer';
+import {AuthGuard} from './core/guards/auth.guard';
+import {AppRedirectGuard} from './core/guards/app-redirect.guard';
 
 const appRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
+    canActivate: [AuthGuard, AppRedirectGuard],
     component: HomeComponent
   },
   {
     path: '**',
-    canActivate: [PageNotFoundGuard],
+    canActivate: [AuthGuard, PageNotFoundGuard],
     component: HomeComponent
   }
 ];
