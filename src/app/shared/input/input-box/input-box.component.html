@@ -8,7 +8,7 @@
   <div [ngClass]="isMultiLine() ? 'input-box-multiline' : 'input-box'"
        [class.cursor-text]="editable"
        [textContent]="mCurrentValue"
-       (blur)="input.scrollTo(0,0); onNewValue(input.textContent, false)"
+       (blur)="input.scrollTo(0,0); onNewValue(input.textContent)"
        [style.color]="color"
        [style.fontSize.rem]="mFontSizeRem"
        [style.maxHeight.rem]="mMaxHeightRem"
