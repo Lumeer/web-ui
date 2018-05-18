@@ -16,8 +16,9 @@
 </div>
 <key-value *ngFor="let attr of collection?.attributes; let idx = index;"
            [key]="attr.name"
-           [value]="documentModel.data[attr.id]"
+           [value]="userUpdates[attr.id] ? userUpdates[attr.id] : documentModel.data[attr.id]"
            [emitKeyPress]="true"
+           (valueChange)="onValueChange(attr.id, $event)"
            (change)="submitAttribute(idx, $event)"
            (remove)="removeAttribute(idx)">
 </key-value>

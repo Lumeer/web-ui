@@ -22,7 +22,7 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {UserModel} from './user.model';
 import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
-import {selectAllGroups, selectGroupsDictionary} from "../groups/groups.state";
+import {selectGroupsDictionary} from "../groups/groups.state";
 import {filterUserFunctions, filterUsersByOrganization} from "./user.filters";
 import {GroupModel} from "../groups/group.model";
 import {OrganizationModel} from '../organizations/organization.model';
@@ -50,7 +50,7 @@ export const selectUsersLoadedForOrganization = createSelector(selectUsersState,
 export const selectCurrentUser = createSelector(selectUsersState, usersState => usersState.currentUser);
 
 export const selectCurrentUserForWorkspace = createSelector(selectCurrentUser, selectGroupsDictionary, selectOrganizationByWorkspace, (user, groups, organization) => {
-  return organization ? mapGroupsOnUser(user, organization.id, groups) : user;
+  return user ? (organization ? mapGroupsOnUser(user, organization.id, groups) : user) : undefined;
 });
 
 export const selectCurrentUserForOrganization = (organization: OrganizationModel) =>

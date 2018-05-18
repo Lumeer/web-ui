@@ -37,7 +37,6 @@ export class AppRedirectGuard implements CanActivate {
 
   public canActivate(next: ActivatedRouteSnapshot,
                      state: RouterStateSnapshot): Observable<boolean> {
-
     return this.getDefaultWorkspace().pipe(
       map(workspace => {
         if (workspace && workspace.organizationCode && workspace.projectCode) {
