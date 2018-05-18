@@ -18,6 +18,7 @@
        [attr.contenteditable]="editable"
        [attr.placeholder]="mPlaceholder"
        [attr.title]="title"
+       (input)="onInterimNewValue(input.textContent)"
        (keydown.enter)="input.blur()"
        (keydown.Escape)="input.textContent = mCurrentValue; input.blur()"
        [attr.spellcheck]="false" #input>

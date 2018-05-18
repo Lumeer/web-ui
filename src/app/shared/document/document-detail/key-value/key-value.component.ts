@@ -45,6 +45,9 @@ export class KeyValueComponent implements OnInit {
   @Output()
   public remove = new EventEmitter();
 
+  @Input()
+  public emitKeyPress = false;
+
   constructor(private i18n: I18n) { }
 
   public ngOnInit() {

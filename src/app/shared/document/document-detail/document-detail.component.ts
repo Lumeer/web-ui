@@ -69,6 +69,7 @@ export class DocumentDetailComponent implements OnInit {
   }
 
   public submitAttribute(idx, $event: any) {
+    console.log($event);
     if ($event[0]) {
       this.encoded[idx] = $event;
       this.tmpDocument[$event[0]] = $event[1];
@@ -94,4 +95,5 @@ export class DocumentDetailComponent implements OnInit {
       this.encoded.splice(idx, 1);
     }
   }
+
 }

@@ -7,6 +7,7 @@
       [editable]="true"
       [canStayEmpty]="false"
       [initialValue]="key"
+      [emitAllChanges]="emitKeyPress"
       (newValue)="onNewKey($event)">
     </input-box>
   </div>
@@ -19,6 +20,7 @@
       [editable]="true"
       [canStayEmpty]="false"
       [initialValue]="value"
+      [emitAllChanges]="emitKeyPress"
       (newValue)="onNewRowValue($event)">
     </input-box>
   </div>

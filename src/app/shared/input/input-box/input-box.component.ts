@@ -45,6 +45,7 @@ export class InputBoxComponent implements OnInit {
   @Input() public placeholder: string;
   @Input() public title: string;
   @Input() public editable: boolean = true;
+  @Input() public emitAllChanges: boolean = false;
 
   @Output() public focus: EventEmitter<void> = new EventEmitter();
   @Output() public blur: EventEmitter<void> = new EventEmitter();
@@ -128,4 +129,9 @@ export class InputBoxComponent implements OnInit {
     });
   }
 
+  public onInterimNewValue(textContent: string | null) {
+    if (this.emitAllChanges) {
+      this.onNewValue(textContent);
+    }
+  }
 }
