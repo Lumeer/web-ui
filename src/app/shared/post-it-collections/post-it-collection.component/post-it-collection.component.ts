@@ -73,6 +73,9 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
   }
 
   public onNameChanged(name: string) {
+    if (name === '') {
+      return;
+    }
     const resourceModel = {...this.collection, name};
     if (this.collection.id) {
       this.update.emit(resourceModel);

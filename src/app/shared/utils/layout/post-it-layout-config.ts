@@ -94,18 +94,18 @@ export class PostItLayoutConfig {
       touchAction: 'none'
     };
 
-  public containerClass = 'masonry-layout';
+  public containerClass: 'muuri';
 
-  public itemClass = 'masonry-layout-item';
+  public itemClass: 'muuri-item';
 
-  public itemVisibleClass = 'masonry-layout-item-shown';
+  public itemVisibleClass: 'muuri-item-shown';
 
-  public itemHiddenClass = 'masonry-layout-item-hidden';
+  public itemHiddenClass: 'muuri-item-hidden';
 
-  public itemPositioningClass = 'masonry-layout-item-positioning';
+  public itemPositioningClass: 'muuri-item-positioning';
 
-  public itemDraggingClass = 'masonry-layout-item-dragging';
+  public itemDraggingClass: 'muuri-item-dragging';
 
-  public itemReleasingClass = 'masonry-layout-item-releasing';
+  public itemReleasingClass: 'muuri-item-releasing';
 
 }

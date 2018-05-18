@@ -3,6 +3,7 @@
 .layout-item {
   position: absolute;
   margin: 5px;
+  display: block !important;
   width: $post-it-width;
 }
 
