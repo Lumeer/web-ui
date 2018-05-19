@@ -1,13 +1,5 @@
 <div class="container">
-  <div class="row">
-    <div class="col">
-      <p class="title small text-uppercase mb-0"><a href="#preview-collapse" data-toggle="collapse" class="preview">There are multiple results, please select one&hellip;</a></p>
-    </div>
-  </div>
-  <div class="p-0 m-0 collapse show" id="preview-collapse">
-    <preview-results (selectCollection)="selectCollection($event)" (selectDocument)="selectDocument($event)"></preview-results>
-    <hr/>
-  </div>
+  <preview-results (selectCollection)="selectCollection($event)" (selectDocument)="selectDocument($event)"></preview-results>
   <document-detail *ngIf="selectedDocument" [collection]="selectedCollection" [document]="selectedDocument"></document-detail>
-  <links-list></links-list>
+  <!--links-list></links-list-->
 </div>

@@ -60,6 +60,9 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
   @Output()
   public selectDocument = new EventEmitter<DocumentModel>();
 
+  private collectionsCount = -1;
+  private documentsCount = -1;
+
   constructor(private store: Store<AppState>) { }
 
   public ngOnInit() {
@@ -86,10 +89,15 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
     // initialize when we do not select anything
     this.allSubscriptions.add(this.collections$.pipe(filter(collections => !!collections), take(1))
       .subscribe(collections => {
+        this.collectionsCount = collections.length;
         if (!this.selectedCollectionId) {
           this.setActiveCollection(collections[0]);
         }
       }));
+  }
+
+  private getMultipleResults() {
+    return this.collectionsCount > 1 || this.documentsCount > 1;
   }
 
   private updateNavigation(query: QueryModel) {
@@ -119,7 +127,11 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
       this.documents$ = this.store.select(selectDocumentsByCustomQuery(this.collectionQuery));
       this.collection$ = this.store.select(selectCollectionById(this.selectedCollectionId));
 
-      this.allSubscriptions.add(this.documents$.pipe(filter(documents => !!documents && documents.length > 0), take(1))
+      this.allSubscriptions.add(this.documents$.pipe(filter(documents => !!documents && documents.length > 0),
+        tap(documents => {
+          this.documentsCount = documents.length;
+        }),
+        take(1))
         .subscribe(documents => this.setActiveDocument(documents[0])));
     }
   }

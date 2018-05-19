@@ -7,7 +7,7 @@
       [editable]="true"
       [canStayEmpty]="false"
       [initialValue]="key"
-      [emitAllChanges]="emitKeyPress"
+      [emitAllChanges]="false"
       (newValue)="onNewKey($event)">
     </input-box>
   </div>
@@ -32,6 +32,10 @@
        i18n-title="@@document.key-value.row.remove"
        (click)="invokeRemove()"
        ></i>
+  </div>
+
+  <div *ngIf="warning" class="col">
+    <span class="warning small">{{warning}}</span>
   </div>
 
 </div>

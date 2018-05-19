@@ -52,7 +52,7 @@ export class DetailPerspectiveComponent implements PerspectiveComponent, OnInit 
 
   constructor() { }
 
-  ngOnInit() {
+  public ngOnInit() {
   }
 
   public selectCollection(collection: CollectionModel) {
@@ -62,5 +62,4 @@ export class DetailPerspectiveComponent implements PerspectiveComponent, OnInit 
   public selectDocument(document: DocumentModel) {
     this.selectedDocument = document;
   }
-
 }

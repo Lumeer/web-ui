@@ -48,6 +48,9 @@ export class KeyValueComponent implements OnInit {
   @Input()
   public emitKeyPress = false;
 
+  @Input()
+  public warning: string;
+
   constructor(private i18n: I18n) { }
 
   public ngOnInit() {

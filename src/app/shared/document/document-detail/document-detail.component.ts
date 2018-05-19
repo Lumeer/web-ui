@@ -55,14 +55,14 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   @Output()
   public documentUpdate = new EventEmitter<DocumentModel>();
 
-  public userUpdates = new Map();
-
   public rows: DetailRow[] = [];
 
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;
 
   private subscriptions = new Subscription();
+
+  public summary: string;
 
   constructor(private i18n: I18n,
               private store: Store<AppState>,
@@ -77,7 +77,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
       this.collection = col;
       this.encodeDocument();
     }));
-    this.subscriptions.add(IntervalObservable.create(200000).subscribe(() => this.patchDocument()));
+    this.subscriptions.add(IntervalObservable.create(60000).subscribe(() => this.patchDocument()));
 
     this.createdBy$ = this.store.select(selectUserNameById(this.documentModel.createdBy))
       .pipe(filter(name => !isNullOrUndefined(name)));
@@ -92,19 +92,13 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   private encodeDocument() {
+    this.summary = this.getDocumentSummary();
+
     this.collection.attributes.forEach(attr => {
-      let row = this.getRowById(attr.id);
-      if (row) {
-        if (row.name !== attr.name) {
-          row.name = attr.name;
-        }
-        if (row.value !== this.documentModel.data[attr.id]) {
-          row.value = this.documentModel.data[attr.id];
-        }
-      } else {
-        row = this.getRowByCorrelationId(attr.correlationId);
+      if (attr.usageCount > 0 && this.documentModel.data[attr.id] !== undefined) {
+        let row = this.getRowById(attr.id);
         if (row) {
-          row.id = attr.id;
+          row.remove = false;
           if (row.name !== attr.name) {
             row.name = attr.name;
           }
@@ -112,19 +106,29 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
             row.value = this.documentModel.data[attr.id];
           }
         } else {
-          this.rows.push({ id: attr.id, name: attr.name, value: this.documentModel.data[attr.id], correlationId: attr.correlationId });
+          row = this.getRowByCorrelationId(attr.correlationId);
+          if (row) {
+            row.remove = false;
+            row.id = attr.id;
+            if (row.name !== attr.name) {
+              row.name = attr.name;
+            }
+            if (row.value !== this.documentModel.data[attr.id]) {
+              row.value = this.documentModel.data[attr.id];
+            }
+          } else {
+            this.rows.push({ id: attr.id, name: attr.name, value: this.documentModel.data[attr.id], correlationId: attr.correlationId });
+          }
         }
+      } else {
+        this.removeRowById(attr.id);
       }
     });
   }
 
   private getRowById(id: string) {
     if (id) {
-      for (let row of this.rows) {
-        if (row.id === id) {
-          return row;
-        }
-      }
+      return this.rows.find(row => row.id === id);
     }
 
     return null;
@@ -132,18 +136,40 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   private getRowByCorrelationId(correlationId: string) {
     if (correlationId) {
-      for (let row of this.rows) {
-        if (row.correlationId === correlationId) {
-          return row;
-        }
-      }
+      return this.rows.find(row => row.correlationId === correlationId);
     }
 
     return null;
   }
 
+  private getRowByName(name: string) {
+    if (name) {
+      return this.rows.filter(row => !row.remove).find(row => row.name === name);
+    }
+
+    return null;
+  }
+
+  private getRemovableRowByName(name: string) {
+    if (name) {
+      return this.rows.filter(row => row.remove).find(row => row.name === name);
+    }
+
+    return null;
+  }
+
+  private removeRowById(id: string) {
+    const idx = this.rows.indexOf(this.getRowById(id));
+    if (idx >= 0 && (this.rows[idx].remove || !this.documentModel.data[id])) {
+      this.rows.splice(idx, 1);
+    }
+  }
+
   public getNativeDate(dateObject) {
-    return new Date(dateObject.year, dateObject.monthValue, dateObject.dayOfMonth, dateObject.hour, dateObject.minute, dateObject.second).getTime();
+    if (dateObject) {
+      return new Date(dateObject.year, dateObject.monthValue, dateObject.dayOfMonth, dateObject.hour, dateObject.minute, dateObject.second).getTime();
+    }
+    return undefined;
   }
 
   private alreadyInCollection(attrName) {
@@ -161,6 +187,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     let dirty = this.patchNewAttributes(updatedDocument);
     dirty = dirty || this.patchExistingAttributes(updatedDocument);
     dirty = dirty || this.patchAttributeRename(updatedDocument);
+    dirty = dirty || this.patchReusedAttributes(updatedDocument);
     dirty = dirty || this.patchDeletedAttributes(updatedDocument);
 
     return dirty ? updatedDocument : null;
@@ -170,7 +197,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     let dirty = false;
 
     const newData: { [attributeName: string]: any } = this.rows
-      .filter(row => isNullOrUndefined(row.id) && !isNullOrUndefined(row.name) && !this.alreadyInCollection(row.name))
+      .filter(row => isNullOrUndefined(row.id) && !isNullOrUndefined(row.name) && row.name && !this.alreadyInCollection(row.name))
       .reduce((acc: { [attributeName: string]: any }, row) => {
         dirty = true;
         acc[row.name] = {value: row.value, correlationId: row.correlationId};
@@ -196,6 +223,25 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     return dirty;
   }
 
+  // patch those that are defined in collection but were unused
+  private patchReusedAttributes(document: DocumentModel) {
+    let dirty = false;
+    this.rows.filter(row =>
+      isNullOrUndefined(row.id) &&
+      !isNullOrUndefined(row.name) && row.name &&
+      this.alreadyInCollection(row.name))
+      .forEach(row => {
+        dirty = true;
+        let attr = this.getCollectionAttributeByName(row.name);
+
+        row.id = attr.id;
+        row.correlationId = undefined;
+        document.data[attr.id] = row.value;
+      });
+
+    return dirty;
+  }
+
   private patchAttributeRename(document: DocumentModel) {
     let dirty = false;
 
@@ -207,12 +253,22 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
         const attr = this.getCollectionAttributeByName(row.name);
 
         if (attr) { // renamed to existing attribute
-          document.data[attr.id] = row.value;
-          row.id = attr.id;
+          if (!document.data[attr.id]) {
+            delete document.data[row.id];
+            document.data[attr.id] = row.value;
+            row.id = attr.id;
+            row.correlationId = undefined;
+          } else if (document.data[attr.id] && this.getRemovableRowByName(row.name) && this.getRowByName(row.name)) {
+            const originalRow = this.getRemovableRowByName(row.name);
+            originalRow.id = row.id;
+            document.data[attr.id] = row.value;
+            row.id = attr.id;
+            row.correlationId = undefined;
+          }
         } else { // renamed to a completely new name
+          delete document.data[row.id];
           row.id = null;
           row.correlationId = CorrelationIdGenerator.generate();
-          document.data[row.id] = null;
           document.newData[row.name] = { value: row.value, correlationId: row.correlationId };
         }
       });
@@ -224,9 +280,9 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     let dirty = false;
 
     this.collection.attributes.forEach(attr => {
-      if (document.data[attr.id] && !this.getRowById(attr.id)) {
+      if (document.data[attr.id] && this.getRowById(attr.id) && this.getRowById(attr.id).remove) {
         dirty = true;
-        document.data[attr.id] = null;
+        delete document.data[attr.id];
       }
     });
 
@@ -242,50 +298,18 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   private patchDocument() {
-    // based on rows, figure out:
-    // 1) what attributes are new
-    // 2) what attributes are renamed
-    // 3) what values are updated
-    // ... and send corresponding updates
+    const updatedDocument = this.prepareUpdatedDocument();
 
+    if (updatedDocument) {
+      const documentUpdateAction = new DocumentsAction.UpdateData({ document: updatedDocument });
 
+      if (updatedDocument.newData && Object.getOwnPropertyNames(updatedDocument.newData).length > 0) {
+        const newAttributes = Object.keys(updatedDocument.newData).map(name => ({name, constraints: [], correlationId: updatedDocument.newData[name].correlationId}));
 
-    const documentUpdateAction = new DocumentsAction.UpdateData({ document: null });
-
-    // are there any updates to upload?
-    if (this.userUpdates.size > 0) {
-      let data = Object.assign({}, {...this.documentModel.data});
-      this.userUpdates.forEach((v, k) => data[k] = v);
-      documentUpdateAction.payload.document = Object.assign({}, {...this.documentModel}, {data});
-    }
-
-    // for new rows we must create attributes and then upload data
-    if (this.rows.length > 0) {
-      // keep only those rows with attr. name that is not null and not in conflict with existing attr. name
-      const newData: { [attributeName: string]: any } = this.rows
-        .filter(row => isNullOrUndefined(row.id) && !isNullOrUndefined(row.name) && !this.alreadyInCollection(row.name))
-        .reduce((acc: { [attributeName: string]: any }, row) => {
-          acc[row.name] = {value: row.value, correlationId: row.correlationId};
-          return acc;
-        }, {});
-      const newAttributes = Object.keys(newData).map(name => ({name, constraints: [], correlationId: newData[name].correlationId}));
-
-      console.log("=============")
-      console.log(newData);
-      console.log(newAttributes);
-      console.log(this.rows);
-
-      if (documentUpdateAction.payload.document) {
-        documentUpdateAction.payload.document.newData = newData;
+        this.store.dispatch(new CollectionsAction.CreateAttributes(
+          {collectionId: this.documentModel.collectionId, attributes: newAttributes, nextAction: documentUpdateAction})
+        );
       } else {
-        documentUpdateAction.payload.document = Object.assign({}, {...this.documentModel}, { newData });
-      }
-
-      this.store.dispatch(new CollectionsAction.CreateAttributes(
-        {collectionId: this.documentModel.collectionId, attributes: newAttributes, nextAction: documentUpdateAction})
-      );
-    } else {
-      if (documentUpdateAction.payload.document) {
         this.store.dispatch(documentUpdateAction);
       }
     }
@@ -297,27 +321,12 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   public addAttrRow() {
-    this.rows.push({ name: "", value: "", correlationId: CorrelationIdGenerator.generate() });
+    this.rows.push({ name: "", value: "", correlationId: CorrelationIdGenerator.generate(), warning: this.getEmptyWarning() });
   }
 
-  public submitAttribute(idx, $event: any) {
-    if ($event[0]) {
-    }
-  }
-
-  public onAttributeChange(attrId: string, newValue: string) {
-
-  }
-
-  public onValueChange(attrId: string, newValue: string) {
-    if (attrId) {
-      this.userUpdates.set(attrId, newValue);
-    }
-  }
-
-  public removeAttribute(idx) {
-   // if (this.encoded[idx][0]) {
-   /*   const message = this.i18n(
+  public onRemoveRow(idx) {
+    if (this.rows[idx].name) {
+      const message = this.i18n(
         {
           id: 'document.detail.attribute.remove.confirm',
           value: 'Are you sure you want to delete this row?'
@@ -327,20 +336,61 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
       const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
       this.notificationService.confirm(message, title, [
-        {text: yesButtonText, action: () => this.encoded.splice(idx, 1), bold: false},
+        {text: yesButtonText, action: () => this.removeRow(idx), bold: false},
         {text: noButtonText}
-      ]);*/
-    //} else {
-    //  this.encoded.splice(idx, 1);
-    //}
+      ]);
+    } else {
+      this.removeRow(idx);
+    }
   }
 
-  public onRemoveRow(idx) {
-    this.rows.splice(idx, 1);
+  private removeRow(idx) {
+    if (!this.rows[idx].name) {
+      this.rows.splice(idx, 1);
+    } else {
+      this.rows[idx].value = undefined;
+      this.rows[idx].remove = true;
+    }
   }
 
   public submitRowChange(idx, $event: string[]) {
-    this.rows[idx].name = $event[0];
-    this.rows[idx].value = $event[1];
+    const collision = this.getRowByName($event[0]);
+
+    if (collision && collision !== this.rows[idx]) {
+      this.rows[idx].warning = this.getCollisionWarning();
+    } else {
+      this.rows[idx].name = $event[0];
+      this.rows[idx].value = $event[1];
+
+      if (!$event[0]) {
+        this.rows[idx].warning = this.getEmptyWarning();
+      } else {
+        delete this.rows[idx].warning;
+      }
+    }
+  }
+
+  private getEmptyWarning() {
+    return this.i18n({ id: "shared.document.detail.attribute.empty", value: "The attribute name cannot be empty." })
+  }
+
+  private getCollisionWarning() {
+    return this.i18n({ id: "shared.document.detail.attribute.collision", value: "The attribute name is already used in this document." })
+  }
+
+  private getDocumentSummary() {
+    if (this.collection.defaultAttributeId) {
+      return this.documentModel.data[this.collection.defaultAttributeId];
+    }
+
+    if (this.collection.attributes.length > 0) {
+      for (let attr of this.collection.attributes) {
+        if (this.documentModel.data[attr.id]) {
+          return this.documentModel.data[attr.id];
+        }
+      }
+    }
+
+    return null;
   }
 }

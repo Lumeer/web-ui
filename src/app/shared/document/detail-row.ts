@@ -21,5 +21,7 @@ export interface DetailRow {
   id?: string,
   name: string,
   value: string,
-  correlationId: string
+  correlationId: string,
+  remove?: boolean,
+  warning?: string
 }
