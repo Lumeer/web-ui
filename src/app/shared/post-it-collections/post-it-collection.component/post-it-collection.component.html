@@ -7,7 +7,7 @@
   <div class="card-body text-center">
     <a class="icon" [style.color]="collection.color"
        [title]="collection.name"
-       [routerLink]="collection.id ? [workspacePath(), 'view', 'postit'] : null"
+       [routerLink]="collection.id ? [workspacePath(), 'view', 'table'] : null"
        [queryParams]="collection.id ? { query: queryForCollectionDocuments() } : null"
        [attr.data-toggle]="collection.id ? '' : 'dropdown'">
       <i class="fa-6x {{ collection.icon }}" aria-hidden="true"></i>
@@ -21,7 +21,7 @@
     <div *ngIf="collection.id" class="document-count opacity-content clickable"
          [ngClass]="{'panel-visible' : focused}">
       <a title="Record Count" i18n-title="@@collection.document.count"
-         [routerLink]="[workspacePath(), 'view', 'postit']"
+         [routerLink]="[workspacePath(), 'view', 'table']"
          [queryParams]="{ query: queryForCollectionDocuments() }">
         <i class="far fa-file" aria-hidden="true"></i>&nbsp;{{ collection.documentsCount }}
       </a>
