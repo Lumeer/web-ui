@@ -42,7 +42,7 @@ export const selectLinkTypesDictionary = createSelector(selectLinkTypesState, li
 export const selectLinkTypesLoaded = createSelector(selectLinkTypesState, linkTypesState => linkTypesState.loaded);
 
 export const selectLinkTypeById = (linkTypeId: string) => createSelector(selectLinkTypesDictionary, linkTypes => linkTypes[linkTypeId]);
-export const selectLinkTypeWithCollections = (linkTypeId: string) =>
+/*export const selectLinkTypeWithCollections = (linkTypeId: string) =>
   createSelector(selectLinkTypeById(linkTypeId), selectCollectionsDictionary, (linkType, collectionsMap) => ({
       ...linkType, collections: [
         collectionsMap[linkType.collectionIds[0]],
@@ -50,6 +50,6 @@ export const selectLinkTypeWithCollections = (linkTypeId: string) =>
       ]
     } as LinkTypeModel)
   );
-
+*/
 export const selectLinkTypesByCollectionId = (collectionId: string) =>
   createSelector(selectAllLinkTypes, linkTypes => linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId)));
