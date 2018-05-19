@@ -1,8 +1,8 @@
 <div class="dropdown h-100">
   <a class="d-block h-100"
      data-toggle="dropdown">
-    <icons-presenter [colors]="colors()"
-                     [icons]="icons()"
+    <icons-presenter [colors]="collections | colors"
+                     [icons]="collections | icons"
                      [title]="linkType.name">
     </icons-presenter>
   </a>

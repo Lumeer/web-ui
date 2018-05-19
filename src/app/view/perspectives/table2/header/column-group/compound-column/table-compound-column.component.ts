@@ -23,10 +23,9 @@ import {Edges, ResizeEvent} from 'angular-resizable-element';
 import {AppState} from '../../../../../../core/store/app.state';
 import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableCompoundColumn, TableModel, TablePart} from '../../../../../../core/store/tables/table.model';
-import {calculateColumnRowspan, getTableColumnWidth, hasLastTableColumnChildHidden, hasTableColumnChildren, isLastTableColumnChild} from '../../../../../../core/store/tables/table.utils';
+import {getTableColumnWidth, hasLastTableColumnChildHidden, hasTableColumnChildren, isLastTableColumnChild} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
 import {getLastFromArray} from '../../../../../../shared/utils/array.utils';
-import {TABLE_ROW_HEIGHT} from '../table-column-group.component';
 
 const MIN_COLUMN_WIDTH = 20;
 
@@ -50,21 +49,6 @@ export class TableCompoundColumnComponent {
   public constructor(private store: Store<AppState>) {
   }
 
-  public height(): string {
-    if (this.column.children.length) {
-      return `${TABLE_ROW_HEIGHT}px`;
-    }
-
-    const rowspan = calculateColumnRowspan(this.table, this.cursor.partIndex, this.cursor.columnPath.slice(0, this.cursor.columnPath.length - 1));
-    const height = rowspan * TABLE_ROW_HEIGHT;
-    return `${height}px`;
-  }
-
-  public width(): string {
-    const width = getTableColumnWidth(this.column);
-    return `${width}px`;
-  }
-
   public onResizeEnd(event: ResizeEvent): void {
     const delta = Number(event.edges.right);
     this.resizeColumn(delta);
@@ -83,17 +67,6 @@ export class TableCompoundColumnComponent {
     const lastChildWidth = getTableColumnWidth(lastChild);
     const delta = Number(event.edges.right);
     return lastChildWidth + delta >= MIN_COLUMN_WIDTH;
-  }
-
-  public resizeEdges(): Edges {
-    const isLastChild = isLastTableColumnChild(this.getPart().columns, this.cursor.columnPath);
-    const hasLastChildHidden = hasLastTableColumnChildHidden(this.column);
-
-    return isLastChild || hasLastChildHidden ? {} : {right: true};
-  }
-
-  private getPart(): TablePart {
-    return this.table.parts[this.cursor.partIndex];
   }
 
 }

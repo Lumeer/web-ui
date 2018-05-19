@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {EffectsModule} from '@ngrx/effects';
 import {StoreModule} from '@ngrx/store';
@@ -29,6 +28,7 @@ import {TablesEffects} from '../../../core/store/tables/tables.effects';
 import {tablesReducer} from '../../../core/store/tables/tables.reducer';
 import {initialTablesState, TABLE_FEATURE_NAME} from '../../../core/store/tables/tables.state';
 import {PickerModule} from '../../../shared/picker/picker.module';
+import {PipesModule} from '../../../shared/pipes/pipes.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {TableRowGroupFooterComponent} from './body/row-group/footer/table-row-group-footer.component';
 import {TableRowGroupHeaderComponent} from './body/row-group/header/table-row-group-header.component';
@@ -56,20 +56,22 @@ import {TableLinkInfoComponent} from './header/link/info/table-link-info.compone
 import {TableHeaderLinkComponent} from './header/link/table-header-link.component';
 import {TableHeaderComponent} from './header/table-header.component';
 import {TableEditableCellComponent} from './shared/editable-cell/table-editable-cell.component';
+import {TablePipesModule} from './shared/pipes/table-pipes.module';
 import {TablePerspectiveRoutingModule} from './table-perspective-routing.module';
 import {Table2PerspectiveComponent} from './table2-perspective.component';
 
 @NgModule({
   imports: [
     SharedModule,
-    CommonModule,
     PickerModule,
+    PipesModule,
     StoreModule.forFeature(TABLE_FEATURE_NAME, tablesReducer, {initialState: initialTablesState}),
     EffectsModule.forFeature([TablesEffects]),
     ContextMenuModule,
     ClickOutsideModule,
     ResizableModule,
     InfiniteScrollModule,
+    TablePipesModule,
     TablePerspectiveRoutingModule
   ],
   declarations: [
@@ -99,7 +101,7 @@ import {Table2PerspectiveComponent} from './table2-perspective.component';
     TableDataCellMenuComponent,
     TableCollapsedCellComponent,
     TableRowNumbersComponent,
-    TableDataCellSuggestionsComponent
+    TableDataCellSuggestionsComponent,
   ],
   exports: [
     Table2PerspectiveComponent

@@ -17,31 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operators';
+import {first, map} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../core/store/collections/collection.model';
 import {selectCollectionById} from '../../../../../../core/store/collections/collections.state';
 import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
 import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
-import {areTableHeaderCursorsEqual, TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
+import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableHiddenColumn, TableModel, TablePart} from '../../../../../../core/store/tables/table.model';
-import {getTableColumnWidth} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
-import {selectTableCursor} from '../../../../../../core/store/tables/tables.state';
-import {extractAttributeLastName} from '../../../../../../shared/utils/attribute.utils';
-import {HtmlModifier} from '../../../../../../shared/utils/html-modifier';
-import {DEFAULT_COLOR} from '../single-column/table-single-column.component';
+import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.state';
 
 @Component({
   selector: 'table-hidden-column',
   templateUrl: './table-hidden-column.component.html',
-  styleUrls: ['./table-hidden-column.component.scss']
+  styleUrls: ['./table-hidden-column.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableHiddenColumnComponent implements OnInit, OnDestroy {
+export class TableHiddenColumnComponent implements OnDestroy, OnChanges {
 
   @Input()
   public table: TableModel;
@@ -52,75 +49,53 @@ export class TableHiddenColumnComponent implements OnInit, OnDestroy {
   @Input()
   public column: TableHiddenColumn;
 
-  public selected: boolean;
+  public collection$: Observable<CollectionModel>;
+  public linkType$: Observable<LinkTypeModel>;
+  public hiddenAttributes$: Observable<AttributeModel[]>;
 
   private subscriptions = new Subscription();
 
   public constructor(private store: Store<AppState>) {
   }
 
-  public ngOnInit() {
-    this.subscribeToSelection();
-  }
-
-  private subscribeToSelection() {
-    this.subscriptions.add(
-      this.store.select(selectTableCursor).subscribe(cursor => {
-        this.selected = areTableHeaderCursorsEqual(cursor, this.cursor);
-      })
-    );
+  public ngOnChanges(changes: SimpleChanges) {
+    const part = this.table.parts[this.cursor.partIndex];
+    if (part) {
+      this.collection$ = this.store.select(selectCollectionById(part.collectionId));
+      this.linkType$ = this.store.select(selectLinkTypeById(part.linkTypeId));
+      this.hiddenAttributes$ = this.getHiddenAttributes(part);
+    }
   }
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
   }
 
-  public backgroundColor(): Observable<string> {
-    if (this.getPart().collectionId) {
-      return this.getCollection().pipe(
-        map(collection => HtmlModifier.shadeColor(collection.color, .5))
-      );
-    }
-
-    return Observable.of(DEFAULT_COLOR);
-  }
-
-  public width(): string {
-    const width = getTableColumnWidth(this.column);
-    return `${width}px`;
-  }
-
-  public hiddenAttributes(): Observable<AttributeModel[]> {
-    return this.getAttributes().pipe(
+  public getHiddenAttributes(part: TablePart): Observable<AttributeModel[]> {
+    return this.getAttributes(part).pipe(
       map(attributes => attributes.filter(attribute => this.column.attributeIds.includes(attribute.id)))
     );
   }
 
-  public getAttributes(): Observable<AttributeModel[]> {
-    if (this.getPart().collectionId) {
-      return this.getCollection().pipe(map(collection => collection.attributes));
+  public getAttributes(part: TablePart): Observable<AttributeModel[]> {
+    if (part.collectionId) {
+      return this.collection$.pipe(map(collection => collection.attributes));
     }
-    if (this.getPart().linkTypeId) {
-      return this.getLinkType().pipe(map(linkType => linkType.attributes));
+    if (part.linkTypeId) {
+      return this.linkType$.pipe(map(linkType => linkType.attributes));
     }
-  }
-
-  public getCollection(): Observable<CollectionModel> {
-    return this.store.select(selectCollectionById(this.getPart().collectionId));
-  }
-
-  public getLinkType(): Observable<LinkTypeModel> {
-    return this.store.select(selectLinkTypeById(this.getPart().linkTypeId));
   }
 
   public onMouseDown() {
-    if (!this.selected) {
-      this.selectColumn();
-    }
-  }
-
-  private selectColumn() {
-    this.store.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
+    this.subscriptions.add(
+      this.store.select(selectTableCursorSelected(this.cursor)).pipe(
+        first()
+      ).subscribe(selected => {
+        if (!selected) {
+          this.store.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
+        }
+      })
+    );
   }
 
   public onShowSingleColumn(attribute: AttributeModel) {
@@ -136,14 +111,6 @@ export class TableHiddenColumnComponent implements OnInit, OnDestroy {
       cursor: this.cursor,
       attributeIds
     }));
-  }
-
-  private getPart(): TablePart {
-    return this.table.parts[this.cursor.partIndex];
-  }
-
-  public extractAttributeLastName(name: string): string {
-    return extractAttributeLastName(name);
   }
 
 }

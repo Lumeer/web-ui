@@ -17,21 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChange, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../../core/store/app.state';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {selectDocumentsByQuery} from '../../../../../core/store/documents/documents.state';
 import {QueryModel} from '../../../../../core/store/navigation/query.model';
-import {TableBodyCursor, TableCursor} from '../../../../../core/store/tables/table-cursor';
+import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {EMPTY_TABLE_ROW, TableModel, TableRow} from '../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
-import {selectTableCursor} from '../../../../../core/store/tables/tables.state';
 
 @Component({
   selector: 'table-rows',
-  templateUrl: './table-rows.component.html'
+  templateUrl: './table-rows.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableRowsComponent implements OnChanges, OnDestroy {
 
@@ -44,20 +44,31 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
   @Input()
   public query: QueryModel;
 
-  private selectedCursor: TableCursor;
+  public cursor: TableBodyCursor;
 
   private subscriptions = new Subscription();
 
   public constructor(private store: Store<AppState>) {
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (changes['query']) {
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.query) {
       this.resetSubscriptions();
       this.retrieveDocuments();
       this.bindDocuments();
-      this.bindSelectedCursor();
     }
+    if (changes.table && this.table && hasTableIdChanged(changes.table)) {
+      this.cursor = this.createRootBodyCursor();
+    }
+  }
+
+  private createRootBodyCursor(): TableBodyCursor {
+    return {
+      tableId: this.table.id,
+      rowPath: [],
+      partIndex: 0,
+      columnIndex: undefined
+    };
   }
 
   private resetSubscriptions() {
@@ -88,24 +99,8 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
     );
   }
 
-  private bindSelectedCursor() {
-    this.subscriptions.add(
-      this.store.select(selectTableCursor)
-        .subscribe(cursor => this.selectedCursor = cursor)
-    );
-  }
-
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
-  }
-
-  public createCursor(rowIndex: number): TableBodyCursor {
-    return {
-      tableId: this.table.id,
-      rowPath: [rowIndex],
-      partIndex: 0,
-      columnIndex: undefined
-    };
   }
 
   public onScroll() {
@@ -117,4 +112,8 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
     return row.documentIds[0];
   }
 
+}
+
+function hasTableIdChanged(change: SimpleChange): boolean {
+  return !change.previousValue || change.previousValue.id !== change.currentValue.id;
 }

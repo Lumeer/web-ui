@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableModel, TableRow} from '../../../../../../../core/store/tables/table.model';
 import {calculateRowNumber, countLinkedRows} from '../../../../../../../core/store/tables/table.utils';
@@ -27,7 +27,7 @@ import {calculateRowNumber, countLinkedRows} from '../../../../../../../core/sto
   templateUrl: './table-row-numbers.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableRowNumbersComponent {
+export class TableRowNumbersComponent implements OnChanges {
 
   @Input()
   public table: TableModel;
@@ -37,6 +37,15 @@ export class TableRowNumbersComponent {
 
   @Input()
   public row: TableRow;
+
+  public rowIndexes: number[] = [];
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.row && this.row) {
+      const rowsCount = countLinkedRows(this.row);
+      this.rowIndexes = Array.from(Array(rowsCount).keys());
+    }
+  }
 
   public rowNumberWidth(): string {
     return `${this.table.rowNumberWidth}px`;
@@ -51,11 +60,6 @@ export class TableRowNumbersComponent {
     const rowsCount = countLinkedRows(this.row);
     const indexes = Array.from(Array(rowsCount).keys());
     return indexes.map(index => firstRowNumber + index);
-  }
-
-  public rowIndexes(): number[] {
-    const rowsCount = countLinkedRows(this.row);
-    return Array.from(Array(rowsCount).keys());
   }
 
 }

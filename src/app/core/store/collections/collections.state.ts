@@ -20,6 +20,7 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
+import {selectLinkTypeById} from '../link-types/link-types.state';
 import {selectQuery, selectWorkspace} from '../navigation/navigation.state';
 import {CollectionModel} from './collection.model';
 
@@ -53,5 +54,11 @@ export const selectCollectionByWorkspace = createSelector(selectCollectionsDicti
 });
 
 export const selectCollectionById = (id: string) => createSelector(selectCollectionsDictionary, collectionsDictionary => collectionsDictionary[id]);
+
+export const selectCollectionsByLinkType = (linkTypeId: string) => createSelector(
+  selectCollectionsDictionary, selectLinkTypeById(linkTypeId), (collectionsMap, linkType) => {
+    return linkType.collectionIds.map(id => collectionsMap[id]);
+  }
+);
 
 export const selectCollectionNames = createSelector(selectCollectionsState, (state: CollectionsState) => state.collectionNames);

@@ -17,19 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, NgZone, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, NgZone, OnChanges, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../../core/store/app.state';
-import {isTableColumnSubPath, TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
+import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableColumn, TableColumnType, TableCompoundColumn, TableModel} from '../../../../../core/store/tables/table.model';
-import {calculateColumnRowspan} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
-import {selectTableCursor} from '../../../../../core/store/tables/tables.state';
-import {arrayStartsWith, deepArrayEquals} from '../../../../../shared/utils/array.utils';
+import {deepArrayEquals} from '../../../../../shared/utils/array.utils';
 import {ColumnLayout} from '../../../../../shared/utils/layout/column-layout';
-
-export const TABLE_ROW_HEIGHT = 35;
 
 @Component({
   selector: 'table-column-group',
@@ -37,7 +32,7 @@ export const TABLE_ROW_HEIGHT = 35;
   styleUrls: ['./table-column-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableColumnGroupComponent implements OnChanges, OnInit, OnDestroy {
+export class TableColumnGroupComponent implements OnChanges {
 
   @Input()
   public table: TableModel;
@@ -49,37 +44,12 @@ export class TableColumnGroupComponent implements OnChanges, OnInit, OnDestroy {
   public columns: TableColumn[];
 
   private columnsLayout: ColumnLayout;
-  private columnGroupId: string;
+  public columnGroupId: string;
 
-  private selectedColumnPath: number[];
+  public containerClassPrefix = 'table-';
 
-  public subscriptions: Subscription = new Subscription();
-
-  public constructor(private changeDetector: ChangeDetectorRef,
-                     private store: Store<AppState>,
+  public constructor(private store: Store<AppState>,
                      private zone: NgZone) {
-  }
-
-  public ngOnInit() {
-    this.subscribeToSelected();
-  }
-
-  private subscribeToSelected() {
-    this.subscriptions.add(
-      this.store.select(selectTableCursor).subscribe((cursor) => {
-        if (isTableColumnSubPath(this.cursor, cursor)) {
-          this.selectedColumnPath = cursor.columnPath;
-        } else {
-          this.selectedColumnPath = null;
-        }
-
-        this.changeDetector.detectChanges();
-      })
-    );
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -122,8 +92,8 @@ export class TableColumnGroupComponent implements OnChanges, OnInit, OnDestroy {
     }, this.zone, ({fromIndex, toIndex}) => this.onMoveColumn(fromIndex, toIndex));
   }
 
-  public layoutContainerClass(): string {
-    return `table-${this.columnGroupId}`;
+  private layoutContainerClass(): string {
+    return this.containerClassPrefix + this.columnGroupId;
   }
 
   private dragClass(): string {
@@ -148,36 +118,11 @@ export class TableColumnGroupComponent implements OnChanges, OnInit, OnDestroy {
     this.store.dispatch(new TablesAction.MoveColumn({cursor, toIndex}));
   }
 
-  public isCompoundColumn(column: TableColumn): boolean {
-    return column && column.type === TableColumnType.COMPOUND;
-  }
-
-  public isHiddenColumn(column: TableColumn): boolean {
-    return column && column.type === TableColumnType.HIDDEN;
-  }
-
-  public height(): string {
-    const rowspan = calculateColumnRowspan(this.table, this.cursor.partIndex, this.cursor.columnPath);
-    const height = rowspan * TABLE_ROW_HEIGHT;
-    return `${height}px`;
-  }
-
-  public getChildCursor(columnIndex: number): TableHeaderCursor {
-    return {...this.cursor, columnPath: this.cursor.columnPath.concat(columnIndex)};
-  }
-
-  public trackByColumnAttribute(index: number, column: TableColumn): string {
+  public trackByCollectionAndAttribute(index: number, column: TableColumn): string {
     if (column && column.type === TableColumnType.COMPOUND) {
-      return (column as TableCompoundColumn).parent.attributeId;
+      const part = this.table.parts[this.cursor.partIndex];
+      return part.collectionId + ':' + (column as TableCompoundColumn).parent.attributeId;
     }
-  }
-
-  public zIndex(columnIndex: number): number {
-    const columnPath = this.cursor.columnPath.concat(columnIndex);
-    if (this.selectedColumnPath && arrayStartsWith(this.selectedColumnPath, columnPath)) {
-      return deepArrayEquals(this.selectedColumnPath, columnPath) ? 100 : 10;
-    }
-    return null;
   }
 
 }

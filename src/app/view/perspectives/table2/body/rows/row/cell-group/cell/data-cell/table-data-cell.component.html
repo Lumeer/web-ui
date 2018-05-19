@@ -1,15 +1,15 @@
 <table-editable-cell [affected]="affected$ | async"
-                     [contextMenu]="contextMenuElement()"
+                     [contextMenu]="contextMenuComponent?.contextMenu"
                      [readonly]="!selected"
                      [selected]="selected"
-                     [value]="value()"
+                     [value]="value"
                      (valueChange)="onValueChange($event)"
                      (editStart)="onEditStart()"
                      (editEnd)="onEditEnd($event)"
                      class="d-block h-100">
 </table-editable-cell>
 
-<table-data-cell-suggestions *ngIf="suggestionsEnabled()"
+<table-data-cell-suggestions *ngIf="!(cursor | isFirstPart) && !((document | entityCreated) || (linkInstance | entityCreated)) && editableCellComponent?.edited"
                              [column]="column"
                              [cursor]="cursor"
                              [table]="table"
@@ -19,7 +19,7 @@
 
 <table-data-cell-menu *ngIf="selected"
                       [cursor]="cursor"
-                      [created]="isCreated()"
+                      [created]="(document | entityCreated) || (linkInstance | entityCreated)"
                       (edit)="onEdit()"
                       (addRow)="onAddRow($event)"
                       (removeRow)="onRemoveRow()"

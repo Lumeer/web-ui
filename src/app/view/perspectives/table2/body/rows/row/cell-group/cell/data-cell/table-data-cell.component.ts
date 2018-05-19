@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {Actions} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../../../../../../core/store/app.state';
 import {AttributeModel} from '../../../../../../../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../../../../../../../core/store/collections/collections.action';
@@ -31,16 +32,17 @@ import {LinkInstancesAction} from '../../../../../../../../../core/store/link-in
 import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../../../../../core/store/tables/table-cursor';
 import {EMPTY_TABLE_ROW, TableCompoundColumn, TableModel, TableRow, TableSingleColumn} from '../../../../../../../../../core/store/tables/table.model';
 import {findTableRow, splitRowPath} from '../../../../../../../../../core/store/tables/table.utils';
-import {TablesAction} from '../../../../../../../../../core/store/tables/tables.action';
-import {selectEditedAttribute} from '../../../../../../../../../core/store/tables/tables.state';
+import {TablesAction, TablesActionType} from '../../../../../../../../../core/store/tables/tables.action';
+import {selectAffected} from '../../../../../../../../../core/store/tables/tables.state';
 import {TableColumnContextMenuComponent} from '../../../../../../header/column-group/single-column/context-menu/table-column-context-menu.component';
 import {TableEditableCellComponent} from '../../../../../../shared/editable-cell/table-editable-cell.component';
 
 @Component({
   selector: 'table-data-cell',
-  templateUrl: './table-data-cell.component.html'
+  templateUrl: './table-data-cell.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableDataCellComponent implements OnInit {
+export class TableDataCellComponent implements OnChanges {
 
   @Input()
   public cursor: TableBodyCursor;
@@ -68,27 +70,51 @@ export class TableDataCellComponent implements OnInit {
 
   public affected$: Observable<boolean>;
 
+  private editSubscription: Subscription;
+
   private linkCreated: boolean;
   private editedValue: string;
 
-  public constructor(private store: Store<AppState>) {
+  public value: string;
+
+  public constructor(private actions$: Actions,
+                     private store: Store<AppState>) {
   }
 
-  public ngOnInit() {
-    this.affected$ = this.store.select(selectEditedAttribute).pipe(
-      map(editedAttribute => editedAttribute &&
-        editedAttribute.documentId === this.document.id &&
-        editedAttribute.attributeId === this.column.attributeId
-      )
-    );
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.document || changes.linkInstance || changes.column) {
+      this.value = this.extractValue();
+      if (this.cursor && this.cursor.partIndex > 0) {
+        this.affected$ = this.store.select(selectAffected({
+          documentId: this.document.id,
+          attributeId: this.column.attributeId
+        }));
+      }
+    }
+    if (changes.selected) {
+      this.bindOrUnbindEditSelectedCell();
+    }
   }
 
-  public value(): string {
+  private bindOrUnbindEditSelectedCell() {
+    if (this.selected) {
+      this.editSubscription = this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
+        .subscribe(action => {
+          this.editableCellComponent.startEditing(action.payload.letter);
+        });
+    } else {
+      if (this.editSubscription) {
+        this.editSubscription.unsubscribe();
+      }
+    }
+  }
+
+  public extractValue(): string {
     const attributeId = this.column.attributeId;
-    if (this.document) {
+    if (this.document && this.document.data) {
       return this.document.data[attributeId];
     }
-    if (this.linkInstance) {
+    if (this.linkInstance && this.linkInstance.data) {
       return this.linkInstance.data[attributeId];
     }
   }
@@ -120,7 +146,7 @@ export class TableDataCellComponent implements OnInit {
   }
 
   private saveData(value: string) {
-    if (this.linkCreated || this.value() === value) {
+    if (this.linkCreated || this.value === value) {
       return;
     }
 
@@ -225,14 +251,6 @@ export class TableDataCellComponent implements OnInit {
     // TODO dispatch patch link instance action
   }
 
-  public contextMenuElement(): ElementRef {
-    return this.contextMenuComponent ? this.contextMenuComponent.contextMenu : null;
-  }
-
-  public isCreated(): boolean {
-    return !!(this.document && this.document.id) || !!(this.linkInstance && this.linkInstance.id);
-  }
-
   public onEdit() {
     this.editableCellComponent.startEditing();
   }
@@ -269,10 +287,6 @@ export class TableDataCellComponent implements OnInit {
     // TODO what is 'this' if the component is destroyed in the meantime?
     const callback = () => this.store.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
     this.store.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId, callback}));
-  }
-
-  public suggestionsEnabled(): boolean {
-    return this.cursor.partIndex > 0 && this.document && !this.isCreated() && this.editableCellComponent.edited;
   }
 
   public onCreateLink(document: DocumentModel) {

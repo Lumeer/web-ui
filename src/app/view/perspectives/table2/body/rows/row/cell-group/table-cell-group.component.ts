@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
@@ -27,13 +27,14 @@ import {selectDocumentsByIds} from '../../../../../../../core/store/documents/do
 import {LinkInstanceModel} from '../../../../../../../core/store/link-instances/link-instance.model';
 import {selectLinkInstancesByIds} from '../../../../../../../core/store/link-instances/link-instances.state';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
-import {TableColumn, TableModel, TableRow} from '../../../../../../../core/store/tables/table.model';
+import {TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TableRow} from '../../../../../../../core/store/tables/table.model';
 import {selectTablePartLeafColumns} from '../../../../../../../core/store/tables/tables.state';
 
 @Component({
   selector: 'table-cell-group',
   templateUrl: './table-cell-group.component.html',
-  styleUrls: ['./table-cell-group.component.scss']
+  styleUrls: ['./table-cell-group.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableCellGroupComponent implements OnInit, OnDestroy {
 
@@ -94,8 +95,14 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  public createColumnCursor(columnIndex: number): TableBodyCursor {
-    return {...this.cursor, columnIndex};
+  public trackByAttributeIds(index: number, column: TableColumn): string {
+    if (column.type === TableColumnType.COMPOUND) {
+      const {parent} = column as TableCompoundColumn;
+      return parent.attributeId || parent.attributeName;
+    }
+    if (column.type === TableColumnType.HIDDEN) {
+      return (column as TableHiddenColumn).attributeIds.join('-');
+    }
   }
 
 }

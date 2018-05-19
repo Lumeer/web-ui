@@ -18,6 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
 import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
 
 @Component({
@@ -27,6 +28,9 @@ import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.m
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableLinkInfoComponent {
+
+  @Input()
+  public collections: CollectionModel[];
 
   @Input()
   public linkType: LinkTypeModel;
@@ -39,13 +43,5 @@ export class TableLinkInfoComponent {
 
   @Output()
   public removePart = new EventEmitter();
-
-  public colors(): string[] {
-    return this.linkType.collections.map(collection => collection.color);
-  }
-
-  public icons(): string[] {
-    return this.linkType.collections.map(collection => collection.icon);
-  }
 
 }

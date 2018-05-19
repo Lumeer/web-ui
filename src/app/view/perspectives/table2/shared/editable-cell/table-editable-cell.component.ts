@@ -20,7 +20,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {KeyCode} from '../../../../../shared/key-code';
 import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
-import {isKeyPrintable} from '../../../../../shared/utils/key-code.helper';
 
 @Component({
   selector: 'table-editable-cell',
@@ -60,11 +59,9 @@ export class TableEditableCellComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('selected')) {
-      if (this.selected) {
-        this.editableCell.nativeElement.focus();
-      } else {
-        this.edited = false; // TODO maybe save changes
+    if (changes.selected) {
+      if (!this.selected) {
+        this.edited = false;
       }
     }
   }
@@ -80,48 +77,18 @@ export class TableEditableCellComponent implements OnChanges {
   public onKeyDown(event: KeyboardEvent) {
     if (this.edited) {
       this.onKeyDownInEditMode(event);
-    } else {
-      this.onKeyDownInSelectionMode(event);
     }
   }
 
   private onKeyDownInEditMode(event: KeyboardEvent) {
+    event.stopPropagation();
     switch (event.keyCode) {
       case KeyCode.Enter:
       case KeyCode.Escape:
+      case KeyCode.F2:
         this.stopEditing();
         event.preventDefault();
         return;
-      case KeyCode.UpArrow:
-      case KeyCode.DownArrow:
-      case KeyCode.LeftArrow:
-      case KeyCode.RightArrow:
-        event.stopPropagation();
-        return;
-    }
-  }
-
-  private onKeyDownInSelectionMode(event: KeyboardEvent) {
-    switch (event.keyCode) {
-      case KeyCode.Enter:
-      case KeyCode.Backspace:
-        this.startEditing();
-        event.preventDefault();
-        return;
-      case KeyCode.Delete:
-        // this.showRemoveConfirm();
-        return;
-      default:
-        if (!isKeyPrintable(event.keyCode)) {
-          return;
-        }
-
-        event.preventDefault();
-        this.startEditing();
-        const element = this.editableCell.nativeElement;
-        if (!element.textContent) {
-          element.textContent = event.key;
-        }
     }
   }
 
@@ -130,13 +97,17 @@ export class TableEditableCellComponent implements OnChanges {
     this.valueChange.emit(value);
   }
 
-  public startEditing() {
+  public startEditing(letter?: string) {
     if (this.edited || this.readonly) {
       return;
     }
 
     this.edited = true;
-    this.changeDetector.detectChanges();
+
+    const element = this.editableCell.nativeElement;
+    if (letter && !element.textContent) {
+      element.textContent = letter;
+    }
 
     this.editStart.emit();
     setTimeout(() => HtmlModifier.setCursorAtTextContentEnd(this.editableCell.nativeElement));
@@ -151,8 +122,6 @@ export class TableEditableCellComponent implements OnChanges {
 
     const value = this.editableCell.nativeElement.textContent;
     this.editEnd.emit(value);
-
-    this.changeDetector.detectChanges(); // TODO maybe not needed
   }
 
 }
