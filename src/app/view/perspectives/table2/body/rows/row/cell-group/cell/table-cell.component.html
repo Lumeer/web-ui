@@ -1,4 +1,5 @@
-<div [style.width]="column | columnWidth | pixel"
+<div [class.transparent-border-top]="cursor | isFirstRow"
+     [style.width]="column | columnWidth | pixel"
      (mousedown)="onMouseDown($event)"
      class="table-border-right table-border-bottom h-100">
   <ng-container *ngIf="column | isSingleColumn">

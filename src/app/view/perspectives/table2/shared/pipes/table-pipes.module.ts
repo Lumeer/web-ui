@@ -50,6 +50,7 @@ import {PartWidthPipe} from './part-width.pipe';
 import {PartPipe} from './part.pipe';
 import {ResizeEdgesPipe} from './resize-edges.pipe';
 import {RowNumberWidthPipe} from './row-number-width.pipe';
+import { IsFirstRowPipe } from './is-first-row.pipe';
 
 @NgModule({
   imports: [
@@ -86,7 +87,8 @@ import {RowNumberWidthPipe} from './row-number-width.pipe';
     AttributeNamePipe,
     AttributeParentNamePipe,
     AttributeExistPipe,
-    EmbeddedPipe
+    EmbeddedPipe,
+    IsFirstRowPipe
   ], exports: [
     DataPipe,
     EntityCreatedPipe,
@@ -118,7 +120,8 @@ import {RowNumberWidthPipe} from './row-number-width.pipe';
     AttributeNamePipe,
     AttributeParentNamePipe,
     AttributeExistPipe,
-    EmbeddedPipe
+    EmbeddedPipe,
+    IsFirstRowPipe
   ],
   providers: [
     AttributeNameChangedPipe

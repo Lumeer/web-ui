@@ -3,6 +3,7 @@
 %highlighted {
   position: relative;
   z-index: $z-index-selected;
+  outline-offset: -1px;
 }
 
 .selected {
