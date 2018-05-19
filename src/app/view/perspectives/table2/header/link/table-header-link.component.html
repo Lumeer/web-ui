@@ -1,8 +1,9 @@
 <div class="d-flex flex-column h-100">
   <div class="text-white">&zwnj;</div>
   <div class="d-flex table-border-top flex-grow-2 align-items-stretch">
-    <table-link-info [linkType]="linkType"
-                     [switchingEnabled]="switchingEnabled()"
+    <table-link-info [linkType]="linkType$ | async"
+                     [collections]="collections$ | async"
+                     [switchingEnabled]="table | maxParts:3"
                      (switchParts)="onSwitchParts()"
                      (removePart)="onRemovePart()"
                      class="d-block p-1 table-border-right table-border-bottom">

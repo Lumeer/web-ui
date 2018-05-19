@@ -1,19 +1,17 @@
-<div (keydown)="onKeyDown($event)"
-     (mousedown)="onMouseDown()"
+<div (mousedown)="onMouseDown()"
      class="table-border-right table-border-bottom h-100">
   <table-editable-cell *ngIf="attribute"
-                       [contextMenu]="contextMenuElement()"
-                       [readonly]="!selected"
-                       [selected]="selected"
-                       [style.background]="background()"
-                       [value]="originalLastName()"
+                       [contextMenu]="contextMenuComponent?.contextMenu"
+                       [selected]="selected$ | async"
+                       [style.background]="collection | columnBackground:(attribute | attributeNameChanged:lastName)"
+                       [value]="attribute | attributeLastName"
                        (valueChange)="onValueChange($event)"
                        (editStart)="onEditStart()"
                        (editEnd)="onEditEnd($event)"
-                       class="d-block h-100 font-italic {{dragClass()}}">
+                       class="d-block h-100 font-italic {{cursor | dragClass}}">
   </table-editable-cell>
-  <table-attribute-suggestions *ngIf="canShowSuggestions()"
-                               [attributeName]="suggestedAttributeName()"
+  <table-attribute-suggestions *ngIf="edited && attribute && !attribute.id && !(attribute | attributeParentName)"
+                               [attributeName]="attribute | attributeName:lastName"
                                [collection]="collection"
                                [cursor]="cursor"
                                [table]="table">

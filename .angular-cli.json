@@ -62,6 +62,9 @@
     "component": {
       "spec": false
     },
+    "pipe": {
+      "spec": false
+    },
     "schematics": {
       "collection": "@ngrx/schematics"
     }

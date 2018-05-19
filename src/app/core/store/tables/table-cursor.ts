@@ -369,9 +369,9 @@ export function isTableColumnSubPath(parent: TableHeaderCursor, child: TableHead
 export function areTableBodyCursorsEqual(cursor1: TableBodyCursor, cursor2: TableBodyCursor): boolean {
   return cursor1 && cursor2
     && cursor1.tableId === cursor2.tableId
-    && deepArrayEquals(cursor1.rowPath, cursor2.rowPath)
     && cursor1.partIndex === cursor2.partIndex
-    && cursor1.columnIndex === cursor2.columnIndex;
+    && cursor1.columnIndex === cursor2.columnIndex
+    && deepArrayEquals(cursor1.rowPath, cursor2.rowPath);
 }
 
 export function findTableColumnWithCursor(table: TableModel, partIndex: number, attributeName: string): { column: TableCompoundColumn, cursor: TableHeaderCursor } {

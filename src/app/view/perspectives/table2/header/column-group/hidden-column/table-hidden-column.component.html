@@ -1,5 +1,5 @@
-<div [style.backgroundColor]="backgroundColor() | async"
-     [style.width]="width()"
+<div [style.background]="collection$ | async | columnBackground"
+     [style.width]="column | columnWidth | pixel"
      (mousedown)="onMouseDown()"
      title="Hidden columns" i18n-title="@@table.header.hidden.columns"
      class="table-border-right table-border-bottom h-100 dropdown">
@@ -9,10 +9,10 @@
     <h6 class="dropdown-header"
         i18n="@@table.header.show.hidden.columns">Show hidden columns
     </h6>
-    <a *ngFor="let attribute of hiddenAttributes() | async"
+    <a *ngFor="let attribute of hiddenAttributes$ | async"
        (click)="onShowSingleColumn(attribute)"
        class="dropdown-item">
-      <span>{{extractAttributeLastName(attribute.name)}}</span>
+      <span>{{attribute | attributeLastName}}</span>
       <small class="text-secondary pl-1">({{attribute.name}})</small>
     </a>
     <a *ngIf="column.attributeIds.length > 1"

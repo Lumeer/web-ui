@@ -39,10 +39,10 @@ import {ViewsAction} from '../views/views.action';
 import {selectViewTable2Config} from '../views/views.state';
 import {moveTableCursor} from './table-cursor';
 import {convertTableToConfig} from './table.converter';
-import {DEFAULT_TABLE_ID, EMPTY_TABLE_ROW, TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
+import {DEFAULT_ROW_NUMBER_WIDTH, DEFAULT_TABLE_ID, EMPTY_TABLE_ROW, TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
 import {createCollectionPart, createLinkPart, createTableColumnsBySiblingAttributeIds, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
-import {selectTableById} from './tables.state';
+import {selectTableById, selectTableCursor} from './tables.state';
 
 @Injectable()
 export class TablesEffects {
@@ -69,7 +69,7 @@ export class TablesEffects {
           parts: [part],
           documentIds: new Set<string>(),
           rows: [EMPTY_TABLE_ROW],
-          rowNumberWidth: 40 // TODO calculate dynamically
+          rowNumberWidth: DEFAULT_ROW_NUMBER_WIDTH // TODO calculate dynamically
         }
       });
 
@@ -386,7 +386,7 @@ export class TablesEffects {
 
   @Effect()
   public collapseRows$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.MoveCursor>(TablesActionType.COLLAPSE_ROWS),
+    ofType<TablesAction.CollapseRows>(TablesActionType.COLLAPSE_ROWS),
     mergeMap(action => this.getLatestTable(action)),
     mergeMap(({action, table}) => {
       const {cursor} = action.payload;
@@ -403,7 +403,7 @@ export class TablesEffects {
 
   @Effect()
   public expandRows$: Observable<Action> = this.actions$.pipe(
-    ofType<TablesAction.MoveCursor>(TablesActionType.EXPAND_ROWS),
+    ofType<TablesAction.ExpandRows>(TablesActionType.EXPAND_ROWS),
     mergeMap(action => this.getLatestTable(action)),
     mergeMap(({action, table}) => {
       const {cursor} = action.payload;
@@ -422,13 +422,16 @@ export class TablesEffects {
   @Effect()
   public moveCursor$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.MoveCursor>(TablesActionType.MOVE_CURSOR),
-    concatMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
-      first(),
-      map(table => ({action, table}))
+    withLatestFrom(this.store$.select(selectTableCursor).pipe(
+      filter(cursor => !!cursor)
     )),
-    map(({action, table}) => {
-      const cursor = moveTableCursor(table, action.payload.cursor, action.payload.direction);
-      return new TablesAction.SetCursor({cursor});
+    concatMap(([action, cursor]) => this.store$.select(selectTableById(cursor.tableId)).pipe(
+      first(),
+      map(table => ({action, cursor, table}))
+    )),
+    map(({action, cursor, table}) => {
+      const nextCursor = moveTableCursor(table, cursor, action.payload.direction);
+      return new TablesAction.SetCursor({cursor: nextCursor});
     })
   );
 

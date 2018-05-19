@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
@@ -27,7 +27,8 @@ import {TablesAction} from '../../../../../../../core/store/tables/tables.action
 @Component({
   selector: 'table-link-cell',
   templateUrl: './table-link-cell.component.html',
-  styleUrls: ['./table-link-cell.component.scss']
+  styleUrls: ['./table-link-cell.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableLinkCellComponent {
 
@@ -46,28 +47,12 @@ export class TableLinkCellComponent {
   public constructor(private store: Store<AppState>) {
   }
 
-  public collapsible(): boolean {
-    return this.row.linkedRows && this.row.linkedRows.length > 1;
-  }
-
-  public expendable(): boolean {
-    if (!this.row.linkedRows || this.row.linkedRows.length !== 1) {
-      return false;
-    }
-    const [row] = this.row.linkedRows;
-    return (row.documentIds && row.documentIds.length > 1) || (row.linkInstanceIds && row.linkInstanceIds.length > 1);
-  }
-
   public onExpand() {
     this.store.dispatch(new TablesAction.ExpandRows({cursor: this.cursor}));
   }
 
   public onCollapse() {
     this.store.dispatch(new TablesAction.CollapseRows({cursor: this.cursor}));
-  }
-
-  public width(): string {
-    return `30px`;
   }
 
 }

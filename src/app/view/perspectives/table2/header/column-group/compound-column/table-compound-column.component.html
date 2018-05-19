@@ -1,9 +1,9 @@
 <div mwlResizable
      [enableGhostResize]="true"
      [ghostElementPositioning]="'absolute'"
-     [resizeEdges]="resizeEdges()"
+     [resizeEdges]="column | resizeEdges:table:cursor"
      [resizeSnapGrid]="{left: 10, right: 10}"
-     [style.width]="width()"
+     [style.width]="column | columnWidth | pixel"
      [validateResize]="validateResize.bind(this)"
      (resizeEnd)="onResizeEnd($event)">
   <div class="d-flex flex-column">
@@ -11,7 +11,7 @@
                          [cursor]="cursor"
                          [column]="column.parent"
                          [leaf]="!column.children.length"
-                         [style.height]="height()"
+                         [style.height]="column | columnHeight:table:cursor | pixel"
                          class="d-block">
     </table-single-column>
     <table-column-group *ngIf="column.children.length"

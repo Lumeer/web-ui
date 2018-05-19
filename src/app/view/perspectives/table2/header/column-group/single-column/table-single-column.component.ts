@@ -17,9 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Actions} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Observable} from 'rxjs/Observable';
+import {first, tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../core/store/collections/collection.model';
@@ -31,22 +34,19 @@ import {NotificationsAction} from '../../../../../../core/store/notifications/no
 import {areTableHeaderCursorsEqual, TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableColumn, TableCompoundColumn, TableModel, TablePart, TableSingleColumn} from '../../../../../../core/store/tables/table.model';
 import {findTableColumn, splitColumnPath} from '../../../../../../core/store/tables/table.utils';
-import {TablesAction} from '../../../../../../core/store/tables/tables.action';
-import {selectTableCursor} from '../../../../../../core/store/tables/tables.state';
-import {Direction} from '../../../../../../shared/direction';
-import {KeyCode} from '../../../../../../shared/key-code';
+import {TablesAction, TablesActionType} from '../../../../../../core/store/tables/tables.action';
+import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.state';
 import {extractAttributeLastName, extractAttributeParentName, filterAttributesByDepth, generateAttributeName, splitAttributeName} from '../../../../../../shared/utils/attribute.utils';
-import {HtmlModifier, stripedBackground} from '../../../../../../shared/utils/html-modifier';
 import {TableEditableCellComponent} from '../../../shared/editable-cell/table-editable-cell.component';
+import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
-
-export const DEFAULT_COLOR = '#ffffff';
 
 @Component({
   selector: 'table-single-column',
-  templateUrl: './table-single-column.component.html'
+  templateUrl: './table-single-column.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableSingleColumnComponent implements OnInit, OnDestroy {
+export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public table: TableModel;
@@ -72,40 +72,20 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
   public attribute: AttributeModel;
   public lastName: string;
 
-  public selected: boolean;
+  public selected$: Observable<boolean>;
   public edited: boolean;
 
+  private editSubscription: Subscription;
   public subscriptions: Subscription = new Subscription();
 
-  public constructor(private i18n: I18n,
-                     private changeDetector: ChangeDetectorRef,
+  public constructor(private actions$: Actions,
+                     private attributeNameChangedPipe: AttributeNameChangedPipe,
+                     private i18n: I18n,
                      private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.subscribeToSelected();
     this.loadEntity();
-  }
-
-  private subscribeToSelected() {
-    this.subscriptions.add(
-      this.store.select(selectTableCursor)
-        .subscribe(cursor => {
-          this.selected = areTableHeaderCursorsEqual(cursor, this.cursor);
-          this.edited = this.selected ? this.edited : false;
-
-          this.changeDetector.detectChanges();
-
-          // TODO probably better to do in action
-          if (this.selected && this.table.parts.length === 1 && this.cursor.columnPath.length === 1
-            && this.cursor.columnPath[0] === this.getPart().columns.length - 1 && this.attribute && this.attribute.id) {
-            const attributeName = generateAttributeName(this.getAttributes());
-            const column = new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
-            const cursor = {...this.cursor, columnPath: [this.cursor.columnPath[0] + 1]};
-            this.store.dispatch(new TablesAction.AddColumn({cursor, column}));
-          }
-        })
-    );
   }
 
   private loadEntity() {
@@ -140,27 +120,51 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
     this.lastName = extractAttributeLastName(this.attribute.name);
   }
 
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.cursor && !areTableHeaderCursorsEqual(changes.cursor.previousValue, changes.cursor.currentValue)) {
+      this.bindToSelected();
+    }
+  }
+
+  private bindToSelected() {
+    this.selected$ = this.store.select(selectTableCursorSelected(this.cursor)).pipe(
+      // TODO do not use tap as selected$ might be used several times
+      tap(selected => {
+        this.edited = selected ? this.edited : false;
+
+        this.bindOrUnbindEditSelectedCell(selected);
+
+        // TODO probably better to do in action
+        if (selected && this.table.parts.length === 1 && this.cursor.columnPath.length === 1
+          && this.cursor.columnPath[0] === this.getPart().columns.length - 1 && this.attribute && this.attribute.id) {
+          const attributeName = generateAttributeName(this.getAttributes());
+          const column = new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
+          const cursor = {...this.cursor, columnPath: [this.cursor.columnPath[0] + 1]};
+          this.store.dispatch(new TablesAction.AddColumn({cursor, column}));
+        }
+      })
+    );
+  }
+
+  private bindOrUnbindEditSelectedCell(selected: boolean) {
+    if (selected) {
+      this.editSubscription = this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
+        .subscribe(action => {
+          this.editableCellComponent.startEditing(action.payload.letter);
+        });
+    } else {
+      if (this.editSubscription) {
+        this.editSubscription.unsubscribe();
+      }
+    }
+  }
+
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
   }
 
   private findAttribute(attributes: AttributeModel[]) {
     return attributes.find(attribute => attribute.id === this.column.attributeId);
-  }
-
-  public background(): string {
-    const color = this.collection ? HtmlModifier.shadeColor(this.collection.color, .5) : DEFAULT_COLOR;
-    const stripeColor = this.collection ? HtmlModifier.shadeColor(color, .25) : '#eeeeee';
-
-    if (!this.attribute || !this.attribute.id || this.originalLastName() !== this.lastName) {
-      return stripedBackground(color, stripeColor);
-    }
-
-    return color;
-  }
-
-  public originalLastName(): string {
-    return extractAttributeLastName(this.attribute.name);
   }
 
   public onValueChange(lastName: string) {
@@ -174,7 +178,7 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
   public onEditEnd(lastName: string) {
     this.edited = false;
 
-    if (this.hasAttributeNameChanged(lastName) && this.isUniqueAttributeName(lastName)) {
+    if (this.attributeNameChangedPipe.transform(this.attribute, lastName) && this.isUniqueAttributeName(lastName)) {
       this.renameAttribute(lastName);
     }
   }
@@ -219,10 +223,6 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
       attributeId: this.attribute.id,
       attribute
     }));
-  }
-
-  private hasAttributeNameChanged(lastName: string): boolean {
-    return lastName && this.attribute && ((this.attribute.id && lastName !== this.originalLastName()) || !this.attribute.id);
   }
 
   public isUniqueAttributeName(lastName: string): boolean {
@@ -291,16 +291,6 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
     this.store.dispatch(new TablesAction.RemoveColumn({cursor: this.cursor}));
   }
 
-  public dragClass(): string {
-    const path = [...this.cursor.columnPath];
-    path.pop();
-    return `drag-${this.cursor.tableId}-${this.cursor.partIndex}-${path.join('-')}`;
-  }
-
-  public contextMenuElement(): ElementRef {
-    return this.contextMenuComponent ? this.contextMenuComponent.contextMenu : null;
-  }
-
   private getAttributes(): AttributeModel[] {
     if (this.collection) {
       return this.collection.attributes;
@@ -312,39 +302,9 @@ export class TableSingleColumnComponent implements OnInit, OnDestroy {
   }
 
   public onMouseDown() {
-    if (!this.selected) {
+    if (!this.edited) {
       this.store.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
     }
-  }
-
-  public onKeyDown(event: KeyboardEvent) {
-    switch (event.keyCode) {
-      case KeyCode.LeftArrow:
-        return this.store.dispatch(new TablesAction.MoveCursor({cursor: this.cursor, direction: Direction.Left}));
-      case KeyCode.UpArrow:
-        return this.store.dispatch(new TablesAction.MoveCursor({cursor: this.cursor, direction: Direction.Up}));
-      case KeyCode.RightArrow:
-        return this.store.dispatch(new TablesAction.MoveCursor({cursor: this.cursor, direction: Direction.Right}));
-      case KeyCode.DownArrow:
-        return this.store.dispatch(new TablesAction.MoveCursor({cursor: this.cursor, direction: Direction.Down}));
-    }
-  }
-
-  public canShowSuggestions(): boolean {
-    return this.edited && this.attribute && !this.attribute.id && this.lastName && !extractAttributeParentName(this.attribute.name);
-  }
-
-  public suggestedAttributeName(): string {
-    if (!this.attribute) {
-      return '';
-    }
-
-    const parentName = extractAttributeParentName(this.attribute.name);
-    if (parentName) {
-      return `${parentName}.${this.lastName}`;
-    }
-
-    return this.lastName;
   }
 
   private getPart(): TablePart {

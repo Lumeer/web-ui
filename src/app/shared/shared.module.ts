@@ -23,19 +23,19 @@ import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {CommentsComponent} from './comments/comments.component';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
+import {InputModule} from './input/input.module';
 import {LinksComponent} from './links/links.component';
-
 import {PerspectiveDirective} from './perspective.directive';
 import {PickerModule} from './picker/picker.module';
+import {PipesModule} from './pipes/pipes.module';
+import {RemovePlaceholderOnFocusDirective} from './placeholder/remove-placeholder-on-focus';
+import {PostItCollectionsModule} from './post-it-collections/post-it-collections.module';
+import {ResourceHeaderComponent} from './resource/header/resource-header.component';
 import {SearchBoxModule} from './search-box/search-box.module';
 import {SizeSliderComponent} from './slider/size-slider.component';
-import {RemovePlaceholderOnFocusDirective} from './placeholder/remove-placeholder-on-focus';
 import {SliderComponent} from './slider/slider.component';
-import {UsersModule} from "./users/users.module";
-import {TagModule} from "./tag/tag.module";
-import {InputModule} from "./input/input.module";
-import {ResourceHeaderComponent} from './resource/header/resource-header.component';
-import {PostItCollectionsModule} from './post-it-collections/post-it-collections.module';
+import {TagModule} from './tag/tag.module';
+import {UsersModule} from './users/users.module';
 
 @NgModule({
   imports: [
@@ -48,7 +48,8 @@ import {PostItCollectionsModule} from './post-it-collections/post-it-collections
     UsersModule,
     TagModule,
     InputModule,
-    PostItCollectionsModule
+    PostItCollectionsModule,
+    PipesModule
   ],
   declarations: [
     SizeSliderComponent,

@@ -1,20 +1,19 @@
-<div [style.height]="height()">
-  <div class="muuri {{layoutContainerClass()}} h-100">
-    <div *ngFor="let column of columns; trackBy: trackByColumnAttribute; index as columnIndex"
-         [style.z-index]="zIndex(columnIndex)"
+<div [style.height]="table | headerHeight:cursor | pixel">
+  <div class="muuri {{columnGroupId | prefix:containerClassPrefix}} h-100">
+    <div *ngFor="let column of columns; trackBy: trackByCollectionAndAttribute.bind(this); index as columnIndex"
          class="muuri-item h-100">
       <div class="muuri-item-content h-100">
-        <table-compound-column *ngIf="isCompoundColumn(column)"
+        <table-compound-column *ngIf="column | isCompoundColumn"
                                [table]="table"
                                [column]="column"
-                               [cursor]="getChildCursor(columnIndex)"
+                               [cursor]="cursor | columnChildCursor:columnIndex"
                                class="d-block">
         </table-compound-column>
 
-        <table-hidden-column *ngIf="isHiddenColumn(column)"
+        <table-hidden-column *ngIf="column | isHiddenColumn"
                              [table]="table"
                              [column]="column"
-                             [cursor]="getChildCursor(columnIndex)"
+                             [cursor]="cursor | columnChildCursor:columnIndex"
                              class="d-block h-100">
         </table-hidden-column>
       </div>

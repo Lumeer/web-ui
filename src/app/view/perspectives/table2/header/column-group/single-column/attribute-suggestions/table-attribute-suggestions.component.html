@@ -1,6 +1,6 @@
 <div class="dropdown">
   <div class="dropdown-menu show">
-    <ng-container *ngIf="attributeNotExists()">
+    <ng-container *ngIf="!(collection | attributeExist:attributeName)">
       <div class="dropdown-header"
            i18n="@@table.header.suggestion.attribute.new">Create new attribute
       </div>
@@ -12,15 +12,15 @@
       </a>
     </ng-container>
 
-    <ng-container *ngIf="attributeNotExists() && arePartsSuggested()">
+    <ng-container *ngIf="!(collection | attributeExist:attributeName) && (cursor | isLastPart:table) && !(table | embedded)">
       <div class="dropdown-divider"></div>
     </ng-container>
 
-    <ng-container *ngIf="arePartsSuggested()">
+    <ng-container *ngIf="(cursor | isLastPart:table) && !(table | embedded)">
       <div class="dropdown-header"
            i18n="@@table.header.suggestion.link.existing">Use existing link
       </div>
-      <a *ngFor="let linkedAttribute of suggestLinkedAttributes() | async"
+      <a *ngFor="let linkedAttribute of linkedAttributes$ | async"
          (mousedown)="useLinkType(linkedAttribute)"
          class="dropdown-item">
         <icons-presenter [colors]="[linkedAttribute.collection.color]"
@@ -34,7 +34,7 @@
       <div class="dropdown-header"
            i18n="@@table.header.suggestion.link.new">Create new link
       </div>
-      <a *ngFor="let linkedAttribute of suggestAllAttributes() | async"
+      <a *ngFor="let linkedAttribute of allAttributes$ | async"
          (mousedown)="createLinkType(linkedAttribute)"
          class="dropdown-item">
         <icons-presenter [colors]="[linkedAttribute.collection.color]"

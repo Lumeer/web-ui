@@ -30,10 +30,10 @@ import {selectLinkTypesByCollectionId} from '../../../../../../../core/store/lin
 import {NavigationAction} from '../../../../../../../core/store/navigation/navigation.action';
 import {selectQuery} from '../../../../../../../core/store/navigation/navigation.state';
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
-import {DEFAULT_TABLE_ID, TableModel} from '../../../../../../../core/store/tables/table.model';
+import {TableModel} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {DialogService} from '../../../../../../../dialog/dialog.service';
-import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
+import {extractAttributeLastName} from '../../../../../../../shared/utils/attribute.utils';
 
 interface LinkedAttribute {
 
@@ -67,33 +67,21 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
 
   public lastName: string;
 
+  public linkedAttributes$: Observable<LinkedAttribute[]>;
+  public allAttributes$: Observable<LinkedAttribute[]>;
+
   public constructor(private dialogService: DialogService,
                      private store: Store<AppState>) {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('attributeName') && this.attributeName) {
+    if (changes.attributeName && this.attributeName) {
       this.lastName = extractAttributeLastName(this.attributeName);
     }
-  }
-
-  public attributeNotExists(): boolean {
-    if (this.collection) {
-      return !findAttributeByName(this.collection.attributes, this.attributeName);
+    if ((changes.collection || changes.attributeName) && this.collection && this.attributeName && this.lastName) {
+      this.linkedAttributes$ = this.suggestLinkedAttributes();
+      this.allAttributes$ = this.suggestAllAttributes();
     }
-    return false;
-  }
-
-  public arePartsSuggested(): boolean {
-    return this.isLastPart() && !this.isEmbeddedTable();
-  }
-
-  private isLastPart(): boolean {
-    return this.cursor.partIndex === this.table.parts.length - 1;
-  }
-
-  private isEmbeddedTable(): boolean {
-    return this.table.id !== DEFAULT_TABLE_ID;
   }
 
   public useLinkType({linkType}: LinkedAttribute) {
@@ -102,6 +90,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   }
 
   public createLinkType({collection}: LinkedAttribute) {
+    this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
     const linkCollectionIds = [this.collection.id, collection.id].join(',');
     this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => {
       this.store.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));

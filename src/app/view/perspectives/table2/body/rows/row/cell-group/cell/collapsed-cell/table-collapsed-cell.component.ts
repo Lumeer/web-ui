@@ -22,11 +22,10 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
 import {AppState} from '../../../../../../../../../core/store/app.state';
-import {DocumentDataModel, DocumentModel} from '../../../../../../../../../core/store/documents/document.model';
+import {DocumentModel} from '../../../../../../../../../core/store/documents/document.model';
 import {LinkInstanceModel} from '../../../../../../../../../core/store/link-instances/link-instance.model';
 import {TableBodyCursor} from '../../../../../../../../../core/store/tables/table-cursor';
 import {TableSingleColumn} from '../../../../../../../../../core/store/tables/table.model';
-import {getTableColumnWidth} from '../../../../../../../../../core/store/tables/table.utils';
 import {selectEditedAttribute} from '../../../../../../../../../core/store/tables/tables.state';
 
 @Component({
@@ -55,37 +54,40 @@ export class TableCollapsedCellComponent implements OnChanges {
   @ViewChild('collapsedCell')
   public collapsedCell: ElementRef;
 
-  public edited: boolean;
-
   public affected$: Observable<boolean>;
+
+  public values = '';
 
   public constructor(private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.affected$ = this.store.select(selectEditedAttribute).pipe(
-      map(editedAttribute => editedAttribute &&
-        this.documents.some(document => editedAttribute.documentId === document.id) &&
-        editedAttribute.attributeId === this.column.attributeId
-      )
-    );
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('selected')) {
-      if (this.selected) {
-        this.collapsedCell.nativeElement.focus();
-      }
+    if (this.cursor && this.cursor.partIndex > 0) {
+      this.affected$ = this.store.select(selectEditedAttribute).pipe(
+        map(editedAttribute => editedAttribute &&
+          this.documents.some(document => editedAttribute.documentId === document.id) &&
+          editedAttribute.attributeId === this.column.attributeId
+        )
+      );
     }
   }
 
-  public values(): string {
-    return this.data().map(data => data[this.column.attributeId])
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.selected && this.selected) {
+      this.collapsedCell.nativeElement.focus();
+    }
+    if (changes.column || changes.documents || changes.linkInstances) {
+      this.values = this.getDataValues();
+    }
+  }
+
+  public getDataValues(): string {
+    return this.getData().map(data => data[this.column.attributeId])
       .filter(data => data)
       .join(', ');
   }
 
-  private data(): any[] {
+  private getData(): any[] {
     if (this.documents) {
       return this.documents.map(document => document.data);
     }
@@ -93,11 +95,6 @@ export class TableCollapsedCellComponent implements OnChanges {
       return this.linkInstances.map(linkInstance => linkInstance.data);
     }
     return [];
-  }
-
-  public width(): string {
-    const width = getTableColumnWidth(this.column);
-    return `${width}px`;
   }
 
 }

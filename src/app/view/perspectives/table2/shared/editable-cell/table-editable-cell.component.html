@@ -1,5 +1,6 @@
 <div #editableCell
      [attr.spellcheck]="false"
+     [attr.tabindex]="selected ? 1 : null"
      [attr.contenteditable]="edited"
      [class.affected]="affected && !selected"
      [class.selected]="selected"
@@ -11,6 +12,5 @@
      (dblclick)="onDoubleClick()"
      (keydown)="onKeyDown($event)"
      (input)="onInput($event)"
-     class="editable-cell h-100 p-1 text-nowrap overflow-hidden"
-     tabindex="0">
+     class="editable-cell h-100 p-1 text-nowrap overflow-hidden">
 </div>

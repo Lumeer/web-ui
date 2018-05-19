@@ -1,12 +1,7 @@
-<div infiniteScroll
-     [infiniteScrollDistance]="2"
-     [infiniteScrollThrottle]="50"
-     (scrolled)="onScroll()"
-     [scrollWindow]="false"
-     class="d-flex flex-column">
+<div class="d-flex flex-column">
   <table-row *ngFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex;"
              [table]="table"
-             [cursor]="createCursor(rowIndex)"
+             [cursor]="cursor | nextRowCursor:rowIndex"
              [row]="row">
   </table-row>
 </div>

@@ -1,15 +1,15 @@
 <div class="table-border-right table-border-bottom h-100 p-1">
-  <div [style.width]="width()"
+  <div [style.width]="'30px'"
        [class.striped]="striped"
        class="link-cell h-100">
-    <a *ngIf="expendable()"
+    <a *ngIf="row | expandable"
        (click)="onExpand()"
        (keyup.enter)="onExpand()"
        class="d-flex h-100 m-0"
        title="Expand" i18n-title="@@table.link.expand">
       <i class="fa fa-expand m-auto"></i>
     </a>
-    <a *ngIf="collapsible()"
+    <a *ngIf="row | collapsible"
        (click)="onCollapse()"
        (keyup.enter)="onCollapse()"
        class="d-flex h-100 m-0"

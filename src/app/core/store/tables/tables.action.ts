@@ -63,7 +63,7 @@ export enum TablesActionType {
   EXPAND_ROWS = '[Tables] Expand Rows',
   COLLAPSE_ROWS = '[Tables] Collapse Rows',
 
-  EDIT_CELL = '[Tables] Edit Cell',
+  EDIT_SELECTED_CELL = '[Tables] Edit Selected Cell',
   COPY_CELL = '[Tables] Copy Cell',
   PASTE_CELL = '[Tables] Paste Cell',
   MOVE_CELL = '[Tables] Move Cell',
@@ -71,7 +71,7 @@ export enum TablesActionType {
   SET_CURSOR = '[Tables] Set Cursor',
   MOVE_CURSOR = '[Tables] Move Cursor',
 
-  SET_EDITED_ATTRIBUTE = '[Tables] Set Edited Document',
+  SET_EDITED_ATTRIBUTE = '[Tables] Set Edited Attribute',
 
   ADD_FUNCTION = '[Tables] Add Function',
   REMOVE_FUNCTION = '[Tables] Remove Function',
@@ -256,7 +256,14 @@ export namespace TablesAction {
   export class MoveCursor implements Action {
     public readonly type = TablesActionType.MOVE_CURSOR;
 
-    public constructor(public payload: { cursor: TableCursor, direction: Direction }) {
+    public constructor(public payload: { direction: Direction }) {
+    }
+  }
+
+  export class EditSelectedCell implements Action {
+    public readonly type = TablesActionType.EDIT_SELECTED_CELL;
+
+    public constructor(public payload: { letter?: string }) {
     }
   }
 
@@ -275,5 +282,5 @@ export namespace TablesAction {
     ReplaceRows | AddRows | AddLinkedRows | RemoveRow |
     CollapseRows | ExpandRows |
     SetCursor | MoveCursor |
-    SetEditedAttribute;
+    EditSelectedCell | SetEditedAttribute;
 }
