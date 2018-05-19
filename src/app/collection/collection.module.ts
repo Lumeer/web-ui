@@ -33,7 +33,8 @@ import {LinkAttributeListComponent} from './settings/tab/link-attribute-list/lin
 import {CollectionTabComponent} from './settings/tab/collection-tab.component';
 import {PickerModule} from '../shared/picker/picker.module';
 import {UsersModule} from '../shared/users/users.module';
-import {AttributesPipe} from './settings/tab/attributes/attributes-pipe';
+import {AttributeFilterPipe} from './settings/tab/attributes/attribute-filter.pipe';
+import {DefaultAttributePipe} from './settings/tab/attributes/default-attribute.pipe';
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import {AttributesPipe} from './settings/tab/attributes/attributes-pipe';
     PickerModule
   ],
   declarations: [
-    AttributesPipe,
+    AttributeFilterPipe,
+    DefaultAttributePipe,
     LinkAttributeListComponent,
     CollectionComponent,
     CollectionTabComponent,

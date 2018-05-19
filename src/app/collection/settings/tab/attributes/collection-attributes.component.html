@@ -40,11 +40,11 @@
           </button>
         </td>
       </tr>
-      <tr class="d-flex" *ngFor="let attribute of attributes | attributeFilter:searchString">
+      <tr class="d-flex" *ngFor="let attribute of attributes | attributeFilter:searchString; trackBy:trackByAttributeId">
         <th scope="row"
             class="icon-hover col-1 d-flex align-items-center justify-content-center"
-            [class.visible]="isDefaultAttribute(attribute)">
-          <i *ngIf="isDefaultAttribute(attribute); else notDefaultIcon"
+            [class.visible]="attribute | isDefaultAttribute:collection">
+          <i *ngIf="attribute | isDefaultAttribute:collection; else notDefaultIcon"
              class="fas fa-fw fa-check-circle cursor-pointer"
              title="Default attribute"
              i18n-title="@@collection.tab.attributes.attribute.default"
@@ -58,7 +58,7 @@
         </th>
         <td class="col-5">
           <input-box
-            [class.font-weight-bold]="isDefaultAttribute(attribute)"
+            [class.font-weight-bold]="attribute | isDefaultAttribute:collection"
             [canStayEmpty]="true"
             [title]="attribute.name"
             [placeholder]="attributePlaceholder"
@@ -68,7 +68,7 @@
           </input-box>
         </td>
         <td class="col-2">
-          <span [class.font-weight-bold]="isDefaultAttribute(attribute)">
+          <span [class.font-weight-bold]="attribute | isDefaultAttribute:collection">
             {{attribute.usageCount}}
           </span>
         </td>

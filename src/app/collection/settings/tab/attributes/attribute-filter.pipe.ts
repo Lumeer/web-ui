@@ -18,14 +18,16 @@
  */
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
+
 import {AttributeModel} from '../../../../core/store/collections/collection.model';
 
 @Pipe({
   name: 'attributeFilter'
 })
 @Injectable()
-export class AttributesPipe implements PipeTransform {
-  transform(attributes: AttributeModel[], value: string): any[] {
+export class AttributeFilterPipe implements PipeTransform {
+
+  public transform(attributes: AttributeModel[], value: string): any[] {
     if (!attributes || !value) {
       return attributes;
     }

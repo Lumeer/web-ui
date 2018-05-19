@@ -131,6 +131,10 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
     return HtmlModifier.shadeColor(color, .5);
   }
 
+  public trackByAttributeId(index: number, attribute: AttributeModel) {
+    return attribute.id;
+  }
+
   private subscribeData() {
     this.collectionSubscription.add(this.store.select(selectCollectionByWorkspace)
       .pipe(filter(collection => !isNullOrUndefined(collection)))
@@ -144,7 +148,7 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
   private translatePlaceholders() {
     this.attributePlaceholder = this.i18n({
       id: 'collection.tab.attributes.attribute.placeholder',
-      value: 'Enter name and hit enter.'
+      value: 'Enter attribute name.'
     })
   }
 }
