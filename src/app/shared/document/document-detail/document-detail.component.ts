@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {NotificationService} from "../../../core/notifications/notification.service";
 import {CollectionModel} from "../../../core/store/collections/collection.model";
@@ -37,6 +37,7 @@ import {selectOrganizationByWorkspace} from "../../../core/store/organizations/o
 import {Observable} from "rxjs/Observable";
 import {CorrelationIdGenerator} from "../../../core/store/correlation-id.generator";
 import {CollectionsAction} from "../../../core/store/collections/collections.action";
+import {DetailRow} from "../detail-row";
 
 @Component({
   selector: 'document-detail',
@@ -51,9 +52,12 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   @Input('document')
   public documentModel: DocumentModel;
 
+  @Output()
+  public documentUpdate = new EventEmitter<DocumentModel>();
+
   public userUpdates = new Map();
 
-  public rows: {id?: string, name: string, value: string, correlationId: string}[] = [];
+  public rows: DetailRow[] = [];
 
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;
@@ -151,6 +155,92 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  private prepareUpdatedDocument() {
+    let updatedDocument = Object.assign({}, this.documentModel);
+
+    let dirty = this.patchNewAttributes(updatedDocument);
+    dirty = dirty || this.patchExistingAttributes(updatedDocument);
+    dirty = dirty || this.patchAttributeRename(updatedDocument);
+    dirty = dirty || this.patchDeletedAttributes(updatedDocument);
+
+    return dirty ? updatedDocument : null;
+  }
+
+  private patchNewAttributes(document: DocumentModel) {
+    let dirty = false;
+
+    const newData: { [attributeName: string]: any } = this.rows
+      .filter(row => isNullOrUndefined(row.id) && !isNullOrUndefined(row.name) && !this.alreadyInCollection(row.name))
+      .reduce((acc: { [attributeName: string]: any }, row) => {
+        dirty = true;
+        acc[row.name] = {value: row.value, correlationId: row.correlationId};
+        return acc;
+      }, {});
+
+    document.newData = newData;
+
+    return dirty;
+  }
+
+  private patchExistingAttributes(document: DocumentModel) {
+    let dirty = false;
+    this.rows.filter(row =>
+      !isNullOrUndefined(row.id) &&
+      row.value !== document.data[row.id] &&
+      row.name === this.getCollectionAttributeById(row.id).name)
+      .forEach(row => {
+        dirty = true;
+        document.data[row.id] = row.value;
+      });
+
+    return dirty;
+  }
+
+  private patchAttributeRename(document: DocumentModel) {
+    let dirty = false;
+
+    this.rows.filter(row =>
+      !isNullOrUndefined(row.id) &&
+      row.name !== this.getCollectionAttributeById(row.id).name)
+      .forEach(row => {
+        dirty = true;
+        const attr = this.getCollectionAttributeByName(row.name);
+
+        if (attr) { // renamed to existing attribute
+          document.data[attr.id] = row.value;
+          row.id = attr.id;
+        } else { // renamed to a completely new name
+          row.id = null;
+          row.correlationId = CorrelationIdGenerator.generate();
+          document.data[row.id] = null;
+          document.newData[row.name] = { value: row.value, correlationId: row.correlationId };
+        }
+      });
+
+    return dirty;
+  }
+
+  private patchDeletedAttributes(document: DocumentModel) {
+    let dirty = false;
+
+    this.collection.attributes.forEach(attr => {
+      if (document.data[attr.id] && !this.getRowById(attr.id)) {
+        dirty = true;
+        document.data[attr.id] = null;
+      }
+    });
+
+    return dirty;
+  }
+
+  private getCollectionAttributeById(id: string) {
+    return this.collection.attributes.find(attr => attr.id === id);
+  }
+
+  private getCollectionAttributeByName(name: string) {
+    return this.collection.attributes.find(attr => attr.name === name);
+  }
+
   private patchDocument() {
     // based on rows, figure out:
     // 1) what attributes are new
@@ -158,14 +248,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     // 3) what values are updated
     // ... and send corresponding updates
 
-    // remove updates that preserve the current value
-    this.collection.attributes.forEach(attr => {
-      if (this.userUpdates.get(attr.id)) {
-        if (this.documentModel.data[attr.id] === this.userUpdates.get(attr.id)) {
-          this.userUpdates.delete(attr.id);
-        }
-      }
-    });
+
 
     const documentUpdateAction = new DocumentsAction.UpdateData({ document: null });
 
