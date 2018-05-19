@@ -1,11 +1,11 @@
 <div class="d-flex flex-column align-items-start">
   <table-caption [collection]="collection$ | async"
-                 [style.width]="captionWidth()">
+                 [style.width]="part | partWidth | pixel">
   </table-caption>
   <table-column-group [table]="table"
-                      [cursor]="getCursor()"
+                      [cursor]="cursor"
                       [columns]="part.columns"
-                      [class.table-border-left]="part.index === 0"
+                      [class.table-border-left]="cursor | isFirstPart"
                       class="d-block table-border-top">
   </table-column-group>
 </div>

@@ -20,6 +20,7 @@
 export const DEFAULT_TABLE_ID = 'default';
 
 export const DEFAULT_COLUMN_WIDTH = 100;
+export const DEFAULT_ROW_NUMBER_WIDTH = 40;
 
 export interface TableModel {
 

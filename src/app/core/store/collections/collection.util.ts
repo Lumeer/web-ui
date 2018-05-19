@@ -17,10 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute} from '../../../../core/dto/attribute';
+import {CollectionModel} from './collection.model';
 
-export interface ConfiguredAttribute extends Attribute {
+export function getDefaultAttributeId(collection: CollectionModel): string {
+  if (collection.defaultAttributeId) {
+    const attributeExist = collection.attributes.findIndex(attr => attr.id === collection.defaultAttributeId) !== -1;
+    if (attributeExist) {
+      return collection.defaultAttributeId;
+    }
+  }
 
-  newConstraint: string;
+  const attributes = collection.attributes || [];
+  if (attributes.length > 0) {
+    return attributes[0].id;
+  }
 
+  return '';
 }

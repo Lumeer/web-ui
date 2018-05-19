@@ -18,12 +18,10 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+
 import {LinkedAttribute} from '../../../../core/dto';
 import {Collection} from '../../../../core/dto/collection';
-
 import {LinkType} from '../../../../core/dto/link-type';
-import {CollectionService, LinkTypeService} from '../../../../core/rest';
-import * as Const from '../constraints';
 
 @Component({
   selector: 'link-attribute-list',

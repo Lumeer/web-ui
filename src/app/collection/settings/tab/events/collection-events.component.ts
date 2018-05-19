@@ -22,13 +22,13 @@ import {Store} from '@ngrx/store';
 
 import {CollectionTabComponent} from '../collection-tab.component';
 import {EventService} from '../../../../core/rest/event.service';
-import {CollectionService} from '../../../../core/rest/collection.service';
 import {Event} from '../../../../core/dto/Event';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {EventModel} from './model/EventModel';
 import {EventFireReason} from './model/event-fire-reason';
 import {finalize} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
+
 @Component({
   selector: 'collection-events',
   templateUrl: './collection-events.component.html',
@@ -39,14 +39,9 @@ export class CollectionEventsComponent extends CollectionTabComponent implements
   public events: EventModel[];
 
   constructor(private eventService: EventService,
-              collectionService: CollectionService,
-              notificationService: NotificationService,
+              private notificationService: NotificationService,
               store: Store<AppState>) {
-    super(
-      collectionService,
-      notificationService,
-      store
-    );
+    super(store);
   }
 
   public ngOnInit(): void {

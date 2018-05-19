@@ -1,3 +1,86 @@
-<div class="mx-3">
-  <attribute-list [collection]="collection"></attribute-list>
+<div class="my-4">
+  <table class="table table-striped">
+    <thead [style.background-color]="lightenColor(collection.color)">
+      <tr class="d-flex">
+        <th class="col-1"></th>
+        <th class="col-5 d-flex align-items-center">
+          <span i18n="@@collections.tab.attributes.attribute">Attribute</span>
+        </th>
+        <th class="col-2 d-flex align-items-center">
+          <span i18n="@@collections.tab.attributes.usage">Usage</span>
+        </th>
+        <th class="col-4">
+          <div class="form-control d-flex align-items-center overflow-hidden" title="Search for attribute" i18n-title="@@collections.tab.attributes.search.title">
+            <input type="search" class="flex-grow-2" #searchInput
+                   width="100"
+                   placeholder="Search attribute..."
+                   i18n-placeholder="@@collections.tab.attributes.search.placeholder"
+                   [(ngModel)]="searchString">
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="d-flex">
+        <td class="col-1"></td>
+        <td class="col-8">
+          <input-box
+            [canStayEmpty]="true"
+            [placeholder]="attributePlaceholder"
+            [initialValue]="newAttributeName"
+            (newValue)="newAttributeName = $event">
+          </input-box>
+        </td>
+        <td class="col-3">
+          <button type="button"
+                  class="btn btn-sm btn-success float-right"
+                  (click)="onCreateAttribute()">
+            <i class="fas fa-plus"></i>
+            <span class="font-weight-bold" i18n="@@collection.tab.attributes.attribute.add">Add attribute</span>
+          </button>
+        </td>
+      </tr>
+      <tr class="d-flex" *ngFor="let attribute of attributes | attributeFilter:searchString; trackBy:trackByAttributeId">
+        <th scope="row"
+            class="icon-hover col-1 d-flex align-items-center justify-content-center"
+            [class.visible]="attribute | isDefaultAttribute:collection">
+          <i *ngIf="attribute | isDefaultAttribute:collection; else notDefaultIcon"
+             class="fas fa-fw fa-check-circle cursor-pointer"
+             title="Default attribute"
+             i18n-title="@@collection.tab.attributes.attribute.default"
+             (click)="setDefaultAttribute(attribute)"></i>
+          <ng-template #notDefaultIcon>
+            <i class="fas fa-fw fa-check cursor-pointer"
+               title="Set default attribute"
+               i18n-title="@@collection.tab.attributes.attribute.default.set"
+               (click)="setDefaultAttribute(attribute)"></i>
+          </ng-template>
+        </th>
+        <td class="col-5">
+          <input-box
+            [class.font-weight-bold]="attribute | isDefaultAttribute:collection"
+            [canStayEmpty]="true"
+            [title]="attribute.name"
+            [placeholder]="attributePlaceholder"
+            [initialValue]="attribute.name"
+            (newValue)="onNewAttributeName(attributeNameInput, attribute, $event)"
+            #attributeNameInput>
+          </input-box>
+        </td>
+        <td class="col-2">
+          <span [class.font-weight-bold]="attribute | isDefaultAttribute:collection">
+            {{attribute.usageCount}}
+          </span>
+        </td>
+        <td class="col-4">
+          <div class="float-right icon-hover">
+            <i class="fas fa-fw fa-trash text-danger cursor-pointer"
+               (click)="onDeleteAttribute(attribute)"
+               title="Delete attribute" i18n-title="@@collection.tab.attributes.attribute.delete"
+               aria-hidden="true"></i>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

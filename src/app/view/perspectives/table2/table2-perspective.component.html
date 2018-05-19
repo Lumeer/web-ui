@@ -1,12 +1,12 @@
-<div *ngIf="!isDisplayable()"
+<div *ngIf="!(query | displayable)"
      class="alert alert-warning m-3"
      role="alert"
      i18n="@@table.query.invalid">Your query results cannot be shown using table perspective. The query needs to specify exactly one file.
 </div>
 
 <div #positioner></div>
-<div *ngIf="isDisplayable()"
-     [style.height]="height(positioner)"
+<div *ngIf="query | displayable"
+     [style.height]="height"
      (clickOutside)="onClickOutside()"
      class="table d-flex flex-column m-0">
   <table-header [table]="table">

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
@@ -26,9 +26,13 @@ import {LinkInstanceModel} from '../../../core/store/link-instances/link-instanc
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 import {getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
 import {QueryModel} from '../../../core/store/navigation/query.model';
+import {TableCursor} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableModel} from '../../../core/store/tables/table.model';
 import {TablesAction} from '../../../core/store/tables/tables.action';
-import {selectTableById} from '../../../core/store/tables/tables.state';
+import {selectTableById, selectTableCursor} from '../../../core/store/tables/tables.state';
+import {Direction} from '../../../shared/direction';
+import {KeyCode} from '../../../shared/key-code';
+import {isKeyPrintable} from '../../../shared/utils/key-code.helper';
 import {Perspective} from '../perspective';
 import CreateTable = TablesAction.CreateTable;
 import DestroyTable = TablesAction.DestroyTable;
@@ -46,8 +50,15 @@ export class Table2PerspectiveComponent implements OnInit, OnDestroy {
   @Input()
   public query: QueryModel;
 
+  @ViewChild('positioner')
+  public positioner: ElementRef;
+
   public table: TableModel;
   private tableId: string;
+
+  public height = 'auto';
+
+  private selectedCursor: TableCursor;
 
   private subscriptions = new Subscription();
 
@@ -56,8 +67,19 @@ export class Table2PerspectiveComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.tableId = this.createTableId();
+    if (this.tableId === DEFAULT_TABLE_ID) {
+      this.calculateHeight();
+    }
+
     this.createTableFromQuery();
     this.subscribeToTable();
+    this.subscribeToSelectedCursor();
+  }
+
+  private subscribeToSelectedCursor() {
+    this.subscriptions.add(
+      this.store.select(selectTableCursor).subscribe(cursor => this.selectedCursor = cursor)
+    );
   }
 
   public ngOnDestroy() {
@@ -91,7 +113,9 @@ export class Table2PerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.store.select(selectTableById(this.tableId)).pipe(
         filter(table => !!table)
-      ).subscribe(table => this.table = table)
+      ).subscribe(table => {
+        this.table = table;
+      })
     );
   }
 
@@ -126,21 +150,50 @@ export class Table2PerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public onClickOutside() {
-    this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
+    if (this.selectedCursor) {
+      this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
+    }
   }
 
-  public isDisplayable(): boolean {
-    return this.query && this.query.collectionIds.length === 1;
+  private calculateHeight() {
+    const {top} = this.positioner.nativeElement.getBoundingClientRect();
+    const height = window.innerHeight - top;
+    this.height = `${height}px`;
   }
 
-  public height(element: ElementRef): string {
-    if (this.table.id !== DEFAULT_TABLE_ID) {
-      return 'auto';
+  @HostListener('window:resize')
+  public onResize() {
+    this.calculateHeight();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    if (!this.selectedCursor) {
+      return;
     }
 
-    const {top} = element['getBoundingClientRect']();
-    const height = window.innerHeight - top;
-    return `${height}px`;
+    switch (event.keyCode) {
+      case KeyCode.LeftArrow:
+        return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Left}));
+      case KeyCode.UpArrow:
+        return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
+      case KeyCode.RightArrow:
+        return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Right}));
+      case KeyCode.DownArrow:
+        return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
+      case KeyCode.Enter:
+      case KeyCode.Backspace:
+      case KeyCode.F2:
+        event.preventDefault();
+        return this.store.dispatch(new TablesAction.EditSelectedCell({}));
+      default:
+        if (!isKeyPrintable(event.keyCode)) {
+          return;
+        }
+
+        event.preventDefault();
+        return this.store.dispatch(new TablesAction.EditSelectedCell({letter: event.key}));
+    }
   }
 
 }

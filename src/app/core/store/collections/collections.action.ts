@@ -58,6 +58,10 @@ export enum CollectionsActionType {
   REMOVE_FAVORITE_SUCCESS = '[Collections] Remove Favorite :: Success',
   REMOVE_FAVORITE_FAILURE = '[Collections] Remove Favorite :: Failure',
 
+  SET_DEFAULT_ATTRIBUTE = '[Collections] Set Default Attribute',
+  SET_DEFAULT_ATTRIBUTE_SUCCESS = '[Collections] Set Default Attribute :: Success',
+  SET_DEFAULT_ATTRIBUTE_FAILURE = '[Collections] Set Default Attribute :: Failure',
+
   CHANGE_ATTRIBUTE = '[Collections] Change Attribute',
   CHANGE_ATTRIBUTE_SUCCESS = '[Collections] Change Attribute :: Success',
   CHANGE_ATTRIBUTE_FAILURE = '[Collections] Change Attribute :: Failure',
@@ -248,6 +252,27 @@ export namespace CollectionsAction {
     }
   }
 
+  export class SetDefaultAttribute implements Action {
+    public readonly type = CollectionsActionType.SET_DEFAULT_ATTRIBUTE;
+
+    public constructor(public payload: { collectionId: string, attributeId: string }) {
+    }
+  }
+
+  export class SetDefaultAttributeSuccess implements Action {
+    public readonly type = CollectionsActionType.SET_DEFAULT_ATTRIBUTE_SUCCESS;
+
+    public constructor(public payload: { collectionId: string, attributeId: string }) {
+    }
+  }
+
+  export class SetDefaultAttributeFailure implements Action {
+    public readonly type = CollectionsActionType.SET_DEFAULT_ATTRIBUTE_FAILURE;
+
+    public constructor(public payload: { collectionId: string, oldDefaultAttributeId: string, error: any }) {
+    }
+  }
+
   export class CreateAttributes implements Action {
     public readonly type = CollectionsActionType.CREATE_ATTRIBUTES;
 
@@ -348,6 +373,7 @@ export namespace CollectionsAction {
     Delete | DeleteSuccess | DeleteFailure |
     AddFavorite | AddFavoriteSuccess | AddFavoriteFailure |
     RemoveFavorite | RemoveFavoriteSuccess | RemoveFavoriteFailure |
+    SetDefaultAttribute | SetDefaultAttributeSuccess | SetDefaultAttributeFailure |
     CreateAttributes | CreateAttributesSuccess | CreateAttributesFailure |
     ChangeAttribute | ChangeAttributeSuccess | ChangeAttributeFailure |
     RemoveAttribute | RemoveAttributeSuccess | RemoveAttributeFailure |

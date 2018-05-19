@@ -23,18 +23,18 @@ import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {CommentsComponent} from './comments/comments.component';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
-
+import {InputModule} from './input/input.module';
 import {PerspectiveDirective} from './perspective.directive';
 import {PickerModule} from './picker/picker.module';
+import {PipesModule} from './pipes/pipes.module';
+import {RemovePlaceholderOnFocusDirective} from './placeholder/remove-placeholder-on-focus';
+import {PostItCollectionsModule} from './post-it-collections/post-it-collections.module';
+import {ResourceHeaderComponent} from './resource/header/resource-header.component';
 import {SearchBoxModule} from './search-box/search-box.module';
 import {SizeSliderComponent} from './slider/size-slider.component';
-import {RemovePlaceholderOnFocusDirective} from './placeholder/remove-placeholder-on-focus';
 import {SliderComponent} from './slider/slider.component';
 import {UsersModule} from "./users/users.module";
 import {TagModule} from "./tag/tag.module";
-import {InputModule} from "./input/input.module";
-import {ResourceHeaderComponent} from './resource/header/resource-header.component';
-import {PostItCollectionsModule} from './post-it-collections/post-it-collections.module';
 import {DocumentModule} from "./document/document.module";
 import {PreviewResultsModule} from "./preview-results/preview-results.module";
 import {LinksModule} from "./links/links.module";
@@ -53,7 +53,8 @@ import {LinksModule} from "./links/links.module";
     PostItCollectionsModule,
     DocumentModule,
     PreviewResultsModule,
-    LinksModule
+    LinksModule,
+    PipesModule
   ],
   declarations: [
     SizeSliderComponent,

@@ -19,7 +19,7 @@
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {TableCursor} from './table-cursor';
+import {areTableBodyCursorsEqual, areTableHeaderCursorsEqual, TableCursor} from './table-cursor';
 import {TableModel} from './table.model';
 import {filterLeafColumns} from './table.utils';
 
@@ -34,7 +34,8 @@ export interface TablesState extends EntityState<TableModel> {
 
 export interface EditedAttribute {
 
-  documentId: string;
+  documentId?: string;
+  linkInstanceId?: string;
   attributeId: string;
 
 }
@@ -55,7 +56,21 @@ export const selectTableById = (tableId: string) =>
   createSelector(selectTablesDictionary, tablesDictionary => tablesDictionary[tableId]);
 
 export const selectTableCursor = createSelector(selectTablesState, state => state.cursor);
+export const selectTableCursorSelected = (cursor: TableCursor) => createSelector(selectTableCursor, selectedCursor => {
+  if (cursor.columnPath) {
+    return areTableHeaderCursorsEqual(selectedCursor, cursor);
+  } else {
+    return areTableBodyCursorsEqual(selectedCursor, cursor);
+  }
+});
+
 export const selectEditedAttribute = createSelector(selectTablesState, state => state.editedAttribute);
+export const selectAffected = (attribute: EditedAttribute) => createSelector(selectEditedAttribute, editedAttribute => {
+  return attribute && editedAttribute &&
+    attribute.documentId === editedAttribute.documentId &&
+    attribute.linkInstanceId === editedAttribute.linkInstanceId &&
+    attribute.attributeId === editedAttribute.attributeId;
+});
 
 export const selectTablePart = (tableId: string, partIndex: number) =>
   createSelector(selectTableById(tableId), table => table ? table.parts[partIndex] : null);

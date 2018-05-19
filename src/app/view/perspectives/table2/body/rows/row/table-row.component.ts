@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import {SimpleChange} from '@angular/core/src/change_detection/change_detection_util';
 import {Store} from '@ngrx/store';
 import {filter} from 'rxjs/operators';
@@ -33,7 +33,8 @@ import {TablesAction} from '../../../../../../core/store/tables/tables.action';
 
 @Component({
   selector: 'table-row',
-  templateUrl: './table-row.component.html'
+  templateUrl: './table-row.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableRowComponent implements OnChanges, OnDestroy {
 
@@ -45,6 +46,8 @@ export class TableRowComponent implements OnChanges, OnDestroy {
 
   @Input()
   public row: TableRow;
+
+  public emptyTableRow = EMPTY_TABLE_ROW;
 
   public striped: boolean;
 
@@ -137,29 +140,8 @@ export class TableRowComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public createNextPartCursor(rowIndex: number): TableBodyCursor {
-    return {
-      ...this.cursor,
-      partIndex: this.collectionPartCursor().partIndex + 1,
-      rowPath: [...this.cursor.rowPath, rowIndex]
-    };
-  }
-
-  public createEmptyLinkedRow(): TableRow {
-    return EMPTY_TABLE_ROW;
-  }
-
-  public collectionPartCursor(): TableBodyCursor {
-    const offset = this.isFirstPart() ? 0 : 1;
-    return {...this.cursor, partIndex: this.cursor.partIndex + offset};
-  }
-
   public isFirstPart(): boolean {
     return this.cursor.partIndex === 0;
-  }
-
-  public isLastPart(): boolean {
-    return this.cursor.partIndex + 2 > this.table.parts.length - 1;
   }
 
   public trackByLinkInstanceId(index: number, linkedRow: TableRow): string | object {

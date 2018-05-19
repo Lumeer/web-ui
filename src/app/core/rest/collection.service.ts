@@ -28,7 +28,6 @@ import {Attribute, Collection} from '../dto';
 import {AppState} from '../store/app.state';
 import {PermissionService} from './permission.service';
 
-// TODO add add support for Default Attribute
 @Injectable()
 export class CollectionService extends PermissionService {
 
@@ -79,6 +78,10 @@ export class CollectionService extends PermissionService {
 
   public getAllCollectionNames(): Observable<string[]> {
     return this.httpClient.get<string[]>(`${this.apiPrefix()}/names`);
+  }
+
+  public setDefaultAttribute(collectionId: string, attributeId: string): Observable<any>{
+    return this.httpClient.put(`${this.apiPrefix()}/${collectionId}/attributes/${attributeId}/default`, {});
   }
 
   /**

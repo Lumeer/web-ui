@@ -17,12 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import {AppState} from '../../../../../core/store/app.state';
+import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {selectCollectionsByLinkType} from '../../../../../core/store/collections/collections.state';
 import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
-import {selectLinkTypeWithCollections} from '../../../../../core/store/link-types/link-types.state';
+import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableModel, TablePart} from '../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
@@ -30,9 +32,13 @@ import {TablesAction} from '../../../../../core/store/tables/tables.action';
 @Component({
   selector: 'table-header-link',
   templateUrl: './table-header-link.component.html',
-  styleUrls: ['./table-header-link.component.scss']
+  styleUrls: ['./table-header-link.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableHeaderLinkComponent implements OnInit, OnDestroy {
+export class TableHeaderLinkComponent implements OnChanges {
+
+  @Input()
+  public cursor: TableHeaderCursor;
 
   @Input()
   public table: TableModel;
@@ -40,50 +46,25 @@ export class TableHeaderLinkComponent implements OnInit, OnDestroy {
   @Input()
   public part: TablePart;
 
-  public linkType: LinkTypeModel;
-
-  public subscriptions = new Subscription();
+  public collections$: Observable<CollectionModel[]>;
+  public linkType$: Observable<LinkTypeModel>;
 
   public constructor(private store: Store<AppState>) {
   }
 
-  public ngOnInit() {
-    this.subscriptions.add(
-      this.store.select(selectLinkTypeWithCollections(this.part.linkTypeId))
-        .subscribe(linkType => this.linkType = linkType)
-    );
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-  }
-
-  public switchingEnabled(): boolean {
-    return this.hasSingleLinkedPart() && !this.isSameCollectionLinked();
-  }
-
-  private hasSingleLinkedPart(): boolean {
-    return this.table.parts.length <= 3;
-  }
-
-  private isSameCollectionLinked(): boolean {
-    return new Set(this.linkType.collectionIds).size === 1;
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.part && this.part) {
+      this.linkType$ = this.store.select(selectLinkTypeById(this.part.linkTypeId));
+      this.collections$ = this.store.select(selectCollectionsByLinkType(this.part.linkTypeId));
+    }
   }
 
   public onSwitchParts() {
-    this.store.dispatch(new TablesAction.SwitchParts({cursor: this.getCursor()}));
+    this.store.dispatch(new TablesAction.SwitchParts({cursor: this.cursor}));
   }
 
   public onRemovePart() {
-    this.store.dispatch(new TablesAction.RemovePart({cursor: this.getCursor()}));
-  }
-
-  public getCursor(): TableHeaderCursor {
-    return {
-      tableId: this.table.id,
-      partIndex: this.part.index,
-      columnPath: []
-    };
+    this.store.dispatch(new TablesAction.RemovePart({cursor: this.cursor}));
   }
 
 }

@@ -18,9 +18,6 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generator';
-import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
 
 @Component({
   selector: 'post-it-collection-add-button',

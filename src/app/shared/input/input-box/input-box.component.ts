@@ -71,7 +71,7 @@ export class InputBoxComponent implements OnInit {
   }
 
   private computeProperties() {
-    this.mCurrentValue = this.initialValue;
+    this.mCurrentValue = this.initialValue && this.initialValue.trim() || '';
     this.mFontSizeRem = this.fontSizeRem || DEFAULT_FONT_SIZE;
     const mMaxLines = this.maxLines || DEFAULT_MAX_LINES;
     this.mLineHeight = DEFAULT_LINE_HEIGHT;
@@ -84,17 +84,19 @@ export class InputBoxComponent implements OnInit {
     this.blur.emit();
     this.removeFocusFromInputParent();
 
-    if (value == this.mCurrentValue) {
-      return;
+    if (value !== this.mCurrentValue) {
+      if (value.length === 0 && !this.canStayEmpty) {
+        this.emptyValue.emit();
+        this.input.nativeElement.textContent = this.mCurrentValue;
+      } else {
+        this.mCurrentValue = value;
+        this.newValue.emit(value);
+      }
     }
+  }
 
-    if (value.length == 0 && !this.canStayEmpty) {
-      this.emptyValue.emit();
-      this.input.nativeElement.textContent = this.mCurrentValue;
-    } else {
-      this.newValue.emit(value);
-      this.mCurrentValue = value;
-    }
+  public setValue(value: string){
+    this.mCurrentValue = value;
   }
 
   public onFocus() {
@@ -114,11 +116,11 @@ export class InputBoxComponent implements OnInit {
     return this.maxLines > 1;
   }
 
-  public setWarningBorder(){
+  public setWarningBorder() {
     this.input.nativeElement.classList.add(...warningStyle);
   }
 
-  public removeWarningBorder(){
+  public removeWarningBorder() {
     this.input.nativeElement.classList.remove(...warningStyle);
   }
 

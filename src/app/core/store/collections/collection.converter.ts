@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute} from '../../dto/attribute';
-import {Collection} from '../../dto/collection';
+import {Attribute, Collection} from '../../dto';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {AttributeModel, CollectionModel} from './collection.model';
 
@@ -33,7 +32,7 @@ export class CollectionConverter {
       color: dto.color,
       icon: dto.icon,
       attributes: dto.attributes ? dto.attributes.map(attr => CollectionConverter.fromAttributeDto(attr)) : [],
-      defaultAttributeId: dto.defaultAttribute ? dto.defaultAttribute.id : null,
+      defaultAttributeId: dto.defaultAttributeId,
       permissions: dto.permissions ? PermissionsConverter.fromDto(dto.permissions) : null,
       documentsCount: dto.documentsCount,
       correlationId: correlationId,
@@ -42,12 +41,6 @@ export class CollectionConverter {
   }
 
   public static toDto(model: CollectionModel): Collection {
-    let defaultAttribute = null;
-    if (model.attributes) {
-      const modelDefaultAttribute = model.attributes.find(attr => attr.id === model.defaultAttributeId);
-      defaultAttribute = modelDefaultAttribute || null;
-    }
-
     return {
       id: model.id,
       code: model.code,
@@ -56,7 +49,7 @@ export class CollectionConverter {
       color: model.color,
       icon: model.icon,
       attributes: model.attributes ? model.attributes.map(CollectionConverter.toAttributeDto) : [],
-      defaultAttribute: defaultAttribute,
+      defaultAttributeId: model.defaultAttributeId,
       permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null,
       documentsCount: model.documentsCount, // TODO maybe not needed this way
       favorite: model.favorite

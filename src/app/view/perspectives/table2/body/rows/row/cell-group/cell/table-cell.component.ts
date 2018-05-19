@@ -17,28 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
+import {first} from 'rxjs/operators';
 import {AppState} from '../../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
 import {LinkInstanceModel} from '../../../../../../../../core/store/link-instances/link-instance.model';
-import {areTableBodyCursorsEqual, TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
-import {TableColumn, TableColumnType, TableModel} from '../../../../../../../../core/store/tables/table.model';
-import {getTableColumnWidth} from '../../../../../../../../core/store/tables/table.utils';
+import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
+import {TableModel, TableSingleColumn} from '../../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
-import {selectTableCursor} from '../../../../../../../../core/store/tables/tables.state';
+import {selectTableCursorSelected} from '../../../../../../../../core/store/tables/tables.state';
 import {Direction} from '../../../../../../../../shared/direction';
 import {KeyCode} from '../../../../../../../../shared/key-code';
 
 @Component({
   selector: 'table-cell',
-  templateUrl: './table-cell.component.html'
+  templateUrl: './table-cell.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableCellComponent implements OnInit, OnDestroy {
+export class TableCellComponent implements OnChanges {
 
   @Input()
-  public column: TableColumn;
+  public column: TableSingleColumn;
 
   @Input()
   public cursor: TableBodyCursor;
@@ -52,58 +53,34 @@ export class TableCellComponent implements OnInit, OnDestroy {
   @Input()
   public table: TableModel;
 
-  public selected: boolean;
-
-  private subscriptions = new Subscription();
+  public collapsed: boolean;
+  public selected$: Observable<boolean>;
 
   public constructor(private store: Store<AppState>) {
   }
 
-  public ngOnInit() {
-    this.subscribeToSelectedCursor();
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.documents || changes.linkInstances) {
+      this.collapsed = this.isCollapsed();
+    }
+    if (changes.cursor && this.cursor) {
+      this.bindSelectedCursor();
+    }
   }
 
-  private subscribeToSelectedCursor() {
-    this.subscriptions.add(
-      this.store.select(selectTableCursor)
-        .subscribe(cursor => this.selected = areTableBodyCursorsEqual(this.cursor, cursor))
-    );
+  private bindSelectedCursor() {
+    this.selected$ = this.store.select(selectTableCursorSelected(this.cursor));
   }
 
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-  }
-
-  public isSingleColumn(): boolean {
-    return this.column.type === TableColumnType.SINGLE;
-  }
-
-  public isCollapsed(): boolean {
+  private isCollapsed(): boolean {
     return (this.documents && this.documents.length > 1) || (this.linkInstances && this.linkInstances.length > 1);
   }
 
-  public width(): string {
-    const width = getTableColumnWidth(this.column);
-    return `${width}px`;
-  }
-
-  public onMouseDown() {
-    if (!this.selected) {
-      this.store.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
-    }
-  }
-
-  public onKeyDown(event: KeyboardEvent) {
-    switch (event.keyCode) {
-      case KeyCode.LeftArrow:
-        return this.store.dispatch(new TablesAction.MoveCursor({cursor: this.cursor, direction: Direction.Left}));
-      case KeyCode.UpArrow:
-        return this.store.dispatch(new TablesAction.MoveCursor({cursor: this.cursor, direction: Direction.Up}));
-      case KeyCode.RightArrow:
-        return this.store.dispatch(new TablesAction.MoveCursor({cursor: this.cursor, direction: Direction.Right}));
-      case KeyCode.DownArrow:
-        return this.store.dispatch(new TablesAction.MoveCursor({cursor: this.cursor, direction: Direction.Down}));
-    }
+  public onMouseDown(event: MouseEvent) {
+    this.selected$.pipe(
+      first()
+    ).subscribe(() => this.store.dispatch(new TablesAction.SetCursor({cursor: this.cursor})));
+    event.stopPropagation();
   }
 
 }

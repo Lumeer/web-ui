@@ -39,9 +39,10 @@ import {PermissionType} from '../permissions/permissions.model';
 import {RouterAction} from '../router/router.action';
 import {TablesAction, TablesActionType} from '../tables/tables.action';
 import {CollectionConverter} from './collection.converter';
-import {AttributeModel} from './collection.model';
+import {AttributeModel, CollectionModel} from './collection.model';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
-import {selectCollectionsLoaded} from './collections.state';
+import {selectCollectionById, selectCollectionsDictionary, selectCollectionsLoaded} from './collections.state';
+import {isNullOrUndefined} from 'util';
 
 @Injectable()
 export class CollectionsEffects {
@@ -260,6 +261,32 @@ export class CollectionsEffects {
   );
 
   @Effect()
+  public setDefaultAttribute$ = this.actions$.pipe(
+    ofType<CollectionsAction.SetDefaultAttribute>(CollectionsActionType.SET_DEFAULT_ATTRIBUTE),
+    tap(action => this.store$.dispatch(new CollectionsAction.SetDefaultAttributeSuccess(action.payload))),
+    withLatestFrom(this.store$.select(selectCollectionsDictionary)),
+    concatMap(([action, collections]) => {
+      const {collectionId, attributeId} = action.payload;
+      const collection = collections[collectionId];
+      const oldDefaultAttributeId = collection.defaultAttributeId;
+      return this.collectionService.setDefaultAttribute(collectionId, attributeId).pipe(
+        concatMap(() => Observable.of()),
+        catchError((error) => Observable.of(new CollectionsAction.SetDefaultAttributeFailure({error, collectionId, oldDefaultAttributeId})))
+      )
+    })
+  );
+
+  @Effect()
+  public setDefaultAttributeFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.SetDefaultAttributeFailure>(CollectionsActionType.SET_DEFAULT_ATTRIBUTE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'collection.attribute.default.set.fail', value: 'Failed to set default attribute id'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
   public createAttributes$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.CreateAttributes>(CollectionsActionType.CREATE_ATTRIBUTES),
     mergeMap(action => {
@@ -269,31 +296,25 @@ export class CollectionsEffects {
         return acc;
       }, {});
 
-      return this.collectionService.createAttributes(action.payload.collectionId, attributesDto).pipe(
+      const {callback, nextAction, collectionId} = action.payload;
+      return this.collectionService.createAttributes(collectionId, attributesDto).pipe(
         map(attributes => ({action, attributes: attributes.map(attr => CollectionConverter.fromAttributeDto(attr, correlationIdMap[attr.name]))})),
-        flatMap(({action, attributes}) => {
-          const {callback, nextAction} = action.payload;
+        withLatestFrom(this.store$.select(selectCollectionById(collectionId))),
+        flatMap(([{action, attributes}, collection]) => {
           if (callback) {
             callback(attributes);
           }
 
-          const actions: Action[] = [new CollectionsAction.CreateAttributesSuccess(
-            {collectionId: action.payload.collectionId, attributes}
-          )];
+          const actions: Action[] = [new CollectionsAction.CreateAttributesSuccess({collectionId, attributes})];
           if (nextAction) {
-            if (nextAction.type === DocumentsActionType.CREATE) {
-              const action = nextAction as DocumentsAction.Create;
-              action.payload.document = convertNewAttributes(attributes, action);
-            } else if (nextAction.type === DocumentsActionType.UPDATE_DATA) {
-              const action = nextAction as DocumentsAction.UpdateData;
-              action.payload.document = convertNewAttributes(attributes, action);
-            } else if (nextAction.type === DocumentsActionType.PATCH_DATA) {
-              const action = nextAction as DocumentsAction.PatchData;
-              action.payload.document = convertNewAttributes(attributes, action);
-            } else if (nextAction.type === TablesActionType.INIT_COLUMN) {
-              (nextAction as TablesAction.InitColumn).payload.attributeId = attributes[0].id;
-            }
+            updateCreateAttributesNextAction(nextAction, attributes);
             actions.push(nextAction);
+          }
+          if (!collection.defaultAttributeId) {
+            const setDefaultAttributeAction = createSetDefaultAttributeAction(collection, attributes);
+            if (setDefaultAttributeAction) {
+              actions.push(setDefaultAttributeAction);
+            }
           }
           return actions;
         }),
@@ -347,11 +368,24 @@ export class CollectionsEffects {
   @Effect()
   public removeAttribute$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.RemoveAttribute>(CollectionsActionType.REMOVE_ATTRIBUTE),
-    mergeMap(action => this.collectionService.removeAttribute(action.payload.collectionId, action.payload.attributeId).pipe(
-      map(() => action),
-      map(action => new CollectionsAction.RemoveAttributeSuccess(action.payload)),
-      catchError((error) => Observable.of(new CollectionsAction.RemoveAttributeFailure({error: error})))
-    ))
+    mergeMap(action => {
+      const {collectionId, attributeId} = action.payload;
+      return this.collectionService.removeAttribute(collectionId, attributeId).pipe(
+        map(() => action),
+        withLatestFrom(this.store$.select(selectCollectionById(collectionId))),
+        flatMap(([action, collection]) => {
+          const actions: Action[] = [new CollectionsAction.RemoveAttributeSuccess(action.payload)];
+          if (collection.defaultAttributeId === attributeId || !collection.defaultAttributeId) {
+            const setDefaultAttributeAction = createSetDefaultAttributeAction(collection, null, attributeId);
+            if (setDefaultAttributeAction) {
+              actions.push(setDefaultAttributeAction);
+            }
+          }
+          return actions;
+        }),
+        catchError((error) => Observable.of(new CollectionsAction.RemoveAttributeFailure({error: error})))
+      )
+    })
   );
 
   @Effect()
@@ -404,6 +438,33 @@ export class CollectionsEffects {
               private searchService: SearchService) {
   }
 
+}
+
+function createSetDefaultAttributeAction(collection: CollectionModel, suppliedAttributes?: AttributeModel[], excludeAttributeId?: string): Action {
+  const attributes = collection.attributes && collection.attributes.length > 0 ? collection.attributes : suppliedAttributes || [];
+
+  const filteredAttributes = excludeAttributeId ? attributes.filter(a => a.id !== excludeAttributeId) : attributes;
+
+  if (filteredAttributes && filteredAttributes.length > 0) {
+    return new CollectionsAction.SetDefaultAttribute({collectionId: collection.id, attributeId: filteredAttributes[0].id});
+  }
+
+  return null;
+}
+
+function updateCreateAttributesNextAction(nextAction: Action, attributes: AttributeModel[]) {
+  if (nextAction.type === DocumentsActionType.CREATE) {
+    const action = nextAction as DocumentsAction.Create;
+    action.payload.document = convertNewAttributes(attributes, action);
+  } else if (nextAction.type === DocumentsActionType.UPDATE_DATA) {
+    const action = nextAction as DocumentsAction.UpdateData;
+    action.payload.document = convertNewAttributes(attributes, action);
+  } else if (nextAction.type === DocumentsActionType.PATCH_DATA) {
+    const action = nextAction as DocumentsAction.PatchData;
+    action.payload.document = convertNewAttributes(attributes, action);
+  } else if (nextAction.type === TablesActionType.INIT_COLUMN) {
+    (nextAction as TablesAction.InitColumn).payload.attributeId = attributes[0].id;
+  }
 }
 
 

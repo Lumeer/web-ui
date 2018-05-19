@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, SimpleChange, SimpleChanges} from '@angular/core';
+import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
 import {TableModel, TablePart} from '../../../../core/store/tables/table.model';
 
 @Component({
@@ -31,12 +32,28 @@ export class TableHeaderComponent {
   @Input()
   public table: TableModel;
 
+  public cursor: TableHeaderCursor;
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.table && this.table && hasTableIdChanged(changes.table)) {
+      this.cursor = this.createHeaderRootCursor();
+    }
+  }
+
+  private createHeaderRootCursor(): TableHeaderCursor {
+    return {
+      tableId: this.table.id,
+      partIndex: null,
+      columnPath: []
+    };
+  }
+
   public trackByPartIndex(index: number, part: TablePart): number {
     return part.index;
   }
 
-  public rowNumberWidth(): string {
-    return `${this.table.rowNumberWidth}px`;
-  }
+}
 
+function hasTableIdChanged(change: SimpleChange): boolean {
+  return !change.previousValue || change.previousValue.id !== change.currentValue.id;
 }

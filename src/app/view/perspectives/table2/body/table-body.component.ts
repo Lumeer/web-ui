@@ -17,29 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../../../core/store/app.state';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {TableModel} from '../../../../core/store/tables/table.model';
 
 @Component({
   selector: 'table-body',
   templateUrl: './table-body.component.html',
-  styleUrls: ['./table-body.component.scss']
+  styleUrls: ['./table-body.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableBodyComponent implements OnInit {
+export class TableBodyComponent {
 
   @Input()
   public table: TableModel;
 
   @Input()
   public query: QueryModel;
-
-  public constructor(private store: Store<AppState>) {
-  }
-
-  public ngOnInit() {
-  }
 
 }
