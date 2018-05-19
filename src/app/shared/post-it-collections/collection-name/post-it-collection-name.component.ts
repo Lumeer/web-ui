@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output, SimpleChange} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, Output, SimpleChange, ViewChild} from '@angular/core';
 
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 
@@ -28,6 +28,8 @@ import {CollectionModel} from '../../../core/store/collections/collection.model'
 })
 export class PostItCollectionNameComponent {
 
+  @ViewChild('collectionNameInput') public input: ElementRef;
+
   @Input() public editable: boolean;
   @Input() public collectionName: string;
 
@@ -36,8 +38,14 @@ export class PostItCollectionNameComponent {
   @Output() public unselected = new EventEmitter();
 
   public onNameBlurred(value: string) {
-    this.changed.emit(value.trim());
     this.unselected.emit();
+
+    const trimmed = value.trim();
+    if (trimmed === '') {
+        this.input.nativeElement.textContent = this.collectionName;
+    } else {
+      this.changed.emit(trimmed);
+    }
   }
 
   public onNameSelected() {
