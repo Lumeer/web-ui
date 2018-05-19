@@ -43,6 +43,7 @@
       <ng-container *ngIf="collection.id">
         <a title="Configure" i18n-title="@@collection.button.configure"
            class="rounded-left text-success"
+           *ngIf="hasManageRole()"
            [routerLink]="[workspacePath(), 'f', collection.id, 'attributes']">
           <i class="fa fa-fw fa-cog" aria-hidden="true"></i></a>
 

@@ -17,18 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraints} from '../constraints';
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-export class ConstraintSuggestion {
+import {AttributeModel} from '../../../../core/store/collections/collection.model';
 
-  public type: string;
-  public color: string;
-  public name: string;
+@Pipe({
+  name: 'attributeFilter'
+})
+@Injectable()
+export class AttributeFilterPipe implements PipeTransform {
 
-  constructor(constraint: Constraints, listSuggestion: string) {
-    this.type = constraint.type;
-    this.color = constraint.color;
-    this.name = listSuggestion;
+  public transform(attributes: AttributeModel[], value: string): any[] {
+    if (!attributes || !value) {
+      return attributes;
+    }
+    return attributes.filter(attr => attr.name.toLowerCase().includes(value.toLocaleLowerCase()));
   }
-
 }

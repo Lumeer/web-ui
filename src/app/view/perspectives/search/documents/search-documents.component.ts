@@ -38,6 +38,7 @@ import {QueryHelper} from "../../../../core/store/navigation/query.helper";
 import {QueryModel} from "../../../../core/store/navigation/query.model";
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
+import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 
 @Component({
   templateUrl: './search-documents.component.html',
@@ -116,7 +117,11 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   public createDefaultAttributeHtml(document: DocumentModel): string {
     if (isNullOrUndefined(document.data)) return '';
-    return this.valueHtml(Object.values(document.data)[0]);
+
+    const defaultAttributeId = this.getDefaultAttributeId(document);
+    const value = document.data[defaultAttributeId] || '';
+
+    return this.valueHtml(value);
   }
 
   public toggleDocument(document: DocumentModel) {
@@ -177,8 +182,8 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public getAttributeName(collection: CollectionModel, attributeId: string): string {
-        const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
-        return attribute && attribute.name;
+    const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
+    return attribute && attribute.name;
   }
 
   private attributeHtml(attributeId: string, document: DocumentModel): string {
@@ -191,8 +196,12 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private isDefaultAttribute(attributeId: string, document: DocumentModel): boolean {
+    return attributeId === this.getDefaultAttributeId(document);
+  }
+
+  private getDefaultAttributeId(document: DocumentModel): string {
     const collection = this.collections[document.collectionId];
-    return document && collection && attributeId === collection.defaultAttributeId;
+    return getDefaultAttributeId(collection);
   }
 
   private valueHtml(value: any): string {

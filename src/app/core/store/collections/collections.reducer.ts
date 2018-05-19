@@ -45,6 +45,10 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
       return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favorite: true}}, state);
     case CollectionsActionType.DELETE_SUCCESS:
       return collectionsAdapter.removeOne(action.payload.collectionId, state);
+    case CollectionsActionType.SET_DEFAULT_ATTRIBUTE_SUCCESS:
+      return setDefaultAttribute(state, action.payload.collectionId, action.payload.attributeId);
+    case CollectionsActionType.SET_DEFAULT_ATTRIBUTE_FAILURE:
+      return setDefaultAttribute(state, action.payload.collectionId, action.payload.oldDefaultAttributeId);
     case CollectionsActionType.CREATE_ATTRIBUTES_SUCCESS:
       return onCreateAttributesSuccess(state, action.payload.collectionId, action.payload.attributes);
     case CollectionsActionType.CHANGE_ATTRIBUTE_SUCCESS:
@@ -60,6 +64,10 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
     default:
       return state;
   }
+}
+
+function setDefaultAttribute(state: CollectionsState, collectionId: string, attributeId: string) {
+  return collectionsAdapter.updateOne({id: collectionId, changes: {defaultAttributeId: attributeId}}, state);
 }
 
 function onCreateAttributesSuccess(state: CollectionsState, collectionId: string, attributes: AttributeModel[]): CollectionsState {

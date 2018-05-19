@@ -17,14 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute} from './attribute';
-import {Resource} from "./resource";
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-export interface Collection extends Resource {
+import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
+import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 
-  attributes?: Attribute[];
-  defaultAttributeId?: string;
-  documentsCount?: number;
-  favorite?: boolean;
+@Pipe({
+  name: 'isDefaultAttribute'
+})
+@Injectable()
+export class DefaultAttributePipe implements PipeTransform {
 
+  public transform(attribute: AttributeModel, collection: CollectionModel): boolean {
+    const defaultAttributeId = getDefaultAttributeId(collection);
+    return defaultAttributeId === attribute.id;
+  }
 }

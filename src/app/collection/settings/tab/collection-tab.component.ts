@@ -41,9 +41,7 @@ export class CollectionTabComponent implements OnInit, OnDestroy {
 
   private collectionSubscription = new Subscription();
 
-  constructor(protected collectionService: CollectionService,
-              protected notificationService: NotificationService,
-              protected store: Store<AppState>) {
+  constructor(protected store: Store<AppState>) {
   }
 
   public ngOnInit(): void {
