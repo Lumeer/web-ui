@@ -49,8 +49,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   @Input()
   public collection: CollectionModel;
 
-  @Input('document')
-  public documentModel: DocumentModel;
+  public _documentModel: DocumentModel;
 
   @Output()
   public documentUpdate = new EventEmitter<DocumentModel>();
@@ -68,9 +67,20 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
               private store: Store<AppState>,
               private notificationService: NotificationService) { }
 
+  get documentModel(): DocumentModel {
+    return this._documentModel;
+  }
+
+  @Input("document")
+  set documentModel(model: DocumentModel) {
+    this._documentModel = model;
+    this.rows = [];
+    this.encodeDocument();
+  }
+
   public ngOnInit() {
-    this.subscriptions.add(this.store.select(selectDocumentById(this.documentModel.id)).subscribe(doc => {
-      this.documentModel = doc;
+    this.subscriptions.add(this.store.select(selectDocumentById(this._documentModel.id)).subscribe(doc => {
+      this._documentModel = doc;
       this.encodeDocument();
     }));
     this.subscriptions.add(this.store.select(selectCollectionById(this.collection.id)).subscribe(col => {
@@ -79,9 +89,9 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     }));
     this.subscriptions.add(IntervalObservable.create(60000).subscribe(() => this.patchDocument()));
 
-    this.createdBy$ = this.store.select(selectUserNameById(this.documentModel.createdBy))
+    this.createdBy$ = this.store.select(selectUserNameById(this._documentModel.createdBy))
       .pipe(filter(name => !isNullOrUndefined(name)));
-    this.updatedBy$ = this.store.select(selectUserNameById(this.documentModel.updatedBy))
+    this.updatedBy$ = this.store.select(selectUserNameById(this._documentModel.updatedBy))
       .pipe(filter(name => !isNullOrUndefined(name)));
 
     this.subscriptions.add(this.store.select(selectOrganizationByWorkspace)
@@ -95,15 +105,15 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     this.summary = this.getDocumentSummary();
 
     this.collection.attributes.forEach(attr => {
-      if (attr.usageCount > 0 && this.documentModel.data[attr.id] !== undefined) {
+      if (attr.usageCount > 0 && this._documentModel.data[attr.id] !== undefined) {
         let row = this.getRowById(attr.id);
         if (row) {
           row.remove = false;
           if (row.name !== attr.name) {
             row.name = attr.name;
           }
-          if (row.value !== this.documentModel.data[attr.id]) {
-            row.value = this.documentModel.data[attr.id];
+          if (row.value !== this._documentModel.data[attr.id]) {
+            row.value = this._documentModel.data[attr.id];
           }
         } else {
           row = this.getRowByCorrelationId(attr.correlationId);
@@ -113,11 +123,11 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
             if (row.name !== attr.name) {
               row.name = attr.name;
             }
-            if (row.value !== this.documentModel.data[attr.id]) {
-              row.value = this.documentModel.data[attr.id];
+            if (row.value !== this._documentModel.data[attr.id]) {
+              row.value = this._documentModel.data[attr.id];
             }
           } else {
-            this.rows.push({ id: attr.id, name: attr.name, value: this.documentModel.data[attr.id], correlationId: attr.correlationId });
+            this.rows.push({ id: attr.id, name: attr.name, value: this._documentModel.data[attr.id], correlationId: attr.correlationId });
           }
         }
       } else {
@@ -160,7 +170,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   private removeRowById(id: string) {
     const idx = this.rows.indexOf(this.getRowById(id));
-    if (idx >= 0 && (this.rows[idx].remove || !this.documentModel.data[id])) {
+    if (idx >= 0 && (this.rows[idx].remove || !this._documentModel.data[id])) {
       this.rows.splice(idx, 1);
     }
   }
@@ -177,7 +187,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   private prepareUpdatedDocument(): DocumentModel {
-    let updatedDocument = Object.assign({}, this.documentModel);
+    let updatedDocument = Object.assign({}, this._documentModel);
 
     let dirty = this.patchNewAttributes(updatedDocument);
     dirty = dirty || this.patchExistingAttributes(updatedDocument);
@@ -302,7 +312,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
         const newAttributes = Object.keys(updatedDocument.newData).map(name => ({name, constraints: [], correlationId: updatedDocument.newData[name].correlationId}));
 
         this.store.dispatch(new CollectionsAction.CreateAttributes(
-          {collectionId: this.documentModel.collectionId, attributes: newAttributes, nextAction: documentUpdateAction})
+          {collectionId: this._documentModel.collectionId, attributes: newAttributes, nextAction: documentUpdateAction})
         );
       } else {
         this.store.dispatch(documentUpdateAction);
@@ -375,13 +385,13 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   private getDocumentSummary(): string {
     if (this.collection.defaultAttributeId) {
-      return this.documentModel.data[this.collection.defaultAttributeId];
+      return this._documentModel.data[this.collection.defaultAttributeId];
     }
 
     if (this.collection.attributes.length > 0) {
       for (let attr of this.collection.attributes) {
-        if (this.documentModel.data[attr.id]) {
-          return this.documentModel.data[attr.id];
+        if (this._documentModel.data[attr.id]) {
+          return this._documentModel.data[attr.id];
         }
       }
     }

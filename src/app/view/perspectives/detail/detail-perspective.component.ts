@@ -23,6 +23,7 @@ import {ViewConfigModel} from "../../../core/store/views/view.model";
 import {DocumentModel} from "../../../core/store/documents/document.model";
 import {QueryModel} from "../../../core/store/navigation/query.model";
 import {CollectionModel} from "../../../core/store/collections/collection.model";
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'detail-perspective',

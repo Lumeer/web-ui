@@ -138,6 +138,10 @@ input {
 .clickable {
   cursor: pointer;
   color: $success;
+  -moz-transition: all .2s ease-in;
+  -o-transition: all .2s ease-in;
+  -webkit-transition: all .2s ease-in;
+  transition: all .2s ease-in;
 
   &:hover {
     color: lighten($success, 20%);

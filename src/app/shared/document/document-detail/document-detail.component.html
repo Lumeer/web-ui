@@ -9,9 +9,9 @@
   </div>
   <div class="col small text-right d-flex align-bottom notice">
     <div class="justify-content-end w-100">
-      Version {{documentModel.dataVersion}}<br/>
-      Created on {{getNativeDate(documentModel.creationDate) | date : 'mediumDate'}} by {{createdBy$ | async}}<br/>
-      Last modified on {{getNativeDate(documentModel.updateDate) | date : 'mediumDate'}} by {{updatedBy$ | async}}
+      Version {{_documentModel.dataVersion}}<br/>
+      Created on {{getNativeDate(_documentModel.creationDate) | date : 'mediumDate'}} by {{createdBy$ | async}}<br/>
+      Last modified on {{getNativeDate(_documentModel.updateDate) | date : 'mediumDate'}} by {{updatedBy$ | async}}
     </div>
   </div>
 </div>
