@@ -51,7 +51,7 @@ export class KeyValueComponent implements OnInit {
   @Input()
   public warning: string;
 
-  constructor(private i18n: I18n) { }
+  constructor(public i18n: I18n) { }
 
   public ngOnInit() {
   }
