@@ -66,15 +66,11 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
   constructor(private store: Store<AppState>) { }
 
   public ngOnInit() {
-    this.bindData();
     this.subscribeAll();
   }
 
   public ngOnDestroy() {
     this.unsubscribeAll();
-  }
-
-  private bindData() {
   }
 
   private subscribeAll() {
@@ -94,10 +90,6 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
           this.setActiveCollection(collections[0]);
         }
       }));
-  }
-
-  private getMultipleResults() {
-    return this.collectionsCount > 1 || this.documentsCount > 1;
   }
 
   private updateNavigation(query: QueryModel) {

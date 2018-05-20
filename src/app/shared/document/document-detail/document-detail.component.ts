@@ -20,7 +20,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {NotificationService} from "../../../core/notifications/notification.service";
-import {CollectionModel} from "../../../core/store/collections/collection.model";
+import {AttributeModel, CollectionModel} from "../../../core/store/collections/collection.model";
 import {DocumentModel} from "../../../core/store/documents/document.model";
 import {Subscription} from "rxjs/Subscription";
 import {Store} from "@ngrx/store";
@@ -126,7 +126,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  private getRowById(id: string) {
+  private getRowById(id: string): DetailRow {
     if (id) {
       return this.rows.find(row => row.id === id);
     }
@@ -134,7 +134,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     return null;
   }
 
-  private getRowByCorrelationId(correlationId: string) {
+  private getRowByCorrelationId(correlationId: string): DetailRow {
     if (correlationId) {
       return this.rows.find(row => row.correlationId === correlationId);
     }
@@ -142,7 +142,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     return null;
   }
 
-  private getRowByName(name: string) {
+  private getRowByName(name: string): DetailRow {
     if (name) {
       return this.rows.filter(row => !row.remove).find(row => row.name === name);
     }
@@ -150,7 +150,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     return null;
   }
 
-  private getRemovableRowByName(name: string) {
+  private getRemovableRowByName(name: string): DetailRow {
     if (name) {
       return this.rows.filter(row => row.remove).find(row => row.name === name);
     }
@@ -165,23 +165,18 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getNativeDate(dateObject) {
+  public getNativeDate(dateObject): number {
     if (dateObject) {
       return new Date(dateObject.year, dateObject.monthValue, dateObject.dayOfMonth, dateObject.hour, dateObject.minute, dateObject.second).getTime();
     }
     return undefined;
   }
 
-  private alreadyInCollection(attrName) {
-    for (let attr of this.collection.attributes) {
-      if (attr.name === attrName) {
-        return true;
-      }
-    }
-    return false;
+  private alreadyInCollection(attrName: string): boolean {
+    return this.collection.attributes.findIndex(attr => attr.name === attr.name) != - 1;
   }
 
-  private prepareUpdatedDocument() {
+  private prepareUpdatedDocument(): DocumentModel {
     let updatedDocument = Object.assign({}, this.documentModel);
 
     let dirty = this.patchNewAttributes(updatedDocument);
@@ -193,7 +188,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     return dirty ? updatedDocument : null;
   }
 
-  private patchNewAttributes(document: DocumentModel) {
+  private patchNewAttributes(document: DocumentModel): boolean {
     let dirty = false;
 
     const newData: { [attributeName: string]: any } = this.rows
@@ -209,7 +204,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     return dirty;
   }
 
-  private patchExistingAttributes(document: DocumentModel) {
+  private patchExistingAttributes(document: DocumentModel): boolean {
     let dirty = false;
     this.rows.filter(row =>
       !isNullOrUndefined(row.id) &&
@@ -224,7 +219,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   // patch those that are defined in collection but were unused
-  private patchReusedAttributes(document: DocumentModel) {
+  private patchReusedAttributes(document: DocumentModel): boolean {
     let dirty = false;
     this.rows.filter(row =>
       isNullOrUndefined(row.id) &&
@@ -242,7 +237,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     return dirty;
   }
 
-  private patchAttributeRename(document: DocumentModel) {
+  private patchAttributeRename(document: DocumentModel): boolean {
     let dirty = false;
 
     this.rows.filter(row =>
@@ -276,7 +271,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     return dirty;
   }
 
-  private patchDeletedAttributes(document: DocumentModel) {
+  private patchDeletedAttributes(document: DocumentModel): boolean {
     let dirty = false;
 
     this.collection.attributes.forEach(attr => {
@@ -289,11 +284,11 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     return dirty;
   }
 
-  private getCollectionAttributeById(id: string) {
+  private getCollectionAttributeById(id: string): AttributeModel {
     return this.collection.attributes.find(attr => attr.id === id);
   }
 
-  private getCollectionAttributeByName(name: string) {
+  private getCollectionAttributeByName(name: string): AttributeModel {
     return this.collection.attributes.find(attr => attr.name === name);
   }
 
@@ -324,7 +319,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     this.rows.push({ name: "", value: "", correlationId: CorrelationIdGenerator.generate(), warning: this.getEmptyWarning() });
   }
 
-  public onRemoveRow(idx) {
+  public onRemoveRow(idx: number) {
     if (this.rows[idx].name) {
       const message = this.i18n(
         {
@@ -344,7 +339,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  private removeRow(idx) {
+  private removeRow(idx: number) {
     if (!this.rows[idx].name) {
       this.rows.splice(idx, 1);
     } else {
@@ -353,7 +348,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  public submitRowChange(idx, $event: string[]) {
+  public submitRowChange(idx: number, $event: string[]) {
     const collision = this.getRowByName($event[0]);
 
     if (collision && collision !== this.rows[idx]) {
@@ -370,15 +365,15 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getEmptyWarning() {
+  private getEmptyWarning(): string {
     return this.i18n({ id: "shared.document.detail.attribute.empty", value: "The attribute name cannot be empty." })
   }
 
-  private getCollisionWarning() {
+  private getCollisionWarning(): string {
     return this.i18n({ id: "shared.document.detail.attribute.collision", value: "The attribute name is already used in this document." })
   }
 
-  private getDocumentSummary() {
+  private getDocumentSummary(): string {
     if (this.collection.defaultAttributeId) {
       return this.documentModel.data[this.collection.defaultAttributeId];
     }

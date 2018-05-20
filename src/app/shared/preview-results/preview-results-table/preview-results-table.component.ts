@@ -64,12 +64,12 @@ export class PreviewResultsTableComponent implements OnInit {
     this.page = page;
   }
 
-  public canActivatePage(page: number) {
+  public canActivatePage(page: number): boolean {
     return ((page < this.page) && (page >= 0)) ||
       ((page > this.page) && (page < Math.ceil(this.documents.length / PreviewResultsTableComponent.PAGE_SIZE)));
   }
 
-  public pageEndIndex(page: number) {
+  public pageEndIndex(page: number): number {
     return Math.min((page + 1) * 100, this.documents.length);
   }
 }

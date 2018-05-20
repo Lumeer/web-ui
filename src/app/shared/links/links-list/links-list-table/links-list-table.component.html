@@ -14,12 +14,12 @@
           </icons-presenter>
           {{linkName}}
         </th>
-        <th [attr.colspan]="attributes.length - linkAttrCount" [title]="collectionName" class="{{linkAttrCount > 0 ? 'border-left' : ''}}">
+        <th [attr.colspan]="attributes.length - linkAttrCount" [title]="collectionName" [class.border-left]="linkAttrCount > 0">
           <i [class]="collectionIcon" [style.color]="collectionColor"></i>&nbsp;{{collectionName}}
         </th>
       </tr>
       <tr>
-        <th *ngFor="let attr of attributes; let j = index;" scope="col" title="{{attr}}" class="{{linkAttrCount == j && linkAttrCount > 0 ? 'border-left' : ''}}">{{attr}}</th>
+        <th *ngFor="let attr of attributes; let j = index;" scope="col" title="{{attr}}" [class.border-left]="linkAttrCount == j && linkAttrCount > 0">{{attr}}</th>
       </tr>
     </thead>
     <tbody>
@@ -28,7 +28,8 @@
           (click)="openLinked(idx)">
         <td *ngFor="let attr of attributes; let i = index;"
             title="{{r[attr]}}"
-            class="{{linkAttrCount == i && linkAttrCount > 0 ? 'border-left' : ''}} {{i < linkAttrCount ? 'always-white' : ''}}">
+            [class.border-left]="linkAttrCount == i && linkAttrCount > 0"
+            [class.always-white]="i < linkAttrCount">
           <input-box *ngIf="i < linkAttrCount"
                      class="flex-grow-2 my-1"
                      [maxLines]="1"

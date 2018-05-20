@@ -38,7 +38,7 @@ export class PreviewResultsTabsComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  public ngOnInit() {
     if (!this.selectedCollection) {
       this.setActiveCollection(this.collections[0]);
     }
