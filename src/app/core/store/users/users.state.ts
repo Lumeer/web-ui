@@ -44,15 +44,13 @@ export const initialUsersState: UsersState = usersAdapter.getInitialState({
 export const selectUsersState = (state: AppState) => state.users;
 
 const selectAllUsersRaw = createSelector(selectUsersState, usersAdapter.getSelectors().selectAll);
+export const selectUsersDictionary = createSelector(selectUsersState, usersAdapter.getSelectors().selectEntities);
 export const selectAllUsers = createSelector(selectAllUsersRaw, users => filterUserFunctions(users));
 export const selectUsersLoadedForOrganization = createSelector(selectUsersState, usersState => usersState.loadedForOrganizationId);
 
 export const selectCurrentUser = createSelector(selectUsersState, usersState => usersState.currentUser);
 
-export const selectUserById = (userId: string) => createSelector(selectAllUsers, users => {
-  const usersById = users.filter(user => user.id === userId);
-  return usersById.length > 0 ? usersById.shift() : null;
-});
+export const selectUserById = (userId: string) => createSelector(selectUsersDictionary, usersMap => usersMap[userId]);
 
 export const selectCurrentUserForWorkspace = createSelector(selectCurrentUser, selectGroupsDictionary, selectOrganizationByWorkspace, (user, groups, organization) => {
   return user ? (organization ? mapGroupsOnUser(user, organization.id, groups) : user) : undefined;
