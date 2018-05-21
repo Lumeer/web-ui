@@ -87,7 +87,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
       this.collection = col;
       this.encodeDocument();
     }));
-    this.subscriptions.add(IntervalObservable.create(60000).subscribe(() => this.patchDocument()));
+    this.subscriptions.add(IntervalObservable.create(2000).subscribe(() => this.patchDocument()));
 
     this.createdBy$ = this.store.select(selectUserById(this._documentModel.createdBy))
       .pipe(filter(user => !isNullOrUndefined(user)), map(user => user.name || user.email || 'Guest'));

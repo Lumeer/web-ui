@@ -152,7 +152,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     const message = this.i18n(
       {
         id: 'view.share.notWorking',
-        value: 'This feature is currently under construction. Your view can be accessed by all your colleagues at the moment.'
+        value: 'This feature is currently under construction. Your view can be currently accessed only by you.'
       });
     const title = this.i18n({id: 'view.share.underConstruction', value: 'Under Construction'});
     const okButtonText = this.i18n({id: 'button.ok', value: 'OK'});
