@@ -31,6 +31,9 @@ import {ViewsAction} from '../../core/store/views/views.action';
 import {selectViewConfig} from '../../core/store/views/views.state';
 import {DialogService} from '../../dialog/dialog.service';
 import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
+import {NotificationService} from "../../core/notifications/notification.service";
+import {I18n} from "@ngx-translate/i18n-polyfill";
+import {SnotifyStyle} from "ng-snotify/snotify/enums/SnotifyStyle.enum";
 
 @Component({
   selector: 'view-controls',
@@ -58,6 +61,8 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   private navigationSubscription: Subscription;
 
   constructor(private dialogService: DialogService,
+              private notificationService: NotificationService,
+              private i18n: I18n,
               private store: Store<AppState>) {
   }
 
@@ -144,7 +149,18 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onShareClick() {
-    this.dialogService.openShareViewDialog();
+    const message = this.i18n(
+      {
+        id: 'view.share.notWorking',
+        value: 'This feature is currently under construction. Your view can be accessed by all your colleagues at the moment.'
+      });
+    const title = this.i18n({id: 'view.share.underConstruction', value: 'Under Construction'});
+    const okButtonText = this.i18n({id: 'button.ok', value: 'OK'});
+
+    this.notificationService.confirm(message, title, [
+      {text: okButtonText, bold: true},
+    ]);
+    //this.dialogService.openShareViewDialog();
   }
 
   public perspectives(): string[] {

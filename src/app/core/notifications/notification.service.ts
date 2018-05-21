@@ -18,10 +18,11 @@
  */
 
 import {Injectable, NgZone} from '@angular/core';
-import {Snotify, SnotifyButton, SnotifyPosition, SnotifyService} from 'ng-snotify';
+import {Snotify, SnotifyButton, SnotifyPosition, SnotifyService, SnotifyToastConfig} from 'ng-snotify';
 import {Observable} from 'rxjs/Observable';
 import {UserSettingsService} from '../user-settings.service';
 import {I18n} from "@ngx-translate/i18n-polyfill";
+import {SnotifyStyle} from "ng-snotify/snotify/enums/SnotifyStyle.enum";
 
 @Injectable()
 export class NotificationService {
