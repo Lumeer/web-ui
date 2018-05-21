@@ -29,8 +29,8 @@ import {selectDocumentById} from "../../../core/store/documents/documents.state"
 import {DocumentsAction} from "../../../core/store/documents/documents.action";
 import {IntervalObservable} from "rxjs/observable/IntervalObservable";
 import {selectCollectionById} from "../../../core/store/collections/collections.state";
-import {selectUserNameById} from "../../../core/store/users/users.state";
-import {filter, take} from "rxjs/operators";
+import {selectUserById} from "../../../core/store/users/users.state";
+import {filter, map, take} from "rxjs/operators";
 import {isNullOrUndefined} from "util";
 import {UsersAction} from "../../../core/store/users/users.action";
 import {selectOrganizationByWorkspace} from "../../../core/store/organizations/organizations.state";
@@ -89,10 +89,10 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     }));
     this.subscriptions.add(IntervalObservable.create(60000).subscribe(() => this.patchDocument()));
 
-    this.createdBy$ = this.store.select(selectUserNameById(this._documentModel.createdBy))
-      .pipe(filter(name => !isNullOrUndefined(name)));
-    this.updatedBy$ = this.store.select(selectUserNameById(this._documentModel.updatedBy))
-      .pipe(filter(name => !isNullOrUndefined(name)));
+    this.createdBy$ = this.store.select(selectUserById(this._documentModel.createdBy))
+      .pipe(filter(user => !isNullOrUndefined(user)), map(user => user.name || user.email || 'Guest'));
+    this.updatedBy$ = this.store.select(selectUserById(this._documentModel.updatedBy))
+      .pipe(filter(user => !isNullOrUndefined(user)), map(user => user.name || user.email || 'Guest'));
 
     this.subscriptions.add(this.store.select(selectOrganizationByWorkspace)
       .pipe(filter(org => !isNullOrUndefined(org)), take(1))
@@ -175,13 +175,6 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  public getNativeDate(dateObject): number {
-    if (dateObject) {
-      return new Date(dateObject.year, dateObject.monthValue, dateObject.dayOfMonth, dateObject.hour, dateObject.minute, dateObject.second).getTime();
-    }
-    return undefined;
-  }
-
   private alreadyInCollection(attrName: string): boolean {
     return this.collection.attributes.findIndex(attr => attr.name === attr.name) != - 1;
   }
@@ -202,7 +195,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     let dirty = false;
 
     const newData: { [attributeName: string]: any } = this.rows
-      .filter(row => isNullOrUndefined(row.id) && !isNullOrUndefined(row.name) && row.name && !this.alreadyInCollection(row.name))
+      .filter(row => isNullOrUndefined(row.id) && row.name && !this.alreadyInCollection(row.name))
       .reduce((acc: { [attributeName: string]: any }, row) => {
         dirty = true;
         acc[row.name] = {value: row.value, correlationId: row.correlationId};
@@ -232,8 +225,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   private patchReusedAttributes(document: DocumentModel): boolean {
     let dirty = false;
     this.rows.filter(row =>
-      isNullOrUndefined(row.id) &&
-      !isNullOrUndefined(row.name) && row.name &&
+      isNullOrUndefined(row.id) && row.name &&
       this.alreadyInCollection(row.name))
       .forEach(row => {
         dirty = true;

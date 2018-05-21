@@ -49,11 +49,9 @@ export const selectUsersLoadedForOrganization = createSelector(selectUsersState,
 
 export const selectCurrentUser = createSelector(selectUsersState, usersState => usersState.currentUser);
 
-export const selectUserNameById = (userId: string) => createSelector(selectAllUsers, users => {
+export const selectUserById = (userId: string) => createSelector(selectAllUsers, users => {
   const usersById = users.filter(user => user.id === userId);
-  const user = usersById.length > 0 ? usersById.shift() : null;
-
-  return user ? (user.name || user.email) : 'Guest';
+  return usersById.length > 0 ? usersById.shift() : null;
 });
 
 export const selectCurrentUserForWorkspace = createSelector(selectCurrentUser, selectGroupsDictionary, selectOrganizationByWorkspace, (user, groups, organization) => {

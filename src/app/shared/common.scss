@@ -138,9 +138,6 @@ input {
 .clickable {
   cursor: pointer;
   color: $success;
-  -moz-transition: all .2s ease-in;
-  -o-transition: all .2s ease-in;
-  -webkit-transition: all .2s ease-in;
   transition: all .2s ease-in;
 
   &:hover {
@@ -246,9 +243,4 @@ ul.nav-u {
   color: $gray-500;
   font-style: italic;
   font-weight: bold;
-}
-
-.ellipsis {
-  overflow: hidden;
-  text-overflow: ellipsis;
 }

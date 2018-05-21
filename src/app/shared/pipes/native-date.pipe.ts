@@ -17,11 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DetailRow {
-  id?: string,
-  name: string,
-  value: string,
-  correlationId?: string,
-  remove?: boolean,
-  warning?: string
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'nativeDate'
+})
+export class NativeDatePipe implements PipeTransform {
+
+  transform(dateObject: {year: number, monthValue: number, dayOfMonth: number, hour: number, minute: number, second: number}): number {
+    if (dateObject) {
+      return new Date(dateObject.year, dateObject.monthValue, dateObject.dayOfMonth, dateObject.hour, dateObject.minute, dateObject.second).getTime();
+    }
+    return undefined;
+  }
+
 }

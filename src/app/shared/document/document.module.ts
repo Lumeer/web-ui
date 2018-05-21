@@ -22,11 +22,13 @@ import {CommonModule} from '@angular/common';
 import {DocumentDetailComponent} from "./document-detail/document-detail.component";
 import {KeyValueComponent} from "./document-detail/key-value/key-value.component";
 import {InputModule} from "../input/input.module";
+import {PipesModule} from "../pipes/pipes.module";
 
 @NgModule({
   imports: [
     CommonModule,
-    InputModule
+    InputModule,
+    PipesModule
   ],
   declarations: [
     DocumentDetailComponent,
