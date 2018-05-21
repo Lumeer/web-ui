@@ -1,0 +1,41 @@
+<div class="row border-top">
+  <div class="col-6 col-md-5 col-lg-4 d-flex flex-row flex-nowrap align-items-center align-self-start attribute">
+    <input-box
+      class="flex-grow-2 mt-3"
+      [placeholder]="i18n({ id: 'document.key-value.attribute.placeholder', value: 'Enter attribute name' })"
+      [maxLines]="1"
+      [editable]="true"
+      [canStayEmpty]="false"
+      [initialValue]="key"
+      [emitAllChanges]="false"
+      (newValue)="onNewKey($event)">
+    </input-box>
+  </div>
+
+  <div class="col-5 col-md-6 col-lg-7 d-flex flex-row flex-nowrap align-items-center justify-content-center">
+    <input-box
+      class="flex-grow-2 my-1"
+      [placeholder]="i18n({ id: 'document.key-value.value.placeholder', value: 'Enter value' })"
+      [maxLines]="100"
+      [editable]="true"
+      [canStayEmpty]="false"
+      [initialValue]="value"
+      [emitAllChanges]="emitKeyPress"
+      (newValue)="onNewRowValue($event)">
+    </input-box>
+  </div>
+
+  <div class="col-1 col-md-1 col-lg-1 d-flex flex-nowrap flex-row-reverse align-items-center align-self-start">
+    <i class="fas fa-fw fa-trash text-danger mx-2 mt-3 clickable"
+       aria-hidden="true"
+       title="Remove Row"
+       i18n-title="@@document.key-value.row.remove"
+       (click)="invokeRemove()"
+       ></i>
+  </div>
+
+  <div *ngIf="warning" class="col">
+    <span class="text-danger small">{{warning}}</span>
+  </div>
+
+</div>

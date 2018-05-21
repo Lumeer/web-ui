@@ -18,6 +18,7 @@
  */
 
 export enum Perspective {
+  Detail = 'detail',
   PostIt = 'postit',
   Chart = 'chart',
   Search = 'search',
@@ -27,6 +28,7 @@ export enum Perspective {
 }
 
 export const perspectivesMap: { [id: string]: Perspective } = {
+  [Perspective.Detail]: Perspective.Detail,
   [Perspective.PostIt]: Perspective.PostIt,
   [Perspective.Chart]: Perspective.Chart,
   [Perspective.Search]: Perspective.Search,
@@ -36,6 +38,7 @@ export const perspectivesMap: { [id: string]: Perspective } = {
 };
 
 export const perspectiveIconsMap: { [id: string]: string } = {
+  [Perspective.Detail]: 'far fa-map-marker-alt',
   [Perspective.PostIt]: 'far fa-sticky-note',
   [Perspective.Chart]: 'far fa-chart-area',
   [Perspective.Search]: 'far fa-search',

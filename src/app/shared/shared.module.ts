@@ -24,7 +24,6 @@ import {RouterModule} from '@angular/router';
 import {CommentsComponent} from './comments/comments.component';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 import {InputModule} from './input/input.module';
-import {LinksComponent} from './links/links.component';
 import {PerspectiveDirective} from './perspective.directive';
 import {PickerModule} from './picker/picker.module';
 import {PipesModule} from './pipes/pipes.module';
@@ -34,8 +33,11 @@ import {ResourceHeaderComponent} from './resource/header/resource-header.compone
 import {SearchBoxModule} from './search-box/search-box.module';
 import {SizeSliderComponent} from './slider/size-slider.component';
 import {SliderComponent} from './slider/slider.component';
-import {TagModule} from './tag/tag.module';
-import {UsersModule} from './users/users.module';
+import {UsersModule} from "./users/users.module";
+import {TagModule} from "./tag/tag.module";
+import {DocumentModule} from "./document/document.module";
+import {PreviewResultsModule} from "./preview-results/preview-results.module";
+import {LinksModule} from "./links/links.module";
 
 @NgModule({
   imports: [
@@ -49,16 +51,18 @@ import {UsersModule} from './users/users.module';
     TagModule,
     InputModule,
     PostItCollectionsModule,
+    DocumentModule,
+    PreviewResultsModule,
+    LinksModule,
     PipesModule
   ],
   declarations: [
     SizeSliderComponent,
     CommentsComponent,
-    LinksComponent,
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
     SliderComponent,
-    ResourceHeaderComponent
+    ResourceHeaderComponent,
   ],
   exports: [
     CommonModule,
@@ -67,7 +71,6 @@ import {UsersModule} from './users/users.module';
     PostItCollectionsModule,
     SizeSliderComponent,
     CommentsComponent,
-    LinksComponent,
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
     UsersModule,
@@ -75,7 +78,10 @@ import {UsersModule} from './users/users.module';
     SliderComponent,
     TagModule,
     InputModule,
-    ResourceHeaderComponent
+    ResourceHeaderComponent,
+    DocumentModule,
+    PreviewResultsModule,
+    LinksModule
   ]
 })
 export class SharedModule {

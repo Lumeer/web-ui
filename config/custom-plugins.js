@@ -33,7 +33,7 @@ const copyWebpackPlugin = new CopyWebpackPlugin(
 const htmlWebpackPlugin = new HtmlWebpackPlugin(
   {
     "favicon": "img/favicon.ico",
-    "title": "Lumeer tool",
+    "title": "Lumeer - Easy Business Booster",
     "publicPath": PUBLIC_PATH,
     "inject": "body",
     "template": "./src/index.ejs",

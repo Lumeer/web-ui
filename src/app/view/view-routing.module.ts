@@ -39,6 +39,10 @@ const viewRoutes: Routes = [
     component: ViewComponent,
     children: [
       {
+        path: Perspective.Detail,
+        loadChildren: './perspectives/detail/detail-perspective.module#DetailPerspectiveModule'
+      },
+      {
         path: Perspective.PostIt,
         component: PostItPerspectiveComponent
       },

@@ -1,0 +1,16 @@
+<ul class="float-right">
+  <li class="nav-item">
+    <button class="btn btn-sm btn-success" (click)="createNewLink()"><i class="fas fa-link"></i>&nbsp;New Link</button>
+  </li>
+</ul>
+<ul class="nav nav-u">
+  <li *ngFor="let link of links;" class="nav-item">
+    <a
+      class="nav-link {{link === selectedLink ? 'active' : ''}}"
+      title="{{link}}"
+      (click)="selectLink(link)">
+      <icons-presenter [colors]="getLinkColors(link)" [icons]="getLinkIcons(link)" [title]="link"></icons-presenter>
+      {{link}}
+    </a>
+  </li>
+</ul>

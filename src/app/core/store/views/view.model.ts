@@ -33,12 +33,17 @@ export interface ViewModel extends ResourceModel {
 
 export interface ViewConfigModel {
 
+  detail?: DetailConfigModel;
   postit?: PostItConfigModel;
   search?: SearchConfigModel;
   table?: TableConfigModel;
   table2?: TableConfig;
   smartdoc?: SmartDocModel;
 
+}
+
+export interface DetailConfigModel {
+  whateverConfig?: string;
 }
 
 export interface PostItConfigModel {

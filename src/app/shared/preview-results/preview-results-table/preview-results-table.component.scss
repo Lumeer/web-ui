@@ -1,0 +1,43 @@
+@import "../../variables";
+
+thead {
+  font-size: small;
+  color: $gray-500;
+  font-style: italic;
+  font-weight: bold;
+}
+
+tbody {
+  font-size: small;
+}
+
+th, td {
+  max-width: 20rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.clickable-row {
+  cursor: pointer;
+
+  &:hover:not(.active) {
+    background-color: $gray-100;
+  }
+}
+
+tr.active {
+  background-color: $light;
+}
+
+.color-success {
+  color: $success;
+}
+
+.table-responsive {
+  resize: vertical;
+}
+
+.h-10em {
+  height: 10em;
+}

@@ -1,0 +1,5 @@
+<div class="container">
+  <preview-results (selectCollection)="selectCollection($event)" (selectDocument)="selectDocument($event)"></preview-results>
+  <document-detail *ngIf="selectedDocument" [collection]="selectedCollection" [document]="selectedDocument"></document-detail>
+  <!--links-list></links-list-->
+</div>

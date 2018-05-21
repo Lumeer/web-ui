@@ -1,0 +1,35 @@
+<div class="row mt-2 mb-2">
+  <div class="col-8 d-flex align-bottom align-self-end text-truncate">
+    <div class="align-text-bottom">
+      <h4 i18n="@@document.detail.heading">Document detail</h4>
+      <span class="small"><i class="fas {{collection?.icon}}" [style.color]="collection?.color"></i>&nbsp;{{collection?.name}}</span>&nbsp;
+      <strong *ngIf="summary">{{summary}}</strong>
+      <em *ngIf="!summary" i18n="@@shared.document.detail.document.indistinguishable">Indistinguishable document</em>
+    </div>
+  </div>
+  <div class="col small text-right d-flex align-bottom notice">
+    <div class="justify-content-end w-100">
+      Version {{_documentModel.dataVersion}}<br/>
+      Created on {{_documentModel.creationDate | nativeDate | date : 'mediumDate'}} by {{createdBy$ | async}}<br/>
+      Last modified on {{_documentModel.updateDate | nativeDate | date : 'mediumDate'}} by {{updatedBy$ | async}}
+    </div>
+  </div>
+</div>
+<ng-container *ngFor="let row of rows; let idx = index;">
+  <key-value *ngIf="!row.remove"
+              [key]="row.name"
+              [value]="row.value"
+              [emitKeyPress]="row.id"
+              (change)="submitRowChange(idx, $event)"
+              (remove)="onRemoveRow(idx)"
+              [warning]="row.warning">
+  </key-value>
+</ng-container>
+<div class="row border-top mb-4">
+  <div class="col">
+    <button class="btn btn-sm btn-success m-2" (click)="addAttrRow()">
+      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+      <span i18n="@@document.detail.attribute.add">Add Row</span>
+    </button>
+  </div>
+</div>

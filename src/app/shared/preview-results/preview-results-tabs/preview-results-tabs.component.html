@@ -1,0 +1,12 @@
+<ul class="nav nav-u small">
+  <li *ngFor="let collection of collections;" class="nav-item">
+    <a
+      class="nav-link"
+      [class.active]="collection.id === selectedCollection"
+      title="{{collection.name}}"
+      (click)="setActiveCollection(collection)">
+      <i class="fas {{collection.icon}}" [style.color]="collection.color"></i>
+      {{collection.name}}
+    </a>
+  </li>
+</ul>
