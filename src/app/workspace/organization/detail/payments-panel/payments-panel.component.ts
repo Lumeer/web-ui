@@ -36,6 +36,7 @@ import {DatePipe, DOCUMENT} from "@angular/common";
 import {NotificationsAction} from "../../../../core/store/notifications/notifications.action";
 import {ServiceLevelType} from "../../../../core/dto/service-level-type";
 import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
+import {NotificationService} from "../../../../core/notifications/notification.service";
 
 @Component({
   selector: 'payments-panel',
@@ -62,6 +63,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
               private actionsSubject: ActionsSubject,
               @Inject(DOCUMENT) private document,
               private elementRef: ElementRef,
+              private notificationService: NotificationService,
               private datePipe: DatePipe) {
     this.languageCode = this.i18n({id: 'organization.payments.lang.code', value: 'en'});
   }
@@ -147,8 +149,20 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   public callGoPay($event: string) {
+    const message = this.i18n(
+      {
+        id: 'organization.payments.disabled.message',
+        value: 'Thank you very much for your interest. We have recorded your order. Automated payments are currently disabled due to legal limitations. We will get in touch with you soon!'
+      });
+    const title = this.i18n({id: 'organization.payments.disabled.title', value: 'Thank You!'});
+    const okButtonText = this.i18n({id: 'button.ok', value: 'OK'});
+
+    this.notificationService.confirm(message, title, [
+      {text: okButtonText, bold: true},
+    ]);
+
     if (!isNullOrUndefined($event) && $event !== "") {
-      (window as any)._gopay.checkout({gatewayUrl: $event, inline: true});
+      //(window as any)._gopay.checkout({gatewayUrl: $event, inline: true});
     }
   }
 
