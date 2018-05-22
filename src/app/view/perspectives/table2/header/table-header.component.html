@@ -1,6 +1,7 @@
 <div class="d-flex">
   <div [style.min-width]="table | rowNumberWidth"
-       [style.width]="table | rowNumberWidth"></div>
+       [style.width]="table | rowNumberWidth"
+       (click)="onRowNumberColumnClick()"></div>
   <ng-container *ngFor="let part of table.parts; trackBy: trackByPartIndex">
     <table-header-collection *ngIf="part.collectionId"
                              [cursor]="cursor | partCursor:part.index"

@@ -43,7 +43,7 @@ import {convertTableToConfig} from './table.converter';
 import {DEFAULT_ROW_NUMBER_WIDTH, DEFAULT_TABLE_ID, EMPTY_TABLE_ROW, TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
 import {createCollectionPart, createLinkPart, createTableColumnsBySiblingAttributeIds, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, isLastTableColumn, isLastTableRow, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
-import {selectTableById, selectTableCursor} from './tables.state';
+import {selectTableById, selectTableBySelectedCursor, selectTableCursor} from './tables.state';
 
 @Injectable()
 export class TablesEffects {
@@ -455,11 +455,52 @@ export class TablesEffects {
   @Effect()
   public setCursor$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.SetCursor>(TablesActionType.SET_CURSOR),
-    mergeMap(action => action.payload.cursor ? this.getLatestTable(action) : Observable.of({action, table: null})),
+    mergeMap(action => {
+      if (action.payload.cursor) {
+        return this.getLatestTable(action);
+      }
+      return this.store$.select(selectTableBySelectedCursor).pipe(
+        first(),
+        map(table => ({action, table}))
+      );
+    }),
+    filter(({action, table}) => !!table),
     mergeMap(({action, table}) => {
       const {cursor} = action.payload;
       const actions: Action[] = [new TablesAction.SetCursorSuccess({cursor})];
-      if (!table || table.parts.length > 1) {
+      if (table.parts.length > 1) {
+        return actions;
+      }
+
+      if (!cursor) {
+        const lastRowIndex = table.rows.length - 1;
+        const lastRow = table.rows[lastRowIndex];
+        if (lastRow && lastRow.documentIds.length === 0) {
+          actions.push(new TablesAction.ReplaceRows({
+            cursor: {
+              tableId: table.id,
+              partIndex: 0,
+              rowPath: [lastRowIndex]
+            },
+            deleteCount: 1,
+            rows: []
+          }));
+        }
+
+        const {columns} = table.parts[0];
+        const lastColumnIndex = columns.length - 1;
+        const lastColumn = columns[lastColumnIndex];
+        if (lastColumn && lastColumn.type === TableColumnType.COMPOUND && !(lastColumn as TableCompoundColumn).parent.attributeId) {
+          actions.push(new TablesAction.ReplaceColumns({
+            cursor: {
+              tableId: table.id,
+              partIndex: 0,
+              columnPath: [lastColumnIndex]
+            },
+            deleteCount: 1
+          }));
+        }
+
         return actions;
       }
 

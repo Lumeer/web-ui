@@ -102,7 +102,8 @@ function addRows(state: TablesState, action: TablesAction.AddRows): TablesState 
   }
 
   const documentIds = new Set(table.documentIds);
-  addedRows.forEach(row => documentIds.add(row.documentIds[0]));
+  addedRows.filter(row => row.documentIds.length > 0)
+    .forEach(row => documentIds.add(row.documentIds[0]));
 
   return tablesAdapter.updateOne({id: table.id, changes: {rows, documentIds}}, state);
 }

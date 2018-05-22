@@ -157,4 +157,8 @@ export class TableRowComponent implements OnChanges, OnDestroy {
     };
   }
 
+  public onRowNumberClick() {
+    this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
+  }
+
 }
