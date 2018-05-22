@@ -25,7 +25,7 @@ import {PostItCollectionsComponent} from './post-it-collections.component';
 import {PostItCollectionNameComponent} from './collection-name/post-it-collection-name.component';
 import {PostItCollectionImportButtonComponent} from './import-button/post-it-collection-import-button.component';
 import {PostItCollectionAddButtonComponent} from './add-button/post-it-collection-add-button.component';
-import {PostItCollectionComponent} from './post-it-collection.component.ts/post-it-collection.component';
+import {PostItCollectionComponent} from './post-it-collection.component/post-it-collection.component';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {PickerModule} from '../picker/picker.module';
 import {LayoutItem} from '../utils/layout/layout-item.directive';
