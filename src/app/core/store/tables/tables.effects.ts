@@ -23,6 +23,7 @@ import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {concatMap, filter, first, flatMap, map, mergeMap, skipWhile, withLatestFrom} from 'rxjs/operators';
 import {getArrayDifference} from '../../../shared/utils/array.utils';
+import {generateAttributeName} from '../../../shared/utils/attribute.utils';
 import {AppState} from '../app.state';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {CollectionsAction} from '../collections/collections.action';
@@ -40,7 +41,7 @@ import {selectViewTable2Config} from '../views/views.state';
 import {moveTableCursor} from './table-cursor';
 import {convertTableToConfig} from './table.converter';
 import {DEFAULT_ROW_NUMBER_WIDTH, DEFAULT_TABLE_ID, EMPTY_TABLE_ROW, TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
-import {createCollectionPart, createLinkPart, createTableColumnsBySiblingAttributeIds, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
+import {createCollectionPart, createLinkPart, createTableColumnsBySiblingAttributeIds, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, isLastTableColumn, isLastTableRow, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {selectTableById, selectTableCursor} from './tables.state';
 
@@ -80,14 +81,12 @@ export class TablesEffects {
       }));
 
       if (createPartActions.length === 0 && part.columns.length === 0) {
-        const column = new TableCompoundColumn(new TableSingleColumn(null, 'A'), []);
         const addColumnAction = new TablesAction.AddColumn({
           cursor: {
             tableId: action.payload.tableId,
             partIndex: 0,
             columnPath: [0]
-          },
-          column
+          }
         });
         return [createTableAction].concat(addColumnAction);
       }
@@ -200,6 +199,40 @@ export class TablesEffects {
           queryParamsHandling: 'merge'
         }
       });
+    })
+  );
+
+  @Effect()
+  public addColumn$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.AddColumn>(TablesActionType.ADD_COLUMN),
+    mergeMap(action => this.getLatestTable(action)),
+    mergeMap(({action, table}) => {
+      const {cursor} = action.payload;
+      const part: TablePart = table.parts[cursor.partIndex];
+      const columns = part.columns;
+
+      if (part.collectionId) {
+        return this.store$.select(selectCollectionById(part.collectionId)).pipe(
+          first(),
+          map(collection => ({cursor, columns, attributes: collection.attributes}))
+        );
+      } else {
+        return this.store$.select(selectLinkTypeById(part.linkTypeId)).pipe(
+          first(),
+          map(linkType => ({cursor, columns, attributes: linkType.attributes}))
+        );
+      }
+    }),
+    map(({cursor, columns, attributes}) => {
+      const parentColumn = cursor.columnPath.length > 1 ? findTableColumn(columns, cursor.columnPath.slice(0, -1)) : null;
+      const parentAttributeId = parentColumn ? (parentColumn as TableCompoundColumn).parent.attributeId : null;
+      const parentAttribute = attributes.find(attribute => attribute.id === parentAttributeId);
+      const parentName = parentAttribute ? parentAttribute.name : null;
+
+      const attributeName = generateAttributeName(attributes, parentName);
+      const column = new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
+
+      return new TablesAction.ReplaceColumns({cursor, deleteCount: 0, columns: [column]});
     })
   );
 
@@ -416,6 +449,44 @@ export class TablesEffects {
       const updatedRow: TableRow = {...row, linkedRows: [], expanded: true};
 
       return [new TablesAction.ReplaceRows({cursor, rows: [updatedRow], deleteCount: 1})];
+    })
+  );
+
+  @Effect()
+  public setCursor$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.SetCursor>(TablesActionType.SET_CURSOR),
+    mergeMap(action => action.payload.cursor ? this.getLatestTable(action) : Observable.of({action, table: null})),
+    mergeMap(({action, table}) => {
+      const {cursor} = action.payload;
+      const actions: Action[] = [new TablesAction.SetCursorSuccess({cursor})];
+      if (!table || table.parts.length > 1) {
+        return actions;
+      }
+
+      const part: TablePart = table.parts[cursor.partIndex];
+      if (isLastTableColumn(cursor, part)) {
+        const index = cursor.columnPath ? cursor.columnPath[0] : cursor.columnIndex;
+        const lastColumn = part.columns[index];
+        if (lastColumn && lastColumn.type === TableColumnType.COMPOUND && (lastColumn as TableCompoundColumn).parent.attributeId) {
+          const nextCursor = {...cursor, columnPath: [index + 1]};
+          actions.push(new TablesAction.AddColumn({cursor: nextCursor}));
+        }
+      }
+      if (isLastTableRow(cursor, table)) {
+        const row: TableRow = table.rows[cursor.rowPath[0]];
+        if (row.documentIds.length > 0) {
+          actions.push(new TablesAction.AddRows({
+            cursor: {
+              tableId: cursor.tableId,
+              partIndex: cursor.partIndex,
+              rowPath: [cursor.rowPath[0] + 1]
+            },
+            rows: [EMPTY_TABLE_ROW]
+          }));
+        }
+      }
+
+      return actions;
     })
   );
 

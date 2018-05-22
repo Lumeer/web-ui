@@ -22,7 +22,7 @@ import {Actions} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {first, tap} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../core/store/collections/collection.model';
@@ -32,11 +32,11 @@ import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.m
 import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
 import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
 import {areTableHeaderCursorsEqual, TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
-import {TableColumn, TableCompoundColumn, TableModel, TablePart, TableSingleColumn} from '../../../../../../core/store/tables/table.model';
+import {TableCompoundColumn, TableModel, TablePart, TableSingleColumn} from '../../../../../../core/store/tables/table.model';
 import {findTableColumn, splitColumnPath} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../core/store/tables/tables.action';
 import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.state';
-import {extractAttributeLastName, extractAttributeParentName, filterAttributesByDepth, generateAttributeName, splitAttributeName} from '../../../../../../shared/utils/attribute.utils';
+import {extractAttributeLastName, extractAttributeParentName, filterAttributesByDepth} from '../../../../../../shared/utils/attribute.utils';
 import {TableEditableCellComponent} from '../../../shared/editable-cell/table-editable-cell.component';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
@@ -133,15 +133,6 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
         this.edited = selected ? this.edited : false;
 
         this.bindOrUnbindEditSelectedCell(selected);
-
-        // TODO probably better to do in action
-        if (selected && this.table.parts.length === 1 && this.cursor.columnPath.length === 1
-          && this.cursor.columnPath[0] === this.getPart().columns.length - 1 && this.attribute && this.attribute.id) {
-          const attributeName = generateAttributeName(this.getAttributes());
-          const column = new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
-          const cursor = {...this.cursor, columnPath: [this.cursor.columnPath[0] + 1]};
-          this.store.dispatch(new TablesAction.AddColumn({cursor, column}));
-        }
       })
     );
   }
@@ -245,13 +236,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
     const {parentPath, columnIndex} = splitColumnPath(this.cursor.columnPath);
     const columnPath = parentPath.concat(columnIndex + (next ? 1 : 0));
     const cursor = {...this.cursor, columnPath};
-    this.store.dispatch(new TablesAction.AddColumn({cursor, column: this.createNewColumn()}));
-  }
-
-  private createNewColumn(): TableColumn {
-    const {parentName} = splitAttributeName(this.column.attributeId);
-    const attributeName = generateAttributeName(this.getAttributes(), parentName);
-    return new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
+    this.store.dispatch(new TablesAction.AddColumn({cursor}));
   }
 
   public onEdit() {
