@@ -29,6 +29,7 @@ import {UsersComponent} from "./users.component";
 import {GroupsSuggestionsComponent} from "./user-groups/suggestions/groups-suggestions.component";
 import {TagModule} from "../tag/tag.module";
 import {InputModule} from "../input/input.module";
+import {UserFilterPipe} from './user-list/user-filter.pipe';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import {InputModule} from "../input/input.module";
     InputModule
   ],
   declarations: [
+    UserFilterPipe,
     UserGroupsComponent,
     GroupsSuggestionsComponent,
     UserListComponent,

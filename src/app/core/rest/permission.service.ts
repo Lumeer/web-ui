@@ -32,8 +32,8 @@ export abstract class PermissionService {
 
   protected workspace: Workspace;
 
-  constructor(protected httpClient: HttpClient,
-              protected store: Store<AppState>) {
+  protected constructor(protected httpClient: HttpClient,
+                        protected store: Store<AppState>) {
     this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
@@ -41,12 +41,12 @@ export abstract class PermissionService {
     return this.httpClient.get<Permissions>(`${this.actualApiPrefix()}/permissions`);
   }
 
-  public updateUserPermission(userPermissions: Permission): Observable<Permission> {
-    return this.httpClient.put<Permission>(`${this.actualApiPrefix()}/permissions/users`, userPermissions);
+  public updateUserPermission(userPermissions: Permission, workspace?: Workspace): Observable<Permission> {
+    return this.httpClient.put<Permission>(`${this.actualApiPrefix(workspace)}/permissions/users`, userPermissions);
   }
 
-  public updateGroupPermission(userPermissions: Permission): Observable<Permission> {
-    return this.httpClient.put<Permission>(`${this.actualApiPrefix()}/permissions/groups`, userPermissions);
+  public updateGroupPermission(userPermissions: Permission, workspace?: Workspace): Observable<Permission> {
+    return this.httpClient.put<Permission>(`${this.actualApiPrefix(workspace)}/permissions/groups`, userPermissions);
   }
 
   public removeUserPermission(user: string): Observable<HttpResponse<any>> {
@@ -60,5 +60,5 @@ export abstract class PermissionService {
     );
   }
 
-  protected abstract actualApiPrefix(): string;
+  protected abstract actualApiPrefix(workspace?: Workspace): string;
 }

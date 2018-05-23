@@ -3,7 +3,7 @@
   [resourceType]="resourceType"
   [currentUser]="currentUser$ | async"
   [users]="users$ | async"
-  [permissions]="permissions$ | async"
+  [resource]="resource$ | async"
   (userCreated)="onNewUser($event)"
   (userUpdated)="onUserUpdated($event)"
   (userDeleted)="onUserDeleted($event)"

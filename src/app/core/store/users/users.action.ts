@@ -106,7 +106,7 @@ export namespace UsersAction {
   export class CreateFailure implements Action {
     public readonly type = UsersActionType.CREATE_FAILURE;
 
-    public constructor(public payload: { error: any }) {
+    public constructor(public payload: { error: any , organizationId: string}) {
     }
   }
 

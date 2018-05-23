@@ -147,10 +147,10 @@ input {
 
 .clickable-unselected {
   cursor: pointer;
-  color: $grey-color;
+  color: $grey-darker-color;
 
   &:hover {
-    color: lighten($grey-color, 20%);
+    color: $grey-color;
   }
 }
 

@@ -27,6 +27,7 @@ import {isNullOrUndefined} from 'util';
 import {Attribute, Collection} from '../dto';
 import {AppState} from '../store/app.state';
 import {PermissionService} from './permission.service';
+import {Workspace} from '../store/navigation/workspace.model';
 
 @Injectable()
 export class CollectionService extends PermissionService {
@@ -112,8 +113,9 @@ export class CollectionService extends PermissionService {
     );
   }
 
-  protected actualApiPrefix() {
-    const collectionId = this.workspace.collectionId;
+  protected actualApiPrefix(workspace?: Workspace): string {
+    const actualWorkspace = workspace || this.workspace;
+    const collectionId = actualWorkspace.collectionId;
 
     return `${this.apiPrefix()}/${collectionId}`;
   }

@@ -189,14 +189,17 @@ export class OrganizationsEffects {
   @Effect()
   public changePermission$ = this.actions$.pipe(
     ofType<OrganizationsAction.ChangePermission>(OrganizationsActionType.CHANGE_PERMISSION),
-    concatMap(action => {
+    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    concatMap(([action, organizations]) => {
+      const organization = organizations[action.payload.organizationId];
+      const workspace = {organizationCode: organization.code};
       const permissionDto: Permission = PermissionsConverter.toPermissionDto(action.payload.permission);
 
       let observable;
       if (action.payload.type === PermissionType.Users) {
-        observable = this.organizationService.updateUserPermission(permissionDto);
+        observable = this.organizationService.updateUserPermission(permissionDto, workspace);
       } else {
-        observable = this.organizationService.updateGroupPermission(permissionDto);
+        observable = this.organizationService.updateGroupPermission(permissionDto, workspace);
       }
 
       return observable.pipe(

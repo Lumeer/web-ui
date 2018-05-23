@@ -23,7 +23,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {map, mergeMap, withLatestFrom} from 'rxjs/operators';
+import {filter, map, mergeMap, take} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
@@ -53,6 +53,7 @@ export class ProjectSettingsGuard implements CanActivate {
       .pipe(
         mergeMap(organization => {
           if (isNullOrUndefined(organization)) {
+            this.dispatchErrorActionsNotExist();
             return Observable.of(false);
           }
           return this.checkProject(organization, projectCode);
@@ -61,8 +62,12 @@ export class ProjectSettingsGuard implements CanActivate {
   }
 
   private checkProject(organization: OrganizationModel, projectCode: string): Observable<boolean> {
-    return this.workspaceService.getProjectFromStoreOrApi(organization.code, organization.id, projectCode).pipe(
-      withLatestFrom(this.store.select(selectCurrentUserForWorkspace)),
+    return Observable.combineLatest(
+      this.workspaceService.getProjectFromStoreOrApi(organization.code, organization.id, projectCode),
+      this.store.select(selectCurrentUserForWorkspace)
+    ).pipe(
+      filter(([project, user]) => !isNullOrUndefined(user)),
+      take(1),
       map(([project, user]) => {
         if (isNullOrUndefined(project)) {
           this.dispatchErrorActionsNotExist();
