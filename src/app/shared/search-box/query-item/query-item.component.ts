@@ -18,13 +18,8 @@
  */
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {HtmlModifier} from '../../utils/html-modifier';
-import {QueryItem} from './model/query-item';
-import {QueryItemType} from './model/query-item-type';
 
-const DEFAULT_BACKGROUND_COLOR = '#faeabb';
-const LINK_BACKGROUND_COLOR = '#ffffff';
-const LINK_BORDER_COLOR = '#ced4da';
+import {QueryItem} from './model/query-item';
 
 @Component({
   selector: 'query-item',
@@ -44,33 +39,6 @@ export class QueryItemComponent {
 
   public onRemove() {
     this.remove.emit();
-  }
-
-  public isAttributeItem(): boolean {
-    return this.queryItem.type === QueryItemType.Attribute;
-  }
-
-  public isCollectionItem(): boolean {
-    return this.queryItem.type === QueryItemType.Collection;
-  }
-
-  public backgroundColor(): string {
-    if (this.queryItem.colors && this.queryItem.colors.length === 1) {
-      return HtmlModifier.shadeColor(this.queryItem.colors[0], .5);
-    }
-
-    if (this.queryItem.type === QueryItemType.Link) {
-      return LINK_BACKGROUND_COLOR;
-    }
-
-    return DEFAULT_BACKGROUND_COLOR;
-  }
-
-  public borderColor(): string {
-    if (this.queryItem.type === QueryItemType.Link) {
-      return LINK_BORDER_COLOR;
-    }
-    return this.backgroundColor();
   }
 
 }

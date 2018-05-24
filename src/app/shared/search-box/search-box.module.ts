@@ -31,6 +31,10 @@ import {ConditionSuggestionsComponent} from './query-item/condition-suggestions/
 import {QueryItemComponent} from './query-item/query-item.component';
 import {SearchBoxComponent} from './search-box.component';
 import {TruncatePipe} from './truncate.pipe';
+import {IsAttributeItemPipe} from './query-item/pipes/is-attribute-item.pipe';
+import {IsCollectionItemPipe} from './query-item/pipes/is-collection-item.pipe';
+import {QueryItemBackgroundPipe} from './query-item/pipes/query-item-background';
+import {QueryItemBorderPipe} from './query-item/pipes/query-item-border';
 
 @NgModule({
   imports: [
@@ -39,6 +43,10 @@ import {TruncatePipe} from './truncate.pipe';
     PickerModule
   ],
   declarations: [
+    IsAttributeItemPipe,
+    IsCollectionItemPipe,
+    QueryItemBackgroundPipe,
+    QueryItemBorderPipe,
     SearchBoxComponent,
     QueryItemComponent,
     SearchSuggestionsComponent,

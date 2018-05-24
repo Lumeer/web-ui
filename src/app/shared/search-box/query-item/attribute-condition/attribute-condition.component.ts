@@ -70,7 +70,10 @@ export class AttributeConditionComponent implements OnInit {
       case KeyCode.DownArrow:
       case KeyCode.UpArrow:
         this.onUpAndDownArrowKeysDown(event);
-        return;
+        break;
+      case KeyCode.Backspace:
+        this.onBackspaceKeyDown();
+        break;
     }
   }
 
@@ -78,6 +81,10 @@ export class AttributeConditionComponent implements OnInit {
     event.preventDefault();
     const direction = event.keyCode === KeyCode.UpArrow ? -1 : 1;
     this.moveSuggestionSelection$.next(direction);
+  }
+
+  public onBackspaceKeyDown() {
+    // TODO
   }
 
   public onEnterKeyUp() {
