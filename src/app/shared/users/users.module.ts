@@ -30,13 +30,15 @@ import {GroupsSuggestionsComponent} from "./user-groups/suggestions/groups-sugge
 import {TagModule} from "../tag/tag.module";
 import {InputModule} from "../input/input.module";
 import {UserFilterPipe} from './user-list/user-filter.pipe';
+import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     TagModule,
-    InputModule
+    InputModule,
+    PipesModule
   ],
   declarations: [
     UserFilterPipe,

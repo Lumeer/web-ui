@@ -24,12 +24,14 @@ import {PrefixPipe} from './prefix.pipe';
 import {IconsPipe} from './icons.pipe';
 import {PixelPipe} from './pixel.pipe';
 import {NativeDatePipe} from './native-date.pipe';
+import {LightenColorPipe} from './lighten-color.pipe';
 
 @NgModule({
   imports: [
     CommonModule
   ],
   declarations: [
+    LightenColorPipe,
     PixelPipe,
     IconsPipe,
     ColorsPipe,
@@ -37,6 +39,7 @@ import {NativeDatePipe} from './native-date.pipe';
     NativeDatePipe
   ],
   exports: [
+    LightenColorPipe,
     PixelPipe,
     IconsPipe,
     ColorsPipe,

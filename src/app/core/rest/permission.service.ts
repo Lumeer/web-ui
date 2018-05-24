@@ -32,8 +32,8 @@ export abstract class PermissionService {
 
   protected workspace: Workspace;
 
-  protected constructor(protected httpClient: HttpClient,
-                        protected store: Store<AppState>) {
+  constructor(protected httpClient: HttpClient,
+              protected store: Store<AppState>) {
     this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 

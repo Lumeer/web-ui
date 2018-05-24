@@ -79,10 +79,7 @@ export class UserListComponent {
   }
 
   public getUserPermission(userId: string): PermissionModel {
-    if (isNullOrUndefined(this.resource)) {
-      return;
-    }
-    return this.resource.permissions && this.resource.permissions.users && this.resource.permissions.users.find(perm => perm.id === userId);
+    return this.resource && this.resource.permissions && this.resource.permissions.users && this.resource.permissions.users.find(perm => perm.id === userId);
   }
 
   public getUserRoles(userId: string): string[] {
@@ -94,10 +91,6 @@ export class UserListComponent {
     const currentPermission = this.getUserPermission(userId);
     const newPermission = {id: userId, roles: data.roles};
     this.userPermissionChange.emit({newPermission, currentPermission, onlyStore: data.onlyStore});
-  }
-
-  public lightenColor(color: string): string {
-    return HtmlModifier.shadeColor(color, .5);
   }
 
   public trackByUserId(index: number, user: UserModel): string {

@@ -119,10 +119,6 @@ export class TableHeaderComponent {
     part.hiddenAttributes = [];
   }
 
-  public lightenColor(color: string): string {
-    return HtmlModifier.shadeColor(color, .5);
-  }
-
   public unplugPart(part: TablePart) {
     this.tableManagerService.removeTablePart(part);
   }

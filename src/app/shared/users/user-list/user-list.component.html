@@ -1,6 +1,6 @@
 <div class="my-4">
   <table class="table table-striped">
-    <thead [style.background-color]="lightenColor(resource.color)">
+    <thead [style.background-color]="resource.color | lightenColor:.5">
       <tr class="d-flex">
         <th class="col-6 d-flex align-items-center">
           <span i18n="@@users.header.email">Email</span>
@@ -10,7 +10,7 @@
         </th>
         <th class="col-3">
           <div class="form-control d-flex align-items-center overflow-hidden" title="Search for users" i18n-title="@@users.header.search.title">
-            <input type="search" class="flex-grow-2" width="20"
+            <input type="search" class="flex-grow-1" width="20"
                    placeholder="Search user..."
                    i18n-placeholder="@@users.header.search.placeholder"
                    [(ngModel)]="searchString">
@@ -20,20 +20,20 @@
     </thead>
     <tbody>
       <tr class="d-flex" new-user *ngIf="canAddUsers()"
-                (userCreated)="userCreated.emit($event)">
+          (userCreated)="userCreated.emit($event)">
       </tr>
 
       <tr class="d-flex" user *ngFor="let user of users | userFilter:searchString; trackBy:trackByUserId"
-            [resourceType]="resourceType"
-            [user]="user"
-            [editable]="canEditUser(user.id)"
-            [changeRoles]="canChangeRoles(user.id)"
-            [expanded]="expanded[user.email]"
-            [userRoles]="getUserRoles(user.id)"
-            (expandedChange)="(expanded[user.email] = !expanded[user.email])"
-            (rolesUpdate)="onUserRolesChanged(user.id, $event)"
-            (userUpdated)="userUpdated.emit($event)"
-            (userDeleted)="userDeleted.emit($event)">
+          [resourceType]="resourceType"
+          [user]="user"
+          [editable]="canEditUser(user.id)"
+          [changeRoles]="canChangeRoles(user.id)"
+          [expanded]="expanded[user.email]"
+          [userRoles]="getUserRoles(user.id)"
+          (expandedChange)="(expanded[user.email] = !expanded[user.email])"
+          (rolesUpdate)="onUserRolesChanged(user.id, $event)"
+          (userUpdated)="userUpdated.emit($event)"
+          (userDeleted)="userDeleted.emit($event)">
       </tr>
 
     </tbody>

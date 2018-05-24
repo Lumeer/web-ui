@@ -41,7 +41,7 @@
     <th *ngFor="let attribute of attributesOfDepthWithParents(part, row)"
         [attr.rowspan]="attribute.intermediate ? 1 : maxAttributeDepth - row + 1"
         [attr.colspan]="countAttributeChildren(attribute, part.shownAttributes) || 1"
-        [style.backgroundColor]="lightenColor(part.collection.color)">
+        [style.backgroundColor]="part.collection.color | lightenColor:.5">
       <table-header-cell [part]="part"
                          [attribute]="attribute"
                          [embedded]="embedded"
@@ -54,7 +54,7 @@
       </table-header-cell>
     </th>
     <th *ngIf="isFirstRow && part.hiddenAttributes.length > 0"
-        [style.backgroundColor]="lightenColor(part.collection.color)"
+        [style.backgroundColor]="part.collection.color | lightenColor:.5"
         [attr.rowspan]="maxAttributeDepth">
       <div class="dropup mx-1">
         <a data-toggle="dropdown"

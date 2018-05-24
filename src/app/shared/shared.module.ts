@@ -76,6 +76,7 @@ import {LinksModule} from "./links/links.module";
     UsersModule,
     SearchBoxModule,
     SliderComponent,
+    PipesModule,
     TagModule,
     InputModule,
     ResourceHeaderComponent,
