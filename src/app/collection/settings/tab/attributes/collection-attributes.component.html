@@ -1,6 +1,6 @@
 <div class="my-4">
   <table class="table table-striped">
-    <thead [style.background-color]="lightenColor(collection.color)">
+    <thead [style.background-color]="collection.color | lightenColor:.5">
       <tr class="d-flex">
         <th class="col-1"></th>
         <th class="col-5 d-flex align-items-center">
@@ -12,7 +12,6 @@
         <th class="col-4">
           <div class="form-control d-flex align-items-center overflow-hidden" title="Search for attribute" i18n-title="@@collections.tab.attributes.search.title">
             <input type="search" class="flex-grow-2" #searchInput
-                   width="100"
                    placeholder="Search attribute..."
                    i18n-placeholder="@@collections.tab.attributes.search.placeholder"
                    [(ngModel)]="searchString">

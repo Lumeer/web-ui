@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 
 import {MemoizedSelector, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
@@ -46,8 +46,6 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   @Input() public resourceType: ResourceType;
 
-  public permissions$: Observable<PermissionsModel>;
-
   public users$: Observable<UserModel[]>;
 
   public currentUser$: Observable<UserModel>;
@@ -55,6 +53,8 @@ export class UsersComponent implements OnInit, OnDestroy {
   public organizationId: string;
 
   public resourceId: string;
+
+  public resource$: Observable<ResourceModel>;
 
   private organizationSubscription: Subscription;
 
@@ -146,10 +146,9 @@ export class UsersComponent implements OnInit, OnDestroy {
     this.users$ = this.store.select(selectUsersForWorkspace).pipe(map(this.sortUsers));
     this.currentUser$ = this.store.select(selectCurrentUserForWorkspace);
 
-    this.permissions$ = this.store.select(this.getSelector()).pipe(
+    this.resource$ = this.store.select(this.getSelector()).pipe(
       filter(resource => !isNullOrUndefined(resource)),
       tap(resource => this.resourceId = resource.id),
-      map(resource => resource.permissions)
     );
   }
 

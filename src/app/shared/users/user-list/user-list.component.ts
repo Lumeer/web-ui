@@ -23,10 +23,15 @@ import {UserModel} from '../../../core/store/users/user.model';
 import {filterUsersByFilter} from "../../../core/store/users/user.filters";
 import {ResourceType} from '../../../core/model/resource-type';
 import {PermissionModel, PermissionsModel} from '../../../core/store/permissions/permissions.model';
+import {ResourceModel} from '../../../core/model/resource.model';
+import {isNullOrUndefined} from 'util';
+import {HtmlModifier} from '../../utils/html-modifier';
+import {AttributeModel} from '../../../core/store/collections/collection.model';
 
 @Component({
   selector: 'user-list',
-  templateUrl: './user-list.component.html'
+  templateUrl: './user-list.component.html',
+  styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent {
 
@@ -36,7 +41,7 @@ export class UserListComponent {
 
   @Input() public currentUser: UserModel;
 
-  @Input() public permissions: PermissionsModel;
+  @Input() public resource: ResourceModel;
 
   @Output() public userCreated = new EventEmitter<string>();
 
@@ -51,15 +56,7 @@ export class UserListComponent {
   }>();
 
   public expanded: { [email: string]: boolean } = {};
-  public userFilter: string;
-
-  public onFilterChanged(filter: string) {
-    this.userFilter = filter;
-  }
-
-  public filterUsers(users: UserModel[]): UserModel[] {
-    return filterUsersByFilter(users, this.userFilter);
-  }
+  public searchString: string;
 
   public canAddUsers(): boolean {
     return this.resourceType === ResourceType.Organization;
@@ -82,7 +79,7 @@ export class UserListComponent {
   }
 
   public getUserPermission(userId: string): PermissionModel {
-    return this.permissions && this.permissions.users && this.permissions.users.find(perm => perm.id === userId);
+    return this.resource && this.resource.permissions && this.resource.permissions.users && this.resource.permissions.users.find(perm => perm.id === userId);
   }
 
   public getUserRoles(userId: string): string[] {
@@ -95,4 +92,9 @@ export class UserListComponent {
     const newPermission = {id: userId, roles: data.roles};
     this.userPermissionChange.emit({newPermission, currentPermission, onlyStore: data.onlyStore});
   }
+
+  public trackByUserId(index: number, user: UserModel): string {
+    return user.id;
+  }
+
 }

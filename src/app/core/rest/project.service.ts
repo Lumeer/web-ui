@@ -23,6 +23,7 @@ import {Observable} from 'rxjs/Observable';
 import {Project} from '../dto';
 import {LumeerError} from '../error/lumeer.error';
 import {PermissionService} from './permission.service';
+import {Workspace} from '../store/navigation/workspace.model';
 
 @Injectable()
 export class ProjectService extends PermissionService {
@@ -83,9 +84,10 @@ export class ProjectService extends PermissionService {
     return `/${API_URL}/rest/organizations/${orgCode}/projects${projCode ? `/${projCode}` : ''}`;
   }
 
-  protected actualApiPrefix(): string {
-    let orgCode = this.workspace.organizationCode;
-    let projCode = this.workspace.projectCode;
+  protected actualApiPrefix(workspace?: Workspace): string {
+    const actualWorkspace = workspace || this.workspace;
+    let orgCode = actualWorkspace.organizationCode;
+    let projCode = actualWorkspace.projectCode;
 
     return this.apiPrefix(orgCode, projCode);
   }

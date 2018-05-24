@@ -23,7 +23,7 @@ import {Validator} from "../../../core/validators/validator";
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
-  selector: 'new-user',
+  selector: '[new-user]',
   templateUrl: './new-user.component.html'
 })
 export class NewUserComponent {
@@ -57,7 +57,7 @@ export class NewUserComponent {
     this.email = '';
   }
 
-  public emailPlaceHolder() {
+  public emailPlaceHolder(): string {
     return this.i18n({
       id: 'user.add.placeholder',
       value: 'Type email to invite another user'

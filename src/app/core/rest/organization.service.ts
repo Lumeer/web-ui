@@ -26,6 +26,7 @@ import {ServiceLimits} from "../dto/service-limits";
 import {Payment} from "../dto/payment";
 import {selectWorkspace} from "../store/navigation/navigation.state";
 import {AppState} from "../store/app.state";
+import {Workspace} from '../store/navigation/workspace.model';
 
 @Injectable()
 export class OrganizationService extends PermissionService {
@@ -86,8 +87,9 @@ export class OrganizationService extends PermissionService {
       }});
   }
 
-  protected actualApiPrefix(): string {
-    const organizationCode = this.workspace.organizationCode;
+  protected actualApiPrefix(workspace?: Workspace): string {
+    const actualWorkspace = workspace || this.workspace;
+    const organizationCode = actualWorkspace.organizationCode;
 
     return this.apiPrefix(organizationCode);
   }

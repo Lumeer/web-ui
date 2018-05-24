@@ -17,35 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {ColorsPipe} from './colors.pipe';
-import {PrefixPipe} from './prefix.pipe';
-import {IconsPipe} from './icons.pipe';
-import {PixelPipe} from './pixel.pipe';
-import {NativeDatePipe} from './native-date.pipe';
-import {LightenColorPipe} from './lighten-color.pipe';
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-@NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: [
-    LightenColorPipe,
-    PixelPipe,
-    IconsPipe,
-    ColorsPipe,
-    PrefixPipe,
-    NativeDatePipe
-  ],
-  exports: [
-    LightenColorPipe,
-    PixelPipe,
-    IconsPipe,
-    ColorsPipe,
-    PrefixPipe,
-    NativeDatePipe
-  ]
+import {UserModel} from '../../../core/store/users/user.model';
+
+@Pipe({
+  name: 'userFilter'
 })
-export class PipesModule {
+@Injectable()
+export class UserFilterPipe implements PipeTransform {
+
+  public transform(users: UserModel[], value: string): UserModel[] {
+    if (!users || !value) {
+      return users;
+    }
+    return users.filter(user => user.email.toLowerCase().includes(value.toLocaleLowerCase()));
+  }
 }

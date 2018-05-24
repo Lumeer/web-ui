@@ -127,10 +127,6 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
     this.store.dispatch(new CollectionsAction.RemoveAttribute({collectionId: this.collection.id, attributeId: attribute.id}));
   }
 
-  public lightenColor(color: string): string {
-    return HtmlModifier.shadeColor(color, .5);
-  }
-
   public trackByAttributeId(index: number, attribute: AttributeModel) {
     return attribute.id;
   }

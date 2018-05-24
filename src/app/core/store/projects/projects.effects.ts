@@ -30,7 +30,7 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary, selectSelectedOrganization} from '../organizations/organizations.state';
 import {ProjectConverter} from './project.converter';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
-import {selectProjectsCodes, selectProjectsLoaded} from './projects.state';
+import {selectProjectsCodes, selectProjectsDictionary, selectProjectsLoaded} from './projects.state';
 import {isNullOrUndefined} from "util";
 import {Permission} from '../../dto';
 import {PermissionType} from '../permissions/permissions.model';
@@ -129,16 +129,17 @@ export class ProjectsEffects {
     withLatestFrom(this.store$.select(selectSelectedOrganization)),
     map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
-        const title = this.i18n({ id: 'serviceLimits.trial', value: 'Free Service' });
+        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'project.create.serviceLimits',
-          value: 'You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?' });
+          value: 'You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?'
+        });
         return new NotificationsAction.Confirm({
           title,
           message,
           action: new RouterAction.Go({
             path: ['/organization', organization.code, 'detail'],
-            extras: { fragment: 'orderService' }
+            extras: {fragment: 'orderService'}
           })
         });
       }
@@ -228,14 +229,19 @@ export class ProjectsEffects {
   @Effect()
   public changePermission$ = this.actions$.pipe(
     ofType<ProjectsAction.ChangePermission>(ProjectsActionType.CHANGE_PERMISSION),
-    concatMap(action => {
+    withLatestFrom(this.store$.select(selectProjectsDictionary)),
+    withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
+    concatMap(([[action, projects], organizations]) => {
+      const project = projects[action.payload.projectId];
+      const organization = organizations[project.organizationId];
+      const workspace = {organizationCode: organization.code, projectCode: project.code};
       const permissionDto: Permission = PermissionsConverter.toPermissionDto(action.payload.permission);
 
       let observable;
       if (action.payload.type === PermissionType.Users) {
-        observable = this.projectService.updateUserPermission(permissionDto);
+        observable = this.projectService.updateUserPermission(permissionDto, workspace);
       } else {
-        observable = this.projectService.updateGroupPermission(permissionDto);
+        observable = this.projectService.updateGroupPermission(permissionDto, workspace);
       }
 
       return observable.pipe(

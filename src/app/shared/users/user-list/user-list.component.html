@@ -1,37 +1,42 @@
-<new-user *ngIf="canAddUsers()"
+<div class="my-4">
+  <table class="table table-striped">
+    <thead [style.background-color]="resource.color | lightenColor:.5">
+      <tr class="d-flex">
+        <th class="col-6 d-flex align-items-center">
+          <span i18n="@@users.header.email">Email</span>
+        </th>
+        <th class="col-3 d-flex align-items-center">
+          <span i18n="@@users.header.actions">Actions</span>
+        </th>
+        <th class="col-3">
+          <div class="form-control d-flex align-items-center overflow-hidden" title="Search for users" i18n-title="@@users.header.search.title">
+            <input type="search" class="flex-grow-1" width="20"
+                   placeholder="Search user..."
+                   i18n-placeholder="@@users.header.search.placeholder"
+                   [(ngModel)]="searchString">
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="d-flex" new-user *ngIf="canAddUsers()"
           (userCreated)="userCreated.emit($event)">
-</new-user>
+      </tr>
 
-<div class="row mt-4">
-  <div class="col-6 col-md-4 col-lg-3 py-2">
-    <filter-box
-      [placeholder]="'Filter users'"
-      (textChange)="onFilterChanged($event)">
-    </filter-box>
-  </div>
+      <tr class="d-flex" user *ngFor="let user of users | userFilter:searchString; trackBy:trackByUserId"
+          [resourceType]="resourceType"
+          [user]="user"
+          [editable]="canEditUser(user.id)"
+          [changeRoles]="canChangeRoles(user.id)"
+          [expanded]="expanded[user.email]"
+          [userRoles]="getUserRoles(user.id)"
+          (expandedChange)="(expanded[user.email] = !expanded[user.email])"
+          (rolesUpdate)="onUserRolesChanged(user.id, $event)"
+          (userUpdated)="userUpdated.emit($event)"
+          (userDeleted)="userDeleted.emit($event)">
+      </tr>
+
+    </tbody>
+  </table>
 </div>
 
-<div *ngFor="let user of filterUsers(users); let isLast = last" [class.mb-2]="!isLast">
-
-  <user
-    [resourceType]="resourceType"
-    [user]="user"
-    [editable]="canEditUser(user.id)"
-    [changeRoles]="canChangeRoles(user.id)"
-    [expanded]="expanded[user.email]"
-    [userRoles]="getUserRoles(user.id)"
-    (expandedChange)="(expanded[user.email] = !expanded[user.email])"
-    (rolesUpdate)="onUserRolesChanged(user.id, $event)"
-    (userUpdated)="userUpdated.emit($event)"
-    (userDeleted)="userDeleted.emit($event)">
-  </user>
-
-  <!--<user-groups-->
-  <!--*ngIf="expanded[user.email]"-->
-  <!--[organization]="organization"-->
-  <!--[user]="user"-->
-  <!--[groups]="groups"-->
-  <!--(userUpdate)="userUpdated.emit($event)">-->
-  <!--</user-groups>-->
-
-</div>

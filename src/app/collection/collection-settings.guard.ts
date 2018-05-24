@@ -54,8 +54,12 @@ export class CollectionSettingsGuard implements CanActivate {
     return this.loadCollections().pipe(
       mergeMap(() => this.store.select(selectCollectionById(collectionId))),
       withLatestFrom(this.store.select(selectAllOrganizations)),
-      withLatestFrom(this.store.select(selectCurrentUserForWorkspace)),
-      map(([[collection, organizations], user]) => {
+      mergeMap(([collection, organizations]) => this.store.select(selectCurrentUserForWorkspace).pipe(
+        filter(user => !isNullOrUndefined(user)),
+        take(1),
+        map(user => ({collection, organizations, user}))
+      )),
+      map(({collection, organizations, user}) => {
         if (isNullOrUndefined(collection)) {
           this.dispatchErrorActionsNotExist();
           return false;
