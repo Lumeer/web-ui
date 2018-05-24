@@ -8,7 +8,7 @@ import {extractAttributeLastName} from '../../../../../shared/utils/attribute.ut
 export class AttributeLastNamePipe implements PipeTransform {
 
   public transform(attribute: AttributeModel): string {
-    return extractAttributeLastName(attribute.name);
+    return attribute && extractAttributeLastName(attribute.name);
   }
 
 }
