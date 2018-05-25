@@ -1,3 +1,19 @@
+<div *ngIf="!isChrome" class="container">
+  <div class="row pt-2">
+    <div class="col text-center">
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fa-2x far fa-exclamation-triangle float-left mt-2"></i>
+        <span class="text-center" i18n="@@isChrome">
+            Lumeer works best in Google Chrome browser. Only this way we can guarantee you the best user experience.<br/>
+            Using Lumeer in a different browser is at your own risk.
+          </span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" i18n-aria-label="@@button.close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="d-flex flex-column h-100">
   <div class="py-2 w-100">
     <top-panel></top-panel>

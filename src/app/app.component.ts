@@ -33,6 +33,8 @@ import {SnotifyService} from 'ng-snotify';
 })
 export class AppComponent implements OnInit {
 
+  public isChrome = true;
+
   constructor(private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
               private keycloakService: KeycloakService,
               private notificationService: SnotifyService) {
@@ -50,6 +52,11 @@ export class AppComponent implements OnInit {
 
   public ngOnInit() {
     this.setNotificationStyle();
+    try {
+      this.isChrome = ((navigator as any).userAgent as string).toLowerCase().indexOf("chrome") >= 0;
+    } catch(e) {
+      this.isChrome = false;
+    }
   }
 
   public setNotificationStyle(): void {
