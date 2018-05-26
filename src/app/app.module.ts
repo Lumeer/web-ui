@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {APP_INITIALIZER, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+import {APP_INITIALIZER, ErrorHandler, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -37,6 +37,7 @@ import { DialogModule } from './dialog/dialog.module';
 
 declare const require; // Use the require method provided by webpack
 const translations = require(`raw-loader!../../${I18N_PATH}`);
+const Raven = require('raven-js');
 
 export const angularticsSettings: Partial<Angulartics2Settings> = {
   developerMode: LUMEER_ENV !== 'production',
@@ -48,6 +49,18 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     anonymizeIp: true
   }
 };
+
+Raven
+  .config('https://518f3e95639941769be32abe63ad9288@sentry.io/1213943')
+  .install();
+
+export class RavenErrorHandler implements ErrorHandler {
+  handleError(err:any) : void {
+    if (LUMEER_ENV === 'production') {
+      Raven.captureException(err.originalError || err);
+    }
+  }
+}
 
 @NgModule({
   imports: [
@@ -65,6 +78,10 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     Angulartics2Module.forRoot([Angulartics2GoogleAnalytics], angularticsSettings)
   ],
   providers: [
+    {
+      provide: ErrorHandler,
+      useClass: RavenErrorHandler
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
