@@ -37,7 +37,6 @@ import { DialogModule } from './dialog/dialog.module';
 
 declare const require; // Use the require method provided by webpack
 const translations = require(`raw-loader!../../${I18N_PATH}`);
-const Raven = require('raven-js');
 
 export const angularticsSettings: Partial<Angulartics2Settings> = {
   developerMode: LUMEER_ENV !== 'production',
@@ -49,18 +48,6 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     anonymizeIp: true
   }
 };
-
-Raven
-  .config('https://518f3e95639941769be32abe63ad9288@sentry.io/1213943')
-  .install();
-
-export class RavenErrorHandler implements ErrorHandler {
-  handleError(err:any) : void {
-    if (LUMEER_ENV === 'production') {
-      Raven.captureException(err.originalError || err);
-    }
-  }
-}
 
 @NgModule({
   imports: [
@@ -78,10 +65,6 @@ export class RavenErrorHandler implements ErrorHandler {
     Angulartics2Module.forRoot([Angulartics2GoogleAnalytics], angularticsSettings)
   ],
   providers: [
-    {
-      provide: ErrorHandler,
-      useClass: RavenErrorHandler
-    },
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
