@@ -25,7 +25,7 @@ import {Observable} from 'rxjs/Observable';
 import {catchError, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkInstanceService} from '../../rest';
 import {AppState} from '../app.state';
-import {QueryHelper} from '../navigation/query.helper';
+import {areQueriesEqual} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {LinkInstanceConverter} from './link-instance.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
@@ -38,7 +38,7 @@ export class LinkInstancesEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Get>(LinkInstancesActionType.GET),
     withLatestFrom(this.store$.select(selectLinkInstancesQueries)),
-    skipWhile(([action, queries]) => queries.some(query => QueryHelper.equal(query, action.payload.query))),
+    skipWhile(([action, queries]) => queries.some(query => areQueriesEqual(query, action.payload.query))),
     mergeMap(([action]) => this.linkInstanceService.getLinkInstances(action.payload.query).pipe(
       map(dtos => ({action, linkInstances: dtos.map(dto => LinkInstanceConverter.fromDto(dto))})),
       map(({action, linkInstances}) => new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})),

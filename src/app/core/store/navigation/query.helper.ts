@@ -21,12 +21,8 @@ import {deepArrayEquals, getArrayDifference, isArraySubset} from '../../../share
 import {QueryConverter} from './query.converter';
 import {QueryModel} from './query.model';
 
-export class QueryHelper {
-
-  public static equal(first: QueryModel, second: QueryModel): boolean {
-    return QueryConverter.toString(first) === QueryConverter.toString(second);
-  }
-
+export function areQueriesEqual(first: QueryModel, second: QueryModel): boolean {
+  return QueryConverter.toString(first) === QueryConverter.toString(second);
 }
 
 export function hasQueryNewLink(oldQuery: QueryModel, newQuery: QueryModel) {

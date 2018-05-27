@@ -24,7 +24,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
-import {getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
+import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {TableCursor} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableModel} from '../../../core/store/tables/table.model';
@@ -124,6 +124,10 @@ export class Table2PerspectiveComponent implements OnInit, OnDestroy {
       this.store.select(selectNavigation).pipe(
         filter(navigation => navigation.perspective === Perspective.Table2 && !!navigation.query)
       ).subscribe(({query}) => {
+        if (areQueriesEqual(this.query, query)) {
+          return;
+        }
+
         if (this.table && hasQueryNewLink(this.query, query)) {
           this.addTablePart(query);
         } else {
