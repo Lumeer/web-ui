@@ -281,7 +281,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
       this.attributesSubscription.unsubscribe();
     }
     this.attributesSubscription = this.attribute$.subscribe(attribute => {
-      if (attribute) { // TODO probably id condition?
+      if (attribute && attribute.id) {
         this.showRemoveConfirm();
       } else {
         this.removeUninitializedColumn();
