@@ -181,6 +181,9 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
 
   public onEditEnd(lastName: string) {
     this.edited = false;
+    if (!lastName) {
+      return;
+    }
 
     if (this.attributesSubscription) {
       this.attributesSubscription.unsubscribe();

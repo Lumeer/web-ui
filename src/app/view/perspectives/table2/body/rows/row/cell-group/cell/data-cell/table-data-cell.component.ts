@@ -136,7 +136,9 @@ export class TableDataCellComponent implements OnChanges {
 
   public onEditEnd(value: string) {
     this.clearEditedAttribute();
-    this.saveData(value);
+    if (value) {
+      this.saveData(value);
+    }
   }
 
   private clearEditedAttribute() {
