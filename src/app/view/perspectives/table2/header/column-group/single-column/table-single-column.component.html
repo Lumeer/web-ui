@@ -11,7 +11,7 @@
   </table-editable-cell>
   <table-attribute-suggestions *ngIf="edited && !(attribute$ | async | entityCreated) && !(attribute$ | async | attributeParentName)"
                                [attributeName]="attribute$ | async | attributeName:lastName"
-                               [collection]="collection"
+                               [collection]="collection$ | async"
                                [cursor]="cursor"
                                [table]="table">
   </table-attribute-suggestions>

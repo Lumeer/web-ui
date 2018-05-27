@@ -27,6 +27,7 @@ import {NativeDatePipe} from './native-date.pipe';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PixelPipe} from './pixel.pipe';
 import {PrefixPipe} from './prefix.pipe';
+import { EmptyPipe } from './empty.pipe';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import {PrefixPipe} from './prefix.pipe';
     NativeDatePipe,
     PerspectiveIconPipe,
     FilterPerspectivesPipe,
+    EmptyPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -51,6 +53,7 @@ import {PrefixPipe} from './prefix.pipe';
     NativeDatePipe,
     PerspectiveIconPipe,
     FilterPerspectivesPipe,
+    EmptyPipe,
   ]
 })
 export class PipesModule {
