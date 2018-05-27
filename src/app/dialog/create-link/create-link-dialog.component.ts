@@ -69,8 +69,6 @@ export class CreateLinkDialogComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.form.reset();
-
     this.subscribeToLinkCollectionIds();
   }
 
@@ -84,7 +82,7 @@ export class CreateLinkDialogComponent implements OnInit, OnDestroy {
         withLatestFrom(this.store.select(selectAllCollections))
       ).subscribe(([linkCollectionIds, collections]) => {
         this.collections = collections.filter(collection => linkCollectionIds.includes(collection.id));
-        this.form.reset();
+        this.linkNameInput.setValue(this.collections.map(collection => collection.name).join('-'));
       })
     );
   }
