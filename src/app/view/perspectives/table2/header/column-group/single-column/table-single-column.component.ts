@@ -36,6 +36,7 @@ import {TableCompoundColumn, TableModel, TablePart, TableSingleColumn} from '../
 import {findTableColumn, splitColumnPath} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../core/store/tables/tables.action';
 import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.state';
+import {DialogService} from '../../../../../../dialog/dialog.service';
 import {extractAttributeLastName, extractAttributeParentName, filterAttributesByDepth} from '../../../../../../shared/utils/attribute.utils';
 import {TableEditableCellComponent} from '../../../shared/editable-cell/table-editable-cell.component';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
@@ -84,6 +85,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   public constructor(private actions$: Actions,
                      private attributeNameChangedPipe: AttributeNameChangedPipe,
                      private changeDetector: ChangeDetectorRef,
+                     private dialogService: DialogService,
                      private i18n: I18n,
                      private store: Store<AppState>) {
   }
@@ -181,7 +183,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
 
   public onEditEnd(lastName: string) {
     this.edited = false;
-    if (!lastName) {
+    if (!lastName || this.dialogService.isDialogOpen()) {
       return;
     }
 

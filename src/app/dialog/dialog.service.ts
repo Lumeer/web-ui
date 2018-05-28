@@ -32,12 +32,14 @@ import {DialogPath} from './dialog-path';
 export class DialogService {
 
   public callback: any;
+  private open: boolean;
 
   public constructor(private router: Router) {
   }
 
   public closeDialog() {
     this.callback = null;
+    this.open = false;
     this.navigateToDialog(null);
   }
 
@@ -65,7 +67,12 @@ export class DialogService {
     this.navigateToDialog([DialogPath.SHARE_VIEW]);
   }
 
+  public isDialogOpen(): boolean {
+    return this.open;
+  }
+
   private navigateToDialog(path: any[]) {
+    this.open = true;
     return this.router.navigate(['', {outlets: {dialog: path}}], {queryParamsHandling: 'preserve'});
   }
 
