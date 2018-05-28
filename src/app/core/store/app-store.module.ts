@@ -94,7 +94,7 @@ const effects = [
   imports: [
     StoreModule.forRoot(reducers, {initialState: initialAppState}),
     EffectsModule.forRoot(effects),
-    LUMEER_ENV === 'development' ? StoreDevtoolsModule.instrument({maxAge: 10}) : []
+    LUMEER_ENV === 'development' ? StoreDevtoolsModule.instrument({maxAge: 15}) : []
   ],
   declarations: []
 })

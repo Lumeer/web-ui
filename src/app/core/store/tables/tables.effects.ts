@@ -30,15 +30,17 @@ import {CollectionsAction} from '../collections/collections.action';
 import {selectAllCollections, selectCollectionById, selectCollectionsLoaded} from '../collections/collections.state';
 import {DocumentsAction} from '../documents/documents.action';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
+import {selectLinkInstancesByTypeAndDocuments} from '../link-instances/link-instances.state';
 import {LinkTypeHelper} from '../link-types/link-type.helper';
 import {selectLinkTypeById} from '../link-types/link-types.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {QueryConverter} from '../navigation/query.converter';
 import {QueryModel} from '../navigation/query.model';
 import {RouterAction} from '../router/router.action';
+import {ViewCursor} from '../views/view.model';
 import {ViewsAction} from '../views/views.action';
 import {selectViewTable2Config} from '../views/views.state';
-import {moveTableCursor} from './table-cursor';
+import {moveTableCursor, TableCursor} from './table-cursor';
 import {convertTableToConfig} from './table.converter';
 import {DEFAULT_ROW_NUMBER_WIDTH, DEFAULT_TABLE_ID, EMPTY_TABLE_ROW, TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
 import {createCollectionPart, createLinkPart, createTableColumnsBySiblingAttributeIds, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, isLastTableColumn, isLastTableRow, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
@@ -97,14 +99,26 @@ export class TablesEffects {
   @Effect()
   public destroyTable$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.DestroyTable>(TablesActionType.DESTROY_TABLE),
-    concatMap(action => this.store$.select(selectTableById(action.payload.tableId)).pipe(
+    mergeMap(action => Observable.combineLatest(
+      this.store$.select(selectTableById(action.payload.tableId)),
+      this.store$.select(selectTableCursor)
+    ).pipe(
       first()
     )),
-    flatMap(table => {
+    mergeMap(([table, tableCursor]) => {
+      if (tableCursor && tableCursor.tableId === table.id) {
+        return this.createViewCursorFromTable(table, tableCursor).pipe(
+          map(viewCursor => ({table, viewCursor}))
+        );
+      }
+      return Observable.of({table, viewCursor: null});
+    }),
+    flatMap(({table, viewCursor}) => {
       const actions: Action[] = [new TablesAction.RemoveTable({tableId: table.id})];
 
       if (table.id === DEFAULT_TABLE_ID) {
         actions.push(new ViewsAction.ChangeTable2Config({config: convertTableToConfig(table)}));
+        actions.push(new ViewsAction.SetCursor({cursor: viewCursor}));
       }
 
       return actions;
@@ -556,6 +570,49 @@ export class TablesEffects {
       first(),
       map(table => ({action, table}))
     );
+  }
+
+  private createViewCursorFromTable(table: TableModel, cursor: TableCursor): Observable<ViewCursor> {
+    if (!cursor || !cursor.rowPath) {
+      return Observable.of(null);
+    }
+
+    const part = table.parts[cursor.partIndex];
+    if (!part.collectionId) {
+      return Observable.of(null);
+    }
+
+    const column = part.columns[cursor.columnIndex];
+    if (column.type !== TableColumnType.COMPOUND) {
+      return Observable.of(null);
+    }
+
+    const {attributeId} = (column as TableCompoundColumn).parent;
+    const row = findTableRow(table.rows, cursor.rowPath);
+    if (row.documentIds.length !== 1) {
+      return Observable.of(null);
+    }
+
+    if (cursor.rowPath.length > 1) {
+      const linkedRow = findTableRow(table.rows, cursor.rowPath);
+      const {linkTypeId} = table.parts[cursor.partIndex - 1];
+      const linkedDocumentId = linkedRow.documentIds[0];
+      return this.store$.select(selectLinkInstancesByTypeAndDocuments(linkTypeId, [linkedDocumentId])).pipe(
+        first(),
+        map(linkInstances => ({
+          linkInstanceId: linkInstances.length ? linkInstances[0].id : null,
+          collectionId: part.collectionId,
+          documentId: row.documentIds[0],
+          attributeId
+        }))
+      );
+    }
+
+    return Observable.of({
+      collectionId: part.collectionId,
+      documentId: row.documentIds[0],
+      attributeId
+    });
   }
 }
 

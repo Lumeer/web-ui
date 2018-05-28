@@ -21,13 +21,14 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {selectQuery} from '../navigation/navigation.state';
-import {ViewConfigModel, ViewModel} from './view.model';
-import {ViewFilters} from "./view.filters";
+import {ViewFilters} from './view.filters';
+import {ViewConfigModel, ViewCursor, ViewModel} from './view.model';
 
 export interface ViewsState extends EntityState<ViewModel> {
 
   loaded: boolean;
   config: ViewConfigModel;
+  cursor: ViewCursor;
 
 }
 
@@ -35,7 +36,8 @@ export const viewsAdapter = createEntityAdapter<ViewModel>({selectId: view => vi
 
 export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
   loaded: false,
-  config: {}
+  config: {},
+  cursor: null
 });
 
 export const selectViewsState = (state: AppState) => state.views;
@@ -52,3 +54,5 @@ export const selectViewSmartDocConfig = createSelector(selectViewConfig, config 
 export const selectViewTableConfig = createSelector(selectViewConfig, config => config.table);
 export const selectViewTable2Config = createSelector(selectViewConfig, config => config.table2);
 export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (views, query): ViewModel[] => ViewFilters.filterByQuery(views, query));
+
+export const selectViewCursor = createSelector(selectViewsState, state => state.cursor);

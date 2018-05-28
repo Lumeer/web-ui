@@ -33,6 +33,8 @@ import {selectViewConfig} from '../../core/store/views/views.state';
 import {DialogService} from '../../dialog/dialog.service';
 import {Perspective} from '../perspectives/perspective';
 
+export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
+
 @Component({
   selector: 'view-controls',
   templateUrl: './view-controls.component.html',
@@ -166,6 +168,10 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     if (perspective === Perspective.Search.valueOf()) {
       this.store.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: []}}));
     }
+  }
+
+  public onPerspectiveChooserClick(event: MouseEvent) {
+    event[PERSPECTIVE_CHOOSER_CLICK] = true;
   }
 
 }

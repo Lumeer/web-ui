@@ -42,6 +42,8 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return {...state, config: {...state.config, table: action.payload.config}};
     case ViewsActionType.CHANGE_TABLE2_CONFIG:
       return {...state, config: {...state.config, table2: action.payload.config}};
+    case ViewsActionType.SET_CURSOR:
+      return {...state, cursor: action.payload.cursor};
     case ViewsActionType.CLEAR:
       return initialViewsState;
     default:

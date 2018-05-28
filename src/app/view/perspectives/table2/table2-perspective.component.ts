@@ -33,6 +33,7 @@ import {selectTableById, selectTableCursor} from '../../../core/store/tables/tab
 import {Direction} from '../../../shared/direction';
 import {KeyCode} from '../../../shared/key-code';
 import {isKeyPrintable} from '../../../shared/utils/key-code.helper';
+import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
 import {Perspective} from '../perspective';
 import CreateTable = TablesAction.CreateTable;
 import DestroyTable = TablesAction.DestroyTable;
@@ -153,8 +154,8 @@ export class Table2PerspectiveComponent implements OnInit, OnDestroy {
     return this.linkInstance ? this.linkInstance.id : DEFAULT_TABLE_ID;
   }
 
-  public onClickOutside() {
-    if (this.selectedCursor) {
+  public onClickOutside(event: MouseEvent) {
+    if (this.selectedCursor && !event[PERSPECTIVE_CHOOSER_CLICK]) {
       this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
   }

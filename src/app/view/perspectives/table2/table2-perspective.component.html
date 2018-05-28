@@ -8,7 +8,7 @@
 <div *ngIf="query | displayable"
      [style.height]="height"
      class="table d-flex flex-column align-items-start m-0">
-  <div (clickOutside)="onClickOutside()"
+  <div (clickOutside)="onClickOutside($event)"
        class="d-flex flex-column">
     <table-header [table]="table"
                   class="d-block pr-4">

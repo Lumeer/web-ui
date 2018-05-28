@@ -18,16 +18,25 @@
  */
 
 import {Perspective} from '../../../view/perspectives/perspective';
+import {ResourceModel} from '../../model/resource.model';
 import {QueryModel} from '../navigation/query.model';
 import {SmartDocModel} from '../smartdoc/smartdoc.model';
 import {TableConfig} from '../tables/table.model';
-import {ResourceModel} from "../../model/resource.model";
 
 export interface ViewModel extends ResourceModel {
 
   perspective: Perspective;
   query: QueryModel;
   config: ViewConfigModel;
+
+}
+
+export interface ViewCursor {
+
+  linkInstanceId?: string;
+  collectionId: string;
+  documentId: string;
+  attributeId: string;
 
 }
 
