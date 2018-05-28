@@ -18,9 +18,10 @@
  */
 
 import {Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Subscription} from 'rxjs';
+import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
@@ -30,10 +31,9 @@ import {ViewModel} from '../../core/store/views/view.model';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {selectViewConfig} from '../../core/store/views/views.state';
 import {DialogService} from '../../dialog/dialog.service';
-import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
-import {NotificationService} from "../../core/notifications/notification.service";
-import {I18n} from "@ngx-translate/i18n-polyfill";
-import {SnotifyStyle} from "ng-snotify/snotify/enums/SnotifyStyle.enum";
+import {Perspective} from '../perspectives/perspective';
+
+export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
 @Component({
   selector: 'view-controls',
@@ -56,6 +56,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   private workspace: Workspace;
   public perspective: Perspective;
+  public perspectives = Object.values(Perspective);
 
   private configSubscription: Subscription;
   private navigationSubscription: Subscription;
@@ -163,36 +164,14 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     //this.dialogService.openShareViewDialog();
   }
 
-  public perspectives(): string[] {
-    return Object.values(Perspective);
-  }
-
-  public getIconForPerspective(perspective: string): string {
-    return perspectiveIconsMap[perspective] || '';
-  }
-
-  private isSingleCollectionInQuery(): boolean {
-    const query = this.view.query;
-    return query && query.collectionIds && query.collectionIds.length === 1;
-  }
-
-  public canShowPerspective(perspective: Perspective): boolean {
-    switch (perspective) {
-      case Perspective.Table2:
-      case Perspective.SmartDoc:
-      case Perspective.Chart:
-        return this.isSingleCollectionInQuery();
-      case Perspective.Table:
-        return false;
-      default:
-        return true;
-    }
-  }
-
   private dispatchActionsOnChangePerspective(perspective: string) {
     if (perspective === Perspective.Search.valueOf()) {
       this.store.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: []}}));
     }
+  }
+
+  public onPerspectiveChooserClick(event: MouseEvent) {
+    event[PERSPECTIVE_CHOOSER_CLICK] = true;
   }
 
 }

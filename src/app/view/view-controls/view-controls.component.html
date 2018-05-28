@@ -1,16 +1,16 @@
 <form class="form-inline d-flex flex-nowrap">
-  <div class="form-control dropdown mr-2 p-0" title="Perspective" i18n-title="@@view.perspective">
+  <div (click)="onPerspectiveChooserClick($event)"
+       class="form-control dropdown mr-2 p-0" title="Perspective" i18n-title="@@view.perspective">
     <div class="dropdown-toggle py-1 px-2 d-flex flex-nowrap align-items-center"
          id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <i class="fa-fw {{getIconForPerspective(perspective)}}"></i>
+      <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
       <span class="ml-1 text-nowrap" i18n="@@view.perspective.name">{perspective, select, detail {Detail} postit {Post-it} chart {Chart} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document}}</span>
     </div>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-      <ng-container *ngFor="let perspective of perspectives()">
-        <div *ngIf="canShowPerspective(perspective)"
-             class="dropdown-item"
-             (click)="onSelectPerspective(perspective)">
-          <i class="fa-fw {{getIconForPerspective(perspective)}}"></i>
+      <ng-container *ngFor="let perspective of perspectives | filterPerspectives:view.query">
+        <div (click)="onSelectPerspective(perspective)"
+             class="dropdown-item">
+          <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
           <span class="ml-1 text-nowrap" i18n="@@view.perspective.name">{perspective, select, detail {Detail} postit {Post-it} chart {Chart} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document}}</span>
         </div>
       </ng-container>

@@ -64,6 +64,10 @@ export const selectTableCursorSelected = (cursor: TableCursor) => createSelector
   }
 });
 
+export const selectTableBySelectedCursor = createSelector(selectTablesDictionary, selectTableCursor, (tablesMap, cursor) => {
+  return cursor ? tablesMap[cursor.tableId] : null;
+});
+
 export const selectEditedAttribute = createSelector(selectTablesState, state => state.editedAttribute);
 export const selectAffected = (attribute: EditedAttribute) => createSelector(selectEditedAttribute, editedAttribute => {
   return attribute && editedAttribute &&

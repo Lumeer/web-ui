@@ -24,7 +24,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
-import {getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
+import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {TableCursor} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableModel} from '../../../core/store/tables/table.model';
@@ -33,6 +33,7 @@ import {selectTableById, selectTableCursor} from '../../../core/store/tables/tab
 import {Direction} from '../../../shared/direction';
 import {KeyCode} from '../../../shared/key-code';
 import {isKeyPrintable} from '../../../shared/utils/key-code.helper';
+import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
 import {Perspective} from '../perspective';
 import CreateTable = TablesAction.CreateTable;
 import DestroyTable = TablesAction.DestroyTable;
@@ -124,6 +125,10 @@ export class Table2PerspectiveComponent implements OnInit, OnDestroy {
       this.store.select(selectNavigation).pipe(
         filter(navigation => navigation.perspective === Perspective.Table2 && !!navigation.query)
       ).subscribe(({query}) => {
+        if (areQueriesEqual(this.query, query)) {
+          return;
+        }
+
         if (this.table && hasQueryNewLink(this.query, query)) {
           this.addTablePart(query);
         } else {
@@ -149,8 +154,8 @@ export class Table2PerspectiveComponent implements OnInit, OnDestroy {
     return this.linkInstance ? this.linkInstance.id : DEFAULT_TABLE_ID;
   }
 
-  public onClickOutside() {
-    if (this.selectedCursor) {
+  public onClickOutside(event: MouseEvent) {
+    if (this.selectedCursor && !event[PERSPECTIVE_CHOOSER_CLICK]) {
       this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
   }

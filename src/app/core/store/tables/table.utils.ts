@@ -21,6 +21,7 @@ import {copyAndSpliceArray, getLastFromArray} from '../../../shared/utils/array.
 import {filterDirectAttributeChildren, findAttributeByName, splitAttributeName} from '../../../shared/utils/attribute.utils';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {LinkTypeModel} from '../link-types/link-type.model';
+import {TableCursor} from './table-cursor';
 import {TableColumn, TableColumnType, TableCompoundColumn, TableConfig, TableConfigColumn, TableConfigPart, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
 
 export function findTableColumn(columns: TableColumn[], path: number[]): TableColumn {
@@ -393,4 +394,13 @@ export function isTableRowStriped(rowPath: number[]): boolean {
   }
 
   return isTableRowStriped(parentPath) ? rowIndex % 2 === 0 : rowIndex % 2 === 1;
+}
+
+export function isLastTableColumn(cursor: TableCursor, part: TablePart): boolean {
+  return (cursor.columnPath && cursor.columnPath.length === 1 && cursor.columnPath[0] === part.columns.length - 1) ||
+    (cursor.columnIndex && cursor.columnIndex === part.columns.length - 1);
+}
+
+export function isLastTableRow(cursor: TableCursor, table: TableModel): boolean {
+  return cursor.rowPath && cursor.rowPath.length === 1 && cursor.rowPath[0] === table.rows.length - 1;
 }

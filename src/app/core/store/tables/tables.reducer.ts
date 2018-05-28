@@ -18,9 +18,9 @@
  */
 
 import {copyAndSpliceArray} from '../../../shared/utils/array.utils';
-import {TableBodyCursor, TableHeaderCursor} from './table-cursor';
-import {EMPTY_TABLE_ROW, TableColumn, TableModel, TablePart, TableRow} from './table.model';
-import {addTableColumn, maxColumnDepth, moveTableColumn, replaceTableColumns, splitRowPath} from './table.utils';
+import {TableHeaderCursor} from './table-cursor';
+import {TableColumn, TableModel, TablePart, TableRow} from './table.model';
+import {maxColumnDepth, moveTableColumn, replaceTableColumns, splitRowPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {initialTablesState, tablesAdapter, TablesState} from './tables.state';
 
@@ -32,8 +32,6 @@ export function tablesReducer(state = initialTablesState(), action: TablesAction
       return tablesAdapter.removeOne(action.payload.tableId, state);
     case TablesActionType.ADD_PART:
       return addPart(state, action);
-    case TablesActionType.ADD_COLUMN:
-      return addColumn(state, action);
     case TablesActionType.REPLACE_COLUMNS:
       return replaceColumn(state, action);
     case TablesActionType.MOVE_COLUMN:
@@ -46,8 +44,8 @@ export function tablesReducer(state = initialTablesState(), action: TablesAction
       return replaceRows(state, action);
     case TablesActionType.REMOVE_ROW:
       return removeRow(state, action);
-    case TablesActionType.SET_CURSOR:
-      return setCursor(state, action);
+    case TablesActionType.SET_CURSOR_SUCCESS:
+      return {...state, cursor: action.payload.cursor};
     case TablesActionType.SET_EDITED_ATTRIBUTE:
       return {...state, editedAttribute: action.payload.editedAttribute};
     default:
@@ -59,12 +57,6 @@ function addPart(state: TablesState, action: TablesAction.AddPart): TablesState 
   const table = state.entities[action.payload.tableId];
   const parts = table.parts.concat(action.payload.parts);
   return tablesAdapter.updateOne({id: table.id, changes: {parts}}, state);
-}
-
-function addColumn(state: TablesState, action: TablesAction.AddColumn): TablesState {
-  return updateColumns(state, action.payload.cursor, (columns) => {
-    return addTableColumn(columns, action.payload.cursor.columnPath, action.payload.column);
-  });
 }
 
 function replaceColumn(state: TablesState, action: TablesAction.ReplaceColumns): TablesState {
@@ -110,7 +102,8 @@ function addRows(state: TablesState, action: TablesAction.AddRows): TablesState 
   }
 
   const documentIds = new Set(table.documentIds);
-  addedRows.forEach(row => documentIds.add(row.documentIds[0]));
+  addedRows.filter(row => row.documentIds.length > 0)
+    .forEach(row => documentIds.add(row.documentIds[0]));
 
   return tablesAdapter.updateOne({id: table.id, changes: {rows, documentIds}}, state);
 }
@@ -190,25 +183,6 @@ function removeLinkedRow(rows: TableRow[], rowPath: number[]): TableRow[] {
   row.linkedRows = removeLinkedRow(row.linkedRows, rowPath.slice(1));
   updatedRows.splice(rowIndex, 1, row);
   return updatedRows;
-}
-
-export function setCursor(state: TablesState, action: TablesAction.SetCursor): TablesState {
-  const cursor = action.payload.cursor;
-
-  if (cursor && cursor.rowPath) {
-    const {table} = getTablePart(state, cursor);
-    if (table.parts.length === 1 && isLastInitializedRow(table, cursor)) {
-      const rows = table.rows.concat(EMPTY_TABLE_ROW);
-      return tablesAdapter.updateOne({id: table.id, changes: {rows}}, {...state, cursor});
-    }
-  }
-  return {...state, cursor};
-}
-
-function isLastInitializedRow(table: TableModel, cursor: TableBodyCursor): boolean {
-  return Boolean(cursor.rowPath.length === 1
-    && cursor.rowPath[0] === table.rows.length - 1
-    && table.rows[table.rows.length - 1].documentIds.length);
 }
 
 export function getTablePart(state: TablesState, cursor: TableHeaderCursor): { table: TableModel, part: TablePart } {

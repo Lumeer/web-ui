@@ -136,7 +136,9 @@ export class TableDataCellComponent implements OnChanges {
 
   public onEditEnd(value: string) {
     this.clearEditedAttribute();
-    this.saveData(value);
+    if (value) {
+      this.saveData(value);
+    }
   }
 
   private clearEditedAttribute() {
@@ -261,7 +263,6 @@ export class TableDataCellComponent implements OnChanges {
     const cursor = {...this.cursor, rowPath};
 
     this.store.dispatch(new TablesAction.ReplaceRows({cursor, rows: [EMPTY_TABLE_ROW], deleteCount: 0}));
-    this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
   }
 
   public onRemoveRow() {

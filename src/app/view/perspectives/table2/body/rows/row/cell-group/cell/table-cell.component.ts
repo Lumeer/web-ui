@@ -28,12 +28,11 @@ import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-c
 import {TableModel, TableSingleColumn} from '../../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
 import {selectTableCursorSelected} from '../../../../../../../../core/store/tables/tables.state';
-import {Direction} from '../../../../../../../../shared/direction';
-import {KeyCode} from '../../../../../../../../shared/key-code';
 
 @Component({
   selector: 'table-cell',
   templateUrl: './table-cell.component.html',
+  styleUrls: ['./table-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableCellComponent implements OnChanges {

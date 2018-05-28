@@ -18,8 +18,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, SimpleChange, SimpleChanges} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../core/store/app.state';
 import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
 import {TableModel, TablePart} from '../../../../core/store/tables/table.model';
+import {TablesAction} from '../../../../core/store/tables/tables.action';
 
 @Component({
   selector: 'table-header',
@@ -33,6 +36,9 @@ export class TableHeaderComponent {
   public table: TableModel;
 
   public cursor: TableHeaderCursor;
+
+  public constructor(private store: Store<AppState>) {
+  }
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.table && this.table && hasTableIdChanged(changes.table)) {
@@ -50,6 +56,10 @@ export class TableHeaderComponent {
 
   public trackByPartIndex(index: number, part: TablePart): number {
     return part.index;
+  }
+
+  public onRowNumberColumnClick() {
+    this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
   }
 
 }

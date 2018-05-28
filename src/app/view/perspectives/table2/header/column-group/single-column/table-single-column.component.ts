@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {Actions} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs/Observable';
-import {first, tap} from 'rxjs/operators';
+import {first, map, tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../core/store/collections/collection.model';
@@ -32,11 +32,12 @@ import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.m
 import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-types.state';
 import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
 import {areTableHeaderCursorsEqual, TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
-import {TableColumn, TableCompoundColumn, TableModel, TablePart, TableSingleColumn} from '../../../../../../core/store/tables/table.model';
+import {TableCompoundColumn, TableModel, TablePart, TableSingleColumn} from '../../../../../../core/store/tables/table.model';
 import {findTableColumn, splitColumnPath} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../core/store/tables/tables.action';
 import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.state';
-import {extractAttributeLastName, extractAttributeParentName, filterAttributesByDepth, generateAttributeName, splitAttributeName} from '../../../../../../shared/utils/attribute.utils';
+import {DialogService} from '../../../../../../dialog/dialog.service';
+import {extractAttributeLastName, extractAttributeParentName, filterAttributesByDepth} from '../../../../../../shared/utils/attribute.utils';
 import {TableEditableCellComponent} from '../../../shared/editable-cell/table-editable-cell.component';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
@@ -46,7 +47,7 @@ import {TableColumnContextMenuComponent} from './context-menu/table-column-conte
   templateUrl: './table-single-column.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy {
+export class TableSingleColumnComponent implements OnInit, OnChanges {
 
   @Input()
   public table: TableModel;
@@ -66,20 +67,25 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
   @ViewChild(TableColumnContextMenuComponent)
   public contextMenuComponent: TableColumnContextMenuComponent;
 
-  public collection: CollectionModel;
-  public linkType: LinkTypeModel;
+  public collection$: Observable<CollectionModel>;
+  public linkType$: Observable<LinkTypeModel>;
+  public attributes$: Observable<AttributeModel[]>;
+  public attribute$: Observable<AttributeModel>;
 
-  public attribute: AttributeModel;
+  public collectionId: string;
+  public linkTypeId: string;
   public lastName: string;
 
   public selected$: Observable<boolean>;
   public edited: boolean;
 
   private editSubscription: Subscription;
-  public subscriptions: Subscription = new Subscription();
+  private attributesSubscription: Subscription;
 
   public constructor(private actions$: Actions,
                      private attributeNameChangedPipe: AttributeNameChangedPipe,
+                     private changeDetector: ChangeDetectorRef,
+                     private dialogService: DialogService,
                      private i18n: I18n,
                      private store: Store<AppState>) {
   }
@@ -89,35 +95,39 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   private loadEntity() {
-    if (this.getPart().collectionId) {
-      this.loadCollection();
+    const part = this.getPart();
+    if (part.collectionId) {
+      this.collection$ = this.loadCollection(part.collectionId);
+      this.attributes$ = this.collection$.pipe(
+        map(collection => collection.attributes)
+      );
     }
-    if (this.getPart().linkTypeId) {
-      this.loadLinkType();
+    if (part.linkTypeId) {
+      this.linkType$ = this.loadLinkType(part.linkTypeId);
+      this.attributes$ = this.linkType$.pipe(
+        map(linkType => linkType.attributes)
+      );
     }
-  }
-
-  private loadCollection() {
-    this.subscriptions.add(
-      this.store.select(selectCollectionById(this.getPart().collectionId)).subscribe(collection => {
-        this.collection = collection;
-        this.initializeAttribute(this.collection.attributes);
+    this.attribute$ = this.attributes$.pipe(
+      map(attributes => this.findAttribute(attributes) || {name: this.column.attributeName, constraints: []}),
+      tap(attribute => {
+        if (attribute && !this.lastName) {
+          this.lastName = extractAttributeLastName(attribute.name);
+        }
       })
     );
   }
 
-  private loadLinkType() {
-    this.subscriptions.add(
-      this.store.select(selectLinkTypeById(this.getPart().linkTypeId)).subscribe(linkType => {
-        this.linkType = linkType;
-        this.initializeAttribute(this.linkType.attributes);
-      })
+  private loadCollection(collectionId: string): Observable<CollectionModel> {
+    return this.store.select(selectCollectionById(collectionId)).pipe(
+      tap(collection => this.collectionId = collection.id)
     );
   }
 
-  private initializeAttribute(attributes: AttributeModel[]) {
-    this.attribute = this.findAttribute(attributes) || {name: this.column.attributeName, constraints: []};
-    this.lastName = extractAttributeLastName(this.attribute.name);
+  private loadLinkType(linkTypeId: string): Observable<LinkTypeModel> {
+    return this.store.select(selectLinkTypeById(linkTypeId)).pipe(
+      tap(linkType => this.linkTypeId = linkType.id)
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -133,15 +143,6 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
         this.edited = selected ? this.edited : false;
 
         this.bindOrUnbindEditSelectedCell(selected);
-
-        // TODO probably better to do in action
-        if (selected && this.table.parts.length === 1 && this.cursor.columnPath.length === 1
-          && this.cursor.columnPath[0] === this.getPart().columns.length - 1 && this.attribute && this.attribute.id) {
-          const attributeName = generateAttributeName(this.getAttributes());
-          const column = new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
-          const cursor = {...this.cursor, columnPath: [this.cursor.columnPath[0] + 1]};
-          this.store.dispatch(new TablesAction.AddColumn({cursor, column}));
-        }
       })
     );
   }
@@ -160,7 +161,12 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    if (this.editSubscription) {
+      this.editSubscription.unsubscribe();
+    }
+    if (this.attributesSubscription) {
+      this.attributesSubscription.unsubscribe();
+    }
   }
 
   private findAttribute(attributes: AttributeModel[]) {
@@ -177,27 +183,39 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
 
   public onEditEnd(lastName: string) {
     this.edited = false;
-
-    if (this.attributeNameChangedPipe.transform(this.attribute, lastName) && this.isUniqueAttributeName(lastName)) {
-      this.renameAttribute(lastName);
+    if (!lastName || this.dialogService.isDialogOpen()) {
+      return;
     }
+
+    if (this.attributesSubscription) {
+      this.attributesSubscription.unsubscribe();
+    }
+    this.attributesSubscription = Observable.combineLatest(this.attributes$, this.attribute$).pipe(
+      first()
+    ).subscribe(([attributes, attribute]) => {
+      if (this.attributeNameChangedPipe.transform(attribute, lastName)
+        && this.isUniqueAttributeName(attributes, attribute ? attribute.id : null, lastName)) {
+        this.renameAttribute(attribute, lastName);
+        setTimeout(() => this.changeDetector.detectChanges());
+      }
+    });
   }
 
-  private renameAttribute(lastName: string) {
-    const parentName = extractAttributeParentName(this.attribute.name);
+  private renameAttribute(oldAttribute: AttributeModel, lastName: string) {
+    const parentName = extractAttributeParentName(oldAttribute.name);
     const name = parentName ? `${parentName}.${lastName}` : lastName;
-    const attribute = {...this.attribute, name};
+    const attribute = {...oldAttribute, name};
 
-    if (this.collection) {
+    if (this.collectionId) {
       this.renameCollectionAttribute(attribute);
     }
-    if (this.linkType) {
+    if (this.linkTypeId) {
       // TODO
     }
   }
 
   private renameCollectionAttribute(attribute: AttributeModel) {
-    if (this.attribute.id) {
+    if (attribute.id) {
       this.updateCollectionAttribute(attribute);
     } else {
       this.createCollectionAttribute(attribute);
@@ -211,7 +229,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
     });
 
     this.store.dispatch(new CollectionsAction.CreateAttributes({
-      collectionId: this.collection.id,
+      collectionId: this.collectionId,
       attributes: [attribute],
       nextAction
     }));
@@ -219,25 +237,25 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
 
   private updateCollectionAttribute(attribute: AttributeModel) {
     this.store.dispatch(new CollectionsAction.ChangeAttribute({
-      collectionId: this.collection.id,
-      attributeId: this.attribute.id,
+      collectionId: this.collectionId,
+      attributeId: attribute.id,
       attribute
     }));
   }
 
-  public isUniqueAttributeName(lastName: string): boolean {
+  public isUniqueAttributeName(attributes: AttributeModel[], attributeId: string, lastName: string): boolean {
     if (this.cursor.columnPath.length === 1) {
-      return filterAttributesByDepth(this.getAttributes(), 1)
-        .filter(attribute => this.attribute.id !== attribute.id)
+      return filterAttributesByDepth(attributes, 1)
+        .filter(attribute => attributeId !== attribute.id)
         .every(attribute => attribute.name !== lastName);
     }
 
     const parentColumn = findTableColumn(this.getPart().columns, this.cursor.columnPath.slice(0, -1)) as TableCompoundColumn;
-    const parentAttribute = this.getAttributes().find(attribute => attribute.id === parentColumn.parent.attributeId);
+    const parentAttribute = attributes.find(attribute => attribute.id === parentColumn.parent.attributeId);
     const prefix = `${parentAttribute.name}.`;
-    return this.getAttributes()
+    return attributes
       .filter(attribute => attribute.name.startsWith(prefix))
-      .filter(attribute => this.attribute.id !== attribute.id)
+      .filter(attribute => attributeId !== attribute.id)
       .every(attribute => extractAttributeLastName(attribute.name) !== lastName);
   }
 
@@ -245,13 +263,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
     const {parentPath, columnIndex} = splitColumnPath(this.cursor.columnPath);
     const columnPath = parentPath.concat(columnIndex + (next ? 1 : 0));
     const cursor = {...this.cursor, columnPath};
-    this.store.dispatch(new TablesAction.AddColumn({cursor, column: this.createNewColumn()}));
-  }
-
-  private createNewColumn(): TableColumn {
-    const {parentName} = splitAttributeName(this.column.attributeId);
-    const attributeName = generateAttributeName(this.getAttributes(), parentName);
-    return new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
+    this.store.dispatch(new TablesAction.AddColumn({cursor}));
   }
 
   public onEdit() {
@@ -267,11 +279,16 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
   }
 
   public onRemove() {
-    if (this.attribute) {
-      this.showRemoveConfirm();
-    } else {
-      this.removeUninitializedColumn();
+    if (this.attributesSubscription) {
+      this.attributesSubscription.unsubscribe();
     }
+    this.attributesSubscription = this.attribute$.subscribe(attribute => {
+      if (attribute && attribute.id) {
+        this.showRemoveConfirm();
+      } else {
+        this.removeUninitializedColumn();
+      }
+    });
   }
 
   private showRemoveConfirm() {
@@ -289,16 +306,6 @@ export class TableSingleColumnComponent implements OnInit, OnChanges, OnDestroy 
 
   private removeUninitializedColumn() {
     this.store.dispatch(new TablesAction.RemoveColumn({cursor: this.cursor}));
-  }
-
-  private getAttributes(): AttributeModel[] {
-    if (this.collection) {
-      return this.collection.attributes;
-    }
-    if (this.linkType) {
-      return this.linkType.attributes;
-    }
-    return [];
   }
 
   public onMouseDown() {

@@ -1,26 +1,25 @@
 <div (mousedown)="onMouseDown()"
      class="table-border-right table-border-bottom h-100">
-  <table-editable-cell *ngIf="attribute"
-                       [contextMenu]="contextMenuComponent?.contextMenu"
+  <table-editable-cell [contextMenu]="contextMenuComponent?.contextMenu"
                        [selected]="selected$ | async"
-                       [style.background]="collection | columnBackground:(attribute | attributeNameChanged:lastName)"
-                       [value]="attribute | attributeLastName"
+                       [style.background]="collection$ | async | columnBackground:(attribute$ | async | attributeNameChanged:lastName)"
+                       [value]="attribute$ | async | attributeLastName"
                        (valueChange)="onValueChange($event)"
                        (editStart)="onEditStart()"
                        (editEnd)="onEditEnd($event)"
                        class="d-block h-100 font-italic {{cursor | dragClass}}">
   </table-editable-cell>
-  <table-attribute-suggestions *ngIf="edited && attribute && !attribute.id && !(attribute | attributeParentName)"
-                               [attributeName]="attribute | attributeName:lastName"
-                               [collection]="collection"
+  <table-attribute-suggestions *ngIf="edited && !(attribute$ | async | entityCreated) && !(attribute$ | async | attributeParentName)"
+                               [attributeName]="attribute$ | async | attributeName:lastName"
+                               [collection]="collection$ | async"
                                [cursor]="cursor"
                                [table]="table">
   </table-attribute-suggestions>
 </div>
 
 <table-column-context-menu #contextMenu
-                           *ngIf="attribute && cursor"
-                           [attribute]="attribute"
+                           *ngIf="(attribute$ | async) && cursor"
+                           [attribute]="attribute$ | async"
                            [cursor]="cursor"
                            [leaf]="leaf"
                            (add)="onAdd($event)"

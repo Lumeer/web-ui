@@ -82,7 +82,8 @@ import {LinksModule} from "./links/links.module";
     ResourceHeaderComponent,
     DocumentModule,
     PreviewResultsModule,
-    LinksModule
+    LinksModule,
+    PipesModule,
   ]
 })
 export class SharedModule {

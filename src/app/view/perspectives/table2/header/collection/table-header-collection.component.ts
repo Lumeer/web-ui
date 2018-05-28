@@ -25,6 +25,7 @@ import {CollectionModel} from '../../../../../core/store/collections/collection.
 import {selectCollectionById} from '../../../../../core/store/collections/collections.state';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableModel, TablePart} from '../../../../../core/store/tables/table.model';
+import {TablesAction} from '../../../../../core/store/tables/tables.action';
 
 @Component({
   selector: 'table-header-collection',
@@ -52,6 +53,10 @@ export class TableHeaderCollectionComponent implements OnChanges {
     if (changes.part && this.part) {
       this.collection$ = this.store.select(selectCollectionById(this.part.collectionId));
     }
+  }
+
+  public onCaptionClick() {
+    this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
   }
 
 }

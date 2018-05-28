@@ -20,11 +20,14 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {ColorsPipe} from './colors.pipe';
-import {PrefixPipe} from './prefix.pipe';
+import {FilterPerspectivesPipe} from './filter-perspectives.pipe';
 import {IconsPipe} from './icons.pipe';
-import {PixelPipe} from './pixel.pipe';
-import {NativeDatePipe} from './native-date.pipe';
 import {LightenColorPipe} from './lighten-color.pipe';
+import {NativeDatePipe} from './native-date.pipe';
+import {PerspectiveIconPipe} from './perspective-icon.pipe';
+import {PixelPipe} from './pixel.pipe';
+import {PrefixPipe} from './prefix.pipe';
+import { EmptyPipe } from './empty.pipe';
 
 @NgModule({
   imports: [
@@ -36,7 +39,10 @@ import {LightenColorPipe} from './lighten-color.pipe';
     IconsPipe,
     ColorsPipe,
     PrefixPipe,
-    NativeDatePipe
+    NativeDatePipe,
+    PerspectiveIconPipe,
+    FilterPerspectivesPipe,
+    EmptyPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -44,7 +50,10 @@ import {LightenColorPipe} from './lighten-color.pipe';
     IconsPipe,
     ColorsPipe,
     PrefixPipe,
-    NativeDatePipe
+    NativeDatePipe,
+    PerspectiveIconPipe,
+    FilterPerspectivesPipe,
+    EmptyPipe,
   ]
 })
 export class PipesModule {

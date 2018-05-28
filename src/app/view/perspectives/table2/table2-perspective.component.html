@@ -7,11 +7,16 @@
 <div #positioner></div>
 <div *ngIf="query | displayable"
      [style.height]="height"
-     (clickOutside)="onClickOutside()"
-     class="table d-flex flex-column m-0">
-  <table-header [table]="table">
-  </table-header>
-  <table-body [table]="table"
-              [query]="query">
-  </table-body>
+     class="table d-flex flex-column align-items-start m-0">
+  <div (clickOutside)="onClickOutside($event)"
+       class="d-flex flex-column">
+    <table-header [table]="table"
+                  class="d-block pr-4">
+    </table-header>
+    <table-body [table]="table"
+                [query]="query"
+                class="d-block pr-4 pb-4">
+    </table-body>
+  </div>
+  <div class="flex-grow-1"></div>
 </div>

@@ -30,11 +30,11 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {selectDocumentsByQuery, selectDocumentsQueries} from '../../../../core/store/documents/documents.state';
 import {selectQuery} from '../../../../core/store/navigation/navigation.state';
+import {areQueriesEqual} from '../../../../core/store/navigation/query.helper';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
 import {UserSettingsService} from '../../../../core/user-settings.service';
 import {SizeType} from '../../../../shared/slider/size-type';
-import {QueryHelper} from "../../../../core/store/navigation/query.helper";
 import {QueryModel} from "../../../../core/store/navigation/query.model";
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
@@ -245,7 +245,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
     const loadedSubscription = this.store.select(selectDocumentsQueries)
       .pipe(
-        map(queries => queries.filter(query => QueryHelper.equal(query, this.currentQuery)))
+        map(queries => queries.filter(query => areQueriesEqual(query, this.currentQuery)))
       )
       .subscribe(queries => this.loaded = queries && queries.length > 0);
     this.subscriptions.add(loadedSubscription);

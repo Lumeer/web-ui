@@ -84,9 +84,12 @@ export class TableEditableCellComponent implements OnChanges {
     event.stopPropagation();
     switch (event.keyCode) {
       case KeyCode.Enter:
-      case KeyCode.Escape:
       case KeyCode.F2:
         this.stopEditing();
+        event.preventDefault();
+        return;
+      case KeyCode.Escape:
+        this.stopEditing(true);
         event.preventDefault();
         return;
     }
@@ -105,7 +108,7 @@ export class TableEditableCellComponent implements OnChanges {
     this.edited = true;
 
     const element = this.editableCell.nativeElement;
-    if (letter && !element.textContent) {
+    if (letter) {
       element.textContent = letter;
     }
 
@@ -113,15 +116,21 @@ export class TableEditableCellComponent implements OnChanges {
     setTimeout(() => HtmlModifier.setCursorAtTextContentEnd(this.editableCell.nativeElement));
   }
 
-  private stopEditing() {
+  private stopEditing(cancel?: boolean) {
     if (!this.edited || this.readonly) {
       return;
     }
 
     this.edited = false;
 
-    const value = this.editableCell.nativeElement.textContent;
-    this.editEnd.emit(value);
+    if (cancel) {
+      this.editableCell.nativeElement.textContent = this.value;
+      this.valueChange.emit(this.value);
+      this.editEnd.emit();
+    } else {
+      const value = this.editableCell.nativeElement.textContent;
+      this.editEnd.emit(value);
+    }
   }
 
 }
