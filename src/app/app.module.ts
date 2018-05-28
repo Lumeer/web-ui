@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {APP_INITIALIZER, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+import {APP_INITIALIZER, ErrorHandler, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {I18n} from '@ngx-translate/i18n-polyfill';

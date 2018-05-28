@@ -17,19 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ErrorHandler, Injectable} from '@angular/core';
+import {ErrorHandler, Injectable} from "@angular/core";
 
-import {LumeerError} from './lumeer.error';
+declare const require; // Use the require method provided by webpack
+const Raven = require('raven-js');
 
-/**
- * This class provides handling unexpecting errors
- */
+Raven
+  .config('https://518f3e95639941769be32abe63ad9288@sentry.io/1213943')
+  .install();
+
 @Injectable()
-export class LumeerErrorHandler implements ErrorHandler {
-
-  public handleError(error: LumeerError): void {
-    // TODO use Rollbar or something similar
-    console.error(error);
+export class RavenErrorHandler implements ErrorHandler {
+  handleError(err:any) : void {
+    console.error(err);
+    
+    if (LUMEER_ENV === 'production') {
+      Raven.captureException(err.originalError || err);
+    }
   }
-
 }

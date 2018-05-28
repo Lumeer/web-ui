@@ -27,7 +27,6 @@ import {ClickOutsideModule} from 'ng-click-outside';
 import {SnotifyComponent, SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import {SharedModule} from '../shared/shared.module';
 import {WorkspaceGuard} from '../workspace/workspace.guard';
-import {LumeerErrorHandler} from './error/lumeer-error.handler';
 import {GuardsModule} from './guards/guards.module';
 import {HomeComponent} from './home.component';
 import {NotificationService} from './notifications/notification.service';
@@ -49,6 +48,7 @@ import {TopPanelComponent} from './top-panel/top-panel.component';
 import {UserSettingsService} from './user-settings.service';
 import {CollectionValidators} from './validators/collection.validators';
 import {GlobalService} from './rest/global.service';
+import {RavenErrorHandler} from "./error/raven-error.handler.ts";
 
 @NgModule({
   imports: [
@@ -67,6 +67,10 @@ import {GlobalService} from './rest/global.service';
     HomeComponent
   ],
   providers: [
+    {
+      provide: ErrorHandler,
+      useClass: RavenErrorHandler
+    },
     CollectionService,
     DocumentService,
     OrganizationService,
@@ -81,7 +85,6 @@ import {GlobalService} from './rest/global.service';
     LinkTypeService,
     EventService,
     GlobalService,
-    {provide: ErrorHandler, useClass: LumeerErrorHandler},
     {provide: 'SnotifyToastConfig', useValue: ToastDefaults},
     SnotifyService,
     NotificationService,
