@@ -489,7 +489,7 @@ export class TablesEffects {
       if (!cursor) {
         const lastRowIndex = table.rows.length - 1;
         const lastRow = table.rows[lastRowIndex];
-        if (lastRow && lastRow.documentIds.length === 0) {
+        if (lastRowIndex > 0 && lastRow && lastRow.documentIds.length === 0) {
           actions.push(new TablesAction.ReplaceRows({
             cursor: {
               tableId: table.id,
@@ -504,7 +504,7 @@ export class TablesEffects {
         const {columns} = table.parts[0];
         const lastColumnIndex = columns.length - 1;
         const lastColumn = columns[lastColumnIndex];
-        if (lastColumn && lastColumn.type === TableColumnType.COMPOUND && !(lastColumn as TableCompoundColumn).parent.attributeId) {
+        if (lastColumnIndex > 0 && lastColumn && lastColumn.type === TableColumnType.COMPOUND && !(lastColumn as TableCompoundColumn).parent.attributeId) {
           actions.push(new TablesAction.ReplaceColumns({
             cursor: {
               tableId: table.id,
