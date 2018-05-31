@@ -49,6 +49,7 @@ import {UserSettingsService} from './user-settings.service';
 import {CollectionValidators} from './validators/collection.validators';
 import {GlobalService} from './rest/global.service';
 import {RavenErrorHandler} from "./error/raven-error.handler.ts";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   imports: [
@@ -60,7 +61,8 @@ import {RavenErrorHandler} from "./error/raven-error.handler.ts";
     SharedModule,
     SnotifyModule,
     ClickOutsideModule,
-    GuardsModule
+    GuardsModule,
+    BrowserAnimationsModule
   ],
   declarations: [
     TopPanelComponent,
