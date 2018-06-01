@@ -179,7 +179,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   private alreadyInCollection(attrName: string): boolean {
-    return this.collection.attributes.findIndex(attr => attr.name === attr.name) != - 1;
+    return this.collection.attributes.findIndex(attr => attr.name === attrName) >= 0;
   }
 
   private prepareUpdatedDocument(): DocumentModel {
