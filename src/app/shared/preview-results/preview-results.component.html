@@ -1,3 +1,16 @@
+<div class="row my-2">
+  <div class="col">
+    <button type="button"
+            class="btn btn-sm btn-success"
+            title="Add Document"
+            i18n-title="@@shared.preview.results.addDocument"
+            [disabled]="!hasWriteAccess"
+            (click)="onNewDocument()">
+      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+      <span class="font-weight-bold" i18n="@@shared.preview.results.addDocument">New Document</span>
+    </button>
+  </div>
+</div>
 <div class="row" *ngIf="(collections$ | async).length > 1 || (documents$ | async).length > 1">
   <div class="col">
     <p class="title small text-uppercase mb-0"><a href="#preview-collapse" data-toggle="collapse" class="preview" i18n="@@shared.preview.results.moreResults">There are multiple results, please select one&hellip;</a></p>
@@ -11,8 +24,13 @@
   </div>
   <div class="row justify-content-center" *ngIf="(collections$ | async).length > 1 || (documents$ | async).length > 1">
     <div class="col">
-      <preview-results-table [documents]="documents$ | async" [collection]="collection$ | async" (selectDocument)="setActiveDocument($event)"></preview-results-table>
+      <preview-results-table [activeIndex]="activeIndex" [documents]="documents$ | async" [collection]="collection$ | async" (selectDocument)="setActiveDocument($event)"></preview-results-table>
     </div>
   </div>
   <hr/>
+</div>
+<div class="row" *ngIf="(collections$ | async).length >= 1 && (documents$ | async).length == 0">
+  <div class="col justify-content-center text-lg-center">
+    <p class="lead font-weight-bold" i18n="@@shared.preview.results.noResults">No documents found!</p>
+  </div>
 </div>

@@ -54,6 +54,9 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   @Output()
   public documentUpdate = new EventEmitter<DocumentModel>();
 
+  @Input()
+  public hasWriteAccess = false;
+
   public rows: DetailRow[] = [];
 
   public createdBy$: Observable<string>;

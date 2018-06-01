@@ -17,50 +17,83 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {PerspectiveComponent} from "../perspective.component";
-import {ViewConfigModel} from "../../../core/store/views/view.model";
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {DocumentModel} from "../../../core/store/documents/document.model";
 import {QueryModel} from "../../../core/store/navigation/query.model";
 import {CollectionModel} from "../../../core/store/collections/collection.model";
-import {Observable} from "rxjs/Observable";
+import {selectCollectionById} from "../../../core/store/collections/collections.state";
+import {withLatestFrom} from "rxjs/operators";
+import {selectCurrentUserForWorkspace} from "../../../core/store/users/users.state";
+import {Role} from "../../../core/model/role";
+import {userRolesInResource} from "../../../shared/utils/resource.utils";
+import {Subscription} from "rxjs/Subscription";
+import {Store} from "@ngrx/store";
+import {AppState} from "../../../core/store/app.state";
 
 @Component({
   selector: 'detail-perspective',
   templateUrl: './detail-perspective.component.html',
   styleUrls: ['./detail-perspective.component.scss']
 })
-export class DetailPerspectiveComponent implements PerspectiveComponent, OnInit {
+export class DetailPerspectiveComponent implements OnInit, OnDestroy {
 
-  @Input()
-  public linkedDocument: DocumentModel;
-
-  @Input()
   public query: QueryModel;
 
   @Input()
-  public config: ViewConfigModel = {};
-
-  @Input()
   public embedded: boolean;
-
-  @Input()
-  public path: number[] = [];
 
   public selectedCollection: CollectionModel;
 
   public selectedDocument: DocumentModel;
 
-  constructor() { }
+  private userRightsSubscription: Subscription;
+
+  public hasWriteAccess = false;
+
+  private subscriptions = new Subscription();
+
+  constructor(private store: Store<AppState>) { }
 
   public ngOnInit() {
+    this.subscribeAll();
+  }
+
+  public ngOnDestroy(): void {
+    this.unsubscribeAll();
+  }
+
+  private subscribeAll(): void {
+  }
+
+  private unsubscribeAll(): void {
+    this.subscriptions.unsubscribe();
+    this.unsubscribeUserRights();
   }
 
   public selectCollection(collection: CollectionModel) {
     this.selectedCollection = collection;
+    this.hasWriteAccess = false;
+    this.subscribeUserRights();
   }
 
   public selectDocument(document: DocumentModel) {
     this.selectedDocument = document;
+  }
+
+  private subscribeUserRights(): void {
+    this.unsubscribeUserRights();
+
+    this.userRightsSubscription = this.store.select(selectCollectionById(this.selectedCollection.id)).pipe(
+      withLatestFrom(this.store.select(selectCurrentUserForWorkspace))
+    ).subscribe(([collection, user]) => {
+      const roles = userRolesInResource(user, collection);
+      this.hasWriteAccess = roles.includes(Role.Write);
+    });
+  }
+
+  private unsubscribeUserRights(): void {
+    if (this.userRightsSubscription) {
+      this.userRightsSubscription.unsubscribe();
+    }
   }
 }

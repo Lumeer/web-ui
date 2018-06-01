@@ -20,12 +20,13 @@
               [key]="row.name"
               [value]="row.value"
               [emitKeyPress]="row.id"
+              [readOnly]="!hasWriteAccess"
               (change)="submitRowChange(idx, $event)"
               (remove)="onRemoveRow(idx)"
               [warning]="row.warning">
   </key-value>
 </ng-container>
-<div class="row border-top mb-4">
+<div *ngIf="hasWriteAccess" class="row border-top mb-4">
   <div class="col">
     <button class="btn btn-sm btn-success m-2" (click)="addAttrRow()">
       <i class="fa fa-plus-circle" aria-hidden="true"></i>
