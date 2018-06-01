@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <base href="<%= htmlWebpackPlugin.options.publicPath %>">
+    <base href="/">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title><%= htmlWebpackPlugin.options.title %></title>
-    <link rel="stylesheet" type="text/css" href="font-awesome/fontawesome-all.min.css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" type="text/css" href="assets/font-awesome/fontawesome-all.min.css">
     <link href="https://cdn.quilljs.com/1.3.4/quill.bubble.css" rel="stylesheet">
     <link href="https://cdn.quilljs.com/1.3.4/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
@@ -22,24 +22,15 @@
 
     <lmr-app>
       <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; justify-content: center; align-items: center;">
-        <img src="img/lumeer-loading.svg" onerror="this.src='img/lumeer-loading.gif'" style="width: 96px; height: 100px;">
+        <img src="assets/img/lumeer-loading.svg" style="width: 96px; height: 100px;">
         <h2 style="font-family: sans-serif; color: #2b3e52">Loading...</h2>
       </div>
     </lmr-app>
-    <script src="https://unpkg.com/@reactivex/rxjs@5.5.6/dist/global/Rx.min.js"></script>
 
     <!-- Bootstrap related Javascripts -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-
-    <!-- Angular related Javascript's libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js" integrity="sha256-3Jy/GbSLrg0o9y5Z5n1uw0qxZECH7C6OQpVBgNFYa0g=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.5.3/shim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/zone.js/0.8.18/zone.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/reflect-metadata/0.1.8/Reflect.min.js" integrity="sha256-rKcebKVvRtSWiAw7TSQXCo6n4ETBl/kxdZXqeY04OvY=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.41/system.src.js" integrity="sha256-66/PZVXLikewAmZD3L6BXE6Zk97p4WGjeyZugpT/Ah4=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/web-animations/2.2.2/web-animations.min.js" integrity="sha256-D/TFw0ZJwHrDxeDSLmQUKR7zRZ0Bl/7tlkcw4dDBozI=" crossorigin="anonymous"></script>
 
     <!-- Spectrum color picker -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>

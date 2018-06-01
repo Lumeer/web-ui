@@ -20,6 +20,7 @@
 import {Injectable} from '@angular/core';
 
 import {Observable} from 'rxjs/Observable';
+import {environment} from '../../../environments/environment';
 import {User} from '../dto';
 import {HttpClient} from "@angular/common/http";
 import 'rxjs/add/observable/of';
@@ -40,7 +41,7 @@ export class GlobalService {
   }
 
   private apiPrefix(): string {
-    return `/${API_URL}/rest/global`;
+    return `/${environment.apiUrl}/rest/global`;
   }
 
 }

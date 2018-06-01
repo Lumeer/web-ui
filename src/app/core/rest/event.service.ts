@@ -20,6 +20,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Store} from '@ngrx/store';
+import {EMPTY} from 'rxjs/internal/observable/empty';
+import {environment} from '../../../environments/environment';
 
 import {LumeerError} from '../error/lumeer.error';
 import {Event} from '../dto/Event';
@@ -75,7 +77,7 @@ export class EventService {
 
     LocalStorage.set(collectionKey, events);
 
-    return Observable.empty();
+    return EMPTY;
   }
 
   public getEvents(collectionId: string): Observable<Event[]> {
@@ -89,7 +91,7 @@ export class EventService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
+    return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
   }
 
   private handleGlobalError(error: HttpErrorResponse): LumeerError {

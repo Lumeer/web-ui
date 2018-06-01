@@ -17,13 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Environment} from './environment-type';
-import {environmentVariables} from './environment-variables';
+import {ErrorHandler, Injectable} from '@angular/core';
+import * as Raven from 'raven-js';
+import {environment} from '../../../environments/environment';
 
-export const environment: Environment = {
-  analytics: false,
-  keycloak: false,
-  production: false,
-  storeDevtools: true,
-  ...environmentVariables
-};
+if (environment.sentryDsn) {
+  Raven.config(environment.sentryDsn).install();
+}
+
+@Injectable()
+export class RavenErrorHandler implements ErrorHandler {
+
+  public handleError(err: any): void {
+    console.error(err);
+
+    if (environment.sentryDsn) {
+      Raven.captureException(err.originalError || err);
+    }
+  }
+
+}

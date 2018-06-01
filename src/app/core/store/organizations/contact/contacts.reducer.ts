@@ -23,9 +23,9 @@ import {contactsAdapter, ContactsState, initialContactsState} from "./contacts.s
 export function contactsReducer(state: ContactsState = initialContactsState, action: ContactsAction.All): ContactsState {
   switch (action.type) {
     case ContactsActionType.GET_CONTACT_SUCCESS:
-      return contactsAdapter.upsertOne({id: action.payload.contact.organizationId, changes: action.payload.contact}, state);
+      return contactsAdapter.upsertOne(action.payload.contact, state);
     case ContactsActionType.SET_CONTACT_SUCCESS:
-      return contactsAdapter.upsertOne({id: action.payload.contact.organizationId, changes: action.payload.contact}, state);
+      return contactsAdapter.upsertOne(action.payload.contact, state);
     default:
       return state;
   }

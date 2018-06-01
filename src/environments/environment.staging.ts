@@ -22,7 +22,7 @@ import {environmentVariables} from './environment-variables';
 
 export const environment: Environment = {
   analytics: false,
-  keycloak: false,
+  keycloak: true,
   production: false,
   storeDevtools: true,
   ...environmentVariables

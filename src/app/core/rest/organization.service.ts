@@ -20,6 +20,7 @@
 import {HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
+import {environment} from '../../../environments/environment';
 import {Contact, Organization} from '../dto';
 import {PermissionService} from './permission.service';
 import {ServiceLimits} from "../dto/service-limits";
@@ -95,7 +96,7 @@ export class OrganizationService extends PermissionService {
   }
 
   private apiPrefix(code?: string): string {
-    return `/${API_URL}/rest/organizations${code ? `/${code}` : ''}`;
+    return `/${environment.apiUrl}/rest/organizations${code ? `/${code}` : ''}`;
   }
 
 }

@@ -22,6 +22,7 @@ import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
+import {environment} from '../../../environments/environment';
 import {LinkInstance, Query} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
@@ -60,7 +61,7 @@ export class LinkInstanceService {
     const projectCode = this.workspace.projectCode;
     const suffix = id ? `/${id}` : '';
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/link-instances${suffix}`;
+    return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/link-instances${suffix}`;
   }
 
 }

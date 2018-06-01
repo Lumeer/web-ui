@@ -25,7 +25,7 @@ export function serviceLimitsReducer(state: ServiceLimitsState = initialServiceL
     case ServiceLimitsActionType.GET_ALL_SUCCESS:
       return serviceLimitsAdapter.addAll(action.payload.allServiceLimits, state);
     case ServiceLimitsActionType.GET_SERVICE_LIMITS_SUCCESS:
-      return serviceLimitsAdapter.upsertOne({id: action.payload.serviceLimits.organizationId, changes: action.payload.serviceLimits}, state);
+      return serviceLimitsAdapter.upsertOne(action.payload.serviceLimits, state);
     default:
       return state;
   }

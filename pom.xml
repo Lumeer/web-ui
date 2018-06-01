@@ -36,7 +36,7 @@
             <configuration>
                <webResources>
                   <resource>
-                     <directory>dist</directory>
+                     <directory>dist/lumeer</directory>
                   </resource>
                  <resource>
                    <directory>src/main/webapp</directory>
@@ -75,7 +75,6 @@
                      </arguments>
                      <workingDirectory>${basedir}</workingDirectory>
                      <environmentVariables>
-                        <AOT>true</AOT>
                         <PUBLIC_PATH>/${context.root}/</PUBLIC_PATH>
                      </environmentVariables>
                   </configuration>

@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Environment} from './environment-type';
-import {environmentVariables} from './environment-variables';
+import {EnvironmentVariables} from './environment-variables';
 
-export const environment: Environment = {
-  analytics: false,
-  keycloak: false,
-  production: false,
-  storeDevtools: true,
-  ...environmentVariables
-};
+export interface Environment extends EnvironmentVariables {
+
+  analytics: boolean,
+  keycloak: boolean,
+  production: boolean,
+  storeDevtools: boolean
+
+}

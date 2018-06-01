@@ -24,6 +24,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
+import {environment} from '../../../environments/environment';
 import {Attribute, Collection} from '../dto';
 import {AppState} from '../store/app.state';
 import {PermissionService} from './permission.service';
@@ -124,7 +125,7 @@ export class CollectionService extends PermissionService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
+    return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
   }
 
 }

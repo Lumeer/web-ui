@@ -22,6 +22,7 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {isNullOrUndefined} from 'util';
+import {environment} from '../../../environments/environment';
 
 import {Document} from '../dto';
 import {AppState} from '../store/app.state';
@@ -100,7 +101,7 @@ export class DocumentService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionId}/documents`;
+    return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionId}/documents`;
   }
 
 }
