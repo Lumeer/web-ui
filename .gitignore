@@ -6,5 +6,4 @@ node_modules/
 *.iml
 *.log
 
-.env
-.env.*
+.env.json
