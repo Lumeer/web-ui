@@ -24,14 +24,22 @@ import {AppState} from "../../core/store/app.state";
 import {selectCollectionById, selectCollectionsByQuery} from "../../core/store/collections/collections.state";
 import {Observable} from "rxjs/Observable";
 import {CollectionModel} from "../../core/store/collections/collection.model";
-import {filter, take, tap} from "rxjs/operators";
+import {combineLatest, filter, take, tap, withLatestFrom} from "rxjs/operators";
 import {isNullOrUndefined} from "util";
 import {DocumentModel} from "../../core/store/documents/document.model";
 import {selectDocumentsByCustomQuery} from "../../core/store/documents/documents.state";
 import {selectNavigation} from "../../core/store/navigation/navigation.state";
-import {QueryModel} from "../../core/store/navigation/query.model";
+import {ConditionType, QueryModel} from "../../core/store/navigation/query.model";
 import {Workspace} from "../../core/store/navigation/workspace.model";
 import {DocumentsAction} from "../../core/store/documents/documents.action";
+import {selectCurrentUserForWorkspace} from "../../core/store/users/users.state";
+import {Role} from "../../core/model/role";
+import {userRolesInResource} from "../utils/resource.utils";
+import {selectViewCursor} from "../../core/store/views/views.state";
+import {ViewsAction} from "../../core/store/views/views.action";
+import {CorrelationIdGenerator} from "../../core/store/correlation-id.generator";
+import {AttributeQueryItem} from "../search-box/query-item/model/attribute.query-item";
+import {QueryConverter} from "../../core/store/navigation/query.converter";
 
 @Component({
   selector: 'preview-results',
@@ -40,7 +48,9 @@ import {DocumentsAction} from "../../core/store/documents/documents.action";
 })
 export class PreviewResultsComponent implements OnInit, OnDestroy {
 
-  public selectedCollectionId: string;
+  public selectedCollection: CollectionModel;
+
+  private selectedDocument: DocumentModel;
 
   public collections$: Observable<CollectionModel[]>;
 
@@ -48,11 +58,17 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
 
   public collection$: Observable<CollectionModel>;
 
+  public activeIndex = 0;
+
   private allSubscriptions = new Subscription();
 
   private query: QueryModel;
 
   private collectionQuery: QueryModel;
+
+  private userRightsSubscription: Subscription;
+
+  public hasWriteAccess = false;
 
   @Output()
   public selectCollection = new EventEmitter<CollectionModel>();
@@ -83,11 +99,18 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
     ).subscribe(navigation => this.updateNavigation(navigation.query)));
 
     // initialize when we do not select anything
-    this.allSubscriptions.add(this.collections$.pipe(filter(collections => !!collections), take(1))
-      .subscribe(collections => {
+    this.allSubscriptions.add(this.collections$.pipe(filter(collections => !!collections), take(1), withLatestFrom(this.store.select(selectViewCursor)))
+      .subscribe(([collections, cursor]) => {
         this.collectionsCount = collections.length;
-        if (!this.selectedCollectionId) {
-          this.setActiveCollection(collections[0]);
+        if (!this.selectedCollection) {
+          if (cursor && cursor.collectionId) {
+            var collection = collections.find(c => c.id === cursor.collectionId);
+          }
+          if (!collection) {
+            var collection = collections[0];
+          }
+
+          this.setActiveCollection(collection);
         }
       }));
   }
@@ -106,37 +129,142 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
 
   private unsubscribeAll() {
     this.allSubscriptions.unsubscribe();
+    this.unsubscribeUserRights();
   }
 
   public setActiveCollection(collection: CollectionModel) {
-    this.selectedCollectionId = collection.id;
+    this.selectedCollection = collection;
     this.getData();
     this.selectCollection.emit(collection);
+    this.subscribeUserRights();
+    this.updateCursor();
+  }
+
+  private updateCursor() {
+    if (this.selectedCollection && this.selectedDocument) {
+      this.store.dispatch(new ViewsAction.SetCursor({cursor: {collectionId: this.selectedCollection.id, documentId: this.selectedDocument.id}}));
+    }
   }
 
   private updateDataSubscription() {
     if (this.collectionQuery) {
       this.documents$ = this.store.select(selectDocumentsByCustomQuery(this.collectionQuery));
-      this.collection$ = this.store.select(selectCollectionById(this.selectedCollectionId));
+      this.collection$ = this.store.select(selectCollectionById(this.selectedCollection.id));
 
       this.allSubscriptions.add(this.documents$.pipe(filter(documents => !!documents && documents.length > 0),
         tap(documents => {
           this.documentsCount = documents.length;
         }),
-        take(1))
-        .subscribe(documents => this.setActiveDocument(documents[0])));
+        //take(1),
+        withLatestFrom(this.store.select(selectViewCursor)))
+        .subscribe(([documents, cursor]) => {
+          if (cursor && cursor.documentId) {
+            var idx = documents.findIndex(d => d.id === cursor.documentId);
+          }
+          if (!idx || idx < 0) {
+            idx = 0;
+          }
+
+          if (this.activeIndex !== idx || !this.selectedDocument) {
+            this.activeIndex = idx;
+
+            // we might get different index when a new document was added but it is already selected
+            if (!this.selectedDocument || this.selectedDocument.id !== documents[idx].id) {
+              this.setActiveDocument(documents[idx]);
+            }
+          }
+        }));
     }
   }
 
   private getData() {
-    if (this.selectedCollectionId) {
-      this.collectionQuery = Object.assign({}, this.query,{ collectionIds: [this.selectedCollectionId] });
+    if (this.selectedCollection) {
+      this.collectionQuery = Object.assign({}, this.query,{ collectionIds: [this.selectedCollection.id] });
       this.updateDataSubscription();
       this.store.dispatch(new DocumentsAction.Get({ query: this.collectionQuery }));
     }
   }
 
   private setActiveDocument($event: DocumentModel) {
+    this.selectedDocument = $event;
     this.selectDocument.emit($event);
+    this.updateCursor();
   }
+
+  private subscribeUserRights(): void {
+    this.unsubscribeUserRights();
+
+    this.userRightsSubscription = this.store.select(selectCollectionById(this.selectedCollection.id)).pipe(
+      withLatestFrom(this.store.select(selectCurrentUserForWorkspace))
+    ).subscribe(([collection, user]) => {
+      const roles = userRolesInResource(user, collection);
+      this.hasWriteAccess = roles.includes(Role.Write);
+    });
+  }
+
+  private unsubscribeUserRights(): void {
+    if (this.userRightsSubscription) {
+      this.userRightsSubscription.unsubscribe();
+    }
+  }
+
+  public onNewDocument() {
+    this.store.dispatch(new DocumentsAction.Create({
+      document: {
+        collectionId: this.selectedCollection.id,
+        correlationId: CorrelationIdGenerator.generate(),
+        data: this.createData()
+        },
+      callback: id => {
+        this.store.dispatch(new ViewsAction.SetCursor({cursor: {collectionId: this.selectedCollection.id, documentId: id}}));
+
+      }
+    }));
+  }
+
+  private createData(): { [attributeId: string]: any } {
+    if (!this.selectedCollection) {
+      return [];
+    }
+    var data = this.selectedCollection.attributes.reduce((acc, attr) => {
+      acc[attr.id] = '';
+      return acc;
+    }, {});
+
+    if (this.query.filters) {
+      this.query.filters.map(filter => {
+        const attrFilter = QueryConverter.parseFilter(filter);
+
+        if (attrFilter.collectionId === this.selectedCollection.id) {
+          switch (attrFilter.conditionType) {
+            case ConditionType.GreaterThan:
+              data[attrFilter.attributeId] = attrFilter.value + 1;
+              break;
+            case ConditionType.LowerThan:
+              data[attrFilter.attributeId] = attrFilter.value - 1;
+              break;
+            case ConditionType.NotEquals:
+              if (attrFilter.value) {
+                if (typeof attrFilter.value === "number") {
+                  data[attrFilter.attributeId] = attrFilter.value + 1;
+                } else {
+                  data[attrFilter.attributeId] = '';
+                }
+              } else {
+                data[attrFilter.attributeId] = 'N/A';
+              }
+            case ConditionType.GreaterThanEquals:
+            case ConditionType.LowerThanEquals:
+            case ConditionType.Equals:
+            default:
+              data[attrFilter.attributeId] = attrFilter.value;
+          }
+        }
+      });
+    }
+
+    return data;
+  }
+
+
 }

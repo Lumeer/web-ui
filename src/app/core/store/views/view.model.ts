@@ -36,7 +36,7 @@ export interface ViewCursor {
   linkInstanceId?: string;
   collectionId: string;
   documentId: string;
-  attributeId: string;
+  attributeId?: string;
 
 }
 

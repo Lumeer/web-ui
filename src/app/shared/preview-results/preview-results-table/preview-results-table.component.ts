@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DocumentModel} from "../../../core/store/documents/document.model";
 import {CollectionModel} from "../../../core/store/collections/collection.model";
 
@@ -51,13 +51,17 @@ export class PreviewResultsTableComponent implements OnInit {
   constructor() { }
 
   public ngOnInit() {
-    this.activate(this.activeIndex);
+    this.countPage();
   }
 
   public activate(index: number) {
     this.activeIndex = index;
-    this.page = Math.floor(this.activeIndex / PreviewResultsTableComponent.PAGE_SIZE);
+    this.countPage();
     this.selectDocument.emit(this.documents[this.activeIndex]);
+  }
+
+  private countPage(): void {
+    this.page = Math.floor(this.activeIndex / PreviewResultsTableComponent.PAGE_SIZE);
   }
 
   public selectPage(page: number) {
