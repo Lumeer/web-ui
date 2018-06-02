@@ -23,26 +23,37 @@ $ npm start
 
 ## Development
 
+Please note that you do not need to run `npm build` if you want run the application locally (even if the dependencies have been changed). Angular CLI which is used under the hood is able to handle it without running the build command before.
+
+When you run the application locally, it is not possible to configure it using environment variables. But you can choose from three configurations when you run it:
+
+1. `npm start`: uses JIT compiler and default language (English at the moment)
+2. `npm start:cs`: uses AOT compiler and Czech language
+3. `npm start:en`: uses AOT compiler and English language
+
+TSLint will be run with every pull-request so make sure you write nice code!
+
+## Deployment
+
+Here is the example command to build the application with all configuration properties you might need:
+```LUMEER_ENV=production \
+I18N_LOCALE=en \
+SENTRY_DSN=https://<key>@sentry.io/<project> \
+BUILD_NUMBER=42 \
+LUMEER_ENGINE=lumeer-engine \
+mvn clean package -Dcontext.root=en```
+
+• *LUMEER_ENV*: environment in which the application runs (`staging`, `production` or empty)
+• *I18N_LOCALE*: language to be used in the application (`en`, `cs` or empty to use default `en`)
+• *SENTRY_DSN*: Sentry Data Source Name, if set it activates Sentry (recommended for production only)
+• *BUILD_NUMBER*: build number to be shown in the application
+• *LUMEER_ENGINE*: back-end deployment context root
+• *context.root*: front-end deployment context root
+
 If you want to run the application locally on your machine during the development, you have to run [lumeer engine server](https://github.com/Lumeer/engine) and you have to set environment variable `LUMEER_ENGINE` to point web-ui where the engine is running (default value is `lumeer-engine`). 
 
 ## Environment variables
 
-* `LUMEER_ENV` - if you want to disable keycloak for web-ui set it to `development`.
-```
-$ LUMEER_ENV=development
-```
-* LUMEER_ENGINE - Points to the [lumeer engine server](https://github.com/Lumeer/engine), no slashes at start or end. If the server listnens on `localhost:8080/lumeer-engine` set it to:
-```
-$ LUMEER_ENGINE=lumeer-engine
-```
-* BUILD_NUMBER - if this variable is set, the given build number is shown in the top panel dropdown menu
-```
-$ BUILD_NUMBER=42
-```
-* AOT - To turn off or on AOT generation. Default is false.
-```
-$ AOT=true
-```
 * OUTPUT_PATH - Where should the build app should be placed. Good for different language mutations. Default to `dist/`.
 ```
 $ OUTPUT_PATH=dist/
