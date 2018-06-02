@@ -20,7 +20,7 @@
 import {Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {filter} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';

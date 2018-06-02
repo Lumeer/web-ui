@@ -19,10 +19,8 @@
 
 import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable, Subscription} from 'rxjs';
 import {filter, map, tap} from 'rxjs/operators';
-
-import {Subscription} from 'rxjs/Subscription';
 import {isArray, isNullOrUndefined, isObject} from 'util';
 import {CollectionService, SearchService} from '../../../../core/rest';
 import {AppState} from '../../../../core/store/app.state';

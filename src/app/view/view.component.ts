@@ -19,8 +19,7 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
-import {Observable} from 'rxjs/Observable';
+import {Subscription, Observable, combineLatest} from 'rxjs';
 import {filter, first, map, take} from 'rxjs/operators';
 import {Query} from '../core/dto';
 import {AppState} from '../core/store/app.state';
@@ -98,7 +97,7 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   public onSave(name: string) {
     this.subscriptions.add(
-      Observable.combineLatest(
+      combineLatest(
         this.store.select(selectViewConfig),
         this.store.select(selectPerspective)
       ).pipe(take(1)).subscribe(([config, perspective]) => {

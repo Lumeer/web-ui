@@ -20,7 +20,7 @@
 import {AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit} from '@angular/core';
 import {PaymentModel} from "../../../../core/store/organizations/payment/payment.model";
 import {OrganizationModel} from "../../../../core/store/organizations/organization.model";
-import {Subscription} from "rxjs/Subscription";
+import {Subscription} from "rxjs";
 import {ActionsSubject, Store} from "@ngrx/store";
 import {Router} from "@angular/router";
 import {I18n} from "@ngx-translate/i18n-polyfill";

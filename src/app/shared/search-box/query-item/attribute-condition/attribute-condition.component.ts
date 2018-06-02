@@ -18,7 +18,7 @@
  */
 
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 import {KeyCode} from '../../../key-code';
 import {HtmlModifier} from '../../../utils/html-modifier';
 import {AttributeQueryItem} from '../model/attribute.query-item';

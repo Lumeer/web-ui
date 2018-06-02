@@ -23,7 +23,7 @@ import {ContactModel} from "../../../../core/store/organizations/contact/contact
 import {CountriesData} from "../../../../core/store/organizations/contact/countries.data";
 import {OrganizationSettingsComponent} from "../../organization-settings.component";
 import {ActionsSubject} from "@ngrx/store";
-import {Subscription} from "rxjs/Subscription";
+import {Subscription} from "rxjs";
 import {ContactsActionType} from "../../../../core/store/organizations/contact/contacts.action";
 
 @Component({

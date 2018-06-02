@@ -29,7 +29,7 @@ import {NotificationService} from '../../../../core/notifications/notification.s
 import {filter} from 'rxjs/operators';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
 import {isNullOrUndefined} from "util";
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {InputBoxComponent} from '../../../../shared/input/input-box/input-box.component';
 

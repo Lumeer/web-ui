@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {flatMap, map, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {SmartDocUtils} from '../../../view/perspectives/smartdoc/smartdoc.utils';

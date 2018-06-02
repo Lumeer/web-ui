@@ -23,7 +23,7 @@ import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter, withLatestFrom} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../core/store/collections/collections.action';

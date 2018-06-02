@@ -20,8 +20,8 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import 'rxjs/add/observable/of';
-import {Observable} from 'rxjs/Observable';
+
+import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {Group} from '../dto';
 import {AppState} from '../store/app.state';

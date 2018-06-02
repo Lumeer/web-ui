@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
 
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable, combineLatest, of} from 'rxjs';
 import {filter, first, map, mergeMap, switchMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {WorkspaceService} from './workspace.service';
@@ -52,14 +52,14 @@ export class WorkspaceSelectGuard implements CanActivate {
 
   private checkOrFetch(selected: boolean): Observable<boolean> {
     if (selected) {
-      return Observable.of(true);
+      return of(true);
     } else {
       return this.fetchDefault();
     }
   }
 
   private isSomethingSelected(): Observable<boolean> {
-    return Observable.combineLatest(
+    return combineLatest(
       this.store.select(selectSelectedOrganization),
       this.store.select(selectSelectedProject)
     ).pipe(
@@ -75,13 +75,13 @@ export class WorkspaceSelectGuard implements CanActivate {
           return this.workspaceService.getOrganizationFromStoreOrApi(workspace.organizationCode).pipe(
             switchMap(organization => {
               if (isNullOrUndefined(organization)) {
-                return Observable.of(true);
+                return of(true);
               }
               return this.checkProject(workspace.organizationCode, organization.id, workspace.projectCode);
             })
           );
         } else {
-          return Observable.of(true);
+          return of(true);
         }
       })
     );
@@ -103,7 +103,7 @@ export class WorkspaceSelectGuard implements CanActivate {
             this.store.dispatch(new OrganizationsAction.Select({organizationId: orgId}));
             this.store.dispatch(new ProjectsAction.Select({projectId: project.id}));
           }
-          return Observable.of(true);
+          return of(true);
         }
       ));
   }

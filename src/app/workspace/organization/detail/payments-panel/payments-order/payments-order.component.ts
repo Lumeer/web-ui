@@ -22,7 +22,7 @@ import {I18n} from "@ngx-translate/i18n-polyfill";
 import {Store} from "@ngrx/store";
 import {Router} from "@angular/router";
 import {selectServiceLimitsByWorkspace} from "../../../../../core/store/organizations/service-limits/service-limits.state";
-import {Subscription} from "rxjs/Subscription";
+import {Subscription} from "rxjs";
 import {filter} from "rxjs/operators";
 import {isNullOrUndefined} from "util";
 import {AppState} from "../../../../../core/store/app.state";

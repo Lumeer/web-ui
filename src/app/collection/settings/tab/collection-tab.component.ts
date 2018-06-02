@@ -29,7 +29,7 @@ import {isNullOrUndefined} from "util";
 import {filter} from 'rxjs/operators';
 import {selectCollectionByWorkspace} from '../../../core/store/collections/collections.state';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 
 // Class can't be abstract because of an issue with compiler https://github.com/angular/angular/issues/13590
 @Component({template: ''})

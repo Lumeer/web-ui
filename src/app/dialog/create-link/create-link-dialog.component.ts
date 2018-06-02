@@ -22,7 +22,7 @@ import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/form
 import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {filter, map, withLatestFrom} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {selectAllCollections} from '../../core/store/collections/collections.state';

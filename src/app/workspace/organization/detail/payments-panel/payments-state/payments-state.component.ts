@@ -27,7 +27,7 @@ import {Store} from "@ngrx/store";
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {AppState} from "../../../../../core/store/app.state";
 import {OrganizationModel} from "../../../../../core/store/organizations/organization.model";
-import {Subscription} from "rxjs/Subscription";
+import {Subscription} from "rxjs";
 import {selectServiceLimitsByWorkspace} from "../../../../../core/store/organizations/service-limits/service-limits.state";
 import {ServiceLimitsModel} from "../../../../../core/store/organizations/service-limits/service-limits.model";
 import {ServiceLimitsAction} from "../../../../../core/store/organizations/service-limits/service-limits.action";

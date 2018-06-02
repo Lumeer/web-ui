@@ -22,8 +22,8 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
-import {filter, mergeMap, take, withLatestFrom} from 'rxjs/operators';
+import {Observable, combineLatest, of} from 'rxjs';
+import {filter, mergeMap, take} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
@@ -49,7 +49,7 @@ export class OrganizationSettingsGuard implements CanActivate {
 
     const organizationCode = next.paramMap.get('organizationCode');
 
-    return Observable.combineLatest(
+    return combineLatest(
       this.workspaceService.getOrganizationFromStoreOrApi(organizationCode),
       this.store.select(selectCurrentUserForWorkspace)
     ).pipe(
@@ -58,15 +58,15 @@ export class OrganizationSettingsGuard implements CanActivate {
       mergeMap(([organization, user]) => {
         if (isNullOrUndefined(organization)) {
           this.dispatchErrorActionsNotExist();
-          return Observable.of(false);
+          return of(false);
         }
 
         if (!userHasManageRoleInResource(user, organization)) {
           this.dispatchErrorActionsNotPermission();
-          return Observable.of(false);
+          return of(false);
         }
         this.dispatchDataEvents(organization);
-        return Observable.of(true);
+        return of(true);
       })
     );
   }

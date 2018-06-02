@@ -23,7 +23,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 import {AppState} from '../store/app.state';
 import {Store} from '@ngrx/store';
 import {selectCurrentUser} from '../store/users/users.state';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 import {DefaultWorkspaceModel} from '../store/users/user.model';
 import {isNullOrUndefined} from "util";

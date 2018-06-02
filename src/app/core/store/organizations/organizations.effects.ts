@@ -17,13 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
 import {catchError, flatMap, map, mergeMap, filter, tap, withLatestFrom, concatMap} from 'rxjs/operators';
 import {RouteFinder} from '../../../shared/utils/route-finder';
 import {OrganizationService} from '../../rest';
@@ -49,7 +50,7 @@ export class OrganizationsEffects {
     mergeMap(() => this.organizationService.getOrganizations().pipe(
       map(dtos => dtos.map(dto => OrganizationConverter.fromDto(dto))),
       map(organizations => new OrganizationsAction.GetSuccess({organizations: organizations})),
-      catchError(error => Observable.of(new OrganizationsAction.GetFailure({error: error})))
+      catchError(error => of(new OrganizationsAction.GetFailure({error: error})))
     ))
   );
 
@@ -70,7 +71,7 @@ export class OrganizationsEffects {
     filter(([action, codes]) => isNullOrUndefined(codes)),
     mergeMap(() => this.organizationService.getOrganizationsCodes().pipe(
       map((organizationCodes) => new OrganizationsAction.GetCodesSuccess({organizationCodes})),
-      catchError((error) => Observable.of(new OrganizationsAction.GetCodesFailure({error: error})))
+      catchError((error) => of(new OrganizationsAction.GetCodesFailure({error: error})))
     ))
   );
 
@@ -95,7 +96,7 @@ export class OrganizationsEffects {
           return [new OrganizationsAction.CreateSuccess({organization}),
             new OrganizationsAction.GetCodesSuccess({organizationCodes: codes})];
         }),
-        catchError(error => Observable.of(new OrganizationsAction.CreateFailure({error: error})))
+        catchError(error => of(new OrganizationsAction.CreateFailure({error: error})))
       );
     })
   );
@@ -141,7 +142,7 @@ export class OrganizationsEffects {
 
           return actions;
         }),
-        catchError(error => Observable.of(new OrganizationsAction.UpdateFailure({error: error})))
+        catchError(error => of(new OrganizationsAction.UpdateFailure({error: error})))
       );
     })
   );
@@ -171,7 +172,7 @@ export class OrganizationsEffects {
           return [new OrganizationsAction.DeleteSuccess(action.payload),
             new OrganizationsAction.GetCodesSuccess({organizationCodes: codes})];
         }),
-        catchError(error => Observable.of(new OrganizationsAction.DeleteFailure({error: error})))
+        catchError(error => of(new OrganizationsAction.DeleteFailure({error: error})))
       );
     })
   );
@@ -203,10 +204,10 @@ export class OrganizationsEffects {
       }
 
       return observable.pipe(
-        concatMap(() => Observable.of()),
+        concatMap(() => of()),
         catchError((error) => {
           const payload = {organizationId: action.payload.organizationId, type: action.payload.type, permission: action.payload.currentPermission, error};
-          return Observable.of(new OrganizationsAction.ChangePermissionFailure(payload))
+          return of(new OrganizationsAction.ChangePermissionFailure(payload))
         })
       )
     }),

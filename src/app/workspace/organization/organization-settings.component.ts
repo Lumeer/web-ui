@@ -22,9 +22,8 @@ import {Router} from '@angular/router';
 
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
+import {Observable, Subscription} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
 import {isNullOrUndefined} from 'util';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';

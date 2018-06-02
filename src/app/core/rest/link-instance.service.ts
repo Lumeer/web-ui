@@ -21,7 +21,7 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {LinkInstance, Query} from '../dto';
 import {AppState} from '../store/app.state';

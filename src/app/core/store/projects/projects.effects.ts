@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {ProjectService} from '../../rest';
 import {AppState} from '../app.state';
@@ -59,7 +60,7 @@ export class ProjectsEffects {
       return this.projectService.getProjects(organization.code).pipe(
         map(dtos => ({organizationId, projects: dtos.map(dto => ProjectConverter.fromDto(dto, organizationId))})),
         map(payload => new ProjectsAction.GetSuccess(payload)),
-        catchError(error => Observable.of(new ProjectsAction.GetFailure({error})))
+        catchError(error => of(new ProjectsAction.GetFailure({error})))
       );
     })
   );
@@ -89,7 +90,7 @@ export class ProjectsEffects {
       return this.projectService.getProjectCodes(organization.code).pipe(
         map(projectCodes => ({projectCodes, organizationId: action.payload.organizationId})),
         map(({projectCodes, organizationId}) => new ProjectsAction.GetCodesSuccess({organizationId, projectCodes})),
-        catchError((error) => Observable.of(new ProjectsAction.GetCodesFailure({error: error})))
+        catchError((error) => of(new ProjectsAction.GetCodesFailure({error: error})))
       );
     })
   );
@@ -117,7 +118,7 @@ export class ProjectsEffects {
           return [new ProjectsAction.CreateSuccess({project}),
             new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes})];
         }),
-        catchError(error => Observable.of(new ProjectsAction.CreateFailure({error: error})))
+        catchError(error => of(new ProjectsAction.CreateFailure({error: error})))
       );
     })
   );
@@ -181,7 +182,7 @@ export class ProjectsEffects {
 
           return actions;
         }),
-        catchError(error => Observable.of(new ProjectsAction.UpdateFailure({error: error})))
+        catchError(error => of(new ProjectsAction.UpdateFailure({error: error})))
       );
     })
   );
@@ -211,7 +212,7 @@ export class ProjectsEffects {
           return [new ProjectsAction.DeleteSuccess(action.payload),
             new ProjectsAction.GetCodesSuccess({organizationId: action.payload.organizationId, projectCodes: codes})];
         }),
-        catchError(error => Observable.of(new ProjectsAction.DeleteFailure({error: error})))
+        catchError(error => of(new ProjectsAction.DeleteFailure({error: error})))
       );
     })
   );
@@ -245,10 +246,10 @@ export class ProjectsEffects {
       }
 
       return observable.pipe(
-        concatMap(() => Observable.of()),
+        concatMap(() => of()),
         catchError((error) => {
           const payload = {projectId: action.payload.projectId, type: action.payload.type, permission: action.payload.currentPermission, error};
-          return Observable.of(new ProjectsAction.ChangePermissionFailure(payload))
+          return of(new ProjectsAction.ChangePermissionFailure(payload))
         })
       )
     }),

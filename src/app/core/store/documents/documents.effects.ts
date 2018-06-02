@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
 import {catchError, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
 import {CollectionService, DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
@@ -54,7 +55,7 @@ export class DocumentsEffects {
       return this.searchService.searchDocuments(queryDto).pipe(
         map(dtos => dtos.map(dto => DocumentConverter.fromDto(dto))),
         map(documents => new DocumentsAction.GetSuccess({documents: documents})),
-        catchError((error) => Observable.of(new DocumentsAction.GetFailure({error: error})))
+        catchError((error) => of(new DocumentsAction.GetFailure({error: error})))
       );
     })
   );
@@ -105,7 +106,7 @@ export class DocumentsEffects {
         //
         //   return actions;
         // }),
-        catchError((error) => Observable.of(new DocumentsAction.CreateFailure({error: error})))
+        catchError((error) => of(new DocumentsAction.CreateFailure({error: error})))
       );
     })
   );
@@ -141,8 +142,8 @@ export class DocumentsEffects {
   public addFavorite$ = this.actions$.pipe(
     ofType<DocumentsAction.AddFavorite>(DocumentsActionType.ADD_FAVORITE),
     mergeMap(action => this.documentService.addFavorite(action.payload.collectionId, action.payload.documentId).pipe(
-      mergeMap(() => Observable.of()),
-      catchError((error) => Observable.of(new DocumentsAction.AddFavoriteFailure({documentId: action.payload.documentId, error: error})))
+      mergeMap(() => of()),
+      catchError((error) => of(new DocumentsAction.AddFavoriteFailure({documentId: action.payload.documentId, error: error})))
     )),
   );
 
@@ -160,8 +161,8 @@ export class DocumentsEffects {
   public removeFavorite$ = this.actions$.pipe(
     ofType<DocumentsAction.RemoveFavorite>(DocumentsActionType.REMOVE_FAVORITE),
     mergeMap(action => this.documentService.removeFavorite(action.payload.collectionId, action.payload.documentId).pipe(
-      mergeMap(() => Observable.of()),
-      catchError((error) => Observable.of(new DocumentsAction.RemoveFavoriteFailure({documentId: action.payload.documentId, error: error})))
+      mergeMap(() => of()),
+      catchError((error) => of(new DocumentsAction.RemoveFavoriteFailure({documentId: action.payload.documentId, error: error})))
     )),
   );
 
@@ -202,7 +203,7 @@ export class DocumentsEffects {
             new DocumentsAction.UpdateSuccess({document})
           ];
         }),
-        catchError((error) => Observable.of(new DocumentsAction.UpdateFailure({error: error})))
+        catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
       );
     }),
   );
@@ -222,7 +223,7 @@ export class DocumentsEffects {
             new DocumentsAction.UpdateSuccess({document})
           ];
         }),
-        catchError((error) => Observable.of(new DocumentsAction.UpdateFailure({error: error})))
+        catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
       );
     }),
   );
@@ -248,7 +249,7 @@ export class DocumentsEffects {
 
           return actions;
         }),
-        catchError((error) => Observable.of(new DocumentsAction.DeleteFailure({error: error})))
+        catchError((error) => of(new DocumentsAction.DeleteFailure({error: error})))
       );
     }),
   );

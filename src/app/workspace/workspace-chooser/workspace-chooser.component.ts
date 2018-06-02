@@ -21,9 +21,8 @@ import {animate, keyframes, state, style, transition, trigger} from '@angular/an
 import {Component, OnDestroy, OnInit} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable, Subscription, combineLatest} from 'rxjs';
 import {filter, first, map, mergeMap, withLatestFrom} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
@@ -170,7 +169,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   public onProjectSettings(id: string) {
     if (!isNullOrUndefined(this.selectedOrganizationId)) {
-      Observable.combineLatest(
+      combineLatest(
         this.store.select(selectSelectedOrganization),
         this.store.select(selectProjectById(id))
       ).pipe(first())
@@ -184,7 +183,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   public onSaveActiveItems() {
     if (!isNullOrUndefined(this.selectedOrganizationId) && !isNullOrUndefined(this.selectedProjectId)) {
-      Observable.combineLatest(
+      combineLatest(
         this.store.select(selectSelectedOrganization),
         this.store.select(selectSelectedProject)
       ).pipe(first())

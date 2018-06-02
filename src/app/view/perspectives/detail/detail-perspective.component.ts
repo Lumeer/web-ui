@@ -26,7 +26,7 @@ import {withLatestFrom} from "rxjs/operators";
 import {selectCurrentUserForWorkspace} from "../../../core/store/users/users.state";
 import {Role} from "../../../core/model/role";
 import {userRolesInResource} from "../../../shared/utils/resource.utils";
-import {Subscription} from "rxjs/Subscription";
+import {Subscription} from "rxjs";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../../core/store/app.state";
 

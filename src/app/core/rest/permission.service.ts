@@ -22,7 +22,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 
 import {Permissions, Permission} from '../dto';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {Workspace} from '../store/navigation/workspace.model';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';

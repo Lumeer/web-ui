@@ -22,7 +22,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../notifications/notification.service';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 import {selectCurrentUser} from '../store/users/users.state';
 import {AppState} from '../store/app.state';

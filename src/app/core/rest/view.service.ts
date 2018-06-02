@@ -19,7 +19,7 @@
 
 import {HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
 import {View} from '../dto';

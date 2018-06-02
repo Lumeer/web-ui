@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+import {of, Observable} from 'rxjs';
 import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
 import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
 
@@ -49,7 +50,7 @@ export class DocumentService {
       map(response => response.headers.get('Location').split('/').pop()),
       mergeMap(id => {
         document.id = id;
-        return Observable.of(document);
+        return of(document);
       })
     );
   }

@@ -24,7 +24,7 @@ import {Store} from "@ngrx/store";
 import {Router} from "@angular/router";
 import {I18n} from "@ngx-translate/i18n-polyfill";
 import {AppState} from "../../../core/store/app.state";
-import {Subscription} from "rxjs/Subscription";
+import {Subscription} from "rxjs";
 import {ContactsAction} from "../../../core/store/organizations/contact/contacts.action";
 import {OrganizationModel} from "../../../core/store/organizations/organization.model";
 import {selectOrganizationByWorkspace} from "../../../core/store/organizations/organizations.state";

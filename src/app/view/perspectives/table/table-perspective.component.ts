@@ -19,8 +19,7 @@
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
-import {Observable} from 'rxjs/Observable';
+import {Subscription, Observable, combineLatest} from 'rxjs';
 import {map, switchMap, withLatestFrom} from 'rxjs/operators';
 import {Attribute, Collection, Document, LinkInstance, LinkType, Query} from '../../../core/dto';
 import {CollectionService, DocumentService, LinkInstanceService, LinkTypeService} from '../../../core/rest';
@@ -79,7 +78,7 @@ export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, 
       return;
     }
 
-    this.subscription = Observable.combineLatest(
+    this.subscription = combineLatest(
       this.store.select(selectNavigation),
       this.store.select(selectViewsDictionary)
     ).pipe(

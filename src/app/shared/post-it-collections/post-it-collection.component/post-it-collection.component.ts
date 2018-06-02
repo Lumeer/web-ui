@@ -24,8 +24,7 @@ import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {QueryConverter} from '../../../core/store/navigation/query.converter';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {Role} from '../../../core/model/role';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
+import {Subject, Subscription} from 'rxjs';
 import {isNullOrUndefined} from 'util';
 import {debounceTime, filter} from 'rxjs/operators';
 

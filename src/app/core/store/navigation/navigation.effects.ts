@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {first, map, mergeMap, skipWhile, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../app.state';
 import {RouterAction} from '../router/router.action';

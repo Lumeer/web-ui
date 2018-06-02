@@ -22,19 +22,17 @@ import {I18n} from "@ngx-translate/i18n-polyfill";
 import {NotificationService} from "../../../core/notifications/notification.service";
 import {AttributeModel, CollectionModel} from "../../../core/store/collections/collection.model";
 import {DocumentModel} from "../../../core/store/documents/document.model";
-import {Subscription} from "rxjs/Subscription";
+import {Subscription, Observable, interval} from "rxjs";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../../core/store/app.state";
 import {selectDocumentById} from "../../../core/store/documents/documents.state";
 import {DocumentsAction} from "../../../core/store/documents/documents.action";
-import {IntervalObservable} from "rxjs/observable/IntervalObservable";
 import {selectCollectionById} from "../../../core/store/collections/collections.state";
 import {selectUserById} from "../../../core/store/users/users.state";
 import {filter, map, take} from "rxjs/operators";
 import {isNullOrUndefined} from "util";
 import {UsersAction} from "../../../core/store/users/users.action";
 import {selectOrganizationByWorkspace} from "../../../core/store/organizations/organizations.state";
-import {Observable} from "rxjs/Observable";
 import {CorrelationIdGenerator} from "../../../core/store/correlation-id.generator";
 import {CollectionsAction} from "../../../core/store/collections/collections.action";
 import {DetailRow} from "../detail-row";
@@ -90,7 +88,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
       this.collection = col;
       this.encodeDocument();
     }));
-    this.subscriptions.add(IntervalObservable.create(2000).subscribe(() => this.patchDocument()));
+    this.subscriptions.add(interval(2000).subscribe(() => this.patchDocument()));
 
     this.createdBy$ = this.store.select(selectUserById(this._documentModel.createdBy))
       .pipe(filter(user => !isNullOrUndefined(user)), map(user => user.name || user.email || 'Guest'));

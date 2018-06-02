@@ -19,8 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable, Subscription} from 'rxjs';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {selectDocumentsByIds} from '../../../../../../../core/store/documents/documents.state';

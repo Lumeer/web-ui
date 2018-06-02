@@ -20,7 +20,7 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import {filter} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {DialogService} from './dialog.service';
 
 declare let $: any;

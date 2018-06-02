@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChange, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {AppState} from '../../../../../core/store/app.state';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {selectDocumentsByQuery} from '../../../../../core/store/documents/documents.state';

@@ -18,11 +18,10 @@
  */
 
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {Subscription} from "rxjs/Subscription";
+import {Subscription, Observable} from "rxjs";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../core/store/app.state";
 import {selectCollectionById, selectCollectionsByQuery} from "../../core/store/collections/collections.state";
-import {Observable} from "rxjs/Observable";
 import {CollectionModel} from "../../core/store/collections/collection.model";
 import {combineLatest, filter, take, tap, withLatestFrom} from "rxjs/operators";
 import {isNullOrUndefined} from "util";

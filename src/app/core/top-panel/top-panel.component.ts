@@ -21,7 +21,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {HtmlModifier} from '../../shared/utils/html-modifier';
 import {KeycloakSettings} from '../keycloak.settings';

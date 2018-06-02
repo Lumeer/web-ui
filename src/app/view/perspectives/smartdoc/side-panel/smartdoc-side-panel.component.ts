@@ -19,7 +19,7 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable, combineLatest} from 'rxjs';
 import {first, map, skipWhile} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
@@ -101,7 +101,7 @@ export class SmartDocSidePanelComponent {
   }
 
   public suggestLinkTypes(): Observable<LinkTypeModel[]> {
-    return Observable.combineLatest(
+    return combineLatest(
       this.linkTypes$.pipe(
         map(linkTypes => linkTypes.filter(linkType => linkType.id && linkType.collectionIds.includes(this.document.collectionId)))
       ),

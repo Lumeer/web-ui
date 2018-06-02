@@ -21,7 +21,7 @@ import {Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, V
 
 import {Store} from '@ngrx/store';
 import {filter, withLatestFrom} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
