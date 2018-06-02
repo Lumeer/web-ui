@@ -3,6 +3,11 @@
 input {
   border: 1px solid transparent;
   outline: none;
+  box-shadow: none;
+}
+
+input:focus {
+  box-shadow: none;
 }
 
 table {
