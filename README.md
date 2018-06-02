@@ -44,12 +44,12 @@ LUMEER_ENGINE=lumeer-engine \
 mvn clean package -Dcontext.root=en
 ```
 
-• *LUMEER_ENV*: environment in which the application runs (`staging`, `production` or empty)
-• *I18N_LOCALE*: language to be used in the application (`en`, `cs` or empty to use default `en`)
-• *SENTRY_DSN*: Sentry Data Source Name, if set it activates Sentry (recommended for production only)
-• *BUILD_NUMBER*: build number to be shown in the application
-• *LUMEER_ENGINE*: back-end deployment context root
-• *context.root*: front-end deployment context root
+ * *LUMEER_ENV*: environment in which the application runs (`staging`, `production` or empty)
+ * *I18N_LOCALE*: language to be used in the application (`en`, `cs` or empty to use default `en`)
+ * *SENTRY_DSN*: Sentry Data Source Name, if set it activates Sentry (recommended for production only)
+ * *BUILD_NUMBER*: build number to be shown in the application
+ * *LUMEER_ENGINE*: back-end deployment context root
+ * *context.root*: front-end deployment context root
 
 If you want to run the application locally on your machine during the development, you have to run [lumeer engine server](https://github.com/Lumeer/engine) and you have to set environment variable `LUMEER_ENGINE` to point web-ui where the engine is running (default value is `lumeer-engine`). 
 
