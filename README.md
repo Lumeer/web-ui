@@ -41,7 +41,8 @@ I18N_LOCALE=en \
 SENTRY_DSN=https://<key>@sentry.io/<project> \
 BUILD_NUMBER=42 \
 LUMEER_ENGINE=lumeer-engine \
-mvn clean package -Dcontext.root=en```
+mvn clean package -Dcontext.root=en
+```
 
 • *LUMEER_ENV*: environment in which the application runs (`staging`, `production` or empty)
 • *I18N_LOCALE*: language to be used in the application (`en`, `cs` or empty to use default `en`)
