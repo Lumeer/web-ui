@@ -56,7 +56,8 @@ function onRouterCancel(state: NavigationState, action: RouterCancelAction<Navig
   return (action as RouterCancelAction<NavigationState>).payload.storeState;
 }
 
-export function navigationReducer(state: NavigationState, action: RouterNavigationAction<RouterStateUrl> | RouterCancelAction<NavigationState>): NavigationState {
+export function navigationReducer(state: NavigationState,
+                                  action: RouterNavigationAction<RouterStateUrl> | RouterCancelAction<NavigationState>): NavigationState {
   switch (action.type) {
     case ROUTER_NAVIGATION:
       return onRouterNavigation(state, action);

@@ -23,7 +23,7 @@ import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 import {filter, map} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription, Observable} from 'rxjs';
 import {isNullOrUndefined} from 'util';
 import {Query} from '../../core/dto';
 import {NotificationService} from '../../core/notifications/notification.service';
@@ -36,7 +36,6 @@ import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {ResourceType} from '../../core/model/resource-type';
 import {Perspective} from '../../view/perspectives/perspective';
-import {Observable} from 'rxjs/Observable';
 import {selectAllUsers} from '../../core/store/users/users.state';
 
 @Component({
@@ -56,7 +55,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
               private store: Store<AppState>) {
   }
 
-  public ngOnInit(){
+  public ngOnInit() {
     this.subscribeToStore();
   }
 
@@ -123,10 +122,10 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   }
 
   public onDocumentsClick() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.PostIt], {queryParams: {query: this.documentsQuery(this.collection.id)}})
+    this.router.navigate([this.workspacePath(), 'view', Perspective.PostIt], {queryParams: {query: this.documentsQuery(this.collection.id)}});
   }
 
-  private subscribeToStore(){
+  private subscribeToStore() {
     this.userCount$ = this.store.select(selectAllUsers)
       .pipe(map(users => users ? users.length : 0));
 

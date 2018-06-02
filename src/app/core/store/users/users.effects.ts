@@ -22,18 +22,18 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
+import {Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {UserService} from '../../rest';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {DefaultWorkspaceConverter, UserConverter} from './user.converter';
 import {UsersAction, UsersActionType} from './users.action';
-import {AppState} from "../app.state";
+import {AppState} from '../app.state';
 import {GlobalService} from '../../rest/global.service';
 import {selectUsersLoadedForOrganization} from './users.state';
-import {HttpErrorResponse} from "@angular/common/http";
-import {RouterAction} from "../router/router.action";
-import {selectOrganizationsDictionary, selectSelectedOrganization} from "../organizations/organizations.state";
+import {HttpErrorResponse} from '@angular/common/http';
+import {RouterAction} from '../router/router.action';
+import {selectOrganizationsDictionary, selectSelectedOrganization} from '../organizations/organizations.state';
 
 @Injectable()
 export class UsersEffects {
@@ -47,7 +47,7 @@ export class UsersEffects {
     mergeMap(action => this.userService.getUsers(action.payload.organizationId).pipe(
       map(dtos => ({organizationId: action.payload.organizationId, users: dtos.map(dto => UserConverter.fromDto(dto))})),
       map(({organizationId, users}) => new UsersAction.GetSuccess({organizationId, users})),
-      catchError(error => Observable.of(new UsersAction.GetFailure({error: error})))
+      catchError(error => of(new UsersAction.GetFailure({error: error})))
     )),
   );
 
@@ -79,7 +79,7 @@ export class UsersEffects {
       return this.userService.createUser(action.payload.organizationId, userDto).pipe(
         map(dto => UserConverter.fromDto(dto)),
         map(user => new UsersAction.CreateSuccess({user: user})),
-        catchError(error => Observable.of(new UsersAction.CreateFailure({error, organizationId: action.payload.organizationId})))
+        catchError(error => of(new UsersAction.CreateFailure({error, organizationId: action.payload.organizationId})))
       );
     }),
   );
@@ -91,7 +91,7 @@ export class UsersEffects {
     withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
     map(([action, organizations]) => {
       const organization = organizations[action.payload.organizationId];
-      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+      if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Trial Service'});
         const message = this.i18n({
           id: 'user.create.serviceLimits',
@@ -120,7 +120,7 @@ export class UsersEffects {
       return this.userService.updateUser(action.payload.organizationId, userDto.id, userDto).pipe(
         map(dto => UserConverter.fromDto(dto)),
         map(user => new UsersAction.UpdateSuccess({user: user})),
-        catchError(error => Observable.of(new UsersAction.UpdateFailure({error: error})))
+        catchError(error => of(new UsersAction.UpdateFailure({error: error})))
       );
     })
   );
@@ -141,7 +141,7 @@ export class UsersEffects {
     mergeMap(action => this.userService.deleteUser(action.payload.organizationId, action.payload.userId).pipe(
       map(() => action),
       map(action => new UsersAction.DeleteSuccess(action.payload)),
-      catchError(error => Observable.of(new UsersAction.DeleteFailure({error: error})))
+      catchError(error => of(new UsersAction.DeleteFailure({error: error})))
     ))
   );
 
@@ -161,9 +161,9 @@ export class UsersEffects {
     concatMap(action => {
       const defaultWorkspaceDto = DefaultWorkspaceConverter.toDto(action.payload.defaultWorkspace);
       return this.globalService.saveDefaultWorkspace(defaultWorkspaceDto).pipe(
-        concatMap(() => Observable.of()),
-        catchError(() => Observable.of())
-      )
+        concatMap(() => of()),
+        catchError(() => of())
+      );
     })
   );
 

@@ -21,15 +21,14 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 
 import {MemoizedSelector, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
-import {Observable} from 'rxjs/Observable';
+import {Observable, Subscription} from 'rxjs';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {UserModel} from '../../core/store/users/user.model';
 import {filter, map, tap} from 'rxjs/operators';
 import {UsersAction} from '../../core/store/users/users.action';
-import {Subscription} from "rxjs/Subscription";
-import {isNullOrUndefined} from "util";
-import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from "../../core/store/users/users.state";
-import {ResourceType} from "../../core/model/resource-type";
+import {isNullOrUndefined} from 'util';
+import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../core/store/users/users.state';
+import {ResourceType} from '../../core/model/resource-type';
 import {ResourceModel} from '../../core/model/resource.model';
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
@@ -67,7 +66,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     if (this.organizationSubscription) {
-      this.organizationSubscription.unsubscribe()
+      this.organizationSubscription.unsubscribe();
     }
   }
 

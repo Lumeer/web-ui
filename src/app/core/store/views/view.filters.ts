@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryModel} from "../navigation/query.model";
-import {ViewModel} from "./view.model";
-import {isNullOrUndefined} from "util";
-import {arrayIntersection} from "../../../shared/utils/array.utils";
+import {QueryModel} from '../navigation/query.model';
+import {ViewModel} from './view.model';
+import {isNullOrUndefined} from 'util';
+import {arrayIntersection} from '../../../shared/utils/array.utils';
 
 export class ViewFilters {
 

@@ -21,7 +21,8 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
+import {environment} from '../../../environments/environment';
 import {HtmlModifier} from '../../shared/utils/html-modifier';
 import {KeycloakSettings} from '../keycloak.settings';
 import {AppState} from '../store/app.state';
@@ -56,7 +57,7 @@ export class TopPanelComponent implements OnInit {
 
   public notificationsDisabled: boolean;
 
-  public buildNumber = BUILD_NUMBER;
+  public buildNumber = environment.buildNumber;
 
   constructor(private store: Store<AppState>,
               private router: Router,
@@ -140,10 +141,6 @@ export class TopPanelComponent implements OnInit {
 
   public keycloakSignOutUrl(): string {
     return `${KeycloakSettings.getAuthServerUrl()}/realms/lumeer/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Fwww.lumeer.io%2F`;
-  }
-
-  public publicPath(): string {
-    return PUBLIC_PATH;
   }
 
 }

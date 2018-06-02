@@ -17,18 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'table-row-group',
   templateUrl: './table-row-group.component.html',
   styleUrls: ['./table-row-group.component.scss']
 })
-export class TableRowGroupComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
+export class TableRowGroupComponent {
 
 }

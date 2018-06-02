@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleC
 import {SimpleChange} from '@angular/core/src/change_detection/change_detection_util';
 import {Store} from '@ngrx/store';
 import {filter} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {AppState} from '../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {getOtherLinkedDocumentId, LinkInstanceModel} from '../../../../../../core/store/link-instances/link-instance.model';
@@ -131,7 +131,7 @@ export class TableRowComponent implements OnChanges, OnDestroy {
   }
 
   private areLinkedRowsCollapsedOrExpanded(oldRow: TableRow, newRow: TableRow): boolean {
-    return oldRow && newRow && oldRow.expanded != newRow.expanded;
+    return oldRow && newRow && oldRow.expanded !== newRow.expanded;
   }
 
   public ngOnDestroy() {

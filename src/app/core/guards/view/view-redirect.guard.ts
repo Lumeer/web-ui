@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {map, skipWhile, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../store/app.state';
 import {selectWorkspace} from '../../store/navigation/navigation.state';

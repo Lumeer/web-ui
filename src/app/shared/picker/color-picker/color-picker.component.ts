@@ -20,7 +20,7 @@
 import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 
 import * as colors from './colors';
-import {I18n} from "@ngx-translate/i18n-polyfill";
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare let $: any;
 
@@ -110,8 +110,8 @@ export class ColorPickerComponent implements OnInit {
       color: this.color,
       flat: false,
       showInput: true,
-      cancelText: this.i18n({ id: "color-picker.cancelText", value: "Cancel" }),
-      chooseText:  this.i18n({ id: "color-picker.chooseText", value: "Choose" }),
+      cancelText: this.i18n({ id: 'color-picker.cancelText', value: 'Cancel' }),
+      chooseText:  this.i18n({ id: 'color-picker.chooseText', value: 'Choose' }),
       preferredFormat: 'hex',
       containerClassName: 'spectrum-container',
       clickoutFiresChange: true,

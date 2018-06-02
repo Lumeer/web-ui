@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Action} from "@ngrx/store";
-import {PaymentModel} from "./payment.model";
+import {Action} from '@ngrx/store';
+import {PaymentModel} from './payment.model';
 
 export enum PaymentsActionType {
 

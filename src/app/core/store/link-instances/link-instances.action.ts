@@ -139,9 +139,6 @@ export namespace LinkInstancesAction {
 
   export class Clear implements Action {
     public readonly type = LinkInstancesActionType.CLEAR;
-
-    public constructor() {
-    }
   }
 
   export type All =

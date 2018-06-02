@@ -182,9 +182,6 @@ export namespace ViewsAction {
 
   export class Clear implements Action {
     public readonly type = ViewsActionType.CLEAR;
-
-    public constructor() {
-    }
   }
 
   export type All = GetByCode | GetSuccess | GetFailure |

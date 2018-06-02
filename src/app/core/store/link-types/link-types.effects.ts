@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
@@ -50,7 +50,7 @@ export class LinkTypesEffects {
           }
           return actions;
         }),
-        catchError((error) => Observable.of(new LinkTypesAction.GetFailure({error: error})))
+        catchError((error) => of(new LinkTypesAction.GetFailure({error: error})))
       );
     }),
   );
@@ -83,7 +83,7 @@ export class LinkTypesEffects {
 
           return actions;
         }),
-        catchError((error) => Observable.of(new LinkTypesAction.CreateFailure({error: error})))
+        catchError((error) => of(new LinkTypesAction.CreateFailure({error: error})))
       );
     }),
   );
@@ -107,7 +107,7 @@ export class LinkTypesEffects {
       return this.linkTypeService.updateLinkType(action.payload.linkType.id, linkTypeDto).pipe(
         map(dto => LinkTypeConverter.fromDto(dto)),
         map(linkType => new LinkTypesAction.UpdateSuccess({linkType: linkType})),
-        catchError((error) => Observable.of(new LinkTypesAction.UpdateFailure({error: error})))
+        catchError((error) => of(new LinkTypesAction.UpdateFailure({error: error})))
       );
     }),
   );
@@ -127,7 +127,7 @@ export class LinkTypesEffects {
     ofType<LinkTypesAction.Delete>(LinkTypesActionType.DELETE),
     mergeMap(action => this.linkTypeService.deleteLinkType(action.payload.linkTypeId).pipe(
       map(linkTypeId => new LinkTypesAction.DeleteSuccess({linkTypeId: linkTypeId})),
-      catchError((error) => Observable.of(new LinkTypesAction.DeleteFailure({error: error})))
+      catchError((error) => of(new LinkTypesAction.DeleteFailure({error: error})))
     ))
   );
 

@@ -18,10 +18,10 @@
  */
 
 import {NgModule} from '@angular/core';
-import {SharedModule} from "../../../shared/shared.module";
+import {SharedModule} from '../../../shared/shared.module';
 import {DetailPerspectiveComponent} from './detail-perspective.component';
-import {RouterModule} from "@angular/router";
-import {DetailPerspectiveRoutingModule} from "./detail-perspective-routing.module";
+import {RouterModule} from '@angular/router';
+import {DetailPerspectiveRoutingModule} from './detail-perspective-routing.module';
 
 @NgModule({
   imports: [

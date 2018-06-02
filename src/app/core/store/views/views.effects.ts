@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
+import {Observable, of} from 'rxjs';
 import {catchError, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {View} from '../../dto';
@@ -46,7 +46,7 @@ export class ViewsEffects {
       return this.searchService.searchViews(action.payload.query).pipe(
         map((dtos: View[]) => dtos.map(dto => ViewConverter.convertToModel(dto))),
         map((views: ViewModel[]) => new ViewsAction.GetSuccess({views})),
-        catchError((error) => Observable.of(new ViewsAction.GetFailure({error: error})))
+        catchError((error) => of(new ViewsAction.GetFailure({error: error})))
       );
     })
   );
@@ -60,7 +60,7 @@ export class ViewsEffects {
       skipWhile((dto: View) => isNullOrUndefined(dto)), // TODO can probably be removed once views are not stored in webstorage
       map((dto: View) => ViewConverter.convertToModel(dto)),
       map((view: ViewModel) => new ViewsAction.GetSuccess({views: [view]})),
-      catchError((error) => Observable.of(new ViewsAction.GetFailure({error: error})))
+      catchError((error) => of(new ViewsAction.GetFailure({error: error})))
     )),
   );
 
@@ -83,7 +83,7 @@ export class ViewsEffects {
       return this.viewService.createView(viewDto).pipe(
         map(dto => ViewConverter.convertToModel(dto)),
         map(view => new ViewsAction.CreateSuccess({view: view})),
-        catchError((error) => Observable.of(new ViewsAction.CreateFailure({error: error})))
+        catchError((error) => of(new ViewsAction.CreateFailure({error: error})))
       );
     })
   );
@@ -120,7 +120,7 @@ export class ViewsEffects {
       return this.viewService.updateView(action.payload.viewCode, viewDto).pipe(
           map(dto => ViewConverter.convertToModel(dto)),
           map((view) => new ViewsAction.UpdateSuccess({view: view, nextAction: action.payload.nextAction})),
-          catchError((error) => Observable.of(new ViewsAction.UpdateFailure({error: error})))
+          catchError((error) => of(new ViewsAction.UpdateFailure({error: error})))
       );
     }),
   );

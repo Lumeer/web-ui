@@ -19,9 +19,9 @@
 
 export enum SizeType {
 
-  S = "S",
-  M = "M",
-  L = "L",
-  XL = "XL"
+  S = 'S',
+  M = 'M',
+  L = 'L',
+  XL = 'XL'
 
 }

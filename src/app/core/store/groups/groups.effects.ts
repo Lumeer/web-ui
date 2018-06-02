@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {GroupService} from '../../rest';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -37,7 +37,7 @@ export class GroupsEffects {
     mergeMap(() => this.groupService.getGroups().pipe(
       map(dtos => dtos.map(dto => GroupConverter.fromDto(dto))),
       map(groups => new GroupsAction.GetSuccess({groups: groups})),
-      catchError(error => Observable.of(new GroupsAction.GetFailure({error: error})))
+      catchError(error => of(new GroupsAction.GetFailure({error: error})))
     ))
   );
 
@@ -60,7 +60,7 @@ export class GroupsEffects {
       return this.groupService.createGroup(groupDto).pipe(
         map(dto => GroupConverter.fromDto(dto)),
         map(group => new GroupsAction.CreateSuccess({group: group})),
-        catchError(error => Observable.of(new GroupsAction.CreateFailure({error: error})))
+        catchError(error => of(new GroupsAction.CreateFailure({error: error})))
       );
     }),
   );
@@ -84,7 +84,7 @@ export class GroupsEffects {
       return this.groupService.updateGroup(groupDto.id, groupDto).pipe(
         map(dto => GroupConverter.fromDto(dto)),
         map(group => new GroupsAction.UpdateSuccess({group: group})),
-        catchError(error => Observable.of(new GroupsAction.UpdateFailure({error: error})))
+        catchError(error => of(new GroupsAction.UpdateFailure({error: error})))
       );
     }),
   );
@@ -105,7 +105,7 @@ export class GroupsEffects {
     mergeMap(action => this.groupService.deleteGroup(action.payload.groupId).pipe(
       map(() => action),
       map(action => new GroupsAction.DeleteSuccess(action.payload)),
-      catchError(error => Observable.of(new GroupsAction.DeleteFailure({error: error})))
+      catchError(error => of(new GroupsAction.DeleteFailure({error: error})))
     ))
   );
 

@@ -21,7 +21,7 @@ import {Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, V
 
 import {Store} from '@ngrx/store';
 import {filter, withLatestFrom} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -43,7 +43,7 @@ import {userRolesInResource} from '../../../shared/utils/resource.utils';
 import {Role} from '../../../core/model/role';
 import Create = DocumentsAction.Create;
 import UpdateData = DocumentsAction.UpdateData;
-import {DeletionHelper} from "./util/deletion-helper";
+import {DeletionHelper} from './util/deletion-helper';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
@@ -181,7 +181,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       this.collectionRoles = collections.reduce((roles, collection) => {
         roles[collection.id] = userRolesInResource(user, collection);
         return roles;
-      }, {})
+      }, {});
     });
   }
 
@@ -189,15 +189,15 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     const {favorite, onlyStore} = data;
     if (onlyStore) {
       if (favorite) {
-        this.store.dispatch(new DocumentsAction.AddFavoriteSuccess({documentId: document.id}))
+        this.store.dispatch(new DocumentsAction.AddFavoriteSuccess({documentId: document.id}));
       } else {
-        this.store.dispatch(new DocumentsAction.RemoveFavoriteSuccess({documentId: document.id}))
+        this.store.dispatch(new DocumentsAction.RemoveFavoriteSuccess({documentId: document.id}));
       }
     } else {
       if (favorite) {
-        this.store.dispatch(new DocumentsAction.AddFavorite({collectionId: document.collectionId, documentId: document.id}))
+        this.store.dispatch(new DocumentsAction.AddFavorite({collectionId: document.collectionId, documentId: document.id}));
       } else {
-        this.store.dispatch(new DocumentsAction.RemoveFavorite({collectionId: document.collectionId, documentId: document.id}))
+        this.store.dispatch(new DocumentsAction.RemoveFavorite({collectionId: document.collectionId, documentId: document.id}));
       }
     }
   }
@@ -223,7 +223,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private getCollectionIds(): string[] {
-    return this.collectionRoles && Object.keys(this.collectionRoles) || []
+    return this.collectionRoles && Object.keys(this.collectionRoles) || [];
   }
 
   private checkAllLoaded(documents: DocumentModel[]): void {
@@ -311,7 +311,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     const subscription = this.store.select(selectDocumentsByCustomQuery(queryModel)).pipe(
       filter(() => this.canFetchDocuments())
     ).subscribe(documents => {
-      this.updateLayoutWithDocuments(documents)
+      this.updateLayoutWithDocuments(documents);
     });
 
     this.subscriptions.push(subscription);
@@ -334,7 +334,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private refreshExistingDocuments(documents: DocumentModel[]) {
     for (let document of documents) {
       const index = this.postIts.findIndex(pi => pi.document.id === document.id);
-      if (index != -1) {
+      if (index !== -1) {
         const postIt = {...this.postIts[index], document};
         this.postIts.splice(index, 1, postIt);
       }
@@ -346,7 +346,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     documents
       .filter(documentModel => !usedDocumentIDs.has(documentModel.id))
       .forEach(documentModel => {
-        this.postIts.push(this.documentModelToPostItModel(documentModel))
+        this.postIts.push(this.documentModelToPostItModel(documentModel));
       });
   }
 

@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Payment} from "../../../dto/payment";
-import {PaymentModel} from "./payment.model";
+import {Payment} from '../../../dto/payment';
+import {PaymentModel} from './payment.model';
 
 export class PaymentConverter {
 

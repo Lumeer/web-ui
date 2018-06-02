@@ -21,7 +21,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState} from '../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {selectDocumentsByQuery} from '../../../core/store/documents/documents.state';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription, combineLatest} from 'rxjs';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
@@ -30,7 +30,6 @@ import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {AxisSelectModel} from './model/axis-select-model';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
 import {selectCollectionsByQuery} from '../../../core/store/collections/collections.state';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 
@@ -104,7 +103,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private dataSubscription() {
-    return Observable.combineLatest(this.store.select(selectDocumentsByQuery),
+    return combineLatest(this.store.select(selectDocumentsByQuery),
       this.store.select(selectCollectionsByQuery)
     ).subscribe(([documents, collections]) => {
       this.documents = documents;

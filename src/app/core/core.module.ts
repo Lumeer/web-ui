@@ -48,8 +48,8 @@ import {TopPanelComponent} from './top-panel/top-panel.component';
 import {UserSettingsService} from './user-settings.service';
 import {CollectionValidators} from './validators/collection.validators';
 import {GlobalService} from './rest/global.service';
-import {RavenErrorHandler} from "./error/raven-error.handler.ts";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {RavenErrorHandler} from './error/raven.error-handler';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [

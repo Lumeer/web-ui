@@ -19,10 +19,11 @@
 
 import {Injectable} from '@angular/core';
 
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
+import {environment} from '../../../environments/environment';
 import {User} from '../dto';
-import {HttpClient} from "@angular/common/http";
-import 'rxjs/add/observable/of';
+import {HttpClient} from '@angular/common/http';
+
 import {DefaultWorkspace} from '../dto/default-workspace';
 
 @Injectable()
@@ -40,7 +41,7 @@ export class GlobalService {
   }
 
   private apiPrefix(): string {
-    return `/${API_URL}/rest/global`;
+    return `/${environment.apiUrl}/rest/global`;
   }
 
 }

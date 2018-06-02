@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {OrganizationModel} from "../organizations/organization.model";
-import {isNullOrUndefined} from "util";
-import {UserModel} from "./user.model";
+import {OrganizationModel} from '../organizations/organization.model';
+import {isNullOrUndefined} from 'util';
+import {UserModel} from './user.model';
 
 export function filterUserFunctions(users: UserModel[]) {
   return users.filter(user => typeof user === 'object');

@@ -19,8 +19,7 @@
 
 import {Component, Input, NgZone, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
-import {Observable} from 'rxjs/Observable';
+import {Subscription, Observable, of, combineLatest} from 'rxjs';
 import {distinct, first, map, skipWhile, switchMap, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
@@ -133,13 +132,13 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
           }));
         }
 
-        return Observable.of(null);
+        return of(null);
       })
     );
   }
 
   private loadQuery(): Observable<QueryModel> {
-    return this.embedded ? Observable.of(this.query) : this.store.select(selectQuery).pipe(
+    return this.embedded ? of(this.query) : this.store.select(selectQuery).pipe(
       tap(query => this.query = query)
     );
   }
@@ -169,7 +168,7 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
   }
 
   private bindDocuments() {
-    this.documentsSubscription = Observable.combineLatest(
+    this.documentsSubscription = combineLatest(
       this.store.select(selectAllDocuments),
       this.store.select(selectViewSmartDocConfig)
     ).pipe(

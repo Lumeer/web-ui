@@ -34,7 +34,7 @@ export interface QueryModel {
 }
 
 export interface AttributeFilter {
-  collectionId: string,
+  collectionId: string;
   conditionType: ConditionType;
   attributeId: string;
   value: any;
@@ -71,5 +71,5 @@ export function conditionFromString(condition: string): ConditionType {
   } else if (GteVariants.includes(conditionLowerCase)) {
     return ConditionType.GreaterThanEquals;
   }
-  return null
+  return null;
 }

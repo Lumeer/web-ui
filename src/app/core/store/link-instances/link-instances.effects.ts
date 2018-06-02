@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
 import {catchError, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkInstanceService} from '../../rest';
 import {AppState} from '../app.state';
@@ -42,7 +42,7 @@ export class LinkInstancesEffects {
     mergeMap(([action]) => this.linkInstanceService.getLinkInstances(action.payload.query).pipe(
       map(dtos => ({action, linkInstances: dtos.map(dto => LinkInstanceConverter.fromDto(dto))})),
       map(({action, linkInstances}) => new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})),
-      catchError((error) => Observable.of(new LinkInstancesAction.GetFailure({error: error})))
+      catchError((error) => of(new LinkInstancesAction.GetFailure({error: error})))
     ))
   );
 
@@ -71,7 +71,7 @@ export class LinkInstancesEffects {
           }
         }),
         map(({linkInstance}) => new LinkInstancesAction.CreateSuccess({linkInstance})),
-        catchError((error) => Observable.of(new LinkInstancesAction.CreateFailure({error: error})))
+        catchError((error) => of(new LinkInstancesAction.CreateFailure({error: error})))
       );
     })
   );
@@ -95,7 +95,7 @@ export class LinkInstancesEffects {
       return this.linkInstanceService.updateLinkInstance(action.payload.linkInstance.id, linkInstanceDto).pipe(
         map(dto => LinkInstanceConverter.fromDto(dto)),
         map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance: linkInstance})),
-        catchError((error) => Observable.of(new LinkInstancesAction.UpdateFailure({error: error})))
+        catchError((error) => of(new LinkInstancesAction.UpdateFailure({error: error})))
       );
     }),
   );
@@ -122,7 +122,7 @@ export class LinkInstancesEffects {
         }
       }),
       map(action => new LinkInstancesAction.DeleteSuccess({linkInstanceId: action.payload.linkInstanceId})),
-      catchError((error) => Observable.of(new LinkInstancesAction.DeleteFailure({error: error})))
+      catchError((error) => of(new LinkInstancesAction.DeleteFailure({error: error})))
     ))
   );
 

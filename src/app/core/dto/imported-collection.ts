@@ -18,7 +18,7 @@
  */
 
 import {Collection} from './collection';
-import {CollectionModel} from "../store/collections/collection.model";
+import {CollectionModel} from '../store/collections/collection.model';
 
 export interface ImportedCollection {
 

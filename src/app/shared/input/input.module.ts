@@ -20,8 +20,8 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 
-import {FilterBoxComponent} from "./filter-box/filter-box.component";
-import {InputBoxComponent} from "./input-box/input-box.component";
+import {FilterBoxComponent} from './filter-box/filter-box.component';
+import {InputBoxComponent} from './input-box/input-box.component';
 
 @NgModule({
   imports: [

@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {createEntityAdapter, EntityState} from "@ngrx/entity";
-import {ContactModel} from "./contact.model";
-import {createSelector} from "@ngrx/store";
-import {AppState} from "../../app.state";
-import {selectOrganizationByWorkspace} from "../organizations.state";
-import {selectAllPayments} from "../payment/payments.state";
+import {createEntityAdapter, EntityState} from '@ngrx/entity';
+import {ContactModel} from './contact.model';
+import {createSelector} from '@ngrx/store';
+import {AppState} from '../../app.state';
+import {selectOrganizationByWorkspace} from '../organizations.state';
+import {selectAllPayments} from '../payment/payments.state';
 
 export interface ContactsState extends EntityState<ContactModel> {
 }

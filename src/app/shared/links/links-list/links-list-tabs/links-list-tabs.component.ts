@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 declare const $: any;
 
@@ -26,7 +26,7 @@ declare const $: any;
   templateUrl: './links-list-tabs.component.html',
   styleUrls: ['./links-list-tabs.component.scss']
 })
-export class LinksListTabsComponent implements OnInit {
+export class LinksListTabsComponent {
 
   @Input()
   public links: string[];
@@ -36,11 +36,6 @@ export class LinksListTabsComponent implements OnInit {
 
   @Output()
   public select = new EventEmitter<string>();
-
-  constructor() { }
-
-  public ngOnInit() {
-  }
 
   public selectLink(linkName: string) {
     this.selectedLink = linkName;

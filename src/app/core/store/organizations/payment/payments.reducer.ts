@@ -17,18 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PaymentsAction, PaymentsActionType} from "./payments.action";
-import {initialPaymentsState, paymentsAdapter, PaymentsState, selectAllPayments} from "./payments.state";
+import {PaymentsAction, PaymentsActionType} from './payments.action';
+import {initialPaymentsState, paymentsAdapter, PaymentsState, selectAllPayments} from './payments.state';
 
 export function paymentsReducer(state: PaymentsState = initialPaymentsState, action: PaymentsAction.All): PaymentsState {
   switch (action.type) {
     case PaymentsActionType.GET_PAYMENT_SUCCESS:
-      return paymentsAdapter.upsertOne({id: action.payload.payment.id, changes: action.payload.payment}, state);
+      return paymentsAdapter.upsertOne(action.payload.payment, state);
     case PaymentsActionType.GET_PAYMENTS_SUCCESS:
-      const updates = action.payload.payments.map(payment => ({ id: payment.id, changes: payment }));
-      return paymentsAdapter.upsertMany(updates, state);
+      return paymentsAdapter.upsertMany(action.payload.payments, state);
     case PaymentsActionType.CREATE_PAYMENT_SUCCESS:
-      return paymentsAdapter.upsertOne({id: action.payload.payment.id, changes: action.payload.payment}, { ...state, lastCreatedPayment: action.payload.payment });
+      return paymentsAdapter.upsertOne(action.payload.payment, { ...state, lastCreatedPayment: action.payload.payment });
     default:
       return state;
   }

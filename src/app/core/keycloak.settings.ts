@@ -17,8 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {KeycloakConfig} from 'keycloak-angular/src/interfaces/keycloak-config';
+import {KeycloakConfig} from 'keycloak-angular';
 import {isNullOrUndefined} from 'util';
+import {environment} from '../../environments/environment';
 
 const SETTINGS = require('../../main/webapp/WEB-INF/keycloak.json');
 
@@ -37,7 +38,7 @@ export class KeycloakSettings {
   }
 
   public static isDisabled(): boolean {
-    return isNullOrUndefined(SETTINGS.disabled) ? LUMEER_ENV === 'development' : SETTINGS.disabled;
+    return isNullOrUndefined(SETTINGS.disabled) ? !environment.keycloak : SETTINGS.disabled;
   }
 
 }

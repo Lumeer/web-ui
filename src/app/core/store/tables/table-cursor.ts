@@ -374,7 +374,9 @@ export function areTableBodyCursorsEqual(cursor1: TableBodyCursor, cursor2: Tabl
     && deepArrayEquals(cursor1.rowPath, cursor2.rowPath);
 }
 
-export function findTableColumnWithCursor(table: TableModel, partIndex: number, attributeName: string): { column: TableCompoundColumn, cursor: TableHeaderCursor } {
+export function findTableColumnWithCursor(table: TableModel,
+                                          partIndex: number,
+                                          attributeName: string): { column: TableCompoundColumn, cursor: TableHeaderCursor } {
   const columns = table.parts[partIndex].columns;
   const startingCursor: TableHeaderCursor = {tableId: table.id, partIndex, columnPath: []};
   const cursor = getTableHeaderCursor(columns, attributeName, startingCursor);

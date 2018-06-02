@@ -31,8 +31,7 @@ import {SelectionHelper} from '../util/selection-helper';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {PostItRow} from './post-it-row';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
+import {Subject, Subscription} from 'rxjs';
 import {debounceTime, filter} from 'rxjs/operators';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
@@ -73,7 +72,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collection) {
-      this.pairAttributes()
+      this.pairAttributes();
     }
     if (changes.postItModel) {
       this.constructRows();
@@ -244,7 +243,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public hasWriteRole(): boolean {
-    return this.collectionRoles && this.collectionRoles.includes(Role.Write)
+    return this.collectionRoles && this.collectionRoles.includes(Role.Write);
   }
 
   private pairAttributes() {
@@ -299,7 +298,6 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
       return acc;
     }, {});
 
-
     const newData: { [attributeName: string]: any } = this.postItRows.filter(row => isNullOrUndefined(row.attributeId))
       .reduce((acc: { [attributeName: string]: any }, row) => {
         acc[row.attributeName] = {value: row.value, correlationId: row.correlationId};
@@ -315,7 +313,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
       filter(favorite => favorite !== this.lastSyncedFavorite)
     ).subscribe(favorite => {
       this.lastSyncedFavorite = null;
-      this.favoriteChange.emit({favorite, onlyStore: false})
+      this.favoriteChange.emit({favorite, onlyStore: false});
     });
   }
 }

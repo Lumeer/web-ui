@@ -21,8 +21,9 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import 'rxjs/add/observable/of';
-import {Observable} from 'rxjs/Observable';
+
+import {Observable} from 'rxjs';
+import {environment} from '../../../environments/environment';
 import {LinkType, Query} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
@@ -63,7 +64,7 @@ export class LinkTypeService {
     const projectCode = this.workspace.projectCode;
     const suffix = id ? `/${id}` : '';
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/link-types${suffix}`;
+    return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/link-types${suffix}`;
   }
 
 }

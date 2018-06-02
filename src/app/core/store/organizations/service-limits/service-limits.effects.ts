@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from "@angular/core";
-import {catchError, map, mergeMap, tap} from "rxjs/operators";
-import {Actions, Effect, ofType} from "@ngrx/effects";
-import {Action, Store} from "@ngrx/store";
-import {Router} from "@angular/router";
-import {AppState} from "../../app.state";
-import {OrganizationService} from "../../../rest";
-import {NotificationsAction} from "../../notifications/notifications.action";
-import {Observable} from "rxjs/Observable";
-import {I18n} from "@ngx-translate/i18n-polyfill";
-import {ServiceLimitsAction, ServiceLimitsActionType} from "./service-limits.action";
-import {ServiceLimitsConverter} from "./service-limits.converter";
+import {of, Observable} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Action, Store} from '@ngrx/store';
+import {Router} from '@angular/router';
+import {AppState} from '../../app.state';
+import {OrganizationService} from '../../../rest';
+import {NotificationsAction} from '../../notifications/notifications.action';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {ServiceLimitsAction, ServiceLimitsActionType} from './service-limits.action';
+import {ServiceLimitsConverter} from './service-limits.converter';
 
 @Injectable()
 export class ServiceLimitsEffects {
@@ -43,7 +43,7 @@ export class ServiceLimitsEffects {
           return acc;
         }, [])),
         map(serviceLimits => new ServiceLimitsAction.GetAllSuccess({allServiceLimits: serviceLimits})),
-        catchError(error => Observable.of(new ServiceLimitsAction.GetAllFailure({error: error})))
+        catchError(error => of(new ServiceLimitsAction.GetAllFailure({error: error})))
       );
     })
   );
@@ -65,7 +65,7 @@ export class ServiceLimitsEffects {
       return this.organizationService.getServiceLimits().pipe(
         map(dto => ServiceLimitsConverter.fromDto(action.payload.organizationId, dto)),
         map(serviceLimits => new ServiceLimitsAction.GetServiceLimitsSuccess({serviceLimits: serviceLimits})),
-        catchError(error => Observable.of(new ServiceLimitsAction.GetServiceLimitsFailure({error: error})))
+        catchError(error => of(new ServiceLimitsAction.GetServiceLimitsFailure({error: error})))
       );
     })
   );

@@ -25,11 +25,11 @@ import {NotificationService} from '../../../core/notifications/notification.serv
 import {AppState} from '../../../core/store/app.state';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
-import {isNullOrUndefined} from "util";
+import {isNullOrUndefined} from 'util';
 import {filter} from 'rxjs/operators';
 import {selectCollectionByWorkspace} from '../../../core/store/collections/collections.state';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 
 // Class can't be abstract because of an issue with compiler https://github.com/angular/angular/issues/13590
 @Component({template: ''})
@@ -52,7 +52,7 @@ export class CollectionTabComponent implements OnInit, OnDestroy {
       .subscribe(collection => {
         this.collection = collection;
       })
-    )
+    );
   }
 
   public ngOnDestroy() {

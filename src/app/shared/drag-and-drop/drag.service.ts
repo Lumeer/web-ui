@@ -24,11 +24,11 @@ export class DragService {
 
   private zone: string;
 
-  startDrag(zone: string) {
+  public startDrag(zone: string) {
     this.zone = zone;
   }
 
-  accepts(zone: string): boolean {
-    return zone == this.zone;
+  public accepts(zone: string): boolean {
+    return zone === this.zone;
   }
 }

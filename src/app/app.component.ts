@@ -18,6 +18,7 @@
  */
 
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Title} from '@angular/platform-browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import {KeycloakService} from 'keycloak-angular';
 
@@ -28,7 +29,8 @@ import {SnotifyService} from 'ng-snotify';
   templateUrl: './app.component.html',
   styleUrls: [
     './shared/common.scss',
-    './app.component.scss'],
+    './app.component.scss'
+  ],
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {
@@ -37,7 +39,9 @@ export class AppComponent implements OnInit {
 
   constructor(private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
               private keycloakService: KeycloakService,
-              private notificationService: SnotifyService) {
+              private notificationService: SnotifyService,
+              private title: Title) {
+    this.title.setTitle('Lumeer - Easy Business Booster');
     this.setUpGoogleAnalytics();
   }
 
@@ -53,7 +57,7 @@ export class AppComponent implements OnInit {
   public ngOnInit() {
     this.setNotificationStyle();
     try {
-      this.isChrome = ((navigator as any).userAgent as string).toLowerCase().indexOf("chrome") >= 0;
+      this.isChrome = ((navigator as any).userAgent as string).toLowerCase().indexOf('chrome') >= 0;
     } catch(e) {
       this.isChrome = false;
     }

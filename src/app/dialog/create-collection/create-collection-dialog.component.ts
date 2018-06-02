@@ -22,7 +22,7 @@ import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/form
 import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {filter, map, mergeMap} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';

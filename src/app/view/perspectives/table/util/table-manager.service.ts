@@ -17,10 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {combineLatest as observableCombineLatest, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import 'rxjs/add/observable/combineLatest';
-import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
 import {Attribute, Collection, Document, LinkInstance, LinkType} from '../../../../core/dto';
 import {LinkInstanceService, LinkTypeService} from '../../../../core/rest';
@@ -54,7 +53,7 @@ export class TableManagerService {
     const collectionIds = config.parts.map(part => part.collectionId);
     const linkTypeIds = config.parts.map(part => part.linkTypeId).filter(id => id);
 
-    return Observable.combineLatest(
+    return observableCombineLatest(
       this.searchService.searchCollections({}), // TODO get collections on link suggestions
       this.searchService.searchDocuments({collectionIds: collectionIds, page: 0, pageSize: 100}),
       this.linkTypeService.getLinkTypes({collectionIds: collectionIds}),
@@ -222,7 +221,7 @@ export class TableManagerService {
     this.parts[this.parts.length - 1].nextPart = part;
     this.parts.push(part);
 
-    Observable.combineLatest(
+    observableCombineLatest(
       this.searchService.searchDocuments({collectionIds: [part.collection.id]}),
       this.linkInstanceService.getLinkInstances({linkTypeIds: [linkType.id]})
     ).subscribe(([documents, linkInstances]) => {

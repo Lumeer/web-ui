@@ -109,7 +109,7 @@ export class ResourcePostItComponent {
 
   public onPickerClick() {
     if (this.isPickerVisible) {
-      this.onPickerBlur()
+      this.onPickerBlur();
     } else {
       this.isPickerVisible = true;
       this.lastIcon = null;
@@ -118,7 +118,7 @@ export class ResourcePostItComponent {
   }
 
   public onPickerBlur() {
-    if (!this.isPickerVisible) return;
+    if (!this.isPickerVisible) { return; }
 
     if (this.resource.id) {
       if (this.shouldUpdateIcons()) {
@@ -232,7 +232,7 @@ export class ResourcePostItComponent {
       return;
     }
 
-    if (this.resource.icon === DEFAULT_ICON && this.resource.color == DEFAULT_COLOR) {
+    if (this.resource.icon === DEFAULT_ICON && this.resource.color === DEFAULT_COLOR) {
       this.showPicker();
       return;
     }
@@ -266,6 +266,5 @@ export class ResourcePostItComponent {
       serviceLevel: this.serviceLevel
     });
   }
-
 
 }

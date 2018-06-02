@@ -21,7 +21,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {filter, map, mergeMap, withLatestFrom} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {ViewModel} from '../../core/store/views/view.model';

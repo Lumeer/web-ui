@@ -19,7 +19,8 @@
 
 import {HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
+import {environment} from '../../../environments/environment';
 import {Project} from '../dto';
 import {LumeerError} from '../error/lumeer.error';
 import {PermissionService} from './permission.service';
@@ -81,7 +82,7 @@ export class ProjectService extends PermissionService {
   }
 
   private apiPrefix(orgCode: string, projCode?: string): string {
-    return `/${API_URL}/rest/organizations/${orgCode}/projects${projCode ? `/${projCode}` : ''}`;
+    return `/${environment.apiUrl}/rest/organizations/${orgCode}/projects${projCode ? `/${projCode}` : ''}`;
   }
 
   protected actualApiPrefix(workspace?: Workspace): string {

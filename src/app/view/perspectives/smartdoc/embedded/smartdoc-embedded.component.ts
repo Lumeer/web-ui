@@ -19,8 +19,7 @@
 
 import {Component, ComponentFactoryResolver, ComponentRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, Type, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
-import {Observable} from 'rxjs/Observable';
+import {Subscription, combineLatest} from 'rxjs';
 import {skipWhile} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -77,7 +76,7 @@ export class SmartDocEmbeddedComponent implements OnInit, OnChanges, OnDestroy {
   public ngOnInit() {
     this.store.dispatch(new LinkTypesAction.Get({query: {linkTypeIds: [this.part.linkTypeId]}, loadInstances: true}));
 
-    this.linkSubscription = Observable.combineLatest(
+    this.linkSubscription = combineLatest(
       this.store.select(selectLinkTypeById(this.part.linkTypeId)),
       this.store.select(selectLinkInstancesByType(this.part.linkTypeId))
     ).pipe(

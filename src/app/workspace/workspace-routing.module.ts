@@ -25,10 +25,10 @@ import {OrganizationSettingsComponent} from './organization/organization-setting
 import {ProjectSettingsComponent} from './project/project-settings.component';
 import {ProjectUsersComponent} from './project/users/project-users.component';
 import {WorkspaceSelectGuard} from './workspace-select.guard';
-import {OrganizationSettingsGuard} from "./organization/organization-settings.guard";
-import {OrganizationDetailComponent} from "./organization/detail/organization-detail.component";
-import {OrganizationUsersComponent} from "./organization/users/organization-users.component";
-import {ProjectSettingsGuard} from "./project/project-settings.guard";
+import {OrganizationSettingsGuard} from './organization/organization-settings.guard';
+import {OrganizationDetailComponent} from './organization/detail/organization-detail.component';
+import {OrganizationUsersComponent} from './organization/users/organization-users.component';
+import {ProjectSettingsGuard} from './project/project-settings.guard';
 import {PageNotFoundGuard} from '../core/guards/page-not-found.guard';
 import {HomeComponent} from '../core/home.component';
 import {AuthGuard} from '../core/guards/auth.guard';

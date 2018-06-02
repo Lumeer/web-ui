@@ -32,7 +32,7 @@ import {AuthGuard} from '../core/guards/auth.guard';
 const collectionRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/f/:collectionId',
-    canActivate:[AuthGuard, WorkspaceGuard, CollectionSettingsGuard],
+    canActivate: [AuthGuard, WorkspaceGuard, CollectionSettingsGuard],
     component: CollectionSettingsComponent,
     children: [
       {

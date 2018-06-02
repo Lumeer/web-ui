@@ -18,11 +18,11 @@
  */
 
 export interface ServiceLimits {
-  serviceLevel: string,
-  users: number,
-  projects: number,
-  files: number,
-  documents: number,
-  dbSizeMb: number,
-  validUntil: number
+  serviceLevel: string;
+  users: number;
+  projects: number;
+  files: number;
+  documents: number;
+  dbSizeMb: number;
+  validUntil: number;
 }

@@ -24,8 +24,7 @@ import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {QueryConverter} from '../../../core/store/navigation/query.converter';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {Role} from '../../../core/model/role';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
+import {Subject, Subscription} from 'rxjs';
 import {isNullOrUndefined} from 'util';
 import {debounceTime, filter} from 'rxjs/operators';
 
@@ -63,7 +62,7 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
       filter(favorite => favorite !== this.lastSyncedFavorite)
     ).subscribe(favorite => {
       this.lastSyncedFavorite = null;
-      this.favoriteChange.emit({favorite, onlyStore: false})
+      this.favoriteChange.emit({favorite, onlyStore: false});
     });
   }
 
@@ -106,7 +105,7 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
 
   public togglePanelVisible(event) {
     if (this.isPickerVisible) {
-      this.onPickerBlur()
+      this.onPickerBlur();
     } else {
       this.isPickerVisible = true;
     }
@@ -114,7 +113,7 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
   }
 
   public onPickerBlur() {
-    if (!this.isPickerVisible) return;
+    if (!this.isPickerVisible) { return; }
 
     if (this.collection.id) {
       this.update.emit(this.collection);
@@ -144,6 +143,5 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
     const roles = this.userRoles || [];
     return roles.includes(role);
   }
-
 
 }

@@ -18,7 +18,7 @@
  */
 
 import {Query} from './query';
-import {Resource} from "./resource";
+import {Resource} from './resource';
 
 export interface View extends Resource {
 

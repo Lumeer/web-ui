@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
 import {map, skipWhile, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {NotificationService} from '../../notifications/notification.service';
@@ -45,7 +45,7 @@ export class ViewExistGuard implements CanActivate {
                      state: RouterStateSnapshot): Observable<boolean> {
     const viewCode = next.paramMap.get('vc');
     if (!viewCode) {
-      return Observable.of(true);
+      return of(true);
     }
 
     return this.store.select(selectViewsLoaded).pipe(

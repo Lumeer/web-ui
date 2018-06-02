@@ -17,12 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {of, Observable, Subject, Subscription} from 'rxjs';
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
 import {catchError, debounceTime, map, mergeMap, startWith, switchMap, withLatestFrom} from 'rxjs/operators';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
 import {Suggestions, SuggestionType} from '../../../../core/dto';
 import {SearchService} from '../../../../core/rest';
 import {AppState} from '../../../../core/store/app.state';
@@ -113,7 +111,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
       map(queryItems => this.filterUsedQueryItems(queryItems)),
       catchError(error => {
         console.error(error);
-        return Observable.of<QueryItem[]>();
+        return of<QueryItem[]>();
       })
     ).subscribe((suggestions: QueryItem[]) => this.updateSuggestions(suggestions));
   }
@@ -127,7 +125,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     if (this.suggesting && text) {
       return this.searchService.suggest(text.toLowerCase(), SuggestionType.All);
     }
-    return Observable.of<Suggestions>();
+    return of<Suggestions>();
   }
 
   private addFulltextSuggestion(queryItems: QueryItem[]): QueryItem[] {

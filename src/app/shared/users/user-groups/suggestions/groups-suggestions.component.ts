@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {GroupModel} from "../../../../core/store/groups/group.model";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {GroupModel} from '../../../../core/store/groups/group.model';
 
 @Component({
   selector: 'group-suggestions',

@@ -18,25 +18,25 @@
  */
 
 import {AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit} from '@angular/core';
-import {PaymentModel} from "../../../../core/store/organizations/payment/payment.model";
-import {OrganizationModel} from "../../../../core/store/organizations/organization.model";
-import {Subscription} from "rxjs/Subscription";
-import {ActionsSubject, Store} from "@ngrx/store";
-import {Router} from "@angular/router";
-import {I18n} from "@ngx-translate/i18n-polyfill";
-import {AppState} from "../../../../core/store/app.state";
-import {isNullOrUndefined} from "util";
-import {filter} from "rxjs/operators";
-import {selectOrganizationByWorkspace} from "../../../../core/store/organizations/organizations.state";
-import {PaymentsAction, PaymentsActionType} from "../../../../core/store/organizations/payment/payments.action";
-import {ServiceLimitsModel} from "../../../../core/store/organizations/service-limits/service-limits.model";
-import {selectServiceLimitsByWorkspace} from "../../../../core/store/organizations/service-limits/service-limits.state";
-import {selectLastCreatedPayment} from "../../../../core/store/organizations/payment/payments.state";
-import {DatePipe, DOCUMENT} from "@angular/common";
-import {NotificationsAction} from "../../../../core/store/notifications/notifications.action";
-import {ServiceLevelType} from "../../../../core/dto/service-level-type";
+import {PaymentModel} from '../../../../core/store/organizations/payment/payment.model';
+import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
+import {Subscription} from 'rxjs';
+import {ActionsSubject, Store} from '@ngrx/store';
+import {Router} from '@angular/router';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {AppState} from '../../../../core/store/app.state';
+import {isNullOrUndefined} from 'util';
+import {filter} from 'rxjs/operators';
+import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
+import {PaymentsAction, PaymentsActionType} from '../../../../core/store/organizations/payment/payments.action';
+import {ServiceLimitsModel} from '../../../../core/store/organizations/service-limits/service-limits.model';
+import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
+import {selectLastCreatedPayment} from '../../../../core/store/organizations/payment/payments.state';
+import {DatePipe, DOCUMENT} from '@angular/common';
+import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
+import {ServiceLevelType} from '../../../../core/dto/service-level-type';
 import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
-import {NotificationService} from "../../../../core/notifications/notification.service";
+import {NotificationService} from '../../../../core/notifications/notification.service';
 
 @Component({
   selector: 'payments-panel',
@@ -118,13 +118,14 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
 
     if (this.serviceLimits.serviceLevel !== ServiceLevelType.FREE && this.checkDayOverlap(this.serviceLimits.validUntil, $event.start)) {
       this.store.dispatch(new NotificationsAction.Confirm({
-        title: this.i18n({ id: "organization.payments.paidWarning.title", value: "Already Paid" }),
+        title: this.i18n({ id: 'organization.payments.paidWarning.title', value: 'Already Paid' }),
         message: this.i18n({
-          id: "organization.payments.paidWarning.text",
-          value: "Your current subscription lasts until {{0}}. Are you sure you want to proceed with an order with earlier start date of {{1}}? In case you want to add more users, please contact support@lumeer.io.",
+          id: 'organization.payments.paidWarning.text',
+          value: `Your current subscription lasts until {{0}}. Are you sure you want to proceed with an order with earlier start date of {{1}}?
+ In case you want to add more users, please contact support@lumeer.io.`,
         }, {
-          "0": this.datePipe.transform(this.serviceLimits.validUntil, "shortDate"),
-          "1": this.datePipe.transform($event.start, "shortDate")
+          '0': this.datePipe.transform(this.serviceLimits.validUntil, 'shortDate'),
+          '1': this.datePipe.transform($event.start, 'shortDate')
         }),
         action: new PaymentsAction.CreatePayment({organizationId: this.organization.id, payment})
       }));
@@ -152,7 +153,8 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
     const message = this.i18n(
       {
         id: 'organization.payments.disabled.message',
-        value: 'Thank you very much for your interest. We have recorded your order. Automated payments are currently disabled due to legal limitations. We will get in touch with you soon!'
+        value: `Thank you very much for your interest. We have recorded your order.
+ Automated payments are currently disabled due to legal limitations. We will get in touch with you soon!`
       });
     const title = this.i18n({id: 'organization.payments.disabled.title', value: 'Thank You!'});
     const okButtonText = this.i18n({id: 'button.ok', value: 'OK'});
@@ -161,7 +163,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
       {text: okButtonText, bold: true},
     ]);
 
-    if (!isNullOrUndefined($event) && $event !== "") {
+    if (!isNullOrUndefined($event) && $event !== '') {
       //(window as any)._gopay.checkout({gatewayUrl: $event, inline: true});
     }
   }

@@ -21,9 +21,8 @@ import {animate, keyframes, state, style, transition, trigger} from '@angular/an
 import {Component, OnDestroy, OnInit} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable, Subscription, combineLatest} from 'rxjs';
 import {filter, first, map, mergeMap, withLatestFrom} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
@@ -40,7 +39,7 @@ import {selectProjectById, selectProjectsCodesForSelectedOrganization, selectPro
 import {RouterAction} from '../../core/store/router/router.action';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {UserSettingsService} from '../../core/user-settings.service';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 import {userHasRoleInResource, userRolesInResource} from '../../shared/utils/resource.utils';
 import {UserModel} from '../../core/store/users/user.model';
 import {mapGroupsOnUser, selectCurrentUser, selectCurrentUserForOrganization} from '../../core/store/users/users.state';
@@ -170,7 +169,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   public onProjectSettings(id: string) {
     if (!isNullOrUndefined(this.selectedOrganizationId)) {
-      Observable.combineLatest(
+      combineLatest(
         this.store.select(selectSelectedOrganization),
         this.store.select(selectProjectById(id))
       ).pipe(first())
@@ -184,7 +183,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   public onSaveActiveItems() {
     if (!isNullOrUndefined(this.selectedOrganizationId) && !isNullOrUndefined(this.selectedProjectId)) {
-      Observable.combineLatest(
+      combineLatest(
         this.store.select(selectSelectedOrganization),
         this.store.select(selectSelectedProject)
       ).pipe(first())

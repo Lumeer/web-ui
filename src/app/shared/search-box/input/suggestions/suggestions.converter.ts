@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Observable} from 'rxjs/Observable';
+import {of, Observable} from 'rxjs';
 import {LinkType, Suggestions} from '../../../../core/dto';
 import {CollectionConverter} from '../../../../core/store/collections/collection.converter';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
@@ -45,7 +45,7 @@ export class SuggestionsConverter {
       ...SuggestionsConverter.createViewQueryItems(views),
       ...SuggestionsConverter.createLinkQueryItems(linkTypes)
     ];
-    return Observable.of(suggestedQueryItems);
+    return of(suggestedQueryItems);
   }
 
   private static convertLinkType(dto: LinkType, allCollections: CollectionModel[]): LinkTypeModel {

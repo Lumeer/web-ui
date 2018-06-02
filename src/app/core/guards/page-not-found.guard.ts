@@ -22,13 +22,13 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../notifications/notification.service';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 import {selectCurrentUser} from '../store/users/users.state';
 import {AppState} from '../store/app.state';
 import {Store} from '@ngrx/store';
 import {DefaultWorkspaceModel} from '../store/users/user.model';
-import {isNullOrUndefined} from "util";
+import {isNullOrUndefined} from 'util';
 
 @Injectable()
 export class PageNotFoundGuard implements CanActivate {
@@ -50,13 +50,13 @@ export class PageNotFoundGuard implements CanActivate {
           this.router.navigate(['w', organizationCode, projectCode, 'view', 'search']);
         } else if(hasWorkspace) {
           this.router.navigate(['w', workspace.organizationCode, workspace.projectCode, 'view', 'search']);
-        }else{
+        } else {
           this.router.navigate(['workspace']);
         }
         const message = this.i18n({id: 'page.not.found', value: 'Page not found'});
         this.notificationService.error(message);
 
-        return false
+        return false;
       })
     );
 

@@ -18,16 +18,16 @@
  */
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {I18n} from "@ngx-translate/i18n-polyfill";
-import {Store} from "@ngrx/store";
-import {Router} from "@angular/router";
-import {selectServiceLimitsByWorkspace} from "../../../../../core/store/organizations/service-limits/service-limits.state";
-import {Subscription} from "rxjs/Subscription";
-import {filter} from "rxjs/operators";
-import {isNullOrUndefined} from "util";
-import {AppState} from "../../../../../core/store/app.state";
-import {DatePipe} from "@angular/common";
-import {ServiceLimitsModel} from "../../../../../core/store/organizations/service-limits/service-limits.model";
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Store} from '@ngrx/store';
+import {Router} from '@angular/router';
+import {selectServiceLimitsByWorkspace} from '../../../../../core/store/organizations/service-limits/service-limits.state';
+import {Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
+import {AppState} from '../../../../../core/store/app.state';
+import {DatePipe} from '@angular/common';
+import {ServiceLimitsModel} from '../../../../../core/store/organizations/service-limits/service-limits.model';
 import {ServiceLevelType} from '../../../../../core/dto/service-level-type';
 
 @Component({
@@ -121,10 +121,14 @@ export class PaymentsOrderComponent implements OnInit {
     this.months = +this.subscriptionLength.split(' ')[0] * (this.discount ? 12 : 1);
 
     switch (this.currency) {
-      case 'EUR': return Math.round(this.months * this.numberOfUsers * (this.discount ? PaymentsOrderComponent.EUR_SALE : PaymentsOrderComponent.EUR_FULL) * (this.discountAmount / 100) * 100) / 100;
-      case 'USD': return Math.round(this.months * this.numberOfUsers * (this.discount ? PaymentsOrderComponent.USD_SALE : PaymentsOrderComponent.USD_FULL) * (this.discountAmount / 100) * 100) / 100;
-      case 'CZK': return Math.round(this.months * this.numberOfUsers * (this.discount ? PaymentsOrderComponent.CZK_SALE : PaymentsOrderComponent.CZK_FULL) * (this.discountAmount / 100) * 100) / 100;
+      case 'EUR': return this.calculatePriceFromMonthly(this.discount ? PaymentsOrderComponent.EUR_SALE : PaymentsOrderComponent.EUR_FULL);
+      case 'USD': return this.calculatePriceFromMonthly(this.discount ? PaymentsOrderComponent.USD_SALE : PaymentsOrderComponent.USD_FULL);
+      case 'CZK': return this.calculatePriceFromMonthly(this.discount ? PaymentsOrderComponent.CZK_SALE : PaymentsOrderComponent.CZK_FULL);
     }
+  }
+
+  private calculatePriceFromMonthly(monthlyPrice: number): number {
+    return Math.round(this.months * this.numberOfUsers * monthlyPrice * (this.discountAmount / 100) * 100) / 100;
   }
 
   public sliderValue($event) {
@@ -163,7 +167,7 @@ export class PaymentsOrderComponent implements OnInit {
     this.pay.emit({ months: this.months, users: this.numberOfUsers, amount: this.price, currency: this.currency, start: this.startDate });
   }
 
-  updateStartDate($event) {
+  public updateStartDate($event) {
     let d = new Date($event.target.value);
     if (!isNaN(d.getTime())) {
       this.startDate = PaymentsOrderComponent.floorDate(d);

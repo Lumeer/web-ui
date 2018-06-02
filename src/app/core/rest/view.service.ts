@@ -19,8 +19,9 @@
 
 import {HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {isNullOrUndefined} from 'util';
+import {environment} from '../../../environments/environment';
 import {View} from '../dto';
 import {PermissionService} from './permission.service';
 
@@ -59,7 +60,7 @@ export class ViewService extends PermissionService {
     let organizationCode = this.workspace.organizationCode;
     let projectCode = this.workspace.projectCode;
 
-    const viewsPath = `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/views`;
+    const viewsPath = `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/views`;
     return code ? viewsPath.concat('/', code) : viewsPath;
   }
 }

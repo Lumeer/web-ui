@@ -19,9 +19,8 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable, Subscription} from 'rxjs';
 import {first, map} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../core/store/collections/collection.model';
 import {selectCollectionById} from '../../../../../../core/store/collections/collections.state';

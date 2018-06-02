@@ -18,7 +18,7 @@
  */
 
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {LumeerError} from '../../../../core/error/lumeer.error';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';

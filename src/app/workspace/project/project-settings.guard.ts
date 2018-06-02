@@ -22,7 +22,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
+import {Observable, combineLatest, of} from 'rxjs';
 import {filter, map, mergeMap, take} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
@@ -54,7 +54,7 @@ export class ProjectSettingsGuard implements CanActivate {
         mergeMap(organization => {
           if (isNullOrUndefined(organization)) {
             this.dispatchErrorActionsNotExist();
-            return Observable.of(false);
+            return of(false);
           }
           return this.checkProject(organization, projectCode);
         })
@@ -62,7 +62,7 @@ export class ProjectSettingsGuard implements CanActivate {
   }
 
   private checkProject(organization: OrganizationModel, projectCode: string): Observable<boolean> {
-    return Observable.combineLatest(
+    return combineLatest(
       this.workspaceService.getProjectFromStoreOrApi(organization.code, organization.id, projectCode),
       this.store.select(selectCurrentUserForWorkspace)
     ).pipe(

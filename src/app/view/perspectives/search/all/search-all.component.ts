@@ -20,7 +20,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {filter, map, tap} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {isNullOrUndefined} from 'util';
 import {SearchService} from '../../../../core/rest';
 

@@ -19,13 +19,14 @@
 
 import {HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
+import {environment} from '../../../environments/environment';
 import {Contact, Organization} from '../dto';
 import {PermissionService} from './permission.service';
-import {ServiceLimits} from "../dto/service-limits";
-import {Payment} from "../dto/payment";
-import {selectWorkspace} from "../store/navigation/navigation.state";
-import {AppState} from "../store/app.state";
+import {ServiceLimits} from '../dto/service-limits';
+import {Payment} from '../dto/payment';
+import {selectWorkspace} from '../store/navigation/navigation.state';
+import {AppState} from '../store/app.state';
 import {Workspace} from '../store/navigation/workspace.model';
 
 @Injectable()
@@ -83,7 +84,7 @@ export class OrganizationService extends PermissionService {
   public createPayment(payment: Payment, returnUrl: string): Observable<Payment> {
     return this.httpClient.post<Payment>(`${this.actualApiPrefix()}/payments`, payment,
       { headers: {
-        "RETURN_URL": returnUrl
+        'RETURN_URL': returnUrl
       }});
   }
 
@@ -95,7 +96,7 @@ export class OrganizationService extends PermissionService {
   }
 
   private apiPrefix(code?: string): string {
-    return `/${API_URL}/rest/organizations${code ? `/${code}` : ''}`;
+    return `/${environment.apiUrl}/rest/organizations${code ? `/${code}` : ''}`;
   }
 
 }

@@ -107,9 +107,6 @@ export namespace CollectionsAction {
 
   export class GetNames implements Action {
     public readonly type = CollectionsActionType.GET_NAMES;
-
-    public constructor() {
-    }
   }
 
   export class GetNamesSuccess implements Action {
@@ -276,7 +273,12 @@ export namespace CollectionsAction {
   export class CreateAttributes implements Action {
     public readonly type = CollectionsActionType.CREATE_ATTRIBUTES;
 
-    public constructor(public payload: { collectionId: string, attributes: AttributeModel[], nextAction?: Action, callback?: (attributes: AttributeModel[]) => void }) {
+    public constructor(public payload: {
+      collectionId: string,
+      attributes: AttributeModel[],
+      nextAction?: Action,
+      callback?: (attributes: AttributeModel[]) => void
+    }) {
     }
   }
 
@@ -359,9 +361,6 @@ export namespace CollectionsAction {
 
   export class Clear implements Action {
     public readonly type = CollectionsActionType.CLEAR;
-
-    public constructor() {
-    }
   }
 
   export type All =

@@ -20,8 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {Actions} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable, Subscription} from 'rxjs';
 import {AppState} from '../../../../../../../../../core/store/app.state';
 import {AttributeModel} from '../../../../../../../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../../../../../../../core/store/collections/collections.action';

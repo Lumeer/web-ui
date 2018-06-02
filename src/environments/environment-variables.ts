@@ -17,22 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ErrorHandler, Injectable} from "@angular/core";
+const env = require('./.env.json');
 
-declare const require; // Use the require method provided by webpack
-const Raven = require('raven-js');
+export interface EnvironmentVariables {
 
-Raven
-  .config('https://518f3e95639941769be32abe63ad9288@sentry.io/1213943')
-  .install();
+  apiUrl: string;
+  buildNumber: number;
+  i18nFormat: string;
+  locale: string;
+  sentryDsn: string;
 
-@Injectable()
-export class RavenErrorHandler implements ErrorHandler {
-  handleError(err:any) : void {
-    console.error(err);
-    
-    if (LUMEER_ENV === 'production') {
-      Raven.captureException(err.originalError || err);
-    }
-  }
 }
+
+const apiUrl = env['LUMEER_ENGINE'];
+const buildNumber: number = env['BUILD_NUMBER'];
+const i18nFormat = env['I18N_FORMAT'];
+const locale: string = env['I18N_LOCALE'];
+const sentryDsn: string = env['SENTRY_DSN'];
+
+export const environmentVariables: EnvironmentVariables = {
+
+  apiUrl,
+  buildNumber,
+  i18nFormat,
+  locale,
+  sentryDsn
+
+};

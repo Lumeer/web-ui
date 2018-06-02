@@ -33,11 +33,11 @@ import {ResourceHeaderComponent} from './resource/header/resource-header.compone
 import {SearchBoxModule} from './search-box/search-box.module';
 import {SizeSliderComponent} from './slider/size-slider.component';
 import {SliderComponent} from './slider/slider.component';
-import {UsersModule} from "./users/users.module";
-import {TagModule} from "./tag/tag.module";
-import {DocumentModule} from "./document/document.module";
-import {PreviewResultsModule} from "./preview-results/preview-results.module";
-import {LinksModule} from "./links/links.module";
+import {UsersModule} from './users/users.module';
+import {TagModule} from './tag/tag.module';
+import {DocumentModule} from './document/document.module';
+import {PreviewResultsModule} from './preview-results/preview-results.module';
+import {LinksModule} from './links/links.module';
 
 @NgModule({
   imports: [

@@ -17,13 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Store} from '@ngrx/store';
+import {EMPTY} from 'rxjs/internal/observable/empty';
+import {environment} from '../../../environments/environment';
 
 import {LumeerError} from '../error/lumeer.error';
 import {Event} from '../dto/Event';
-import {Observable} from 'rxjs/Observable';
 import {LocalStorage} from '../../shared/utils/local-storage';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
@@ -51,7 +53,7 @@ export class EventService {
 
     LocalStorage.set(collectionKey, events);
 
-    return Observable.of(event.id);
+    return of(event.id);
   }
 
   public updateEvent(collectionId: string, id: string, event: Event): Observable<Event> {
@@ -63,7 +65,7 @@ export class EventService {
 
     LocalStorage.set(collectionKey, events);
 
-    return Observable.of(event);
+    return of(event);
   }
 
   public deleteEvent(collectionId: string, id: string): Observable<void> {
@@ -75,21 +77,21 @@ export class EventService {
 
     LocalStorage.set(collectionKey, events);
 
-    return Observable.empty();
+    return EMPTY;
   }
 
   public getEvents(collectionId: string): Observable<Event[]> {
     const collectionKey = `${collectionId}_${EVENTS_KEY}`;
     const events = LocalStorage.get(collectionKey) || [];
 
-    return Observable.of(events);
+    return of(events);
   }
 
   private apiPrefix(collectionCode: string): string {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
+    return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
   }
 
   private handleGlobalError(error: HttpErrorResponse): LumeerError {

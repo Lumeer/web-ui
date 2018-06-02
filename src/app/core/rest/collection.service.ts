@@ -21,9 +21,10 @@ import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
+import {environment} from '../../../environments/environment';
 import {Attribute, Collection} from '../dto';
 import {AppState} from '../store/app.state';
 import {PermissionService} from './permission.service';
@@ -81,7 +82,7 @@ export class CollectionService extends PermissionService {
     return this.httpClient.get<string[]>(`${this.apiPrefix()}/names`);
   }
 
-  public setDefaultAttribute(collectionId: string, attributeId: string): Observable<any>{
+  public setDefaultAttribute(collectionId: string, attributeId: string): Observable<any> {
     return this.httpClient.put(`${this.apiPrefix()}/${collectionId}/attributes/${attributeId}/default`, {});
   }
 
@@ -99,7 +100,7 @@ export class CollectionService extends PermissionService {
   }
 
   public createAttributes(collectionId: string, attributes: Attribute[]): Observable<Attribute[]> {
-    return this.httpClient.post<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`, attributes)
+    return this.httpClient.post<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`, attributes);
   }
 
   public updateAttribute(collectionId: string, id: string, attribute: Attribute): Observable<Attribute> {
@@ -124,7 +125,7 @@ export class CollectionService extends PermissionService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
+    return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
   }
 
 }

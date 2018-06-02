@@ -34,13 +34,13 @@ export class ResourceHeaderComponent {
   @Input() public resourceType: ResourceType;
   @Input() public resource: ResourceModel;
 
-  @Output() codeChange: EventEmitter<string> = new EventEmitter();
-  @Output() nameChange: EventEmitter<string> = new EventEmitter();
-  @Output() descriptionChange: EventEmitter<string> = new EventEmitter();
-  @Output() iconChange: EventEmitter<string> = new EventEmitter();
-  @Output() colorChange: EventEmitter<string> = new EventEmitter();
-  @Output() delete = new EventEmitter();
-  @Output() back = new EventEmitter();
+  @Output() public codeChange: EventEmitter<string> = new EventEmitter();
+  @Output() public nameChange: EventEmitter<string> = new EventEmitter();
+  @Output() public descriptionChange: EventEmitter<string> = new EventEmitter();
+  @Output() public iconChange: EventEmitter<string> = new EventEmitter();
+  @Output() public colorChange: EventEmitter<string> = new EventEmitter();
+  @Output() public delete = new EventEmitter();
+  @Output() public back = new EventEmitter();
 
   constructor(private i18n: I18n) {
   }
@@ -112,7 +112,6 @@ export class ResourceHeaderComponent {
     }
     return null;
   }
-
 
   public getCodePlaceholder(): string {
     return this.i18n({

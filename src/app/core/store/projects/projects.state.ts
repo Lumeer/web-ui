@@ -22,13 +22,13 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {selectOrganizationByWorkspace, selectSelectedOrganizationId} from '../organizations/organizations.state';
 import {ProjectModel} from './project.model';
-import {selectWorkspace} from "../navigation/navigation.state";
+import {selectWorkspace} from '../navigation/navigation.state';
 
 export interface ProjectsState extends EntityState<ProjectModel> {
 
   selectedProjectId: string;
   projectCodes: { [organizationId: string]: string[] };
-  loaded: { [organizationId: string]: boolean }
+  loaded: { [organizationId: string]: boolean };
 
 }
 
@@ -46,9 +46,13 @@ export const selectProjectsDictionary = createSelector(selectProjectsState, proj
 export const selectProjectsLoaded = createSelector(selectProjectsState, projectState => projectState.loaded);
 export const selectSelectedProjectId = createSelector(selectProjectsState, projectsState => projectsState.selectedProjectId);
 export const selectProjectsCodes = createSelector(selectProjectsState, projectState => projectState.projectCodes);
-export const selectProjectsCodesForSelectedOrganization = createSelector(selectProjectsCodes, selectSelectedOrganizationId, (projectCodes, selectedOrganizationId) => {
-  return projectCodes[selectedOrganizationId] || [];
-});
+export const selectProjectsCodesForSelectedOrganization = createSelector(
+  selectProjectsCodes,
+  selectSelectedOrganizationId,
+  (projectCodes, selectedOrganizationId) => {
+    return projectCodes[selectedOrganizationId] || [];
+  }
+);
 
 export const selectProjectsForSelectedOrganization = createSelector(selectAllProjects, selectSelectedOrganizationId, (projects, organizationId) => {
   return projects.filter(project => project.organizationId === organizationId);

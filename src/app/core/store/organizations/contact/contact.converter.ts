@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Contact} from "../../../dto";
-import {ContactModel} from "./contact.model";
+import {Contact} from '../../../dto';
+import {ContactModel} from './contact.model';
 
 export class ContactConverter {
 

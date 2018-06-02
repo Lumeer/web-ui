@@ -24,7 +24,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class NativeDatePipe implements PipeTransform {
 
-  transform(dateObject: {year: number, monthValue: number, dayOfMonth: number, hour: number, minute: number, second: number}): number {
+  public transform(dateObject: {year: number, monthValue: number, dayOfMonth: number, hour: number, minute: number, second: number}): number {
     if (dateObject) {
       return new Date(dateObject.year, dateObject.monthValue, dateObject.dayOfMonth, dateObject.hour, dateObject.minute, dateObject.second).getTime();
     }

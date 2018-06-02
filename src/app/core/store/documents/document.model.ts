@@ -37,7 +37,7 @@ export interface DocumentModel {
 }
 
 export interface DocumentDataModel {
-  attributeId?: string,
-  name?: string,
-  value?: any
+  attributeId?: string;
+  name?: string;
+  value?: any;
 }

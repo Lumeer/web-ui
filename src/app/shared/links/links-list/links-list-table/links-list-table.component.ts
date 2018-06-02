@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'links-list-table',
   templateUrl: './links-list-table.component.html',
   styleUrls: ['./links-list-table.component.scss']
 })
-export class LinksListTableComponent implements OnInit {
+export class LinksListTableComponent {
 
   public data = [
     { 'Attr1': 'Sed ut', 'Attr2': 10, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
@@ -39,15 +39,15 @@ export class LinksListTableComponent implements OnInit {
     { 'Attr1': 'inventore', 'Attr2': 84, 'Attr3': 'in ea voluptate velit esse quam nihil', 'Attr4': 'vel illum qui dolorem'},
     { 'Attr1': 'veritatis', 'Attr2': 72, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
     { 'Attr1': 'et quasi', 'Attr2': 39, 'Attr3': 'corporis suscipit laboriosam, nisi', 'Attr4': 'totam rem aperiam'}
-  ]
+  ];
 
   public attributes = [ 'Attr1', 'Attr2', 'Attr3', 'Attr4', 'Some really very long attribute that does not fit the space'];
 
   @Input()
-  public linkName: string = "Name1";
+  public linkName: string = 'Name1';
 
   @Input()
-  public collectionName: string = "Collection1";
+  public collectionName: string = 'Collection1';
 
   @Input()
   public collectionIcon: string = 'fas fa-curling';
@@ -64,12 +64,7 @@ export class LinksListTableComponent implements OnInit {
   @Input()
   public linkAttrCount = 2;
 
-  constructor() { }
-
-  public ngOnInit() {
-  }
-
   public openLinked(idx) {
-
+    // TODO
   }
 }

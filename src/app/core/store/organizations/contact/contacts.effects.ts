@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from "@angular/core";
-import {catchError, map, mergeMap, tap} from "rxjs/operators";
-import {Actions, Effect, ofType} from "@ngrx/effects";
-import {Action, Store} from "@ngrx/store";
-import {Router} from "@angular/router";
-import {ContactConverter} from "./contact.converter";
-import {AppState} from "../../app.state";
-import {OrganizationService} from "../../../rest";
-import {NotificationsAction} from "../../notifications/notifications.action";
-import {Observable} from "rxjs/Observable";
-import {I18n} from "@ngx-translate/i18n-polyfill";
-import {ContactsAction, ContactsActionType} from "./contacts.action";
+import {of, Observable} from 'rxjs';
+import {Injectable} from '@angular/core';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Action, Store} from '@ngrx/store';
+import {Router} from '@angular/router';
+import {ContactConverter} from './contact.converter';
+import {AppState} from '../../app.state';
+import {OrganizationService} from '../../../rest';
+import {NotificationsAction} from '../../notifications/notifications.action';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {ContactsAction, ContactsActionType} from './contacts.action';
 
 @Injectable()
 export class ContactsEffects {
@@ -37,7 +37,7 @@ export class ContactsEffects {
     ofType<ContactsAction.GetContact>(ContactsActionType.GET_CONTACT),
     mergeMap(action => this.organizationService.getOrganizationContact(action.payload.organizationCode).pipe(
       map(contact => new ContactsAction.GetContactSuccess({ contact: ContactConverter.fromDto(contact) })),
-      catchError(error => Observable.of(new ContactsAction.GetContactFailure({error: error})))
+      catchError(error => of(new ContactsAction.GetContactFailure({error: error})))
     ))
   );
 
@@ -56,7 +56,7 @@ export class ContactsEffects {
     ofType<ContactsAction.SetContact>(ContactsActionType.SET_CONTACT),
     mergeMap(action => this.organizationService.setOrganizationContact(action.payload.organizationCode, ContactConverter.toDto(action.payload.contact)).pipe(
       map(contact => new ContactsAction.SetContactSuccess({ contact: ContactConverter.fromDto(contact) })),
-      catchError(error => Observable.of(new ContactsAction.SetContactFailure({error: error})))
+      catchError(error => of(new ContactsAction.SetContactFailure({error: error})))
     ))
   );
 
@@ -77,4 +77,3 @@ export class ContactsEffects {
               private organizationService: OrganizationService) {
   }
 }
-

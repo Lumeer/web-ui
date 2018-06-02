@@ -28,8 +28,8 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {filter} from 'rxjs/operators';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
-import {isNullOrUndefined} from "util";
-import {Subscription} from 'rxjs/Subscription';
+import {isNullOrUndefined} from 'util';
+import {Subscription} from 'rxjs';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {InputBoxComponent} from '../../../../shared/input/input-box/input-box.component';
 
@@ -91,7 +91,7 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
     if (newName === '') {
       this.showAttributeDeleteDialog(attribute, () => {
         component.setValue(attribute.name);
-      })
+      });
     } else {
       const updatedAttribute = {...attribute, name: newName};
       this.store.dispatch(new CollectionsAction.ChangeAttribute({
@@ -138,13 +138,13 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
         this.collection = collection;
         this.attributes = this.collection.attributes.slice();
       })
-    )
+    );
   }
 
   private translatePlaceholders() {
     this.attributePlaceholder = this.i18n({
       id: 'collection.tab.attributes.attribute.placeholder',
       value: 'Enter attribute name.'
-    })
+    });
   }
 }

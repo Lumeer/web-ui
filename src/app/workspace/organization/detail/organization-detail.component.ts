@@ -18,19 +18,19 @@
  */
 
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ContactModel} from "../../../core/store/organizations/contact/contact.model";
-import {ContactFormComponent} from "./contact-form/contact-form.component";
-import {Store} from "@ngrx/store";
-import {Router} from "@angular/router";
-import {I18n} from "@ngx-translate/i18n-polyfill";
-import {AppState} from "../../../core/store/app.state";
-import {Subscription} from "rxjs/Subscription";
-import {ContactsAction} from "../../../core/store/organizations/contact/contacts.action";
-import {OrganizationModel} from "../../../core/store/organizations/organization.model";
-import {selectOrganizationByWorkspace} from "../../../core/store/organizations/organizations.state";
-import {isNullOrUndefined} from "util";
-import {filter} from "rxjs/operators";
-import {selectContactByOrganizationId, selectContactByWorkspace} from "../../../core/store/organizations/contact/contacts.state";
+import {ContactModel} from '../../../core/store/organizations/contact/contact.model';
+import {ContactFormComponent} from './contact-form/contact-form.component';
+import {Store} from '@ngrx/store';
+import {Router} from '@angular/router';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {AppState} from '../../../core/store/app.state';
+import {Subscription} from 'rxjs';
+import {ContactsAction} from '../../../core/store/organizations/contact/contacts.action';
+import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
+import {isNullOrUndefined} from 'util';
+import {filter} from 'rxjs/operators';
+import {selectContactByOrganizationId, selectContactByWorkspace} from '../../../core/store/organizations/contact/contacts.state';
 
 @Component({
   templateUrl: './organization-detail.component.html'

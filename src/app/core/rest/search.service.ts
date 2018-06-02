@@ -21,8 +21,9 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
+import {environment} from '../../../environments/environment';
 import {Collection} from '../dto/collection';
 import {Document} from '../dto/document';
 import {Query} from '../dto/query';
@@ -66,7 +67,7 @@ export class SearchService {
 
   private searchPath(workspace?: Workspace): string {
     const w = workspace || this.workspace;
-    return `/${API_URL}/rest/organizations/${w.organizationCode}/projects/${w.projectCode}/search`;
+    return `/${environment.apiUrl}/rest/organizations/${w.organizationCode}/projects/${w.projectCode}/search`;
   }
 
 }

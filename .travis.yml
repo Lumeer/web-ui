@@ -1,5 +1,8 @@
 language: node_js
+before_install:
+  - "npm i -g npm@latest"
 node_js:
   - "lts/*"
 script:
-  - "AOT=true npm run build"
+  - "npm run lint"
+  - "npm run build"

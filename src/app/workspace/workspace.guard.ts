@@ -17,12 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
-
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
 import {mergeMap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../core/store/app.state';
@@ -49,7 +48,7 @@ export class WorkspaceGuard implements CanActivate {
       mergeMap(organization => {
         if (isNullOrUndefined(organization)) {
           this.dispatchErrorActions();
-          return Observable.of(false);
+          return of(false);
         }
 
         return this.checkProject(organizationCode, organization.id, projectCode);
@@ -62,9 +61,9 @@ export class WorkspaceGuard implements CanActivate {
       mergeMap(project => {
           if (isNullOrUndefined(project)) {
             this.dispatchErrorActions();
-            return Observable.of(false);
+            return of(false);
           }
-          return Observable.of(true);
+          return of(true);
         }
       ));
   }

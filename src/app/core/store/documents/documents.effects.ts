@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
 import {catchError, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
 import {CollectionService, DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
@@ -36,9 +36,9 @@ import {DocumentConverter} from './document.converter';
 import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {selectDocumentById, selectDocumentsQueries} from './documents.state';
-import {HttpErrorResponse} from "@angular/common/http";
-import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
-import {RouterAction} from "../router/router.action";
+import {HttpErrorResponse} from '@angular/common/http';
+import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
+import {RouterAction} from '../router/router.action';
 
 @Injectable()
 export class DocumentsEffects {
@@ -54,7 +54,7 @@ export class DocumentsEffects {
       return this.searchService.searchDocuments(queryDto).pipe(
         map(dtos => dtos.map(dto => DocumentConverter.fromDto(dto))),
         map(documents => new DocumentsAction.GetSuccess({documents: documents})),
-        catchError((error) => Observable.of(new DocumentsAction.GetFailure({error: error})))
+        catchError((error) => of(new DocumentsAction.GetFailure({error: error})))
       );
     })
   );
@@ -105,7 +105,7 @@ export class DocumentsEffects {
         //
         //   return actions;
         // }),
-        catchError((error) => Observable.of(new DocumentsAction.CreateFailure({error: error})))
+        catchError((error) => of(new DocumentsAction.CreateFailure({error: error})))
       );
     })
   );
@@ -116,7 +116,7 @@ export class DocumentsEffects {
     tap(action => console.error(action.payload.error)),
     withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
     map(([action, organization]) => {
-      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+      if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'document.create.serviceLimits',
@@ -136,13 +136,12 @@ export class DocumentsEffects {
     })
   );
 
-
   @Effect()
   public addFavorite$ = this.actions$.pipe(
     ofType<DocumentsAction.AddFavorite>(DocumentsActionType.ADD_FAVORITE),
     mergeMap(action => this.documentService.addFavorite(action.payload.collectionId, action.payload.documentId).pipe(
-      mergeMap(() => Observable.of()),
-      catchError((error) => Observable.of(new DocumentsAction.AddFavoriteFailure({documentId: action.payload.documentId, error: error})))
+      mergeMap(() => of()),
+      catchError((error) => of(new DocumentsAction.AddFavoriteFailure({documentId: action.payload.documentId, error: error})))
     )),
   );
 
@@ -160,8 +159,8 @@ export class DocumentsEffects {
   public removeFavorite$ = this.actions$.pipe(
     ofType<DocumentsAction.RemoveFavorite>(DocumentsActionType.REMOVE_FAVORITE),
     mergeMap(action => this.documentService.removeFavorite(action.payload.collectionId, action.payload.documentId).pipe(
-      mergeMap(() => Observable.of()),
-      catchError((error) => Observable.of(new DocumentsAction.RemoveFavoriteFailure({documentId: action.payload.documentId, error: error})))
+      mergeMap(() => of()),
+      catchError((error) => of(new DocumentsAction.RemoveFavoriteFailure({documentId: action.payload.documentId, error: error})))
     )),
   );
 
@@ -185,7 +184,6 @@ export class DocumentsEffects {
     })
   );
 
-
   @Effect()
   public updateData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.UpdateData>(DocumentsActionType.UPDATE_DATA),
@@ -202,7 +200,7 @@ export class DocumentsEffects {
             new DocumentsAction.UpdateSuccess({document})
           ];
         }),
-        catchError((error) => Observable.of(new DocumentsAction.UpdateFailure({error: error})))
+        catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
       );
     }),
   );
@@ -222,7 +220,7 @@ export class DocumentsEffects {
             new DocumentsAction.UpdateSuccess({document})
           ];
         }),
-        catchError((error) => Observable.of(new DocumentsAction.UpdateFailure({error: error})))
+        catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
       );
     }),
   );
@@ -248,7 +246,7 @@ export class DocumentsEffects {
 
           return actions;
         }),
-        catchError((error) => Observable.of(new DocumentsAction.DeleteFailure({error: error})))
+        catchError((error) => of(new DocumentsAction.DeleteFailure({error: error})))
       );
     }),
   );

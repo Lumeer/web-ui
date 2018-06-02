@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable, combineLatest, of} from 'rxjs';
 import {concatMap, filter, first, flatMap, map, mergeMap, skipWhile, withLatestFrom} from 'rxjs/operators';
 import {getArrayDifference} from '../../../shared/utils/array.utils';
 import {generateAttributeName} from '../../../shared/utils/attribute.utils';
@@ -99,7 +99,7 @@ export class TablesEffects {
   @Effect()
   public destroyTable$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.DestroyTable>(TablesActionType.DESTROY_TABLE),
-    mergeMap(action => Observable.combineLatest(
+    mergeMap(action => combineLatest(
       this.store$.select(selectTableById(action.payload.tableId)),
       this.store$.select(selectTableCursor)
     ).pipe(
@@ -111,7 +111,7 @@ export class TablesEffects {
           map(viewCursor => ({table, viewCursor}))
         );
       }
-      return Observable.of({table, viewCursor: null});
+      return of({table, viewCursor: null});
     }),
     flatMap(({table, viewCursor}) => {
       const actions: Action[] = [new TablesAction.RemoveTable({tableId: table.id})];
@@ -574,23 +574,23 @@ export class TablesEffects {
 
   private createViewCursorFromTable(table: TableModel, cursor: TableCursor): Observable<ViewCursor> {
     if (!cursor || !cursor.rowPath) {
-      return Observable.of(null);
+      return of(null);
     }
 
     const part = table.parts[cursor.partIndex];
     if (!part.collectionId) {
-      return Observable.of(null);
+      return of(null);
     }
 
     const column = part.columns[cursor.columnIndex];
     if (column.type !== TableColumnType.COMPOUND) {
-      return Observable.of(null);
+      return of(null);
     }
 
     const {attributeId} = (column as TableCompoundColumn).parent;
     const row = findTableRow(table.rows, cursor.rowPath);
     if (row.documentIds.length !== 1) {
-      return Observable.of(null);
+      return of(null);
     }
 
     if (cursor.rowPath.length > 1) {
@@ -608,7 +608,7 @@ export class TablesEffects {
       );
     }
 
-    return Observable.of({
+    return of({
       collectionId: part.collectionId,
       documentId: row.documentIds[0],
       attributeId

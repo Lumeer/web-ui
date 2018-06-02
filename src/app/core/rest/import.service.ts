@@ -18,18 +18,16 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
+import {environment} from '../../../environments/environment';
 import {Collection} from '../dto/collection';
-import {ErrorObservable} from 'rxjs/observable/ErrorObservable';
-import {LumeerError} from '../error/lumeer.error';
-import {catchError} from 'rxjs/operators';
 import {Workspace} from '../store/navigation/workspace.model';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
-import {ImportedCollection} from "../dto/imported-collection";
+import {ImportedCollection} from '../dto/imported-collection';
 
 @Injectable()
 export class ImportService {
@@ -44,19 +42,14 @@ export class ImportService {
   public importFile(format: string, importedCollection: ImportedCollection): Observable<Collection> {
     const queryParams = new HttpParams().set('format', format);
 
-    return this.http.post<Collection>(this.apiPrefix(), importedCollection, {params: queryParams})
-      .pipe(catchError(ImportService.handleGlobalError));
-  }
-
-  private static handleGlobalError(error: HttpErrorResponse): ErrorObservable {
-    throw new LumeerError(error.message);
+    return this.http.post<Collection>(this.apiPrefix(), importedCollection, {params: queryParams});
   }
 
   private apiPrefix(): string {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/import`;
+    return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/import`;
   }
 
 }

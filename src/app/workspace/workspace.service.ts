@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
 import {catchError, map, mergeMap, take, tap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {OrganizationService, ProjectService} from '../core/rest';
@@ -46,7 +46,7 @@ export class WorkspaceService {
     return this.getOrganizationFromStore(code).pipe(
       mergeMap(organization => {
         if (!isNullOrUndefined(organization)) {
-          return Observable.of(organization);
+          return of(organization);
         }
         return this.getOrganizationFromApi(code);
       })
@@ -65,7 +65,7 @@ export class WorkspaceService {
       map(organization => OrganizationConverter.fromDto(organization)),
       tap(organization => this.store.dispatch(new OrganizationsAction.GetOneSuccess({organization}))),
       catchError(() => {
-        return Observable.of(undefined);
+        return of(undefined);
       })
     );
   }
@@ -74,7 +74,7 @@ export class WorkspaceService {
     return this.getProjectFromStore(projCode).pipe(
       mergeMap(project => {
         if (!isNullOrUndefined(project)) {
-          return Observable.of(project);
+          return of(project);
         }
         return this.getProjectFromApi(orgCode, orgId, projCode);
       })
@@ -93,7 +93,7 @@ export class WorkspaceService {
       map(project => ProjectConverter.fromDto(project, orgId)),
       tap(project => this.store.dispatch(new ProjectsAction.GetOneSuccess({project}))),
       catchError(() => {
-        return Observable.of(undefined);
+        return of(undefined);
       })
     );
   }

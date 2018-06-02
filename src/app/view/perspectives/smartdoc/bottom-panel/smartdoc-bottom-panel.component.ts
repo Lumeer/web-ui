@@ -19,9 +19,8 @@
 
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {combineLatest, Subscription} from 'rxjs';
 import {skipWhile} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../core/store/app.state';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {selectAllCollections} from '../../../../core/store/collections/collections.state';
@@ -64,7 +63,7 @@ export class SmartDocBottomPanelComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     if (this.part.linkTypeId) {
-      this.linkTypeSubscription = Observable.combineLatest(
+      this.linkTypeSubscription = combineLatest(
         this.store.select(selectLinkTypeById(this.part.linkTypeId)),
         this.store.select(selectAllCollections)
       ).pipe(

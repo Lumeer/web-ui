@@ -23,6 +23,7 @@ import {EffectsModule} from '@ngrx/effects';
 import {routerReducer} from '@ngrx/router-store';
 import {ActionReducerMap, StoreModule} from '@ngrx/store';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {environment} from '../../../environments/environment';
 import {AppState, initialAppState} from './app.state';
 import {CollectionsEffects} from './collections/collections.effects';
 import {collectionsReducer} from './collections/collections.reducer';
@@ -94,7 +95,7 @@ const effects = [
   imports: [
     StoreModule.forRoot(reducers, {initialState: initialAppState}),
     EffectsModule.forRoot(effects),
-    LUMEER_ENV === 'development' ? StoreDevtoolsModule.instrument({maxAge: 15}) : []
+    environment.storeDevtools ? StoreDevtoolsModule.instrument({maxAge: 15}) : []
   ],
   declarations: []
 })

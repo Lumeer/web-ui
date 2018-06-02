@@ -23,8 +23,7 @@ import {UserModel} from '../../../core/store/users/user.model';
 import {Role} from '../../../core/model/role';
 import {ResourceType} from '../../../core/model/resource-type';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Subject} from 'rxjs/Subject';
-import {Subscription} from 'rxjs/Subscription';
+import {Subject, Subscription} from 'rxjs';
 import {debounceTime, filter} from 'rxjs/operators';
 import {deepArrayEquals} from '../../utils/array.utils';
 import {isNullOrUndefined} from 'util';
@@ -164,7 +163,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
     let newRoles;
     if (this.userRoles.includes(role)) {
-      newRoles = this.userRoles.filter(r => r !== role)
+      newRoles = this.userRoles.filter(r => r !== role);
     } else {
       newRoles = [...this.userRoles, role];
     }

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {APP_INITIALIZER, ErrorHandler, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+import {APP_INITIALIZER, LOCALE_ID, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -25,21 +25,21 @@ import {Angulartics2Module, Angulartics2Settings} from 'angulartics2';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular';
 import {ContextMenuModule} from 'ngx-contextmenu';
+import {environment} from '../environments/environment';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {appInitializer} from './app.initializer';
 import {CollectionModule} from './collection/collection.module';
 import {CoreModule} from './core/core.module';
+import {DialogModule} from './dialog/dialog.module';
 import {DocumentsModule} from './documents/documents.module';
 import {ViewModule} from './view/view.module';
 import {WorkspaceModule} from './workspace/workspace.module';
-import { DialogModule } from './dialog/dialog.module';
 
 declare const require; // Use the require method provided by webpack
-const translations = require(`raw-loader!../../${I18N_PATH}`);
 
 export const angularticsSettings: Partial<Angulartics2Settings> = {
-  developerMode: LUMEER_ENV !== 'production',
+  developerMode: !environment.analytics,
   pageTracking: {
     clearIds: true,
     idsRegExp: new RegExp('^[0-9a-z]{24}$')
@@ -66,6 +66,10 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
   ],
   providers: [
     {
+      provide: LOCALE_ID,
+      useFactory: () => environment.locale
+    },
+    {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
       multi: true,
@@ -73,11 +77,12 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     },
     {
       provide: TRANSLATIONS,
-      useFactory: () => translations
+      useFactory: (locale) => require(`raw-loader!../../src/i18n/messages.${locale}.xlf`), // TODO ${environment.i18nPath}
+      deps: [LOCALE_ID]
     },
     {
       provide: TRANSLATIONS_FORMAT,
-      useValue: I18N_FORMAT
+      useFactory: () => environment.i18nFormat
     },
     I18n
   ],

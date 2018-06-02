@@ -18,10 +18,10 @@
  */
 
 export interface DetailRow {
-  id?: string,
-  name: string,
-  value: string,
-  correlationId?: string,
-  remove?: boolean,
-  warning?: string
+  id?: string;
+  name: string;
+  value: string;
+  correlationId?: string;
+  remove?: boolean;
+  warning?: string;
 }

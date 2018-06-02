@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ServiceLimits} from "../../../dto/service-limits";
-import {ServiceLimitsModel} from "./service-limits.model";
+import {ServiceLimits} from '../../../dto/service-limits';
+import {ServiceLimitsModel} from './service-limits.model';
 import {serviceLevelMap, ServiceLevelType} from '../../../dto/service-level-type';
 
 export class ServiceLimitsConverter {

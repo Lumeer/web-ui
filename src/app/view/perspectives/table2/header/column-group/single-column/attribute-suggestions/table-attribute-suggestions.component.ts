@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../../core/store/collections/collection.model';
@@ -37,9 +37,9 @@ import {extractAttributeLastName} from '../../../../../../../shared/utils/attrib
 
 interface LinkedAttribute {
 
-  linkType?: LinkTypeModel,
-  collection: CollectionModel,
-  attribute: AttributeModel
+  linkType?: LinkTypeModel;
+  collection: CollectionModel;
+  attribute: AttributeModel;
 
 }
 
@@ -98,7 +98,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   }
 
   public suggestLinkedAttributes(): Observable<LinkedAttribute[]> {
-    return Observable.combineLatest(
+    return combineLatest(
       this.store.select(selectLinkTypesByCollectionId(this.collection.id)),
       this.store.select(selectCollectionsDictionary),
       this.store.select(selectQuery)

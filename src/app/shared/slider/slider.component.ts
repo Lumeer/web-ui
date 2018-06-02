@@ -26,22 +26,19 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 })
 export class SliderComponent implements OnInit {
 
-  @Input("values")
+  @Input('values')
   public values: string;
 
-  @Input("default")
+  @Input('default')
   public defaultValue: number = 0;
 
-  @Output("onSlide")
+  @Output('onSlide')
   public onSlide = new EventEmitter<{position: number, value: string}>();
 
   public splitValues: string[];
 
-  constructor() {
-  }
-
-  ngOnInit() {
-    this.splitValues = this.values.split("|");
+  public ngOnInit() {
+    this.splitValues = this.values.split('|');
     this.onSlide.emit({position: this.defaultValue, value: this.splitValues[this.defaultValue]});
   }
 

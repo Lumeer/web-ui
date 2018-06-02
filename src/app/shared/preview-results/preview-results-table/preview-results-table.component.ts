@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DocumentModel} from "../../../core/store/documents/document.model";
-import {CollectionModel} from "../../../core/store/collections/collection.model";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
 
 export const PAGE_SIZE = 100;
 
@@ -30,7 +30,7 @@ export const PAGE_SIZE = 100;
 })
 export class PreviewResultsTableComponent implements OnInit {
 
-  static readonly PAGE_SIZE = 100;
+  public static readonly PAGE_SIZE = 100;
 
   @Input()
   public documents: DocumentModel[];
@@ -47,8 +47,6 @@ export class PreviewResultsTableComponent implements OnInit {
   public selectDocument = new EventEmitter<DocumentModel>();
 
   public readonly pageSize = PAGE_SIZE;
-
-  constructor() { }
 
   public ngOnInit() {
     this.countPage();

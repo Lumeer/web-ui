@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {of, Observable} from 'rxjs';
 import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
 import {isNullOrUndefined} from 'util';
+import {environment} from '../../../environments/environment';
 
 import {Document} from '../dto';
 import {AppState} from '../store/app.state';
@@ -48,7 +49,7 @@ export class DocumentService {
       map(response => response.headers.get('Location').split('/').pop()),
       mergeMap(id => {
         document.id = id;
-        return Observable.of(document);
+        return of(document);
       })
     );
   }
@@ -64,7 +65,6 @@ export class DocumentService {
   public patchDocumentData(document: Document): Observable<Document> {
     return this.httpClient.patch<Document>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data);
   }
-
 
   public removeDocument(collectionId: string, documentId: string): Observable<HttpResponse<any>> {
     return this.httpClient.delete(
@@ -100,7 +100,7 @@ export class DocumentService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${API_URL}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionId}/documents`;
+    return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionId}/documents`;
   }
 
 }

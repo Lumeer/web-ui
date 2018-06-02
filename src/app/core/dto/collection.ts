@@ -18,7 +18,7 @@
  */
 
 import {Attribute} from './attribute';
-import {Resource} from "./resource";
+import {Resource} from './resource';
 
 export interface Collection extends Resource {
 

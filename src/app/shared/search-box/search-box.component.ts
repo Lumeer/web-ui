@@ -17,13 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {of, combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {ViewQueryItem} from './query-item/model/view.query-item';
-import {Observable} from 'rxjs/Observable';
 import {filter, flatMap, map} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../core/store/app.state';
 import {selectAllCollections} from '../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
@@ -62,8 +61,8 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   private subscribeToQuery() {
     this.querySubscription = this.store.select(selectQuery).pipe(
-      flatMap(query => Observable.combineLatest(
-        Observable.of(query),
+      flatMap(query => observableCombineLatest(
+        of(query),
         this.loadData(query)
       )),
       map(([query, data]) => new QueryItemsConverter(data).fromQuery(query)),
@@ -81,7 +80,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private loadData(query: QueryModel): Observable<QueryData> {
-    return Observable.combineLatest(
+    return observableCombineLatest(
       this.store.select(selectAllCollections),
       this.store.select(selectAllLinkTypes)
     ).pipe(

@@ -21,9 +21,8 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges,
 import {Actions} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
+import {Observable, Subscription, combineLatest} from 'rxjs';
 import {first, map, tap} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
 import {AppState} from '../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../../../../core/store/collections/collections.action';
@@ -190,7 +189,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     if (this.attributesSubscription) {
       this.attributesSubscription.unsubscribe();
     }
-    this.attributesSubscription = Observable.combineLatest(this.attributes$, this.attribute$).pipe(
+    this.attributesSubscription = combineLatest(this.attributes$, this.attribute$).pipe(
       first()
     ).subscribe(([attributes, attribute]) => {
       if (this.attributeNameChangedPipe.transform(attribute, lastName)

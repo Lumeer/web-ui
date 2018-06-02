@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {of, Observable} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs/Observable';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {Collection, Permission} from '../../dto';
 import {CollectionService, ImportService, SearchService} from '../../rest';
@@ -59,7 +59,7 @@ export class CollectionsEffects {
       return this.searchService.searchCollections(queryDto, action.payload.workspace).pipe(
         map((dtos: Collection[]) => dtos.map(dto => CollectionConverter.fromDto(dto))),
         map((collections) => new CollectionsAction.GetSuccess({collections: collections})),
-        catchError((error) => Observable.of(new CollectionsAction.GetFailure({error: error})))
+        catchError((error) => of(new CollectionsAction.GetFailure({error: error})))
       );
     })
   );
@@ -79,7 +79,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.GetNames>(CollectionsActionType.GET_NAMES),
     mergeMap(() => this.collectionService.getAllCollectionNames().pipe(
       map((collectionNames) => new CollectionsAction.GetNamesSuccess({collectionNames})),
-      catchError((error) => Observable.of(new CollectionsAction.GetNamesFailure({error: error})))
+      catchError((error) => of(new CollectionsAction.GetNamesFailure({error: error})))
     ))
   );
 
@@ -108,7 +108,7 @@ export class CollectionsEffects {
 
           return actions;
         }),
-        catchError((error) => Observable.of(new CollectionsAction.CreateFailure({error: error})))
+        catchError((error) => of(new CollectionsAction.CreateFailure({error: error})))
       );
     })
   );
@@ -119,7 +119,7 @@ export class CollectionsEffects {
     tap(action => console.error(action.payload.error)),
     withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
     map(([action, organization]) => {
-      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+      if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
@@ -146,7 +146,7 @@ export class CollectionsEffects {
       return this.importService.importFile(action.payload.format, action.payload.importedCollection).pipe(
         map(collection => CollectionConverter.fromDto(collection)),
         map(collection => new CollectionsAction.ImportSuccess({collection: collection})),
-        catchError((error) => Observable.of(new CollectionsAction.ImportFailure({error: error})))
+        catchError((error) => of(new CollectionsAction.ImportFailure({error: error})))
       );
     })
   );
@@ -157,7 +157,7 @@ export class CollectionsEffects {
     tap(action => console.error(action.payload.error)),
     withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
     map(([action, organization]) => {
-      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+      if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
@@ -186,7 +186,7 @@ export class CollectionsEffects {
       return this.collectionService.updateCollection(collectionDto).pipe(
         map((dto: Collection) => CollectionConverter.fromDto(dto)),
         map(collection => new CollectionsAction.UpdateSuccess({collection: collection})),
-        catchError((error) => Observable.of(new CollectionsAction.CreateFailure({error: error})))
+        catchError((error) => of(new CollectionsAction.CreateFailure({error: error})))
       );
     })
   );
@@ -208,7 +208,7 @@ export class CollectionsEffects {
       flatMap(collectionId => [new CollectionsAction.DeleteSuccess({collectionId}),
         new DocumentsAction.ClearByCollection({collectionId})
       ]),
-      catchError((error) => Observable.of(new CollectionsAction.DeleteFailure({error: error})))
+      catchError((error) => of(new CollectionsAction.DeleteFailure({error: error})))
     ))
   );
 
@@ -226,8 +226,8 @@ export class CollectionsEffects {
   public addFavorite$ = this.actions$.pipe(
     ofType<CollectionsAction.AddFavorite>(CollectionsActionType.ADD_FAVORITE),
     mergeMap(action => this.collectionService.addFavorite(action.payload.collectionId).pipe(
-      mergeMap(() => Observable.of()),
-      catchError((error) => Observable.of(new CollectionsAction.AddFavoriteFailure({collectionId: action.payload.collectionId, error: error})))
+      mergeMap(() => of()),
+      catchError((error) => of(new CollectionsAction.AddFavoriteFailure({collectionId: action.payload.collectionId, error: error})))
     )),
   );
 
@@ -245,8 +245,8 @@ export class CollectionsEffects {
   public removeFavorite$ = this.actions$.pipe(
     ofType<CollectionsAction.RemoveFavorite>(CollectionsActionType.REMOVE_FAVORITE),
     mergeMap(action => this.collectionService.removeFavorite(action.payload.collectionId).pipe(
-      mergeMap(() => Observable.of()),
-      catchError((error) => Observable.of(new CollectionsAction.RemoveFavoriteFailure({collectionId: action.payload.collectionId, error: error})))
+      mergeMap(() => of()),
+      catchError((error) => of(new CollectionsAction.RemoveFavoriteFailure({collectionId: action.payload.collectionId, error: error})))
     )),
   );
 
@@ -270,9 +270,9 @@ export class CollectionsEffects {
       const collection = collections[collectionId];
       const oldDefaultAttributeId = collection.defaultAttributeId;
       return this.collectionService.setDefaultAttribute(collectionId, attributeId).pipe(
-        concatMap(() => Observable.of()),
-        catchError((error) => Observable.of(new CollectionsAction.SetDefaultAttributeFailure({error, collectionId, oldDefaultAttributeId})))
-      )
+        concatMap(() => of()),
+        catchError((error) => of(new CollectionsAction.SetDefaultAttributeFailure({error, collectionId, oldDefaultAttributeId})))
+      );
     })
   );
 
@@ -318,7 +318,7 @@ export class CollectionsEffects {
           }
           return actions;
         }),
-        catchError((error) => Observable.of(new CollectionsAction.CreateAttributesFailure({error: error})))
+        catchError((error) => of(new CollectionsAction.CreateAttributesFailure({error: error})))
       );
     })
   );
@@ -350,7 +350,7 @@ export class CollectionsEffects {
           }
           return actions;
         }),
-        catchError((error) => Observable.of(new CollectionsAction.ChangeAttributeFailure({error: error})))
+        catchError((error) => of(new CollectionsAction.ChangeAttributeFailure({error: error})))
       );
     })
   );
@@ -383,8 +383,8 @@ export class CollectionsEffects {
           }
           return actions;
         }),
-        catchError((error) => Observable.of(new CollectionsAction.RemoveAttributeFailure({error: error})))
-      )
+        catchError((error) => of(new CollectionsAction.RemoveAttributeFailure({error: error})))
+      );
     })
   );
 
@@ -412,10 +412,10 @@ export class CollectionsEffects {
         observable = this.collectionService.updateGroupPermission(permissionDto, workspace);
       }
       return observable.pipe(
-        concatMap(() => Observable.of()),
+        concatMap(() => of()),
         catchError((error) => {
           const payload = {collectionId: action.payload.collectionId, type: action.payload.type, permission: action.payload.currentPermission, error};
-          return Observable.of(new CollectionsAction.ChangePermissionFailure(payload));
+          return of(new CollectionsAction.ChangePermissionFailure(payload));
         })
       );
     })
@@ -468,8 +468,8 @@ function updateCreateAttributesNextAction(nextAction: Action, attributes: Attrib
   }
 }
 
-
-function convertNewAttributes(attributes: AttributeModel[], action: DocumentsAction.Create | DocumentsAction.UpdateData | DocumentsAction.PatchData): DocumentModel {
+function convertNewAttributes(attributes: AttributeModel[],
+                              action: DocumentsAction.Create | DocumentsAction.UpdateData | DocumentsAction.PatchData): DocumentModel {
   const document = action.payload.document;
   const newAttributes = Object.keys(document.newData).reduce((acc, attrName) => {
     const attribute = attributes.find(attr => attr.name === attrName);
