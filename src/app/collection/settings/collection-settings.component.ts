@@ -55,7 +55,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
               private store: Store<AppState>) {
   }
 
-  public ngOnInit(){
+  public ngOnInit() {
     this.subscribeToStore();
   }
 
@@ -122,10 +122,10 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   }
 
   public onDocumentsClick() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.PostIt], {queryParams: {query: this.documentsQuery(this.collection.id)}})
+    this.router.navigate([this.workspacePath(), 'view', Perspective.PostIt], {queryParams: {query: this.documentsQuery(this.collection.id)}});
   }
 
-  private subscribeToStore(){
+  private subscribeToStore() {
     this.userCount$ = this.store.select(selectAllUsers)
       .pipe(map(users => users ? users.length : 0));
 

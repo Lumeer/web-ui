@@ -18,27 +18,27 @@
  */
 
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {Subscription, Observable} from "rxjs";
-import {Store} from "@ngrx/store";
-import {AppState} from "../../core/store/app.state";
-import {selectCollectionById, selectCollectionsByQuery} from "../../core/store/collections/collections.state";
-import {CollectionModel} from "../../core/store/collections/collection.model";
-import {combineLatest, filter, take, tap, withLatestFrom} from "rxjs/operators";
-import {isNullOrUndefined} from "util";
-import {DocumentModel} from "../../core/store/documents/document.model";
-import {selectDocumentsByCustomQuery} from "../../core/store/documents/documents.state";
-import {selectNavigation} from "../../core/store/navigation/navigation.state";
-import {ConditionType, QueryModel} from "../../core/store/navigation/query.model";
-import {Workspace} from "../../core/store/navigation/workspace.model";
-import {DocumentsAction} from "../../core/store/documents/documents.action";
-import {selectCurrentUserForWorkspace} from "../../core/store/users/users.state";
-import {Role} from "../../core/model/role";
-import {userRolesInResource} from "../utils/resource.utils";
-import {selectViewCursor} from "../../core/store/views/views.state";
-import {ViewsAction} from "../../core/store/views/views.action";
-import {CorrelationIdGenerator} from "../../core/store/correlation-id.generator";
-import {AttributeQueryItem} from "../search-box/query-item/model/attribute.query-item";
-import {QueryConverter} from "../../core/store/navigation/query.converter";
+import {Subscription, Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../core/store/app.state';
+import {selectCollectionById, selectCollectionsByQuery} from '../../core/store/collections/collections.state';
+import {CollectionModel} from '../../core/store/collections/collection.model';
+import {combineLatest, filter, take, tap, withLatestFrom} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
+import {DocumentModel} from '../../core/store/documents/document.model';
+import {selectDocumentsByCustomQuery} from '../../core/store/documents/documents.state';
+import {selectNavigation} from '../../core/store/navigation/navigation.state';
+import {ConditionType, QueryModel} from '../../core/store/navigation/query.model';
+import {Workspace} from '../../core/store/navigation/workspace.model';
+import {DocumentsAction} from '../../core/store/documents/documents.action';
+import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
+import {Role} from '../../core/model/role';
+import {userRolesInResource} from '../utils/resource.utils';
+import {selectViewCursor} from '../../core/store/views/views.state';
+import {ViewsAction} from '../../core/store/views/views.action';
+import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
+import {AttributeQueryItem} from '../search-box/query-item/model/attribute.query-item';
+import {QueryConverter} from '../../core/store/navigation/query.converter';
 
 @Component({
   selector: 'preview-results',
@@ -102,11 +102,12 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
       .subscribe(([collections, cursor]) => {
         this.collectionsCount = collections.length;
         if (!this.selectedCollection) {
+          let collection;
           if (cursor && cursor.collectionId) {
-            var collection = collections.find(c => c.id === cursor.collectionId);
+            collection = collections.find(c => c.id === cursor.collectionId);
           }
           if (!collection) {
-            var collection = collections[0];
+            collection = collections[0];
           }
 
           this.setActiveCollection(collection);
@@ -157,8 +158,9 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
         //take(1),
         withLatestFrom(this.store.select(selectViewCursor)))
         .subscribe(([documents, cursor]) => {
+          let idx;
           if (cursor && cursor.documentId) {
-            var idx = documents.findIndex(d => d.id === cursor.documentId);
+            idx = documents.findIndex(d => d.id === cursor.documentId);
           }
           if (!idx || idx < 0) {
             idx = 0;
@@ -225,7 +227,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
     if (!this.selectedCollection) {
       return [];
     }
-    var data = this.selectedCollection.attributes.reduce((acc, attr) => {
+    const data = this.selectedCollection.attributes.reduce((acc, attr) => {
       acc[attr.id] = '';
       return acc;
     }, {});
@@ -244,7 +246,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
               break;
             case ConditionType.NotEquals:
               if (attrFilter.value) {
-                if (typeof attrFilter.value === "number") {
+                if (typeof attrFilter.value === 'number') {
                   data[attrFilter.attributeId] = attrFilter.value + 1;
                 } else {
                   data[attrFilter.attributeId] = '';
@@ -252,6 +254,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
               } else {
                 data[attrFilter.attributeId] = 'N/A';
               }
+              break;
             case ConditionType.GreaterThanEquals:
             case ConditionType.LowerThanEquals:
             case ConditionType.Equals:
@@ -264,6 +267,5 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
 
     return data;
   }
-
 
 }

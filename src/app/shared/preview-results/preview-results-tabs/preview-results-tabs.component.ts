@@ -18,7 +18,7 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {CollectionModel} from "../../../core/store/collections/collection.model";
+import {CollectionModel} from '../../../core/store/collections/collection.model';
 
 @Component({
   selector: 'preview-results-tabs',
@@ -35,8 +35,6 @@ export class PreviewResultsTabsComponent implements OnInit {
 
   @Output()
   public select = new EventEmitter<CollectionModel>();
-
-  constructor() { }
 
   public ngOnInit() {
     if (!this.selectedCollection) {

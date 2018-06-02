@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 
@@ -37,9 +36,9 @@ import {DocumentConverter} from './document.converter';
 import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {selectDocumentById, selectDocumentsQueries} from './documents.state';
-import {HttpErrorResponse} from "@angular/common/http";
-import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
-import {RouterAction} from "../router/router.action";
+import {HttpErrorResponse} from '@angular/common/http';
+import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
+import {RouterAction} from '../router/router.action';
 
 @Injectable()
 export class DocumentsEffects {
@@ -117,7 +116,7 @@ export class DocumentsEffects {
     tap(action => console.error(action.payload.error)),
     withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
     map(([action, organization]) => {
-      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+      if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'document.create.serviceLimits',
@@ -136,7 +135,6 @@ export class DocumentsEffects {
       return new NotificationsAction.Error({message});
     })
   );
-
 
   @Effect()
   public addFavorite$ = this.actions$.pipe(
@@ -185,7 +183,6 @@ export class DocumentsEffects {
       return new NotificationsAction.Error({message});
     })
   );
-
 
   @Effect()
   public updateData$: Observable<Action> = this.actions$.pipe(

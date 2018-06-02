@@ -20,7 +20,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {UserModel} from '../../../core/store/users/user.model';
-import {filterUsersByFilter} from "../../../core/store/users/user.filters";
+import {filterUsersByFilter} from '../../../core/store/users/user.filters';
 import {ResourceType} from '../../../core/model/resource-type';
 import {PermissionModel, PermissionsModel} from '../../../core/store/permissions/permissions.model';
 import {ResourceModel} from '../../../core/model/resource.model';

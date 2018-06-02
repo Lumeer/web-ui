@@ -139,7 +139,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
       .pipe(filter(organization => !isNullOrUndefined(organization)))
       .subscribe(organization => {
-        if (isNullOrUndefined(this.organization) || this.organization.id != organization.id) {
+        if (isNullOrUndefined(this.organization) || this.organization.id !== organization.id) {
           this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
         }
         this.organization = organization;

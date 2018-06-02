@@ -82,7 +82,7 @@ export class CollectionService extends PermissionService {
     return this.httpClient.get<string[]>(`${this.apiPrefix()}/names`);
   }
 
-  public setDefaultAttribute(collectionId: string, attributeId: string): Observable<any>{
+  public setDefaultAttribute(collectionId: string, attributeId: string): Observable<any> {
     return this.httpClient.put(`${this.apiPrefix()}/${collectionId}/attributes/${attributeId}/default`, {});
   }
 
@@ -100,7 +100,7 @@ export class CollectionService extends PermissionService {
   }
 
   public createAttributes(collectionId: string, attributes: Attribute[]): Observable<Attribute[]> {
-    return this.httpClient.post<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`, attributes)
+    return this.httpClient.post<Attribute[]>(`${this.apiPrefix()}/${collectionId}/attributes`, attributes);
   }
 
   public updateAttribute(collectionId: string, id: string, attribute: Attribute): Observable<Attribute> {

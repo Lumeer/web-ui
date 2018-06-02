@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
   public ngOnInit() {
     this.setNotificationStyle();
     try {
-      this.isChrome = ((navigator as any).userAgent as string).toLowerCase().indexOf("chrome") >= 0;
+      this.isChrome = ((navigator as any).userAgent as string).toLowerCase().indexOf('chrome') >= 0;
     } catch(e) {
       this.isChrome = false;
     }

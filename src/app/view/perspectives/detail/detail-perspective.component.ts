@@ -18,24 +18,24 @@
  */
 
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {DocumentModel} from "../../../core/store/documents/document.model";
-import {QueryModel} from "../../../core/store/navigation/query.model";
-import {CollectionModel} from "../../../core/store/collections/collection.model";
-import {selectCollectionById} from "../../../core/store/collections/collections.state";
-import {withLatestFrom} from "rxjs/operators";
-import {selectCurrentUserForWorkspace} from "../../../core/store/users/users.state";
-import {Role} from "../../../core/model/role";
-import {userRolesInResource} from "../../../shared/utils/resource.utils";
-import {Subscription} from "rxjs";
-import {Store} from "@ngrx/store";
-import {AppState} from "../../../core/store/app.state";
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {QueryModel} from '../../../core/store/navigation/query.model';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {withLatestFrom} from 'rxjs/operators';
+import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
+import {Role} from '../../../core/model/role';
+import {userRolesInResource} from '../../../shared/utils/resource.utils';
+import {Subscription} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../core/store/app.state';
 
 @Component({
   selector: 'detail-perspective',
   templateUrl: './detail-perspective.component.html',
   styleUrls: ['./detail-perspective.component.scss']
 })
-export class DetailPerspectiveComponent implements OnInit, OnDestroy {
+export class DetailPerspectiveComponent implements OnDestroy {
 
   public query: QueryModel;
 
@@ -54,15 +54,8 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<AppState>) { }
 
-  public ngOnInit() {
-    this.subscribeAll();
-  }
-
   public ngOnDestroy(): void {
     this.unsubscribeAll();
-  }
-
-  private subscribeAll(): void {
   }
 
   private unsubscribeAll(): void {

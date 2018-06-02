@@ -28,12 +28,12 @@ import {UserService} from '../../rest';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {DefaultWorkspaceConverter, UserConverter} from './user.converter';
 import {UsersAction, UsersActionType} from './users.action';
-import {AppState} from "../app.state";
+import {AppState} from '../app.state';
 import {GlobalService} from '../../rest/global.service';
 import {selectUsersLoadedForOrganization} from './users.state';
-import {HttpErrorResponse} from "@angular/common/http";
-import {RouterAction} from "../router/router.action";
-import {selectOrganizationsDictionary, selectSelectedOrganization} from "../organizations/organizations.state";
+import {HttpErrorResponse} from '@angular/common/http';
+import {RouterAction} from '../router/router.action';
+import {selectOrganizationsDictionary, selectSelectedOrganization} from '../organizations/organizations.state';
 
 @Injectable()
 export class UsersEffects {
@@ -91,7 +91,7 @@ export class UsersEffects {
     withLatestFrom(this.store$.select(selectOrganizationsDictionary)),
     map(([action, organizations]) => {
       const organization = organizations[action.payload.organizationId];
-      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+      if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Trial Service'});
         const message = this.i18n({
           id: 'user.create.serviceLimits',
@@ -163,7 +163,7 @@ export class UsersEffects {
       return this.globalService.saveDefaultWorkspace(defaultWorkspaceDto).pipe(
         concatMap(() => of()),
         catchError(() => of())
-      )
+      );
     })
   );
 

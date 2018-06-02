@@ -25,7 +25,7 @@ export class PermissionsHelper {
     const entityPermissions: PermissionModel[] = permissions ? permissions[type].slice() : [];
 
     const index = entityPermissions.findIndex(p => p.id === permission.id);
-    if (index != -1) {
+    if (index !== -1) {
       entityPermissions.splice(index, 1, permission);
     } else {
       entityPermissions.push(permission);

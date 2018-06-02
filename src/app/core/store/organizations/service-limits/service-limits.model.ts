@@ -20,12 +20,12 @@
 import {ServiceLevelType} from '../../../dto/service-level-type';
 
 export interface ServiceLimitsModel {
-  organizationId: string,
-  serviceLevel: ServiceLevelType,
-  users: number,
-  projects: number,
-  files: number,
-  documents: number,
-  dbSizeMb: number,
-  validUntil: Date
+  organizationId: string;
+  serviceLevel: ServiceLevelType;
+  users: number;
+  projects: number;
+  files: number;
+  documents: number;
+  dbSizeMb: number;
+  validUntil: Date;
 }

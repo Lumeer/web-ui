@@ -154,9 +154,6 @@ export namespace UsersAction {
 
   export class Clear implements Action {
     public readonly type = UsersActionType.CLEAR;
-
-    public constructor() {
-    }
   }
 
   export type All = Get | GetSuccess | GetFailure |

@@ -18,24 +18,24 @@
  */
 
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {I18n} from "@ngx-translate/i18n-polyfill";
-import {NotificationService} from "../../../core/notifications/notification.service";
-import {AttributeModel, CollectionModel} from "../../../core/store/collections/collection.model";
-import {DocumentModel} from "../../../core/store/documents/document.model";
-import {Subscription, Observable, interval} from "rxjs";
-import {Store} from "@ngrx/store";
-import {AppState} from "../../../core/store/app.state";
-import {selectDocumentById} from "../../../core/store/documents/documents.state";
-import {DocumentsAction} from "../../../core/store/documents/documents.action";
-import {selectCollectionById} from "../../../core/store/collections/collections.state";
-import {selectUserById} from "../../../core/store/users/users.state";
-import {filter, map, take} from "rxjs/operators";
-import {isNullOrUndefined} from "util";
-import {UsersAction} from "../../../core/store/users/users.action";
-import {selectOrganizationByWorkspace} from "../../../core/store/organizations/organizations.state";
-import {CorrelationIdGenerator} from "../../../core/store/correlation-id.generator";
-import {CollectionsAction} from "../../../core/store/collections/collections.action";
-import {DetailRow} from "../detail-row";
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {NotificationService} from '../../../core/notifications/notification.service';
+import {AttributeModel, CollectionModel} from '../../../core/store/collections/collection.model';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {Subscription, Observable, interval} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../core/store/app.state';
+import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {selectUserById} from '../../../core/store/users/users.state';
+import {filter, map, take} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
+import {UsersAction} from '../../../core/store/users/users.action';
+import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
+import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generator';
+import {CollectionsAction} from '../../../core/store/collections/collections.action';
+import {DetailRow} from '../detail-row';
 
 @Component({
   selector: 'document-detail',
@@ -72,7 +72,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     return this._documentModel;
   }
 
-  @Input("document")
+  @Input('document')
   set documentModel(model: DocumentModel) {
     this._documentModel = model;
     this.rows = [];
@@ -302,7 +302,8 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
       const documentUpdateAction = new DocumentsAction.UpdateData({ document: updatedDocument });
 
       if (updatedDocument.newData && Object.getOwnPropertyNames(updatedDocument.newData).length > 0) {
-        const newAttributes = Object.keys(updatedDocument.newData).map(name => ({name, constraints: [], correlationId: updatedDocument.newData[name].correlationId}));
+        const newAttributes = Object.keys(updatedDocument.newData)
+          .map(name => ({name, constraints: [], correlationId: updatedDocument.newData[name].correlationId}));
 
         this.store.dispatch(new CollectionsAction.CreateAttributes(
           {collectionId: this._documentModel.collectionId, attributes: newAttributes, nextAction: documentUpdateAction})
@@ -319,7 +320,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   public addAttrRow() {
-    this.rows.push({ name: "", value: "", correlationId: CorrelationIdGenerator.generate(), warning: this.getEmptyWarning() });
+    this.rows.push({ name: '', value: '', correlationId: CorrelationIdGenerator.generate(), warning: this.getEmptyWarning() });
   }
 
   public onRemoveRow(idx: number) {
@@ -369,11 +370,11 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   private getEmptyWarning(): string {
-    return this.i18n({ id: "shared.document.detail.attribute.empty", value: "The attribute name cannot be empty." })
+    return this.i18n({ id: 'shared.document.detail.attribute.empty', value: 'The attribute name cannot be empty.' });
   }
 
   private getCollisionWarning(): string {
-    return this.i18n({ id: "shared.document.detail.attribute.collision", value: "The attribute name is already used in this document." })
+    return this.i18n({ id: 'shared.document.detail.attribute.collision', value: 'The attribute name is already used in this document.' });
   }
 
   private getDocumentSummary(): string {

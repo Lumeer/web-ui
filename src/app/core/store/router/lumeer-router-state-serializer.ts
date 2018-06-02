@@ -37,11 +37,11 @@ export class LumeerRouterStateSerializer implements RouterStateSerializer<Router
     const queryParams: Params = {};
 
     while (route.firstChild) {
-      for (const param in route.params) {
-        params[param] = route.params[param];
+      for (const param of route.paramMap.keys) {
+        params[param] = route.paramMap.get(param);
       }
-      for (const queryParam in route.queryParams) {
-        queryParams[queryParam] = route.queryParams[queryParam];
+      for (const queryParam of route.queryParamMap.keys) {
+        queryParams[queryParam] = route.queryParamMap.get(queryParam);
       }
       route = route.firstChild;
     }

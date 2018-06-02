@@ -19,7 +19,7 @@
 
 import {Component, EventEmitter, Output} from '@angular/core';
 
-import {Validator} from "../../../core/validators/validator";
+import {Validator} from '../../../core/validators/validator';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({

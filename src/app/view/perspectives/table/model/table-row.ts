@@ -22,14 +22,14 @@ import {TablePart} from './table-part';
 
 export class TableRow {
 
-  part: TablePart;
+  public part: TablePart;
 
-  documents: Document[] = [];
+  public documents: Document[] = [];
 
-  nextLinkedRows: TableRow[] = [];
-  previousLinkedRow: TableRow;
+  public nextLinkedRows: TableRow[] = [];
+  public previousLinkedRow: TableRow;
 
-  rowOffset: number;
+  public rowOffset: number;
 
   public rowNumber(): number {
     return this.rowAbove ? this.rowAbove.rowNumber() + this.rowAbove.countRows() : 1;

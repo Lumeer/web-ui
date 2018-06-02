@@ -72,7 +72,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collection) {
-      this.pairAttributes()
+      this.pairAttributes();
     }
     if (changes.postItModel) {
       this.constructRows();
@@ -243,7 +243,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public hasWriteRole(): boolean {
-    return this.collectionRoles && this.collectionRoles.includes(Role.Write)
+    return this.collectionRoles && this.collectionRoles.includes(Role.Write);
   }
 
   private pairAttributes() {
@@ -298,7 +298,6 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
       return acc;
     }, {});
 
-
     const newData: { [attributeName: string]: any } = this.postItRows.filter(row => isNullOrUndefined(row.attributeId))
       .reduce((acc: { [attributeName: string]: any }, row) => {
         acc[row.attributeName] = {value: row.value, correlationId: row.correlationId};
@@ -314,7 +313,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
       filter(favorite => favorite !== this.lastSyncedFavorite)
     ).subscribe(favorite => {
       this.lastSyncedFavorite = null;
-      this.favoriteChange.emit({favorite, onlyStore: false})
+      this.favoriteChange.emit({favorite, onlyStore: false});
     });
   }
 }

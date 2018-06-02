@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 
@@ -32,14 +31,14 @@ import {selectOrganizationsDictionary, selectSelectedOrganization} from '../orga
 import {ProjectConverter} from './project.converter';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {selectProjectsCodes, selectProjectsDictionary, selectProjectsLoaded} from './projects.state';
-import {isNullOrUndefined} from "util";
+import {isNullOrUndefined} from 'util';
 import {Permission} from '../../dto';
 import {PermissionType} from '../permissions/permissions.model';
 import {PermissionsConverter} from '../permissions/permissions.converter';
-import {HttpErrorResponse} from "@angular/common/http";
-import {RouterAction} from "../router/router.action";
+import {HttpErrorResponse} from '@angular/common/http';
+import {RouterAction} from '../router/router.action';
 import {RouteFinder} from '../../../shared/utils/route-finder';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 @Injectable()
 export class ProjectsEffects {
@@ -129,7 +128,7 @@ export class ProjectsEffects {
     tap(action => console.error(action.payload.error)),
     withLatestFrom(this.store$.select(selectSelectedOrganization)),
     map(([action, organization]) => {
-      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+      if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'project.create.serviceLimits',
@@ -249,9 +248,9 @@ export class ProjectsEffects {
         concatMap(() => of()),
         catchError((error) => {
           const payload = {projectId: action.payload.projectId, type: action.payload.type, permission: action.payload.currentPermission, error};
-          return of(new ProjectsAction.ChangePermissionFailure(payload))
+          return of(new ProjectsAction.ChangePermissionFailure(payload));
         })
-      )
+      );
     }),
   );
 

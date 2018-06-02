@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {of, Observable} from 'rxjs';
 import {LinkType, Suggestions} from '../../../../core/dto';
 import {CollectionConverter} from '../../../../core/store/collections/collection.converter';

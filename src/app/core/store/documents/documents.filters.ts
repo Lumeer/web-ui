@@ -20,7 +20,7 @@
 import {isNullOrUndefined} from 'util';
 import {AttributeFilter, ConditionType, QueryModel} from '../navigation/query.model';
 import {DocumentModel} from './document.model';
-import {QueryConverter} from "../navigation/query.converter";
+import {QueryConverter} from '../navigation/query.converter';
 
 export function filterDocumentsByQuery(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
   documents = documents.filter(document => typeof(document) === 'object')
@@ -55,7 +55,7 @@ function filterDocumentsByFulltext(documents: DocumentModel[], query: QueryModel
 }
 
 function filterDocumentsByFilters(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
-  if (!query.filters || query.filters.length == 0) {
+  if (!query.filters || query.filters.length === 0) {
     return documents;
   }
 
@@ -102,4 +102,3 @@ function paginate(documents: DocumentModel[], query: QueryModel) {
 
   return documents.slice(query.page * query.pageSize, (query.page + 1) * query.pageSize);
 }
-

@@ -26,9 +26,9 @@ import {selectOrganizationByWorkspace} from '../../core/store/organizations/orga
 import {UserModel} from '../../core/store/users/user.model';
 import {filter, map, tap} from 'rxjs/operators';
 import {UsersAction} from '../../core/store/users/users.action';
-import {isNullOrUndefined} from "util";
-import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from "../../core/store/users/users.state";
-import {ResourceType} from "../../core/model/resource-type";
+import {isNullOrUndefined} from 'util';
+import {selectCurrentUserForWorkspace, selectUsersForWorkspace} from '../../core/store/users/users.state';
+import {ResourceType} from '../../core/model/resource-type';
 import {ResourceModel} from '../../core/model/resource.model';
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
@@ -66,7 +66,7 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     if (this.organizationSubscription) {
-      this.organizationSubscription.unsubscribe()
+      this.organizationSubscription.unsubscribe();
     }
   }
 

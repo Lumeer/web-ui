@@ -111,7 +111,8 @@ function onRemoveAttributeSuccess(state: CollectionsState, action: CollectionsAc
   return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {attributes: attributes}}, state);
 }
 
-function onChangePermission(state: CollectionsState, action: CollectionsAction.ChangePermissionSuccess | CollectionsAction.ChangePermissionFailure): CollectionsState {
+function onChangePermission(state: CollectionsState,
+                            action: CollectionsAction.ChangePermissionSuccess | CollectionsAction.ChangePermissionFailure): CollectionsState {
   const collection = state.entities[action.payload.collectionId];
   const permissions = PermissionsHelper.changePermission(collection.permissions, action.payload.type, action.payload.permission);
 

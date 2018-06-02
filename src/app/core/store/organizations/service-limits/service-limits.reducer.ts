@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {initialServiceLimitsState, serviceLimitsAdapter, ServiceLimitsState} from "./service-limits.state";
-import {ServiceLimitsAction, ServiceLimitsActionType} from "./service-limits.action";
+import {initialServiceLimitsState, serviceLimitsAdapter, ServiceLimitsState} from './service-limits.state';
+import {ServiceLimitsAction, ServiceLimitsActionType} from './service-limits.action';
 
 export function serviceLimitsReducer(state: ServiceLimitsState = initialServiceLimitsState, action: ServiceLimitsAction.All): ServiceLimitsState {
   switch (action.type) {

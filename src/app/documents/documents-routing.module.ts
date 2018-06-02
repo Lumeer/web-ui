@@ -27,7 +27,7 @@ import {AuthGuard} from '../core/guards/auth.guard';
 const documentRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/f/:collectionId/records',
-    canActivate:[AuthGuard, WorkspaceGuard],
+    canActivate: [AuthGuard, WorkspaceGuard],
     component: DocumentsComponent
   }
 ];

@@ -28,7 +28,7 @@ import {filter, map} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
 import {ResourceType} from '../../core/model/resource-type';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
-import {isNullOrUndefined} from "util";
+import {isNullOrUndefined} from 'util';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';

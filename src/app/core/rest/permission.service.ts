@@ -51,7 +51,7 @@ export abstract class PermissionService {
 
   public removeUserPermission(user: string): Observable<HttpResponse<any>> {
     return this.httpClient.delete(`${this.actualApiPrefix()}/permissions/users/${user}`,
-      {observe: 'response', responseType: 'text'})
+      {observe: 'response', responseType: 'text'});
   }
 
   public removeGroupPermission(group: string): Observable<HttpResponse<any>> {

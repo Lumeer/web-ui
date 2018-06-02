@@ -21,9 +21,9 @@ import {EnvironmentVariables} from './environment-variables';
 
 export interface Environment extends EnvironmentVariables {
 
-  analytics: boolean,
-  keycloak: boolean,
-  production: boolean,
-  storeDevtools: boolean
+  analytics: boolean;
+  keycloak: boolean;
+  production: boolean;
+  storeDevtools: boolean;
 
 }

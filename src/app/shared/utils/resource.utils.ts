@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {ResourceModel} from '../../core/model/resource.model';
 import {Role} from '../../core/model/role';
 import {UserModel} from '../../core/store/users/user.model';

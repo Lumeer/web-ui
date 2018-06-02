@@ -20,7 +20,7 @@
 import {Component} from '@angular/core';
 
 import {CollectionTabComponent} from '../collection-tab.component';
-import {ResourceType} from "../../../../core/model/resource-type";
+import {ResourceType} from '../../../../core/model/resource-type';
 
 @Component({
   templateUrl: './collection-users.component.html'
@@ -28,7 +28,7 @@ import {ResourceType} from "../../../../core/model/resource-type";
 export class CollectionUsersComponent extends CollectionTabComponent {
 
   public getResourceType(): ResourceType {
-    return ResourceType.Collection
+    return ResourceType.Collection;
   }
 
 }

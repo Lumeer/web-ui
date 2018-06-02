@@ -10,15 +10,10 @@
     "i18n-ts": "ngx-extractor -i \"src/app/**/*.ts\" -f xlf -o src/i18n/messages.xlf",
     "i18n-merge": "xliffmerge --profile xliffmerge.json en cs",
     "lint": "ng lint",
-    "prepree2e": "npm start",
-    "pree2e": "webdriver-manager update --standalone false --gecko false --quiet",
-    "config": "node ./config/env-vars.js",
     "build": "NODE_OPTIONS=--max_old_space_size=4096 ng build $(node ./config/env-vars.js)",
     "start": "ng serve",
     "start:cs": "ng serve --configuration=cs",
-    "start:en": "ng serve --configuration=en",
-    "test": "karma start ./karma.conf.js",
-    "e2e": "protractor ./protractor.conf.js"
+    "start:en": "ng serve --configuration=en"
   },
   "repository": {
     "type": "git",

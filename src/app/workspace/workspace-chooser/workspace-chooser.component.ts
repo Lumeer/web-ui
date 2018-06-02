@@ -39,7 +39,7 @@ import {selectProjectById, selectProjectsCodesForSelectedOrganization, selectPro
 import {RouterAction} from '../../core/store/router/router.action';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {UserSettingsService} from '../../core/user-settings.service';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 import {userHasRoleInResource, userRolesInResource} from '../../shared/utils/resource.utils';
 import {UserModel} from '../../core/store/users/user.model';
 import {mapGroupsOnUser, selectCurrentUser, selectCurrentUserForOrganization} from '../../core/store/users/users.state';

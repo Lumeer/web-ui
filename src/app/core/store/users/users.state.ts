@@ -21,17 +21,17 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {UserModel} from './user.model';
-import {selectOrganizationByWorkspace} from "../organizations/organizations.state";
-import {selectGroupsDictionary} from "../groups/groups.state";
-import {filterUserFunctions, filterUsersByOrganization} from "./user.filters";
-import {GroupModel} from "../groups/group.model";
+import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
+import {selectGroupsDictionary} from '../groups/groups.state';
+import {filterUserFunctions, filterUsersByOrganization} from './user.filters';
+import {GroupModel} from '../groups/group.model';
 import {OrganizationModel} from '../organizations/organization.model';
 import {Dictionary} from '@ngrx/entity/src/models';
 import {isNullOrUndefined} from 'util';
 
 export interface UsersState extends EntityState<UserModel> {
   loadedForOrganizationId: string;
-  currentUser: UserModel
+  currentUser: UserModel;
 }
 
 export const usersAdapter = createEntityAdapter<UserModel>();
@@ -52,9 +52,12 @@ export const selectCurrentUser = createSelector(selectUsersState, usersState => 
 
 export const selectUserById = (userId: string) => createSelector(selectUsersDictionary, usersMap => usersMap[userId]);
 
-export const selectCurrentUserForWorkspace = createSelector(selectCurrentUser, selectGroupsDictionary, selectOrganizationByWorkspace, (user, groups, organization) => {
-  return user ? (organization ? mapGroupsOnUser(user, organization.id, groups) : user) : undefined;
-});
+export const selectCurrentUserForWorkspace = createSelector(
+  selectCurrentUser,
+  selectGroupsDictionary,
+  selectOrganizationByWorkspace,
+  (user, groups, organization) => user ? (organization ? mapGroupsOnUser(user, organization.id, groups) : user) : undefined
+);
 
 export const selectCurrentUserForOrganization = (organization: OrganizationModel) =>
   createSelector(selectCurrentUser, selectGroupsDictionary, (user, groups) => {
@@ -71,4 +74,3 @@ export function mapGroupsOnUser(user: UserModel, organizationId: string, groups:
   user.groups = groupIds.map(id => groups[id]).filter(group => !isNullOrUndefined(group));
   return user;
 }
-

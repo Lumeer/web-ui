@@ -62,7 +62,7 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
       filter(favorite => favorite !== this.lastSyncedFavorite)
     ).subscribe(favorite => {
       this.lastSyncedFavorite = null;
-      this.favoriteChange.emit({favorite, onlyStore: false})
+      this.favoriteChange.emit({favorite, onlyStore: false});
     });
   }
 
@@ -105,7 +105,7 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
 
   public togglePanelVisible(event) {
     if (this.isPickerVisible) {
-      this.onPickerBlur()
+      this.onPickerBlur();
     } else {
       this.isPickerVisible = true;
     }
@@ -113,7 +113,7 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
   }
 
   public onPickerBlur() {
-    if (!this.isPickerVisible) return;
+    if (!this.isPickerVisible) { return; }
 
     if (this.collection.id) {
       this.update.emit(this.collection);
@@ -143,6 +143,5 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
     const roles = this.userRoles || [];
     return roles.includes(role);
   }
-
 
 }

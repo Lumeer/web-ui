@@ -26,20 +26,20 @@ import {Document} from '../../../../core/dto/document';
 
 export class TablePart {
 
-  index: number;
-  nextPart: TablePart;
+  public index: number;
+  public nextPart: TablePart;
 
-  collection: Collection;
-  shownAttributes: Attribute[] = [];
-  hiddenAttributes: Attribute[] = [];
+  public collection: Collection;
+  public shownAttributes: Attribute[] = [];
+  public hiddenAttributes: Attribute[] = [];
 
-  expandedDocuments: Document[] = [];
+  public expandedDocuments: Document[] = [];
 
-  linkType: LinkType;
-  linkedCollection: Collection;
-  linkedDocument?: DocumentModel;
+  public linkType: LinkType;
+  public linkedCollection: Collection;
+  public linkedDocument?: DocumentModel;
 
-  rows: TableRow[] = [];
-  sorting: {attributeId: string, descending: boolean};
+  public rows: TableRow[] = [];
+  public sorting: {attributeId: string, descending: boolean};
 
 }

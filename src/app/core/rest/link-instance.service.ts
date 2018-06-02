@@ -27,7 +27,7 @@ import {LinkInstance, Query} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
-import {map} from "rxjs/operators";
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class LinkInstanceService {

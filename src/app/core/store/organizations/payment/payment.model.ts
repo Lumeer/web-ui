@@ -18,17 +18,17 @@
  */
 
 export interface PaymentModel {
-  id: string,
-  organizationId: string,
-  date: Date,
-  amount: number,
-  paymentId: string,
-  start: Date,
-  validUntil: Date,
-  state: string,
-  serviceLevel: string,
-  users: number,
-  language: string,
-  currency: string,
-  gwUrl: string
+  id: string;
+  organizationId: string;
+  date: Date;
+  amount: number;
+  paymentId: string;
+  start: Date;
+  validUntil: Date;
+  state: string;
+  serviceLevel: string;
+  users: number;
+  language: string;
+  currency: string;
+  gwUrl: string;
 }

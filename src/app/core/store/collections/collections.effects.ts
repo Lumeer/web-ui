@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {of, Observable} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -120,7 +119,7 @@ export class CollectionsEffects {
     tap(action => console.error(action.payload.error)),
     withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
     map(([action, organization]) => {
-      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+      if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
@@ -158,7 +157,7 @@ export class CollectionsEffects {
     tap(action => console.error(action.payload.error)),
     withLatestFrom(this.store$.select(selectOrganizationByWorkspace)),
     map(([action, organization]) => {
-      if (action.payload.error instanceof HttpErrorResponse && action.payload.error.status == 402) {
+      if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
@@ -273,7 +272,7 @@ export class CollectionsEffects {
       return this.collectionService.setDefaultAttribute(collectionId, attributeId).pipe(
         concatMap(() => of()),
         catchError((error) => of(new CollectionsAction.SetDefaultAttributeFailure({error, collectionId, oldDefaultAttributeId})))
-      )
+      );
     })
   );
 
@@ -385,7 +384,7 @@ export class CollectionsEffects {
           return actions;
         }),
         catchError((error) => of(new CollectionsAction.RemoveAttributeFailure({error: error})))
-      )
+      );
     })
   );
 
@@ -469,8 +468,8 @@ function updateCreateAttributesNextAction(nextAction: Action, attributes: Attrib
   }
 }
 
-
-function convertNewAttributes(attributes: AttributeModel[], action: DocumentsAction.Create | DocumentsAction.UpdateData | DocumentsAction.PatchData): DocumentModel {
+function convertNewAttributes(attributes: AttributeModel[],
+                              action: DocumentsAction.Create | DocumentsAction.UpdateData | DocumentsAction.PatchData): DocumentModel {
   const document = action.payload.document;
   const newAttributes = Object.keys(document.newData).reduce((acc, attrName) => {
     const attribute = attributes.find(attr => attr.name === attrName);

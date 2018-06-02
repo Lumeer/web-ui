@@ -17,26 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'links-list',
   templateUrl: './links-list.component.html',
   styleUrls: ['./links-list.component.scss']
 })
-export class LinksListComponent implements OnInit {
+export class LinksListComponent {
 
   public links: string[] = [
-    "Name1",
-    "name2",
-    "Name3 ja ja lsdjfh aljsdkf aljsd fajsdf ajds flajsdhfla dsfl ajsdf ajsdhf lasd fladsjhf jadsf ajdfhask",
+    'Name1',
+    'name2',
+    'Name3 ja ja lsdjfh aljsdkf aljsd fajsdf ajds flajsdhfla dsfl ajsdf ajsdhf lasd fladsjhf jadsf ajdfhask',
   ];
 
-  public selectedLink: string = "Name1";
-
-  constructor() { }
-
-  public ngOnInit() {
-  }
+  public selectedLink: string = 'Name1';
 
 }

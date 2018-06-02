@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Action} from "@ngrx/store";
-import {ServiceLimitsModel} from "./service-limits.model";
+import {Action} from '@ngrx/store';
+import {ServiceLimitsModel} from './service-limits.model';
 
 export enum ServiceLimitsActionType {
 

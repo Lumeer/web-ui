@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {createEntityAdapter, EntityState} from "@ngrx/entity";
-import {createSelector} from "@ngrx/store";
-import {AppState} from "../../app.state";
-import {ServiceLimitsModel} from "./service-limits.model";
-import {selectOrganizationByWorkspace} from "../organizations.state";
+import {createEntityAdapter, EntityState} from '@ngrx/entity';
+import {createSelector} from '@ngrx/store';
+import {AppState} from '../../app.state';
+import {ServiceLimitsModel} from './service-limits.model';
+import {selectOrganizationByWorkspace} from '../organizations.state';
 
 export interface ServiceLimitsState extends EntityState<ServiceLimitsModel> {
 }

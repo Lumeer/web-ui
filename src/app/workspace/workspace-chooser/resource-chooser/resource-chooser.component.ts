@@ -167,7 +167,7 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private getActiveIndex(): number {
-    if (isNullOrUndefined(this.resources) || isNullOrUndefined(this.selectedId)) return -1;
+    if (isNullOrUndefined(this.resources) || isNullOrUndefined(this.selectedId)) { return -1; }
     return this.resources.findIndex(resource => resource.id === this.selectedId);
   }
 
@@ -297,7 +297,6 @@ export class ResourceChooserComponent implements OnChanges {
     const resourceModel = {...resource, description: newDescription};
     this.resourceUpdate.emit(resourceModel);
   }
-
 
   public getResourceIdentificator(resource: ResourceModel): string {
     return resource.id || resource.correlationId;

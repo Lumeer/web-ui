@@ -36,15 +36,14 @@ import {NotificationsAction} from '../../core/store/notifications/notifications.
 import {PostItLayoutConfig} from '../utils/layout/post-it-layout-config';
 import {PostItLayout} from '../utils/layout/post-it-layout';
 import {ProjectModel} from '../../core/store/projects/project.model';
-import {isNullOrUndefined} from "util";
-import {selectProjectByWorkspace} from "../../core/store/projects/projects.state";
-import {CorrelationIdGenerator} from "../../core/store/correlation-id.generator";
-import {DEFAULT_COLOR, DEFAULT_ICON} from "../../core/constants";
-import {NotificationService} from "../../core/notifications/notification.service";
+import {isNullOrUndefined} from 'util';
+import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
+import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
+import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
+import {NotificationService} from '../../core/notifications/notification.service';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
 import {userHasRoleInResource, userRolesInResource} from '../utils/resource.utils';
 import {UserModel} from '../../core/store/users/user.model';
-
 
 @Component({
   selector: 'post-it-collections',
@@ -162,7 +161,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       this.collectionRoles = collections.reduce((roles, collection) => {
         roles[collection.id] = userRolesInResource(user, collection);
         return roles;
-      }, {})
+      }, {});
     });
   }
 
@@ -217,15 +216,15 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     const {favorite, onlyStore} = data;
     if (onlyStore) {
       if (favorite) {
-        this.store.dispatch(new CollectionsAction.AddFavoriteSuccess({collectionId}))
+        this.store.dispatch(new CollectionsAction.AddFavoriteSuccess({collectionId}));
       } else {
-        this.store.dispatch(new CollectionsAction.RemoveFavoriteSuccess({collectionId}))
+        this.store.dispatch(new CollectionsAction.RemoveFavoriteSuccess({collectionId}));
       }
     } else {
       if (favorite) {
-        this.store.dispatch(new CollectionsAction.AddFavorite({collectionId}))
+        this.store.dispatch(new CollectionsAction.AddFavorite({collectionId}));
       } else {
-        this.store.dispatch(new CollectionsAction.RemoveFavorite({collectionId}))
+        this.store.dispatch(new CollectionsAction.RemoveFavorite({collectionId}));
       }
     }
   }

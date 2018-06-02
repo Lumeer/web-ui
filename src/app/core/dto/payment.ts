@@ -18,16 +18,16 @@
  */
 
 export interface Payment {
-  id: string,
-  date: number,
-  amount: number,
-  paymentId: string,
-  start: number,
-  validUntil: number,
-  state: string,
-  serviceLevel: string,
-  users: number,
-  language: string,
-  currency: string,
-  gwUrl: string
+  id: string;
+  date: number;
+  amount: number;
+  paymentId: string;
+  start: number;
+  validUntil: number;
+  state: string;
+  serviceLevel: string;
+  users: number;
+  language: string;
+  currency: string;
+  gwUrl: string;
 }

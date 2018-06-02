@@ -33,7 +33,7 @@ import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
 import {UserSettingsService} from '../../../../core/user-settings.service';
 import {SizeType} from '../../../../shared/slider/size-type';
-import {QueryModel} from "../../../../core/store/navigation/query.model";
+import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
@@ -114,7 +114,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public createDefaultAttributeHtml(document: DocumentModel): string {
-    if (isNullOrUndefined(document.data)) return '';
+    if (isNullOrUndefined(document.data)) { return ''; }
 
     const defaultAttributeId = this.getDefaultAttributeId(document);
     const value = document.data[defaultAttributeId] || '';

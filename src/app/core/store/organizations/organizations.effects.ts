@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
@@ -34,7 +33,7 @@ import {RouterAction} from '../router/router.action';
 import {OrganizationConverter} from './organization.converter';
 import {OrganizationsAction, OrganizationsActionType} from './organizations.action';
 import {selectOrganizationCodes, selectOrganizationsDictionary, selectOrganizationsLoaded} from './organizations.state';
-import {isNullOrUndefined} from "util";
+import {isNullOrUndefined} from 'util';
 import {Permission} from '../../dto';
 import {PermissionType} from '../permissions/permissions.model';
 import {PermissionsConverter} from '../permissions/permissions.converter';
@@ -207,9 +206,9 @@ export class OrganizationsEffects {
         concatMap(() => of()),
         catchError((error) => {
           const payload = {organizationId: action.payload.organizationId, type: action.payload.type, permission: action.payload.currentPermission, error};
-          return of(new OrganizationsAction.ChangePermissionFailure(payload))
+          return of(new OrganizationsAction.ChangePermissionFailure(payload));
         })
-      )
+      );
     }),
   );
 

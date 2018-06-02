@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {createEntityAdapter, EntityState} from "@ngrx/entity";
-import {createSelector} from "@ngrx/store";
-import {AppState} from "../../app.state";
-import {PaymentModel} from "./payment.model";
-import {selectOrganizationByWorkspace} from "../organizations.state";
+import {createEntityAdapter, EntityState} from '@ngrx/entity';
+import {createSelector} from '@ngrx/store';
+import {AppState} from '../../app.state';
+import {PaymentModel} from './payment.model';
+import {selectOrganizationByWorkspace} from '../organizations.state';
 
 export interface PaymentsState extends EntityState<PaymentModel> {
   lastCreatedPayment: PaymentModel;
@@ -39,6 +39,6 @@ export const selectPaymentsByWorkspace = createSelector(selectAllPayments, selec
   return payments.filter(payment => organization && (payment.organizationId === organization.id));
 });
 export const selectPaymentsByWorkspaceSorted = createSelector(selectPaymentsByWorkspace, payments => {
-  return payments.sort((a, b) => b.validUntil.getTime() - a.validUntil.getTime())
+  return payments.sort((a, b) => b.validUntil.getTime() - a.validUntil.getTime());
 });
 export const selectLastCreatedPayment = createSelector(selectPaymentsState, state => state.lastCreatedPayment);

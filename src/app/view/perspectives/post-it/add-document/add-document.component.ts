@@ -68,7 +68,7 @@ export class PostItAddDocumentComponent implements OnInit, OnDestroy {
     if (!this.selectedCollection) {
       return [];
     }
-    return this.selectedCollection.attributes.reduce((acc, attr)=>{
+    return this.selectedCollection.attributes.reduce((acc, attr) => {
       acc[attr.id] = '';
       return acc;
     }, {});

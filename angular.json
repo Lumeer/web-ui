@@ -135,12 +135,16 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
+            "tslintConfig": "tslint.json",
             "tsConfig": [
               "src/tsconfig.app.json",
               "src/tsconfig.spec.json"
             ],
             "exclude": [
-              "**/node_modules/**"
+              "**/node_modules/**",
+              "**/countries.data.ts",
+              "**/validator.ts",
+              "**/html-modifier.ts"
             ]
           }
         }

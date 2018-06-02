@@ -17,23 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {of, Observable} from 'rxjs';
-import {Injectable} from "@angular/core";
-import {catchError, flatMap, map, mergeMap, tap, withLatestFrom} from "rxjs/operators";
-import {Actions, Effect, ofType} from "@ngrx/effects";
-import {Action, Store} from "@ngrx/store";
-import {Router} from "@angular/router";
-import {AppState} from "../../app.state";
-import {OrganizationService} from "../../../rest";
-import {NotificationsAction} from "../../notifications/notifications.action";
-import {I18n} from "@ngx-translate/i18n-polyfill";
-import {PaymentsAction, PaymentsActionType} from "./payments.action";
-import {PaymentConverter} from "./payment.converter";
-import {selectOrganizationByWorkspace} from "../organizations.state";
-import {PlatformLocation} from "@angular/common";
-import {isNullOrUndefined} from "util";
-import {BrowserPlatformLocation} from "@angular/platform-browser/src/browser/location/browser_platform_location";
+import {Injectable} from '@angular/core';
+import {catchError, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Action, Store} from '@ngrx/store';
+import {Router} from '@angular/router';
+import {AppState} from '../../app.state';
+import {OrganizationService} from '../../../rest';
+import {NotificationsAction} from '../../notifications/notifications.action';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {PaymentsAction, PaymentsActionType} from './payments.action';
+import {PaymentConverter} from './payment.converter';
+import {selectOrganizationByWorkspace} from '../organizations.state';
+import {PlatformLocation} from '@angular/common';
+import {isNullOrUndefined} from 'util';
+import {BrowserPlatformLocation} from '@angular/platform-browser/src/browser/location/browser_platform_location';
 
 @Injectable()
 export class PaymentsEffects {
@@ -46,7 +45,7 @@ export class PaymentsEffects {
         map(dtos => dtos.map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto))),
         map(payments => new PaymentsAction.GetPaymentsSuccess({ payments: payments })),
         catchError(error => of(new PaymentsAction.GetPaymentsFailure({error: error})))
-      )
+      );
     })
   );
 
@@ -75,7 +74,7 @@ export class PaymentsEffects {
           return actions;
         }),
         catchError(error => of(new PaymentsAction.GetPaymentFailure({error: error})))
-      )
+      );
     })
   );
 
@@ -99,7 +98,7 @@ export class PaymentsEffects {
         map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
         map(payment => new PaymentsAction.CreatePaymentSuccess({ payment: payment })),
         catchError(error => of(new PaymentsAction.CreatePaymentFailure({error: error})))
-      )
+      );
     })
   );
 

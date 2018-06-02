@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {of, Observable} from 'rxjs';
 import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -66,7 +65,6 @@ export class DocumentService {
   public patchDocumentData(document: Document): Observable<Document> {
     return this.httpClient.patch<Document>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data);
   }
-
 
   public removeDocument(collectionId: string, documentId: string): Observable<HttpResponse<any>> {
     return this.httpClient.delete(

@@ -199,9 +199,6 @@ export namespace DocumentsAction {
 
   export class Clear implements Action {
     public readonly type = DocumentsActionType.CLEAR;
-
-    public constructor() {
-    }
   }
 
   export class ClearByCollection implements Action {

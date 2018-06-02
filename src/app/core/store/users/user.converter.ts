@@ -21,6 +21,28 @@ import {User} from '../../dto';
 import {DefaultWorkspaceModel, UserModel} from './user.model';
 import {DefaultWorkspace} from '../../dto/default-workspace';
 
+export class DefaultWorkspaceConverter {
+
+  public static fromDto(dto: DefaultWorkspace): DefaultWorkspaceModel {
+    return {
+      organizationId: dto.organizationId,
+      projectId: dto.projectId,
+      organizationCode: dto.organizationCode,
+      projectCode: dto.projectCode
+    };
+  }
+
+  public static toDto(model: DefaultWorkspaceModel): DefaultWorkspace {
+    return {
+      organizationId: model.organizationId,
+      projectId: model.projectId,
+      organizationCode: model.organizationCode,
+      projectCode: model.projectCode
+    };
+  }
+
+}
+
 export class UserConverter {
 
   public static fromDto(dto: User): UserModel {
@@ -40,28 +62,6 @@ export class UserConverter {
       email: user.email,
       groups: user.groupsMap
     };
-  }
-
-}
-
-export class DefaultWorkspaceConverter {
-
-  public static fromDto(dto: DefaultWorkspace): DefaultWorkspaceModel {
-    return {
-      organizationId: dto.organizationId,
-      projectId: dto.projectId,
-      organizationCode: dto.organizationCode,
-      projectCode: dto.projectCode
-    }
-  }
-
-  public static toDto(model: DefaultWorkspaceModel): DefaultWorkspace {
-    return {
-      organizationId: model.organizationId,
-      projectId: model.projectId,
-      organizationCode: model.organizationCode,
-      projectCode: model.projectCode
-    }
   }
 
 }

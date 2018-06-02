@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PermissionsModel} from "../store/permissions/permissions.model";
+import {PermissionsModel} from '../store/permissions/permissions.model';
 
 export interface ResourceModel {
 

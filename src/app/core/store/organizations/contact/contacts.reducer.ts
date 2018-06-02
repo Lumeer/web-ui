@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ContactsAction, ContactsActionType} from "./contacts.action";
-import {contactsAdapter, ContactsState, initialContactsState} from "./contacts.state";
+import {ContactsAction, ContactsActionType} from './contacts.action';
+import {contactsAdapter, ContactsState, initialContactsState} from './contacts.state';
 
 export function contactsReducer(state: ContactsState = initialContactsState, action: ContactsAction.All): ContactsState {
   switch (action.type) {

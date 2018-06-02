@@ -23,8 +23,8 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 import {CollectionService} from '../core/rest';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
-import {selectCollectionById, selectCollectionsLoaded} from "../core/store/collections/collections.state";
-import {Store} from "@ngrx/store";
+import {selectCollectionById, selectCollectionsLoaded} from '../core/store/collections/collections.state';
+import {Store} from '@ngrx/store';
 import {AppState} from '../core/store/app.state';
 import {CollectionModel} from '../core/store/collections/collection.model';
 import {CollectionsAction} from '../core/store/collections/collections.action';
@@ -47,7 +47,7 @@ export class CollectionSettingsGuard implements CanActivate {
   }
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    const organizationCode = next.paramMap.get("organizationCode");
+    const organizationCode = next.paramMap.get('organizationCode');
     const collectionId = next.paramMap.get('collectionId');
 
     return this.loadCollections().pipe(
@@ -88,7 +88,6 @@ export class CollectionSettingsGuard implements CanActivate {
       take(1)
     );
   }
-
 
   private dispatchErrorActionsNotExist() {
     const message = this.i18n({id: 'file.not.exist', value: 'File does not exist'});

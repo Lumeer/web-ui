@@ -20,7 +20,6 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {SizeType} from './size-type';
 
-
 @Component({
   selector: 'size-slider',
   templateUrl: './size-slider.component.html',
@@ -49,7 +48,7 @@ export class SizeSliderComponent implements OnInit {
     const position = event.clientX - this.offsetLeft();
     const index = Math.floor(position / this.step);
     const newCirclePosition = this.calculateSliderLeft(index);
-    if (newCirclePosition != this.circlePosition) {
+    if (newCirclePosition !== this.circlePosition) {
       this.circlePosition = newCirclePosition;
       this.newSize.emit(this.sizes[index]);
     }

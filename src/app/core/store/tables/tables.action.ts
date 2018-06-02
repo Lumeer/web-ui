@@ -83,7 +83,7 @@ export namespace TablesAction {
   export interface TableCursorAction extends Action {
     payload: {
       cursor: TableCursor
-    }
+    };
   }
 
   export class CreateTable implements Action {

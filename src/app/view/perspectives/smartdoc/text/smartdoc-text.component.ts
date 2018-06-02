@@ -148,7 +148,7 @@ export class SmartDocTextComponent {
     this.editor.setSelection(index + 1, 0);
   }
 
-  public getAttributeValue(id: string) : any{
+  public getAttributeValue(id: string) : any {
     return this.document.data[id];
   }
 

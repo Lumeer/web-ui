@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ResourceModel} from "../../model/resource.model";
+import {ResourceModel} from '../../model/resource.model';
 
 export interface AttributeModel {
 

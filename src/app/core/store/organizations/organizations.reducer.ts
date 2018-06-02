@@ -46,7 +46,8 @@ export function organizationsReducer(state: OrganizationsState = initialOrganiza
   }
 }
 
-function onChangePermission(state: OrganizationsState, action: OrganizationsAction.ChangePermissionSuccess | OrganizationsAction.ChangePermissionFailure): OrganizationsState {
+function onChangePermission(state: OrganizationsState,
+                            action: OrganizationsAction.ChangePermissionSuccess | OrganizationsAction.ChangePermissionFailure): OrganizationsState {
   const organization = state.entities[action.payload.organizationId];
   const permissions = PermissionsHelper.changePermission(organization.permissions, action.payload.type, action.payload.permission);
 

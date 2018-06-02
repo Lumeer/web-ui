@@ -37,9 +37,9 @@ import {extractAttributeLastName} from '../../../../../../../shared/utils/attrib
 
 interface LinkedAttribute {
 
-  linkType?: LinkTypeModel,
-  collection: CollectionModel,
-  attribute: AttributeModel
+  linkType?: LinkTypeModel;
+  collection: CollectionModel;
+  attribute: AttributeModel;
 
 }
 

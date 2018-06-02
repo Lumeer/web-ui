@@ -31,19 +31,19 @@ import {PickerModule} from '../shared/picker/picker.module';
 import {WorkspaceSelectGuard} from './workspace-select.guard';
 import {WorkspaceService} from './workspace.service';
 import {OrganizationRegistrationComponent} from './organization/registration/organization-registration.component';
-import {OrganizationSettingsGuard} from "./organization/organization-settings.guard";
-import {OrganizationDetailComponent} from "./organization/detail/organization-detail.component";
+import {OrganizationSettingsGuard} from './organization/organization-settings.guard';
+import {OrganizationDetailComponent} from './organization/detail/organization-detail.component';
 import {ContactFormComponent} from './organization/detail/contact-form/contact-form.component';
 import {PaymentsPanelComponent} from './organization/detail/payments-panel/payments-panel.component';
 import {PaymentsOrderComponent} from './organization/detail/payments-panel/payments-order/payments-order.component';
 import {PaymentsListComponent} from './organization/detail/payments-panel/payments-list/payments-list.component';
 import {PaymentsStateComponent} from './organization/detail/payments-panel/payments-state/payments-state.component';
-import {OrganizationUsersComponent} from "./organization/users/organization-users.component";
-import {UsersModule} from "../shared/users/users.module";
-import {ProjectSettingsGuard} from "./project/project-settings.guard";
+import {OrganizationUsersComponent} from './organization/users/organization-users.component';
+import {UsersModule} from '../shared/users/users.module';
+import {ProjectSettingsGuard} from './project/project-settings.guard';
 import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
 import {ResourcePostItComponent} from './workspace-chooser/resource-post-it/resource-post-it.component';
-import {DatePipe} from "@angular/common";
+import {DatePipe} from '@angular/common';
 
 @NgModule({
   imports: [

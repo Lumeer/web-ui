@@ -131,7 +131,7 @@ export class TableRowComponent implements OnChanges, OnDestroy {
   }
 
   private areLinkedRowsCollapsedOrExpanded(oldRow: TableRow, newRow: TableRow): boolean {
-    return oldRow && newRow && oldRow.expanded != newRow.expanded;
+    return oldRow && newRow && oldRow.expanded !== newRow.expanded;
   }
 
   public ngOnDestroy() {

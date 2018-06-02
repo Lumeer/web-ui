@@ -127,9 +127,6 @@ export namespace GroupsAction {
 
   export class Clear implements Action {
     public readonly type = GroupsActionType.CLEAR;
-
-    public constructor() {
-    }
   }
 
   export type All = Get | GetSuccess | GetFailure |

@@ -19,20 +19,20 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 import {AppState} from '../../../../core/store/app.state';
-import {Observable, Subscription, combineLatest} from "rxjs";
-import {selectViewsByQuery} from "../../../../core/store/views/views.state";
-import {ViewsAction} from "../../../../core/store/views/views.action";
-import {selectNavigation} from "../../../../core/store/navigation/navigation.state";
-import {Workspace} from "../../../../core/store/navigation/workspace.model";
-import {ViewModel} from "../../../../core/store/views/view.model";
-import {selectAllCollections} from "../../../../core/store/collections/collections.state";
-import {selectAllLinkTypes} from "../../../../core/store/link-types/link-types.state";
-import {QueryData} from "../../../../shared/search-box/query-data";
-import {filter} from "rxjs/operators";
-import {isNullOrUndefined} from "util";
+import {Observable, Subscription, combineLatest} from 'rxjs';
+import {selectViewsByQuery} from '../../../../core/store/views/views.state';
+import {ViewsAction} from '../../../../core/store/views/views.action';
+import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
+import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {ViewModel} from '../../../../core/store/views/view.model';
+import {selectAllCollections} from '../../../../core/store/collections/collections.state';
+import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
+import {QueryData} from '../../../../shared/search-box/query-data';
+import {filter} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'search-views',

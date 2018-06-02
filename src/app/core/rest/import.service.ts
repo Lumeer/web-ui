@@ -27,7 +27,7 @@ import {Collection} from '../dto/collection';
 import {Workspace} from '../store/navigation/workspace.model';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
-import {ImportedCollection} from "../dto/imported-collection";
+import {ImportedCollection} from '../dto/imported-collection';
 
 @Injectable()
 export class ImportService {

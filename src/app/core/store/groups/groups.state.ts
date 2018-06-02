@@ -21,7 +21,7 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {GroupModel} from './group.model';
-import {GroupFilters} from "./group.filters";
+import {GroupFilters} from './group.filters';
 
 export interface GroupsState extends EntityState<GroupModel> {
 

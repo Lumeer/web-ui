@@ -163,7 +163,7 @@ export class UserComponent implements OnInit, OnDestroy {
 
     let newRoles;
     if (this.userRoles.includes(role)) {
-      newRoles = this.userRoles.filter(r => r !== role)
+      newRoles = this.userRoles.filter(r => r !== role);
     } else {
       newRoles = [...this.userRoles, role];
     }

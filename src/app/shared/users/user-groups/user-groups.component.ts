@@ -19,10 +19,9 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {UserModel} from "../../../core/store/users/user.model";
-import {GroupModel} from "../../../core/store/groups/group.model";
-import {OrganizationModel} from "../../../core/store/organizations/organization.model";
-
+import {UserModel} from '../../../core/store/users/user.model';
+import {GroupModel} from '../../../core/store/groups/group.model';
+import {OrganizationModel} from '../../../core/store/organizations/organization.model';
 
 @Component({
   selector: 'user-groups',

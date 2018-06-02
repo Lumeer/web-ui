@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {of, combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';

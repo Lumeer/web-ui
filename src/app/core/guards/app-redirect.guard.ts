@@ -26,7 +26,7 @@ import {selectCurrentUser} from '../store/users/users.state';
 import {Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 import {DefaultWorkspaceModel} from '../store/users/user.model';
-import {isNullOrUndefined} from "util";
+import {isNullOrUndefined} from 'util';
 
 @Injectable()
 export class AppRedirectGuard implements CanActivate {
@@ -44,7 +44,7 @@ export class AppRedirectGuard implements CanActivate {
         } else {
           this.router.navigate(['workspace']);
         }
-        return false
+        return false;
       })
     );
   }

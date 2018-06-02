@@ -87,7 +87,7 @@ export class TableSingleColumn implements TableColumn {
   public constructor(public attributeId: string,
                      public attributeName?: string,
                      public width: number = DEFAULT_COLUMN_WIDTH) {
-  };
+  }
 
 }
 
@@ -97,7 +97,7 @@ export class TableCompoundColumn implements TableColumn {
 
   public constructor(public parent: TableSingleColumn,
                      public children: TableColumn[]) {
-  };
+  }
 
 }
 
@@ -106,13 +106,13 @@ export class TableHiddenColumn implements TableColumn {
   public readonly type = TableColumnType.HIDDEN;
 
   public constructor(public attributeIds: string[]) {
-  };
+  }
 
 }
 
 export interface TableConfig {
 
-  parts: TableConfigPart[]
+  parts: TableConfigPart[];
 
 }
 

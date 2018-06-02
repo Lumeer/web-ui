@@ -18,7 +18,7 @@
  */
 
 import {Component} from '@angular/core';
-import {ResourceType} from "../../../core/model/resource-type";
+import {ResourceType} from '../../../core/model/resource-type';
 
 @Component({
   templateUrl: './organization-users.component.html'
@@ -26,6 +26,6 @@ import {ResourceType} from "../../../core/model/resource-type";
 export class OrganizationUsersComponent {
 
   public getResourceType(): ResourceType {
-    return ResourceType.Organization
+    return ResourceType.Organization;
   }
 }
