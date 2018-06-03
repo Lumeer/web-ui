@@ -64,8 +64,4 @@ export class NewUserComponent {
       value: 'Type email to invite another user'
     });
   }
-
-  public tmpfce($event) {
-    console.log($event);
-  }
 }
