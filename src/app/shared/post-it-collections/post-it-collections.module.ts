@@ -20,6 +20,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import {PipesModule} from '../pipes/pipes.module';
 
 import {PostItCollectionsComponent} from './post-it-collections.component';
 import {PostItCollectionNameComponent} from './collection-name/post-it-collection-name.component';
@@ -37,7 +38,8 @@ import {RouterModule} from '@angular/router';
     FormsModule,
     PickerModule,
     ClickOutsideModule,
-    RouterModule
+    RouterModule,
+    PipesModule
   ],
   declarations: [
     LayoutItem,

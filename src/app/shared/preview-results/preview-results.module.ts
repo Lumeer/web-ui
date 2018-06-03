@@ -19,13 +19,15 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {PipesModule} from '../pipes/pipes.module';
 import {PreviewResultsComponent} from './preview-results.component';
 import {PreviewResultsTableComponent} from './preview-results-table/preview-results-table.component';
 import {PreviewResultsTabsComponent} from './preview-results-tabs/preview-results-tabs.component';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    PipesModule
   ],
   declarations: [
     PreviewResultsComponent,

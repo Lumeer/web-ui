@@ -23,7 +23,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {selectCollectionById, selectCollectionsByQuery} from '../../core/store/collections/collections.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
-import {combineLatest, filter, take, tap, withLatestFrom} from 'rxjs/operators';
+import {filter, take, tap, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectDocumentsByCustomQuery} from '../../core/store/documents/documents.state';
@@ -31,13 +31,9 @@ import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {ConditionType, QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {Role} from '../../core/model/role';
-import {userRolesInResource} from '../utils/resource.utils';
 import {selectViewCursor} from '../../core/store/views/views.state';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
-import {AttributeQueryItem} from '../search-box/query-item/model/attribute.query-item';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 
 @Component({
@@ -64,10 +60,6 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
   private query: QueryModel;
 
   private collectionQuery: QueryModel;
-
-  private userRightsSubscription: Subscription;
-
-  public hasWriteAccess = false;
 
   @Output()
   public selectCollection = new EventEmitter<CollectionModel>();
@@ -129,14 +121,12 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
 
   private unsubscribeAll() {
     this.allSubscriptions.unsubscribe();
-    this.unsubscribeUserRights();
   }
 
   public setActiveCollection(collection: CollectionModel) {
     this.selectedCollection = collection;
     this.getData();
     this.selectCollection.emit(collection);
-    this.subscribeUserRights();
     this.updateCursor();
   }
 
@@ -190,23 +180,6 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
     this.selectedDocument = $event;
     this.selectDocument.emit($event);
     this.updateCursor();
-  }
-
-  private subscribeUserRights(): void {
-    this.unsubscribeUserRights();
-
-    this.userRightsSubscription = this.store.select(selectCollectionById(this.selectedCollection.id)).pipe(
-      withLatestFrom(this.store.select(selectCurrentUserForWorkspace))
-    ).subscribe(([collection, user]) => {
-      const roles = userRolesInResource(user, collection);
-      this.hasWriteAccess = roles.includes(Role.Write);
-    });
-  }
-
-  private unsubscribeUserRights(): void {
-    if (this.userRightsSubscription) {
-      this.userRightsSubscription.unsubscribe();
-    }
   }
 
   public onNewDocument() {
