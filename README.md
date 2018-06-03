@@ -30,12 +30,13 @@ You also need to run our [back-end](https://github.com/Lumeer/engine) if you wan
 ## Deployment
 
 Here is the example command to build the application WAR file with all configuration properties you might need:
-```LUMEER_ENV=production \
-I18N_LOCALE=en \
-SENTRY_DSN=https://<key>@sentry.io/<project> \
-BUILD_NUMBER=42 \
-LUMEER_ENGINE=lumeer-engine \
-mvn clean package -Dcontext.root=en
+```bash
+$ LUMEER_ENV=production \
+> I18N_LOCALE=en \
+> SENTRY_DSN=https://<key>@sentry.io/<project> \
+> BUILD_NUMBER=42 \
+> LUMEER_ENGINE=lumeer-engine \
+> mvn clean package -Dcontext.root=en
 ```
 
  * `LUMEER_ENV`: environment in which the application runs (`staging`, `production` or empty)
