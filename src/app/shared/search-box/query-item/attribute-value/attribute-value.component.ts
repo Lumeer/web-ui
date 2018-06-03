@@ -78,7 +78,7 @@ export class AttributeValueComponent {
     this.moveLeftOnCaretStart();
   }
 
-  private onEnterKeyUp() {
+  public onEnterKeyUp() {
     this.enter.emit();
   }
 
