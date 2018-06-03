@@ -8,12 +8,12 @@
 
   <span [class.font-weight-bold]="queryItem | isCollectionItem"
         [title]="queryItem.text"
-        [ngClass]="(queryItem | isAttributeItem) ? null : 'overflow-hidden text-ellipsize'"
+        [class.text-truncate]="!(queryItem | isAttributeItem)"
         class="mx-1">
     {{queryItem.text | truncate:30}}
   </span>
 
-  <div class="mr-1 condition flex-grow-1 overflow-hidden"
+  <div class="mr-1 d-inline-block flex-grow-1 overflow-hidden"
        *ngIf="queryItem | isAttributeItem">
 
     <attribute-condition #attributeCondition

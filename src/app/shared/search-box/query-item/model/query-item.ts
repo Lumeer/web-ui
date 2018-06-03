@@ -30,6 +30,4 @@ export interface QueryItem {
   value: string;
   type: QueryItemType;
 
-  isComplete(): boolean;
-
 }

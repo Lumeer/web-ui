@@ -42,8 +42,4 @@ export class ViewQueryItem implements QueryItem {
     return this.view.code;
   }
 
-  public isComplete(): boolean {
-    return !!this.view;
-  }
-
 }

@@ -20,7 +20,7 @@
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 
 import {Subject} from 'rxjs';
-import {FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormGroup} from '@angular/forms';
 import {KeyCode} from '../../../key-code';
 import {getCaretCharacterOffsetWithin, HtmlModifier} from '../../../utils/html-modifier';
 import {AttributeQueryItem} from '../model/attribute.query-item';
@@ -56,10 +56,13 @@ export class AttributeConditionComponent implements OnInit {
   public useSuggestionSelection$ = new Subject<string>();
 
   public ngOnInit() {
-    const formControl = this.getControl();
-    if (!this.readonly && formControl && !formControl.valid) {
+    if (!this.readonly && this.conditionControl && !this.conditionControl.valid) {
       this.focusInput();
     }
+  }
+
+  public get conditionControl(): AbstractControl {
+    return this.form.get('condition');
   }
 
   public onFocus() {
@@ -107,10 +110,6 @@ export class AttributeConditionComponent implements OnInit {
 
   public focusInput() {
     setTimeout(() => HtmlModifier.setCursorAtTextContentEnd(this.conditionInput.nativeElement));
-  }
-
-  private getControl(): FormControl {
-    return this.form && <FormControl>this.form.controls['condition'];
   }
 
   private onRightArrowKeyDown() {

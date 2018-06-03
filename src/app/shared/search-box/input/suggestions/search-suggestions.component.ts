@@ -165,7 +165,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   }
 
   private isFullTextPresented(): boolean {
-    return this.queryItems && this.queryItems.findIndex(q => q.type === QueryItemType.Fulltext) !== -1;
+    return this.queryItems && !!this.queryItems.find(q => q.type === QueryItemType.Fulltext);
   }
 
   public onUseSuggestion(queryItem: QueryItem) {

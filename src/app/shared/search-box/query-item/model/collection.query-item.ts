@@ -44,8 +44,4 @@ export class CollectionQueryItem implements QueryItem {
     return [this.collection.color];
   }
 
-  public isComplete(): boolean {
-    return true;
-  }
-
 }

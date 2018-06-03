@@ -206,4 +206,8 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     }
   }
 
+  public trackByTypeAndText(index: number, queryItem: QueryItem) {
+    return queryItem.type.toString() + queryItem.text;
+  }
+
 }

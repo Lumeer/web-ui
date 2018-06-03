@@ -47,10 +47,6 @@ export class AttributeQueryItem implements QueryItem {
     return [this.collection.color];
   }
 
-  public isComplete(): boolean {
-    return !!this.condition; // TODO add condition validation
-  }
-
   public getFilter(): string {
     return `${this.collection.id}:${this.attribute.id}:${this.condition} ${this.conditionValue}`;
   }

@@ -4,7 +4,6 @@
        class="cursor-text"
        [attr.contenteditable]="!readonly"
        [attr.placeholder]="'='"
-       [class.invalid]="!queryItem.isComplete()"
        [(ngModel)]="queryItem.condition"
        (blur)="onBlur()"
        formControlName="condition"

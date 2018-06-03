@@ -41,8 +41,4 @@ export class LinkQueryItem implements QueryItem {
     return this.linkType.id;
   }
 
-  public isComplete(): boolean {
-    return true;
-  }
-
 }
