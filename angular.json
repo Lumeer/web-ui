@@ -36,10 +36,10 @@
               "src/styles.css"
             ],
             "scripts": [
-              "node_modules/plotly.js/dist/plotly.min.js",
               "node_modules/hammerjs/hammer.min.js",
               "node_modules/muuri/muuri.min.js"
-            ]
+            ],
+            "vendorChunk": false
           },
           "configurations": {
             "production": {
