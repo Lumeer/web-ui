@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 
@@ -76,7 +75,7 @@ export class AttributeValueComponent {
   }
 
   private onLeftArrowKeyDown() {
-    this.moveLeftOnCaretStart()
+    this.moveLeftOnCaretStart();
   }
 
   private onEnterKeyUp() {
@@ -84,7 +83,7 @@ export class AttributeValueComponent {
   }
 
   private onBackspaceKeyDown() {
-    this.moveLeftOnCaretStart()
+    this.moveLeftOnCaretStart();
   }
 
   private moveLeftOnCaretStart() {

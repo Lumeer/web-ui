@@ -1,4 +1,4 @@
-import {Directive, forwardRef, ElementRef, HostListener, Renderer2} from '@angular/core'
+import {Directive, forwardRef, ElementRef, HostListener, Renderer2} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 @Directive({
@@ -27,13 +27,13 @@ export class EditableDivDirective implements ControlValueAccessor {
     this.onChange();
   }
 
-  private _onChange = (_) => {
-  };
-  private _onTouched = () => {
-  };
+  private _onChange: (_) => void;
+  private _onTouched: () => void;
 
   public writeValue(val: any) {
-    if (!val) val = '';
+    if (!val) {
+      val = '';
+    }
 
     this._renderer.setProperty(this._elRef.nativeElement, 'textContent', val);
   }

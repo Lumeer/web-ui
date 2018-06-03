@@ -64,7 +64,7 @@ export class SearchInputComponent {
     return HtmlModifier.removeHtmlComments(html);
   }
 
-  public focusInput(){
+  public focusInput() {
     this.searchInput.nativeElement.focus();
   }
 

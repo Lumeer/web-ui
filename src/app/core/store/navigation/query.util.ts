@@ -104,5 +104,5 @@ export function conditionFromString(condition: string): ConditionType {
   } else if (GteVariants.includes(conditionLowerCase)) {
     return ConditionType.GreaterThanEquals;
   }
-  return null
+  return null;
 }

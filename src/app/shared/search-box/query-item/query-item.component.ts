@@ -48,7 +48,7 @@ export class QueryItemComponent {
     this.remove.emit();
   }
 
-  public onEnter(){
+  public onEnter() {
     this.enter.emit();
   }
 
