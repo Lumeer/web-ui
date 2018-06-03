@@ -22,12 +22,13 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ResourceType} from '../../../core/model/resource-type';
 import {ResourceModel} from '../../../core/model/resource.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {animateOpacityFromUp} from '../../animations';
 
 @Component({
   selector: 'resource-header',
   templateUrl: './resource-header.component.html',
-  styleUrls: ['./resource-header.component.scss']
-
+  styleUrls: ['./resource-header.component.scss'],
+  animations: [ animateOpacityFromUp ]
 })
 export class ResourceHeaderComponent {
 
