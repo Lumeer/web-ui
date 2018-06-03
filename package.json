@@ -10,7 +10,7 @@
     "i18n-ts": "ngx-extractor -i \"src/app/**/*.ts\" -f xlf -o src/i18n/messages.xlf",
     "i18n-merge": "xliffmerge --profile xliffmerge.json en cs",
     "lint": "ng lint",
-    "build": "NODE_OPTIONS=--max_old_space_size=4096 ng build $(node ./config/env-vars.js)",
+    "build": "NODE_OPTIONS=--max_old_space_size=4096 ng build $(node ./env-vars.js)",
     "start": "ng serve",
     "start:cs": "ng serve --configuration=cs",
     "start:en": "ng serve --configuration=en"
