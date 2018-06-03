@@ -4,7 +4,7 @@
             class="btn btn-sm btn-success"
             title="Add Document"
             i18n-title="@@shared.preview.results.addDocument"
-            [disabled]="!(selectCollection | permissions:'write' | async)"
+            [disabled]="!(selectedCollection | permissions:'write' | async)"
             (click)="onNewDocument()">
       <i class="fa fa-plus-circle" aria-hidden="true"></i>
       <span class="font-weight-bold" i18n="@@shared.preview.results.addDocument">New Document</span>
