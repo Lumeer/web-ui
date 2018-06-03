@@ -1,4 +1,4 @@
-<td class="col-6 d-flex align-items-center">
+<td>
 
   <input-box
     class="flex-grow-1"
@@ -10,8 +10,7 @@
 
 </td>
 
-<td class="col-3">
-
+<td>
   <i *ngFor="let role of getRoles()"
      class="fas fa-fw {{getIconForRole(role)}} mx-1"
      [ngClass]="(hasRole(role)) ?  (changeRoles ? 'clickable': 'selected')
@@ -20,10 +19,6 @@
      [title]="getTitleForRole(role)"
      (click)="toggleRole(role)">
   </i>
-
-</td>
-
-<td class="col-3 d-flex flex-nowrap flex-row-reverse align-items-center">
   <i class="fas fa-fw fa-trash text-danger mx-2 cursor-pointer"
      *ngIf="editable"
      aria-hidden="true"

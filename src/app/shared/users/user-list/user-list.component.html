@@ -1,42 +1,52 @@
-<div class="my-4">
-  <table class="table table-striped">
-    <thead [style.background-color]="resource.color | lightenColor:.5">
-      <tr class="d-flex">
-        <th class="col-6 d-flex align-items-center">
-          <span i18n="@@users.header.email">Email</span>
-        </th>
-        <th class="col-3 d-flex align-items-center">
-          <span i18n="@@users.header.actions">Actions</span>
-        </th>
-        <th class="col-3">
-          <div class="form-control d-flex align-items-center overflow-hidden" title="Search for users" i18n-title="@@users.header.search.title">
-            <input type="search" class="flex-grow-1" width="20"
-                   placeholder="Search user..."
-                   i18n-placeholder="@@users.header.search.placeholder"
-                   [(ngModel)]="searchString">
-          </div>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="d-flex" new-user *ngIf="canAddUsers()"
-          (userCreated)="userCreated.emit($event)">
-      </tr>
-
-      <tr class="d-flex" user *ngFor="let user of users | userFilter:searchString; trackBy:trackByUserId"
-          [resourceType]="resourceType"
-          [user]="user"
-          [editable]="canEditUser(user.id)"
-          [changeRoles]="canChangeRoles(user.id)"
-          [expanded]="expanded[user.email]"
-          [userRoles]="getUserRoles(user.id)"
-          (expandedChange)="(expanded[user.email] = !expanded[user.email])"
-          (rolesUpdate)="onUserRolesChanged(user.id, $event)"
-          (userUpdated)="userUpdated.emit($event)"
-          (userDeleted)="userDeleted.emit($event)">
-      </tr>
-
-    </tbody>
-  </table>
+<div class="row my-4">
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title" i18n="@@users.header.inviteUser">Invite a colleague or friend</h4>
+        <new-user *ngIf="canAddUsers()"
+                  (userCreated)="userCreated.emit($event)"></new-user>
+      </div>
+    </div>
+  </div>
 </div>
-
+<div class="row mt-4">
+  <div class="col">
+    <h4 i18n="@@users.header.existingUsers">Existing users</h4>
+    <table class="table table-striped table-sm">
+      <thead [style.background-color]="resource.color | lightenColor:.5">
+        <tr>
+          <th>
+            <span i18n="@@users.header.email">Email</span>
+          </th>
+          <th style="width: 30%;" class="text-right">
+            <div class="input-group input-group-sm">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="search-user1"><i class="fas fa-search"></i></span>
+              </div>
+              <input id="userSearch" class="form-control" type="search"
+                     placeholder="Search user..."
+                     i18n-placeholder="@@users.header.search.placeholder"
+                     title="Search for users" i18n-title="@@users.header.search.title"
+                     aria-describedby="search-user1"
+                     [(ngModel)]="searchString">
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr user *ngFor="let user of users | userFilter:searchString; trackBy:trackByUserId"
+            [resourceType]="resourceType"
+            [user]="user"
+            [editable]="canEditUser(user.id)"
+            [changeRoles]="canChangeRoles(user.id)"
+            [expanded]="expanded[user.email]"
+            [userRoles]="getUserRoles(user.id)"
+            (expandedChange)="(expanded[user.email] = !expanded[user.email])"
+            (rolesUpdate)="onUserRolesChanged(user.id, $event)"
+            (userUpdated)="userUpdated.emit($event)"
+            (userDeleted)="userDeleted.emit($event)">
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
