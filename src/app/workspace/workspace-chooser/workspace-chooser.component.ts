@@ -50,7 +50,7 @@ import {Role} from '../../core/model/role';
 import {Perspective} from '../../view/perspectives/perspective';
 import {ResourceType} from '../../core/model/resource-type';
 import {UsersAction} from '../../core/store/users/users.action';
-import {animateOpacityFromUp} from "../../shared/animations";
+import {animateOpacityFromUp} from '../../shared/animations';
 
 const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'aturing@lumeer.io'];
 

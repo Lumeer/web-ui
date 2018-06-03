@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {animate, keyframes, state, style, transition, trigger} from "@angular/animations";
+import {animate, keyframes, state, style, transition, trigger} from '@angular/animations';
 
 export const animateOpacityFromUp = trigger('animateOpacityFromUp', [
   state('in', style({transform: 'translateY(0)', opacity: 1})),

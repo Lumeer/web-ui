@@ -27,7 +27,7 @@ import {isNullOrUndefined} from 'util';
 import {InputBoxComponent} from '../../../shared/input/input-box/input-box.component';
 import {ResourceType} from '../../../core/model/resource-type';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
-import {animateVisible} from "../../../shared/animations";
+import {animateVisible} from '../../../shared/animations';
 
 @Component({
   selector: 'resource-post-it',

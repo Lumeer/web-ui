@@ -30,7 +30,7 @@ import {ServiceLimitsModel} from '../../../core/store/organizations/service-limi
 import {ServiceLevelType} from '../../../core/dto/service-level-type';
 import {ResourceType} from '../../../core/model/resource-type';
 import {ResourceModel} from '../../../core/model/resource.model';
-import {animateOpacityFromUp} from "../../../shared/animations";
+import {animateOpacityFromUp} from '../../../shared/animations';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
