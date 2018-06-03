@@ -17,15 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+
+import {of, combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {ViewQueryItem} from './query-item/model/view.query-item';
-import {filter, flatMap, map} from 'rxjs/operators';
+import {filter, flatMap, map, skipWhile} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
-import {selectAllCollections} from '../../core/store/collections/collections.state';
-import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
+import {selectAllCollections, selectCollectionsLoaded} from '../../core/store/collections/collections.state';
+import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../core/store/link-types/link-types.state';
 import {selectNavigation, selectQuery} from '../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
@@ -35,6 +36,9 @@ import {QueryData} from './query-data';
 import {QueryItem} from './query-item/model/query-item';
 import {QueryItemType} from './query-item/model/query-item-type';
 import {QueryItemsConverter} from './query-item/query-items.converter';
+import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {queryItemToForm} from '../../core/store/navigation/query.util';
+import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'search-box',
@@ -43,6 +47,8 @@ import {QueryItemsConverter} from './query-item/query-items.converter';
 export class SearchBoxComponent implements OnInit, OnDestroy {
 
   public queryItems: QueryItem[] = [];
+  public form: FormGroup;
+  public queryItemsControl: FormArray;
 
   private querySubscription: Subscription;
   private navigationSubscription: Subscription;
@@ -51,12 +57,14 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private perspective: Perspective;
 
   constructor(private router: Router,
-              private store: Store<AppState>) {
+              private store: Store<AppState>,
+              private formBuilder: FormBuilder) {
   }
 
   public ngOnInit() {
     this.subscribeToQuery();
     this.subscribeToNavigation();
+    this.initForm();
   }
 
   private subscribeToQuery() {
@@ -66,8 +74,10 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
         this.loadData(query)
       )),
       map(([query, data]) => new QueryItemsConverter(data).fromQuery(query)),
+      filter(queryItems => this.itemsChanged(queryItems))
     ).subscribe(queryItems => {
       this.queryItems = queryItems;
+      this.initForm(this.queryItems);
     });
   }
 
@@ -82,8 +92,11 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private loadData(query: QueryModel): Observable<QueryData> {
     return observableCombineLatest(
       this.store.select(selectAllCollections),
-      this.store.select(selectAllLinkTypes)
+      this.store.select(selectAllLinkTypes),
+      this.store.select(selectCollectionsLoaded),
+      this.store.select(selectLinkTypesLoaded)
     ).pipe(
+      skipWhile(([collections, linkTypes, collectionsLoaded, linkTypesLoaded]) => !collectionsLoaded || !linkTypesLoaded),
       map(([collections, linkTypes]) => {
         return {
           collections: collections.filter(collection => collection && collection.id),
@@ -114,18 +127,22 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   public onAddQueryItem(queryItem: QueryItem) {
     this.queryItems.push(queryItem);
+    this.queryItemsControl.push(queryItemToForm(queryItem));
   }
 
   public onRemoveQueryItem(index: number) {
     this.queryItems.splice(index, 1);
+    this.queryItemsControl.removeAt(index);
   }
 
   public onRemoveLastQueryItem() {
+    const lastIndex = this.queryItems.length - 2;
     this.queryItems.pop();
+    this.queryItemsControl.removeAt(lastIndex);
   }
 
   public onSearch(redirect?: boolean) {
-    if (!this.areAllQueryItemsCompleted()) {
+    if (!this.form.valid) {
       return;
     }
 
@@ -134,10 +151,6 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     }
 
     this.showByQueryItems(redirect);
-  }
-
-  private areAllQueryItemsCompleted(): boolean {
-    return this.queryItems.every(item => item.isComplete());
   }
 
   private showView(): boolean {
@@ -155,8 +168,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private showByQueryItems(redirect: boolean) {
-    const completedQueryItems = this.queryItems.filter(queryItem => queryItem.isComplete());
-    const query = QueryItemsConverter.toQueryString(completedQueryItems);
+    const query = QueryItemsConverter.toQueryString(this.queryItems);
     this.navigateToQuery(query, redirect);
   }
 
@@ -165,6 +177,33 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     // TODO remove vc if this.workspace.viewCode is set
     const url = redirect || !this.perspective ? searchUrl : [];
     this.router.navigate(url, {queryParams: {query}});
+  }
+
+  private itemsChanged(queryItems: QueryItem[]): boolean {
+    if (isNullOrUndefined(this.queryItems) || this.queryItems.length !== queryItems.length) {
+      return true;
+    }
+    for (let i = 0; i < queryItems.length; i++) {
+      if (this.queryItems[i].value !== queryItems[i].value) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private initForm(queryItems: QueryItem[] = []) {
+    if (this.queryItemsControl) {
+      while (this.queryItemsControl.length > 0) {
+        this.queryItemsControl.removeAt(0);
+      }
+      queryItems.map(qi => queryItemToForm(qi))
+        .forEach(it => this.queryItemsControl.push(it));
+    } else {
+      this.form = this.formBuilder.group({
+        queryItems: this.formBuilder.array(queryItems.map(qi => queryItemToForm(qi)))
+      });
+      this.queryItemsControl = <FormArray>this.form.controls['queryItems'];
+    }
   }
 
 }

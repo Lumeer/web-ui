@@ -19,7 +19,8 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
 import {HighlightPipe} from '../highlight.pipe';
 import {PickerModule} from '../picker/picker.module';
 import {SearchButtonComponent} from './button/search-button.component';
@@ -35,12 +36,17 @@ import {IsAttributeItemPipe} from './query-item/pipes/is-attribute-item.pipe';
 import {IsCollectionItemPipe} from './query-item/pipes/is-collection-item.pipe';
 import {QueryItemBackgroundPipe} from './query-item/pipes/query-item-background';
 import {QueryItemBorderPipe} from './query-item/pipes/query-item-border';
+import {AttributeValueComponent} from './query-item/attribute-value/attribute-value.component';
+import {DirectivesModule} from '../directives/directives.module';
+import {ConditionFilterPipe} from './query-item/pipes/condition-filter.pipe';
 
 @NgModule({
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FormsModule,
-    PickerModule
+    PickerModule,
+    DirectivesModule
   ],
   declarations: [
     IsAttributeItemPipe,
@@ -56,7 +62,9 @@ import {QueryItemBorderPipe} from './query-item/pipes/query-item-border';
     HighlightPipe,
     SuggestionItemComponent,
     TruncatePipe,
-    AttributeConditionComponent
+    AttributeConditionComponent,
+    AttributeValueComponent,
+    ConditionFilterPipe
   ],
   exports: [
     SearchBoxComponent,

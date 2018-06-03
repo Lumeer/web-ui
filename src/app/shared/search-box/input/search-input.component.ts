@@ -56,12 +56,16 @@ export class SearchInputComponent {
     this.text = '';
 
     if (suggestion.isComplete()) {
-      setTimeout(() => this.searchInput.nativeElement.focus());
+      setTimeout(() => this.focusInput());
     }
   }
 
   public removeHtmlComments(html: HTMLElement): string {
     return HtmlModifier.removeHtmlComments(html);
+  }
+
+  public focusInput(){
+    this.searchInput.nativeElement.focus();
   }
 
   public onBlur() {
@@ -83,6 +87,9 @@ export class SearchInputComponent {
       case KeyCode.DownArrow:
       case KeyCode.UpArrow:
         this.onUpAndDownArrowKeysDown(event);
+        return;
+      case KeyCode.Enter:
+        event.preventDefault();
         return;
     }
   }

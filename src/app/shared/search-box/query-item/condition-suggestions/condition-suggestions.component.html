@@ -1,9 +1,9 @@
-<div class="dropdown" *ngIf="suggesting && suggestions.length > 0">
+<div class="dropdown position-absolute" *ngIf="suggesting && suggestions.length > 0">
   <div class="dropdown-menu show suggestions">
     <div class="dropdown-item d-flex justify-content-between"
          *ngFor="let suggestion of suggestions; let suggestionIndex = index"
          [class.bg-light]="suggestionIndex == selectedIndex"
-         (click)="$event.preventDefault(); onUseSuggestion(suggestion)">
+         (mousedown)="$event.preventDefault(); onUseSuggestion(suggestion)">
       {{suggestion}}
     </div>
   </div>

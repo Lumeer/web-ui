@@ -19,7 +19,8 @@
 
 import {isNullOrUndefined} from 'util';
 import {Query} from '../../dto';
-import {AttributeFilter, conditionFromString, ConditionType, QueryModel} from './query.model';
+import {AttributeFilter, QueryModel} from './query.model';
+import {conditionFromString} from './query.util';
 
 export class QueryConverter {
 

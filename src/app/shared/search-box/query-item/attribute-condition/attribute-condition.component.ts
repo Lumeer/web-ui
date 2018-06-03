@@ -18,9 +18,11 @@
  */
 
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+
 import {Subject} from 'rxjs';
+import {FormControl, FormGroup} from '@angular/forms';
 import {KeyCode} from '../../../key-code';
-import {HtmlModifier} from '../../../utils/html-modifier';
+import {getCaretCharacterOffsetWithin, HtmlModifier} from '../../../utils/html-modifier';
 import {AttributeQueryItem} from '../model/attribute.query-item';
 
 @Component({
@@ -36,8 +38,14 @@ export class AttributeConditionComponent implements OnInit {
   @Input()
   public readonly: boolean;
 
+  @Input()
+  public form: FormGroup;
+
   @Output()
-  public complete = new EventEmitter();
+  public enter = new EventEmitter();
+
+  @Output()
+  public moveRight = new EventEmitter();
 
   @ViewChild('conditionInput')
   private conditionInput: ElementRef;
@@ -48,7 +56,8 @@ export class AttributeConditionComponent implements OnInit {
   public useSuggestionSelection$ = new Subject<string>();
 
   public ngOnInit() {
-    if (!this.readonly && !this.queryItem.isComplete()) {
+    const formControl = this.getControl();
+    if (!this.readonly && formControl && !formControl.valid) {
       this.focusInput();
     }
   }
@@ -59,10 +68,7 @@ export class AttributeConditionComponent implements OnInit {
 
   public onBlur() {
     this.focused = false;
-  }
-
-  public onInput(event: Event) {
-    this.queryItem.condition = event.target['textContent'];
+    this.queryItem.condition = this.queryItem.condition.trim();
   }
 
   public onKeyDown(event: KeyboardEvent) {
@@ -71,8 +77,14 @@ export class AttributeConditionComponent implements OnInit {
       case KeyCode.UpArrow:
         this.onUpAndDownArrowKeysDown(event);
         break;
-      case KeyCode.Backspace:
-        this.onBackspaceKeyDown();
+      case KeyCode.RightArrow:
+        this.onRightArrowKeyDown();
+        break;
+      case KeyCode.Enter:
+        event.preventDefault();
+        break;
+      case KeyCode.Escape:
+        this.onEscapeKeyDown();
         break;
     }
   }
@@ -83,25 +95,33 @@ export class AttributeConditionComponent implements OnInit {
     this.moveSuggestionSelection$.next(direction);
   }
 
-  public onBackspaceKeyDown() {
-    // TODO
-  }
-
   public onEnterKeyUp() {
-    if (this.queryItem.condition) {
-      this.complete.emit();
-    } else {
-      this.useSuggestionSelection$.next('');
-    }
+    const value = this.queryItem.condition.trim();
+    this.useSuggestionSelection$.next(value);
   }
 
   public onUseSuggestion(condition: string) {
-    this.queryItem.condition = condition + ' ';
-    this.focusInput();
+    this.queryItem.condition = condition;
+    this.enter.emit();
   }
 
-  private focusInput() {
+  public focusInput() {
     setTimeout(() => HtmlModifier.setCursorAtTextContentEnd(this.conditionInput.nativeElement));
   }
 
+  private getControl(): FormControl {
+    return this.form && <FormControl>this.form.controls['condition'];
+  }
+
+  private onRightArrowKeyDown() {
+    const inputLength = this.queryItem.condition.length;
+    const caretOffset = getCaretCharacterOffsetWithin(this.conditionInput.nativeElement);
+    if (caretOffset >= inputLength) {
+      this.moveRight.emit();
+    }
+  }
+
+  private onEscapeKeyDown() {
+    this.conditionInput.nativeElement.blur();
+  }
 }

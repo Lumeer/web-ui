@@ -1,14 +1,18 @@
-<div #conditionInput
-     [attr.contenteditable]="!readonly"
-     [class.invalid]="!queryItem.isComplete()"
-     [textContent]="queryItem.condition"
-     (blur)="onBlur()"
-     (focus)="onFocus()"
-     (input)="onInput($event)"
-     (keydown)="onKeyDown($event)"
-     (keydown.enter)="onEnterKeyUp(); conditionInput.blur()"
-     class="condition px-1"
-     spellcheck="false">
+<div [formGroup]="form">
+  <div #conditionInput
+       editable-div
+       class="cursor-text"
+       [attr.contenteditable]="!readonly"
+       [attr.placeholder]="'='"
+       [class.invalid]="!queryItem.isComplete()"
+       [(ngModel)]="queryItem.condition"
+       (blur)="onBlur()"
+       formControlName="condition"
+       (focus)="onFocus()"
+       (keydown)="onKeyDown($event)"
+       (keyup.enter)="onEnterKeyUp()"
+       spellcheck="false">
+  </div>
 </div>
 
 <condition-suggestions *ngIf="!readonly && focused"

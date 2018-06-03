@@ -18,8 +18,10 @@
  */
 
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+
 import {Observable, Subscription} from 'rxjs';
 import {AttributeModel} from '../../../../core/store/collections/collection.model';
+import {getAllConditions} from '../../../../core/store/navigation/query.util';
 
 @Component({
   selector: 'condition-suggestions',
@@ -39,16 +41,18 @@ export class ConditionSuggestionsComponent implements OnInit, OnChanges, OnDestr
   @Input()
   public useSelection$: Observable<string>;
 
+  @Input()
+  public suggesting = true;
+
   @Output()
   public useSuggestion = new EventEmitter<string>();
 
-  public suggestions = ['=', '!=', '<', '>', '~']; // TODO suggest based on attribute constraints
+  public allSuggestions = getAllConditions(); // TODO suggest based on attribute constraints
+  public suggestions = [];
   public selectedIndex = -1;
 
   private moveSelectionSubscription: Subscription;
   private useSelectionSubscription: Subscription;
-
-  public suggesting = true;
 
   public ngOnInit() {
     this.subscribeToMoveSelection();
@@ -57,7 +61,7 @@ export class ConditionSuggestionsComponent implements OnInit, OnChanges, OnDestr
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.hasOwnProperty('text')) {
-      this.suggesting = !this.text;
+      this.filterSuggestions();
     }
   }
 
@@ -88,6 +92,17 @@ export class ConditionSuggestionsComponent implements OnInit, OnChanges, OnDestr
       const condition = this.selectedIndex >= 0 && this.suggestions[this.selectedIndex] ? this.suggestions[this.selectedIndex] : text;
       this.onUseSuggestion(condition);
     });
+  }
+
+  private filterSuggestions() {
+    const textLowerCase = this.text.toLowerCase().trim();
+    this.suggestions = this.allSuggestions
+      .filter(s => s.toLowerCase().includes(textLowerCase))
+      .slice(0, 5);
+
+    if(this.selectedIndex >= this.suggestions.length) {
+      this.selectedIndex = this.suggestions.length - 1;
+    }
   }
 
 }

@@ -62,7 +62,7 @@ export class SuggestionsConverter {
   }
 
   private static createAttributeQueryItems(collections: CollectionModel[]): QueryItem[] {
-    return collections.map(collection => new AttributeQueryItem(collection, collection.attributes[0], ''));
+    return collections.map(collection => new AttributeQueryItem(collection, collection.attributes[0], '', ''));
   }
 
   private static createViewQueryItems(views: ViewModel[]): QueryItem[] {

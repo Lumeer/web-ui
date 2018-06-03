@@ -27,7 +27,8 @@ export class AttributeQueryItem implements QueryItem {
 
   public constructor(public collection: CollectionModel,
                      public attribute: AttributeModel,
-                     public condition: string) {
+                     public condition: string,
+                     public conditionValue: string) {
   }
 
   public get text() {
@@ -51,7 +52,7 @@ export class AttributeQueryItem implements QueryItem {
   }
 
   public getFilter(): string {
-    return `${this.collection.id}:${this.attribute.id}:${this.condition}`;
+    return `${this.collection.id}:${this.attribute.id}:${this.condition} ${this.conditionValue}`;
   }
 
 }

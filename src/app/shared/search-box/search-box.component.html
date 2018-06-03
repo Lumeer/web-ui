@@ -1,17 +1,23 @@
-<div class="form-control d-flex w-100 p-0">
-  <div class="d-flex flex-wrap w-100 pb-1 pr-1">
-    <query-item *ngFor="let queryItem of queryItems; let itemIndex = index"
-                [queryItem]="queryItem"
-                (remove)="onRemoveQueryItem(itemIndex)"
-                class="d-inline-flex mt-1 ml-1 align-items-center">
-    </query-item>
+<div class="form-control w-100 p-0">
+  <form class="d-flex" [formGroup]="form">
+    <div class="d-flex flex-wrap  flex-grow-1 pb-1 pr-1" [style.width.px]="1" formArrayName="queryItems">
+      <query-item *ngFor="let queryItem of queryItems; let itemIndex = index"
+                  [form]="queryItemsControl.at(itemIndex)"
+                  [queryItem]="queryItem"
+                  (enter)="searchInput.focusInput()"
+                  (remove)="onRemoveQueryItem(itemIndex)"
+                  class="d-inline-flex mt-1 ml-1 align-items-center">
+      </query-item>
 
-    <search-input [queryItems]="queryItems"
-                  (addQueryItem)="onAddQueryItem($event)"
-                  (removeQueryItem)="onRemoveLastQueryItem()"
-                  (search)="onSearch()"
-                  class="flex-grow-2 mt-1 ml-1"></search-input>
-  </div>
+      <search-input #searchInput
+                    [queryItems]="queryItems"
+                    (addQueryItem)="onAddQueryItem($event)"
+                    (removeQueryItem)="onRemoveLastQueryItem()"
+                    (search)="onSearch()"
+                    class="flex-grow-2 mt-1 ml-1"></search-input>
+    </div>
 
-  <search-button (search)="onSearch($event)"></search-button>
+    <search-button class="py-0 flex-grow-0" (search)="onSearch($event)"
+                   [disabled]="!form.valid"></search-button>
+  </form>
 </div>

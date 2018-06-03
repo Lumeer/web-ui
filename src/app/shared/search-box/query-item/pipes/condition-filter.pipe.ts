@@ -17,39 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-import {QueryItem} from './model/query-item';
-import {FormGroup} from '@angular/forms';
+import {AttributeModel} from '../../../../core/store/collections/collection.model';
 
-@Component({
-  selector: 'query-item',
-  templateUrl: './query-item.component.html',
-  styleUrls: ['./query-item.component.scss']
+@Pipe({
+  name: 'conditionFilter'
 })
-export class QueryItemComponent {
+@Injectable()
+export class ConditionFilterPipe implements PipeTransform {
 
-  @Input()
-  public queryItem: QueryItem;
-
-  @Input()
-  public form: FormGroup;
-
-  @Input()
-  public readonly: boolean;
-
-  @Output()
-  public remove = new EventEmitter();
-
-  @Output()
-  public enter = new EventEmitter();
-
-  public onRemove() {
-    this.remove.emit();
+  public transform(conditions: string[], value: string): any[] {
+    if (!conditions || !value) {
+      return conditions;
+    }
+    return conditions.filter(c => c.toLowerCase().includes(value.toLowerCase()));
   }
-
-  public onEnter(){
-    this.enter.emit();
-  }
-
 }

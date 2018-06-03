@@ -17,39 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 
-import {QueryItem} from './model/query-item';
-import {FormGroup} from '@angular/forms';
+import {EditableDivDirective} from './editable-div.directive';
 
-@Component({
-  selector: 'query-item',
-  templateUrl: './query-item.component.html',
-  styleUrls: ['./query-item.component.scss']
+@NgModule({
+  imports: [
+    CommonModule
+  ],
+  declarations: [
+    EditableDivDirective
+  ],
+  exports: [
+    EditableDivDirective
+  ]
 })
-export class QueryItemComponent {
-
-  @Input()
-  public queryItem: QueryItem;
-
-  @Input()
-  public form: FormGroup;
-
-  @Input()
-  public readonly: boolean;
-
-  @Output()
-  public remove = new EventEmitter();
-
-  @Output()
-  public enter = new EventEmitter();
-
-  public onRemove() {
-    this.remove.emit();
-  }
-
-  public onEnter(){
-    this.enter.emit();
-  }
-
+export class DirectivesModule {
 }
