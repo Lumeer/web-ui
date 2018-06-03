@@ -17,7 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-const env = require('./.env.json');
+let env = {};
+try {
+  env = require('./.env.json');
+} catch (ex) {
+  // not needed when `ng serve` is run
+}
 
 export interface EnvironmentVariables {
 
@@ -29,10 +34,10 @@ export interface EnvironmentVariables {
 
 }
 
-const apiUrl = env['LUMEER_ENGINE'];
+const apiUrl = env['LUMEER_ENGINE'] || 'engine';
 const buildNumber: number = env['BUILD_NUMBER'];
 const i18nFormat = env['I18N_FORMAT'];
-const locale: string = env['I18N_LOCALE'];
+const locale: string = env['I18N_LOCALE'] || 'en';
 const sentryDsn: string = env['SENTRY_DSN'];
 
 export const environmentVariables: EnvironmentVariables = {
