@@ -28,6 +28,7 @@ import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PixelPipe} from './pixel.pipe';
 import {PrefixPipe} from './prefix.pipe';
 import { EmptyPipe } from './empty.pipe';
+import { PermissionsPipe } from './permissions.pipe';
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ import { EmptyPipe } from './empty.pipe';
     PerspectiveIconPipe,
     FilterPerspectivesPipe,
     EmptyPipe,
+    PermissionsPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -54,6 +56,7 @@ import { EmptyPipe } from './empty.pipe';
     PerspectiveIconPipe,
     FilterPerspectivesPipe,
     EmptyPipe,
+    PermissionsPipe,
   ]
 })
 export class PipesModule {

@@ -9,13 +9,13 @@
       "projectType": "application",
       "prefix": "",
       "schematics": {
-        "@schematics/angular:component": {
+        "@ngrx/schematics:component": {
           "spec": false
         },
-        "@schematics/angular:pipe": {
+        "@ngrx/schematics:pipe": {
           "spec": false
         },
-        "@schematics/angular:service": {
+        "@ngrx/schematics:service": {
           "spec": false
         }
       },

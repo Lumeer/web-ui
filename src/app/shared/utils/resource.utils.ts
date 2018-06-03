@@ -27,7 +27,7 @@ export function userHasManageRoleInResource(user: UserModel, resource: ResourceM
 }
 
 export function userHasRoleInResource(user: UserModel, resource: ResourceModel, role: string): boolean {
-  return userRolesInResource(user, resource).includes(role);
+  return userRolesInResource(user, resource).includes(role.toUpperCase());
 }
 
 export function userRolesInResource(user: UserModel, resource: ResourceModel): string[] {

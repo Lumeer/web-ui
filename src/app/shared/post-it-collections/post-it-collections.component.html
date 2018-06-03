@@ -1,21 +1,21 @@
-<div *ngIf="collections && collections.length == 0 && !hasCreateRights()"
+<div *ngIf="collections && collections.length === 0 && !(project | permissions:'write' | async)"
      class="alert alert-warning mt-2"
      i18n="@@search.result.empty">
   We are sorry, but we have not found anything. Please do a more accurate search.
 </div>
 
-<div *ngIf="(collections && collections.length > 0) || hasCreateRights()">
+<div *ngIf="(collections && collections.length > 0) || (project | permissions:'write' | async)">
 
   <div class="d-flex mt-2 mb-1">
     <post-it-collection-add-button
       class="ml-1"
-      [disabled]="!hasCreateRights()"
+      [disabled]="!(project | permissions:'write' | async)"
       (clicked)="newCollection()">
     </post-it-collection-add-button>
 
     <post-it-collection-import-button
       class="ml-2"
-      [disabled]="!hasCreateRights()"
+      [disabled]="!(project | permissions:'write' | async)"
       [i18n]="i18n"
       (error)="notifyOfError($event)"
       (import)="onImportCollection($event)">
@@ -40,7 +40,6 @@
       (favoriteChange)="onFavoriteChange(collection.id, $event)"
       (togglePanel)="togglePanelVisible($event, idx)">
     </post-it-collection>
-
 
   </div>
 

@@ -79,7 +79,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   private workspace: Workspace;
 
-  private project: ProjectModel;
+  public project: ProjectModel;
 
   private currentUser: UserModel;
 
@@ -239,10 +239,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public createCollection(collection: CollectionModel) {
     this.store.dispatch(new CollectionsAction.Create({collection}));
-  }
-
-  public hasCreateRights(): boolean {
-    return this.project && this.currentUser && userHasRoleInResource(this.currentUser, this.project, Role.Write);
   }
 
   public getRoles(collection: CollectionModel): string[] {
