@@ -1,15 +1,12 @@
-<div [formGroup]="form">
-  <div
-    #conditionValueInput
-    editable-div
-    class="cursor-text"
-    [attr.contenteditable]="!readonly"
-    [(ngModel)]="queryItem.conditionValue"
-    [attr.placeholder]="5"
-    (keydown)="onKeyDown($event)"
-    (keyup.enter)="onEnterKeyUp()"
-    formControlName="conditionValue"
-    (blur)="onBlur()"
-    spellcheck="false">
-  </div>
+<div
+  #conditionValueInput
+  class="cursor-text"
+  [attr.contenteditable]="!readonly"
+  [attr.placeholder]="5"
+  [textContent]="conditionValueControl.value"
+  (input)="onInput(conditionValueInput.textContent)"
+  (keydown)="onKeyDown($event)"
+  (keyup.enter)="onEnterKeyUp()"
+  (blur)="onBlur()"
+  spellcheck="false">
 </div>

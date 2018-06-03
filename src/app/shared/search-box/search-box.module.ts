@@ -37,7 +37,6 @@ import {IsCollectionItemPipe} from './query-item/pipes/is-collection-item.pipe';
 import {QueryItemBackgroundPipe} from './query-item/pipes/query-item-background';
 import {QueryItemBorderPipe} from './query-item/pipes/query-item-border';
 import {AttributeValueComponent} from './query-item/attribute-value/attribute-value.component';
-import {DirectivesModule} from '../directives/directives.module';
 import {ConditionFilterPipe} from './query-item/pipes/condition-filter.pipe';
 
 @NgModule({
@@ -45,8 +44,7 @@ import {ConditionFilterPipe} from './query-item/pipes/condition-filter.pipe';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    PickerModule,
-    DirectivesModule
+    PickerModule
   ],
   declarations: [
     IsAttributeItemPipe,

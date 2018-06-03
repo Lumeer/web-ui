@@ -65,13 +65,22 @@ export class AttributeConditionComponent implements OnInit {
     return this.form.get('condition');
   }
 
+  public onInput(value: string) {
+    this.setValue(value);
+  }
+
+  private setValue(value: string) {
+    this.conditionControl.setValue(value);
+    this.queryItem.condition = value;
+  }
+
   public onFocus() {
     this.focused = true;
   }
 
   public onBlur() {
     this.focused = false;
-    this.queryItem.condition = this.queryItem.condition.trim();
+    this.setValue(this.queryItem.condition.trim());
   }
 
   public onKeyDown(event: KeyboardEvent) {
@@ -104,7 +113,7 @@ export class AttributeConditionComponent implements OnInit {
   }
 
   public onUseSuggestion(condition: string) {
-    this.queryItem.condition = condition;
+    this.setValue(condition);
     this.enter.emit();
   }
 

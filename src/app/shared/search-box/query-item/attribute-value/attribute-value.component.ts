@@ -18,7 +18,7 @@
  */
 
 import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {AbstractControl, FormGroup} from '@angular/forms';
 
 import {AttributeQueryItem} from '../model/attribute.query-item';
 import {getCaretCharacterOffsetWithin, HtmlModifier} from '../../../utils/html-modifier';
@@ -49,8 +49,21 @@ export class AttributeValueComponent {
   @ViewChild('conditionValueInput')
   private conditionValueInput: ElementRef;
 
+  public get conditionValueControl(): AbstractControl {
+    return this.form.get('conditionValue');
+  }
+
   public onBlur() {
-    this.queryItem.conditionValue = this.queryItem.conditionValue.trim();
+    this.setValue(this.queryItem.conditionValue.trim());
+  }
+
+  public onInput(value: string) {
+    this.setValue(value);
+  }
+
+  private setValue(value: string) {
+    this.conditionValueControl.setValue(value);
+    this.queryItem.conditionValue = value;
   }
 
   public onKeyDown(event: KeyboardEvent) {

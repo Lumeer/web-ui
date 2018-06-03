@@ -38,7 +38,6 @@ import {TagModule} from './tag/tag.module';
 import {DocumentModule} from './document/document.module';
 import {PreviewResultsModule} from './preview-results/preview-results.module';
 import {LinksModule} from './links/links.module';
-import {DirectivesModule} from './directives/directives.module';
 
 @NgModule({
   imports: [
@@ -55,8 +54,7 @@ import {DirectivesModule} from './directives/directives.module';
     DocumentModule,
     PreviewResultsModule,
     LinksModule,
-    PipesModule,
-    DirectivesModule
+    PipesModule
   ],
   declarations: [
     SizeSliderComponent,
@@ -75,7 +73,6 @@ import {DirectivesModule} from './directives/directives.module';
     CommentsComponent,
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
-    DirectivesModule,
     UsersModule,
     SearchBoxModule,
     SliderComponent,

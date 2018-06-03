@@ -1,5 +1,5 @@
 <div [style.background-color]="queryItem | queryItemBackground"
-     [style.border-color]="queryItem | queryItemBorder"
+     [style.border-color]="queryItem | queryItemBorder:form.valid"
      [class.pr-2]="readonly"
      class="query-item py-1 px-1 d-flex align-items-center">
   <icons-presenter [colors]="queryItem.colors"
