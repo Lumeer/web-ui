@@ -19,11 +19,15 @@
             <span i18n="@@users.header.email">Email</span>
           </th>
           <th style="width: 30%;" class="text-right">
-            <div class="form-check form-check-inline w-100">
-              <input id="userSearch" class="form-check-input form-control form-control-sm w-100" type="search"
+            <div class="input-group input-group-sm">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="search-user1"><i class="fas fa-search"></i></span>
+              </div>
+              <input id="userSearch" class="form-control" type="search"
                      placeholder="Search user..."
                      i18n-placeholder="@@users.header.search.placeholder"
                      title="Search for users" i18n-title="@@users.header.search.title"
+                     aria-describedby="search-user1"
                      [(ngModel)]="searchString">
             </div>
           </th>

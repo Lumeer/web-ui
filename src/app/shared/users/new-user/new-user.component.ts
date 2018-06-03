@@ -24,7 +24,8 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'new-user',
-  templateUrl: './new-user.component.html'
+  templateUrl: './new-user.component.html',
+  styleUrls: [ './new-user.component.scss' ]
 })
 export class NewUserComponent {
 
@@ -62,5 +63,9 @@ export class NewUserComponent {
       id: 'user.add.placeholder',
       value: 'Type email to invite another user'
     });
+  }
+
+  public tmpfce($event) {
+    console.log($event);
   }
 }

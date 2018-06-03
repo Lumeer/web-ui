@@ -10,6 +10,11 @@ input:focus {
   box-shadow: none;
 }
 
+input::placeholder {
+  color: $gray-500;
+  font-style: italic;
+}
+
 table {
 
   table-layout: fixed;
