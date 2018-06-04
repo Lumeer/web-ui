@@ -25,10 +25,9 @@ export interface QueryItem {
   icons?: string[];
   colors?: string[];
   condition?: string;
+  conditionValue?: string;
 
   value: string;
   type: QueryItemType;
-
-  isComplete(): boolean;
 
 }

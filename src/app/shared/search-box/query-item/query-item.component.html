@@ -1,25 +1,44 @@
-<div [style.background-color]="backgroundColor()"
-     [style.border-color]="borderColor()"
+<div [style.background-color]="queryItem | queryItemBackground"
+     [style.border-color]="queryItem | queryItemBorder:form.valid"
      [class.pr-2]="readonly"
-     class="query-item py-1 px-1">
+     class="query-item py-1 px-1 d-flex align-items-center">
   <icons-presenter [colors]="queryItem.colors"
                    [icons]="queryItem.icons">
   </icons-presenter>
 
-  <span [class.font-weight-bold]="isCollectionItem()"
+  <span [class.font-weight-bold]="queryItem | isCollectionItem"
         [title]="queryItem.text"
-        class="ml-1">
+        [class.text-truncate]="!(queryItem | isAttributeItem)"
+        class="mx-1">
     {{queryItem.text | truncate:30}}
   </span>
 
-  <attribute-condition *ngIf="isAttributeItem()"
-                       [queryItem]="queryItem"
-                       [readonly]="readonly">
-  </attribute-condition>
+  <div class="mr-1 d-inline-block flex-grow-1 overflow-hidden"
+       *ngIf="queryItem | isAttributeItem">
+
+    <attribute-condition #attributeCondition
+                         class="mr-1"
+                         [form]="form"
+                         [queryItem]="queryItem"
+                         [readonly]="readonly"
+                         (enter)="attributeConditionValue.focusInput()"
+                         (moveRight)="attributeConditionValue.focusInput()">
+    </attribute-condition>
+
+    <attribute-value #attributeConditionValue
+                     [queryItem]="queryItem"
+                     [form]="form"
+                     (enter)="onEnter()"
+                     (moveLeft)="attributeCondition.focusInput()"
+                     [readonly]="readonly">
+
+    </attribute-value>
+
+  </div>
 
   <i *ngIf="!readonly"
      (click)="onRemove()"
-     class="fas fa-times remove"
+     class="mr-1 fas fa-times remove"
      title="Remove query item" i18n-title="@@query.item.button.remove">
   </i>
 </div>

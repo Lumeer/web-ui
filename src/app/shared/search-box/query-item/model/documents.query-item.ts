@@ -36,8 +36,4 @@ export class DocumentQueryItem implements QueryItem {
     return this.documentId;
   }
 
-  public isComplete(): boolean {
-    return !!this.documentId;
-  }
-
 }

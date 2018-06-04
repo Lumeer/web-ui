@@ -76,11 +76,12 @@ export class QueryItemsConverter {
 
   private createAttributeItems(filters: string[]): QueryItem[] {
     return filters.map(filter => {
-      const [collectionId, attributeId, condition] = filter.split(':', 3);
+      const [collectionId, attributeId, fullCondition] = filter.split(':', 3);
       const collection = this.data.collections.find(collection => collection.id === collectionId);
       const attribute = collection.attributes.find(attribute => attribute.id === attributeId);
+      const [condition, conditionValue] = fullCondition.split(' ', 2);
 
-      return new AttributeQueryItem(collection, attribute, condition);
+      return new AttributeQueryItem(collection, attribute, condition, conditionValue);
     });
   }
 

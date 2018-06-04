@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
   selector: 'search-button',
@@ -25,6 +25,9 @@ import {Component, EventEmitter, Output} from '@angular/core';
   styleUrls: ['./search-button.component.scss']
 })
 export class SearchButtonComponent {
+
+  @Input()
+  public disabled: boolean;
 
   @Output()
   public search = new EventEmitter<boolean>();

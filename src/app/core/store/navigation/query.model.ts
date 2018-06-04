@@ -48,28 +48,3 @@ export enum ConditionType {
   GreaterThan,
   GreaterThanEquals
 }
-
-const EqVariants = ['=', '==', 'eq', 'equals'];
-const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];
-const LtVariants = ['<', 'lt'];
-const LteVariants = ['<=', 'lte'];
-const GtVariants = ['>', 'gt'];
-const GteVariants = ['>=', 'gte'];
-
-export function conditionFromString(condition: string): ConditionType {
-  const conditionLowerCase = condition.toLowerCase();
-  if (EqVariants.includes(conditionLowerCase)) {
-    return ConditionType.Equals;
-  } else if (NeqVariants.includes(conditionLowerCase)) {
-    return ConditionType.NotEquals;
-  } else if (LtVariants.includes(conditionLowerCase)) {
-    return ConditionType.LowerThan;
-  } else if (LteVariants.includes(conditionLowerCase)) {
-    return ConditionType.LowerThanEquals;
-  } else if (GtVariants.includes(conditionLowerCase)) {
-    return ConditionType.GreaterThan;
-  } else if (GteVariants.includes(conditionLowerCase)) {
-    return ConditionType.GreaterThanEquals;
-  }
-  return null;
-}

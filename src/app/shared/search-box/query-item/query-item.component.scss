@@ -1,6 +1,11 @@
 @import "../../variables";
 
+:host {
+  max-width: 100%;
+}
+
 .query-item {
+  max-width: 100%;
   border-width: 1px;
   border-style: solid;
   border-radius: $border-radius-base;

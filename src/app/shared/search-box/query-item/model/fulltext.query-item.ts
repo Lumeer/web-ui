@@ -31,8 +31,4 @@ export class FulltextQueryItem implements QueryItem {
     return this.text;
   }
 
-  public isComplete(): boolean {
-    return this.text !== '';
-  }
-
 }

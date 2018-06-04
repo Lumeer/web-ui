@@ -228,9 +228,9 @@ ul.nav-u {
   border: none;
   border-radius: 5px;
   background-color: white;
-  -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
 }
 
 .notice {
@@ -248,3 +248,14 @@ ul.nav-u {
 button {
   box-shadow: none ! important;
 }
+
+[contenteditable=true]:empty:before {
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+  color: $grey-darker-color;
+}
+
+[contenteditable]:focus {
+  outline: 0 solid transparent;
+}
+

@@ -83,7 +83,6 @@ import {LinksModule} from './links/links.module';
     DocumentModule,
     PreviewResultsModule,
     LinksModule,
-    PipesModule,
   ]
 })
 export class SharedModule {

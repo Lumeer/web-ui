@@ -79,9 +79,8 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
       this.suggesting = !this.queryItems.find(queryItem => queryItem.type === QueryItemType.View);
     }
     if (changes.hasOwnProperty('text')) {
-      if (this.text) {
-        this.searchTerms$.next(this.text);
-      } else {
+      this.searchTerms$.next(this.text);
+      if (!this.text) {
         this.updateSuggestions([]);
       }
     }
@@ -129,7 +128,11 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   }
 
   private addFulltextSuggestion(queryItems: QueryItem[]): QueryItem[] {
-    return queryItems.concat(new FulltextQueryItem(this.text));
+    if (!this.isFullTextPresented()) {
+      return queryItems.concat(new FulltextQueryItem(this.text));
+    } else {
+      return queryItems;
+    }
   }
 
   private filterViewQueryItems(queryItems: QueryItem[]): QueryItem[] {
@@ -161,7 +164,15 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     });
   }
 
+  private isFullTextPresented(): boolean {
+    return this.queryItems && !!this.queryItems.find(q => q.type === QueryItemType.Fulltext);
+  }
+
   public onUseSuggestion(queryItem: QueryItem) {
+    if (queryItem.type === QueryItemType.Fulltext && this.isFullTextPresented()) {
+      return;
+    }
+
     this.useSuggestion.emit(queryItem);
     this.suggestions = [];
   }

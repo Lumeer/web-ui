@@ -27,9 +27,11 @@ export class ViewQueryItem implements QueryItem {
   public type = QueryItemType.View;
 
   public icons: string[];
+  public colors: string[];
 
   public constructor(public view: ViewModel) {
     this.icons = [perspectiveIconsMap[view.perspective]];
+    this.colors = ['#2c3e50'];
   }
 
   public get text(): string {
@@ -38,10 +40,6 @@ export class ViewQueryItem implements QueryItem {
 
   public get value(): string {
     return this.view.code;
-  }
-
-  public isComplete(): boolean {
-    return !!this.view;
   }
 
 }

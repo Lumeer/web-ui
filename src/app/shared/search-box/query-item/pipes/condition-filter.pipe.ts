@@ -17,31 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {QueryItem} from './query-item';
-import {QueryItemType} from './query-item-type';
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-export class CollectionQueryItem implements QueryItem {
+import {AttributeModel} from '../../../../core/store/collections/collection.model';
 
-  public type = QueryItemType.Collection;
+@Pipe({
+  name: 'conditionFilter'
+})
+@Injectable()
+export class ConditionFilterPipe implements PipeTransform {
 
-  public constructor(public collection: CollectionModel) {
+  public transform(conditions: string[], value: string): any[] {
+    if (!conditions || !value) {
+      return conditions;
+    }
+    return conditions.filter(c => c.toLowerCase().includes(value.toLowerCase()));
   }
-
-  public get text(): string {
-    return this.collection.name;
-  }
-
-  public get value(): string {
-    return this.collection.id;
-  }
-
-  public get icons(): string[] {
-    return [this.collection.icon];
-  }
-
-  public get colors(): string[] {
-    return [this.collection.color];
-  }
-
 }
