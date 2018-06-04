@@ -2,7 +2,7 @@
      class="cursor-text"
      [attr.contenteditable]="!readonly"
      [attr.placeholder]="'='"
-     [textContent]="conditionControl.value"
+     [textContent]="queryItem.condition"
      (input)="onInput(conditionInput.textContent)"
      (blur)="onBlur()"
      (focus)="onFocus()"

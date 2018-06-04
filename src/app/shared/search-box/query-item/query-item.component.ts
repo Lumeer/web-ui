@@ -33,7 +33,7 @@ export class QueryItemComponent {
   public queryItem: QueryItem;
 
   @Input()
-  public form: FormGroup;
+  public queryItemForm: FormGroup;
 
   @Input()
   public readonly: boolean;
@@ -50,6 +50,13 @@ export class QueryItemComponent {
 
   public onEnter() {
     this.enter.emit();
+  }
+
+  public isFormValid(): boolean {
+    if (this.readonly || !this.queryItemForm) {
+      return true;
+    }
+    return this.queryItemForm.valid;
   }
 
 }

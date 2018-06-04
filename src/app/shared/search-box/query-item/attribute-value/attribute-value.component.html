@@ -3,7 +3,7 @@
   class="cursor-text"
   [attr.contenteditable]="!readonly"
   [attr.placeholder]="5"
-  [textContent]="conditionValueControl.value"
+  [textContent]="queryItem.conditionValue"
   (input)="onInput(conditionValueInput.textContent)"
   (keydown)="onKeyDown($event)"
   (keyup.enter)="onEnterKeyUp()"

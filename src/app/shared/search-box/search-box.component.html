@@ -2,7 +2,7 @@
   <form class="d-flex" [formGroup]="form">
     <div class="d-flex flex-wrap  flex-grow-1 pb-1 pr-1" [style.width.px]="1" formArrayName="queryItems">
       <query-item *ngFor="let queryItem of queryItems; trackBy:trackByTypeAndText; let itemIndex = index;"
-                  [form]="queryItemsControl.at(itemIndex)"
+                  [queryItemForm]="queryItemsControl.at(itemIndex)"
                   [queryItem]="queryItem"
                   (enter)="searchInput.focusInput()"
                   (remove)="onRemoveQueryItem(itemIndex)"
