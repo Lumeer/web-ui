@@ -39,7 +39,7 @@ export class AttributeConditionComponent implements OnInit {
   public readonly: boolean;
 
   @Input()
-  public form: FormGroup;
+  public queryItemForm: FormGroup;
 
   @Output()
   public enter = new EventEmitter();
@@ -62,7 +62,7 @@ export class AttributeConditionComponent implements OnInit {
   }
 
   public get conditionControl(): AbstractControl {
-    return this.form.get('condition');
+    return this.queryItemForm && this.queryItemForm.get('condition');
   }
 
   public onInput(value: string) {

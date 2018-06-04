@@ -1,5 +1,5 @@
 <div [style.background-color]="queryItem | queryItemBackground"
-     [style.border-color]="queryItem | queryItemBorder:form.valid"
+     [style.border-color]="queryItem | queryItemBorder:isFormValid()"
      [class.pr-2]="readonly"
      class="query-item py-1 px-1 d-flex align-items-center">
   <icons-presenter [colors]="queryItem.colors"
@@ -18,7 +18,7 @@
 
     <attribute-condition #attributeCondition
                          class="mr-1"
-                         [form]="form"
+                         [queryItemForm]="queryItemForm"
                          [queryItem]="queryItem"
                          [readonly]="readonly"
                          (enter)="attributeConditionValue.focusInput()"
@@ -27,7 +27,8 @@
 
     <attribute-value #attributeConditionValue
                      [queryItem]="queryItem"
-                     [form]="form"
+                     [queryItemForm]="queryItemForm"
+                     [readonly]="readonly"
                      (enter)="onEnter()"
                      (moveLeft)="attributeCondition.focusInput()"
                      [readonly]="readonly">

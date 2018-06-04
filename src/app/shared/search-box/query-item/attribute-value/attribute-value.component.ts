@@ -38,7 +38,7 @@ export class AttributeValueComponent {
   public readonly: boolean;
 
   @Input()
-  public form: FormGroup;
+  public queryItemForm: FormGroup;
 
   @Output()
   public enter = new EventEmitter();
@@ -50,7 +50,7 @@ export class AttributeValueComponent {
   private conditionValueInput: ElementRef;
 
   public get conditionValueControl(): AbstractControl {
-    return this.form.get('conditionValue');
+    return this.queryItemForm && this.queryItemForm.get('conditionValue');
   }
 
   public onBlur() {
