@@ -5,13 +5,13 @@
         <span class="flex-grow-2">
           <span class="mr-2" i18n="@@collection.config.tab.events.on">On</span>
           <ng-container *ngFor="let fireReason of eventModel.data.fireReasons; let idx = index">
-            <span class="text-success"
+            <span class="text-primary"
                   (click)="removeFireReasonFromEvent(eventModel.data, fireReason)"
                   title="Remove event fire reason"
                   i18n-title="@@collection.config.tab.events.remove.event.fire.reason">{{ fireReason }}</span>
             <span *ngIf="idx !== eventModel.data.fireReasons.length - 1">, </span>
           </ng-container>
-          <input class="text-success edit-border"/>
+          <input class="text-primary edit-border"/>
         </span>
       <span *ngIf="eventModel.data.automatic" i18n="@@collection.config.tab.events.automatic">
           automatic
@@ -20,7 +20,7 @@
 
     <div>
       <span class="mr-2" i18n="@@collection.config.tab.events.do">Do</span>
-      <input class="text-success edit-border" [(ngModel)]="eventModel.data.callback.name"/>
+      <input class="text-primary edit-border" [(ngModel)]="eventModel.data.callback.name"/>
       <ng-template *ngIf="eventModel.data.callback.hasValue">
         <span>:</span>
         <input class="edit-border" [(ngModel)]="eventModel.data.callback.value"/>
@@ -30,7 +30,7 @@
     <div>
       <span class="mr-2" i18n="@@collection.config.tab.events.parameters">Parameters</span>
       <ng-container *ngFor="let parameter of eventModel.data.parameters">
-        <div class="text-success">{{ parameter.name }}</div>
+        <div class="text-primary">{{ parameter.name }}</div>
       </ng-container>
       <input class="edit-border"/>
     </div>

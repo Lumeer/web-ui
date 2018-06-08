@@ -23,7 +23,8 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 const DEFAULT_FONT_SIZE = 1;
 const DEFAULT_MAX_LINES = 1;
 const DEFAULT_LINE_HEIGHT = 1.5;
-const DEFAULT_PADDING = 0.5;
+const DEFAULT_PADDING_H = 0.5;
+const DEFAULT_PADDING_V = 0;
 const warningStyle = ['border', 'border-danger', 'rounded'];
 
 @Component({
@@ -40,12 +41,15 @@ export class InputBoxComponent implements OnInit {
   @Input() public color: string;
   @Input() public fontSizeRem: number;
   @Input() public paddingRem: number;
-  @Input() public maxLines: number;
   @Input() public canStayEmpty: boolean;
+  @Input() public maxLines: number;
   @Input() public placeholder: string;
   @Input() public title: string;
   @Input() public editable: boolean = true;
   @Input() public emitAllChanges: boolean = false;
+  @Input() public userData: boolean = false;
+  @Input() public alwaysFrame: boolean = false;
+  @Input() public textAttribute: boolean = false;
 
   @Output() public focus: EventEmitter<void> = new EventEmitter();
   @Output() public blur: EventEmitter<void> = new EventEmitter();
@@ -54,10 +58,10 @@ export class InputBoxComponent implements OnInit {
 
   public mCurrentValue: string;
   public mFontSizeRem: number;
-  public mMaxHeightRem: number;
   public mPlaceholder: string;
   public mLineHeight: number;
-  public mPaddingRem: number;
+  public mPaddingHRem: number;
+  public mPaddingVRem: number;
 
   public constructor(private i18n: I18n) {
   }
@@ -73,10 +77,9 @@ export class InputBoxComponent implements OnInit {
   private computeProperties() {
     this.mCurrentValue = this.initialValue && this.initialValue.trim() || '';
     this.mFontSizeRem = this.fontSizeRem || DEFAULT_FONT_SIZE;
-    const mMaxLines = this.maxLines || DEFAULT_MAX_LINES;
     this.mLineHeight = DEFAULT_LINE_HEIGHT;
-    this.mPaddingRem = this.isMultiLine() ? this.paddingRem || DEFAULT_PADDING : 0;
-    this.mMaxHeightRem = mMaxLines * DEFAULT_LINE_HEIGHT * this.mFontSizeRem;
+    this.mPaddingVRem = this.paddingRem || DEFAULT_PADDING_V;
+    this.mPaddingHRem = DEFAULT_PADDING_H;
     this.mPlaceholder = this.placeholder || this.defaultPlaceholder();
   }
 
@@ -110,10 +113,6 @@ export class InputBoxComponent implements OnInit {
 
   public removeFocusFromInputParent() {
     this.inputParent.nativeElement.classList.remove('focused');
-  }
-
-  public isMultiLine(): boolean {
-    return this.maxLines > 1;
   }
 
   public setWarningBorder() {

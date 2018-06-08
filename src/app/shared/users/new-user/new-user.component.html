@@ -1,7 +1,7 @@
 <form class="form-inline d-flex">
   <input ngModel [value]="email" name="emailField" #emailField="ngModel" id="emailField" class="form-control form-control-sm mr-sm-2 flex-fill" type="email" [placeholder]="emailPlaceHolder()" (input)="email = emailField.control.value" email>
   <button type="button"
-          class="btn btn-sm btn-success"
+          class="btn btn-sm btn-primary"
           [disabled]="emailField.invalid || !email"
           (click)="onAddUser()">
     <i class="fas fa-plus"></i>

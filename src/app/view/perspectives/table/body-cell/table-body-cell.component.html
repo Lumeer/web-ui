@@ -45,7 +45,7 @@
   <ng-template *ngIf="row.documents.length === 1"
                (execute)="switchEditMode(true)"
                contextMenuItem>
-    <i class="fa fa-fw fa-edit mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-edit mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.body.row.edit">Edit value</span>
   </ng-template>
   <ng-template *ngIf="row.documents.length === 1 && row.documents[0].id"
@@ -54,13 +54,13 @@
   <ng-template *ngIf="row.part.index > 0 && row.documents.length === 1 && row.documents[0].id"
                (execute)="confirmUnlink()"
                contextMenuItem>
-    <i class="fa fa-fw fa-unlink text-warning mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-unlink text-warning mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.body.row.unlink">Unlink row</span>
   </ng-template>
   <ng-template *ngIf="row.documents.length === 1 && row.documents[0].id"
                (execute)="onRemoveRow()"
                contextMenuItem>
-    <i class="fas fa-fw fa-trash text-danger mr-1" aria-hidden="true"></i>
+    <i class="fas fa-fw fa-trash text-danger mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.body.row.remove">Remove row</span>
   </ng-template>
   <ng-template *ngIf="row.documents.length === 1"
@@ -69,13 +69,13 @@
   <ng-template *ngIf="row.documents.length === 1"
                (execute)="addNewRow()"
                contextMenuItem>
-    <i class="fa fa-fw fa-plus-circle text-success mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-plus-circle text-primary mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.body.row.add">Add new row</span>
   </ng-template>
   <ng-template *ngIf="row.documents.length === 1 && row.part.nextPart"
                (execute)="addLinkedRow()"
                contextMenuItem>
-    <i class="fa fa-fw fa-link text-success mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-link text-primary mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.body.row.linked.add">Add linked row</span>
   </ng-template>
 </context-menu>
@@ -83,7 +83,7 @@
 <context-menu #collapsedContextMenu>
   <ng-template (execute)="onExpand()"
                contextMenuItem>
-    <i class="fa fa-fw fa-expand mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-expand mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.body.row.expand">Expand</span>
   </ng-template>
 </context-menu>

@@ -2,13 +2,13 @@
   <ng-template *ngIf="false && cursor.partIndex === 0"
                contextMenuItem
                (execute)="onSort(false)">
-    <i class="fa fa-fw fa-sort-alpha-down mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-sort-alpha-down mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.header.menu.sort.ascending">Sort ascending</span>
   </ng-template>
   <ng-template *ngIf="false && cursor.partIndex === 0"
                contextMenuItem
                (execute)="onSort(true)">
-    <i class="fa fa-fw fa-sort-alpha-up mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-sort-alpha-up mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.header.menu.sort.descending">Sort descending</span>
   </ng-template>
   <ng-template *ngIf="false && cursor.partIndex === 0"
@@ -16,41 +16,41 @@
                divider="true"></ng-template>
   <ng-template contextMenuItem
                (execute)="edit.emit()">
-    <i class="fa fa-fw fa-edit mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-edit mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.header.menu.edit">Edit name</span>
   </ng-template>
   <ng-template *ngIf="false"
                contextMenuItem>
-    <i class="fa fa-fw fa-cog mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-cog mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.header.menu.config">Configuration</span>
   </ng-template>
   <ng-template contextMenuItem divider="true"></ng-template>
   <ng-template (execute)="addNextColumn()"
                contextMenuItem>
-    <i class="fa fa-fw fa-arrow-alt-circle-right text-success mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-arrow-alt-circle-right text-primary mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.header.menu.add.column.next">Add column right</span>
   </ng-template>
   <ng-template (execute)="addPreviousColumn()"
                contextMenuItem>
-    <i class="fa fa-fw fa-arrow-alt-circle-left text-success mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-arrow-alt-circle-left text-primary mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.header.menu.add.column.previous">Add column left</span>
   </ng-template>
   <ng-template contextMenuItem divider="true"></ng-template>
   <ng-template *ngIf="false && leaf && attribute.id"
                (execute)="split.emit()"
                contextMenuItem>
-    <i class="fa fa-fw fa-columns text-warning mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-columns text-warning mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.header.menu.split">Split column</span>
   </ng-template>
   <ng-template *ngIf="attribute.id"
                contextMenuItem
                (execute)="hide.emit()">
-    <i class="fa fa-fw fa-eye-slash mr-1" aria-hidden="true"></i>
+    <i class="fa fa-fw fa-eye-slash mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.header.menu.hide">Hide column</span>
   </ng-template>
   <ng-template (execute)="remove.emit()"
                contextMenuItem>
-    <i class="fas fa-fw fa-trash text-danger mr-1" aria-hidden="true"></i>
+    <i class="fas fa-fw fa-trash text-danger mr-1" aria-hidden="true"></i>&nbsp;
     <span i18n="@@table.header.menu.remove">Remove column</span>
   </ng-template>
 </context-menu>

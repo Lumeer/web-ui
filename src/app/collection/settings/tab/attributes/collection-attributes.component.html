@@ -10,8 +10,8 @@
           <span i18n="@@collections.tab.attributes.usage">Usage</span>
         </th>
         <th class="col-4">
-          <div class="form-control d-flex align-items-center overflow-hidden" title="Search for attribute" i18n-title="@@collections.tab.attributes.search.title">
-            <input type="search" class="flex-grow-2" #searchInput
+          <div class="form-inline d-flex align-items-center overflow-hidden" title="Search for attribute" i18n-title="@@collections.tab.attributes.search.title">
+            <input type="search" class="form-control flex-grow-2" #searchInput
                    placeholder="Search attribute..."
                    i18n-placeholder="@@collections.tab.attributes.search.placeholder"
                    [(ngModel)]="searchString">
@@ -25,6 +25,7 @@
         <td class="col-8">
           <input-box
             [canStayEmpty]="true"
+            [alwaysFrame]="true"
             [placeholder]="attributePlaceholder"
             [initialValue]="newAttributeName"
             (newValue)="newAttributeName = $event">
@@ -32,9 +33,9 @@
         </td>
         <td class="col-3">
           <button type="button"
-                  class="btn btn-sm btn-success float-right"
+                  class="btn btn-sm btn-primary float-right"
                   (click)="onCreateAttribute()">
-            <i class="fas fa-plus"></i>
+            <i class="fas fa-plus"></i>&nbsp;
             <span class="font-weight-bold" i18n="@@collection.tab.attributes.attribute.add">Add attribute</span>
           </button>
         </td>
@@ -55,10 +56,11 @@
                (click)="setDefaultAttribute(attribute)"></i>
           </ng-template>
         </th>
-        <td class="col-5">
+        <td class="col-5 d-flex align-items-center">
           <input-box
             [class.font-weight-bold]="attribute | isDefaultAttribute:collection"
             [canStayEmpty]="true"
+            [userData]="true"
             [title]="attribute.name"
             [placeholder]="attributePlaceholder"
             [initialValue]="attribute.name"
@@ -66,12 +68,12 @@
             #attributeNameInput>
           </input-box>
         </td>
-        <td class="col-2">
+        <td class="col-2 d-flex align-items-center">
           <span [class.font-weight-bold]="attribute | isDefaultAttribute:collection">
             {{attribute.usageCount}}
           </span>
         </td>
-        <td class="col-4">
+        <td class="col-4 d-flex align-items-center justify-content-end">
           <div class="float-right icon-hover">
             <i class="fas fa-fw fa-trash text-danger cursor-pointer"
                (click)="onDeleteAttribute(attribute)"

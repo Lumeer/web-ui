@@ -1,6 +1,6 @@
 @import '../../variables';
 
-.input {
+/*.input {
   background: transparent;
   transition: border-color $animation-color-duration;
 
@@ -55,14 +55,14 @@
     border-bottom: 1px solid $grey-darker-color !important;
   }
 
-}
+}/*
 
-[contenteditable=true]:empty:before {
-  content: attr(placeholder);
-  display: block; /* For Firefox */
-  color: $grey-darker-color;
-}
+//[contenteditable=true]:empty:before {
+//  content: attr(placeholder);
+//  display: block; /* For Firefox */
+//  color: $grey-darker-color;
+//}
 
-[contenteditable]:focus {
-  outline: 0 solid transparent;
-}
+//[contenteditable]:focus {
+//  outline: 0 solid transparent;
+//}

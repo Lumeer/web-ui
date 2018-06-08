@@ -54,6 +54,9 @@ export class KeyValueComponent {
   @Input()
   public readOnly = false;
 
+  @Input()
+  public defaultAttribute = false;
+
   constructor(public i18n: I18n) { }
 
   public onNewKey($event: string) {

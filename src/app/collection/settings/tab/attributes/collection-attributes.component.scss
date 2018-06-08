@@ -1,9 +1,9 @@
 @import "../../../../shared/variables";
 
-input {
+/*input {
   border: 1px solid transparent;
   outline: none;
-}
+}*/
 
 table {
 
@@ -22,7 +22,7 @@ table {
       }
 
       &:hover {
-        color: $success;
+        color: $primary;
       }
     }
 
@@ -36,7 +36,7 @@ table {
   }
 }
 
-.btn:focus,.btn:active {
+/*.btn:focus,.btn:active {
   outline: none !important;
   box-shadow: none !important;
-}
+}*/

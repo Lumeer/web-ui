@@ -2,7 +2,7 @@
   <span class="mr-1 d-flex overflow-hidden"
         [style.color]="collection.color"
         [title]="collection.name">
-    <i class="icon fa-fw {{ collection.icon }}"></i>
+    <i class="icon fa-fw {{ collection.icon }}"></i>&nbsp;
     <span class="collection-name pl-3">
       {{ collection.name }}
     </span>
@@ -12,7 +12,7 @@
     <i class="button text-danger fas fa-trash rounded align-self-center p-1"
        title="Remove Record" i18n-title="@@document.button.remove"
        (click)="onRemove()"></i>
-    <i class="button text-success fa fa-pencil rounded align-self-center p-1"
+    <i class="button text-primary fa fa-pencil rounded align-self-center p-1"
        title="Edit Record" i18n-title="@@document.button.edit"
        (click)="selectionHelper.setEditMode(true); selectionHelper.select(0, 0, postItModel)"></i>
   </ng-container>

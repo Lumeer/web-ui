@@ -2,7 +2,7 @@
   <div class="my-3">
     <a (click)="onAddText()"
        title="Add text" i18n-title="@@smartdoc.panel.add.text">
-      <i class="fa fa-font fa-fw fa-lg text-success"></i>
+      <i class="fa fa-font fa-fw fa-lg text-primary"></i>
     </a>
   </div>
   <div class="my-3">
@@ -14,7 +14,7 @@
          aria-haspopup="true"
          aria-expanded="false"
          title="Add table" i18n-title="@@smartdoc.panel.add.table">
-        <i class="fa fa-table fa-fw fa-lg text-success"></i>
+        <i class="fa fa-table fa-fw fa-lg text-primary"></i>
       </a>
 
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
@@ -36,13 +36,13 @@
            (click)="addPartByCollection(collection)"
            class="dropdown-item">
           <i class="{{collection.icon}} fa-fw"
-             [style.color]="collection.color"></i>
+             [style.color]="collection.color"></i>&nbsp;
           <span class="ml-1">{{collection.name}}</span>
         </a>
         <div class="dropdown-divider"></div>
         <a class="dropdown-item"
            (click)="addPartWithNewCollection()">
-          <i class="fa fa-plus-circle text-secondary mr-1"></i>
+          <i class="fa fa-plus-circle text-secondary mr-1"></i>&nbsp;
           <span i18n="@@smartdoc.add.collection.new">Create new file</span>
         </a>
       </div>

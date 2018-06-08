@@ -1,5 +1,6 @@
 @import "variables";
 @import "~bootstrap/scss/bootstrap";
+@import "bootswatch";
 
 *[contenteditable] {
   -webkit-user-select: auto !important;
@@ -27,19 +28,21 @@ a {
 }
 
 a:hover {
-  color: lighten($link-color, 5%);
+  text-decoration: none;
 }
 
 .flex-grow-2 {
   flex-grow: 2;
 }
 
+// TODO remove this style
 .no-outline {
   &:focus {
     outline: none;
   }
 }
 
+// TODO should not be needed
 ul {
   list-style-type: none;
 }
@@ -52,6 +55,7 @@ ul {
   cursor: text;
 }
 
+// TODO should not be needed
 .edit-border {
   background: transparent;
   border: 1px solid transparent !important;
@@ -69,6 +73,7 @@ ul {
   }
 }
 
+// TODO should not be needed
 input {
   background: transparent;
 }
@@ -85,7 +90,7 @@ input {
 .snotifyToast {
   border: 2px solid;
   box-shadow: $shadow-up;
-  background: $secondary-color;
+  background: $white;
   cursor: default !important;
 }
 
@@ -100,7 +105,7 @@ input {
 }
 
 .snotify-success, .snotify-prompt {
-  border-color: $success;
+  border-color: $primary;
 }
 
 .snotify-info, .snotify-async {
@@ -137,21 +142,24 @@ input {
 
 .clickable {
   cursor: pointer;
-  color: $success;
   transition: all .2s ease-in;
 
-  &:hover {
-    color: lighten($success, 20%);
-  }
-}
+  &.clickable-primary {
+    color: $primary !important;
 
-.clickable-unselected {
-  cursor: pointer;
-  color: $grey-darker-color;
-
-  &:hover {
-    color: $grey-color;
+    &:hover {
+      color: lighten($primary, 15%) !important;
+    }
   }
+
+  &:not(.clickable-primary) {
+    color: $success;
+
+    &:hover {
+      color: darken($success, 15%);
+    }
+  }
+
 }
 
 .pointer-events-none {
@@ -203,59 +211,8 @@ input {
   border-left: 1px solid $table-border-color;
 }
 
+// TODO possibly replace with text-truncate from bootstrap
 .overflow-hidden {
   overflow: hidden;
-}
-
-ul.nav-u {
-  border-bottom: 1px solid $gray-300;
-}
-
-.nav-u .nav-item.show .nav-link, .nav-u .nav-link.active {
-  color: #495057;
-  background-color: #fff;
-  border-color: $success;
-}
-
-.nav-u .nav-link {
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 3px solid transparent;
-}
-
-.spectrum-container {
-  border: none;
-  border-radius: 5px;
-  background-color: white;
-  -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-}
-
-.notice {
-  color: $gray-500;
-  font-style: italic;
-}
-
-.attribute {
-  font-size: small;
-  color: $gray-500;
-  font-style: italic;
-  font-weight: bold;
-}
-
-button {
-  box-shadow: none ! important;
-}
-
-[contenteditable=true]:empty:before {
-  content: attr(placeholder);
-  display: block; /* For Firefox */
-  color: $grey-darker-color;
-}
-
-[contenteditable]:focus {
-  outline: 0 solid transparent;
 }
 

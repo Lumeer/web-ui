@@ -1,19 +1,19 @@
 <div class="row my-2">
   <div class="col">
     <button type="button"
-            class="btn btn-sm btn-success"
+            class="btn btn-sm btn-primary"
             title="Add Document"
             i18n-title="@@shared.preview.results.addDocument"
             [disabled]="!(selectedCollection | permissions:'write' | async)"
             (click)="onNewDocument()">
-      <i class="fa fa-plus-circle" aria-hidden="true"></i>
+      <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;
       <span class="font-weight-bold" i18n="@@shared.preview.results.addDocument">New Document</span>
     </button>
   </div>
 </div>
 <div class="row" *ngIf="(collections$ | async).length > 1 || (documents$ | async).length > 1">
   <div class="col">
-    <p class="title small text-uppercase mb-0"><a href="#preview-collapse" data-toggle="collapse" class="preview" i18n="@@shared.preview.results.moreResults">There are multiple results, please select one&hellip;</a></p>
+    <p class="small text-muted mb-0"><a href="#preview-collapse" data-toggle="collapse" class="preview" i18n="@@shared.preview.results.moreResults">There are multiple results, please select one&hellip;</a></p>
   </div>
 </div>
 <div class="p-0 m-0 collapse show" id="preview-collapse" *ngIf="(collections$ | async).length > 1 || (documents$ | async).length > 1">

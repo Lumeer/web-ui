@@ -9,11 +9,11 @@
     text-overflow: ellipsis;
 
     &:not(.active) {
-      color: $success;
+      color: $primary;
     }
 
     &:hover:not(.active) {
-      color: lighten($success, 5%);
+      color: darken($primary, 15%);
     }
   }
 }

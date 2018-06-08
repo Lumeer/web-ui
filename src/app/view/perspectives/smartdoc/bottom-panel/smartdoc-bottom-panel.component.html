@@ -5,7 +5,7 @@
         <i class="{{linkType.collections[0].icon}} fa-xs fa-fw align-top"
            [style.color]="linkType.collections[0].color"></i><!-- TODO remove space somehow
     --><i class="{{linkType.collections[1].icon}} fa-xs fa-fw"
-          [style.color]="linkType.collections[1].color"></i>
+          [style.color]="linkType.collections[1].color"></i>&nbsp;
           <span class="text-secondary">{{linkType.name}}</span>
       </span>
     </div>
@@ -30,13 +30,13 @@
            class="ml-3"
            [title]="removeHtmlComments(perspectiveName)">
           <!--title="Switch perspective" i18n-title="@@smartdoc.perspective.switch">-->
-          <i class="{{perspectiveIcon(perspective)}} text-success"></i>
+          <i class="{{perspectiveIcon(perspective)}} text-primary"></i>
         </a>
       </ng-container>
       <a (click)="onCopyPart()"
          class="ml-3"
          title="Copy part" i18n-title="@@smartdoc.part.copy">
-        <i class="fa fa-copy text-success"></i>
+        <i class="fa fa-copy text-primary"></i>
       </a>
       <a *ngIf="!single"
          (click)="onRemovePart()"
