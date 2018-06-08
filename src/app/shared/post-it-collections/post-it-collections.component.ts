@@ -17,20 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, HostListener, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
 
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter, withLatestFrom} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
+import {Subscription, Observable} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {selectCollectionsByQuery} from '../../core/store/collections/collections.state';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
-import {Role} from '../../core/model/role';
 import {HashCodeGenerator} from '../utils/hash-code-generator';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {PostItLayoutConfig} from '../utils/layout/post-it-layout-config';
@@ -42,8 +41,12 @@ import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator'
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {userHasRoleInResource, userRolesInResource} from '../utils/resource.utils';
-import {UserModel} from '../../core/store/users/user.model';
+import {userRolesInResource} from '../utils/resource.utils';
+import {QueryModel} from '../../core/store/navigation/query.model';
+import {queryIsNotEmpty} from '../../core/store/navigation/query.util';
+import {NavigationAction} from '../../core/store/navigation/navigation.action';
+
+const UNCREATED_THRESHOLD = 5;
 
 @Component({
   selector: 'post-it-collections',
@@ -51,6 +54,9 @@ import {UserModel} from '../../core/store/users/user.model';
   styleUrls: ['./post-it-collections.component.scss']
 })
 export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  @Input()
+  public maxLines: number = -1;
 
   /**
    * Handler to change the flag to remove opacity css on elements
@@ -63,33 +69,25 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  @ViewChildren('textArea')
-  public nameInputs: QueryList<ElementRef>;
-
   public collections: CollectionModel[];
   public collectionRoles: { [collectionId: string]: string[] };
-
   public selectedCollection: CollectionModel;
 
   public panelVisible: boolean = false;
 
   public clickedComponent: any;
 
-  private layout: PostItLayout;
-
-  private workspace: Workspace;
+  public layout: PostItLayout;
 
   public project: ProjectModel;
 
-  private currentUser: UserModel;
+  public focusedPanel: number;
 
-  private navigationSubscription: Subscription;
+  public workspace: Workspace;
 
-  private collectionsSubscription: Subscription;
+  private query: QueryModel;
 
-  private projectSubscription: Subscription;
-
-  private focusedPanel: number;
+  private subscriptions = new Subscription();
 
   constructor(public i18n: I18n,
               private store: Store<AppState>,
@@ -101,6 +99,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.createLayout();
     this.subscribeOnNavigation();
     this.subscribeOnCollections();
+    this.dispatchActions();
   }
 
   public ngAfterViewInit() {
@@ -108,17 +107,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public ngOnDestroy() {
-    if (this.navigationSubscription) {
-      this.navigationSubscription.unsubscribe();
-    }
-
-    if (this.collectionsSubscription) {
-      this.collectionsSubscription.unsubscribe();
-    }
-
-    if (this.projectSubscription) {
-      this.projectSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   public togglePanelVisible(event, index) {
@@ -139,30 +128,33 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   private subscribeOnNavigation() {
-    this.navigationSubscription = this.store.select(selectNavigation).pipe(
+    const navigationSubscription = this.store.select(selectNavigation).pipe(
       filter(navigation => Boolean(navigation && navigation.workspace && navigation.workspace.organizationCode && navigation.workspace.projectCode))
     ).subscribe(navigation => {
       this.workspace = navigation.workspace;
+      this.query = navigation.query;
     });
+    this.subscriptions.add(navigationSubscription);
 
-    this.projectSubscription = this.store.select(selectProjectByWorkspace).pipe(
+    const projectSubscription = this.store.select(selectProjectByWorkspace).pipe(
       filter(project => !isNullOrUndefined(project)
       )).subscribe(project => this.project = project);
+    this.subscriptions.add(projectSubscription);
   }
 
   private subscribeOnCollections() {
-    this.collectionsSubscription = this.store.select(selectCollectionsByQuery).pipe(
+    const collectionsSubscription = this.store.select(selectCollectionsByQuery).pipe(
       withLatestFrom(this.store.select(selectCurrentUserForWorkspace))
     ).subscribe(([collections, user]) => {
       const corrIds: string[] = collections.filter(res => res.correlationId).map(res => res.correlationId);
       const newCollections = this.collections ? this.collections.filter(collection => !collection.id && !corrIds.includes(collection.correlationId)) : [];
       this.collections = newCollections.concat(collections.slice());
-      this.currentUser = user;
       this.collectionRoles = collections.reduce((roles, collection) => {
         roles[collection.id] = userRolesInResource(user, collection);
         return roles;
       }, {});
     });
+    this.subscriptions.add(collectionsSubscription);
   }
 
   public onCollectionSelect(collection: CollectionModel) {
@@ -188,6 +180,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     };
 
     this.collections.unshift(newCollection);
+
+    this.checkNumberOfUncreatedCollections();
   }
 
   private emptyCollection(): CollectionModel {
@@ -208,7 +202,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       {
         title,
         message,
-        action: new CollectionsAction.Delete({collectionId: collection.id})
+        action: new CollectionsAction.Delete({collectionId: collection.id, callback: this.onRemoveCollection()})
       }));
   }
 
@@ -238,7 +232,27 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public createCollection(collection: CollectionModel) {
-    this.store.dispatch(new CollectionsAction.Create({collection}));
+    this.store.dispatch(new CollectionsAction.Create({collection, callback: this.onCreateCollection()}));
+  }
+
+  private onCreateCollection(): (collection: CollectionModel) => void {
+    const query = this.query;
+    const store = this.store;
+    return collection => {
+      if (queryIsNotEmpty(query)) {
+        store.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
+      }
+    }
+  }
+
+  private onRemoveCollection(): (collectionId: string) => void {
+    const query = this.query;
+    const store = this.store;
+    return collectionId => {
+      if (queryIsNotEmpty(query)) {
+        store.dispatch(new NavigationAction.RemoveCollectionFromQuery({collectionId}));
+      }
+    }
   }
 
   public getRoles(collection: CollectionModel): string[] {
@@ -257,7 +271,29 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     const newCollection = {...this.emptyCollection(), name: importInfo.name};
     const importedCollection = {collection: newCollection, data: importInfo.result};
 
-    this.store.dispatch(new CollectionsAction.Import({format: importInfo.format, importedCollection}));
+    this.store.dispatch(new CollectionsAction.Import({format: importInfo.format, importedCollection, callback: this.onCreateCollection()}));
+  }
+
+  private dispatchActions() {
+    this.store.dispatch(new CollectionsAction.GetNames());
+  }
+
+  private checkNumberOfUncreatedCollections() {
+    const numUncreated = this.collections.filter(coll => isNullOrUndefined(coll.id)).length;
+
+    if (numUncreated % UNCREATED_THRESHOLD === 0) {
+      const message = this.i18n({
+        id: 'collections.postit.empty.info',
+        value: 'Looks like you have lot of empty files. Is it okay? We recommend to fill in name or delete them.'
+      });
+
+      this.notificationService.info(message);
+    }
+
+  }
+
+  public shouldLayout() {
+    this.layout.refresh();
   }
 
 }

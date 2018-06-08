@@ -147,7 +147,7 @@ export namespace CollectionsAction {
   export class Import implements Action {
     public readonly type = CollectionsActionType.IMPORT;
 
-    public constructor(public payload: { format: string, importedCollection: ImportedCollection }) {
+    public constructor(public payload: { format: string, importedCollection: ImportedCollection, callback?: (collection: CollectionModel) => void}) {
     }
   }
 
@@ -175,7 +175,7 @@ export namespace CollectionsAction {
   export class UpdateSuccess implements Action {
     public readonly type = CollectionsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: { collection: CollectionModel }) {
+    public constructor(public payload: { collection: CollectionModel, oldName?: string }) {
     }
   }
 
@@ -189,14 +189,14 @@ export namespace CollectionsAction {
   export class Delete implements Action {
     public readonly type = CollectionsActionType.DELETE;
 
-    public constructor(public payload: { collectionId: string }) {
+    public constructor(public payload: { collectionId: string, callback?: (collectionId: string) => void }) {
     }
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = CollectionsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: { collectionId: string }) {
+    public constructor(public payload: { collectionId: string , collectionName?: string}) {
     }
   }
 

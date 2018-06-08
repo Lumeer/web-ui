@@ -24,22 +24,26 @@
 
   <div class="post-it-collection-layout">
 
-    <post-it-collection
-      *ngFor="let collection of collections; trackBy:trackByCollection; let idx = index"
-      [collection]="collection"
-      [layout]="layout"
-      [selected]="selectedCollection == collection"
-      [focused]="panelVisible && focusedPanel == idx"
-      [workspace]="workspace"
-      [userRoles]="getRoles(collection)"
-      (select)="onCollectionSelect(collection)"
-      (unselect)="onCollectionUnselect()"
-      (update)="updateCollection($event)"
-      (create)="createCollection($event)"
-      (delete)="confirmDeletion(collection)"
-      (favoriteChange)="onFavoriteChange(collection.id, $event)"
-      (togglePanel)="togglePanelVisible($event, idx)">
-    </post-it-collection>
+    <div post-it-collection
+         class="layout-item"
+         layout-item
+         *ngFor="let collection of collections; trackBy:trackByCollection; let idx = index"
+         [class.focused]="panelVisible && focusedPanel === idx"
+         [class.selected]="selectedCollection === collection"
+         [collection]="collection"
+         [layout]="layout"
+         [focused]="panelVisible && focusedPanel === idx"
+         [workspace]="workspace"
+         [userRoles]="getRoles(collection)"
+         (layout)="shouldLayout()"
+         (select)="onCollectionSelect(collection)"
+         (unselect)="onCollectionUnselect()"
+         (update)="updateCollection($event)"
+         (create)="createCollection($event)"
+         (delete)="confirmDeletion(collection)"
+         (favoriteChange)="onFavoriteChange(collection.id, $event)"
+         (togglePanel)="togglePanelVisible($event, idx)">
+    </div>
 
   </div>
 

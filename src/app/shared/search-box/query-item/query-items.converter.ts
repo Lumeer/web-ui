@@ -27,6 +27,7 @@ import {DocumentQueryItem} from './model/documents.query-item';
 import {FulltextQueryItem} from './model/fulltext.query-item';
 import {QueryItem} from './model/query-item';
 import {QueryItemType} from './model/query-item-type';
+import {isNullOrUndefined} from 'util';
 
 export class QueryItemsConverter {
 
@@ -78,11 +79,15 @@ export class QueryItemsConverter {
     return filters.map(filter => {
       const [collectionId, attributeId, fullCondition] = filter.split(':', 3);
       const collection = this.data.collections.find(collection => collection.id === collectionId);
-      const attribute = collection.attributes.find(attribute => attribute.id === attributeId);
+      const attribute = collection && collection.attributes.find(attribute => attribute.id === attributeId) || null;
+      if (!attribute) {
+        return null;
+      }
+
       const [condition, conditionValue] = fullCondition.split(' ', 2);
 
       return new AttributeQueryItem(collection, attribute, condition, conditionValue);
-    });
+    }).filter(queryItem => !isNullOrUndefined(queryItem));
   }
 
   private createCollectionItems(query: QueryModel): QueryItem[] {
@@ -102,12 +107,15 @@ export class QueryItemsConverter {
   private createLinkItems(linkTypeIds: string[]): QueryItem[] {
     return this.data.linkTypes.filter(linkType => linkTypeIds.includes(linkType.id))
       .map(linkType => {
-        linkType.collections = [
-          this.data.collections.find(collection => collection.id === linkType.collectionIds[0]),
-          this.data.collections.find(collection => collection.id === linkType.collectionIds[1])
-        ];
+        const collection1 = this.data.collections.find(collection => collection.id === linkType.collectionIds[0]);
+        const collection2 = this.data.collections.find(collection => collection.id === linkType.collectionIds[1]);
+        if (!collection1 || !collection2) {
+          return null;
+        }
+
+        linkType.collections = [collection1, collection2];
         return new LinkQueryItem(linkType);
-      });
+      }).filter(queryItem => !isNullOrUndefined(queryItem));
   }
 
 }

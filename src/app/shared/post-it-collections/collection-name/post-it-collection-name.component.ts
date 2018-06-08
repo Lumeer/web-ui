@@ -20,6 +20,7 @@
 import {Component, ElementRef, EventEmitter, Input, Output, SimpleChange, ViewChild} from '@angular/core';
 
 import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'post-it-collection-name',
@@ -32,6 +33,7 @@ export class PostItCollectionNameComponent {
 
   @Input() public editable: boolean;
   @Input() public collectionName: string;
+  @Input() public nameFormControl: FormControl;
 
   @Output() public changed = new EventEmitter<string>();
   @Output() public selected = new EventEmitter();
@@ -42,10 +44,14 @@ export class PostItCollectionNameComponent {
 
     const trimmed = value.trim();
     if (trimmed === '') {
-        this.input.nativeElement.textContent = this.collectionName;
-    } else {
+      this.input.nativeElement.textContent = this.collectionName;
+    } else if (trimmed !== this.collectionName && this.nameFormControl && this.nameFormControl.valid) {
       this.changed.emit(trimmed);
     }
+  }
+
+  public onInput(value: string){
+    this.nameFormControl && this.nameFormControl.setValue(value);
   }
 
   public onNameSelected() {

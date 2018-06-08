@@ -37,11 +37,11 @@ export class PostItLayout {
   }
 
   public initialize(): void {
-    this.isInitializedAffterAttempt();
+    this.isInitializedAfterAttempt();
   }
 
   public add(element: HTMLElement): void {
-    if (!this.isInitializedAffterAttempt()) {
+    if (!this.isInitializedAfterAttempt()) {
       return;
     }
 
@@ -52,7 +52,7 @@ export class PostItLayout {
   }
 
   public remove(element: HTMLElement): void {
-    if (!this.isInitializedAffterAttempt()) {
+    if (!this.isInitializedAfterAttempt()) {
       return;
     }
 
@@ -72,12 +72,12 @@ export class PostItLayout {
   }
 
   public refresh(): void {
-    if (this.isInitializedAffterAttempt()) {
+    if (this.isInitializedAfterAttempt()) {
       this.relayout();
     }
   }
 
-  protected isInitializedAffterAttempt(): boolean {
+  protected isInitializedAfterAttempt(): boolean {
     if (!this.containerExists()) {
       return false;
     }
