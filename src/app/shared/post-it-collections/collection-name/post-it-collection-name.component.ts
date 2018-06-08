@@ -86,7 +86,7 @@ export class PostItCollectionNameComponent {
     return false;
   }
 
-  private shouldPerformPendingUpdate(): boolean{
+  private shouldPerformPendingUpdate(): boolean {
     const currentValue = this.input.nativeElement.textContent;
     return this.pendingUpdate && this.nameFormControl.valid && currentValue !== this.collectionName;
   }

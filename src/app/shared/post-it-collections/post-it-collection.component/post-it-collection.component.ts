@@ -163,11 +163,11 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
     this.nameFormControl.updateValueAndValidity();
   }
 
-  public performPendingUpdateName(): boolean{
+  public performPendingUpdateName(): boolean {
     return this.collectionNameComponent.performPendingUpdateIfNeeded();
   }
 
-  public getPendingUpdateName(): string{
+  public getPendingUpdateName(): string {
     return this.collectionNameComponent.getPendingUpdate();
   }
 
@@ -188,7 +188,7 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private initFormControl() {
-    const collectionName = this.collection ? this.collection.name : "";
+    const collectionName = this.collection ? this.collection.name : '';
     this.nameFormControl = new FormControl(collectionName, null, this.collectionValidators.uniqueName(this.collection.name));
     this.nameFormControl.setErrors(null);
   }

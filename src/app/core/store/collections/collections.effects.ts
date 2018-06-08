@@ -236,7 +236,7 @@ export class CollectionsEffects {
           return actions;
         }),
         catchError((error) => of(new CollectionsAction.DeleteFailure({error: error})))
-      )
+      );
     })
   );
 

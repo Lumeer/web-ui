@@ -248,7 +248,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       if (queryIsNotEmpty(query)) {
         store.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
       }
-    }
+    };
   }
 
   private onRemoveCollection(): (collectionId: string) => void {
@@ -258,7 +258,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       if (queryIsNotEmpty(query)) {
         store.dispatch(new NavigationAction.RemoveCollectionFromQuery({collectionId}));
       }
-    }
+    };
   }
 
   public getRoles(collection: CollectionModel): string[] {
