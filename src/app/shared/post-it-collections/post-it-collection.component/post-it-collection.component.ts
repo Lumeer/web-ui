@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {QueryConverter} from '../../../core/store/navigation/query.converter';
@@ -28,6 +28,7 @@ import {isNullOrUndefined} from 'util';
 import {debounceTime, filter} from 'rxjs/operators';
 import {FormControl} from '@angular/forms';
 import {CollectionValidators} from '../../../core/validators/collection.validators';
+import {PostItCollectionNameComponent} from '../collection-name/post-it-collection-name.component';
 
 @Component({
   selector: '[post-it-collection]',
@@ -38,6 +39,7 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() public collection: CollectionModel;
   @Input() public focused: boolean;
+  @Input() public selected: boolean;
   @Input() public userRoles: string[];
   @Input() public workspace: Workspace;
 
@@ -49,6 +51,9 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
   @Output() public delete = new EventEmitter();
   @Output() public togglePanel = new EventEmitter<any>();
   @Output() public favoriteChange = new EventEmitter<{ favorite: boolean, onlyStore: boolean }>();
+
+  @ViewChild(PostItCollectionNameComponent)
+  public collectionNameComponent: PostItCollectionNameComponent;
 
   public isPickerVisible: boolean = false;
   public nameFormControl: FormControl;
@@ -152,6 +157,18 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
 
   public hasWriteRole(): boolean {
     return this.hasRole(Role.Write);
+  }
+
+  public refreshValidators() {
+    this.nameFormControl.updateValueAndValidity();
+  }
+
+  public performPendingUpdateName(): boolean{
+    return this.collectionNameComponent.performPendingUpdateIfNeeded();
+  }
+
+  public getPendingUpdateName(): string{
+    return this.collectionNameComponent.getPendingUpdate();
   }
 
   private hasRole(role: string): boolean {

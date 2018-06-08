@@ -109,7 +109,6 @@ export class CollectionSettingsGuard implements CanActivate {
 
   private dispatchDataEvents(organization: OrganizationModel, collection: CollectionModel) {
     this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
-    this.store.dispatch(new CollectionsAction.GetNames());
     //this.store.dispatch(new GroupsAction.Get());
   }
 

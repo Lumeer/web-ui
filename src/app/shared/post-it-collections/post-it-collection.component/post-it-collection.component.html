@@ -1,4 +1,5 @@
 <div class="card post-it"
+     [class.selected]="selected"
      [class.uninitialized]="!collection.id"
      [class.initialized]="collection.id"
      [style.border-color]="collection.color">

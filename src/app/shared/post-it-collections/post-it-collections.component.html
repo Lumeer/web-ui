@@ -25,7 +25,7 @@
   <div class="post-it-collection-layout">
 
     <div post-it-collection
-         class="layout-item" layout-item
+         #postIt class="layout-item" layout-item
          *ngFor="let collection of (maxShown > 0 ? (collections | slice:0:maxShown) : collections); trackBy:trackByCollection; let idx = index"
          [class.focused]="panelVisible && focusedPanel === idx"
          [class.selected]="selectedCollection === collection"
@@ -33,6 +33,7 @@
          [layout]="layout"
          [forceLayoutIndex]="idx"
          [focused]="panelVisible && focusedPanel === idx"
+         [selected]="selectedCollection === collection"
          [workspace]="workspace"
          [userRoles]="getRoles(collection)"
          (resize)="forceLayout()"

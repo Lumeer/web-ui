@@ -195,9 +195,10 @@ export class CollectionsEffects {
       const collectionDto = CollectionConverter.toDto(action.payload.collection);
       const oldCollection = collections[collectionDto.id];
       const oldName = oldCollection && oldCollection.name !== collectionDto.name ? oldCollection.name : null;
+      const correlationId = oldCollection && oldCollection.correlationId;
 
       return this.collectionService.updateCollection(collectionDto).pipe(
-        map((dto: Collection) => CollectionConverter.fromDto(dto)),
+        map((dto: Collection) => CollectionConverter.fromDto(dto, correlationId)),
         map(collection => new CollectionsAction.UpdateSuccess({collection, oldName})),
         catchError((error) => of(new CollectionsAction.CreateFailure({error})))
       );

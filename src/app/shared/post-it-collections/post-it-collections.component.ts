@@ -45,6 +45,7 @@ import {userRolesInResource} from '../utils/resource.utils';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {queryIsNotEmpty} from '../../core/store/navigation/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
+import {PostItCollectionComponent} from './post-it-collection.component/post-it-collection.component';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -70,7 +71,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   @ViewChildren('postIt')
-  public postIts: QueryList<ElementRef>;
+  public postIts: QueryList<PostItCollectionComponent>;
 
   public collections: CollectionModel[];
   public collectionRoles: { [collectionId: string]: string[] };
@@ -156,6 +157,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
         roles[collection.id] = userRolesInResource(user, collection);
         return roles;
       }, {});
+
+      this.refreshPostIts();
     });
     this.subscriptions.add(collectionsSubscription);
   }
@@ -263,7 +266,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public trackByCollection(index: number, collection: CollectionModel): number {
-    return HashCodeGenerator.hashString(collection.id || collection.correlationId);
+    return HashCodeGenerator.hashString(collection.correlationId || collection.id);
   }
 
   public notifyOfError(message: string) {
@@ -279,6 +282,12 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public forceLayout() {
     this.layout.refresh();
+  }
+
+  public refreshPostIts() {
+    this.postIts && this.postIts.forEach(postIt => postIt.refreshValidators());
+
+    this.checkForPendingUpdatesNames();
   }
 
   private dispatchActions() {
@@ -299,4 +308,25 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   }
 
+  private checkForPendingUpdatesNames() {
+    if (!this.postIts) {
+      return;
+    }
+
+    const pendingUpdates = this.postIts.reduce((updates, postIt, index) => {
+      updates.push(postIt.getPendingUpdateName());
+      return updates;
+    }, []);
+
+    const performedUpdates = [];
+
+    pendingUpdates.forEach((update, index) => {
+      if (update && !performedUpdates.includes(update)) {
+        const success = this.postIts.toArray()[index].performPendingUpdateName();
+        if (success) {
+          performedUpdates.push(update);
+        }
+      }
+    });
+  }
 }

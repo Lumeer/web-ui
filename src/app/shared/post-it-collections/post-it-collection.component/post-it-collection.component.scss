@@ -18,6 +18,10 @@
   }
 }
 
+.selected {
+  z-index: $z-index-selected;
+}
+
 .initialized {
   padding-top: 0.75px;
   padding-bottom: 0.75px;
