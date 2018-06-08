@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, HostListener, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
 
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter, withLatestFrom} from 'rxjs/operators';
-import {Subscription, Observable} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
@@ -56,7 +56,7 @@ const UNCREATED_THRESHOLD = 5;
 export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input()
-  public maxLines: number = -1;
+  public maxShown: number = -1;
 
   /**
    * Handler to change the flag to remove opacity css on elements
@@ -68,6 +68,9 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       this.panelVisible = false;
     }
   }
+
+  @ViewChildren('postIt')
+  public postIts: QueryList<ElementRef>;
 
   public collections: CollectionModel[];
   public collectionRoles: { [collectionId: string]: string[] };
@@ -274,6 +277,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.store.dispatch(new CollectionsAction.Import({format: importInfo.format, importedCollection, callback: this.onCreateCollection()}));
   }
 
+  public forceLayout() {
+    this.layout.refresh();
+  }
+
   private dispatchActions() {
     this.store.dispatch(new CollectionsAction.GetNames());
   }
@@ -290,10 +297,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       this.notificationService.info(message);
     }
 
-  }
-
-  public shouldLayout() {
-    this.layout.refresh();
   }
 
 }

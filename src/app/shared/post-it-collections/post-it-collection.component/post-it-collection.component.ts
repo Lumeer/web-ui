@@ -41,7 +41,7 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
   @Input() public userRoles: string[];
   @Input() public workspace: Workspace;
 
-  @Output() public layout = new EventEmitter();
+  @Output() public resize = new EventEmitter();
   @Output() public update = new EventEmitter<CollectionModel>();
   @Output() public create = new EventEmitter<CollectionModel>();
   @Output() public select = new EventEmitter();
@@ -98,7 +98,7 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
     this.unselect.emit();
 
     if (this.isValidCopy !== this.nameFormControl.valid) {
-      this.layout.emit();
+      this.resize.emit();
     }
   }
 

@@ -21,6 +21,11 @@
     .focused, .selected {
       z-index: $z-index-selected;
     }
+
+    .see-all {
+      height: 181px;
+      font-size: 200%;
+    }
   }
 
 }

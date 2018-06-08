@@ -25,17 +25,17 @@
   <div class="post-it-collection-layout">
 
     <div post-it-collection
-         class="layout-item"
-         layout-item
-         *ngFor="let collection of collections; trackBy:trackByCollection; let idx = index"
+         class="layout-item" layout-item
+         *ngFor="let collection of (maxShown > 0 ? (collections | slice:0:maxShown) : collections); trackBy:trackByCollection; let idx = index"
          [class.focused]="panelVisible && focusedPanel === idx"
          [class.selected]="selectedCollection === collection"
          [collection]="collection"
          [layout]="layout"
+         [forceLayoutIndex]="idx"
          [focused]="panelVisible && focusedPanel === idx"
          [workspace]="workspace"
          [userRoles]="getRoles(collection)"
-         (layout)="shouldLayout()"
+         (resize)="forceLayout()"
          (select)="onCollectionSelect(collection)"
          (unselect)="onCollectionUnselect()"
          (update)="updateCollection($event)"
@@ -43,6 +43,17 @@
          (delete)="confirmDeletion(collection)"
          (favoriteChange)="onFavoriteChange(collection.id, $event)"
          (togglePanel)="togglePanelVisible($event, idx)">
+    </div>
+
+
+    <div class="layout-item" layout-item
+         *ngIf="maxShown > 0 && maxShown < collections.length"
+         [layout]="layout"
+         [forceLayoutIndex]="maxShown > 0 ? maxShown : null">
+      <div class="see-all d-flex align-items-center justify-content-center cursor-pointer clickable"
+           i18n="@@search.result.more">
+        See all
+      </div>
     </div>
 
   </div>

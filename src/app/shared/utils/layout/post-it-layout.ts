@@ -40,13 +40,13 @@ export class PostItLayout {
     this.isInitializedAfterAttempt();
   }
 
-  public add(element: HTMLElement): void {
+  public add(element: HTMLElement, forceIndex?: number): void {
     if (!this.isInitializedAfterAttempt()) {
       return;
     }
 
     this.zone.runOutsideAngular(() => {
-      this.layout.add(element, {index: this.insertingElementsAtIndex});
+      this.layout.add(element, {index: forceIndex || this.insertingElementsAtIndex});
       this.relayout();
     });
   }

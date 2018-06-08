@@ -28,11 +28,14 @@ export class LayoutItem implements AfterViewInit, OnDestroy {
   @Input()
   public layout: PostItLayout;
 
+  @Input()
+  public forceLayoutIndex: number;
+
   constructor(private element: ElementRef) {
   }
 
   public ngAfterViewInit(): void {
-    this.layout.add(this.element.nativeElement);
+    this.layout.add(this.element.nativeElement, this.forceLayoutIndex);
   }
 
   public ngOnDestroy(): void {
