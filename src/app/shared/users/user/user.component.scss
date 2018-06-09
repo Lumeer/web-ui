@@ -1,9 +1,31 @@
 @import "../../../shared/variables";
 
-.selected {
-  color: $primary;
+i {
+  transition: all 0.25s ease;
 }
 
-.unselected {
-  color: $grey-color;
+.role-clickable.role-selected {
+  color: $success;
+  cursor: pointer;
+
+  &:hover {
+    color: darken($success, 15%);
+  }
+}
+
+.role-clickable:not(role-selected) {
+  color: $secondary;
+  cursor: pointer;
+
+  &:hover {
+    color: darken($secondary, 15%);
+  }
+}
+
+.role-selected:not(.role-clickable) {
+  color: $success;
+}
+
+i:not(.role-selected):not(.role-clickable) {
+  color: $secondary;
 }

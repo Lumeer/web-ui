@@ -50,6 +50,7 @@ export class InputBoxComponent implements OnInit {
   @Input() public userData: boolean = false;
   @Input() public alwaysFrame: boolean = false;
   @Input() public textAttribute: boolean = false;
+  @Input() public innerClass: string = "";
 
   @Output() public focus: EventEmitter<void> = new EventEmitter();
   @Output() public blur: EventEmitter<void> = new EventEmitter();

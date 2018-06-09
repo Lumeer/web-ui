@@ -147,4 +147,8 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
       value: 'Enter attribute name.'
     });
   }
+
+  public valueChanged($event) {
+    this.newAttributeName = $event.target.value;
+  }
 }

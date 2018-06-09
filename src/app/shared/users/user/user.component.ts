@@ -108,13 +108,13 @@ export class UserComponent implements OnInit, OnDestroy {
   public getRoles(): Role[] {
     switch (this.resourceType) {
       case ResourceType.Organization:
-        return [Role.Read, Role.Manage, Role.Write];
+        return [Role.Read, Role.Write, Role.Manage];
       case ResourceType.Project:
-        return [Role.Read, Role.Manage, Role.Write];
+        return [Role.Read, Role.Write, Role.Manage];
       case ResourceType.Collection:
-        return [Role.Read, Role.Manage, Role.Write, Role.Share];
+        return [Role.Read, Role.Write, Role.Share, Role.Manage];
       case ResourceType.View:
-        return [Role.Manage, Role.Clone, Role.Read];
+        return [Role.Read, Role.Clone, Role.Manage];
       default:
         return [];
     }

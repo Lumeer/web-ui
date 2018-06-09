@@ -49,6 +49,22 @@ ul {
 
 .cursor-pointer {
   cursor: pointer;
+
+  &.text-primary:hover {
+    color: lighten($primary, 15%) !important;
+  }
+  &.text-secondary:hover {
+    color: darken($secondary, 15%) !important;
+  }
+  &.text-warning:hover {
+    color: darken($warning, 15%) !important;
+  }
+  &.text-danger:hover {
+    color: darken($danger, 15%) !important;
+  }
+  &.text-success:hover {
+    color: darken($success, 15%) !important;
+  }
 }
 
 .cursor-text {

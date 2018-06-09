@@ -67,9 +67,11 @@ $table-accent-bg:             $gray-200 !default;
 
 // Dropdowns
 
-$dropdown-link-color:               $gray-700 !default;
-$dropdown-link-hover-color:         $white !default;
-$dropdown-link-hover-bg:            $primary !default;
+$dropdown-link-color:               $primary !default;
+$dropdown-link-hover-color:         $primary !default;
+$dropdown-link-hover-bg:            $light !default;
+$dropdown-link-active-color:        $white !default;
+$dropdown-link-active-bg:           $primary !default;
 
 // Navs
 

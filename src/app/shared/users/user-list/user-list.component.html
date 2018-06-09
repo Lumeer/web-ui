@@ -1,17 +1,16 @@
-<div class="row my-4">
+<div *ngIf="canAddUsers()" class="row my-4">
   <div class="col">
     <div class="card">
       <div class="card-body">
         <h4 class="card-title" i18n="@@users.header.inviteUser">Invite a colleague or friend</h4>
-        <new-user *ngIf="canAddUsers()"
-                  (userCreated)="userCreated.emit($event)"></new-user>
+        <new-user (userCreated)="userCreated.emit($event)"></new-user>
       </div>
     </div>
   </div>
 </div>
 <div class="row mt-4">
   <div class="col">
-    <h4 i18n="@@users.header.existingUsers">Existing users</h4>
+    <h4 *ngIf="canAddUsers()" i18n="@@users.header.existingUsers">Existing users</h4>
     <table class="table table-striped table-sm">
       <thead [style.background-color]="resource.color | lightenColor:.5">
         <tr>
