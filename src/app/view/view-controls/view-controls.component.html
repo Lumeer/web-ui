@@ -33,19 +33,13 @@
       name="viewName"
       type="text"
       class="form-control"
-      [class.exclamation]="true"
+      autocomplete="off"
       placeholder="Type a title of this page, save, and share!"
       i18n-placeholder="@@view.untitled"
       [class.font-italic]="!view.code || nameChanged"
       (input)="onNameInput(viewNameInput.value)"
     >
     <div class="input-group-append">
-      <!--button class="btn btn-outline-primary border-left-0">
-        <i *ngIf="!isViewChanged()"
-           class="far fa-exclamation-triangle text-warning float-right"
-           title="Changes has not been saved" i18n-title="@@view.indicator.not.saved">
-        </i>
-      </button-->
       <button
         [disabled]="!(viewNameInput.value && isViewChanged())"
         class="btn"
@@ -74,3 +68,9 @@
     </div>
   </div>
 </form>
+<div *ngIf="isViewChanged()" class="small text-right text-warning">
+  <i class="far fa-exclamation-triangle text-warning mr-1"
+     title="Changes are not saved yet" i18n-title="@@view.indicator.not.saved">
+  </i>
+  Changes are not saved yet!
+</div>

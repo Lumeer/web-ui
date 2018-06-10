@@ -181,7 +181,9 @@ body {
 
 // Forms =======================================================================
 
-
+input:-webkit-autofill {
+  background-color: red !important;
+}
 
 input, .form-control, .custom-control-input, input, textarea, select, .custom-file-input {
 
@@ -190,6 +192,7 @@ input, .form-control, .custom-control-input, input, textarea, select, .custom-fi
   &:focus, &:active {
     box-shadow: none !important;
   }
+
 }
 
 .form-control, .custom-file-label {

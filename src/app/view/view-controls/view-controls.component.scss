@@ -13,13 +13,3 @@
   border: 0;
   padding: 0;
 }
-
-.exclamation::after {
-  font-family: FontAwesome;
-  color: $warning;
-  content: "\f071";
-  font-size: 75%;
-  font-weight: normal;
-  font-style: normal;
-  padding-left: 0.25rem;
-}
