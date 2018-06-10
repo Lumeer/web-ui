@@ -121,7 +121,7 @@ input {
 }
 
 .snotify-success, .snotify-prompt {
-  border-color: $primary;
+  border-color: $success;
 }
 
 .snotify-info, .snotify-async {
@@ -212,19 +212,19 @@ input {
 }
 
 .table-border-top {
-  border-top: 1px solid $table-border-color;
+  border-top: 1px solid $light;
 }
 
 .table-border-bottom {
-  border-bottom: 1px solid $table-border-color;
+  border-bottom: 1px solid $light;
 }
 
 .table-border-right {
-  border-right: 1px solid $table-border-color;
+  border-right: 1px solid $light;
 }
 
 .table-border-left {
-  border-left: 1px solid $table-border-color;
+  border-left: 1px solid $light;
 }
 
 // TODO possibly replace with text-truncate from bootstrap

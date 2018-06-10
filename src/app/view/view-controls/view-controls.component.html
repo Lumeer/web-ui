@@ -14,7 +14,7 @@
       </button>
       <div class="dropdown-menu" aria-labelledby="perspectiveDropdown">
         <ng-container *ngFor="let aperspective of perspectives | filterPerspectives:view.query">
-          <a (click)="onSelectPerspective(aperspective)" href="#" class="dropdown-item" [class.active]="perspective === aperspective">
+          <a (click)="onSelectPerspective(aperspective)" class="dropdown-item" [class.active]="perspective === aperspective">
             <i class="fa-fw {{aperspective | perspectiveIcon}}"></i>
             <span class="ml-1 text-nowrap" i18n="@@view.perspective.name">{aperspective, select, detail {Detail} postit {Post-it} chart {Chart} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document}}</span>
           </a>
