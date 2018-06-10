@@ -1,39 +1,73 @@
 <div class="container-fluid">
-  <div class="row">
-    <div class="panel-item col order-lg-1 d-flex justify-content-between">
-      <a [routerLink]="['/']"
-         class="d-flex">
-        <img class="lumeer-logo" src="assets/img/lumeer-logo.png">
-        <div class="lumeer-header text-uppercase pl-2">
-          Lumeer
-        </div>
-      </a>
-      <a *ngIf="isWorkspaceSet()"
+  <div class="row d-flex">
+    <div class="col-3 order-lg-1 d-flex justify-content-left align-self-center">
+      <div class="panel-item mr-1">
+        <a [routerLink]="['/']"
+           class="d-flex">
+          <img class="lumeer-logo" src="assets/img/lumeer.svg">
+          <div *ngIf="!isWorkspaceSet()" class="lumeer-header text-uppercase pl-2">
+            Lumeer
+          </div>
+        </a>
+      </div>
+      <div class="mr-2 d-flex"
+           *ngIf="isWorkspaceSet()">
+
+          <ul class="navbar navbar-triangle my-0 p-0 mr-3 flex-nowrap">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i [class]="organization?.icon" [style.color]="organization?.color"></i>&nbsp;{{organization?.code}}
+              </a>
+              <div class="dropdown-menu" style="width: 18rem;" aria-labelledby="navbarDropdown1">
+                <div class="card-body pt-2">
+                  <div class="small text-secondary mb-2">Organization</div>
+                  <h5 class="card-title"><i [class]="organization?.icon" [style.color]="organization?.color"></i>&nbsp;{{organization?.code}}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{{organization?.name}}</h6>
+                  <p class="card-text">28&nbsp;<i class="fas fa-user mr-3"></i>3&nbsp;<i class="fas fa-th-large mr-3"></i><button (click)="goToOrganization('users')" class="btn btn-primary btn-sm"><i class="fas fa-user-plus"></i>&nbsp;Invite Colleagues</button></p>
+                  <p class="card-text">{{organization?.description}}</p>
+                  <div class="text-center">
+                    <button (click)="goToOrganization('detail')" href="#" class="btn btn-primary btn-sm mr-2"><i class="fas fa-cog"></i>&nbsp;Configure</button>
+                    <button (click)="goToOrganization('detail')" href="#" class="btn btn-danger btn-sm"><i class="fas fa-credit-card"></i>&nbsp;Upgrade Plan</button>
+                  </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#"><i class="fas fa-frog" style="color: wheat"></i>&nbsp;Another organization</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#"><i class="fas fa-plus text-success"></i>&nbsp;Create New Organization</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i [class]="project?.icon" [style.color]="project?.color"></i>&nbsp;{{project?.code}}
+              </a>
+              <div class="dropdown-menu" style="width: 18rem;" aria-labelledby="navbarDropdown2">
+                <div class="card-body pt-2">
+                  <div class="small text-secondary mb-2">Project</div>
+                  <h5 class="card-title"><i [class]="project?.icon" [style.color]="project?.color"></i>&nbsp;{{project?.code}}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{{project?.name}}</h6>
+                  <p class="card-text">12&nbsp;<i class="fas fa-book mr-3"></i>12,689&nbsp;<i class="fas fa-file-alt"></i></p>
+                  <p class="card-text">{{project?.description}}</p>
+                  <div class="text-center">
+                    <button (click)="goToProject('users')" class="btn btn-primary btn-sm"><i class="fas fa-cog"></i>&nbsp;Configure</button>
+                  </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#"><i class="fas fa-frog" style="color: lime"></i>&nbsp;Another project</a>
+                <a class="dropdown-item" href="#"><i class="fas fa-feather" style="color: navy"></i>&nbsp;Yet Another project</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#"><i class="fas fa-plus text-success"></i>&nbsp;Create New Project</a>
+              </div>
+            </li>
+          </ul>
+      </div>
+      <!--a *ngIf="isWorkspaceSet()"
          [routerLink]="[workspacePath(), 'view', 'search', 'files']"
          title="See all files" i18n-title="@@panel.button.home">
         <i class="fa fa-lg fa-home align-middle home-button"></i>
-      </a>
+      </a-->
     </div>
 
-    <div class="d-flex justify-content-end col order-lg-3">
-      <div class="panel-item lead mr-2"
-           *ngIf="isWorkspaceSet()">
-        <span>
-          <a *ngIf="organization"
-             (click)="goToWorkspaceOrganization()"
-             [title]="organization.name"
-             tabindex>
-            {{organization.code}}
-          </a>
-          <span class="mx-1">/</span>
-          <a *ngIf="project"
-             (click)="goToWorkspaceProject()"
-             [title]="project.name"
-             tabindex>
-            {{project.code}}
-          </a>
-        </span>
-      </div>
+    <div class="d-flex justify-content-end col order-lg-3 align-self-center">
 
       <!-- TODO remove once Angular supports ICU messages in attributes -->
       <div hidden>
@@ -58,6 +92,9 @@
         </a>
 
         <div class="dropdown-menu dropdown-menu-right profile-dropdown" aria-labelledby="profileDropdownLink">
+          <a (click)="goToOrganization('detail')" class="dropdown-item text-center">
+            <span class="bagde badge-danger badge-pill mr-2 py-1" i18n="@@panel.plan.free">Free&nbsp;Plan</span>
+          </a>
           <a [href]="keycloakAccountUrl()"
              class="dropdown-item"
              title="Account" i18n-title="@@menu.account">
@@ -91,7 +128,7 @@
       </div>
     </div>
 
-    <div class="col-lg-6 col-xl-7 order-lg-2 mt-1 mt-lg-1 mb-3 mx-auto">
+    <div class="col-lg-7 col-xl-8 order-lg-2 mt-2 mt-lg-0 flex-fill mx-auto align-self-center">
       <search-box *ngIf="isSearchBoxShown()"></search-box>
     </div>
   </div>

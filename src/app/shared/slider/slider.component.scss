@@ -16,10 +16,10 @@ $track-radius: 15px !default;
 $track-width: 100% !default;
 $track-height: 22px !default;
 $track-border-width: 1px !default;
-$track-border-color: $grey-color !default;
+$track-border-color: $light !default;
 $track-shadow-size: 0px !default;
 $track-shadow-blur: 0px !default;
-$track-shadow-color: $grey-darker-color !default;
+$track-shadow-color: $dark !default;
 
 @mixin shadow($shadow-size, $shadow-blur, $shadow-color) {
   box-shadow: $shadow-size $shadow-size $shadow-blur $shadow-color, 0 0 $shadow-size lighten($shadow-color, 5%);

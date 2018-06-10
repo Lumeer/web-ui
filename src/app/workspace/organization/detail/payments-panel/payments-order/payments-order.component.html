@@ -4,7 +4,7 @@
 </ng-container>
 <h5 *ngIf="trial" i18n="@@organizations.tab.detail.order.get">Get Lumeer for Business now!</h5>
 <div style="cursor: default;" *ngIf="discountAmount > 0" class="btn btn-lg btn-danger">
-  {{discountDescription}} <span class="badge badge-primary">-{{discountAmount}}%</span>
+  {{discountDescription}} <span class="badge badge-success">-{{discountAmount}}%</span>
 </div>
 <form #orderForm="ngForm" class="mt-4">
   <div class="form-group">
@@ -15,7 +15,7 @@
         <del *ngIf="discountAmount > 0">{{discountInfoPerUser}}</del>
         <strong>{{prefix}}{{pricePerUser}}{{suffix}}</strong>
         <span i18n="@@organizations.tab.detail.order.perUserMonth">per user and month</span>
-        <span *ngIf="discount" class="badge badge-pill badge-primary" i18n="@@organizations.tab.detail.order.bestOffer">-17% Best offer!</span>
+        <span *ngIf="discount" class="badge badge-pill badge-success ml-1" i18n="@@organizations.tab.detail.order.bestOffer">-17% Best offer!</span>
       </div>
       <slider
         i18n-values="@@organizations.tab.detail.order.values"
@@ -65,7 +65,7 @@
       <button class="btn btn-lg btn-primary mb-2" i18n="@@organizations.tab.detail.order.contactUs">Contact us for more users!</button>
     </a>
     <button *ngIf="numberOfUsers < 100" type="submit" (click)="placeOrder()"
-            class="btn btn-lg btn-primary mb-2"
+            class="btn btn-lg btn-success mb-2"
             i18n="@@organizations.tab.detail.order.orderBtn"
             [disabled]="!orderForm.valid">
       Get Lumeer for only <del *ngIf="discountAmount > 0">{{prefix}}{{discountInfo | number:'1.2-2'}}{{suffix}}</del>

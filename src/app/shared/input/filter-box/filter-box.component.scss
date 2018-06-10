@@ -7,7 +7,7 @@
 [contenteditable=true]:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
-  color: $grey-darker-color;
+  color: $dark;
 }
 
 [contenteditable]:focus {

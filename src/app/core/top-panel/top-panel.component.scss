@@ -6,12 +6,20 @@ $top-panel-height: 48px;
 .panel-item {
   height: $top-panel-height;
   line-height: $top-panel-height;
+  white-space: nowrap;
 }
 
 .lumeer-logo {
   height: $top-panel-height;
   position: relative;
   bottom: 3px;
+  z-index: $zindex-popover;
+
+  &:hover {
+    transform: scale(1.2, 1.2);
+  }
+
+  transition: transform 0.15s ease-in-out;
 }
 
 .lumeer-header {
@@ -24,13 +32,3 @@ $top-panel-height: 48px;
   bottom: 2px;
   left: 15px;
 }
-
-/*.profile-dropdown {
-  a {
-    color: $link-color;
-
-    &:hover {
-      color: lighten($link-color, 5%);
-    }
-  }
-}*/

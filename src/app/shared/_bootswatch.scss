@@ -32,9 +32,22 @@ body {
 .navbar-triangle {
 
   .nav-link {
+    color: $secondary;
+    font-size: 0.75rem;
     display: block;
-    padding: 15px !important;
+    line-height: 18px;
+    //padding: 15px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    margin-top: 5px;
+    margin-bottom: 5px;
     background:url('../../assets/img/crumbs2.gif') no-repeat right center;
+
+    &:hover {
+      color: darken($secondary, 15%);
+    }
   }
 
 

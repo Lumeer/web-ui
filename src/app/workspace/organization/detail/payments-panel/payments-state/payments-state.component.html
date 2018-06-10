@@ -1,6 +1,6 @@
 <ul *ngIf="isFree()" class="list-group">
   <li class="list-group-item list-group-item-light text-sm-center" i18n="@@organizations.tab.detail.state.trial">You are on the <strong>Free</strong> program now.</li>
-  <li class="list-group-item list-group-item-primary text-lg-center" i18n="@@organizations.tab.detail.state.getBusiness">Get Lumeer for Business!</li>
+  <li class="list-group-item list-group-item-success text-lg-center" i18n="@@organizations.tab.detail.state.getBusiness">Get Lumeer for Business!</li>
   <li class="list-group-item">
     <i class="far fa-list-ul"></i>&nbsp;<span i18n="@@organizations.tab.detail.state.allInclusive">All features included</span>
   </li>
@@ -30,7 +30,7 @@
   </li>
 </ul>
 <ul *ngIf="isBasic()" class="list-group">
-  <li class="list-group-item list-group-item-primary text-lg-center" i18n="@@organizations.tab.detail.order.onBusiness">Congratulations, <strong>Business</strong> program active!</li>
+  <li class="list-group-item list-group-item-success text-lg-center" i18n="@@organizations.tab.detail.order.onBusiness">Congratulations, <strong>Business</strong> program active!</li>
   <li class="list-group-item list-group-item-light text-sm-center" i18n="@@organizations.tab.detail.basic.active">Subscription is active until {{serviceLimits.validUntil | date : 'mediumDate'}}</li>
   <li class="list-group-item" i18n="@@organizations.tab.detail.basic.allInclusive">
     <i class="far fa-list-ul"></i>

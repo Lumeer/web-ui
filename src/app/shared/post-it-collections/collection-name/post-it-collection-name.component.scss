@@ -35,7 +35,7 @@ $name-expanded: 300px;
 [contenteditable=true]:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
-  color: $grey-color;
+  color: $light;
 }
 
 [contenteditable]:focus {

@@ -12,7 +12,7 @@
     transition: background $animation-color-duration, opacity $animation-color-duration;
 
     &:hover {
-      background: $grey-darker-color;
+      background: $dark;
     }
   }
 
