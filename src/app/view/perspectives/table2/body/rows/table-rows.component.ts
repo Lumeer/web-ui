@@ -31,6 +31,10 @@ import {TablesAction} from '../../../../../core/store/tables/tables.action';
 @Component({
   selector: 'table-rows',
   templateUrl: './table-rows.component.html',
+  host: {
+    '[class.d-flex]': 'true',
+    '[class.flex-column]': 'true'
+  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableRowsComponent implements OnChanges, OnDestroy {
@@ -76,9 +80,8 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
     this.subscriptions = new Subscription();
   }
 
-  private retrieveDocuments(page: number = 0) {
-    const query: QueryModel = {...this.query, page, pageSize: 50};
-    this.store.dispatch(new DocumentsAction.Get({query}));
+  private retrieveDocuments() {
+    this.store.dispatch(new DocumentsAction.Get({query: this.query}));
   }
 
   private bindDocuments() {

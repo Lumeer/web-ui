@@ -1,7 +1,5 @@
-<div class="d-flex flex-column">
-  <table-row *ngFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex;"
-             [table]="table"
-             [cursor]="cursor | nextRowCursor:rowIndex"
-             [row]="row">
-  </table-row>
-</div>
+<table-row *ngFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex;"
+           [table]="table"
+           [cursor]="cursor | nextRowCursor:rowIndex"
+           [row]="row">
+</table-row>

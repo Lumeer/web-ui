@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges,
 import {Actions} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, Subscription, combineLatest} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {first, map, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../core/store/collections/collection.model';
@@ -37,13 +37,14 @@ import {TablesAction, TablesActionType} from '../../../../../../core/store/table
 import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.state';
 import {DialogService} from '../../../../../../dialog/dialog.service';
 import {extractAttributeLastName, extractAttributeParentName, filterAttributesByDepth} from '../../../../../../shared/utils/attribute.utils';
-import {TableEditableCellComponent} from '../../../shared/editable-cell/table-editable-cell.component';
+import {TableEditableCellDirective} from '../../../shared/directives/table-editable-cell.directive';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
 
 @Component({
   selector: 'table-single-column',
   templateUrl: './table-single-column.component.html',
+  styleUrls: ['./table-single-column.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableSingleColumnComponent implements OnInit, OnChanges {
@@ -60,8 +61,8 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   @Input()
   public leaf: boolean;
 
-  @ViewChild(TableEditableCellComponent)
-  public editableCellComponent: TableEditableCellComponent;
+  @ViewChild(TableEditableCellDirective)
+  public editableCellDirective: TableEditableCellDirective;
 
   @ViewChild(TableColumnContextMenuComponent)
   public contextMenuComponent: TableColumnContextMenuComponent;
@@ -150,7 +151,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     if (selected) {
       this.editSubscription = this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
         .subscribe(action => {
-          this.editableCellComponent.startEditing(action.payload.letter);
+          this.editableCellDirective.startEditing(action.payload.letter);
         });
     } else {
       if (this.editSubscription) {
@@ -266,7 +267,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   }
 
   public onEdit() {
-    this.editableCellComponent.startEditing();
+    this.editableCellDirective.startEditing();
   }
 
   public onHide() {
