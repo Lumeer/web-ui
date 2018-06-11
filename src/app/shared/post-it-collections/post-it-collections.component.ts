@@ -259,7 +259,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     const comp = this;
     return () => {
       comp.refreshPostIts();
-    }
+    };
   }
 
   private onRemoveCollection(): (collectionId: string) => void {
