@@ -9,7 +9,7 @@ i {
   cursor: pointer;
 
   &:hover {
-    color: darken($success, 15%);
+    color: $success-hover;
   }
 }
 
@@ -18,7 +18,7 @@ i {
   cursor: pointer;
 
   &:hover {
-    color: darken($secondary, 15%);
+    color: $secondary-hover;
   }
 }
 

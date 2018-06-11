@@ -13,7 +13,7 @@
     }
 
     &:hover:not(.active) {
-      color: darken($primary, 15%);
+      color: $primary-hover;
     }
   }
 

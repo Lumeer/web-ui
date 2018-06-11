@@ -33,7 +33,7 @@ body {
 
   .nav-link {
     color: $secondary;
-    font-size: 0.75rem;
+    //font-size: 0.75rem;
     display: block;
     line-height: 18px;
     //padding: 15px !important;
@@ -46,7 +46,7 @@ body {
     background:url('../../assets/img/crumbs2.gif') no-repeat right center;
 
     &:hover {
-      color: darken($secondary, 15%);
+      color: $secondary-hover;
     }
   }
 
@@ -78,15 +78,31 @@ body {
 .btn {
 
   &-primary:hover {
-    border-color: lighten($primary, 15%);
-    background-color: lighten($primary, 15%);
+    border-color: $primary-hover;
+    background-color: $primary-hover;
   }
 
   &-secondary:hover {
-    border-color: lighten($secondary, 15%);
-    background-color: lighten($secondary, 15%);
+    border-color: $primary-hover;
+    background-color: $primary-hover;
   }
 
+}
+
+.sharp-top-left {
+  border-top-left-radius: 0px !important;
+}
+
+.sharp-top-right {
+  border-top-right-radius: 0px !important;
+}
+
+.sharp-bottom-left {
+  border-bottom-left-radius: 0px !important;
+}
+
+.sharp-bottom-right {
+  border-bottom-right-radius: 0px !important;
 }
 
 // Typography ==================================================================
@@ -247,7 +263,7 @@ div[contenteditable="true"].form-control {
   &:not(.frame):not(.user) {
 
     &::before {
-      font-family: FontAwesome;
+      font-family: Font Awesome\ 5 Pro;
       content: "\f040";
       font-style: normal;
       font-weight: normal;

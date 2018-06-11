@@ -1,14 +1,14 @@
-<form class="form-inline d-flex mt-4">
+<form class="form-inline d-flex mt-2">
   <div class="input-group mb-2">
     <div class="input-group-prepend">
-                    <span class="input-group-text">
-                      <strong i18n="@@view.perspective.guide.select">
-                        1.&nbsp;Select View
-                      </strong>
-                    </span>
+      <span class="input-group-text">
+        <strong i18n="@@view.perspective.guide.select">
+          1.&nbsp;Select View
+        </strong>
+      </span>
     </div>
     <div (click)="onPerspectiveChooserClick($event)" title="Perspective" i18n-title="@@view.perspective">
-      <button class="btn btn-outline-gray-600 dropdown-toggle" id="perspectiveDropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle" id="perspectiveDropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
         <span class="ml-sm-1 text-nowrap" i18n="@@view.perspective.name">{perspective, select, detail {Detail} postit {Post-it} chart {Chart} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document}}</span>
       </button>

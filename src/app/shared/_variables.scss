@@ -28,15 +28,6 @@ $green:   #18BC9C !default;
 $teal:    #20c997 !default;
 $cyan:    #3498DB !default;
 
-/*$primary:       $green !default;
-$secondary:     $blue !default;// gray-600 !default;
-$success:       $teal !default;
-$info:          $gray-600 !default;
-$warning:       $yellow !default;
-$danger:        $red !default;
-$light:         $gray-200 !default;
-$dark:          $gray-700 !default;*/
-
 $primary:       $blue !default;
 $secondary:     $gray-600 !default;
 $success:       $green !default;
@@ -46,6 +37,12 @@ $danger:        $red !default;
 $light:         $gray-200 !default;
 $dark:          $gray-700 !default;
 
+$primary-hover:   lighten($primary, 15%);
+$secondary-hover: darken($secondary, 15%);
+$success-hover:   darken($success, 15%);
+$info-hover:      darken($info, 15%);
+$warning-hover:   darken($warning, 15%);
+$danger-hover:    darken($danger, 15%);
 
 // Links
 
@@ -96,7 +93,7 @@ $pagination-border-width:           0 !default;
 $pagination-border-color:           transparent !default;
 
 $pagination-hover-color:            $white !default;
-$pagination-hover-bg:               darken($primary, 15%) !default;
+$pagination-hover-bg:               $primary-hover !default;
 $pagination-hover-border-color:     transparent !default;
 
 $pagination-active-bg:              $pagination-hover-bg !default;

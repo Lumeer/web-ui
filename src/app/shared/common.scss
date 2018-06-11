@@ -51,19 +51,19 @@ ul {
   cursor: pointer;
 
   &.text-primary:hover {
-    color: lighten($primary, 15%) !important;
+    color: $primary-hover !important;
   }
   &.text-secondary:hover {
-    color: darken($secondary, 15%) !important;
+    color: $secondary-hover !important;
   }
   &.text-warning:hover {
-    color: darken($warning, 15%) !important;
+    color: $warning-hover !important;
   }
   &.text-danger:hover {
-    color: darken($danger, 15%) !important;
+    color: $danger-hover !important;
   }
   &.text-success:hover {
-    color: darken($success, 15%) !important;
+    color: $success-hover !important;
   }
 }
 
@@ -164,7 +164,7 @@ input {
     color: $primary !important;
 
     &:hover {
-      color: lighten($primary, 15%) !important;
+      color: $primary-hover !important;
     }
   }
 
@@ -172,7 +172,7 @@ input {
     color: $success;
 
     &:hover {
-      color: darken($success, 15%);
+      color: $secondary-hover !important;
     }
   }
 

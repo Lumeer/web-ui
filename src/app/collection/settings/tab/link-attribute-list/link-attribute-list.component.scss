@@ -21,7 +21,7 @@
     color: $danger;
 
     &:hover {
-      color: darken($danger, 25);
+      color: $danger-hover;
     }
   }
 

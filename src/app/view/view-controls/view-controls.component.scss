@@ -19,6 +19,6 @@
 
   &:hover, &:active, &:focus {
     color: white;
-    background-color: lighten($primary, 15%);
+    background-color: $primary-hover;
   }
 }
