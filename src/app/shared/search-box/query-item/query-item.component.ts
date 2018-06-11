@@ -62,7 +62,7 @@ export class QueryItemComponent {
     return this.queryItemForm.valid;
   }
 
-  public onQueryItemChanged(): boolean {
+  public onQueryItemChanged() {
     if (this.isFormValid()) {
       this.change.emit();
     }
