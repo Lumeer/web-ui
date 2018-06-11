@@ -17,28 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import {QueryItem} from './query-item';
+import {QueryItemType} from './query-item-type';
 
-import {QueryItem} from '../model/query-item';
-import {QueryItemType} from '../model/query-item-type';
-import {QueryItemBackgroundPipe} from './query-item-background';
+export class DeletedQueryItem implements QueryItem {
 
-const LINK_BORDER_COLOR = '#ced4da';
-const DANGER_COLOR = '#dc3545';
+  public type = QueryItemType.Deleted;
+  public forType: QueryItemType;
 
-@Pipe({
-  name: 'queryItemBorder'
-})
-export class QueryItemBorderPipe extends QueryItemBackgroundPipe implements PipeTransform {
+  public constructor(forType: QueryItemType) {
+    this.forType = forType;
+  }
 
-  public transform(queryItem: QueryItem, isValid: boolean): string {
-    if (!isValid || queryItem.type === QueryItemType.Deleted) {
-      return DANGER_COLOR;
-    }
-    if (queryItem.type === QueryItemType.Link || queryItem.type === QueryItemType.View) {
-      return LINK_BORDER_COLOR;
-    }
-    return super.transform(queryItem, isValid);
+  public get value(): string {
+    return '';
+  }
+
+  public get text(): string {
+    return '';
   }
 
 }

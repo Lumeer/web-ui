@@ -24,6 +24,7 @@ export enum QueryItemType {
   Document = 'Document',
   Fulltext = 'Fulltext',
   Link = 'Link',
-  View = 'View'
+  View = 'View',
+  Deleted = 'Deleted'
 
 }

@@ -21,7 +21,6 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import {HighlightPipe} from '../highlight.pipe';
 import {PickerModule} from '../picker/picker.module';
 import {SearchButtonComponent} from './button/search-button.component';
 import {SearchInputComponent} from './input/search-input.component';
@@ -31,43 +30,32 @@ import {AttributeConditionComponent} from './query-item/attribute-condition/attr
 import {ConditionSuggestionsComponent} from './query-item/condition-suggestions/condition-suggestions.component';
 import {QueryItemComponent} from './query-item/query-item.component';
 import {SearchBoxComponent} from './search-box.component';
-import {TruncatePipe} from './truncate.pipe';
-import {IsAttributeItemPipe} from './query-item/pipes/is-attribute-item.pipe';
-import {IsCollectionItemPipe} from './query-item/pipes/is-collection-item.pipe';
-import {QueryItemBackgroundPipe} from './query-item/pipes/query-item-background';
-import {QueryItemBorderPipe} from './query-item/pipes/query-item-border';
 import {AttributeValueComponent} from './query-item/attribute-value/attribute-value.component';
-import {ConditionFilterPipe} from './query-item/pipes/condition-filter.pipe';
+import {SearchBoxPipesModule} from './query-item/pipes/search-box-pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    PickerModule
+    PickerModule,
+    SearchBoxPipesModule
   ],
   declarations: [
-    IsAttributeItemPipe,
-    IsCollectionItemPipe,
-    QueryItemBackgroundPipe,
-    QueryItemBorderPipe,
     SearchBoxComponent,
     QueryItemComponent,
     SearchSuggestionsComponent,
     SearchInputComponent,
     SearchButtonComponent,
     ConditionSuggestionsComponent,
-    HighlightPipe,
     SuggestionItemComponent,
-    TruncatePipe,
     AttributeConditionComponent,
-    AttributeValueComponent,
-    ConditionFilterPipe
+    AttributeValueComponent
   ],
   exports: [
     SearchBoxComponent,
-    HighlightPipe,
-    QueryItemComponent
+    QueryItemComponent,
+    SearchBoxPipesModule
   ]
 })
 export class SearchBoxModule {
