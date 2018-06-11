@@ -39,6 +39,8 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   public view: ViewModel;
 
+  public viewsExist$: Observable<boolean>;
+
   public workspace: Workspace;
   private query: QueryModel;
 
@@ -49,23 +51,32 @@ export class ViewComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.subscriptions.add(
-      this.store.select(selectNavigation).pipe(
-        filter(this.validNavigation)
-      ).subscribe(navigation => {
-        this.workspace = navigation.workspace;
-        this.query = navigation.query;
+    this.subscriptions.add(this.subscribeToNavigation());
+    this.bindToViews();
+  }
 
-        if (!navigation.workspace) {
-          return;
-        }
+  private subscribeToNavigation(): Subscription {
+    return this.store.select(selectNavigation).pipe(
+      filter(this.validNavigation)
+    ).subscribe(navigation => {
+      this.workspace = navigation.workspace;
+      this.query = navigation.query;
 
-        if (navigation.workspace.viewCode) {
-          this.loadView(navigation.workspace.viewCode);
-        } else {
-          this.loadQuery(navigation.query, navigation.viewName);
-        }
-      })
+      if (!navigation.workspace) {
+        return;
+      }
+
+      if (navigation.workspace.viewCode) {
+        this.loadView(navigation.workspace.viewCode);
+      } else {
+        this.loadQuery(navigation.query, navigation.viewName);
+      }
+    });
+  }
+
+  private bindToViews() {
+    this.viewsExist$ = this.store.select(selectAllViews).pipe(
+      map(views => views && views.length > 0)
     );
   }
 

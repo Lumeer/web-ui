@@ -47,6 +47,9 @@ export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
+  public novice: boolean;
+
+  @Input()
   public view: ViewModel;
 
   @Output()

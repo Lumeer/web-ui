@@ -2,9 +2,11 @@
   <div class="input-group mb-2">
     <div class="input-group-prepend">
       <span class="input-group-text">
-        <strong i18n="@@view.perspective.guide.select">
-          1.&nbsp;Select View
-        </strong>
+        <strong *ngIf="novice"
+                i18n="@@view.perspective.guide.select">1.&nbsp;Select View</strong>
+        <i *ngIf="!novice"
+           class="far fa-eye fa-fw">
+        </i>
       </span>
     </div>
     <div *ngVar="perspective$ | async as perspective"
@@ -33,10 +35,20 @@
       </div>
     </div>
   </div>
-  <i class="fas fa-arrow-circle-right mx-2 mb-2 text-muted"></i>
-  <div class="input-group flex-fill mb-2">
+
+  <i *ngIf="novice"
+     class="fas fa-arrow-circle-right ml-2 mb-2 text-muted">
+  </i>
+
+  <div class="input-group flex-fill ml-2 mb-2">
     <div class="input-group-prepend">
-      <span class="input-group-text"><strong i18n="@@view.perspective.guide.title">2.&nbsp;Set Title</strong></span>
+      <span class="input-group-text">
+        <strong *ngIf="novice"
+                i18n="@@view.perspective.guide.title">2.&nbsp;Set Title</strong>
+        <i *ngIf="!novice"
+           class="far fa-file-edit fa-fw">
+        </i>
+      </span>
     </div>
     <input #viewNameInput
            [class.font-italic]="!view.code || view.name !== name"
