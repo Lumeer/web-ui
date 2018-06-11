@@ -17,17 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Subscription} from 'rxjs';
+import {Observable} from 'rxjs/internal/Observable';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
-import {selectNavigation} from '../../core/store/navigation/navigation.state';
+import {selectPerspective, selectQuery, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
+import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {RouterAction} from '../../core/store/router/router.action';
-import {ViewModel} from '../../core/store/views/view.model';
+import {ViewConfigModel, ViewModel} from '../../core/store/views/view.model';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {selectViewConfig} from '../../core/store/views/views.state';
 import {DialogService} from '../../dialog/dialog.service';
@@ -38,7 +41,8 @@ export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 @Component({
   selector: 'view-controls',
   templateUrl: './view-controls.component.html',
-  styleUrls: ['./view-controls.component.scss']
+  styleUrls: ['./view-controls.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
@@ -48,79 +52,52 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public save = new EventEmitter<string>();
 
-  @ViewChild('viewNameInput')
-  public viewNameInput: ElementRef;
+  public name: string;
 
-  public nameChanged: boolean;
-  public configChanged: boolean;
+  public config$: Observable<ViewConfigModel>;
+  public perspective$: Observable<Perspective>;
+  public query$: Observable<QueryModel>;
 
   private workspace: Workspace;
-  public perspective: Perspective;
-  public perspectives = Object.values(Perspective);
+  public readonly perspectives = Object.values(Perspective);
 
-  private configSubscription: Subscription;
-  private navigationSubscription: Subscription;
+  private subscriptions = new Subscription();
 
   constructor(private dialogService: DialogService,
               private notificationService: NotificationService,
               private i18n: I18n,
+              private route: ActivatedRoute,
               private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.subscribeNavigation();
-    this.subscribeConfig();
+    this.subscriptions.add(this.subscribeToWorkspace());
+
+    this.config$ = this.store.select(selectViewConfig);
+    this.perspective$ = this.store.select(selectPerspective);
+    this.query$ = this.store.select(selectQuery);
   }
 
-  private subscribeNavigation() {
-    this.navigationSubscription = this.store.select(selectNavigation).subscribe(navigation => {
-      this.workspace = navigation.workspace;
-      this.perspective = navigation.perspective;
-
-      if (navigation.viewName) {
-        this.setViewNameInputValue(`${navigation.viewName} - copy`);
-        this.nameChanged = true;
-      }
-    });
+  private subscribeToWorkspace(): Subscription {
+    return this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
-  private subscribeConfig() {
-    this.configSubscription = this.store.select(selectViewConfig).subscribe(config => {
-      this.configChanged = JSON.stringify(config[this.perspective]) !== JSON.stringify(this.view.config[this.perspective]);
-    });
-  }
-
-  public onNameInput(viewName: string) {
-    this.nameChanged = this.view.name !== viewName;
-  }
-
-  public isViewChanged(): boolean {
-    const perspectiveChanged = this.view.perspective !== this.perspective;
-    return this.view.code ? (this.nameChanged || this.configChanged || perspectiveChanged) : this.nameChanged;
+  public onNameInput(name: string) {
+    this.name = name;
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes.hasOwnProperty('view')) {
+    if (changes.view) {
       if (this.view && this.view.name) {
-        this.setViewNameInputValue(this.view.name);
-        this.nameChanged = false;
+        this.name = this.view.name;
       } else {
-        this.setViewNameInputValue('');
+        this.name = '';
       }
     }
   }
 
-  private setViewNameInputValue(value: string) {
-    this.viewNameInput.nativeElement.value = value;
-  }
-
   public ngOnDestroy() {
-    if (this.configSubscription) {
-      this.configSubscription.unsubscribe();
-    }
-    if (this.navigationSubscription) {
-      this.navigationSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   public onSelectPerspective(perspective: string) {
@@ -135,8 +112,8 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.store.dispatch(new RouterAction.Go({path, extras: {queryParamsHandling: 'merge'}}));
   }
 
-  public onSave(viewName: string) {
-    this.save.emit(viewName.trim());
+  public onSave() {
+    this.save.emit(this.name.trim());
   }
 
   public onCopy() {
@@ -161,7 +138,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.notificationService.confirm(message, title, [
       {text: okButtonText, bold: true},
     ]);
-    //this.dialogService.openShareViewDialog();
+    // TODO this.dialogService.openShareViewDialog();
   }
 
   private dispatchActionsOnChangePerspective(perspective: string) {

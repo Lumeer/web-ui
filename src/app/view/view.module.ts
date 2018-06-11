@@ -28,6 +28,7 @@ import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewRoutingModule} from './view-routing.module';
 import {ViewComponent} from './view.component';
+import { ViewChangedPipe } from './view-controls/view-changed.pipe';
 
 @NgModule({
   imports: [
@@ -42,7 +43,8 @@ import {ViewComponent} from './view.component';
   declarations: [
     ViewComponent,
     ViewControlsComponent,
-    ViewLoadingComponent
+    ViewLoadingComponent,
+    ViewChangedPipe
   ]
 })
 export class ViewModule {

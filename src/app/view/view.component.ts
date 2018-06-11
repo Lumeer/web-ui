@@ -19,11 +19,12 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Subscription, Observable, combineLatest} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {filter, first, map, take} from 'rxjs/operators';
 import {Query} from '../core/dto';
 import {AppState} from '../core/store/app.state';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
+import {QueryModel} from '../core/store/navigation/query.model';
 import {Workspace} from '../core/store/navigation/workspace.model';
 import {RouterAction} from '../core/store/router/router.action';
 import {ViewModel} from '../core/store/views/view.model';
@@ -39,6 +40,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   public view: ViewModel;
 
   public workspace: Workspace;
+  private query: QueryModel;
 
   private subscriptions = new Subscription();
 
@@ -52,6 +54,8 @@ export class ViewComponent implements OnInit, OnDestroy {
         filter(this.validNavigation)
       ).subscribe(navigation => {
         this.workspace = navigation.workspace;
+        this.query = navigation.query;
+
         if (!navigation.workspace) {
           return;
         }
@@ -59,7 +63,7 @@ export class ViewComponent implements OnInit, OnDestroy {
         if (navigation.workspace.viewCode) {
           this.loadView(navigation.workspace.viewCode);
         } else {
-          this.loadQuery(navigation.query);
+          this.loadQuery(navigation.query, navigation.viewName);
         }
       })
     );
@@ -86,9 +90,9 @@ export class ViewComponent implements OnInit, OnDestroy {
     );
   }
 
-  private loadQuery(query: Query) {
+  private loadQuery(query: Query, name?: string) {
     this.view = {
-      name: '',
+      name: name ? `${name} - copy` : '',
       query: query,
       perspective: null,
       config: {}
@@ -101,7 +105,7 @@ export class ViewComponent implements OnInit, OnDestroy {
         this.store.select(selectViewConfig),
         this.store.select(selectPerspective)
       ).pipe(take(1)).subscribe(([config, perspective]) => {
-        const view: ViewModel = {...this.view, name, config, perspective};
+        const view: ViewModel = {...this.view, query: this.query, name, config, perspective};
 
         if (view.code) {
           this.updateView(view);
