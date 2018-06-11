@@ -24,7 +24,6 @@ import {AbstractControl, FormGroup} from '@angular/forms';
 import {KeyCode} from '../../../key-code';
 import {getCaretCharacterOffsetWithin, HtmlModifier} from '../../../utils/html-modifier';
 import {AttributeQueryItem} from '../model/attribute.query-item';
-import {isNumber} from 'util';
 
 @Component({
   selector: 'attribute-condition',
