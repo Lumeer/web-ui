@@ -31,6 +31,7 @@ import {ShareViewDialogComponent} from './share-view/share-view-dialog.component
 import {CollectionNameInputComponent} from './shared/collection-name-input/collection-name-input.component';
 import {LinkNameInputComponent} from './shared/link-name-input/link-name-input.component';
 import {DialogWrapperComponent} from './shared/wrapper/dialog-wrapper.component';
+import {CreateResourceDialogComponent} from './create-resource/create-resource-dialog.component';
 
 @NgModule({
   imports: [
@@ -48,7 +49,8 @@ import {DialogWrapperComponent} from './shared/wrapper/dialog-wrapper.component'
     CreateLinkDialogComponent,
     DialogBaseComponent,
     ShareViewDialogComponent,
-    OverwriteViewDialogComponent
+    OverwriteViewDialogComponent,
+    CreateResourceDialogComponent
   ],
   providers: [
     DialogService
@@ -57,7 +59,8 @@ import {DialogWrapperComponent} from './shared/wrapper/dialog-wrapper.component'
     CreateCollectionDialogComponent,
     CreateLinkDialogComponent,
     ShareViewDialogComponent,
-    OverwriteViewDialogComponent
+    OverwriteViewDialogComponent,
+    CreateResourceDialogComponent
   ],
   exports: [
     DialogBaseComponent

@@ -39,6 +39,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {RouterAction} from '../router/router.action';
 import {RouteFinder} from '../../../shared/utils/route-finder';
 import {Router} from '@angular/router';
+import {CommonAction} from '../common/common.action';
 
 @Injectable()
 export class ProjectsEffects {
@@ -112,10 +113,17 @@ export class ProjectsEffects {
       return this.projectService.createProject(organization.code, projectDto).pipe(
         map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId, correlationId)),
         withLatestFrom(this.store$.select(selectProjectsCodes)),
-        flatMap(([project, projectCodes]) => {
+        mergeMap(([project, projectCodes]) => {
           const codes = [...projectCodes[project.organizationId], project.code];
-          return [new ProjectsAction.CreateSuccess({project}),
+          const actions: Action[] = [new ProjectsAction.CreateSuccess({project}),
             new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: codes})];
+
+          const {callback} = action.payload;
+          if (callback) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(organization)}));
+          }
+
+          return actions;
         }),
         catchError(error => of(new ProjectsAction.CreateFailure({error: error})))
       );

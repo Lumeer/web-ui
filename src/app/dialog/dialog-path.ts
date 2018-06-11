@@ -22,6 +22,7 @@ export enum DialogPath {
   CREATE_COLLECTION = 'create-collection',
   CREATE_LINK = 'create-link',
   OVERWRITE_VIEW = 'overwrite-view',
-  SHARE_VIEW = 'share-view'
+  SHARE_VIEW = 'share-view',
+  CREATE_RESOURCE = 'create-resource',
 
 }

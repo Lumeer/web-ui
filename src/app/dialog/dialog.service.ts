@@ -22,6 +22,8 @@ import {Router} from '@angular/router';
 import {CollectionModel} from '../core/store/collections/collection.model';
 import {LinkTypeModel} from '../core/store/link-types/link-type.model';
 import {DialogPath} from './dialog-path';
+import {ResourceType} from '../core/model/resource-type';
+import {ResourceModel} from '../core/model/resource.model';
 
 /**
  * If callback is provided in any of the open*() methods, the calling component is responsible for closing the dialog
@@ -41,6 +43,11 @@ export class DialogService {
     this.callback = null;
     this.open = false;
     this.navigateToDialog(null);
+  }
+
+  public openCreateResourceDialog(resourceType: ResourceType, callback?: (resource: ResourceModel) => void) {
+    this.callback = callback;
+    this.navigateToDialog([DialogPath.CREATE_RESOURCE, resourceType]);
   }
 
   public openCreateCollectionDialog(callback?: (collection: CollectionModel) => void) {

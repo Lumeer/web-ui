@@ -24,6 +24,7 @@ import {CreateCollectionDialogComponent} from './create-collection/create-collec
 import {CreateLinkDialogComponent} from './create-link/create-link-dialog.component';
 import {OverwriteViewDialogComponent} from './overwrite-view/overwrite-view-dialog.component';
 import {ShareViewDialogComponent} from './share-view/share-view-dialog.component';
+import {CreateResourceDialogComponent} from './create-resource/create-resource-dialog.component';
 
 const routes: Routes = [
   {
@@ -49,6 +50,11 @@ const routes: Routes = [
   {
     path: DialogPath.SHARE_VIEW,
     component: ShareViewDialogComponent,
+    outlet: 'dialog'
+  },
+  {
+    path: `${DialogPath.CREATE_RESOURCE}/:resourceType`,
+    component: CreateResourceDialogComponent,
     outlet: 'dialog'
   },
 ];
