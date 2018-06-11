@@ -52,20 +52,7 @@
     transition: opacity $animation-color-duration;
     opacity: 0;
   }
-
-  .buttons {
-    a {
-      /*transition: background-position $animation-color-duration;
-      background: linear-gradient(to top, #e8e8e8 50%, transparent 50%);
-      background-size: 100% 200%;
-      background-position: right top;*/
-
-      &:hover {
-        //background-position: right bottom;
-      }
-    }
-  }
-
+  
   li {
     border-bottom: 1px solid #e5e5e5;
     display: inline-flex;

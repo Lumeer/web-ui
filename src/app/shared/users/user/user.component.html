@@ -11,8 +11,6 @@
 </td>
 
 <td>
-  <!--[ngClass]="(hasRole(role)) ?  (changeRoles ? 'clickable selected': 'selected')
-                               :  (changeRoles ? 'clickable unselected' : 'unselected')"-->
   <i *ngFor="let role of getRoles()"
      class="fas fa-fw {{getIconForRole(role)}} mx-1"
      [class.role-clickable]="changeRoles"

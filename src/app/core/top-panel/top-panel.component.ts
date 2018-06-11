@@ -129,15 +129,13 @@ export class TopPanelComponent implements OnInit {
 
   public goToOrganization(page: string) {
     if (this.workspace && this.workspace.organizationCode) {
-      this.store.dispatch(new RouterAction.Go({path: ['organization', this.workspace.organizationCode, page]}));
+      this.router.navigate(['organization', this.workspace.organizationCode, page]);
     }
   }
 
   public goToProject(page: string) {
     if (this.workspace && this.workspace.organizationCode && this.workspace.projectCode) {
-      this.store.dispatch(new RouterAction.Go({
-        path: ['organization', this.workspace.organizationCode, 'project', this.workspace.projectCode, page]
-      }));
+      this.router.navigate(['organization', this.workspace.organizationCode, 'project', this.workspace.projectCode, page]);
     }
   }
 
