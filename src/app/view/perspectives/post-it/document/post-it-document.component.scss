@@ -9,11 +9,24 @@
 
   .card-header .button {
     cursor: auto;
-    transition: background $animation-color-duration, opacity $animation-color-duration;
+    transition: background, opacity, color $animation-color-duration;
 
-    &:hover {
-      background: $dark;
+    &.text-primary:hover {
+      color: $primary-hover !important;
     }
+    &.text-secondary:hover {
+      color: $secondary-hover !important;
+    }
+    &.text-success:hover {
+      color: $success-hover !important;
+    }
+    &.text-danger:hover {
+      color: $danger-hover !important;
+    }
+    &.text-warning:hover {
+      color: $warning-hover !important;
+    }
+
   }
 
   .icon {
@@ -42,13 +55,13 @@
 
   .buttons {
     a {
-      transition: background-position $animation-color-duration;
+      /*transition: background-position $animation-color-duration;
       background: linear-gradient(to top, #e8e8e8 50%, transparent 50%);
       background-size: 100% 200%;
-      background-position: right top;
+      background-position: right top;*/
 
       &:hover {
-        background-position: right bottom;
+        //background-position: right bottom;
       }
     }
   }
@@ -83,6 +96,7 @@
     width: 100%;
     pointer-events: none;
     text-overflow: ellipsis;
+    background: transparent;
 
     &:focus {
       text-overflow: clip;

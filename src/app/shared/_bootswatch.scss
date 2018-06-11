@@ -33,14 +33,9 @@ body {
 
   .nav-link {
     color: $secondary;
-    //font-size: 0.75rem;
     display: block;
     line-height: 18px;
-    //padding: 15px !important;
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
+    padding: 10px 15px !important;
     margin-top: 5px;
     margin-bottom: 5px;
     background:url('../../assets/img/crumbs2.gif') no-repeat right center;
@@ -109,13 +104,12 @@ body {
 
 .text-attribute {
   font-style: italic;
-  font-weight: bold;
-  color: $gray-600 !important;
-  font-size: small;
+  color: $primary-hover;
+  font-size: 90%;
 }
 
 .text-default-attribute {
-  color: $primary;
+  font-weight: bold;
   font-size: 100%;
 }
 

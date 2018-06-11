@@ -19,7 +19,7 @@
   <key-value *ngIf="!row.remove"
               [key]="row.name"
               [value]="row.value"
-              [defaultAttribute]="row.id === selectedCollection?.defaultAttributeId"
+              [defaultAttribute]="row.id === collection?.defaultAttributeId"
               [emitKeyPress]="row.id"
               [readOnly]="!hasWriteAccess"
               (change)="submitRowChange(idx, $event)"

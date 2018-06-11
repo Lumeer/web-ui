@@ -35,13 +35,6 @@ a:hover {
   flex-grow: 2;
 }
 
-// TODO remove this style
-.no-outline {
-  &:focus {
-    outline: none;
-  }
-}
-
 // TODO should not be needed
 ul {
   list-style-type: none;
@@ -69,29 +62,6 @@ ul {
 
 .cursor-text {
   cursor: text;
-}
-
-// TODO should not be needed
-.edit-border {
-  background: transparent;
-  border: 1px solid transparent !important;
-  transition: border-color $animation-color-duration;
-
-  border-radius: $border-radius-small;
-  &:hover {
-    border: 1px solid #bfbfbf !important;
-  }
-  &:focus {
-    border: 1px solid $primary !important;
-  }
-  &.focused {
-    border: 1px solid $primary !important;
-  }
-}
-
-// TODO should not be needed
-input {
-  background: transparent;
 }
 
 // notifications
@@ -227,7 +197,6 @@ input {
   border-left: 1px solid $light;
 }
 
-// TODO possibly replace with text-truncate from bootstrap
 .overflow-hidden {
   overflow: hidden;
 }
