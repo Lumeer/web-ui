@@ -3,6 +3,7 @@
     <div class="col pointer-events-none"></div>
     <div class="col-12 col-lg-5 col-xl-6 justify-content-center mb-4">
       <view-controls *ngIf="view"
+                     [novice]="!(viewsExist$ | async)"
                      [view]="view"
                      (save)="onSave($event)">
       </view-controls>

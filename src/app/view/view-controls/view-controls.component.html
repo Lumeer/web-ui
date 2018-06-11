@@ -2,73 +2,96 @@
   <div class="input-group mb-2">
     <div class="input-group-prepend">
       <span class="input-group-text">
-        <strong i18n="@@view.perspective.guide.select">
-          1.&nbsp;Select View
-        </strong>
+        <strong *ngIf="novice"
+                i18n="@@view.perspective.guide.select">1.&nbsp;Select View</strong>
+        <i *ngIf="!novice"
+           class="far fa-eye fa-fw">
+        </i>
       </span>
     </div>
-    <div (click)="onPerspectiveChooserClick($event)" title="Perspective" i18n-title="@@view.perspective">
-      <button class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle" id="perspectiveDropdown" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <div *ngVar="perspective$ | async as perspective"
+         (click)="onPerspectiveChooserClick($event)"
+         title="Perspective" i18n-title="@@view.perspective">
+      <button aria-expanded="false"
+              aria-haspopup="true"
+              class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
+              data-toggle="dropdown"
+              id="perspectiveDropdown"
+              type="button">
         <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
-        <span class="ml-sm-1 text-nowrap" i18n="@@view.perspective.name">{perspective, select, detail {Detail} postit {Post-it} chart {Chart} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document}}</span>
+        <span class="ml-sm-1 text-nowrap"
+              i18n="@@view.perspective.name">{perspective, select, detail {Detail} postit {Post-it} chart {Chart} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document}}</span>
       </button>
-      <div class="dropdown-menu" aria-labelledby="perspectiveDropdown">
-        <ng-container *ngFor="let aperspective of perspectives | filterPerspectives:view.query">
-          <a (click)="onSelectPerspective(aperspective)" class="dropdown-item" [class.active]="perspective === aperspective">
-            <i class="fa-fw {{aperspective | perspectiveIcon}}"></i>
-            <span class="ml-1 text-nowrap" i18n="@@view.perspective.name">{aperspective, select, detail {Detail} postit {Post-it} chart {Chart} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document}}</span>
-          </a>
-        </ng-container>
+      <div aria-labelledby="perspectiveDropdown"
+           class="dropdown-menu">
+        <a *ngFor="let aperspective of perspectives | filterPerspectives:view.query"
+           [class.active]="perspective === aperspective"
+           (click)="onSelectPerspective(aperspective)"
+           class="dropdown-item">
+          <i class="fa-fw {{aperspective | perspectiveIcon}}"></i>
+          <span class="ml-1 text-nowrap"
+                i18n="@@view.perspective.name">{aperspective, select, detail {Detail} postit {Post-it} chart {Chart} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document}}</span>
+        </a>
       </div>
     </div>
   </div>
-  <i class="fas fa-arrow-circle-right mx-2 mb-2 text-muted"></i>
-  <div class="input-group flex-fill mb-2">
+
+  <i *ngIf="novice"
+     class="fas fa-arrow-circle-right ml-2 mb-2 text-muted">
+  </i>
+
+  <div class="input-group flex-fill ml-2 mb-2">
     <div class="input-group-prepend">
-      <span class="input-group-text"><strong i18n="@@view.perspective.guide.title">2.&nbsp;Set Title</strong></span>
+      <span class="input-group-text">
+        <strong *ngIf="novice"
+                i18n="@@view.perspective.guide.title">2.&nbsp;Set Title</strong>
+        <i *ngIf="!novice"
+           class="far fa-file-edit fa-fw">
+        </i>
+      </span>
     </div>
-    <input
-      #viewNameInput
-      id="viewName"
-      name="viewName"
-      type="text"
-      class="form-control"
-      autocomplete="off"
-      placeholder="Type a title of this page, save, and share!"
-      i18n-placeholder="@@view.untitled"
-      [class.font-italic]="!view.code || nameChanged"
-      (input)="onNameInput(viewNameInput.value)"
-    >
-    <div class="input-group-append">
-      <button
-        [disabled]="!(viewNameInput.value && isViewChanged())"
-        class="btn"
-        [class.btn-primary]="viewNameInput.value && isViewChanged()"
-        [class.btn-outline-secondary]="!(viewNameInput.value && isViewChanged())"
-        [class.disabled]="!(viewNameInput.value && isViewChanged())"
-        type="button"
-        title="Save" i18n-title="@@view.button.save"
-        (click)="onSave(viewNameInput.value)"
-      >
+    <input #viewNameInput
+           [class.font-italic]="!view.code || view.name !== name"
+           [value]="name"
+           (input)="onNameInput(viewNameInput.value)"
+           id="viewName"
+           name="viewName"
+           type="text"
+           class="form-control"
+           autocomplete="off"
+           placeholder="Type a title of this page, save, and share!" i18n-placeholder="@@view.untitled">
+    <div *ngVar="view | viewChanged:name:(config$ | async):(perspective$ | async):(query$ | async) as viewChanged"
+         class="input-group-append">
+      <button [disabled]="!(name && viewChanged)"
+              class="btn"
+              [class.btn-primary]="name && viewChanged"
+              [class.btn-outline-secondary]="!(name && viewChanged)"
+              [class.disabled]="!(name && viewChanged)"
+              type="button"
+              title="Save" i18n-title="@@view.button.save"
+              (click)="onSave()">
         <i class="fas fa-save"></i>
       </button>
-      <button
-        [disabled]="!view.code"
-        class="btn btn-primary"
-        [class.btn-primary]="view.code"
-        [class.btn-outline-secondary]="!view.code"
-        [class.disabled]="!view.code"
-        type="button"
-        title="Copy" i18n-title="@@view.button.copy"
-        (click)="onCopy()"
-      >
+      <button [disabled]="!view.code"
+              class="btn btn-primary"
+              [class.btn-primary]="view.code"
+              [class.btn-outline-secondary]="!view.code"
+              [class.disabled]="!view.code"
+              type="button"
+              title="Copy" i18n-title="@@view.button.copy"
+              (click)="onCopy()">
         <i class="fas fa-copy"></i>
       </button>
-      <button class="btn btn-primary" type="button" (click)="onShareClick()" title="Share" i18n-title="@@view.button.share">Share</button>
+      <button (click)="onShareClick()"
+              class="btn btn-primary"
+              type="button"
+              title="Share" i18n-title="@@view.button.share">Share
+      </button>
     </div>
   </div>
 </form>
-<div *ngIf="isViewChanged()" class="small text-right text-warning">
+<div *ngIf="view | viewChanged:name:(config$ | async):(perspective$ | async):(query$ | async)"
+     class="small text-right text-warning">
   <i class="far fa-exclamation-triangle text-warning mr-1"
      title="Changes are not saved yet" i18n-title="@@view.indicator.not.saved">
   </i>
