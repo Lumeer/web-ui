@@ -17,17 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, HostListener, Input, Output, SimpleChanges} from '@angular/core';
 import {KeyCode} from '../../../../../shared/key-code';
 import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
 
-@Component({
-  selector: 'table-editable-cell',
-  templateUrl: './table-editable-cell.component.html',
-  styleUrls: ['./table-editable-cell.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+@Directive({
+  selector: '[tableEditableCell]',
+  host: {
+    '[attr.spellcheck]': 'false',
+    '[attr.tabindex]': 'selected ? 1 : null',
+    '[attr.contenteditable]': 'edited',
+    '[class.affected]': 'affected && !selected',
+    '[class.selected]': 'selected',
+    '[class.edited]': 'edited',
+    '[style.cursor]': `edited ? 'text' : 'default'`,
+    '[textContent]': 'value',
+    '[title]': `value ? value : ''`,
+    '[class.editable-cell]': 'true',
+    '[class.h-100]': 'true',
+    '[class.p-1]': 'true',
+    '[class.text-nowrap]': 'true',
+    '[class.overflow-hidden]': 'true'
+  }
 })
-export class TableEditableCellComponent implements OnChanges {
+export class TableEditableCellDirective {
 
   @Input()
   public affected: boolean;
@@ -50,12 +63,9 @@ export class TableEditableCellComponent implements OnChanges {
   @Output()
   public editEnd = new EventEmitter<string>();
 
-  @ViewChild('editableCell')
-  public editableCell: ElementRef;
-
   public edited: boolean;
 
-  public constructor(private changeDetector: ChangeDetectorRef) {
+  public constructor(private element: ElementRef) {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -66,14 +76,17 @@ export class TableEditableCellComponent implements OnChanges {
     }
   }
 
+  @HostListener('blur')
   public onBlur() {
     this.stopEditing();
   }
 
+  @HostListener('dblclick')
   public onDoubleClick() {
     this.startEditing();
   }
 
+  @HostListener('keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
     if (this.edited) {
       this.onKeyDownInEditMode(event);
@@ -95,9 +108,15 @@ export class TableEditableCellComponent implements OnChanges {
     }
   }
 
+  @HostListener('input', ['$event'])
   public onInput(event: KeyboardEvent) {
     const value = event.target['innerText'];
     this.valueChange.emit(value);
+  }
+
+  @HostListener('edit', ['$event'])
+  public onEdit(letter?: string) {
+    this.startEditing(letter);
   }
 
   public startEditing(letter?: string) {
@@ -107,13 +126,13 @@ export class TableEditableCellComponent implements OnChanges {
 
     this.edited = true;
 
-    const element = this.editableCell.nativeElement;
+    const element = this.element.nativeElement;
     if (letter) {
       element.textContent = letter;
     }
 
     this.editStart.emit();
-    setTimeout(() => HtmlModifier.setCursorAtTextContentEnd(this.editableCell.nativeElement));
+    setTimeout(() => HtmlModifier.setCursorAtTextContentEnd(this.element.nativeElement));
   }
 
   private stopEditing(cancel?: boolean) {
@@ -124,11 +143,11 @@ export class TableEditableCellComponent implements OnChanges {
     this.edited = false;
 
     if (cancel) {
-      this.editableCell.nativeElement.textContent = this.value;
+      this.element.nativeElement.textContent = this.value;
       this.valueChange.emit(this.value);
       this.editEnd.emit();
     } else {
-      const value = this.editableCell.nativeElement.textContent;
+      const value = this.element.nativeElement.textContent;
       this.editEnd.emit(value);
     }
   }

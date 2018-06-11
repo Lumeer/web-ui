@@ -17,31 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {Directive, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
 import {Actions} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
-import {AppState} from '../../../../../../../../../core/store/app.state';
-import {AttributeModel} from '../../../../../../../../../core/store/collections/collection.model';
-import {CollectionsAction} from '../../../../../../../../../core/store/collections/collections.action';
-import {DocumentModel} from '../../../../../../../../../core/store/documents/document.model';
-import {DocumentsAction} from '../../../../../../../../../core/store/documents/documents.action';
-import {LinkInstanceModel} from '../../../../../../../../../core/store/link-instances/link-instance.model';
-import {LinkInstancesAction} from '../../../../../../../../../core/store/link-instances/link-instances.action';
-import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../../../../../core/store/tables/table-cursor';
-import {EMPTY_TABLE_ROW, TableCompoundColumn, TableModel, TableRow, TableSingleColumn} from '../../../../../../../../../core/store/tables/table.model';
-import {findTableRow, splitRowPath} from '../../../../../../../../../core/store/tables/table.utils';
-import {TablesAction, TablesActionType} from '../../../../../../../../../core/store/tables/tables.action';
-import {selectAffected} from '../../../../../../../../../core/store/tables/tables.state';
-import {TableColumnContextMenuComponent} from '../../../../../../header/column-group/single-column/context-menu/table-column-context-menu.component';
-import {TableEditableCellComponent} from '../../../../../../shared/editable-cell/table-editable-cell.component';
+import {Subscription} from 'rxjs/index';
+import {AppState} from '../../../../../core/store/app.state';
+import {AttributeModel} from '../../../../../core/store/collections/collection.model';
+import {CollectionsAction} from '../../../../../core/store/collections/collections.action';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
+import {LinkInstanceModel} from '../../../../../core/store/link-instances/link-instance.model';
+import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
+import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
+import {TableCompoundColumn, TableModel, TableRow, TableSingleColumn} from '../../../../../core/store/tables/table.model';
+import {findTableRow} from '../../../../../core/store/tables/table.utils';
+import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
 
-@Component({
-  selector: 'table-data-cell',
-  templateUrl: './table-data-cell.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+@Directive({
+  selector: '[tableDataCell]'
 })
-export class TableDataCellComponent implements OnChanges {
+export class TableDataCellDirective implements OnChanges, OnDestroy {
 
   @Input()
   public cursor: TableBodyCursor;
@@ -61,35 +56,21 @@ export class TableDataCellComponent implements OnChanges {
   @Input()
   public table: TableModel;
 
-  @ViewChild(TableEditableCellComponent)
-  public editableCellComponent: TableEditableCellComponent;
+  @Input()
+  public value: string;
 
-  @ViewChild(TableColumnContextMenuComponent)
-  public contextMenuComponent: TableColumnContextMenuComponent;
-
-  public affected$: Observable<boolean>;
+  @Output()
+  public edit = new EventEmitter<string>();
 
   private editSubscription: Subscription;
 
   private linkCreated: boolean;
-  private editedValue: string;
-
-  public value: string;
 
   public constructor(private actions$: Actions,
                      private store: Store<AppState>) {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.document || changes.linkInstance || changes.column) {
-      this.value = this.extractValue();
-      if (this.cursor && this.cursor.partIndex > 0) {
-        this.affected$ = this.store.select(selectAffected({
-          documentId: this.document.id,
-          attributeId: this.column.attributeId
-        }));
-      }
-    }
     if (changes.selected) {
       this.bindOrUnbindEditSelectedCell();
     }
@@ -99,7 +80,7 @@ export class TableDataCellComponent implements OnChanges {
     if (this.selected) {
       this.editSubscription = this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
         .subscribe(action => {
-          this.editableCellComponent.startEditing(action.payload.letter);
+          this.edit.emit(action.payload.letter);
         });
     } else {
       if (this.editSubscription) {
@@ -108,20 +89,13 @@ export class TableDataCellComponent implements OnChanges {
     }
   }
 
-  public extractValue(): string {
-    const attributeId = this.column.attributeId;
-    if (this.document && this.document.data) {
-      return this.document.data[attributeId];
-    }
-    if (this.linkInstance && this.linkInstance.data) {
-      return this.linkInstance.data[attributeId];
+  public ngOnDestroy() {
+    if (this.editSubscription) {
+      this.editSubscription.unsubscribe();
     }
   }
 
-  public onValueChange(value: string) {
-    this.editedValue = value;
-  }
-
+  @HostListener('editStart')
   public onEditStart() {
     if (this.document.id) {
       this.store.dispatch(new TablesAction.SetEditedAttribute({
@@ -133,6 +107,7 @@ export class TableDataCellComponent implements OnChanges {
     }
   }
 
+  @HostListener('editEnd', ['$event'])
   public onEditEnd(value: string) {
     this.clearEditedAttribute();
     if (value) {
@@ -148,9 +123,14 @@ export class TableDataCellComponent implements OnChanges {
 
   private saveData(value: string) {
     if (this.linkCreated || this.value === value) {
+      // TODO unset linkCreated
       return;
     }
 
+    this.updateData(value);
+  }
+
+  public updateData(value: string) {
     if (this.document) {
       this.updateDocumentData(this.column.attributeId, this.column.attributeName, value);
     }
@@ -250,57 +230,6 @@ export class TableDataCellComponent implements OnChanges {
 
   private updateLinkInstanceData(key: string, name: string, value: string) {
     // TODO dispatch patch link instance action
-  }
-
-  public onEdit() {
-    this.editableCellComponent.startEditing();
-  }
-
-  public onAddRow(indexDelta: number) {
-    const {parentPath, rowIndex} = splitRowPath(this.cursor.rowPath);
-    const rowPath = parentPath.concat(rowIndex + indexDelta);
-    const cursor = {...this.cursor, rowPath};
-
-    this.store.dispatch(new TablesAction.ReplaceRows({cursor, rows: [EMPTY_TABLE_ROW], deleteCount: 0}));
-  }
-
-  public onRemoveRow() {
-    // TODO delete link instance
-    // TODO response from server might be slow and some change can be done to the table in the meantime
-    const removeRowAction = new TablesAction.RemoveRow({cursor: this.cursor});
-    if (this.document && this.document.id) {
-      this.store.dispatch(new DocumentsAction.DeleteConfirm({
-        collectionId: this.document.collectionId,
-        documentId: this.document.id,
-        nextAction: removeRowAction
-      }));
-      return;
-    }
-    if (this.linkInstance && this.linkInstance.id) {
-      // TODO
-    }
-    this.store.dispatch(removeRowAction);
-  }
-
-  public onUnlinkRow() {
-    const linkInstanceId = findTableRow(this.table.rows, this.cursor.rowPath).linkInstanceIds[0];
-    // TODO what is 'this' if the component is destroyed in the meantime?
-    const callback = () => this.store.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
-    this.store.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId, callback}));
-  }
-
-  public onCreateLink(document: DocumentModel) {
-    this.linkCreated = true;
-
-    const {parentPath} = splitRowPath(this.cursor.rowPath);
-    const part = this.table.parts[this.cursor.partIndex - 1];
-    const previousRow = findTableRow(this.table.rows, parentPath);
-
-    const linkInstance: LinkInstanceModel = {
-      linkTypeId: part.linkTypeId,
-      documentIds: [previousRow.documentIds[0], document.id]
-    };
-    this.store.dispatch(new LinkInstancesAction.Create({linkInstance}));
   }
 
 }

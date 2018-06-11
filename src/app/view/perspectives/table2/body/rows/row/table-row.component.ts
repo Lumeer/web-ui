@@ -20,8 +20,8 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import {SimpleChange} from '@angular/core/src/change_detection/change_detection_util';
 import {Store} from '@ngrx/store';
-import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
 import {AppState} from '../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {getOtherLinkedDocumentId, LinkInstanceModel} from '../../../../../../core/store/link-instances/link-instance.model';
@@ -34,6 +34,12 @@ import {TablesAction} from '../../../../../../core/store/tables/tables.action';
 @Component({
   selector: 'table-row',
   templateUrl: './table-row.component.html',
+  host: {
+    '[class.bg-light]': 'striped',
+    '[class.bg-white]': '!striped',
+    '[class.d-flex]': 'true',
+    '[class.h-100]': 'true'
+  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableRowComponent implements OnChanges, OnDestroy {

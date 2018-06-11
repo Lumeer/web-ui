@@ -17,16 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {AppState} from '../../../../../../../../../core/store/app.state';
-import {DocumentModel} from '../../../../../../../../../core/store/documents/document.model';
-import {LinkInstanceModel} from '../../../../../../../../../core/store/link-instances/link-instance.model';
-import {TableBodyCursor} from '../../../../../../../../../core/store/tables/table-cursor';
-import {TableSingleColumn} from '../../../../../../../../../core/store/tables/table.model';
-import {selectEditedAttribute} from '../../../../../../../../../core/store/tables/tables.state';
+import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
+import {LinkInstanceModel} from '../../../../../../../../core/store/link-instances/link-instance.model';
+import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
+import {TableSingleColumn} from '../../../../../../../../core/store/tables/table.model';
 
 @Component({
   selector: 'table-collapsed-cell',
@@ -35,6 +31,9 @@ import {selectEditedAttribute} from '../../../../../../../../../core/store/table
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableCollapsedCellComponent implements OnChanges {
+
+  @Input()
+  public affected: boolean;
 
   @Input()
   public column: TableSingleColumn;
@@ -51,31 +50,11 @@ export class TableCollapsedCellComponent implements OnChanges {
   @Input()
   public selected: boolean;
 
-  @ViewChild('collapsedCell')
-  public collapsedCell: ElementRef;
-
   public affected$: Observable<boolean>;
 
   public values = '';
 
-  public constructor(private store: Store<AppState>) {
-  }
-
-  public ngOnInit() {
-    if (this.cursor && this.cursor.partIndex > 0) {
-      this.affected$ = this.store.select(selectEditedAttribute).pipe(
-        map(editedAttribute => editedAttribute &&
-          this.documents.some(document => editedAttribute.documentId === document.id) &&
-          editedAttribute.attributeId === this.column.attributeId
-        )
-      );
-    }
-  }
-
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.selected && this.selected) {
-      this.collapsedCell.nativeElement.focus();
-    }
     if (changes.column || changes.documents || changes.linkInstances) {
       this.values = this.getDataValues();
     }

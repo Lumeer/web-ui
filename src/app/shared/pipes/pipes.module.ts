@@ -29,6 +29,7 @@ import {PixelPipe} from './pixel.pipe';
 import {PrefixPipe} from './prefix.pipe';
 import { EmptyPipe } from './empty.pipe';
 import { PermissionsPipe } from './permissions.pipe';
+import { LengthGreaterThanPipe } from './length-greater-than.pipe';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { PermissionsPipe } from './permissions.pipe';
     FilterPerspectivesPipe,
     EmptyPipe,
     PermissionsPipe,
+    LengthGreaterThanPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -57,6 +59,7 @@ import { PermissionsPipe } from './permissions.pipe';
     FilterPerspectivesPipe,
     EmptyPipe,
     PermissionsPipe,
+    LengthGreaterThanPipe,
   ]
 })
 export class PipesModule {

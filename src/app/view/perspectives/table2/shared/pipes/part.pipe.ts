@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
+import {TableCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableModel, TablePart} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
@@ -7,7 +7,7 @@ import {TableModel, TablePart} from '../../../../../core/store/tables/table.mode
 })
 export class PartPipe implements PipeTransform {
 
-  public transform(table: TableModel, cursor: TableHeaderCursor): TablePart {
+  public transform(table: TableModel, cursor: TableCursor): TablePart {
     return table.parts[cursor.partIndex];
   }
 

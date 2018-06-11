@@ -1,0 +1,35 @@
+@import "../../../../../../../shared/variables";
+
+:host {
+  display: flex;
+}
+
+.transparent-border-top {
+  border-top: 1px solid transparent;
+}
+
+%highlighted {
+  position: relative;
+  z-index: $z-index-selected;
+  outline-offset: -2px;
+}
+
+.selected {
+  @extend %highlighted;
+  outline: $primary solid 2px;
+}
+
+.edited {
+  @extend %highlighted;
+  outline: $success solid 2px;
+}
+
+.affected {
+  @extend %highlighted;
+  outline: $warning solid 2px;
+}
+
+.invalid {
+  @extend %highlighted;
+  outline: $danger solid 2px;
+}

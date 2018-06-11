@@ -1,9 +1,66 @@
-<div class="d-flex h-100">
-  <table-cell *ngFor="let column of columns$ | async; trackBy: trackByAttributeIds; let columnIndex = index"
-              [column]="column"
-              [cursor]="cursor | columnCursor:columnIndex"
-              [documents]="documents"
-              [linkInstances]="linkInstances"
-              [table]="table">
-  </table-cell>
-</div>
+<ng-container *ngIf="{selectedCursor: selectedCursor$ | async}; let row">
+  <ng-container *ngFor="let column of columns$ | async; trackBy: trackByAttributeIds; let columnIndex = index">
+    <ng-container *ngIf="column | isSingleColumn; else emptyCell">
+      <ng-container *ngIf="!((documents || linkInstances) | lengthGreaterThan:1); else collapsedCell">
+        <ng-container *ngIf="{
+          cursor: cursor | columnCursor:columnIndex,
+          document: documents ? documents[0] : null,
+          linkInstance: linkInstances ? linkInstances[0] : null,
+          selected: row.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)
+        }; let cell">
+          <div tableDataCell
+               [affected]="editedAttribute$ | async | affectedCell:(documents || linkInstances):column"
+               [column]="column"
+               [cursor]="cell.cursor"
+               [document]="cell.document"
+               [linkInstance]="cell.linkInstance"
+               [table]="table"
+               tableEditableCell
+               [contextMenu]="dataCellMenu?.contextMenu"
+               [readonly]="!cell.selected"
+               [selected]="cell.selected"
+               [value]="(cell.document | extractValue:column) || (cell.linkInstance | extractValue:column)"
+               (valueChange)="onValueChange($event)"
+               [class.transparent-border-top]="cursor | isFirstRow"
+               [style.width]="column | columnWidth | pixel"
+               (mousedown)="onMouseDown($event, columnIndex)"
+               class="d-block table-border-right table-border-bottom">
+          </div>
+
+          <table-data-cell-suggestions *ngIf="!(cursor | isFirstPart) && !((document | entityCreated) || (linkInstance | entityCreated)) && editedValue"
+                                       [column]="column"
+                                       [cursor]="cell.cursor"
+                                       [table]="table"
+                                       [value]="editedValue">
+          </table-data-cell-suggestions>
+
+          <table-data-cell-menu #dataCellMenu
+                                *ngIf="cell.selected"
+                                [cursor]="cell.cursor"
+                                [document]="cell.document"
+                                [linkInstance]="cell.linkInstance"
+                                (edit)="onEdit()">
+          </table-data-cell-menu>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #collapsedCell>
+        <table-collapsed-cell [affected]="editedAttribute$ | async | affectedCell:(documents || linkInstances):column"
+                              [column]="column"
+                              [cursor]="cursor | columnCursor:columnIndex"
+                              [documents]="documents"
+                              [linkInstances]="linkInstances"
+                              [selected]="row.selectedCursor | async | cursorEquals:(cursor | columnCursor:columnIndex)"
+                              [style.width]="column | columnWidth | pixel"
+                              [class.transparent-border-top]="cursor | isFirstRow"
+                              (mousedown)="onMouseDown($event, columnIndex)"
+                              class="d-block table-border-right table-border-bottom">
+        </table-collapsed-cell>
+      </ng-template>
+    </ng-container>
+
+    <ng-template #emptyCell>
+      <div class="table-border-right table-border-bottom"></div>
+    </ng-template>
+  </ng-container>
+</ng-container>
