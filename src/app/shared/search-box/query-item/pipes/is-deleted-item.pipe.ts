@@ -4,12 +4,12 @@ import {QueryItem} from '../model/query-item';
 import {QueryItemType} from '../model/query-item-type';
 
 @Pipe({
-  name: 'isInvalidItem'
+  name: 'isDeletedItem'
 })
-export class IsInvalidItemPipe implements PipeTransform {
+export class IsDeletedItemPipe implements PipeTransform {
 
 public transform(queryItem: QueryItem): boolean {
-    return queryItem.type === QueryItemType.Invalid;
+    return queryItem.type === QueryItemType.Deleted;
   }
 
 }

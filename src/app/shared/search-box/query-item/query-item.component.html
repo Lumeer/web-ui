@@ -6,13 +6,13 @@
                    [icons]="queryItem.icons">
   </icons-presenter>
 
-  <em *ngIf="queryItem | isInvalidItem"
+  <em *ngIf="queryItem | isDeletedItem"
       class="mx-1"
       [title]="queryItem | queryItemText">
     {{queryItem | queryItemText}}
   </em>
 
-  <span *ngIf="!(queryItem | isInvalidItem)"
+  <span *ngIf="!(queryItem | isDeletedItem)"
         [class.font-weight-bold]="queryItem | isCollectionItem"
         [title]="queryItem | queryItemText"
         [class.text-truncate]="!(queryItem | isAttributeItem)"

@@ -25,6 +25,6 @@ export enum QueryItemType {
   Fulltext = 'Fulltext',
   Link = 'Link',
   View = 'View',
-  Invalid = 'Invalid'
+  Deleted = 'Deleted'
 
 }

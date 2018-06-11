@@ -28,7 +28,7 @@ import {FulltextQueryItem} from './model/fulltext.query-item';
 import {QueryItem} from './model/query-item';
 import {QueryItemType} from './model/query-item-type';
 import {isNullOrUndefined} from 'util';
-import {InvalidQueryItem} from './model/invalid.query-item';
+import {DeletedQueryItem} from './model/deleted.query-item';
 
 export class QueryItemsConverter {
 
@@ -82,7 +82,7 @@ export class QueryItemsConverter {
       const collection = this.data.collections.find(collection => collection.id === collectionId);
       const attribute = collection && collection.attributes.find(attribute => attribute.id === attributeId);
       if (!attribute) {
-        return new InvalidQueryItem(QueryItemType.Attribute);
+        return new DeletedQueryItem(QueryItemType.Attribute);
       }
 
       const [condition, conditionValue] = fullCondition.split(' ', 2);
@@ -95,7 +95,7 @@ export class QueryItemsConverter {
     return collectionIds.map(collectionId => {
       const collection = this.data.collections.find(collection => collection.id === collectionId);
       if (!collection) {
-        return new InvalidQueryItem(QueryItemType.Collection);
+        return new DeletedQueryItem(QueryItemType.Collection);
       }
       return new CollectionQueryItem(collection);
     });
@@ -115,7 +115,7 @@ export class QueryItemsConverter {
         const collection1 = this.data.collections.find(collection => collection.id === linkType.collectionIds[0]);
         const collection2 = this.data.collections.find(collection => collection.id === linkType.collectionIds[1]);
         if (!collection1 || !collection2) {
-          return new InvalidQueryItem(QueryItemType.Link);
+          return new DeletedQueryItem(QueryItemType.Link);
         }
 
         linkType.collections = [collection1, collection2];

@@ -13,7 +13,7 @@ const LINK_BACKGROUND_COLOR = '#ffffff';
 export class QueryItemBackgroundPipe implements PipeTransform {
 
   public transform(queryItem: QueryItem, isValid: boolean): string {
-    if ([QueryItemType.Link, QueryItemType.View, QueryItemType.Invalid].includes(queryItem.type)) {
+    if ([QueryItemType.Link, QueryItemType.View, QueryItemType.Deleted].includes(queryItem.type)) {
       return LINK_BACKGROUND_COLOR;
     }
 

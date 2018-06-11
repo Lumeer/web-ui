@@ -20,7 +20,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 
-import {IsInvalidItemPipe} from './is-invalid-item.pipe';
+import {IsDeletedItemPipe} from './is-deleted-item.pipe';
 import {IsAttributeItemPipe} from './is-attribute-item.pipe';
 import {IsCollectionItemPipe} from './is-collection-item.pipe';
 import {QueryItemBackgroundPipe} from './query-item-background';
@@ -37,7 +37,7 @@ import {QueryItemTextPipe} from './query-item-text.pipe';
   declarations: [
     IsAttributeItemPipe,
     IsCollectionItemPipe,
-    IsInvalidItemPipe,
+    IsDeletedItemPipe,
     QueryItemBackgroundPipe,
     QueryItemBorderPipe,
     ConditionFilterPipe,
@@ -48,7 +48,7 @@ import {QueryItemTextPipe} from './query-item-text.pipe';
   exports: [
     IsAttributeItemPipe,
     IsCollectionItemPipe,
-    IsInvalidItemPipe,
+    IsDeletedItemPipe,
     QueryItemBackgroundPipe,
     QueryItemBorderPipe,
     ConditionFilterPipe,

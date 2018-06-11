@@ -20,9 +20,9 @@
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 
-export class InvalidQueryItem implements QueryItem {
+export class DeletedQueryItem implements QueryItem {
 
-  public type = QueryItemType.Invalid;
+  public type = QueryItemType.Deleted;
   public forType: QueryItemType;
 
   public constructor(forType: QueryItemType) {
