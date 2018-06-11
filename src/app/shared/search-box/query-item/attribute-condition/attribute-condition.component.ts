@@ -47,18 +47,23 @@ export class AttributeConditionComponent implements OnInit {
   @Output()
   public moveRight = new EventEmitter();
 
+  @Output()
+  public change = new EventEmitter();
+
   @ViewChild('conditionInput')
   private conditionInput: ElementRef;
 
   public focused: boolean;
-
   public moveSuggestionSelection$ = new Subject<number>();
   public useSuggestionSelection$ = new Subject<string>();
+
+  private lastCommittedValue: string;
 
   public ngOnInit() {
     if (!this.readonly && this.conditionControl && !this.conditionControl.valid) {
       this.focusInput();
     }
+    this.lastCommittedValue = this.queryItem.condition;
   }
 
   public get conditionControl(): AbstractControl {
@@ -82,7 +87,14 @@ export class AttributeConditionComponent implements OnInit {
 
   public onBlur() {
     this.focused = false;
-    this.setValue(this.queryItem.condition.trim());
+
+    const trimmedValue = this.queryItem.condition.trim();
+    this.setValue(trimmedValue);
+
+    if (trimmedValue != this.lastCommittedValue && this.conditionControl.valid) {
+      this.change.emit();
+      this.lastCommittedValue = trimmedValue;
+    }
   }
 
   public onKeyDown(event: KeyboardEvent) {

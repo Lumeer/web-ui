@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
 
 import {AttributeQueryItem} from '../model/attribute.query-item';
@@ -29,7 +29,7 @@ import {KeyCode} from '../../../key-code';
   templateUrl: './attribute-value.component.html',
   styleUrls: ['./attribute-value.component.scss']
 })
-export class AttributeValueComponent {
+export class AttributeValueComponent implements OnInit {
 
   @Input()
   public queryItem: AttributeQueryItem;
@@ -46,15 +46,30 @@ export class AttributeValueComponent {
   @Output()
   public moveLeft = new EventEmitter();
 
+  @Output()
+  public change = new EventEmitter();
+
+  private lastCommittedValue: string;
+
   @ViewChild('conditionValueInput')
   private conditionValueInput: ElementRef;
+
+  public ngOnInit() {
+    this.lastCommittedValue = this.queryItem.conditionValue;
+  }
 
   public get conditionValueControl(): AbstractControl {
     return this.queryItemForm && this.queryItemForm.get('conditionValue');
   }
 
   public onBlur() {
-    this.setValue(this.queryItem.conditionValue.trim());
+    const trimmedValue = this.queryItem.conditionValue.trim();
+    this.setValue(trimmedValue);
+
+    if (trimmedValue != this.lastCommittedValue && this.conditionValueControl.valid) {
+      this.change.emit();
+      this.lastCommittedValue = trimmedValue;
+    }
   }
 
   public onInput(value: string) {

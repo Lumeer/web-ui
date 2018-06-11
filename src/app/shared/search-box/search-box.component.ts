@@ -40,6 +40,8 @@ import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {queryItemToForm} from '../../core/store/navigation/query.util';
 import {isNullOrUndefined} from 'util';
 
+const allowAutomaticSubmission = true;
+
 @Component({
   selector: 'search-box',
   templateUrl: './search-box.component.html'
@@ -127,18 +129,42 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   public onAddQueryItem(queryItem: QueryItem) {
     this.queryItems.push(queryItem);
-    this.queryItemsControl.push(queryItemToForm(queryItem));
+
+    const queryItemForm = queryItemToForm(queryItem);
+    this.queryItemsControl.push(queryItemForm);
+
+    if (queryItemForm.valid) {
+      this.onQueryItemsChanged();
+    }
   }
 
   public onRemoveQueryItem(index: number) {
     this.queryItems.splice(index, 1);
+
+    const isQueryItemValid =  this.queryItemsControl.at(index).valid;
     this.queryItemsControl.removeAt(index);
+
+    if(isQueryItemValid) {
+      this.onQueryItemsChanged();
+    }
   }
 
   public onRemoveLastQueryItem() {
-    const lastIndex = this.queryItems.length - 2;
+    const lastIndex = this.queryItems.length - 1;
     this.queryItems.pop();
+
+    const isQueryItemValid =  this.queryItemsControl.at(lastIndex).valid;
     this.queryItemsControl.removeAt(lastIndex);
+
+    if(isQueryItemValid) {
+      this.onQueryItemsChanged();
+    }
+  }
+
+  public onQueryItemsChanged() {
+    if (allowAutomaticSubmission) {
+      this.onSearch();
+    }
   }
 
   public onSearch(redirect?: boolean) {
