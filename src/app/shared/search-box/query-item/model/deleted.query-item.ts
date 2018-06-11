@@ -17,12 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LumeerError} from './lumeer.error';
+import {QueryItem} from './query-item';
+import {QueryItemType} from './query-item-type';
 
-export class NetworkError extends LumeerError {
+export class DeletedQueryItem implements QueryItem {
 
-  public constructor() {
-    super('Network is unavailable');
+  public type = QueryItemType.Deleted;
+  public forType: QueryItemType;
+
+  public constructor(forType: QueryItemType) {
+    this.forType = forType;
+  }
+
+  public get value(): string {
+    return '';
+  }
+
+  public get text(): string {
+    return '';
   }
 
 }

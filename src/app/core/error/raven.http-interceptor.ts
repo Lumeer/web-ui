@@ -17,8 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LumeerError} from './lumeer.error';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import * as Raven from 'raven-js';
+import {Observable, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+import {environment} from '../../../environments/environment';
 
-export class BadInputError extends LumeerError {
+@Injectable()
+export class RavenHttpInterceptor implements HttpInterceptor {
+
+  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(request).pipe(
+      catchError(error => {
+        if (environment.sentryDsn) {
+          Raven.captureException(error);
+        }
+
+        return throwError(error);
+      })
+    );
+  }
 
 }

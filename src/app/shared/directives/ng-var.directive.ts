@@ -17,10 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class LumeerError extends Error {
+import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
 
-  constructor(public message: string) {
-    super(message);
+@Directive({
+  selector: '[ngVar]'
+})
+export class NgVarDirective {
+
+  @Input()
+  public set ngVar(context: any) {
+    this.context.$implicit = this.context.ngVar = context;
+    this.updateView();
+  }
+
+  private context: any = {};
+
+  public constructor(private template: TemplateRef<any>,
+                     private viewContainer: ViewContainerRef) {
+  }
+
+  private updateView() {
+    this.viewContainer.clear();
+    this.viewContainer.createEmbeddedView(this.template, this.context);
   }
 
 }

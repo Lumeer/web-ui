@@ -19,7 +19,6 @@
 
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {LumeerError} from '../../../../core/error/lumeer.error';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {selectAllDocuments} from '../../../../core/store/documents/documents.state';
@@ -34,7 +33,7 @@ export class DeletionHelper {
 
   public initialize(): void {
     if (this.documentsSubscription) {
-      throw new LumeerError('DeletionHelper already initialized');
+      throw Error('DeletionHelper already initialized');
     }
 
     this.documentsSubscription = this.store.select(selectAllDocuments).subscribe(documents => {

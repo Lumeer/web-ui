@@ -66,6 +66,7 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
         value: new FormControl(queryItem.value, Validators.required),
         text: new FormControl(queryItem.text, Validators.required)
       });
+    case QueryItemType.Deleted:
     case QueryItemType.Fulltext:
       return new FormGroup({
         value: new FormControl(queryItem.value, Validators.required)

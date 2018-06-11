@@ -28,7 +28,6 @@ import {AppState} from '../../core/store/app.state';
 import {selectAllCollections, selectCollectionsLoaded} from '../../core/store/collections/collections.state';
 import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../core/store/link-types/link-types.state';
 import {selectNavigation, selectQuery} from '../../core/store/navigation/navigation.state';
-import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {ViewModel} from '../../core/store/views/view.model';
 import {Perspective} from '../../view/perspectives/perspective';
@@ -39,6 +38,8 @@ import {QueryItemsConverter} from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {queryItemToForm} from '../../core/store/navigation/query.util';
 import {isNullOrUndefined} from 'util';
+
+const allowAutomaticSubmission = true;
 
 @Component({
   selector: 'search-box',
@@ -69,9 +70,10 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   private subscribeToQuery() {
     this.querySubscription = this.store.select(selectQuery).pipe(
+      filter(query => !isNullOrUndefined(query)),
       flatMap(query => observableCombineLatest(
         of(query),
-        this.loadData(query)
+        this.loadData()
       )),
       map(([query, data]) => new QueryItemsConverter(data).fromQuery(query)),
       filter(queryItems => this.itemsChanged(queryItems))
@@ -89,7 +91,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       });
   }
 
-  private loadData(query: QueryModel): Observable<QueryData> {
+  private loadData(): Observable<QueryData> {
     return observableCombineLatest(
       this.store.select(selectAllCollections),
       this.store.select(selectAllLinkTypes),
@@ -102,16 +104,6 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
           collections: collections.filter(collection => collection && collection.id),
           linkTypes: linkTypes.filter(linkType => linkType && linkType.id) // TODO remove after NgRx bug is fixed
         };
-      }),
-      filter(({collections, linkTypes}) => {
-        const collectionIds = new Set(collections.map(collection => collection.id));
-        const linkTypeIds = new Set(linkTypes.map(linkType => linkType.id));
-        const linkCollectionIds: string[] = linkTypes.reduce((collectionIds, linkType) => collectionIds.concat(linkType.collectionIds), []);
-
-        return query &&
-          query.collectionIds.every(collectionId => collectionIds.has(collectionId)) &&
-          query.linkTypeIds.every(linkTypeId => linkTypeIds.has(linkTypeId)) &&
-          linkCollectionIds.every(collectionId => collectionIds.has(collectionId));
       })
     );
   }
@@ -128,17 +120,29 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public onAddQueryItem(queryItem: QueryItem) {
     this.queryItems.push(queryItem);
     this.queryItemsControl.push(queryItemToForm(queryItem));
+
+    this.onQueryItemsChanged();
   }
 
   public onRemoveQueryItem(index: number) {
     this.queryItems.splice(index, 1);
     this.queryItemsControl.removeAt(index);
+
+    this.onQueryItemsChanged();
   }
 
   public onRemoveLastQueryItem() {
-    const lastIndex = this.queryItems.length - 2;
+    const lastIndex = this.queryItems.length - 1;
     this.queryItems.pop();
     this.queryItemsControl.removeAt(lastIndex);
+
+    this.onQueryItemsChanged();
+  }
+
+  public onQueryItemsChanged() {
+    if (allowAutomaticSubmission && this.form.valid) {
+      this.onSearch();
+    }
   }
 
   public onSearch(redirect?: boolean) {

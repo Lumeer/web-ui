@@ -18,21 +18,25 @@
  */
 
 import {CommonModule} from '@angular/common';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 
 import {ClickOutsideModule} from 'ng-click-outside';
 import {SnotifyComponent, SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import {SharedModule} from '../shared/shared.module';
 import {WorkspaceGuard} from '../workspace/workspace.guard';
+import {RavenErrorHandler} from './error/raven.error-handler';
+import {RavenHttpInterceptor} from './error/raven.http-interceptor';
 import {GuardsModule} from './guards/guards.module';
 import {HomeComponent} from './home.component';
 import {NotificationService} from './notifications/notification.service';
 import {CollectionService} from './rest/collection.service';
 import {DocumentService} from './rest/document.service';
 import {EventService} from './rest/event.service';
+import {GlobalService} from './rest/global.service';
 import {GroupService} from './rest/group.service';
 import {ImportService} from './rest/import.service';
 import {LinkInstanceService} from './rest/link-instance.service';
@@ -47,9 +51,6 @@ import {AppStoreModule} from './store/app-store.module';
 import {TopPanelComponent} from './top-panel/top-panel.component';
 import {UserSettingsService} from './user-settings.service';
 import {CollectionValidators} from './validators/collection.validators';
-import {GlobalService} from './rest/global.service';
-import {RavenErrorHandler} from './error/raven.error-handler';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ResourceMenuModule} from './top-panel/resource-menu/resource-menu.module';
 
 @NgModule({
@@ -74,6 +75,11 @@ import {ResourceMenuModule} from './top-panel/resource-menu/resource-menu.module
     {
       provide: ErrorHandler,
       useClass: RavenErrorHandler
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RavenHttpInterceptor,
+      multi: true,
     },
     CollectionService,
     DocumentService,

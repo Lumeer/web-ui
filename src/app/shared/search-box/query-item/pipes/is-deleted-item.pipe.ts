@@ -17,12 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LumeerError} from './lumeer.error';
+import {Pipe, PipeTransform} from '@angular/core';
 
-export class FetchFailedError extends LumeerError {
+import {QueryItem} from '../model/query-item';
+import {QueryItemType} from '../model/query-item-type';
 
-  public constructor(resourceType: string) {
-    super(`Can't fetch ${resourceType}`);
+@Pipe({
+  name: 'isDeletedItem'
+})
+export class IsDeletedItemPipe implements PipeTransform {
+
+public transform(queryItem: QueryItem): boolean {
+    return queryItem.type === QueryItemType.Deleted;
   }
 
 }

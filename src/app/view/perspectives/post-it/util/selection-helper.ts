@@ -18,7 +18,6 @@
  */
 
 import {isNullOrUndefined} from 'util';
-import {LumeerError} from '../../../../core/error/lumeer.error';
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
 import {Direction} from '../document-data/direction';
 import {PostItDocumentModel} from '../document-data/post-it-document-model';
@@ -85,7 +84,7 @@ export class SelectionHelper {
         this.selectNextOnNewLine();
         break;
       default:
-        throw new LumeerError('Currently selected nonexistent column');
+        throw Error('Currently selected nonexistent column');
     }
   }
 
@@ -237,7 +236,7 @@ export class SelectionHelper {
 
   public focus(): void {
     if (isNullOrUndefined(this.selection.column) || isNullOrUndefined(this.selection.row)) {
-      throw new LumeerError('Focusing empty selection');
+      throw Error('Focusing empty selection');
     }
 
     let elementToFocus = document.getElementById(this.selectedInputId());
