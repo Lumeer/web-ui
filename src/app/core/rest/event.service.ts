@@ -17,16 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Store} from '@ngrx/store';
+import {Observable, of} from 'rxjs';
 import {EMPTY} from 'rxjs/internal/observable/empty';
 import {environment} from '../../../environments/environment';
-
-import {LumeerError} from '../error/lumeer.error';
-import {Event} from '../dto/Event';
 import {LocalStorage} from '../../shared/utils/local-storage';
+import {Event} from '../dto/Event';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
@@ -92,10 +90,6 @@ export class EventService {
     const projectCode = this.workspace.projectCode;
 
     return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
-  }
-
-  private handleGlobalError(error: HttpErrorResponse): LumeerError {
-    throw new LumeerError(error.message);
   }
 
 }

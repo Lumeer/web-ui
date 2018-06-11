@@ -22,7 +22,6 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {Project} from '../dto';
-import {LumeerError} from '../error/lumeer.error';
 import {PermissionService} from './permission.service';
 import {Workspace} from '../store/navigation/workspace.model';
 
@@ -31,7 +30,7 @@ export class ProjectService extends PermissionService {
 
   public getProjects(orgCode: string): Observable<Project[]> {
     if (!this.hasOrganizationApiPrefix(orgCode)) {
-      throw new LumeerError('Organization not set');
+      throw Error('Organization not set');
     }
 
     return this.httpClient.get<Project[]>(this.apiPrefix(orgCode));
@@ -44,7 +43,7 @@ export class ProjectService extends PermissionService {
 
   public getProject(orgCode: string, projCode: string): Observable<Project> {
     if (!this.hasFullApiPrefix(orgCode, projCode)) {
-      throw new LumeerError(`Workspace not set ${orgCode} ${projCode}`);
+      throw Error(`Workspace not set ${orgCode} ${projCode}`);
     }
 
     return this.httpClient.get<Project>(this.apiPrefix(orgCode, projCode));
@@ -52,7 +51,7 @@ export class ProjectService extends PermissionService {
 
   public deleteProject(orgCode: string, projCode: string): Observable<HttpResponse<any>> {
     if (!this.hasFullApiPrefix(orgCode, projCode)) {
-      throw new LumeerError(`Workspace not set ${orgCode} ${projCode}`);
+      throw Error(`Workspace not set ${orgCode} ${projCode}`);
     }
 
     return this.httpClient.delete(this.apiPrefix(orgCode, projCode), {observe: 'response', responseType: 'text'});
@@ -60,7 +59,7 @@ export class ProjectService extends PermissionService {
 
   public createProject(orgCode: string, project: Project): Observable<Project> {
     if (!this.hasOrganizationApiPrefix(orgCode)) {
-      throw new LumeerError('Organization not set');
+      throw Error('Organization not set');
     }
 
     return this.httpClient.post<Project>(this.apiPrefix(orgCode), project);
@@ -68,7 +67,7 @@ export class ProjectService extends PermissionService {
 
   public editProject(orgCode: string, projCode: string, project: Project): Observable<Project> {
     if (!this.hasFullApiPrefix(orgCode, projCode)) {
-      throw new LumeerError(`Workspace not set ${orgCode} ${projCode}`);
+      throw Error(`Workspace not set ${orgCode} ${projCode}`);
     }
     return this.httpClient.put<Project>(this.apiPrefix(orgCode, projCode), project);
   }
