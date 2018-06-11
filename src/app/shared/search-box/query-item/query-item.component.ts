@@ -44,6 +44,9 @@ export class QueryItemComponent {
   @Output()
   public enter = new EventEmitter();
 
+  @Output()
+  public change = new EventEmitter();
+
   public onRemove() {
     this.remove.emit();
   }
@@ -57,6 +60,12 @@ export class QueryItemComponent {
       return true;
     }
     return this.queryItemForm.valid;
+  }
+
+  public onQueryItemChanged() {
+    if (this.isFormValid()) {
+      this.change.emit();
+    }
   }
 
 }

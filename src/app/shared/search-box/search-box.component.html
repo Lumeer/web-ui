@@ -5,6 +5,7 @@
                   [queryItemForm]="queryItemsControl.at(itemIndex)"
                   [queryItem]="queryItem"
                   (enter)="searchInput.focusInput()"
+                  (change)="onQueryItemsChanged()"
                   (remove)="onRemoveQueryItem(itemIndex)"
                   class="d-inline-flex mt-1 ml-1 align-items-center">
       </query-item>

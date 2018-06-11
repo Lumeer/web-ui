@@ -21,6 +21,7 @@
                          [queryItemForm]="queryItemForm"
                          [queryItem]="queryItem"
                          [readonly]="readonly"
+                         (change)="onQueryItemChanged()"
                          (enter)="attributeConditionValue.focusInput()"
                          (moveRight)="attributeConditionValue.focusInput()">
     </attribute-condition>
@@ -29,9 +30,9 @@
                      [queryItem]="queryItem"
                      [queryItemForm]="queryItemForm"
                      [readonly]="readonly"
+                     (change)="onQueryItemChanged()"
                      (enter)="onEnter()"
-                     (moveLeft)="attributeCondition.focusInput()"
-                     [readonly]="readonly">
+                     (moveLeft)="attributeCondition.focusInput()">
 
     </attribute-value>
 
