@@ -24,6 +24,7 @@ import {AbstractControl, FormGroup} from '@angular/forms';
 import {KeyCode} from '../../../key-code';
 import {getCaretCharacterOffsetWithin, HtmlModifier} from '../../../utils/html-modifier';
 import {AttributeQueryItem} from '../model/attribute.query-item';
+import {isNumber} from 'util';
 
 @Component({
   selector: 'attribute-condition',
@@ -66,10 +67,12 @@ export class AttributeConditionComponent implements OnInit {
   }
 
   public onInput(value: string) {
-    this.setValue(value);
+    const result = value.replace(/[\d\s]+/g, '');
+    this.setValue(result);
   }
 
   private setValue(value: string) {
+    this.conditionInput.nativeElement.textContent = value;
     this.conditionControl.setValue(value);
     this.queryItem.condition = value;
   }
@@ -93,6 +96,7 @@ export class AttributeConditionComponent implements OnInit {
         this.onRightArrowKeyDown();
         break;
       case KeyCode.Enter:
+      case KeyCode.Space:
         event.preventDefault();
         break;
       case KeyCode.Escape:
@@ -112,6 +116,10 @@ export class AttributeConditionComponent implements OnInit {
     this.useSuggestionSelection$.next(value);
   }
 
+  public onSpaceKeyUp() {
+    this.checkCaretPositionAndGoRight();
+  }
+
   public onUseSuggestion(condition: string) {
     this.setValue(condition);
     this.enter.emit();
@@ -121,7 +129,22 @@ export class AttributeConditionComponent implements OnInit {
     setTimeout(() => HtmlModifier.setCursorAtTextContentEnd(this.conditionInput.nativeElement));
   }
 
+  public onKeyPress(event: KeyboardEvent) {
+    if (this.isNumber(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  public isNumber(value: string): boolean {
+    const reg = new RegExp('^[0-9]$');
+    return reg.test(value);
+  }
+
   private onRightArrowKeyDown() {
+    this.checkCaretPositionAndGoRight();
+  }
+
+  private checkCaretPositionAndGoRight() {
     const inputLength = this.queryItem.condition.length;
     const caretOffset = getCaretCharacterOffsetWithin(this.conditionInput.nativeElement);
     if (caretOffset >= inputLength) {
