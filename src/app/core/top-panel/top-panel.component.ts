@@ -33,9 +33,19 @@ import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {selectOrganizationByWorkspace} from '../store/organizations/organizations.state';
 import {ProjectModel} from '../store/projects/project.model';
 import {ProjectsAction} from '../store/projects/projects.action';
-import {selectProjectByWorkspace} from '../store/projects/projects.state';
+import {selectProjectByWorkspace, selectProjectsByOrganizationId} from '../store/projects/projects.state';
 import {RouterAction} from '../store/router/router.action';
 import {UserSettingsService} from '../user-settings.service';
+import {ResourceType} from '../model/resource-type';
+import {Resource} from '../dto';
+import {filter, map, take} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
+import {UsersAction} from '../store/users/users.action';
+import {LinkTypesAction} from '../store/link-types/link-types.action';
+import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
+import {DocumentsAction} from '../store/documents/documents.action';
+import {CollectionsAction} from '../store/collections/collections.action';
+import {ViewsAction} from '../store/views/views.action';
 
 @Component({
   selector: 'top-panel',
@@ -58,6 +68,9 @@ export class TopPanelComponent implements OnInit {
   public notificationsDisabled: boolean;
 
   public buildNumber = environment.buildNumber;
+
+  public readonly organizationResourceType = ResourceType.Organization;
+  public readonly projectResourceType = ResourceType.Project;
 
   constructor(private store: Store<AppState>,
               private router: Router,
@@ -127,16 +140,38 @@ export class TopPanelComponent implements OnInit {
     return this.isWorkspaceSet() && !this.searchBoxHidden;
   }
 
-  public goToOrganization(page: string) {
+  public goToOrganization(code: string) {
     if (this.workspace && this.workspace.organizationCode) {
-      this.router.navigate(['organization', this.workspace.organizationCode, page]);
+      this.router.navigate(['w', this.workspace.organizationCode, code]);
     }
   }
 
-  public goToProject(page: string) {
-    if (this.workspace && this.workspace.organizationCode && this.workspace.projectCode) {
-      this.router.navigate(['organization', this.workspace.organizationCode, 'project', this.workspace.projectCode, page]);
+  public goToProject(organization: OrganizationModel, project: ProjectModel) {
+    if (organization && project) {
+      this.updateDefaultWorkspace(organization, project);
+      this.clearStore();
+      this.store.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
+      this.store.dispatch(new ProjectsAction.Select({projectId: project.id}));
+      this.store.dispatch(new RouterAction.Go({path: ['w', organization.code, project.code, 'view', 'search', 'all']}));
     }
+  }
+
+  private clearStore() {
+    this.store.dispatch(new CollectionsAction.Clear());
+    this.store.dispatch(new DocumentsAction.Clear());
+    this.store.dispatch(new LinkInstancesAction.Clear());
+    this.store.dispatch(new LinkTypesAction.Clear());
+    this.store.dispatch(new ViewsAction.Clear());
+  }
+
+  private updateDefaultWorkspace(organization: OrganizationModel, project: ProjectModel) {
+    const defaultWorkspace = {
+      organizationId: organization.id,
+      organizationCode: organization.code,
+      projectId: project.id,
+      projectCode: project.code
+    };
+    this.store.dispatch(new UsersAction.SaveDefaultWorkspace({defaultWorkspace}));
   }
 
   public removeHtmlComments(html: HTMLElement): string {
@@ -155,4 +190,27 @@ export class TopPanelComponent implements OnInit {
     return `${KeycloakSettings.getAuthServerUrl()}/realms/lumeer/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Fwww.lumeer.io%2F`;
   }
 
+  public selectOrganization(organization: Resource): void {
+    this.store.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
+
+    this.store.select(selectProjectsByOrganizationId(organization.id)).pipe(
+      filter(projects => !isNullOrUndefined(projects) && projects.length > 0),
+      take(1),
+      map(projects => projects[0])
+    ).subscribe(project =>
+      this.goToProject(organization as OrganizationModel, project)
+    );
+  }
+
+  public selectProject(project: Resource): void {
+    this.goToProject(this.organization, project as ProjectModel);
+  }
+
+  public createNewOrganization(): void {
+    // TODO call create dialog
+  }
+
+  public createNewProject(): void {
+    // TODO call create dialog
+  }
 }

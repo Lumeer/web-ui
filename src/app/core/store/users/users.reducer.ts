@@ -18,7 +18,7 @@
  */
 
 import {UsersAction, UsersActionType} from './users.action';
-import {usersAdapter, UsersState, initialUsersState} from './users.state';
+import {initialUsersState, usersAdapter, UsersState} from './users.state';
 
 export function usersReducer(state: UsersState = initialUsersState, action: UsersAction.All): UsersState {
   switch (action.type) {
@@ -32,6 +32,12 @@ export function usersReducer(state: UsersState = initialUsersState, action: User
       return usersAdapter.updateOne({id: action.payload.user.id, changes: action.payload.user}, state);
     case UsersActionType.DELETE_SUCCESS:
       return usersAdapter.removeOne(action.payload.userId, state);
+    case UsersActionType.SAVE_DEFAULT_WORKSPACE_SUCCESS:
+      state.currentUser.defaultWorkspace = action.payload.defaultWorkspace;
+      return usersAdapter.updateOne({
+        id: action.payload.user.id,
+        changes: {defaultWorkspace: action.payload.defaultWorkspace}
+      }, state);
     case UsersActionType.CLEAR:
       return initialUsersState;
     default:

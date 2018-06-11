@@ -33,7 +33,7 @@ import {GlobalService} from '../../rest/global.service';
 import {selectUsersLoadedForOrganization} from './users.state';
 import {HttpErrorResponse} from '@angular/common/http';
 import {RouterAction} from '../router/router.action';
-import {selectOrganizationsDictionary, selectSelectedOrganization} from '../organizations/organizations.state';
+import {selectOrganizationsDictionary} from '../organizations/organizations.state';
 
 @Injectable()
 export class UsersEffects {
@@ -157,13 +157,29 @@ export class UsersEffects {
 
   @Effect()
   public saveDefaultWorkspace$ = this.actions$.pipe(
-    ofType<UsersAction.SaveDefaultWorkspace>(UsersActionType.SAVE_DEFAULT_WORKSPACE),
+    ofType<UsersAction.SaveDefaultWorkspaceSuccess>(UsersActionType.SAVE_DEFAULT_WORKSPACE),
     concatMap(action => {
       const defaultWorkspaceDto = DefaultWorkspaceConverter.toDto(action.payload.defaultWorkspace);
       return this.globalService.saveDefaultWorkspace(defaultWorkspaceDto).pipe(
-        concatMap(() => of()),
-        catchError(() => of())
+        withLatestFrom(this.globalService.getCurrentUser()),
+        map(([result, user]) =>
+          new UsersAction.SaveDefaultWorkspaceSuccess({
+            user,
+            defaultWorkspace: action.payload.defaultWorkspace
+          })
+        ),
+        catchError(error => of(new UsersAction.SaveDefaultWorkspaceFailure({error: error})))
       );
+    })
+  );
+
+  @Effect()
+  public saveDefaultWorkspaceFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.SaveDefaultWorkspaceFailure>(UsersActionType.SAVE_DEFAULT_WORKSPACE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'user.defaultWorkspace.save.fail', value: 'Failed to save default workspace'});
+      return new NotificationsAction.Error({message});
     })
   );
 

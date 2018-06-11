@@ -17,7 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {isNullOrUndefined} from 'util';
@@ -217,16 +228,28 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public unusedAttributes(): AttributeModel[] {
+    if (isNullOrUndefined(this.collection)) {
+      return [];
+    }
+
     return this.collection.attributes.filter(attribute => {
       return isNullOrUndefined(this.postItRows.find(d => d.attributeId === attribute.id));
     });
   }
 
   public findAttributeByName(name: string): AttributeModel {
+    if (isNullOrUndefined(this.collection)) {
+      return;
+    }
+
     return this.collection.attributes.find(attr => attr.name === name);
   }
 
   public findAttributeById(id: string): AttributeModel {
+    if (isNullOrUndefined(this.collection)) {
+      return;
+    }
+
     return this.collection.attributes.find(attr => attr.id === id);
   }
 

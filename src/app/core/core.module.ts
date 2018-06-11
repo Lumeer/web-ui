@@ -50,6 +50,7 @@ import {CollectionValidators} from './validators/collection.validators';
 import {GlobalService} from './rest/global.service';
 import {RavenErrorHandler} from './error/raven.error-handler';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {ResourceMenuModule} from './top-panel/resource-menu/resource-menu.module';
 
 @NgModule({
   imports: [
@@ -61,12 +62,13 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     SharedModule,
     SnotifyModule,
     ClickOutsideModule,
+    ResourceMenuModule,
     GuardsModule,
     BrowserAnimationsModule
   ],
   declarations: [
     TopPanelComponent,
-    HomeComponent
+    HomeComponent,
   ],
   providers: [
     {

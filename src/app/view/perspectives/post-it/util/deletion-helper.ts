@@ -43,7 +43,9 @@ export class DeletionHelper {
   }
 
   public deletePostIt(postIt: PostItDocumentModel): void {
-    this.postIts.splice(postIt.index, 1);
+    if (postIt) {
+      this.postIts.splice(postIt.index, 1);
+    }
   }
 
   public destroy(): void {
