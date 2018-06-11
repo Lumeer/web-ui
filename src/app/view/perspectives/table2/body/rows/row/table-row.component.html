@@ -1,45 +1,43 @@
-<div [class.bg-light]="striped"
-     [class.bg-white]="!striped"
-     class="d-flex h-100">
-  <table-row-numbers *ngIf="cursor | isFirstPart"
-                     [table]="table"
-                     [cursor]="cursor"
-                     [row]="row"
-                     (click)="onRowNumberClick()"
-                     class="table-border-right bg-white">
-  </table-row-numbers>
+<table-row-numbers *ngIf="cursor | isFirstPart"
+                   [table]="table"
+                   [cursor]="cursor"
+                   [row]="row"
+                   (click)="onRowNumberClick()"
+                   class="table-border-right bg-white">
+</table-row-numbers>
 
-  <table-cell-group *ngIf="!(cursor | isFirstPart)"
-                    [table]="table"
-                    [cursor]="cursor"
-                    [row]="row">
-  </table-cell-group>
+<table-cell-group *ngIf="!(cursor | isFirstPart)"
+                  [table]="table"
+                  [cursor]="cursor"
+                  [row]="row"
+                  [style.width]="table | part:cursor | partWidth | pixel">
+</table-cell-group>
 
-  <table-cell-group [table]="table"
-                    [cursor]="cursor | nextPartCursor:(cursor | isFirstPart)"
-                    [row]="row">
-  </table-cell-group>
+<table-cell-group [table]="table"
+                  [cursor]="cursor | nextPartCursor:(cursor | isFirstPart)"
+                  [row]="row"
+                  [style.width]="table | part:(cursor | nextPartCursor:(cursor | isFirstPart)) | partWidth | pixel">
+</table-cell-group>
 
-  <div *ngIf="!(cursor | isLastPart: table)"
-       class="d-flex">
-    <table-link-cell [cursor]="cursor"
-                     [row]="row"
-                     [striped]="striped"
-                     [table]="table">
-    </table-link-cell>
-    <div class="d-flex flex-column">
-      <table-row *ngFor="let linkedRow of row.linkedRows; trackBy: trackByLinkInstanceId; index as rowIndex"
-                 [table]="table"
-                 [cursor]="cursor | nextPartCursor | nextRowCursor:rowIndex"
-                 [row]="linkedRow"
-                 class="h-100">
-      </table-row>
-      <table-row *ngIf="!row.linkedRows || row.linkedRows.length === 0"
-                 [table]="table"
-                 [cursor]="cursor | nextPartCursor | nextRowCursor:0"
-                 [row]="emptyTableRow"
-                 class="h-100">
-      </table-row>
-    </div>
+<div *ngIf="!(cursor | isLastPart: table)"
+     class="d-flex">
+  <table-link-cell [cursor]="cursor"
+                   [row]="row"
+                   [striped]="striped"
+                   [table]="table">
+  </table-link-cell>
+  <div class="d-flex flex-column">
+    <table-row *ngFor="let linkedRow of row.linkedRows; trackBy: trackByLinkInstanceId; index as rowIndex"
+               [table]="table"
+               [cursor]="cursor | nextPartCursor | nextRowCursor:rowIndex"
+               [row]="linkedRow"
+               class="h-100">
+    </table-row>
+    <table-row *ngIf="!row.linkedRows || row.linkedRows.length === 0"
+               [table]="table"
+               [cursor]="cursor | nextPartCursor | nextRowCursor:0"
+               [row]="emptyTableRow"
+               class="h-100">
+    </table-row>
   </div>
 </div>

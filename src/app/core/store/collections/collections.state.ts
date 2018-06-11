@@ -35,7 +35,7 @@ export const collectionsAdapter = createEntityAdapter<CollectionModel>({selectId
 
 export const initialCollectionsState: CollectionsState = collectionsAdapter.getInitialState({
   loaded: false,
-  collectionNames: []
+  collectionNames: null
 });
 
 export const selectCollectionsState = (state: AppState) => state.collections;
@@ -46,7 +46,7 @@ export const selectCollectionsLoaded = createSelector(selectCollectionsState, (s
 export const selectCollectionsByQuery = createSelector(selectCollectionsDictionary, selectQuery, (collections, query) => {
   delete collections['undefined'];
   return query && query.collectionIds && query.collectionIds.length > 0 ? query.collectionIds.map(id => collections[id])
-    : Object.values(collections);
+    .filter(collection => collection) : Object.values(collections);
 });
 
 export const selectCollectionByWorkspace = createSelector(selectCollectionsDictionary, selectWorkspace, (collections, workspace) => {

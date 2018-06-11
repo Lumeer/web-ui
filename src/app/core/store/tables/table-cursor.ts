@@ -352,6 +352,14 @@ function findSideMostColumn(column: TableCompoundColumn, cursor: TableCursor, le
   return findSideMostColumn(nextColumn, nextCursor, level, right);
 }
 
+export function areTableCursorsEqual(cursor1: TableCursor, cursor2: TableCursor): boolean {
+  if (cursor2.columnPath) {
+    return areTableHeaderCursorsEqual(cursor1, cursor2);
+  } else {
+    return areTableBodyCursorsEqual(cursor1, cursor2);
+  }
+}
+
 export function areTableHeaderCursorsEqual(cursor1: TableHeaderCursor, cursor2: TableHeaderCursor): boolean {
   return cursor1 && cursor2
     && cursor1.tableId === cursor2.tableId
@@ -371,6 +379,13 @@ export function areTableBodyCursorsEqual(cursor1: TableBodyCursor, cursor2: Tabl
     && cursor1.tableId === cursor2.tableId
     && cursor1.partIndex === cursor2.partIndex
     && cursor1.columnIndex === cursor2.columnIndex
+    && deepArrayEquals(cursor1.rowPath, cursor2.rowPath);
+}
+
+export function areTableRowCursorsEqual(cursor1: TableBodyCursor, cursor2: TableBodyCursor): boolean {
+  return cursor1 && cursor2
+    && cursor1.tableId === cursor2.tableId
+    && cursor1.partIndex === cursor2.partIndex
     && deepArrayEquals(cursor1.rowPath, cursor2.rowPath);
 }
 

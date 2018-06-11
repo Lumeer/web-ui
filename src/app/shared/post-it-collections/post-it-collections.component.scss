@@ -6,6 +6,26 @@
   .post-it-collection-layout {
     transition: height $animation-duration;
     position: relative;
+
+    .layout-item {
+      position: absolute;
+      margin: 5px;
+      display: block !important;
+      width: $post-it-width;
+
+      &:hover {
+        z-index: 1000;
+      }
+    }
+
+    .focused, .selected {
+      z-index: $z-index-selected;
+    }
+
+    .see-all {
+      height: 181px;
+      font-size: 200%;
+    }
   }
 
 }

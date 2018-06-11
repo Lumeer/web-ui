@@ -17,29 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Directive, ElementRef, Input, OnDestroy} from '@angular/core';
-import {PostItLayout} from './post-it-layout';
+import {Pipe, PipeTransform} from '@angular/core';
+import {areTableCursorsEqual, TableCursor} from '../../../../../core/store/tables/table-cursor';
 
-@Directive({
-  selector: '[layout-item]'
+@Pipe({
+  name: 'cursorEquals'
 })
-export class LayoutItem implements AfterViewInit, OnDestroy {
+export class CursorEqualsPipe implements PipeTransform {
 
-  @Input()
-  public layout: PostItLayout;
-
-  @Input()
-  public forceLayoutIndex: number;
-
-  constructor(private element: ElementRef) {
-  }
-
-  public ngAfterViewInit(): void {
-    this.layout.add(this.element.nativeElement, this.forceLayoutIndex);
-  }
-
-  public ngOnDestroy(): void {
-    this.layout.remove(this.element.nativeElement);
+  public transform(cursor1: TableCursor, cursor2: TableCursor): boolean {
+    return areTableCursorsEqual(cursor1, cursor2);
   }
 
 }

@@ -51,6 +51,10 @@ import {PartPipe} from './part.pipe';
 import {ResizeEdgesPipe} from './resize-edges.pipe';
 import {RowNumberWidthPipe} from './row-number-width.pipe';
 import { IsFirstRowPipe } from './is-first-row.pipe';
+import { TableWidthPipe } from './table-width.pipe';
+import { CursorEqualsPipe } from './cursor-equals.pipe';
+import { ExtractValuePipe } from './extract-value.pipe';
+import { AffectedCellPipe } from './affected-cell.pipe';
 
 @NgModule({
   imports: [
@@ -88,7 +92,11 @@ import { IsFirstRowPipe } from './is-first-row.pipe';
     AttributeParentNamePipe,
     AttributeExistPipe,
     EmbeddedPipe,
-    IsFirstRowPipe
+    IsFirstRowPipe,
+    TableWidthPipe,
+    CursorEqualsPipe,
+    ExtractValuePipe,
+    AffectedCellPipe,
   ], exports: [
     DataPipe,
     EntityCreatedPipe,
@@ -121,7 +129,11 @@ import { IsFirstRowPipe } from './is-first-row.pipe';
     AttributeParentNamePipe,
     AttributeExistPipe,
     EmbeddedPipe,
-    IsFirstRowPipe
+    IsFirstRowPipe,
+    TableWidthPipe,
+    CursorEqualsPipe,
+    ExtractValuePipe,
+    AffectedCellPipe,
   ],
   providers: [
     AttributeNameChangedPipe

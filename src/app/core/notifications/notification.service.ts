@@ -56,7 +56,7 @@ export class NotificationService {
       return;
     }
     this.zone.runOutsideAngular(() =>
-      this.notifications.info(message, this.i18n({ id: 'notification.service.Info', value: 'Info' }))
+      this.notifications.info(message, this.i18n({ id: 'notification.service.Info', value: 'Info' }), {timeout: 5000})
     );
   }
 

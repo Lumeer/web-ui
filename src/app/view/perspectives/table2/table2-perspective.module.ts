@@ -33,11 +33,9 @@ import {SharedModule} from '../../../shared/shared.module';
 import {TableRowGroupFooterComponent} from './body/row-group/footer/table-row-group-footer.component';
 import {TableRowGroupHeaderComponent} from './body/row-group/header/table-row-group-header.component';
 import {TableRowGroupComponent} from './body/row-group/table-row-group.component';
-import {TableCollapsedCellComponent} from './body/rows/row/cell-group/cell/collapsed-cell/table-collapsed-cell.component';
-import {TableDataCellMenuComponent} from './body/rows/row/cell-group/cell/data-cell/menu/table-data-cell-menu.component';
-import {TableDataCellSuggestionsComponent} from './body/rows/row/cell-group/cell/data-cell/suggestions/table-data-cell-suggestions.component';
-import {TableDataCellComponent} from './body/rows/row/cell-group/cell/data-cell/table-data-cell.component';
-import {TableCellComponent} from './body/rows/row/cell-group/cell/table-cell.component';
+import {TableCollapsedCellComponent} from './body/rows/row/cell-group/collapsed-cell/table-collapsed-cell.component';
+import {TableDataCellMenuComponent} from './body/rows/row/cell-group/data-cell-menu/table-data-cell-menu.component';
+import {TableDataCellSuggestionsComponent} from './body/rows/row/cell-group/data-cell-suggestions/table-data-cell-suggestions.component';
 import {TableCellGroupComponent} from './body/rows/row/cell-group/table-cell-group.component';
 import {TableLinkCellComponent} from './body/rows/row/link-cell/table-link-cell.component';
 import {TableRowNumbersComponent} from './body/rows/row/row-numbers/table-row-numbers.component';
@@ -55,7 +53,8 @@ import {TableColumnGroupComponent} from './header/column-group/table-column-grou
 import {TableLinkInfoComponent} from './header/link/info/table-link-info.component';
 import {TableHeaderLinkComponent} from './header/link/table-header-link.component';
 import {TableHeaderComponent} from './header/table-header.component';
-import {TableEditableCellComponent} from './shared/editable-cell/table-editable-cell.component';
+import {TableDataCellDirective} from './shared/directives/table-data-cell.directive';
+import {TableEditableCellDirective} from './shared/directives/table-editable-cell.directive';
 import {TablePipesModule} from './shared/pipes/table-pipes.module';
 import {TablePerspectiveRoutingModule} from './table-perspective-routing.module';
 import {Table2PerspectiveComponent} from './table2-perspective.component';
@@ -93,15 +92,14 @@ import {Table2PerspectiveComponent} from './table2-perspective.component';
     TableRowGroupFooterComponent,
     TableRowComponent,
     TableCellGroupComponent,
-    TableDataCellComponent,
     TableLinkCellComponent,
     TableRowsComponent,
-    TableCellComponent,
-    TableEditableCellComponent,
     TableDataCellMenuComponent,
     TableCollapsedCellComponent,
     TableRowNumbersComponent,
     TableDataCellSuggestionsComponent,
+    TableEditableCellDirective,
+    TableDataCellDirective,
   ],
   exports: [
     Table2PerspectiveComponent

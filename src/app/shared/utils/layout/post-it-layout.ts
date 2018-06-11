@@ -37,22 +37,22 @@ export class PostItLayout {
   }
 
   public initialize(): void {
-    this.isInitializedAffterAttempt();
+    this.isInitializedAfterAttempt();
   }
 
-  public add(element: HTMLElement): void {
-    if (!this.isInitializedAffterAttempt()) {
+  public add(element: HTMLElement, forceIndex?: number): void {
+    if (!this.isInitializedAfterAttempt()) {
       return;
     }
 
     this.zone.runOutsideAngular(() => {
-      this.layout.add(element, {index: this.insertingElementsAtIndex});
+      this.layout.add(element, {index: forceIndex || this.insertingElementsAtIndex});
       this.relayout();
     });
   }
 
   public remove(element: HTMLElement): void {
-    if (!this.isInitializedAffterAttempt()) {
+    if (!this.isInitializedAfterAttempt()) {
       return;
     }
 
@@ -72,12 +72,12 @@ export class PostItLayout {
   }
 
   public refresh(): void {
-    if (this.isInitializedAffterAttempt()) {
+    if (this.isInitializedAfterAttempt()) {
       this.relayout();
     }
   }
 
-  protected isInitializedAffterAttempt(): boolean {
+  protected isInitializedAfterAttempt(): boolean {
     if (!this.containerExists()) {
       return false;
     }

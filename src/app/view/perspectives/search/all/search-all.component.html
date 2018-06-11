@@ -11,7 +11,7 @@
       <div class="h3 ml-3 my-2" i18n="@@search.all.files">
         Files
       </div>
-      <post-it-collections class="perspective"></post-it-collections>
+      <post-it-collections [maxShown]="5"></post-it-collections>
     </div>
     <div *ngIf="documents.length > 0">
       <hr *ngIf="collections.length > 0">

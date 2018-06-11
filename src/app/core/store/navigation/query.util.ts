@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ConditionType} from './query.model';
+import {ConditionType, QueryModel} from './query.model';
 import {QueryItem} from '../../../shared/search-box/query-item/model/query-item';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {QueryItemType} from '../../../shared/search-box/query-item/model/query-item-type';
+import {QueryConverter} from './query.converter';
 
 const EqVariants = ['=', '==', 'eq', 'equals'];
 const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];
@@ -86,7 +87,7 @@ export function conditionValidator(input: FormControl): { [key: string]: any } {
 
 export function notEmptyValidator(input: FormControl): { [key: string]: any } {
   const value = input.value.toString().trim();
-  return value === '' ? {'emptyValue' : value} : null;
+  return value === '' ? {'emptyValue': value} : null;
 }
 
 export function conditionFromString(condition: string): ConditionType {
@@ -105,4 +106,8 @@ export function conditionFromString(condition: string): ConditionType {
     return ConditionType.GreaterThanEquals;
   }
   return null;
+}
+
+export function queryIsNotEmpty(query: QueryModel): boolean {
+  return query && Object.values(query).find(val => val instanceof Array ? val.length > 0 : val);
 }

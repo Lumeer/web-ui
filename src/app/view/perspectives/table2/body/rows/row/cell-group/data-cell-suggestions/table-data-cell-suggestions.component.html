@@ -2,7 +2,7 @@
   <div class="dropdown-menu show">
     <a *ngFor="let doc of documents$ | async"
        [innerHtml]="doc.data[column.attributeId] | highlight: value"
-       (mousedown)="createLink.emit(doc)"
+       (mousedown)="onCreateLink(doc)"
        class="dropdown-item">
     </a>
   </div>

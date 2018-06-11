@@ -9,14 +9,14 @@
   }
 }
 
-.layout-item {
-  position: absolute;
-  margin: 5px;
-  width: $post-it-width;
-}
-
 .post-it {
   transition: box-shadow $animation-duration, transform $animation-duration;
+}
+
+.error {
+  color: $danger;
+  width: 100%;
+  font-size: 80%;
 }
 
 .post-it:hover {
@@ -27,17 +27,13 @@
   }
 }
 
-.post-it:hover {
-  z-index: $z-index-hovered;
+.selected {
+  z-index: $z-index-selected;
 }
 
 .initialized {
   padding-top: 0.75px;
   padding-bottom: 0.75px;
-}
-
-.selected {
-  z-index: $z-index-selected;
 }
 
 .opacity-content {
@@ -99,12 +95,3 @@
   transform: translate3d(-8px, 120px, 0px) !important;
 }
 
-.card-footer {
-  border: none;
-  outline: none;
-  padding-top: 0;
-
-  width: 100%;
-  color: inherit;
-  font-size: 20px;
-}

@@ -25,6 +25,9 @@ import {calculateRowNumber, countLinkedRows} from '../../../../../../../core/sto
 @Component({
   selector: 'table-row-numbers',
   templateUrl: './table-row-numbers.component.html',
+  host: {
+    'class': 'd-flex flex-column'
+  },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableRowNumbersComponent implements OnChanges {

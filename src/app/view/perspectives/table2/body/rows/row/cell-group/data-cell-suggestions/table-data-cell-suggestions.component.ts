@@ -21,13 +21,15 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {AppState} from '../../../../../../../../../../core/store/app.state';
-import {DocumentModel} from '../../../../../../../../../../core/store/documents/document.model';
-import {selectDocumentsByCustomQuery} from '../../../../../../../../../../core/store/documents/documents.state';
-import {QueryModel} from '../../../../../../../../../../core/store/navigation/query.model';
-import {TableBodyCursor} from '../../../../../../../../../../core/store/tables/table-cursor';
-import {TableModel, TableSingleColumn} from '../../../../../../../../../../core/store/tables/table.model';
-import {findTableRow, splitRowPath} from '../../../../../../../../../../core/store/tables/table.utils';
+import {AppState} from '../../../../../../../../core/store/app.state';
+import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
+import {selectDocumentsByCustomQuery} from '../../../../../../../../core/store/documents/documents.state';
+import {LinkInstanceModel} from '../../../../../../../../core/store/link-instances/link-instance.model';
+import {LinkInstancesAction} from '../../../../../../../../core/store/link-instances/link-instances.action';
+import {QueryModel} from '../../../../../../../../core/store/navigation/query.model';
+import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
+import {TableModel, TableSingleColumn} from '../../../../../../../../core/store/tables/table.model';
+import {findTableRow, splitRowPath} from '../../../../../../../../core/store/tables/table.utils';
 
 @Component({
   selector: 'table-data-cell-suggestions',
@@ -47,9 +49,6 @@ export class TableDataCellSuggestionsComponent implements OnChanges {
 
   @Input()
   public value: string;
-
-  @Output()
-  public createLink = new EventEmitter<DocumentModel>();
 
   public documents$: Observable<DocumentModel[]>;
 
@@ -78,6 +77,20 @@ export class TableDataCellSuggestionsComponent implements OnChanges {
         !linkedDocumentIds.includes(document.id)
       ))
     );
+  }
+
+  public onCreateLink(document: DocumentModel) {
+    // this.linkCreated = true; TODO
+
+    const {parentPath} = splitRowPath(this.cursor.rowPath);
+    const part = this.table.parts[this.cursor.partIndex - 1];
+    const previousRow = findTableRow(this.table.rows, parentPath);
+
+    const linkInstance: LinkInstanceModel = {
+      linkTypeId: part.linkTypeId,
+      documentIds: [previousRow.documentIds[0], document.id]
+    };
+    this.store.dispatch(new LinkInstancesAction.Create({linkInstance}));
   }
 
 }

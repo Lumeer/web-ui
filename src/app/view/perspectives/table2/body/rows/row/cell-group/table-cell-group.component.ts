@@ -17,17 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {selectDocumentsByIds} from '../../../../../../../core/store/documents/documents.state';
 import {LinkInstanceModel} from '../../../../../../../core/store/link-instances/link-instance.model';
 import {selectLinkInstancesByIds} from '../../../../../../../core/store/link-instances/link-instances.state';
-import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
+import {areTableRowCursorsEqual, TableBodyCursor, TableCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TableRow} from '../../../../../../../core/store/tables/table.model';
-import {selectTablePartLeafColumns} from '../../../../../../../core/store/tables/tables.state';
+import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
+import {EditedAttribute, selectEditedAttribute, selectTableCursor, selectTablePartLeafColumns} from '../../../../../../../core/store/tables/tables.state';
+import {TableEditableCellDirective} from '../../../../shared/directives/table-editable-cell.directive';
 
 @Component({
   selector: 'table-cell-group',
@@ -46,23 +49,79 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
   @Input()
   public row: TableRow;
 
+  @ViewChildren(TableEditableCellDirective)
+  public editableCells: QueryList<TableEditableCellDirective>;
+
   public documents: DocumentModel[];
   public linkInstances: LinkInstanceModel[];
 
   private subscriptions = new Subscription();
 
   public columns$: Observable<TableColumn[]>;
+  public editedAttribute$: Observable<EditedAttribute>;
+  public selectedCursor$: Observable<TableCursor>;
+
+  private rowEdited: boolean;
+  private rowSelected: boolean;
+
+  public editedValue: string;
 
   public constructor(private store: Store<AppState>) {
   }
 
   public ngOnInit() {
     this.bindColumns();
+    this.bindEditedAttribute();
+    this.bindSelectedCursor();
     this.bindData();
   }
 
   private bindColumns() {
     this.columns$ = this.store.select(selectTablePartLeafColumns(this.cursor.tableId, this.cursor.partIndex));
+  }
+
+  private bindSelectedCursor() {
+    this.selectedCursor$ = this.store.select(selectTableCursor).pipe(
+      filter(selectedCursor => {
+        const rowBeingSelected = areTableRowCursorsEqual(this.cursor, selectedCursor);
+        if (!this.rowSelected && !rowBeingSelected) {
+          return false;
+        }
+
+        this.rowSelected = rowBeingSelected;
+        return true;
+      })
+    );
+  }
+
+  private bindEditedAttribute() {
+    if (this.cursor.partIndex === 0) {
+      return;
+    }
+
+    this.editedAttribute$ = this.store.select(selectEditedAttribute).pipe(
+      filter(editedAttribute => {
+        const rowBeingEdited = this.isRowBeingEdited(editedAttribute);
+        if (!this.rowEdited && !rowBeingEdited) {
+          return false;
+        }
+
+        this.rowEdited = rowBeingEdited;
+        return true;
+      })
+    );
+  }
+
+  private isRowBeingEdited(editedAttribute: EditedAttribute): boolean {
+    if (!editedAttribute) {
+      return false;
+    }
+    if (this.documents) {
+      return this.documents.some(document => document.id === editedAttribute.documentId);
+    }
+    if (this.linkInstances) {
+      return this.linkInstances.some(linkInstance => linkInstance.id === editedAttribute.linkInstanceId);
+    }
   }
 
   private bindData() {
@@ -102,6 +161,23 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
     if (column.type === TableColumnType.HIDDEN) {
       return (column as TableHiddenColumn).attributeIds.join('-');
     }
+  }
+
+  public onMouseDown(event: MouseEvent, columnIndex: number) {
+    const cursor: TableBodyCursor = {...this.cursor, columnIndex};
+    this.store.dispatch(new TablesAction.SetCursor({cursor}));
+    event.stopPropagation();
+  }
+
+  public onEdit() {
+    const editableCell = this.editableCells.find(cell => cell.selected === true);
+    if (editableCell) {
+      editableCell.startEditing();
+    }
+  }
+
+  public onValueChange(value: string) {
+    this.editedValue = value;
   }
 
 }
