@@ -79,7 +79,7 @@ export class QueryItemsConverter {
     return filters.map(filter => {
       const [collectionId, attributeId, fullCondition] = filter.split(':', 3);
       const collection = this.data.collections.find(collection => collection.id === collectionId);
-      const attribute = collection && collection.attributes.find(attribute => attribute.id === attributeId) || null;
+      const attribute = collection && collection.attributes.find(attribute => attribute.id === attributeId);
       if (!attribute) {
         return null;
       }

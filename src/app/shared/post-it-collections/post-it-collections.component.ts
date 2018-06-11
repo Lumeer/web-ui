@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, HostListener, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
 
 import {Store} from '@ngrx/store';
@@ -46,6 +46,9 @@ import {QueryModel} from '../../core/store/navigation/query.model';
 import {queryIsNotEmpty} from '../../core/store/navigation/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {PostItCollectionComponent} from './post-it-collection.component/post-it-collection.component';
+import {Perspective} from '../../view/perspectives/perspective';
+import {Router} from '@angular/router';
+import {QueryConverter} from '../../core/store/navigation/query.converter';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -70,7 +73,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  @ViewChildren('postIt')
+  @ViewChildren(PostItCollectionComponent)
   public postIts: QueryList<PostItCollectionComponent>;
 
   public collections: CollectionModel[];
@@ -94,6 +97,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   private subscriptions = new Subscription();
 
   constructor(public i18n: I18n,
+              private router: Router,
               private store: Store<AppState>,
               private zone: NgZone,
               private notificationService: NotificationService,) {
@@ -157,8 +161,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
         roles[collection.id] = userRolesInResource(user, collection);
         return roles;
       }, {});
-
-      this.refreshPostIts();
     });
     this.subscriptions.add(collectionsSubscription);
   }
@@ -234,7 +236,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public updateCollection(collection: CollectionModel) {
-    this.store.dispatch(new CollectionsAction.Update({collection}));
+    this.store.dispatch(new CollectionsAction.Update({collection, callback: this.onUpdateCollection()}));
   }
 
   public createCollection(collection: CollectionModel) {
@@ -244,20 +246,31 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   private onCreateCollection(): (collection: CollectionModel) => void {
     const query = this.query;
     const store = this.store;
+    const comp = this;
     return collection => {
       if (queryIsNotEmpty(query)) {
         store.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
       }
+      comp.refreshPostIts();
     };
+  }
+
+  private onUpdateCollection(): () => void {
+    const comp = this;
+    return () => {
+      comp.refreshPostIts();
+    }
   }
 
   private onRemoveCollection(): (collectionId: string) => void {
     const query = this.query;
     const store = this.store;
+    const comp = this;
     return collectionId => {
       if (queryIsNotEmpty(query)) {
         store.dispatch(new NavigationAction.RemoveCollectionFromQuery({collectionId}));
       }
+      comp.refreshPostIts();
     };
   }
 
@@ -290,6 +303,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.checkForPendingUpdatesNames();
   }
 
+  public onShowAllClicked() {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'files'], {queryParams: {query: QueryConverter.toString(this.query)}});
+  }
+
   private dispatchActions() {
     this.store.dispatch(new CollectionsAction.GetNames());
   }
@@ -306,6 +323,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       this.notificationService.info(message);
     }
 
+  }
+
+  private workspacePath(): string {
+    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
   private checkForPendingUpdatesNames() {

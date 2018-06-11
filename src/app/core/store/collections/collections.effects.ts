@@ -41,7 +41,7 @@ import {TablesAction, TablesActionType} from '../tables/tables.action';
 import {CollectionConverter} from './collection.converter';
 import {AttributeModel, CollectionModel} from './collection.model';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
-import {selectAllCollections, selectCollectionById, selectCollectionNames, selectCollectionsDictionary, selectCollectionsLoaded} from './collections.state';
+import {selectCollectionById, selectCollectionNames, selectCollectionsDictionary, selectCollectionsLoaded} from './collections.state';
 import {isNullOrUndefined} from 'util';
 
 @Injectable()
@@ -100,7 +100,8 @@ export class CollectionsEffects {
       return this.collectionService.createCollection(collectionDto).pipe(
         map(collection => CollectionConverter.fromDto(collection, action.payload.collection.correlationId)),
         mergeMap(collection => {
-          const actions: Action[] = [new CollectionsAction.CreateSuccess({collection})];
+          const actions: Action[] = [new CollectionsAction.CreateSuccess({collection}),
+            new CollectionsAction.AddName({name: collection.name})];
 
           const {callback} = action.payload;
           if (callback) {
@@ -194,12 +195,26 @@ export class CollectionsEffects {
     mergeMap(([action, collections]) => {
       const collectionDto = CollectionConverter.toDto(action.payload.collection);
       const oldCollection = collections[collectionDto.id];
-      const oldName = oldCollection && oldCollection.name !== collectionDto.name ? oldCollection.name : null;
+      const oldName = oldCollection && oldCollection.name;
       const correlationId = oldCollection && oldCollection.correlationId;
 
       return this.collectionService.updateCollection(collectionDto).pipe(
         map((dto: Collection) => CollectionConverter.fromDto(dto, correlationId)),
-        map(collection => new CollectionsAction.UpdateSuccess({collection, oldName})),
+        mergeMap(collection => {
+          const actions: Action[] = [new CollectionsAction.UpdateSuccess({collection})];
+
+          if (oldName && oldName !== collection.name) {
+            actions.push(new CollectionsAction.DeleteName({name: oldName}));
+            actions.push(new CollectionsAction.AddName({name: collection.name}));
+          }
+
+          const {callback} = action.payload;
+          if (callback) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => callback()}));
+          }
+
+          return actions;
+        }),
         catchError((error) => of(new CollectionsAction.CreateFailure({error})))
       );
     })
@@ -225,7 +240,8 @@ export class CollectionsEffects {
 
       return this.collectionService.removeCollection(action.payload.collectionId).pipe(
         mergeMap(collectionId => {
-          const actions: Action[] = [new CollectionsAction.DeleteSuccess({collectionId, collectionName}),
+          const actions: Action[] = [new CollectionsAction.DeleteSuccess({collectionId}),
+            new CollectionsAction.DeleteName({name: collectionName}),
             new DocumentsAction.ClearByCollection({collectionId})];
 
           const {callback} = action.payload;

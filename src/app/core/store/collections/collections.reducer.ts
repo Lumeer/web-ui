@@ -29,14 +29,16 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
       return {...collectionsAdapter.addMany(action.payload.collections, state), loaded: true};
     case CollectionsActionType.GET_NAMES_SUCCESS:
       return {...state, collectionNames: action.payload.collectionNames};
+    case CollectionsActionType.ADD_NAME:
+      return addCollectionName(state, action.payload.name);
+    case CollectionsActionType.DELETE_NAME:
+      return deleteCollectionName(state, action.payload.name);
     case CollectionsActionType.CREATE_SUCCESS:
-      const newStateAfterCreate = updateCollectionNames(state, action.payload.collection.name, null);
-      return collectionsAdapter.addOne(action.payload.collection, newStateAfterCreate);
+      return collectionsAdapter.addOne(action.payload.collection, state);
     case CollectionsActionType.IMPORT_SUCCESS:
       return collectionsAdapter.addOne(action.payload.collection, state);
     case CollectionsActionType.UPDATE_SUCCESS:
-      const newStateAfterUpdate = updateCollectionNames(state, action.payload.oldName ? action.payload.collection.name : null, action.payload.oldName);
-      return collectionsAdapter.updateOne({id: action.payload.collection.id, changes: action.payload.collection}, newStateAfterUpdate);
+      return collectionsAdapter.updateOne({id: action.payload.collection.id, changes: action.payload.collection}, state);
     case CollectionsActionType.ADD_FAVORITE_SUCCESS:
       return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favorite: true}}, state);
     case CollectionsActionType.REMOVE_FAVORITE_SUCCESS:
@@ -46,8 +48,7 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
     case CollectionsActionType.REMOVE_FAVORITE_FAILURE:
       return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favorite: true}}, state);
     case CollectionsActionType.DELETE_SUCCESS:
-      const newStateAfterDelete = updateCollectionNames(state, null, action.payload.collectionName);
-      return collectionsAdapter.removeOne(action.payload.collectionId, newStateAfterDelete);
+      return collectionsAdapter.removeOne(action.payload.collectionId, state);
     case CollectionsActionType.SET_DEFAULT_ATTRIBUTE_SUCCESS:
       return setDefaultAttribute(state, action.payload.collectionId, action.payload.attributeId);
     case CollectionsActionType.SET_DEFAULT_ATTRIBUTE_FAILURE:
@@ -69,6 +70,20 @@ export function collectionsReducer(state: CollectionsState = initialCollectionsS
   }
 }
 
+function addCollectionName(state: CollectionsState, name: string): CollectionsState {
+  const names = state.collectionNames || [];
+  return {...state, collectionNames: [...names, name]};
+}
+
+function deleteCollectionName(state: CollectionsState, name: string): CollectionsState {
+  const names = state.collectionNames || [];
+  const index = names.findIndex(n => n === name);
+  if (index >= 0) {
+    names.splice(index, 1);
+  }
+  return {...state, collectionNames: names};
+}
+
 function updateCollectionNames(state: CollectionsState, addName?: string, removeName?: string): CollectionsState {
   if (!addName && !removeName) {
     return state;
@@ -87,7 +102,7 @@ function updateCollectionNames(state: CollectionsState, addName?: string, remove
   return {...state, collectionNames};
 }
 
-function setDefaultAttribute(state: CollectionsState, collectionId: string, attributeId: string) {
+function setDefaultAttribute(state: CollectionsState, collectionId: string, attributeId: string): CollectionsState {
   return collectionsAdapter.updateOne({id: collectionId, changes: {defaultAttributeId: attributeId}}, state);
 }
 

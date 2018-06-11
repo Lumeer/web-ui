@@ -31,7 +31,7 @@ import {CollectionValidators} from '../../../core/validators/collection.validato
 import {PostItCollectionNameComponent} from '../collection-name/post-it-collection-name.component';
 
 @Component({
-  selector: '[post-it-collection]',
+  selector: 'post-it-collection',
   templateUrl: './post-it-collection.component.html',
   styleUrls: ['./post-it-collection.component.scss']
 })
