@@ -13,8 +13,8 @@
 <td>
   <i *ngFor="let role of getRoles()"
      class="fas fa-fw {{getIconForRole(role)}} mx-1"
-     [ngClass]="(hasRole(role)) ?  (changeRoles ? 'clickable': 'selected')
-                                  :  (changeRoles ? 'clickable-unselected' : 'unselected')"
+     [class.role-clickable]="changeRoles"
+     [class.role-selected]="hasRole(role)"
      aria-hidden="true"
      [title]="getTitleForRole(role)"
      (click)="toggleRole(role)">

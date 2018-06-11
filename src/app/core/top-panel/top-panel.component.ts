@@ -127,6 +127,18 @@ export class TopPanelComponent implements OnInit {
     return this.isWorkspaceSet() && !this.searchBoxHidden;
   }
 
+  public goToOrganization(page: string) {
+    if (this.workspace && this.workspace.organizationCode) {
+      this.router.navigate(['organization', this.workspace.organizationCode, page]);
+    }
+  }
+
+  public goToProject(page: string) {
+    if (this.workspace && this.workspace.organizationCode && this.workspace.projectCode) {
+      this.router.navigate(['organization', this.workspace.organizationCode, 'project', this.workspace.projectCode, page]);
+    }
+  }
+
   public removeHtmlComments(html: HTMLElement): string {
     return HtmlModifier.removeHtmlComments(html);
   }

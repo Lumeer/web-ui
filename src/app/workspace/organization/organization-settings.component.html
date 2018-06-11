@@ -12,7 +12,7 @@
     <div class="d-flex flex-row flex-nowrap align-items-center mr-3"
          [style.color]="organization.color"
          title="Number of users" i18n-title="@@organization.settings.users.count">
-      <i class="far fa-user mr-1" aria-hidden="true"></i>
+      <i class="far fa-user mr-1" aria-hidden="true"></i>&nbsp;
       <span>{{ userCount$ | async }}</span>
     </div>
 
@@ -20,12 +20,12 @@
          [style.color]="organization.color"
          (click)="onProjectsClick()"
          title="Number of projects" i18n-title="@@organization.settings.projects.count">
-      <i class="far fa-edit mr-1" aria-hidden="true"></i>
+      <i class="far fa-edit mr-1" aria-hidden="true"></i>&nbsp;
       <span>{{ projectsCount$ | async }}</span>
     </div>
   </resource-header>
 
-  <ul class="nav nav-u">
+  <ul class="nav nav-tabs">
     <li role="presentation" class="nav-item">
       <a [routerLink]="'detail'"
          routerLinkActive="active"

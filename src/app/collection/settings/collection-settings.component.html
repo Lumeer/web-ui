@@ -9,14 +9,14 @@
     (descriptionChange)="onNewDescription($event)"
     (nameChange)="onNewName($event)"
     (codeChange)="onNewCode($event)">
-    <div class="d-flex flex-row flex-nowrap align-items-center mr-3"
+    <div class="d-flex flex-row text-primary flex-nowrap align-items-center mr-3"
          [style.color]="collection.color"
          title="Number of users" i18n-title="@@collection.settings.users.count">
       <i class="far fa-user mr-1" aria-hidden="true"></i>
       <span>{{ userCount$ | async }}</span>
     </div>
 
-    <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer"
+    <div class="d-flex flex-row text-success flex-nowrap align-items-center cursor-pointer"
          [style.color]="collection.color"
          (click)="onDocumentsClick()"
          title="Number of records" i18n-title="@@collection.settings.records.count">
@@ -26,7 +26,7 @@
 
   </resource-header>
 
-  <ul class="nav nav-u px-5">
+  <ul class="nav nav-tabs px-5">
     <li role="presentation" class="nav-item">
       <a [routerLink]="['attributes']"
          routerLinkActive="active"

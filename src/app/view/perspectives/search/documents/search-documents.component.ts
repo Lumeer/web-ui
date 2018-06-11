@@ -61,7 +61,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public expandedDocumentIds: string[] = [];
   public loaded: boolean = false;
 
-  private collections: { [collectionId: string]: CollectionModel };
+  public collections: { [collectionId: string]: CollectionModel };
   private currentQuery: QueryModel;
   private subscriptions: Subscription = new Subscription();
 
@@ -190,7 +190,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private attributeHtmlClasses(attributeId: string, document: DocumentModel): string {
-    return `search-documents-attribute ${this.isDefaultAttribute(attributeId, document) ? 'search-documents-default-attribute' : ''}`;
+    return `text-attribute ${this.isDefaultAttribute(attributeId, document) ? 'text-default-attribute' : ''}`;
   }
 
   private isDefaultAttribute(attributeId: string, document: DocumentModel): boolean {

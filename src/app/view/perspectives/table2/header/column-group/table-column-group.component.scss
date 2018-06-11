@@ -1,10 +1,10 @@
 @import "../../../../../shared/variables";
 
 :host {
-  background-color: $table-border-color;
+  background-color: $light;
 }
 
 .muuri-item-dragging {
-  border-top: 1px solid $table-border-color;
-  border-left: 1px solid $table-border-color;
+  border-top: 1px solid $light;
+  border-left: 1px solid $light;
 }

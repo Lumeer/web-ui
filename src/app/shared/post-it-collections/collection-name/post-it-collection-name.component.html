@@ -1,13 +1,15 @@
-<div #collectionNameInput
-     class="card-footer text-center font-weight-bold bg-transparent name"
-     [attr.contenteditable]="editable"
-     placeholder="Set name" i18n-placeholder="@@collection.name.placeholder"
-     [textContent]="collectionName"
-     title="{{collectionName}}"
-     (blur)="onNameBlurred(collectionNameInput.textContent)"
-     (input)="onInput(collectionNameInput.textContent)"
-     (focus)="onNameSelected()"
-     [attr.spellcheck]="false"
-     (keydown.enter)="collectionNameInput.blur()"
-     (keydown.Escape)="collectionNameInput.blur()">
+<div class="card-footer text-center bg-transparent">
+  <div #collectionNameInput
+       class="font-weight-bold name form-control"
+       [attr.contenteditable]="editable"
+       placeholder="Set name" i18n-placeholder="@@collection.name.placeholder"
+       [textContent]="collectionName"
+       title="{{collectionName}}"
+       (blur)="onNameBlurred(collectionNameInput.textContent)"
+       (input)="onInput(collectionNameInput.textContent)"
+       (focus)="onNameSelected()"
+       [attr.spellcheck]="false"
+       (keydown.enter)="collectionNameInput.blur()"
+       (keydown.Escape)="collectionNameInput.blur()">
+  </div>
 </div>

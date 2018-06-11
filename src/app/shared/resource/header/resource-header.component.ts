@@ -133,4 +133,8 @@ export class ResourceHeaderComponent {
     });
   }
 
+  public isCollection(): boolean {
+    return this.resourceType === ResourceType.Collection;
+  }
+
 }

@@ -14,11 +14,11 @@ $name-expanded: 300px;
 
   width: 100%;
   color: inherit;
-  font-size: 20px;
 }
 
 .name {
   transition: max-height $animation-duration;
+  font-size: 20px;
 
   overflow: hidden;
   text-overflow: ellipsis;
@@ -35,7 +35,7 @@ $name-expanded: 300px;
 [contenteditable=true]:empty:before {
   content: attr(placeholder);
   display: block; /* For Firefox */
-  color: $grey-color;
+  color: $light;
 }
 
 [contenteditable]:focus {

@@ -21,7 +21,7 @@
     color: $danger;
 
     &:hover {
-      color: darken($danger, 25);
+      color: $danger-hover;
     }
   }
 
@@ -29,7 +29,7 @@
     transition: color $animation-color-duration;
 
     &:hover {
-      color: $success;
+      color: $primary;
     }
   }
 

@@ -2,27 +2,29 @@
   <span class="mr-1 d-flex overflow-hidden"
         [style.color]="collection.color"
         [title]="collection.name">
-    <i class="icon fa-fw {{ collection.icon }}"></i>
-    <span class="collection-name pl-3">
+    <i class="icon fa-fw {{ collection.icon }} mr-1"></i>&nbsp;
+    <span class="collection-name">
       {{ collection.name }}
     </span>
   </span>
 
-  <ng-container *ngIf="hasWriteRole()">
-    <i class="button text-danger fas fa-trash rounded align-self-center p-1"
-       title="Remove Record" i18n-title="@@document.button.remove"
-       (click)="onRemove()"></i>
-    <i class="button text-success fa fa-pencil rounded align-self-center p-1"
-       title="Edit Record" i18n-title="@@document.button.edit"
-       (click)="selectionHelper.setEditMode(true); selectionHelper.select(0, 0, postItModel)"></i>
-  </ng-container>
-  <i *ngIf="postItModel.initialized"
-     class="text-warning fa-star button rounded align-self-center p-1"
-     [class.always-visible]="postItModel.document.favorite"
-     title="{{ postItModel.document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
-     i18n-title="@@collection.document.favorite"
-     [ngClass]="postItModel.document.favorite ? 'fas' : 'far'"
-     (click)="toggleFavorite()"></i>
+  <div class="text-right flex-fill align-self-center">
+    <ng-container *ngIf="hasWriteRole()">
+      <i class="button text-danger fas fa-trash rounded p-1"
+         title="Remove Record" i18n-title="@@document.button.remove"
+         (click)="onRemove()"></i>
+      <i class="button text-success fas fa-pencil rounded p-1"
+         title="Edit Record" i18n-title="@@document.button.edit"
+         (click)="selectionHelper.setEditMode(true); selectionHelper.select(0, 0, postItModel)"></i>
+    </ng-container>
+    <i *ngIf="postItModel.initialized"
+       class="text-warning fa-star button rounded p-1"
+       [class.always-visible]="postItModel.document.favorite"
+       title="{{ postItModel.document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
+       i18n-title="@@collection.document.favorite"
+       [ngClass]="postItModel.document.favorite ? 'fas' : 'far'"
+       (click)="toggleFavorite()"></i>
+  </div>
 </div>
 
 <div class="card-body p-2">
@@ -30,7 +32,7 @@
 
     <ng-container *ngIf="hasWriteRole()">
       <li *ngFor="let data of postItRows; let row = index">
-        <span id="{{ perspectiveId }}{{ postItModel.index }}[0, {{ row }}]" class="attribute"
+        <span id="{{ perspectiveId }}{{ postItModel.index }}[0, {{ row }}]"
               [attr.tabindex]="postItModel.index * 1000 + row * 2"
               [title]="data.attributeName"
               (keydown.ArrowLeft)="selectionHelper.moveSelection(-1, 0)"
@@ -43,8 +45,8 @@
               (keydown.delete)="removeRow(row)"
               (focus)="clickOnAttributePair(0, row)">
 
-          <input class="border-0"
-                 [class.font-weight-bold]="isDefaultAttribute(data.attributeId)"
+          <input class="border-0 text-attribute"
+                 [class.text-default-attribute]="isDefaultAttribute(data.attributeId)"
                  [(ngModel)]="data.attributeName"
                  [attr.list]="suggestionListId()"
                  (keydown)="$event.stopPropagation()"

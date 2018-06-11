@@ -11,12 +11,12 @@
     <a *ngIf="switchingEnabled"
        (click)="switchParts.emit()"
        class="dropdown-item">
-      <i class="fa fa-fw fa-exchange mr-1"></i>
+      <i class="fa fa-fw fa-exchange mr-1"></i>&nbsp;
       <span i18n="@@table.header.switch.parts">Switch files</span>
     </a>
     <a (click)="removePart.emit()"
        class="dropdown-item">
-      <i class="fa fa-fw fa-plug mr-1"></i>
+      <i class="fa fa-fw fa-plug mr-1"></i>&nbsp;
       <span i18n="@@table.header.remove.part">Disconnect file</span>
     </a>
   </div>

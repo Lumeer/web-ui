@@ -1,4 +1,13 @@
 @import "../../variables";
+@import '../../bootstrap_var';
+
+.buttons a {
+  color: $link-color;
+
+  &:hover {
+    color: $link-hover-color;
+  }
+}
 
 .post-it {
   transition: box-shadow $animation-duration, transform $animation-duration;

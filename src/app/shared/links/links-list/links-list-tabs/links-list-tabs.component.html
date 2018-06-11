@@ -1,9 +1,9 @@
 <ul class="float-right">
   <li class="nav-item">
-    <button class="btn btn-sm btn-success" (click)="createNewLink()"><i class="fas fa-link"></i>&nbsp;New Link</button>
+    <button class="btn btn-sm btn-primary" (click)="createNewLink()"><i class="fas fa-link"></i>&nbsp;New Link</button>
   </li>
 </ul>
-<ul class="nav nav-u">
+<ul class="nav nav-tabs">
   <li *ngFor="let link of links;" class="nav-item">
     <a
       class="nav-link {{link === selectedLink ? 'active' : ''}}"

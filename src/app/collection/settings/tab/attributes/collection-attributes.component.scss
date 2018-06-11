@@ -1,10 +1,5 @@
 @import "../../../../shared/variables";
 
-input {
-  border: 1px solid transparent;
-  outline: none;
-}
-
 table {
 
   table-layout: fixed;
@@ -22,7 +17,7 @@ table {
       }
 
       &:hover {
-        color: $success;
+        color: $primary;
       }
     }
 
@@ -34,9 +29,4 @@ table {
   .visible i {
     opacity: 1 !important;
   }
-}
-
-.btn:focus,.btn:active {
-  outline: none !important;
-  box-shadow: none !important;
 }

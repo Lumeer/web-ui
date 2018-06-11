@@ -36,13 +36,13 @@
 
 <ng-template #header let-document>
   <div class="d-flex flex-row pt-3">
-    <i class="fa fa-fw clickable align-self-center" (click)="toggleDocument(document)"
+    <i class="fa fa-fw clickable-primary clickable align-self-center" (click)="toggleDocument(document)"
        [ngClass]="(isDocumentOpened(document) || isXlTemplatePresented()) ? 'fa-caret-down':'fa-caret-right'"
        aria-hidden="true"></i>
-    <i class="{{document.collection.icon}} align-self-center fa-fw"
-       [style.color]="document.collection.color"
-       *ngIf="document.collection" aria-hidden="true"></i>
-    <span class="ml-1" *ngIf="document.collection" [style.color]="document.collection.color">{{document.collection.name}}</span>
+    <i class="{{collections[document.collectionId].icon}} align-self-center fa-fw"
+       [style.color]="collections[document.collectionId].color"
+       *ngIf="document.collectionId" aria-hidden="true"></i>
+    <span class="ml-1" *ngIf="document.collectionId" [style.color]="collections[document.collectionId].color">&nbsp;{{collections[document.collectionId].name}}</span>
     <div class="ml-3" [innerHTML]="createDefaultAttributeHtml(document)"></div>
     <div class="ml-auto">
       <!--span class="clickable" (click)="onLinkClick(document)"><i class="fas fa-link" aria-hidden="true"></i><span class="ml-1">10</span></span>

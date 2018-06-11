@@ -1,5 +1,6 @@
 @import "variables";
 @import "~bootstrap/scss/bootstrap";
+@import "bootswatch";
 
 *[contenteditable] {
   -webkit-user-select: auto !important;
@@ -27,50 +28,40 @@ a {
 }
 
 a:hover {
-  color: lighten($link-color, 5%);
+  text-decoration: none;
 }
 
 .flex-grow-2 {
   flex-grow: 2;
 }
 
-.no-outline {
-  &:focus {
-    outline: none;
-  }
-}
-
+// TODO should not be needed
 ul {
   list-style-type: none;
 }
 
 .cursor-pointer {
   cursor: pointer;
+
+  &.text-primary:hover {
+    color: $primary-hover !important;
+  }
+  &.text-secondary:hover {
+    color: $secondary-hover !important;
+  }
+  &.text-warning:hover {
+    color: $warning-hover !important;
+  }
+  &.text-danger:hover {
+    color: $danger-hover !important;
+  }
+  &.text-success:hover {
+    color: $success-hover !important;
+  }
 }
 
 .cursor-text {
   cursor: text;
-}
-
-.edit-border {
-  background: transparent;
-  border: 1px solid transparent !important;
-  transition: border-color $animation-color-duration;
-
-  border-radius: $border-radius-small;
-  &:hover {
-    border: 1px solid #bfbfbf !important;
-  }
-  &:focus {
-    border: 1px solid $primary !important;
-  }
-  &.focused {
-    border: 1px solid $primary !important;
-  }
-}
-
-input {
-  background: transparent;
 }
 
 // notifications
@@ -85,7 +76,7 @@ input {
 .snotifyToast {
   border: 2px solid;
   box-shadow: $shadow-up;
-  background: $secondary-color;
+  background: $white;
   cursor: default !important;
 }
 
@@ -137,21 +128,24 @@ input {
 
 .clickable {
   cursor: pointer;
-  color: $success;
   transition: all .2s ease-in;
 
-  &:hover {
-    color: lighten($success, 20%);
-  }
-}
+  &.clickable-primary {
+    color: $primary !important;
 
-.clickable-unselected {
-  cursor: pointer;
-  color: $grey-darker-color;
-
-  &:hover {
-    color: $grey-color;
+    &:hover {
+      color: $primary-hover !important;
+    }
   }
+
+  &:not(.clickable-primary) {
+    color: $success;
+
+    &:hover {
+      color: $secondary-hover !important;
+    }
+  }
+
 }
 
 .pointer-events-none {
@@ -188,74 +182,22 @@ input {
 }
 
 .table-border-top {
-  border-top: 1px solid $table-border-color;
+  border-top: 1px solid $light;
 }
 
 .table-border-bottom {
-  border-bottom: 1px solid $table-border-color;
+  border-bottom: 1px solid $light;
 }
 
 .table-border-right {
-  border-right: 1px solid $table-border-color;
+  border-right: 1px solid $light;
 }
 
 .table-border-left {
-  border-left: 1px solid $table-border-color;
+  border-left: 1px solid $light;
 }
 
 .overflow-hidden {
   overflow: hidden;
-}
-
-ul.nav-u {
-  border-bottom: 1px solid $gray-300;
-}
-
-.nav-u .nav-item.show .nav-link, .nav-u .nav-link.active {
-  color: #495057;
-  background-color: #fff;
-  border-color: $success;
-}
-
-.nav-u .nav-link {
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  border-bottom: 3px solid transparent;
-}
-
-.spectrum-container {
-  border: none;
-  border-radius: 5px;
-  background-color: white;
-  -webkit-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-}
-
-.notice {
-  color: $gray-500;
-  font-style: italic;
-}
-
-.attribute {
-  font-size: small;
-  color: $gray-500;
-  font-style: italic;
-  font-weight: bold;
-}
-
-button {
-  box-shadow: none ! important;
-}
-
-[contenteditable=true]:empty:before {
-  content: attr(placeholder);
-  display: block; /* For Firefox */
-  color: $grey-darker-color;
-}
-
-[contenteditable]:focus {
-  outline: 0 solid transparent;
 }
 

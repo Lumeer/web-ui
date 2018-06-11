@@ -3,10 +3,10 @@
 .search-button {
   background: transparent;
   border: 0;
-  color: $success;
+  color: $primary;
 
   &:not([disabled]):hover {
-    background-color: $success;
+    background-color: $primary;
     color: $white;
   }
 }

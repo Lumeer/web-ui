@@ -15,7 +15,7 @@
         <del *ngIf="discountAmount > 0">{{discountInfoPerUser}}</del>
         <strong>{{prefix}}{{pricePerUser}}{{suffix}}</strong>
         <span i18n="@@organizations.tab.detail.order.perUserMonth">per user and month</span>
-        <span *ngIf="discount" class="badge badge-pill badge-success" i18n="@@organizations.tab.detail.order.bestOffer">-17% Best offer!</span>
+        <span *ngIf="discount" class="badge badge-pill badge-success ml-1" i18n="@@organizations.tab.detail.order.bestOffer">-17% Best offer!</span>
       </div>
       <slider
         i18n-values="@@organizations.tab.detail.order.values"
@@ -62,7 +62,7 @@
   </div>
   <div class="text-right">
     <a href="mailto:support@lumeer.io" *ngIf="numberOfUsers >= 100">
-      <button class="btn btn-lg btn-success mb-2" i18n="@@organizations.tab.detail.order.contactUs">Contact us for more users!</button>
+      <button class="btn btn-lg btn-primary mb-2" i18n="@@organizations.tab.detail.order.contactUs">Contact us for more users!</button>
     </a>
     <button *ngIf="numberOfUsers < 100" type="submit" (click)="placeOrder()"
             class="btn btn-lg btn-success mb-2"

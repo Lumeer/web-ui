@@ -41,14 +41,14 @@
          [style.top]="'50px'">
       <ng-container *ngIf="collection.id">
         <a title="Configure" i18n-title="@@collection.button.configure"
-           class="rounded-left text-success"
+           class="rounded-left"
            *ngIf="hasManageRole()"
            [routerLink]="[workspacePath(), 'f', collection.id, 'attributes']">
-          <i class="fa fa-fw fa-cog" aria-hidden="true"></i></a>
+          <i class="fas fa-fw fa-cog" aria-hidden="true"></i></a>
 
         <a title="Icon picker" i18n-title="@@collection.button.icon"
-           class="rounded-left text-success" data-toggle="dropdown">
-          <i class="fa fa-fw fa-eye-dropper" aria-hidden="true" (click)="togglePanelVisible($event);"
+           class="rounded-left" data-toggle="dropdown">
+          <i class="fas fa-fw fa-eye-dropper" aria-hidden="true" (click)="togglePanelVisible($event);"
              (clickOutside)="onPickerBlur()"></i></a>
         <div class="dropdown-menu dropdown-menu-right">
           <color-picker class="dropdown-item" [(color)]="collection.color"></color-picker>

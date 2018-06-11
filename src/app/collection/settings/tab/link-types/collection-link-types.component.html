@@ -49,7 +49,7 @@
       <span *ngIf="linkTypeModel.initialized">
             <a tabindex
                (click)="changeCollection(linkTypeModel.data.collectionIds[1])"
-               class="btn btn-outline-success {{ !linkTypeModel.initialized ? 'disabled' : null }}"
+               class="btn btn-outline-primary {{ !linkTypeModel.initialized ? 'disabled' : null }}"
                title="Go to {{ getLinkedCollection(linkTypeModel).name }}"
                i18n-title="@@collection.config.tab.link.types.go.to">
               <i class="fa fa-arrow-right" aria-hidden="true"></i>

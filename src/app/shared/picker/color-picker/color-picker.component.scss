@@ -1,7 +1,7 @@
 @import "../../variables";
 
 :host {
-  background: $secondary-color !important;
+  background: $white !important;
 
   padding: 0 18px !important;
   display: flex;
@@ -29,7 +29,7 @@
     margin: 5px 0 0;
 
     &:hover {
-      color: $success;
+      color: $primary;
     }
   }
 
@@ -38,6 +38,6 @@
   }
 
   .control-icon {
-    color: $success;
+    color: $primary;
   }
 }
