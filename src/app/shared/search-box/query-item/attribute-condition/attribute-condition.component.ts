@@ -129,14 +129,9 @@ export class AttributeConditionComponent implements OnInit {
   }
 
   public onKeyPress(event: KeyboardEvent) {
-    if (this.isNumber(event.key)) {
+    if (!isNaN(Number(event.key))) {
       event.preventDefault();
     }
-  }
-
-  public isNumber(value: string): boolean {
-    const reg = new RegExp('^[0-9]$');
-    return reg.test(value);
   }
 
   private onRightArrowKeyDown() {
