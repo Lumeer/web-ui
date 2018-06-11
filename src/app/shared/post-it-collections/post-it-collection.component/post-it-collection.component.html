@@ -1,5 +1,4 @@
-<div layout-item [layout]="layout"
-     class="layout-item card post-it"
+<div class="card post-it"
      [class.selected]="selected"
      [class.uninitialized]="!collection.id"
      [class.initialized]="collection.id"
@@ -68,9 +67,15 @@
 
   </div>
 
+  <div class="error text-center px-2" *ngIf="!nameFormControl.valid"
+       i18n="@@collection.postit.name.duplicity">
+    Sorry, this name is already taken. Try another?
+  </div>
+
   <post-it-collection-name
     [collectionName]="collection.name"
     [editable]="hasWriteRole() || !collection.id"
+    [nameFormControl]="nameFormControl"
     (changed)="onNameChanged($event)"
     (selected)="onNameSelect()"
     (unselected)="onNameUnselect()">

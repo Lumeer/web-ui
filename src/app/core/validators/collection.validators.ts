@@ -21,11 +21,12 @@ import {Injectable} from '@angular/core';
 import {AbstractControl} from '@angular/forms';
 import {AsyncValidatorFn} from '@angular/forms/src/directives/validators';
 import {Store} from '@ngrx/store';
-import {filter, first, map} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {CollectionsAction} from '../store/collections/collections.action';
 import {selectCollectionNames} from '../store/collections/collections.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
+import {isNullOrUndefined} from 'util';
 
 @Injectable()
 export class CollectionValidators {
@@ -36,18 +37,21 @@ export class CollectionValidators {
     ).subscribe(() => this.store.dispatch(new CollectionsAction.GetNames()));
   }
 
-  public uniqueName(): AsyncValidatorFn {
-    return (control: AbstractControl) => this.store.select(selectCollectionNames).pipe(
-      first(),
-      map(collectionNames => {
-        const names = collectionNames.map(name => name.toLowerCase());
-        if (names.includes(control.value.trim().toLowerCase())) {
-          return {uniqueName: true};
-        } else {
-          return null;
-        }
-      })
-    );
+  public uniqueName(excludeName?: string): AsyncValidatorFn {
+    return (control: AbstractControl) =>
+      this.store.select(selectCollectionNames).pipe(
+        filter(collectionNames => !isNullOrUndefined(collectionNames)),
+        map(collectionNames => {
+          const names = collectionNames.map(name => name.toLowerCase());
+          const value = control.value.trim().toLowerCase();
+
+          if (excludeName.toLowerCase() !== value && names.includes(value)) {
+            return {uniqueName: true};
+          } else {
+            return null;
+          }
+        })
+      );
   }
 
 }

@@ -21,7 +21,10 @@ import {Action} from '@ngrx/store';
 
 export enum NavigationActionType {
 
-  ADD_LINK_TO_QUERY = '[Navigation] Add Link to Query'
+  ADD_LINK_TO_QUERY = '[Navigation] Add Link to Query',
+
+  ADD_COLLECTION_TO_QUERY = '[Navigation] Add Collection to Query',
+  REMOVE_COLLECTION_TO_QUERY = '[Navigation] Remove Collection fromQuery'
 
 }
 
@@ -31,6 +34,20 @@ export namespace NavigationAction {
     public readonly type = NavigationActionType.ADD_LINK_TO_QUERY;
 
     public constructor(public payload: { linkTypeId: string }) {
+    }
+  }
+
+  export class AddCollectionToQuery implements Action {
+    public readonly type = NavigationActionType.ADD_COLLECTION_TO_QUERY;
+
+    public constructor(public payload: { collectionId: string }) {
+    }
+  }
+
+  export class RemoveCollectionFromQuery implements Action {
+    public readonly type = NavigationActionType.REMOVE_COLLECTION_TO_QUERY;
+
+    public constructor(public payload: { collectionId: string }) {
     }
   }
 

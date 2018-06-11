@@ -17,9 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
-import {PostItLayout} from '../../utils/layout/post-it-layout';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {QueryConverter} from '../../../core/store/navigation/query.converter';
 import {QueryModel} from '../../../core/store/navigation/query.model';
@@ -27,21 +26,24 @@ import {Role} from '../../../core/model/role';
 import {Subject, Subscription} from 'rxjs';
 import {isNullOrUndefined} from 'util';
 import {debounceTime, filter} from 'rxjs/operators';
+import {FormControl} from '@angular/forms';
+import {CollectionValidators} from '../../../core/validators/collection.validators';
+import {PostItCollectionNameComponent} from '../collection-name/post-it-collection-name.component';
 
 @Component({
   selector: 'post-it-collection',
   templateUrl: './post-it-collection.component.html',
   styleUrls: ['./post-it-collection.component.scss']
 })
-export class PostItCollectionComponent implements OnInit, OnDestroy {
+export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() public collection: CollectionModel;
-  @Input() public layout: PostItLayout;
   @Input() public focused: boolean;
   @Input() public selected: boolean;
   @Input() public userRoles: string[];
   @Input() public workspace: Workspace;
 
+  @Output() public resize = new EventEmitter();
   @Output() public update = new EventEmitter<CollectionModel>();
   @Output() public create = new EventEmitter<CollectionModel>();
   @Output() public select = new EventEmitter();
@@ -50,29 +52,39 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
   @Output() public togglePanel = new EventEmitter<any>();
   @Output() public favoriteChange = new EventEmitter<{ favorite: boolean, onlyStore: boolean }>();
 
+  @ViewChild(PostItCollectionNameComponent)
+  public collectionNameComponent: PostItCollectionNameComponent;
+
   public isPickerVisible: boolean = false;
+  public nameFormControl: FormControl;
 
   private lastSyncedFavorite: boolean;
+  private isValidCopy: boolean;
   private favoriteChange$ = new Subject<boolean>();
-  private favoriteChangeSubscription: Subscription;
+  private subscriptions = new Subscription();
 
-  public ngOnInit() {
-    this.favoriteChangeSubscription = this.favoriteChange$.pipe(
-      debounceTime(1000),
-      filter(favorite => favorite !== this.lastSyncedFavorite)
-    ).subscribe(favorite => {
-      this.lastSyncedFavorite = null;
-      this.favoriteChange.emit({favorite, onlyStore: false});
-    });
+  constructor(private collectionValidators: CollectionValidators) {
   }
 
-  public ngOnDestroy() {
-    if (this.favoriteChangeSubscription) {
-      this.favoriteChangeSubscription.unsubscribe();
+  public ngOnInit() {
+    this.subscribeData();
+    this.initFormControl();
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collection) {
+      this.updateValidators();
     }
   }
 
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
   public onNameChanged(name: string) {
+    if (name === '') {
+      return;
+    }
     const resourceModel = {...this.collection, name};
     if (this.collection.id) {
       this.update.emit(resourceModel);
@@ -83,10 +95,16 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
 
   public onNameSelect() {
     this.select.emit();
+
+    this.isValidCopy = this.nameFormControl.valid;
   }
 
   public onNameUnselect() {
     this.unselect.emit();
+
+    if (this.isValidCopy !== this.nameFormControl.valid) {
+      this.resize.emit();
+    }
   }
 
   public onDelete() {
@@ -113,7 +131,9 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
   }
 
   public onPickerBlur() {
-    if (!this.isPickerVisible) { return; }
+    if (!this.isPickerVisible) {
+      return;
+    }
 
     if (this.collection.id) {
       this.update.emit(this.collection);
@@ -139,9 +159,46 @@ export class PostItCollectionComponent implements OnInit, OnDestroy {
     return this.hasRole(Role.Write);
   }
 
+  public refreshValidators() {
+    this.nameFormControl.updateValueAndValidity();
+  }
+
+  public performPendingUpdateName(): boolean {
+    return this.collectionNameComponent.performPendingUpdateIfNeeded();
+  }
+
+  public getPendingUpdateName(): string {
+    return this.collectionNameComponent.getPendingUpdate();
+  }
+
   private hasRole(role: string): boolean {
     const roles = this.userRoles || [];
     return roles.includes(role);
+  }
+
+  private subscribeData() {
+    const favoriteChangeSubscription = this.favoriteChange$.pipe(
+      debounceTime(1000),
+      filter(favorite => favorite !== this.lastSyncedFavorite)
+    ).subscribe(favorite => {
+      this.lastSyncedFavorite = null;
+      this.favoriteChange.emit({favorite, onlyStore: false});
+    });
+    this.subscriptions.add(favoriteChangeSubscription);
+  }
+
+  private initFormControl() {
+    const collectionName = this.collection ? this.collection.name : '';
+    this.nameFormControl = new FormControl(collectionName, null, this.collectionValidators.uniqueName(this.collection.name));
+    this.nameFormControl.setErrors(null);
+  }
+
+  private updateValidators() {
+    if (!this.nameFormControl) {
+      return;
+    }
+    this.nameFormControl.setAsyncValidators(this.collectionValidators.uniqueName(this.collection.name));
+    this.nameFormControl.updateValueAndValidity();
   }
 
 }

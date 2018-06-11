@@ -27,6 +27,7 @@ import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
 import {selectQuery} from './navigation.state';
 import {QueryConverter} from './query.converter';
+import {QueryModel} from './query.model';
 
 @Injectable()
 export class NavigationEffects {
@@ -42,15 +43,41 @@ export class NavigationEffects {
     map(({action, query}) => {
       const linkTypeIds = (query.linkTypeIds || []).concat(action.payload.linkTypeId);
 
-      return new RouterAction.Go({
-        path: [],
-        queryParams: {
-          query: QueryConverter.toString({...query, linkTypeIds})
-        },
-        extras: {
-          queryParamsHandling: 'merge'
-        }
-      });
+      return newQueryAction({...query, linkTypeIds});
+    })
+  );
+
+  @Effect()
+  public addCollectionToQuery$: Observable<Action> = this.actions$.pipe(
+    ofType<NavigationAction.AddCollectionToQuery>(NavigationActionType.ADD_COLLECTION_TO_QUERY),
+    mergeMap(action => this.store$.select(selectQuery).pipe(
+      skipWhile(query => !query),
+      first(),
+      map(query => ({action, query}))
+    )),
+    map(({action, query}) => {
+      const collectionIds = (query.collectionIds || []).concat(action.payload.collectionId);
+
+      return newQueryAction({...query, collectionIds});
+    })
+  );
+
+  @Effect()
+  public removeCollectionFromQuery$: Observable<Action> = this.actions$.pipe(
+    ofType<NavigationAction.RemoveCollectionFromQuery>(NavigationActionType.REMOVE_COLLECTION_TO_QUERY),
+    mergeMap(action => this.store$.select(selectQuery).pipe(
+      skipWhile(query => !query),
+      first(),
+      map(query => ({action, query}))
+    )),
+    map(({action, query}) => {
+      const collectionIds = query.collectionIds || [];
+      const indexToRemove = collectionIds.findIndex(id => id === action.payload.collectionId);
+      if (indexToRemove) {
+        collectionIds.splice(indexToRemove, 1);
+      }
+
+      return newQueryAction({...query, collectionIds});
     })
   );
 
@@ -58,4 +85,16 @@ export class NavigationEffects {
               private store$: Store<AppState>) {
   }
 
+}
+
+function newQueryAction(query: QueryModel): Action {
+  return new RouterAction.Go({
+    path: [],
+    queryParams: {
+      query: QueryConverter.toString(query)
+    },
+    extras: {
+      queryParamsHandling: 'merge'
+    }
+  });
 }

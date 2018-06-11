@@ -34,6 +34,9 @@ export enum CollectionsActionType {
   GET_NAMES_SUCCESS = '[Collections] Get Collection Names :: Success',
   GET_NAMES_FAILURE = '[Collections] Get Collection Names :: Failure',
 
+  ADD_NAME = '[Collections] Add Collection Name',
+  DELETE_NAME = '[Collections] Delete Collection Name',
+
   CREATE = '[Collections] Create',
   CREATE_SUCCESS = '[Collections] Create :: Success',
   CREATE_FAILURE = '[Collections] Create :: Failure',
@@ -123,6 +126,20 @@ export namespace CollectionsAction {
     }
   }
 
+  export class AddName implements Action {
+    public readonly type = CollectionsActionType.ADD_NAME;
+
+    public constructor(public payload: { name: string }) {
+    }
+  }
+
+  export class DeleteName implements Action {
+    public readonly type = CollectionsActionType.DELETE_NAME;
+
+    public constructor(public payload: { name: string }) {
+    }
+  }
+
   export class Create implements Action {
     public readonly type = CollectionsActionType.CREATE;
 
@@ -147,7 +164,7 @@ export namespace CollectionsAction {
   export class Import implements Action {
     public readonly type = CollectionsActionType.IMPORT;
 
-    public constructor(public payload: { format: string, importedCollection: ImportedCollection }) {
+    public constructor(public payload: { format: string, importedCollection: ImportedCollection, callback?: (collection: CollectionModel) => void }) {
     }
   }
 
@@ -168,7 +185,7 @@ export namespace CollectionsAction {
   export class Update implements Action {
     public readonly type = CollectionsActionType.UPDATE;
 
-    public constructor(public payload: { collection: CollectionModel }) {
+    public constructor(public payload: { collection: CollectionModel, callback?: () => void }) {
     }
   }
 
@@ -189,7 +206,7 @@ export namespace CollectionsAction {
   export class Delete implements Action {
     public readonly type = CollectionsActionType.DELETE;
 
-    public constructor(public payload: { collectionId: string }) {
+    public constructor(public payload: { collectionId: string, callback?: (collectionId: string) => void }) {
     }
   }
 
@@ -365,7 +382,7 @@ export namespace CollectionsAction {
 
   export type All =
     Get | GetSuccess | GetFailure |
-    GetNames | GetNamesSuccess | GetNamesFailure |
+    GetNames | GetNamesSuccess | GetNamesFailure | AddName | DeleteName |
     Create | CreateSuccess | CreateFailure |
     Import | ImportSuccess | ImportFailure |
     Update | UpdateSuccess | UpdateFailure |
