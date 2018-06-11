@@ -129,40 +129,28 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   public onAddQueryItem(queryItem: QueryItem) {
     this.queryItems.push(queryItem);
+    this.queryItemsControl.push(queryItemToForm(queryItem));
 
-    const queryItemForm = queryItemToForm(queryItem);
-    this.queryItemsControl.push(queryItemForm);
-
-    if (queryItemForm.valid) {
-      this.onQueryItemsChanged();
-    }
+    this.onQueryItemsChanged();
   }
 
   public onRemoveQueryItem(index: number) {
     this.queryItems.splice(index, 1);
-
-    const isQueryItemValid =  this.queryItemsControl.at(index).valid;
     this.queryItemsControl.removeAt(index);
 
-    if(isQueryItemValid) {
-      this.onQueryItemsChanged();
-    }
+    this.onQueryItemsChanged();
   }
 
   public onRemoveLastQueryItem() {
     const lastIndex = this.queryItems.length - 1;
     this.queryItems.pop();
-
-    const isQueryItemValid =  this.queryItemsControl.at(lastIndex).valid;
     this.queryItemsControl.removeAt(lastIndex);
 
-    if(isQueryItemValid) {
-      this.onQueryItemsChanged();
-    }
+    this.onQueryItemsChanged();
   }
 
   public onQueryItemsChanged() {
-    if (allowAutomaticSubmission) {
+    if (allowAutomaticSubmission && this.form.valid) {
       this.onSearch();
     }
   }
