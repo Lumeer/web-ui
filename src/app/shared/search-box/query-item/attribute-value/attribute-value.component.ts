@@ -66,7 +66,7 @@ export class AttributeValueComponent implements OnInit {
     const trimmedValue = this.queryItem.conditionValue.trim();
     this.setValue(trimmedValue);
 
-    if (trimmedValue != this.lastCommittedValue && this.conditionValueControl.valid) {
+    if (trimmedValue !== this.lastCommittedValue && this.conditionValueControl.valid) {
       this.change.emit();
       this.lastCommittedValue = trimmedValue;
     }
