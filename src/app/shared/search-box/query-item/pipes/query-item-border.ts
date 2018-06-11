@@ -13,7 +13,7 @@ const DANGER_COLOR = '#dc3545';
 export class QueryItemBorderPipe extends QueryItemBackgroundPipe implements PipeTransform {
 
   public transform(queryItem: QueryItem, isValid: boolean): string {
-    if (!isValid) {
+    if (!isValid || queryItem.type === QueryItemType.Invalid) {
       return DANGER_COLOR;
     }
     if (queryItem.type === QueryItemType.Link || queryItem.type === QueryItemType.View) {

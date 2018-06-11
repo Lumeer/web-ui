@@ -17,14 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum QueryItemType {
+import {QueryItem} from './query-item';
+import {QueryItemType} from './query-item-type';
 
-  Attribute = 'Attribute',
-  Collection = 'Collection',
-  Document = 'Document',
-  Fulltext = 'Fulltext',
-  Link = 'Link',
-  View = 'View',
-  Invalid = 'Invalid'
+export class InvalidQueryItem implements QueryItem {
+
+  public type = QueryItemType.Invalid;
+  public forType: QueryItemType;
+
+  public constructor(forType: QueryItemType) {
+    this.forType = forType;
+  }
+
+  public get value(): string {
+    return '';
+  }
+
+  public get text(): string {
+    return '';
+  }
 
 }

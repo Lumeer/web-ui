@@ -6,11 +6,18 @@
                    [icons]="queryItem.icons">
   </icons-presenter>
 
-  <span [class.font-weight-bold]="queryItem | isCollectionItem"
-        [title]="queryItem.text"
+  <em *ngIf="queryItem | isInvalidItem"
+      class="mx-1"
+      [title]="queryItem | queryItemText">
+    {{queryItem | queryItemText}}
+  </em>
+
+  <span *ngIf="!(queryItem | isInvalidItem)"
+        [class.font-weight-bold]="queryItem | isCollectionItem"
+        [title]="queryItem | queryItemText"
         [class.text-truncate]="!(queryItem | isAttributeItem)"
         class="mx-1">
-    {{queryItem.text | truncate:30}}
+    {{queryItem | queryItemText | truncate:30}}
   </span>
 
   <div class="mr-1 d-inline-block flex-grow-1 overflow-hidden"

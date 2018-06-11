@@ -28,6 +28,7 @@ import {FulltextQueryItem} from './model/fulltext.query-item';
 import {QueryItem} from './model/query-item';
 import {QueryItemType} from './model/query-item-type';
 import {isNullOrUndefined} from 'util';
+import {InvalidQueryItem} from './model/invalid.query-item';
 
 export class QueryItemsConverter {
 
@@ -67,7 +68,7 @@ export class QueryItemsConverter {
 
   public fromQuery(query: QueryModel): QueryItem[] {
     return [
-      ...this.createCollectionItems(query),
+      ...this.createCollectionItems(query.collectionIds),
       ...this.createAttributeItems(query.filters),
       ...this.createDocumentItems(query.documentIds),
       ...this.createFulltextItems(query.fulltext),
@@ -81,19 +82,23 @@ export class QueryItemsConverter {
       const collection = this.data.collections.find(collection => collection.id === collectionId);
       const attribute = collection && collection.attributes.find(attribute => attribute.id === attributeId);
       if (!attribute) {
-        return null;
+        return new InvalidQueryItem(QueryItemType.Attribute);
       }
 
       const [condition, conditionValue] = fullCondition.split(' ', 2);
 
       return new AttributeQueryItem(collection, attribute, condition, conditionValue);
-    }).filter(queryItem => !isNullOrUndefined(queryItem));
+    });
   }
 
-  private createCollectionItems(query: QueryModel): QueryItem[] {
-    return this.data.collections.filter(collection => {
-      return (query.collectionIds && query.collectionIds.includes(collection.id));
-    }).map(collection => new CollectionQueryItem(collection));
+  private createCollectionItems(collectionIds: string[]): QueryItem[] {
+    return collectionIds.map(collectionId => {
+      const collection = this.data.collections.find(collection => collection.id === collectionId);
+      if (!collection) {
+        return new InvalidQueryItem(QueryItemType.Collection);
+      }
+      return new CollectionQueryItem(collection);
+    });
   }
 
   private createDocumentItems(documentIds: string[]): QueryItem[] {
@@ -110,7 +115,7 @@ export class QueryItemsConverter {
         const collection1 = this.data.collections.find(collection => collection.id === linkType.collectionIds[0]);
         const collection2 = this.data.collections.find(collection => collection.id === linkType.collectionIds[1]);
         if (!collection1 || !collection2) {
-          return null;
+          return new InvalidQueryItem(QueryItemType.Link);
         }
 
         linkType.collections = [collection1, collection2];
