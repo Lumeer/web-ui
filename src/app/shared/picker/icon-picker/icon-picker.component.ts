@@ -17,24 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 
 import * as Icons from './icons';
+
+declare let $: any;
 
 @Component({
   selector: 'icon-picker',
   templateUrl: './icon-picker.component.html',
   styleUrls: ['./icon-picker.component.scss']
 })
-export class IconPickerComponent implements OnInit {
+export class IconPickerComponent implements OnInit, AfterViewInit {
 
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent): void {
     event.stopPropagation();
   }
 
+  public tabs: { icon: string, selected: boolean}[] = [];
+
   @Input()
   public icon: string;
+
+  @Input()
+  public dropdownId: string;
 
   @Output()
   private iconChange = new EventEmitter<string>();
@@ -52,11 +59,26 @@ export class IconPickerComponent implements OnInit {
 
   public ngOnInit(): void {
     this.selected = this.icon;
-    this.tab = Math.floor(this.icons.indexOf(this.selected) / this.iconsPerTab());
+    this.generateTabs();
+    this.updateTab();
   }
 
   public preview(previewed: string) {
     this.iconChange.emit(previewed ? previewed : this.selected);
+  }
+
+  private updateTab() {
+    let newTab = Math.floor(this.icons.indexOf(this.selected) / this.iconsPerTab());
+
+    if (newTab !== this.tab) {
+      this.selectTab(newTab);
+    }
+  }
+
+  private generateTabs() {
+    let icons = [];
+    this.range(0, this.TABS).forEach(i => icons.push({ icon: this.tabIcon(i), selected: i === this.tab }));
+    this.tabs = icons;
   }
 
   public select(selected: string) {
@@ -101,4 +123,19 @@ export class IconPickerComponent implements OnInit {
     return Math.ceil(this.icons.length / this.TABS / 9) * 9;
   }
 
+  public ngAfterViewInit(): void {
+    if (this.dropdownId) {
+      $(`#${this.dropdownId}`).on('hide.bs.dropdown', () => {
+        this.updateTab();
+      });
+    }
+  }
+
+  public selectTab(i: number): void {
+    if (i !== this.tab) {
+      this.tabs[this.tab].selected = false;
+      this.tabs[i].selected = true;
+      this.tab = i;
+    }
+  }
 }

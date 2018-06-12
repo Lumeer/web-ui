@@ -1,0 +1,27 @@
+<div class="dropdown-menu" style="width: 18rem;" [attr.aria-labelledby]="labelledBy">
+  <resource-detail
+    [type]="type"
+    [resource]="resource"
+    [workspace]="workspace">
+  </resource-detail>
+
+  <resource-list
+    *ngIf="isOrganizationType()"
+    [currentCode]="resource?.code"
+    [organizations]="organizations$ | async"
+    (onResourceSelect)="selectResource($event)">
+  </resource-list>
+  <resource-list
+    *ngIf="!isOrganizationType()"
+    [currentCode]="resource?.code"
+    [projects]="projects$ | async"
+    (onResourceSelect)="selectResource($event)">
+  </resource-list>
+
+  <div class="dropdown-divider"></div>
+
+  <a class="dropdown-item" (click)="newResource()">
+    <i class="fas fa-plus text-success mr-1"></i>
+    <span i18n="@@resource.menu.createNew">Create New {type, select, organization {Organization} project {Project} other {}}</span>
+  </a>
+</div>

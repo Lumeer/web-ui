@@ -18,45 +18,29 @@
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i [class]="organization?.icon" [style.color]="organization?.color"></i>&nbsp;{{organization?.code}}
               </a>
-              <div class="dropdown-menu" style="width: 18rem;" aria-labelledby="navbarDropdown1">
-                <div class="card-body pt-2">
-                  <div class="small text-secondary mb-2">Organization</div>
-                  <h5 class="card-title"><i [class]="organization?.icon" [style.color]="organization?.color"></i>&nbsp;{{organization?.code}}</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">{{organization?.name}}</h6>
-                  <p class="card-text">28&nbsp;<i class="fas fa-user mr-3"></i>3&nbsp;<i class="fas fa-th-large mr-3"></i><button (click)="goToOrganization('users')" class="btn btn-primary btn-sm"><i class="fas fa-user-plus"></i>&nbsp;Invite Colleagues</button></p>
-                  <p class="card-text">{{organization?.description}}</p>
-                  <div class="text-center">
-                    <button (click)="goToOrganization('detail')" href="#" class="btn btn-primary btn-sm mr-2"><i class="fas fa-cog"></i>&nbsp;Configure</button>
-                    <button (click)="goToOrganization('detail')" href="#" class="btn btn-danger btn-sm"><i class="fas fa-credit-card"></i>&nbsp;Upgrade Plan</button>
-                  </div>
-                </div>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#"><i class="fas fa-frog" style="color: wheat"></i>&nbsp;Another organization</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#"><i class="fas fa-plus text-success"></i>&nbsp;Create New Organization</a>
-              </div>
+              <resource-menu
+                labelledBy="navbarDropdown1"
+                [type]="organizationResourceType"
+                [resource]="organization"
+                [workspace]="workspace"
+                (onResourceSelect)="selectOrganization($event)"
+                (onNewResource)="createNewOrganization()"
+              >
+              </resource-menu>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i [class]="project?.icon" [style.color]="project?.color"></i>&nbsp;{{project?.code}}
               </a>
-              <div class="dropdown-menu" style="width: 18rem;" aria-labelledby="navbarDropdown2">
-                <div class="card-body pt-2">
-                  <div class="small text-secondary mb-2">Project</div>
-                  <h5 class="card-title"><i [class]="project?.icon" [style.color]="project?.color"></i>&nbsp;{{project?.code}}</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">{{project?.name}}</h6>
-                  <p class="card-text">12&nbsp;<i class="fas fa-book mr-3"></i>12,689&nbsp;<i class="fas fa-file-alt"></i></p>
-                  <p class="card-text">{{project?.description}}</p>
-                  <div class="text-center">
-                    <button (click)="goToProject('users')" class="btn btn-primary btn-sm"><i class="fas fa-cog"></i>&nbsp;Configure</button>
-                  </div>
-                </div>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#"><i class="fas fa-frog" style="color: lime"></i>&nbsp;Another project</a>
-                <a class="dropdown-item" href="#"><i class="fas fa-feather" style="color: navy"></i>&nbsp;Yet Another project</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#"><i class="fas fa-plus text-success"></i>&nbsp;Create New Project</a>
-              </div>
+              <resource-menu
+                labelledBy="navbarDropdown2"
+                [type]="projectResourceType"
+                [resource]="project"
+                [workspace]="workspace"
+                (onResourceSelect)="selectProject($event)"
+                (onNewResource)="createNewProject(organization)"
+              >
+              </resource-menu>
             </li>
           </ul>
       </div>
