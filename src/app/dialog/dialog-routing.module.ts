@@ -57,6 +57,11 @@ const routes: Routes = [
     component: CreateResourceDialogComponent,
     outlet: 'dialog'
   },
+  {
+    path: `${DialogPath.CREATE_RESOURCE}/:resourceType/:parentId`,
+    component: CreateResourceDialogComponent,
+    outlet: 'dialog'
+  },
 ];
 
 @NgModule({

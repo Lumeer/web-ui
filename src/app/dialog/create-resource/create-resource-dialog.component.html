@@ -3,7 +3,7 @@
                 [width]="350"
                 (submit)="onSubmit()">
   <span class="title" i18n="@@resource.new.dialog.title">
-  {resourceType, select, organization {Create new Organization} project {Create new Project}}
+  Create new {resourceType, select, organization {Organization} project {Project}}
   </span>
 
   <div class="body">
@@ -25,7 +25,6 @@
           <input type="text"
                  id="codeInput"
                  formControlName="code"
-                 (input)="onCodeInput()"
                  class="form-control"
                  i18n-placeholder="@@resource.new.dialog.code.placeholder"
                  placeholder="Enter code">
@@ -52,7 +51,7 @@
 
   </div>
 
-
   <span class="button-cancel" i18n="@@resource.new.dialog.button.cancel">Cancel</span>
   <span class="button-submit" i18n="@@resource.new.dialog.button.create">Create</span>
+
 </dialog-wrapper>

@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {ActivatedRoute} from '@angular/router';
 import {Action, Store} from '@ngrx/store';
@@ -30,6 +30,9 @@ import {ResourceType, resourceTypeFromString} from '../../core/model/resource-ty
 import {ResourceModel} from '../../core/model/resource.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {maxLengthValidator, minLengthValidator} from '../../shared/utils/validators';
+import {ProjectValidators} from '../../core/validators/project.validators';
+import {OrganizationValidators} from '../../core/validators/organization.validators';
 
 @Component({
   selector: 'create-resource-dialog',
@@ -43,9 +46,12 @@ export class CreateResourceDialogComponent implements OnInit {
   public icon: string = DEFAULT_ICON;
 
   public resourceType: ResourceType;
+  public parentId: string;
 
   constructor(
     private dialogService: DialogService,
+    private projectValidators: ProjectValidators,
+    private organizationValidators: OrganizationValidators,
     private route: ActivatedRoute,
     private store: Store<AppState>) {
     this.createForm();
@@ -61,12 +67,9 @@ export class CreateResourceDialogComponent implements OnInit {
 
   private createForm() {
     this.form = new FormGroup({
-      icon: new FormControl(this.icon, Validators.required),
-      color: new FormControl(this.color, Validators.required),
-      code: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(5)]),
-      name: new FormControl('', Validators.required)
+      code: new FormControl('', [minLengthValidator(3), maxLengthValidator(5)], this.createAsyncValidator()),
+      name: new FormControl('')
     });
-    console.log(this.form, this.icon, this.color);
   }
 
   public ngOnInit() {
@@ -74,24 +77,10 @@ export class CreateResourceDialogComponent implements OnInit {
     this.parseResourceType();
   }
 
-  private parseResourceType() {
-    this.route.paramMap.pipe(
-      map(params => params.get('resourceType')),
-      map(resourceType => resourceTypeFromString(resourceType)),
-      filter(resourceType => !!resourceType),
-      first()
-    ).subscribe(resourceType => this.resourceType = resourceType);
-  }
-
   public reset() {
     this.color = DEFAULT_COLOR;
     this.icon = DEFAULT_ICON;
     this.form.reset();
-    console.log(this.form, this.icon, this.color);
-  }
-
-  public onCodeInput(){
-    console.log(this.form, this.icon, this.color);
   }
 
   public onSubmit() {
@@ -107,13 +96,24 @@ export class CreateResourceDialogComponent implements OnInit {
     }
   }
 
+  private createAsyncValidator(): AsyncValidatorFn {
+    if (this.resourceType === ResourceType.Organization) {
+      return this.organizationValidators.uniqueCode();
+    } else if (this.resourceType === ResourceType.Project) {
+      return this.projectValidators.uniqueCode();
+    }
+
+    return null;
+  }
+
   private createResourceAction(): Action {
     const resource = this.createResourceObject();
 
     if (this.resourceType === ResourceType.Organization) {
       return new OrganizationsAction.Create({organization: resource, callback: this.dialogService.callback});
     } else if (this.resourceType === ResourceType.Project) {
-      return new ProjectsAction.Create({project: resource, callback: this.dialogService.callback});
+      const project = {...resource, organizationId: this.parentId};
+      return new ProjectsAction.Create({project, callback: this.dialogService.callback});
     }
 
     return null;
@@ -127,6 +127,21 @@ export class CreateResourceDialogComponent implements OnInit {
       icon: this.icon,
       description: ''
     };
+  }
+
+  private parseResourceType() {
+    this.route.paramMap.pipe(
+      map(params => [params.get('resourceType'), params.get('parentId')]),
+      map(([resourceType, parentId]) => [resourceTypeFromString(resourceType), parentId]),
+      filter(([resourceType]) => !!resourceType),
+      first()
+    ).subscribe(([resourceType, parentId]: [ResourceType, string]) => {
+      this.resourceType = resourceType;
+      this.parentId = parentId;
+      if (this.resourceType === ResourceType.Project) {
+        this.projectValidators.setOrganizationId(this.parentId);
+      }
+    });
   }
 
 }

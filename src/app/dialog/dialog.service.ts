@@ -45,9 +45,13 @@ export class DialogService {
     this.navigateToDialog(null);
   }
 
-  public openCreateResourceDialog(resourceType: ResourceType, callback?: (resource: ResourceModel) => void) {
+  public openCreateResourceDialog(resourceType: ResourceType, parentId?: string, callback?: (resource: ResourceModel) => void) {
     this.callback = callback;
-    this.navigateToDialog([DialogPath.CREATE_RESOURCE, resourceType]);
+    const path: any[] = [DialogPath.CREATE_RESOURCE, resourceType];
+    if (parentId) {
+      path.push(parentId);
+    }
+    this.navigateToDialog(path);
   }
 
   public openCreateCollectionDialog(callback?: (collection: CollectionModel) => void) {
