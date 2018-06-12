@@ -17,16 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Resource} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace.model';
 import {Observable} from 'rxjs/index';
@@ -34,7 +25,6 @@ import {OrganizationsAction} from '../../store/organizations/organizations.actio
 import {selectAllOrganizations} from '../../store/organizations/organizations.state';
 import {OrganizationModel} from '../../store/organizations/organization.model';
 import {ProjectModel} from '../../store/projects/project.model';
-import {UserSettingsService} from '../../user-settings.service';
 import {AppState} from '../../store/app.state';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
@@ -63,8 +53,7 @@ export class ResourceMenuComponent implements OnInit, OnChanges {
   private dispatched = false;
 
   constructor(private store: Store<AppState>,
-              private router: Router,
-              private userSettingsService: UserSettingsService) {
+              private router: Router) {
   }
 
   public ngOnInit() {

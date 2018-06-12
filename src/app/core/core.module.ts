@@ -47,11 +47,9 @@ import {SearchService} from './rest/search.service';
 import {UserService} from './rest/user.service';
 import {ViewService} from './rest/view.service';
 import {AppStoreModule} from './store/app-store.module';
-
-import {TopPanelComponent} from './top-panel/top-panel.component';
 import {UserSettingsService} from './user-settings.service';
 import {CollectionValidators} from './validators/collection.validators';
-import {ResourceMenuModule} from './top-panel/resource-menu/resource-menu.module';
+import {TopPanelModule} from './top-panel/top-panel.module';
 
 @NgModule({
   imports: [
@@ -63,13 +61,12 @@ import {ResourceMenuModule} from './top-panel/resource-menu/resource-menu.module
     SharedModule,
     SnotifyModule,
     ClickOutsideModule,
-    ResourceMenuModule,
+    TopPanelModule,
     GuardsModule,
     BrowserAnimationsModule
   ],
   declarations: [
-    TopPanelComponent,
-    HomeComponent,
+    HomeComponent
   ],
   providers: [
     {
@@ -102,7 +99,7 @@ import {ResourceMenuModule} from './top-panel/resource-menu/resource-menu.module
     CollectionValidators
   ],
   exports: [
-    TopPanelComponent,
+    TopPanelModule,
     HomeComponent,
     SnotifyComponent
   ]

@@ -19,7 +19,6 @@
 
 import {Action} from '@ngrx/store';
 import {DefaultWorkspaceModel, UserModel} from './user.model';
-import {User} from '../../dto';
 
 export enum UsersActionType {
 
@@ -87,7 +86,7 @@ export namespace UsersAction {
   export class SaveDefaultWorkspaceSuccess implements Action {
     public readonly type = UsersActionType.SAVE_DEFAULT_WORKSPACE_SUCCESS;
 
-    public constructor(public payload: { user: User, defaultWorkspace: DefaultWorkspaceModel }) {
+    public constructor(public payload: { user: UserModel, defaultWorkspace: DefaultWorkspaceModel }) {
     }
   }
 

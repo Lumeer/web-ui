@@ -33,11 +33,11 @@ export function usersReducer(state: UsersState = initialUsersState, action: User
     case UsersActionType.DELETE_SUCCESS:
       return usersAdapter.removeOne(action.payload.userId, state);
     case UsersActionType.SAVE_DEFAULT_WORKSPACE_SUCCESS:
-      state.currentUser.defaultWorkspace = action.payload.defaultWorkspace;
+      const newState = {...state, currentUser: {...state.currentUser, defaultWorkspace: action.payload.defaultWorkspace}};
       return usersAdapter.updateOne({
         id: action.payload.user.id,
         changes: {defaultWorkspace: action.payload.defaultWorkspace}
-      }, state);
+      }, newState);
     case UsersActionType.CLEAR:
       return initialUsersState;
     default:

@@ -30,7 +30,7 @@ import {DefaultWorkspaceConverter, UserConverter} from './user.converter';
 import {UsersAction, UsersActionType} from './users.action';
 import {AppState} from '../app.state';
 import {GlobalService} from '../../rest/global.service';
-import {selectUsersLoadedForOrganization} from './users.state';
+import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
 import {HttpErrorResponse} from '@angular/common/http';
 import {RouterAction} from '../router/router.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
@@ -157,11 +157,11 @@ export class UsersEffects {
 
   @Effect()
   public saveDefaultWorkspace$ = this.actions$.pipe(
-    ofType<UsersAction.SaveDefaultWorkspaceSuccess>(UsersActionType.SAVE_DEFAULT_WORKSPACE),
+    ofType<UsersAction.SaveDefaultWorkspace>(UsersActionType.SAVE_DEFAULT_WORKSPACE),
     concatMap(action => {
       const defaultWorkspaceDto = DefaultWorkspaceConverter.toDto(action.payload.defaultWorkspace);
       return this.globalService.saveDefaultWorkspace(defaultWorkspaceDto).pipe(
-        withLatestFrom(this.globalService.getCurrentUser()),
+        withLatestFrom(this.store$.select(selectCurrentUser)),
         map(([result, user]) =>
           new UsersAction.SaveDefaultWorkspaceSuccess({
             user,

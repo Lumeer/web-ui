@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 
 import * as Icons from './icons';
 
@@ -35,8 +35,7 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
     event.stopPropagation();
   }
 
-  @ViewChild('tabs')
-  public tabs: ElementRef;
+  public tabs: { icon: string, selected: boolean}[] = [];
 
   @Input()
   public icon: string;
@@ -60,6 +59,7 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
 
   public ngOnInit(): void {
     this.selected = this.icon;
+    this.generateTabs();
     this.updateTab();
   }
 
@@ -68,7 +68,17 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
   }
 
   private updateTab() {
-    this.tab = Math.floor(this.icons.indexOf(this.selected) / this.iconsPerTab());
+    let newTab = Math.floor(this.icons.indexOf(this.selected) / this.iconsPerTab());
+
+    if (newTab !== this.tab) {
+      this.selectTab(newTab);
+    }
+  }
+
+  private generateTabs() {
+    let icons = [];
+    this.range(0, this.TABS).forEach(i => icons.push({ icon: this.tabIcon(i), selected: i === this.tab }));
+    this.tabs = icons;
   }
 
   public select(selected: string) {
@@ -115,9 +125,17 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit(): void {
     if (this.dropdownId) {
-      $(`#${this.dropdownId}`).on('show.bs.dropdown', () => {
+      $(`#${this.dropdownId}`).on('hide.bs.dropdown', () => {
         this.updateTab();
       });
+    }
+  }
+
+  public selectTab(i: number): void {
+    if (i !== this.tab) {
+      this.tabs[this.tab].selected = false;
+      this.tabs[i].selected = true;
+      this.tab = i;
     }
   }
 }
