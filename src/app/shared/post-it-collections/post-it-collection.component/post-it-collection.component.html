@@ -3,18 +3,18 @@
      [class.uninitialized]="!collection.id"
      [class.initialized]="collection.id"
      [style.border-color]="collection.color">
-  <div class="card-body text-center">
+  <div class="card-body text-center" id="dropdown-{{collection.id}}">
     <a class="icon" [style.color]="collection.color"
        [title]="collection.name"
        [routerLink]="collection.id ? [workspacePath(), 'view', 'table'] : null"
        [queryParams]="collection.id ? { query: queryForCollectionDocuments() } : null"
-       [attr.data-toggle]="collection.id ? '' : 'dropdown'">
+       data-toggle="dropdown">
       <i class="fa-6x {{ collection.icon }}" aria-hidden="true"></i>
     </a>
     <div class="dropdown-menu dropdown-menu-right uninitialized-dropdown">
       <color-picker class="dropdown-item" [(color)]="collection.color"></color-picker>
       <div class="dropdown-divider"></div>
-      <icon-picker class="dropdown-item" [(icon)]="collection.icon"></icon-picker>
+      <icon-picker [dropdownId]="'dropdown-' + collection.id" class="dropdown-item" [(icon)]="collection.icon"></icon-picker>
     </div>
 
     <div *ngIf="collection.id" class="document-count opacity-content clickable"

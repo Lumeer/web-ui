@@ -17,24 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild} from '@angular/core';
 
 import * as Icons from './icons';
+
+declare let $: any;
 
 @Component({
   selector: 'icon-picker',
   templateUrl: './icon-picker.component.html',
   styleUrls: ['./icon-picker.component.scss']
 })
-export class IconPickerComponent implements OnInit {
+export class IconPickerComponent implements OnInit, AfterViewInit {
 
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent): void {
     event.stopPropagation();
   }
 
+  @ViewChild('tabs')
+  public tabs: ElementRef;
+
   @Input()
   public icon: string;
+
+  @Input()
+  public dropdownId: string;
 
   @Output()
   private iconChange = new EventEmitter<string>();
@@ -52,11 +60,15 @@ export class IconPickerComponent implements OnInit {
 
   public ngOnInit(): void {
     this.selected = this.icon;
-    this.tab = Math.floor(this.icons.indexOf(this.selected) / this.iconsPerTab());
+    this.updateTab();
   }
 
   public preview(previewed: string) {
     this.iconChange.emit(previewed ? previewed : this.selected);
+  }
+
+  private updateTab() {
+    this.tab = Math.floor(this.icons.indexOf(this.selected) / this.iconsPerTab());
   }
 
   public select(selected: string) {
@@ -101,4 +113,11 @@ export class IconPickerComponent implements OnInit {
     return Math.ceil(this.icons.length / this.TABS / 9) * 9;
   }
 
+  public ngAfterViewInit(): void {
+    if (this.dropdownId) {
+      $(`#${this.dropdownId}`).on('show.bs.dropdown', () => {
+        this.updateTab();
+      });
+    }
+  }
 }

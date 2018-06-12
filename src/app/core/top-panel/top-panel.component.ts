@@ -194,12 +194,16 @@ export class TopPanelComponent implements OnInit {
     this.store.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
 
     this.store.select(selectProjectsByOrganizationId(organization.id)).pipe(
-      filter(projects => !isNullOrUndefined(projects) && projects.length > 0),
+      filter(projects => !isNullOrUndefined(projects)),
       take(1),
-      map(projects => projects[0])
-    ).subscribe(project =>
-      this.goToProject(organization as OrganizationModel, project)
-    );
+      map(projects => projects.length > 0 ? projects[0] : undefined)
+    ).subscribe(project => {
+      if (project) {
+        this.goToProject(organization as OrganizationModel, project);
+      } else {
+        this.createNewProject(organization);
+      }
+    });
   }
 
   public selectProject(project: Resource): void {
@@ -210,7 +214,7 @@ export class TopPanelComponent implements OnInit {
     // TODO call create dialog
   }
 
-  public createNewProject(): void {
+  public createNewProject(parentOrganization: OrganizationModel): void {
     // TODO call create dialog
   }
 }

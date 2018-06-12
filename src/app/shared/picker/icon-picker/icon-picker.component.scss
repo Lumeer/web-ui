@@ -1,28 +1,10 @@
 @import "../../variables";
 
-a.nav-link.active {
-  background-color: $primary;
-  border: none;
-  border-radius: .25rem;
-}
-
-a.nav-link:hover {
-  border: none;
-  border-bottom: solid $primary 02px;
-  transition: border-bottom-color 1s ease;
-}
-
 :host {
   background: $white !important;
 
   padding: 0;
   display: block;
-  color: inherit;
-
-  &:active, &:hover {
-    background-color: inherit;
-    color: inherit;
-  }
 
   .nav-link {
     padding: 0 1.5px;
