@@ -38,10 +38,6 @@ $name-expanded: 300px;
 [contenteditable=true]:empty::before {
   content: attr(placeholder) !important;
   display: block; /* For Firefox */
-  font-style: italic !important;
-  color: $gray-600 !important;
-  font-size: 100% !important;
-  font-family: $font-family-base !important;
 }
 
 [contenteditable]:focus {

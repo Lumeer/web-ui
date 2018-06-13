@@ -257,15 +257,22 @@ div[contenteditable="true"].form-control {
 
   &:not(.frame):not(.user) {
 
-    &::before {
-      font-family: Font Awesome\ 5 Pro;
-      content: "\f040";
-      font-style: normal;
-      font-weight: normal;
-      padding-right: 0.25rem;
-      color: $success;
-      font-size: 75%;
-    }
+    text-decoration-style: dotted;
+    text-decoration-line: underline;
+    text-decoration-color: $gray-400;
+
+  }
+
+  &:empty:before {
+    // font-family: Font Awesome\ 5 Pro;
+    // content: "\f040";
+    // font-style: normal;
+    // font-weight: normal;
+    // padding-right: 0.25rem;
+    // color: $success;
+    // font-size: 75%;
+    font-style: italic;
+    color: $gray-600;
   }
 
   transition:border .15s ease-in;
@@ -277,6 +284,7 @@ div[contenteditable="true"].form-control {
 
   &:active, &:focus, &.user:hover {
     border: 1px solid $gray-400;
+    text-decoration-line: none !important;
   }
 
   &.user.attribute {

@@ -64,7 +64,6 @@ export class InputBoxComponent implements OnInit {
   public mPaddingHRem: number;
   public mPaddingVRem: number;
   public mMaxHeightRem: number;
-  public empty = true;
 
   public constructor(private i18n: I18n) {
   }
@@ -79,7 +78,6 @@ export class InputBoxComponent implements OnInit {
 
   private computeProperties() {
     this.mCurrentValue = this.initialValue && this.initialValue.trim() || '';
-    this.empty = !this.mCurrentValue;
     this.mFontSizeRem = this.fontSizeRem || DEFAULT_FONT_SIZE;
     const mMaxLines = this.maxLines || DEFAULT_MAX_LINES;
     this.mLineHeight = DEFAULT_LINE_HEIGHT;
@@ -101,10 +99,8 @@ export class InputBoxComponent implements OnInit {
       if (value.length === 0 && !this.canStayEmpty) {
         this.emptyValue.emit();
         this.input.nativeElement.textContent = this.mCurrentValue;
-        this.empty = !this.mCurrentValue;
       } else {
         this.mCurrentValue = value;
-        this.empty = !this.mCurrentValue;
         this.newValue.emit(value);
       }
     }
@@ -112,7 +108,6 @@ export class InputBoxComponent implements OnInit {
 
   public setValue(value: string) {
     this.mCurrentValue = value;
-    this.empty = !this.mCurrentValue;
   }
 
   public onFocus() {
@@ -144,7 +139,6 @@ export class InputBoxComponent implements OnInit {
   }
 
   public onInterimNewValue(textContent: string | null) {
-    this.empty = !textContent;
     if (this.emitAllChanges) {
       this.onNewValue(textContent);
     }

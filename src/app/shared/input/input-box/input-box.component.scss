@@ -4,7 +4,7 @@
 .input {
 
   padding-top: 0;
-  padding-botton: 0;
+  padding-bottom: 0;
 
   .input-box {
     white-space: nowrap;
@@ -27,21 +27,9 @@
       text-overflow: clip;
     }
   }
-
-  .pencil-icon {
-    font-style: normal;
-    font-weight: normal;
-    padding-left: 0.5rem;
-    color: $success;
-    font-size: 75%;
-  }
 }
 
 [contenteditable=true]:empty::before {
-  content: attr(placeholder) !important;
+  content: attr(placeholder);
   display: block; /* For Firefox */
-  font-style: italic !important;
-  color: $gray-600 !important;
-  font-size: 100% !important;
-  font-family: $font-family-base !important;
 }

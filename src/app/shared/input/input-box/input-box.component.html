@@ -1,35 +1,30 @@
 <div class="input"
      #inputParent>
 
-  <div class="d-flex flex-row align-items-center">
-    <div *ngIf="empty && !userData && !alwaysFrame" [style.fontSize.rem]="mFontSizeRem">
-      <i class="pencil-icon far fa-pencil"></i>
-    </div>
-    <div [ngClass]="maxLines !== 1 ? 'input-box-multiline' : 'input-box'"
-         [class]="innerClass"
-         [class.frame]="alwaysFrame"
-         [class.user]="userData"
-         [class.text-attribute]="textAttribute"
-         [class.form-control]="editable"
-         [class.cursor-text]="editable"
-         [textContent]="mCurrentValue"
-         (blur)="input.scrollTo(0,0); onNewValue(input.textContent)"
-         [style.color]="color"
-         [style.fontSize.rem]="mFontSizeRem"
-         [style.maxHeight.rem]="mMaxHeightRem"
-         [style.paddingLeft.rem]="empty ? 0.25 : mPaddingHRem"
-         [style.paddingRight.rem]="mPaddingHRem"
-         [style.paddingTop.rem]="mPaddingVRem"
-         [style.paddingBottom.rem]="mPaddingVRem"
-         (focus)="onFocus()"
-         [attr.contenteditable]="editable"
-         [attr.placeholder]="mPlaceholder"
-         [attr.title]="title"
-         (input)="onInterimNewValue(input.textContent)"
-         (keydown.enter)="input.blur()"
-         (keydown.Escape)="input.textContent = mCurrentValue; input.blur()"
-         [attr.spellcheck]="false" #input>
-  </div>
+  <div [ngClass]="maxLines !== 1 ? 'input-box-multiline' : 'input-box'"
+       [class]="innerClass"
+       [class.frame]="alwaysFrame"
+       [class.user]="userData"
+       [class.text-attribute]="textAttribute"
+       [class.form-control]="editable"
+       [class.cursor-text]="editable"
+       [textContent]="mCurrentValue"
+       (blur)="input.scrollTo(0,0); onNewValue(input.textContent)"
+       [style.color]="color"
+       [style.fontSize.rem]="mFontSizeRem"
+       [style.maxHeight.rem]="mMaxHeightRem"
+       [style.paddingLeft.rem]="empty ? 0.25 : mPaddingHRem"
+       [style.paddingRight.rem]="mPaddingHRem"
+       [style.paddingTop.rem]="mPaddingVRem"
+       [style.paddingBottom.rem]="mPaddingVRem"
+       (focus)="onFocus()"
+       [attr.contenteditable]="editable"
+       [attr.placeholder]="mPlaceholder"
+       [attr.title]="title"
+       (input)="onInterimNewValue(input.textContent)"
+       (keydown.enter)="input.blur()"
+       (keydown.Escape)="input.textContent = mCurrentValue; input.blur()"
+       [attr.spellcheck]="false" #input>
   </div>
 
 </div>
