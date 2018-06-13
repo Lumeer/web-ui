@@ -120,7 +120,7 @@ export class ProjectsEffects {
 
           const {callback} = action.payload;
           if (callback) {
-            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(organization)}));
+            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(project)}));
           }
 
           return actions;

@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {AbstractControl} from '@angular/forms';
 import {AsyncValidatorFn} from '@angular/forms/src/directives/validators';
 import {Store} from '@ngrx/store';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {CollectionsAction} from '../store/collections/collections.action';
 import {selectCollectionNames} from '../store/collections/collections.state';
@@ -45,12 +45,13 @@ export class CollectionValidators {
           const names = collectionNames.map(name => name.toLowerCase());
           const value = control.value.trim().toLowerCase();
 
-          if (excludeName.toLowerCase() !== value && names.includes(value)) {
+          if ((excludeName && excludeName.toLowerCase() !== value) && names.includes(value)) {
             return {uniqueName: true};
           } else {
             return null;
           }
-        })
+        }),
+        take(1)
       );
   }
 

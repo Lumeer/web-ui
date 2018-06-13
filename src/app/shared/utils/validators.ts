@@ -19,10 +19,9 @@
 
 import {FormControl} from '@angular/forms';
 
-
 export const notEmptyValidator = () => {
   return (control: FormControl) => {
-    const value = control.value && control.value.toString().trim();
+    const value = control.value && control.value.trim();
     if (!value || value === '') {
       return {empty: {valid: false}};
     }
@@ -32,9 +31,9 @@ export const notEmptyValidator = () => {
 
 export const maxLengthValidator = (max: number) => {
   return (control: FormControl) => {
-    const value = control.value && control.value.toString().trim();
+    const value = control.value && control.value.trim();
     if (!value || value.length > max) {
-      return {maxLength: {valid: false}};
+      return {maxlength: {valid: false}};
     }
     return null;
   };
@@ -42,9 +41,9 @@ export const maxLengthValidator = (max: number) => {
 
 export const minLengthValidator = (min: number) => {
   return (control: FormControl) => {
-    const value = control.value && control.value.toString().trim();
+    const value = control.value && control.value.trim();
     if (!value || value.length < min) {
-      return {minLength: {valid: false}};
+      return {minlength: {valid: false}};
     }
     return null;
   };

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {ConditionType, QueryModel} from './query.model';
 import {QueryItem} from '../../../shared/search-box/query-item/model/query-item';
@@ -64,19 +64,19 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
     case QueryItemType.Collection:
     case QueryItemType.Link:
       return new FormGroup({
-        value: new FormControl(queryItem.value, notEmptyValidator),
-        text: new FormControl(queryItem.text, notEmptyValidator)
+        value: new FormControl(queryItem.value, Validators.required),
+        text: new FormControl(queryItem.text, Validators.required)
       });
     case QueryItemType.Deleted:
     case QueryItemType.Fulltext:
       return new FormGroup({
-        value: new FormControl(queryItem.value, notEmptyValidator)
+        value: new FormControl(queryItem.value, Validators.required)
       });
     case QueryItemType.Attribute:
       return new FormGroup({
-        text: new FormControl(queryItem.text, notEmptyValidator),
-        condition: new FormControl(queryItem.condition, [conditionValidator, notEmptyValidator]),
-        conditionValue: new FormControl(queryItem.conditionValue, [notEmptyValidator])
+        text: new FormControl(queryItem.text, Validators.required),
+        condition: new FormControl(queryItem.condition, [Validators.required, conditionValidator, notEmptyValidator]),
+        conditionValue: new FormControl(queryItem.conditionValue, [Validators.required, notEmptyValidator])
       });
   }
 }

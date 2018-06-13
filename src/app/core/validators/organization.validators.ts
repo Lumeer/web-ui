@@ -22,7 +22,7 @@ import {AbstractControl} from '@angular/forms';
 import {AsyncValidatorFn} from '@angular/forms/src/directives/validators';
 
 import {Store} from '@ngrx/store';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {isNullOrUndefined} from 'util';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
@@ -43,12 +43,13 @@ export class OrganizationValidators {
           const codesLowerCase = codes.map(code => code.toLowerCase());
           const value = control.value.trim().toLowerCase();
 
-          if (excludeCode.toLowerCase() !== value && codesLowerCase.includes(value)) {
+          if ((!excludeCode || excludeCode.toLowerCase() !== value) && codesLowerCase.includes(value)) {
             return {notUniqueCode: true};
           } else {
             return null;
           }
-        })
+        }),
+        take(1)
       );
   }
 

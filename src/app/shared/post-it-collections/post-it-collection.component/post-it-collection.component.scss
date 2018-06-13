@@ -13,12 +13,6 @@
   transition: box-shadow $animation-duration, transform $animation-duration;
 }
 
-.error {
-  color: $danger;
-  width: 100%;
-  font-size: 80%;
-}
-
 .post-it:hover {
   box-shadow: $shadow-default;
 

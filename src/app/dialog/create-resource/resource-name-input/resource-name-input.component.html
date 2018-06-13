@@ -1,0 +1,15 @@
+<div class="form-group row" [formGroup]="form">
+  <label class="col-2 col-form-label"
+         i18n="@@resource.new.dialog.name.label"
+         for="name">Name</label>
+
+  <div class="col-10">
+    <input type="text"
+           id="name"
+           formControlName="name"
+           class="form-control"
+           i18n-placeholder="@@resource.new.dialog.name.placeholder"
+           placeholder="Enter name">
+
+  </div>
+</div>

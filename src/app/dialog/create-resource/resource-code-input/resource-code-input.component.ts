@@ -17,32 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {DialogType} from '../../dialog-type';
+import {Component, Input} from '@angular/core';
+import {AbstractControl, FormGroup} from '@angular/forms';
 
 @Component({
-  selector: 'dialog-wrapper',
-  templateUrl: './dialog-wrapper.component.html'
+  selector: 'resource-code-input',
+  templateUrl: './resource-code-input.component.html'
 })
-export class DialogWrapperComponent {
+export class ResourceCodeInputComponent {
 
   @Input()
-  public submitDisabled: boolean;
+  public form: FormGroup;
 
-  @Input()
-  public showSubmit: boolean = true;
-
-  @Input()
-  public type: DialogType;
-
-  @Input()
-  public width: number;
-
-  @Output()
-  public submit = new EventEmitter();
-
-  public onSubmit() {
-    this.submit.emit();
+  public get codeInput(): AbstractControl {
+    return this.form.get('code');
   }
 
 }

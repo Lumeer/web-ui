@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup} from '@angular/forms';
 
 import {ActivatedRoute} from '@angular/router';
 import {Action, Store} from '@ngrx/store';
@@ -33,12 +33,14 @@ import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {maxLengthValidator, minLengthValidator} from '../../shared/utils/validators';
 import {ProjectValidators} from '../../core/validators/project.validators';
 import {OrganizationValidators} from '../../core/validators/organization.validators';
+import {selectOrganizationById} from '../../core/store/organizations/organizations.state';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'create-resource-dialog',
   templateUrl: './create-resource-dialog.component.html'
 })
-export class CreateResourceDialogComponent implements OnInit {
+export class CreateResourceDialogComponent implements OnInit, OnDestroy {
 
   public form: FormGroup;
 
@@ -46,7 +48,10 @@ export class CreateResourceDialogComponent implements OnInit {
   public icon: string = DEFAULT_ICON;
 
   public resourceType: ResourceType;
+
   public parentId: string;
+  public parentResource: ResourceModel;
+  public subscriptions = new Subscription();
 
   constructor(
     private dialogService: DialogService,
@@ -65,16 +70,20 @@ export class CreateResourceDialogComponent implements OnInit {
     return this.form.get('name');
   }
 
-  private createForm() {
-    this.form = new FormGroup({
-      code: new FormControl('', [minLengthValidator(3), maxLengthValidator(5)], this.createAsyncValidator()),
-      name: new FormControl('')
-    });
-  }
-
   public ngOnInit() {
     this.reset();
     this.parseResourceType();
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
+  private createForm() {
+    this.form = new FormGroup({
+      code: new FormControl('', [minLengthValidator(2), maxLengthValidator(5)]),
+      name: new FormControl('')
+    });
   }
 
   public reset() {
@@ -94,6 +103,10 @@ export class CreateResourceDialogComponent implements OnInit {
     if (!callback) {
       this.dialogService.closeDialog();
     }
+  }
+
+  public canShowContent(): Boolean {
+    return this.resourceType === ResourceType.Organization || !!this.parentResource;
   }
 
   private createAsyncValidator(): AsyncValidatorFn {
@@ -138,9 +151,15 @@ export class CreateResourceDialogComponent implements OnInit {
     ).subscribe(([resourceType, parentId]: [ResourceType, string]) => {
       this.resourceType = resourceType;
       this.parentId = parentId;
-      if (this.resourceType === ResourceType.Project) {
-        this.projectValidators.setOrganizationId(this.parentId);
+      if (this.resourceType === ResourceType.Project && parentId) {
+        this.projectValidators.setOrganizationId(parentId);
+        this.subscriptions.add(
+          this.store.select(selectOrganizationById(parentId))
+            .subscribe(resource => this.parentResource = resource)
+        );
       }
+
+      this.codeInput.setAsyncValidators(this.createAsyncValidator());
     });
   }
 

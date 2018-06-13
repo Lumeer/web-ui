@@ -32,6 +32,8 @@ import {CollectionNameInputComponent} from './shared/collection-name-input/colle
 import {LinkNameInputComponent} from './shared/link-name-input/link-name-input.component';
 import {DialogWrapperComponent} from './shared/wrapper/dialog-wrapper.component';
 import {CreateResourceDialogComponent} from './create-resource/create-resource-dialog.component';
+import {ResourceCodeInputComponent} from './create-resource/resource-code-input/resource-code-input.component';
+import {ResourceNameInputComponent} from './create-resource/resource-name-input/resource-name-input.component';
 
 @NgModule({
   imports: [
@@ -50,7 +52,9 @@ import {CreateResourceDialogComponent} from './create-resource/create-resource-d
     DialogBaseComponent,
     ShareViewDialogComponent,
     OverwriteViewDialogComponent,
-    CreateResourceDialogComponent
+    CreateResourceDialogComponent,
+    ResourceCodeInputComponent,
+    ResourceNameInputComponent
   ],
   providers: [
     DialogService
