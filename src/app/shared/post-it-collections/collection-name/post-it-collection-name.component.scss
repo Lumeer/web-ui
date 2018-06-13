@@ -1,6 +1,7 @@
 @import "../../variables";
+@import '../../bootstrap_var';
 
-$name-collapsed: 42px;
+$name-collapsed: 44px;
 $name-expanded: 300px;
 
 :host {
@@ -22,8 +23,10 @@ $name-expanded: 300px;
 
   overflow: hidden;
   text-overflow: ellipsis;
+  min-height: $name-collapsed;
   max-height: $name-collapsed;
   white-space: nowrap;
+  cursor: text;
 
   &:hover, &:focus {
     max-height: $name-expanded;
@@ -32,10 +35,13 @@ $name-expanded: 300px;
   }
 }
 
-[contenteditable=true]:empty:before {
-  content: attr(placeholder);
+[contenteditable=true]:empty::before {
+  content: attr(placeholder) !important;
   display: block; /* For Firefox */
-  color: $light;
+  font-style: italic !important;
+  color: $gray-600 !important;
+  font-size: 100% !important;
+  font-family: $font-family-base !important;
 }
 
 [contenteditable]:focus {

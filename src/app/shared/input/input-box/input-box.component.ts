@@ -21,10 +21,10 @@ import {Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChange
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 const DEFAULT_FONT_SIZE = 1;
-const DEFAULT_MAX_LINES = 1;
+const DEFAULT_MAX_LINES = -1;
 const DEFAULT_LINE_HEIGHT = 1.5;
 const DEFAULT_PADDING_H = 0.5;
-const DEFAULT_PADDING_V = 0;
+const DEFAULT_PADDING_V = 0.375;
 const warningStyle = ['border', 'border-danger', 'rounded'];
 
 @Component({
@@ -63,6 +63,8 @@ export class InputBoxComponent implements OnInit {
   public mLineHeight: number;
   public mPaddingHRem: number;
   public mPaddingVRem: number;
+  public mMaxHeightRem: number;
+  public empty = true;
 
   public constructor(private i18n: I18n) {
   }
@@ -77,10 +79,17 @@ export class InputBoxComponent implements OnInit {
 
   private computeProperties() {
     this.mCurrentValue = this.initialValue && this.initialValue.trim() || '';
+    this.empty = !this.mCurrentValue;
     this.mFontSizeRem = this.fontSizeRem || DEFAULT_FONT_SIZE;
+    const mMaxLines = this.maxLines || DEFAULT_MAX_LINES;
     this.mLineHeight = DEFAULT_LINE_HEIGHT;
     this.mPaddingVRem = this.paddingRem || DEFAULT_PADDING_V;
     this.mPaddingHRem = DEFAULT_PADDING_H;
+    if (mMaxLines === 1) {
+      this.mMaxHeightRem = mMaxLines * this.mLineHeight * this.mFontSizeRem + (2 * this.mPaddingVRem);
+    } else {
+      this.mMaxHeightRem = 9999; // unlimited
+    }
     this.mPlaceholder = this.placeholder || this.defaultPlaceholder();
   }
 
@@ -92,8 +101,10 @@ export class InputBoxComponent implements OnInit {
       if (value.length === 0 && !this.canStayEmpty) {
         this.emptyValue.emit();
         this.input.nativeElement.textContent = this.mCurrentValue;
+        this.empty = !this.mCurrentValue;
       } else {
         this.mCurrentValue = value;
+        this.empty = !this.mCurrentValue;
         this.newValue.emit(value);
       }
     }
@@ -101,6 +112,7 @@ export class InputBoxComponent implements OnInit {
 
   public setValue(value: string) {
     this.mCurrentValue = value;
+    this.empty = !this.mCurrentValue;
   }
 
   public onFocus() {
@@ -132,8 +144,10 @@ export class InputBoxComponent implements OnInit {
   }
 
   public onInterimNewValue(textContent: string | null) {
+    this.empty = !textContent;
     if (this.emitAllChanges) {
       this.onNewValue(textContent);
     }
   }
+
 }

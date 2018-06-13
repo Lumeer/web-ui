@@ -1,0 +1,47 @@
+@import '../../variables';
+@import '../../bootstrap_var';
+
+.input {
+
+  padding-top: 0;
+  padding-botton: 0;
+
+  .input-box {
+    white-space: nowrap;
+    cursor: text;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    &:focus {
+      text-overflow: clip;
+    }
+  }
+
+  .input-box-multiline {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap: break-word;
+    word-break: break-all;
+
+    &:focus {
+      text-overflow: clip;
+    }
+  }
+
+  .pencil-icon {
+    font-style: normal;
+    font-weight: normal;
+    padding-left: 0.5rem;
+    color: $success;
+    font-size: 75%;
+  }
+}
+
+[contenteditable=true]:empty::before {
+  content: attr(placeholder) !important;
+  display: block; /* For Firefox */
+  font-style: italic !important;
+  color: $gray-600 !important;
+  font-size: 100% !important;
+  font-family: $font-family-base !important;
+}

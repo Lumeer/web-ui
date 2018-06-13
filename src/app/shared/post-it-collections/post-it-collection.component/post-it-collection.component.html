@@ -3,7 +3,7 @@
      [class.uninitialized]="!collection.id"
      [class.initialized]="collection.id"
      [style.border-color]="collection.color">
-  <div class="card-body text-center" id="dropdown-new-{{collection.correlationId}}">
+  <div class="card-body text-center" id="{{newDropdownId}}">
     <a class="icon" [style.color]="collection.color"
        [title]="collection.name"
        [routerLink]="collection.id ? [workspacePath(), 'view', 'table'] : null"
@@ -14,7 +14,8 @@
     <div *ngIf="!collection.id" class="dropdown-menu dropdown-menu-right uninitialized-dropdown">
       <color-picker class="dropdown-item" [(color)]="collection.color"></color-picker>
       <div class="dropdown-divider"></div>
-      <icon-picker [dropdownId]="'dropdown-new-' + collection.correlationId" class="dropdown-item" [(icon)]="collection.icon"></icon-picker>
+      <icon-picker [dropdownId]="newDropdownId" class="dropdown-item"
+                   [(icon)]="collection.icon"></icon-picker>
     </div>
 
     <div *ngIf="collection.id" class="document-count opacity-content clickable"

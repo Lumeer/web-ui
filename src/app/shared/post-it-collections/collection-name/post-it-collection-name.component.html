@@ -2,7 +2,7 @@
   <div #collectionNameInput
        class="font-weight-bold name form-control"
        [attr.contenteditable]="editable"
-       placeholder="Set name" i18n-placeholder="@@collection.name.placeholder"
+       placeholder="Click to set name" i18n-placeholder="@@collection.name.placeholder"
        [textContent]="collectionName"
        title="{{collectionName}}"
        (blur)="onNameBlurred(collectionNameInput.textContent)"
