@@ -32,3 +32,39 @@ $top-panel-height: 48px;
   bottom: 2px;
   left: 15px;
 }
+
+.grid {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+
+.search-box {
+  grid-row: 2;
+  grid-column: 1 / span 2;
+}
+
+@media (min-width: 1200px) {
+
+  .grid {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .workspace-panel {
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  .search-box {
+    display: block;
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .user-panel {
+    grid-row: 1;
+    grid-column: 3;
+  }
+
+}

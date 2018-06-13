@@ -1,109 +1,102 @@
-<div class="container-fluid">
-  <div class="row d-flex">
-    <div class="col-3 order-lg-1 d-flex justify-content-left align-self-center">
-      <div class="panel-item mr-1">
-        <a [routerLink]="['/']"
-           class="d-flex">
-          <img class="lumeer-logo" src="assets/img/lumeer.svg">
-          <div *ngIf="!isWorkspaceSet()" class="lumeer-header text-uppercase pl-2">
-            Lumeer
-          </div>
-        </a>
-      </div>
-      <div class="ml-2 mr-2 d-flex"
-           *ngIf="isWorkspaceSet()">
+<div class="grid">
+  <div #workspacePanel class="d-flex justify-content-left workspace-panel">
+    <div class="panel-item mr-1">
+      <a [routerLink]="['/']"
+         class="d-flex">
+        <img class="lumeer-logo" src="assets/img/lumeer.svg">
+        <div *ngIf="!isWorkspaceSet()" class="lumeer-header text-uppercase pl-2">
+          Lumeer
+        </div>
+      </a>
+    </div>
+    <div class="d-flex"
+         *ngIf="isWorkspaceSet()">
+      <ul class="navbar navbar-triangle my-0 p-0 mr-3 flex-nowrap">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i [class]="organization?.icon" [style.color]="organization?.color"></i>&nbsp;{{organization?.code}}
+          </a>
+          <resource-menu
+            labelledBy="navbarDropdown1"
+            [type]="organizationResourceType"
+            [resource]="organization"
+            [workspace]="workspace"
+            (onResourceSelect)="selectOrganization($event)"
+            (onNewResource)="createNewOrganization()"
+          >
+          </resource-menu>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i [class]="project?.icon" [style.color]="project?.color"></i>&nbsp;{{project?.code}}
+          </a>
+          <resource-menu
+            labelledBy="navbarDropdown2"
+            [type]="projectResourceType"
+            [resource]="project"
+            [workspace]="workspace"
+            (onResourceSelect)="selectProject($event)"
+            (onNewResource)="createNewProject(organization)"
+          >
+          </resource-menu>
+        </li>
+      </ul>
+    </div>
+  </div>
 
-          <ul class="navbar navbar-triangle my-0 p-0 mr-3 flex-nowrap">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i [class]="organization?.icon" [style.color]="organization?.color"></i>&nbsp;{{organization?.code}}
-              </a>
-              <resource-menu
-                labelledBy="navbarDropdown1"
-                [type]="organizationResourceType"
-                [resource]="organization"
-                [workspace]="workspace"
-                (onResourceSelect)="selectOrganization($event)"
-                (onNewResource)="createNewOrganization()"
-              >
-              </resource-menu>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i [class]="project?.icon" [style.color]="project?.color"></i>&nbsp;{{project?.code}}
-              </a>
-              <resource-menu
-                labelledBy="navbarDropdown2"
-                [type]="projectResourceType"
-                [resource]="project"
-                [workspace]="workspace"
-                (onResourceSelect)="selectProject($event)"
-                (onNewResource)="createNewProject(organization)"
-              >
-              </resource-menu>
-            </li>
-          </ul>
-      </div>
-      <!--a *ngIf="isWorkspaceSet()"
-         [routerLink]="[workspacePath(), 'view', 'search', 'files']"
-         title="See all files" i18n-title="@@panel.button.home">
-        <i class="fa fa-lg fa-home align-middle home-button"></i>
-      </a-->
+  <div [style.width.px]="sideWidth$ | async"
+       class="d-flex justify-content-end user-panel">
+
+    <div class="panel-item">
+      <a (click)="goToOrganization('detail')">
+        <span class="bagde badge-danger badge-pill mr-2 py-1" i18n="@@panel.plan.free">Free&nbsp;Plan</span>
+      </a>
     </div>
 
-    <div class="d-flex justify-content-end col col-lg-3 order-lg-3 align-self-center">
-
-      <div class="panel-item">
-        <a (click)="goToOrganization('detail')">
-          <span class="bagde badge-danger badge-pill mr-2 py-1" i18n="@@panel.plan.free">Free&nbsp;Plan</span>
-        </a>
-      </div>
-
-      <!-- TODO remove once Angular supports ICU messages in attributes -->
-      <div hidden>
+    <!-- TODO remove once Angular supports ICU messages in attributes -->
+    <div hidden>
         <span #notificationsTitle
               i18n="@@panel.notifications">
           {notifications, plural, =0 {No new notifications} =1 {One new notification} =2 {2 new notifications} =3 {3 new notifications} =4 {4 new notifications} other { {{notifications}} new notifications}}
         </span>
-      </div>
-
-      <div class="panel-item mx-2"
-           [title]="removeHtmlComments(notificationsTitle)">
-        <i *ngIf="notifications === 0"
-           class="fa fa-bell fa-lg text-secondary"></i>
-        <i *ngIf="notifications > 0"
-           class="fa fa-bell fa-lg text-warning"></i>
-      </div>
-
-      <div class="dropdown show ml-2">
-        <a href="#" role="button" id="profileDropdownLink" data-toggle="dropdown" aria-haspopup="true"
-           aria-expanded="false" class="text-primary">
-          <i class="fa fa-user-circle fa-3x"></i>
-        </a>
-
-        <div class="dropdown-menu dropdown-menu-right profile-dropdown" aria-labelledby="profileDropdownLink">
-          <a [href]="keycloakAccountUrl()"
-             class="dropdown-item"
-             title="Account" i18n-title="@@menu.account">
-            <i class="fas fa-fw fa-user" data-fa-transform="left-4" aria-hidden="true"></i>&nbsp;
-            <span i18n="@@menu.account">Account</span>
-          </a>
-          <a [href]="keycloakSignOutUrl()"
-             class="dropdown-item" title="Sign Out">
-            <i class="fas fa-fw fa-sign-in" data-fa-transform="left-4" aria-hidden="true"></i>&nbsp;
-            <span i18n="@@menu.signOut">Sign Out</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <ng-container *ngIf="buildNumber">
-            <div class="dropdown-divider"></div>
-            <small class="dropdown-header py-0">Build #{{buildNumber}}</small>
-          </ng-container>
-        </div>
-      </div>
     </div>
 
-    <div class="col-lg-5 col-xl-6 order-lg-2 mt-2 mt-lg-0 flex-fill mx-auto align-self-center">
-      <search-box *ngIf="isSearchBoxShown()"></search-box>
+    <div class="panel-item mx-2"
+         [title]="removeHtmlComments(notificationsTitle)">
+      <i *ngIf="notifications === 0"
+         class="fa fa-bell fa-lg text-secondary"></i>
+      <i *ngIf="notifications > 0"
+         class="fa fa-bell fa-lg text-warning"></i>
+    </div>
+
+    <div class="dropdown show ml-2">
+      <a href="#" role="button" id="profileDropdownLink" data-toggle="dropdown" aria-haspopup="true"
+         aria-expanded="false" class="text-primary">
+        <i class="fa fa-user-circle fa-3x"></i>
+      </a>
+
+      <div class="dropdown-menu dropdown-menu-right profile-dropdown" aria-labelledby="profileDropdownLink">
+        <a [href]="keycloakAccountUrl"
+           class="dropdown-item"
+           title="Account" i18n-title="@@menu.account">
+          <i class="fas fa-fw fa-user" data-fa-transform="left-4" aria-hidden="true"></i>&nbsp;
+          <span i18n="@@menu.account">Account</span>
+        </a>
+        <a [href]="keycloakSignOutUrl"
+           class="dropdown-item" title="Sign Out">
+          <i class="fas fa-fw fa-sign-in" data-fa-transform="left-4" aria-hidden="true"></i>&nbsp;
+          <span i18n="@@menu.signOut">Sign Out</span>
+        </a>
+        <div class="dropdown-divider"></div>
+        <ng-container *ngIf="buildNumber">
+          <div class="dropdown-divider"></div>
+          <small class="dropdown-header py-0">Build #{{buildNumber}}</small>
+        </ng-container>
+      </div>
     </div>
   </div>
+
+  <search-box *ngIf="isSearchBoxShown()"
+              class="search-box">
+  </search-box>
 </div>

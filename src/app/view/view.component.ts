@@ -30,6 +30,7 @@ import {RouterAction} from '../core/store/router/router.action';
 import {ViewModel} from '../core/store/views/view.model';
 import {ViewsAction} from '../core/store/views/views.action';
 import {selectAllViews, selectViewByCode, selectViewConfig} from '../core/store/views/views.state';
+import {TopPanelService} from '../core/top-panel/top-panel.service';
 import {DialogService} from '../dialog/dialog.service';
 
 @Component({
@@ -40,6 +41,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   public view: ViewModel;
 
   public viewsExist$: Observable<boolean>;
+  public sideWidth$: Observable<number>;
 
   public workspace: Workspace;
   private query: QueryModel;
@@ -47,10 +49,15 @@ export class ViewComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(private dialogService: DialogService,
-              private store: Store<AppState>) {
+              private store: Store<AppState>,
+              private topPanelService: TopPanelService) {
   }
 
   public ngOnInit() {
+    this.sideWidth$ = this.topPanelService.sideWidth$.pipe(
+      map(sideWidth => sideWidth + 10)
+    );
+
     this.subscriptions.add(this.subscribeToNavigation());
     this.bindToViews();
   }
