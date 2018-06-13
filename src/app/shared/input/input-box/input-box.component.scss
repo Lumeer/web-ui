@@ -1,0 +1,35 @@
+@import '../../variables';
+@import '../../bootstrap_var';
+
+.input {
+
+  padding-top: 0;
+  padding-bottom: 0;
+
+  .input-box {
+    white-space: nowrap;
+    cursor: text;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    &:focus {
+      text-overflow: clip;
+    }
+  }
+
+  .input-box-multiline {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap: break-word;
+    word-break: break-all;
+
+    &:focus {
+      text-overflow: clip;
+    }
+  }
+}
+
+[contenteditable=true]:empty::before {
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+}

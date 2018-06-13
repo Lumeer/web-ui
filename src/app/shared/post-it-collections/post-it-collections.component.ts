@@ -38,7 +38,6 @@ import {ProjectModel} from '../../core/store/projects/project.model';
 import {isNullOrUndefined} from 'util';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
-import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
 import {userRolesInResource} from '../utils/resource.utils';
@@ -49,6 +48,8 @@ import {PostItCollectionComponent} from './post-it-collection.component/post-it-
 import {Perspective} from '../../view/perspectives/perspective';
 import {Router} from '@angular/router';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
+import * as Icons from '../picker/icon-picker/icons';
+import * as Colors from '../picker/color-picker/colors';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -91,6 +92,9 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   public focusedPanel: number;
 
   public workspace: Workspace;
+
+  private icons = Icons.solid;
+  private colors = Colors.palette;
 
   private query: QueryModel;
 
@@ -195,8 +199,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   private emptyCollection(): CollectionModel {
     return {
       name: '',
-      color: DEFAULT_COLOR,
-      icon: DEFAULT_ICON,
+      color: this.colors[Math.round(Math.random() * this.colors.length)],
+      icon: this.icons[Math.round(Math.random() * this.icons.length)],
       description: '',
       attributes: []
     };

@@ -25,6 +25,7 @@ import {Resource} from '../../../dto';
 @Component({
   selector: 'resource-list',
   templateUrl: './resource-list.component.html',
+  styleUrls: ['./resource-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ResourceListComponent {

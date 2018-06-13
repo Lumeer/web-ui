@@ -1,9 +1,8 @@
 <div class="input"
-     [style.paddingTop.rem]="mPaddingVRem"
-     [style.paddingBottom.rem]="mPaddingVRem"
      #inputParent>
 
-  <div [class]="innerClass"
+  <div [ngClass]="maxLines !== 1 ? 'input-box-multiline' : 'input-box'"
+       [class]="innerClass"
        [class.frame]="alwaysFrame"
        [class.user]="userData"
        [class.text-attribute]="textAttribute"
@@ -13,8 +12,11 @@
        (blur)="input.scrollTo(0,0); onNewValue(input.textContent)"
        [style.color]="color"
        [style.fontSize.rem]="mFontSizeRem"
+       [style.maxHeight.rem]="mMaxHeightRem"
        [style.paddingLeft.rem]="mPaddingHRem"
        [style.paddingRight.rem]="mPaddingHRem"
+       [style.paddingTop.rem]="mPaddingVRem"
+       [style.paddingBottom.rem]="mPaddingVRem"
        (focus)="onFocus()"
        [attr.contenteditable]="editable"
        [attr.placeholder]="mPlaceholder"
