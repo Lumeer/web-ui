@@ -65,6 +65,7 @@ $top-panel-height: 48px;
   .user-panel {
     grid-row: 1;
     grid-column: 3;
+    width: var(--top-panel-side-width);
   }
 
 }

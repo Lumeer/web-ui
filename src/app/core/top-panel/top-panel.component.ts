@@ -22,7 +22,6 @@ import {Router} from '@angular/router';
 
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {Observable} from 'rxjs/internal/Observable';
 import {filter, map, take} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
@@ -47,7 +46,6 @@ import {RouterAction} from '../store/router/router.action';
 import {UsersAction} from '../store/users/users.action';
 import {ViewsAction} from '../store/views/views.action';
 import {UserSettingsService} from '../user-settings.service';
-import {TopPanelService} from './top-panel.service';
 
 @Component({
   selector: 'top-panel',
@@ -62,8 +60,6 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
 
   @ViewChild('workspacePanel')
   public workspacePanel: ElementRef;
-
-  public sideWidth$: Observable<number>;
 
   public searchBoxHidden = false;
   public notifications = 0;
@@ -83,13 +79,10 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
 
   constructor(private store: Store<AppState>,
               private router: Router,
-              private topPanelService: TopPanelService,
               private userSettingsService: UserSettingsService) {
   }
 
   public ngOnInit() {
-    this.sideWidth$ = this.topPanelService.sideWidth$;
-
     this.subscribeToNavigation();
     this.subscribeToOrganization();
     this.subscribeToProject();
@@ -119,7 +112,8 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
   }
 
   public ngAfterViewChecked() {
-    this.topPanelService.updateSideWidth(this.workspacePanel.nativeElement.clientWidth);
+    const width = this.workspacePanel.nativeElement.clientWidth;
+    document.body.style.setProperty('--top-panel-side-width', `${width}px`);
   }
 
   public ngOnDestroy() {
