@@ -33,7 +33,8 @@ import {selectAllViews, selectViewByCode, selectViewConfig} from '../core/store/
 import {DialogService} from '../dialog/dialog.service';
 
 @Component({
-  templateUrl: './view.component.html'
+  templateUrl: './view.component.html',
+  styleUrls: ['./view.component.scss']
 })
 export class ViewComponent implements OnInit, OnDestroy {
 

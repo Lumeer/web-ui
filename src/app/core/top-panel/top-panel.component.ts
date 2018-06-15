@@ -17,15 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
+import {filter, map, take} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
 import {HtmlModifier} from '../../shared/utils/html-modifier';
+import {Resource} from '../dto';
 import {KeycloakSettings} from '../keycloak.settings';
+import {ResourceType} from '../model/resource-type';
 import {AppState} from '../store/app.state';
+import {CollectionsAction} from '../store/collections/collections.action';
+import {DocumentsAction} from '../store/documents/documents.action';
+import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
+import {LinkTypesAction} from '../store/link-types/link-types.action';
 import {selectNavigation} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
 import {OrganizationModel} from '../store/organizations/organization.model';
@@ -35,26 +43,23 @@ import {ProjectModel} from '../store/projects/project.model';
 import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectByWorkspace, selectProjectsByOrganizationId} from '../store/projects/projects.state';
 import {RouterAction} from '../store/router/router.action';
-import {UserSettingsService} from '../user-settings.service';
-import {ResourceType} from '../model/resource-type';
-import {Resource} from '../dto';
-import {filter, map, take} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
 import {UsersAction} from '../store/users/users.action';
-import {LinkTypesAction} from '../store/link-types/link-types.action';
-import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
-import {DocumentsAction} from '../store/documents/documents.action';
-import {CollectionsAction} from '../store/collections/collections.action';
 import {ViewsAction} from '../store/views/views.action';
+import {UserSettingsService} from '../user-settings.service';
 
 @Component({
   selector: 'top-panel',
   templateUrl: './top-panel.component.html',
   styleUrls: ['./top-panel.component.scss']
 })
-export class TopPanelComponent implements OnInit {
+export class TopPanelComponent implements OnInit, AfterViewChecked {
 
-  public licence = 'trial';
+  private readonly keycloakUrl = KeycloakSettings.getAuthServerUrl();
+  public readonly keycloakAccountUrl = `${this.keycloakUrl}/realms/lumeer/account`;
+  public readonly keycloakSignOutUrl = `${this.keycloakUrl}/realms/lumeer/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Fwww.lumeer.io%2F`;
+
+  @ViewChild('workspacePanel')
+  public workspacePanel: ElementRef;
 
   public searchBoxHidden = false;
   public notifications = 0;
@@ -104,6 +109,11 @@ export class TopPanelComponent implements OnInit {
     this.subscriptions.add(
       this.store.select(selectProjectByWorkspace).subscribe(project => this.project = project)
     );
+  }
+
+  public ngAfterViewChecked() {
+    const width = this.workspacePanel.nativeElement.clientWidth;
+    document.body.style.setProperty('--top-panel-side-width', `${width}px`);
   }
 
   public ngOnDestroy() {
@@ -180,14 +190,6 @@ export class TopPanelComponent implements OnInit {
 
   public workspacePath(): string {
     return `w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
-  }
-
-  public keycloakAccountUrl(): string {
-    return `${KeycloakSettings.getAuthServerUrl()}/realms/lumeer/account`;
-  }
-
-  public keycloakSignOutUrl(): string {
-    return `${KeycloakSettings.getAuthServerUrl()}/realms/lumeer/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Fwww.lumeer.io%2F`;
   }
 
   public selectOrganization(organization: Resource): void {
