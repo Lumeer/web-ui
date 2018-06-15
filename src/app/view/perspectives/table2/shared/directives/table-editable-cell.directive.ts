@@ -46,6 +46,9 @@ export class TableEditableCellDirective {
   public affected: boolean;
 
   @Input()
+  public disabledCharacters: string[];
+
+  @Input()
   public readonly: boolean;
 
   @Input()
@@ -106,6 +109,10 @@ export class TableEditableCellDirective {
         event.preventDefault();
         return;
     }
+
+    if (this.isCharacterDisabled(event.key)) {
+      event.preventDefault();
+    }
   }
 
   @HostListener('input', ['$event'])
@@ -127,7 +134,7 @@ export class TableEditableCellDirective {
     this.edited = true;
 
     const element = this.element.nativeElement;
-    if (letter) {
+    if (letter && !this.isCharacterDisabled(letter)) {
       element.textContent = letter;
     }
 
@@ -150,6 +157,10 @@ export class TableEditableCellDirective {
       const value = this.element.nativeElement.textContent;
       this.editEnd.emit(value);
     }
+  }
+
+  private isCharacterDisabled(character: string): boolean {
+    return this.disabledCharacters && this.disabledCharacters.includes(character);
   }
 
 }

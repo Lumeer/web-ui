@@ -79,6 +79,8 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   public selected$: Observable<boolean>;
   public edited: boolean;
 
+  public readonly disabledCharacters = ['.'];
+
   private editSubscription: Subscription;
   private attributesSubscription: Subscription;
 

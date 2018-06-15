@@ -1,5 +1,6 @@
 <div tableEditableCell
      [contextMenu]="contextMenuComponent?.contextMenu"
+     [disabledCharacters]="disabledCharacters"
      [selected]="selected$ | async"
      [style.background]="collection$ | async | columnBackground:(attribute$ | async | attributeNameChanged:lastName)"
      [value]="attribute$ | async | attributeLastName"
