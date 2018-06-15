@@ -19,8 +19,8 @@
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
-import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {AttributeModel, CollectionModel} from '../../core/store/collections/collection.model';
+import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
 
 @Pipe({
   name: 'isDefaultAttribute'

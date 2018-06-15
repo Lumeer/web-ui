@@ -21,8 +21,8 @@ import {CollectionModel} from './collection.model';
 
 export function getDefaultAttributeId(collection: CollectionModel): string {
   if (collection.defaultAttributeId) {
-    const attributeExist = collection.attributes.findIndex(attr => attr.id === collection.defaultAttributeId) !== -1;
-    if (attributeExist) {
+    const defaultAttribute = collection.attributes.find(attr => attr.id === collection.defaultAttributeId);
+    if (defaultAttribute) {
       return collection.defaultAttributeId;
     }
   }

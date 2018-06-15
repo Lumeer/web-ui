@@ -621,7 +621,7 @@ function createReplaceColumnAction(splitAction: TablesAction.SplitColumn,
                                    childNames: string[]): TablesAction.ReplaceColumns {
   const parent = oldColumn.parent;
   const children: TableColumn[] = childNames.map(name => {
-    return new TableCompoundColumn(new TableSingleColumn(`${parent.attributeId}.${name}`), []);
+    return new TableCompoundColumn(new TableSingleColumn(`${parent.attributeId}.${name}`), []); // TODO fix attribute ID
   });
   const column: TableCompoundColumn = new TableCompoundColumn(parent, children);
 
