@@ -1,5 +1,5 @@
-<form class="form-inline d-flex mt-2">
-  <div class="input-group mb-2">
+<form class="form-inline d-flex flex-nowrap mt-2">
+  <div class="input-group flex-nowrap mb-2">
     <div class="input-group-prepend">
       <span class="input-group-text">
         <strong *ngIf="novice"
@@ -40,7 +40,7 @@
      class="fas fa-arrow-circle-right ml-2 mb-2 text-muted">
   </i>
 
-  <div class="input-group flex-fill ml-2 mb-2">
+  <div class="input-group flex-nowrap flex-fill ml-2 mb-2">
     <div class="input-group-prepend">
       <span class="input-group-text">
         <strong *ngIf="novice"
@@ -60,13 +60,12 @@
            class="form-control"
            autocomplete="off"
            placeholder="Type a title of this page, save, and share!" i18n-placeholder="@@view.untitled">
-    <div *ngVar="view | viewChanged:name:(config$ | async):(perspective$ | async):(query$ | async) as viewChanged"
-         class="input-group-append">
-      <button [disabled]="!(name && viewChanged)"
+    <div class="input-group-append">
+      <button [disabled]="!(name && (view | viewChanged:name:(config$ | async):(perspective$ | async):(query$ | async)))"
               class="btn"
-              [class.btn-primary]="name && viewChanged"
-              [class.btn-outline-secondary]="!(name && viewChanged)"
-              [class.disabled]="!(name && viewChanged)"
+              [class.btn-primary]="name && (view | viewChanged:name:(config$ | async):(perspective$ | async):(query$ | async))"
+              [class.btn-outline-secondary]="!(name && (view | viewChanged:name:(config$ | async):(perspective$ | async):(query$ | async)))"
+              [class.disabled]="!(name && (view | viewChanged:name:(config$ | async):(perspective$ | async):(query$ | async)))"
               type="button"
               title="Save" i18n-title="@@view.button.save"
               (click)="onSave()">
