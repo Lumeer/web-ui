@@ -22,7 +22,6 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {CommentsComponent} from './comments/comments.component';
-import {NgVarDirective} from './directives/ng-var.directive';
 import {DocumentModule} from './document/document.module';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 import {InputModule} from './input/input.module';
@@ -39,6 +38,7 @@ import {SizeSliderComponent} from './slider/size-slider.component';
 import {SliderComponent} from './slider/slider.component';
 import {TagModule} from './tag/tag.module';
 import {UsersModule} from './users/users.module';
+import {DirectivesModule} from './directives/directives.module';
 
 @NgModule({
   imports: [
@@ -55,7 +55,8 @@ import {UsersModule} from './users/users.module';
     DocumentModule,
     PreviewResultsModule,
     LinksModule,
-    PipesModule
+    PipesModule,
+    DirectivesModule
   ],
   declarations: [
     SizeSliderComponent,
@@ -63,8 +64,7 @@ import {UsersModule} from './users/users.module';
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
     SliderComponent,
-    ResourceHeaderComponent,
-    NgVarDirective,
+    ResourceHeaderComponent
   ],
   exports: [
     CommonModule,
@@ -85,7 +85,7 @@ import {UsersModule} from './users/users.module';
     DocumentModule,
     PreviewResultsModule,
     LinksModule,
-    NgVarDirective,
+    DirectivesModule
   ]
 })
 export class SharedModule {

@@ -18,23 +18,25 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, AsyncValidatorFn, FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {ActivatedRoute} from '@angular/router';
 import {Action, Store} from '@ngrx/store';
-import {filter, first, map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../core/constants';
 import {AppState} from '../../core/store/app.state';
 import {DialogService} from '../dialog.service';
-import {ResourceType, resourceTypeFromString} from '../../core/model/resource-type';
+import {ResourceType} from '../../core/model/resource-type';
 import {ResourceModel} from '../../core/model/resource.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {maxLengthValidator, minLengthValidator} from '../../shared/utils/validators';
 import {ProjectValidators} from '../../core/validators/project.validators';
 import {OrganizationValidators} from '../../core/validators/organization.validators';
 import {selectOrganizationById} from '../../core/store/organizations/organizations.state';
 import {Subscription} from 'rxjs';
+import {DialogPath, dialogPathsMap} from '../dialog-path';
+import {OrganizationModel} from '../../core/store/organizations/organization.model';
+import {selectProjectsByOrganizationId} from '../../core/store/projects/projects.state';
 
 @Component({
   selector: 'create-resource-dialog',
@@ -50,7 +52,8 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
   public resourceType: ResourceType;
 
   public parentId: string;
-  public parentResource: ResourceModel;
+  public parentOrganization: OrganizationModel;
+  public isFirstProject: boolean;
   public subscriptions = new Subscription();
 
   constructor(
@@ -81,7 +84,7 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
 
   private createForm() {
     this.form = new FormGroup({
-      code: new FormControl('', [minLengthValidator(2), maxLengthValidator(5)]),
+      code: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(5)]),
       name: new FormControl('')
     });
   }
@@ -106,7 +109,7 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
   }
 
   public canShowContent(): Boolean {
-    return this.resourceType === ResourceType.Organization || !!this.parentResource;
+    return this.resourceType === ResourceType.Organization || !!this.parentOrganization;
   }
 
   private createAsyncValidator(): AsyncValidatorFn {
@@ -143,24 +146,43 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
   }
 
   private parseResourceType() {
+    this.resourceType = this.getResourceTypeFromRouter();
+
     this.route.paramMap.pipe(
-      map(params => [params.get('resourceType'), params.get('parentId')]),
-      map(([resourceType, parentId]) => [resourceTypeFromString(resourceType), parentId]),
-      filter(([resourceType]) => !!resourceType),
-      first()
-    ).subscribe(([resourceType, parentId]: [ResourceType, string]) => {
-      this.resourceType = resourceType;
+      map(params => params.get('organizationId')),
+      take(1)
+    ).subscribe(parentId => {
       this.parentId = parentId;
       if (this.resourceType === ResourceType.Project && parentId) {
         this.projectValidators.setOrganizationId(parentId);
-        this.subscriptions.add(
-          this.store.select(selectOrganizationById(parentId))
-            .subscribe(resource => this.parentResource = resource)
-        );
+        this.selectData();
       }
 
       this.codeInput.setAsyncValidators(this.createAsyncValidator());
     });
+  }
+
+  private selectData() {
+    this.subscriptions.add(
+      this.store.select(selectOrganizationById(this.parentId))
+        .subscribe(resource => this.parentOrganization = resource)
+    );
+    this.subscriptions.add(
+      this.store.select(selectProjectsByOrganizationId(this.parentId))
+        .subscribe(projects => this.isFirstProject = projects.length === 0)
+    );
+  }
+
+  private getResourceTypeFromRouter(): ResourceType {
+    const [rootPath,] = this.route.routeConfig.path.split('/');
+    const dialogPath = dialogPathsMap[rootPath];
+    console.log(rootPath, dialogPath);
+    if (dialogPath === DialogPath.CREATE_ORGANIZATION) {
+      return ResourceType.Organization;
+    } else if (dialogPath === DialogPath.CREATE_PROJECT) {
+      return ResourceType.Project;
+    }
+    return null;
   }
 
 }

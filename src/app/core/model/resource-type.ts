@@ -24,17 +24,9 @@ export const enum ResourceType {
   View = 'view'
 }
 
-export function resourceTypeFromString(value: string): ResourceType {
-  switch (value) {
-    case ResourceType.Organization.toString():
-      return ResourceType.Organization;
-    case ResourceType.Project.toString():
-      return ResourceType.Project;
-    case ResourceType.Collection.toString():
-      return ResourceType.Collection;
-    case ResourceType.View.toString():
-      return ResourceType.View;
-    default:
-      return null;
-  }
-}
+export const resourceTypesMap: { [id: string]: ResourceType } = {
+  [ResourceType.Organization]: ResourceType.Organization,
+  [ResourceType.Project]: ResourceType.Project,
+  [ResourceType.Collection]: ResourceType.Collection,
+  [ResourceType.View]: ResourceType.View
+};

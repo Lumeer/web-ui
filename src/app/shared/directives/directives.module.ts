@@ -17,22 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum DialogPath {
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-  CREATE_COLLECTION = 'create-collection',
-  CREATE_LINK = 'create-link',
-  OVERWRITE_VIEW = 'overwrite-view',
-  SHARE_VIEW = 'share-view',
-  CREATE_ORGANIZATION = 'create-organization',
-  CREATE_PROJECT = 'create-project',
+import {NgVarDirective} from './ng-var.directive';
+import {TrimValueAccessor} from './trim-value-accessor';
 
+@NgModule({
+  imports: [
+    CommonModule,
+  ],
+  declarations: [
+    NgVarDirective,
+    TrimValueAccessor
+  ],
+  exports: [
+    NgVarDirective,
+    TrimValueAccessor
+  ]
+})
+export class DirectivesModule {
 }
-
-export const dialogPathsMap: { [id: string]: DialogPath } = {
-  [DialogPath.CREATE_COLLECTION]: DialogPath.CREATE_COLLECTION,
-  [DialogPath.CREATE_LINK]: DialogPath.CREATE_LINK,
-  [DialogPath.OVERWRITE_VIEW]: DialogPath.OVERWRITE_VIEW,
-  [DialogPath.SHARE_VIEW]: DialogPath.SHARE_VIEW,
-  [DialogPath.CREATE_ORGANIZATION]: DialogPath.CREATE_ORGANIZATION,
-  [DialogPath.CREATE_PROJECT]: DialogPath.CREATE_PROJECT
-};

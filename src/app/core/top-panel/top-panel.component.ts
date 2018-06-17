@@ -47,6 +47,8 @@ import {DialogService} from '../../dialog/dialog.service';
 import {ServiceLimitsAction} from '../store/organizations/service-limits/service-limits.action';
 import {UsersAction} from '../store/users/users.action';
 import {ViewsAction} from '../store/views/views.action';
+import {NotificationService} from '../notifications/notification.service';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'top-panel',
@@ -80,6 +82,8 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
 
   constructor(private store: Store<AppState>,
               private router: Router,
+              private notificationService: NotificationService,
+              private i18n: I18n,
               private dialogService: DialogService,
               private userSettingsService: UserSettingsService) {
   }
@@ -219,24 +223,32 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
   }
 
   public createNewOrganization(): void {
-    this.dialogService.openCreateResourceDialog(ResourceType.Organization, null, this.onCreateOrganization());
+    this.dialogService.openCreateOrganizationDialog(organization => this.onCreateOrganization(organization));
   }
 
   public createNewProject(parentOrganization: OrganizationModel): void {
-    this.dialogService.openCreateResourceDialog(ResourceType.Project, parentOrganization.id, this.onCreateProject(parentOrganization));
+    this.dialogService.openCreateProjectDialog(parentOrganization.id, project => this.onCreateProject(parentOrganization, project));
   }
 
-  private onCreateOrganization(): (organization: OrganizationModel) => void {
-    const comp = this;
-    return organization => {
-      comp.createNewProject(organization);
-    };
+  private onCreateOrganization(organization: OrganizationModel) {
+    const successMessage = this.i18n({
+      id: 'organization.create.success',
+      value: 'Organization was successfully created'
+    });
+
+    this.notificationService.success(successMessage);
+    this.createNewProject(organization);
   }
 
-  private onCreateProject(organization: OrganizationModel): (project: ProjectModel) => void {
-    const comp = this;
-    return project => {
-      comp.goToProject(organization, project);
-    };
+  private onCreateProject(organization: OrganizationModel, project: ProjectModel) {
+    const successMessage = this.i18n({
+      id: 'project.create.success',
+      value: 'Project was successfully created'
+    });
+
+    this.notificationService.success(successMessage);
+
+    this.goToProject(organization, project);
   }
+
 }

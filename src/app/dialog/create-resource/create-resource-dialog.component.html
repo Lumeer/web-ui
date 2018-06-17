@@ -10,14 +10,18 @@
   <div class="body">
     <form [formGroup]="form"
           *ngIf="canShowContent(); else invalidResource">
-      <div *ngIf="parentResource">
-        <span class="mr-2" i18n="@@resource.new.dialog.project.subtitle">Creating project for:</span>
-        <i class="fa-fw {{ parentResource.icon }}"
-           [style.color]="parentResource.color"></i>&nbsp;
-        <span [style.color]="parentResource.color">[{{parentResource.code}}] {{parentResource.name}}</span>
-
-        <hr/>
+      <div *ngIf="parentOrganization"
+           [ngClass]="isFirstProject ? 'alert alert-warning' : null">
+        <span *ngIf="isFirstProject" class="mr-2"
+              i18n="@@resource.new.dialog.project.subtitle.first">You need create first project in order to use</span>
+        <span *ngIf="!isFirstProject" class="mr-2"
+              i18n="@@resource.new.dialog.project.subtitle">Creating project for:</span>
+        <i class="fa-fw {{ parentOrganization.icon }}"
+           [style.color]="parentOrganization.color"></i>&nbsp;
+        <span [style.color]="parentOrganization.color">[{{parentOrganization.code}}] {{parentOrganization.name}}</span>
       </div>
+
+      <hr *ngIf="parentOrganization && !firstName"/>
 
       <div class="form-group">
 

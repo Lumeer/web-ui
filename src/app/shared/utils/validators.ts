@@ -28,23 +28,3 @@ export const notEmptyValidator = () => {
     return null;
   };
 };
-
-export const maxLengthValidator = (max: number) => {
-  return (control: FormControl) => {
-    const value = control.value && control.value.trim();
-    if (!value || value.length > max) {
-      return {maxlength: {valid: false}};
-    }
-    return null;
-  };
-};
-
-export const minLengthValidator = (min: number) => {
-  return (control: FormControl) => {
-    const value = control.value && control.value.trim();
-    if (!value || value.length < min) {
-      return {minlength: {valid: false}};
-    }
-    return null;
-  };
-};

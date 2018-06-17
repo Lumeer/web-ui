@@ -53,12 +53,12 @@ const routes: Routes = [
     outlet: 'dialog'
   },
   {
-    path: `${DialogPath.CREATE_RESOURCE}/:resourceType`,
+    path: `${DialogPath.CREATE_ORGANIZATION}`,
     component: CreateResourceDialogComponent,
     outlet: 'dialog'
   },
   {
-    path: `${DialogPath.CREATE_RESOURCE}/:resourceType/:parentId`,
+    path: `${DialogPath.CREATE_PROJECT}/:organizationId`,
     component: CreateResourceDialogComponent,
     outlet: 'dialog'
   },
