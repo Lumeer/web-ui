@@ -45,6 +45,8 @@ export interface TableRow {
   expanded?: boolean;
   linkedRows?: TableRow[];
 
+  rowId?: string;
+
 }
 
 export const EMPTY_TABLE_ROW: TableRow = {

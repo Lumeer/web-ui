@@ -69,7 +69,6 @@ export enum TablesActionType {
   MOVE_CELL = '[Tables] Move Cell',
 
   SET_CURSOR = '[Tables] Set Cursor',
-  SET_CURSOR_SUCCESS = '[Tables] Set Cursor :: Success',
   MOVE_CURSOR = '[Tables] Move Cursor',
 
   SET_EDITED_ATTRIBUTE = '[Tables] Set Edited Attribute',
@@ -254,13 +253,6 @@ export namespace TablesAction {
     }
   }
 
-  export class SetCursorSuccess implements TableCursorAction {
-    public readonly type = TablesActionType.SET_CURSOR_SUCCESS;
-
-    public constructor(public payload: { cursor: TableCursor }) {
-    }
-  }
-
   export class MoveCursor implements Action {
     public readonly type = TablesActionType.MOVE_CURSOR;
 
@@ -289,6 +281,6 @@ export namespace TablesAction {
     MoveColumn | ResizeColumn | InitColumn |
     ReplaceRows | AddRows | AddLinkedRows | RemoveRow |
     CollapseRows | ExpandRows |
-    SetCursor | SetCursorSuccess | MoveCursor |
+    SetCursor | MoveCursor |
     EditSelectedCell | SetEditedAttribute;
 }
