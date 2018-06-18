@@ -22,7 +22,6 @@ import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/form
 import {ConditionType, QueryModel} from './query.model';
 import {QueryItem} from '../../../shared/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../shared/search-box/query-item/model/query-item-type';
-import {notEmptyValidator} from '../../../shared/utils/validators';
 
 const EqVariants = ['=', '==', 'eq', 'equals'];
 const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];
@@ -75,8 +74,8 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
     case QueryItemType.Attribute:
       return new FormGroup({
         text: new FormControl(queryItem.text, Validators.required),
-        condition: new FormControl(queryItem.condition, [Validators.required, conditionValidator, notEmptyValidator]),
-        conditionValue: new FormControl(queryItem.conditionValue, [Validators.required, notEmptyValidator])
+        condition: new FormControl(queryItem.condition, [Validators.required, conditionValidator]),
+        conditionValue: new FormControl(queryItem.conditionValue, [Validators.required])
       });
   }
 }

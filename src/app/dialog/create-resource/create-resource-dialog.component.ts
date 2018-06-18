@@ -176,7 +176,6 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
   private getResourceTypeFromRouter(): ResourceType {
     const [rootPath,] = this.route.routeConfig.path.split('/');
     const dialogPath = dialogPathsMap[rootPath];
-    console.log(rootPath, dialogPath);
     if (dialogPath === DialogPath.CREATE_ORGANIZATION) {
       return ResourceType.Organization;
     } else if (dialogPath === DialogPath.CREATE_PROJECT) {

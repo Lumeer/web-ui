@@ -24,7 +24,7 @@ import {
 import {COMPOSITION_BUFFER_MODE, DefaultValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 @Directive({
-  selector: 'input[trim], textarea[trim]',
+  selector: 'input[trim], textarea[trim], div[trim]',
   providers: [{provide: NG_VALUE_ACCESSOR, useExisting: TrimValueAccessor, multi: true}]
 
 })
