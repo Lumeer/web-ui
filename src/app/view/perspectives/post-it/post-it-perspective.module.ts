@@ -24,7 +24,9 @@ import {SharedModule} from '../../../shared/shared.module';
 import {PostItAddDocumentComponent} from './add-document/add-document.component';
 import {PostItDocumentComponent} from './document/post-it-document.component';
 import {PostItPerspectiveComponent} from './post-it-perspective.component';
-import {PostItDocumentHeaderComponent} from './document/post-it-document-header.component/post-it-document-header.component';
+import {PostItDocumentHeaderComponent} from './document/post-it-document-header/post-it-document-header.component';
+import {PostItDocumentCellComponent} from './document/post-it-document-cell/post-it-document-cell.component';
+import {PostItDocumentNewCellComponent} from './document/post-it-document-new-cell/post-it-document-new-cell.component';
 
 @NgModule({
   imports: [
@@ -35,7 +37,9 @@ import {PostItDocumentHeaderComponent} from './document/post-it-document-header.
     PostItAddDocumentComponent,
     PostItDocumentComponent,
     PostItPerspectiveComponent,
-    PostItDocumentHeaderComponent
+    PostItDocumentHeaderComponent,
+    PostItDocumentCellComponent,
+    PostItDocumentNewCellComponent
   ],
   entryComponents: [
     PostItPerspectiveComponent

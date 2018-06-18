@@ -47,7 +47,8 @@ import {DeletionHelper} from './util/deletion-helper';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
-import {Document} from '../../../core/dto';
+import {UserSettingsService} from '../../../core/user-settings.service';
+import {SizeType} from '../../../shared/slider/size-type';
 
 @Component({
   selector: 'post-it-perspective',
@@ -105,6 +106,10 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public layoutManager: PostItLayout;
 
+  public size: SizeType;
+
+  private deletionHelper: DeletionHelper;
+
   private subscriptions: Subscription[] = [];
 
   private createdDocumentCorrelationId: string;
@@ -117,10 +122,12 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<AppState>,
               private zone: NgZone,
+              private userSettingsService: UserSettingsService,
               private element: ElementRef) {
   }
 
   public ngOnInit(): void {
+    this.initSettings();
     this.createLayoutManager();
     this.createInfiniteScroll();
     this.createDefectionHelper();
@@ -130,11 +137,14 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createLayoutManager() {
+    const config = new PostItLayoutConfig();
+    config.layout.rounding = false;
+
     this.layoutManager = new PostItSortingLayout(
       '.post-it-document-layout',
-      new PostItLayoutConfig(),
+      config,
       this.sortByOrder,
-      'post-it-document',
+      'div[layout-item]',
       this.zone
     );
   }
@@ -151,7 +161,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private createSelectionHelper() {
     this.selectionHelper = new SelectionHelper(
       this.postIts,
-      () => this.documentsPerRow(),
+      () => this.getNumberColumns(),
       this.perspectiveId
     );
   }
@@ -162,7 +172,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createNavigationHelper() {
-    this.navigationHelper = new NavigationHelper(this.store, () => this.documentsPerRow());
+    this.navigationHelper = new NavigationHelper(this.store, () => this.getNumberColumns());
     this.navigationHelper.onChange(() => this.resetToInitialState());
     this.navigationHelper.onValidNavigation(() => this.getPostIts());
     this.navigationHelper.initialize();
@@ -183,7 +193,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     });
   }
 
-  public onFavoriteChange(document: Document, data: { favorite: boolean, onlyStore: boolean }) {
+  public onFavoriteChange(document: DocumentModel, data: { favorite: boolean, onlyStore: boolean }) {
     const {favorite, onlyStore} = data;
     if (onlyStore) {
       if (favorite) {
@@ -433,13 +443,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return postIt;
   }
 
-  private documentsPerRow(): number {
-    const postItWidth = 225;
-    const layoutWidth = this.layoutElement.nativeElement.clientWidth;
-
-    return Math.max(1, Math.floor(layoutWidth / postItWidth));
-  }
-
   public getCollectionRoles(postIt: PostItDocumentModel): string[] {
     return this.collectionRoles && this.collectionRoles[postIt.document.collectionId] || [];
   }
@@ -466,6 +469,50 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     }
 
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
+  public getColumnStyle(): string {
+    switch (this.size) {
+      case SizeType.S:
+        return 'col-2';
+      case SizeType.M:
+        return 'col-3';
+      case SizeType.L:
+        return 'col-4';
+      case SizeType.XL:
+        return 'col-6';
+      default:
+        return 'col-3';
+    }
+  }
+
+  public getNumberColumns(): number {
+    switch (this.size) {
+      case SizeType.S:
+        return 6;
+      case SizeType.M:
+        return 4;
+      case SizeType.L:
+        return 3;
+      case SizeType.XL:
+        return 2;
+      default:
+        return 4;
+    }
+  }
+
+  public onSizeChange(newSize: SizeType) {
+    this.size = newSize;
+    let userSettings = this.userSettingsService.getUserSettings();
+    userSettings.searchSize = newSize;
+    this.userSettingsService.updateUserSettings(userSettings);
+
+    this.layoutManager.refresh();
+  }
+
+  private initSettings() {
+    let userSettings = this.userSettingsService.getUserSettings();
+    this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
   }
 
 }

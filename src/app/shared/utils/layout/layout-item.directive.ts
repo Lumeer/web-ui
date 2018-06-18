@@ -23,7 +23,7 @@ import {PostItLayout} from './post-it-layout';
 @Directive({
   selector: '[layout-item]'
 })
-export class LayoutItem implements AfterViewInit, OnDestroy {
+export class LayoutItemDirective implements AfterViewInit, OnDestroy {
 
   @Input()
   public layout: PostItLayout;

@@ -17,25 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../../../core/store/app.state';
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../core/model/role';
-import {PostItLayout} from '../../../../shared/utils/layout/post-it-layout';
 import {PostItDocumentModel} from '../document-data/post-it-document-model';
 import {NavigationHelper} from '../util/navigation-helper';
 import {SelectionHelper} from '../util/selection-helper';
@@ -52,13 +40,12 @@ import {getDefaultAttributeId} from '../../../../core/store/collections/collecti
   templateUrl: './post-it-document.component.html',
   styleUrls: ['./post-it-document.component.scss']
 })
-export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PostItDocumentComponent implements OnInit, OnDestroy {
 
   @Input() public postItModel: PostItDocumentModel;
   @Input() public collection: CollectionModel;
   @Input() public collectionRoles: string[];
   @Input() public perspectiveId: string;
-  @Input() public layoutManager: PostItLayout;
   @Input() public navigationHelper: NavigationHelper;
   @Input() public selectionHelper: SelectionHelper;
 
@@ -100,11 +87,6 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     if (this.postItChangeSubscription) {
       this.postItChangeSubscription.unsubscribe();
     }
-    this.layoutManager.remove(this.element.nativeElement);
-  }
-
-  public ngAfterViewInit(): void {
-    this.layoutManager.add(this.element.nativeElement);
   }
 
   private disableScrollOnNavigation(): void {
@@ -223,7 +205,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
-  public onEdit(){
+  public onEdit() {
     this.selectionHelper.setEditMode(true);
     this.selectionHelper.select(0, 0, this.postItModel)
   }
@@ -243,7 +225,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public findAttributeByName(name: string): AttributeModel {
-    return this.collection  && this.collection.attributes.find(attr => attr.name === name);
+    return this.collection && this.collection.attributes.find(attr => attr.name === name);
   }
 
   public findAttributeById(id: string): AttributeModel {
