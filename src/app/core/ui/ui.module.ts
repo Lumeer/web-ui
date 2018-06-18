@@ -17,11 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DetailRow {
-  id?: string;
-  name: string;
-  value: string;
-  correlationId?: string;
-  remove?: boolean;
-  warning?: string;
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {SharedModule} from '../../shared/shared.module';
+import {DocumentUiService} from './document-ui.service';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    SharedModule
+  ],
+  providers: [
+    DocumentUiService
+  ]
+})
+export class UiModule {
 }

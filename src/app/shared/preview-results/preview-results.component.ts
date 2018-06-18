@@ -18,7 +18,7 @@
  */
 
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {Subscription, Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {selectCollectionById, selectCollectionsByQuery} from '../../core/store/collections/collections.state';
@@ -56,6 +56,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
   public activeIndex = 0;
 
   private allSubscriptions = new Subscription();
+  private dataSubscriptions = new Subscription();
 
   private query: QueryModel;
 
@@ -113,14 +114,12 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
   }
 
   private validWorkspace(workspace: Workspace): boolean {
-    if (workspace && workspace.organizationCode && workspace.projectCode) {
-      return true;
-    }
-    return false;
+    return !!(workspace && workspace.organizationCode && workspace.projectCode);
   }
 
   private unsubscribeAll() {
     this.allSubscriptions.unsubscribe();
+    this.dataSubscriptions.unsubscribe();
   }
 
   public setActiveCollection(collection: CollectionModel) {
@@ -141,11 +140,11 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
       this.documents$ = this.store.select(selectDocumentsByCustomQuery(this.collectionQuery));
       this.collection$ = this.store.select(selectCollectionById(this.selectedCollection.id));
 
+      this.dataSubscriptions.unsubscribe();
       this.allSubscriptions.add(this.documents$.pipe(filter(documents => !!documents && documents.length > 0),
         tap(documents => {
           this.documentsCount = documents.length;
         }),
-        //take(1),
         withLatestFrom(this.store.select(selectViewCursor)))
         .subscribe(([documents, cursor]) => {
           let idx;

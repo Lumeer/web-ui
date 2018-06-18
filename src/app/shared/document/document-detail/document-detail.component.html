@@ -1,30 +1,47 @@
 <div class="row mt-2 mb-2">
   <div class="col-8 d-flex align-bottom align-self-end text-truncate">
     <div class="align-text-bottom">
-      <h4 i18n="@@document.detail.heading">Document detail</h4>
+      <h4>
+        <span i18n="@@document.detail.heading">Document detail</span>
+        <i class="fas fa-fw fa-trash ml-4 text-danger clickable clickable-danger"
+           aria-hidden="true"
+           title="Remove Document"
+           i18n-title="@@document.detail.remove"
+           (click)="onRemoveDocument()"
+        ></i>
+        <i *ngIf="getFavorite$() | async" class="fas fa-fw fa-star ml-2 text-warning clickable clickable-warning"
+           title="Remove from favorites"
+           i18n-title="@@document.detail.favorite.remove"
+           (click)="onToggleFavorite()"></i>
+        <i *ngIf="!(getFavorite$() | async)"
+           class="far fa-fw fa-star ml-2 text-warning clickable clickable-warning"
+           title="Add to favorites"
+           i18n-title="@@document.detail.favorite.add"
+           (click)="onToggleFavorite()"></i>
+      </h4>
       <span class="small"><i class="fas {{collection?.icon}}" [style.color]="collection?.color"></i>&nbsp;{{collection?.name}}</span>&nbsp;
-      <strong *ngIf="summary">{{summary}}</strong>
-      <em *ngIf="!summary" i18n="@@shared.document.detail.document.indistinguishable">Indistinguishable document</em>
+      <strong *ngIf="getSummary$() | async">{{getSummary$() | async}}</strong>
+      <em *ngIf="!(getSummary$() | async)" i18n="@@shared.document.detail.document.indistinguishable">Indistinguishable
+        document</em>
     </div>
   </div>
   <div class="col small text-right d-flex align-bottom text-notice">
     <div class="justify-content-end w-100">
-      Version {{_documentModel.dataVersion}}<br/>
-      Created on {{_documentModel.creationDate | date : 'mediumDate'}} by {{createdBy$ | async}}<br/>
-      Last modified on {{_documentModel.updateDate | date : 'mediumDate'}} by {{updatedBy$ | async}}
+      Version {{document.dataVersion}}<br/>
+      Created on {{document.creationDate | nativeDate | date : 'mediumDate'}} by {{createdBy$ | async}}<br/>
+      Last modified on {{document.updateDate | nativeDate | date : 'mediumDate'}} by {{updatedBy$ | async}}
     </div>
   </div>
 </div>
-<ng-container *ngFor="let row of rows; let idx = index;">
+<ng-container *ngFor="let row of getRows$() | async; trackBy: getTrackBy(); let idx = index;">
   <key-value *ngIf="!row.remove"
-              [key]="row.name"
-              [value]="row.value"
-              [defaultAttribute]="row.id === collection?.defaultAttributeId"
-              [emitKeyPress]="row.id"
-              [readOnly]="!hasWriteAccess"
-              (change)="submitRowChange(idx, $event)"
-              (remove)="onRemoveRow(idx)"
-              [warning]="row.warning">
+             [key]="row.newName || row.name"
+             [value]="row.newValue || row.value"
+             [defaultAttribute]="row.id === collection?.defaultAttributeId"
+             [readOnly]="!hasWriteAccess"
+             (change)="submitRowChange(idx, $event)"
+             (remove)="onRemoveRow(idx)"
+             [warning]="row.warning">
   </key-value>
 </ng-container>
 <div *ngIf="hasWriteAccess" class="row border-top mb-4">

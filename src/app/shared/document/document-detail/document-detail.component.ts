@@ -17,379 +17,128 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../core/notifications/notification.service';
-import {AttributeModel, CollectionModel} from '../../../core/store/collections/collection.model';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {Subscription, Observable, interval} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {selectDocumentById} from '../../../core/store/documents/documents.state';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectUserById} from '../../../core/store/users/users.state';
 import {filter, map, take} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {UsersAction} from '../../../core/store/users/users.action';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
-import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generator';
-import {CollectionsAction} from '../../../core/store/collections/collections.action';
-import {DetailRow} from '../detail-row';
+import {DocumentUiService} from '../../../core/ui/document-ui.service';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {UiRow} from '../../../core/ui/ui-row';
+import DeleteConfirm = DocumentsAction.DeleteConfirm;
 
 @Component({
   selector: 'document-detail',
   templateUrl: './document-detail.component.html',
-  styleUrls: ['./document-detail.component.scss']
+  styleUrls: ['./document-detail.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocumentDetailComponent implements OnInit, OnDestroy {
+export class DocumentDetailComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input()
   public collection: CollectionModel;
 
-  public _documentModel: DocumentModel;
-
-  @Output()
-  public documentUpdate = new EventEmitter<DocumentModel>();
+  public document: DocumentModel;
 
   @Input()
   public hasWriteAccess = false;
-
-  public rows: DetailRow[] = [];
 
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;
 
   private subscriptions = new Subscription();
 
-  public summary: string;
-
   constructor(private i18n: I18n,
               private store: Store<AppState>,
-              private notificationService: NotificationService) { }
+              private notificationService: NotificationService,
+              private documentUiService: DocumentUiService) {
+  }
 
-  get documentModel(): DocumentModel {
-    return this._documentModel;
+  get _document(): DocumentModel {
+    return this.document;
   }
 
   @Input('document')
-  set documentModel(model: DocumentModel) {
-    this._documentModel = model;
-    this.rows = [];
-    this.encodeDocument();
+  set _document(model: DocumentModel) {
+    this.document = model;
+    this.renewSubscriptions();
   }
 
   public ngOnInit() {
-    this.subscriptions.add(this.store.select(selectDocumentById(this._documentModel.id)).subscribe(doc => {
-      this._documentModel = doc;
-      this.encodeDocument();
-    }));
-    this.subscriptions.add(this.store.select(selectCollectionById(this.collection.id)).subscribe(col => {
-      this.collection = col;
-      this.encodeDocument();
-    }));
-    this.subscriptions.add(interval(2000).subscribe(() => this.patchDocument()));
-
-    this.createdBy$ = this.store.select(selectUserById(this._documentModel.createdBy))
-      .pipe(filter(user => !isNullOrUndefined(user)), map(user => user.name || user.email || 'Guest'));
-    this.updatedBy$ = this.store.select(selectUserById(this._documentModel.updatedBy))
-      .pipe(filter(user => !isNullOrUndefined(user)), map(user => user.name || user.email || 'Guest'));
-
-    this.subscriptions.add(this.store.select(selectOrganizationByWorkspace)
-      .pipe(filter(org => !isNullOrUndefined(org)), take(1))
-      .subscribe(org => this.store.dispatch(new UsersAction.Get({ organizationId: org.id} ))));
-
-    this.encodeDocument();
+    this.renewSubscriptions();
   }
 
-  private encodeDocument() {
-    this.summary = this.getDocumentSummary();
-
-    this.collection.attributes.forEach(attr => {
-      if (attr.usageCount > 0 && this._documentModel.data[attr.id] !== undefined) {
-        let row = this.getRowById(attr.id);
-        if (row) {
-          row.remove = false;
-          if (row.name !== attr.name) {
-            row.name = attr.name;
-          }
-          if (row.value !== this._documentModel.data[attr.id]) {
-            row.value = this._documentModel.data[attr.id];
-          }
-        } else {
-          row = this.getRowByCorrelationId(attr.correlationId);
-          if (row) {
-            row.remove = false;
-            row.id = attr.id;
-            if (row.name !== attr.name) {
-              row.name = attr.name;
-            }
-            if (row.value !== this._documentModel.data[attr.id]) {
-              row.value = this._documentModel.data[attr.id];
-            }
-          } else {
-            this.rows.push({ id: attr.id, name: attr.name, value: this._documentModel.data[attr.id], correlationId: attr.correlationId });
-          }
-        }
-      } else {
-        this.removeRowById(attr.id);
-      }
-    });
+  public ngOnChanges(changes: SimpleChanges): void {
+    this.renewSubscriptions();
   }
 
-  private getRowById(id: string): DetailRow {
-    if (id) {
-      return this.rows.find(row => row.id === id);
-    }
+  private renewSubscriptions(): void {
+    this.subscriptions.unsubscribe();
+    this.documentUiService.destroy(this.collection, this.document);
 
-    return null;
-  }
+    if (this.collection && this.document) {
+      this.documentUiService.init(this.collection, this.document);
 
-  private getRowByCorrelationId(correlationId: string): DetailRow {
-    if (correlationId) {
-      return this.rows.find(row => row.correlationId === correlationId);
-    }
+      this.createdBy$ = this.store.select(selectUserById(this.document.createdBy))
+        .pipe(filter(user => !isNullOrUndefined(user)), map(user => user.name || user.email || 'Guest'));
+      this.updatedBy$ = this.store.select(selectUserById(this.document.updatedBy))
+        .pipe(filter(user => !isNullOrUndefined(user)), map(user => user.name || user.email || 'Guest'));
 
-    return null;
-  }
-
-  private getRowByName(name: string): DetailRow {
-    if (name) {
-      return this.rows.filter(row => !row.remove).find(row => row.name === name);
-    }
-
-    return null;
-  }
-
-  private getRemovableRowByName(name: string): DetailRow {
-    if (name) {
-      return this.rows.filter(row => row.remove).find(row => row.name === name);
-    }
-
-    return null;
-  }
-
-  private removeRowById(id: string) {
-    const idx = this.rows.indexOf(this.getRowById(id));
-    if (idx >= 0 && (this.rows[idx].remove || !this._documentModel.data[id])) {
-      this.rows.splice(idx, 1);
-    }
-  }
-
-  private alreadyInCollection(attrName: string): boolean {
-    return this.collection.attributes.findIndex(attr => attr.name === attrName) >= 0;
-  }
-
-  private prepareUpdatedDocument(): DocumentModel {
-    let updatedDocument = Object.assign({}, this._documentModel);
-
-    let dirty = this.patchNewAttributes(updatedDocument);
-    dirty = dirty || this.patchExistingAttributes(updatedDocument);
-    dirty = dirty || this.patchAttributeRename(updatedDocument);
-    dirty = dirty || this.patchReusedAttributes(updatedDocument);
-    dirty = dirty || this.patchDeletedAttributes(updatedDocument);
-
-    return dirty ? updatedDocument : null;
-  }
-
-  private patchNewAttributes(document: DocumentModel): boolean {
-    let dirty = false;
-
-    const newData: { [attributeName: string]: any } = this.rows
-      .filter(row => isNullOrUndefined(row.id) && row.name && !this.alreadyInCollection(row.name))
-      .reduce((acc: { [attributeName: string]: any }, row) => {
-        dirty = true;
-        acc[row.name] = {value: row.value, correlationId: row.correlationId};
-        return acc;
-      }, {});
-
-    document.newData = newData;
-
-    return dirty;
-  }
-
-  private patchExistingAttributes(document: DocumentModel): boolean {
-    let dirty = false;
-    this.rows.filter(row =>
-      !isNullOrUndefined(row.id) &&
-      row.value !== document.data[row.id] &&
-      row.name === this.getCollectionAttributeById(row.id).name)
-      .forEach(row => {
-        dirty = true;
-        document.data[row.id] = row.value;
-      });
-
-    return dirty;
-  }
-
-  // patch those that are defined in collection but were unused
-  private patchReusedAttributes(document: DocumentModel): boolean {
-    let dirty = false;
-    this.rows.filter(row =>
-      isNullOrUndefined(row.id) && row.name &&
-      this.alreadyInCollection(row.name))
-      .forEach(row => {
-        dirty = true;
-        let attr = this.getCollectionAttributeByName(row.name);
-
-        row.id = attr.id;
-        row.correlationId = undefined;
-        document.data[attr.id] = row.value;
-      });
-
-    return dirty;
-  }
-
-  private patchAttributeRename(document: DocumentModel): boolean {
-    let dirty = false;
-
-    this.rows.filter(row =>
-      !isNullOrUndefined(row.id) &&
-      row.name !== this.getCollectionAttributeById(row.id).name)
-      .forEach(row => {
-        dirty = true;
-        const attr = this.getCollectionAttributeByName(row.name);
-
-        if (attr) { // renamed to existing attribute
-          if (!document.data[attr.id]) {
-            delete document.data[row.id];
-            document.data[attr.id] = row.value;
-            row.id = attr.id;
-            row.correlationId = undefined;
-          } else if (document.data[attr.id] && this.getRemovableRowByName(row.name) && this.getRowByName(row.name)) {
-            const originalRow = this.getRemovableRowByName(row.name);
-            originalRow.id = row.id;
-            document.data[attr.id] = row.value;
-            row.id = attr.id;
-            row.correlationId = undefined;
-          }
-        } else { // renamed to a completely new name
-          delete document.data[row.id];
-          row.id = null;
-          row.correlationId = CorrelationIdGenerator.generate();
-          document.newData[row.name] = { value: row.value, correlationId: row.correlationId };
-        }
-      });
-
-    return dirty;
-  }
-
-  private patchDeletedAttributes(document: DocumentModel): boolean {
-    let dirty = false;
-
-    this.collection.attributes.forEach(attr => {
-      if (document.data[attr.id] && this.getRowById(attr.id) && this.getRowById(attr.id).remove) {
-        dirty = true;
-        delete document.data[attr.id];
-      }
-    });
-
-    return dirty;
-  }
-
-  private getCollectionAttributeById(id: string): AttributeModel {
-    return this.collection.attributes.find(attr => attr.id === id);
-  }
-
-  private getCollectionAttributeByName(name: string): AttributeModel {
-    return this.collection.attributes.find(attr => attr.name === name);
-  }
-
-  private patchDocument() {
-    const updatedDocument = this.prepareUpdatedDocument();
-
-    if (updatedDocument) {
-      const documentUpdateAction = new DocumentsAction.UpdateData({ document: updatedDocument });
-
-      if (updatedDocument.newData && Object.getOwnPropertyNames(updatedDocument.newData).length > 0) {
-        const newAttributes = Object.keys(updatedDocument.newData)
-          .map(name => ({name, constraints: [], correlationId: updatedDocument.newData[name].correlationId}));
-
-        this.store.dispatch(new CollectionsAction.CreateAttributes(
-          {collectionId: this._documentModel.collectionId, attributes: newAttributes, nextAction: documentUpdateAction})
-        );
-      } else {
-        this.store.dispatch(documentUpdateAction);
-      }
+      this.subscriptions.add(this.store.select(selectOrganizationByWorkspace)
+        .pipe(filter(org => !isNullOrUndefined(org)), take(1))
+        .subscribe(org => this.store.dispatch(new UsersAction.Get({organizationId: org.id}))));
     }
   }
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
-    this.patchDocument();
+    this.documentUiService.destroy(this.collection, this.document);
   }
 
   public addAttrRow() {
-    this.rows.push({ name: '', value: '', correlationId: CorrelationIdGenerator.generate(), warning: this.getEmptyWarning() });
+    this.documentUiService.onAddRow(this.collection, this.document);
   }
 
   public onRemoveRow(idx: number) {
-    if (this.rows[idx].name) {
-      const message = this.i18n(
-        {
-          id: 'document.detail.attribute.remove.confirm',
-          value: 'Are you sure you want to delete this row?'
-        });
-      const title = this.i18n({id: 'resource.delete.dialog.title', value: 'Delete?'});
-      const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-      const noButtonText = this.i18n({id: 'button.no', value: 'No'});
-
-      this.notificationService.confirm(message, title, [
-        {text: yesButtonText, action: () => this.removeRow(idx), bold: false},
-        {text: noButtonText}
-      ]);
-    } else {
-      this.removeRow(idx);
-    }
+    this.documentUiService.onRemoveRow(this.collection, this.document, idx);
   }
 
-  private removeRow(idx: number) {
-    if (!this.rows[idx].name) {
-      this.rows.splice(idx, 1);
-    } else {
-      this.rows[idx].value = undefined;
-      this.rows[idx].remove = true;
-    }
+  public submitRowChange(idx: number, $event: [string, string]) {
+    this.documentUiService.onUpdateRow(this.collection, this.document, idx, $event);
   }
 
-  public submitRowChange(idx: number, $event: string[]) {
-    const collision = this.getRowByName($event[0]);
-
-    if (collision && collision !== this.rows[idx]) {
-      this.rows[idx].warning = this.getCollisionWarning();
-    } else {
-      this.rows[idx].name = $event[0];
-      this.rows[idx].value = $event[1];
-
-      if (!$event[0]) {
-        this.rows[idx].warning = this.getEmptyWarning();
-      } else {
-        delete this.rows[idx].warning;
-      }
-    }
+  public onRemoveDocument() {
+    this.store.dispatch(new DeleteConfirm({
+      collectionId: this.document.collectionId,
+      documentId: this.document.id,
+    }));
   }
 
-  private getEmptyWarning(): string {
-    return this.i18n({ id: 'shared.document.detail.attribute.empty', value: 'The attribute name cannot be empty.' });
+  public onToggleFavorite() {
+    this.documentUiService.onToggleFavorite(this.collection, this.document);
   }
 
-  private getCollisionWarning(): string {
-    return this.i18n({ id: 'shared.document.detail.attribute.collision', value: 'The attribute name is already used in this document.' });
+  public getRows$(): Observable<UiRow[]> {
+    return this.documentUiService.getRows$(this.collection, this.document);
   }
 
-  private getDocumentSummary(): string {
-    if (this.collection.defaultAttributeId) {
-      return this._documentModel.data[this.collection.defaultAttributeId];
-    }
+  public getFavorite$(): Observable<boolean> {
+    return this.documentUiService.getFavorite$(this.collection, this.document);
+  }
 
-    if (this.collection.attributes.length > 0) {
-      for (let attr of this.collection.attributes) {
-        if (this._documentModel.data[attr.id]) {
-          return this._documentModel.data[attr.id];
-        }
-      }
-    }
+  public getSummary$(): Observable<string> {
+    return this.documentUiService.getSummary$(this.collection, this.document);
+  }
 
-    return null;
+  public getTrackBy(): (index: number, row: UiRow) => string {
+    return this.documentUiService.getTrackBy(this.collection, this.document);
   }
 }

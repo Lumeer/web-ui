@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
@@ -141,7 +141,10 @@ export class DocumentsEffects {
     ofType<DocumentsAction.AddFavorite>(DocumentsActionType.ADD_FAVORITE),
     mergeMap(action => this.documentService.addFavorite(action.payload.collectionId, action.payload.documentId).pipe(
       mergeMap(() => of()),
-      catchError((error) => of(new DocumentsAction.AddFavoriteFailure({documentId: action.payload.documentId, error: error})))
+      catchError((error) => of(new DocumentsAction.AddFavoriteFailure({
+        documentId: action.payload.documentId,
+        error: error
+      })))
     )),
   );
 
@@ -160,7 +163,10 @@ export class DocumentsEffects {
     ofType<DocumentsAction.RemoveFavorite>(DocumentsActionType.REMOVE_FAVORITE),
     mergeMap(action => this.documentService.removeFavorite(action.payload.collectionId, action.payload.documentId).pipe(
       mergeMap(() => of()),
-      catchError((error) => of(new DocumentsAction.RemoveFavoriteFailure({documentId: action.payload.documentId, error: error})))
+      catchError((error) => of(new DocumentsAction.RemoveFavoriteFailure({
+        documentId: action.payload.documentId,
+        error: error
+      })))
     )),
   );
 
@@ -256,7 +262,10 @@ export class DocumentsEffects {
     ofType<DocumentsAction.DeleteConfirm>(DocumentsActionType.DELETE_CONFIRM),
     map((action: DocumentsAction.DeleteConfirm) => {
       const title = this.i18n({id: 'document.delete.dialog.title', value: 'Delete record'});
-      const message = this.i18n({id: 'document.delete.dialog.message', value: 'Do you really want to delete this record?'});
+      const message = this.i18n({
+        id: 'document.delete.dialog.message',
+        value: 'Do you really want to delete this record?'
+      });
 
       return new NotificationsAction.Confirm({
         title,
