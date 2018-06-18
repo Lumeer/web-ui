@@ -1,0 +1,28 @@
+<div class="d-inline-flex flex-nowrap w-100">
+  <span class="mr-1 d-flex overflow-hidden align-items-center"
+        [style.color]="collection?.color"
+        [title]="collection?.name">
+    <i class="fa-fw {{ collection?.icon }} mr-1"></i>&nbsp;
+    <span class="flex-grow-1 text-truncate">
+      {{ collection?.name }}
+    </span>
+  </span>
+
+  <div class="d-flex align-self-center">
+    <ng-container *ngIf="hasWriteRole">
+      <i class="icon text-danger fas fa-trash p-1"
+         title="Remove Record" i18n-title="@@document.button.remove"
+         (click)="onRemove()"></i>
+      <i class="icon text-success fas fa-pencil p-1"
+         title="Edit Record" i18n-title="@@document.button.edit"
+         (click)="onEdit()"></i>
+    </ng-container>
+    <i *ngIf="document.id"
+       class="icon text-warning fa-star button p-1"
+       [class.always-visible]="document.favorite"
+       title="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
+       i18n-title="@@collection.document.favorite"
+       [ngClass]="document.favorite ? 'fas' : 'far'"
+       (click)="onToggleFavorite()"></i>
+  </div>
+</div>

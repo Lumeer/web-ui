@@ -103,8 +103,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public collectionRoles: { [collectionId: string]: string[] };
 
-  private deletionHelper: DeletionHelper;
-
   public layoutManager: PostItLayout;
 
   private subscriptions: Subscription[] = [];
@@ -287,7 +285,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         collectionId: postIt.document.collectionId,
         documentId: postIt.document.id
       }));
-
     } else {
       this.deletionHelper.deletePostIt(postIt);
     }
@@ -452,7 +449,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public trackByDocument(index: number, postIt: PostItDocumentModel): number {
-    return HashCodeGenerator.hashString(postIt.document.id || postIt.document.correlationId);
+    return HashCodeGenerator.hashString(postIt.document.correlationId || postIt.document.id);
   }
 
   public ngOnDestroy(): void {

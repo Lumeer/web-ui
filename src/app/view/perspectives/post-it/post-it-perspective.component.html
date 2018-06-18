@@ -8,7 +8,7 @@
   </div>
 
   <div class="post-it-document-layout">
-    <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByDocument"
+    <post-it-document *ngFor="let postIt of postIts; trackBy:trackByDocument; let idx = index"
                       class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : 'initialized' }}"
                       [attr.order]="postIt.order"
                       [collection]="getCollection(postIt)"

@@ -24,7 +24,6 @@ $text-margin-tb: 6px;
 
   .slider {
     height: $circle-size;
-    cursor: pointer;
 
     .line {
       height: $line-size;
@@ -39,10 +38,6 @@ $text-margin-tb: 6px;
       background: $circle-color;
       -moz-border-radius: 50%;
       -webkit-border-radius: 50%;
-      transition: left $animation-duration;
-      -webkit-transition: left $animation-duration;
-      -moz-transition: left $animation-duration;
-      -o-transition: left $animation-duration;
       border-radius: 50%;
       border: 1px solid $circle-border-color;
     }

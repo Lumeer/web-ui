@@ -223,6 +223,11 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
+  public onEdit(){
+    this.selectionHelper.setEditMode(true);
+    this.selectionHelper.select(0, 0, this.postItModel)
+  }
+
   public removeValue(selectedRow: number) {
     this.postItRows[selectedRow].value = '';
   }
@@ -238,19 +243,11 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public findAttributeByName(name: string): AttributeModel {
-    if (isNullOrUndefined(this.collection)) {
-      return;
-    }
-
-    return this.collection.attributes.find(attr => attr.name === name);
+    return this.collection  && this.collection.attributes.find(attr => attr.name === name);
   }
 
   public findAttributeById(id: string): AttributeModel {
-    if (isNullOrUndefined(this.collection)) {
-      return;
-    }
-
-    return this.collection.attributes.find(attr => attr.id === id);
+    return this.collection && this.collection.attributes.find(attr => attr.id === id);
   }
 
   public isAttributeUsed(id: string) {
