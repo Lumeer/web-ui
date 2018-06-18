@@ -29,7 +29,7 @@ import {DocumentsAction} from '../../../../../core/store/documents/documents.act
 import {LinkInstanceModel} from '../../../../../core/store/link-instances/link-instance.model';
 import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
 import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableCompoundColumn, TableModel, TableRow, TableSingleColumn} from '../../../../../core/store/tables/table.model';
+import {TableModel, TableRow, TableSingleColumn} from '../../../../../core/store/tables/table.model';
 import {findTableRow} from '../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
 
@@ -173,9 +173,7 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
     return attributes => {
       const attribute = attributes.find(attribute => attribute.name === attributeName);
       if (attribute) {
-        const parent: TableSingleColumn = new TableSingleColumn(attribute.id, null, column.parent.width);
-        const columns = [new TableCompoundColumn(parent, [])];
-        this.store.dispatch(new TablesAction.ReplaceColumns({cursor, deleteCount: 1, columns}));
+        this.store.dispatch(new TablesAction.InitColumn({cursor, attributeId: attribute.id}));
       }
     };
   }

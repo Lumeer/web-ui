@@ -116,7 +116,7 @@ export namespace TablesAction {
   export class CreatePart implements Action {
     public readonly type = TablesActionType.CREATE_PART;
 
-    public constructor(public payload: { tableId: string, linkTypeId: string, config?: TableConfig }) {
+    public constructor(public payload: { tableId: string, linkTypeId: string, last?: boolean, config?: TableConfig }) {
     }
   }
 

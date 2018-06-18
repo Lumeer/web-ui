@@ -64,7 +64,8 @@ export class TablesEffects {
       const query: QueryModel = action.payload.query;
 
       const collection = collections.find(collection => collection.id === query.collectionIds[0]);
-      const part = createCollectionPart(collection, 0, config);
+      const last = !query.linkTypeIds || query.linkTypeIds.length === 0;
+      const part = createCollectionPart(collection, 0, last, config);
 
       const createTableAction: Action = new TablesAction.AddTable({
         table: {
@@ -76,22 +77,13 @@ export class TablesEffects {
         }
       });
 
-      const createPartActions: Action[] = query.linkTypeIds.map(linkTypeId => new TablesAction.CreatePart({
+      const createPartActions: Action[] = query.linkTypeIds.map((linkTypeId, index) => new TablesAction.CreatePart({
         tableId: action.payload.tableId,
         linkTypeId,
+        last: index === query.linkTypeIds.length - 1,
         config
       }));
 
-      if (createPartActions.length === 0 && part.columns.length === 0) {
-        const addColumnAction = new TablesAction.AddColumn({
-          cursor: {
-            tableId: action.payload.tableId,
-            partIndex: 0,
-            columnPath: [0]
-          }
-        });
-        return [createTableAction].concat(addColumnAction);
-      }
       return [createTableAction].concat(createPartActions);
     })
   );
@@ -149,7 +141,7 @@ export class TablesEffects {
     mergeMap(({action, table, linkType, collection}) => {
       const lastIndex = table.parts.length - 1;
       const linkTypePart = createLinkPart(linkType, lastIndex + 1, action.payload.config);
-      const collectionPart = createCollectionPart(collection, lastIndex + 2, action.payload.config);
+      const collectionPart = createCollectionPart(collection, lastIndex + 2, action.payload.last, action.payload.config);
 
       return [
         new TablesAction.AddPart({
@@ -220,35 +212,45 @@ export class TablesEffects {
   public addColumn$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.AddColumn>(TablesActionType.ADD_COLUMN),
     mergeMap(action => this.getLatestTable(action)),
-    mergeMap(({action, table}) => {
-      const {cursor} = action.payload;
-      const part: TablePart = table.parts[cursor.partIndex];
-      const columns = part.columns;
-
-      if (part.collectionId) {
-        return this.store$.select(selectCollectionById(part.collectionId)).pipe(
-          first(),
-          map(collection => ({cursor, columns, attributes: collection.attributes}))
-        );
-      } else {
-        return this.store$.select(selectLinkTypeById(part.linkTypeId)).pipe(
-          first(),
-          map(linkType => ({cursor, columns, attributes: linkType.attributes}))
-        );
-      }
-    }),
-    map(({cursor, columns, attributes}) => {
-      const parentColumn = cursor.columnPath.length > 1 ? findTableColumn(columns, cursor.columnPath.slice(0, -1)) : null;
-      const parentAttributeId = parentColumn ? (parentColumn as TableCompoundColumn).parent.attributeId : null;
-      const parentAttribute = attributes.find(attribute => attribute.id === parentAttributeId);
-      const parentName = parentAttribute ? parentAttribute.name : null;
-
-      const attributeName = generateAttributeName(attributes, parentName);
-      const column = new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
-
-      return new TablesAction.ReplaceColumns({cursor, deleteCount: 0, columns: [column]});
-    })
+    mergeMap(({action, table}) => this.createNewEmptyColumn(table, action.payload.cursor).pipe(
+      map(column => new TablesAction.ReplaceColumns({
+        cursor: action.payload.cursor,
+        deleteCount: 0,
+        columns: [column]
+      }))
+    ))
   );
+
+  private createNewEmptyColumn(table: TableModel, cursor: TableCursor): Observable<TableCompoundColumn> {
+    const part: TablePart = table.parts[cursor.partIndex];
+    const columns = part.columns;
+
+    return this.getLatestAttributes(part).pipe(
+      map(attributes => {
+        const parentColumn = cursor.columnPath.length > 1 ? findTableColumn(columns, cursor.columnPath.slice(0, -1)) : null;
+        const parentAttributeId = parentColumn ? (parentColumn as TableCompoundColumn).parent.attributeId : null;
+        const parentAttribute = attributes.find(attribute => attribute.id === parentAttributeId);
+        const parentName = parentAttribute ? parentAttribute.name : null;
+
+        const attributeName = generateAttributeName(attributes, parentName);
+        return new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
+      })
+    );
+  }
+
+  private getLatestAttributes(part: TablePart): Observable<AttributeModel[]> {
+    if (part.collectionId) {
+      return this.store$.select(selectCollectionById(part.collectionId)).pipe(
+        first(),
+        map(collection => collection.attributes)
+      );
+    } else {
+      return this.store$.select(selectLinkTypeById(part.linkTypeId)).pipe(
+        first(),
+        map(linkType => linkType.attributes)
+      );
+    }
+  }
 
   @Effect()
   public splitColumn$: Observable<Action> = this.actions$.pipe(
@@ -414,21 +416,26 @@ export class TablesEffects {
   @Effect()
   public initColumn$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.InitColumn>(TablesActionType.INIT_COLUMN),
-    mergeMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
-      first(),
-      map(table => {
-        const part: TablePart = table.parts[action.payload.cursor.partIndex];
-        const column = findTableColumn(part.columns, action.payload.cursor.columnPath) as TableCompoundColumn;
-        const parent = {...column.parent, attributeId: action.payload.attributeId};
-        const initializedColumn = {...column, parent};
+    mergeMap(action => this.getLatestTable(action)),
+    mergeMap(({action, table}) => {
+      const part: TablePart = table.parts[action.payload.cursor.partIndex];
+      const column = findTableColumn(part.columns, action.payload.cursor.columnPath) as TableCompoundColumn;
+      const parent = {...column.parent, attributeId: action.payload.attributeId};
+      const columns = [{...column, parent}];
 
-        return new TablesAction.ReplaceColumns({
-          cursor: action.payload.cursor,
-          deleteCount: 1,
-          columns: [initializedColumn]
-        });
-      })
-    ))
+      const {cursor} = action.payload;
+      const actions: Action[] = [new TablesAction.ReplaceColumns({
+        cursor,
+        deleteCount: 1,
+        columns
+      })];
+
+      if (cursor.columnPath.length === 1) {
+        actions.push(new TablesAction.AddColumn({cursor: {...cursor, columnPath: [cursor.columnPath[0] + 1]}}));
+      }
+
+      return actions;
+    })
   );
 
   @Effect()
