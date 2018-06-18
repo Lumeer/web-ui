@@ -34,7 +34,10 @@ import {findTableRow} from '../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
 
 @Directive({
-  selector: '[tableDataCell]'
+  selector: '[tableDataCell]',
+  host: {
+    '[class.uninitialized-column]': '!column?.attributeId'
+  }
 })
 export class TableDataCellDirective implements OnChanges, OnDestroy {
 

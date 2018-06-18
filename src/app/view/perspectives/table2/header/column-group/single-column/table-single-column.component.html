@@ -9,6 +9,7 @@
      (editEnd)="onEditEnd($event)"
      (mousedown)="onMouseDown()"
      class="table-border-right table-border-bottom h-100 font-italic {{cursor | dragClass}}"
+     [class.uninitialized-column]="!column?.attributeId"
      [class.text-default-attribute]="attribute$ | async | isDefaultAttribute:(collection$ | async)">
 </div>
 
