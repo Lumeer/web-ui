@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
 import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
 
@@ -27,7 +27,7 @@ import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.m
   styleUrls: ['./table-link-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableLinkInfoComponent {
+export class TableLinkInfoComponent implements AfterViewInit {
 
   @Input()
   public collections: CollectionModel[];
@@ -43,5 +43,13 @@ export class TableLinkInfoComponent {
 
   @Output()
   public removePart = new EventEmitter();
+
+  @ViewChild('linkMenu')
+  public linkMenu: ElementRef;
+
+  public ngAfterViewInit() {
+    const width = this.linkMenu.nativeElement.clientWidth;
+    document.body.style.setProperty('--table-link-info-width', `${width}px`);
+  }
 
 }
