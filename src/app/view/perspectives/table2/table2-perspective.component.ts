@@ -192,7 +192,7 @@ export class Table2PerspectiveComponent implements OnInit, OnDestroy {
         event.preventDefault();
         return this.store.dispatch(new TablesAction.EditSelectedCell({}));
       default:
-        if (!isKeyPrintable(event.keyCode)) {
+        if (!isKeyPrintable(event.keyCode) || event.key === 'Dead') {
           return;
         }
 
