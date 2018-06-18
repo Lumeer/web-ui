@@ -133,13 +133,16 @@ export class TableEditableCellDirective {
 
     this.edited = true;
 
-    const element = this.element.nativeElement;
+    const {nativeElement} = this.element;
     if (letter && !this.isCharacterDisabled(letter)) {
-      element.textContent = letter;
+      nativeElement.textContent = letter;
     }
 
     this.editStart.emit();
-    setTimeout(() => HtmlModifier.setCursorAtTextContentEnd(this.element.nativeElement));
+    setTimeout(() => {
+      nativeElement.scrollLeft = nativeElement.scrollWidth - nativeElement.clientWidth + 5;
+      HtmlModifier.setCursorAtTextContentEnd(nativeElement);
+    });
   }
 
   private stopEditing(cancel?: boolean) {
@@ -149,14 +152,17 @@ export class TableEditableCellDirective {
 
     this.edited = false;
 
+    const {nativeElement}= this.element;
     if (cancel) {
-      this.element.nativeElement.textContent = this.value;
+      nativeElement.textContent = this.value;
       this.valueChange.emit(this.value);
       this.editEnd.emit();
     } else {
-      const value = this.element.nativeElement.textContent;
+      const value = nativeElement.textContent;
       this.editEnd.emit(value);
     }
+
+    nativeElement.scrollLeft = 0;
   }
 
   private isCharacterDisabled(character: string): boolean {
