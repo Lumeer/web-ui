@@ -20,3 +20,7 @@
   @extend %highlighted;
   outline: $danger solid 2px;
 }
+
+.uninitialized-column {
+  color: $secondary;
+}
