@@ -125,7 +125,7 @@ export class DocumentUi {
   private patchExistingAttributes(document: DocumentModel): boolean {
     let dirty = false;
     this.rows.filter(row =>
-      row.newValue &&
+      !isUndefined(row.newValue) &&
       row.name === this.getCollectionAttributeById(row.id).name)
       .forEach(row => {
         dirty = true;
@@ -255,7 +255,7 @@ export class DocumentUi {
   }
 
   private refreshRows(): void {
-    if (this.document) {
+    if (this.collection && this.document) {
       this.summary = this.getDocumentSummary();
       this.summary$.next(this.summary);
 
@@ -295,11 +295,11 @@ export class DocumentUi {
   }
 
   private getDocumentSummary(): string {
-    if (this.collection.defaultAttributeId && this.document) {
+    if (this.collection && this.collection.defaultAttributeId && this.document) {
       return this.document.data[this.collection.defaultAttributeId];
     }
 
-    if (this.document && this.collection.attributes.length > 0) {
+    if (this.collection && this.document && this.collection.attributes.length > 0) {
       for (let attr of this.collection.attributes) {
         if (this.document.data[attr.id]) {
           return this.document.data[attr.id];
