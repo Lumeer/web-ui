@@ -7,7 +7,8 @@
       </div>
       <a class="dropdown-item">
         <icons-presenter [colors]="[collection.color]"
-                         [icons]="[collection.icon]">
+                         [icons]="[collection.icon]"
+                         class="mr-1">
         </icons-presenter>
         <span>{{lastName}}</span>
       </a>
@@ -26,9 +27,10 @@
            (mousedown)="useLinkType(linkedAttribute)"
            class="dropdown-item">
           <icons-presenter [colors]="[linkedAttribute.collection.color]"
-                           [icons]="[linkedAttribute.collection.icon]">
+                           [icons]="[linkedAttribute.collection.icon]"
+                           class="mr-1">
           </icons-presenter>
-          <span>{{linkedAttribute.collection.name}}.</span><span [innerHtml]="linkedAttribute.attribute.name | highlight: lastName"></span>
+          <span [innerHtml]="linkedAttribute.collection.name + '.' + (linkedAttribute.attribute.name | highlight: lastName)"></span>
           <small class="text-secondary ml-1">({{linkedAttribute.linkType.name}})</small>
         </a>
       </ng-container>
@@ -45,9 +47,10 @@
            (mousedown)="createLinkType(linkedAttribute)"
            class="dropdown-item">
           <icons-presenter [colors]="[linkedAttribute.collection.color]"
-                           [icons]="[linkedAttribute.collection.icon]">
+                           [icons]="[linkedAttribute.collection.icon]"
+                           class="mr-1">
           </icons-presenter>
-          <span>{{linkedAttribute.collection.name}}.</span><span [innerHtml]="linkedAttribute.attribute.name | highlight: lastName"></span>
+          <span [innerHtml]="linkedAttribute.collection.name + '.' + (linkedAttribute.attribute.name | highlight: lastName)"></span>
         </a>
       </ng-container>
     </ng-container>
