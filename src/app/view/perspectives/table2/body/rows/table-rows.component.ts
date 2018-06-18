@@ -93,7 +93,8 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
           partIndex: 0
         };
 
-        const rows: TableRow[] = documents.filter(document => !this.table.documentIds.has(document.id))
+        const rows: TableRow[] = documents.filter(document => document.collectionId === this.table.parts[0].collectionId)
+          .filter(document => !this.table.documentIds.has(document.id))
           .map(document => ({...EMPTY_TABLE_ROW, documentIds: [document.id]}))
           .concat({...EMPTY_TABLE_ROW, rowId: Math.random().toString(36).substr(2, 9)});
         if (rows.length > 1) {
