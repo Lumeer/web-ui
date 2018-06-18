@@ -107,7 +107,7 @@ export namespace ProjectsAction {
   export class Create implements Action {
     public readonly type = ProjectsActionType.CREATE;
 
-    public constructor(public payload: { project: ProjectModel }) {
+    public constructor(public payload: { project: ProjectModel, callback?: (project: ProjectModel) => void }) {
     }
   }
 

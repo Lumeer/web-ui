@@ -22,6 +22,17 @@ export enum DialogPath {
   CREATE_COLLECTION = 'create-collection',
   CREATE_LINK = 'create-link',
   OVERWRITE_VIEW = 'overwrite-view',
-  SHARE_VIEW = 'share-view'
+  SHARE_VIEW = 'share-view',
+  CREATE_ORGANIZATION = 'create-organization',
+  CREATE_PROJECT = 'create-project',
 
 }
+
+export const dialogPathsMap: { [id: string]: DialogPath } = {
+  [DialogPath.CREATE_COLLECTION]: DialogPath.CREATE_COLLECTION,
+  [DialogPath.CREATE_LINK]: DialogPath.CREATE_LINK,
+  [DialogPath.OVERWRITE_VIEW]: DialogPath.OVERWRITE_VIEW,
+  [DialogPath.SHARE_VIEW]: DialogPath.SHARE_VIEW,
+  [DialogPath.CREATE_ORGANIZATION]: DialogPath.CREATE_ORGANIZATION,
+  [DialogPath.CREATE_PROJECT]: DialogPath.CREATE_PROJECT
+};

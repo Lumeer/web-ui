@@ -22,8 +22,7 @@ import {Router} from '@angular/router';
 
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {filter, map, take} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
+import {filter, map, mergeMap, take} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {HtmlModifier} from '../../shared/utils/html-modifier';
 import {Resource} from '../dto';
@@ -41,11 +40,15 @@ import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {selectOrganizationByWorkspace} from '../store/organizations/organizations.state';
 import {ProjectModel} from '../store/projects/project.model';
 import {ProjectsAction} from '../store/projects/projects.action';
-import {selectProjectByWorkspace, selectProjectsByOrganizationId} from '../store/projects/projects.state';
+import {selectProjectByWorkspace, selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from '../store/projects/projects.state';
 import {RouterAction} from '../store/router/router.action';
+import {UserSettingsService} from '../user-settings.service';
+import {DialogService} from '../../dialog/dialog.service';
+import {ServiceLimitsAction} from '../store/organizations/service-limits/service-limits.action';
 import {UsersAction} from '../store/users/users.action';
 import {ViewsAction} from '../store/views/views.action';
-import {UserSettingsService} from '../user-settings.service';
+import {NotificationService} from '../notifications/notification.service';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'top-panel',
@@ -79,6 +82,9 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
 
   constructor(private store: Store<AppState>,
               private router: Router,
+              private notificationService: NotificationService,
+              private i18n: I18n,
+              private dialogService: DialogService,
               private userSettingsService: UserSettingsService) {
   }
 
@@ -86,6 +92,9 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
     this.subscribeToNavigation();
     this.subscribeToOrganization();
     this.subscribeToProject();
+
+    this.store.dispatch(new OrganizationsAction.Get());
+    this.store.dispatch(new ServiceLimitsAction.GetAll());
 
     this.notificationsDisabled = this.userSettingsService.getUserSettings().notificationsDisabled;
   }
@@ -192,11 +201,12 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
     return `w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
-  public selectOrganization(organization: Resource): void {
+  public selectOrganization(organization: OrganizationModel): void {
     this.store.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
 
-    this.store.select(selectProjectsByOrganizationId(organization.id)).pipe(
-      filter(projects => !isNullOrUndefined(projects)),
+    this.store.select(selectProjectsLoadedForOrganization(organization.id)).pipe(
+      filter(loaded => loaded),
+      mergeMap(() => this.store.select(selectProjectsByOrganizationId(organization.id))),
       take(1),
       map(projects => projects.length > 0 ? projects[0] : undefined)
     ).subscribe(project => {
@@ -213,10 +223,32 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
   }
 
   public createNewOrganization(): void {
-    // TODO call create dialog
+    this.dialogService.openCreateOrganizationDialog(organization => this.onCreateOrganization(organization));
   }
 
   public createNewProject(parentOrganization: OrganizationModel): void {
-    // TODO call create dialog
+    this.dialogService.openCreateProjectDialog(parentOrganization.id, project => this.onCreateProject(parentOrganization, project));
   }
+
+  private onCreateOrganization(organization: OrganizationModel) {
+    const successMessage = this.i18n({
+      id: 'organization.create.success',
+      value: 'Organization was successfully created'
+    });
+
+    this.notificationService.success(successMessage);
+    this.createNewProject(organization);
+  }
+
+  private onCreateProject(organization: OrganizationModel, project: ProjectModel) {
+    const successMessage = this.i18n({
+      id: 'project.create.success',
+      value: 'Project was successfully created'
+    });
+
+    this.notificationService.success(successMessage);
+
+    this.goToProject(organization, project);
+  }
+
 }

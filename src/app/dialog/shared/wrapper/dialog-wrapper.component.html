@@ -21,7 +21,8 @@
             data-dismiss="modal">
       <ng-content select=".button-cancel"></ng-content>
     </button>
-    <button [attr.aria-disabled]="submitDisabled"
+    <button *ngIf="showSubmit"
+            [attr.aria-disabled]="submitDisabled"
             [disabled]="submitDisabled"
             (click)="onSubmit()"
             type="button"

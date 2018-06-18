@@ -101,7 +101,7 @@ export namespace OrganizationsAction {
   export class Create implements Action {
     public readonly type = OrganizationsActionType.CREATE;
 
-    public constructor(public payload: { organization: OrganizationModel }) {
+    public constructor(public payload: { organization: OrganizationModel, callback?: (organization: OrganizationModel) => void }) {
     }
   }
 

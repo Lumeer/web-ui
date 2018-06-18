@@ -22,6 +22,7 @@ import {Perspective, perspectivesMap} from '../../../view/perspectives/perspecti
 import {RouterStateUrl} from '../router/lumeer-router-state-serializer';
 import {NavigationState} from './navigation.state';
 import {QueryConverter} from './query.converter';
+import {AppState} from '../app.state';
 
 function onRouterNavigation(state: NavigationState, action: RouterNavigationAction<RouterStateUrl>): NavigationState {
   const {data, params, queryParams, url} = action.payload.routerState;
@@ -52,12 +53,12 @@ function extractPerspectiveIdFromUrl(url: string): string {
   }
 }
 
-function onRouterCancel(state: NavigationState, action: RouterCancelAction<NavigationState>) {
-  return (action as RouterCancelAction<NavigationState>).payload.storeState;
+function onRouterCancel(state: NavigationState, action: RouterCancelAction<AppState>): NavigationState {
+  return action.payload.storeState.navigation;
 }
 
 export function navigationReducer(state: NavigationState,
-                                  action: RouterNavigationAction<RouterStateUrl> | RouterCancelAction<NavigationState>): NavigationState {
+                                  action: RouterNavigationAction<RouterStateUrl> | RouterCancelAction<AppState>): NavigationState {
   switch (action.type) {
     case ROUTER_NAVIGATION:
       return onRouterNavigation(state, action);

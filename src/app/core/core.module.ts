@@ -50,6 +50,8 @@ import {AppStoreModule} from './store/app-store.module';
 import {UserSettingsService} from './user-settings.service';
 import {CollectionValidators} from './validators/collection.validators';
 import {TopPanelModule} from './top-panel/top-panel.module';
+import {OrganizationValidators} from './validators/organization.validators';
+import {ProjectValidators} from './validators/project.validators';
 
 @NgModule({
   imports: [
@@ -96,7 +98,9 @@ import {TopPanelModule} from './top-panel/top-panel.module';
     SnotifyService,
     NotificationService,
     WorkspaceGuard,
-    CollectionValidators
+    CollectionValidators,
+    OrganizationValidators,
+    ProjectValidators
   ],
   exports: [
     TopPanelModule,

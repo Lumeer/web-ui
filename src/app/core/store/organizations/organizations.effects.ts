@@ -37,6 +37,8 @@ import {isNullOrUndefined} from 'util';
 import {Permission} from '../../dto';
 import {PermissionType} from '../permissions/permissions.model';
 import {PermissionsConverter} from '../permissions/permissions.converter';
+import {CommonAction} from '../common/common.action';
+import {ServiceLimitsAction} from './service-limits/service-limits.action';
 
 @Injectable()
 export class OrganizationsEffects {
@@ -90,10 +92,18 @@ export class OrganizationsEffects {
       return this.organizationService.createOrganization(organizationDto).pipe(
         map(dto => OrganizationConverter.fromDto(dto, correlationId)),
         withLatestFrom(this.store$.select(selectOrganizationCodes)),
-        flatMap(([organization, organizationCodes]) => {
+        mergeMap(([organization, organizationCodes]) => {
           const codes = [...organizationCodes, organization.code];
-          return [new OrganizationsAction.CreateSuccess({organization}),
-            new OrganizationsAction.GetCodesSuccess({organizationCodes: codes})];
+          const actions: Action[] = [new OrganizationsAction.CreateSuccess({organization}),
+            new OrganizationsAction.GetCodesSuccess({organizationCodes: codes}),
+            new ServiceLimitsAction.GetServiceLimits({organizationId: organization.id})];
+
+          const {callback} = action.payload;
+          if (callback) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(organization)}));
+          }
+
+          return actions;
         }),
         catchError(error => of(new OrganizationsAction.CreateFailure({error: error})))
       );

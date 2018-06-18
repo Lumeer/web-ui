@@ -68,10 +68,10 @@
 
   </div>
 
-  <div class="error text-center px-2" *ngIf="!nameFormControl.valid"
+  <small class="text-danger text-center px-2" *ngIf="!nameFormControl.valid"
        i18n="@@collection.postit.name.duplicity">
     Sorry, this name is already taken. Try another?
-  </div>
+  </small>
 
   <post-it-collection-name
     [collectionName]="collection.name"

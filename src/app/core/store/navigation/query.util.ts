@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+
 import {ConditionType, QueryModel} from './query.model';
 import {QueryItem} from '../../../shared/search-box/query-item/model/query-item';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {QueryItemType} from '../../../shared/search-box/query-item/model/query-item-type';
-import {QueryConverter} from './query.converter';
 
 const EqVariants = ['=', '==', 'eq', 'equals'];
 const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];
@@ -74,8 +74,8 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
     case QueryItemType.Attribute:
       return new FormGroup({
         text: new FormControl(queryItem.text, Validators.required),
-        condition: new FormControl(queryItem.condition, [Validators.required, conditionValidator, notEmptyValidator]),
-        conditionValue: new FormControl(queryItem.conditionValue, [Validators.required, notEmptyValidator])
+        condition: new FormControl(queryItem.condition, [Validators.required, conditionValidator]),
+        conditionValue: new FormControl(queryItem.conditionValue, [Validators.required])
       });
   }
 }
@@ -84,11 +84,6 @@ export function conditionValidator(input: FormControl): { [key: string]: any } {
   const value = input.value.toString().trim();
   const isCondition = conditionFromString(value) != null;
   return !isCondition ? {'invalidCondition': value} : null;
-}
-
-export function notEmptyValidator(input: FormControl): { [key: string]: any } {
-  const value = input.value.toString().trim();
-  return value === '' ? {'emptyValue': value} : null;
 }
 
 export function conditionFromString(condition: string): ConditionType {

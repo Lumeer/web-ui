@@ -1,0 +1,30 @@
+<div class="form-group row" [formGroup]="form">
+
+  <label class="col-2 col-form-label"
+         i18n="@@resource.new.dialog.code.label"
+         for="code">Code</label>
+
+  <div class="col-10">
+    <input type="text"
+           id="code"
+           trim
+           formControlName="code"
+           class="form-control"
+           i18n-placeholder="@@resource.new.dialog.code.placeholder"
+           placeholder="Enter code">
+
+  </div>
+
+  <small *ngIf="codeInput.invalid && (codeInput.dirty || codeInput.touched)"
+         class="text-danger col-10 ml-auto mt-1">
+          <span *ngIf="codeInput.errors.minlength || codeInput.errors.maxlength"
+                i18n="@@resource.new.dialog.code.error.length">
+            Code must be from 2 to 5 characters.
+          </span>
+    <span *ngIf="codeInput.errors.notUniqueCode"
+          i18n="@@resource.new.dialog.code.error.duplicity">
+            Sorry, this code is already taken. Try another?
+          </span>
+  </small>
+
+</div>

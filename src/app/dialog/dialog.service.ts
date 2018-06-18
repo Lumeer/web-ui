@@ -22,6 +22,8 @@ import {Router} from '@angular/router';
 import {CollectionModel} from '../core/store/collections/collection.model';
 import {LinkTypeModel} from '../core/store/link-types/link-type.model';
 import {DialogPath} from './dialog-path';
+import {OrganizationModel} from '../core/store/organizations/organization.model';
+import {ProjectModel} from '../core/store/projects/project.model';
 
 /**
  * If callback is provided in any of the open*() methods, the calling component is responsible for closing the dialog
@@ -41,6 +43,16 @@ export class DialogService {
     this.callback = null;
     this.open = false;
     this.navigateToDialog(null);
+  }
+
+  public openCreateOrganizationDialog(callback?: (organization: OrganizationModel) => void) {
+    this.callback = callback;
+    this.navigateToDialog([DialogPath.CREATE_ORGANIZATION]);
+  }
+
+  public openCreateProjectDialog(organizationId: string, callback?: (project: ProjectModel) => void) {
+    this.callback = callback;
+    this.navigateToDialog([DialogPath.CREATE_PROJECT, organizationId]);
   }
 
   public openCreateCollectionDialog(callback?: (collection: CollectionModel) => void) {

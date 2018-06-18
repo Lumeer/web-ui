@@ -20,33 +20,39 @@
 import {Injectable} from '@angular/core';
 import {AbstractControl} from '@angular/forms';
 import {AsyncValidatorFn} from '@angular/forms/src/directives/validators';
+
 import {Store} from '@ngrx/store';
 import {filter, map, take} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
-import {CollectionsAction} from '../store/collections/collections.action';
-import {selectCollectionNames} from '../store/collections/collections.state';
-import {selectWorkspace} from '../store/navigation/navigation.state';
 import {isNullOrUndefined} from 'util';
+import {OrganizationsAction} from '../store/organizations/organizations.action';
+import {selectOrganizationCodes} from '../store/organizations/organizations.state';
+import {ProjectsAction} from '../store/projects/projects.action';
+import {selectProjectsCodesForOrganization} from '../store/projects/projects.state';
 
 @Injectable()
-export class CollectionValidators {
+export class ProjectValidators {
+
+  private currentOrganizationId: string;
 
   constructor(private store: Store<AppState>) {
-    this.store.select(selectWorkspace).pipe(
-      filter(workspace => Boolean(workspace && workspace.organizationCode && workspace.projectCode))
-    ).subscribe(() => this.store.dispatch(new CollectionsAction.GetNames()));
   }
 
-  public uniqueName(excludeName?: string): AsyncValidatorFn {
+  public setOrganizationId(id: string) {
+    this.currentOrganizationId = id;
+    this.store.dispatch(new ProjectsAction.GetCodes({organizationId: id}));
+  }
+
+  public uniqueCode(excludeCode?: string): AsyncValidatorFn {
     return (control: AbstractControl) =>
-      this.store.select(selectCollectionNames).pipe(
-        filter(collectionNames => !isNullOrUndefined(collectionNames)),
-        map(collectionNames => {
-          const names = collectionNames.map(name => name.toLowerCase());
+      this.store.select(selectProjectsCodesForOrganization(this.currentOrganizationId)).pipe(
+        filter(codes => !isNullOrUndefined(codes)),
+        map(codes => {
+          const codesLowerCase = codes.map(code => code.toLowerCase());
           const value = control.value.trim().toLowerCase();
 
-          if ((excludeName && excludeName.toLowerCase() !== value) && names.includes(value)) {
-            return {uniqueName: true};
+          if ((!excludeCode || excludeCode.toLowerCase() !== value) && codesLowerCase.includes(value)) {
+            return {notUniqueCode: true};
           } else {
             return null;
           }

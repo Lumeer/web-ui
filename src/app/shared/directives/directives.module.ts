@@ -17,32 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {DialogType} from '../../dialog-type';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-@Component({
-  selector: 'dialog-wrapper',
-  templateUrl: './dialog-wrapper.component.html'
+import {NgVarDirective} from './ng-var.directive';
+import {TrimValueAccessor} from './trim-value-accessor';
+
+@NgModule({
+  imports: [
+    CommonModule,
+  ],
+  declarations: [
+    NgVarDirective,
+    TrimValueAccessor
+  ],
+  exports: [
+    NgVarDirective,
+    TrimValueAccessor
+  ]
 })
-export class DialogWrapperComponent {
-
-  @Input()
-  public submitDisabled: boolean;
-
-  @Input()
-  public showSubmit: boolean = true;
-
-  @Input()
-  public type: DialogType;
-
-  @Input()
-  public width: number;
-
-  @Output()
-  public submit = new EventEmitter();
-
-  public onSubmit() {
-    this.submit.emit();
-  }
-
+export class DirectivesModule {
 }

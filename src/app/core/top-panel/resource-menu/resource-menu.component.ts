@@ -18,6 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+
 import {Resource} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace.model';
 import {Observable} from 'rxjs/index';
@@ -26,7 +27,6 @@ import {selectAllOrganizations} from '../../store/organizations/organizations.st
 import {OrganizationModel} from '../../store/organizations/organization.model';
 import {ProjectModel} from '../../store/projects/project.model';
 import {AppState} from '../../store/app.state';
-import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {selectProjectsForWorkspace} from '../../store/projects/projects.state';
 import {ResourceType} from '../../model/resource-type';
@@ -47,21 +47,16 @@ export class ResourceMenuComponent implements OnInit, OnChanges {
   @Output() public onNewResource = new EventEmitter<ResourceType>();
   @Output() public onResourceSelect = new EventEmitter<Resource>();
 
-  private organizations$: Observable<OrganizationModel[]>;
-  private projects$: Observable<ProjectModel[]>;
+  public organizations$: Observable<OrganizationModel[]>;
+  public projects$: Observable<ProjectModel[]>;
 
   private dispatched = false;
 
-  constructor(private store: Store<AppState>,
-              private router: Router) {
+  constructor(private store: Store<AppState>) {
   }
 
   public ngOnInit() {
     this.bindData();
-
-    this.store.dispatch(new OrganizationsAction.GetCodes());
-    this.store.dispatch(new OrganizationsAction.Get());
-
   }
 
   public isOrganizationType(): boolean {
@@ -71,18 +66,6 @@ export class ResourceMenuComponent implements OnInit, OnChanges {
   private bindData(): void {
     this.organizations$ = this.store.select(selectAllOrganizations);
     this.projects$ = this.store.select(selectProjectsForWorkspace);
-  }
-
-  public goToOrganization(page: string) {
-    if (this.workspace && this.workspace.organizationCode) {
-      this.router.navigate(['organization', this.workspace.organizationCode, page]);
-    }
-  }
-
-  public goToProject(page: string) {
-    if (this.workspace && this.workspace.organizationCode && this.workspace.projectCode) {
-      this.router.navigate(['organization', this.workspace.organizationCode, 'project', this.workspace.projectCode, page]);
-    }
   }
 
   public newResource(): void {

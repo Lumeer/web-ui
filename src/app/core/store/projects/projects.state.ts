@@ -54,6 +54,10 @@ export const selectProjectsCodesForSelectedOrganization = createSelector(
   }
 );
 
+export const selectProjectsCodesForOrganization = (id) => createSelector(selectProjectsCodes, projectCodes => projectCodes[id]);
+
+export const selectProjectsLoadedForOrganization = (id) => createSelector(selectProjectsLoaded, loaded => loaded[id]);
+
 export const selectProjectsForSelectedOrganization = createSelector(selectAllProjects, selectSelectedOrganizationId, (projects, organizationId) => {
   return projects.filter(project => project.organizationId === organizationId);
 });
