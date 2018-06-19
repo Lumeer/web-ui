@@ -112,6 +112,7 @@ export function createTableColumnsFromAttributes(allAttributes: AttributeModel[]
                                                  parentAttribute?: AttributeModel,
                                                  columnsConfig: TableConfigColumn[] = []): TableColumn[] {
   const attributes = filterDirectAttributeChildren(allAttributes, parentAttribute);
+  attributes.sort((a, b) => Number(a.id.slice(1)) - Number(b.id.slice(1)));
 
   if (columnsConfig && columnsConfig.length) {
     return createColumnsFromConfig(columnsConfig, allAttributes, attributes);
