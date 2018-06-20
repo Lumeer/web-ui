@@ -50,7 +50,7 @@
                               [cursor]="cursor | columnCursor:columnIndex"
                               [documents]="documents"
                               [linkInstances]="linkInstances"
-                              [selected]="row.selectedCursor | async | cursorEquals:(cursor | columnCursor:columnIndex)"
+                              [selected]="row.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
                               [style.width]="column | columnWidth | pixel"
                               [class.transparent-border-top]="cursor | isFirstRow"
                               (mousedown)="onMouseDown($event, columnIndex)"
