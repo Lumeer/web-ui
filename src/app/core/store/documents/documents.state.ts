@@ -18,17 +18,13 @@
  */
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {Dictionary} from '@ngrx/entity/src/models';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {CollectionModel} from '../collections/collection.model';
-import {selectCollectionsDictionary} from '../collections/collections.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {QueryModel} from '../navigation/query.model';
-
 import {DocumentModel} from './document.model';
+import {sortDocumentsByCreationDate} from './document.utils';
 import {filterDocumentsByQuery} from './documents.filters';
-import {isNullOrUndefined} from 'util';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   queries: QueryModel[];
@@ -50,12 +46,12 @@ export const selectDocumentsByQuery = createSelector(selectAllDocuments, selectQ
 );
 
 export const selectDocumentsByCustomQuery = (query: QueryModel) => createSelector(selectAllDocuments,
-  (documents): DocumentModel[] => filterDocuments(documents, query)
+  (documents): DocumentModel[] => filterDocuments(sortDocumentsByCreationDate(documents), query)
 );
 
 export const selectDocumentById = (id: string) => createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);
 
-export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary,documentsMap => ids.map(id => documentsMap[id]));
+export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary, documentsMap => ids.map(id => documentsMap[id]));
 
 function filterDocuments(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
   return filterDocumentsByQuery(documents, query);

@@ -17,27 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DocumentModel {
+import {DocumentModel} from './document.model';
 
-  id?: string;
-  collectionId: string;
-  data: { [attributeId: string]: any };
-  newData?: { [attributeName: string]: {value: any, correlationId?: string} };
-
-  favorite?: boolean;
-
-  creationDate?: Date;
-  updateDate?: Date;
-  createdBy?: string;
-  updatedBy?: string;
-  dataVersion?: number;
-
-  correlationId?: string;
-
-}
-
-export interface DocumentDataModel {
-  attributeId?: string;
-  name?: string;
-  value?: any;
+export function sortDocumentsByCreationDate(documents: DocumentModel[]): DocumentModel[] {
+  const sortedDocuments = [...documents];
+  return sortedDocuments.sort((a, b) => a.creationDate.getTime() - b.creationDate.getTime());
 }
