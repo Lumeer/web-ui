@@ -30,11 +30,16 @@ import {QueryModel} from '../../../../../../../../core/store/navigation/query.mo
 import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
 import {TableModel, TableSingleColumn} from '../../../../../../../../core/store/tables/table.model';
 import {findTableRow, splitRowPath} from '../../../../../../../../core/store/tables/table.utils';
+import {TABLE_ROW_HEIGHT} from '../../../../../shared/pipes/column-height.pipe';
 
 @Component({
   selector: 'table-data-cell-suggestions',
   templateUrl: './table-data-cell-suggestions.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[style.position]': `'relative'`,
+    '[style.top.px]': 'tableRowHeight'
+  }
 })
 export class TableDataCellSuggestionsComponent implements OnChanges {
 
@@ -49,6 +54,8 @@ export class TableDataCellSuggestionsComponent implements OnChanges {
 
   @Input()
   public value: string;
+
+  public readonly tableRowHeight = TABLE_ROW_HEIGHT;
 
   public documents$: Observable<DocumentModel[]>;
 

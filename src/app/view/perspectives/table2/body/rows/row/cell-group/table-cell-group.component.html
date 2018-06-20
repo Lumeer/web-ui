@@ -8,6 +8,13 @@
           linkInstance: linkInstances ? linkInstances[0] : null,
           selected: row.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)
         }; let cell">
+          <table-data-cell-suggestions *ngIf="!(cursor | isFirstPart) && !((document | entityCreated) || (linkInstance | entityCreated)) && editedValue"
+                                       [column]="column"
+                                       [cursor]="cell.cursor"
+                                       [table]="table"
+                                       [value]="editedValue">
+          </table-data-cell-suggestions>
+
           <div tableDataCell
                [affected]="editedAttribute$ | async | affectedCell:(documents || linkInstances):column"
                [column]="column"
@@ -26,13 +33,6 @@
                (mousedown)="onMouseDown($event, columnIndex)"
                class="d-block table-border-right table-border-bottom">
           </div>
-
-          <table-data-cell-suggestions *ngIf="!(cursor | isFirstPart) && !((document | entityCreated) || (linkInstance | entityCreated)) && editedValue"
-                                       [column]="column"
-                                       [cursor]="cell.cursor"
-                                       [table]="table"
-                                       [value]="editedValue">
-          </table-data-cell-suggestions>
 
           <table-data-cell-menu #dataCellMenu
                                 *ngIf="cell.selected"
