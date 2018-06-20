@@ -33,7 +33,8 @@ import {TablesAction} from '../../../../../core/store/tables/tables.action';
   templateUrl: './table-rows.component.html',
   host: {
     '[class.d-flex]': 'true',
-    '[class.flex-column]': 'true'
+    '[class.flex-column]': 'true',
+    '[style.width]': `'min-content'`
   },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
