@@ -122,7 +122,7 @@ export class TableColumnGroupComponent implements OnChanges {
     if (column && column.type === TableColumnType.COMPOUND) {
       const part = this.table.parts[this.cursor.partIndex];
       const {parent} = column as TableCompoundColumn;
-      return part.collectionId + ':' + (parent.attributeId || parent.attributeName);
+      return part.collectionId + ':' + (parent.attributeId || parent.uniqueId);
     }
   }
 

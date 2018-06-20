@@ -152,7 +152,7 @@ export class TableEditableCellDirective {
 
     this.edited = false;
 
-    const {nativeElement}= this.element;
+    const {nativeElement} = this.element;
     if (cancel) {
       nativeElement.textContent = this.value;
       this.valueChange.emit(this.value);
