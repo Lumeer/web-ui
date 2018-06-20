@@ -10,7 +10,7 @@ import {TABLE_ROW_HEIGHT} from './column-height.pipe';
 export class HeaderHeightPipe implements PipeTransform {
 
   public transform(table: TableModel, cursor: TableHeaderCursor): number {
-    const rowspan = calculateColumnRowspan(table, cursor.partIndex, cursor.columnPath);
+    const rowspan = calculateColumnRowspan(table, cursor.partIndex, cursor.columnPath) || 1;
     return rowspan * TABLE_ROW_HEIGHT;
   }
 

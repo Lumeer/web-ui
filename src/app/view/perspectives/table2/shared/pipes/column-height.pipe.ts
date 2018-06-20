@@ -15,7 +15,7 @@ export class ColumnHeightPipe implements PipeTransform {
       return TABLE_ROW_HEIGHT;
     }
 
-    const rowspan = calculateColumnRowspan(table, cursor.partIndex, cursor.columnPath.slice(0, cursor.columnPath.length - 1));
+    const rowspan = calculateColumnRowspan(table, cursor.partIndex, cursor.columnPath.slice(0, cursor.columnPath.length - 1)) || 1;
     return rowspan * TABLE_ROW_HEIGHT;
   }
 
