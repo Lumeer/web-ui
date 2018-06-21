@@ -74,13 +74,18 @@ export class IconComponent implements OnInit, AfterViewInit {
     $(`#${this.dropdownId}`).on('hide.bs.dropdown', () => this.detectChanges());
   }
 
-  public detectChanges() {
+  public detectChanges(): void {
     if (this.color !== this.changedIcon) {
       this.colorChange.emit(this.changedColor);
     }
     if (this.icon !== this.changedIcon) {
       this.iconChange.emit(this.changedIcon);
     }
+  }
+
+  public revertSelectedColor($event: MouseEvent): void {
+    this.changedColor = this.color;
+    this.changedIcon = this.icon;
   }
 
 }

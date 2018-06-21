@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 
 import * as colors from './colors';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -29,7 +29,7 @@ declare let $: any;
   templateUrl: './color-picker.component.html',
   styleUrls: ['./color-picker.component.scss']
 })
-export class ColorPickerComponent implements OnInit {
+export class ColorPickerComponent implements OnInit, AfterViewInit {
 
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent): void {
@@ -44,6 +44,9 @@ export class ColorPickerComponent implements OnInit {
 
   @Output()
   public selectedChange = new EventEmitter<string>();
+
+  @Input()
+  public dropdownId: string;
 
   public selected: string;
 
@@ -61,6 +64,10 @@ export class ColorPickerComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.resetColor();
+  }
+
+  private resetColor(): void {
     this.selected = this.color;
   }
 
@@ -122,5 +129,13 @@ export class ColorPickerComponent implements OnInit {
         __this.preview(color.toHexString());
       }
     });
+  }
+
+  public ngAfterViewInit(): void {
+    if (this.dropdownId) {
+      $(`#${this.dropdownId}`).on('show.bs.dropdown', () => {
+        this.resetColor();
+      });
+    }
   }
 }

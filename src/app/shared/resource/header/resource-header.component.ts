@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
 
 import {ResourceType} from '../../../core/model/resource-type';
 import {ResourceModel} from '../../../core/model/resource.model';
@@ -41,7 +41,20 @@ export class ResourceHeaderComponent {
   @Output() public delete = new EventEmitter();
   @Output() public back = new EventEmitter();
 
+  private oldIcon: string;
+  private oldColor: string;
+  private clickedComponent: any;
+
   constructor(private i18n: I18n) {
+  }
+
+  @HostListener('document:click', ['$event'])
+  public documentClicked($event): void {
+    if (this.clickedComponent && $event.target !== this.clickedComponent) {
+      this.resource.icon = this.oldIcon || this.resource.icon;
+      this.resource.color = this.oldColor || this.resource.color;
+      $event.stopPropagation();
+    }
   }
 
   public hasVisibleCode(): boolean {
@@ -68,14 +81,6 @@ export class ResourceHeaderComponent {
     if (this.hasVisibleCode()) {
       this.nameChange.emit(value);
     }
-  }
-
-  public onNewColor(color: string) {
-    this.colorChange.emit(color);
-  }
-
-  public onNewIcon(icon: string) {
-    this.iconChange.emit(icon);
   }
 
   public onNewDescription(description: string) {
@@ -137,4 +142,20 @@ export class ResourceHeaderComponent {
     return this.resourceType === ResourceType.Collection;
   }
 
+  public saveSelectedColor($event: MouseEvent): void {
+    this.colorChange.emit(this.resource.color);
+    this.iconChange.emit(this.resource.icon);
+  }
+
+  public revertSelectedColor($event: MouseEvent): void {
+    this.resource.color = this.oldColor;
+    this.resource.icon = this.oldIcon;
+  }
+
+
+  public storeIconAndColor($event: MouseEvent): void {
+    this.clickedComponent = $event.target;
+    this.oldColor = this.resource.color;
+    this.oldIcon = this.resource.icon;
+  }
 }
