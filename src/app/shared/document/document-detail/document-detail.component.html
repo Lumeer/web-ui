@@ -4,7 +4,7 @@
       <h4>
         <span i18n="@@document.detail.heading">Document detail</span>
       </h4>
-      <span class="small"><i class="fas {{collection?.icon}}" [style.color]="collection?.color"></i>&nbsp;{{collection?.name}}</span>&nbsp;
+      <span class="small"><i class="{{collection?.icon}}" [style.color]="collection?.color"></i>&nbsp;{{collection?.name}}</span>&nbsp;
       <strong *ngIf="getSummary$() | async">{{getSummary$() | async}}</strong>
       <em *ngIf="!(getSummary$() | async)" i18n="@@shared.document.detail.document.indistinguishable">Indistinguishable
         document</em>

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
@@ -39,9 +39,9 @@ import DeleteConfirm = DocumentsAction.DeleteConfirm;
   selector: 'document-detail',
   templateUrl: './document-detail.component.html',
   styleUrls: ['./document-detail.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocumentDetailComponent implements OnInit, OnDestroy, OnChanges {
+export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   @Input()
   public collection: CollectionModel;
@@ -53,6 +53,8 @@ export class DocumentDetailComponent implements OnInit, OnDestroy, OnChanges {
 
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;
+
+  private last: { collection: CollectionModel, document: DocumentModel };
 
   private subscriptions = new Subscription();
 
@@ -69,6 +71,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy, OnChanges {
   @Input('document')
   set _document(model: DocumentModel) {
     this.document = model;
+
     this.renewSubscriptions();
   }
 
@@ -76,15 +79,14 @@ export class DocumentDetailComponent implements OnInit, OnDestroy, OnChanges {
     this.renewSubscriptions();
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    this.renewSubscriptions();
-  }
-
   private renewSubscriptions(): void {
     this.subscriptions.unsubscribe();
-    this.documentUiService.destroy(this.collection, this.document);
+    if (this.last) {
+      this.documentUiService.destroy(this.last.collection, this.last.document);
+    }
 
     if (this.collection && this.document) {
+      this.last = { collection: this.collection, document: this.document };
       this.documentUiService.init(this.collection, this.document);
 
       this.createdBy$ = this.store.select(selectUserById(this.document.createdBy))
@@ -96,6 +98,10 @@ export class DocumentDetailComponent implements OnInit, OnDestroy, OnChanges {
         .pipe(filter(org => !isNullOrUndefined(org)), take(1))
         .subscribe(org => this.store.dispatch(new UsersAction.Get({organizationId: org.id}))));
     }
+  }
+
+  private unsubscribeAll() {
+
   }
 
   public ngOnDestroy() {

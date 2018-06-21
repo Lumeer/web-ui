@@ -5,7 +5,7 @@
       [class.active]="collection.id === selectedCollection"
       title="{{collection.name}}"
       (click)="setActiveCollection(collection)">
-      <i class="fas {{collection.icon}}" [style.color]="collection.color"></i>
+      <i class="{{collection.icon}}" [style.color]="collection.color"></i>
       {{collection.name}}
     </a>
   </li>

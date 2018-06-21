@@ -56,7 +56,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
   public activeIndex = 0;
 
   private allSubscriptions = new Subscription();
-  private dataSubscriptions = new Subscription();
+  private dataSubscription: Subscription;
 
   private query: QueryModel;
 
@@ -119,10 +119,14 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
 
   private unsubscribeAll() {
     this.allSubscriptions.unsubscribe();
-    this.dataSubscriptions.unsubscribe();
+    if (this.dataSubscription) {
+      this.dataSubscription.unsubscribe();
+    }
   }
 
   public setActiveCollection(collection: CollectionModel) {
+    this.selectedDocument = null;
+    this.activeIndex = 0;
     this.selectedCollection = collection;
     this.getData();
     this.selectCollection.emit(collection);
@@ -137,16 +141,20 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
 
   private updateDataSubscription() {
     if (this.collectionQuery) {
+      if (this.dataSubscription) {
+        this.dataSubscription.unsubscribe();
+      }
+
       this.documents$ = this.store.select(selectDocumentsByCustomQuery(this.collectionQuery));
       this.collection$ = this.store.select(selectCollectionById(this.selectedCollection.id));
 
-      this.dataSubscriptions.unsubscribe();
-      this.allSubscriptions.add(this.documents$.pipe(filter(documents => !!documents && documents.length > 0),
+      this.dataSubscription = this.documents$.pipe(filter(documents => !!documents && documents.length > 0),
         tap(documents => {
           this.documentsCount = documents.length;
         }),
         withLatestFrom(this.store.select(selectViewCursor)))
         .subscribe(([documents, cursor]) => {
+
           let idx;
           if (cursor && cursor.documentId) {
             idx = documents.findIndex(d => d.id === cursor.documentId);
@@ -159,11 +167,11 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
             this.activeIndex = idx;
 
             // we might get different index when a new document was added but it is already selected
-            if (!this.selectedDocument || this.selectedDocument.id !== documents[idx].id) {
+            if ((!this.selectedDocument || this.selectedDocument.id !== documents[idx].id) && documents.length > idx) {
               this.setActiveDocument(documents[idx]);
             }
           }
-        }));
+        });
     }
   }
 

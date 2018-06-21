@@ -288,6 +288,10 @@ export class DocumentUi {
 
       this.rowsChanged();
     } else {
+      this.summary = '';
+      this.summary$.next(this.summary);
+
+      this.favorite$.next(false);
       this.rows = [];
       this.addedRows = [];
       this.rowsChanged();

@@ -28,7 +28,9 @@ import {NotificationService} from '../notifications/notification.service';
 import {Injectable} from '@angular/core';
 import {DocumentUi} from './document-ui';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DocumentUiService {
 
   private state: { [key: string]: DocumentUi } = {};
@@ -89,7 +91,7 @@ export class DocumentUiService {
     }
   }
 
-  public onUpdateRow(collection: CollectionModel, document: DocumentModel, idx: number, keyValue: string[]): void {
+  public onUpdateRow(collection: CollectionModel, document: DocumentModel, idx: number, keyValue: [string, string]): void {
     let key = DocumentUiService.getKey(collection, document);
     if (key) {
       let state = this.state[key];
