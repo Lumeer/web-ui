@@ -8,8 +8,8 @@
     </span>
   </span>
 
-  <div class="d-flex align-self-center">
-    <ng-container *ngIf="hasWriteRole">
+  <div class="d-flex align-self-center ml-auto">
+    <ng-container *ngIf="!readonly">
       <i class="icon text-danger fas fa-trash p-1"
          title="Remove Record" i18n-title="@@document.button.remove"
          (click)="onRemove()"></i>
@@ -17,12 +17,12 @@
          title="Edit Record" i18n-title="@@document.button.edit"
          (click)="onEdit()"></i>
     </ng-container>
-    <i *ngIf="document.id"
+    <i *ngIf="initialized"
        class="icon text-warning fa-star button p-1"
-       [class.always-visible]="document.favorite"
-       title="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
+       [class.always-visible]="favorite"
+       title="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"
        i18n-title="@@collection.document.favorite"
-       [ngClass]="document.favorite ? 'fas' : 'far'"
+       [ngClass]="favorite ? 'fas' : 'far'"
        (click)="onToggleFavorite()"></i>
   </div>
 </div>

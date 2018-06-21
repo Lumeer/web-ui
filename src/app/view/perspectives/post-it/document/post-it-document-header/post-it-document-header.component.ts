@@ -32,9 +32,11 @@ export class PostItDocumentHeaderComponent {
 
   @Input() public collection: CollectionModel;
 
-  @Input() public document: DocumentModel;
+  @Input() public initialized: boolean;
 
-  @Input() public hasWriteRole: boolean;
+  @Input() public favorite: boolean;
+
+  @Input() public readonly: boolean;
 
   @Output() public remove = new EventEmitter();
 

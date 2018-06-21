@@ -1,89 +1,63 @@
 <post-it-document-header
   class="card-header px-2 py-1 d-flex"
   [collection]="collection"
-  [hasWriteRole]="hasWriteRole()"
-  [document]="postItModel.document"
+  [readonly]="!hasWriteRole"
+  [favorite]="getFavorite$() | async"
+  [initialized]="postItModel.document.id"
   (remove)="onRemove()"
-  (toggleFavorite)="toggleFavorite()"
+  (toggleFavorite)="onToggleFavorite()"
   (edit)="onEdit()">
 </post-it-document-header>
 
 <div class="card-body p-2">
   <ul class="m-0 p-0" #content>
+    <ng-container *ngFor="let row of getRows$() | async as rows; trackBy:getTrackBy(); let index = index">
 
-    <ng-container *ngIf="hasWriteRole()">
-      <li class="w-100" *ngFor="let data of postItRows; let row = index">
+      <li class="w-100" *ngIf="!row.remote">
         <post-it-document-cell
           class="w-50"
           [index]="postItModel.order"
-          [row]="row"
+          [row]="index"
+          [readonly]="!hasWriteRole"
           [column]="0"
-          [additionalClasses]="isDefaultAttribute(data.attributeId) ? 'attribute text-default-attribute' : 'attribute'"
+          [additionalClasses]="isDefaultAttribute(row.id) ? 'attribute text-default-attribute' : 'attribute'"
           [perspectiveId]="perspectiveId"
           [selectionHelper]="selectionHelper"
           [suggestionListId]="suggestionListId()"
-          [model]="data.attributeName"
-          (removeRow)="removeRow(row)"
-          (blur)="onUpdateAttribute(row)"
-          (focus)="clickOnAttributePair(0, row)"
+          [model]="row.newName || row.name"
+          (removeValue)="onRemoveRow(index)"
+          (update)="onUpdateRow(index, $event, row.newValue || row.value)"
+          (focus)="clickOnAttributePair(0, index)"
           (enter)="onEnterKeyPressedInEditMode()">
         </post-it-document-cell>
 
         <post-it-document-cell
           class="w-50"
           [index]="postItModel.order"
-          [row]="row"
+          [row]="index"
+          [readonly]="!hasWriteRole"
           [column]="1"
           [perspectiveId]="perspectiveId"
           [selectionHelper]="selectionHelper"
-          [model]="data.value"
-          (removeRow)="removeValue(row)"
-          (blur)="updateValue(row)"
-          (focus)="clickOnAttributePair(1, row)"
+          [model]="row.newValue || row.value"
+          (removeValue)="onUpdateRow(index, row.newName || row.name, '')"
+          (update)="onUpdateRow(index, row.newName || row.name, $event)"
+          (focus)="clickOnAttributePair(1, index)"
           (enter)="onEnterKeyPressedInEditMode()">
         </post-it-document-cell>
       </li>
 
-      <li class="w-100">
-        <post-it-document-new-cell
-          class="w-50"
-          [index]="postItModel.order"
-          [row]="postItRows.length"
-          [perspectiveId]="perspectiveId"
-          [selectionHelper]="selectionHelper"
-          [suggestionListId]="suggestionListId()"
-          [model]="postItNewRow.attributeName"
-          (blur)="createAttributePair()"
-          (focus)="this.selectionHelper.select(0, postItRows.length, postItModel)"
-          (enter)="onEnterKeyPressedInEditMode()">
-        </post-it-document-new-cell>
-
-        <span class="w-50 d-flex">
-        <input class="border-0 w-100" [disabled]="true"/>
-        </span>
-      </li>
     </ng-container>
 
-    <ng-container *ngIf="!hasWriteRole()">
-      <li *ngFor="let row of postItRows">
-        <span class="attribute w-50">
-          <input class="border-0"
-                 readonly
-                 [ngModel]="row.attributeName">
-        </span>
 
-        <span class="w-50">
-          <input class="border-0"
-                 [title]="row.value"
-                 readonly
-                 [ngModel]="row.value">
-        </span>
-      </li>
-    </ng-container>
+    <li class="w-100" *ngIf="hasWriteRole && getRows$() | async as rows">
+      <div (click)="addAttrRow">
+        <i class="fas fa-plus text-success"></i>
+      </div>
+    </li>
   </ul>
 </div>
 
-<datalist *ngIf="postItModel"
-          id="{{ suggestionListId() }}">
+<datalist *ngIf="postItModel" id="{{ suggestionListId() }}">
   <option *ngFor="let attribute of unusedAttributes()">{{ attribute.name }}</option>
 </datalist>

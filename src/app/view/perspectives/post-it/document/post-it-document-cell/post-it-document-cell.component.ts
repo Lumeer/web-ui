@@ -39,27 +39,28 @@ export class PostItDocumentCellComponent {
   @Input() public row: number;
   @Input() public column: number;
   @Input() public selectionHelper: SelectionHelper;
+  @Input() public readonly: boolean;
 
   @Output() public focus = new EventEmitter();
-  @Output() public blur = new EventEmitter();
+  @Output() public update = new EventEmitter<string>();
   @Output() public enter = new EventEmitter();
-  @Output() public removeRow = new EventEmitter();
+  @Output() public removeValue = new EventEmitter();
 
   public onFocus(){
     this.focus.emit();
   }
 
   public onRemoveRow() {
-    this.removeRow.emit();
+    this.removeValue.emit();
   }
 
   public onEnter() {
     this.enter.emit();
   }
 
-  public onBlur() {
-    // TODO check state
-    this.blur.emit();
+  public onBlur(value: string) {
+    // TODO trim value
+    this.update.emit(value);
   }
 
 

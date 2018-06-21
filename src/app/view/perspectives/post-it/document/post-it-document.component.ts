@@ -33,6 +33,9 @@ import {Subject, Subscription} from 'rxjs';
 import {debounceTime, filter} from 'rxjs/operators';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {DocumentUiService} from '../../../../core/ui/document-ui.service';
+import {Observable} from 'rxjs/index';
+import {UiRow} from '../../../../core/ui/ui-row';
 
 @Component({
   selector: 'post-it-document',
@@ -49,45 +52,63 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
   @Input() public selectionHelper: SelectionHelper;
 
   @Output() public remove = new EventEmitter();
-  @Output() public changes = new EventEmitter<DocumentModel>();
-  @Output() public favoriteChange = new EventEmitter<{ favorite: boolean, onlyStore: boolean }>();
+  @Output() public changes = new EventEmitter();
 
   @ViewChild('content') public content: ElementRef;
 
-  public postItRows: PostItRow[] = [];
-  public postItNewRow: PostItRow = {attributeName: '', value: ''};
-  private postItChange$ = new Subject<any>();
-  private postItChangeSubscription: Subscription;
+  public hasWriteRole = false;
 
-  private lastSyncedFavorite: boolean;
-  private favoriteChange$ = new Subject<boolean>();
-  private favoriteChangeSubscription: Subscription;
-
-  constructor(private store: Store<AppState>,
-              private element: ElementRef) {
+  public constructor(private documentUiService: DocumentUiService) {
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection) {
-      this.pairAttributes();
-    }
-    if (changes.postItModel) {
-      this.constructRows();
-    }
-  }
-
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.disableScrollOnNavigation();
-    this.initFavoriteSubscription();
+    this.initDocumentService();
+
+    this.hasWriteRole = this.collectionRoles && this.collectionRoles.includes(Role.Write);
   }
 
-  public ngOnDestroy(): void {
-    if (this.postItChangeSubscription) {
-      this.postItChangeSubscription.unsubscribe();
+  public ngOnDestroy() {
+    if (this.collection && this.postItModel && this.postItModel.document) {
+      this.documentUiService.destroy(this.collection, this.postItModel.document);
     }
+  }
+
+  public onRemove() {
+    // TODO removing actually creating document?
+    this.remove.emit();
+  }
+
+  public getRows$(): Observable<UiRow[]> {
+    return this.documentUiService.getRows$(this.collection, this.postItModel.document);
+  }
+
+  public getFavorite$(): Observable<boolean> {
+    return this.documentUiService.getFavorite$(this.collection, this.postItModel.document);
+  }
+
+  public onToggleFavorite() {
+    this.documentUiService.onToggleFavorite(this.collection, this.postItModel.document);
+  }
+
+  public onUpdateRow(index: number, attribute: string, value: string) {
+    this.documentUiService.onUpdateRow(this.collection, this.postItModel.document, index, [attribute, value]);
+  }
+
+  public addAttrRow() {
+    this.documentUiService.onAddRow(this.collection, this.postItModel.document);
+  }
+
+  public onRemoveRow(idx: number) {
+    this.documentUiService.onRemoveRow(this.collection, this.postItModel.document, idx);
+  }
+
+  public getTrackBy(): (index: number, row: UiRow) => string {
+    return this.documentUiService.getTrackBy(this.collection, this.postItModel.document);
   }
 
   private disableScrollOnNavigation(): void {
+    /// TODO ????
     const capture = false;
     const scrollKeys = [KeyCode.UpArrow, KeyCode.DownArrow];
 
@@ -107,105 +128,9 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
     this.selectionHelper.selectNext(this.postItModel);
   }
 
-  public createAttributePair(): void {
-    const selectedAttribute = this.findAttributeByName(this.postItNewRow.attributeName);
-
-    if (selectedAttribute) {
-      if (this.isAttributeUsed(selectedAttribute.id)) {
-        return;
-      }
-
-      this.postItRows.push({...this.postItNewRow, attributeId: selectedAttribute.id});
-    } else {
-      this.postItRows.push({...this.postItNewRow, correlationId: CorrelationIdGenerator.generate()});
-    }
-
-    this.postItNewRow = {attributeName: '', value: ''};
-    this.onChange();
-
-    setTimeout(() => {
-      this.selectionHelper.select(1, this.postItRows.length, this.postItModel);
-    });
-  }
-
-  public onUpdateAttribute(selectedRow: number): void {
-    const data = this.postItRows[selectedRow];
-    if (!data) {
-      return;
-    }
-
-    this.onChange();
-
-    data.attributeName = data.attributeName.trim();
-    if (!data.attributeName) {
-      this.removeRow(selectedRow);
-      return;
-    }
-
-    const selectedAttribute = this.findAttributeByName(data.attributeName);
-    if (data.attributeId && selectedAttribute && selectedAttribute.id !== data.attributeId && this.isAttributeUsed(selectedAttribute.id)) {
-      const previousAttribute = this.findAttributeById(data.attributeId);
-      data.attributeName = previousAttribute.name;
-    } else {
-      data.attributeId = selectedAttribute && selectedAttribute.id || null;
-      if (isNullOrUndefined(data.attributeId) && isNullOrUndefined(data.correlationId)) {
-        data.correlationId = CorrelationIdGenerator.generate();
-      }
-    }
-  }
-
-  public updateValue(selectedRow: number): void {
-    const data = this.postItRows[selectedRow];
-    if (!data) {
-      return;
-    }
-
-    data.value = data.value.trim();
-    this.onChange();
-  }
-
-  public toggleFavorite() {
-    if (isNullOrUndefined(this.lastSyncedFavorite)) {
-      this.lastSyncedFavorite = this.postItModel.document.favorite;
-    }
-
-    const value = !this.postItModel.document.favorite;
-    this.favoriteChange$.next(value);
-    this.favoriteChange.emit({favorite: value, onlyStore: true});
-  }
-
-  public onRemove(): void {
-    if (this.postItChangeSubscription) {
-      this.postItChangeSubscription.unsubscribe();
-      this.postItChangeSubscription = null;
-    }
-
-    this.remove.emit();
-  }
-
-  public removeRow(selectedRow: number) {
-    this.postItRows.splice(selectedRow, 1);
-
-    setTimeout(() => {
-      this.selectionHelper.select(
-        this.selectionHelper.selection.column,
-        this.selectionHelper.selection.row - 1,
-        this.postItModel
-      );
-    });
-
-    if (this.postItRows.length === 0) {
-      this.onRemove();
-    }
-  }
-
   public onEdit() {
     this.selectionHelper.setEditMode(true);
     this.selectionHelper.select(0, 0, this.postItModel)
-  }
-
-  public removeValue(selectedRow: number) {
-    this.postItRows[selectedRow].value = '';
   }
 
   public unusedAttributes(): AttributeModel[] {
@@ -213,103 +138,23 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
       return [];
     }
 
-    return this.collection.attributes.filter(attribute => {
-      return isNullOrUndefined(this.postItRows.find(d => d.attributeId === attribute.id));
-    });
-  }
-
-  public findAttributeByName(name: string): AttributeModel {
-    return this.collection && this.collection.attributes.find(attr => attr.name === name);
-  }
-
-  public findAttributeById(id: string): AttributeModel {
-    return this.collection && this.collection.attributes.find(attr => attr.id === id);
-  }
-
-  public isAttributeUsed(id: string) {
-    return this.postItRows.findIndex(d => d.attributeId === id) !== -1;
+    return [];
+    // return this.collection.attributes.filter(attribute => {
+    //   return isNullOrUndefined(this.postItRows.find(d => d.attributeId === attribute.id));
+    // });
   }
 
   public suggestionListId(): string {
-    return `${ this.perspectiveId }${ this.postItModel.document.id || 'uninitialized' }`;
+    return `${ this.perspectiveId }${ this.postItModel.document.correlationId || this.postItModel.document.id }`;
   }
 
   public isDefaultAttribute(attributeId: string): boolean {
     return attributeId && attributeId === getDefaultAttributeId(this.collection);
   }
 
-  public hasWriteRole(): boolean {
-    return this.collectionRoles && this.collectionRoles.includes(Role.Write);
-  }
-
-  private pairAttributes() {
-    if (isNullOrUndefined(this.collection)) {
-      return;
+  private initDocumentService() {
+    if (this.collection && this.postItModel && this.postItModel.document) {
+      this.documentUiService.init(this.collection, this.postItModel.document);
     }
-
-    this.collection.attributes.forEach(attribute => {
-      const row = this.postItRows.find(r => r.correlationId && r.correlationId === attribute.correlationId);
-      if (row) {
-        row.attributeId = attribute.id;
-        row.correlationId = null;
-      }
-    });
-  }
-
-  private constructRows() {
-    if (isNullOrUndefined(this.postItModel)) {
-      return;
-    }
-
-    Object.keys(this.postItModel.document.data).forEach(attributeId => {
-      const row = this.postItRows.find(r => r.attributeId === attributeId);
-      if (!row) {
-        const attribute = this.findAttributeById(attributeId);
-        if (attribute) {
-          const attributeName = attribute && attribute.name || '';
-          this.postItRows.push({attributeId, attributeName, value: this.postItModel.document.data[attributeId]});
-        }
-      }
-    });
-  }
-
-  private onChange() {
-    if (isNullOrUndefined(this.postItChangeSubscription)) {
-      this.initSubscription();
-    }
-    this.postItChange$.next();
-  }
-
-  private initSubscription() {
-    this.postItChangeSubscription = this.postItChange$.pipe(
-      debounceTime(3000),
-    ).subscribe(() => {
-      this.changes.emit(this.createUpdateDocument());
-    });
-  }
-
-  private createUpdateDocument(): DocumentModel {
-    const data: { [attributeId: string]: any } = this.postItRows.filter(row => row.attributeId).reduce((acc, row) => {
-      acc[row.attributeId] = row.value;
-      return acc;
-    }, {});
-
-    const newData: { [attributeName: string]: any } = this.postItRows.filter(row => isNullOrUndefined(row.attributeId))
-      .reduce((acc: { [attributeName: string]: any }, row) => {
-        acc[row.attributeName] = {value: row.value, correlationId: row.correlationId};
-        return acc;
-      }, {});
-
-    return {...this.postItModel.document, data, newData: Object.keys(newData).length > 0 ? newData : null};
-  }
-
-  private initFavoriteSubscription() {
-    this.favoriteChangeSubscription = this.favoriteChange$.pipe(
-      debounceTime(1000),
-      filter(favorite => favorite !== this.lastSyncedFavorite)
-    ).subscribe(favorite => {
-      this.lastSyncedFavorite = null;
-      this.favoriteChange.emit({favorite, onlyStore: false});
-    });
   }
 }

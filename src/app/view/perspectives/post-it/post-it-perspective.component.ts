@@ -69,7 +69,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   public size: SizeType;
 
   private page = 0;
-  private allLoaded: boolean;
   private query: QueryModel;
   private workspace: Workspace;
   private subscriptions = new Subscription();
@@ -185,23 +184,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     });
   }
 
-  public onFavoriteChange(document: DocumentModel, data: { favorite: boolean, onlyStore: boolean }) {
-    const {favorite, onlyStore} = data;
-    if (onlyStore) {
-      if (favorite) {
-        this.store.dispatch(new DocumentsAction.AddFavoriteSuccess({documentId: document.id}));
-      } else {
-        this.store.dispatch(new DocumentsAction.RemoveFavoriteSuccess({documentId: document.id}));
-      }
-    } else {
-      if (favorite) {
-        this.store.dispatch(new DocumentsAction.AddFavorite({collectionId: document.collectionId, documentId: document.id}));
-      } else {
-        this.store.dispatch(new DocumentsAction.RemoveFavorite({collectionId: document.collectionId, documentId: document.id}));
-      }
-    }
-  }
-
   public createPostIt(documentModel: DocumentModel) {
     this.postIts.unshift({document: documentModel, order: 0});
   }
@@ -225,16 +207,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public onScrollDown(event) {
-    console.log('onScrolledDown', event);
     this.loadNextPage();
-  }
-
-  private loadMoreOnInfiniteScroll() {
-
-    // TODO
-    // if (!this.allLoaded) {
-    //   this.loadNextPage();
-    // }
   }
 
   private loadNextPage() {
@@ -242,38 +215,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.fetchDocuments();
   }
 
-  public postItChanged(changedPostIt: PostItDocumentModel, document: DocumentModel): void {
-    if (changedPostIt.document.id) {
-      this.updateDocument(document);
-    } else {
-      this.createDocument(document);
-    }
-  }
-
-  private updateDocument(document: DocumentModel) {
-    if (document.newData) {
-      const action = new UpdateData({document});
-      const newAttributes = Object.keys(document.newData).map(name => ({name, constraints: [], correlationId: document.newData[name].correlationId}));
-
-      this.store.dispatch(new CollectionsAction.CreateAttributes(
-        {collectionId: document.collectionId, attributes: newAttributes, nextAction: action})
-      );
-    } else {
-      this.store.dispatch(new UpdateData({document: document}));
-    }
-  }
-
-  private createDocument(document: DocumentModel) {
-    if (document.newData) {
-      const action = new Create({document});
-      const newAttributes = Object.keys(document.newData).map(name => ({name, constraints: [], correlationId: document.newData[name].correlationId}));
-
-      this.store.dispatch(new CollectionsAction.CreateAttributes(
-        {collectionId: document.collectionId, attributes: newAttributes, nextAction: action})
-      );
-    } else {
-      this.store.dispatch(new Create({document: document}));
-    }
+  public postItChanged(changedPostIt: PostItDocumentModel): void {
+    // TODO ?
   }
 
   public removePostIt(postIt: PostItDocumentModel) {

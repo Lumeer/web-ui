@@ -28,9 +28,8 @@
         [postItModel]="postItWithIndex(postIt, idx)"
         [perspectiveId]="perspectiveId"
         [selectionHelper]="selectionHelper"
-        (favoriteChange)="onFavoriteChange(postIt.document, $event)"
         (remove)="removePostIt(postIt)"
-        (changes)="postItChanged(postIt, $event)"></post-it-document>
+        (changes)="postItChanged(postIt)"></post-it-document>
 
     </div>
 
