@@ -20,6 +20,7 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {ColorsPipe} from './colors.pipe';
+import {DefaultAttributePipe} from './default-attribute.pipe';
 import {FilterPerspectivesPipe} from './filter-perspectives.pipe';
 import {IconsPipe} from './icons.pipe';
 import {LightenColorPipe} from './lighten-color.pipe';
@@ -47,6 +48,7 @@ import { LengthGreaterThanPipe } from './length-greater-than.pipe';
     EmptyPipe,
     PermissionsPipe,
     LengthGreaterThanPipe,
+    DefaultAttributePipe,
   ],
   exports: [
     LightenColorPipe,
@@ -60,6 +62,7 @@ import { LengthGreaterThanPipe } from './length-greater-than.pipe';
     EmptyPipe,
     PermissionsPipe,
     LengthGreaterThanPipe,
+    DefaultAttributePipe,
   ]
 })
 export class PipesModule {

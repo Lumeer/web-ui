@@ -10,8 +10,8 @@
   <div class="col small text-right d-flex align-bottom text-notice">
     <div class="justify-content-end w-100">
       Version {{_documentModel.dataVersion}}<br/>
-      Created on {{_documentModel.creationDate | nativeDate | date : 'mediumDate'}} by {{createdBy$ | async}}<br/>
-      Last modified on {{_documentModel.updateDate | nativeDate | date : 'mediumDate'}} by {{updatedBy$ | async}}
+      Created on {{_documentModel.creationDate | date : 'mediumDate'}} by {{createdBy$ | async}}<br/>
+      Last modified on {{_documentModel.updateDate | date : 'mediumDate'}} by {{updatedBy$ | async}}
     </div>
   </div>
 </div>

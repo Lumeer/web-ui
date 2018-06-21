@@ -45,6 +45,8 @@ export interface TableRow {
   expanded?: boolean;
   linkedRows?: TableRow[];
 
+  rowId?: string;
+
 }
 
 export const EMPTY_TABLE_ROW: TableRow = {
@@ -83,6 +85,7 @@ export interface TableColumn {
 export class TableSingleColumn implements TableColumn {
 
   public readonly type = TableColumnType.SINGLE;
+  public readonly uniqueId = Math.random().toString(36).substr(2, 9);
 
   public constructor(public attributeId: string,
                      public attributeName?: string,

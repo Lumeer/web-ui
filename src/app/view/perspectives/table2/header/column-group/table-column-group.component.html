@@ -1,4 +1,4 @@
-<div [style.height]="table | headerHeight:cursor | pixel">
+<div [style.height.px]="table | headerHeight:cursor">
   <div class="muuri {{columnGroupId | prefix:containerClassPrefix}} h-100">
     <div *ngFor="let column of columns; trackBy: trackByCollectionAndAttribute.bind(this); index as columnIndex"
          class="muuri-item h-100">

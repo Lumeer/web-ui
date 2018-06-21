@@ -18,7 +18,7 @@
  */
 
 import {copyAndSpliceArray, getLastFromArray} from '../../../shared/utils/array.utils';
-import {filterDirectAttributeChildren, findAttributeByName, splitAttributeName} from '../../../shared/utils/attribute.utils';
+import {filterDirectAttributeChildren, findAttributeByName, generateAttributeName, splitAttributeName} from '../../../shared/utils/attribute.utils';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
 import {LinkTypeModel} from '../link-types/link-type.model';
 import {TableCursor} from './table-cursor';
@@ -112,6 +112,7 @@ export function createTableColumnsFromAttributes(allAttributes: AttributeModel[]
                                                  parentAttribute?: AttributeModel,
                                                  columnsConfig: TableConfigColumn[] = []): TableColumn[] {
   const attributes = filterDirectAttributeChildren(allAttributes, parentAttribute);
+  attributes.sort((a, b) => Number(a.id.slice(1)) - Number(b.id.slice(1)));
 
   if (columnsConfig && columnsConfig.length) {
     return createColumnsFromConfig(columnsConfig, allAttributes, attributes);
@@ -212,12 +213,16 @@ export function containCompoundColumn(columns: TableColumn[]): boolean {
   return columns && columns.some(column => column.type === TableColumnType.COMPOUND);
 }
 
-export function createCollectionPart(collection: CollectionModel, index: number, config?: TableConfig): TablePart {
+export function createCollectionPart(collection: CollectionModel, index: number, last?: boolean, config?: TableConfig): TablePart {
   const configPart = getConfigPart(config, index);
   const columnsConfig = configPart && configPart.collectionId === collection.id ? configPart.columns : null;
 
   const columns = createTableColumnsFromAttributes(collection.attributes, null, columnsConfig);
   const columnDepth = maxColumnDepth(columns);
+
+  if (last) {
+    columns.push(createEmptyColumn(collection.attributes));
+  }
 
   return {
     index,
@@ -225,6 +230,11 @@ export function createCollectionPart(collection: CollectionModel, index: number,
     columns,
     columnDepth
   };
+}
+
+export function createEmptyColumn(attributes: AttributeModel[]): TableCompoundColumn {
+  const attributeName = generateAttributeName(attributes);
+  return new TableCompoundColumn(new TableSingleColumn(null, attributeName), []);
 }
 
 export function createLinkPart(linkType: LinkTypeModel, index: number, config?: TableConfig): TablePart {

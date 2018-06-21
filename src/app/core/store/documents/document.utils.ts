@@ -17,19 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
+import {DocumentModel} from './document.model';
 
-import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
-import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
-
-@Pipe({
-  name: 'isDefaultAttribute'
-})
-@Injectable()
-export class DefaultAttributePipe implements PipeTransform {
-
-  public transform(attribute: AttributeModel, collection: CollectionModel): boolean {
-    const defaultAttributeId = getDefaultAttributeId(collection);
-    return defaultAttributeId === attribute.id;
-  }
+export function sortDocumentsByCreationDate(documents: DocumentModel[]): DocumentModel[] {
+  const sortedDocuments = [...documents];
+  return sortedDocuments.sort((a, b) => a.creationDate.getTime() - b.creationDate.getTime());
 }

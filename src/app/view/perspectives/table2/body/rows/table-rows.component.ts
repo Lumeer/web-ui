@@ -33,7 +33,8 @@ import {TablesAction} from '../../../../../core/store/tables/tables.action';
   templateUrl: './table-rows.component.html',
   host: {
     '[class.d-flex]': 'true',
-    '[class.flex-column]': 'true'
+    '[class.flex-column]': 'true',
+    '[style.width]': `'min-content'`
   },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -89,14 +90,16 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
       this.store.select(selectDocumentsByQuery).subscribe(documents => {
         const cursor: TableBodyCursor = {
           tableId: this.table.id,
-          rowPath: [this.table.rows.length],
+          rowPath: [this.table.rows.length - 1],
           partIndex: 0
         };
 
-        const rows: TableRow[] = documents.filter(document => !this.table.documentIds.has(document.id))
-          .map(document => ({...EMPTY_TABLE_ROW, documentIds: [document.id]}));
-        if (rows.length) {
-          this.store.dispatch(new TablesAction.AddRows({cursor, rows}));
+        const rows: TableRow[] = documents.filter(document => document.collectionId === this.table.parts[0].collectionId)
+          .filter(document => !this.table.documentIds.has(document.id))
+          .map(document => ({...EMPTY_TABLE_ROW, documentIds: [document.id]}))
+          .concat({...EMPTY_TABLE_ROW, rowId: Math.random().toString(36).substr(2, 9)});
+        if (rows.length > 1) {
+          this.store.dispatch(new TablesAction.ReplaceRows({cursor, rows, deleteCount: 1}));
         }
       })
     );
@@ -112,7 +115,7 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
   }
 
   public trackByDocumentId(index: number, row: TableRow): string {
-    return row.documentIds[0];
+    return row.documentIds[0] || row.rowId;
   }
 
 }

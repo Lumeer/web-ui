@@ -26,8 +26,8 @@ export interface DocumentModel {
 
   favorite?: boolean;
 
-  creationDate?: object;
-  updateDate?: object;
+  creationDate?: Date;
+  updateDate?: Date;
   createdBy?: string;
   updatedBy?: string;
   dataVersion?: number;

@@ -1,5 +1,6 @@
 <div tableEditableCell
      [contextMenu]="contextMenuComponent?.contextMenu"
+     [disabledCharacters]="disabledCharacters"
      [selected]="selected$ | async"
      [style.background]="collection$ | async | columnBackground:(attribute$ | async | attributeNameChanged:lastName)"
      [value]="attribute$ | async | attributeLastName"
@@ -7,7 +8,9 @@
      (editStart)="onEditStart()"
      (editEnd)="onEditEnd($event)"
      (mousedown)="onMouseDown()"
-     class="table-border-right table-border-bottom h-100 font-italic {{cursor | dragClass}}">
+     class="table-border-right table-border-bottom h-100 font-italic {{cursor | dragClass}}"
+     [class.uninitialized-column]="!column?.attributeId"
+     [class.text-default-attribute]="attribute$ | async | isDefaultAttribute:(collection$ | async)">
 </div>
 
 <table-attribute-suggestions *ngIf="edited && !(attribute$ | async | entityCreated) && !(attribute$ | async | attributeParentName)"

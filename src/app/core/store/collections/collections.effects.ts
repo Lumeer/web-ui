@@ -345,10 +345,6 @@ export class CollectionsEffects {
         map(attributes => ({action, attributes: attributes.map(attr => CollectionConverter.fromAttributeDto(attr, correlationIdMap[attr.name]))})),
         withLatestFrom(this.store$.select(selectCollectionById(collectionId))),
         flatMap(([{action, attributes}, collection]) => {
-          if (callback) {
-            callback(attributes);
-          }
-
           const actions: Action[] = [new CollectionsAction.CreateAttributesSuccess({collectionId, attributes})];
           if (nextAction) {
             updateCreateAttributesNextAction(nextAction, attributes);
@@ -359,6 +355,9 @@ export class CollectionsEffects {
             if (setDefaultAttributeAction) {
               actions.push(setDefaultAttributeAction);
             }
+          }
+          if (callback) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(attributes)}));
           }
           return actions;
         }),

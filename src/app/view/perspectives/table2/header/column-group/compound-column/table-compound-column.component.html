@@ -3,7 +3,7 @@
      [ghostElementPositioning]="'absolute'"
      [resizeEdges]="column | resizeEdges:table:cursor"
      [resizeSnapGrid]="{left: 10, right: 10}"
-     [style.width]="column | columnWidth | pixel"
+     [style.width.px]="column | columnWidth"
      [validateResize]="validateResize.bind(this)"
      (resizeEnd)="onResizeEnd($event)">
   <div class="d-flex flex-column">
@@ -11,7 +11,7 @@
                          [cursor]="cursor"
                          [column]="column.parent"
                          [leaf]="!column.children.length"
-                         [style.height]="column | columnHeight:table:cursor | pixel"
+                         [style.height.px]="column | columnHeight:table:cursor"
                          class="d-block">
     </table-single-column>
     <table-column-group *ngIf="column.children.length"

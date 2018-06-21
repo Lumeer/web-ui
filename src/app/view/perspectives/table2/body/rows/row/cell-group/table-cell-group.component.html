@@ -8,6 +8,13 @@
           linkInstance: linkInstances ? linkInstances[0] : null,
           selected: row.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)
         }; let cell">
+          <table-data-cell-suggestions *ngIf="!(cursor | isFirstPart) && !((document | entityCreated) || (linkInstance | entityCreated)) && editedValue"
+                                       [column]="column"
+                                       [cursor]="cell.cursor"
+                                       [table]="table"
+                                       [value]="editedValue">
+          </table-data-cell-suggestions>
+
           <div tableDataCell
                [affected]="editedAttribute$ | async | affectedCell:(documents || linkInstances):column"
                [column]="column"
@@ -27,13 +34,6 @@
                class="d-block table-border-right table-border-bottom">
           </div>
 
-          <table-data-cell-suggestions *ngIf="!(cursor | isFirstPart) && !((document | entityCreated) || (linkInstance | entityCreated)) && editedValue"
-                                       [column]="column"
-                                       [cursor]="cell.cursor"
-                                       [table]="table"
-                                       [value]="editedValue">
-          </table-data-cell-suggestions>
-
           <table-data-cell-menu #dataCellMenu
                                 *ngIf="cell.selected"
                                 [cursor]="cell.cursor"
@@ -50,7 +50,7 @@
                               [cursor]="cursor | columnCursor:columnIndex"
                               [documents]="documents"
                               [linkInstances]="linkInstances"
-                              [selected]="row.selectedCursor | async | cursorEquals:(cursor | columnCursor:columnIndex)"
+                              [selected]="row.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
                               [style.width]="column | columnWidth | pixel"
                               [class.transparent-border-top]="cursor | isFirstRow"
                               (mousedown)="onMouseDown($event, columnIndex)"

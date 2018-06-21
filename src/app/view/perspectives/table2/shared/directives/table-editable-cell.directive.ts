@@ -46,6 +46,9 @@ export class TableEditableCellDirective {
   public affected: boolean;
 
   @Input()
+  public disabledCharacters: string[];
+
+  @Input()
   public readonly: boolean;
 
   @Input()
@@ -106,6 +109,10 @@ export class TableEditableCellDirective {
         event.preventDefault();
         return;
     }
+
+    if (this.isCharacterDisabled(event.key)) {
+      event.preventDefault();
+    }
   }
 
   @HostListener('input', ['$event'])
@@ -126,13 +133,16 @@ export class TableEditableCellDirective {
 
     this.edited = true;
 
-    const element = this.element.nativeElement;
-    if (letter) {
-      element.textContent = letter;
+    const {nativeElement} = this.element;
+    if (letter && !this.isCharacterDisabled(letter)) {
+      nativeElement.textContent = letter;
     }
 
     this.editStart.emit();
-    setTimeout(() => HtmlModifier.setCursorAtTextContentEnd(this.element.nativeElement));
+    setTimeout(() => {
+      nativeElement.scrollLeft = nativeElement.scrollWidth - nativeElement.clientWidth + 5;
+      HtmlModifier.setCursorAtTextContentEnd(nativeElement);
+    });
   }
 
   private stopEditing(cancel?: boolean) {
@@ -142,14 +152,21 @@ export class TableEditableCellDirective {
 
     this.edited = false;
 
+    const {nativeElement} = this.element;
     if (cancel) {
-      this.element.nativeElement.textContent = this.value;
+      nativeElement.textContent = this.value;
       this.valueChange.emit(this.value);
       this.editEnd.emit();
     } else {
-      const value = this.element.nativeElement.textContent;
+      const value = nativeElement.textContent;
       this.editEnd.emit(value);
     }
+
+    nativeElement.scrollLeft = 0;
+  }
+
+  private isCharacterDisabled(character: string): boolean {
+    return this.disabledCharacters && this.disabledCharacters.includes(character);
   }
 
 }

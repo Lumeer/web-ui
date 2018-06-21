@@ -121,7 +121,8 @@ export class TableColumnGroupComponent implements OnChanges {
   public trackByCollectionAndAttribute(index: number, column: TableColumn): string {
     if (column && column.type === TableColumnType.COMPOUND) {
       const part = this.table.parts[this.cursor.partIndex];
-      return part.collectionId + ':' + (column as TableCompoundColumn).parent.attributeId;
+      const {parent} = column as TableCompoundColumn;
+      return part.collectionId + ':' + (parent.attributeId || parent.uniqueId);
     }
   }
 

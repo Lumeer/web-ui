@@ -21,8 +21,8 @@ export class Document {
 
   public id: string;
   public collectionId: string;
-  public creationDate?: object;
-  public updateDate?: object;
+  public creationDate?: number;
+  public updateDate?: number;
   public createdBy?: string;
   public updatedBy?: string;
   public dataVersion?: number;

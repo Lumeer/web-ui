@@ -34,7 +34,6 @@ import {CollectionTabComponent} from './settings/tab/collection-tab.component';
 import {PickerModule} from '../shared/picker/picker.module';
 import {UsersModule} from '../shared/users/users.module';
 import {AttributeFilterPipe} from './settings/tab/attributes/attribute-filter.pipe';
-import {DefaultAttributePipe} from './settings/tab/attributes/default-attribute.pipe';
 
 @NgModule({
   imports: [
@@ -45,7 +44,6 @@ import {DefaultAttributePipe} from './settings/tab/attributes/default-attribute.
   ],
   declarations: [
     AttributeFilterPipe,
-    DefaultAttributePipe,
     LinkAttributeListComponent,
     CollectionComponent,
     CollectionTabComponent,

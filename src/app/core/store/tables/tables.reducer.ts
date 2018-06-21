@@ -44,7 +44,7 @@ export function tablesReducer(state = initialTablesState(), action: TablesAction
       return replaceRows(state, action);
     case TablesActionType.REMOVE_ROW:
       return removeRow(state, action);
-    case TablesActionType.SET_CURSOR_SUCCESS:
+    case TablesActionType.SET_CURSOR:
       return {...state, cursor: action.payload.cursor};
     case TablesActionType.SET_EDITED_ATTRIBUTE:
       return {...state, editedAttribute: action.payload.editedAttribute};
