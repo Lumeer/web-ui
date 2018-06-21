@@ -161,6 +161,7 @@ export class DocumentUi {
           row.id = null;
           row.correlationId = CorrelationIdGenerator.generate();
           document.newData[row.newName] = {value: row.newValue || row.value, correlationId: row.correlationId};
+          delete document.data[row.name];
         }
       });
 
