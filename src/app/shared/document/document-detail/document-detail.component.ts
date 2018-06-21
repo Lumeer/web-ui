@@ -100,10 +100,6 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  private unsubscribeAll() {
-
-  }
-
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
     this.documentUiService.destroy(this.collection, this.document);
