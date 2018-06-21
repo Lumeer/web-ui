@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {QueryModel} from '../../../core/store/navigation/query.model';
@@ -25,7 +25,8 @@ import {QueryModel} from '../../../core/store/navigation/query.model';
 @Component({
   selector: 'detail-perspective',
   templateUrl: './detail-perspective.component.html',
-  styleUrls: ['./detail-perspective.component.scss']
+  styleUrls: ['./detail-perspective.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailPerspectiveComponent {
 

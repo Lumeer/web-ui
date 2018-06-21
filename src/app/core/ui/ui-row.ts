@@ -17,10 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DetailRow {
+export interface UiRow {
   id?: string;
   name: string;
+  newName?: string;
   value: string;
+  newValue?: string;
   correlationId?: string;
   remove?: boolean;
   warning?: string;

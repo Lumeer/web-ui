@@ -17,13 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 
 @Component({
   selector: 'preview-results-tabs',
   templateUrl: './preview-results-tabs.component.html',
-  styleUrls: ['./preview-results-tabs.component.scss']
+  styleUrls: ['./preview-results-tabs.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PreviewResultsTabsComponent implements OnInit {
 

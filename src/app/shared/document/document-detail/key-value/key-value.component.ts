@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
@@ -46,16 +46,13 @@ export class KeyValueComponent {
   public remove = new EventEmitter();
 
   @Input()
-  public emitKeyPress = false;
-
-  @Input()
-  public warning: string;
-
-  @Input()
   public readOnly = false;
 
   @Input()
   public defaultAttribute = false;
+
+  @Input()
+  public warning: string = '';
 
   constructor(public i18n: I18n) { }
 
