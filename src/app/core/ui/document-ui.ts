@@ -93,7 +93,7 @@ export class DocumentUi {
   }
 
   private prepareUpdatedDocument(): DocumentModel {
-    let updatedDocument = Object.assign({}, this.document);
+    let updatedDocument = { ...this.document };
 
     let dirty = this.patchNewAttributes(updatedDocument);
     dirty = dirty || this.patchExistingAttributes(updatedDocument);

@@ -2,6 +2,7 @@
   <preview-results (selectCollection)="selectCollection($event)"
                    (selectDocument)="selectDocument($event)">
   </preview-results>
+  {{selectedDocument?.id}}
   <document-detail *ngIf="selectedDocument"
                    [collection]="selectedCollection"
                    [document]="selectedDocument"

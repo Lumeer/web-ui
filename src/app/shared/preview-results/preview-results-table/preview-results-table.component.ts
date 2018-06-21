@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 
@@ -26,7 +26,8 @@ export const PAGE_SIZE = 100;
 @Component({
   selector: 'preview-results-table',
   templateUrl: './preview-results-table.component.html',
-  styleUrls: ['./preview-results-table.component.scss']
+  styleUrls: ['./preview-results-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PreviewResultsTableComponent implements OnInit {
 
@@ -46,6 +47,9 @@ export class PreviewResultsTableComponent implements OnInit {
   @Output()
   public selectDocument = new EventEmitter<DocumentModel>();
 
+  @Output('activate')
+  public activateEvent = new EventEmitter<number>();
+
   public readonly pageSize = PAGE_SIZE;
 
   public ngOnInit() {
@@ -56,6 +60,7 @@ export class PreviewResultsTableComponent implements OnInit {
     this.activeIndex = index;
     this.countPage();
     this.selectDocument.emit(this.documents[this.activeIndex]);
+    this.activateEvent.emit(this.activeIndex);
   }
 
   private countPage(): void {

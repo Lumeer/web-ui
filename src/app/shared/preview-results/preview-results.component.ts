@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
@@ -39,7 +39,8 @@ import {QueryConverter} from '../../core/store/navigation/query.converter';
 @Component({
   selector: 'preview-results',
   templateUrl: './preview-results.component.html',
-  styleUrls: ['./preview-results.component.scss']
+  styleUrls: ['./preview-results.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PreviewResultsComponent implements OnInit, OnDestroy {
 
@@ -148,28 +149,33 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
       this.documents$ = this.store.select(selectDocumentsByCustomQuery(this.collectionQuery));
       this.collection$ = this.store.select(selectCollectionById(this.selectedCollection.id));
 
-      this.dataSubscription = this.documents$.pipe(filter(documents => !!documents && documents.length > 0),
+      this.dataSubscription = this.documents$.pipe(filter(documents => !!documents),
         tap(documents => {
           this.documentsCount = documents.length;
         }),
         withLatestFrom(this.store.select(selectViewCursor)))
         .subscribe(([documents, cursor]) => {
 
-          let idx;
-          if (cursor && cursor.documentId) {
-            idx = documents.findIndex(d => d.id === cursor.documentId);
-          }
-          if (!idx || idx < 0) {
-            idx = 0;
-          }
+          if (documents.length > 0) {
 
-          if (this.activeIndex !== idx || !this.selectedDocument) {
-            this.activeIndex = idx;
-
-            // we might get different index when a new document was added but it is already selected
-            if ((!this.selectedDocument || this.selectedDocument.id !== documents[idx].id) && documents.length > idx) {
-              this.setActiveDocument(documents[idx]);
+            let idx;
+            if (cursor && cursor.documentId) {
+              idx = documents.findIndex(d => d.id === cursor.documentId);
             }
+            if (!idx || idx < 0) {
+              idx = 0;
+            }
+
+            if (this.activeIndex !== idx || !this.selectedDocument) {
+              this.activeIndex = idx;
+
+              // we might get different index when a new document was added but it is already selected
+              if ((!this.selectedDocument || this.selectedDocument.id !== documents[idx].id) && documents.length > idx) {
+                this.setActiveDocument(documents[idx]);
+              }
+            }
+          } else {
+            this.setActiveDocument(null);
           }
         });
     }
@@ -177,7 +183,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
 
   private getData() {
     if (this.selectedCollection) {
-      this.collectionQuery = Object.assign({}, this.query,{ collectionIds: [this.selectedCollection.id] });
+      this.collectionQuery = { ...this.query, collectionIds: [this.selectedCollection.id] };
       this.updateDataSubscription();
       this.store.dispatch(new DocumentsAction.Get({ query: this.collectionQuery }));
     }
