@@ -15,7 +15,7 @@
       <li class="w-100" *ngFor="let data of postItRows; let row = index">
         <post-it-document-cell
           class="w-50"
-          [index]="postItModel.index"
+          [index]="postItModel.order"
           [row]="row"
           [column]="0"
           [additionalClasses]="isDefaultAttribute(data.attributeId) ? 'attribute text-default-attribute' : 'attribute'"
@@ -31,7 +31,7 @@
 
         <post-it-document-cell
           class="w-50"
-          [index]="postItModel.index"
+          [index]="postItModel.order"
           [row]="row"
           [column]="1"
           [perspectiveId]="perspectiveId"
@@ -44,21 +44,22 @@
         </post-it-document-cell>
       </li>
 
-      <li>
+      <li class="w-100">
         <post-it-document-new-cell
           class="w-50"
-          [index]="postItModel.index"
+          [index]="postItModel.order"
           [row]="postItRows.length"
           [perspectiveId]="perspectiveId"
           [selectionHelper]="selectionHelper"
+          [suggestionListId]="suggestionListId()"
           [model]="postItNewRow.attributeName"
           (blur)="createAttributePair()"
           (focus)="this.selectionHelper.select(0, postItRows.length, postItModel)"
           (enter)="onEnterKeyPressedInEditMode()">
         </post-it-document-new-cell>
 
-        <span class="w-50">
-        <input class="border-0" [disabled]="true"/>
+        <span class="w-50 d-flex">
+        <input class="border-0 w-100" [disabled]="true"/>
         </span>
       </li>
     </ng-container>

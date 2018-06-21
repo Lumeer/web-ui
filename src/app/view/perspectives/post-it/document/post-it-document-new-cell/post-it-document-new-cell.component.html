@@ -1,5 +1,5 @@
 <span id="{{ perspectiveId }}{{ index }}[0, {{ row }}]"
-      class="attribute"
+      class="attribute d-flex"
       [attr.tabindex]="index * 1000 + row * 2"
       (keydown.ArrowLeft)="selectionHelper.moveSelection(-1, 0)"
       (keydown.ArrowRight)="selectionHelper.moveSelection(1, 0)"
@@ -9,7 +9,7 @@
       (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
       (focus)="selectionHelper.setEditMode(true); onFocus()">
 
-  <input class="border-0" remove-placeholder-on-focus #newAttributeInput
+  <input class="border-0 w-100" remove-placeholder-on-focus #newAttributeInput
          placeholder=" + "
          [attr.list]="suggestionListId"
          [(ngModel)]="model"

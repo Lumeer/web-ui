@@ -27,11 +27,13 @@ import {PostItPerspectiveComponent} from './post-it-perspective.component';
 import {PostItDocumentHeaderComponent} from './document/post-it-document-header/post-it-document-header.component';
 import {PostItDocumentCellComponent} from './document/post-it-document-cell/post-it-document-cell.component';
 import {PostItDocumentNewCellComponent} from './document/post-it-document-new-cell/post-it-document-new-cell.component';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 
 @NgModule({
   imports: [
     SharedModule,
-    RouterModule
+    RouterModule,
+    InfiniteScrollModule
   ],
   declarations: [
     PostItAddDocumentComponent,

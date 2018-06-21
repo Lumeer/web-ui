@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
 
 import {CollectionModel} from '../../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
@@ -25,7 +25,8 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 @Component({
   selector: 'post-it-document-header',
   templateUrl: './post-it-document-header.component.html',
-  styleUrls: ['./post-it-document-header.component.scss']
+  styleUrls: ['./post-it-document-header.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostItDocumentHeaderComponent {
 

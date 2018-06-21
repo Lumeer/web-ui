@@ -1,6 +1,6 @@
 <span id="{{ perspectiveId }}{{ index }}[{{column}}, {{ row }}]"
       [attr.tabindex]="index * 1000 + row * 2 + column"
-      [title]="model"
+      [title]="model" class="d-flex"
       (keydown.ArrowLeft)="selectionHelper.moveSelection(-1, 0)"
       (keydown.ArrowRight)="selectionHelper.moveSelection(1, 0)"
       (keydown.ArrowUp)="selectionHelper.moveSelection(0, -1)"
@@ -11,7 +11,7 @@
       (keydown.delete)="onRemoveRow()"
       (focus)="onFocus()">
 
-    <input class="border-0 {{additionalClasses}}"
+    <input class="border-0 w-100 {{additionalClasses}}"
            [(ngModel)]="model"
            [attr.list]="suggestionListId"
            (keydown)="$event.stopPropagation()"

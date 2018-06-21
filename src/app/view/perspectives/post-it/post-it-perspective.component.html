@@ -1,4 +1,6 @@
-<div #layout class="container-fluid">
+<div class="container-fluid" infiniteScroll
+     [infiniteScrollDistance]="2"
+     (scrolled)="onScrollDown($event)">
   <div class="my-2 d-flex align-items-center">
     <add-document
       [hasCollection]="hasSingleCollection()"
@@ -26,7 +28,6 @@
         [postItModel]="postItWithIndex(postIt, idx)"
         [perspectiveId]="perspectiveId"
         [selectionHelper]="selectionHelper"
-        [navigationHelper]="navigationHelper"
         (favoriteChange)="onFavoriteChange(postIt.document, $event)"
         (remove)="removePostIt(postIt)"
         (changes)="postItChanged(postIt, $event)"></post-it-document>
@@ -40,7 +41,7 @@
 </div>
 
 <div class="fading loading-text text-center py-5"
-     [style.opacity]="infiniteScroll.isLoading() ? 1 : 0"
+     [style.opacity]="0"
      i18n="@@documents.post.it.loading">
   Loading...
 </div>

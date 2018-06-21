@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
 
 import {CollectionModel} from '../../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
@@ -26,7 +26,8 @@ import {SelectionHelper} from '../../util/selection-helper';
 @Component({
   selector: 'post-it-document-new-cell',
   templateUrl: './post-it-document-new-cell.component.html',
-  styleUrls: ['./post-it-document-new-cell.component.scss']
+  styleUrls: ['./post-it-document-new-cell.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostItDocumentNewCellComponent {
 

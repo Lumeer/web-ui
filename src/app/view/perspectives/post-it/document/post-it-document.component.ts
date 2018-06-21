@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {isNullOrUndefined} from 'util';
@@ -25,7 +25,6 @@ import {AppState} from '../../../../core/store/app.state';
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../core/model/role';
 import {PostItDocumentModel} from '../document-data/post-it-document-model';
-import {NavigationHelper} from '../util/navigation-helper';
 import {SelectionHelper} from '../util/selection-helper';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -38,7 +37,8 @@ import {getDefaultAttributeId} from '../../../../core/store/collections/collecti
 @Component({
   selector: 'post-it-document',
   templateUrl: './post-it-document.component.html',
-  styleUrls: ['./post-it-document.component.scss']
+  styleUrls: ['./post-it-document.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostItDocumentComponent implements OnInit, OnDestroy {
 
@@ -46,7 +46,6 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
   @Input() public collection: CollectionModel;
   @Input() public collectionRoles: string[];
   @Input() public perspectiveId: string;
-  @Input() public navigationHelper: NavigationHelper;
   @Input() public selectionHelper: SelectionHelper;
 
   @Output() public remove = new EventEmitter();
@@ -75,7 +74,6 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
     if (changes.postItModel) {
       this.constructRows();
     }
-    this.postItModel.numRows = this.postItRows.length;
   }
 
   public ngOnInit(): void {
@@ -121,8 +119,6 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
     } else {
       this.postItRows.push({...this.postItNewRow, correlationId: CorrelationIdGenerator.generate()});
     }
-
-    this.postItModel.numRows = this.postItRows.length;
 
     this.postItNewRow = {attributeName: '', value: ''};
     this.onChange();
@@ -189,8 +185,6 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
 
   public removeRow(selectedRow: number) {
     this.postItRows.splice(selectedRow, 1);
-
-    this.postItModel.numRows = this.postItRows.length;
 
     setTimeout(() => {
       this.selectionHelper.select(
