@@ -14,7 +14,7 @@
       width: $post-it-width;
 
       &:hover {
-        z-index: 1000;
+        z-index: $z-index-postit-hover;
       }
     }
 

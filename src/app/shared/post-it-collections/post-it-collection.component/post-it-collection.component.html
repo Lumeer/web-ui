@@ -9,7 +9,8 @@
        [routerLink]="collection.id ? [workspacePath(), 'view', 'table'] : null"
        [queryParams]="collection.id ? { query: queryForCollectionDocuments() } : null"
        [attr.data-toggle]="collection.id ? '' : 'dropdown'">
-      <i class="fa-6x {{ collection.icon }}" aria-hidden="true"></i>
+      <i class="fa-6x {{ collection.icon }}" aria-hidden="true" (click)="togglePanelVisible($event);"
+         (clickOutside)="onPickerBlur()"></i>
     </a>
     <div *ngIf="!collection.id" class="dropdown-menu dropdown-menu-right uninitialized-dropdown">
       <color-picker class="dropdown-item" [(color)]="collection.color"></color-picker>

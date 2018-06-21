@@ -127,6 +127,7 @@ $border-radius-small: 3px !default;
 
 $z-index-selected: 100;
 $z-index-hovered: 90;
+$z-index-postit-hover: 900;
 
 $shadow-default: 0 1px 5px 1px rgba(0, 0, 0, 0.2); // default shadow
 $shadow-up: 0 4px 8px 3px rgba(0, 0, 0, 0.11); // blurred shadow for 'higher' elements
@@ -138,3 +139,4 @@ $post-it-width: 215px;
 $animation-duration: 0.4s ease;
 $animation-duration-slow: 0.5s ease;
 $animation-color-duration: 0.25s ease;
+
