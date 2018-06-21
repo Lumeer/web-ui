@@ -152,7 +152,6 @@ export class ResourceHeaderComponent {
     this.resource.icon = this.oldIcon;
   }
 
-
   public storeIconAndColor($event: MouseEvent): void {
     this.clickedComponent = $event.target;
     this.oldColor = this.resource.color;
