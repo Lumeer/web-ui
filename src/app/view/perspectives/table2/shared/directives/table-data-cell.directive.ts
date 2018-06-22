@@ -67,7 +67,7 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
 
   private editSubscription: Subscription;
 
-  private linkCreated: boolean;
+  private savingDisabled: boolean;
 
   public constructor(private actions$: Actions,
                      private store: Store<AppState>) {
@@ -124,9 +124,12 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
     }
   }
 
+  public disableSaving() {
+    this.savingDisabled = true;
+  }
+
   private saveData(value: string) {
-    if (this.linkCreated || this.value === value) {
-      // TODO unset linkCreated
+    if (this.savingDisabled || this.value === value) {
       return;
     }
 

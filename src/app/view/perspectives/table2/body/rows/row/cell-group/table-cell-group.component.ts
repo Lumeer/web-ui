@@ -30,6 +30,7 @@ import {areTableRowCursorsEqual, TableBodyCursor, TableCursor} from '../../../..
 import {TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TableRow} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {EditedAttribute, selectEditedAttribute, selectTableCursor, selectTablePartLeafColumns} from '../../../../../../../core/store/tables/tables.state';
+import {TableDataCellDirective} from '../../../../shared/directives/table-data-cell.directive';
 import {TableEditableCellDirective} from '../../../../shared/directives/table-editable-cell.directive';
 
 @Component({
@@ -48,6 +49,9 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
 
   @Input()
   public row: TableRow;
+
+  @ViewChildren(TableDataCellDirective)
+  public dataCells: QueryList<TableDataCellDirective>;
 
   @ViewChildren(TableEditableCellDirective)
   public editableCells: QueryList<TableEditableCellDirective>;
@@ -178,6 +182,13 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
 
   public onValueChange(value: string) {
     this.editedValue = value;
+  }
+
+  public onLinkCreate(cursor: TableBodyCursor) {
+    const dataCell = this.dataCells.find(cell => cell.cursor.columnIndex === cursor.columnIndex);
+    if (dataCell) {
+      dataCell.disableSaving();
+    }
   }
 
 }

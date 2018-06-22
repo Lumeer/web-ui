@@ -12,7 +12,8 @@
                                        [column]="column"
                                        [cursor]="cell.cursor"
                                        [table]="table"
-                                       [value]="editedValue">
+                                       [value]="editedValue"
+                                       (linkCreate)="onLinkCreate(cell.cursor)">
           </table-data-cell-suggestions>
 
           <div tableDataCell

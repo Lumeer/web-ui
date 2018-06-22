@@ -55,6 +55,9 @@ export class TableDataCellSuggestionsComponent implements OnChanges {
   @Input()
   public value: string;
 
+  @Output()
+  public linkCreate = new EventEmitter();
+
   public readonly tableRowHeight = TABLE_ROW_HEIGHT;
 
   public documents$: Observable<DocumentModel[]>;
@@ -87,7 +90,7 @@ export class TableDataCellSuggestionsComponent implements OnChanges {
   }
 
   public onCreateLink(document: DocumentModel) {
-    // this.linkCreated = true; TODO
+    this.linkCreate.emit();
 
     const {parentPath} = splitRowPath(this.cursor.rowPath);
     const part = this.table.parts[this.cursor.partIndex - 1];
