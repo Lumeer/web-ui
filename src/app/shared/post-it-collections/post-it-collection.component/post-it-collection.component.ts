@@ -17,17 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {QueryConverter} from '../../../core/store/navigation/query.converter';
@@ -73,9 +63,22 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
   private favoriteChange$ = new Subject<boolean>();
   private subscriptions = new Subscription();
 
+  private oldColor: string;
+  private oldIcon: string;
+  private clickedComponent: any;
+
   public newDropdownId = 'dropdown-' + Math.floor((1 + Math.random()) * 1000000000000).toString(16);
 
   constructor(private collectionValidators: CollectionValidators) {
+  }
+
+  @HostListener('document:click', ['$event'])
+  public documentClicked($event): void {
+    if (this.clickedComponent && $event.target !== this.clickedComponent) {
+      this.collection.icon = this.oldIcon || this.collection.icon;
+      this.collection.color = this.oldColor || this.collection.color;
+      $event.stopPropagation();
+    }
   }
 
   public ngOnInit() {
@@ -133,10 +136,14 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
     this.favoriteChange.emit({favorite: value, onlyStore: true});
   }
 
-  public togglePanelVisible(event) {
+  public togglePanelVisible(event): void {
+    this.clickedComponent = event.target;
+
     if (this.isPickerVisible) {
       this.onPickerBlur();
     } else {
+      this.oldColor = this.collection.color;
+      this.oldIcon = this.collection.icon;
       this.isPickerVisible = true;
     }
     this.togglePanel.emit(event);
@@ -147,9 +154,12 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    if (this.collection.id) {
+    this.collection.icon = this.oldIcon || this.collection.icon;
+    this.collection.color = this.oldColor || this.collection.color;
+
+/*    if (this.collection.id) {
       this.update.emit(this.collection);
-    }
+    }*/
 
     this.isPickerVisible = false;
   }
@@ -213,4 +223,14 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
     this.nameFormControl.updateValueAndValidity();
   }
 
+  public revertSelectedColor($event: MouseEvent): void {
+    this.collection.icon = this.oldIcon || this.collection.icon;
+    this.collection.color = this.oldColor || this.collection.color;
+    this.togglePanelVisible($event);
+  }
+
+  public saveSelectedColor($event: MouseEvent): void {
+    this.update.emit(this.collection);
+    this.togglePanelVisible($event);
+  }
 }

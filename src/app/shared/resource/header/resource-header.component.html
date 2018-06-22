@@ -4,13 +4,18 @@
      (click)="onBack()"></i>
   <i class="fa-fw {{ resource.icon }} cursor-pointer"
      [style.fontSize.rem]="2"
-     [style.color]="resource.color" data-toggle="dropdown"></i>
+     [style.color]="resource.color" data-toggle="dropdown" (click)="storeIconAndColor($event)"></i>
   <div class="dropdown-menu">
-    <color-picker class="dropdown-item" [color]="resource.color"
-                  (selectedChange)="onNewColor($event)"></color-picker>
+    <color-picker dropdownId="dropdown-header" class="dropdown-item" [(color)]="resource.color"
+                  ></color-picker>
     <div class="dropdown-divider"></div>
-    <icon-picker dropdownId="dropdown-header" class="dropdown-item" [icon]="resource.icon"
-                 (selectedChange)="onNewIcon($event)"></icon-picker>
+    <icon-picker dropdownId="dropdown-header" class="dropdown-item" [(icon)]="resource.icon"
+                 ></icon-picker>
+    <div class="dropdown-divider"></div>
+    <div class="text-right mx-2">
+      <button class="btn btn-outline-secondary btn-sm" (click)="revertSelectedColor($event)" i18n="@@icon-picker.cancel">Cancel</button>
+      <button class="btn btn-primary btn-sm mx-2" (click)="saveSelectedColor($event)" i18n="@@icon-picker.select">Select</button>
+    </div>
   </div>
 
   <input-box

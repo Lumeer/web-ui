@@ -16,5 +16,9 @@
     <icon-picker [dropdownId]="dropdownId" [(icon)]="changedIcon"
                  class="dropdown-item">
     </icon-picker>
+    <div class="text-right mx-2">
+      <button class="btn btn-outline-secondary btn-sm" (click)="revertSelectedColor($event)" i18n="@@icon-picker.cancel">Cancel</button>
+      <button class="btn btn-primary btn-sm mx-2" i18n="@@icon-picker.select">Select</button>
+    </div>
   </div>
 </div>
