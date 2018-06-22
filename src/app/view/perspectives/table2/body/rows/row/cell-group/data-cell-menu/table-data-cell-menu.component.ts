@@ -52,15 +52,6 @@ export class TableDataCellMenuComponent implements OnChanges {
   @Output()
   public edit = new EventEmitter();
 
-  @Output()
-  public addRow = new EventEmitter<number>();
-
-  @Output()
-  public unlinkRow = new EventEmitter();
-
-  @Output()
-  public removeRow = new EventEmitter();
-
   @ViewChild('contextMenu')
   public contextMenu: ElementRef;
 
