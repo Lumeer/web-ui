@@ -1,5 +1,5 @@
 <dialog-wrapper [submitDisabled]="!form.valid"
-                [type]="'success'"
+                [type]="'primary'"
                 [width]="350"
                 [showSubmit]="canShowContent()"
                 (submit)="onSubmit()">
@@ -13,9 +13,9 @@
       <div *ngIf="parentOrganization"
            [ngClass]="isFirstProject ? 'alert alert-warning' : null">
         <span *ngIf="isFirstProject" class="mr-2"
-              i18n="@@resource.new.dialog.project.subtitle.first">You need create first project in order to use</span>
+              i18n="@@resource.new.dialog.project.subtitle.first">Your organization is missing a project, create one first!</span>
         <span *ngIf="!isFirstProject" class="mr-2"
-              i18n="@@resource.new.dialog.project.subtitle">Creating project for:</span>
+              i18n="@@resource.new.dialog.project.subtitle">Create project in organization:</span><br/>
         <i class="fa-fw {{ parentOrganization.icon }}"
            [style.color]="parentOrganization.color"></i>&nbsp;
         <span [style.color]="parentOrganization.color">[{{parentOrganization.code}}] {{parentOrganization.name}}</span>
@@ -25,9 +25,9 @@
 
       <div class="form-group">
 
-        <label class="col-form-label"
+        <label class="col-form-label text-muted"
                i18n="@@resource.new.dialog.icon.label">
-          Click on icon to change
+          Click to set icon and color:
         </label>
 
         <icon-chooser [(color)]="color"

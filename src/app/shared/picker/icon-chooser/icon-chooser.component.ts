@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
+import {AfterViewInit, Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 
 declare let $: any;
 
@@ -52,8 +51,10 @@ export class IconComponent implements OnInit, AfterViewInit {
   @Output()
   public iconChange = new EventEmitter<string>();
 
-  public changedColor: string;
-  public changedIcon: string;
+  public oldColor: string;
+  public oldIcon: string;
+
+  public clickedComponent: any;
 
   public dropdownId: string;
 
@@ -61,13 +62,20 @@ export class IconComponent implements OnInit, AfterViewInit {
     this.dropdownId = 'dropdown-' + IconComponent.generateId();
   }
 
+  @HostListener('document:click', ['$event'])
+  public documentClicked($event): void {
+    if (this.clickedComponent && $event.target !== this.clickedComponent) {
+      this.icon = this.oldIcon || this.icon;
+      this.color = this.oldColor || this.color;
+      $event.stopPropagation();
+    }
+  }
+
   private static generateId() {
     return Math.floor((1 + Math.random()) * 1000000000000).toString(16);
   }
 
   public ngOnInit() {
-    this.changedColor = this.color || DEFAULT_COLOR;
-    this.changedIcon = this.icon || DEFAULT_ICON;
   }
 
   public ngAfterViewInit(): void {
@@ -75,17 +83,27 @@ export class IconComponent implements OnInit, AfterViewInit {
   }
 
   public detectChanges(): void {
-    if (this.color !== this.changedIcon) {
-      this.colorChange.emit(this.changedColor);
+    if (this.color !== this.oldIcon) {
+      this.colorChange.emit(this.color);
     }
-    if (this.icon !== this.changedIcon) {
-      this.iconChange.emit(this.changedIcon);
+    if (this.icon !== this.oldIcon) {
+      this.iconChange.emit(this.icon);
     }
   }
 
+  public saveSelectedColor($event: MouseEvent): void {
+    this.detectChanges();
+  }
+
   public revertSelectedColor($event: MouseEvent): void {
-    this.changedColor = this.color;
-    this.changedIcon = this.icon;
+    this.color = this.oldColor;
+    this.icon = this.oldIcon;
+  }
+
+  public storeIconAndColor($event: MouseEvent): void {
+    this.clickedComponent = $event.target;
+    this.oldColor = this.color;
+    this.oldIcon = this.icon;
   }
 
 }

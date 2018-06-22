@@ -1,13 +1,18 @@
-<ul class="nav nav-tabs" role="tablist" (click)="$event.stopPropagation()">
-  <li *ngFor="let icon of tabs; let i = index" (click)="selectTab(i)" class="nav-item"><a
-    class="nav-link" [class.active]="icon.selected"><i class="fa-fw {{ icon.icon }}"></i></a></li>
-</ul>
-
+<div class="text-center text-muted px-0" i18n="@@icon-picker.select.icon">Choose icon</div>
+<div class="d-flex mx-3 my-1">
+  <input
+    class="form-control form-control-sm flex-fill"
+    (input)="filterInput($event)"
+    [(value)]="filter"
+    placeholder="Search for icon..."/>
+</div>
 <div class="tab-content">
-  <div *ngFor="let iconOption of iconsInTab(tab)" class="text-center {{ iconHighlight(iconOption) }} rounded icon"
+  <div *ngFor="let iconOption of filteredIcons" class="text-center rounded icon"
+       [class.selected]="iconOption === selected"
+       [class.active]="iconOption === icon"
        (mouseenter)="preview(iconOption)"
-       (mouseleave)="preview()"
+       (mouseleave)="preview(null)"
        (click)="select(iconOption)">
-    <i class="fa-fw {{ iconOption }}" aria-hidden="true"></i>
+    <i id="{{iconId(iconOption)}}" class="fa-fw {{ iconOption }}" aria-hidden="true"></i>
   </div>
 </div>

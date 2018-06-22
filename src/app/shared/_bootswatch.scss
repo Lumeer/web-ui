@@ -352,7 +352,9 @@ div[contenteditable="true"].form-control {
 
 .close {
   text-decoration: none;
-  opacity: 0.4;
+  opacity: 0.6;
+  color: $white;
+  transition: opacity 0.25s ease;
 
   &:hover,
   &:focus {
@@ -397,7 +399,7 @@ div[contenteditable="true"].form-control {
 
 // Containers ==================================================================
 .modal .close{
-  color: $black;
+  color: $white;
 }
 
 .card-template {

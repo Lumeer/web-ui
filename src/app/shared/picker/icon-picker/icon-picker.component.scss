@@ -10,10 +10,14 @@
   }
 
   .tab-content {
+    height: 8rem;
     display: flex;
     flex-wrap: wrap;
+    overflow: auto;
+    padding-left: 1rem;
 
     .icon {
+      color: $primary;
       padding: 0 2.5px;
 
       &.selected {

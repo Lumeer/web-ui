@@ -37,6 +37,8 @@ import {Subscription} from 'rxjs';
 import {DialogPath, dialogPathsMap} from '../dialog-path';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {selectProjectsByOrganizationId} from '../../core/store/projects/projects.state';
+import * as Colors from '../../shared/picker/color-picker/colors';
+import * as Icons from '../../shared/picker/icon-picker/icons';
 
 @Component({
   selector: 'create-resource-dialog',
@@ -55,6 +57,9 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
   public parentOrganization: OrganizationModel;
   public isFirstProject: boolean;
   public subscriptions = new Subscription();
+
+  private icons = Icons.solid;
+  private colors = Colors.palette;
 
   constructor(
     private dialogService: DialogService,
@@ -76,6 +81,8 @@ export class CreateResourceDialogComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.reset();
     this.parseResourceType();
+    this.color = this.colors[Math.round(Math.random() * this.colors.length)];
+    this.icon = this.icons[Math.round(Math.random() * this.icons.length)];
   }
 
   public ngOnDestroy() {

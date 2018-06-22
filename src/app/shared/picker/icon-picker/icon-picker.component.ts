@@ -35,8 +35,6 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
     event.stopPropagation();
   }
 
-  public tabs: { icon: string, selected: boolean}[] = [];
-
   @Input()
   public icon: string;
 
@@ -53,32 +51,25 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
 
   public icons = Icons.solid.concat(Icons.brand);
 
-  public tab = 0;
+  public filteredIcons: string[];
 
-  public TABS = 18;
+  private filter = '';
 
   public ngOnInit(): void {
     this.selected = this.icon;
-    this.generateTabs();
-    this.updateTab();
+    this.applyFilter();
+  }
+
+  private applyFilter(): void {
+    if (this.filter) {
+      this.filteredIcons = this.icons.filter(icon => icon.indexOf(this.filter) >= 0);
+    } else {
+      this.filteredIcons = [...this.icons];
+    }
   }
 
   public preview(previewed: string) {
     this.iconChange.emit(previewed ? previewed : this.selected);
-  }
-
-  private updateTab() {
-    let newTab = Math.floor(this.icons.indexOf(this.selected) / this.iconsPerTab());
-
-    if (newTab !== this.tab) {
-      this.selectTab(newTab);
-    }
-  }
-
-  private generateTabs() {
-    let icons = [];
-    this.range(0, this.TABS).forEach(i => icons.push({ icon: this.tabIcon(i), selected: i === this.tab }));
-    this.tabs = icons;
   }
 
   public select(selected: string) {
@@ -87,16 +78,8 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
     this.iconChange.emit(selected);
   }
 
-  public iconHighlight(icon: string): string {
-    if (icon === this.selected) {
-      return 'selected';
-    }
-
-    if (icon === this.icon) {
-      return 'active';
-    }
-
-    return '';
+  public iconId(icon: string): string {
+    return 'icon-' + icon.replace(/ /g, '.');
   }
 
   public range(start: number, end: number): number[] {
@@ -107,35 +90,26 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
     return result;
   }
 
-  public tabIcon(tabIndex: number): string {
-    const iconsPerTab = this.iconsPerTab(); //this.icons.length / this.TABS;
-    const start = Math.floor(tabIndex * iconsPerTab);
-    return this.icons[start];
-  }
-
-  public iconsInTab(tabIndex: number): string[] {
-    const iconsPerTab = this.iconsPerTab(); //this.icons.length / this.TABS;
-    const start = Math.floor(tabIndex * iconsPerTab);
-    return this.icons.slice(start, start + iconsPerTab);
-  }
-
-  private iconsPerTab() {
-    return Math.ceil(this.icons.length / this.TABS / 9) * 9;
-  }
-
   public ngAfterViewInit(): void {
     if (this.dropdownId) {
+      $(`#${this.dropdownId}`).on('shown.bs.dropdown', () => {
+        this.selected = this.icon;
+        const elem = (document as any).getElementById(this.iconId(this.icon));
+        if (elem) {
+          elem.scrollIntoView(true);
+        }
+      });
       $(`#${this.dropdownId}`).on('hide.bs.dropdown', () => {
-        this.updateTab();
+        if (this.filter) {
+          this.filter = '';
+          this.applyFilter();
+        }
       });
     }
   }
 
-  public selectTab(i: number): void {
-    if (i !== this.tab) {
-      this.tabs[this.tab].selected = false;
-      this.tabs[i].selected = true;
-      this.tab = i;
-    }
+  public filterInput($event: InputEvent): void {
+    this.filter = $event.target.value;
+    this.applyFilter();
   }
 }

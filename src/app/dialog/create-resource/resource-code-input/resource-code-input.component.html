@@ -2,7 +2,7 @@
 
   <label class="col-2 col-form-label"
          i18n="@@resource.new.dialog.code.label"
-         for="code">Code</label>
+         for="code">Code:</label>
 
   <div class="col-10">
     <input type="text"
@@ -19,11 +19,11 @@
          class="text-danger col-10 ml-auto mt-1">
           <span *ngIf="codeInput.errors.minlength || codeInput.errors.maxlength"
                 i18n="@@resource.new.dialog.code.error.length">
-            Code must be from 2 to 5 characters.
+            Code length must be between 2 and 5 characters.
           </span>
     <span *ngIf="codeInput.errors.notUniqueCode"
           i18n="@@resource.new.dialog.code.error.duplicity">
-            Sorry, this code is already taken. Try another?
+            Sorry, this code is already taken. Try another!
           </span>
   </small>
 

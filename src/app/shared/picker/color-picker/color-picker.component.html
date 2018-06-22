@@ -1,16 +1,19 @@
-<div class="rounded" *ngFor="let colorOption of greyscaleColors" [style.background]="colorOption"
-     [style.border-color]="colorHighlight(colorOption)"
-     (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
-<div class="rounded control-icon {{!isCustom() ? 'mt-0 p-0' : ''}}"
-     [style.border-color]="isCustom() ? colorHighlight(selected) : 'transparent'"
-     [style.background]="isCustom() ? selected : 'transparent'"
-     id="spectrum-picker-{{id}}">
-  <i [style.color]="isCustom() ? 'transparent' : ''" class="far fa-crosshairs" (click)="openSpectrum()"></i>
+<div class="text-center text-muted px-0" i18n="@@color-picker.select.icon">Choose color</div>
+<div class="colors">
+  <div class="rounded" *ngFor="let colorOption of greyscaleColors" [style.background]="colorOption"
+       [style.border-color]="colorHighlight(colorOption)"
+       (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
+  <div class="rounded control-icon {{!isCustom() ? 'mt-0 p-0' : ''}}"
+       [style.border-color]="isCustom() ? colorHighlight(selected) : 'transparent'"
+       [style.background]="isCustom() ? selected : 'transparent'"
+       id="spectrum-picker-{{id}}">
+    <i [style.color]="isCustom() ? 'transparent' : ''" class="far fa-crosshairs" (click)="openSpectrum()"></i>
+  </div>
+  <div class="rounded" *ngFor="let colorOption of saturatedColors" [style.background]="colorOption"
+       [style.border-color]="colorHighlight(colorOption)"
+       (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
+  <hr/>
+  <div class="rounded" *ngFor="let colorOption of colors" [style.background]="colorOption"
+       [style.border-color]="colorHighlight(colorOption)"
+       (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
 </div>
-<div class="rounded" *ngFor="let colorOption of saturatedColors" [style.background]="colorOption"
-     [style.border-color]="colorHighlight(colorOption)"
-     (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
-<hr/>
-<div class="rounded" *ngFor="let colorOption of colors" [style.background]="colorOption"
-     [style.border-color]="colorHighlight(colorOption)"
-     (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
