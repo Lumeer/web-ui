@@ -24,9 +24,9 @@ import {DocumentModel} from '../store/documents/document.model';
 import {UiRow} from './ui-row';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {NotificationService} from '../notifications/notification.service';
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {DocumentUi} from './document-ui';
+import {NotificationService} from '../notifications/notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +37,8 @@ export class DocumentUiService {
 
   constructor(private store: Store<AppState>,
               private i18n: I18n,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private ngZone: NgZone) {
   }
 
   public init(collection: CollectionModel, document: DocumentModel): void {
@@ -45,7 +46,7 @@ export class DocumentUiService {
 
     let key = DocumentUiService.getKey(collection, document);
     if (key) {
-      this.state[key] = new DocumentUi(collection, document, this.store, this.i18n, this.notificationService);
+      this.state[key] = new DocumentUi(collection, document, this.store, this.i18n, this.notificationService, this.ngZone);
     }
   }
 

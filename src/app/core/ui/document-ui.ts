@@ -35,6 +35,7 @@ import {CorrelationIdGenerator} from '../store/correlation-id.generator';
 import {isNullOrUndefined, isUndefined} from 'util';
 import {DocumentsAction} from '../store/documents/documents.action';
 import {CollectionsAction} from '../store/collections/collections.action';
+import {NgZone} from '@angular/core';
 
 export class DocumentUi {
 
@@ -55,7 +56,8 @@ export class DocumentUi {
               private document: DocumentModel,
               private store: Store<AppState>,
               private i18n: I18n,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private ngZone: NgZone) {
     if (this.collection && this.document) {
       this.subscribe();
     }
@@ -82,7 +84,9 @@ export class DocumentUi {
       this.collection = col;
       this.refreshRows();
     }));
-    this.subscriptions.add(interval(2000).subscribe(() => this.saveChanges()));
+    this.ngZone.runOutsideAngular(() =>
+      this.subscriptions.add(interval(2000).subscribe(() => this.saveChanges()))
+    );
     this.subscriptions.add(this.favoriteChange$.pipe(
       debounceTime(2000),
       filter(favorite => favorite !== this.favorite)

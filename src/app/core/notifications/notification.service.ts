@@ -18,11 +18,10 @@
  */
 
 import {Injectable, NgZone} from '@angular/core';
-import {Snotify, SnotifyButton, SnotifyPosition, SnotifyService, SnotifyToastConfig} from 'ng-snotify';
+import {Snotify, SnotifyButton, SnotifyPosition, SnotifyService} from 'ng-snotify';
 import {Observable} from 'rxjs';
 import {UserSettingsService} from '../user-settings.service';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {SnotifyStyle} from 'ng-snotify/snotify/enums/SnotifyStyle.enum';
 
 @Injectable()
 export class NotificationService {
@@ -38,7 +37,7 @@ export class NotificationService {
       return;
     }
     this.zone.runOutsideAngular(() =>
-      this.notifications.simple(message, this.i18n({ id: 'notification.service.Hey', value: 'Hey' }))
+      this.notifications.simple(message, this.i18n({id: 'notification.service.Hey', value: 'Hey'}))
     );
   }
 
@@ -47,7 +46,7 @@ export class NotificationService {
       return;
     }
     this.zone.runOutsideAngular(() =>
-      this.notifications.success(message, this.i18n({ id: 'notification.service.Success', value: 'Success' }))
+      this.notifications.success(message, this.i18n({id: 'notification.service.Success', value: 'Success'}))
     );
   }
 
@@ -56,7 +55,7 @@ export class NotificationService {
       return;
     }
     this.zone.runOutsideAngular(() =>
-      this.notifications.info(message, this.i18n({ id: 'notification.service.Info', value: 'Info' }), {timeout: 5000})
+      this.notifications.info(message, this.i18n({id: 'notification.service.Info', value: 'Info'}), {timeout: 5000})
     );
   }
 
@@ -65,7 +64,7 @@ export class NotificationService {
       return;
     }
     this.zone.runOutsideAngular(() =>
-      this.notifications.warning(message, this.i18n({ id: 'notification.service.Warning', value: 'Warning' }))
+      this.notifications.warning(message, this.i18n({id: 'notification.service.Warning', value: 'Warning'}))
     );
   }
 
@@ -74,7 +73,7 @@ export class NotificationService {
       return;
     }
     this.zone.runOutsideAngular(() =>
-      this.notifications.error(message, this.i18n({ id: 'notification.service.Error', value: 'Error' }))
+      this.notifications.error(message, this.i18n({id: 'notification.service.Error', value: 'Error'}))
     );
   }
 

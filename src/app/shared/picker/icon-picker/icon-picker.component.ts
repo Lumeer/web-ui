@@ -108,8 +108,8 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public filterInput($event: InputEvent): void {
-    this.filter = $event.target.value;
+  public filterInput($event: KeyboardEvent): void {
+    this.filter = (<HTMLInputElement>$event.target).value;
     this.applyFilter();
   }
 }
