@@ -24,7 +24,7 @@
              i18n="@@table.header.suggestion.link.existing">Use existing link
         </div>
         <a *ngFor="let linkedAttribute of linkedAttributes$ | async"
-           (mousedown)="useLinkType(linkedAttribute)"
+           (mousedown)="useLinkType(linkedAttribute.linkType)"
            class="dropdown-item">
           <icons-presenter [colors]="[linkedAttribute.collection.color]"
                            [icons]="[linkedAttribute.collection.icon]"
@@ -44,7 +44,7 @@
              i18n="@@table.header.suggestion.link.new">Create new link
         </div>
         <a *ngFor="let linkedAttribute of allAttributes$ | async"
-           (mousedown)="createLinkType(linkedAttribute)"
+           (mousedown)="createLinkType(linkedAttribute.collection)"
            class="dropdown-item">
           <icons-presenter [colors]="[linkedAttribute.collection.color]"
                            [icons]="[linkedAttribute.collection.icon]"

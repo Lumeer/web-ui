@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable, combineLatest} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../../core/store/collections/collection.model';
@@ -84,17 +84,15 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
     }
   }
 
-  public useLinkType({linkType}: LinkedAttribute) {
+  public useLinkType(linkType: LinkTypeModel) {
     this.store.dispatch(new TablesAction.RemoveColumn({cursor: this.cursor}));
     this.store.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
   }
 
-  public createLinkType({collection}: LinkedAttribute) {
+  public createLinkType(collection: CollectionModel) {
     this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
     const linkCollectionIds = [this.collection.id, collection.id].join(',');
-    this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => {
-      this.store.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
-    });
+    this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => this.useLinkType(linkType));
   }
 
   public suggestLinkedAttributes(): Observable<LinkedAttribute[]> {
