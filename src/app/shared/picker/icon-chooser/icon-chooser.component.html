@@ -23,11 +23,12 @@
       class="dropdown-item"
     ></icon-picker>
     <div class="text-right mx-2">
-      <button class="btn btn-outline-secondary btn-sm" (click)="revertSelectedColor($event)"
+      <button class="btn btn-outline-secondary btn-sm" data-toggle="dropdown" (click)="revertSelectedColor($event)"
               i18n="@@icon-picker.cancel">
         Cancel
       </button>
-      <button class="btn btn-primary btn-sm mx-2" (click)="saveSelectedColor($event)" i18n="@@icon-picker.select">
+      <button class="btn btn-primary btn-sm mx-2" data-toggle="dropdown" (click)="saveSelectedColor($event)"
+              i18n="@@icon-picker.select">
         Select
       </button>
     </div>

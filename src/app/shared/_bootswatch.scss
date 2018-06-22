@@ -127,7 +127,7 @@ body {
   color: $gray-300;
 }
 
-.dropdown-item:hover .text-primary {
+.dropdown-item:hover .text-primary, .dropdown-item:active {
   color: $white !important;
 }
 
