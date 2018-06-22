@@ -17,10 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {SelectionHelper} from '../../util/selection-helper';
 
 @Component({
@@ -44,23 +42,23 @@ export class PostItDocumentCellComponent {
   @Output() public focus = new EventEmitter();
   @Output() public update = new EventEmitter<string>();
   @Output() public enter = new EventEmitter();
-  @Output() public removeValue = new EventEmitter();
+  @Output() public remove = new EventEmitter();
 
   public onFocus(){
     this.focus.emit();
   }
 
-  public onRemoveRow() {
-    this.removeValue.emit();
+  public onRemove() {
+    this.remove.emit();
   }
 
   public onEnter() {
     this.enter.emit();
   }
 
-  public onBlur(value: string) {
-    // TODO trim value
-    this.update.emit(value);
+  public onBlur() {
+    this.model = this.model.trim();
+    this.update.emit(this.model);
   }
 
 

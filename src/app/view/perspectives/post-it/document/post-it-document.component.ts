@@ -17,25 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 
-import {Store} from '@ngrx/store';
-import {isNullOrUndefined} from 'util';
-import {AppState} from '../../../../core/store/app.state';
+import {Observable} from 'rxjs';
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../core/model/role';
 import {PostItDocumentModel} from '../document-data/post-it-document-model';
-import {SelectionHelper} from '../util/selection-helper';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {PostItRow} from './post-it-row';
-import {Subject, Subscription} from 'rxjs';
-import {debounceTime, filter} from 'rxjs/operators';
-import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {DocumentUiService} from '../../../../core/ui/document-ui.service';
-import {Observable} from 'rxjs/index';
 import {UiRow} from '../../../../core/ui/ui-row';
+import {filter, map, tap} from 'rxjs/operators';
+import {SelectionHelper} from '../util/selection-helper';
 
 @Component({
   selector: 'post-it-document',
@@ -52,11 +45,12 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
   @Input() public selectionHelper: SelectionHelper;
 
   @Output() public remove = new EventEmitter();
-  @Output() public changes = new EventEmitter();
+  @Output() public sizeChange = new EventEmitter();
 
   @ViewChild('content') public content: ElementRef;
 
   public hasWriteRole = false;
+  private currentRowsLength: number;
 
   public constructor(private documentUiService: DocumentUiService) {
   }
@@ -80,11 +74,13 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
   }
 
   public getRows$(): Observable<UiRow[]> {
-    return this.documentUiService.getRows$(this.collection, this.postItModel.document);
+    return this.documentUiService.getRows$(this.collection, this.postItModel.document).asObservable().pipe(
+      tap(rows => this.checkRowsLength(rows.length))
+    );
   }
 
   public getFavorite$(): Observable<boolean> {
-    return this.documentUiService.getFavorite$(this.collection, this.postItModel.document);
+    return this.documentUiService.getFavorite$(this.collection, this.postItModel.document).asObservable();
   }
 
   public onToggleFavorite() {
@@ -107,8 +103,16 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
     return this.documentUiService.getTrackBy(this.collection, this.postItModel.document);
   }
 
+  private checkRowsLength(length: number) {
+    const changed = this.currentRowsLength && this.currentRowsLength !== length;
+    this.currentRowsLength = length;
+
+    if(changed){
+      this.sizeChange.emit();
+    }
+  }
+
   private disableScrollOnNavigation(): void {
-    /// TODO ????
     const capture = false;
     const scrollKeys = [KeyCode.UpArrow, KeyCode.DownArrow];
 
@@ -119,29 +123,13 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
     }, capture);
   }
 
-  public clickOnAttributePair(column: number, row: number): void {
-    this.selectionHelper.setEditMode(false);
-    this.selectionHelper.select(column, row, this.postItModel);
-  }
-
-  public onEnterKeyPressedInEditMode(): void {
-    this.selectionHelper.selectNext(this.postItModel);
-  }
-
-  public onEdit() {
-    this.selectionHelper.setEditMode(true);
-    this.selectionHelper.select(0, 0, this.postItModel)
-  }
-
-  public unusedAttributes(): AttributeModel[] {
-    if (isNullOrUndefined(this.collection)) {
-      return [];
-    }
-
-    return [];
-    // return this.collection.attributes.filter(attribute => {
-    //   return isNullOrUndefined(this.postItRows.find(d => d.attributeId === attribute.id));
-    // });
+  public getUnusedAttributes$(): Observable<AttributeModel[]> {
+    return this.getRows$().pipe(
+      filter(() => !!this.collection),
+      map(rows => this.collection.attributes.filter(attribute =>
+        !rows.find(row => row.id === attribute.id))
+      )
+    );
   }
 
   public suggestionListId(): string {

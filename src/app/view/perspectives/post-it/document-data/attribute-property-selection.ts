@@ -18,10 +18,7 @@
  */
 
 export interface AttributePropertySelection {
-
   row: number;
   column: number;
-  editing: boolean;
   index: number;
-
 }

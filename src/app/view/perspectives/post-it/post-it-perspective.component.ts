@@ -31,21 +31,19 @@ import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
 import {PostItLayoutConfig} from '../../../shared/utils/layout/post-it-layout-config';
 import {PostItSortingLayout} from '../../../shared/utils/layout/post-it-sorting-layout';
 import {PostItDocumentModel} from './document-data/post-it-document-model';
-import {SelectionHelper} from './util/selection-helper';
 import {KeyCode} from '../../../shared/key-code';
 import {HashCodeGenerator} from '../../../shared/utils/hash-code-generator';
 import {selectCollectionsByQuery} from '../../../core/store/collections/collections.state';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
 import {userRolesInResource} from '../../../shared/utils/resource.utils';
 import {Role} from '../../../core/model/role';
-import Create = DocumentsAction.Create;
-import UpdateData = DocumentsAction.UpdateData;
 import {CollectionModel} from '../../../core/store/collections/collection.model';
-import {CollectionsAction} from '../../../core/store/collections/collections.action';
 import {UserSettingsService} from '../../../core/user-settings.service';
 import {SizeType} from '../../../shared/slider/size-type';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
+import {SelectionHelper} from './util/selection-helper';
+import {DocumentUiService} from '../../../core/ui/document-ui.service';
 
 @Component({
   selector: 'post-it-perspective',
@@ -77,6 +75,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<AppState>,
               private zone: NgZone,
+              private documentUiService: DocumentUiService,
               private userSettingsService: UserSettingsService) {
   }
 
@@ -119,7 +118,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private createSelectionHelper() {
-    this.selectionHelper = new SelectionHelper(this.postIts, () => this.getNumberColumns(), this.perspectiveId);
+    this.selectionHelper = new SelectionHelper(() => this.postIts, () => this.collections, () => this.getNumberColumns(), this.documentUiService , this.perspectiveId);
   }
 
   private subscribeData() {
@@ -185,7 +184,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public createPostIt(documentModel: DocumentModel) {
-    this.postIts.unshift({document: documentModel, order: 0});
+    this.store.dispatch(new DocumentsAction.Create({document: documentModel}));
   }
 
   public postItWithIndex(postIt: PostItDocumentModel, index: number): PostItDocumentModel {
@@ -215,8 +214,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.fetchDocuments();
   }
 
-  public postItChanged(changedPostIt: PostItDocumentModel): void {
-    // TODO ?
+  public postItChanged() {
+    this.layoutManager.refresh();
   }
 
   public removePostIt(postIt: PostItDocumentModel) {

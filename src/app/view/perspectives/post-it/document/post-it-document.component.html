@@ -11,7 +11,7 @@
 
 <div class="card-body p-2">
   <ul class="m-0 p-0" #content>
-    <ng-container *ngFor="let row of getRows$() | async as rows; trackBy:getTrackBy(); let index = index">
+    <ng-container *ngFor="let row of getRows$() | async; trackBy:getTrackBy(); let index = index">
 
       <li class="w-100" *ngIf="!row.remote">
         <post-it-document-cell
@@ -25,10 +25,10 @@
           [selectionHelper]="selectionHelper"
           [suggestionListId]="suggestionListId()"
           [model]="row.newName || row.name"
-          (removeValue)="onRemoveRow(index)"
+          (remove)="onRemoveRow(index)"
           (update)="onUpdateRow(index, $event, row.newValue || row.value)"
-          (focus)="clickOnAttributePair(0, index)"
-          (enter)="onEnterKeyPressedInEditMode()">
+          (focus)="selectionHelper.focusCellSpan(index, 0, postItModel)"
+          (enter)="selectionHelper.moveToNextInput()">
         </post-it-document-cell>
 
         <post-it-document-cell
@@ -40,24 +40,24 @@
           [perspectiveId]="perspectiveId"
           [selectionHelper]="selectionHelper"
           [model]="row.newValue || row.value"
-          (removeValue)="onUpdateRow(index, row.newName || row.name, '')"
+          (remove)="onUpdateRow(index, row.newName || row.name, '')"
           (update)="onUpdateRow(index, row.newName || row.name, $event)"
-          (focus)="clickOnAttributePair(1, index)"
-          (enter)="onEnterKeyPressedInEditMode()">
+          (focus)="selectionHelper.focusCellSpan(index, 1, postItModel)"
+          (enter)="selectionHelper.moveToNextInput()">
         </post-it-document-cell>
       </li>
 
     </ng-container>
 
 
-    <li class="w-100" *ngIf="hasWriteRole && getRows$() | async as rows">
-      <div (click)="addAttrRow">
-        <i class="fas fa-plus text-success"></i>
+    <li class="w-100" *ngIf="hasWriteRole">
+      <div class="w-100 h-100 clickable" (click)="addAttrRow()">
+        <i class="fas fa-plus pt-2 pl-1"></i>
       </div>
     </li>
   </ul>
 </div>
 
 <datalist *ngIf="postItModel" id="{{ suggestionListId() }}">
-  <option *ngFor="let attribute of unusedAttributes()">{{ attribute.name }}</option>
+  <option *ngFor="let attribute of getUnusedAttributes$() | async">{{ attribute.name }}</option>
 </datalist>

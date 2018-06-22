@@ -1,14 +1,14 @@
 <span id="{{ perspectiveId }}{{ index }}[{{column}}, {{ row }}]"
       [attr.tabindex]="index * 1000 + row * 2 + column"
       [title]="model" class="d-flex"
-      (keydown.ArrowLeft)="selectionHelper.moveSelection(-1, 0)"
-      (keydown.ArrowRight)="selectionHelper.moveSelection(1, 0)"
-      (keydown.ArrowUp)="selectionHelper.moveSelection(0, -1)"
-      (keydown.ArrowDown)="selectionHelper.moveSelection(0, 1)"
-      (keydown.F2)="selectionHelper.setEditMode(true); selectionHelper.focus()"
-      (keydown.enter)="selectionHelper.setEditMode(true); selectionHelper.focus()"
-      (keydown.backspace)="onRemoveRow()"
-      (keydown.delete)="onRemoveRow()"
+      (keydown.ArrowLeft)="selectionHelper.moveLeft()"
+      (keydown.ArrowRight)="selectionHelper.moveRight()"
+      (keydown.ArrowUp)="selectionHelper.moveUp()"
+      (keydown.ArrowDown)="selectionHelper.moveDown()"
+      (keydown.F2)="selectionHelper.focusToggle(true)"
+      (keydown.enter)="selectionHelper.focusToggle(true)"
+      (keydown.backspace)="onRemove()"
+      (keydown.delete)="onRemove()"
       (focus)="onFocus()">
 
     <input #cellInput
@@ -17,9 +17,8 @@
            [disabled]="readonly"
            [attr.list]="suggestionListId"
            (keydown)="$event.stopPropagation()"
-           (keydown.F2)="selectionHelper.setEditMode(false); selectionHelper.focus()"
-           (keydown.Escape)="selectionHelper.setEditMode(false); selectionHelper.focus()"
+           (keydown.F2)="selectionHelper.focusToggle(false)"
+           (keydown.Escape)="selectionHelper.focusToggle(false)"
            (keydown.enter)="onEnter()"
-           (blur)="onBlur(cellInput.textContent)"
-           (click)="selectionHelper.setEditMode(true)">
+           (blur)="onBlur()">
 </span>

@@ -17,254 +17,191 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isNullOrUndefined} from 'util';
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
-import {Direction} from '../document-data/direction';
 import {PostItDocumentModel} from '../document-data/post-it-document-model';
+import {DocumentUiService} from '../../../../core/ui/document-ui.service';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
 
 export const ATTRIBUTE_COLUMN = 0;
 
 export const VALUE_COLUMN = 1;
 
-export const COLUMNS = 1;
-
 export class SelectionHelper {
 
-  public selection: AttributePropertySelection = this.emptySelection();
+  private selection: AttributePropertySelection = this.emptySelection();
 
-  public selectedPostIt: PostItDocumentModel;
+  private selectedPostIt: PostItDocumentModel;
 
-  constructor(private postIts: PostItDocumentModel[],
-              private getDocumentsPerRow: () => number,
+  constructor(private postIts: () => PostItDocumentModel[],
+              private collections: () => { [collectionId: string]: CollectionModel },
+              private documentsPerRow: () => number,
+              private documentUiService: DocumentUiService,
               private perspectiveId: string) {
   }
 
-  private emptySelection(): AttributePropertySelection {
-    return {
-      row: null,
-      column: null,
-      index: null,
-      editing: false
-    };
-  }
-
   public initializeIfNeeded() {
-    if (this.selectionIsEmpty()) {
-      this.select(0, 0, this.firstPostIt());
+    if (this.isEmptySelection()) {
+      this.tryToSelectSpanCell(0, 0, 0);
     }
   }
 
-  private firstPostIt(): PostItDocumentModel {
-    return this.postIts.reduce((first, current) => {
-      if (first.order <= current.order) {
-        return first;
-      } else {
-        return current;
+  public moveUp() {
+    if (this.isEmptySelection()) {
+      return;
+    }
+
+    const row = this.selection.row - 1;
+    const column = this.selection.column;
+
+    if (row >= 0) {
+      this.focusCurrent(row, column);
+    } else { // now we need select document above
+      const index = this.selection.index - this.documentsPerRow();
+      const postIt = this.getDocumentByIndex(index);
+      if (postIt) {
+        this.focusCellSpan(this.lastRowIndex(postIt), column, postIt);
       }
-    });
+    }
+
   }
 
-  private selectionIsEmpty(): boolean {
-    return JSON.stringify(this.selection) === JSON.stringify(this.emptySelection());
-  }
+  public moveDown() {
+    if (this.isEmptySelection()) {
+      return;
+    }
 
-  public setEditMode(on: boolean): void {
-    this.selection.editing = on;
-  }
+    const row = this.selection.row + 1;
+    const column = this.selection.column;
 
-  public selectNext(postIt: PostItDocumentModel, currentRows?: number): void {
-    this.selectedPostIt = postIt;
-
-    switch (this.selection.column) {
-      case ATTRIBUTE_COLUMN:
-        this.selectNextToTheRight();
-        break;
-      case VALUE_COLUMN:
-        this.selectNextOnNewLine();
-        break;
-      default:
-        throw Error('Currently selected nonexistent column');
+    if (row <= this.currentLastRowIndex()) {
+      this.focusCurrent(row, column);
+    } else { // now we need select document below
+      const index = this.selection.index + this.documentsPerRow();
+      this.tryToSelectSpanCell(0, column, index);
     }
   }
 
-  private selectNextToTheRight(): void {
-    if (this.selection.row === this.lastRow()) {
-      this.moveSelection(Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER);
-    } else {
-      this.moveSelection(1, 0);
+  public moveRight() {
+    if (this.isEmptySelection()) {
+      return;
+    }
+
+    const row = this.selection.row;
+    const column = this.selection.column + 1;
+
+    if (column <= VALUE_COLUMN) {
+      this.focusCurrent(row, column);
+    } else { // we need to select document on right
+      const index = this.selection.index + 1;
+      this.tryToSelectSpanCell(row, ATTRIBUTE_COLUMN, index);
     }
   }
 
-  private selectNextOnNewLine(): void {
-    if (this.selection.row === this.lastRow()) {
-      this.moveSelection(Number.MAX_SAFE_INTEGER, -Number.MAX_SAFE_INTEGER);
-    } else {
-      this.moveSelection(-1, 1);
+  public moveLeft() {
+    if (this.isEmptySelection()) {
+      return;
+    }
+
+    const row = this.selection.row;
+    const column = this.selection.column - 1;
+
+    if (column >= ATTRIBUTE_COLUMN) {
+      this.focusCurrent(row, column);
+    } else { // we need to select document on left
+      const index = this.selection.index - 1;
+      this.tryToSelectSpanCell(row, VALUE_COLUMN, index);
     }
   }
 
-  public moveSelection(columnChange: number, rowChange: number): void {
-    const newColumn = this.selection.column + columnChange;
-    const newRow = this.selection.row + rowChange;
-    const newDirection = this.selectedDocumentDirection(newColumn, newRow);
-
-    if (newDirection === Direction.Self) {
-      this.select(newColumn, newRow, this.selectedPostIt);
-    } else {
-      this.selectDocumentByDirection(newColumn, newRow, newDirection);
-    }
-  }
-
-  public select(column: number, row: number, postIt: PostItDocumentModel): void {
-    this.selectedPostIt = postIt;
-
-    this.selection.index = postIt.order;
-    this.selectRow(row);
-    this.selectColumn(column);
-
-    this.handleBoundarySelections();
-
-    this.focus();
-  }
-
-  private selectedDocumentDirection(newColumn: number, newRow: number): Direction {
-    if (newColumn < 0) {
-      return Direction.Left;
-    }
-    if (newColumn > COLUMNS || this.leftOfDisabledInput() && newColumn === VALUE_COLUMN) {
-      return Direction.Right;
-    }
-    if (newRow < 0) {
-      return Direction.Up;
-    }
-    if (newRow > this.lastRow() || this.aboveDisabledInput() && newRow === this.lastRow() && newColumn !== ATTRIBUTE_COLUMN) {
-      return Direction.Down;
+  public moveToNextInput() {
+    if (this.isEmptySelection()) {
+      return;
     }
 
-    return Direction.Self;
-  }
-
-  private selectDocumentByDirection(newColumn: number, newRow: number, direction: Direction): void {
-    switch (direction) {
-      case Direction.Left:
-        this.tryToSelectDocumentOnLeft(newColumn, newRow);
-        break;
-      case Direction.Right:
-        this.tryToSelectDocumentOnRight(newColumn, newRow);
-        break;
-      case Direction.Up:
-        this.tryToSelectDocumentOnUp(newColumn, newRow);
-        break;
-      case Direction.Down:
-        this.tryToSelectDocumentOnDown(newColumn, newRow);
-        break;
-    }
-  }
-
-  private tryToSelectDocumentOnLeft(newColumn: number, newRow: number): void {
-    newColumn = VALUE_COLUMN;
-    newRow = newRow > this.lastRow() ? 0 : newRow;
-
-    if (this.selection.index - 1 >= 0) {
-      const selectedDocument = this.postIts[this.selection.index - 1];
-      this.select(newColumn, newRow, selectedDocument);
-    }
-  }
-
-  private tryToSelectDocumentOnRight(newColumn: number, newRow: number): void {
-    newColumn = ATTRIBUTE_COLUMN;
-
-    if (this.selection.index + 1 < this.postIts.length) {
-      const selectedDocument = this.postIts[this.selection.index + 1];
-      this.select(newColumn, newRow, selectedDocument);
-    }
-  }
-
-  private tryToSelectDocumentOnUp(newColumn: number, newRow: number): void {
-    if (this.selection.index - this.getDocumentsPerRow() >= 0) {
-      const selectedDocument = this.postIts[this.selection.index - this.getDocumentsPerRow()];
-      this.select(newColumn, newRow, selectedDocument);
-    }
-  }
-
-  private tryToSelectDocumentOnDown(newColumn: number, newRow: number): void {
-    newRow = 0;
-
-    if (this.selection.index + this.getDocumentsPerRow() < this.postIts.length) {
-      const selectedDocument = this.postIts[this.selection.index + this.getDocumentsPerRow()];
-      this.select(newColumn, newRow, selectedDocument);
-    }
-  }
-
-  private selectRow(row: number): void {
-    if (row < 0) {
-      row = 0;
-    }
-
-    if (row > this.lastRow()) {
-      row = this.lastRow();
-    }
-
-    this.selection.row = row;
-  }
-
-  private selectColumn(column: number): void {
-    if (column > COLUMNS) {
+    let column = this.selection.column + 1;
+    let row = this.selection.row;
+    if (column > VALUE_COLUMN) {
       column = ATTRIBUTE_COLUMN;
+      row += 1;
     }
 
-    if (column < 0) {
-      column = VALUE_COLUMN;
-    }
-
-    this.selection.column = column;
-  }
-
-  private handleBoundarySelections(): void {
-    if (this.lastRow() === 0 && this.selection.column === VALUE_COLUMN) {
-      this.selection.column = ATTRIBUTE_COLUMN;
-      return;
-    }
-
-    if (this.selection.row === this.lastRow() && this.selection.column === VALUE_COLUMN) {
-      this.selection.row--;
-      return;
+    if (row <= this.currentLastRowIndex()) {
+      this.focus(row, column, this.selectedPostIt, true);
+    } else { // now we need select document below
+      const index = this.selection.index + 1;
+      const postIt = this.getDocumentByIndex(index);
+      if (postIt) {
+        this.focus(0, column, postIt, true);
+      }
     }
   }
 
-  public focus(): void {
-    if (isNullOrUndefined(this.selection.column) || isNullOrUndefined(this.selection.row)) {
-      throw Error('Focusing empty selection');
+  public focusToggle(input: boolean) {
+    if (this.isEmptySelection()) {
+      return;
     }
 
-    let elementToFocus = document.getElementById(this.selectedInputId());
+    this.focus(this.selection.row, this.selection.column, this.selectedPostIt, input);
+  }
 
-    if (elementToFocus && this.selection.editing) {
+  private tryToSelectSpanCell(row: number, column: number, index: number) {
+    const postIt = this.getDocumentByIndex(index);
+    if (postIt) {
+      this.focusCellSpan(row, column, postIt);
+    }
+  }
+
+  private getDocumentByIndex(index: number): PostItDocumentModel {
+    return this.postIts().find(doc => doc.order === index);
+  }
+
+  private focusCurrent(row: number, column: number) {
+    this.focusCellSpan(row, column, this.selectedPostIt);
+  }
+
+  public focusCellSpan(row: number, column: number, postIt: PostItDocumentModel) {
+    this.focus(row, column, postIt, false);
+  }
+
+  private focus(row: number, column: number, postIt: PostItDocumentModel, input: boolean) {
+    const cellId = this.getCellId(row, column, postIt.order);
+
+    let elementToFocus = document.getElementById(cellId);
+
+    if (input && elementToFocus) {
       elementToFocus = elementToFocus.getElementsByTagName('Input').item(0) as HTMLInputElement;
     }
 
     if (elementToFocus) {
       elementToFocus.focus();
+
+      this.selection.row = row;
+      this.selection.column = column;
+      this.selection.index = postIt.order;
+      this.selectedPostIt = postIt;
     }
   }
 
-  private selectedInputId(): string {
-    return `${ this.perspectiveId }${ this.selection.index }[${ this.selection.column }, ${ this.selection.row }]`;
+  private getCellId(row: number, column: number, index: number): string {
+    console.log('getCellId', index, column, row);
+    return `${ this.perspectiveId }${index}[${column}, ${row}]`;
   }
 
-  private leftOfDisabledInput(): boolean {
-    return this.selection.column === ATTRIBUTE_COLUMN &&
-      this.selection.row === this.lastRow();
+  private isEmptySelection(): boolean {
+    return JSON.stringify(this.selection) === JSON.stringify(this.emptySelection());
   }
 
-  private aboveDisabledInput(): boolean {
-    return this.selection.column === VALUE_COLUMN &&
-      this.selection.row === this.lastRow() - 1;
+  private currentLastRowIndex(): number {
+    return this.lastRowIndex(this.selectedPostIt);
   }
 
-  private lastRow(): number {
-    // TODO is this last row?
-    return Object.keys(this.selectedPostIt.document.data).length;
+  private lastRowIndex(postIt: PostItDocumentModel): number {
+    const collection = this.collections()[postIt.document.collectionId];
+    return this.documentUiService.getRows$(collection, postIt.document).getValue().length - 1;
+  }
+
+  private emptySelection(): AttributePropertySelection {
+    return {row: null, column: null, index: null};
   }
 
 }
