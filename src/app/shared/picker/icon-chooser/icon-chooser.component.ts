@@ -83,6 +83,7 @@ export class IconComponent implements OnInit, AfterViewInit {
   }
 
   public detectChanges(): void {
+    console.log('setting good ones');
     if (this.color !== this.oldIcon) {
       this.colorChange.emit(this.color);
     }

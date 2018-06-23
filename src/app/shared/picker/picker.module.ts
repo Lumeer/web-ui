@@ -25,11 +25,13 @@ import {ColorPickerComponent} from './color-picker/color-picker.component';
 import {IconPickerComponent} from './icon-picker/icon-picker.component';
 import {IconComponent} from './icon-chooser/icon-chooser.component';
 import {IconsPresenterComponent} from './icons-presenter/icons-presenter.component';
+import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    PipesModule
   ],
   declarations: [
     IconPickerComponent,

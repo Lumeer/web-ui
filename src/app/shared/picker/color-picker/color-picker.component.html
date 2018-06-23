@@ -1,5 +1,5 @@
-<div class="text-center text-muted px-0" i18n="@@color-picker.select.icon">Choose color</div>
-<div class="colors">
+<div class="text-center text-muted px-0" i18n="@@color-picker.select.icon">1. Choose color</div>
+<div class="colors justify-content-center">
   <div class="rounded" *ngFor="let colorOption of greyscaleColors" [style.background]="colorOption"
        [style.border-color]="colorHighlight(colorOption)"
        (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
@@ -12,7 +12,8 @@
   <div class="rounded" *ngFor="let colorOption of saturatedColors" [style.background]="colorOption"
        [style.border-color]="colorHighlight(colorOption)"
        (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>
-  <hr/>
+</div>
+<div class="colors justify-content-center mt-2">
   <div class="rounded" *ngFor="let colorOption of colors" [style.background]="colorOption"
        [style.border-color]="colorHighlight(colorOption)"
        (mouseenter)="preview(colorOption)" (mouseleave)="preview()" (click)="select(colorOption)"></div>

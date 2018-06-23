@@ -9,12 +9,14 @@
     padding: 0 1.5px;
   }
 
+  .tab-content-container {
+    height: 153px;
+  }
   .tab-content {
-    height: 8rem;
     display: flex;
     flex-wrap: wrap;
     overflow: auto;
-    padding-left: 1rem;
+    padding: 0 1rem;
 
     .icon {
       color: $primary;

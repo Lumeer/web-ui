@@ -1,7 +1,7 @@
 <ng-container *ngIf="collection">
   <div class="row">
     <div class="col text-right">
-      <strong>{{page * 100 + 1}}&mdash;{{pageEndIndex(page)}}</strong>&nbsp;of&nbsp;{{documents.length}}
+      <strong>{{page * 100 + 1}}&mdash;{{pageEndIndex(page)}}</strong>&nbsp;<span i18n="@@count.of">of</span>&nbsp;{{documents.length}}
       <a *ngIf="canActivatePage(page - 1)" (click)="selectPage(page - 1)"><i
         class="clickable fas fa-angle-double-left"></i></a>
       <i *ngIf="!canActivatePage(page - 1)" class="fas fa-angle-double-left"></i>

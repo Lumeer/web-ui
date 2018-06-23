@@ -20,12 +20,17 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'icons'
+  name: 'pageSlice'
 })
-export class IconsPipe implements PipeTransform {
+export class PageSlicePipe implements PipeTransform {
 
-  public transform(entities: { icon: string }[]): string[] {
-    return entities.map(entity => entity.icon);
+  public transform(array: any[], page: number, pageSize: number): any[] {
+    const pages = Math.ceil(array.length / pageSize);
+    const realPage = Math.min(Math.max(page, 0), pages);
+    const start = realPage * pageSize;
+    const end = Math.min((realPage + 1) * pageSize, array.length);
+
+    return array.slice(start, end);
   }
 
 }

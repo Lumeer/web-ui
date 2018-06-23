@@ -25,9 +25,13 @@
 
       <div class="form-group">
 
-        <label class="col-form-label text-muted"
-               i18n="@@resource.new.dialog.icon.label">
-          Click to set icon and color:
+        <label class="col-form-label mb-2">
+          <span i18n="@@resource.new.dialog.icon.label">
+            Icon:
+          </span>
+          <span class="ml-4 text-muted small" i18n="@@resource.new.dialog.icon.label.hint">
+            (click the icon to change it)
+          </span>
         </label>
 
         <icon-chooser [(color)]="color"
@@ -52,6 +56,7 @@
       </h4>
     </ng-template>
 
+    <div class="small text-muted"><sup>*</sup>&nbsp;<span i18n="@@resource.new.dialog.required">Required</span></div>
   </div>
 
   <span class="button-cancel" i18n="@@resource.new.dialog.button.cancel">Cancel</span>

@@ -28,9 +28,10 @@ import {NativeDatePipe} from './native-date.pipe';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PixelPipe} from './pixel.pipe';
 import {PrefixPipe} from './prefix.pipe';
-import { EmptyPipe } from './empty.pipe';
-import { PermissionsPipe } from './permissions.pipe';
-import { LengthGreaterThanPipe } from './length-greater-than.pipe';
+import {EmptyPipe} from './empty.pipe';
+import {PermissionsPipe} from './permissions.pipe';
+import {LengthGreaterThanPipe} from './length-greater-than.pipe';
+import {PageSlicePipe} from './page-slice.pipe';
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import { LengthGreaterThanPipe } from './length-greater-than.pipe';
     PermissionsPipe,
     LengthGreaterThanPipe,
     DefaultAttributePipe,
+    PageSlicePipe
   ],
   exports: [
     LightenColorPipe,
@@ -63,6 +65,7 @@ import { LengthGreaterThanPipe } from './length-greater-than.pipe';
     PermissionsPipe,
     LengthGreaterThanPipe,
     DefaultAttributePipe,
+    PageSlicePipe
   ]
 })
 export class PipesModule {
