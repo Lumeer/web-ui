@@ -284,7 +284,7 @@ export function resizeLastColumnChild(column: TableCompoundColumn, delta: number
   return new TableCompoundColumn(parent, children);
 }
 
-export const HIDDEN_COLUMN_WIDTH = 8;
+export const HIDDEN_COLUMN_WIDTH = 10;
 
 export function getTableColumnWidth(column: TableColumn): number {
   switch (column.type) {

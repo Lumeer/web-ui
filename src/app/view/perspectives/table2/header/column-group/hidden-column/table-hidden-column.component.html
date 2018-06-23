@@ -1,8 +1,8 @@
 <div [style.background]="collection$ | async | columnBackground"
-     [style.width]="column | columnWidth | pixel"
+     [style.width.px]="column | columnWidth"
      (mousedown)="onMouseDown()"
      title="Hidden columns" i18n-title="@@table.header.hidden.columns"
-     class="table-border-right table-border-bottom h-100 dropdown">
+     class="table-border-right table-border-bottom text-center h-100 dropdown">
   <i class="fas fa-ellipsis-v text-secondary"
      data-toggle="dropdown"></i>
   <div class="dropdown-menu">

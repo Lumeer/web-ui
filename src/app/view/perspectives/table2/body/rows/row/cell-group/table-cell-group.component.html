@@ -62,7 +62,9 @@
     </ng-container>
 
     <ng-template #emptyCell>
-      <div class="table-border-right table-border-bottom"></div>
+      <div [style.width.px]="column | columnWidth"
+           class="table-border-right table-border-bottom">
+      </div>
     </ng-template>
   </ng-container>
 </ng-container>
