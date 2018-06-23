@@ -93,11 +93,12 @@ export function createTableColumnsBySiblingAttributeIds(allAttributes: Attribute
     return [];
   }
 
-  const attributeNames = allAttributes.filter(attribute => attributeIds.includes(attribute.id))
-    .map(attribute => attribute.name);
+  const attributes = allAttributes.filter(attribute => attributeIds.includes(attribute.id));
+  const attributeNames = attributes.map(attribute => attribute.name);
 
-  const attributes = allAttributes
-    .filter(attribute => attributeNames.some(name => attribute.name.startsWith(name)));
+  const childAttributes = allAttributes
+    .filter(attribute => attributeNames.some(name => attribute.name.startsWith(name + '.')));
+  attributes.push(...childAttributes);
 
   const {parentName} = splitAttributeName(attributeNames[0]);
   if (!parentName) {
