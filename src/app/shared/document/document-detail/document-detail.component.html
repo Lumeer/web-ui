@@ -2,30 +2,37 @@
   <div class="col-8 d-flex align-bottom align-self-end text-truncate">
     <div class="align-text-bottom">
       <h4>
-        <span i18n="@@document.detail.heading">Document detail</span>
+        <span [style.color]="collection?.color"><i class="{{collection?.icon}} mr-2"></i>{{collection?.name}}</span>&nbsp;
+        <strong *ngIf="getSummary$() | async">{{getSummary$() | async}}</strong>
+        <em *ngIf="!(getSummary$() | async)" i18n="@@shared.document.detail.document.indistinguishable">Indistinguishable
+          document</em>
+        <!--span i18n="@@document.detail.heading">Document detail</span-->
       </h4>
-      <span class="small"><i class="{{collection?.icon}}" [style.color]="collection?.color"></i>&nbsp;{{collection?.name}}</span>&nbsp;
-      <strong *ngIf="getSummary$() | async">{{getSummary$() | async}}</strong>
-      <em *ngIf="!(getSummary$() | async)" i18n="@@shared.document.detail.document.indistinguishable">Indistinguishable
-        document</em>
+      <div class="toolbar">
+        <i class="fas fa-fw fa-trash text-danger clickable clickable-danger"
+           aria-hidden="true"
+           title="Remove Document"
+           i18n-title="@@document.detail.remove"
+           (click)="onRemoveDocument()"
+        ></i>
+        <i *ngIf="getFavorite$() | async" class="fas fa-fw fa-star ml-2 text-warning clickable clickable-warning"
+           title="Remove from favorites"
+           i18n-title="@@document.detail.favorite.remove"
+           (click)="onToggleFavorite()"></i>
+        <i *ngIf="!(getFavorite$() | async)"
+           class="far fa-fw fa-star ml-2 mr-4 text-warning clickable clickable-warning"
+           title="Add to favorites"
+           i18n-title="@@document.detail.favorite.add"
+           (click)="onToggleFavorite()"></i>
+        <span i18n="@@document.detail.view.in">View in:</span>
+        <button class="btn btn-primary btn-sm ml-2" (click)="goTo(PERSPECTIVE_TABLE2)">
+          <i class="far fa-table mr-2"></i>
+          <span i18n="@@document.detail.perspective.name.table2">Table</span>
+        </button>
+      </div>
     </div>
-    <div class="mt-1">
-      <i class="fas fa-fw fa-trash ml-4 text-danger clickable clickable-danger"
-         aria-hidden="true"
-         title="Remove Document"
-         i18n-title="@@document.detail.remove"
-         (click)="onRemoveDocument()"
-      ></i>
-      <i *ngIf="getFavorite$() | async" class="fas fa-fw fa-star ml-2 text-warning clickable clickable-warning"
-         title="Remove from favorites"
-         i18n-title="@@document.detail.favorite.remove"
-         (click)="onToggleFavorite()"></i>
-      <i *ngIf="!(getFavorite$() | async)"
-         class="far fa-fw fa-star ml-2 text-warning clickable clickable-warning"
-         title="Add to favorites"
-         i18n-title="@@document.detail.favorite.add"
-         (click)="onToggleFavorite()"></i>
-    </div>
+    <!--div class="mt-1">
+    </div-->
   </div>
   <div class="col small text-right d-flex align-bottom text-notice">
     <div class="justify-content-end w-100">

@@ -34,6 +34,8 @@ import {DocumentUiService} from '../../../core/ui/document-ui.service';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {UiRow} from '../../../core/ui/ui-row';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
+import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
+import {PerspectiveUtils} from '../../utils/perspective.utils';
 
 @Component({
   selector: 'document-detail',
@@ -54,6 +56,8 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;
 
+  public readonly PERSPECTIVE_TABLE2 = Perspective.Table2;
+
   private last: { collection: CollectionModel, document: DocumentModel };
 
   private subscriptions = new Subscription();
@@ -61,7 +65,8 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   constructor(private i18n: I18n,
               private store: Store<AppState>,
               private notificationService: NotificationService,
-              private documentUiService: DocumentUiService) {
+              private documentUiService: DocumentUiService,
+              private perspective: PerspectiveUtils) {
   }
 
   get _document(): DocumentModel {
@@ -142,5 +147,9 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   public getTrackBy(): (index: number, row: UiRow) => string {
     return this.documentUiService.getTrackBy(this.collection, this.document);
+  }
+
+  public goTo(perspective: string): void {
+    this.perspective.switchPerspective(perspectivesMap[perspective], this.collection, this.document);
   }
 }
