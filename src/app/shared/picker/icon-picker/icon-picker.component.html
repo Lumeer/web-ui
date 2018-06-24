@@ -20,7 +20,7 @@
     </div>
   </div>
   <div class="text-center text-muted px-0 my-1">
-    <strong>{{ pageStart() }}&mdash;{{ pageEnd(page) }}</strong>
+    <strong>{{ pageStart() }}&mdash;{{ pageEnd() }}</strong>
     &nbsp;<span i18n="@@count.of">of</span>&nbsp;
     {{ iconsCount() }}
     <a *ngIf="canActivatePage(page - 1)" (click)="selectPage(page - 1)"><i

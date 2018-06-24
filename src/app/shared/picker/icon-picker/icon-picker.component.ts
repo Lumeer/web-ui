@@ -48,7 +48,7 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
 
   public filteredIcons: string[];
 
-  private filter = '';
+  public filter = '';
 
   public page = 0;
 
