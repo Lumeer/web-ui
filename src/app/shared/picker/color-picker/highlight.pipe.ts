@@ -25,7 +25,7 @@ import {HtmlModifier} from '../../utils/html-modifier';
 })
 export class HighlightPipe implements PipeTransform {
 
-  public transform(color, selected, current: string, effect: string = 'darken'): string {
+  public transform(color: string, selected: string, current: string): string {
     if (color === selected) {
       return HtmlModifier.shadeColor(color, -0.3);
     }
