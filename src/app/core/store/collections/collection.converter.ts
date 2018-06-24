@@ -32,21 +32,7 @@ export class CollectionConverter {
       color: dto.color,
       icon: dto.icon,
       attributes: dto.attributes ? dto.attributes.map(attr => CollectionConverter.fromAttributeDto(attr))
-        .sort((a, b) => {
-          if (!a.id && !b.id) {
-            return 0;
-          }
-          if (!a.id) {
-            return 1;
-          }
-          if (!b.id) {
-            return -1;
-          }
-
-          const intA = +a.id.substring(1);
-          const intB = +b.id.substring(1);
-          return intA - intB;
-        }) : [],
+        .sort((a, b) => (+a.id.substring(1) - +b.id.substring(1))) : [],
       defaultAttributeId: dto.defaultAttributeId,
       permissions: dto.permissions ? PermissionsConverter.fromDto(dto.permissions) : null,
       documentsCount: dto.documentsCount,

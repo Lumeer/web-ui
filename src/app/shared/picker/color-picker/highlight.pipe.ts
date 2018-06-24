@@ -18,26 +18,23 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
-import {HtmlModifier, stripedBackground} from '../../../../../shared/utils/html-modifier';
-
-export const DEFAULT_COLOR = '#ffffff';
-export const DEFAULT_STRIPED_COLOR = '#eeeeee';
+import {HtmlModifier} from '../../utils/html-modifier';
 
 @Pipe({
-  name: 'columnBackground'
+  name: 'highlight'
 })
-export class ColumnBackgroundPipe implements PipeTransform {
+export class HighlightPipe implements PipeTransform {
 
-  public transform(collection: CollectionModel, unsaved?: boolean): any {
-    const color = collection ? HtmlModifier.shadeColor(collection.color, .5) : DEFAULT_COLOR;
-    const stripeColor = collection ? HtmlModifier.shadeColor(color, .25) : DEFAULT_STRIPED_COLOR;
-
-    if (unsaved) {
-      return stripedBackground(color, stripeColor);
+  public transform(color, selected, current: string, effect: string = 'darken'): string {
+    if (color === selected) {
+      return HtmlModifier.shadeColor(color, -0.3);
     }
 
-    return color;
+    if (color === current) {
+      return HtmlModifier.shadeColor(color, -0.2);
+    }
+
+    return 'transparent';
   }
 
 }

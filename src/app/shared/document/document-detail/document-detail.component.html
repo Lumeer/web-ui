@@ -3,8 +3,8 @@
     <div class="align-text-bottom">
       <h4>
         <span [style.color]="collection?.color"><i class="{{collection?.icon}} mr-2"></i>{{collection?.name}}</span>&nbsp;
-        <strong *ngIf="getSummary$() | async">{{getSummary$() | async}}</strong>
-        <em *ngIf="!(getSummary$() | async)" i18n="@@shared.document.detail.document.indistinguishable">Indistinguishable
+        <strong *ngIf="summary$ | async">{{summary$ | async}}</strong>
+        <em *ngIf="!(summary$ | async)" i18n="@@shared.document.detail.document.indistinguishable">Indistinguishable
           document</em>
         <!--span i18n="@@document.detail.heading">Document detail</span-->
       </h4>
@@ -15,17 +15,17 @@
            i18n-title="@@document.detail.remove"
            (click)="onRemoveDocument()"
         ></i>
-        <i *ngIf="getFavorite$() | async" class="fas fa-fw fa-star ml-2 text-warning clickable clickable-warning"
+        <i *ngIf="favorite$ | async" class="fas fa-fw fa-star ml-2 mr-4 text-warning clickable clickable-warning"
            title="Remove from favorites"
            i18n-title="@@document.detail.favorite.remove"
            (click)="onToggleFavorite()"></i>
-        <i *ngIf="!(getFavorite$() | async)"
+        <i *ngIf="!(favorite$ | async)"
            class="far fa-fw fa-star ml-2 mr-4 text-warning clickable clickable-warning"
            title="Add to favorites"
            i18n-title="@@document.detail.favorite.add"
            (click)="onToggleFavorite()"></i>
         <span i18n="@@document.detail.view.in">View in:</span>
-        <button class="btn btn-primary btn-sm ml-2" (click)="goTo(PERSPECTIVE_TABLE2)">
+        <button class="btn btn-primary btn-sm ml-2" (click)="goTo(PERSPECTIVE_TABLE)">
           <i class="far fa-table mr-2"></i>
           <span i18n="@@document.detail.perspective.name.table2">Table</span>
         </button>
@@ -42,7 +42,7 @@
     </div>
   </div>
 </div>
-<ng-container *ngFor="let row of getRows$() | async; trackBy: getTrackBy(); let idx = index;">
+<ng-container *ngFor="let row of rows$ | async; trackBy: getTrackBy(); let idx = index;">
   <key-value *ngIf="!row.remove"
              [key]="row.newName || row.name"
              [value]="row.newValue || row.value"
