@@ -29,7 +29,6 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../notifications/notification.service';
 import {selectDocumentById} from '../store/documents/documents.state';
 import {selectCollectionById} from '../store/collections/collections.state';
-import {interval} from 'rxjs/internal/observable/interval';
 import {debounceTime, filter} from 'rxjs/operators';
 import {CorrelationIdGenerator} from '../store/correlation-id.generator';
 import {isNullOrUndefined, isUndefined} from 'util';
@@ -82,7 +81,6 @@ export class DocumentUi {
       this.collection = col;
       this.refreshRows();
     }));
-    this.subscriptions.add(interval(2000).subscribe(() => this.saveChanges()));
     this.subscriptions.add(this.favoriteChange$.pipe(
       debounceTime(2000),
       filter(favorite => favorite !== this.favorite)
@@ -337,6 +335,7 @@ export class DocumentUi {
     }
 
     this.rowsChanged();
+    this.saveChanges();
   }
 
   private updateExistingRow(idx: number, keyValue: string[]): void {
@@ -438,6 +437,7 @@ export class DocumentUi {
     }
 
     this.rowsChanged();
+    this.saveChanges();
   }
 
   private saveFavoriteChange(favorite: boolean, onlyStore: boolean) {

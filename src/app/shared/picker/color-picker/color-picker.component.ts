@@ -69,6 +69,7 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
 
   private resetColor(): void {
     this.selected = this.color;
+    this.customColor = this.isCustom();
   }
 
   public preview(previewed?: string) {
@@ -79,35 +80,13 @@ export class ColorPickerComponent implements OnInit, AfterViewInit {
     this.selected = selected;
     this.selectedChange.emit(selected);
     this.colorChange.emit(selected);
+    this.customColor = this.isCustom();
   }
 
-  public colorHighlight(color: string): string {
-    if (color === this.selected) {
-      return this.darken(color, 80);
-    }
-
-    if (color === this.color) {
-      return this.darken(color, 40);
-    }
-
-    return 'transparent';
-  }
-
-  public isCustom() {
+  private isCustom() {
     return this.greyscaleColors.indexOf(this.selected) < 0 &&
       this.saturatedColors.indexOf(this.selected) < 0 &&
       this.colors.indexOf(this.selected) < 0;
-  }
-
-  public darken(color: string, amount: number): string {
-    const hexToNumber = (start: number) => parseInt(color.substr(start, 2), 16);
-    const subtractAmount = (num: number) => Math.max(0, (num - amount));
-
-    const darkerColors: string = [hexToNumber(1), hexToNumber(3), hexToNumber(5)]
-      .map(subtractAmount)
-      .join(', ');
-
-    return `rgb(${darkerColors})`;
   }
 
   public openSpectrum() {

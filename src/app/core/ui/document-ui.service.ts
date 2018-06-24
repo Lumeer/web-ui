@@ -24,9 +24,9 @@ import {DocumentModel} from '../store/documents/document.model';
 import {UiRow} from './ui-row';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {NotificationService} from '../notifications/notification.service';
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {DocumentUi} from './document-ui';
+import {NotificationService} from '../notifications/notification.service';
 
 @Injectable({
   providedIn: 'root'

@@ -1,5 +1,5 @@
 <dialog-wrapper [submitDisabled]="!form.valid"
-                [type]="'success'"
+                [type]="'primary'"
                 [width]="350"
                 [showSubmit]="canShowContent()"
                 (submit)="onSubmit()">
@@ -13,9 +13,9 @@
       <div *ngIf="parentOrganization"
            [ngClass]="isFirstProject ? 'alert alert-warning' : null">
         <span *ngIf="isFirstProject" class="mr-2"
-              i18n="@@resource.new.dialog.project.subtitle.first">You need create first project in order to use</span>
+              i18n="@@resource.new.dialog.project.subtitle.first">Your organization is missing a project, create one first!</span>
         <span *ngIf="!isFirstProject" class="mr-2"
-              i18n="@@resource.new.dialog.project.subtitle">Creating project for:</span>
+              i18n="@@resource.new.dialog.project.subtitle">Create project in organization:</span><br/>
         <i class="fa-fw {{ parentOrganization.icon }}"
            [style.color]="parentOrganization.color"></i>&nbsp;
         <span [style.color]="parentOrganization.color">[{{parentOrganization.code}}] {{parentOrganization.name}}</span>
@@ -25,9 +25,13 @@
 
       <div class="form-group">
 
-        <label class="col-form-label"
-               i18n="@@resource.new.dialog.icon.label">
-          Click on icon to change
+        <label class="col-form-label mb-2">
+          <span i18n="@@resource.new.dialog.icon.label">
+            Icon:
+          </span>
+          <span class="ml-4 text-muted small" i18n="@@resource.new.dialog.icon.label.hint">
+            (click the icon to change it)
+          </span>
         </label>
 
         <icon-chooser [(color)]="color"
@@ -52,6 +56,7 @@
       </h4>
     </ng-template>
 
+    <div class="small text-muted"><sup>*</sup>&nbsp;<span i18n="@@resource.new.dialog.required">Required</span></div>
   </div>
 
   <span class="button-cancel" i18n="@@resource.new.dialog.button.cancel">Cancel</span>

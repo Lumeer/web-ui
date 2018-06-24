@@ -1,13 +1,34 @@
-<ul class="nav nav-tabs" role="tablist" (click)="$event.stopPropagation()">
-  <li *ngFor="let icon of tabs; let i = index" (click)="selectTab(i)" class="nav-item"><a
-    class="nav-link" [class.active]="icon.selected"><i class="fa-fw {{ icon.icon }}"></i></a></li>
-</ul>
-
-<div class="tab-content">
-  <div *ngFor="let iconOption of iconsInTab(tab)" class="text-center {{ iconHighlight(iconOption) }} rounded icon"
-       (mouseenter)="preview(iconOption)"
-       (mouseleave)="preview()"
-       (click)="select(iconOption)">
-    <i class="fa-fw {{ iconOption }}" aria-hidden="true"></i>
+<div class="text-center text-muted px-0" i18n="@@icon-picker.select.icon">2. Choose icon</div>
+<div class="d-flex mx-3 my-1">
+  <input
+    class="form-control form-control-sm flex-fill"
+    (input)="filterInput($event)"
+    [(value)]="filter"
+    placeholder="Search for icon..."
+    i18n.placeholder="@@icon-picker.select.icon.search"
+  />
+</div>
+<div class="tab-content-container">
+  <div class="tab-content align-self-start justify-content-center">
+    <div *ngFor="let iconOption of filteredIcons | pageSlice:page:ICONS_ON_PAGE" class="text-center rounded icon"
+         [class.selected]="iconOption === selected"
+         [class.active]="iconOption === icon"
+         (mouseenter)="preview(iconOption)"
+         (mouseleave)="preview(null)"
+         (click)="select(iconOption)">
+      <i id="{{iconId(iconOption)}}" class="fa-fw {{ iconOption }}" aria-hidden="true"></i>
+    </div>
+  </div>
+  <div class="text-center text-muted px-0 my-1">
+    <strong>{{ pageStart() }}&mdash;{{ pageEnd() }}</strong>
+    &nbsp;<span i18n="@@count.of">of</span>&nbsp;
+    {{ iconsCount() }}
+    <a *ngIf="canActivatePage(page - 1)" (click)="selectPage(page - 1)"><i
+      class="clickable fas fa-angle-double-left"></i></a>
+    <i *ngIf="!canActivatePage(page - 1)" class="fas fa-angle-double-left"></i>
+    <a (click)="activatePageWithSelectedIcon()"><i class="clickable far fa-dot-circle mx-1"></i></a>
+    <a *ngIf="canActivatePage(page + 1)" (click)="selectPage(page + 1)"><i
+      class="clickable fas fa-angle-double-right"></i></a>
+    <i *ngIf="!canActivatePage(page + 1)" class="fas fa-angle-double-right"></i>
   </div>
 </div>

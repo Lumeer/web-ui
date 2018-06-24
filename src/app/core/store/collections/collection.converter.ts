@@ -31,7 +31,8 @@ export class CollectionConverter {
       description: dto.description,
       color: dto.color,
       icon: dto.icon,
-      attributes: dto.attributes ? dto.attributes.map(attr => CollectionConverter.fromAttributeDto(attr)) : [],
+      attributes: dto.attributes ? dto.attributes.map(attr => CollectionConverter.fromAttributeDto(attr))
+        .sort((a, b) => (+a.id.substring(1) - +b.id.substring(1))) : [],
       defaultAttributeId: dto.defaultAttributeId,
       permissions: dto.permissions ? PermissionsConverter.fromDto(dto.permissions) : null,
       documentsCount: dto.documentsCount,

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
@@ -34,6 +34,8 @@ import {DocumentUiService} from '../../../core/ui/document-ui.service';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {UiRow} from '../../../core/ui/ui-row';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
+import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
+import {PerspectiveService} from '../../../core/perspective.service';
 
 @Component({
   selector: 'document-detail',
@@ -53,6 +55,11 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;
+  public favorite$: Observable<boolean>;
+  public summary$: Observable<string>;
+  public rows$: Observable<UiRow[]>;
+
+  public readonly PERSPECTIVE_TABLE = Perspective.Table2;
 
   private last: { collection: CollectionModel, document: DocumentModel };
 
@@ -61,7 +68,8 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   constructor(private i18n: I18n,
               private store: Store<AppState>,
               private notificationService: NotificationService,
-              private documentUiService: DocumentUiService) {
+              private documentUiService: DocumentUiService,
+              private perspective: PerspectiveService) {
   }
 
   get _document(): DocumentModel {
@@ -97,6 +105,10 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
       this.subscriptions.add(this.store.select(selectOrganizationByWorkspace)
         .pipe(filter(org => !isNullOrUndefined(org)), take(1))
         .subscribe(org => this.store.dispatch(new UsersAction.Get({organizationId: org.id}))));
+
+      this.summary$ = this.getSummary$();
+      this.favorite$ = this.getFavorite$();
+      this.rows$ = this.getRows$();
     }
   }
 
@@ -128,19 +140,23 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     this.documentUiService.onToggleFavorite(this.collection, this.document);
   }
 
-  public getRows$(): Observable<UiRow[]> {
+  private getRows$(): Observable<UiRow[]> {
     return this.documentUiService.getRows$(this.collection, this.document);
   }
 
-  public getFavorite$(): Observable<boolean> {
+  private getFavorite$(): Observable<boolean> {
     return this.documentUiService.getFavorite$(this.collection, this.document);
   }
 
-  public getSummary$(): Observable<string> {
+  private getSummary$(): Observable<string> {
     return this.documentUiService.getSummary$(this.collection, this.document);
   }
 
   public getTrackBy(): (index: number, row: UiRow) => string {
     return this.documentUiService.getTrackBy(this.collection, this.document);
+  }
+
+  public goTo(perspective: string): void {
+    this.perspective.switchPerspective(perspectivesMap[perspective], this.collection, this.document);
   }
 }

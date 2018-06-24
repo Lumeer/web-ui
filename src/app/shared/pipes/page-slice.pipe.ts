@@ -18,26 +18,19 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {CollectionModel} from '../../../../../core/store/collections/collection.model';
-import {HtmlModifier, stripedBackground} from '../../../../../shared/utils/html-modifier';
-
-export const DEFAULT_COLOR = '#ffffff';
-export const DEFAULT_STRIPED_COLOR = '#eeeeee';
 
 @Pipe({
-  name: 'columnBackground'
+  name: 'pageSlice'
 })
-export class ColumnBackgroundPipe implements PipeTransform {
+export class PageSlicePipe implements PipeTransform {
 
-  public transform(collection: CollectionModel, unsaved?: boolean): any {
-    const color = collection ? HtmlModifier.shadeColor(collection.color, .5) : DEFAULT_COLOR;
-    const stripeColor = collection ? HtmlModifier.shadeColor(color, .25) : DEFAULT_STRIPED_COLOR;
+  public transform(array: any[], page: number, pageSize: number): any[] {
+    const pages = Math.ceil(array.length / pageSize);
+    const realPage = Math.min(Math.max(page, 0), pages);
+    const start = realPage * pageSize;
+    const end = Math.min((realPage + 1) * pageSize, array.length);
 
-    if (unsaved) {
-      return stripedBackground(color, stripeColor);
-    }
-
-    return color;
+    return array.slice(start, end);
   }
 
 }

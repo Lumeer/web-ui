@@ -1,24 +1,37 @@
 <div [id]="dropdownId"
      class="dropdown text-center">
   <a [attr.data-toggle]="readonly ? '' : 'dropdown'"
-     [style.color]="changedColor"
+     [style.color]="color"
      [style.cursor]="readonly && !url ? 'default' : 'pointer'"
      data-toggle="dropdown">
     <i aria-hidden="true"
-       class="{{changedIcon}} {{size}}">
+       class="{{icon}} {{size}}"
+       (click)="storeIconAndColor($event)"
+    >
     </i>
   </a>
   <div class="dropdown-menu pickers">
-    <color-picker [(color)]="changedColor"
-                  class="dropdown-item">
-    </color-picker>
+    <color-picker
+      [dropdownId]="dropdownId"
+      [(color)]="color"
+      class="dropdown-item"
+    ></color-picker>
     <div class="dropdown-divider"></div>
-    <icon-picker [dropdownId]="dropdownId" [(icon)]="changedIcon"
-                 class="dropdown-item">
-    </icon-picker>
+    <icon-picker
+      [dropdownId]="dropdownId"
+      [(icon)]="icon"
+      class="dropdown-item"
+    ></icon-picker>
+    <div class="dropdown-divider"></div>
     <div class="text-right mx-2">
-      <button class="btn btn-outline-secondary btn-sm" (click)="revertSelectedColor($event)" i18n="@@icon-picker.cancel">Cancel</button>
-      <button class="btn btn-primary btn-sm mx-2" i18n="@@icon-picker.select">Select</button>
+      <button class="btn btn-outline-secondary btn-sm" data-toggle="dropdown" (click)="revertSelectedColor($event)"
+              i18n="@@icon-picker.cancel">
+        Cancel
+      </button>
+      <button class="btn btn-primary btn-sm mx-2" data-toggle="dropdown" (click)="saveSelectedColor($event)"
+              i18n="@@icon-picker.select">
+        Select
+      </button>
     </div>
   </div>
 </div>
