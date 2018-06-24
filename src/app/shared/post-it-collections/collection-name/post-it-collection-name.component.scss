@@ -1,7 +1,7 @@
 @import "../../variables";
 @import '../../bootstrap_var';
 
-$name-collapsed: 44px;
+$name-collapsed: 1.85rem;
 $name-expanded: 300px;
 
 :host {
@@ -12,6 +12,8 @@ $name-expanded: 300px;
   border: none;
   outline: none;
   padding-top: 0;
+  padding-left: 0.375rem;
+  padding-right: 0.375rem;
 
   width: 100%;
   color: inherit;
@@ -19,7 +21,7 @@ $name-expanded: 300px;
 
 .name {
   transition: max-height $animation-duration;
-  font-size: 20px;
+  font-size: 1rem;
 
   overflow: hidden;
   text-overflow: ellipsis;
@@ -27,6 +29,8 @@ $name-expanded: 300px;
   max-height: $name-collapsed;
   white-space: nowrap;
   cursor: text;
+
+  padding: 0.175rem;
 
   &:hover, &:focus {
     max-height: $name-expanded;
