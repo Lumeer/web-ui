@@ -29,13 +29,11 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../notifications/notification.service';
 import {selectDocumentById} from '../store/documents/documents.state';
 import {selectCollectionById} from '../store/collections/collections.state';
-import {interval} from 'rxjs/internal/observable/interval';
 import {debounceTime, filter} from 'rxjs/operators';
 import {CorrelationIdGenerator} from '../store/correlation-id.generator';
 import {isNullOrUndefined, isUndefined} from 'util';
 import {DocumentsAction} from '../store/documents/documents.action';
 import {CollectionsAction} from '../store/collections/collections.action';
-import {NgZone} from '@angular/core';
 
 export class DocumentUi {
 
