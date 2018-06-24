@@ -30,6 +30,7 @@ import {QueryModel} from '../../../../../../../../core/store/navigation/query.mo
 import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
 import {TableModel, TableSingleColumn} from '../../../../../../../../core/store/tables/table.model';
 import {findTableRow, splitRowPath} from '../../../../../../../../core/store/tables/table.utils';
+import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
 import {TABLE_ROW_HEIGHT} from '../../../../../shared/pipes/column-height.pipe';
 
 @Component({
@@ -100,7 +101,15 @@ export class TableDataCellSuggestionsComponent implements OnChanges {
       linkTypeId: part.linkTypeId,
       documentIds: [previousRow.documentIds[0], document.id]
     };
-    this.store.dispatch(new LinkInstancesAction.Create({linkInstance}));
+    this.store.dispatch(new LinkInstancesAction.Create({
+      linkInstance,
+      callback: () => this.expandLinkedRow()
+    }));
+  }
+
+  private expandLinkedRow() {
+    const cursor = {...this.cursor, rowPath: this.cursor.rowPath.slice(0, -1)};
+    this.store.dispatch(new TablesAction.ExpandRows({cursor}));
   }
 
 }

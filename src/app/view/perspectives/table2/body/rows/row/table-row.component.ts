@@ -115,7 +115,7 @@ export class TableRowComponent implements OnChanges, OnDestroy {
       return [{linkInstanceIds, documentIds, linkedRows: []}];
     }
 
-    return linkInstances.map(linkInstance => {
+    const linkedRows = linkInstances.map(linkInstance => {
       const documentId = getOtherLinkedDocumentId(linkInstance, this.row.documentIds[0]);
       return {
         linkInstanceIds: [linkInstance.id],
@@ -123,6 +123,8 @@ export class TableRowComponent implements OnChanges, OnDestroy {
         linkedRows: []
       };
     });
+    // TODO sort by config
+    return linkedRows;
   }
 
   private isNextPartRemoved(oldTable: TableModel, newTable: TableModel): boolean {

@@ -29,7 +29,7 @@ import {DocumentsAction} from '../../../../../core/store/documents/documents.act
 import {LinkInstanceModel} from '../../../../../core/store/link-instances/link-instance.model';
 import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
 import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableModel, TableRow, TableSingleColumn} from '../../../../../core/store/tables/table.model';
+import {TableModel, TableSingleColumn} from '../../../../../core/store/tables/table.model';
 import {findTableRow} from '../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
 
@@ -201,17 +201,14 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
       };
       this.store.dispatch(new LinkInstancesAction.Create({
         linkInstance,
-        callback: this.replaceTableRowsCallback(documentId)
+        callback: () => this.expandLinkedRow()
       }));
     };
   }
 
-  private replaceTableRowsCallback(documentId: string): (linkInstanceId: string) => void {
-    return linkInstanceId => {
-      const linkedRows: TableRow[] = [{documentIds: [documentId], linkInstanceIds: [linkInstanceId]}];
-      const cursor: TableBodyCursor = {...this.cursor, rowPath: this.cursor.rowPath.slice(0, -1)};
-      this.store.dispatch(new TablesAction.AddLinkedRows({cursor, linkedRows}));
-    };
+  private expandLinkedRow() {
+    const cursor = {...this.cursor, rowPath: this.cursor.rowPath.slice(0, -1)};
+    this.store.dispatch(new TablesAction.ExpandRows({cursor}));
   }
 
   private updateDocument(attributeId: string, attributeName: string, value: string) {
