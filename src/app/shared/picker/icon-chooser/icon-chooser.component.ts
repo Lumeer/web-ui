@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
 
 declare let $: any;
 
@@ -28,7 +28,7 @@ const DEFAULT_SIZE = 'fa-6x';
   templateUrl: './icon-chooser.component.html',
   styleUrls: ['./icon-chooser.component.scss']
 })
-export class IconComponent implements OnInit, AfterViewInit {
+export class IconComponent implements AfterViewInit {
 
   @Input()
   public color: string;
@@ -73,9 +73,6 @@ export class IconComponent implements OnInit, AfterViewInit {
 
   private static generateId() {
     return Math.floor((1 + Math.random()) * 1000000000000).toString(16);
-  }
-
-  public ngOnInit() {
   }
 
   public ngAfterViewInit(): void {
