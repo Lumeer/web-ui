@@ -84,9 +84,6 @@ export class DocumentUi {
       this.collection = col;
       this.refreshRows();
     }));
-    //this.ngZone.runOutsideAngular(() =>
-    //  this.subscriptions.add(interval(2000).subscribe(() => this.saveChanges()))
-    //);
     this.subscriptions.add(this.favoriteChange$.pipe(
       debounceTime(2000),
       filter(favorite => favorite !== this.favorite)
