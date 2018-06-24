@@ -37,8 +37,7 @@ export class DocumentUiService {
 
   constructor(private store: Store<AppState>,
               private i18n: I18n,
-              private notificationService: NotificationService,
-              private ngZone: NgZone) {
+              private notificationService: NotificationService) {
   }
 
   public init(collection: CollectionModel, document: DocumentModel): void {
@@ -46,7 +45,7 @@ export class DocumentUiService {
 
     let key = DocumentUiService.getKey(collection, document);
     if (key) {
-      this.state[key] = new DocumentUi(collection, document, this.store, this.i18n, this.notificationService, this.ngZone);
+      this.state[key] = new DocumentUi(collection, document, this.store, this.i18n, this.notificationService);
     }
   }
 

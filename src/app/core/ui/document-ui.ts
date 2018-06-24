@@ -56,8 +56,7 @@ export class DocumentUi {
               private document: DocumentModel,
               private store: Store<AppState>,
               private i18n: I18n,
-              private notificationService: NotificationService,
-              private ngZone: NgZone) {
+              private notificationService: NotificationService) {
     if (this.collection && this.document) {
       this.subscribe();
     }
