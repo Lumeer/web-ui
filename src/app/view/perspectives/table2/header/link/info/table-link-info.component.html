@@ -1,24 +1,21 @@
 <div #linkMenu
-     class="dropdown h-100">
-  <a class="d-block h-100"
-     data-toggle="dropdown">
-    <icons-presenter [colors]="collections | colors"
-                     [icons]="collections | icons"
-                     [title]="linkType.name">
-    </icons-presenter>
-  </a>
-
-  <div class="dropdown-menu">
-    <a *ngIf="switchingEnabled"
-       (click)="switchParts.emit()"
-       class="dropdown-item">
-      <i class="fa fa-fw fa-exchange mr-1"></i>&nbsp;
-      <span i18n="@@table.header.switch.parts">Switch files</span>
-    </a>
-    <a (click)="removePart.emit()"
-       class="dropdown-item">
-      <i class="fa fa-fw fa-plug mr-1"></i>&nbsp;
-      <span i18n="@@table.header.remove.part">Disconnect file</span>
-    </a>
-  </div>
+     [contextMenu]="contextMenu"
+     class="h-100">
+  <icons-presenter [colors]="collections | colors"
+                   [icons]="collections | icons"
+                   [title]="linkType.name">
+  </icons-presenter>
 </div>
+
+<context-menu #contextMenu>
+  <ng-template (execute)="switchParts.emit()"
+               contextMenuItem>
+    <i class="fa fa-fw fa-exchange mr-1"></i>&nbsp;
+    <span i18n="@@table.header.switch.parts">Switch files</span>
+  </ng-template>
+  <ng-template (execute)="removePart.emit()"
+               contextMenuItem>
+    <i class="fa fa-fw fa-plug mr-1"></i>&nbsp;
+    <span i18n="@@table.header.remove.part">Disconnect file</span>
+  </ng-template>
+</context-menu>
