@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
-import {filter, map, tap} from 'rxjs/operators';
+import {filter} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {selectDocumentsByIds} from '../../../../../../../core/store/documents/documents.state';
@@ -65,7 +65,6 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
   public editedAttribute$: Observable<EditedAttribute>;
   public selectedCursor$: Observable<TableCursor>;
 
-  private rowEdited: boolean;
   private rowSelected: boolean;
 
   public editedValue: string;
@@ -103,29 +102,7 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.editedAttribute$ = this.store.select(selectEditedAttribute).pipe(
-      filter(editedAttribute => {
-        const rowBeingEdited = this.isRowBeingEdited(editedAttribute);
-        if (!this.rowEdited && !rowBeingEdited) {
-          return false;
-        }
-
-        this.rowEdited = rowBeingEdited;
-        return true;
-      })
-    );
-  }
-
-  private isRowBeingEdited(editedAttribute: EditedAttribute): boolean {
-    if (!editedAttribute) {
-      return false;
-    }
-    if (this.documents) {
-      return this.documents.some(document => document.id === editedAttribute.documentId);
-    }
-    if (this.linkInstances) {
-      return this.linkInstances.some(linkInstance => linkInstance.id === editedAttribute.linkInstanceId);
-    }
+    this.editedAttribute$ = this.store.select(selectEditedAttribute);
   }
 
   private bindData() {

@@ -30,7 +30,7 @@ export class AffectedCellPipe implements PipeTransform {
 
   public transform(editedAttribute: EditedAttribute, entities: (DocumentModel | LinkInstanceModel)[], column: TableSingleColumn): boolean {
     return editedAttribute && entities && column && editedAttribute.attributeId === column.attributeId &&
-      entities.some(entity => editedAttribute.documentId === entity.id || editedAttribute.linkInstanceId === entity.id);
+      entities.some(entity => entity.id && (editedAttribute.documentId === entity.id || editedAttribute.linkInstanceId === entity.id));
 
   }
 
