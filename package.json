@@ -87,6 +87,7 @@
     "karma-jasmine-html-reporter": "^1.1.0",
     "ngx-i18nsupport": "^0.16.2",
     "protractor": "~5.3.2",
+    "rxjs-tslint-rules": "^4.4.2",
     "ts-node": "~5.0.1",
     "tslint": "~5.10.0",
     "typescript": "~2.7.2"

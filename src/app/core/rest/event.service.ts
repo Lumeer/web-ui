@@ -20,8 +20,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable, of} from 'rxjs';
-import {EMPTY} from 'rxjs/internal/observable/empty';
+import {Observable, of, EMPTY} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {LocalStorage} from '../../shared/utils/local-storage';
 import {Event} from '../dto/Event';

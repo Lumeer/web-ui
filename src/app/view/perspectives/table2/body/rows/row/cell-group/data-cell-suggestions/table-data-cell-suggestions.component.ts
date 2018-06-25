@@ -19,8 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
+import {Observable, BehaviorSubject} from 'rxjs';
 import {map, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';

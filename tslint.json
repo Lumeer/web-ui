@@ -1,4 +1,7 @@
 {
+  "extends": [
+    "rxjs-tslint-rules"
+  ],
   "rules": {
     "class-name": true,
     "curly": true,
@@ -61,6 +64,7 @@
       "single"
     ],
     "radix": true,
+    "rxjs-no-internal": true,
     "semicolon": true,
     "trailing-comma": [
       false,

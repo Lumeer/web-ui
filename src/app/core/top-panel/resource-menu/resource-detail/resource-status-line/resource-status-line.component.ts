@@ -22,7 +22,7 @@ import {ProjectModel} from '../../../../store/projects/project.model';
 import {OrganizationModel} from '../../../../store/organizations/organization.model';
 import {AppState} from '../../../../store/app.state';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/internal/Observable';
+import {Observable} from 'rxjs';
 import {selectProjectsForWorkspace} from '../../../../store/projects/projects.state';
 import {selectUsersForWorkspace} from '../../../../store/users/users.state';
 import {filter, map} from 'rxjs/operators';

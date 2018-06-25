@@ -17,10 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
+import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {UiRow} from './ui-row';
-import {Subject} from 'rxjs/internal/Subject';
-import {Subscription} from 'rxjs/internal/Subscription';
 import {AttributeModel, CollectionModel} from '../store/collections/collection.model';
 import {DocumentModel} from '../store/documents/document.model';
 import {Store} from '@ngrx/store';
