@@ -19,7 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/internal/Observable';
+import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {ResourceModel} from '../../core/model/resource.model';
 import {AppState} from '../../core/store/app.state';

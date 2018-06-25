@@ -93,7 +93,7 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   @HostListener('window:resize', ['$event'])
-  private onResize(event) {
+  public onResize(event) {
     this.compute();
   }
 
@@ -111,7 +111,7 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private actualizeWidthAndCheck() {
-    let resourceContentWidth = this.resourceContainer.nativeElement.clientWidth;
+    const resourceContentWidth = this.resourceContainer.nativeElement.clientWidth;
     this.resourceWidth = Math.max(this.resourcesLength() * squareSize, resourceContentWidth);
     this.checkForDisableResourceArrows(resourceContentWidth);
   }

@@ -20,8 +20,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable, of} from 'rxjs';
-import {EMPTY} from 'rxjs/internal/observable/empty';
+import {Observable, of, EMPTY} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {LocalStorage} from '../../shared/utils/local-storage';
 import {Event} from '../dto/Event';
@@ -58,7 +57,7 @@ export class EventService {
     const collectionKey = `${collectionId}_${EVENTS_KEY}`;
     const events = LocalStorage.get(collectionKey) || [];
 
-    const updatedEventIndex = events.findIndex(event => id === event.id);
+    const updatedEventIndex = events.findIndex(e => id === e.id);
     events[updatedEventIndex] = event;
 
     LocalStorage.set(collectionKey, events);

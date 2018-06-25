@@ -105,7 +105,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private deletionHelper: DeletionHelper;
 
-  private layoutManager: PostItLayout;
+  public layoutManager: PostItLayout;
 
   private subscriptions: Subscription[] = [];
 
@@ -332,7 +332,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private refreshExistingDocuments(documents: DocumentModel[]) {
-    for (let document of documents) {
+    for (const document of documents) {
       const index = this.postIts.findIndex(pi => pi.document.id === document.id);
       if (index !== -1) {
         const postIt = {...this.postIts[index], document};

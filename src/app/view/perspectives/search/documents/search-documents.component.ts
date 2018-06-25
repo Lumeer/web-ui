@@ -82,7 +82,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   public onSizeChange(newSize: SizeType) {
     this.size = newSize;
-    let userSettings = this.userSettingsService.getUserSettings();
+    const userSettings = this.userSettingsService.getUserSettings();
     userSettings.searchSize = newSize;
     this.userSettingsService.updateUserSettings(userSettings);
   }
@@ -163,7 +163,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   private getValuesFromArray(array: any[]): string[] {
     let values: string[] = [];
-    for (let value of array) {
+    for (const value of array) {
       values = values.concat(this.getValuesFromAny(value));
     }
     return values;
@@ -224,7 +224,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private initSettings() {
-    let userSettings = this.userSettingsService.getUserSettings();
+    const userSettings = this.userSettingsService.getUserSettings();
     this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
   }
 

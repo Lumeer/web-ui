@@ -26,7 +26,7 @@ import {DocumentModel} from './store/documents/document.model';
 import {ViewsAction} from './store/views/views.action';
 import {Router} from '@angular/router';
 import {selectWorkspace} from './store/navigation/navigation.state';
-import {filter, take} from 'rxjs/internal/operators';
+import {filter, take} from 'rxjs/operators';
 import {selectViewCursor} from './store/views/views.state';
 
 @Injectable({

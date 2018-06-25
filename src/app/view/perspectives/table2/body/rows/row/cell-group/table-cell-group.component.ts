@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
@@ -32,6 +32,7 @@ import {TablesAction} from '../../../../../../../core/store/tables/tables.action
 import {EditedAttribute, selectEditedAttribute, selectTableCursor, selectTablePartLeafColumns} from '../../../../../../../core/store/tables/tables.state';
 import {TableDataCellDirective} from '../../../../shared/directives/table-data-cell.directive';
 import {TableEditableCellDirective} from '../../../../shared/directives/table-editable-cell.directive';
+import {TableDataCellMenuComponent} from './data-cell-menu/table-data-cell-menu.component';
 
 @Component({
   selector: 'table-cell-group',
@@ -49,6 +50,9 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
 
   @Input()
   public row: TableRow;
+
+  @ViewChild(TableDataCellMenuComponent)
+  public dataCellMenu: TableDataCellMenuComponent;
 
   @ViewChildren(TableDataCellDirective)
   public dataCells: QueryList<TableDataCellDirective>;

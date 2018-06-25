@@ -8,13 +8,21 @@
           linkInstance: linkInstances ? linkInstances[0] : null,
           selected: row.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)
         }; let cell">
-          <table-data-cell-suggestions *ngIf="cell.selected && !(cursor | isFirstPart) && !((document | entityCreated) || (linkInstance | entityCreated)) && editedValue"
+          <table-data-cell-suggestions *ngIf="cell.selected && !(cursor | isFirstPart) && !((cell.document | entityCreated) || (cell.linkInstance | entityCreated)) && editedValue"
                                        [column]="column"
                                        [cursor]="cell.cursor"
                                        [table]="table"
                                        [value]="editedValue"
                                        (linkCreate)="onLinkCreate(cell.cursor)">
           </table-data-cell-suggestions>
+
+          <table-data-cell-menu *ngIf="cell.selected"
+                                [cursor]="cell.cursor"
+                                [document]="cell.document"
+                                [linkInstance]="cell.linkInstance"
+                                [table]="table"
+                                (edit)="onEdit()">
+          </table-data-cell-menu>
 
           <div tableDataCell
                [affected]="editedAttribute$ | async | affectedCell:(documents || linkInstances):column"
@@ -34,15 +42,6 @@
                (mousedown)="onMouseDown($event, columnIndex)"
                class="d-block table-border-right table-border-bottom">
           </div>
-
-          <table-data-cell-menu #dataCellMenu
-                                *ngIf="cell.selected"
-                                [cursor]="cell.cursor"
-                                [document]="cell.document"
-                                [linkInstance]="cell.linkInstance"
-                                [table]="table"
-                                (edit)="onEdit()">
-          </table-data-cell-menu>
         </ng-container>
       </ng-container>
 

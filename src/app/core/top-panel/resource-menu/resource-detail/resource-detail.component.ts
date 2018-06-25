@@ -24,7 +24,7 @@ import {Router} from '@angular/router';
 import {OrganizationModel} from '../../../store/organizations/organization.model';
 import {ProjectModel} from '../../../store/projects/project.model';
 import {ResourceType} from '../../../model/resource-type';
-import {Observable} from 'rxjs/internal/Observable';
+import {Observable} from 'rxjs';
 import {AppState} from '../../../store/app.state';
 import {Store} from '@ngrx/store';
 import {selectOrganizationByWorkspace} from '../../../store/organizations/organizations.state';

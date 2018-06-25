@@ -177,7 +177,7 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
     const {column, cursor} = findTableColumnWithCursor(this.table, this.cursor.partIndex, attributeName);
 
     return attributes => {
-      const attribute = attributes.find(attribute => attribute.name === attributeName);
+      const attribute = attributes.find(attr => attr.name === attributeName);
       if (attribute) {
         this.store.dispatch(new TablesAction.InitColumn({cursor, attributeId: attribute.id}));
       }
