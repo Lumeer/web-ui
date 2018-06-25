@@ -2768,7 +2768,7 @@ export function getPureIconName(icon: string): string {
 }
 
 export function searchIconsByMeta(meta: string): string[] {
-  let result = [];
+  const result = [];
   iconsMeta.forEach((iconMeta, key) => {
     if (iconMeta.filter(m => m.indexOf(meta) >= 0).length > 0) {
       result.push(key);

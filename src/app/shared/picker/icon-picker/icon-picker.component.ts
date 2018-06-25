@@ -63,7 +63,7 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
 
   private applyFilter(): void {
     if (this.filter) {
-      let iconsByMeta = searchIconsByMeta(this.filter);
+      const iconsByMeta = searchIconsByMeta(this.filter);
       this.filteredIcons = this.icons.filter(icon => iconsByMeta.indexOf(getPureIconName(icon)) >= 0);
     } else {
       this.filteredIcons = [...this.icons];
