@@ -107,7 +107,7 @@ function setDefaultAttribute(state: CollectionsState, collectionId: string, attr
 }
 
 function onCreateAttributesSuccess(state: CollectionsState, collectionId: string, attributes: AttributeModel[]): CollectionsState {
-  let newAttributes = state.entities[collectionId].attributes.concat(attributes);
+  const newAttributes = state.entities[collectionId].attributes.concat(attributes);
   return collectionsAdapter.updateOne({id: collectionId, changes: {attributes: newAttributes}}, state);
 }
 

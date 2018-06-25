@@ -168,7 +168,7 @@ export class PaymentsOrderComponent implements OnInit {
   }
 
   public updateStartDate($event) {
-    let d = new Date($event.target.value);
+    const d = new Date($event.target.value);
     if (!isNaN(d.getTime())) {
       this.startDate = PaymentsOrderComponent.floorDate(d);
     }

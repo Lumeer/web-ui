@@ -341,7 +341,7 @@ function moveTableHeaderCursorRight(table: TableModel, cursor: TableHeaderCursor
     return findLeftMostColumn(nextParent.column, {...cursor, columnPath: nextParent.path}, cursor.columnPath.length);
   }
 
-  let nextPart = findNextPartWithColumns(table, cursor.partIndex);
+  const nextPart = findNextPartWithColumns(table, cursor.partIndex);
   if (nextPart) {
     return findLeftMostColumn(nextPart.columns[0] as TableCompoundColumn, {...cursor, partIndex: nextPart.index, columnPath: [0]}, cursor.columnPath.length);
   }
@@ -350,7 +350,7 @@ function moveTableHeaderCursorRight(table: TableModel, cursor: TableHeaderCursor
 }
 
 function findNextPartWithColumns(table: TableModel, partIndex: number): TablePart {
-  let part = table.parts[partIndex + 1];
+  const part = table.parts[partIndex + 1];
   if (!part) {
     return null;
   }

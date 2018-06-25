@@ -34,6 +34,7 @@
       "check-catch",
       "check-else"
     ],
+    "prefer-const": true,
     "quotemark": [true, "single"],
     "radix": true,
     "semicolon": true,

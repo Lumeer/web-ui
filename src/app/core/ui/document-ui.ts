@@ -91,7 +91,7 @@ export class DocumentUi {
   }
 
   private prepareUpdatedDocument(): DocumentModel {
-    let updatedDocument = { ...this.document };
+    const updatedDocument = { ...this.document };
 
     let dirty = this.patchNewAttributes(updatedDocument);
     dirty = dirty || this.patchExistingAttributes(updatedDocument);
@@ -172,7 +172,7 @@ export class DocumentUi {
     this.addedRows.filter(row => row.name && this.alreadyInCollection(row.name))
       .forEach(row => {
         dirty = true;
-        let attr = this.getCollectionAttributeByName(row.name);
+        const attr = this.getCollectionAttributeByName(row.name);
 
         row.id = attr.id;
         row.correlationId = undefined;
@@ -303,7 +303,7 @@ export class DocumentUi {
     }
 
     if (this.collection && this.document && this.collection.attributes.length > 0) {
-      for (let attr of this.collection.attributes) {
+      for (const attr of this.collection.attributes) {
         if (this.document.data[attr.id]) {
           return this.document.data[attr.id];
         }

@@ -43,16 +43,16 @@ export class DocumentUiService {
   public init(collection: CollectionModel, document: DocumentModel): void {
     this.destroy(collection, document);
 
-    let key = DocumentUiService.getKey(collection, document);
+    const key = DocumentUiService.getKey(collection, document);
     if (key) {
       this.state[key] = new DocumentUi(collection, document, this.store, this.i18n, this.notificationService);
     }
   }
 
   public destroy(collection: CollectionModel, document: DocumentModel): void {
-    let key = DocumentUiService.getKey(collection, document);
+    const key = DocumentUiService.getKey(collection, document);
     if (key) {
-      let state = this.state[key];
+      const state = this.state[key];
       if (state) {
         state.destroy();
       }
@@ -62,29 +62,29 @@ export class DocumentUiService {
   }
 
   public getRows$(collection: CollectionModel, document: DocumentModel): BehaviorSubject<UiRow[]> {
-    let key = DocumentUiService.getKey(collection, document);
+    const key = DocumentUiService.getKey(collection, document);
     return key ? (this.state[key] ? this.state[key].rows$ : null) : null;
   }
 
   public getSummary$(collection: CollectionModel, document: DocumentModel): BehaviorSubject<string> {
-    let key = DocumentUiService.getKey(collection, document);
+    const key = DocumentUiService.getKey(collection, document);
     return key ? (this.state[key] ? this.state[key].summary$ : null) : null;
   }
 
   public getFavorite$(collection: CollectionModel, document: DocumentModel): BehaviorSubject<boolean> {
-    let key = DocumentUiService.getKey(collection, document);
+    const key = DocumentUiService.getKey(collection, document);
     return key ? (this.state[key] ? this.state[key].favorite$ : null) : null;
   }
 
   public getTrackBy(collection: CollectionModel, document: DocumentModel): (index: number, row: UiRow) => string {
-    let key = DocumentUiService.getKey(collection, document);
+    const key = DocumentUiService.getKey(collection, document);
     return key ? (this.state[key] ? this.state[key].trackRows : null) : null;
   }
 
   public onAddRow(collection: CollectionModel, document: DocumentModel): void {
-    let key = DocumentUiService.getKey(collection, document);
+    const key = DocumentUiService.getKey(collection, document);
     if (key) {
-      let state = this.state[key];
+      const state = this.state[key];
       if (state) {
         state.onAddRow();
       }
@@ -92,9 +92,9 @@ export class DocumentUiService {
   }
 
   public onUpdateRow(collection: CollectionModel, document: DocumentModel, idx: number, keyValue: [string, string]): void {
-    let key = DocumentUiService.getKey(collection, document);
+    const key = DocumentUiService.getKey(collection, document);
     if (key) {
-      let state = this.state[key];
+      const state = this.state[key];
       if (state) {
         state.onUpdateRow(idx, keyValue);
       }
@@ -102,9 +102,9 @@ export class DocumentUiService {
   }
 
   public onRemoveRow(collection: CollectionModel, document: DocumentModel, idx: number): void {
-    let key = DocumentUiService.getKey(collection, document);
+    const key = DocumentUiService.getKey(collection, document);
     if (key) {
-      let state = this.state[key];
+      const state = this.state[key];
       if (state) {
         state.onRemoveRow(idx);
       }
@@ -112,9 +112,9 @@ export class DocumentUiService {
   }
 
   public onToggleFavorite(collection: CollectionModel, document: DocumentModel): void {
-    let key = DocumentUiService.getKey(collection, document);
+    const key = DocumentUiService.getKey(collection, document);
     if (key) {
-      let state = this.state[key];
+      const state = this.state[key];
       if (state) {
         state.onToggleFavorite();
       }

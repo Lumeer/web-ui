@@ -110,7 +110,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
 
     validUntil = new Date($event.start.getFullYear(), $event.start.getMonth() + $event.months, $event.start.getDate(), 23, 59, 59, 999);
 
-    let payment: PaymentModel = {
+    const payment: PaymentModel = {
       date: new Date(), serviceLevel: 'BASIC', amount: $event.amount, currency: $event.currency,
       start: $event.start, validUntil, state: 'CREATED', users: $event.users, language: this.languageCode, gwUrl: '',
       paymentId: null, id: null, organizationId: this.organization.id

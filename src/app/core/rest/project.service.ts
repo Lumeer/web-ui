@@ -86,8 +86,8 @@ export class ProjectService extends PermissionService {
 
   protected actualApiPrefix(workspace?: Workspace): string {
     const actualWorkspace = workspace || this.workspace;
-    let orgCode = actualWorkspace.organizationCode;
-    let projCode = actualWorkspace.projectCode;
+    const orgCode = actualWorkspace.organizationCode;
+    const projCode = actualWorkspace.projectCode;
 
     return this.apiPrefix(orgCode, projCode);
   }
