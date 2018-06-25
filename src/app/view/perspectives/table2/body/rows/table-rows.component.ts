@@ -112,7 +112,6 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
 
   public onScroll() {
     // TODO change query in order to load more documents
-    console.log('scrolling');
   }
 
   public trackByDocumentId(index: number, row: TableRow): string {

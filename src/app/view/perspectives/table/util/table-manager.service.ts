@@ -351,9 +351,9 @@ export class TableManagerService {
       const index = linkedRows.indexOf(row);
       linkedRows.splice(index, 1);
 
-      linkedRows.forEach((row, i) => {
+      linkedRows.forEach((linkedRow, i) => {
         if (i >= index) {
-          row.rowOffset--;
+          linkedRow.rowOffset--;
         }
       });
     }
@@ -463,8 +463,8 @@ export class TableManagerService {
     };
 
     if (!parentAttribute.intermediate) {
-      const index = attributes.indexOf(parentAttribute);
-      attributes.splice(index, 1, attribute);
+      const parentIndex = attributes.indexOf(parentAttribute);
+      attributes.splice(parentIndex, 1, attribute);
 
       parentAttribute.intermediate = true;
       return;
@@ -521,9 +521,9 @@ export class TableManagerService {
       const linkedIndex = linkedRows.indexOf(rowAbove);
       linkedRows.splice(linkedIndex + 1, 0, row);
 
-      linkedRows.forEach((row, i) => {
+      linkedRows.forEach((linkedRow, i) => {
         if (i > index) {
-          row.rowOffset++;
+          linkedRow.rowOffset++;
         }
       });
     }

@@ -1,20 +1,35 @@
 {
+  "extends": [
+    "rxjs-tslint-rules"
+  ],
   "rules": {
     "class-name": true,
     "curly": true,
     "eofline": true,
+    "file-header": [
+      true,
+      "Copyright \\(C\\) since 2017 Answer Institute, s\\.r\\.o\\."
+    ],
     "forin": true,
-    "indent": [true, "spaces"],
+    "indent": [
+      true,
+      "spaces"
+    ],
     "label-position": true,
-    "max-line-length": [true, {
-      "limit": 160,
-      "ignore-pattern": "^import "
-    }],
+    "max-line-length": [
+      true,
+      {
+        "limit": 160,
+        "ignore-pattern": "^import "
+      }
+    ],
     "member-access": true,
     "no-arg": true,
     "no-bitwise": false,
     "no-consecutive-blank-lines": true,
-    "no-console": [true,
+    "no-console": [
+      true,
+      "log",
       "trace"
     ],
     "no-construct": true,
@@ -22,6 +37,13 @@
     "no-duplicate-variable": true,
     "no-empty": true,
     "no-eval": true,
+    "no-shadowed-variable": [
+      true,
+      {
+        "class": true,
+        "interface": true
+      }
+    ],
     "no-string-literal": false,
     "no-switch-case-fall-through": true,
     "no-trailing-whitespace": true,
@@ -29,20 +51,42 @@
     "no-unused-variable": false,
     "no-use-before-declare": true,
     "no-var-keyword": true,
-    "one-line": [true,
+    "one-line": [
+      true,
       "check-open-brace",
       "check-whitespace",
       "check-catch",
       "check-else"
     ],
-    "quotemark": [true, "single"],
+    "prefer-const": true,
+    "quotemark": [
+      true,
+      "single"
+    ],
     "radix": true,
+    "rxjs-no-internal": true,
     "semicolon": true,
-    "trailing-comma": [false, {"multiline": "always", "singleline": "never"}],
-    "triple-equals": [true, "allow-null-check"],
-    "typedef-whitespace": [true],
-    "variable-name": [true, "ban-keywords", "allow-leading-underscore"],
-    "whitespace": [true,
+    "trailing-comma": [
+      false,
+      {
+        "multiline": "always",
+        "singleline": "never"
+      }
+    ],
+    "triple-equals": [
+      true,
+      "allow-null-check"
+    ],
+    "typedef-whitespace": [
+      true
+    ],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "allow-leading-underscore"
+    ],
+    "whitespace": [
+      true,
       "check-decl",
       "check-operator",
       "check-type"

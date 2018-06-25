@@ -189,7 +189,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private setActiveDocument($event: DocumentModel) {
+  public setActiveDocument($event: DocumentModel) {
     this.selectedDocument = $event;
     this.selectDocument.emit($event);
     this.updateCursor();
@@ -219,8 +219,8 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
     }, {});
 
     if (this.query.filters) {
-      this.query.filters.map(filter => {
-        const attrFilter = QueryConverter.parseFilter(filter);
+      this.query.filters.map(queryFilter => {
+        const attrFilter = QueryConverter.parseFilter(queryFilter);
 
         if (attrFilter.collectionId === this.selectedCollection.id) {
           switch (attrFilter.conditionType) {

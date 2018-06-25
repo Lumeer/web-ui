@@ -151,8 +151,8 @@ export class ProjectsEffects {
           })
         });
       }
-      const message = this.i18n({id: 'project.create.fail', value: 'Failed to create project'});
-      return new NotificationsAction.Error({message});
+      const errorMessage = this.i18n({id: 'project.create.fail', value: 'Failed to create project'});
+      return new NotificationsAction.Error({message: errorMessage});
     })
   );
 
@@ -165,9 +165,9 @@ export class ProjectsEffects {
       const oldProject = state.projects.entities[action.payload.project.id];
       const projectDto = ProjectConverter.toDto(action.payload.project);
       return this.projectService.editProject(organization.code, oldProject.code, projectDto).pipe(
-        map(dto => ({project: ProjectConverter.fromDto(dto, action.payload.project.organizationId), oldProject})),
+        map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId)),
         withLatestFrom(this.store$.select(selectProjectsCodes)),
-        flatMap(([{project, oldProject}, projectCodes]) => {
+        flatMap(([project, projectCodes]) => {
           const actions: Action[] = [new ProjectsAction.UpdateSuccess({project: {...project, id: project.id}})];
           const codesByOrg = projectCodes && projectCodes[project.organizationId];
           if (codesByOrg) {
@@ -212,10 +212,9 @@ export class ProjectsEffects {
       const organization = state.organizations.entities[action.payload.organizationId];
       const project = state.projects.entities[action.payload.projectId];
       return this.projectService.deleteProject(organization.code, project.code).pipe(
-        map(() => ({action, deletedProjectCode: project.code})),
         withLatestFrom(this.store$.select(selectProjectsCodes)),
-        flatMap(([{action, deletedProjectCode}, projectCodes]) => {
-          const codes = projectCodes[action.payload.organizationId].filter(code => code !== deletedProjectCode);
+        flatMap(([, projectCodes]) => {
+          const codes = projectCodes[action.payload.organizationId].filter(code => code !== project.code);
           return [new ProjectsAction.DeleteSuccess(action.payload),
             new ProjectsAction.GetCodesSuccess({organizationId: action.payload.organizationId, projectCodes: codes})];
         }),

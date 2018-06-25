@@ -135,30 +135,30 @@ function createColumnsFromConfig(columnsConfig: TableConfigColumn[],
                                  attributes: AttributeModel[]): TableColumn[] {
   const attributeIds = attributes.map(attribute => attribute.id);
 
-  const columns = columnsConfig.reduce<TableColumn[]>((columns, column) => {
+  const columns = columnsConfig.reduce<TableColumn[]>((preparedColumns, column) => {
     if (column.type === TableColumnType.COMPOUND) {
       const attributeId = column.attributeIds[0];
       const attribute = attributes.find(attr => attr.id === attributeId);
       if (!attribute) {
-        return columns;
+        return preparedColumns;
       }
 
       const parent = new TableSingleColumn(attributeId, null, column.width);
       // TODO should children not in config really appear instead of just parent?
       const children = createTableColumnsFromAttributes(allAttributes, attribute, column.children);
-      return columns.concat(new TableCompoundColumn(parent, children));
+      return preparedColumns.concat(new TableCompoundColumn(parent, children));
     }
 
     if (column.type === TableColumnType.HIDDEN) {
       const ids = column.attributeIds.filter(id => attributeIds.includes(id));
-      return ids.length ? columns.concat(new TableHiddenColumn(ids)) : columns;
+      return ids.length ? preparedColumns.concat(new TableHiddenColumn(ids)) : preparedColumns;
     }
 
-    return columns;
+    return preparedColumns;
   }, []);
 
-  const usedAttributeIds = columnsConfig.reduce((attributeIds, columnConfig) => {
-    return columnConfig.attributeIds ? attributeIds.concat(columnConfig.attributeIds) : attributeIds;
+  const usedAttributeIds = columnsConfig.reduce((ids, columnConfig) => {
+    return columnConfig.attributeIds ? ids.concat(columnConfig.attributeIds) : ids;
   }, []);
   const remainingAttributeIds = attributeIds.filter(id => !usedAttributeIds.includes(id));
   return remainingAttributeIds.length ? columns.concat(new TableHiddenColumn(remainingAttributeIds)) : columns;

@@ -76,15 +76,15 @@ export class DocumentsEffects {
       const documentDto = DocumentConverter.toDto(action.payload.document);
 
       return this.documentService.createDocument(documentDto).pipe(
-        map(dto => ({action, document: DocumentConverter.fromDto(dto, action.payload.document.correlationId)})),
+        map(dto => DocumentConverter.fromDto(dto, action.payload.document.correlationId)),
         withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
-        tap(([{action, document}]) => {
+        tap(([document]) => {
           const callback = action.payload.callback;
           if (callback) {
             callback(document.id);
           }
         }),
-        flatMap(([{document}, collection]) => {
+        flatMap(([document, collection]) => {
           return [
             createSyncCollectionAction(collection, document, null),
             new DocumentsAction.CreateSuccess({document})
@@ -131,8 +131,8 @@ export class DocumentsEffects {
           })
         });
       }
-      const message = this.i18n({id: 'document.create.fail', value: 'Failed to create record'});
-      return new NotificationsAction.Error({message});
+      const errorMessage = this.i18n({id: 'document.create.fail', value: 'Failed to create record'});
+      return new NotificationsAction.Error({message: errorMessage});
     })
   );
 

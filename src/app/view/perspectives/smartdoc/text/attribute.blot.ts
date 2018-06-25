@@ -20,7 +20,7 @@
 import QuillEditor from 'quill';
 import EmbedType from 'quill/blots/embed';
 
-let Embed: EmbedType = QuillEditor.import('blots/embed');
+const Embed: EmbedType = QuillEditor.import('blots/embed');
 
 export class AttributeBlot extends Embed {
 

@@ -37,8 +37,8 @@
   <div class="col small text-right d-flex align-bottom text-notice">
     <div class="justify-content-end w-100">
       Version {{document.dataVersion}}<br/>
-      Created on {{document.creationDate | nativeDate | date : 'mediumDate'}} by {{createdBy$ | async}}<br/>
-      Last modified on {{document.updateDate | nativeDate | date : 'mediumDate'}} by {{updatedBy$ | async}}
+      Created on {{document.creationDate | date : 'mediumDate'}} by {{createdBy$ | async}}<br/>
+      Last modified on {{document.updateDate | date : 'mediumDate'}} by {{updatedBy$ | async}}
     </div>
   </div>
 </div>

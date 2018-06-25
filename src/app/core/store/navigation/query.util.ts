@@ -37,7 +37,7 @@ export function getAllConditions(): string[] {
 
   const allConditions = [];
   for (let i = 0; i < maxElements; i++) {
-    for (let array of allConditionArrays) {
+    for (const array of allConditionArrays) {
       if (i < array.length) {
         allConditions.push(array[i]);
       }

@@ -21,8 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDe
 import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Subscription} from 'rxjs';
-import {Observable} from 'rxjs/internal/Observable';
+import {Subscription, Observable} from 'rxjs';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {selectPerspective, selectQuery, selectWorkspace} from '../../core/store/navigation/navigation.state';

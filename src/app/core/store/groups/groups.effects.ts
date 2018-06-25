@@ -103,8 +103,7 @@ export class GroupsEffects {
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<GroupsAction.Delete>(GroupsActionType.DELETE),
     mergeMap(action => this.groupService.deleteGroup(action.payload.groupId).pipe(
-      map(() => action),
-      map(action => new GroupsAction.DeleteSuccess(action.payload)),
+      map(() => new GroupsAction.DeleteSuccess(action.payload)),
       catchError(error => of(new GroupsAction.DeleteFailure({error: error})))
     ))
   );

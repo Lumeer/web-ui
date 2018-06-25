@@ -79,8 +79,8 @@ export class QueryItemsConverter {
   private createAttributeItems(filters: string[]): QueryItem[] {
     return filters.map(filter => {
       const [collectionId, attributeId, fullCondition] = filter.split(':', 3);
-      const collection = this.data.collections.find(collection => collection.id === collectionId);
-      const attribute = collection && collection.attributes.find(attribute => attribute.id === attributeId);
+      const collection = this.data.collections.find(col => col.id === collectionId);
+      const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
       if (!attribute) {
         return new DeletedQueryItem(QueryItemType.Attribute);
       }
@@ -93,7 +93,7 @@ export class QueryItemsConverter {
 
   private createCollectionItems(collectionIds: string[]): QueryItem[] {
     return collectionIds.map(collectionId => {
-      const collection = this.data.collections.find(collection => collection.id === collectionId);
+      const collection = this.data.collections.find(col => col.id === collectionId);
       if (!collection) {
         return new DeletedQueryItem(QueryItemType.Collection);
       }

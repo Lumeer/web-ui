@@ -63,7 +63,7 @@ export class TablesEffects {
     flatMap(([action, config, collections]) => {
       const query: QueryModel = action.payload.query;
 
-      const collection = collections.find(collection => collection.id === query.collectionIds[0]);
+      const collection = collections.find(col => col.id === query.collectionIds[0]);
       const last = !query.linkTypeIds || query.linkTypeIds.length === 0;
       const part = createCollectionPart(collection, 0, last, config);
 
@@ -193,7 +193,7 @@ export class TablesEffects {
     withLatestFrom(this.store$.select(selectQuery)),
     map(([{action, table}, query]) => {
       const linkTypeIds = table.parts.slice(0, action.payload.cursor.partIndex)
-        .reduce((linkTypeIds, part) => part.linkTypeId ? linkTypeIds.concat(part.linkTypeId) : linkTypeIds, []);
+        .reduce((ids, part) => part.linkTypeId ? ids.concat(part.linkTypeId) : ids, []);
       const newQuery: QueryModel = {...query, linkTypeIds};
 
       return new RouterAction.Go({
@@ -302,34 +302,30 @@ export class TablesEffects {
 
       if (hiddenBefore && hiddenAfter) {
         const mergedColumn = mergeHiddenColumns(columnBefore as TableHiddenColumn, columnAfter as TableHiddenColumn);
-        const hiddenColumn = extendHiddenColumn(mergedColumn, column.parent.attributeId);
         return new TablesAction.ReplaceColumns({
           cursor: {...action.payload.cursor, columnPath: pathBefore},
           deleteCount: 3,
-          columns: [hiddenColumn]
+          columns: [extendHiddenColumn(mergedColumn, column.parent.attributeId)]
         });
       }
       if (hiddenBefore && !hiddenAfter) {
-        const hiddenColumn = extendHiddenColumn(columnBefore as TableHiddenColumn, column.parent.attributeId);
         return new TablesAction.ReplaceColumns({
           cursor: {...action.payload.cursor, columnPath: pathBefore},
           deleteCount: 2,
-          columns: [hiddenColumn]
+          columns: [extendHiddenColumn(columnBefore as TableHiddenColumn, column.parent.attributeId)]
         });
       }
       if (!hiddenBefore && hiddenAfter) {
-        const hiddenColumn = extendHiddenColumn(columnAfter as TableHiddenColumn, column.parent.attributeId);
         return new TablesAction.ReplaceColumns({
           cursor: action.payload.cursor,
           deleteCount: 2,
-          columns: [hiddenColumn]
+          columns: [extendHiddenColumn(columnAfter as TableHiddenColumn, column.parent.attributeId)]
         });
       }
-      const hiddenColumn = new TableHiddenColumn([column.parent.attributeId]);
       return new TablesAction.ReplaceColumns({
         cursor: action.payload.cursor,
         deleteCount: 1,
-        columns: [hiddenColumn]
+        columns: [new TableHiddenColumn([column.parent.attributeId])]
       });
     })
   );

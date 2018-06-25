@@ -39,7 +39,7 @@ export class SuggestionsConverter {
     const views: ViewModel[] = suggestions.views.map(view => ViewConverter.convertToModel(view));
     const linkTypes: LinkTypeModel[] = suggestions.linkTypes.map(link => SuggestionsConverter.convertLinkType(link, allCollections));
 
-    let suggestedQueryItems: QueryItem[] = [
+    const suggestedQueryItems: QueryItem[] = [
       ...SuggestionsConverter.createCollectionQueryItems(collections),
       ...SuggestionsConverter.createAttributeQueryItems(attributes),
       ...SuggestionsConverter.createViewQueryItems(views),

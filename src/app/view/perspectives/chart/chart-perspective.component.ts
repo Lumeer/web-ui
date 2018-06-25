@@ -51,9 +51,9 @@ import {CollectionModel} from '../../../core/store/collections/collection.model'
 })
 export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
-  private documents: DocumentModel[];
+  public documents: DocumentModel[];
 
-  private collections: CollectionModel[];
+  public collections: CollectionModel[];
 
   public axisSelectModel: AxisSelectModel[];
 

@@ -40,8 +40,8 @@ export class LinkInstancesEffects {
     withLatestFrom(this.store$.select(selectLinkInstancesQueries)),
     skipWhile(([action, queries]) => queries.some(query => areQueriesEqual(query, action.payload.query))),
     mergeMap(([action]) => this.linkInstanceService.getLinkInstances(action.payload.query).pipe(
-      map(dtos => ({action, linkInstances: dtos.map(dto => LinkInstanceConverter.fromDto(dto))})),
-      map(({action, linkInstances}) => new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})),
+      map(dtos => dtos.map(dto => LinkInstanceConverter.fromDto(dto))),
+      map(linkInstances => new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})),
       catchError((error) => of(new LinkInstancesAction.GetFailure({error: error})))
     ))
   );
@@ -63,14 +63,14 @@ export class LinkInstancesEffects {
       const linkInstanceDto = LinkInstanceConverter.toDto(action.payload.linkInstance);
 
       return this.linkInstanceService.createLinkInstance(linkInstanceDto).pipe(
-        map(dto => ({action, linkInstance: LinkInstanceConverter.fromDto(dto)})),
-        tap(({action, linkInstance}) => {
+        map(dto => LinkInstanceConverter.fromDto(dto)),
+        tap(linkInstance => {
           const callback = action.payload.callback;
           if (callback) {
             callback(linkInstance.id);
           }
         }),
-        map(({linkInstance}) => new LinkInstancesAction.CreateSuccess({linkInstance})),
+        map(linkInstance => new LinkInstancesAction.CreateSuccess({linkInstance})),
         catchError((error) => of(new LinkInstancesAction.CreateFailure({error: error})))
       );
     })
@@ -114,14 +114,13 @@ export class LinkInstancesEffects {
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Delete>(LinkInstancesActionType.DELETE),
     mergeMap(action => this.linkInstanceService.deleteLinkInstance(action.payload.linkInstanceId).pipe(
-      map(() => action),
-      tap(action => {
+      tap(() => {
         const callback = action.payload.callback;
         if (callback) {
           callback(action.payload.linkInstanceId);
         }
       }),
-      map(action => new LinkInstancesAction.DeleteSuccess({linkInstanceId: action.payload.linkInstanceId})),
+      map(() => new LinkInstancesAction.DeleteSuccess({linkInstanceId: action.payload.linkInstanceId})),
       catchError((error) => of(new LinkInstancesAction.DeleteFailure({error: error})))
     ))
   );
