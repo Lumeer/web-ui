@@ -26,11 +26,13 @@
                              *ngIf="data.attribute && cursor"
                              [attribute]="data.attribute"
                              [cursor]="cursor"
+                             [defaultAttribute]="data.attribute | isDefaultAttribute:(data.collection)"
                              [leaf]="leaf"
                              (add)="onAdd($event)"
                              (edit)="onEdit()"
                              (hide)="onHide()"
                              (remove)="onRemove()"
+                             (setDefaultAttribute)="onSetDefaultAttribute()"
                              (split)="onSplit()">
   </table-column-context-menu>
 </ng-container>

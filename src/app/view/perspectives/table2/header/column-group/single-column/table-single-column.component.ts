@@ -320,4 +320,8 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     return this.table.parts[this.cursor.partIndex];
   }
 
+  public onSetDefaultAttribute() {
+    this.store.dispatch(new CollectionsAction.SetDefaultAttribute({collectionId: this.collectionId, attributeId: this.column.attributeId}));
+  }
+
 }
