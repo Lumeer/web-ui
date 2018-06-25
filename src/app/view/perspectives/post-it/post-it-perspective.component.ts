@@ -105,7 +105,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private deletionHelper: DeletionHelper;
 
-  private layoutManager: PostItLayout;
+  public layoutManager: PostItLayout;
 
   private subscriptions: Subscription[] = [];
 

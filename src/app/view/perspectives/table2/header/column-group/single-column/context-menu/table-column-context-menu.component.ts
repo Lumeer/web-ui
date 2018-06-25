@@ -70,4 +70,8 @@ export class TableColumnContextMenuComponent {
     this.add.emit(false);
   }
 
+  public onSort(descending: boolean) {
+    // TODO
+  }
+
 }

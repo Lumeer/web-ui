@@ -31,7 +31,7 @@ export class TagComponent {
 
   @Output() public remove = new EventEmitter<void>();
 
-  private onRemove() {
+  public onRemove() {
     this.remove.emit();
   }
 

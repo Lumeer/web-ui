@@ -75,7 +75,7 @@ export class SmartDocPerspectiveComponent implements PerspectiveComponent, OnCha
   private initSubscription: Subscription;
   private selectedDocumentSubscription: Subscription;
 
-  private selectedDocumentId: string;
+  public selectedDocumentId: string;
 
   public size: SizeType = SizeType.M;
 

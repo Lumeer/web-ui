@@ -293,7 +293,7 @@ export class TableBodyCellComponent implements OnChanges {
     this.expand.emit();
   }
 
-  public suggestLinkedDocuments(prefix: string): Document[] {
+  public suggestLinkedDocuments(): Document[] {
     const usedDocuments: Document[] = [].concat.apply([], this.row.previousLinkedRow.nextLinkedRows.map(row => row.documents));
 
     // TODO use document service instead

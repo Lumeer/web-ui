@@ -93,7 +93,7 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   @HostListener('window:resize', ['$event'])
-  private onResize(event) {
+  public onResize(event) {
     this.compute();
   }
 

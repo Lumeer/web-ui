@@ -46,7 +46,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   private dataSubscription: Subscription;
 
   private workspace: Workspace;
-  private queryData: QueryData;
+  public queryData: QueryData;
 
   constructor(private router: Router,
               private store: Store<AppState>) {

@@ -189,7 +189,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private setActiveDocument($event: DocumentModel) {
+  public setActiveDocument($event: DocumentModel) {
     this.selectedDocument = $event;
     this.selectDocument.emit($event);
     this.updateCursor();

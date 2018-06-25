@@ -68,8 +68,8 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
 
   @ViewChild('content') public content: ElementRef;
 
-  private postItRows: PostItRow[] = [];
-  private postItNewRow: PostItRow = {attributeName: '', value: ''};
+  public postItRows: PostItRow[] = [];
+  public postItNewRow: PostItRow = {attributeName: '', value: ''};
   private postItChange$ = new Subject<any>();
   private postItChangeSubscription: Subscription;
 

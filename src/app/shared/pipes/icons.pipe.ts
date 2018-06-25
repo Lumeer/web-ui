@@ -18,13 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+import {ResourceModel} from '../../core/model/resource.model';
 
 @Pipe({
   name: 'icons'
 })
 export class IconsPipe implements PipeTransform {
 
-  public transform(entities: { icon: string }[]): string[] {
+  public transform(entities: ResourceModel[]): string[] {
     return entities.map(entity => entity.icon);
   }
 
