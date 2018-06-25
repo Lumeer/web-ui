@@ -20,7 +20,7 @@
 import {Direction} from '../../../shared/direction';
 import {arrayStartsWith, deepArrayEquals, getLastFromArray} from '../../../shared/utils/array.utils';
 import {TableColumn, TableColumnType, TableCompoundColumn, TableModel, TablePart, TableRow} from './table.model';
-import {containCompoundColumn, findTableColumn, findTableRow, getTableColumns, splitColumnPath, splitRowPath} from './table.utils';
+import {containCompoundColumn, filterLeafColumns, findTableColumn, findTableColumnByIndex, findTableRow, getTableColumns, splitColumnPath, splitRowPath} from './table.utils';
 
 export interface TableHeaderCursor {
 
@@ -179,21 +179,44 @@ function moveTableCursorLeft(table: TableModel, cursor: TableCursor): TableCurso
 
 function moveTableBodyCursorLeft(table: TableModel, cursor: TableBodyCursor): TableCursor {
   if (cursor.columnIndex > 0) {
-    return {...cursor, columnIndex: cursor.columnIndex - 1};
+    return moveTableBodyCursorLeftWithinPart(table, cursor);
   }
 
+  return moveTableBodyCursorLeftToPreviousPart(table, cursor);
+}
+
+function moveTableBodyCursorLeftWithinPart(table: TableModel, cursor: TableBodyCursor): TableCursor {
+  const {columns} = table.parts[cursor.partIndex];
+  const nextCursor = {...cursor, columnIndex: cursor.columnIndex - 1};
+
+  const nextColumn = findTableColumnByIndex(columns, nextCursor.columnIndex);
+  if (nextColumn && nextColumn.type === TableColumnType.HIDDEN) {
+    return moveTableBodyCursorLeft(table, nextCursor);
+  }
+
+  return nextCursor;
+}
+
+function moveTableBodyCursorLeftToPreviousPart(table: TableModel, cursor: TableBodyCursor): TableCursor {
   if (cursor.partIndex === 0) {
     return cursor;
   }
 
   const partIndex = cursor.partIndex - 2; // TODO link instance parts
-
-  return {
-    tableId: cursor.tableId,
+  const {columns} = table.parts[partIndex];
+  const nextCursor = {
+    ...cursor,
     partIndex,
-    columnIndex: table.parts[partIndex].columns.length - 1, // TODO nested attributes
+    columnIndex: filterLeafColumns(columns).length - 1,
     rowPath: cursor.rowPath.slice(0, -1)
   };
+
+  const nextColumn = findTableColumnByIndex(columns, partIndex);
+  if (nextColumn && nextColumn.type === TableColumnType.HIDDEN) {
+    return moveTableBodyCursorLeft(table, nextCursor);
+  }
+
+  return nextCursor;
 }
 
 function moveTableHeaderCursorLeft(table: TableModel, cursor: TableHeaderCursor): TableCursor {
@@ -269,22 +292,46 @@ function moveTableCursorRight(table: TableModel, cursor: TableCursor): TableCurs
 }
 
 function moveTableBodyCursorRight(table: TableModel, cursor: TableBodyCursor): TableCursor {
-  const lastColumnIndex = table.parts[cursor.partIndex].columns.length - 1;
+  const {columns} = table.parts[cursor.partIndex];
+  const lastColumnIndex = columns.length - 1;
   if (cursor.columnIndex < lastColumnIndex) {
-    return {...cursor, columnIndex: cursor.columnIndex + 1};
+    return moveTableBodyCursorRightWithinPart(table, cursor);
   }
 
-  const partIndex = cursor.partIndex + 2; // TODO link instance parts
-  if (table.parts.length - 1 < partIndex) {
-    return cursor;
+  return moveTableBodyCursorRightToNextPart(table, cursor);
+}
+
+function moveTableBodyCursorRightWithinPart(table: TableModel, cursor: TableBodyCursor) {
+  const {columns} = table.parts[cursor.partIndex];
+  const nextCursor = {...cursor, columnIndex: cursor.columnIndex + 1};
+
+  const nextColumn = findTableColumnByIndex(columns, nextCursor.columnIndex);
+  if (nextColumn && nextColumn.type === TableColumnType.HIDDEN) {
+    return moveTableBodyCursorRight(table, nextCursor);
   }
 
-  return {
-    tableId: cursor.tableId,
-    partIndex,
+  return nextCursor;
+}
+
+function moveTableBodyCursorRightToNextPart(table: TableModel, cursor: TableBodyCursor) {
+  const nextCursor = {
+    ...cursor,
+    partIndex: cursor.partIndex + 2, // TODO link instance parts
     columnIndex: 0,
     rowPath: cursor.rowPath.concat(0)
   };
+
+  if (table.parts.length - 1 < nextCursor.partIndex) {
+    return cursor;
+  }
+
+  const {columns} = table.parts[nextCursor.partIndex];
+  const nextColumn = findTableColumnByIndex(columns, nextCursor.columnIndex);
+  if (nextColumn && nextColumn.type === TableColumnType.HIDDEN) {
+    return moveTableBodyCursorRight(table, nextCursor);
+  }
+
+  return nextCursor;
 }
 
 function moveTableHeaderCursorRight(table: TableModel, cursor: TableHeaderCursor): TableCursor {

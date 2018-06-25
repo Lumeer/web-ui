@@ -35,6 +35,10 @@ export function findTableColumn(columns: TableColumn[], path: number[]): TableCo
   return findTableColumn(column.children, path.slice(1));
 }
 
+export function findTableColumnByIndex(columns: TableColumn[], columnIndex: number): TableColumn {
+  return filterLeafColumns(columns)[columnIndex];
+}
+
 export function getTableColumns(columns: TableColumn[], path: number[]): TableColumn[] {
   if (path.length === 0 || columns.length === 0) {
     return columns;
