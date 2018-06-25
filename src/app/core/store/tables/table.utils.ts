@@ -35,6 +35,10 @@ export function findTableColumn(columns: TableColumn[], path: number[]): TableCo
   return findTableColumn(column.children, path.slice(1));
 }
 
+export function findTableColumnByIndex(columns: TableColumn[], columnIndex: number): TableColumn {
+  return filterLeafColumns(columns)[columnIndex];
+}
+
 export function getTableColumns(columns: TableColumn[], path: number[]): TableColumn[] {
   if (path.length === 0 || columns.length === 0) {
     return columns;
@@ -93,11 +97,12 @@ export function createTableColumnsBySiblingAttributeIds(allAttributes: Attribute
     return [];
   }
 
-  const attributeNames = allAttributes.filter(attribute => attributeIds.includes(attribute.id))
-    .map(attribute => attribute.name);
+  const attributes = allAttributes.filter(attribute => attributeIds.includes(attribute.id));
+  const attributeNames = attributes.map(attribute => attribute.name);
 
-  const attributes = allAttributes
-    .filter(attribute => attributeNames.some(name => attribute.name.startsWith(name)));
+  const childAttributes = allAttributes
+    .filter(attribute => attributeNames.some(name => attribute.name.startsWith(name + '.')));
+  attributes.push(...childAttributes);
 
   const {parentName} = splitAttributeName(attributeNames[0]);
   if (!parentName) {
@@ -284,7 +289,7 @@ export function resizeLastColumnChild(column: TableCompoundColumn, delta: number
   return new TableCompoundColumn(parent, children);
 }
 
-export const HIDDEN_COLUMN_WIDTH = 8;
+export const HIDDEN_COLUMN_WIDTH = 10;
 
 export function getTableColumnWidth(column: TableColumn): number {
   switch (column.type) {

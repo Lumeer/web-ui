@@ -17,9 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, Input, ViewChild} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../core/store/app.state';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {TableModel} from '../../../../core/store/tables/table.model';
+import {TablesAction} from '../../../../core/store/tables/tables.action';
+import {TableRowsComponent} from './rows/table-rows.component';
 
 @Component({
   selector: 'table-body',
@@ -34,5 +38,19 @@ export class TableBodyComponent {
 
   @Input()
   public query: QueryModel;
+
+  @ViewChild(TableRowsComponent)
+  public rowsComponent: TableRowsComponent;
+
+  public constructor(private store: Store<AppState>) {
+  }
+
+  @HostListener('click', ['$event'])
+  public onClick(event: MouseEvent) {
+    const rowsClick = this.rowsComponent.element.nativeElement.contains(event.target);
+    if (!rowsClick) {
+      this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
+    }
+  }
 
 }

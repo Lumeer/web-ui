@@ -1,33 +1,38 @@
-<div tableEditableCell
-     [contextMenu]="contextMenuComponent?.contextMenu"
-     [disabledCharacters]="disabledCharacters"
-     [selected]="selected$ | async"
-     [style.background]="collection$ | async | columnBackground:(attribute$ | async | attributeNameChanged:lastName)"
-     [value]="attribute$ | async | attributeLastName"
-     (valueChange)="onValueChange($event)"
-     (editStart)="onEditStart()"
-     (editEnd)="onEditEnd($event)"
-     (mousedown)="onMouseDown()"
-     class="table-border-right table-border-bottom h-100 font-italic {{cursor | dragClass}}"
-     [class.uninitialized-column]="!column?.attributeId"
-     [class.text-default-attribute]="attribute$ | async | isDefaultAttribute:(collection$ | async)">
-</div>
+<ng-container *ngIf="{attribute: attribute$ | async, collection: collection$ | async} as data">
+  <div tableEditableCell
+       [cancelOnBlur]="!(data.attribute | entityCreated)"
+       [contextMenu]="contextMenuComponent?.contextMenu"
+       [disabledCharacters]="disabledCharacters"
+       [selected]="selected$ | async"
+       [style.background]="data.collection | columnBackground:(data.attribute | attributeNameChanged:lastName)"
+       [value]="data.attribute | attributeLastName"
+       (valueChange)="onValueChange($event)"
+       (editStart)="onEditStart()"
+       (editEnd)="onEditEnd($event)"
+       (mousedown)="onMouseDown()"
+       class="table-border-right table-border-bottom h-100 font-italic {{cursor | dragClass}}"
+       [class.uninitialized-column]="!column?.attributeId"
+       [class.text-default-attribute]="data.attribute | isDefaultAttribute:(data.collection)">
+  </div>
 
-<table-attribute-suggestions *ngIf="edited && !(attribute$ | async | entityCreated) && !(attribute$ | async | attributeParentName)"
-                             [attributeName]="attribute$ | async | attributeName:lastName"
-                             [collection]="collection$ | async"
+  <table-attribute-suggestions *ngIf="edited && !(data.attribute | entityCreated) && !(data.attribute | attributeParentName)"
+                               [attributeName]="data.attribute | attributeName:lastName"
+                               [collection]="data.collection"
+                               [cursor]="cursor"
+                               [table]="table">
+  </table-attribute-suggestions>
+
+  <table-column-context-menu #contextMenu
+                             *ngIf="data.attribute && cursor"
+                             [attribute]="data.attribute"
                              [cursor]="cursor"
-                             [table]="table">
-</table-attribute-suggestions>
-
-<table-column-context-menu #contextMenu
-                           *ngIf="(attribute$ | async) && cursor"
-                           [attribute]="attribute$ | async"
-                           [cursor]="cursor"
-                           [leaf]="leaf"
-                           (add)="onAdd($event)"
-                           (edit)="onEdit()"
-                           (hide)="onHide()"
-                           (remove)="onRemove()"
-                           (split)="onSplit()">
-</table-column-context-menu>
+                             [defaultAttribute]="data.attribute | isDefaultAttribute:(data.collection)"
+                             [leaf]="leaf"
+                             (add)="onAdd($event)"
+                             (edit)="onEdit()"
+                             (hide)="onHide()"
+                             (remove)="onRemove()"
+                             (setDefaultAttribute)="onSetDefaultAttribute()"
+                             (split)="onSplit()">
+  </table-column-context-menu>
+</ng-container>

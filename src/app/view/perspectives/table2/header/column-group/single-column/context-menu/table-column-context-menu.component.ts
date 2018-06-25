@@ -36,6 +36,9 @@ export class TableColumnContextMenuComponent {
   public attribute: AttributeModel;
 
   @Input()
+  public defaultAttribute: boolean;
+
+  @Input()
   public leaf: boolean;
 
   @Output()
@@ -49,6 +52,9 @@ export class TableColumnContextMenuComponent {
 
   @Output()
   public hide = new EventEmitter();
+
+  @Output()
+  public setDefaultAttribute = new EventEmitter();
 
   @Output()
   public split = new EventEmitter();

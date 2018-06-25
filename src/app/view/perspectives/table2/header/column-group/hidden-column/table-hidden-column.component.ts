@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
-import {first, map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {AppState} from '../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../core/store/collections/collection.model';
 import {selectCollectionById} from '../../../../../../core/store/collections/collections.state';
@@ -29,7 +29,6 @@ import {selectLinkTypeById} from '../../../../../../core/store/link-types/link-t
 import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableHiddenColumn, TableModel, TablePart} from '../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
-import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.state';
 
 @Component({
   selector: 'table-hidden-column',
@@ -37,7 +36,7 @@ import {selectTableCursorSelected} from '../../../../../../core/store/tables/tab
   styleUrls: ['./table-hidden-column.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableHiddenColumnComponent implements OnDestroy, OnChanges {
+export class TableHiddenColumnComponent implements OnChanges {
 
   @Input()
   public table: TableModel;
@@ -52,8 +51,6 @@ export class TableHiddenColumnComponent implements OnDestroy, OnChanges {
   public linkType$: Observable<LinkTypeModel>;
   public hiddenAttributes$: Observable<AttributeModel[]>;
 
-  private subscriptions = new Subscription();
-
   public constructor(private store: Store<AppState>) {
   }
 
@@ -64,10 +61,6 @@ export class TableHiddenColumnComponent implements OnDestroy, OnChanges {
       this.linkType$ = this.store.select(selectLinkTypeById(part.linkTypeId));
       this.hiddenAttributes$ = this.getHiddenAttributes(part);
     }
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
   }
 
   public getHiddenAttributes(part: TablePart): Observable<AttributeModel[]> {
@@ -86,15 +79,7 @@ export class TableHiddenColumnComponent implements OnDestroy, OnChanges {
   }
 
   public onMouseDown() {
-    this.subscriptions.add(
-      this.store.select(selectTableCursorSelected(this.cursor)).pipe(
-        first()
-      ).subscribe(selected => {
-        if (!selected) {
-          this.store.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
-        }
-      })
-    );
+    this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
   }
 
   public onShowSingleColumn(attribute: AttributeModel) {

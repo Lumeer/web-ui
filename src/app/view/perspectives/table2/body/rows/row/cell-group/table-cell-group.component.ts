@@ -30,6 +30,7 @@ import {areTableRowCursorsEqual, TableBodyCursor, TableCursor} from '../../../..
 import {TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TableRow} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {EditedAttribute, selectEditedAttribute, selectTableCursor, selectTablePartLeafColumns} from '../../../../../../../core/store/tables/tables.state';
+import {TableDataCellDirective} from '../../../../shared/directives/table-data-cell.directive';
 import {TableEditableCellDirective} from '../../../../shared/directives/table-editable-cell.directive';
 
 @Component({
@@ -49,6 +50,9 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
   @Input()
   public row: TableRow;
 
+  @ViewChildren(TableDataCellDirective)
+  public dataCells: QueryList<TableDataCellDirective>;
+
   @ViewChildren(TableEditableCellDirective)
   public editableCells: QueryList<TableEditableCellDirective>;
 
@@ -61,7 +65,6 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
   public editedAttribute$: Observable<EditedAttribute>;
   public selectedCursor$: Observable<TableCursor>;
 
-  private rowEdited: boolean;
   private rowSelected: boolean;
 
   public editedValue: string;
@@ -99,50 +102,28 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.editedAttribute$ = this.store.select(selectEditedAttribute).pipe(
-      filter(editedAttribute => {
-        const rowBeingEdited = this.isRowBeingEdited(editedAttribute);
-        if (!this.rowEdited && !rowBeingEdited) {
-          return false;
-        }
-
-        this.rowEdited = rowBeingEdited;
-        return true;
-      })
-    );
-  }
-
-  private isRowBeingEdited(editedAttribute: EditedAttribute): boolean {
-    if (!editedAttribute) {
-      return false;
-    }
-    if (this.documents) {
-      return this.documents.some(document => document.id === editedAttribute.documentId);
-    }
-    if (this.linkInstances) {
-      return this.linkInstances.some(linkInstance => linkInstance.id === editedAttribute.linkInstanceId);
-    }
+    this.editedAttribute$ = this.store.select(selectEditedAttribute);
   }
 
   private bindData() {
     const part = this.table.parts[this.cursor.partIndex];
 
     if (part.collectionId) {
-      this.bindDocument(part.collectionId);
+      this.bindDocuments(part.collectionId);
     }
     if (part.linkTypeId) {
-      this.bindLinkInstance(part.linkTypeId);
+      this.bindLinkInstances(part.linkTypeId);
     }
   }
 
-  private bindDocument(collectionId: string) {
+  private bindDocuments(collectionId: string) {
     this.subscriptions.add(
       this.store.select(selectDocumentsByIds(this.row.documentIds))
         .subscribe(documents => this.documents = documents && documents.length ? documents : [{collectionId, data: {}}])
     );
   }
 
-  private bindLinkInstance(linkTypeId: string) {
+  private bindLinkInstances(linkTypeId: string) {
     this.subscriptions.add(
       this.store.select(selectLinkInstancesByIds(this.row.linkInstanceIds))
         .subscribe(linkInstances => this.linkInstances = linkInstances) // TODO what if it does not exist?
@@ -178,6 +159,13 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
 
   public onValueChange(value: string) {
     this.editedValue = value;
+  }
+
+  public onLinkCreate(cursor: TableBodyCursor) {
+    const dataCell = this.dataCells.find(cell => cell.cursor.columnIndex === cursor.columnIndex);
+    if (dataCell) {
+      dataCell.disableSaving();
+    }
   }
 
 }

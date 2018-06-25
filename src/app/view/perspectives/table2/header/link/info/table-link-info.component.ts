@@ -48,6 +48,10 @@ export class TableLinkInfoComponent implements AfterViewInit {
   public linkMenu: ElementRef;
 
   public ngAfterViewInit() {
+    this.setTableLinkInfoWidthCssVariable();
+  }
+
+  private setTableLinkInfoWidthCssVariable() {
     const width = this.linkMenu.nativeElement.clientWidth;
     document.body.style.setProperty('--table-link-info-width', `${width}px`);
   }

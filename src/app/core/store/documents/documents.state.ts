@@ -42,7 +42,7 @@ export const selectAllDocuments = createSelector(selectDocumentsState, documents
 export const selectDocumentsDictionary = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectEntities);
 export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
 export const selectDocumentsByQuery = createSelector(selectAllDocuments, selectQuery,
-  (documents, query): DocumentModel[] => filterDocuments(documents, query)
+  (documents, query): DocumentModel[] => filterDocuments(sortDocumentsByCreationDate(documents), query)
 );
 
 export const selectDocumentsByCustomQuery = (query: QueryModel) => createSelector(selectAllDocuments,

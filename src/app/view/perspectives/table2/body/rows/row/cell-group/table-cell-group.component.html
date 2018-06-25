@@ -8,11 +8,12 @@
           linkInstance: linkInstances ? linkInstances[0] : null,
           selected: row.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)
         }; let cell">
-          <table-data-cell-suggestions *ngIf="!(cursor | isFirstPart) && !((document | entityCreated) || (linkInstance | entityCreated)) && editedValue"
+          <table-data-cell-suggestions *ngIf="cell.selected && !(cursor | isFirstPart) && !((document | entityCreated) || (linkInstance | entityCreated)) && editedValue"
                                        [column]="column"
                                        [cursor]="cell.cursor"
                                        [table]="table"
-                                       [value]="editedValue">
+                                       [value]="editedValue"
+                                       (linkCreate)="onLinkCreate(cell.cursor)">
           </table-data-cell-suggestions>
 
           <div tableDataCell
@@ -24,7 +25,7 @@
                [table]="table"
                tableEditableCell
                [contextMenu]="dataCellMenu?.contextMenu"
-               [readonly]="!cell.selected"
+               [readonly]="false"
                [selected]="cell.selected"
                [value]="(cell.document | extractValue:column) || (cell.linkInstance | extractValue:column)"
                (valueChange)="onValueChange($event)"
@@ -39,6 +40,7 @@
                                 [cursor]="cell.cursor"
                                 [document]="cell.document"
                                 [linkInstance]="cell.linkInstance"
+                                [table]="table"
                                 (edit)="onEdit()">
           </table-data-cell-menu>
         </ng-container>
@@ -60,7 +62,9 @@
     </ng-container>
 
     <ng-template #emptyCell>
-      <div class="table-border-right table-border-bottom"></div>
+      <div [style.width.px]="column | columnWidth"
+           class="table-border-right table-border-bottom">
+      </div>
     </ng-template>
   </ng-container>
 </ng-container>

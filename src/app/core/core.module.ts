@@ -23,16 +23,14 @@ import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-
 import {ClickOutsideModule} from 'ng-click-outside';
-import {SnotifyComponent, SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import {SharedModule} from '../shared/shared.module';
 import {WorkspaceGuard} from '../workspace/workspace.guard';
 import {RavenErrorHandler} from './error/raven.error-handler';
 import {RavenHttpInterceptor} from './error/raven.http-interceptor';
 import {GuardsModule} from './guards/guards.module';
 import {HomeComponent} from './home.component';
-import {NotificationService} from './notifications/notification.service';
+import {NotificationsModule} from './notifications/notifications.module';
 import {CollectionService} from './rest/collection.service';
 import {DocumentService} from './rest/document.service';
 import {EventService} from './rest/event.service';
@@ -47,9 +45,9 @@ import {SearchService} from './rest/search.service';
 import {UserService} from './rest/user.service';
 import {ViewService} from './rest/view.service';
 import {AppStoreModule} from './store/app-store.module';
+import {TopPanelModule} from './top-panel/top-panel.module';
 import {UserSettingsService} from './user-settings.service';
 import {CollectionValidators} from './validators/collection.validators';
-import {TopPanelModule} from './top-panel/top-panel.module';
 import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
 
@@ -61,11 +59,11 @@ import {ProjectValidators} from './validators/project.validators';
     HttpClientModule,
     RouterModule,
     SharedModule,
-    SnotifyModule,
     ClickOutsideModule,
     TopPanelModule,
     GuardsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    NotificationsModule
   ],
   declarations: [
     HomeComponent
@@ -94,9 +92,6 @@ import {ProjectValidators} from './validators/project.validators';
     LinkTypeService,
     EventService,
     GlobalService,
-    {provide: 'SnotifyToastConfig', useValue: ToastDefaults},
-    SnotifyService,
-    NotificationService,
     WorkspaceGuard,
     CollectionValidators,
     OrganizationValidators,
@@ -105,7 +100,7 @@ import {ProjectValidators} from './validators/project.validators';
   exports: [
     TopPanelModule,
     HomeComponent,
-    SnotifyComponent
+    NotificationsModule,
   ]
 })
 export class CoreModule {

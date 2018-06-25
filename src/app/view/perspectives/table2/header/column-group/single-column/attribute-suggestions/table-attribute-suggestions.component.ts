@@ -19,10 +19,11 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable, combineLatest} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../../core/store/collections/collection.model';
+import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
 import {selectAllCollections, selectCollectionsDictionary} from '../../../../../../../core/store/collections/collections.state';
 import {LinkTypeHelper} from '../../../../../../../core/store/link-types/link-type.helper';
 import {LinkTypeModel} from '../../../../../../../core/store/link-types/link-type.model';
@@ -84,17 +85,37 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
     }
   }
 
-  public useLinkType({linkType}: LinkedAttribute) {
+  public createAttribute() {
+    const attribute: AttributeModel = {
+      name: this.attributeName,
+      constraints: []
+    };
+    this.store.dispatch(new CollectionsAction.CreateAttributes({
+      collectionId: this.collection.id,
+      attributes: [attribute],
+      callback: attributes => this.initColumn(attributes)
+    }));
+  }
+
+  private initColumn(attributes: AttributeModel[]) {
+    const attribute = attributes.find(attr => attr.name === this.attributeName);
+    if (attribute) {
+      this.store.dispatch(new TablesAction.InitColumn({
+        cursor: this.cursor,
+        attributeId: attribute.id
+      }));
+    }
+  }
+
+  public useLinkType(linkType: LinkTypeModel) {
     this.store.dispatch(new TablesAction.RemoveColumn({cursor: this.cursor}));
     this.store.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
   }
 
-  public createLinkType({collection}: LinkedAttribute) {
+  public createLinkType(collection: CollectionModel) {
     this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
     const linkCollectionIds = [this.collection.id, collection.id].join(',');
-    this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => {
-      this.store.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
-    });
+    this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => this.useLinkType(linkType));
   }
 
   public suggestLinkedAttributes(): Observable<LinkedAttribute[]> {

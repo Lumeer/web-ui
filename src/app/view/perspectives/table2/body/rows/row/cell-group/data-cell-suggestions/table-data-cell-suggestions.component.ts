@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
+import {map, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
 import {selectDocumentsByCustomQuery} from '../../../../../../../../core/store/documents/documents.state';
@@ -30,6 +31,7 @@ import {QueryModel} from '../../../../../../../../core/store/navigation/query.mo
 import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
 import {TableModel, TableSingleColumn} from '../../../../../../../../core/store/tables/table.model';
 import {findTableRow, splitRowPath} from '../../../../../../../../core/store/tables/table.utils';
+import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
 import {TABLE_ROW_HEIGHT} from '../../../../../shared/pipes/column-height.pipe';
 
 @Component({
@@ -41,7 +43,7 @@ import {TABLE_ROW_HEIGHT} from '../../../../../shared/pipes/column-height.pipe';
     '[style.top.px]': 'tableRowHeight'
   }
 })
-export class TableDataCellSuggestionsComponent implements OnChanges {
+export class TableDataCellSuggestionsComponent implements OnInit, OnChanges {
 
   @Input()
   public column: TableSingleColumn;
@@ -55,23 +57,30 @@ export class TableDataCellSuggestionsComponent implements OnChanges {
   @Input()
   public value: string;
 
+  @Output()
+  public linkCreate = new EventEmitter();
+
   public readonly tableRowHeight = TABLE_ROW_HEIGHT;
 
   public documents$: Observable<DocumentModel[]>;
+  private filter$ = new BehaviorSubject<string>('');
 
   public constructor(private store: Store<AppState>) {
   }
 
+  public ngOnInit() {
+    this.bindDocuments();
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.hasOwnProperty('value')) {
-      this.bindDocuments();
+      this.filter$.next(this.value);
     }
   }
 
   private bindDocuments() {
     const query: QueryModel = {
-      collectionIds: [this.table.parts[this.cursor.partIndex].collectionId],
-      fulltext: this.value
+      collectionIds: [this.table.parts[this.cursor.partIndex].collectionId]
     };
 
     const {parentPath} = splitRowPath(this.cursor.rowPath);
@@ -82,12 +91,17 @@ export class TableDataCellSuggestionsComponent implements OnChanges {
       map(documents => documents.filter(document =>
         document.data.hasOwnProperty(this.column.attributeId) &&
         !linkedDocumentIds.includes(document.id)
-      ))
+      )),
+      withLatestFrom(this.filter$),
+      map(([documents, filter]) => documents.filter(document => {
+        const value = document.data[this.column.attributeId];
+        return value.toLowerCase().includes(filter.toLowerCase());
+      }))
     );
   }
 
   public onCreateLink(document: DocumentModel) {
-    // this.linkCreated = true; TODO
+    this.linkCreate.emit();
 
     const {parentPath} = splitRowPath(this.cursor.rowPath);
     const part = this.table.parts[this.cursor.partIndex - 1];
@@ -97,7 +111,15 @@ export class TableDataCellSuggestionsComponent implements OnChanges {
       linkTypeId: part.linkTypeId,
       documentIds: [previousRow.documentIds[0], document.id]
     };
-    this.store.dispatch(new LinkInstancesAction.Create({linkInstance}));
+    this.store.dispatch(new LinkInstancesAction.Create({
+      linkInstance,
+      callback: () => this.expandLinkedRow()
+    }));
+  }
+
+  private expandLinkedRow() {
+    const cursor = {...this.cursor, rowPath: this.cursor.rowPath.slice(0, -1)};
+    this.store.dispatch(new TablesAction.ExpandRows({cursor}));
   }
 
 }

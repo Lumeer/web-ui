@@ -3,7 +3,7 @@
 %highlighted {
   position: relative;
   z-index: $z-index-selected;
-  outline-offset: -1px;
+  outline-offset: -2px;
 }
 
 .selected {
@@ -23,4 +23,8 @@
 
 .uninitialized-column {
   color: $secondary;
+
+  &.selected {
+    color: $primary;
+  }
 }
