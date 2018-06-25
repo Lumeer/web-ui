@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
-import {filter} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {selectDocumentsByIds} from '../../../../../../../core/store/documents/documents.state';
@@ -132,21 +132,21 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
     const part = this.table.parts[this.cursor.partIndex];
 
     if (part.collectionId) {
-      this.bindDocument(part.collectionId);
+      this.bindDocuments(part.collectionId);
     }
     if (part.linkTypeId) {
-      this.bindLinkInstance(part.linkTypeId);
+      this.bindLinkInstances(part.linkTypeId);
     }
   }
 
-  private bindDocument(collectionId: string) {
+  private bindDocuments(collectionId: string) {
     this.subscriptions.add(
       this.store.select(selectDocumentsByIds(this.row.documentIds))
         .subscribe(documents => this.documents = documents && documents.length ? documents : [{collectionId, data: {}}])
     );
   }
 
-  private bindLinkInstance(linkTypeId: string) {
+  private bindLinkInstances(linkTypeId: string) {
     this.subscriptions.add(
       this.store.select(selectLinkInstancesByIds(this.row.linkInstanceIds))
         .subscribe(linkInstances => this.linkInstances = linkInstances) // TODO what if it does not exist?

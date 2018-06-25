@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Directive, ElementRef, EventEmitter, HostListener, Input, Output, SimpleChanges} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import {KeyCode} from '../../../../../shared/key-code';
 import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
 
@@ -69,14 +69,6 @@ export class TableEditableCellDirective {
   public edited: boolean;
 
   public constructor(private element: ElementRef) {
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.selected) {
-      if (!this.selected) {
-        this.edited = false;
-      }
-    }
   }
 
   @HostListener('blur')
