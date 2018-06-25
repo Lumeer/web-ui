@@ -3,6 +3,7 @@
     "class-name": true,
     "curly": true,
     "eofline": true,
+    "file-header": [true, "Copyright \\(C\\) since 2017 Answer Institute, s\\.r\\.o\\."],
     "forin": true,
     "indent": [true, "spaces"],
     "label-position": true,
