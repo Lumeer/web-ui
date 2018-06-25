@@ -20,6 +20,7 @@
 import {AfterViewInit, Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 
 import * as Icons from './icons';
+import {getPureIconName, searchIconsByMeta} from './icons';
 
 declare let $: any;
 
@@ -50,10 +51,6 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
 
   public filter = '';
 
-  public page = 0;
-
-  public readonly ICONS_ON_PAGE = 6 * 8;
-
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent): void {
     event.stopPropagation();
@@ -66,37 +63,11 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
 
   private applyFilter(): void {
     if (this.filter) {
-      this.filteredIcons = this.icons.filter(icon => icon.indexOf(this.filter) >= 0);
-      this.page = 0;
+      let iconsByMeta = searchIconsByMeta(this.filter);
+      this.filteredIcons = this.icons.filter(icon => iconsByMeta.indexOf(getPureIconName(icon)) >= 0);
     } else {
       this.filteredIcons = [...this.icons];
     }
-  }
-
-  public pageStart(): number {
-    return this.ICONS_ON_PAGE * this.page + 1;
-  }
-
-  public pageEnd(): number {
-    return Math.min(this.ICONS_ON_PAGE * (this.page + 1), this.filteredIcons.length);
-  }
-
-  public canActivatePage(page: number): boolean {
-    return ((page < this.page) && (page >= 0)) ||
-      ((page > this.page) && (page < Math.ceil(this.filteredIcons.length / this.ICONS_ON_PAGE)));
-  }
-
-  public selectPage(page: number): void {
-    this.page = page;
-  }
-
-  public iconsCount(): number {
-    return this.filteredIcons.length;
-  }
-
-  public activatePageWithSelectedIcon(): void {
-    const selectedIndex = this.filteredIcons.indexOf(this.selected);
-    this.page = selectedIndex >= 0 ? Math.floor(selectedIndex / this.ICONS_ON_PAGE) : 0;
   }
 
   public preview(previewed: string) {
@@ -121,18 +92,27 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
     return result;
   }
 
+  private scrollToSelection(): void {
+    const elem = (document as any).getElementById(this.iconId(this.selected));
+
+    if (elem) {
+      elem.parentElement.parentElement.parentElement.scrollTop = elem.parentElement.offsetTop - elem.parentElement.parentElement.offsetTop;
+    }
+  }
+
   public ngAfterViewInit(): void {
     if (this.dropdownId) {
       $(`#${this.dropdownId}`).on('show.bs.dropdown', () => {
         // needed for initial display when the dialog was never opened
         // however, it does not work in subsequent opens
         this.selected = this.icon;
-        this.activatePageWithSelectedIcon();
+      });
+      $(`#${this.dropdownId}`).on('shown.bs.dropdown', () => {
+        this.scrollToSelection();
       });
       $(`#${this.dropdownId}`).on('hide.bs.dropdown', () => {
         // needed to handle subsequent opens
         this.selected = this.icon;
-        this.activatePageWithSelectedIcon();
 
         if (this.filter) {
           this.filter = '';
@@ -143,7 +123,9 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
   }
 
   public filterInput($event: KeyboardEvent): void {
-    this.filter = (<HTMLInputElement>$event.target).value;
+    if ($event) {
+      this.filter = (<HTMLInputElement>$event.target).value;
+    }
     this.applyFilter();
   }
 }

@@ -25,6 +25,11 @@
 .post-it:hover {
   box-shadow: $shadow-default;
 
+  .toggle-favorite {
+    top: 3px;
+    right: 4px;
+  }
+
   .opacity-content {
     opacity: 1;
   }
@@ -55,8 +60,17 @@
 }
 
 .toggle-favorite {
+
   top: 3px;
   right: 4px;
+
+  &.always-visible {
+
+    top: 20px;
+    right: 20px;
+
+    transition: top 0.25s, right 0.25s ease;
+  }
 }
 
 .uninitialized {
