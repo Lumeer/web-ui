@@ -155,7 +155,7 @@ function moveTableHeaderCursorDown(table: TableModel, cursor: TableHeaderCursor)
   const part: TablePart = table.parts[cursor.partIndex];
   const column: TableCompoundColumn = findTableColumn(part.columns, cursor.columnPath) as TableCompoundColumn;
 
-  const index = column.children.findIndex(column => column.type === TableColumnType.COMPOUND);
+  const index = column.children.findIndex(c => c.type === TableColumnType.COMPOUND);
 
   if (index >= 0) {
     return {...cursor, columnPath: cursor.columnPath.concat(index)};

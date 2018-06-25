@@ -215,10 +215,10 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     this.organizationsRoles$ = this.organizations$.pipe(
       withLatestFrom(this.store.select(selectCurrentUser)),
       withLatestFrom(this.store.select(selectGroupsDictionary)),
-      map(([[organizations, user], groups]) => organizations.reduce((map, organization) => {
+      map(([[organizations, user], groups]) => organizations.reduce((rolesMap, organization) => {
         const userWithGroups = mapGroupsOnUser(user, organization.id, groups);
-        map[organization.id] = userRolesInResource(userWithGroups, organization);
-        return map;
+        rolesMap[organization.id] = userRolesInResource(userWithGroups, organization);
+        return rolesMap;
       }, {}))
     );
     this.canCreateOrganizations$ = this.store.select(selectCurrentUser).pipe(
@@ -232,9 +232,9 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
     );
     this.projectRoles$ = this.projects$.pipe(
       mergeMap(projects => this.selectOrganizationAndCurrentUser().pipe(
-        map(({organization, user}) => projects.reduce((map, project) => {
-          map[project.id] = userRolesInResource(user, project);
-          return map;
+        map(({organization, user}) => projects.reduce((rolesMap, project) => {
+          rolesMap[project.id] = userRolesInResource(user, project);
+          return rolesMap;
         }, {}))
       ))
     );

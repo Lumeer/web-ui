@@ -275,7 +275,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     this.collection.attributes.forEach(attribute => {
-      const row = this.postItRows.find(row => row.correlationId && row.correlationId === attribute.correlationId);
+      const row = this.postItRows.find(r => r.correlationId && r.correlationId === attribute.correlationId);
       if (row) {
         row.attributeId = attribute.id;
         row.correlationId = null;
@@ -289,7 +289,7 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     Object.keys(this.postItModel.document.data).forEach(attributeId => {
-      const row = this.postItRows.find(row => row.attributeId === attributeId);
+      const row = this.postItRows.find(r => r.attributeId === attributeId);
       if (!row) {
         const attribute = this.findAttributeById(attributeId);
         if (attribute) {

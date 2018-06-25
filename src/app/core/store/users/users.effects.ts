@@ -106,8 +106,8 @@ export class UsersEffects {
           })
         });
       }
-      const message = this.i18n({id: 'user.create.fail', value: 'Failed to create user'});
-      return new NotificationsAction.Error({message});
+      const errorMessage = this.i18n({id: 'user.create.fail', value: 'Failed to create user'});
+      return new NotificationsAction.Error({message: errorMessage});
     })
   );
 
@@ -139,8 +139,7 @@ export class UsersEffects {
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.Delete>(UsersActionType.DELETE),
     mergeMap(action => this.userService.deleteUser(action.payload.organizationId, action.payload.userId).pipe(
-      map(() => action),
-      map(action => new UsersAction.DeleteSuccess(action.payload)),
+      map(() => new UsersAction.DeleteSuccess(action.payload)),
       catchError(error => of(new UsersAction.DeleteFailure({error: error})))
     ))
   );

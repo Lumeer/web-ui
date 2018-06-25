@@ -58,7 +58,7 @@ export class EventService {
     const collectionKey = `${collectionId}_${EVENTS_KEY}`;
     const events = LocalStorage.get(collectionKey) || [];
 
-    const updatedEventIndex = events.findIndex(event => id === event.id);
+    const updatedEventIndex = events.findIndex(e => id === e.id);
     events[updatedEventIndex] = event;
 
     LocalStorage.set(collectionKey, events);

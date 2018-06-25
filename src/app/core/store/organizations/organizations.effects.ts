@@ -128,9 +128,9 @@ export class OrganizationsEffects {
       const organizationDto = OrganizationConverter.toDto(action.payload.organization);
       const oldOrganization = organizationEntities[action.payload.organization.id];
       return this.organizationService.editOrganization(oldOrganization.code, organizationDto).pipe(
-        map(dto => ({organization: OrganizationConverter.fromDto(dto), oldOrganization})),
+        map(dto => OrganizationConverter.fromDto(dto)),
         withLatestFrom(this.store$.select(selectOrganizationCodes)),
-        flatMap(([{organization, oldOrganization}, organizationCodes]) => {
+        flatMap(([organization, organizationCodes]) => {
           const actions: Action[] = [new OrganizationsAction.UpdateSuccess({organization: {...organization, id: organization.id}})];
           if (organizationCodes) {
             const codes = organizationCodes.map(code => code === oldOrganization.code ? organization.code : code);
@@ -173,10 +173,9 @@ export class OrganizationsEffects {
     mergeMap(([action, organizationEntities]) => {
       const organization = organizationEntities[action.payload.organizationId];
       return this.organizationService.deleteOrganization(organization.code).pipe(
-        map(() => ({action, deletedOrganizationCode: organization.code})),
         withLatestFrom(this.store$.select(selectOrganizationCodes)),
-        flatMap(([{action, deletedOrganizationCode}, organizationCodes]) => {
-          const codes = organizationCodes.filter(code => code !== deletedOrganizationCode);
+        flatMap(([, organizationCodes]) => {
+          const codes = organizationCodes.filter(code => code !== organization.code);
 
           return [new OrganizationsAction.DeleteSuccess(action.payload),
             new OrganizationsAction.GetCodesSuccess({organizationCodes: codes})];

@@ -48,8 +48,8 @@ export class SmartDocUtils {
   }
 
   private static createInitialTextData(collection: CollectionModel): any {
-    const ops: DeltaOperation[] = collection.attributes.reduce<DeltaOperation[]>((ops, attribute) => {
-      return ops.concat({insert: attribute.name + ': '}, {insert: {attribute: {id: attribute.id}}}, {insert: '\n'});
+    const ops: DeltaOperation[] = collection.attributes.reduce<DeltaOperation[]>((deltaOperations, attribute) => {
+      return deltaOperations.concat({insert: attribute.name + ': '}, {insert: {attribute: {id: attribute.id}}}, {insert: '\n'});
     }, []);
     return {ops};
   }

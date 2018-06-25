@@ -136,8 +136,8 @@ export class CollectionsEffects {
           })
         });
       }
-      const message = this.i18n({id: 'collection.create.fail', value: 'Failed to create file'});
-      return new NotificationsAction.Error({message});
+      const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Failed to create file'});
+      return new NotificationsAction.Error({message: errorMessage});
     })
   );
 
@@ -183,8 +183,8 @@ export class CollectionsEffects {
           })
         });
       }
-      const message = this.i18n({id: 'collection.import.fail', value: 'Failed to import file'});
-      return new NotificationsAction.Error({message});
+      const errorMessage = this.i18n({id: 'collection.import.fail', value: 'Failed to import file'});
+      return new NotificationsAction.Error({message: errorMessage});
     })
   );
 
@@ -342,9 +342,9 @@ export class CollectionsEffects {
 
       const {callback, nextAction, collectionId} = action.payload;
       return this.collectionService.createAttributes(collectionId, attributesDto).pipe(
-        map(attributes => ({action, attributes: attributes.map(attr => CollectionConverter.fromAttributeDto(attr, correlationIdMap[attr.name]))})),
+        map(attributes => attributes.map(attr => CollectionConverter.fromAttributeDto(attr, correlationIdMap[attr.name]))),
         withLatestFrom(this.store$.select(selectCollectionById(collectionId))),
-        flatMap(([{action, attributes}, collection]) => {
+        flatMap(([attributes, collection]) => {
           const actions: Action[] = [new CollectionsAction.CreateAttributesSuccess({collectionId, attributes})];
           if (nextAction) {
             updateCreateAttributesNextAction(nextAction, attributes);
@@ -383,8 +383,8 @@ export class CollectionsEffects {
       const attributeDto = CollectionConverter.toAttributeDto(action.payload.attribute);
 
       return this.collectionService.updateAttribute(action.payload.collectionId, action.payload.attributeId, attributeDto).pipe(
-        map(result => ({action, attribute: CollectionConverter.fromAttributeDto(result)})),
-        flatMap(({action, attribute}) => {
+        map(result => CollectionConverter.fromAttributeDto(result)),
+        flatMap(attribute => {
           const actions: Action[] = [new CollectionsAction.ChangeAttributeSuccess(
             {collectionId: action.payload.collectionId, attributeId: action.payload.attributeId, attribute: attribute}
           )];
@@ -414,9 +414,8 @@ export class CollectionsEffects {
     mergeMap(action => {
       const {collectionId, attributeId} = action.payload;
       return this.collectionService.removeAttribute(collectionId, attributeId).pipe(
-        map(() => action),
         withLatestFrom(this.store$.select(selectCollectionById(collectionId))),
-        flatMap(([action, collection]) => {
+        flatMap(([, collection]) => {
           const actions: Action[] = [new CollectionsAction.RemoveAttributeSuccess(action.payload)];
           if (collection.defaultAttributeId === attributeId || !collection.defaultAttributeId) {
             const setDefaultAttributeAction = createSetDefaultAttributeAction(collection, null, attributeId);
