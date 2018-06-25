@@ -5,7 +5,8 @@
       <div class="dropdown-header cursor-not-allowed"
            i18n="@@table.header.suggestion.attribute.new">Create new attribute
       </div>
-      <a class="dropdown-item">
+      <a class="dropdown-item"
+         (mousedown)="createAttribute()">
         <icons-presenter [colors]="[collection.color]"
                          [icons]="[collection.icon]"
                          class="mr-1">

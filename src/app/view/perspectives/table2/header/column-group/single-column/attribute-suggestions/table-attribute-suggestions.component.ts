@@ -23,6 +23,7 @@ import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../../core/store/collections/collection.model';
+import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
 import {selectAllCollections, selectCollectionsDictionary} from '../../../../../../../core/store/collections/collections.state';
 import {LinkTypeHelper} from '../../../../../../../core/store/link-types/link-type.helper';
 import {LinkTypeModel} from '../../../../../../../core/store/link-types/link-type.model';
@@ -81,6 +82,28 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
     if ((changes.collection || changes.attributeName) && this.collection && this.attributeName && this.lastName) {
       this.linkedAttributes$ = this.suggestLinkedAttributes();
       this.allAttributes$ = this.suggestAllAttributes();
+    }
+  }
+
+  public createAttribute() {
+    const attribute: AttributeModel = {
+      name: this.attributeName,
+      constraints: []
+    };
+    this.store.dispatch(new CollectionsAction.CreateAttributes({
+      collectionId: this.collection.id,
+      attributes: [attribute],
+      callback: attributes => this.initColumn(attributes)
+    }));
+  }
+
+  private initColumn(attributes: AttributeModel[]) {
+    const attribute = attributes.find(attr => attr.name === this.attributeName);
+    if (attribute) {
+      this.store.dispatch(new TablesAction.InitColumn({
+        cursor: this.cursor,
+        attributeId: attribute.id
+      }));
     }
   }
 

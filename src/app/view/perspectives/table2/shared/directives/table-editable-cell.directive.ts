@@ -46,6 +46,9 @@ export class TableEditableCellDirective {
   public affected: boolean;
 
   @Input()
+  public cancelOnBlur: boolean;
+
+  @Input()
   public disabledCharacters: string[];
 
   @Input()
@@ -73,7 +76,7 @@ export class TableEditableCellDirective {
 
   @HostListener('blur')
   public onBlur() {
-    this.stopEditing();
+    this.stopEditing(this.cancelOnBlur);
   }
 
   @HostListener('dblclick')
