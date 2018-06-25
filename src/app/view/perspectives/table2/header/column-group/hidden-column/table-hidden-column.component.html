@@ -1,23 +1,22 @@
-<div [style.background]="collection$ | async | columnBackground"
+<div [contextMenu]="contextMenu"
+     [style.background]="collection$ | async | columnBackground"
      [style.width.px]="column | columnWidth"
      (mousedown)="onMouseDown()"
-     title="Hidden columns" i18n-title="@@table.header.hidden.columns"
-     class="table-border-right table-border-bottom text-center h-100 dropdown">
-  <i class="fas fa-ellipsis-v text-secondary"
-     data-toggle="dropdown"></i>
-  <div class="dropdown-menu">
-    <h6 class="dropdown-header"
-        i18n="@@table.header.show.hidden.columns">Show hidden columns
-    </h6>
-    <a *ngFor="let attribute of hiddenAttributes$ | async"
-       (click)="onShowSingleColumn(attribute)"
-       class="dropdown-item">
-      <span>{{attribute | attributeLastName}}</span>
-      <small class="text-secondary pl-1">({{attribute.name}})</small>
-    </a>
-    <a *ngIf="column.attributeIds.length > 1"
-       (click)="onShowAllColumns()"
-       class="dropdown-item"
-       i18n="@@table.header.show.all">All columns</a>
-  </div>
+     title="Show hidden columns" i18n-title="@@table.header.show.hidden.columns"
+     class="table-border-right table-border-bottom text-center h-100">
+  <i class="fas fa-ellipsis-v text-secondary"></i>
 </div>
+
+<context-menu #contextMenu>
+  <ng-template *ngFor="let attribute of hiddenAttributes$ | async"
+               (execute)="onShowSingleColumn(attribute)"
+               contextMenuItem>
+    <span>{{attribute | attributeLastName}}</span>
+    <small class="text-secondary pl-1">({{attribute.name}})</small>
+  </ng-template>
+  <ng-template *ngIf="column.attributeIds.length > 1"
+               (execute)="onShowAllColumns()"
+               contextMenuItem>
+    <span i18n="@@table.header.show.all">All columns</span>
+  </ng-template>
+</context-menu>

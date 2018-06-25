@@ -1,7 +1,6 @@
 <div [style.height.px]="table | headerHeight:cursor">
   <div class="muuri {{columnGroupId | prefix:containerClassPrefix}} h-100">
     <div *ngFor="let column of columns; trackBy: trackByCollectionAndAttribute.bind(this); index as columnIndex"
-         [style.z-index]="(column | isHiddenColumn) ? 2 : 1"
          class="muuri-item h-100">
       <div class="muuri-item-content h-100">
         <table-compound-column *ngIf="column | isCompoundColumn"
