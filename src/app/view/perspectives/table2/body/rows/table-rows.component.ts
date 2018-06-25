@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChange, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChange, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {AppState} from '../../../../../core/store/app.state';
@@ -53,7 +53,8 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  public constructor(private store: Store<AppState>) {
+  public constructor(public element: ElementRef,
+                     private store: Store<AppState>) {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
