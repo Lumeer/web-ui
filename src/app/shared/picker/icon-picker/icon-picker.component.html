@@ -16,7 +16,7 @@
        (mouseenter)="preview(iconOption)"
        (mouseleave)="preview(null)"
        (click)="select(iconOption)"
-       id="{{iconId(iconOption)}}"
+       id="{{iconOption | iconId:dropdownId }}"
        aria-hidden="true"
     >
     </i>

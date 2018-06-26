@@ -21,6 +21,7 @@ import {AfterViewInit, Component, EventEmitter, HostListener, Input, OnInit, Out
 
 import * as Icons from './icons';
 import {getPureIconName, searchIconsByMeta} from './icons';
+import {IconIdPipe} from './icon-id.pipe';
 
 declare let $: any;
 
@@ -51,6 +52,9 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
 
   public filter = '';
 
+  constructor(private iconIdPipe: IconIdPipe) {
+  }
+
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent): void {
     event.stopPropagation();
@@ -80,10 +84,6 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
     this.iconChange.emit(selected);
   }
 
-  public iconId(icon: string): string {
-    return this.dropdownId + '-icon-' + icon.replace(/ /g, '.');
-  }
-
   public range(start: number, end: number): number[] {
     const result = [];
     for (let i = start; i < end; i++) {
@@ -93,10 +93,10 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
   }
 
   private scrollToSelection(): void {
-    const elem = (document as any).getElementById(this.iconId(this.selected));
+    const elem = (document as any).getElementById(this.iconIdPipe.transform(this.selected, this.dropdownId));
 
     if (elem) {
-      elem.parentElement.parentElement.parentElement.scrollTop = elem.parentElement.offsetTop - elem.parentElement.parentElement.offsetTop;
+      elem.parentElement.parentElement.scrollTop = elem.offsetTop - elem.parentElement.offsetTop;
     }
   }
 
@@ -122,9 +122,9 @@ export class IconPickerComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public filterInput($event: KeyboardEvent): void {
-    if ($event) {
-      this.filter = (<HTMLInputElement>$event.target).value;
+  public filterInput(keyboardEvent: KeyboardEvent): void {
+    if (keyboardEvent) {
+      this.filter = (<HTMLInputElement>keyboardEvent.target).value;
     }
     this.applyFilter();
   }
