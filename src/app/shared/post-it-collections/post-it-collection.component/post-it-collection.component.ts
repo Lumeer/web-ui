@@ -17,7 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {QueryConverter} from '../../../core/store/navigation/query.converter';
@@ -156,10 +167,6 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
 
     this.collection.icon = this.oldIcon || this.collection.icon;
     this.collection.color = this.oldColor || this.collection.color;
-
-/*    if (this.collection.id) {
-      this.update.emit(this.collection);
-    }*/
 
     this.isPickerVisible = false;
   }

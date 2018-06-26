@@ -11,10 +11,24 @@
 
 .post-it {
   transition: box-shadow $animation-duration, transform $animation-duration;
+
+  &:not(.uninitialized) {
+    border: 1px transparent;
+  }
+
+  .card-body {
+    padding-top: 2rem;
+    padding-bottom: 0.5rem;
+  }
 }
 
 .post-it:hover {
   box-shadow: $shadow-default;
+
+  .toggle-favorite {
+    top: 3px;
+    right: 4px;
+  }
 
   .opacity-content {
     opacity: 1;
@@ -46,8 +60,17 @@
 }
 
 .toggle-favorite {
+
   top: 3px;
-  right: 3px;
+  right: 4px;
+
+  &.always-visible {
+
+    top: 20px;
+    right: 20px;
+
+    transition: top 0.25s, right 0.25s ease;
+  }
 }
 
 .uninitialized {
@@ -58,18 +81,7 @@
 .buttons {
   width: 25px;
   right: 0;
-
-  a {
-    transition: background-position $animation-color-duration;
-
-    background: linear-gradient(to right, transparent 50%, #e8e8e8 50%);
-    background-size: 200% 100%;
-    background-position: left bottom;
-
-    &:hover {
-      background-position: right bottom;
-    }
-  }
+  top: 1.5rem;
 }
 
 .dropdown-menu {

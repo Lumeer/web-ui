@@ -11,6 +11,7 @@
 
   .tab-content-container {
     height: 153px;
+    overflow: auto;
   }
   .tab-content {
     display: flex;
@@ -20,7 +21,10 @@
 
     .icon {
       color: $primary;
-      padding: 0 2.5px;
+      padding: 5px;
+      margin: 2px;
+      width: 26px;
+      height: 26px;
 
       &.selected {
         color: white;

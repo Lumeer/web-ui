@@ -88,17 +88,17 @@ export class IconComponent implements AfterViewInit {
     }
   }
 
-  public saveSelectedColor($event: MouseEvent): void {
+  public saveSelectedColor(mouseEvent: MouseEvent): void {
     this.detectChanges();
   }
 
-  public revertSelectedColor($event: MouseEvent): void {
+  public revertSelectedColor(mouseEvent: MouseEvent): void {
     this.color = this.oldColor;
     this.icon = this.oldIcon;
   }
 
-  public storeIconAndColor($event: MouseEvent): void {
-    this.clickedComponent = $event.target;
+  public storeIconAndColor(mouseEvent: MouseEvent): void {
+    this.clickedComponent = mouseEvent.target;
     this.oldColor = this.color;
     this.oldIcon = this.icon;
   }
