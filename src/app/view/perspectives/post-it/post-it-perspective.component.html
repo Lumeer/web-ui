@@ -3,6 +3,7 @@
      (scrolled)="onScrollDown($event)">
   <div class="my-2 d-flex align-items-center">
     <add-document
+      [query]="query"
       [hasCollection]="hasSingleCollection()"
       [hasRights]="hasCreateRights()"
       (createPostIt)="createPostIt($event)">
@@ -14,26 +15,26 @@
     </size-slider>
   </div>
 
-  <div class="post-it-document-layout row">
+  <div class="post-it-document-layout row" #postItLayout>
     <div class="layout-item {{getColumnStyle()}} mb-3"
          layout-item
          [layout]="layoutManager"
-         *ngFor="let postIt of postIts; trackBy:trackByDocument; let idx = index">
+         *ngFor="let doc of getDocuments(); trackBy:trackByDocument; let idx = index">
       <post-it-document
         class="card post-it"
-        [ngClass]="postIt.document.id ? 'initialized': 'uninitialized'"
-        [attr.order]="postIt.order"
-        [collection]="getCollection(postIt)"
-        [collectionRoles]="getCollectionRoles(postIt)"
-        [postItModel]="postItWithIndex(postIt, idx)"
+        [ngClass]="doc.id ? 'initialized': 'uninitialized'"
+        [collection]="getCollection(doc)"
+        [collectionRoles]="getCollectionRoles(doc)"
+        [index]="idx"
+        [documentModel]="doc"
         [perspectiveId]="perspectiveId"
         [selectionHelper]="selectionHelper"
-        (remove)="removePostIt(postIt)"
+        (remove)="removePostIt(doc)"
         (sizeChange)="postItChanged()"></post-it-document>
 
     </div>
 
-    <label *ngIf="(!hasSingleCollection() || !hasCreateRights()) && !postIts.length"
+    <label *ngIf="(!hasSingleCollection() || !hasCreateRights()) && !postItsOrder.length"
            class="label-centered"
            i18n="@@document.list.empty">Nothing To Show</label>
   </div>

@@ -35,6 +35,7 @@ import {selectViewCursor} from '../../core/store/views/views.state';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
+import {generateDocumentData} from '../../core/store/documents/document.utils';
 
 @Component({
   selector: 'preview-results',
@@ -204,58 +205,13 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
       document: {
         collectionId: this.selectedCollection.id,
         correlationId: CorrelationIdGenerator.generate(),
-        data: this.createData()
+        data: generateDocumentData(this.selectedCollection, this.query.filters)
         },
       callback: id => {
         this.store.dispatch(new ViewsAction.SetCursor({cursor: {collectionId: this.selectedCollection.id, documentId: id}}));
 
       }
     }));
-  }
-
-  private createData(): { [attributeId: string]: any } {
-    if (!this.selectedCollection) {
-      return [];
-    }
-    const data = this.selectedCollection.attributes.reduce((acc, attr) => {
-      acc[attr.id] = '';
-      return acc;
-    }, {});
-
-    if (this.query.filters) {
-      this.query.filters.map(queryFilter => {
-        const attrFilter = QueryConverter.parseFilter(queryFilter);
-
-        if (attrFilter.collectionId === this.selectedCollection.id) {
-          switch (attrFilter.conditionType) {
-            case ConditionType.GreaterThan:
-              data[attrFilter.attributeId] = attrFilter.value + 1;
-              break;
-            case ConditionType.LowerThan:
-              data[attrFilter.attributeId] = attrFilter.value - 1;
-              break;
-            case ConditionType.NotEquals:
-              if (attrFilter.value) {
-                if (typeof attrFilter.value === 'number') {
-                  data[attrFilter.attributeId] = attrFilter.value + 1;
-                } else {
-                  data[attrFilter.attributeId] = '';
-                }
-              } else {
-                data[attrFilter.attributeId] = 'N/A';
-              }
-              break;
-            case ConditionType.GreaterThanEquals:
-            case ConditionType.LowerThanEquals:
-            case ConditionType.Equals:
-            default:
-              data[attrFilter.attributeId] = attrFilter.value;
-          }
-        }
-      });
-    }
-
-    return data;
   }
 
 }

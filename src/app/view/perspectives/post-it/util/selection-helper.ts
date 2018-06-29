@@ -18,9 +18,6 @@
  */
 
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
-import {PostItDocumentModel} from '../document-data/post-it-document-model';
-import {DocumentUiService} from '../../../../core/ui/document-ui.service';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
 
 export const ATTRIBUTE_COLUMN = 0;
 
@@ -30,18 +27,15 @@ export class SelectionHelper {
 
   private selection: AttributePropertySelection = this.emptySelection();
 
-  private selectedPostIt: PostItDocumentModel;
-
-  constructor(private postIts: () => PostItDocumentModel[],
-              private collections: () => { [collectionId: string]: CollectionModel },
+  constructor(private postItsOrder: () => string[],
+              private getDocumentNumRows: (string) => number,
               private documentsPerRow: () => number,
-              private documentUiService: DocumentUiService,
               private perspectiveId: string) {
   }
 
   public initializeIfNeeded() {
     if (this.isEmptySelection()) {
-      this.tryToSelectSpanCell(0, 0, 0);
+      this.tryToSelectSpanCell(0, VALUE_COLUMN, 0);
     }
   }
 
@@ -55,11 +49,11 @@ export class SelectionHelper {
 
     if (row >= 0) {
       this.focusCurrent(row, column);
-    } else { // now we need select document above
+    } else { // now we need select post-it above
       const index = this.selection.index - this.documentsPerRow();
-      const postIt = this.getDocumentByIndex(index);
-      if (postIt) {
-        this.focusCellSpan(this.lastRowIndex(postIt), column, postIt);
+      if (index >= 0) {
+        const key = this.postItsOrder()[index];
+        this.focusCellSpan(this.getDocumentNumRows(key), column, key);
       }
     }
 
@@ -75,7 +69,7 @@ export class SelectionHelper {
 
     if (row <= this.currentLastRowIndex()) {
       this.focusCurrent(row, column);
-    } else { // now we need select document below
+    } else { // now we need select post-it below
       const index = this.selection.index + this.documentsPerRow();
       this.tryToSelectSpanCell(0, column, index);
     }
@@ -91,7 +85,7 @@ export class SelectionHelper {
 
     if (column <= VALUE_COLUMN) {
       this.focusCurrent(row, column);
-    } else { // we need to select document on right
+    } else { // we need to select post-it on the right
       const index = this.selection.index + 1;
       this.tryToSelectSpanCell(row, ATTRIBUTE_COLUMN, index);
     }
@@ -107,7 +101,7 @@ export class SelectionHelper {
 
     if (column >= ATTRIBUTE_COLUMN) {
       this.focusCurrent(row, column);
-    } else { // we need to select document on left
+    } else { // we need to select post-it on the left
       const index = this.selection.index - 1;
       this.tryToSelectSpanCell(row, VALUE_COLUMN, index);
     }
@@ -126,12 +120,11 @@ export class SelectionHelper {
     }
 
     if (row <= this.currentLastRowIndex()) {
-      this.focus(row, column, this.selectedPostIt, true);
-    } else { // now we need select document below
+      this.focus(row, column, this.selection.key, true);
+    } else { // now we need select post-it below
       const index = this.selection.index + 1;
-      const postIt = this.getDocumentByIndex(index);
-      if (postIt) {
-        this.focus(0, column, postIt, true);
+      if (index < this.postItsOrder().length) {
+        this.focus(0, ATTRIBUTE_COLUMN, this.postItsOrder()[index], true);
       }
     }
   }
@@ -141,50 +134,52 @@ export class SelectionHelper {
       return;
     }
 
-    this.focus(this.selection.row, this.selection.column, this.selectedPostIt, input);
+    this.focus(this.selection.row, this.selection.column, this.selection.key, input);
   }
 
   private tryToSelectSpanCell(row: number, column: number, index: number) {
-    const postIt = this.getDocumentByIndex(index);
-    if (postIt) {
-      this.focusCellSpan(row, column, postIt);
+    if (index >= 0 && index < this.postItsOrder().length) {
+      this.focusCellSpan(row, column, this.postItsOrder()[index]);
     }
   }
 
-  private getDocumentByIndex(index: number): PostItDocumentModel {
-    return this.postIts().find(doc => doc.order === index);
-  }
-
   private focusCurrent(row: number, column: number) {
-    this.focusCellSpan(row, column, this.selectedPostIt);
+    this.focusCellSpan(row, column, this.selection.key);
   }
 
-  public focusCellSpan(row: number, column: number, postIt: PostItDocumentModel) {
-    this.focus(row, column, postIt, false);
+  public focusCellSpan(row: number, column: number, key: string) {
+    this.focus(row, column, key, false);
   }
 
-  private focus(row: number, column: number, postIt: PostItDocumentModel, input: boolean) {
-    const cellId = this.getCellId(row, column, postIt.order);
+  public focusInputIfNeeded(key: string) {
+    if (this.selection.key != key) {
+      this.focus(0, VALUE_COLUMN, key, true);
+    }
+  }
+
+  private focus(row: number, column: number, key: string, input: boolean) {
+    const cellId = this.getCellId(row, column, key);
 
     let elementToFocus = document.getElementById(cellId);
 
     if (input && elementToFocus) {
-      elementToFocus = elementToFocus.getElementsByTagName('Input').item(0) as HTMLInputElement;
+      elementToFocus = elementToFocus.getElementsByTagName('Input').item(0) as HTMLElement;
     }
+
+    // console.log(elementToFocus.getBoundingClientRect());
 
     if (elementToFocus) {
       elementToFocus.focus();
 
       this.selection.row = row;
       this.selection.column = column;
-      this.selection.index = postIt.order;
-      this.selectedPostIt = postIt;
+      this.selection.index = this.postItsOrder().findIndex(ord => ord === key);
+      this.selection.key = key;
     }
   }
 
-  private getCellId(row: number, column: number, index: number): string {
-    console.log('getCellId', index, column, row);
-    return `${ this.perspectiveId }${index}[${column}, ${row}]`;
+  private getCellId(row: number, column: number, key: string): string {
+    return `${ this.perspectiveId }${key}[${column}, ${row}]`;
   }
 
   private isEmptySelection(): boolean {
@@ -192,16 +187,11 @@ export class SelectionHelper {
   }
 
   private currentLastRowIndex(): number {
-    return this.lastRowIndex(this.selectedPostIt);
-  }
-
-  private lastRowIndex(postIt: PostItDocumentModel): number {
-    const collection = this.collections()[postIt.document.collectionId];
-    return this.documentUiService.getRows$(collection, postIt.document).getValue().length - 1;
+    return this.getDocumentNumRows(this.selection.key);
   }
 
   private emptySelection(): AttributePropertySelection {
-    return {row: null, column: null, index: null};
+    return {row: null, column: null, index: null, key: null};
   }
 
 }

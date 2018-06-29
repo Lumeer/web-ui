@@ -17,86 +17,106 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgZone} from '@angular/core';
-import {PostItLayoutConfig} from './post-it-layout-config';
+import {NgZone} from "@angular/core";
+
+import {Subject} from 'rxjs';
+import {Subscription} from 'rxjs/internal/Subscription';
+import {throttleTime} from 'rxjs/operators';
 
 export class PostItLayout {
 
-  protected layout: any;
+  private grid = null;
+  private refreshSubject = new Subject();
+  private subscriptions = new Subscription();
 
-  protected insertingElementsAtIndex: number = 0;
-
-  constructor(protected containerClassName: string, protected parameters: PostItLayoutConfig, protected zone: NgZone) {
-    this.addContainerClassIdentifierIfMissing();
+  constructor(private gridElement: any,
+              private dragEnabled: boolean,
+              private zone: NgZone) {
+    this.initGrid();
   }
 
-  private addContainerClassIdentifierIfMissing(): void {
-    if (!this.containerClassName.startsWith('.')) {
-      this.containerClassName = '.' + this.containerClassName;
-    }
+  private initGrid() {
+    this.runSafely(() => {
+      this.grid = new window['Muuri'](
+        this.gridElement,
+        {
+          layoutDuration: 200,
+          layoutEasing: 'ease',
+          dragEnabled: this.dragEnabled,
+          dragSortInterval: 200,
+          dragReleaseDuration: 200,
+          dragReleaseEasing: 'ease',
+          layoutOnResize: 200,
+          layoutOnInit: true,
+          layout: {
+            fillGaps: false,
+            horizontal: false,
+            alignRight: false,
+            alignBottom: false,
+            rounding: false
+          },
+          dragStartPredicate: {
+            distance: 0,
+            delay: 0,
+            handle: false
+          },
+          dragSort: true,
+          dragSortPredicate: {
+            threshold: 50,
+            action: 'move'
+          },
+        }
+      ).on('move', () => this.updateIndices())
+        .on('sort', () => this.updateIndices());
+    });
+
+    const subscription = this.refreshSubject.pipe(
+      throttleTime(200)
+    ).subscribe(() => {
+      this.onRefresh()
+    });
+
+    this.subscriptions.add(subscription);
   }
 
-  public initialize(): void {
-    this.isInitializedAfterAttempt();
-  }
-
-  public add(element: HTMLElement, forceIndex?: number): void {
-    if (!this.isInitializedAfterAttempt()) {
-      return;
-    }
-
-    this.zone.runOutsideAngular(() => {
-      this.layout.add(element, {index: forceIndex || this.insertingElementsAtIndex});
-      this.relayout();
+  public addItem(newElement: any, index: number) {
+    this.runSafely(() => {
+      const added = this.grid.add(newElement, {index: index});
+      this.updateIndices()
     });
   }
 
-  public remove(element: HTMLElement): void {
-    if (!this.isInitializedAfterAttempt()) {
-      return;
-    }
-
-    this.zone.runOutsideAngular(() => {
-      this.layout.remove(element);
-      this.relayout();
+  public removeItem(removed: any) {
+    this.runSafely(() => {
+      this.grid.remove(removed, {removeElements: true});
+      this.updateIndices();
     });
   }
 
-  protected relayout(): void {
+  public refresh() {
+    this.refreshSubject.next();
+  }
+
+  private onRefresh() {
+
     setTimeout(() => {
-      this.layout
+      this.grid
         .refreshItems()
         .synchronize()
         .layout();
     });
   }
 
-  public refresh(): void {
-    if (this.isInitializedAfterAttempt()) {
-      this.relayout();
-    }
-  }
-
-  protected isInitializedAfterAttempt(): boolean {
-    if (!this.containerExists()) {
-      return false;
-    }
-
-    if (!this.layout) {
-      this.createLayout();
-    }
-
-    return true;
-  }
-
-  private createLayout(): void {
-    this.zone.runOutsideAngular(() => {
-      this.layout = new window['Muuri'](this.containerClassName, this.parameters);
+  private updateIndices() {
+    this.runSafely(() => {
+      this.grid.getItems().forEach((item, i) => {
+        item.getElement().setAttribute('order', i);
+      });
     });
   }
 
-  protected containerExists(): boolean {
-    return !!(document.querySelector(this.containerClassName));
+  private runSafely(fun: () => void) {
+    this.zone.runOutsideAngular(() => fun());
   }
 
 }

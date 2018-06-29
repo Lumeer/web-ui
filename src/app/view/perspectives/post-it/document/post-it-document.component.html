@@ -3,7 +3,7 @@
   [collection]="collection"
   [readonly]="!hasWriteRole"
   [favorite]="getFavorite$() | async"
-  [initialized]="postItModel.document.id"
+  [initialized]="documentModel.id"
   (remove)="onRemove()"
   (toggleFavorite)="onToggleFavorite()"
   (edit)="onEdit()">
@@ -11,13 +11,14 @@
 
 <div class="card-body p-2">
   <ul class="m-0 p-0" #content>
-    <ng-container *ngFor="let row of getRows$() | async; trackBy:getTrackBy(); let index = index">
+    <ng-container *ngFor="let row of getRows$() | async; trackBy:getTrackBy(); let idx = index">
 
       <li class="w-100" *ngIf="!row.remote">
         <post-it-document-cell
           class="w-50"
-          [index]="postItModel.order"
-          [row]="index"
+          [key]="getDocumentKey()"
+          [row]="idx"
+          [index]="index"
           [readonly]="!hasWriteRole"
           [column]="0"
           [additionalClasses]="isDefaultAttribute(row.id) ? 'attribute text-default-attribute' : 'attribute'"
@@ -25,24 +26,25 @@
           [selectionHelper]="selectionHelper"
           [suggestionListId]="suggestionListId()"
           [model]="row.newName || row.name"
-          (remove)="onRemoveRow(index)"
-          (update)="onUpdateRow(index, $event, row.newValue || row.value)"
-          (focus)="selectionHelper.focusCellSpan(index, 0, postItModel)"
+          (remove)="onRemoveRow(idx)"
+          (update)="onUpdateRow(idx, $event, row.newValue || row.value)"
+          (focus)="selectionHelper.focusCellSpan(idx, 0, getDocumentKey())"
           (enter)="selectionHelper.moveToNextInput()">
         </post-it-document-cell>
 
         <post-it-document-cell
           class="w-50"
-          [index]="postItModel.order"
-          [row]="index"
+          [key]="getDocumentKey()"
+          [row]="idx"
+          [index]="index"
           [readonly]="!hasWriteRole"
           [column]="1"
           [perspectiveId]="perspectiveId"
           [selectionHelper]="selectionHelper"
           [model]="row.newValue || row.value"
-          (remove)="onUpdateRow(index, row.newName || row.name, '')"
-          (update)="onUpdateRow(index, row.newName || row.name, $event)"
-          (focus)="selectionHelper.focusCellSpan(index, 1, postItModel)"
+          (remove)="onUpdateRow(idx, row.newName || row.name, '')"
+          (update)="onUpdateRow(idx, row.newName || row.name, $event)"
+          (focus)="selectionHelper.focusCellSpan(idx, 1, getDocumentKey())"
           (enter)="selectionHelper.moveToNextInput()">
         </post-it-document-cell>
       </li>
@@ -58,6 +60,6 @@
   </ul>
 </div>
 
-<datalist *ngIf="postItModel" id="{{ suggestionListId() }}">
+<datalist *ngIf="documentModel" id="{{ suggestionListId() }}">
   <option *ngFor="let attribute of getUnusedAttributes$() | async">{{ attribute.name }}</option>
 </datalist>

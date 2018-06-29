@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 
 import {Observable} from 'rxjs';
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../core/model/role';
-import {PostItDocumentModel} from '../document-data/post-it-document-model';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {DocumentUiService} from '../../../../core/ui/document-ui.service';
 import {UiRow} from '../../../../core/ui/ui-row';
 import {filter, map, tap} from 'rxjs/operators';
 import {SelectionHelper} from '../util/selection-helper';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
 @Component({
   selector: 'post-it-document',
@@ -36,9 +36,10 @@ import {SelectionHelper} from '../util/selection-helper';
   styleUrls: ['./post-it-document.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PostItDocumentComponent implements OnInit, OnDestroy {
+export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
 
-  @Input() public postItModel: PostItDocumentModel;
+  @Input() public documentModel: DocumentModel;
+  @Input() public index: number;
   @Input() public collection: CollectionModel;
   @Input() public collectionRoles: string[];
   @Input() public perspectiveId: string;
@@ -49,6 +50,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
 
   @ViewChild('content') public content: ElementRef;
 
+  public initedDocumentKey: string;
   public hasWriteRole = false;
   private currentRowsLength: number;
 
@@ -63,51 +65,60 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.collection && this.postItModel && this.postItModel.document) {
-      this.documentUiService.destroy(this.collection, this.postItModel.document);
+    if (this.collection && this.documentModel) {
+      this.documentUiService.destroy(this.collection, this.documentModel);
+    }
+  }
+
+  public ngOnChanges(changes: SimpleChanges){
+    if(changes.documentModel && this.initedDocumentKey !== this.getDocumentKey()){
+      this.initDocumentService();
     }
   }
 
   public onRemove() {
-    // TODO removing actually creating document?
     this.remove.emit();
   }
 
+  public onEdit() {
+    this.selectionHelper.focusInputIfNeeded(this.getDocumentKey());
+  }
+
   public getRows$(): Observable<UiRow[]> {
-    return this.documentUiService.getRows$(this.collection, this.postItModel.document).asObservable().pipe(
+    return this.documentUiService.getRows$(this.collection, this.documentModel).asObservable().pipe(
       tap(rows => this.checkRowsLength(rows.length))
     );
   }
 
   public getFavorite$(): Observable<boolean> {
-    return this.documentUiService.getFavorite$(this.collection, this.postItModel.document).asObservable();
+    return this.documentUiService.getFavorite$(this.collection, this.documentModel).asObservable();
   }
 
   public onToggleFavorite() {
-    this.documentUiService.onToggleFavorite(this.collection, this.postItModel.document);
+    this.documentUiService.onToggleFavorite(this.collection, this.documentModel);
   }
 
   public onUpdateRow(index: number, attribute: string, value: string) {
-    this.documentUiService.onUpdateRow(this.collection, this.postItModel.document, index, [attribute, value]);
+    this.documentUiService.onUpdateRow(this.collection, this.documentModel, index, [attribute, value]);
   }
 
   public addAttrRow() {
-    this.documentUiService.onAddRow(this.collection, this.postItModel.document);
+    this.documentUiService.onAddRow(this.collection, this.documentModel);
   }
 
   public onRemoveRow(idx: number) {
-    this.documentUiService.onRemoveRow(this.collection, this.postItModel.document, idx);
+    this.documentUiService.onRemoveRow(this.collection, this.documentModel, idx);
   }
 
   public getTrackBy(): (index: number, row: UiRow) => string {
-    return this.documentUiService.getTrackBy(this.collection, this.postItModel.document);
+    return this.documentUiService.getTrackBy(this.collection, this.documentModel);
   }
 
   private checkRowsLength(length: number) {
     const changed = this.currentRowsLength && this.currentRowsLength !== length;
     this.currentRowsLength = length;
 
-    if(changed){
+    if (changed) {
       this.sizeChange.emit();
     }
   }
@@ -133,7 +144,11 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
   }
 
   public suggestionListId(): string {
-    return `${ this.perspectiveId }${ this.postItModel.document.correlationId || this.postItModel.document.id }`;
+    return `${ this.perspectiveId }${ this.documentModel.correlationId || this.documentModel.id }`;
+  }
+
+  public getDocumentKey(): string {
+    return this.documentModel.correlationId || this.documentModel.id;
   }
 
   public isDefaultAttribute(attributeId: string): boolean {
@@ -141,8 +156,9 @@ export class PostItDocumentComponent implements OnInit, OnDestroy {
   }
 
   private initDocumentService() {
-    if (this.collection && this.postItModel && this.postItModel.document) {
-      this.documentUiService.init(this.collection, this.postItModel.document);
+    if (this.collection && this.documentModel) {
+      this.initedDocumentKey = this.getDocumentKey();
+      this.documentUiService.init(this.collection, this.documentModel);
     }
   }
 }

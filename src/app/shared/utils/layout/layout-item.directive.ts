@@ -35,11 +35,11 @@ export class LayoutItemDirective implements AfterViewInit, OnDestroy {
   }
 
   public ngAfterViewInit(): void {
-    this.layout.add(this.element.nativeElement, this.forceLayoutIndex);
+    this.layout.addItem(this.element.nativeElement, this.forceLayoutIndex);
   }
 
   public ngOnDestroy(): void {
-    this.layout.remove(this.element.nativeElement);
+    this.layout.removeItem(this.element.nativeElement);
   }
 
 }

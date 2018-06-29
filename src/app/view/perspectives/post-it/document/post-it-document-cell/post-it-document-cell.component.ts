@@ -33,6 +33,7 @@ export class PostItDocumentCellComponent {
   @Input() public suggestionListId: string;
   @Input() public additionalClasses: string;
   @Input() public model: string;
+  @Input() public key: string;
   @Input() public index: number;
   @Input() public row: number;
   @Input() public column: number;

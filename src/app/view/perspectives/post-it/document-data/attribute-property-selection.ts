@@ -21,4 +21,5 @@ export interface AttributePropertySelection {
   row: number;
   column: number;
   index: number;
+  key: string;
 }
