@@ -17,32 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {CollectionsGuard} from './collections.guard';
-import {LinkTypesGuard} from './link-types.guard';
-import {PageNotFoundGuard} from './page-not-found.guard';
-import {ViewExistGuard} from './view/view-exist.guard';
-import {ViewRedirectGuard} from './view/view-redirect.guard';
-import {ViewsLoadedGuard} from './view/views-loaded.guard';
-import {CurrentUserGuard} from './current-user.guard';
-import {AppRedirectGuard} from './app-redirect.guard';
+import {RouterModule, Routes} from '@angular/router';
+import {AuthCallbackComponent} from './callback/auth-callback.component';
+
+const authRoutes: Routes = [
+  {
+    path: 'auth',
+    component: AuthCallbackComponent
+  },
+];
 
 @NgModule({
   imports: [
-    CommonModule
+    RouterModule.forChild(authRoutes)
   ],
-  declarations: [],
-  providers: [
-    CollectionsGuard,
-    LinkTypesGuard,
-    PageNotFoundGuard,
-    ViewExistGuard,
-    ViewsLoadedGuard,
-    ViewRedirectGuard,
-    CurrentUserGuard,
-    AppRedirectGuard
+  exports: [
+    RouterModule
   ]
 })
-export class GuardsModule {
+export class AuthRoutingModule {
+
 }

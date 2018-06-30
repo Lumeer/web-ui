@@ -19,20 +19,20 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-
+import {AuthGuard} from '../auth/auth.guard';
+import {CurrentUserGuard} from '../core/guards/current-user.guard';
+import {WorkspaceGuard} from '../workspace/workspace.guard';
 import {CollectionSettingsGuard} from './collection-settings.guard';
 import {CollectionSettingsComponent} from './settings/collection-settings.component';
-import {CollectionUsersComponent} from './settings/tab/users/collection-users.component';
 import {CollectionAttributesComponent} from './settings/tab/attributes/collection-attributes.component';
 import {CollectionEventsComponent} from './settings/tab/events/collection-events.component';
 import {CollectionLinkTypesComponent} from './settings/tab/link-types/collection-link-types.component';
-import {WorkspaceGuard} from '../workspace/workspace.guard';
-import {AuthGuard} from '../core/guards/auth.guard';
+import {CollectionUsersComponent} from './settings/tab/users/collection-users.component';
 
 const collectionRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/f/:collectionId',
-    canActivate: [AuthGuard, WorkspaceGuard, CollectionSettingsGuard],
+    canActivate: [AuthGuard, CurrentUserGuard, WorkspaceGuard, CollectionSettingsGuard],
     component: CollectionSettingsComponent,
     children: [
       {

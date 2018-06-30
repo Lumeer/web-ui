@@ -18,7 +18,7 @@
  */
 
 import {CommonModule} from '@angular/common';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HttpClientModule} from '@angular/common/http';
 import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -27,7 +27,6 @@ import {ClickOutsideModule} from 'ng-click-outside';
 import {SharedModule} from '../shared/shared.module';
 import {WorkspaceGuard} from '../workspace/workspace.guard';
 import {RavenErrorHandler} from './error/raven.error-handler';
-import {RavenHttpInterceptor} from './error/raven.http-interceptor';
 import {GuardsModule} from './guards/guards.module';
 import {HomeComponent} from './home.component';
 import {NotificationsModule} from './notifications/notifications.module';
@@ -36,6 +35,7 @@ import {DocumentService} from './rest/document.service';
 import {EventService} from './rest/event.service';
 import {GlobalService} from './rest/global.service';
 import {GroupService} from './rest/group.service';
+import {httpInterceptorProviders} from './rest/http-interceptors';
 import {ImportService} from './rest/import.service';
 import {LinkInstanceService} from './rest/link-instance.service';
 import {LinkTypeService} from './rest/link-type.service';
@@ -73,11 +73,7 @@ import {ProjectValidators} from './validators/project.validators';
       provide: ErrorHandler,
       useClass: RavenErrorHandler
     },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: RavenHttpInterceptor,
-      multi: true,
-    },
+    httpInterceptorProviders,
     CollectionService,
     DocumentService,
     OrganizationService,

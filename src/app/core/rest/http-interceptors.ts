@@ -17,21 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {AuthHttpInterceptor} from '../../auth/auth.http-interceptor';
+import {RavenHttpInterceptor} from '../error/raven.http-interceptor';
 
-import {SharedModule} from '../shared/shared.module';
-import {DocumentRoutingModule} from './documents-routing.module';
-import {DocumentsComponent} from './documents.component';
-
-@NgModule({
-  imports: [
-    SharedModule,
-    DocumentRoutingModule
-  ],
-  declarations: [
-    DocumentsComponent
-  ]
-})
-export class DocumentsModule {
-
-}
+export const httpInterceptorProviders = [
+  {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
+  {provide: HTTP_INTERCEPTORS, useClass: RavenHttpInterceptor, multi: true},
+];

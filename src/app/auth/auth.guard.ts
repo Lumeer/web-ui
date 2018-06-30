@@ -17,28 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {KeycloakConfig} from 'keycloak-angular';
-import {isNullOrUndefined} from 'util';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
 import {environment} from '../../environments/environment';
+import {AUTH_REDIRECT_KEY, AuthService} from './auth.service';
 
-const SETTINGS = require('../../main/webapp/WEB-INF/keycloak.json');
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthGuard implements CanActivate {
 
-export class KeycloakSettings {
-
-  public static getConfig(): KeycloakConfig {
-    return {
-      url: SETTINGS['auth-server-url'],
-      realm: SETTINGS['realm'],
-      clientId: SETTINGS['resource']
-    };
+  public constructor(private authService: AuthService) {
   }
 
-  public static getAuthServerUrl(): string {
-    return this.getConfig().url;
-  }
-
-  public static isDisabled(): boolean {
-    return isNullOrUndefined(SETTINGS.disabled) ? !environment.keycloak : SETTINGS.disabled;
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    if (environment.auth && !this.authService.isAuthenticated()) {
+      localStorage.setItem(AUTH_REDIRECT_KEY, state.url);
+      this.authService.login();
+      return false;
+    }
+    return true;
   }
 
 }

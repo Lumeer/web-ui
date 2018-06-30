@@ -55,6 +55,7 @@ export class PageNotFoundGuard implements CanActivate {
         }
         const message = this.i18n({id: 'page.not.found', value: 'Page not found'});
         this.notificationService.error(message);
+        console.error(state.url);
 
         return false;
       })

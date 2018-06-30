@@ -19,15 +19,17 @@
 
 import {AfterViewChecked, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-
 import {Store} from '@ngrx/store';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Subscription} from 'rxjs';
 import {filter, map, mergeMap, take} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
+import {AuthService} from '../../auth/auth.service';
+import {DialogService} from '../../dialog/dialog.service';
 import {HtmlModifier} from '../../shared/utils/html-modifier';
 import {Resource} from '../dto';
-import {KeycloakSettings} from '../keycloak.settings';
 import {ResourceType} from '../model/resource-type';
+import {NotificationService} from '../notifications/notification.service';
 import {AppState} from '../store/app.state';
 import {CollectionsAction} from '../store/collections/collections.action';
 import {DocumentsAction} from '../store/documents/documents.action';
@@ -38,17 +40,14 @@ import {Workspace} from '../store/navigation/workspace.model';
 import {OrganizationModel} from '../store/organizations/organization.model';
 import {OrganizationsAction} from '../store/organizations/organizations.action';
 import {selectOrganizationByWorkspace} from '../store/organizations/organizations.state';
+import {ServiceLimitsAction} from '../store/organizations/service-limits/service-limits.action';
 import {ProjectModel} from '../store/projects/project.model';
 import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectByWorkspace, selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from '../store/projects/projects.state';
 import {RouterAction} from '../store/router/router.action';
-import {UserSettingsService} from '../user-settings.service';
-import {DialogService} from '../../dialog/dialog.service';
-import {ServiceLimitsAction} from '../store/organizations/service-limits/service-limits.action';
 import {UsersAction} from '../store/users/users.action';
 import {ViewsAction} from '../store/views/views.action';
-import {NotificationService} from '../notifications/notification.service';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {UserSettingsService} from '../user-settings.service';
 
 @Component({
   selector: 'top-panel',
@@ -56,10 +55,6 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
   styleUrls: ['./top-panel.component.scss']
 })
 export class TopPanelComponent implements OnInit, AfterViewChecked {
-
-  private readonly keycloakUrl = KeycloakSettings.getAuthServerUrl();
-  public readonly keycloakAccountUrl = `${this.keycloakUrl}/realms/lumeer/account`;
-  public readonly keycloakSignOutUrl = `${this.keycloakUrl}/realms/lumeer/protocol/openid-connect/logout?redirect_uri=http%3A%2F%2Fwww.lumeer.io%2F`;
 
   @ViewChild('workspacePanel')
   public workspacePanel: ElementRef;
@@ -80,11 +75,12 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
   public readonly organizationResourceType = ResourceType.Organization;
   public readonly projectResourceType = ResourceType.Project;
 
-  constructor(private store: Store<AppState>,
-              private router: Router,
-              private notificationService: NotificationService,
-              private i18n: I18n,
+  constructor(private authService: AuthService,
               private dialogService: DialogService,
+              private i18n: I18n,
+              private notificationService: NotificationService,
+              private store: Store<AppState>,
+              private router: Router,
               private userSettingsService: UserSettingsService) {
   }
 
@@ -253,6 +249,14 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
 
   public onFeedbackClick() {
     this.dialogService.openFeedbackDialog();
+  }
+
+  public onLogoutClick() {
+    if (environment.auth) {
+      this.authService.logout();
+    } else {
+      console.warn('Cannot log out. Authentication is disabled.');
+    }
   }
 
 }

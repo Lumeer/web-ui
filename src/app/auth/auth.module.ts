@@ -17,13 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Environment} from './environment-type';
-import {environmentVariables} from './environment-variables';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
+import {AuthRoutingModule} from './auth-routing.module';
+import {AuthCallbackComponent} from './callback/auth-callback.component';
 
-export const environment: Environment = {
-  analytics: true,
-  keycloak: true,
-  production: true,
-  storeDevtools: false,
-  ...environmentVariables
-};
+@NgModule({
+  imports: [
+    AuthRoutingModule,
+    CommonModule,
+  ],
+  declarations: [
+    AuthCallbackComponent,
+  ]
+})
+export class AuthModule {
+}

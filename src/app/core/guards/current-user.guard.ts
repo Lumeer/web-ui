@@ -22,14 +22,14 @@ import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular
 
 import {Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
-import {tap, filter, take, switchMap, catchError, map} from 'rxjs/operators';
+import {tap, filter, take, catchError, map} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {selectCurrentUserForWorkspace} from '../store/users/users.state';
 import {UsersAction} from '../store/users/users.action';
 import {isNullOrUndefined} from 'util';
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class CurrentUserGuard implements CanActivate {
 
   constructor(private store: Store<AppState>) {
   }

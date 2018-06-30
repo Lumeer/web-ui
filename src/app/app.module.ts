@@ -17,22 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {APP_INITIALIZER, LOCALE_ID, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+import {LOCALE_ID, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Angulartics2Module, Angulartics2Settings} from 'angulartics2';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
-import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular';
 import {ContextMenuModule} from 'ngx-contextmenu';
 import {environment} from '../environments/environment';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {appInitializer} from './app.initializer';
 import {CollectionModule} from './collection/collection.module';
+import {AuthModule} from './auth/auth.module';
 import {CoreModule} from './core/core.module';
 import {DialogModule} from './dialog/dialog.module';
-import {DocumentsModule} from './documents/documents.module';
 import {ViewModule} from './view/view.module';
 import {WorkspaceModule} from './workspace/workspace.module';
 
@@ -54,11 +52,10 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     BrowserModule,
     BrowserAnimationsModule,
     ContextMenuModule.forRoot({useBootstrap4: true}),
+    AuthModule,
     CoreModule,
     CollectionModule,
     DialogModule,
-    DocumentsModule,
-    KeycloakAngularModule,
     ViewModule,
     WorkspaceModule,
     AppRoutingModule, // needs to be declared after all other routing modules
@@ -68,12 +65,6 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     {
       provide: LOCALE_ID,
       useFactory: () => environment.locale
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: appInitializer,
-      multi: true,
-      deps: [KeycloakService]
     },
     {
       provide: TRANSLATIONS,

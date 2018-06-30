@@ -17,29 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {Environment} from './environment-type';
+import {environmentVariables} from './environment-variables';
 
-import {WorkspaceGuard} from '../workspace/workspace.guard';
-import {DocumentsComponent} from './documents.component';
-import {AuthGuard} from '../core/guards/auth.guard';
-
-const documentRoutes: Routes = [
-  {
-    path: 'w/:organizationCode/:projectCode/f/:collectionId/records',
-    canActivate: [AuthGuard, WorkspaceGuard],
-    component: DocumentsComponent
-  }
-];
-
-@NgModule({
-  imports: [
-    RouterModule.forChild(documentRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
-})
-export class DocumentRoutingModule {
-
-}
+export const environment: Environment = {
+  analytics: true,
+  auth: true,
+  production: true,
+  storeDevtools: false,
+  ...environmentVariables
+};

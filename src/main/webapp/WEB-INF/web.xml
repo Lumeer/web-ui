@@ -13,21 +13,4 @@
     <location>/index.html</location>
   </error-page>
 
-  <security-constraint>
-    <web-resource-collection>
-      <url-pattern>/*</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>scientist</role-name>
-    </auth-constraint>
-  </security-constraint>
-
-  <login-config>
-    <auth-method>KEYCLOAK</auth-method>
-    <realm-name>lumeer</realm-name>
-  </login-config>
-
-  <security-role>
-    <role-name>scientist</role-name>
-  </security-role>
 </web-app>

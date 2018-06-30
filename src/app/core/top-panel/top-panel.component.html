@@ -88,13 +88,13 @@
           <span i18n="@@menu.sendFeedback">Send feedback</span>
         </a>
         <div class="dropdown-divider"></div>
-        <a [href]="keycloakAccountUrl"
+        <a *ngIf="false"
            class="dropdown-item"
            title="Account" i18n-title="@@menu.account">
           <i class="fas fa-fw fa-user" data-fa-transform="left-4" aria-hidden="true"></i>&nbsp;
           <span i18n="@@menu.account">Account</span>
         </a>
-        <a [href]="keycloakSignOutUrl"
+        <a (click)="onLogoutClick()"
            class="dropdown-item" title="Sign Out">
           <i class="fas fa-fw fa-sign-in" data-fa-transform="left-4" aria-hidden="true"></i>&nbsp;
           <span i18n="@@menu.signOut">Sign Out</span>

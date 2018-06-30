@@ -17,21 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {KeycloakService} from 'keycloak-angular';
-import {KeycloakSettings} from './core/keycloak.settings';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {AUTH_REDIRECT_KEY} from '../auth.service';
 
-export function appInitializer(keycloak: KeycloakService): () => Promise<any> {
-  return (): Promise<any> => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        if (!KeycloakSettings.isDisabled()) {
-          await keycloak.init({config: KeycloakSettings.getConfig()});
-          await keycloak.getToken();
-        }
-        resolve();
-      } catch (error) {
-        reject(error);
-      }
-    });
-  };
+@Component({
+  selector: 'auth-callback',
+  template: ''
+})
+export class AuthCallbackComponent implements OnInit {
+
+  public constructor(private router: Router) {
+  }
+
+  public ngOnInit() {
+    const path = localStorage.getItem(AUTH_REDIRECT_KEY) || '/';
+    setTimeout(() => this.router.navigate([path]));
+  }
+
 }

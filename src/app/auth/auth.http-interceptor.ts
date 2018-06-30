@@ -17,11 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {environment} from '../../environments/environment';
+import {AuthService} from './auth.service';
 
-@Component({
-  template: ''
-})
-export class DocumentsComponent {
+@Injectable()
+export class AuthHttpInterceptor implements HttpInterceptor {
+
+  public constructor(private authService: AuthService) {
+  }
+
+  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (!environment.auth) {
+      return next.handle(request);
+    }
+
+    const authRequest = request.clone({
+      setHeaders: {
+        Authorization: `Bearer ${this.authService.getAccessToken()}`
+      }
+    });
+    return next.handle(authRequest);
+  }
 
 }
