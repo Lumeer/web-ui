@@ -75,6 +75,12 @@
       </a>
 
       <div class="dropdown-menu dropdown-menu-right profile-dropdown" aria-labelledby="profileDropdownLink">
+        <h6 class="dropdown-header text-center"
+            i18n="@@menu.changeLanguage">Change language</h6>
+        <div class="text-center">
+          <language-chooser></language-chooser>
+        </div>
+        <div class="dropdown-divider"></div>
         <a [href]="keycloakAccountUrl"
            class="dropdown-item"
            title="Account" i18n-title="@@menu.account">

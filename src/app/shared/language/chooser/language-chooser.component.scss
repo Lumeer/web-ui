@@ -1,0 +1,12 @@
+@import '../../../shared/variables';
+
+$flag-icon-css-path: '~flag-icon-css/flags' !default;
+@import '../../../../../node_modules/flag-icon-css/sass/flag-icon';
+
+span.flag-icon {
+  box-shadow: 0 0 6px $light;
+}
+
+span.flag-icon:hover {
+  box-shadow: 0 0 6px $secondary;
+}
