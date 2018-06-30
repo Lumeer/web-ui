@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
@@ -69,7 +69,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.GetFailure>(CollectionsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collections.get.fail', value: 'Failed to get files'});
+      const message = this.i18n({id: 'collections.get.fail', value: 'Failed to get collections'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -125,7 +125,7 @@ export class CollectionsEffects {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
-          value: 'You are currently on the Free plan which allows you to have only limited number of files. Do you want to upgrade to Business now?'
+          value: 'You are currently on the Free plan which allows you to have only limited number of collections. Do you want to upgrade to Business now?'
         });
         return new NotificationsAction.Confirm({
           title,
@@ -136,7 +136,7 @@ export class CollectionsEffects {
           })
         });
       }
-      const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Failed to create file'});
+      const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Failed to create collection'});
       return new NotificationsAction.Error({message: errorMessage});
     })
   );
@@ -172,7 +172,7 @@ export class CollectionsEffects {
         const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
-          value: 'You are currently on the Free plan which allows you to have only limited number of files. Do you want to upgrade to Business now?'
+          value: 'You are currently on the Free plan which allows you to have only limited number of collections. Do you want to upgrade to Business now?'
         });
         return new NotificationsAction.Confirm({
           title,
@@ -183,7 +183,7 @@ export class CollectionsEffects {
           })
         });
       }
-      const errorMessage = this.i18n({id: 'collection.import.fail', value: 'Failed to import file'});
+      const errorMessage = this.i18n({id: 'collection.import.fail', value: 'Failed to import collection'});
       return new NotificationsAction.Error({message: errorMessage});
     })
   );
@@ -225,7 +225,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.update.fail', value: 'Failed to update file'});
+      const message = this.i18n({id: 'collection.update.fail', value: 'Failed to update collection'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -261,7 +261,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.DeleteFailure>(CollectionsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.delete.fail', value: 'Failed to delete file'});
+      const message = this.i18n({id: 'collection.delete.fail', value: 'Failed to delete collection'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -280,7 +280,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.AddFavoriteFailure>(CollectionsActionType.ADD_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.add.favorite.fail', value: 'Failed to add favorite file'});
+      const message = this.i18n({id: 'collection.add.favorite.fail', value: 'Failed to add favorite collection'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -299,7 +299,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.RemoveFavoriteFailure>(CollectionsActionType.REMOVE_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.remove.favorite.fail', value: 'Failed to remove favorite file'});
+      const message = this.i18n({id: 'collection.remove.favorite.fail', value: 'Failed to remove favorite collection'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -468,7 +468,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.ChangePermissionFailure>(CollectionsActionType.CHANGE_PERMISSION_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.change.permission.fail', value: 'Failed to change file permission'});
+      const message = this.i18n({id: 'collection.change.permission.fail', value: 'Failed to change collection permission'});
       return new NotificationsAction.Error({message});
     })
   );

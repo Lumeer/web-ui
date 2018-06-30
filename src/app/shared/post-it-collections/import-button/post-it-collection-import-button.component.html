@@ -2,7 +2,7 @@
         class="btn btn-sm btn-primary"
         ondragover="return false;"
         *ngIf="!disabled"
-        title="Import file"
+        title="Import collection"
         i18n-title="@@collection.post.it.import.title"
         (click)="fileInput.click()"
         (drop)="handleDrop($event)"
@@ -11,7 +11,7 @@
         [class.dragging]="dragging">
   <i class="fa fa-cloud-upload mr-1" aria-hidden="true"></i>
   <span class="font-weight-bold"
-        i18n="@@collection.post.it.import">Import File
+        i18n="@@collection.post.it.import">Import Collection
   </span>
   <input hidden
          type="file"
