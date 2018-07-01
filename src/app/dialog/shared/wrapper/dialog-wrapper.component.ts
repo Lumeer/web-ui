@@ -42,7 +42,9 @@ export class DialogWrapperComponent {
   public submit = new EventEmitter();
 
   public onSubmit() {
-    this.submit.emit();
+    if (!this.submitDisabled) {
+      this.submit.emit();
+    }
   }
 
 }

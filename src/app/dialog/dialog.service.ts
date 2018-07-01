@@ -21,9 +21,9 @@ import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {CollectionModel} from '../core/store/collections/collection.model';
 import {LinkTypeModel} from '../core/store/link-types/link-type.model';
-import {DialogPath} from './dialog-path';
 import {OrganizationModel} from '../core/store/organizations/organization.model';
 import {ProjectModel} from '../core/store/projects/project.model';
+import {DialogPath} from './dialog-path';
 
 /**
  * If callback is provided in any of the open*() methods, the calling component is responsible for closing the dialog
@@ -68,6 +68,10 @@ export class DialogService {
   public openCreateLinkDialog(linkCollectionIds: string, callback?: (linkType: LinkTypeModel) => void) {
     this.callback = callback;
     this.navigateToDialog([DialogPath.CREATE_LINK, linkCollectionIds]);
+  }
+
+  public openFeedbackDialog() {
+    this.navigateToDialog([DialogPath.FEEDBACK]);
   }
 
   public openOverwriteViewDialog(existingViewCode: string, callback?: () => void) {

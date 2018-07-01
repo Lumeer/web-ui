@@ -17,14 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {User} from '../dto';
-import {HttpClient} from '@angular/common/http';
-
 import {DefaultWorkspace} from '../dto/default-workspace';
+import {FeedbackDto} from '../dto/feedback.dto';
 
 @Injectable()
 export class GlobalService {
@@ -38,6 +37,11 @@ export class GlobalService {
 
   public saveDefaultWorkspace(defaultWorkspace: DefaultWorkspace): Observable<any> {
     return this.httpClient.put(`${this.apiPrefix()}/workspace`, defaultWorkspace);
+  }
+
+  public sendFeedback(message: string): Observable<void> {
+    const feedback: FeedbackDto = {message};
+    return this.httpClient.post<void>(`${this.apiPrefix()}/feedback`, feedback);
   }
 
   private apiPrefix(): string {

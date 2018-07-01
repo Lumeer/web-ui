@@ -34,6 +34,7 @@ import {DialogWrapperComponent} from './shared/wrapper/dialog-wrapper.component'
 import {CreateResourceDialogComponent} from './create-resource/create-resource-dialog.component';
 import {ResourceCodeInputComponent} from './create-resource/resource-code-input/resource-code-input.component';
 import {ResourceNameInputComponent} from './create-resource/resource-name-input/resource-name-input.component';
+import { FeedbackDialogComponent } from './dialog/feedback-dialog.component';
 
 @NgModule({
   imports: [
@@ -54,7 +55,8 @@ import {ResourceNameInputComponent} from './create-resource/resource-name-input/
     OverwriteViewDialogComponent,
     CreateResourceDialogComponent,
     ResourceCodeInputComponent,
-    ResourceNameInputComponent
+    ResourceNameInputComponent,
+    FeedbackDialogComponent
   ],
   providers: [
     DialogService

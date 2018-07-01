@@ -81,6 +81,13 @@
           <language-chooser></language-chooser>
         </div>
         <div class="dropdown-divider"></div>
+        <a (click)="onFeedbackClick()"
+           class="dropdown-item"
+           title="Send feedback" i18n-title="@@menu.sendFeedback">
+          <i class="far fa-fw fa-comment" data-fa-transform="left-4" aria-hidden="true"></i>&nbsp;
+          <span i18n="@@menu.sendFeedback">Send feedback</span>
+        </a>
+        <div class="dropdown-divider"></div>
         <a [href]="keycloakAccountUrl"
            class="dropdown-item"
            title="Account" i18n-title="@@menu.account">
