@@ -17,24 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum DialogPath {
+export interface FeedbackDto {
 
-  CREATE_COLLECTION = 'create-collection',
-  CREATE_LINK = 'create-link',
-  FEEDBACK = 'feedback',
-  OVERWRITE_VIEW = 'overwrite-view',
-  SHARE_VIEW = 'share-view',
-  CREATE_ORGANIZATION = 'create-organization',
-  CREATE_PROJECT = 'create-project',
+  id?: string;
+  userId?: string;
+  creationTime?: number;
+  message: string;
 
 }
-
-export const dialogPathsMap: { [id: string]: DialogPath } = {
-  [DialogPath.CREATE_COLLECTION]: DialogPath.CREATE_COLLECTION,
-  [DialogPath.CREATE_LINK]: DialogPath.CREATE_LINK,
-  [DialogPath.FEEDBACK]: DialogPath.FEEDBACK,
-  [DialogPath.OVERWRITE_VIEW]: DialogPath.OVERWRITE_VIEW,
-  [DialogPath.SHARE_VIEW]: DialogPath.SHARE_VIEW,
-  [DialogPath.CREATE_ORGANIZATION]: DialogPath.CREATE_ORGANIZATION,
-  [DialogPath.CREATE_PROJECT]: DialogPath.CREATE_PROJECT
-};

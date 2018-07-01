@@ -251,4 +251,8 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
     this.goToProject(organization, project);
   }
 
+  public onFeedbackClick() {
+    this.dialogService.openFeedbackDialog();
+  }
+
 }
