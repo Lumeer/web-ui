@@ -71,10 +71,7 @@ const workspaceRoutes: Routes = [
   {
     path: 'workspace',
     canActivate: [AuthGuard, CurrentUserGuard, WorkspaceSelectGuard],
-    component: WorkspaceChooserComponent,
-    data: {
-      searchBoxHidden: true
-    }
+    component: WorkspaceChooserComponent
   }
 ];
 

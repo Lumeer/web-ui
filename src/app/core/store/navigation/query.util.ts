@@ -20,8 +20,8 @@
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 
 import {ConditionType, QueryModel} from './query.model';
-import {QueryItem} from '../../../shared/search-box/query-item/model/query-item';
-import {QueryItemType} from '../../../shared/search-box/query-item/model/query-item-type';
+import {QueryItem} from '../../../shared/top-panel/search-box/query-item/model/query-item';
+import {QueryItemType} from '../../../shared/top-panel/search-box/query-item/model/query-item-type';
 
 const EqVariants = ['=', '==', 'eq', 'equals'];
 const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];

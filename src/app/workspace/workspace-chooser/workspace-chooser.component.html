@@ -1,41 +1,43 @@
-<div class="container">
-  <resource-chooser [selectedId]="selectedOrganizationId"
-                    [resourceType]="organizationItemType()"
-                    [resources]="organizations$ | async"
-                    [resourcesRoles]="organizationsRoles$ | async"
-                    [canCreateResource]="canCreateOrganizations$ | async"
-                    [serviceLimits]="serviceLimits$ | async"
-                    [usedCodes]="organizationCodes$ | async"
-                    (warningMessage)="onWarningMessage($event)"
-                    (resourceDelete)="onDeleteOrganization($event)"
-                    (resourceSelect)="onSelectOrganization($event)"
-                    (resourceNew)="onCreateOrganization($event)"
-                    (resourceUpdate)="onUpdateOrganization($event)"
-                    (resourceSettings)="onOrganizationSettings($event)">
-  </resource-chooser>
-
-  <div class="pt-3" *ngIf="selectedOrganizationId">
-    <resource-chooser [selectedId]="selectedProjectId"
-                      [resourceType]="projectItemType()"
-                      [resources]="projects$ | async"
-                      [resourcesRoles]="projectRoles$ | async"
-                      [usedCodes]="projectCodes$ | async"
+<top-panel-wrapper>
+  <div class="container">
+    <resource-chooser [selectedId]="selectedOrganizationId"
+                      [resourceType]="organizationItemType()"
+                      [resources]="organizations$ | async"
+                      [resourcesRoles]="organizationsRoles$ | async"
+                      [canCreateResource]="canCreateOrganizations$ | async"
+                      [serviceLimits]="serviceLimits$ | async"
+                      [usedCodes]="organizationCodes$ | async"
                       (warningMessage)="onWarningMessage($event)"
-                      [canCreateResource]="canCreateProjects$ | async"
-                      (resourceDelete)="onDeleteProject($event)"
-                      (resourceSelect)="onSelectProject($event)"
-                      (resourceNew)="onCreateProject($event)"
-                      (resourceUpdate)="onUpdateProject($event)"
-                      (resourceSettings)="onProjectSettings($event)">
+                      (resourceDelete)="onDeleteOrganization($event)"
+                      (resourceSelect)="onSelectOrganization($event)"
+                      (resourceNew)="onCreateOrganization($event)"
+                      (resourceUpdate)="onUpdateOrganization($event)"
+                      (resourceSettings)="onOrganizationSettings($event)">
     </resource-chooser>
+
+    <div class="pt-3" *ngIf="selectedOrganizationId">
+      <resource-chooser [selectedId]="selectedProjectId"
+                        [resourceType]="projectItemType()"
+                        [resources]="projects$ | async"
+                        [resourcesRoles]="projectRoles$ | async"
+                        [usedCodes]="projectCodes$ | async"
+                        (warningMessage)="onWarningMessage($event)"
+                        [canCreateResource]="canCreateProjects$ | async"
+                        (resourceDelete)="onDeleteProject($event)"
+                        (resourceSelect)="onSelectProject($event)"
+                        (resourceNew)="onCreateProject($event)"
+                        (resourceUpdate)="onUpdateProject($event)"
+                        (resourceSettings)="onProjectSettings($event)">
+      </resource-chooser>
+    </div>
+    <div class="my-4 py-2" [style.height]="'3.5em'"></div>
+    <div class="m-5 d-flex justify-content-end fixed-bottom"
+         *ngIf="selectedOrganizationId && selectedProjectId"
+         [@animateOpacityFromUp]="'in'">
+      <button type="button" class="btn btn-lg btn-primary py-2 px-4 font-weight-bold" (click)="onSaveActiveItems()">
+        <i class="fas fa fa-play px-2"></i>&nbsp;
+        <span i18n="@@workspace.button.apply">Use project</span>
+      </button>
+    </div>
   </div>
-  <div class="my-4 py-2" [style.height]="'3.5em'"></div>
-  <div class="m-5 d-flex justify-content-end fixed-bottom"
-       *ngIf="selectedOrganizationId && selectedProjectId"
-       [@animateOpacityFromUp]="'in'">
-    <button type="button" class="btn btn-lg btn-primary py-2 px-4 font-weight-bold" (click)="onSaveActiveItems()">
-      <i class="fas fa fa-play px-2"></i>&nbsp;
-      <span i18n="@@workspace.button.apply">Use project</span>
-    </button>
-  </div>
-</div>
+</top-panel-wrapper>

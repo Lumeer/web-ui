@@ -45,7 +45,6 @@ import {SearchService} from './rest/search.service';
 import {UserService} from './rest/user.service';
 import {ViewService} from './rest/view.service';
 import {AppStoreModule} from './store/app-store.module';
-import {TopPanelModule} from './top-panel/top-panel.module';
 import {UserSettingsService} from './user-settings.service';
 import {CollectionValidators} from './validators/collection.validators';
 import {OrganizationValidators} from './validators/organization.validators';
@@ -60,7 +59,6 @@ import {ProjectValidators} from './validators/project.validators';
     RouterModule,
     SharedModule,
     ClickOutsideModule,
-    TopPanelModule,
     GuardsModule,
     BrowserAnimationsModule,
     NotificationsModule
@@ -94,7 +92,6 @@ import {ProjectValidators} from './validators/project.validators';
     ProjectValidators
   ],
   exports: [
-    TopPanelModule,
     HomeComponent,
     NotificationsModule,
   ]
