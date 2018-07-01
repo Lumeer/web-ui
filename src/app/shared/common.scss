@@ -68,6 +68,10 @@ ul {
   cursor: text;
 }
 
+.cursor-default {
+  cursor: default;
+}
+
 // notifications
 .snotifyToast__title, .snotifyToast__body, .snotifyToast__buttons button {
   color: $primary !important;

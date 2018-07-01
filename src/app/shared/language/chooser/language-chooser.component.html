@@ -1,0 +1,7 @@
+<a *ngFor="let language of languages"
+   [class.cursor-default]="language.code === code"
+   [href]="url$ | async | languageLink:language.code"
+   [title]="language.name"
+   class="mx-1">
+  <span class="flag-icon {{language.icon}}"></span>
+</a>
