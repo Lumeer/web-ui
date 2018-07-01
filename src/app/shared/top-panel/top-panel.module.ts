@@ -26,6 +26,7 @@ import {ResourceMenuModule} from './resource-menu/resource-menu.module';
 import {SearchBoxModule} from './search-box/search-box.module';
 import {TopPanelComponent} from './top-panel.component';
 import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
+import { UserMenuComponent } from './user-menu/user-menu.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
   declarations: [
     TopPanelComponent,
     TopPanelWrapperComponent,
+    UserMenuComponent,
   ],
   exports: [
     TopPanelWrapperComponent,

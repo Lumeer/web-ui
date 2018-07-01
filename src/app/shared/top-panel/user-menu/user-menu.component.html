@@ -1,0 +1,40 @@
+<div class="dropdown show ml-2">
+  <a href="#" role="button" id="profileDropdownLink" data-toggle="dropdown" aria-haspopup="true"
+     aria-expanded="false" class="text-primary">
+    <i class="fa fa-user-circle fa-3x"></i>
+  </a>
+
+  <div class="dropdown-menu dropdown-menu-right profile-dropdown" aria-labelledby="profileDropdownLink">
+    <h6 class="dropdown-header text-center"
+        i18n="@@menu.changeLanguage">Change language</h6>
+    <div class="text-center">
+      <language-chooser></language-chooser>
+    </div>
+    <div class="dropdown-divider"></div>
+    <a (click)="onFeedbackClick()"
+       class="dropdown-item"
+       title="Send feedback" i18n-title="@@menu.sendFeedback">
+      <i class="far fa-fw fa-comment" data-fa-transform="left-4" aria-hidden="true"></i>&nbsp;
+      <span i18n="@@menu.sendFeedback">Send feedback</span>
+    </a>
+    <div class="dropdown-divider"></div>
+    <a *ngIf="false"
+       class="dropdown-item"
+       title="Account" i18n-title="@@menu.account">
+      <i class="fas fa-fw fa-user" data-fa-transform="left-4" aria-hidden="true"></i>&nbsp;
+      <span i18n="@@menu.account">Account</span>
+    </a>
+    <a (click)="onLogoutClick()"
+       class="dropdown-item" title="Sign Out">
+      <i class="fas fa-fw fa-sign-in" data-fa-transform="left-4" aria-hidden="true"></i>&nbsp;
+      <span i18n="@@menu.signOut">Sign out</span>
+    </a>
+    <div *ngIf="buildNumber"
+         class="dropdown-divider">
+    </div>
+    <ng-container *ngIf="buildNumber">
+      <div class="dropdown-divider"></div>
+      <small class="dropdown-header py-0">Build #{{buildNumber}}</small>
+    </ng-container>
+  </div>
+</div>

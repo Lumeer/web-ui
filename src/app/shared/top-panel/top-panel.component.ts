@@ -23,8 +23,6 @@ import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Subscription} from 'rxjs';
 import {filter, map, mergeMap, take} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
-import {AuthService} from '../../auth/auth.service';
 import {Resource} from '../../core/dto/index';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
@@ -72,13 +70,10 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
 
   public notificationsDisabled: boolean;
 
-  public buildNumber = environment.buildNumber;
-
   public readonly organizationResourceType = ResourceType.Organization;
   public readonly projectResourceType = ResourceType.Project;
 
-  constructor(private authService: AuthService,
-              private dialogService: DialogService,
+  constructor(private dialogService: DialogService,
               private i18n: I18n,
               private notificationService: NotificationService,
               private store: Store<AppState>,
@@ -238,18 +233,6 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
     this.notificationService.success(successMessage);
 
     this.goToProject(organization, project);
-  }
-
-  public onFeedbackClick() {
-    this.dialogService.openFeedbackDialog();
-  }
-
-  public onLogoutClick() {
-    if (environment.auth) {
-      this.authService.logout();
-    } else {
-      console.warn('Cannot log out. Authentication is disabled.');
-    }
   }
 
 }
