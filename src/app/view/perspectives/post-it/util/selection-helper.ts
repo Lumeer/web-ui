@@ -230,8 +230,8 @@ export class SelectionHelper {
         const distance = Math.abs(elY - y);
         if (distance < minDistance) {
           minDistance = distance;
-          minDistanceElement = el;
           minDistanceRow = +idSplit[3];
+          minDistanceElement = el;
         }
       }
     }
@@ -242,6 +242,11 @@ export class SelectionHelper {
   private findParentElementToFocusHorizontally(excludeIndex: number, fromX: number, toX: number, fromY: number, toY: number)
     : { parentElement: HTMLElement | null, key: string | null } {
     const keys = this.postItsOrder();
+    const y = fromY - (fromY - toY) / 2;
+    let minDistance = Number.MAX_SAFE_INTEGER;
+    let minDistanceElement: HTMLElement;
+    let minDistanceKey: string;
+
     for (let i = 0; i < keys.length; i++) {
       if (i === excludeIndex) {
         continue;
@@ -250,13 +255,22 @@ export class SelectionHelper {
       const el = document.getElementById(this.getParentId(key));
       if (el) {
         const rect = el.getBoundingClientRect();
-        if (fromX === rect.left && toX === rect.right && this.isIntersecting(rect.top, rect.bottom, fromY, toY)) {
-          return {parentElement: el, key};
+        if (fromX === rect.left && toX === rect.right) {
+          if (this.isIntersecting(rect.top, rect.bottom, fromY, toY)) {
+            return {parentElement: el, key};
+          } else { // try to find nearest post-it
+            const distance = Math.min(Math.abs(rect.top - y), Math.abs(rect.bottom - y));
+            if (distance < minDistance) {
+              minDistance = distance;
+              minDistanceElement = el;
+              minDistanceKey = key;
+            }
+          }
         }
       }
     }
 
-    return {parentElement: null, key: null};
+    return {parentElement: minDistanceElement, key: minDistanceKey};
   }
 
   private findParentElementToFocusVertically(fromIndex: number, toIndex: number, left: number, right: number, up?: boolean)

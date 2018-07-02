@@ -64,6 +64,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
   public collectionRoles: { [collectionId: string]: string[] };
+  public postItsOrder: string[] = [];
   public selectionHelper: SelectionHelper;
   public layoutManager: PostItLayout;
   public size: SizeType;
@@ -75,7 +76,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private documentsSubscription = new Subscription();
 
   private creatingCorrelationsIds: string[] = [];
-  private postItsOrder: string[] = [];
   private postIts: { [documentId: string]: DocumentModel };
   private collections: { [collectionId: string]: CollectionModel };
 
