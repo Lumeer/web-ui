@@ -49,6 +49,7 @@ export class DocumentService {
       map(response => response.headers.get('Location').split('/').pop()),
       mergeMap(id => {
         document.id = id;
+        document.creationDate = Date.now();
         return of(document);
       })
     );

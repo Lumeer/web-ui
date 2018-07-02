@@ -22,12 +22,9 @@ import {ConditionType} from '../navigation/query.model';
 import {QueryConverter} from '../navigation/query.converter';
 import {CollectionModel} from '../collections/collection.model';
 
-export function sortDocumentsByCreationDate(documents: DocumentModel[]): DocumentModel[] {
+export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   const sortedDocuments = [...documents];
-  return sortedDocuments.sort((a, b) => {
-    console.log('sorting', a.creationDate.getTime(), b.creationDate.getTime());
-    return a.creationDate.getTime() - b.creationDate.getTime()
-  });
+  return sortedDocuments.sort((a, b) => (a.creationDate.getTime() - b.creationDate.getTime()) * (sortDesc ? -1 : 1));
 }
 
 export function generateDocumentData(collection: CollectionModel, filters: string[]): { [attributeId: string]: any } {
@@ -44,23 +41,18 @@ export function generateDocumentData(collection: CollectionModel, filters: strin
       const attrFilter = QueryConverter.parseFilter(filter);
 
       if (attrFilter.collectionId === collection.id) {
+        const isNumber = !isNaN(Number(attrFilter.value));
+        const value = isNumber ? +attrFilter.value : attrFilter.value.toString();
+
         switch (attrFilter.conditionType) {
           case ConditionType.GreaterThan:
-            data[attrFilter.attributeId] = attrFilter.value + 1;
+            data[attrFilter.attributeId] = isNumber ? value + 1 : value + 'a';
             break;
           case ConditionType.LowerThan:
-            data[attrFilter.attributeId] = attrFilter.value - 1;
+            data[attrFilter.attributeId] = isNumber ? value - 1 : (value as string).slice(0, -1);
             break;
           case ConditionType.NotEquals:
-            if (attrFilter.value) {
-              if (typeof attrFilter.value === 'number') {
-                data[attrFilter.attributeId] = attrFilter.value + 1;
-              } else {
-                data[attrFilter.attributeId] = '';
-              }
-            } else {
-              data[attrFilter.attributeId] = 'N/A';
-            }
+            data[attrFilter.attributeId] = isNumber ? value + 1 : '';
             break;
           case ConditionType.GreaterThanEquals:
           case ConditionType.LowerThanEquals:

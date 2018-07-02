@@ -50,6 +50,11 @@ export class DocumentUiService {
     }
   }
 
+  public isInited(collection: CollectionModel, document: DocumentModel): boolean {
+    const key = DocumentUiService.getKey(collection, document);
+    return !!this.state[key];
+  }
+
   public destroy(collection: CollectionModel, document: DocumentModel): void {
     const key = DocumentUiService.getKey(collection, document);
     if (key) {

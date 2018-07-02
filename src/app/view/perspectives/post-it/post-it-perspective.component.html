@@ -19,7 +19,8 @@
     <div class="layout-item {{getColumnStyle()}} mb-3"
          layout-item
          [layout]="layoutManager"
-         *ngFor="let doc of getDocuments(); trackBy:trackByDocument; let idx = index">
+         *ngFor="let doc of getDocuments(); trackBy:trackByDocument; let idx = index"
+         id="{{perspectiveId}}#{{doc.correlationId || doc.id}}">
       <post-it-document
         class="card post-it"
         [ngClass]="doc.id ? 'initialized': 'uninitialized'"

@@ -18,6 +18,7 @@
  */
 
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
+import {isNullOrUndefined} from 'util';
 
 export const ATTRIBUTE_COLUMN = 0;
 
@@ -33,10 +34,8 @@ export class SelectionHelper {
               private perspectiveId: string) {
   }
 
-  public initializeIfNeeded() {
-    if (this.isEmptySelection()) {
-      this.tryToSelectSpanCell(0, VALUE_COLUMN, 0);
-    }
+  public clearSelection() {
+    this.selection = this.emptySelection();
   }
 
   public moveUp() {
@@ -50,10 +49,16 @@ export class SelectionHelper {
     if (row >= 0) {
       this.focusCurrent(row, column);
     } else { // now we need select post-it above
-      const index = this.selection.index - this.documentsPerRow();
+      const index = this.selection.index - 1;
       if (index >= 0) {
-        const key = this.postItsOrder()[index];
-        this.focusCellSpan(this.getDocumentNumRows(key), column, key);
+        const currentParentElement = this.getCurrentFocusedParentElement();
+        if (currentParentElement) {
+          const parentRect = currentParentElement.getBoundingClientRect();
+          const {parentElement, key} = this.findParentElementToFocusVertically(index, 0, parentRect.left, parentRect.right, true);
+          if (parentElement && key) {
+            this.focus(this.getDocumentNumRows(key), column, key, false);
+          }
+        }
       }
     }
 
@@ -70,8 +75,17 @@ export class SelectionHelper {
     if (row <= this.currentLastRowIndex()) {
       this.focusCurrent(row, column);
     } else { // now we need select post-it below
-      const index = this.selection.index + this.documentsPerRow();
-      this.tryToSelectSpanCell(0, column, index);
+      const index = this.selection.index + 1;
+      if (index < this.postItsOrder().length) {
+        const currentParentElement = this.getCurrentFocusedParentElement();
+        if (currentParentElement) {
+          const parentRect = currentParentElement.getBoundingClientRect();
+          const {parentElement, key} = this.findParentElementToFocusVertically(index, this.postItsOrder().length - 1, parentRect.left, parentRect.right, false);
+          if (parentElement && key) {
+            this.focus(0, column, key, false);
+          }
+        }
+      }
     }
   }
 
@@ -86,8 +100,19 @@ export class SelectionHelper {
     if (column <= VALUE_COLUMN) {
       this.focusCurrent(row, column);
     } else { // we need to select post-it on the right
-      const index = this.selection.index + 1;
-      this.tryToSelectSpanCell(row, ATTRIBUTE_COLUMN, index);
+      const currentParentElement = this.getCurrentFocusedParentElement();
+      const currentElement = this.getCurrentFocusedElement();
+      if (currentParentElement && currentElement) {
+        const parentRect = currentParentElement.getBoundingClientRect();
+        const rect = currentElement.getBoundingClientRect();
+        const {parentElement, key} = this.findParentElementToFocusHorizontally(this.selection.index, parentRect.right, parentRect.right + parentRect.width, rect.top, rect.bottom);
+        if (parentElement && key) {
+          const {element, row} = this.findElementToFocus(parentElement, ATTRIBUTE_COLUMN, rect.bottom - (rect.bottom - rect.top) / 2);
+          if (element && !isNullOrUndefined(row)) {
+            this.focusElement(element, row, ATTRIBUTE_COLUMN, key, false);
+          }
+        }
+      }
     }
   }
 
@@ -102,8 +127,19 @@ export class SelectionHelper {
     if (column >= ATTRIBUTE_COLUMN) {
       this.focusCurrent(row, column);
     } else { // we need to select post-it on the left
-      const index = this.selection.index - 1;
-      this.tryToSelectSpanCell(row, VALUE_COLUMN, index);
+      const currentParentElement = this.getCurrentFocusedParentElement();
+      const currentElement = this.getCurrentFocusedElement();
+      if (currentParentElement && currentElement) {
+        const parentRect = currentParentElement.getBoundingClientRect();
+        const rect = currentElement.getBoundingClientRect();
+        const {parentElement, key} = this.findParentElementToFocusHorizontally(this.selection.index, parentRect.left - parentRect.width, parentRect.left, rect.top, rect.bottom);
+        if (parentElement && key) {
+          const {element, row} = this.findElementToFocus(parentElement, VALUE_COLUMN, rect.bottom - (rect.bottom - rect.top) / 2);
+          if (element && !isNullOrUndefined(row)) {
+            this.focusElement(element, row, VALUE_COLUMN, key, false);
+          }
+        }
+      }
     }
   }
 
@@ -137,18 +173,12 @@ export class SelectionHelper {
     this.focus(this.selection.row, this.selection.column, this.selection.key, input);
   }
 
-  private tryToSelectSpanCell(row: number, column: number, index: number) {
-    if (index >= 0 && index < this.postItsOrder().length) {
-      this.focusCellSpan(row, column, this.postItsOrder()[index]);
-    }
+  public focusCellSpan(row: number, column: number, key: string) {
+    this.focus(row, column, key, false);
   }
 
   private focusCurrent(row: number, column: number) {
     this.focusCellSpan(row, column, this.selection.key);
-  }
-
-  public focusCellSpan(row: number, column: number, key: string) {
-    this.focus(row, column, key, false);
   }
 
   public focusInputIfNeeded(key: string) {
@@ -157,16 +187,12 @@ export class SelectionHelper {
     }
   }
 
-  private focus(row: number, column: number, key: string, input: boolean) {
-    const cellId = this.getCellId(row, column, key);
+  private focusElement(element: HTMLElement, row: number, column: number, key: string, input: boolean) {
+    let elementToFocus = element;
 
-    let elementToFocus = document.getElementById(cellId);
-
-    if (input && elementToFocus) {
+    if (input) {
       elementToFocus = elementToFocus.getElementsByTagName('Input').item(0) as HTMLElement;
     }
-
-    // console.log(elementToFocus.getBoundingClientRect());
 
     if (elementToFocus) {
       elementToFocus.focus();
@@ -178,8 +204,93 @@ export class SelectionHelper {
     }
   }
 
+  private focus(row: number, column: number, key: string, input: boolean) {
+    const cellId = this.getCellId(row, column, key);
+    let elementToFocus = document.getElementById(cellId);
+    if (elementToFocus) {
+      this.focusElement(elementToFocus, row, column, key, input);
+    }
+  }
+
+  private findElementToFocus(parentElement: HTMLElement, column: number, y: number): { element: HTMLElement | null, row: number } {
+    const elements = parentElement.getElementsByTagName('post-it-document-cell');
+    let minDistance = Number.MAX_SAFE_INTEGER;
+    let minDistanceElement: HTMLElement;
+    let minDistanceRow: number;
+    for (let i = 0; i < elements.length; i++) {
+      const el = elements.item(i).getElementsByTagName('span').item(0) as HTMLElement;
+      const rect = el.getBoundingClientRect();
+      const idSplit = el.id.split("#", 4);
+      const elColumn = +idSplit[2];
+
+      if (elColumn === column) {
+        const elY = rect.bottom - (rect.bottom - rect.top) / 2;
+        const distance = Math.abs(elY - y);
+        if (distance < minDistance) {
+          minDistance = distance;
+          minDistanceElement = el;
+          minDistanceRow = +idSplit[3];
+        }
+      }
+    }
+
+    return {element: minDistanceElement, row: minDistanceRow};
+  }
+
+  private findParentElementToFocusHorizontally(excludeIndex: number, fromX: number, toX: number, fromY: number, toY: number): { parentElement: HTMLElement | null, key: string | null } {
+    const keys = this.postItsOrder();
+    for (let i = 0; i < keys.length; i++) {
+      if (i === excludeIndex) {
+        continue;
+      }
+      const key = keys[i];
+      const el = document.getElementById(this.getParentId(key));
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        console.log(fromX, toX, rect.left, rect.right);
+        if (fromX === rect.left && toX === rect.right && this.isIntersecting(rect.top, rect.bottom, fromY, toY)) {
+          return {parentElement: el, key};
+        }
+      }
+    }
+
+    return {parentElement: null, key: null};
+  }
+
+  private findParentElementToFocusVertically(fromIndex: number, toIndex: number, left: number, right: number, up?: boolean): { parentElement: HTMLElement | null, key: string | null } {
+    const keys = this.postItsOrder();
+    for (let i = fromIndex; up ? i >= toIndex : i <= toIndex; up ? i-- : i++) {
+      const key = keys[i];
+      const el = document.getElementById(this.getParentId(key));
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        if (rect.left === left && rect.right === right) {
+          return {parentElement: el, key};
+        }
+      }
+    }
+
+    return {parentElement: null, key: null};
+  }
+
+  private isIntersecting(from: number, to: number, a1: number, a2: number): boolean {
+    return (a1 >= from && a1 <= to) || (a2 >= from && a2 <= to);
+  }
+
+  private getCurrentFocusedParentElement(): HTMLElement | null {
+    return document.getElementById(this.getParentId(this.selection.key));
+  }
+
+  private getCurrentFocusedElement(): HTMLElement | null {
+    return document.getElementById(this.getCellId(this.selection.row, this.selection.column, this.selection.key));
+  }
+
+  private getParentId(key: string) {
+    return `${ this.perspectiveId }#${key}`;
+  }
+
   private getCellId(row: number, column: number, key: string): string {
-    return `${ this.perspectiveId }${key}[${column}, ${row}]`;
+    return `${ this.getParentId(key)}#${column}#${row}`;
   }
 
   private isEmptySelection(): boolean {

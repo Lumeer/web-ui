@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../core/model/role';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
@@ -54,12 +54,13 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   public hasWriteRole = false;
   private currentRowsLength: number;
 
-  public constructor(private documentUiService: DocumentUiService) {
+  public constructor(private documentUiService: DocumentUiService,
+                     private detector: ChangeDetectorRef) {
   }
 
   public ngOnInit() {
     this.disableScrollOnNavigation();
-    this.initDocumentService();
+    this.initDocumentServiceIfNeeded();
 
     this.hasWriteRole = this.collectionRoles && this.collectionRoles.includes(Role.Write);
   }
@@ -70,9 +71,12 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  public ngOnChanges(changes: SimpleChanges){
-    if(changes.documentModel && this.initedDocumentKey !== this.getDocumentKey()){
-      this.initDocumentService();
+  public ngOnChanges(changes: SimpleChanges) {
+    if (this.collection && this.documentModel && this.initedDocumentKey !== this.getDocumentKey()) {
+      const changed = this.initDocumentServiceIfNeeded();
+      if (changed) {
+        this.sizeChange.emit();
+      }
     }
   }
 
@@ -85,13 +89,15 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public getRows$(): Observable<UiRow[]> {
-    return this.documentUiService.getRows$(this.collection, this.documentModel).asObservable().pipe(
+    const observable$ = this.documentUiService.getRows$(this.collection, this.documentModel);
+    return observable$ ? observable$.asObservable().pipe(
       tap(rows => this.checkRowsLength(rows.length))
-    );
+    ) : of([]);
   }
 
   public getFavorite$(): Observable<boolean> {
-    return this.documentUiService.getFavorite$(this.collection, this.documentModel).asObservable();
+    const observable$ = this.documentUiService.getFavorite$(this.collection, this.documentModel);
+    return observable$ ? observable$.asObservable() : of(false);
   }
 
   public onToggleFavorite() {
@@ -155,10 +161,12 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
     return attributeId && attributeId === getDefaultAttributeId(this.collection);
   }
 
-  private initDocumentService() {
-    if (this.collection && this.documentModel) {
+  private initDocumentServiceIfNeeded(): boolean {
+    if (this.collection && this.documentModel && !this.documentUiService.isInited(this.collection, this.documentModel)) {
       this.initedDocumentKey = this.getDocumentKey();
       this.documentUiService.init(this.collection, this.documentModel);
+      return true;
     }
+    return false;
   }
 }

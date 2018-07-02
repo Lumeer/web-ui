@@ -28,7 +28,6 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectDocumentsByCustomQuery} from '../../../core/store/documents/documents.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
-import {KeyCode} from '../../../shared/key-code';
 import {selectCollectionsByQuery} from '../../../core/store/collections/collections.state';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
 import {userRolesInResource} from '../../../shared/utils/resource.utils';
@@ -49,10 +48,11 @@ import {isNullOrUndefined} from 'util';
 })
 export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
-  @HostListener('document:keydown', ['$event'])
-  public onKeyboardClick(event: KeyboardEvent) {
-    if (this.isNavigationKey(event.keyCode)) {
-      this.handleNavigationKeydown();
+  @HostListener('document:click', ['$event'])
+  public onDocumentClick(event: any){
+    const id = event.target && event.target.id || '';
+    if(!id.startsWith(this.perspectiveId)){
+      this.selectionHelper.clearSelection();
     }
   }
 
@@ -101,16 +101,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return Object.values(this.postIts);
   }
 
-  private handleNavigationKeydown() {
-    if (this.selectionHelper) {
-      this.selectionHelper.initializeIfNeeded();
-    }
-  }
-
-  private isNavigationKey(keyCode: number): boolean {
-    return [KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.Enter, KeyCode.Tab].includes(keyCode);
-  }
-
   private createLayoutManager() {
     this.layoutManager = new PostItLayout(this.postItLayout.nativeElement, true, this.zone);
   }
@@ -149,12 +139,16 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     ).subscribe(navigation => {
       this.query = navigation.query;
       this.workspace = navigation.workspace;
-      this.page = 0;
-      this.postItsOrder = [];
-      this.postIts = {};
+      this.clearData();
       this.fetchDocuments();
     });
     this.subscriptions.add(navigationSubscription);
+  }
+
+  private clearData(){
+    this.page = 0;
+    this.postItsOrder = [];
+    this.postIts = {};
   }
 
   private getNumRows(key: string): number {
@@ -252,7 +246,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public postItChanged() {
-    console.log('postItChangeRefresh');
     this.layoutManager.refresh();
   }
 
