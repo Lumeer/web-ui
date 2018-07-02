@@ -5,19 +5,19 @@
          formControlName="collectionName"
          type="text"
          class="form-control"
-         placeholder="Enter file name..." i18n-placeholder="@@collection.new.dialog.file.name.placeholder">
+         placeholder="Enter collection name..." i18n-placeholder="@@collection.new.dialog.file.name.placeholder">
   <div class="invalid-feedback">
     <div *ngIf="collectionNameInput.errors && collectionNameInput.errors.required"
          i18n="@@validation.collection.name.empty">
-      File name cannot be empty.
+      Collection name cannot be empty.
     </div>
     <div *ngIf="collectionNameInput.errors && collectionNameInput.errors.minlength"
          i18n="@@validation.collection.name.short">
-      File name must have at least {{collectionNameInput.errors.minlength.requiredLength}} characters.
+      Collection name must have at least {{collectionNameInput.errors.minlength.requiredLength}} characters.
     </div>
     <div *ngIf="collectionNameInput.errors && collectionNameInput.errors.uniqueName"
          i18n="@@validation.collection.name.unique">
-      You cannot have two files with the same name.
+      You cannot have two collections with the same name.
     </div>
   </div>
 </div>

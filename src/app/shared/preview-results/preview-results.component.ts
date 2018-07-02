@@ -80,6 +80,10 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.unsubscribeAll();
+
+    if (this.selectedCollection && this.selectedDocument) {
+      this.store.dispatch(new ViewsAction.SetCursor({cursor: {collectionId: this.selectedCollection.id, documentId: this.selectedDocument.id}}));
+    }
   }
 
   private subscribeAll() {

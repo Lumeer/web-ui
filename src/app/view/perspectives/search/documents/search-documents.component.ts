@@ -21,7 +21,7 @@ import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/cor
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {filter, map, tap} from 'rxjs/operators';
-import {isArray, isNullOrUndefined, isObject} from 'util';
+import {isArray, isNullOrUndefined} from 'util';
 import {CollectionService, SearchService} from '../../../../core/rest';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -37,6 +37,8 @@ import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {PerspectiveService} from '../../../../core/perspective.service';
+import {Perspective} from '../../perspective';
 
 @Component({
   templateUrl: './search-documents.component.html',
@@ -68,7 +70,8 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   constructor(private searchService: SearchService,
               private store: Store<AppState>,
               private collectionService: CollectionService,
-              private userSettingsService: UserSettingsService) {
+              private userSettingsService: UserSettingsService,
+              private perspectiveService: PerspectiveService) {
   }
 
   public ngOnInit() {
@@ -137,7 +140,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public onDetailClick(document: DocumentModel) {
-    // TODO
+    this.perspectiveService.switchPerspective(Perspective.Detail, this.collections[document.collectionId], document);
   }
 
   public createValuesHtml(document: DocumentModel): string {

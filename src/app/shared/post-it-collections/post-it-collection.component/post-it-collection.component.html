@@ -3,8 +3,9 @@
      [class.uninitialized]="!collection.id"
      [class.initialized]="collection.id">
   <div class="card-body text-center">
+    <div *ngIf="!collection.id" class="text-center small text-muted" i18n="@@collection.document.icon.set">Click icon to set it</div>
     <div *ngIf="!collection.id" id="{{newDropdownId}}">
-      <a class="icon" [style.color]="collection.color"
+      <a class="icon icon-edit" [style.color]="collection.color"
          [title]="collection.name"
          [routerLink]="null"
          [queryParams]="null"
@@ -13,13 +14,14 @@
            (clickOutside)="onPickerBlur()"></i>
       </a>
       <div class="dropdown-menu dropdown-menu-right uninitialized-dropdown">
-        <color-picker [dropdownId]="newDropdownId"  class="dropdown-item" [(color)]="collection.color"></color-picker>
+        <color-picker [dropdownId]="newDropdownId" class="dropdown-item" [(color)]="collection.color"></color-picker>
         <div class="dropdown-divider"></div>
         <icon-picker [dropdownId]="newDropdownId" class="dropdown-item"
                      [(icon)]="collection.icon"></icon-picker>
         <div class="dropdown-divider"></div>
         <div class="text-right mx-2">
-          <button class="btn btn-outline-secondary btn-sm" data-toggle="dropdown" (click)="revertSelectedColor($event)" i18n="@@icon-picker.cancel">Cancel</button>
+          <button class="btn btn-outline-secondary btn-sm" data-toggle="dropdown" (click)="revertSelectedColor($event)" i18n="@@icon-picker.cancel">Cancel
+          </button>
           <button class="btn btn-primary btn-sm mx-2" data-toggle="dropdown" (click)="saveSelectedColor($event)" i18n="@@icon-picker.select">Select</button>
         </div>
       </div>
@@ -57,9 +59,9 @@
       </a>
     </div>
 
-    <div class="buttons opacity-content d-flex flex-column"
+    <div *ngIf="collection.id" class="buttons opacity-content d-flex flex-column"
          [ngClass]="{'panel-visible' : focused}">
-      <div *ngIf="collection.id" id="dropdown-{{collection.id}}">
+      <div id="dropdown-{{collection.id}}">
         <a title="Configure" i18n-title="@@collection.button.configure"
            class="rounded-left"
            *ngIf="hasManageRole()"
@@ -67,11 +69,19 @@
           <i class="fas fa-fw fa-cog" aria-hidden="true"></i></a>
       </div>
     </div>
+    <div *ngIf="!collection.id" class="button-remove opacity-content d-flex flex-column"
+         [ngClass]="{'panel-visible' : focused}">
+      <a (click)="onDelete()"
+         class="text-danger rounded-left"
+         title="Remove Collection" i18n-title="@@collection.button.remove">
+        <i class="fas fa-fw fa-trash" aria-hidden="true"></i>
+      </a>
+    </div>
 
   </div>
 
   <small class="text-danger text-center px-2" *ngIf="!nameFormControl.valid"
-       i18n="@@collection.postit.name.duplicity">
+         i18n="@@collection.postit.name.duplicity">
     Sorry, this name is already taken. Try another?
   </small>
 

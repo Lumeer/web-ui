@@ -28,6 +28,7 @@
     <div class="col">
       <preview-results-tabs
         [collections]="collections$ | async"
+        [selectedCollection]="selectedCollection.id"
         (select)="setActiveCollection($event)"
       >
       </preview-results-tabs>

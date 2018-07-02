@@ -11,11 +11,11 @@
              i18n="@@search.tab.all">All</a>
         </li>
         <li role="presentation" class="nav-item">
-          <a [routerLink]="'files'"
+          <a [routerLink]="'collections'"
              [queryParams]="{query: stringifyQuery()}"
-             [class.active]="isLinkActive('files')"
+             [class.active]="isLinkActive('collections')"
              class="nav-link"
-             i18n="@@search.tab.collections">Files</a>
+             i18n="@@search.tab.collections">Collections</a>
         </li>
         <li role="presentation" class="nav-item">
           <a [routerLink]="'records'"

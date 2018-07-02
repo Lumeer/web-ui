@@ -1,3 +1,4 @@
+@import "../../../shared/variables";
 
 .chevron {
   font-size: 24px;
@@ -9,4 +10,8 @@
     padding-right: 0;
     padding-left: 0;
   }
+}
+
+.icon-edit:before {
+  border-bottom: dotted $gray-400;
 }

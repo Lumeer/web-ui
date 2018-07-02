@@ -14,11 +14,20 @@
 
   &:not(.uninitialized) {
     border: 1px transparent;
+
+    .card-body {
+      padding-top: 2rem;
+    }
+  }
+
+  &.uninitialized {
+    .card-body {
+      padding-top: 0.75rem;
+    }
   }
 
   .card-body {
-    padding-top: 2rem;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
   }
 }
 
@@ -84,6 +93,12 @@
   top: 1.5rem;
 }
 
+.button-remove {
+  top: 0;
+  right: 0;
+  width: 25px;
+}
+
 .dropdown-menu {
   width: 230px;
   transform: translate3d(-195px, 71px, 0px) !important;
@@ -101,4 +116,3 @@
 .uninitialized-dropdown {
   transform: translate3d(-8px, 120px, 0px) !important;
 }
-

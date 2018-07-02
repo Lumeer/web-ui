@@ -33,6 +33,7 @@ import {selectOrganizationByWorkspace} from '../../core/store/organizations/orga
 import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {ResourceType} from '../../core/model/resource-type';
+import {Location} from '@angular/common';
 
 @Component({
   templateUrl: './organization-settings.component.html'
@@ -48,7 +49,8 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   constructor(private i18n: I18n,
               private router: Router,
               private store: Store<AppState>,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private location: Location) {
   }
 
   public ngOnInit() {
@@ -59,18 +61,6 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     if (this.organizationSubscription) {
       this.organizationSubscription.unsubscribe();
     }
-  }
-
-  private subscribeToStore() {
-    this.userCount$ = this.store.select(selectAllUsers)
-      .pipe(map(users => users ? users.length : 0));
-
-    this.projectsCount$ = this.store.select(selectProjectsForWorkspace)
-      .pipe(map(projects => projects ? projects.length : 0));
-
-    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
-      .pipe(filter(organization => !isNullOrUndefined(organization)))
-      .subscribe(organization => this.organization = organization);
   }
 
   public getResourceType(): ResourceType {
@@ -91,11 +81,6 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
         {text: noButtonText}
       ]
     );
-  }
-
-  private deleteOrganization() {
-    this.store.dispatch(new OrganizationsAction.Delete({organizationId: this.organization.id}));
-    this.goBack();
   }
 
   public onNewDescription(newDescription: string) {
@@ -123,16 +108,33 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     this.updateOrganization(organizationCopy);
   }
 
-  private updateOrganization(organization: OrganizationModel) {
-    this.store.dispatch(new OrganizationsAction.Update({organization}));
-  }
-
   public onProjectsClick() {
     this.goBack();
   }
 
   public goBack(): void {
-    this.router.navigate(['/workspace']);
+    this.location.back();
+  }
+
+  private subscribeToStore() {
+    this.userCount$ = this.store.select(selectAllUsers)
+      .pipe(map(users => users ? users.length : 0));
+
+    this.projectsCount$ = this.store.select(selectProjectsForWorkspace)
+      .pipe(map(projects => projects ? projects.length : 0));
+
+    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+      .pipe(filter(organization => !isNullOrUndefined(organization)))
+      .subscribe(organization => this.organization = organization);
+  }
+
+  private deleteOrganization() {
+    this.store.dispatch(new OrganizationsAction.Delete({organizationId: this.organization.id}));
+    this.goBack();
+  }
+
+  private updateOrganization(organization: OrganizationModel) {
+    this.store.dispatch(new OrganizationsAction.Update({organization}));
   }
 
 }
