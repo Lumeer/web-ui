@@ -49,9 +49,12 @@ import {isNullOrUndefined} from 'util';
 export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
-  public onDocumentClick(event: any){
-    const id = event.target && event.target.id || '';
-    if(!id.startsWith(this.perspectiveId)){
+  public onDocumentClick(event: any) {
+    const id = event.target.id || '';
+    const parent = event.target.parentElement;
+    const idParent = parent && parent.id || '';
+
+    if (!id.startsWith(this.perspectiveId) && !idParent.startsWith(this.perspectiveId)) {
       this.selectionHelper.clearSelection();
     }
   }
@@ -145,7 +148,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(navigationSubscription);
   }
 
-  private clearData(){
+  private clearData() {
     this.page = 0;
     this.postItsOrder = [];
     this.postIts = {};
@@ -193,13 +196,13 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       return acc;
     }, {});
 
-    for (let correlationId of this.creatingCorrelationsIds) {
+    for (const correlationId of this.creatingCorrelationsIds) {
       if (documentsMap[correlationId]) {
         this.postItsOrder.splice(0, 0, correlationId);
       }
     }
 
-    this.creatingCorrelationsIds = this.creatingCorrelationsIds.filter(corrId => isNullOrUndefined(documentsMap[corrId]));
+    this.creatingCorrelationsIds = this.creatingCorrelationsIds.filter(corrId => !documentsMap[corrId]);
 
     const newPostIts = this.postItsOrder.reduce((acc, key) => {
       const doc = documentsMap[key];
@@ -304,7 +307,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public onSizeChange(newSize: SizeType) {
     this.size = newSize;
-    let userSettings = this.userSettingsService.getUserSettings();
+    const userSettings = this.userSettingsService.getUserSettings();
     userSettings.searchSize = newSize;
     this.userSettingsService.updateUserSettings(userSettings);
 
@@ -312,7 +315,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private initSettings() {
-    let userSettings = this.userSettingsService.getUserSettings();
+    const userSettings = this.userSettingsService.getUserSettings();
     this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
   }
 

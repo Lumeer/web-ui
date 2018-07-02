@@ -45,7 +45,7 @@ export class PostItDocumentCellComponent {
   @Output() public enter = new EventEmitter();
   @Output() public remove = new EventEmitter();
 
-  public onFocus(){
+  public onFocus() {
     this.focus.emit();
   }
 
@@ -61,6 +61,5 @@ export class PostItDocumentCellComponent {
     this.model = this.model.trim();
     this.update.emit(this.model);
   }
-
 
 }

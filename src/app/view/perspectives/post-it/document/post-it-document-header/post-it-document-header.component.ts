@@ -44,7 +44,7 @@ export class PostItDocumentHeaderComponent {
 
   @Output() public toggleFavorite = new EventEmitter();
 
-  public onRemove(){
+  public onRemove() {
     this.remove.emit();
   }
 

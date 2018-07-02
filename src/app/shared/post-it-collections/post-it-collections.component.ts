@@ -214,7 +214,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   private createLayout() {
     if (this.postItLayout) {
       this.layout = new PostItLayout(this.postItLayout.nativeElement, false, this.zone);
-      this.changeDetector.detectChanges()
+      this.changeDetector.detectChanges();
     }
   }
 

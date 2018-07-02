@@ -17,10 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgZone} from "@angular/core";
+import {NgZone} from '@angular/core';
 
-import {Subject} from 'rxjs';
-import {Subscription} from 'rxjs/internal/Subscription';
+import {Subject, Subscription} from 'rxjs';
 import {throttleTime} from 'rxjs/operators';
 
 export class PostItLayout {
@@ -73,7 +72,7 @@ export class PostItLayout {
     const subscription = this.refreshSubject.pipe(
       throttleTime(200)
     ).subscribe(() => {
-      this.onRefresh()
+      this.onRefresh();
     });
 
     this.subscriptions.add(subscription);
@@ -82,7 +81,7 @@ export class PostItLayout {
   public addItem(newElement: any, index: number) {
     this.runSafely(() => {
       const added = this.grid.add(newElement, {index: index});
-      this.updateIndices()
+      this.updateIndices();
     });
   }
 

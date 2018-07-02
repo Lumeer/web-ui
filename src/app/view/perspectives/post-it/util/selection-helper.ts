@@ -29,7 +29,7 @@ export class SelectionHelper {
   private selection: AttributePropertySelection = this.emptySelection();
 
   constructor(private postItsOrder: () => string[],
-              private getDocumentNumRows: (string) => number,
+              private documentNumRows: (key: string) => number,
               private documentsPerRow: () => number,
               private perspectiveId: string) {
   }
@@ -43,11 +43,11 @@ export class SelectionHelper {
       return;
     }
 
-    const row = this.selection.row - 1;
-    const column = this.selection.column;
+    const newRow = this.selection.row - 1;
+    const newColumn = this.selection.column;
 
-    if (row >= 0) {
-      this.focusCurrent(row, column);
+    if (newRow >= 0) {
+      this.focusCurrent(newRow, newColumn);
     } else { // now we need select post-it above
       const index = this.selection.index - 1;
       if (index >= 0) {
@@ -56,7 +56,7 @@ export class SelectionHelper {
           const parentRect = currentParentElement.getBoundingClientRect();
           const {parentElement, key} = this.findParentElementToFocusVertically(index, 0, parentRect.left, parentRect.right, true);
           if (parentElement && key) {
-            this.focus(this.getDocumentNumRows(key), column, key, false);
+            this.focus(this.documentNumRows(key), newColumn, key, false);
           }
         }
       }
@@ -69,11 +69,11 @@ export class SelectionHelper {
       return;
     }
 
-    const row = this.selection.row + 1;
-    const column = this.selection.column;
+    const newRow = this.selection.row + 1;
+    const newColumn = this.selection.column;
 
-    if (row <= this.currentLastRowIndex()) {
-      this.focusCurrent(row, column);
+    if (newRow <= this.currentLastRowIndex()) {
+      this.focusCurrent(newRow, newColumn);
     } else { // now we need select post-it below
       const index = this.selection.index + 1;
       if (index < this.postItsOrder().length) {
@@ -82,7 +82,7 @@ export class SelectionHelper {
           const parentRect = currentParentElement.getBoundingClientRect();
           const {parentElement, key} = this.findParentElementToFocusVertically(index, this.postItsOrder().length - 1, parentRect.left, parentRect.right, false);
           if (parentElement && key) {
-            this.focus(0, column, key, false);
+            this.focus(0, newColumn, key, false);
           }
         }
       }
@@ -94,18 +94,19 @@ export class SelectionHelper {
       return;
     }
 
-    const row = this.selection.row;
-    const column = this.selection.column + 1;
+    const newRow = this.selection.row;
+    const newColumn = this.selection.column + 1;
 
-    if (column <= VALUE_COLUMN) {
-      this.focusCurrent(row, column);
+    if (newColumn <= VALUE_COLUMN) {
+      this.focusCurrent(newRow, newColumn);
     } else { // we need to select post-it on the right
       const currentParentElement = this.getCurrentFocusedParentElement();
       const currentElement = this.getCurrentFocusedElement();
       if (currentParentElement && currentElement) {
         const parentRect = currentParentElement.getBoundingClientRect();
         const rect = currentElement.getBoundingClientRect();
-        const {parentElement, key} = this.findParentElementToFocusHorizontally(this.selection.index, parentRect.right, parentRect.right + parentRect.width, rect.top, rect.bottom);
+        const {parentElement, key} = this.findParentElementToFocusHorizontally(this.selection.index, parentRect.right,
+          parentRect.right + parentRect.width, rect.top, rect.bottom);
         if (parentElement && key) {
           const {element, row} = this.findElementToFocus(parentElement, ATTRIBUTE_COLUMN, rect.bottom - (rect.bottom - rect.top) / 2);
           if (element && !isNullOrUndefined(row)) {
@@ -121,18 +122,19 @@ export class SelectionHelper {
       return;
     }
 
-    const row = this.selection.row;
-    const column = this.selection.column - 1;
+    const newRow = this.selection.row;
+    const newColumn = this.selection.column - 1;
 
-    if (column >= ATTRIBUTE_COLUMN) {
-      this.focusCurrent(row, column);
+    if (newColumn >= ATTRIBUTE_COLUMN) {
+      this.focusCurrent(newRow, newColumn);
     } else { // we need to select post-it on the left
       const currentParentElement = this.getCurrentFocusedParentElement();
       const currentElement = this.getCurrentFocusedElement();
       if (currentParentElement && currentElement) {
         const parentRect = currentParentElement.getBoundingClientRect();
         const rect = currentElement.getBoundingClientRect();
-        const {parentElement, key} = this.findParentElementToFocusHorizontally(this.selection.index, parentRect.left - parentRect.width, parentRect.left, rect.top, rect.bottom);
+        const {parentElement, key} = this.findParentElementToFocusHorizontally(this.selection.index, parentRect.left - parentRect.width,
+          parentRect.left, rect.top, rect.bottom);
         if (parentElement && key) {
           const {element, row} = this.findElementToFocus(parentElement, VALUE_COLUMN, rect.bottom - (rect.bottom - rect.top) / 2);
           if (element && !isNullOrUndefined(row)) {
@@ -148,15 +150,15 @@ export class SelectionHelper {
       return;
     }
 
-    let column = this.selection.column + 1;
-    let row = this.selection.row;
-    if (column > VALUE_COLUMN) {
-      column = ATTRIBUTE_COLUMN;
-      row += 1;
+    let newColumn = this.selection.column + 1;
+    let newRow = this.selection.row;
+    if (newColumn > VALUE_COLUMN) {
+      newColumn = ATTRIBUTE_COLUMN;
+      newRow += 1;
     }
 
-    if (row <= this.currentLastRowIndex()) {
-      this.focus(row, column, this.selection.key, true);
+    if (newRow <= this.currentLastRowIndex()) {
+      this.focus(newRow, newColumn, this.selection.key, true);
     } else { // now we need select post-it below
       const index = this.selection.index + 1;
       if (index < this.postItsOrder().length) {
@@ -182,7 +184,7 @@ export class SelectionHelper {
   }
 
   public focusInputIfNeeded(key: string) {
-    if (this.selection.key != key) {
+    if (this.selection.key !== key) {
       this.focus(0, VALUE_COLUMN, key, true);
     }
   }
@@ -206,7 +208,7 @@ export class SelectionHelper {
 
   private focus(row: number, column: number, key: string, input: boolean) {
     const cellId = this.getCellId(row, column, key);
-    let elementToFocus = document.getElementById(cellId);
+    const elementToFocus = document.getElementById(cellId);
     if (elementToFocus) {
       this.focusElement(elementToFocus, row, column, key, input);
     }
@@ -220,7 +222,7 @@ export class SelectionHelper {
     for (let i = 0; i < elements.length; i++) {
       const el = elements.item(i).getElementsByTagName('span').item(0) as HTMLElement;
       const rect = el.getBoundingClientRect();
-      const idSplit = el.id.split("#", 4);
+      const idSplit = el.id.split('#', 4);
       const elColumn = +idSplit[2];
 
       if (elColumn === column) {
@@ -237,7 +239,8 @@ export class SelectionHelper {
     return {element: minDistanceElement, row: minDistanceRow};
   }
 
-  private findParentElementToFocusHorizontally(excludeIndex: number, fromX: number, toX: number, fromY: number, toY: number): { parentElement: HTMLElement | null, key: string | null } {
+  private findParentElementToFocusHorizontally(excludeIndex: number, fromX: number, toX: number, fromY: number, toY: number)
+    : { parentElement: HTMLElement | null, key: string | null } {
     const keys = this.postItsOrder();
     for (let i = 0; i < keys.length; i++) {
       if (i === excludeIndex) {
@@ -247,7 +250,6 @@ export class SelectionHelper {
       const el = document.getElementById(this.getParentId(key));
       if (el) {
         const rect = el.getBoundingClientRect();
-        console.log(fromX, toX, rect.left, rect.right);
         if (fromX === rect.left && toX === rect.right && this.isIntersecting(rect.top, rect.bottom, fromY, toY)) {
           return {parentElement: el, key};
         }
@@ -257,7 +259,8 @@ export class SelectionHelper {
     return {parentElement: null, key: null};
   }
 
-  private findParentElementToFocusVertically(fromIndex: number, toIndex: number, left: number, right: number, up?: boolean): { parentElement: HTMLElement | null, key: string | null } {
+  private findParentElementToFocusVertically(fromIndex: number, toIndex: number, left: number, right: number, up?: boolean)
+    : { parentElement: HTMLElement | null, key: string | null } {
     const keys = this.postItsOrder();
     for (let i = fromIndex; up ? i >= toIndex : i <= toIndex; up ? i-- : i++) {
       const key = keys[i];
@@ -298,7 +301,7 @@ export class SelectionHelper {
   }
 
   private currentLastRowIndex(): number {
-    return this.getDocumentNumRows(this.selection.key);
+    return this.documentNumRows(this.selection.key);
   }
 
   private emptySelection(): AttributePropertySelection {
