@@ -34,6 +34,9 @@ import {selectProjectsForWorkspace} from '../../core/store/projects/projects.sta
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {ResourceType} from '../../core/model/resource-type';
 import {Location} from '@angular/common';
+import {Perspective} from '../../view/perspectives/perspective';
+import {ProjectModel} from '../../core/store/projects/project.model';
+import {tap} from 'rxjs/internal/operators';
 
 @Component({
   templateUrl: './organization-settings.component.html'
@@ -45,6 +48,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   public organization: OrganizationModel;
 
   private organizationSubscription: Subscription;
+  private firstProject: ProjectModel = null;
 
   constructor(private i18n: I18n,
               private router: Router,
@@ -113,7 +117,11 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   public goBack(): void {
-    this.location.back();
+    if (window.history.length > 1) {
+      this.location.back();
+    } else if (this.firstProject) {
+      this.router.navigate(['w', this.organization.code, this.firstProject.code, 'view', Perspective.Search, 'all']);
+    }
   }
 
   private subscribeToStore() {
@@ -121,7 +129,11 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
       .pipe(map(users => users ? users.length : 0));
 
     this.projectsCount$ = this.store.select(selectProjectsForWorkspace)
-      .pipe(map(projects => projects ? projects.length : 0));
+      .pipe(tap(projects => {
+        if (projects && projects.length > 0) {
+          this.firstProject = projects[0];
+        }
+      }), map(projects => projects ? projects.length : 0));
 
     this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
       .pipe(filter(organization => !isNullOrUndefined(organization)))

@@ -10,8 +10,8 @@
          [routerLink]="null"
          [queryParams]="null"
          [attr.data-toggle]="'dropdown'">
-        <i class="fa-3x {{ collection.icon }}" aria-hidden="true" (click)="togglePanelVisible($event);"
-           (clickOutside)="onPickerBlur()"></i>
+        <i class="fa-3x {{ collection.icon }}" aria-hidden="true" (click)="togglePanelVisible($event, false);"
+           (clickOutside)="onPickerBlur(false)"></i>
       </a>
       <div class="dropdown-menu dropdown-menu-right uninitialized-dropdown">
         <color-picker [dropdownId]="newDropdownId" class="dropdown-item" [(color)]="collection.color"></color-picker>
@@ -31,8 +31,8 @@
        [title]="collection.name"
        [routerLink]="[workspacePath(), 'view', 'table']"
        [queryParams]="{ query: queryForCollectionDocuments() }">
-      <i class="fa-3x {{ collection.icon }}" aria-hidden="true" (click)="togglePanelVisible($event);"
-         (clickOutside)="onPickerBlur()"></i>
+      <i class="fa-3x {{ collection.icon }}" aria-hidden="true" (click)="togglePanelVisible($event, false);"
+         (clickOutside)="onPickerBlur(false)"></i>
     </a>
 
     <div *ngIf="collection.id" class="document-count opacity-content clickable"
@@ -65,12 +65,12 @@
         <a title="Configure" i18n-title="@@collection.button.configure"
            class="rounded-left"
            *ngIf="hasManageRole()"
-           [routerLink]="[workspacePath(), 'f', collection.id, 'attributes']">
+           [routerLink]="[workspacePath(), 'c', collection.id, 'attributes']">
           <i class="fas fa-fw fa-cog" aria-hidden="true"></i></a>
       </div>
     </div>
     <div *ngIf="!collection.id" class="button-remove opacity-content d-flex flex-column"
-         [ngClass]="{'panel-visible' : focused}">
+         [class.panel-visible]="focused">
       <a (click)="onDelete()"
          class="text-danger rounded-left"
          title="Remove Collection" i18n-title="@@collection.button.remove">

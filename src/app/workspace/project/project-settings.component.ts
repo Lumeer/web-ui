@@ -123,7 +123,11 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public goBack(): void {
-    this.location.back();
+    if (window.history.length > 1) {
+      this.location.back();
+    } else {
+      this.router.navigate(['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', Perspective.Search, 'all']);
+    }
   }
 
   private subscribeToStore() {

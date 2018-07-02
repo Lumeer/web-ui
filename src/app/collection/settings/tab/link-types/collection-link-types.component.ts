@@ -74,7 +74,7 @@ export class CollectionLinkTypesComponent extends CollectionTabComponent impleme
   }
 
   public changeCollection(collectionId: string): void {
-    this.router.navigate([this.workspacePath(), 'f', collectionId, 'linktypes']);
+    this.router.navigate([this.workspacePath(), 'c', collectionId, 'linktypes']);
   }
 
   public emptyLinkType(): LinkTypeModel {
