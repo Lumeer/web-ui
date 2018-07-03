@@ -62,6 +62,28 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   @Input()
   public maxShown: number = -1;
+  @ViewChildren(PostItCollectionComponent)
+  public postIts: QueryList<PostItCollectionComponent>;
+  public collections: CollectionModel[];
+  public collectionRoles: { [collectionId: string]: string[] };
+  public selectedCollection: CollectionModel;
+  public panelVisible: boolean = false;
+  public clickedComponent: any;
+  public layout: PostItLayout;
+  public project: ProjectModel;
+  public focusedPanel: number;
+  public workspace: Workspace;
+  private icons = Icons.solid;
+  private colors = Colors.palette;
+  private query: QueryModel;
+  private subscriptions = new Subscription();
+
+  constructor(public i18n: I18n,
+              private router: Router,
+              private store: Store<AppState>,
+              private zone: NgZone,
+              private notificationService: NotificationService,) {
+  }
 
   /**
    * Handler to change the flag to remove opacity css on elements
@@ -72,39 +94,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     if (this.clickedComponent && targetElement !== this.clickedComponent) {
       this.panelVisible = false;
     }
-  }
-
-  @ViewChildren(PostItCollectionComponent)
-  public postIts: QueryList<PostItCollectionComponent>;
-
-  public collections: CollectionModel[];
-  public collectionRoles: { [collectionId: string]: string[] };
-  public selectedCollection: CollectionModel;
-
-  public panelVisible: boolean = false;
-
-  public clickedComponent: any;
-
-  public layout: PostItLayout;
-
-  public project: ProjectModel;
-
-  public focusedPanel: number;
-
-  public workspace: Workspace;
-
-  private icons = Icons.solid;
-  private colors = Colors.palette;
-
-  private query: QueryModel;
-
-  private subscriptions = new Subscription();
-
-  constructor(public i18n: I18n,
-              private router: Router,
-              private store: Store<AppState>,
-              private zone: NgZone,
-              private notificationService: NotificationService,) {
   }
 
   public ngOnInit() {
@@ -130,6 +119,93 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       this.panelVisible = true;
     }
     this.focusedPanel = index;
+  }
+
+  public onCollectionSelect(collection: CollectionModel) {
+    this.selectedCollection = collection;
+  }
+
+  public onCollectionUnselect() {
+    this.selectedCollection = null;
+  }
+
+  public confirmDeletion(collection: CollectionModel) {
+    if (collection.id) {
+      this.deleteInitializedPostIt(collection);
+    } else {
+      this.deleteUninitializedPostIt(collection);
+    }
+  }
+
+  public newCollection() {
+    const newCollection = {
+      ...this.emptyCollection(),
+      correlationId: CorrelationIdGenerator.generate()
+    };
+
+    this.collections.unshift(newCollection);
+
+    this.checkNumberOfUncreatedCollections();
+  }
+
+  public onFavoriteChange(collectionId: string, data: { favorite: boolean, onlyStore: boolean }) {
+    const {favorite, onlyStore} = data;
+    if (onlyStore) {
+      if (favorite) {
+        this.store.dispatch(new CollectionsAction.AddFavoriteSuccess({collectionId}));
+      } else {
+        this.store.dispatch(new CollectionsAction.RemoveFavoriteSuccess({collectionId}));
+      }
+    } else {
+      if (favorite) {
+        this.store.dispatch(new CollectionsAction.AddFavorite({collectionId}));
+      } else {
+        this.store.dispatch(new CollectionsAction.RemoveFavorite({collectionId}));
+      }
+    }
+  }
+
+  public updateCollection(collection: CollectionModel) {
+    if (collection.id) {
+      this.store.dispatch(new CollectionsAction.Update({collection, callback: this.onUpdateCollection()}));
+    }
+  }
+
+  public createCollection(collection: CollectionModel) {
+    this.store.dispatch(new CollectionsAction.Create({collection, callback: this.onCreateCollection()}));
+  }
+
+  public getRoles(collection: CollectionModel): string[] {
+    return this.collectionRoles && this.collectionRoles[collection.id] || [];
+  }
+
+  public trackByCollection(index: number, collection: CollectionModel): number {
+    return HashCodeGenerator.hashString(collection.correlationId || collection.id);
+  }
+
+  public notifyOfError(message: string) {
+    this.notificationService.error(message);
+  }
+
+  public onImportCollection(importInfo: { result: string, name: string, format: string }) {
+    const newCollection = {...this.emptyCollection(), name: importInfo.name};
+    const importedCollection = {collection: newCollection, data: importInfo.result};
+
+    this.store.dispatch(new CollectionsAction.Import({format: importInfo.format, importedCollection, callback: this.onCreateCollection()}));
+  }
+
+  public forceLayout() {
+    this.layout.refresh();
+  }
+
+  public refreshPostIts() {
+    this.postIts && this.postIts.forEach(postIt => postIt.refreshValidators());
+
+    this.checkForPendingUpdatesNames();
+  }
+
+  public onShowAllClicked() {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {queryParams: {query: QueryConverter.toString(this.query)}});
   }
 
   private createLayout() {
@@ -169,33 +245,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.subscriptions.add(collectionsSubscription);
   }
 
-  public onCollectionSelect(collection: CollectionModel) {
-    this.selectedCollection = collection;
-  }
-
-  public onCollectionUnselect() {
-    this.selectedCollection = null;
-  }
-
-  public confirmDeletion(collection: CollectionModel) {
-    if (collection.id) {
-      this.deleteInitializedPostIt(collection);
-    } else {
-      this.deleteUninitializedPostIt(collection);
-    }
-  }
-
-  public newCollection() {
-    const newCollection = {
-      ...this.emptyCollection(),
-      correlationId: CorrelationIdGenerator.generate()
-    };
-
-    this.collections.unshift(newCollection);
-
-    this.checkNumberOfUncreatedCollections();
-  }
-
   private emptyCollection(): CollectionModel {
     return {
       name: '',
@@ -208,7 +257,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   private deleteInitializedPostIt(collection: CollectionModel) {
     const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
-    const message = this.i18n({id: 'collection.delete.dialog.message', value: 'Do you really want to remove the file?'});
+    const message = this.i18n({id: 'collection.delete.dialog.message', value: 'Do you really want to remove this collection?'});
 
     this.store.dispatch(new NotificationsAction.Confirm(
       {
@@ -218,33 +267,12 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       }));
   }
 
-  public onFavoriteChange(collectionId: string, data: { favorite: boolean, onlyStore: boolean }) {
-    const {favorite, onlyStore} = data;
-    if (onlyStore) {
-      if (favorite) {
-        this.store.dispatch(new CollectionsAction.AddFavoriteSuccess({collectionId}));
-      } else {
-        this.store.dispatch(new CollectionsAction.RemoveFavoriteSuccess({collectionId}));
-      }
-    } else {
-      if (favorite) {
-        this.store.dispatch(new CollectionsAction.AddFavorite({collectionId}));
-      } else {
-        this.store.dispatch(new CollectionsAction.RemoveFavorite({collectionId}));
-      }
-    }
-  }
-
   private deleteUninitializedPostIt(collection: CollectionModel) {
     this.collections = this.collections.filter(coll => coll.correlationId !== collection.correlationId);
   }
 
-  public updateCollection(collection: CollectionModel) {
-    this.store.dispatch(new CollectionsAction.Update({collection, callback: this.onUpdateCollection()}));
-  }
-
-  public createCollection(collection: CollectionModel) {
-    this.store.dispatch(new CollectionsAction.Create({collection, callback: this.onCreateCollection()}));
+  private getCollectionByCorrelationId(correlationId: string): CollectionModel {
+    return this.collections.find(c => c.correlationId === correlationId);
   }
 
   private onCreateCollection(): (collection: CollectionModel) => void {
@@ -278,39 +306,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     };
   }
 
-  public getRoles(collection: CollectionModel): string[] {
-    return this.collectionRoles && this.collectionRoles[collection.id] || [];
-  }
-
-  public trackByCollection(index: number, collection: CollectionModel): number {
-    return HashCodeGenerator.hashString(collection.correlationId || collection.id);
-  }
-
-  public notifyOfError(message: string) {
-    this.notificationService.error(message);
-  }
-
-  public onImportCollection(importInfo: { result: string, name: string, format: string }) {
-    const newCollection = {...this.emptyCollection(), name: importInfo.name};
-    const importedCollection = {collection: newCollection, data: importInfo.result};
-
-    this.store.dispatch(new CollectionsAction.Import({format: importInfo.format, importedCollection, callback: this.onCreateCollection()}));
-  }
-
-  public forceLayout() {
-    this.layout.refresh();
-  }
-
-  public refreshPostIts() {
-    this.postIts && this.postIts.forEach(postIt => postIt.refreshValidators());
-
-    this.checkForPendingUpdatesNames();
-  }
-
-  public onShowAllClicked() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'files'], {queryParams: {query: QueryConverter.toString(this.query)}});
-  }
-
   private dispatchActions() {
     this.store.dispatch(new CollectionsAction.GetNames());
   }
@@ -321,7 +316,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     if (numUncreated % UNCREATED_THRESHOLD === 0) {
       const message = this.i18n({
         id: 'collections.postit.empty.info',
-        value: 'Looks like you have lot of empty files. Is it okay? We recommend to fill in name or delete them.'
+        value: 'Looks like you have lot of empty collections. Is it okay? I would suggest to fill in their names or delete them.'
       });
 
       this.notificationService.info(message);

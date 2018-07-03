@@ -40,6 +40,7 @@ import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Perspective} from '../../view/perspectives/perspective';
+import {Location} from '@angular/common';
 
 @Component({
   templateUrl: './project-settings.component.html'
@@ -55,7 +56,8 @@ export class ProjectSettingsComponent implements OnInit {
   constructor(private i18n: I18n,
               private router: Router,
               private store: Store<AppState>,
-              private notificationService: NotificationService) {
+              private notificationService: NotificationService,
+              private location: Location) {
   }
 
   public ngOnInit() {
@@ -64,21 +66,6 @@ export class ProjectSettingsComponent implements OnInit {
 
   public ngOnDestroy() {
     this.subscription.unsubscribe();
-  }
-
-  private subscribeToStore() {
-    this.userCount$ = this.store.select(selectAllUsers)
-      .pipe(map(users => users ? users.length : 0));
-
-    this.subscription.add(this.store.select(selectProjectByWorkspace)
-      .pipe(filter(project => !isNullOrUndefined(project)))
-      .subscribe(project => this.project = project)
-    );
-
-    this.subscription.add(this.store.select(selectWorkspace)
-      .pipe(filter(workspace => !isNullOrUndefined(workspace)))
-      .subscribe(workspace => this.workspace = workspace)
-    );
   }
 
   public getResourceType(): ResourceType {
@@ -106,21 +93,8 @@ export class ProjectSettingsComponent implements OnInit {
     const projectCode = this.project && this.project.code;
     if (organizationCode && projectCode) {
       this.clearStore();
-      this.router.navigate(['/w', organizationCode, projectCode, 'view', Perspective.Search, 'files']);
+      this.router.navigate(['/w', organizationCode, projectCode, 'view', Perspective.Search, 'collections']);
     }
-  }
-
-  private clearStore() {
-    this.store.dispatch(new CollectionsAction.Clear());
-    this.store.dispatch(new DocumentsAction.Clear());
-    this.store.dispatch(new LinkInstancesAction.Clear());
-    this.store.dispatch(new LinkTypesAction.Clear());
-    this.store.dispatch(new ViewsAction.Clear());
-  }
-
-  private deleteProject() {
-    this.store.dispatch(new ProjectsAction.Delete({organizationId: this.project.organizationId, projectId: this.project.id}));
-    this.goBack();
   }
 
   public onNewDescription(newDescription: string) {
@@ -148,11 +122,43 @@ export class ProjectSettingsComponent implements OnInit {
     this.updateProject(projectCopy);
   }
 
-  private updateProject(project: ProjectModel) {
-    this.store.dispatch(new ProjectsAction.Update({project}));
+  public goBack(): void {
+    if (window.history.length > 1) {
+      this.location.back();
+    } else {
+      this.router.navigate(['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', Perspective.Search, 'all']);
+    }
   }
 
-  public goBack(): void {
-    this.router.navigate(['/workspace']);
+  private subscribeToStore() {
+    this.userCount$ = this.store.select(selectAllUsers)
+      .pipe(map(users => users ? users.length : 0));
+
+    this.subscription.add(this.store.select(selectProjectByWorkspace)
+      .pipe(filter(project => !isNullOrUndefined(project)))
+      .subscribe(project => this.project = project)
+    );
+
+    this.subscription.add(this.store.select(selectWorkspace)
+      .pipe(filter(workspace => !isNullOrUndefined(workspace)))
+      .subscribe(workspace => this.workspace = workspace)
+    );
+  }
+
+  private clearStore() {
+    this.store.dispatch(new CollectionsAction.Clear());
+    this.store.dispatch(new DocumentsAction.Clear());
+    this.store.dispatch(new LinkInstancesAction.Clear());
+    this.store.dispatch(new LinkTypesAction.Clear());
+    this.store.dispatch(new ViewsAction.Clear());
+  }
+
+  private deleteProject() {
+    this.store.dispatch(new ProjectsAction.Delete({organizationId: this.project.organizationId, projectId: this.project.id}));
+    this.goBack();
+  }
+
+  private updateProject(project: ProjectModel) {
+    this.store.dispatch(new ProjectsAction.Update({project}));
   }
 }

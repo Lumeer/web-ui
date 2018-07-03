@@ -31,7 +31,7 @@
         <tr>
           <th class="text-center" style="width: 3rem;">
             <i class="fas fa-fw fa-check-circle cursor-pointer"
-               title="Default attribute"
+               title="Displayed attribute"
                i18n-title="@@collection.tab.attributes.attribute.default"></i>
           </th>
           <th i18n="@@collections.tab.attributes.attribute">Attribute</th>
@@ -58,12 +58,12 @@
               [class.visible]="attribute | isDefaultAttribute:collection">
             <i *ngIf="attribute | isDefaultAttribute:collection; else notDefaultIcon"
                class="fas fa-fw fa-check-circle cursor-pointer"
-               title="Default attribute"
+               title="Displayed attribute"
                i18n-title="@@collection.tab.attributes.attribute.default"
                (click)="setDefaultAttribute(attribute)"></i>
             <ng-template #notDefaultIcon>
               <i class="fas fa-fw fa-check cursor-pointer"
-                 title="Set default attribute"
+                 title="Set displayed attribute"
                  i18n-title="@@collection.tab.attributes.attribute.default.set"
                  (click)="setDefaultAttribute(attribute)"></i>
             </ng-template>
@@ -92,6 +92,9 @@
                  title="Delete attribute" i18n-title="@@collection.tab.attributes.attribute.delete"
                  ></i>
           </td>
+        </tr>
+        <tr *ngIf="!attributes?.length">
+          <td colspan="4" class="align-middle text-center" i18n="@@collection.tab.attributes.none">There are no attributes yet. Create one!</td>
         </tr>
       </tbody>
     </table>

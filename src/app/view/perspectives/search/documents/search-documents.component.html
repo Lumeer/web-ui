@@ -35,7 +35,7 @@
 </ng-template>
 
 <ng-template #header let-document>
-  <div class="d-flex flex-row pt-3">
+  <div class="d-flex flex-row">
     <i class="fa fa-fw clickable-primary clickable align-self-center" (click)="toggleDocument(document)"
        [ngClass]="(isDocumentOpened(document) || isXlTemplatePresented()) ? 'fa-caret-down':'fa-caret-right'"
        aria-hidden="true"></i>

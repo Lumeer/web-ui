@@ -17,18 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {QueryConverter} from '../../../core/store/navigation/query.converter';
@@ -40,6 +29,8 @@ import {debounceTime, filter} from 'rxjs/operators';
 import {FormControl} from '@angular/forms';
 import {CollectionValidators} from '../../../core/validators/collection.validators';
 import {PostItCollectionNameComponent} from '../collection-name/post-it-collection-name.component';
+
+declare let $: any;
 
 @Component({
   selector: 'post-it-collection',
@@ -68,17 +59,14 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
 
   public isPickerVisible: boolean = false;
   public nameFormControl: FormControl;
-
+  public newDropdownId = 'dropdown-' + Math.floor((1 + Math.random()) * 1000000000000).toString(16);
   private lastSyncedFavorite: boolean;
   private isValidCopy: boolean;
   private favoriteChange$ = new Subject<boolean>();
   private subscriptions = new Subscription();
-
   private oldColor: string;
   private oldIcon: string;
   private clickedComponent: any;
-
-  public newDropdownId = 'dropdown-' + Math.floor((1 + Math.random()) * 1000000000000).toString(16);
 
   constructor(private collectionValidators: CollectionValidators) {
   }
@@ -147,11 +135,11 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
     this.favoriteChange.emit({favorite: value, onlyStore: true});
   }
 
-  public togglePanelVisible(event): void {
+  public togglePanelVisible(event, success: boolean): void {
     this.clickedComponent = event.target;
 
     if (this.isPickerVisible) {
-      this.onPickerBlur();
+      this.onPickerBlur(success);
     } else {
       this.oldColor = this.collection.color;
       this.oldIcon = this.collection.icon;
@@ -160,13 +148,18 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
     this.togglePanel.emit(event);
   }
 
-  public onPickerBlur() {
+  public onPickerBlur(success: boolean) {
     if (!this.isPickerVisible) {
       return;
     }
 
-    this.collection.icon = this.oldIcon || this.collection.icon;
-    this.collection.color = this.oldColor || this.collection.color;
+    if (!success) {
+      this.collection.icon = this.oldIcon || this.collection.icon;
+      this.collection.color = this.oldColor || this.collection.color;
+    } else {
+      this.oldIcon = null;
+      this.oldColor = null;
+    }
 
     this.isPickerVisible = false;
   }
@@ -200,6 +193,21 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
     return this.collectionNameComponent.getPendingUpdate();
   }
 
+  public revertSelectedColor($event: MouseEvent): void {
+    this.collection.icon = this.oldIcon || this.collection.icon;
+    this.collection.color = this.oldColor || this.collection.color;
+    this.togglePanelVisible($event, false);
+    $event.stopPropagation();
+    $(`#${this.newDropdownId}`).dropdown('toggle');
+  }
+
+  public saveSelectedColor($event: MouseEvent): void {
+    this.update.emit(this.collection);
+    this.togglePanelVisible($event, true);
+    $event.stopPropagation();
+    $(`#${this.newDropdownId}`).dropdown('toggle');
+  }
+
   private hasRole(role: string): boolean {
     const roles = this.userRoles || [];
     return roles.includes(role);
@@ -228,16 +236,5 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
     }
     this.nameFormControl.setAsyncValidators(this.collectionValidators.uniqueName(this.collection.name));
     this.nameFormControl.updateValueAndValidity();
-  }
-
-  public revertSelectedColor($event: MouseEvent): void {
-    this.collection.icon = this.oldIcon || this.collection.icon;
-    this.collection.color = this.oldColor || this.collection.color;
-    this.togglePanelVisible($event);
-  }
-
-  public saveSelectedColor($event: MouseEvent): void {
-    this.update.emit(this.collection);
-    this.togglePanelVisible($event);
   }
 }

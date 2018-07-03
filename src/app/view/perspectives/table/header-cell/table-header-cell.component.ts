@@ -210,7 +210,7 @@ export class TableHeaderCellComponent {
 
   public confirmRemove() {
     this.notificationService.confirm(
-      'Deleting a column will permanently remove the attribute from the file.',
+      'Deleting a column will permanently remove the attribute from the collection.',
       'Delete this column?',
       [
         {text: 'Yes', action: () => this.onDeleteAttribute(), bold: false},

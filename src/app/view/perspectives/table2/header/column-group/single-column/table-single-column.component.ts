@@ -301,7 +301,10 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
 
   private createConfirmAction(action: Action): NotificationsAction.Confirm {
     const title = this.i18n({id: 'table.delete.column.dialog.title', value: 'Delete this column?'});
-    const message = this.i18n({id: 'table.delete.column.dialog.message', value: 'Deleting a column will permanently remove the attribute from the file.'});
+    const message = this.i18n({
+      id: 'table.delete.column.dialog.message',
+      value: 'Deleting a column will permanently remove the attribute from the collection.'
+    });
 
     return new NotificationsAction.Confirm({title, message, action});
   }
