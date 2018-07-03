@@ -325,7 +325,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.SetDefaultAttributeFailure>(CollectionsActionType.SET_DEFAULT_ATTRIBUTE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.attribute.default.set.fail', value: 'Failed to set default attribute id'});
+      const message = this.i18n({id: 'collection.attribute.default.set.fail', value: 'Failed to set displayed attribute id'});
       return new NotificationsAction.Error({message});
     })
   );

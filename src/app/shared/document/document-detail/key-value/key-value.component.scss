@@ -1,0 +1,13 @@
+:host {
+  .button-remove {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  &:hover, &:focus, &:active {
+    .button-remove {
+      opacity: 1;
+    }
+  }
+
+}

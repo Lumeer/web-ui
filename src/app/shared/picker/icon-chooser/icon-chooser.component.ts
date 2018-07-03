@@ -21,7 +21,7 @@ import {AfterViewInit, Component, EventEmitter, HostListener, Input, Output} fro
 
 declare let $: any;
 
-const DEFAULT_SIZE = 'fa-6x';
+const DEFAULT_SIZE = 'fa-3x';
 
 @Component({
   selector: 'icon-chooser',
