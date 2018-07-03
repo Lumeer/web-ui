@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
@@ -29,6 +29,9 @@ import {userHasRoleInResource} from '../utils/resource.utils';
 @Pipe({
   name: 'permissions',
   pure: false
+})
+@Injectable({
+  providedIn: 'root'
 })
 export class PermissionsPipe implements PipeTransform {
 

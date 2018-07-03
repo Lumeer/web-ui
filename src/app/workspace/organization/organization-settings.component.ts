@@ -23,7 +23,7 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, Subscription} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -36,7 +36,6 @@ import {ResourceType} from '../../core/model/resource-type';
 import {Location} from '@angular/common';
 import {Perspective} from '../../view/perspectives/perspective';
 import {ProjectModel} from '../../core/store/projects/project.model';
-import {tap} from 'rxjs/internal/operators';
 
 @Component({
   templateUrl: './organization-settings.component.html'
