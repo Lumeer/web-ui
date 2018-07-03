@@ -19,7 +19,7 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {SearchBoxModule} from '../../../shared/search-box/search-box.module';
+import {SearchBoxModule} from '../../../shared/top-panel/search-box/search-box.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {PostItPerspectiveModule} from '../post-it/post-it-perspective.module';
 import {SearchAllComponent} from './all/search-all.component';

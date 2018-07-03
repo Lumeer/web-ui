@@ -30,7 +30,7 @@ import {Workspace} from '../../../../core/store/navigation/workspace.model';
 import {ViewModel} from '../../../../core/store/views/view.model';
 import {selectAllCollections} from '../../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
-import {QueryData} from '../../../../shared/search-box/query-data';
+import {QueryData} from '../../../../shared/top-panel/search-box/query-data';
 import {filter} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 

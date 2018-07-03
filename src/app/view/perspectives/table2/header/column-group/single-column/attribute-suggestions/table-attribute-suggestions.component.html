@@ -31,7 +31,7 @@
                            [icons]="[linkedAttribute.collection.icon]"
                            class="mr-1">
           </icons-presenter>
-          <span [innerHtml]="linkedAttribute.collection.name + '.' + (linkedAttribute.attribute.name | highlight: lastName)"></span>
+          <span [innerHtml]="linkedAttribute.collection.name + '.' + (linkedAttribute.attribute.name | highlightText: lastName)"></span>
           <small class="text-secondary ml-1">({{linkedAttribute.linkType.name}})</small>
         </a>
       </ng-container>
@@ -51,7 +51,7 @@
                            [icons]="[linkedAttribute.collection.icon]"
                            class="mr-1">
           </icons-presenter>
-          <span [innerHtml]="linkedAttribute.collection.name + '.' + (linkedAttribute.attribute.name | highlight: lastName)"></span>
+          <span [innerHtml]="linkedAttribute.collection.name + '.' + (linkedAttribute.attribute.name | highlightText: lastName)"></span>
         </a>
       </ng-container>
     </ng-container>

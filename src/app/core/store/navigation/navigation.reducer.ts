@@ -36,7 +36,6 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
       viewCode: params['vc']
     },
     perspective: perspectivesMap[extractPerspectiveIdFromUrl(url)],
-    searchBoxHidden: data['searchBoxHidden'],
     viewName: queryParams['viewName'],
   };
 }

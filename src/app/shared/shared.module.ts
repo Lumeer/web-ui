@@ -34,10 +34,10 @@ import {RemovePlaceholderOnFocusDirective} from './placeholder/remove-placeholde
 import {PostItCollectionsModule} from './post-it-collections/post-it-collections.module';
 import {PreviewResultsModule} from './preview-results/preview-results.module';
 import {ResourceHeaderComponent} from './resource/header/resource-header.component';
-import {SearchBoxModule} from './search-box/search-box.module';
 import {SizeSliderComponent} from './slider/size-slider.component';
 import {SliderComponent} from './slider/slider.component';
 import {TagModule} from './tag/tag.module';
+import {TopPanelModule} from './top-panel/top-panel.module';
 import {UsersModule} from './users/users.module';
 import {DirectivesModule} from './directives/directives.module';
 
@@ -48,7 +48,6 @@ import {DirectivesModule} from './directives/directives.module';
     RouterModule,
     PickerModule,
     DragAndDropModule,
-    SearchBoxModule,
     UsersModule,
     TagModule,
     InputModule,
@@ -59,6 +58,7 @@ import {DirectivesModule} from './directives/directives.module';
     PipesModule,
     DirectivesModule,
     LanguageModule,
+    TopPanelModule,
   ],
   declarations: [
     SizeSliderComponent,
@@ -78,7 +78,6 @@ import {DirectivesModule} from './directives/directives.module';
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
     UsersModule,
-    SearchBoxModule,
     SliderComponent,
     PipesModule,
     TagModule,
@@ -89,6 +88,7 @@ import {DirectivesModule} from './directives/directives.module';
     LinksModule,
     DirectivesModule,
     LanguageModule,
+    TopPanelModule,
   ]
 })
 export class SharedModule {

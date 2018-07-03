@@ -1,9 +1,0 @@
-{
-  "realm": "lumeer",
-  "auth-server-url": "https://auth.lumeer.io/auth",
-  "ssl-required": "all",
-  "resource": "engine",
-  "public-client": true,
-  "disable-trust-manager": "true",
-  "enable-cors": true
-}

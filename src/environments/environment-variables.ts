@@ -27,6 +27,8 @@ try {
 export interface EnvironmentVariables {
 
   apiUrl: string;
+  authClientId: string;
+  authDomain: string;
   buildNumber: number;
   i18nFormat: string;
   locale: string;
@@ -35,6 +37,8 @@ export interface EnvironmentVariables {
 }
 
 const apiUrl = env['LUMEER_ENGINE'] || 'engine';
+const authClientId = env['AUTH_CLIENT_ID'] || 'Hjee0La2DjlYjIH5ClCx3Xnfaj02n2On';
+const authDomain = env['AUTH_DOMAIN'] || 'lumeer.eu.auth0.com';
 const buildNumber: number = env['BUILD_NUMBER'];
 const i18nFormat = env['I18N_FORMAT'];
 const locale: string = env['I18N_LOCALE'] || 'en';
@@ -43,6 +47,8 @@ const sentryDsn: string = env['SENTRY_DSN'];
 export const environmentVariables: EnvironmentVariables = {
 
   apiUrl,
+  authClientId,
+  authDomain,
   buildNumber,
   i18nFormat,
   locale,

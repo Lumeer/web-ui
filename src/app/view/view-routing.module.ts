@@ -19,7 +19,8 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {AuthGuard} from '../core/guards/auth.guard';
+import {AuthGuard} from '../auth/auth.guard';
+import {CurrentUserGuard} from '../core/guards/current-user.guard';
 import {CollectionsGuard} from '../core/guards/collections.guard';
 import {LinkTypesGuard} from '../core/guards/link-types.guard';
 import {ViewExistGuard} from '../core/guards/view/view-exist.guard';
@@ -35,7 +36,7 @@ import {ViewComponent} from './view.component';
 const viewRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/view',
-    canActivate: [AuthGuard, WorkspaceGuard, CollectionsGuard, LinkTypesGuard, ViewsLoadedGuard, ViewExistGuard],
+    canActivate: [AuthGuard, CurrentUserGuard, WorkspaceGuard, CollectionsGuard, LinkTypesGuard, ViewsLoadedGuard, ViewExistGuard],
     component: ViewComponent,
     children: [
       {

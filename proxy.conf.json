@@ -1,8 +1,10 @@
 {
   "/engine": {
-    "target": "http://127.0.0.1:8080/lumeer-engine",
+    "target": "http://127.0.0.1:8080",
     "pathRewrite": {
-      "^/engine": ""
-    }
+      "^/engine": "/lumeer-engine"
+    },
+    "cookieDomainRewrite": "localhost:7000",
+    "cookiePathRewrite": ""
   }
 }

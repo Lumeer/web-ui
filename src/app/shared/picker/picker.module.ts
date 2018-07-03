@@ -26,7 +26,7 @@ import {IconPickerComponent} from './icon-picker/icon-picker.component';
 import {IconComponent} from './icon-chooser/icon-chooser.component';
 import {IconsPresenterComponent} from './icons-presenter/icons-presenter.component';
 import {PipesModule} from '../pipes/pipes.module';
-import {HighlightPipe} from './color-picker/highlight.pipe';
+import {HighlightColorPipe} from './color-picker/highlight-color.pipe';
 import {IconIdPipe} from './icon-picker/icon-id.pipe';
 
 @NgModule({
@@ -40,7 +40,7 @@ import {IconIdPipe} from './icon-picker/icon-id.pipe';
     ColorPickerComponent,
     IconComponent,
     IconsPresenterComponent,
-    HighlightPipe,
+    HighlightColorPipe,
     IconIdPipe
   ],
   exports: [
