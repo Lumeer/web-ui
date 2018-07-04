@@ -17,21 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {AuthRoutingModule} from './auth-routing.module';
-import {AuthCallbackComponent} from './callback/auth-callback.component';
-import { LogoutComponent } from './logout/logout.component';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {AUTH_REDIRECT_KEY} from '../auth.service';
 
-@NgModule({
-  imports: [
-    AuthRoutingModule,
-    CommonModule,
-  ],
-  declarations: [
-    AuthCallbackComponent,
-    LogoutComponent,
-  ]
+@Component({
+  selector: 'logout',
+  template: ''
 })
-export class AuthModule {
+export class LogoutComponent implements OnInit {
+
+  public constructor(private router: Router) {
+  }
+
+  public ngOnInit() {
+    const path = localStorage.getItem(AUTH_REDIRECT_KEY) || '/';
+    this.router.navigate([path]);
+  }
+
 }

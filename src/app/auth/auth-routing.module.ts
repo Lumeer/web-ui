@@ -20,11 +20,16 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AuthCallbackComponent} from './callback/auth-callback.component';
+import {LogoutComponent} from './logout/logout.component';
 
 const authRoutes: Routes = [
   {
     path: 'auth',
     component: AuthCallbackComponent
+  },
+  {
+    path: 'logout',
+    component: LogoutComponent
   }
 ];
 

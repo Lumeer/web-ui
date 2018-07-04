@@ -40,7 +40,7 @@ export class AuthHttpInterceptor implements HttpInterceptor {
       },
       withCredentials: true
     });
-    return next.handle(authRequest)
+    return next.handle(authRequest);
   }
 
 }

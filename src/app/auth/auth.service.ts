@@ -20,10 +20,13 @@
 import {Location} from '@angular/common';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
 import {Auth0DecodedHash, Auth0UserProfile, WebAuth} from 'auth0-js';
 import {of, Subscription, timer} from 'rxjs';
 import {mergeMap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
+import {AppState} from '../core/store/app.state';
+import {UsersAction} from '../core/store/users/users.action';
 
 export const AUTH_REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
@@ -40,7 +43,8 @@ export class AuthService {
   private refreshSubscription: Subscription;
 
   public constructor(private location: Location,
-                     private router: Router) {
+                     private router: Router,
+                     private store: Store<AppState>) {
     if (environment.auth) {
       const redirectUri = document.location.origin + location.prepareExternalUrl('auth');
       this.initAuth(redirectUri);
@@ -66,6 +70,7 @@ export class AuthService {
     this.auth0.parseHash((error, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
+        this.store.dispatch(new UsersAction.GetCurrentUser());
       } else if (error) {
         this.router.navigate(['/']);
         console.error(error);
@@ -96,7 +101,7 @@ export class AuthService {
   }
 
   public getLogoutUrl(): string {
-    const returnToUrl = encodeURIComponent(document.location.origin + this.location.prepareExternalUrl('auth'));
+    const returnToUrl = encodeURIComponent(document.location.origin + this.location.prepareExternalUrl('logout'));
     return `https://${environment.authDomain}/v2/logout?returnTo=${returnToUrl}&client_id=${environment.authClientId}`;
   }
 
