@@ -20,8 +20,6 @@
 import {NgModule} from '@angular/core';
 
 import {SharedModule} from '../shared/shared.module';
-import {CollectionListComponent} from './list/collection-list.component';
-import {CollectionComponent} from './collection.component';
 import {CollectionRoutingModule} from './collection-routing.module';
 import {CollectionSettingsComponent} from './settings/collection-settings.component';
 import {CollectionLinkTypesComponent} from './settings/tab/link-types/collection-link-types.component';
@@ -45,9 +43,7 @@ import {AttributeFilterPipe} from './settings/tab/attributes/attribute-filter.pi
   declarations: [
     AttributeFilterPipe,
     LinkAttributeListComponent,
-    CollectionComponent,
     CollectionTabComponent,
-    CollectionListComponent,
     CollectionSettingsComponent,
     CollectionUsersComponent,
     CollectionAttributesComponent,

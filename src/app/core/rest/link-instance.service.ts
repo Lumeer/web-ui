@@ -61,7 +61,7 @@ export class LinkInstanceService {
     const projectCode = this.workspace.projectCode;
     const suffix = id ? `/${id}` : '';
 
-    return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/link-instances${suffix}`;
+    return `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/link-instances${suffix}`;
   }
 
 }

@@ -28,7 +28,6 @@ export interface NavigationState {
   query: QueryModel;
   workspace: Workspace;
   perspective?: Perspective;
-  searchBoxHidden?: boolean;
   viewName?: string;
 
 }
@@ -36,8 +35,7 @@ export interface NavigationState {
 export const initialNavigationState: NavigationState = {
 
   query: {},
-  workspace: {},
-  searchBoxHidden: false
+  workspace: {}
 
 };
 

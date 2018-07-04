@@ -33,10 +33,12 @@ export class LumeerRouterStateSerializer implements RouterStateSerializer<Router
   public serialize(routerState: RouterStateSnapshot): RouterStateUrl {
     let route = routerState.root;
 
+    let data: Data = {};
     const params: Params = {};
     const queryParams: Params = {};
 
-    while (route.firstChild) {
+    while (route) {
+      data = {...data, ...route.data};
       for (const param of route.paramMap.keys) {
         params[param] = route.paramMap.get(param);
       }
@@ -47,7 +49,6 @@ export class LumeerRouterStateSerializer implements RouterStateSerializer<Router
     }
 
     const {url} = routerState;
-    const {data} = route;
 
     return {url, params, queryParams, data};
   }

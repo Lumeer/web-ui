@@ -67,7 +67,7 @@ export class SearchService {
 
   private searchPath(workspace?: Workspace): string {
     const w = workspace || this.workspace;
-    return `/${environment.apiUrl}/rest/organizations/${w.organizationCode}/projects/${w.projectCode}/search`;
+    return `${environment.apiUrl}/rest/organizations/${w.organizationCode}/projects/${w.projectCode}/search`;
   }
 
 }

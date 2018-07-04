@@ -81,7 +81,7 @@ export class ProjectService extends PermissionService {
   }
 
   private apiPrefix(orgCode: string, projCode?: string): string {
-    return `/${environment.apiUrl}/rest/organizations/${orgCode}/projects${projCode ? `/${projCode}` : ''}`;
+    return `${environment.apiUrl}/rest/organizations/${orgCode}/projects${projCode ? `/${projCode}` : ''}`;
   }
 
   protected actualApiPrefix(workspace?: Workspace): string {

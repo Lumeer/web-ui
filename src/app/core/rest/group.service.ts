@@ -60,7 +60,7 @@ export class GroupService {
   }
 
   private apiPrefix(groupId?: string): string {
-    return `/${environment.apiUrl}/rest/organizations/${this.workspace.organizationCode}/groups${groupId ? `/${groupId}` : ''}`;
+    return `${environment.apiUrl}/rest/organizations/${this.workspace.organizationCode}/groups${groupId ? `/${groupId}` : ''}`;
   }
 
 }

@@ -88,7 +88,7 @@ export class EventService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
+    return `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections/${collectionCode}/documents`;
   }
 
 }

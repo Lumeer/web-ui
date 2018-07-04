@@ -19,25 +19,23 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-
-import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
-import {OrganizationSettingsComponent} from './organization/organization-settings.component';
-import {ProjectSettingsComponent} from './project/project-settings.component';
-import {ProjectUsersComponent} from './project/users/project-users.component';
-import {WorkspaceSelectGuard} from './workspace-select.guard';
-import {OrganizationSettingsGuard} from './organization/organization-settings.guard';
+import {AuthGuard} from '../auth/auth.guard';
+import {CurrentUserGuard} from '../core/guards/current-user.guard';
 import {OrganizationDetailComponent} from './organization/detail/organization-detail.component';
+import {OrganizationSettingsComponent} from './organization/organization-settings.component';
+import {OrganizationSettingsGuard} from './organization/organization-settings.guard';
 import {OrganizationUsersComponent} from './organization/users/organization-users.component';
+import {ProjectSettingsComponent} from './project/project-settings.component';
 import {ProjectSettingsGuard} from './project/project-settings.guard';
-import {PageNotFoundGuard} from '../core/guards/page-not-found.guard';
-import {HomeComponent} from '../core/home.component';
-import {AuthGuard} from '../core/guards/auth.guard';
+import {ProjectUsersComponent} from './project/users/project-users.component';
+import {WorkspaceChooserComponent} from './workspace-chooser/workspace-chooser.component';
+import {WorkspaceSelectGuard} from './workspace-select.guard';
 
 const workspaceRoutes: Routes = [
   {
     path: 'organization/:organizationCode/project/:projectCode',
     component: ProjectSettingsComponent,
-    canActivate: [AuthGuard, ProjectSettingsGuard],
+    canActivate: [AuthGuard, CurrentUserGuard, ProjectSettingsGuard],
     children: [
       {
         path: 'users',
@@ -53,7 +51,7 @@ const workspaceRoutes: Routes = [
   {
     path: 'organization/:organizationCode',
     component: OrganizationSettingsComponent,
-    canActivate: [AuthGuard, OrganizationSettingsGuard],
+    canActivate: [AuthGuard, CurrentUserGuard, OrganizationSettingsGuard],
     children: [
       {
         path: 'detail',
@@ -72,11 +70,8 @@ const workspaceRoutes: Routes = [
   },
   {
     path: 'workspace',
-    canActivate: [AuthGuard, WorkspaceSelectGuard],
-    component: WorkspaceChooserComponent,
-    data: {
-      searchBoxHidden: true
-    }
+    canActivate: [AuthGuard, CurrentUserGuard, WorkspaceSelectGuard],
+    component: WorkspaceChooserComponent
   }
 ];
 

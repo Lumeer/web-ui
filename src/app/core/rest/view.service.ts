@@ -60,7 +60,7 @@ export class ViewService extends PermissionService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    const viewsPath = `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/views`;
+    const viewsPath = `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/views`;
     return code ? viewsPath.concat('/', code) : viewsPath;
   }
 }

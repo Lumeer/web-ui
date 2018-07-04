@@ -9,8 +9,10 @@ config.I18N_FORMAT = env.I18N_FORMAT || 'xlf';
 config.I18N_LOCALE = env.I18N_LOCALE || 'en';
 config.I18N_PATH = env.I18N_PATH || `src/i18n/messages.${config.I18N_LOCALE}.${config.I18N_FORMAT}`;
 config.BUILD_NUMBER = env.BUILD_NUMBER;
-config.LUMEER_ENGINE = env.LUMEER_ENGINE || 'engine';
+config.LUMEER_ENGINE = env.LUMEER_ENGINE;
 config.SENTRY_DSN = env.SENTRY_DSN;
+config.AUTH_CLIENT_ID = env.AUTH_CLIENT_ID;
+config.AUTH_DOMAIN = env.AUTH_DOMAIN;
 
 writeFileSync('./src/environments/.env.json', JSON.stringify(config));
 

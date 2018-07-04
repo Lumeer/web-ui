@@ -19,19 +19,21 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {HighlightTextPipe} from './highlight-text.pipe';
 import {ColorsPipe} from './colors.pipe';
 import {DefaultAttributePipe} from './default-attribute.pipe';
+import {EmptyPipe} from './empty.pipe';
 import {FilterPerspectivesPipe} from './filter-perspectives.pipe';
 import {IconsPipe} from './icons.pipe';
+import {LengthGreaterThanPipe} from './length-greater-than.pipe';
 import {LightenColorPipe} from './lighten-color.pipe';
 import {NativeDatePipe} from './native-date.pipe';
+import {PageSlicePipe} from './page-slice.pipe';
+import {PermissionsPipe} from './permissions.pipe';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PixelPipe} from './pixel.pipe';
 import {PrefixPipe} from './prefix.pipe';
-import {EmptyPipe} from './empty.pipe';
-import {PermissionsPipe} from './permissions.pipe';
-import {LengthGreaterThanPipe} from './length-greater-than.pipe';
-import {PageSlicePipe} from './page-slice.pipe';
+import {WorkspaceSetPipe} from './workspace-set.pipe';
 
 @NgModule({
   imports: [
@@ -50,7 +52,9 @@ import {PageSlicePipe} from './page-slice.pipe';
     PermissionsPipe,
     LengthGreaterThanPipe,
     DefaultAttributePipe,
-    PageSlicePipe
+    PageSlicePipe,
+    WorkspaceSetPipe,
+    HighlightTextPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -65,7 +69,9 @@ import {PageSlicePipe} from './page-slice.pipe';
     PermissionsPipe,
     LengthGreaterThanPipe,
     DefaultAttributePipe,
-    PageSlicePipe
+    PageSlicePipe,
+    WorkspaceSetPipe,
+    HighlightTextPipe,
   ]
 })
 export class PipesModule {

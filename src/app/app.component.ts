@@ -20,9 +20,9 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
-import {KeycloakService} from 'keycloak-angular';
-
 import {SnotifyService} from 'ng-snotify';
+import {environment} from '../environments/environment';
+import {AuthService} from './auth/auth.service';
 
 @Component({
   selector: 'lmr-app',
@@ -38,33 +38,43 @@ export class AppComponent implements OnInit {
   public isChrome = true;
 
   constructor(private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
-              private keycloakService: KeycloakService,
-              private notificationService: SnotifyService,
+              private authService: AuthService,
+              private snotifyService: SnotifyService,
               private title: Title) {
     this.title.setTitle('Lumeer - Easy Business Booster');
+
+    this.handleAuthentication();
     this.setUpGoogleAnalytics();
   }
 
+  private handleAuthentication() {
+    if (environment.auth) {
+      this.authService.handleAuthentication();
+    }
+  }
+
   private setUpGoogleAnalytics() {
-    if (!this.keycloakService.getKeycloakInstance()) {
+    if (!environment.analytics) {
       return;
     }
 
-    this.keycloakService.loadUserProfile()
-      .then(userProfile => this.angulartics2GoogleAnalytics.setUsername(userProfile.id));
+    this.authService.getUserProfile().then(profile => {
+      const [, userId] = profile.sub.split('|', 2);
+      this.angulartics2GoogleAnalytics.setUsername(userId);
+    });
   }
 
   public ngOnInit() {
     this.setNotificationStyle();
     try {
       this.isChrome = ((navigator as any).userAgent as string).toLowerCase().indexOf('chrome') >= 0;
-    } catch(e) {
+    } catch (e) {
       this.isChrome = false;
     }
   }
 
   public setNotificationStyle(): void {
-    this.notificationService.setDefaults({
+    this.snotifyService.setDefaults({
       toast: {
         titleMaxLength: 20,
         backdrop: -1,

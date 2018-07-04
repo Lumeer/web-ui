@@ -21,9 +21,9 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 import {perspectiveIconsMap} from '../../../perspective';
 import {ViewModel} from '../../../../../core/store/views/view.model';
-import {QueryData} from '../../../../../shared/search-box/query-data';
-import {QueryItem} from '../../../../../shared/search-box/query-item/model/query-item';
-import {QueryItemsConverter} from '../../../../../shared/search-box/query-item/query-items.converter';
+import {QueryData} from '../../../../../shared/top-panel/search-box/query-data';
+import {QueryItem} from '../../../../../shared/top-panel/search-box/query-item/model/query-item';
+import {QueryItemsConverter} from '../../../../../shared/top-panel/search-box/query-item/query-items.converter';
 
 @Component({
   selector: 'view-detail',

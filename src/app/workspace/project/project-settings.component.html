@@ -1,37 +1,39 @@
-<div class="col-12 col-lg-11 col-xl-10 m-auto" *ngIf="project">
-  <resource-header
-    [resource]="project"
-    [resourceType]="getResourceType()"
-    (back)="goBack()"
-    (delete)="onDelete()"
-    (colorChange)="onNewColor($event)"
-    (iconChange)="onNewIcon($event)"
-    (descriptionChange)="onNewDescription($event)"
-    (nameChange)="onNewName($event)"
-    (codeChange)="onNewCode($event)">
-    <div class="d-flex flex-row flex-nowrap align-items-center mr-3"
-         [style.color]="project.color"
-         title="Number of users" i18n-title="@@project.settings.users.count">
-      <i class="far fa-user mr-1" aria-hidden="true"></i>&nbsp;
-      <span>{{ userCount$ | async }}</span>
-    </div>
+<top-panel-wrapper>
+  <div class="col-12 col-lg-11 col-xl-10 m-auto" *ngIf="project">
+    <resource-header
+      [resource]="project"
+      [resourceType]="getResourceType()"
+      (back)="goBack()"
+      (delete)="onDelete()"
+      (colorChange)="onNewColor($event)"
+      (iconChange)="onNewIcon($event)"
+      (descriptionChange)="onNewDescription($event)"
+      (nameChange)="onNewName($event)"
+      (codeChange)="onNewCode($event)">
+      <div class="d-flex flex-row flex-nowrap align-items-center mr-3"
+           [style.color]="project.color"
+           title="Number of users" i18n-title="@@project.settings.users.count">
+        <i class="far fa-user mr-1" aria-hidden="true"></i>&nbsp;
+        <span>{{ userCount$ | async }}</span>
+      </div>
 
-    <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer"
-         [style.color]="project.color"
-         (click)="onCollectionsClick()"
-         title="Number of collections" i18n-title="@@project.settings.collections.count">
-      <i class="far fa-edit mr-1" aria-hidden="true"></i>&nbsp;
-      <span>{{project.collectionsCount}}</span>
-    </div>
-  </resource-header>
+      <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer"
+           [style.color]="project.color"
+           (click)="onCollectionsClick()"
+           title="Number of collections" i18n-title="@@project.settings.collections.count">
+        <i class="far fa-edit mr-1" aria-hidden="true"></i>&nbsp;
+        <span>{{project.collectionsCount}}</span>
+      </div>
+    </resource-header>
 
-  <ul class="nav nav-tabs">
-    <li role="presentation" class="nav-item">
-      <a [routerLink]="'users'"
-         routerLinkActive="active"
-         class="nav-link"
-         i18n="@@project.settings.tab.users">Users</a>
-    </li>
-  </ul>
-  <router-outlet></router-outlet>
-</div>
+    <ul class="nav nav-tabs">
+      <li role="presentation" class="nav-item">
+        <a [routerLink]="'users'"
+           routerLinkActive="active"
+           class="nav-link"
+           i18n="@@project.settings.tab.users">Users</a>
+      </li>
+    </ul>
+    <router-outlet></router-outlet>
+  </div>
+</top-panel-wrapper>

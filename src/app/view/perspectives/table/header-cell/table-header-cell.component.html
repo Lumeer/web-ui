@@ -46,7 +46,7 @@
          (mousedown)="useExistingLink(linkCollectionAttribute)"
          class="dropdown-item">
         <i class="{{linkCollectionAttribute[1].icon}} fa-fw mr-1" [style.color]="linkCollectionAttribute[1].color"></i>&nbsp;
-        <span>{{linkCollectionAttribute[1].name}}.</span><span [innerHtml]="linkCollectionAttribute[2].name | highlight: attributeName"></span>
+        <span>{{linkCollectionAttribute[1].name}}.</span><span [innerHtml]="linkCollectionAttribute[2].name | highlightText: attributeName"></span>
         <small class="text-secondary ml-1">({{linkCollectionAttribute[0].name}})</small>
       </a>
 
@@ -58,7 +58,7 @@
          (mousedown)="createNewLink(collectionAttribute)"
            class="dropdown-item">
         <i class="{{collectionAttribute[0].icon}} fa-fw mr-1" [style.color]="collectionAttribute[0].color"></i>&nbsp;
-        <span>{{collectionAttribute[0].name}}.</span><span [innerHtml]="collectionAttribute[1].name | highlight: attributeName"></span>
+        <span>{{collectionAttribute[0].name}}.</span><span [innerHtml]="collectionAttribute[1].name | highlightText: attributeName"></span>
       </a>
     </ng-container>
   </div>

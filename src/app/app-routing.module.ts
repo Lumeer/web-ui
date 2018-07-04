@@ -20,22 +20,23 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
+import {AuthGuard} from './auth/auth.guard';
+import {AppRedirectGuard} from './core/guards/app-redirect.guard';
+import {CurrentUserGuard} from './core/guards/current-user.guard';
 import {PageNotFoundGuard} from './core/guards/page-not-found.guard';
 import {HomeComponent} from './core/home.component';
 import {LumeerRouterStateSerializer} from './core/store/router/lumeer-router-state-serializer';
-import {AuthGuard} from './core/guards/auth.guard';
-import {AppRedirectGuard} from './core/guards/app-redirect.guard';
 
 const appRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    canActivate: [AuthGuard, AppRedirectGuard],
+    canActivate: [AuthGuard, CurrentUserGuard, AppRedirectGuard],
     component: HomeComponent
   },
   {
     path: '**',
-    canActivate: [AuthGuard, PageNotFoundGuard],
+    canActivate: [AuthGuard, CurrentUserGuard, PageNotFoundGuard],
     component: HomeComponent
   }
 ];

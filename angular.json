@@ -10,6 +10,13 @@
       "prefix": "",
       "schematics": {
         "@ngrx/schematics:component": {
+          "spec": false,
+          "styleext": "scss"
+        },
+        "@ngrx/schematics:guard": {
+          "spec": false
+        },
+        "@ngrx/schematics:module": {
           "spec": false
         },
         "@ngrx/schematics:pipe": {
@@ -50,7 +57,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "with": "src/environments/environment.production.ts"
                 }
               ],
               "namedChunks": true,
@@ -97,8 +104,7 @@
           "options": {
             "baseHref": "/ui/",
             "browserTarget": "lumeer:build",
-            "port": 7000,
-            "proxyConfig": "proxy.conf.json"
+            "port": 7000
           },
           "configurations": {
             "cs": {
