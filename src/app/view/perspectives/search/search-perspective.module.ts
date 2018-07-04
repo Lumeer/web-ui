@@ -31,6 +31,7 @@ import {SearchPerspectiveComponent} from './search-perspective.component';
 import {SearchResultsDirective} from './search-results.directive';
 import {SearchViewsComponent} from './views/search-views.component';
 import {ViewDetailComponent} from './views/view-detail/view-detail.component';
+import {SearchDocumentHeaderComponent} from './documents/header/search-document-header.component';
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import {ViewDetailComponent} from './views/view-detail/view-detail.component';
     SearchDocumentsComponent,
     SearchLinksComponent,
     SearchPerspectiveComponent,
+    SearchDocumentHeaderComponent,
     SearchResultsDirective,
     SearchViewsComponent,
     ViewDetailComponent

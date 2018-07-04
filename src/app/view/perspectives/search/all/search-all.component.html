@@ -18,14 +18,14 @@
       <div class="h3 ml-3 my-2" i18n="@@search.all.records">
         Records
       </div>
-      <post-it-perspective class="perspective"></post-it-perspective>
+      <search-documents [maxLines]="5"></search-documents>
     </div>
     <div *ngIf="views.length > 0">
       <hr *ngIf="collections.length > 0 || documents.length > 0">
       <div class="h3 ml-3 my-2" i18n="@@search.all.views">
         Views
       </div>
-      <search-views class="perspective"></search-views>
+      <search-views [maxLines]="5"></search-views>
     </div>
   </ng-container>
 </div>

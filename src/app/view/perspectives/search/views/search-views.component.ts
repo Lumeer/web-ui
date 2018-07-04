@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 
@@ -32,7 +32,9 @@ import {selectAllCollections} from '../../../../core/store/collections/collectio
 import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
 import {QueryData} from '../../../../shared/top-panel/search-box/query-data';
 import {filter} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
+import {Perspective} from '../../perspective';
+import {QueryConverter} from '../../../../core/store/navigation/query.converter';
+import {QueryModel} from '../../../../core/store/navigation/query.model';
 
 @Component({
   selector: 'search-views',
@@ -40,13 +42,17 @@ import {isNullOrUndefined} from 'util';
 })
 export class SearchViewsComponent implements OnInit, OnDestroy {
 
+  @Input()
+  public maxLines: number = -1;
+
   public views$: Observable<ViewModel[]>;
+  public queryData: QueryData;
 
   private navigationSubscription: Subscription;
   private dataSubscription: Subscription;
 
   private workspace: Workspace;
-  public queryData: QueryData;
+  private query: QueryModel;
 
   constructor(private router: Router,
               private store: Store<AppState>) {
@@ -69,10 +75,11 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
 
   private subscribeToNavigation() {
     this.navigationSubscription = this.store.select(selectNavigation).pipe(
-      filter(navigation => !isNullOrUndefined(navigation.workspace))
+      filter(navigation => !!navigation.workspace && !!navigation.query)
     ).subscribe(
       navigation => {
         this.workspace = navigation.workspace;
+        this.query = navigation.query;
         this.store.dispatch(new ViewsAction.Get({query: navigation.query}));
       }
     );
@@ -87,6 +94,18 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
 
   public showView(view: ViewModel) {
     this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}]);
+  }
+
+  public trackByView(index: number, view: ViewModel): string {
+    return view.id;
+  }
+
+  public onShowAll() {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'views'], {queryParams: {query: QueryConverter.toString(this.query)}});
+  }
+
+  private workspacePath(): string {
+    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
 }

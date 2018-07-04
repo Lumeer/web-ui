@@ -35,8 +35,7 @@ import {ViewModel} from '../../../../core/store/views/view.model';
 import {selectViewsByQuery} from '../../../../core/store/views/views.state';
 
 @Component({
-  templateUrl: './search-all.component.html',
-  styleUrls: ['./search-all.component.scss']
+  templateUrl: './search-all.component.html'
 })
 export class SearchAllComponent implements OnInit, OnDestroy {
 
