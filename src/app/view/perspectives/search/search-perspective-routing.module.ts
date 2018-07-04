@@ -36,7 +36,7 @@ const searchRoutes: Routes = [
         component: SearchAllComponent
       },
       {
-        path: 'files',
+        path: 'collections',
         component: SearchCollectionsComponent
       },
       {

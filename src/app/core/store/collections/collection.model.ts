@@ -36,6 +36,7 @@ export interface CollectionModel extends ResourceModel {
 
   attributes?: AttributeModel[];
   defaultAttributeId?: string;
+  lastTimeUsed?: Date;
 
   documentsCount?: number;
 
