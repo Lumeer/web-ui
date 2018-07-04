@@ -175,7 +175,7 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
           if (organization && project) {
             this.updateDefaultWorkspace(organization, project);
             this.clearStore();
-            this.router.navigate(['/w', organization.code, project.code, 'view', Perspective.Search, 'files']);
+            this.router.navigate(['/w', organization.code, project.code, 'view', Perspective.Search, 'collections']);
           }
         });
     }
