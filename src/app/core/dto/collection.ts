@@ -26,6 +26,6 @@ export interface Collection extends Resource {
   defaultAttributeId?: string;
   documentsCount?: number;
   favorite?: boolean;
-  lastTimeUsed?: number
+  lastTimeUsed?: number;
 
 }
