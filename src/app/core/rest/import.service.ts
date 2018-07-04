@@ -49,7 +49,7 @@ export class ImportService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/import`;
+    return `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/import`;
   }
 
 }

@@ -70,7 +70,7 @@ export class OrganizationService extends PermissionService {
   }
 
   public getAllServiceLimits(): Observable<{[organizationId: string]: ServiceLimits}> {
-    return this.httpClient.options<{[organizationId: string]: ServiceLimits}>(`${this.apiPrefix()}/serviceLimits`);
+    return this.httpClient.get<{[organizationId: string]: ServiceLimits}>(`${this.apiPrefix()}/info/serviceLimits`);
   }
 
   public getPayments(): Observable<Payment[]> {
@@ -96,7 +96,7 @@ export class OrganizationService extends PermissionService {
   }
 
   private apiPrefix(code?: string): string {
-    return `/${environment.apiUrl}/rest/organizations${code ? `/${code}` : ''}`;
+    return `${environment.apiUrl}/rest/organizations${code ? `/${code}` : ''}`;
   }
 
 }

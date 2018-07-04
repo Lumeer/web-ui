@@ -45,7 +45,7 @@ export class GlobalService {
   }
 
   private apiPrefix(): string {
-    return `/${environment.apiUrl}/rest/global`;
+    return `${environment.apiUrl}/rest/global`;
   }
 
 }

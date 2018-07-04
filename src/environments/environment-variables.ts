@@ -36,7 +36,7 @@ export interface EnvironmentVariables {
 
 }
 
-const apiUrl = env['LUMEER_ENGINE'] || 'engine';
+const apiUrl = env['LUMEER_ENGINE'] || 'http://localhost:8080/lumeer-engine';
 const authClientId = env['AUTH_CLIENT_ID'] || 'Hjee0La2DjlYjIH5ClCx3Xnfaj02n2On';
 const authDomain = env['AUTH_DOMAIN'] || 'lumeer.eu.auth0.com';
 const buildNumber: number = env['BUILD_NUMBER'];

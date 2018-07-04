@@ -125,7 +125,7 @@ export class CollectionService extends PermissionService {
     const organizationCode = this.workspace.organizationCode;
     const projectCode = this.workspace.projectCode;
 
-    return `/${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
+    return `${environment.apiUrl}/rest/organizations/${organizationCode}/projects/${projectCode}/collections`;
   }
 
 }

@@ -49,7 +49,7 @@ export class UserService {
   }
 
   private apiPrefix(organizationId: string, userId?: string): string {
-    return `/${environment.apiUrl}/rest/organizations/${organizationId}/users${userId ? `/${userId}` : ''}`;
+    return `${environment.apiUrl}/rest/organizations/${organizationId}/users${userId ? `/${userId}` : ''}`;
   }
 
 }

@@ -20,6 +20,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AUTH_REDIRECT_KEY} from '../auth.service';
+import {AppState} from '../../core/store/app.state';
+import {Store} from '@ngrx/store';
+import {UsersAction} from '../../core/store/users/users.action';
+import {selectCurrentUser} from '../../core/store/users/users.state';
+import {filter, take} from 'rxjs/operators';
 
 @Component({
   selector: 'auth-callback',
@@ -27,12 +32,17 @@ import {AUTH_REDIRECT_KEY} from '../auth.service';
 })
 export class AuthCallbackComponent implements OnInit {
 
-  public constructor(private router: Router) {
+  public constructor(private router: Router,
+                     private store: Store<AppState>) {
   }
 
   public ngOnInit() {
     const path = localStorage.getItem(AUTH_REDIRECT_KEY) || '/';
-    setTimeout(() => this.router.navigate([path]));
+
+    this.store.select(selectCurrentUser).pipe(filter(user => !!user), take(1)).subscribe(user => {
+      setTimeout(() => this.router.navigate([path]));
+    });
+    this.store.dispatch(new UsersAction.GetCurrentUser());
   }
 
 }
