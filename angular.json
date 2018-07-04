@@ -104,8 +104,7 @@
           "options": {
             "baseHref": "/ui/",
             "browserTarget": "lumeer:build",
-            "port": 7000,
-            "proxyConfig": "proxy.conf.json"
+            "port": 7000
           },
           "configurations": {
             "cs": {
