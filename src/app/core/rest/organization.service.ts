@@ -66,7 +66,7 @@ export class OrganizationService extends PermissionService {
   }
 
   public getServiceLimits(code: string): Observable<ServiceLimits> {
-    return this.httpClient.get<ServiceLimits>(`${this.apiPrefix(code)}/serviceLimits`);
+    return this.httpClient.get<ServiceLimits>(`${this.apiPrefix(code)}/serviceLimit`);
   }
 
   public getAllServiceLimits(): Observable<{[organizationId: string]: ServiceLimits}> {
