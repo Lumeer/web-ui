@@ -37,7 +37,8 @@ export class CollectionConverter {
       permissions: dto.permissions ? PermissionsConverter.fromDto(dto.permissions) : null,
       documentsCount: dto.documentsCount,
       correlationId: correlationId,
-      favorite: dto.favorite
+      favorite: dto.favorite,
+      lastTimeUsed: new Date(dto.lastTimeUsed)
     };
   }
 
@@ -50,10 +51,7 @@ export class CollectionConverter {
       color: model.color,
       icon: model.icon,
       attributes: model.attributes ? model.attributes.map(CollectionConverter.toAttributeDto) : [],
-      defaultAttributeId: model.defaultAttributeId,
-      permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null,
-      documentsCount: model.documentsCount, // TODO maybe not needed this way
-      favorite: model.favorite
+      permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null
     };
   }
 
