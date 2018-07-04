@@ -17,22 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {LanguageChooserComponent} from './chooser/language-chooser.component';
-import { LanguageLinkPipe } from './language-link.pipe';
+export interface Language {
 
-@NgModule({
-  imports: [
-    CommonModule,
-  ],
-  declarations: [
-    LanguageChooserComponent,
-    LanguageLinkPipe,
-  ],
-  exports: [
-    LanguageChooserComponent,
-  ]
-})
-export class LanguageModule {
+  code: string;
+  name: string;
+  englishName: string;
+  icon: string;
+
 }
+
+export const availableLanguages: Language[] = [
+  {code: 'cs', name: 'Čeština', englishName: 'Czech', icon: 'flag-icon-cz'},
+  {code: 'en', name: 'English', englishName: 'English', icon: 'flag-icon-gb'},
+];

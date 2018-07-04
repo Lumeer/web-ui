@@ -25,7 +25,6 @@ import {CommentsComponent} from './comments/comments.component';
 import {DocumentModule} from './document/document.module';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 import {InputModule} from './input/input.module';
-import {LanguageModule} from './language/language.module';
 import {LinksModule} from './links/links.module';
 import {PerspectiveDirective} from './perspective.directive';
 import {PickerModule} from './picker/picker.module';
@@ -57,7 +56,6 @@ import {DirectivesModule} from './directives/directives.module';
     LinksModule,
     PipesModule,
     DirectivesModule,
-    LanguageModule,
     TopPanelModule,
   ],
   declarations: [
@@ -87,7 +85,6 @@ import {DirectivesModule} from './directives/directives.module';
     PreviewResultsModule,
     LinksModule,
     DirectivesModule,
-    LanguageModule,
     TopPanelModule,
   ]
 })

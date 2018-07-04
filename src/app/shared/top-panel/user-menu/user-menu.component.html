@@ -5,11 +5,13 @@
   </a>
 
   <div class="dropdown-menu dropdown-menu-right profile-dropdown" aria-labelledby="profileDropdownLink">
-    <h6 class="dropdown-header text-center"
-        i18n="@@menu.changeLanguage">Change language</h6>
-    <div class="text-center">
-      <language-chooser></language-chooser>
-    </div>
+    <a *ngFor="let language of otherLanguages"
+       [href]="url$ | async | languageLink:language.code"
+       [title]="language.name"
+       class="dropdown-item">
+      <span class="flag-icon {{language.icon}}"></span>
+      <span>{{language | languageName}}</span>
+    </a>
     <div class="dropdown-divider"></div>
     <a (click)="onFeedbackClick()"
        class="dropdown-item"
