@@ -41,6 +41,7 @@ import {UsersModule} from './users/users.module';
 import {DirectivesModule} from './directives/directives.module';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {WarningMessageModule} from './warning-message/warning-message.module';
+import {SearchBoxModule} from './top-panel/search-box/search-box.module';
 
 @NgModule({
   imports: [
@@ -60,7 +61,6 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
     PipesModule,
     DirectivesModule,
     TopPanelModule,
-    LanguageModule,
     WarningMessageModule
   ],
   declarations: [
@@ -93,7 +93,6 @@ import {WarningMessageModule} from './warning-message/warning-message.module';
     LinksModule,
     DirectivesModule,
     TopPanelModule,
-    LanguageModule,
     WarningMessageModule
   ]
 })
