@@ -31,9 +31,6 @@
       <i class="fas fa-fw fa-sign-in" data-fa-transform="left-4" aria-hidden="true"></i>&nbsp;
       <span i18n="@@menu.signOut">Sign out</span>
     </a>
-    <div *ngIf="buildNumber"
-         class="dropdown-divider">
-    </div>
     <ng-container *ngIf="buildNumber">
       <div class="dropdown-divider"></div>
       <small class="dropdown-header py-0">Build #{{buildNumber}}</small>
