@@ -50,7 +50,7 @@ $ LUMEER_ENV=production \
 When you add some text to the application which will be shown to the user, you should always add `i18n` attribute on its element with the translation string unique ID as its value. For example:
 
 ```html
-<span i18n="@@view.override.button.cancel">Cancel</span>
+<span i18n="@@button.cancel">Cancel</span>
 ```
 
 See the details in the [Angular documentation](https://angular.io/guide/i18n).

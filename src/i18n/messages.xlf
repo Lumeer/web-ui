@@ -1680,6 +1680,10 @@
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
           <context context-type="linenumber">8</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.newFeature.warn" datatype="html">
         <source>Features in the Free program are tested but can be a little buggy still.</source>
         <context-group purpose="location">
@@ -1691,6 +1695,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
           <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.nextDaySupport.warn" datatype="html">
         <source>Now you have best effort e-mail support.</source>
@@ -1704,6 +1712,10 @@
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
           <context context-type="linenumber">16</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.backupAndRecovery.warn" datatype="html">
         <source>There are no recovery guarantees in Free.</source>
         <context-group purpose="location">
@@ -1715,6 +1727,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
           <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.powerfulServer.warn" datatype="html">
         <source>You run now on commodity shared virtual machine.</source>
@@ -1728,6 +1744,10 @@
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
           <context context-type="linenumber">24</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.unlimitedProjects.warn" datatype="html">
         <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> collections.</source>
         <context-group purpose="location">
@@ -1739,6 +1759,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
           <context context-type="linenumber">28</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
+          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.state.dataLimit.warn" datatype="html">
         <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.documents}}"/> records available.</source>
@@ -1766,42 +1790,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
           <context context-type="linenumber">35</context>
-        </context-group>
-      </trans-unit><trans-unit id="organizations.tab.detail.basic.newFeature" datatype="html">
-        <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Verified<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> updates and new features</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
-          <context context-type="linenumber">41</context>
-        </context-group>
-      </trans-unit><trans-unit id="organizations.tab.detail.basic.nextDaySupport" datatype="html">
-        <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Next business day<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> e-mail support</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-      </trans-unit><trans-unit id="organizations.tab.detail.basic.backupAndRecovery" datatype="html">
-        <source>Data backup and <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>next business day recovery<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-      </trans-unit><trans-unit id="organizations.tab.detail.basic.powerfulServer" datatype="html">
-        <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Powerful<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> shared server resources</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
-          <context context-type="linenumber">53</context>
-        </context-group>
-      </trans-unit><trans-unit id="organizations.tab.detail.basic.unlimitedProjects" datatype="html">
-        <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/> projects, users and collections</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
-          <context context-type="linenumber">57</context>
-        </context-group>
-      </trans-unit><trans-unit id="organizations.tab.detail.basic.dataLimit" datatype="html">
-        <source>Plenty of data (1,000,000 records in total)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
-          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit><trans-unit id="chart.query.invalid" datatype="html">
         <source>Your query results cannot be shown using chart perspective. The query
@@ -2067,14 +2055,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="file.not.exist" datatype="html">
-        <source>File does not exist</source>
+        <source>Collection does not exist</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="file.permission.missing" datatype="html">
-        <source>You do not have permission to access this file</source>
+        <source>You do not have permission to access this collection</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
           <context context-type="linenumber">1</context>
@@ -2673,7 +2661,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="user.create.serviceLimits" datatype="html">
-        <source>You are currently on the Trial plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?</source>
+        <source>You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
           <context context-type="linenumber">1</context>
@@ -2802,14 +2790,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="color-picker.cancelText" datatype="html">
-        <source>Cancel</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/picker/color-picker/color-picker.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="color-picker.chooseText" datatype="html">
+      <trans-unit id="button.choose" datatype="html">
         <source>Choose</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/picker/color-picker/color-picker.component.ts</context>
@@ -3027,7 +3008,7 @@
       </trans-unit>
       <trans-unit id="organization.payments.disabled.message" datatype="html">
         <source>Thank you very much for your interest. We have recorded your order.
- Automated payments are currently disabled due to legal limitations. We will get in touch with you soon!</source>
+ Automated payments are not fully operational yet. We will get in touch with you soon!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context>
           <context context-type="linenumber">1</context>
