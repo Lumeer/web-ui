@@ -56,20 +56,19 @@ function searchDocumentGetValues(document: DocumentModel): any[] {
   return searchDocumentGetValuesFromArray(Object.values(document.data));
 }
 
-function searchDocumentGetValuesFromAny(value: any): string[] | string {
+function searchDocumentGetValuesFromAny(value: any): string[] {
   if (isArray(value)) {
     return searchDocumentGetValuesFromArray(value as any[]);
   } else {
-    return value as string;
+    return [value as string];
   }
 }
 
 function searchDocumentGetValuesFromArray(array: any[]): string[] {
-  let values: string[] = [];
-  for (const value of array) {
-    values = values.concat(searchDocumentGetValuesFromAny(value));
-  }
-  return values;
+  return array.reduce((acc, value) => {
+    acc = [...acc, ...searchDocumentGetValuesFromAny(value)];
+    return acc;
+  }, []);
 }
 
 function searchDocumentAttributeHtml(attributeId: string, collection: CollectionModel) {

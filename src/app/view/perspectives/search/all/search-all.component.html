@@ -1,6 +1,6 @@
 <div class="mt-2" *ngIf="dataLoaded$ | async">
 
-  <ng-container *ngIf="hasData(); else noData">
+  <ng-container *ngIf="hasCollection || hasView || hasDocument; else noData">
 
     <ng-container *ngIf="hasCollection">
       <div class="h3 ml-3 my-2" i18n="@@search.all.collections">

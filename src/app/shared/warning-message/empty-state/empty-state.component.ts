@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
 @Component({
   selector: 'empty-state',
-  templateUrl: './empty-state.component.html'
+  templateUrl: './empty-state.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptyStateComponent {
 

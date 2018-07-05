@@ -39,7 +39,7 @@ export class SearchDocumentHeaderComponent {
   public document: DocumentModel;
 
   @Input()
-  public isOpened: Boolean;
+  public isOpened: boolean;
 
   @Input()
   public size: SizeType;

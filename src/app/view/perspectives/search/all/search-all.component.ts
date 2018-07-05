@@ -54,10 +54,6 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  public hasData(): boolean {
-    return this.hasCollection || this.hasView || this.hasDocument;
-  }
-
   private subscribeDataInfo() {
     this.dataLoaded$ = observableCombineLatest(this.store.select(selectCollectionsLoaded),
       this.store.select(selectViewsLoaded),

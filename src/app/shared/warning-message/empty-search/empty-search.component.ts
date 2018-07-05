@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   selector: 'empty-search',
-  templateUrl: './empty-search.component.html'
+  templateUrl: './empty-search.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmptySearchComponent {
 

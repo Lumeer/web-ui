@@ -28,7 +28,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 export class PostItCollectionImportButtonComponent {
 
   @Output()
-  public import = new EventEmitter<{result: string, name: string, format: string}>();
+  public import = new EventEmitter<{ result: string, name: string, format: string }>();
 
   @Output()
   public error = new EventEmitter<string>();
@@ -36,8 +36,8 @@ export class PostItCollectionImportButtonComponent {
   @Input()
   public disabled: boolean;
 
-  @Input()
-  public i18n: I18n;
+  constructor(private i18n: I18n) {
+  }
 
   public dragging: boolean = false;
 
@@ -54,7 +54,7 @@ export class PostItCollectionImportButtonComponent {
       const indexOfSuffix = file.name.lastIndexOf('.');
       const name = indexOfSuffix !== -1 ? file.name.substring(0, indexOfSuffix) : file.name;
       reader.onloadend = () => {
-        this.import.emit({ result: reader.result, name, format: 'csv' });
+        this.import.emit({result: reader.result, name, format: 'csv'});
       };
       reader.readAsText(file);
 

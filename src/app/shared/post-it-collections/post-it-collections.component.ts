@@ -48,7 +48,6 @@ import {Router} from '@angular/router';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import * as Icons from '../picker/icon-picker/icons';
 import * as Colors from '../picker/color-picker/colors';
-import {selectViewsLoaded} from '../../core/store/views/views.state';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -84,7 +83,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   private collectionsLoaded: boolean;
   private subscriptions = new Subscription();
 
-  constructor(public i18n: I18n,
+  constructor(private i18n: I18n,
               private router: Router,
               private store: Store<AppState>,
               private zone: NgZone,
@@ -215,10 +214,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public onShowAllClicked() {
     this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {queryParams: {query: QueryConverter.toString(this.query)}});
-  }
-
-  public isLoading(): boolean {
-    return isNullOrUndefined(this.collectionsLoaded) || isNullOrUndefined(this.query);
   }
 
   private createLayout() {

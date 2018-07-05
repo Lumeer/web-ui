@@ -1,4 +1,4 @@
-<ng-container *ngIf="!isLoading()">
+<ng-container *ngIf="collectionsLoaded && query">
 
   <ng-container *ngIf="collections.length; else noCollections">
 
@@ -12,7 +12,6 @@
       <post-it-collection-import-button
         class="ml-2"
         [disabled]="!(project | permissions:'write' | async)"
-        [i18n]="i18n"
         (error)="notifyOfError($event)"
         (import)="onImportCollection($event)">
       </post-it-collection-import-button>
