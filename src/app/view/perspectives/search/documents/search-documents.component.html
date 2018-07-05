@@ -1,14 +1,12 @@
-<div class="mt-2" *ngIf="getDocuments() as documents">
-  <div *ngIf="!documents.length && loaded" class="alert alert-warning" i18n="@@search.result.empty">
-    We are sorry, but we have not found anything. Please do a more accurate search.
-  </div>
-  <div *ngIf="documents.length" infiniteScroll
+<ng-container *ngIf="loaded$ | async">
+
+  <div class="mt-2" *ngIf="documentsOrder.length; else noDocuments" infiniteScroll
        [infiniteScrollDisabled]="maxLines > 0"
        [infiniteScrollDistance]="2"
        (scrolled)="onScrollDown($event)">
     <size-slider class="d-flex justify-content-end mb-2"
                  [defaultSize]="size" (newSize)="onSizeChange($event)"></size-slider>
-    <div *ngFor="let document of (maxLines > 0 ? (documents | slice:0:maxLines) : documents); trackBy:trackByDocument">
+    <div *ngFor="let document of (maxLines > 0 ? (getDocuments() | slice:0:maxLines) : getDocuments()); trackBy:trackByDocument">
 
       <search-document-header
         (toggle)="toggleDocument(document)"
@@ -23,12 +21,13 @@
     </div>
 
     <div class="clickable d-flex justify-content-end" [style.font-size.%]="150"
-         *ngIf="maxLines > 0 && maxLines < documents.length" i18n="@@search.result.more"
+         *ngIf="maxLines > 0 && maxLines < documentsOrder.length" i18n="@@search.result.more"
          (click)="onShowAll()">
       See all
     </div>
   </div>
-</div>
+
+</ng-container>
 
 <ng-template #sTemplate let-document>
 </ng-template>
@@ -45,4 +44,13 @@
   <ng-container *ngTemplateOutlet="lTemplate; context: { $implicit: document}"></ng-container>
   <!--links></links>
   <comments></comments-->
+</ng-template>
+
+<ng-template #noDocuments>
+  <empty-search *ngIf="!(query | emptyQuery)"></empty-search>
+  <empty-state *ngIf="query | emptyQuery"
+               [icon]="'fa fa-file-times'">
+    <h3 i18n="@@search.records.empty.title">No records yet!</h3>
+    <div i18n="@@search.records.empty.subtitle">Add your first record by selecting some collection.</div>
+  </empty-state>
 </ng-template>

@@ -23,8 +23,7 @@ import {Router} from '@angular/router';
 
 import {AppState} from '../../../../core/store/app.state';
 import {Observable, Subscription, combineLatest} from 'rxjs';
-import {selectViewsByQuery} from '../../../../core/store/views/views.state';
-import {ViewsAction} from '../../../../core/store/views/views.action';
+import {selectViewsByQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../../core/store/navigation/workspace.model';
 import {ViewModel} from '../../../../core/store/views/view.model';
@@ -35,6 +34,7 @@ import {filter} from 'rxjs/operators';
 import {Perspective} from '../../perspective';
 import {QueryConverter} from '../../../../core/store/navigation/query.converter';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
+import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'search-views',
@@ -48,11 +48,12 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   public views$: Observable<ViewModel[]>;
   public queryData: QueryData;
 
-  private navigationSubscription: Subscription;
-  private dataSubscription: Subscription;
+  private subscriptions = new Subscription();
+
+  private viewsLoaded: boolean;
 
   private workspace: Workspace;
-  private query: QueryModel;
+  public query: QueryModel;
 
   constructor(private router: Router,
               private store: Store<AppState>) {
@@ -65,31 +66,35 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.navigationSubscription) {
-      this.navigationSubscription.unsubscribe();
-    }
-    if (this.dataSubscription) {
-      this.dataSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   private subscribeToNavigation() {
-    this.navigationSubscription = this.store.select(selectNavigation).pipe(
+    const navigationSubscription = this.store.select(selectNavigation).pipe(
       filter(navigation => !!navigation.workspace && !!navigation.query)
     ).subscribe(
       navigation => {
         this.workspace = navigation.workspace;
         this.query = navigation.query;
-        this.store.dispatch(new ViewsAction.Get({query: navigation.query}));
       }
     );
+    this.subscriptions.add(navigationSubscription);
   }
 
   private subscribeToData() {
-    this.dataSubscription = combineLatest(
+    const dataSubscription = combineLatest(
       this.store.select(selectAllCollections),
       this.store.select(selectAllLinkTypes)
     ).subscribe(([collections, linkTypes]) => this.queryData = {collections, linkTypes});
+    this.subscriptions.add(dataSubscription);
+
+    const loadedSubscription = this.store.select(selectViewsLoaded)
+      .subscribe(loaded => this.viewsLoaded = loaded);
+    this.subscriptions.add(loadedSubscription);
+  }
+
+  public isLoading(): boolean {
+    return isNullOrUndefined(this.viewsLoaded) || isNullOrUndefined(this.query);
   }
 
   public showView(view: ViewModel) {

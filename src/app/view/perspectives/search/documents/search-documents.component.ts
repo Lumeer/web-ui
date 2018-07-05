@@ -20,14 +20,13 @@
 import {Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
+import {Observable, Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {selectDocumentsByCustomQuery, selectDocumentsQueries} from '../../../../core/store/documents/documents.state';
+import {selectCurrentQueryLoaded, selectDocumentsByCustomQuery} from '../../../../core/store/documents/documents.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
-import {areQueriesEqual} from '../../../../core/store/navigation/query.helper';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
 import {UserSettingsService} from '../../../../core/user-settings.service';
@@ -69,12 +68,12 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public size: SizeType;
   public documentsMap: { [documentId: string]: DocumentModel };
   public expandedDocumentIds: string[] = [];
-  public loaded: boolean = false;
   public collections: { [collectionId: string]: CollectionModel };
   public documentsOrder: string[] = [];
+  public loaded$: Observable<boolean>;
+  public query: QueryModel;
 
   private page = 0;
-  private query: QueryModel;
   private workspace: Workspace;
   private subscriptions = new Subscription();
   private documentsSubscription: Subscription;
@@ -133,7 +132,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public isDocumentOpened(document: DocumentModel): boolean {
     return this.expandedDocumentIds.includes(document.id);
   }
-  
+
   public toggleDocument(document: DocumentModel) {
     const newIds = this.isDocumentOpened(document) ? this.expandedDocumentIds.filter(id => id !== document.id)
       : [...this.expandedDocumentIds, document.id];
@@ -190,12 +189,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
       .subscribe(config => this.expandedDocumentIds = config && config.expandedDocumentIds.slice() || []);
     this.subscriptions.add(searchConfigSubscription);
 
-    const loadedSubscription = this.store.select(selectDocumentsQueries)
-      .pipe(
-        map(queries => queries.filter(query => areQueriesEqual(query, this.query)))
-      )
-      .subscribe(queries => this.loaded = queries && queries.length > 0);
-    this.subscriptions.add(loadedSubscription);
+    this.loaded$ = this.store.select(selectCurrentQueryLoaded);
 
     const collectionSubscription = this.store.select(selectCollectionsByQuery)
       .subscribe(collections => this.collections = collections.reduce((acc, coll) => {
@@ -226,7 +220,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     }
     const pageSize = PAGE_SIZE * (this.page + 1);
     const query = {...this.query, page: 0, pageSize};
-    this.documentsSubscription = this.store.select(selectDocumentsByCustomQuery(query)).pipe(
+    this.documentsSubscription = this.store.select(selectDocumentsByCustomQuery(query, true)).pipe(
       filter(documents => !!documents)
     ).subscribe(documents => {
       this.mapNewDocuments(documents);

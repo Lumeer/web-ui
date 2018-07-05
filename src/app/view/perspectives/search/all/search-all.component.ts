@@ -19,91 +19,78 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {filter, map, tap} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
-import {isNullOrUndefined} from 'util';
-import {SearchService} from '../../../../core/rest';
 
+import {Observable, Subscription, combineLatest as observableCombineLatest} from 'rxjs';
 import {AppState} from '../../../../core/store/app.state';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {selectCollectionsByQuery, selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
+import {selectViewsByQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
+import {selectCurrentQueryLoaded, selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
+import {filter, map, tap} from 'rxjs/operators';
+import {selectQuery} from '../../../../core/store/navigation/navigation.state';
+import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
-import {NavigationState, selectNavigation} from '../../../../core/store/navigation/navigation.state';
-import {ViewModel} from '../../../../core/store/views/view.model';
-import {selectViewsByQuery} from '../../../../core/store/views/views.state';
 
 @Component({
   templateUrl: './search-all.component.html'
 })
 export class SearchAllComponent implements OnInit, OnDestroy {
 
-  public collections: CollectionModel[];
-
-  public documents: DocumentModel[];
-
-  public views: ViewModel[];
+  public dataLoaded$: Observable<boolean>;
+  public hasCollection: boolean;
+  public hasDocument: boolean;
+  public hasView: boolean;
+  public query: QueryModel;
 
   private subscriptions = new Subscription();
 
-  constructor(private searchService: SearchService,
-              private store: Store<AppState>) {
+  constructor(private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    [
-      this.subscribeOnQuery(),
-      this.subscribeOnCollection(),
-      this.subscribeOnDocuments(),
-      this.subscribeOnViews()
-    ].forEach(subscription => this.subscriptions.add(subscription));
-  }
-
-  private subscribeOnQuery() {
-    return this.store.select(selectNavigation).pipe(
-      filter((navigation: NavigationState) => {
-        return Boolean(navigation && navigation.workspace && navigation.workspace.organizationCode && navigation.workspace.projectCode);
-      }),
-      map(navigation => navigation.query),
-      filter(query => !isNullOrUndefined(query)),
-      map(query => ({...query, page: 0, pageSize: 100})), // TODO implement pagination logic
-      tap(query => this.store.dispatch(new DocumentsAction.Get({query})))
-    ).subscribe();
-  }
-
-  private subscribeOnViews() {
-    return this.store.select(selectViewsByQuery).subscribe(views => {
-      this.views = views;
-    });
-  }
-
-  private subscribeOnDocuments() {
-    return this.store.select(selectDocumentsByQuery).subscribe(documents => {
-      this.documents = documents;
-    });
-  }
-
-  private subscribeOnCollection() {
-    return this.store.select(selectCollectionsByQuery).subscribe(collections => {
-      this.collections = collections;
-    });
-  }
-
-  public loading(): boolean {
-    return Boolean(!this.collections || !this.documents || !this.views);
-  }
-
-  public emptySearch(): boolean {
-    return Boolean(
-      this.collections.length === 0 &&
-      this.documents.length === 0 &&
-      this.views.length === 0
-    );
+    this.subscribeDataInfo();
   }
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  public hasData(): boolean {
+    return this.hasCollection || this.hasView || this.hasDocument;
+  }
+
+  private subscribeDataInfo() {
+    this.dataLoaded$ = observableCombineLatest(this.store.select(selectCollectionsLoaded),
+      this.store.select(selectViewsLoaded),
+      this.store.select(selectCurrentQueryLoaded)
+    ).pipe(
+      map(([collectionsLoaded, viewLoaded, documentsLoaded]) => collectionsLoaded && viewLoaded && documentsLoaded)
+    );
+
+    const querySubscription = this.store.select(selectQuery).pipe(
+      filter(query => !!query),
+      tap(query => this.loadDocument(query))
+    ).subscribe(query => this.query = query);
+    this.subscriptions.add(querySubscription);
+
+    const collectionSubscription = this.store.select(selectCollectionsByQuery).pipe(
+      map(collections => collections && collections.length > 0)
+    ).subscribe(hasCollection => this.hasCollection = hasCollection);
+    this.subscriptions.add(collectionSubscription);
+
+    const viewsSubscription = this.store.select(selectViewsByQuery).pipe(
+      map(views => views && views.length > 0)
+    ).subscribe(hasView => this.hasView = hasView);
+    this.subscriptions.add(viewsSubscription);
+
+    const documentSubscription = this.store.select(selectDocumentsByQuery).pipe(
+      map(documents => documents && documents.length > 0)
+    ).subscribe(hasDocument => this.hasDocument = hasDocument);
+    this.subscriptions.add(documentSubscription);
+  }
+
+  private loadDocument(query: QueryModel) {
+    const querySingleDocument = {...query, page: 0, pageSize: 1};
+    this.store.dispatch(new DocumentsAction.Get({query: querySingleDocument}));
   }
 
 }

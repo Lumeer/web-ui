@@ -53,7 +53,7 @@ export class DocumentsEffects {
 
       return this.searchService.searchDocuments(queryDto).pipe(
         map(dtos => dtos.map(dto => DocumentConverter.fromDto(dto))),
-        map(documents => new DocumentsAction.GetSuccess({documents: documents})),
+        map(documents => new DocumentsAction.GetSuccess({documents: documents, query: action.payload.query})),
         catchError((error) => of(new DocumentsAction.GetFailure({error: error})))
       );
     })

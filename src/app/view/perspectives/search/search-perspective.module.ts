@@ -32,6 +32,7 @@ import {SearchResultsDirective} from './search-results.directive';
 import {SearchViewsComponent} from './views/search-views.component';
 import {ViewDetailComponent} from './views/view-detail/view-detail.component';
 import {SearchDocumentHeaderComponent} from './documents/header/search-document-header.component';
+import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import {SearchDocumentHeaderComponent} from './documents/header/search-document-
     SharedModule,
     PostItPerspectiveModule,
     SearchBoxModule,
+    WarningMessageModule,
     SearchPerspectiveRoutingModule
   ],
   declarations: [

@@ -40,6 +40,7 @@ import {TopPanelModule} from './top-panel/top-panel.module';
 import {UsersModule} from './users/users.module';
 import {DirectivesModule} from './directives/directives.module';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {WarningMessageModule} from './warning-message/warning-message.module';
 
 @NgModule({
   imports: [
@@ -59,6 +60,8 @@ import {InfiniteScrollModule} from 'ngx-infinite-scroll';
     PipesModule,
     DirectivesModule,
     TopPanelModule,
+    LanguageModule,
+    WarningMessageModule
   ],
   declarations: [
     SizeSliderComponent,
@@ -90,6 +93,8 @@ import {InfiniteScrollModule} from 'ngx-infinite-scroll';
     LinksModule,
     DirectivesModule,
     TopPanelModule,
+    LanguageModule,
+    WarningMessageModule
   ]
 })
 export class SharedModule {

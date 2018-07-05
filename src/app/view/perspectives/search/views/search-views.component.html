@@ -1,17 +1,29 @@
 <div class="mt-2" *ngIf="views$ | async as views">
-  <ng-container *ngIf="views.length; else noViews">
-    <view-detail *ngFor="let view of (maxLines > 0 ? (views | slice:0:maxLines) : views); trackBy:trackByView"
-                 [view]="view"
-                 [queryData]="queryData"
-                 (clicked)="showView(view)">
-    </view-detail>
-    <div class="clickable d-flex justify-content-end" [style.font-size.%]="150"
-         *ngIf="maxLines > 0 && maxLines < views.length" i18n="@@search.result.more"
-         (click)="onShowAll()">
-      See all
-    </div>
+
+  <ng-container *ngIf="!isLoading()">
+
+    <ng-container *ngIf="views.length; else noViews">
+      <view-detail *ngFor="let view of (maxLines > 0 ? (views | slice:0:maxLines) : views); trackBy:trackByView"
+                   [view]="view"
+                   [queryData]="queryData"
+                   (clicked)="showView(view)">
+      </view-detail>
+      <div class="clickable d-flex justify-content-end" [style.font-size.%]="150"
+           *ngIf="maxLines > 0 && maxLines < views.length" i18n="@@search.result.more"
+           (click)="onShowAll()">
+        See all
+      </div>
+    </ng-container>
+
   </ng-container>
-  <ng-template class="alert alert-warning" #noViews i18n="@@search.perspective.result.empty">
-    I am sorry, I did not find anything. Please try another search!
-  </ng-template>
+
 </div>
+
+<ng-template #noViews>
+  <empty-search *ngIf="!(query | emptyQuery)"></empty-search>
+  <empty-state *ngIf="query | emptyQuery"
+               [icon]="'fa fa-eye-slash'">
+    <h3 i18n="@@search.views.empty.title">No views yet!</h3>
+    <div i18n="@@search.views.empty.subtitle">Add your first view by building query and saving it.</div>
+  </empty-state>
+</ng-template>

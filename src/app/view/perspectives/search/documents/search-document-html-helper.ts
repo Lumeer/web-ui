@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isArray, isNullOrUndefined} from "util";
+import {isArray, isNullOrUndefined} from 'util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';

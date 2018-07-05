@@ -23,7 +23,8 @@ import {documentsAdapter, DocumentsState, initialDocumentsState} from './documen
 export function documentsReducer(state: DocumentsState = initialDocumentsState, action: DocumentsAction.All): DocumentsState {
   switch (action.type) {
     case DocumentsActionType.GET_SUCCESS:
-      return documentsAdapter.addMany(action.payload.documents, state);
+      const queriesState = {...state, queries: state.queries.concat(action.payload.query)};
+      return documentsAdapter.addMany(action.payload.documents, queriesState);
     case DocumentsActionType.CREATE_SUCCESS:
       return documentsAdapter.addOne(action.payload.document, state);
     case DocumentsActionType.UPDATE_SUCCESS:
