@@ -17,15 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Language {
+import { Pipe, PipeTransform } from '@angular/core';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Language} from './language';
 
-  code: string;
-  name: string;
-  icon: string;
+@Pipe({
+  name: 'languageName'
+})
+export class LanguageNamePipe implements PipeTransform {
+
+  public constructor(private i18n: I18n) {
+  }
+
+  public transform(language: Language): string {
+    const translatedName = this.i18n({id: 'language.name.' + language.code, value: language.englishName});
+    return translatedName === language.name ? translatedName : `${language.name} (${translatedName})`;
+  }
 
 }
-
-export const availableLanguages: Language[] = [
-  {code: 'cs', name: 'Čeština', icon: 'flag-icon-cz'},
-  {code: 'en', name: 'English', icon: 'flag-icon-gb'},
-];
