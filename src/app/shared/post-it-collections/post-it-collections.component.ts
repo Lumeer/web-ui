@@ -174,8 +174,8 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  public createCollection(collection: CollectionModel) {
-    this.store.dispatch(new CollectionsAction.Create({collection, callback: (collection) => this.onCreateCollection(collection)}));
+  public createCollection(newCollection: CollectionModel) {
+    this.store.dispatch(new CollectionsAction.Create({collection: newCollection, callback: (collection) => this.onCreateCollection(collection)}));
   }
 
   public getRoles(collection: CollectionModel): string[] {
@@ -194,7 +194,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     const newCollection = {...this.emptyCollection(), name: importInfo.name};
     const importedCollection = {collection: newCollection, data: importInfo.result};
 
-    this.store.dispatch(new CollectionsAction.Import({format: importInfo.format, importedCollection, callback: (collection) => this.onCreateCollection(collection)}));
+    this.store.dispatch(new CollectionsAction.Import({
+      format: importInfo.format, importedCollection,
+      callback: (collection) => this.onCreateCollection(collection)
+    }));
   }
 
   public forceLayout() {
@@ -274,14 +277,14 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.collections = this.collections.filter(coll => coll.correlationId !== collection.correlationId);
   }
 
-  private onCreateCollection(collection: CollectionModel){
+  private onCreateCollection(collection: CollectionModel) {
     if (queryIsNotEmpty(this.query)) {
       this.store.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
     }
     this.refreshPostIts();
   }
 
-  private onRemoveCollection(collectionId: string){
+  private onRemoveCollection(collectionId: string) {
     if (queryIsNotEmpty(this.query)) {
       this.store.dispatch(new NavigationAction.RemoveCollectionFromQuery({collectionId}));
     }

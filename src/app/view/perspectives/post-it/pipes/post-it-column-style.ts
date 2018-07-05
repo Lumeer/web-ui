@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {Pipe, PipeTransform} from '@angular/core';
 
 import {SizeType} from '../../../../shared/slider/size-type';
