@@ -27,6 +27,9 @@ import {PostItPerspectiveComponent} from './post-it-perspective.component';
 import {PostItDocumentHeaderComponent} from './document/post-it-document-header/post-it-document-header.component';
 import {PostItDocumentCellComponent} from './document/post-it-document-cell/post-it-document-cell.component';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {PostItColumnStylePipe} from './pipes/post-it-column-style';
+import {DocumentCollectionRolesPipe} from './pipes/document-collection-roles.pipe';
+import {DocumentCollectionPipe} from './pipes/document-collection.pipe';
 
 @NgModule({
   imports: [
@@ -39,7 +42,10 @@ import {InfiniteScrollModule} from 'ngx-infinite-scroll';
     PostItDocumentComponent,
     PostItPerspectiveComponent,
     PostItDocumentHeaderComponent,
-    PostItDocumentCellComponent
+    PostItDocumentCellComponent,
+    PostItColumnStylePipe,
+    DocumentCollectionRolesPipe,
+    DocumentCollectionPipe
   ],
   entryComponents: [
     PostItPerspectiveComponent

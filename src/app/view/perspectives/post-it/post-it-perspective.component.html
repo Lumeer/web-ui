@@ -16,7 +16,7 @@
   </div>
 
   <div class="post-it-document-layout row" #postItLayout>
-    <div class="layout-item {{getColumnStyle()}} mb-3"
+    <div class="layout-item {{size | postItColumnStyle}} mb-3"
          layout-item
          [layout]="layoutManager"
          *ngFor="let doc of getDocuments(); trackBy:trackByDocument; let idx = index"
@@ -24,8 +24,8 @@
       <post-it-document
         class="card post-it"
         [ngClass]="doc.id ? 'initialized': 'uninitialized'"
-        [collection]="getCollection(doc)"
-        [collectionRoles]="getCollectionRoles(doc)"
+        [collection]="doc | documentCollection:collections"
+        [collectionRoles]="doc | documentCollectionRoles:collectionRoles"
         [index]="idx"
         [documentModel]="doc"
         [perspectiveId]="perspectiveId"
@@ -34,15 +34,5 @@
         (sizeChange)="postItChanged()"></post-it-document>
 
     </div>
-
-    <label *ngIf="(!hasSingleCollection() || !hasCreateRights()) && !postItsOrder.length"
-           class="label-centered"
-           i18n="@@document.list.empty">Nothing To Show</label>
   </div>
-</div>
-
-<div class="fading loading-text text-center py-5"
-     [style.opacity]="0"
-     i18n="@@documents.post.it.loading">
-  Loading...
 </div>

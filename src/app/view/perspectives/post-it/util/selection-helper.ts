@@ -220,7 +220,7 @@ export class SelectionHelper {
     let minDistanceElement: HTMLElement;
     let minDistanceRow: number;
     for (let i = 0; i < elements.length; i++) {
-      const el = elements.item(i).getElementsByTagName('span').item(0) as HTMLElement;
+      const el = elements.item(i) as HTMLElement;
       const rect = el.getBoundingClientRect();
       const idSplit = el.id.split('#', 4);
       const elColumn = +idSplit[2];

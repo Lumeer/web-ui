@@ -45,8 +45,8 @@ export const selectDocumentsByQuery = createSelector(selectAllDocuments, selectQ
   (documents, query): DocumentModel[] => filterDocuments(sortDocumentsByCreationDate(documents), query)
 );
 
-export const selectDocumentsByCustomQuery = (query: QueryModel) => createSelector(selectAllDocuments,
-  (documents): DocumentModel[] => filterDocuments(sortDocumentsByCreationDate(documents, true), query)
+export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean) => createSelector(selectAllDocuments,
+  (documents): DocumentModel[] => filterDocuments(sortDocumentsByCreationDate(documents, desc), query)
 );
 
 export const selectDocumentById = (id: string) => createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);

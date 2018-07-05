@@ -2,7 +2,7 @@
   class="card-header px-2 py-1 d-flex"
   [collection]="collection"
   [readonly]="!hasWriteRole"
-  [favorite]="getFavorite$() | async"
+  [favorite]="favorite$ | async"
   [initialized]="documentModel.id"
   (remove)="onRemove()"
   (toggleFavorite)="onToggleFavorite()"
@@ -11,7 +11,7 @@
 
 <div class="card-body p-2">
   <ul class="m-0 p-0" #content>
-    <ng-container *ngFor="let row of getRows$() | async; trackBy:getTrackBy(); let idx = index">
+    <ng-container *ngFor="let row of rows$ | async; trackBy:getTrackBy(); let idx = index">
 
       <li class="w-100" *ngIf="!row.remove">
         <post-it-document-cell
@@ -61,5 +61,5 @@
 </div>
 
 <datalist *ngIf="documentModel" id="{{ suggestionListId() }}">
-  <option *ngFor="let attribute of getUnusedAttributes$() | async">{{ attribute.name }}</option>
+  <option *ngFor="let attribute of unusedAttributes$ | async">{{ attribute.name }}</option>
 </datalist>

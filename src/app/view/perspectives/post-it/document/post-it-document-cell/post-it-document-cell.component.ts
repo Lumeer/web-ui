@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, HostListener, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
 import {SelectionHelper} from '../../util/selection-helper';
+import {KeyCode} from '../../../../../shared/key-code';
 
 @Component({
   selector: 'post-it-document-cell',
@@ -27,7 +28,7 @@ import {SelectionHelper} from '../../util/selection-helper';
   styleUrls: ['./post-it-document-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PostItDocumentCellComponent {
+export class PostItDocumentCellComponent implements OnChanges {
 
   @Input() public perspectiveId: string;
   @Input() public suggestionListId: string;
@@ -45,8 +46,47 @@ export class PostItDocumentCellComponent {
   @Output() public enter = new EventEmitter();
   @Output() public remove = new EventEmitter();
 
-  public onFocus() {
-    this.focus.emit();
+  @HostBinding('id') public id: string;
+  @HostBinding('attr.tabindex') public tabindex: number;
+  @HostBinding('title') public title: string;
+
+  @HostListener('focus', ['$event'])
+  public hostFocus(event: FocusEvent) {
+    if(event) {
+      this.focus.emit();
+    }
+  }
+
+  @HostListener('keydown', ['$event'])
+  public keydown(event: KeyboardEvent) {
+    switch (event.keyCode) {
+      case KeyCode.RightArrow:
+        this.selectionHelper.moveRight();
+        break;
+      case KeyCode.LeftArrow:
+        this.selectionHelper.moveLeft();
+        break;
+      case KeyCode.DownArrow:
+        this.selectionHelper.moveDown();
+        break;
+      case KeyCode.UpArrow:
+        this.selectionHelper.moveUp();
+        break;
+      case KeyCode.Enter:
+      case KeyCode.F2:
+        this.selectionHelper.focusToggle(true);
+        break;
+      case KeyCode.Backspace:
+      case KeyCode.Delete:
+        this.onRemove();
+        break;
+    }
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    this.id = `${this.perspectiveId}#${this.key}#${this.column}#${this.row}`;
+    this.tabindex = this.index * 1000 + this.row * 2 + this.column;
+    this.title = this.model;
   }
 
   public onRemove() {

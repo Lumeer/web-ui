@@ -39,7 +39,6 @@ import {selectNavigation} from '../../../core/store/navigation/navigation.state'
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {SelectionHelper} from './util/selection-helper';
 import {DocumentUiService} from '../../../core/ui/document-ui.service';
-import {isNullOrUndefined} from 'util';
 
 @Component({
   selector: 'post-it-perspective',
@@ -63,6 +62,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   public postItLayout: ElementRef;
 
   public perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
+  public collections: { [collectionId: string]: CollectionModel };
   public collectionRoles: { [collectionId: string]: string[] };
   public postItsOrder: string[] = [];
   public selectionHelper: SelectionHelper;
@@ -77,7 +77,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private creatingCorrelationsIds: string[] = [];
   private postIts: { [documentId: string]: DocumentModel };
-  private collections: { [collectionId: string]: CollectionModel };
 
   constructor(private store: Store<AppState>,
               private zone: NgZone,
@@ -183,7 +182,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     }
     const pageSize = this.getPageSize() * (this.page + 1);
     const query = {...this.query, page: 0, pageSize};
-    this.documentsSubscription = this.store.select(selectDocumentsByCustomQuery(query)).pipe(
+    this.documentsSubscription = this.store.select(selectDocumentsByCustomQuery(query, true)).pipe(
       filter(documents => !!documents)
     ).subscribe(documents => {
       this.mapNewDocuments(documents);
@@ -258,39 +257,14 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         collectionId: documentModel.collectionId,
         documentId: documentModel.id
       }));
-
     }
-  }
-
-  public getCollection(documentModel: DocumentModel): CollectionModel {
-    const collectionId = documentModel && documentModel.collectionId;
-    return collectionId && this.collections[collectionId];
-  }
-
-  public getCollectionRoles(documentModel: DocumentModel): string[] {
-    return this.collectionRoles && this.collectionRoles[documentModel.collectionId] || [];
   }
 
   public trackByDocument(documentModel: DocumentModel): string {
     return documentModel.correlationId || documentModel.id;
   }
 
-  public getColumnStyle(): string {
-    switch (this.size) {
-      case SizeType.S:
-        return 'col-2';
-      case SizeType.M:
-        return 'col-3';
-      case SizeType.L:
-        return 'col-4';
-      case SizeType.XL:
-        return 'col-6';
-      default:
-        return 'col-3';
-    }
-  }
-
-  public getNumberColumns(): number {
+  private getNumberColumns(): number {
     switch (this.size) {
       case SizeType.S:
         return 6;

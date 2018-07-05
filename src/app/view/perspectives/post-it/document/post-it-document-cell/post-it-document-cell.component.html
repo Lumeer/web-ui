@@ -1,24 +1,9 @@
-<span id="{{perspectiveId}}#{{key}}#{{column}}#{{row}}"
-      [attr.tabindex]="index * 1000 + row * 2 + column"
-      [title]="model" class="d-flex"
-      (keydown.ArrowLeft)="selectionHelper.moveLeft()"
-      (keydown.ArrowRight)="selectionHelper.moveRight()"
-      (keydown.ArrowUp)="selectionHelper.moveUp()"
-      (keydown.ArrowDown)="selectionHelper.moveDown()"
-      (keydown.F2)="selectionHelper.focusToggle(true)"
-      (keydown.enter)="selectionHelper.focusToggle(true)"
-      (keydown.backspace)="onRemove()"
-      (keydown.delete)="onRemove()"
-      (focus)="onFocus()">
-
-    <input #cellInput
-           class="border-0 w-100 {{additionalClasses}}"
-           [(ngModel)]="model"
-           [disabled]="readonly"
-           [attr.list]="suggestionListId"
-           (keydown)="$event.stopPropagation()"
-           (keydown.F2)="selectionHelper.focusToggle(false)"
-           (keydown.Escape)="selectionHelper.focusToggle(false)"
-           (keydown.enter)="onEnter()"
-           (blur)="onBlur()">
-</span>
+<input class="border-0 w-100 {{additionalClasses}}"
+       [(ngModel)]="model"
+       [disabled]="readonly"
+       [attr.list]="suggestionListId"
+       (keydown)="$event.stopPropagation()"
+       (keydown.F2)="selectionHelper.focusToggle(false)"
+       (keydown.Escape)="selectionHelper.focusToggle(false)"
+       (keydown.enter)="onEnter()"
+       (blur)="onBlur()">

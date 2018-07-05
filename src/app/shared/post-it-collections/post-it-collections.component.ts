@@ -60,7 +60,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   @Input()
   public maxShown: number = -1;
-  
+
   @ViewChildren(PostItCollectionComponent)
   public postIts: QueryList<PostItCollectionComponent>;
 
@@ -170,12 +170,12 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public updateCollection(collection: CollectionModel) {
     if (collection.id) {
-      this.store.dispatch(new CollectionsAction.Update({collection, callback: this.onUpdateCollection()}));
+      this.store.dispatch(new CollectionsAction.Update({collection, callback: () => this.refreshPostIts()}));
     }
   }
 
   public createCollection(collection: CollectionModel) {
-    this.store.dispatch(new CollectionsAction.Create({collection, callback: this.onCreateCollection()}));
+    this.store.dispatch(new CollectionsAction.Create({collection, callback: (collection) => this.onCreateCollection(collection)}));
   }
 
   public getRoles(collection: CollectionModel): string[] {
@@ -194,7 +194,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     const newCollection = {...this.emptyCollection(), name: importInfo.name};
     const importedCollection = {collection: newCollection, data: importInfo.result};
 
-    this.store.dispatch(new CollectionsAction.Import({format: importInfo.format, importedCollection, callback: this.onCreateCollection()}));
+    this.store.dispatch(new CollectionsAction.Import({format: importInfo.format, importedCollection, callback: (collection) => this.onCreateCollection(collection)}));
   }
 
   public forceLayout() {
@@ -266,7 +266,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       {
         title,
         message,
-        action: new CollectionsAction.Delete({collectionId: collection.id, callback: this.onRemoveCollection()})
+        action: new CollectionsAction.Delete({collectionId: collection.id, callback: (collectionId) => this.onRemoveCollection(collectionId)})
       }));
   }
 
@@ -274,39 +274,18 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.collections = this.collections.filter(coll => coll.correlationId !== collection.correlationId);
   }
 
-  private getCollectionByCorrelationId(correlationId: string): CollectionModel {
-    return this.collections.find(c => c.correlationId === correlationId);
+  private onCreateCollection(collection: CollectionModel){
+    if (queryIsNotEmpty(this.query)) {
+      this.store.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
+    }
+    this.refreshPostIts();
   }
 
-  private onCreateCollection(): (collection: CollectionModel) => void {
-    const query = this.query;
-    const store = this.store;
-    const comp = this;
-    return collection => {
-      if (queryIsNotEmpty(query)) {
-        store.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
-      }
-      comp.refreshPostIts();
-    };
-  }
-
-  private onUpdateCollection(): () => void {
-    const comp = this;
-    return () => {
-      comp.refreshPostIts();
-    };
-  }
-
-  private onRemoveCollection(): (collectionId: string) => void {
-    const query = this.query;
-    const store = this.store;
-    const comp = this;
-    return collectionId => {
-      if (queryIsNotEmpty(query)) {
-        store.dispatch(new NavigationAction.RemoveCollectionFromQuery({collectionId}));
-      }
-      comp.refreshPostIts();
-    };
+  private onRemoveCollection(collectionId: string){
+    if (queryIsNotEmpty(this.query)) {
+      this.store.dispatch(new NavigationAction.RemoveCollectionFromQuery({collectionId}));
+    }
+    this.refreshPostIts();
   }
 
   private dispatchActions() {

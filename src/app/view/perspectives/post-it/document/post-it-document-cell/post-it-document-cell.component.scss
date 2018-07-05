@@ -1,6 +1,10 @@
 @import "../../../../../shared/variables";
 
-span:focus input, span input:focus {
+:host {
+  display: flex;
+}
+
+:host(:focus) input, :host input:focus {
   outline: auto !important;
   pointer-events: auto;
 }
