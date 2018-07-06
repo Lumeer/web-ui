@@ -27,7 +27,6 @@ import {AuthService} from '../../../auth/auth.service';
 import {AppState} from '../../../core/store/app.state';
 import {selectUrl} from '../../../core/store/navigation/navigation.state';
 import {DialogService} from '../../../dialog/dialog.service';
-import {availableLanguages, Language} from './language';
 
 @Component({
   selector: 'user-menu',
@@ -38,10 +37,9 @@ import {availableLanguages, Language} from './language';
 export class UserMenuComponent {
 
   public readonly buildNumber = environment.buildNumber;
+  public readonly locale = environment.locale;
 
   public url$: Observable<string>;
-
-  public otherLanguages: Language[];
 
   public constructor(private authService: AuthService,
                      private dialogService: DialogService,
@@ -51,7 +49,6 @@ export class UserMenuComponent {
   }
 
   public ngOnInit() {
-    this.otherLanguages = availableLanguages.filter(lang => lang.code !== environment.locale);
     this.url$ = this.store.select(selectUrl);
   }
 
