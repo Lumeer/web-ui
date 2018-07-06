@@ -25,9 +25,8 @@ import {ResourceMenuModule} from './resource-menu/resource-menu.module';
 import {SearchBoxModule} from './search-box/search-box.module';
 import {TopPanelComponent} from './top-panel.component';
 import {LanguageLinkPipe} from './user-menu/language-link.pipe';
+import {UserMenuComponent} from './user-menu/user-menu.component';
 import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
-import { UserMenuComponent } from './user-menu/user-menu.component';
-import { LanguageNamePipe } from './user-menu/language-name.pipe';
 
 @NgModule({
   imports: [
@@ -35,17 +34,16 @@ import { LanguageNamePipe } from './user-menu/language-name.pipe';
     PipesModule,
     RouterModule,
     ResourceMenuModule,
-    SearchBoxModule,
+    SearchBoxModule
   ],
   declarations: [
     TopPanelComponent,
     TopPanelWrapperComponent,
     UserMenuComponent,
-    LanguageNamePipe,
-    LanguageLinkPipe,
+    LanguageLinkPipe
   ],
   exports: [
-    TopPanelWrapperComponent,
+    TopPanelWrapperComponent
   ]
 })
 export class TopPanelModule {
