@@ -77,10 +77,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   public focusedPanel: number;
   public workspace: Workspace;
   public query: QueryModel;
+  public collectionsLoaded: boolean;
 
   private icons = Icons.solid;
   private colors = Colors.palette;
-  private collectionsLoaded: boolean;
   private subscriptions = new Subscription();
 
   constructor(private i18n: I18n,
