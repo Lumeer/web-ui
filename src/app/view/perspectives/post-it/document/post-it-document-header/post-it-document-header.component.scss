@@ -1,0 +1,29 @@
+@import "../../../../../shared/variables";
+
+.always-visible {
+  opacity: 1 !important;
+}
+
+.icon {
+  cursor: auto;
+  transition: background, opacity, color $animation-color-duration;
+  opacity: 0;
+
+  &.text-primary:hover {
+    color: $primary-hover !important;
+  }
+  &.text-secondary:hover {
+    color: $secondary-hover !important;
+  }
+  &.text-success:hover {
+    color: $success-hover !important;
+  }
+  &.text-danger:hover {
+    color: $danger-hover !important;
+  }
+  &.text-warning:hover {
+    color: $warning-hover !important;
+  }
+
+}
+

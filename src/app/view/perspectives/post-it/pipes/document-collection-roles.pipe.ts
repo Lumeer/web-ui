@@ -17,15 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {Pipe, PipeTransform} from '@angular/core';
 
-export class WorkspaceHelper {
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
-  constructor(public workspace: Workspace) {
-  }
+@Pipe({
+  name: 'documentCollectionRoles'
+})
+export class DocumentCollectionRolesPipe implements PipeTransform {
 
-  public hasWorkspace(): boolean {
-    return Boolean(this.workspace && this.workspace.organizationCode && this.workspace.projectCode);
+  public transform(document: DocumentModel, collectionRoles: { [collectionId: string]: string[] }): string[] {
+    return collectionRoles && collectionRoles[document.collectionId] || [];
   }
 
 }

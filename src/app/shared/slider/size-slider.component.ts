@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {SizeType} from './size-type';
 
 @Component({
@@ -33,6 +33,9 @@ export class SizeSliderComponent implements OnInit {
   @Input() public defaultSize: SizeType;
   @Output() public newSize: EventEmitter<SizeType> = new EventEmitter();
 
+  private trackingMouse: boolean = false;
+  private clickedInside: boolean = false;
+
   public sizes: SizeType[] = [SizeType.S, SizeType.M, SizeType.L, SizeType.XL];
   public componentWidth = 160;
   public circleSize = 15;
@@ -44,9 +47,38 @@ export class SizeSliderComponent implements OnInit {
     this.circlePosition = this.calculateSliderLeft(index);
   }
 
-  public onSliderClick(event) {
+  @HostListener('document:mousedown', ['$event'])
+  public onMouseDown(event: any) {
+    if (this.clickedInside) {
+      this.trackingMouse = true;
+      this.calculateNewPosition(event);
+    }
+  }
+
+  @HostListener('document:mousemove', ['$event'])
+  public onMouseMove(event: any) {
+    if (this.trackingMouse) {
+      this.calculateNewPosition(event);
+    }
+  }
+
+  @HostListener('document:mouseup', ['$event'])
+  public onMouseUp(event: any) {
+    if (this.trackingMouse) {
+      this.trackingMouse = false;
+      this.calculateNewPosition(event);
+    }
+    this.clickedInside = false;
+  }
+
+  public onMouseDownInsideComponent() {
+    this.clickedInside = true;
+  }
+
+  private calculateNewPosition(event: any) {
     const position = event.clientX - this.offsetLeft();
-    const index = Math.floor(position / this.step);
+    const computedIndex = Math.floor(position / this.step);
+    const index = Math.min(Math.max(0, computedIndex), this.sizes.length - 1);
     const newCirclePosition = this.calculateSliderLeft(index);
     if (newCirclePosition !== this.circlePosition) {
       this.circlePosition = newCirclePosition;

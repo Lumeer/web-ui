@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Injectable} from '@angular/core';
+
 import {AppState} from '../store/app.state';
 import {Store} from '@ngrx/store';
 import {CollectionModel} from '../store/collections/collection.model';
@@ -24,7 +26,6 @@ import {DocumentModel} from '../store/documents/document.model';
 import {UiRow} from './ui-row';
 import {BehaviorSubject} from 'rxjs';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Injectable, NgZone} from '@angular/core';
 import {DocumentUi} from './document-ui';
 import {NotificationService} from '../notifications/notification.service';
 
@@ -47,6 +48,11 @@ export class DocumentUiService {
     if (key) {
       this.state[key] = new DocumentUi(collection, document, this.store, this.i18n, this.notificationService);
     }
+  }
+
+  public isInited(collection: CollectionModel, document: DocumentModel): boolean {
+    const key = DocumentUiService.getKey(collection, document);
+    return !!this.state[key];
   }
 
   public destroy(collection: CollectionModel, document: DocumentModel): void {

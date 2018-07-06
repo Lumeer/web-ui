@@ -22,7 +22,6 @@ import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {filter, map, tap} from 'rxjs/operators';
 import {isArray, isNullOrUndefined} from 'util';
-import {CollectionService, SearchService} from '../../../../core/rest';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
@@ -67,9 +66,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   private currentQuery: QueryModel;
   private subscriptions: Subscription = new Subscription();
 
-  constructor(private searchService: SearchService,
-              private store: Store<AppState>,
-              private collectionService: CollectionService,
+  constructor(private store: Store<AppState>,
               private userSettingsService: UserSettingsService,
               private perspectiveService: PerspectiveService) {
   }
@@ -117,7 +114,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public createDefaultAttributeHtml(document: DocumentModel): string {
-    if (isNullOrUndefined(document.data)) { return ''; }
+    if (isNullOrUndefined(document.data)) {
+      return '';
+    }
 
     const defaultAttributeId = this.getDefaultAttributeId(document);
     const value = document.data[defaultAttributeId] || '';

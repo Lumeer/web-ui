@@ -26,6 +26,8 @@ import {CollectionModel} from '../../../../core/store/collections/collection.mod
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
+import {QueryModel} from '../../../../core/store/navigation/query.model';
+import {generateDocumentData} from '../../../../core/store/documents/document.utils';
 
 @Component({
   selector: 'add-document',
@@ -39,6 +41,9 @@ export class PostItAddDocumentComponent implements OnInit, OnDestroy {
 
   @Input()
   public hasRights: boolean;
+
+  @Input()
+  public query: QueryModel;
 
   @Output()
   public createPostIt = new EventEmitter<DocumentModel>();
@@ -60,18 +65,8 @@ export class PostItAddDocumentComponent implements OnInit, OnDestroy {
     this.createPostIt.emit({
       collectionId: this.selectedCollection.id,
       correlationId: CorrelationIdGenerator.generate(),
-      data: this.createData()
+      data: generateDocumentData(this.selectedCollection, this.query && this.query.filters || [])
     });
-  }
-
-  private createData(): { [attributeId: string]: any } {
-    if (!this.selectedCollection) {
-      return [];
-    }
-    return this.selectedCollection.attributes.reduce((acc, attr) => {
-      acc[attr.id] = '';
-      return acc;
-    }, {});
   }
 
   public disabled(): boolean {

@@ -16,11 +16,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {SizeType} from '../../shared/slider/size-type';
 
-export interface UserSettings {
+import {Pipe, PipeTransform} from '@angular/core';
 
-  searchSize: SizeType;
-  notificationsDisabled: boolean;
+import {SizeType} from '../../../../shared/slider/size-type';
+
+@Pipe({
+  name: 'postItColumnStyle'
+})
+export class PostItColumnStylePipe implements PipeTransform {
+
+  public transform(size: SizeType): string {
+    switch (size) {
+      case SizeType.S:
+        return 'col-2';
+      case SizeType.M:
+        return 'col-3';
+      case SizeType.L:
+        return 'col-4';
+      case SizeType.XL:
+        return 'col-6';
+      default:
+        return 'col-3';
+    }
+  }
 
 }

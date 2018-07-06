@@ -1,0 +1,22 @@
+@import "../../../../../shared/variables";
+
+:host {
+  display: flex;
+}
+
+:host(:focus) input, :host input:focus {
+  outline: auto !important;
+  pointer-events: auto;
+}
+
+input {
+  padding: 0 3px;
+  width: 100%;
+  pointer-events: none;
+  text-overflow: ellipsis;
+  background: transparent;
+
+  &:focus {
+    text-overflow: clip;
+  }
+}

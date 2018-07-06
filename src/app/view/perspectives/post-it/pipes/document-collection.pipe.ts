@@ -16,11 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {SizeType} from '../../shared/slider/size-type';
 
-export interface UserSettings {
+import {Pipe, PipeTransform} from '@angular/core';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
 
-  searchSize: SizeType;
-  notificationsDisabled: boolean;
+@Pipe({
+  name: 'documentCollection'
+})
+export class DocumentCollectionPipe implements PipeTransform {
+
+  public transform(document: DocumentModel, collections: { [collectionId: string]: CollectionModel }): CollectionModel {
+    const collectionId = document && document.collectionId;
+    return collectionId && collections[collectionId];
+  }
 
 }

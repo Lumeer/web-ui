@@ -30,7 +30,6 @@ import {OrganizationsAction} from '../core/store/organizations/organizations.act
 import {selectSelectedOrganization} from '../core/store/organizations/organizations.state';
 import {ProjectsAction} from '../core/store/projects/projects.action';
 import {selectSelectedProject} from '../core/store/projects/projects.state';
-import {UserSettingsService} from '../core/user-settings.service';
 import {DefaultWorkspaceModel} from '../core/store/users/user.model';
 import {selectCurrentUser} from '../core/store/users/users.state';
 
@@ -38,7 +37,6 @@ import {selectCurrentUser} from '../core/store/users/users.state';
 export class WorkspaceSelectGuard implements CanActivate {
 
   public constructor(private workspaceService: WorkspaceService,
-                     private userSettingsService: UserSettingsService,
                      private store: Store<AppState>) {
   }
 
@@ -97,22 +95,13 @@ export class WorkspaceSelectGuard implements CanActivate {
   private checkProject(orgCode: string, orgId: string, projCode: string): Observable<boolean> {
     return this.workspaceService.getProjectFromStoreOrApi(orgCode, orgId, projCode).pipe(
       switchMap(project => {
-          if (isNullOrUndefined(project)) {
-            this.clearCodesFromUserSettings();
-          } else {
+          if (!isNullOrUndefined(project)) {
             this.store.dispatch(new OrganizationsAction.Select({organizationId: orgId}));
             this.store.dispatch(new ProjectsAction.Select({projectId: project.id}));
           }
           return of(true);
         }
       ));
-  }
-
-  private clearCodesFromUserSettings() {
-    const userSettings = this.userSettingsService.getUserSettings();
-    userSettings.defaultOrganization = null;
-    userSettings.defaultProject = null;
-    this.userSettingsService.updateUserSettings(userSettings);
   }
 
 }

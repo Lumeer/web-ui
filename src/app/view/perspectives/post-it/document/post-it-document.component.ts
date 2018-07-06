@@ -17,94 +17,107 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 
-import {Store} from '@ngrx/store';
-import {isNullOrUndefined} from 'util';
-import {AppState} from '../../../../core/store/app.state';
+import {Observable} from 'rxjs';
 import {KeyCode} from '../../../../shared/key-code';
 import {Role} from '../../../../core/model/role';
-import {PostItLayout} from '../../../../shared/utils/layout/post-it-layout';
-import {PostItDocumentModel} from '../document-data/post-it-document-model';
-import {NavigationHelper} from '../util/navigation-helper';
-import {SelectionHelper} from '../util/selection-helper';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {PostItRow} from './post-it-row';
-import {Subject, Subscription} from 'rxjs';
-import {debounceTime, filter} from 'rxjs/operators';
-import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {DocumentUiService} from '../../../../core/ui/document-ui.service';
+import {UiRow} from '../../../../core/ui/ui-row';
+import {map} from 'rxjs/operators';
+import {SelectionHelper} from '../util/selection-helper';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
 @Component({
   selector: 'post-it-document',
   templateUrl: './post-it-document.component.html',
-  styleUrls: ['./post-it-document.component.scss']
+  styleUrls: ['./post-it-document.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
 
-  @Input() public postItModel: PostItDocumentModel;
+  @Input() public documentModel: DocumentModel;
+  @Input() public index: number;
   @Input() public collection: CollectionModel;
   @Input() public collectionRoles: string[];
   @Input() public perspectiveId: string;
-  @Input() public layoutManager: PostItLayout;
-  @Input() public navigationHelper: NavigationHelper;
   @Input() public selectionHelper: SelectionHelper;
 
   @Output() public remove = new EventEmitter();
-  @Output() public changes = new EventEmitter<DocumentModel>();
-  @Output() public favoriteChange = new EventEmitter<{ favorite: boolean, onlyStore: boolean }>();
+  @Output() public sizeChange = new EventEmitter();
 
   @ViewChild('content') public content: ElementRef;
 
-  public postItRows: PostItRow[] = [];
-  public postItNewRow: PostItRow = {attributeName: '', value: ''};
-  private postItChange$ = new Subject<any>();
-  private postItChangeSubscription: Subscription;
+  public rows$: Observable<UiRow[]>;
+  public favorite$: Observable<boolean>;
+  public unusedAttributes$: Observable<AttributeModel[]>;
 
-  private lastSyncedFavorite: boolean;
-  private favoriteChange$ = new Subject<boolean>();
-  private favoriteChangeSubscription: Subscription;
+  public initedDocumentKey: string;
+  public hasWriteRole = false;
+  private currentRowsLength: number;
 
-  constructor(private store: Store<AppState>,
-              private element: ElementRef) {
+  public constructor(private documentUiService: DocumentUiService) {
+  }
+
+  public ngOnInit() {
+    this.disableScrollOnNavigation();
+    this.initDocumentServiceIfNeeded();
+
+    this.hasWriteRole = this.collectionRoles && this.collectionRoles.includes(Role.Write);
+  }
+
+  public ngOnDestroy() {
+    if (this.collection && this.documentModel) {
+      this.documentUiService.destroy(this.collection, this.documentModel);
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection) {
-      this.pairAttributes();
+    if (this.collection && this.documentModel && this.initedDocumentKey !== this.getDocumentKey()) {
+      const changed = this.initDocumentServiceIfNeeded();
+      if (changed) {
+        this.sizeChange.emit();
+      }
     }
-    if (changes.postItModel) {
-      this.constructRows();
-    }
-    this.postItModel.numRows = this.postItRows.length;
   }
 
-  public ngOnInit(): void {
-    this.disableScrollOnNavigation();
-    this.initFavoriteSubscription();
+  public onRemove() {
+    this.remove.emit();
   }
 
-  public ngOnDestroy(): void {
-    if (this.postItChangeSubscription) {
-      this.postItChangeSubscription.unsubscribe();
+  public onEdit() {
+    this.selectionHelper.focusInputIfNeeded(this.getDocumentKey());
+  }
+
+  public onToggleFavorite() {
+    this.documentUiService.onToggleFavorite(this.collection, this.documentModel);
+  }
+
+  public onUpdateRow(index: number, attribute: string, value: string) {
+    this.documentUiService.onUpdateRow(this.collection, this.documentModel, index, [attribute, value]);
+  }
+
+  public addAttrRow() {
+    this.documentUiService.onAddRow(this.collection, this.documentModel);
+  }
+
+  public onRemoveRow(idx: number) {
+    this.documentUiService.onRemoveRow(this.collection, this.documentModel, idx);
+  }
+
+  public getTrackBy(): (index: number, row: UiRow) => string {
+    return this.documentUiService.getTrackBy(this.collection, this.documentModel);
+  }
+
+  private checkRowsLength(length: number) {
+    const changed = this.currentRowsLength && this.currentRowsLength !== length;
+    this.currentRowsLength = length;
+
+    if (changed) {
+      this.sizeChange.emit();
     }
-    this.layoutManager.remove(this.element.nativeElement);
-  }
-
-  public ngAfterViewInit(): void {
-    this.layoutManager.add(this.element.nativeElement);
   }
 
   private disableScrollOnNavigation(): void {
@@ -118,225 +131,31 @@ export class PostItDocumentComponent implements OnInit, AfterViewInit, OnDestroy
     }, capture);
   }
 
-  public clickOnAttributePair(column: number, row: number): void {
-    this.selectionHelper.setEditMode(false);
-    this.selectionHelper.select(column, row, this.postItModel);
-  }
-
-  public onEnterKeyPressedInEditMode(): void {
-    this.selectionHelper.selectNext(this.postItModel);
-  }
-
-  public createAttributePair(): void {
-    const selectedAttribute = this.findAttributeByName(this.postItNewRow.attributeName);
-
-    if (selectedAttribute) {
-      if (this.isAttributeUsed(selectedAttribute.id)) {
-        return;
-      }
-
-      this.postItRows.push({...this.postItNewRow, attributeId: selectedAttribute.id});
-    } else {
-      this.postItRows.push({...this.postItNewRow, correlationId: CorrelationIdGenerator.generate()});
-    }
-
-    this.postItModel.numRows = this.postItRows.length;
-
-    this.postItNewRow = {attributeName: '', value: ''};
-    this.onChange();
-
-    setTimeout(() => {
-      this.selectionHelper.select(1, this.postItRows.length, this.postItModel);
-    });
-  }
-
-  public onUpdateAttribute(selectedRow: number): void {
-    const data = this.postItRows[selectedRow];
-    if (!data) {
-      return;
-    }
-
-    this.onChange();
-
-    data.attributeName = data.attributeName.trim();
-    if (!data.attributeName) {
-      this.removeRow(selectedRow);
-      return;
-    }
-
-    const selectedAttribute = this.findAttributeByName(data.attributeName);
-    if (data.attributeId && selectedAttribute && selectedAttribute.id !== data.attributeId && this.isAttributeUsed(selectedAttribute.id)) {
-      const previousAttribute = this.findAttributeById(data.attributeId);
-      data.attributeName = previousAttribute.name;
-    } else {
-      data.attributeId = selectedAttribute && selectedAttribute.id || null;
-      if (isNullOrUndefined(data.attributeId) && isNullOrUndefined(data.correlationId)) {
-        data.correlationId = CorrelationIdGenerator.generate();
-      }
-    }
-  }
-
-  public updateValue(selectedRow: number): void {
-    const data = this.postItRows[selectedRow];
-    if (!data) {
-      return;
-    }
-
-    data.value = data.value.trim();
-    this.onChange();
-  }
-
-  public toggleFavorite() {
-    if (isNullOrUndefined(this.lastSyncedFavorite)) {
-      this.lastSyncedFavorite = this.postItModel.document.favorite;
-    }
-
-    const value = !this.postItModel.document.favorite;
-    this.favoriteChange$.next(value);
-    this.favoriteChange.emit({favorite: value, onlyStore: true});
-  }
-
-  public onRemove(): void {
-    if (this.postItChangeSubscription) {
-      this.postItChangeSubscription.unsubscribe();
-      this.postItChangeSubscription = null;
-    }
-
-    this.remove.emit();
-  }
-
-  public removeRow(selectedRow: number) {
-    this.postItRows.splice(selectedRow, 1);
-
-    this.postItModel.numRows = this.postItRows.length;
-
-    setTimeout(() => {
-      this.selectionHelper.select(
-        this.selectionHelper.selection.column,
-        this.selectionHelper.selection.row - 1,
-        this.postItModel
-      );
-    });
-
-    if (this.postItRows.length === 0) {
-      this.onRemove();
-    }
-  }
-
-  public removeValue(selectedRow: number) {
-    this.postItRows[selectedRow].value = '';
-  }
-
-  public unusedAttributes(): AttributeModel[] {
-    if (isNullOrUndefined(this.collection)) {
-      return [];
-    }
-
-    return this.collection.attributes.filter(attribute => {
-      return isNullOrUndefined(this.postItRows.find(d => d.attributeId === attribute.id));
-    });
-  }
-
-  public findAttributeByName(name: string): AttributeModel {
-    if (isNullOrUndefined(this.collection)) {
-      return;
-    }
-
-    return this.collection.attributes.find(attr => attr.name === name);
-  }
-
-  public findAttributeById(id: string): AttributeModel {
-    if (isNullOrUndefined(this.collection)) {
-      return;
-    }
-
-    return this.collection.attributes.find(attr => attr.id === id);
-  }
-
-  public isAttributeUsed(id: string) {
-    return this.postItRows.findIndex(d => d.attributeId === id) !== -1;
-  }
-
   public suggestionListId(): string {
-    return `${ this.perspectiveId }${ this.postItModel.document.id || 'uninitialized' }`;
+    return `${ this.perspectiveId }${ this.documentModel.correlationId || this.documentModel.id }`;
+  }
+
+  public getDocumentKey(): string {
+    return this.documentModel.correlationId || this.documentModel.id;
   }
 
   public isDefaultAttribute(attributeId: string): boolean {
     return attributeId && attributeId === getDefaultAttributeId(this.collection);
   }
 
-  public hasWriteRole(): boolean {
-    return this.collectionRoles && this.collectionRoles.includes(Role.Write);
-  }
+  private initDocumentServiceIfNeeded(): boolean {
+    if (this.collection && this.documentModel && !this.documentUiService.isInited(this.collection, this.documentModel)) {
+      this.initedDocumentKey = this.getDocumentKey();
+      this.documentUiService.init(this.collection, this.documentModel);
+      this.rows$ = this.documentUiService.getRows$(this.collection, this.documentModel).asObservable();
+      this.favorite$ = this.documentUiService.getFavorite$(this.collection, this.documentModel).asObservable();
+      this.unusedAttributes$ = this.rows$.pipe(
+        map(rows => this.collection.attributes.filter(attribute =>
+          !rows.find(row => row.id === attribute.id))
+        ));
 
-  private pairAttributes() {
-    if (isNullOrUndefined(this.collection)) {
-      return;
+      return true;
     }
-
-    this.collection.attributes.forEach(attribute => {
-      const row = this.postItRows.find(r => r.correlationId && r.correlationId === attribute.correlationId);
-      if (row) {
-        row.attributeId = attribute.id;
-        row.correlationId = null;
-      }
-    });
-  }
-
-  private constructRows() {
-    if (isNullOrUndefined(this.postItModel)) {
-      return;
-    }
-
-    Object.keys(this.postItModel.document.data).forEach(attributeId => {
-      const row = this.postItRows.find(r => r.attributeId === attributeId);
-      if (!row) {
-        const attribute = this.findAttributeById(attributeId);
-        if (attribute) {
-          const attributeName = attribute && attribute.name || '';
-          this.postItRows.push({attributeId, attributeName, value: this.postItModel.document.data[attributeId]});
-        }
-      }
-    });
-  }
-
-  private onChange() {
-    if (isNullOrUndefined(this.postItChangeSubscription)) {
-      this.initSubscription();
-    }
-    this.postItChange$.next();
-  }
-
-  private initSubscription() {
-    this.postItChangeSubscription = this.postItChange$.pipe(
-      debounceTime(3000),
-    ).subscribe(() => {
-      this.changes.emit(this.createUpdateDocument());
-    });
-  }
-
-  private createUpdateDocument(): DocumentModel {
-    const data: { [attributeId: string]: any } = this.postItRows.filter(row => row.attributeId).reduce((acc, row) => {
-      acc[row.attributeId] = row.value;
-      return acc;
-    }, {});
-
-    const newData: { [attributeName: string]: any } = this.postItRows.filter(row => isNullOrUndefined(row.attributeId))
-      .reduce((acc: { [attributeName: string]: any }, row) => {
-        acc[row.attributeName] = {value: row.value, correlationId: row.correlationId};
-        return acc;
-      }, {});
-
-    return {...this.postItModel.document, data, newData: Object.keys(newData).length > 0 ? newData : null};
-  }
-
-  private initFavoriteSubscription() {
-    this.favoriteChangeSubscription = this.favoriteChange$.pipe(
-      debounceTime(1000),
-      filter(favorite => favorite !== this.lastSyncedFavorite)
-    ).subscribe(favorite => {
-      this.lastSyncedFavorite = null;
-      this.favoriteChange.emit({favorite, onlyStore: false});
-    });
+    return false;
   }
 }

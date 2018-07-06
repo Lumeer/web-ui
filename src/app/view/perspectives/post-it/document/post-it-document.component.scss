@@ -1,103 +1,21 @@
 @import "../../../../shared/variables";
 
-:host {
+.card-header {
+  cursor: move;
+  width: 100%;
+}
 
-  .card-header {
-    cursor: move;
-    width: 100%;
-  }
+li {
+  border-bottom: 1px solid #e5e5e5;
+  display: inline-flex;
+  padding: 2px 1px;
 
-  .card-header .button {
-    cursor: auto;
-    transition: background, opacity, color $animation-color-duration;
-
-    &.text-primary:hover {
-      color: $primary-hover !important;
-    }
-    &.text-secondary:hover {
-      color: $secondary-hover !important;
-    }
-    &.text-success:hover {
-      color: $success-hover !important;
-    }
-    &.text-danger:hover {
-      color: $danger-hover !important;
-    }
-    &.text-warning:hover {
-      color: $warning-hover !important;
-    }
-
-  }
-
-  .icon {
-    margin-top: 4px;
-  }
-
-  .collection-name {
-    flex-grow: 2;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  .always-visible{
-    opacity: 1 !important;
-  }
-
-  .card-body {
-    font-size: 15px;
-  }
-
-  .button, .buttons {
-    transition: opacity $animation-color-duration;
-    opacity: 0;
-  }
-  
-  li {
-    border-bottom: 1px solid #e5e5e5;
-    display: inline-flex;
-    padding: 2px 1px;
-
-    &:last-child {
-      border-bottom: none;
-    }
-  }
-
-  .attribute input {
-    width: 75px;
-    color: $primary;
-    font-style: italic;
-  }
-
-  span:focus input, span input:focus {
-    outline: auto !important;
-    pointer-events: auto;
-  }
-
-  span input:focus {
-    box-shadow: $shadow-down;
-  }
-
-  input {
-    padding: 0 3px;
-    width: 100%;
-    pointer-events: none;
-    text-overflow: ellipsis;
-    background: transparent;
-
-    &:focus {
-      text-overflow: clip;
-    }
-  }
-
-  input:read-only:focus {
-    background: inherit;
-    color: inherit;
+  &:last-child {
+    border-bottom: none;
   }
 }
 
-:host:hover {
-  .button, .buttons {
-    opacity: 1;
-  }
+input:read-only:focus {
+  background: inherit;
+  color: inherit;
 }

@@ -29,7 +29,7 @@ import {PostItCollectionAddButtonComponent} from './add-button/post-it-collectio
 import {PostItCollectionComponent} from './post-it-collection.component/post-it-collection.component';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {PickerModule} from '../picker/picker.module';
-import {LayoutItem} from '../utils/layout/layout-item.directive';
+import {LayoutItemDirective} from '../utils/layout/layout-item.directive';
 import {RouterModule} from '@angular/router';
 
 @NgModule({
@@ -42,7 +42,7 @@ import {RouterModule} from '@angular/router';
     PipesModule
   ],
   declarations: [
-    LayoutItem,
+    LayoutItemDirective,
     PostItCollectionsComponent,
     PostItCollectionComponent,
     PostItCollectionNameComponent,
@@ -50,7 +50,8 @@ import {RouterModule} from '@angular/router';
     PostItCollectionImportButtonComponent,
   ],
   exports: [
-    PostItCollectionsComponent
+    PostItCollectionsComponent,
+    LayoutItemDirective
   ]
 })
 export class PostItCollectionsModule {
