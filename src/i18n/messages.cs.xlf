@@ -27,15 +27,9 @@
             <trans-unit id="menu.account" datatype="html">
                 <source>Account</source>
                 <target>Účet</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context>
-                    <context context-type="linenumber">25</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context>
-                    <context context-type="linenumber">23</context>
-                </context-group>
-            </trans-unit>
+
+
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit>
             <trans-unit id="workspace.button.apply" datatype="html">
                 <source>Use project</source>
                 <target>Použít projekt</target>
@@ -246,37 +240,21 @@
             <trans-unit id="document.button.remove" datatype="html">
                 <source>Remove Record</source>
                 <target>Odstranit záznam</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document.component.ts</context>
-                    <context context-type="linenumber">14</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document-header/post-it-document-header.component.ts</context><context context-type="linenumber">14</context></context-group></trans-unit>
             <trans-unit id="document.button.edit" datatype="html">
                 <source>Edit Record</source>
                 <target>Upravit záznam</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document.component.ts</context>
-                    <context context-type="linenumber">17</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document-header/post-it-document-header.component.ts</context><context context-type="linenumber">17</context></context-group></trans-unit>
             <trans-unit id="collection.document.favorite" datatype="html">
-                <source><x id="INTERPOLATION" equiv-text="{{ postItModel.document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source>
+                <source><x id="INTERPOLATION" equiv-text="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source>
                 <target>
                     <x id="INTERPOLATION" equiv-text="{{data.document.favorite ?  'Odstranit z oblíbených' : 'Přidat do oblíbených'}}"/>
                 </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document.component.ts</context>
-                    <context context-type="linenumber">23</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="document.list.empty" datatype="html">
-                <source>Nothing To Show</source>
-                <target>Žádné záznamy, vytvořte nový!</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/post-it/post-it-perspective.component.ts</context>
-                    <context context-type="linenumber">27</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document-header/post-it-document-header.component.ts</context><context context-type="linenumber">23</context></context-group></trans-unit>
+
             <trans-unit id="search.tab.all" datatype="html">
                 <source>All</source>
                 <target>Vše</target>
@@ -1892,16 +1870,7 @@
                     <context context-type="linenumber">10</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="documents.post.it.loading" datatype="html">
-                <source>
-  Loading...
-</source>
-                <target>Načítání...</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/post-it/post-it-perspective.component.ts</context>
-                    <context context-type="linenumber">33</context>
-                </context-group>
-            </trans-unit>
+
             <trans-unit id="document.post.it.add" datatype="html">
                 <source>Add Record</source>
                 <target>Vytvořit záznam</target>
@@ -3226,14 +3195,11 @@
             </trans-unit>
             <trans-unit id="search.result.more" datatype="html">
                 <source>
-        See all
-      </source>
+          See all
+        </source>
                 <target>Zobrazit vše</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-                    <context context-type="linenumber">56</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">58</context></context-group></trans-unit>
             <trans-unit id="document.detail.remove" datatype="html">
                 <source>Remove Document</source>
                 <target>Odstranit dokument</target>
@@ -3397,26 +3363,13 @@
                     <context context-type="linenumber">51</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="menu.changeLanguage" datatype="html">
-                <source>Change language</source>
-                <target>Zvolit jazyk</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context>
-                    <context context-type="linenumber">9</context>
-                </context-group>
-            </trans-unit>
+
             <trans-unit id="menu.sendFeedback" datatype="html">
                 <source>Send Feedback</source>
                 <target>Odeslat zpětnou vazbu</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context>
-                    <context context-type="linenumber">18</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context>
-                    <context context-type="linenumber">16</context>
-                </context-group>
-            </trans-unit>
+
+
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context><context context-type="linenumber">27</context></context-group></trans-unit>
             <trans-unit id="resource.detail.organization.invite" datatype="html">
                 <source>Invite Colleagues</source>
                 <target>Pozvat kolegy</target>
@@ -3910,11 +3863,8 @@
             <trans-unit id="menu.logout" datatype="html">
                 <source>Logout</source>
                 <target>Odhlásit se</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context>
-                    <context context-type="linenumber">30</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context><context context-type="linenumber">40</context></context-group></trans-unit>
             <trans-unit id="create.new.attribute" datatype="html">
                 <source>Create new attribute
     </source>
@@ -3949,6 +3899,18 @@
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
-        </body>
+        <trans-unit id="language.czech" datatype="html">
+        <source>Czech</source><target>Čeština</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="language.english" datatype="html">
+        <source>English</source><target>Angličtina</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit></body>
     </file>
 </xliff>
