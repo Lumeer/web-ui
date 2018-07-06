@@ -29,13 +29,15 @@ export interface NavigationState {
   workspace: Workspace;
   perspective?: Perspective;
   viewName?: string;
+  url: string;
 
 }
 
 export const initialNavigationState: NavigationState = {
 
   query: {},
-  workspace: {}
+  workspace: {},
+  url: '/'
 
 };
 
@@ -43,3 +45,4 @@ export const selectNavigation = (state: AppState) => state.navigation;
 export const selectQuery = createSelector(selectNavigation, (state: NavigationState) => state.query);
 export const selectPerspective = createSelector(selectNavigation, (state: NavigationState) => state.perspective);
 export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);
+export const selectUrl = createSelector(selectNavigation, state => state.url);

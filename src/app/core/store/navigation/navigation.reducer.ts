@@ -37,6 +37,7 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
     },
     perspective: perspectivesMap[extractPerspectiveIdFromUrl(url)],
     viewName: queryParams['viewName'],
+    url
   };
 }
 

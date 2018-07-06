@@ -21,12 +21,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 
 export class PostItDocumentModel {
 
-  public index: number;
   public document: DocumentModel;
-
-  public order = 1;
-  public updating = false;
-  public initialized: boolean;
-  public numRows: number;
+  public order = 0;
 
 }

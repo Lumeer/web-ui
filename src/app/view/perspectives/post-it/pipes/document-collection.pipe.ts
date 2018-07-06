@@ -17,15 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Language {
+import {Pipe, PipeTransform} from '@angular/core';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
 
-  code: string;
-  name: string;
-  icon: string;
+@Pipe({
+  name: 'documentCollection'
+})
+export class DocumentCollectionPipe implements PipeTransform {
+
+  public transform(document: DocumentModel, collections: { [collectionId: string]: CollectionModel }): CollectionModel {
+    const collectionId = document && document.collectionId;
+    return collectionId && collections[collectionId];
+  }
 
 }
-
-export const availableLanguages: Language[] = [
-  {code: 'cs', name: 'Čeština', icon: 'flag-icon-cz'},
-  {code: 'en', name: 'English', icon: 'flag-icon-gb'},
-];

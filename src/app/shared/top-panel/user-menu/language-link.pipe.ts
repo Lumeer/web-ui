@@ -17,22 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {LanguageChooserComponent} from './chooser/language-chooser.component';
-import { LanguageLinkPipe } from './language-link.pipe';
+import {Pipe, PipeTransform} from '@angular/core';
 
-@NgModule({
-  imports: [
-    CommonModule,
-  ],
-  declarations: [
-    LanguageChooserComponent,
-    LanguageLinkPipe,
-  ],
-  exports: [
-    LanguageChooserComponent,
-  ]
+@Pipe({
+  name: 'languageLink'
 })
-export class LanguageModule {
+export class LanguageLinkPipe implements PipeTransform {
+
+  public transform(path: string, languageCode: string): string {
+    return window.location.origin + '/' + languageCode + (path || '/');
+  }
+
 }

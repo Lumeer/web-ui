@@ -37,7 +37,7 @@ export class DocumentUi {
 
   public rows$ = new BehaviorSubject<UiRow[]>([]);
   public summary$ = new BehaviorSubject<string>('');
-  public favorite$ = new BehaviorSubject<boolean>(null);
+  public favorite$ = new BehaviorSubject<boolean>(false);
 
   private rows: UiRow[] = [];
   private addedRows: UiRow[] = [];

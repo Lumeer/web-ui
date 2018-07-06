@@ -17,15 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
+export interface Language {
 
-export class WorkspaceHelper {
-
-  constructor(public workspace: Workspace) {
-  }
-
-  public hasWorkspace(): boolean {
-    return Boolean(this.workspace && this.workspace.organizationCode && this.workspace.projectCode);
-  }
+  code: string;
+  name: string;
+  englishName: string;
+  icon: string;
 
 }
+
+export const availableLanguages: Language[] = [
+  {code: 'cs', name: 'Čeština', englishName: 'Czech', icon: 'flag-icon-cz'},
+  {code: 'en', name: 'English', englishName: 'English', icon: 'flag-icon-gb'},
+];

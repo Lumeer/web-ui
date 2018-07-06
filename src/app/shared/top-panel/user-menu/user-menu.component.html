@@ -5,11 +5,22 @@
   </a>
 
   <div class="dropdown-menu dropdown-menu-right profile-dropdown" aria-labelledby="profileDropdownLink">
-    <h6 class="dropdown-header text-center"
-        i18n="@@menu.changeLanguage">Change language</h6>
-    <div class="text-center">
-      <language-chooser></language-chooser>
-    </div>
+    <a *ngIf="locale !== 'cs'"
+       [href]="url$ | async | languageLink:'cs'"
+       class="dropdown-item"
+       title="Čeština">
+      <span class="flag-icon flag-icon-cz"></span>
+      <span>Čeština</span>
+      (<span i18n="@@language.czech">Czech</span>)
+    </a>
+    <a *ngIf="locale !== 'en'"
+       [href]="url$ | async | languageLink:'en'"
+       class="dropdown-item"
+       title="English">
+      <span class="flag-icon flag-icon-en"></span>
+      <span>English</span>
+      (<span i18n="@@language.english">English</span>)
+    </a>
     <div class="dropdown-divider"></div>
     <a (click)="onFeedbackClick()"
        class="dropdown-item"
@@ -25,13 +36,11 @@
       <span i18n="@@menu.account">Account</span>
     </a>
     <a (click)="onLogoutClick()"
-       class="dropdown-item" title="Sign Out">
+       class="dropdown-item"
+       title="Log out" i18n-title="@@menu.logout">
       <i class="fas fa-fw fa-sign-in" data-fa-transform="left-4" aria-hidden="true"></i>&nbsp;
       <span i18n="@@menu.logout">Logout</span>
     </a>
-    <div *ngIf="buildNumber"
-         class="dropdown-divider">
-    </div>
     <ng-container *ngIf="buildNumber">
       <div class="dropdown-divider"></div>
       <small class="dropdown-header py-0">Build #{{buildNumber}}</small>

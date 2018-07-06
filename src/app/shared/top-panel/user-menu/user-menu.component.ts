@@ -17,22 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Location} from '@angular/common';
 import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/index';
 import {environment} from '../../../../environments/environment';
 import {AuthService} from '../../../auth/auth.service';
+import {AppState} from '../../../core/store/app.state';
+import {selectUrl} from '../../../core/store/navigation/navigation.state';
 import {DialogService} from '../../../dialog/dialog.service';
 
 @Component({
   selector: 'user-menu',
   templateUrl: './user-menu.component.html',
+  styleUrls: ['./user-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserMenuComponent {
 
   public readonly buildNumber = environment.buildNumber;
+  public readonly locale = environment.locale;
+
+  public url$: Observable<string>;
 
   public constructor(private authService: AuthService,
-                     private dialogService: DialogService) {
+                     private dialogService: DialogService,
+                     private location: Location,
+                     private router: Router,
+                     private store: Store<AppState>) {
+  }
+
+  public ngOnInit() {
+    this.url$ = this.store.select(selectUrl);
   }
 
   public onFeedbackClick() {

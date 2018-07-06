@@ -1,35 +1,38 @@
-<div class="mx-5" #layout>
-  <div class="m-2">
+<div class="container-fluid" infiniteScroll
+     [infiniteScrollDistance]="2"
+     (scrolled)="onScrollDown($event)">
+  <div class="my-2 d-flex align-items-center">
     <add-document
+      [query]="query"
       [hasCollection]="hasSingleCollection()"
       [hasRights]="hasCreateRights()"
       (createPostIt)="createPostIt($event)">
     </add-document>
+
+    <size-slider class="ml-auto"
+                 [defaultSize]="size"
+                 (newSize)="onSizeChange($event)">
+    </size-slider>
   </div>
 
-  <div class="post-it-document-layout">
-    <post-it-document *ngFor="let postIt of postIts; let idx = index; trackBy:trackByDocument"
-                      class="layout-item card post-it {{ !postIt.initialized ? 'uninitialized' : 'initialized' }}"
-                      [attr.order]="postIt.order"
-                      [collection]="getCollection(postIt)"
-                      [collectionRoles]="getCollectionRoles(postIt)"
-                      [postItModel]="postItWithIndex(postIt, idx)"
-                      [perspectiveId]="perspectiveId"
-                      [layoutManager]="layoutManager"
-                      [selectionHelper]="selectionHelper"
-                      [navigationHelper]="navigationHelper"
-                      (favoriteChange)="onFavoriteChange(postIt.document, $event)"
-                      (remove)="removePostIt(postIt)"
-                      (changes)="postItChanged(postIt, $event)"></post-it-document>
+  <div class="post-it-document-layout row" #postItLayout>
+    <div class="layout-item {{size | postItColumnStyle}} mb-3"
+         layout-item
+         [layout]="layoutManager"
+         *ngFor="let doc of getDocuments(); trackBy:trackByDocument; let idx = index"
+         id="{{perspectiveId}}#{{doc.correlationId || doc.id}}">
+      <post-it-document
+        class="card post-it"
+        [ngClass]="doc.id ? 'initialized': 'uninitialized'"
+        [collection]="doc | documentCollection:collections"
+        [collectionRoles]="doc | documentCollectionRoles:collectionRoles"
+        [index]="idx"
+        [documentModel]="doc"
+        [perspectiveId]="perspectiveId"
+        [selectionHelper]="selectionHelper"
+        (remove)="removePostIt(doc)"
+        (sizeChange)="postItChanged()"></post-it-document>
 
-    <label *ngIf="(!hasSingleCollection() || !hasCreateRights()) && !postIts.length"
-           class="label-centered"
-           i18n="@@document.list.empty">Nothing To Show</label>
+    </div>
   </div>
-</div>
-
-<div class="fading loading-text text-center py-5"
-     [style.opacity]="infiniteScroll.isLoading() ? 1 : 0"
-     i18n="@@documents.post.it.loading">
-  Loading...
 </div>

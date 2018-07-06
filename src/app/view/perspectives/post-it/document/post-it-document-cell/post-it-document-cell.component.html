@@ -1,0 +1,9 @@
+<input class="border-0 w-100 {{additionalClasses}}"
+       [(ngModel)]="model"
+       [disabled]="readonly"
+       [attr.list]="suggestionListId"
+       (keydown)="$event.stopPropagation()"
+       (keydown.F2)="selectionHelper.focusToggle(false)"
+       (keydown.Escape)="selectionHelper.focusToggle(false)"
+       (keydown.enter)="onEnter()"
+       (blur)="onBlur()">

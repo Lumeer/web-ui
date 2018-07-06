@@ -19,13 +19,15 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 
-@Pipe({
-  name: 'languageLink'
-})
-export class LanguageLinkPipe implements PipeTransform {
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
-  public transform(path: string, languageCode: string): string {
-    return window.location.origin + '/' + languageCode + path;
+@Pipe({
+  name: 'documentCollectionRoles'
+})
+export class DocumentCollectionRolesPipe implements PipeTransform {
+
+  public transform(document: DocumentModel, collectionRoles: { [collectionId: string]: string[] }): string[] {
+    return collectionRoles && collectionRoles[document.collectionId] || [];
   }
 
 }

@@ -20,30 +20,30 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {LanguageModule} from '../language/language.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {ResourceMenuModule} from './resource-menu/resource-menu.module';
 import {SearchBoxModule} from './search-box/search-box.module';
 import {TopPanelComponent} from './top-panel.component';
+import {LanguageLinkPipe} from './user-menu/language-link.pipe';
+import {UserMenuComponent} from './user-menu/user-menu.component';
 import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
-import { UserMenuComponent } from './user-menu/user-menu.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    LanguageModule,
     PipesModule,
     RouterModule,
     ResourceMenuModule,
-    SearchBoxModule,
+    SearchBoxModule
   ],
   declarations: [
     TopPanelComponent,
     TopPanelWrapperComponent,
     UserMenuComponent,
+    LanguageLinkPipe
   ],
   exports: [
-    TopPanelWrapperComponent,
+    TopPanelWrapperComponent
   ]
 })
 export class TopPanelModule {

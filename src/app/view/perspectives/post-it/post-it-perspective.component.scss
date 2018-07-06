@@ -1,49 +1,37 @@
 @import "../../../shared/variables";
 
-:host {
-  display: block;
+.layout-item {
+  position: absolute;
+}
 
-  .post-it-document-layout {
-    transition: height $animation-duration;
-    position: relative;
-    margin: 0 auto;
-  }
+.post-it-document-layout {
+  transition: height $animation-duration;
+  position: relative;
+}
 
-  .layout-item {
-    will-change: transform;
-    position: absolute;
-    margin: 5px;
-    width: $post-it-width;
-  }
+.post-it:hover, .selected {
+  box-shadow: $shadow-default;
+}
 
-  .post-it:hover, .selected {
-    box-shadow: $shadow-default;
-  }
+.post-it:hover {
+  z-index: $z-index-hovered;
+}
 
-  .post-it:hover {
-    z-index: $z-index-hovered;
-  }
+.masonry-layout-item-dragging {
+  cursor: move;
+}
 
-  .masonry-layout-item-dragging {
-    cursor: move;
-  }
+.masonry-layout-item-dragging, .masonry-layout-item-releasing {
+  z-index: $z-index-selected;
+}
 
-  .masonry-layout-item-dragging, .masonry-layout-item-releasing {
-    z-index: $z-index-selected;
-  }
+.uninitialized {
+  border-width: 1.5px;
+  border-style: dashed;
+}
 
-  .uninitialized {
-    border-width: 1.5px;
-    border-style: dashed;
-  }
-
-  .loading-text {
-    position: relative;
-    top: 50px;
-
-    font-size: 36px;
-
-    pointer-events: none;
-  }
-
+.loading-text {
+  position: relative;
+  font-size: 36px;
+  pointer-events: none;
 }

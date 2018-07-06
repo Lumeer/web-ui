@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, HostListener, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {AfterViewInit} from '@angular/core/src/metadata/lifecycle_hooks';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -32,7 +31,6 @@ import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {HashCodeGenerator} from '../utils/hash-code-generator';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {PostItLayoutConfig} from '../utils/layout/post-it-layout-config';
 import {PostItLayout} from '../utils/layout/post-it-layout';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {isNullOrUndefined} from 'util';
@@ -62,8 +60,13 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   @Input()
   public maxShown: number = -1;
+
   @ViewChildren(PostItCollectionComponent)
   public postIts: QueryList<PostItCollectionComponent>;
+
+  @ViewChild('postItLayout')
+  public postItLayout: ElementRef;
+
   public collections: CollectionModel[];
   public collectionRoles: { [collectionId: string]: string[] };
   public selectedCollection: CollectionModel;
@@ -82,6 +85,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
               private router: Router,
               private store: Store<AppState>,
               private zone: NgZone,
+              private changeDetector: ChangeDetectorRef,
               private notificationService: NotificationService,) {
   }
 
@@ -97,18 +101,17 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   public ngOnInit() {
-    this.createLayout();
     this.subscribeOnNavigation();
     this.subscribeOnCollections();
     this.dispatchActions();
   }
 
-  public ngAfterViewInit() {
-    this.layout.initialize();
-  }
-
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  public ngAfterViewInit() {
+    this.createLayout();
   }
 
   public togglePanelVisible(event, index) {
@@ -167,12 +170,12 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public updateCollection(collection: CollectionModel) {
     if (collection.id) {
-      this.store.dispatch(new CollectionsAction.Update({collection, callback: this.onUpdateCollection()}));
+      this.store.dispatch(new CollectionsAction.Update({collection, callback: () => this.refreshPostIts()}));
     }
   }
 
-  public createCollection(collection: CollectionModel) {
-    this.store.dispatch(new CollectionsAction.Create({collection, callback: this.onCreateCollection()}));
+  public createCollection(newCollection: CollectionModel) {
+    this.store.dispatch(new CollectionsAction.Create({collection: newCollection, callback: (collection) => this.onCreateCollection(collection)}));
   }
 
   public getRoles(collection: CollectionModel): string[] {
@@ -191,7 +194,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     const newCollection = {...this.emptyCollection(), name: importInfo.name};
     const importedCollection = {collection: newCollection, data: importInfo.result};
 
-    this.store.dispatch(new CollectionsAction.Import({format: importInfo.format, importedCollection, callback: this.onCreateCollection()}));
+    this.store.dispatch(new CollectionsAction.Import({
+      format: importInfo.format, importedCollection,
+      callback: (collection) => this.onCreateCollection(collection)
+    }));
   }
 
   public forceLayout() {
@@ -209,10 +215,10 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   }
 
   private createLayout() {
-    const config = new PostItLayoutConfig();
-    config.dragEnabled = false;
-
-    this.layout = new PostItLayout('post-it-collection-layout', config, this.zone);
+    if (this.postItLayout) {
+      this.layout = new PostItLayout(this.postItLayout.nativeElement, false, this.zone);
+      this.changeDetector.detectChanges();
+    }
   }
 
   private subscribeOnNavigation() {
@@ -263,7 +269,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
       {
         title,
         message,
-        action: new CollectionsAction.Delete({collectionId: collection.id, callback: this.onRemoveCollection()})
+        action: new CollectionsAction.Delete({collectionId: collection.id, callback: (collectionId) => this.onRemoveCollection(collectionId)})
       }));
   }
 
@@ -271,39 +277,18 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.collections = this.collections.filter(coll => coll.correlationId !== collection.correlationId);
   }
 
-  private getCollectionByCorrelationId(correlationId: string): CollectionModel {
-    return this.collections.find(c => c.correlationId === correlationId);
+  private onCreateCollection(collection: CollectionModel) {
+    if (queryIsNotEmpty(this.query)) {
+      this.store.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
+    }
+    this.refreshPostIts();
   }
 
-  private onCreateCollection(): (collection: CollectionModel) => void {
-    const query = this.query;
-    const store = this.store;
-    const comp = this;
-    return collection => {
-      if (queryIsNotEmpty(query)) {
-        store.dispatch(new NavigationAction.AddCollectionToQuery({collectionId: collection.id}));
-      }
-      comp.refreshPostIts();
-    };
-  }
-
-  private onUpdateCollection(): () => void {
-    const comp = this;
-    return () => {
-      comp.refreshPostIts();
-    };
-  }
-
-  private onRemoveCollection(): (collectionId: string) => void {
-    const query = this.query;
-    const store = this.store;
-    const comp = this;
-    return collectionId => {
-      if (queryIsNotEmpty(query)) {
-        store.dispatch(new NavigationAction.RemoveCollectionFromQuery({collectionId}));
-      }
-      comp.refreshPostIts();
-    };
+  private onRemoveCollection(collectionId: string) {
+    if (queryIsNotEmpty(this.query)) {
+      this.store.dispatch(new NavigationAction.RemoveCollectionFromQuery({collectionId}));
+    }
+    this.refreshPostIts();
   }
 
   private dispatchActions() {
