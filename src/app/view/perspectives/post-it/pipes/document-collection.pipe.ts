@@ -26,9 +26,9 @@ import {CollectionModel} from '../../../../core/store/collections/collection.mod
 })
 export class DocumentCollectionPipe implements PipeTransform {
 
-  public transform(document: DocumentModel, collections: { [collectionId: string]: CollectionModel }): CollectionModel {
+  public transform(document: DocumentModel, collections: CollectionModel[]): CollectionModel {
     const collectionId = document && document.collectionId;
-    return collectionId && collections[collectionId];
+    return collectionId && collections.find(coll => coll.id === collectionId);
   }
 
 }

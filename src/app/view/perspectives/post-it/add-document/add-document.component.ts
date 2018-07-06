@@ -34,47 +34,23 @@ import {generateDocumentData} from '../../../../core/store/documents/document.ut
   templateUrl: './add-document.component.html',
   styleUrls: ['./add-document.component.scss']
 })
-export class PostItAddDocumentComponent implements OnInit, OnDestroy {
-
-  @Input()
-  public hasCollection: boolean;
-
-  @Input()
-  public hasRights: boolean;
+export class PostItAddDocumentComponent {
 
   @Input()
   public query: QueryModel;
 
+  @Input()
+  public collection: CollectionModel;
+
   @Output()
   public createPostIt = new EventEmitter<DocumentModel>();
 
-  public selectedCollection: CollectionModel;
-
-  private collectionSubscription: Subscription;
-
-  constructor(private store: Store<AppState>) {
-  }
-
-  public ngOnInit(): void {
-    this.collectionSubscription = this.store.select(selectCollectionsByQuery).subscribe((collections: CollectionModel[]) => {
-      this.selectedCollection = collections.length === 1 ? collections[0] : null;
-    });
-  }
-
   public onClick(): void {
     this.createPostIt.emit({
-      collectionId: this.selectedCollection.id,
+      collectionId: this.collection.id,
       correlationId: CorrelationIdGenerator.generate(),
-      data: generateDocumentData(this.selectedCollection, this.query && this.query.filters || [])
+      data: generateDocumentData(this.collection, this.query && this.query.filters || [])
     });
-  }
-
-  public disabled(): boolean {
-    return !this.hasRights || !this.hasCollection;
-  }
-
-  public ngOnDestroy(): void {
-    this.collectionSubscription.unsubscribe();
   }
 
 }

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, HostListener, Input, NgZone, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -56,7 +56,7 @@ const UNCREATED_THRESHOLD = 5;
   templateUrl: './post-it-collections.component.html',
   styleUrls: ['./post-it-collections.component.scss']
 })
-export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   @Input()
   public maxShown: number = -1;
@@ -64,8 +64,14 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   @ViewChildren(PostItCollectionComponent)
   public postIts: QueryList<PostItCollectionComponent>;
 
-  @ViewChild('postItLayout')
-  public postItLayout: ElementRef;
+  @ViewChild('postItLayout') set content(content: ElementRef) {
+    if (content) {
+      this.postItLayout = content;
+      this.createLayout();
+    } else {
+      this.destroyLayout();
+    }
+  }
 
   public collections: CollectionModel[];
   public collectionRoles: { [collectionId: string]: string[] };
@@ -79,6 +85,7 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
   public query: QueryModel;
   public collectionsLoaded: boolean;
 
+  private postItLayout: ElementRef;
   private icons = Icons.solid;
   private colors = Colors.palette;
   private subscriptions = new Subscription();
@@ -110,10 +117,6 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
-  }
-
-  public ngAfterViewInit() {
-    this.createLayout();
   }
 
   public togglePanelVisible(event, index) {
@@ -216,9 +219,13 @@ export class PostItCollectionsComponent implements OnInit, AfterViewInit, OnDest
     this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {queryParams: {query: QueryConverter.toString(this.query)}});
   }
 
+  private destroyLayout() {
+    this.layout = null;
+  }
+
   private createLayout() {
-    if (this.postItLayout) {
-      this.layout = new PostItLayout(this.postItLayout.nativeElement, false, this.zone);
+    if (!this.layout) {
+      this.layout = new PostItLayout(this.postItLayout, false, this.zone);
       this.changeDetector.detectChanges();
     }
   }

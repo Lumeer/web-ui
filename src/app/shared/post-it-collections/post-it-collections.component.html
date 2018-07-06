@@ -2,7 +2,7 @@
 
   <ng-container *ngIf="collections.length; else noCollections">
 
-    <div class="d-flex mb-1">
+    <div class="d-flex mb-2">
       <post-it-collection-add-button
         class="ml-1"
         [disabled]="!(project | permissions:'write' | async)"
