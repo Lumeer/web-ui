@@ -154,7 +154,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
       {
         id: 'organization.payments.disabled.message',
         value: `Thank you very much for your interest. We have recorded your order.
- Automated payments are currently disabled due to legal limitations. We will get in touch with you soon!`
+ Automated payments are not fully operational yet. We will get in touch with you soon!`
       });
     const title = this.i18n({id: 'organization.payments.disabled.title', value: 'Thank You!'});
     const okButtonText = this.i18n({id: 'button.ok', value: 'OK'});

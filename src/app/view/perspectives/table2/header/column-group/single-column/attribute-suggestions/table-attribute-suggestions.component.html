@@ -3,7 +3,7 @@
   <div class="dropdown-menu show">
     <ng-container *ngIf="collection && !(collection | attributeExist:attributeName)">
       <div class="dropdown-header cursor-not-allowed"
-           i18n="@@table.header.suggestion.attribute.new">Create new attribute
+           i18n="@@create.new.attribute">Create new attribute
       </div>
       <a class="dropdown-item"
          (mousedown)="createAttribute()">
@@ -42,7 +42,7 @@
 
       <ng-container *ngIf="!(allAttributes$ | async | empty)">
         <div class="dropdown-header cursor-not-allowed"
-             i18n="@@table.header.suggestion.link.new">Create new link
+             i18n="@@create.new.link">Create new link
         </div>
         <a *ngFor="let linkedAttribute of allAttributes$ | async"
            (mousedown)="createLinkType(linkedAttribute.collection)"

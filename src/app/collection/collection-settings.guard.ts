@@ -90,14 +90,14 @@ export class CollectionSettingsGuard implements CanActivate {
   }
 
   private dispatchErrorActionsNotExist() {
-    const message = this.i18n({id: 'file.not.exist', value: 'File does not exist'});
+    const message = this.i18n({id: 'file.not.exist', value: 'Collection does not exist'});
     this.dispatchErrorActions(message);
   }
 
   private dispatchErrorActionsNotPermission() {
     const message = this.i18n({
       id: 'file.permission.missing',
-      value: 'You do not have permission to access this file'
+      value: 'You do not have permission to access this collection'
     });
     this.dispatchErrorActions(message);
   }
