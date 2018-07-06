@@ -4,10 +4,10 @@
         <body>
             <trans-unit id="panel.notifications" datatype="html">
                 <source>
-                    <x id="ICU" equiv-text="{notifications, plural, =0 {...} =1 {...} =2 {...} =3 {...} =4 {...} other {...}}"></x>
-                </source>
+          <x id="ICU" equiv-text="{notifications, plural, =0 {...} =1 {...} =2 {...} =3 {...} =4 {...} other {...}}"/>
+        </source>
                 <target>
-                    <x id="ICU" equiv-text="{upozornění, plural, =0 {...} =1 {...} =2 {...} =3 {...} =4 {...} other {...}}"></x>
+                    <x id="ICU" equiv-text="{upozornění, plural, =0 {...} =1 {...} =2 {...} =3 {...} =4 {...} other {...}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/shared/top-panel/top-panel.component.ts</context>
@@ -15,9 +15,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="cfb40a3883978597fcd2f0b863a75a5f3df84fbd" datatype="html">
-                <source>{VAR_PLURAL, plural, =0 {No new notifications} =1 {One new notification} =2 {2 new notifications} =3 {3 new notifications} =4 {4 new notifications} other {<x id="INTERPOLATION" equiv-text="{{notifications}}"></x>
-                     new notifications} }</source>
-                <target>{VAR_PLURAL, plural, =0 {Žádná nová upozornění} =1 {Jedno nové upozornění} =2 {2 nová upozornění} =3 {3 nová upozornění} =4 {4 nová upozornění} other {<x id="INTERPOLATION" equiv-text="{{notifications}}"></x>
+                <source>{VAR_PLURAL, plural, =0 {No new notifications} =1 {One new notification} =2 {2 new notifications} =3 {3 new notifications} =4 {4 new notifications} other {<x id="INTERPOLATION" equiv-text="{{notifications}}"/> new notifications} }</source>
+                <target>{VAR_PLURAL, plural, =0 {Žádná nová upozornění} =1 {Jedno nové upozornění} =2 {2 nová upozornění} =3 {3 nová upozornění} =4 {4 nová upozornění} other {<x id="INTERPOLATION" equiv-text="{{notifications}}"/>
 
                      nových upozornění} }</target>
                 <context-group purpose="location">
@@ -46,7 +45,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="search.result.empty" datatype="html">
-                <source>We are sorry, but we have not found anything. Please do a more accurate search.</source>
+                <source>
+  We are sorry, but we have not found anything. Please do a more accurate search.
+</source>
                 <target>Je nám líto, ale nic jsme nenašli. Zkuste jednodušší hledání.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
@@ -87,10 +88,10 @@
             </trans-unit>
             <trans-unit id="search.input.placeholder" datatype="html">
                 <source>
-                    <x id="ICU" equiv-text="{queryItems.length, select, 0 {...} other {...}}"></x>
-                </source>
+    <x id="ICU" equiv-text="{queryItems.length, select, 0 {...} other {...}}"/>
+  </source>
                 <target>
-                    <x id="ICU" equiv-text="{queryItems.length, select, 0 {...} other {...}}"></x>
+                    <x id="ICU" equiv-text="{queryItems.length, select, 0 {...} other {...}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/shared/top-panel/search-box/input/search-input.component.ts</context>
@@ -118,7 +119,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.config.link.types.list.attribute" datatype="html">
-                <source>Attribute</source>
+                <source>
+      Attribute
+    </source>
                 <target>Atribut</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/collection/settings/tab/link-attribute-list/link-attribute-list.component.ts</context>
@@ -126,7 +129,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.config.tab.attributes" datatype="html">
-                <source>Attributes</source>
+                <source>
+          Attributes
+        </source>
                 <target>Atributy</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/collection/settings/collection-settings.component.ts</context>
@@ -134,7 +139,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.config.tab.permissions" datatype="html">
-                <source>Users</source>
+                <source>
+          Users
+        </source>
                 <target>Uživatelé</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/collection/settings/collection-settings.component.ts</context>
@@ -150,7 +157,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.config.tab.events.automatic" datatype="html">
-                <source>automatic</source>
+                <source>
+          automatic
+      </source>
                 <target>automaticky</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/collection/settings/tab/events/collection-events.component.ts</context>
@@ -174,7 +183,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.config.tab.events.add" datatype="html">
-                <source>Add Event</source>
+                <source>
+        Add Event
+      </source>
                 <target>Přidat událost</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/collection/settings/tab/events/collection-events.component.ts</context>
@@ -206,9 +217,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.config.tab.link.types.go.to" datatype="html">
-                <source>Go to <x id="INTERPOLATION" equiv-text="{{ getLinkedCollection(linkTypeModel).name }}"></x>
-                </source>
-                <target>Přejít na <x id="INTERPOLATION" equiv-text="{{ getLinkedCollection(linkTypeModel).name }}"></x>
+                <source>Go to <x id="INTERPOLATION" equiv-text="{{ getLinkedCollection(linkTypeModel).name }}"/></source>
+                <target>Přejít na <x id="INTERPOLATION" equiv-text="{{ getLinkedCollection(linkTypeModel).name }}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
@@ -216,7 +226,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.config.tab.link.types.add" datatype="html">
-                <source>Add link Type</source>
+                <source>
+        Add link Type
+      </source>
                 <target>Zadat propojení</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
@@ -248,11 +260,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.document.favorite" datatype="html">
-                <source>
-                    <x id="INTERPOLATION" equiv-text="{{ postItModel.document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"></x>
-                </source>
+                <source><x id="INTERPOLATION" equiv-text="{{ postItModel.document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source>
                 <target>
-                    <x id="INTERPOLATION" equiv-text="{{data.document.favorite ?  'Odstranit z oblíbených' : 'Přidat do oblíbených'}}"></x>
+                    <x id="INTERPOLATION" equiv-text="{{data.document.favorite ?  'Odstranit z oblíbených' : 'Přidat do oblíbených'}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document.component.ts</context>
@@ -300,7 +310,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="table.query.invalid" datatype="html">
-                <source>Your query results cannot be shown using table perspective. The query needs to specify exactly one collection.</source>
+                <source>Your query results cannot be shown using table perspective. The query needs to specify exactly one collection.
+</source>
                 <target>Výsledky Vašeho hledání nemohou být zobrazeny v tabulce. Hledání musí obsahovat jen jednu kolekci.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/table/table-perspective.component.ts</context>
@@ -312,7 +323,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="smartdoc.query.invalid" datatype="html">
-                <source>Your query results cannot be shown using smart document perspective. The query needs to specify exactly one collection.</source>
+                <source>Your query results cannot be shown using smart document perspective. The query needs to specify exactly one collection.
+</source>
                 <target>Výsledky Vašeho hledání nemohou být zobrazeny v Chytrém dokumentu. Hledání musí obsahovat jen jednu kolekci.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/smartdoc/smartdoc-perspective.component.ts</context>
@@ -329,10 +341,10 @@
             </trans-unit>
             <trans-unit id="view.share.dialog.input.placeholder" datatype="html">
                 <source>
-                    <x id="ICU" equiv-text="{emails.length, select, 0 {...} other {...}}"></x>
-                </source>
+        <x id="ICU" equiv-text="{emails.length, select, 0 {...} other {...}}"/>
+      </source>
                 <target>
-                    <x id="ICU" equiv-text="{emails.length, select, 0 {...} other {...}}"></x>
+                    <x id="ICU" equiv-text="{emails.length, select, 0 {...} other {...}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context>
@@ -340,7 +352,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="view.not.exist" datatype="html">
-                <source>View does not exist!</source>
+                <source>View does not exist!
+      </source>
                 <target>Tento pohled neexistuje!</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/view.component.ts</context>
@@ -544,7 +557,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="table.header.suggestion.link.existing" datatype="html">
-                <source>Use existing link</source>
+                <source>Use existing link
+      </source>
                 <target>Použít exsitující propojení</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/table/header-cell/table-header-cell.component.ts</context>
@@ -736,9 +750,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="smartdoc.button.perspective.switch" datatype="html">
-                <source>Switch to <x id="ICU" equiv-text="{perspective, select, postit {...} search {...} table {...} smartdoc {...}}"></x>
-                </source>
-                <target>Přepnout na <x id="ICU" equiv-text="{perspective, select, postit {...} search {...} table {...} smartdoc {...}}"></x>
+                <source>
+              Switch to <x id="ICU" equiv-text="{perspective, select, postit {...} search {...} table {...} smartdoc {...}}"/>
+            </source>
+                <target>Přepnout na <x id="ICU" equiv-text="{perspective, select, postit {...} search {...} table {...} smartdoc {...}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/smartdoc/bottom-panel/smartdoc-bottom-panel.component.ts</context>
@@ -771,10 +786,10 @@
             </trans-unit>
             <trans-unit id="resource.chooser.header" datatype="html">
                 <source>
-                    <x id="ICU" equiv-text="{resourceType, select, Organization {...} Project {...}}"></x>
-                </source>
+    <x id="ICU" equiv-text="{resourceType, select, Organization {...} Project {...}}"/>
+  </source>
                 <target>
-                    <x id="ICU" equiv-text="{resourceType, select, Organization {...} Project {...}}"></x>
+                    <x id="ICU" equiv-text="{resourceType, select, Organization {...} Project {...}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
@@ -790,10 +805,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.chooser.empty" datatype="html">
-                <source>There are no <x id="ICU" equiv-text="{resourceType, select, Organization {...} Project {...}}"></x>
-                     and you are not allowed to
-      create new ones.</source>
-                <target>Nemáte žádné <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"></x>
+                <source>
+      There are no <x id="ICU" equiv-text="{resourceType, select, Organization {...} Project {...}}"/> and you are not allowed to
+      create new ones.
+    </source>
+                <target>Nemáte žádné <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"/>
 
                      a nemáte ani oprávnění je vytvářet.</target>
                 <context-group purpose="location">
@@ -906,7 +922,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="validation.collection.name.empty" datatype="html">
-                <source>Collection name cannot be empty.</source>
+                <source>
+      Collection name cannot be empty.
+    </source>
                 <target>Název kolekce nemůže být prázdný.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/shared/collection-name-input/collection-name-input.component.ts</context>
@@ -914,9 +932,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="validation.collection.name.short" datatype="html">
-                <source>Collection name must have at least <x id="INTERPOLATION" equiv-text="{{collectionNameInput.errors.minlength.requiredLength}}"></x>
-                     characters.</source>
-                <target>Název kolekce musí mít alespoň<x id="INTERPOLATION" equiv-text="{{collectionNameInput.errors.minlength.requiredLength}}"></x>
+                <source>
+      Collection name must have at least <x id="INTERPOLATION" equiv-text="{{collectionNameInput.errors.minlength.requiredLength}}"/> characters.
+    </source>
+                <target>Název kolekce musí mít alespoň<x id="INTERPOLATION" equiv-text="{{collectionNameInput.errors.minlength.requiredLength}}"/>
 
                     znaků.</target>
                 <context-group purpose="location">
@@ -941,7 +960,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="validation.link.name.empty" datatype="html">
-                <source>Link name cannot be empty.</source>
+                <source>
+        Link name cannot be empty.
+      </source>
                 <target>Název propojení nemůže být prázdný.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/shared/link-name-input/link-name-input.component.ts</context>
@@ -949,9 +970,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="validation.link.name.short" datatype="html">
-                <source>Link name needs to have at least <x id="INTERPOLATION" equiv-text="{{linkNameInput.errors.minlength.requiredLength}}"></x>
-                     characters.</source>
-                <target>Název propojení musí mít alespoň<x id="INTERPOLATION" equiv-text="{{linkNameInput.errors.minlength.requiredLength}}"></x>
+                <source>
+        Link name needs to have at least <x id="INTERPOLATION" equiv-text="{{linkNameInput.errors.minlength.requiredLength}}"/> characters.
+      </source>
+                <target>Název propojení musí mít alespoň<x id="INTERPOLATION" equiv-text="{{linkNameInput.errors.minlength.requiredLength}}"/>
 
                     znaků.</target>
                 <context-group purpose="location">
@@ -968,7 +990,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="search.perspective.result.empty" datatype="html">
-                <source>I am sorry, I did not find anything. Please try another search!</source>
+                <source>
+    I am sorry, I did not find anything. Please try another search!
+  </source>
                 <target state="translated">Je mi líto, nic jsem nenašel. Zkuste hledat něco jiného!</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.ts</context>
@@ -1032,7 +1056,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.user.roles.groups" datatype="html">
-                <source>Groups:</source>
+                <source>
+    Groups:
+  </source>
                 <target state="translated">Skupiny:</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/shared/users/user-groups/user-groups.component.ts</context>
@@ -1632,12 +1658,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.delete.dialog.message" datatype="html">
-                <source>Are you sure you want to remove <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"></x>
-                    <x id="INTERPOLATION" equiv-text="{{resourceCode}}"></x>
-                    ?</source>
-                <target state="translated">Skutečně chcete smazat <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"></x>
+                <source>Are you sure you want to remove <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>?</source>
+                <target state="translated">Skutečně chcete smazat <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/>
 
-                    } <x id="INTERPOLATION" equiv-text="{{resourceCode}}"></x>
+                    } <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>
 
                     ?</target>
                 <context-group purpose="location">
@@ -1666,14 +1690,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.already.exist" datatype="html">
-                <source>
-                    <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"></x>
-                     with code <x id="INTERPOLATION" equiv-text="{{resourceCode}}"></x>
-                     already exist</source>
+                <source><x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> with code <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/> already exist</source>
                 <target state="translated">
-                    <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"></x>
+                    <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/>
 
-                    } s kódem <x id="INTERPOLATION" equiv-text="{{resourceCode}}"></x>
+                    } s kódem <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>
 
                      již existuje</target>
                 <context-group purpose="location">
@@ -1698,7 +1719,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="validation.collection.name.unique" datatype="html">
-                <source>You cannot have two collections with the same name.</source>
+                <source>
+      You cannot have two collections with the same name.
+    </source>
                 <target>Nelze mít dvě kolekce se stejným jménem.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/shared/collection-name-input/collection-name-input.component.ts</context>
@@ -1723,7 +1746,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="shared.preview.results.moreResults" datatype="html">
-                <source>There are multiple results, please select one…</source>
+                <source>
+        There are multiple results, please select one…
+      </source>
                 <target>Nalezeno více výsledků, prosím vyberte jeden...</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/shared/preview-results/preview-results.component.ts</context>
@@ -1759,7 +1784,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.post.it.import" datatype="html">
-                <source>Import Collection</source>
+                <source>Import Collection
+  </source>
                 <target>Importovat kolekci</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/shared/post-it-collections/import-button/post-it-collection-import-button.component.ts</context>
@@ -1867,7 +1893,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="documents.post.it.loading" datatype="html">
-                <source>Loading...</source>
+                <source>
+  Loading...
+</source>
                 <target>Načítání...</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/post-it/post-it-perspective.component.ts</context>
@@ -1979,7 +2007,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.contact.email.invalid" datatype="html">
-                <source>Please enter a valid e-mail address (e.g. alan.turing@lumeer.io).</source>
+                <source>
+          Please enter a valid e-mail address (e.g. alan.turing@lumeer.io).
+        </source>
                 <target>Prosím zadejte platnou e-mailovou adresu (např. alan.turing@lumeer.io).</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/workspace/organization/detail/contact-form/contact-form.component.ts</context>
@@ -1995,7 +2025,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.contact.phone.invalid" datatype="html">
-                <source>Please enter a phone number that contains only numbers, characters +-/ and spaces.</source>
+                <source>
+          Please enter a phone number that contains only numbers, characters +-/ and spaces.
+        </source>
                 <target>Prosím zadejte telefonní číslo, které obsahuje jen číslice, mezery a znaky +-/</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/workspace/organization/detail/contact-form/contact-form.component.ts</context>
@@ -2011,7 +2043,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.contact.ic.invalid" datatype="html">
-                <source>Please enter only numbers and spaces.</source>
+                <source>
+          Please enter only numbers and spaces.
+        </source>
                 <target>Prosím zadejte jen číslice a mezery.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/workspace/organization/detail/contact-form/contact-form.component.ts</context>
@@ -2091,15 +2125,12 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.order.activeUntil" datatype="html">
-                <source>Subscription is active until <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"></x>
-                    . <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"></x>
-                    Extend it today!<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"></x>
-                </source>
-                <target>Předplatné je aktivní do<x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"></x>
+                <source>Subscription is active until <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"/>. <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>Extend it today!<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/></source>
+                <target>Předplatné je aktivní do<x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"/>
 
-                    .<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"></x>
+                    .<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
 
-                    Prodlužte si předplatné již dnes!<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"></x>
+                    Prodlužte si předplatné již dnes!<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.ts</context>
@@ -2171,7 +2202,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.order.users.invalidMin" datatype="html">
-                <source>Minimal order is 10 users.</source>
+                <source>
+      Minimal order is 10 users.
+    </source>
                 <target>Minimální objednávka je pro 10 uživatelů.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.ts</context>
@@ -2179,12 +2212,12 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.order.users.invalidMax" datatype="html">
-                <source>For orders of more than 99 users please contact our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"></x>
-                    support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"></x>
-                    .</source>
-                <target>Pro objednávky nad 99 uživatelů prosím kontaktujte<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"></x>
+                <source>
+      For orders of more than 99 users please contact our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.
+    </source>
+                <target>Pro objednávky nad 99 uživatelů prosím kontaktujte<x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>
 
-                    naši podporu<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"></x>
+                    naši podporu<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>
 
                     .</target>
                 <context-group purpose="location">
@@ -2201,27 +2234,20 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.order.orderBtn" datatype="html">
-                <source>Get Lumeer for only <x id="START_TAG_DEL" ctype="x-del" equiv-text="&lt;del&gt;"></x>
-                    <x id="INTERPOLATION" equiv-text="{{prefix}}"></x>
-                    <x id="INTERPOLATION_1" equiv-text="{{discountInfo | number:'1.2-2'}}"></x>
-                    <x id="INTERPOLATION_2" equiv-text="{{suffix}}"></x>
-                    <x id="CLOSE_TAG_DEL" ctype="x-del" equiv-text="&lt;/del&gt;"></x>
-                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"></x>
-                    <x id="INTERPOLATION" equiv-text="{{prefix}}"></x>
-                    <x id="INTERPOLATION_3" equiv-text="{{price | number:'1.2-2'}}"></x>
-                    <x id="INTERPOLATION_2" equiv-text="{{suffix}}"></x>
-                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"></x>
-                    !</source>
-                <target>Získejte Lumeera jen za<x id="START_TAG_DEL" ctype="x-del" equiv-text="&lt;del&gt;"></x>
-                    <x id="INTERPOLATION" equiv-text="{{prefix}}"></x>
-                    <x id="INTERPOLATION_1" equiv-text="{{discountInfo | number:'1.2-2'}}"></x>
-                    <x id="INTERPOLATION_2" equiv-text="{{suffix}}"></x>
-                    <x id="CLOSE_TAG_DEL" ctype="x-del" equiv-text="&lt;/del&gt;"></x>
-                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"></x>
-                    <x id="INTERPOLATION" equiv-text="{{prefix}}"></x>
-                    <x id="INTERPOLATION_3" equiv-text="{{price | number:'1.2-2'}}"></x>
-                    <x id="INTERPOLATION_2" equiv-text="{{suffix}}"></x>
-                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"></x>
+                <source>
+      Get Lumeer for only <x id="START_TAG_DEL" ctype="x-del" equiv-text="&lt;del>"/><x id="INTERPOLATION" equiv-text="{{prefix}}"/><x id="INTERPOLATION_1" equiv-text="{{discountInfo | number:'1.2-2'}}"/><x id="INTERPOLATION_2" equiv-text="{{suffix}}"/><x id="CLOSE_TAG_DEL" ctype="x-del" equiv-text="&lt;/del>"/>
+      <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/><x id="INTERPOLATION" equiv-text="{{prefix}}"/><x id="INTERPOLATION_3" equiv-text="{{price | number:'1.2-2'}}"/><x id="INTERPOLATION_2" equiv-text="{{suffix}}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>!
+    </source>
+                <target>Získejte Lumeera jen za<x id="START_TAG_DEL" ctype="x-del" equiv-text="&lt;del>"/>
+                    <x id="INTERPOLATION" equiv-text="{{prefix}}"/>
+                    <x id="INTERPOLATION_1" equiv-text="{{discountInfo | number:'1.2-2'}}"/>
+                    <x id="INTERPOLATION_2" equiv-text="{{suffix}}"/>
+                    <x id="CLOSE_TAG_DEL" ctype="x-del" equiv-text="&lt;/del>"/>
+                    <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
+                    <x id="INTERPOLATION" equiv-text="{{prefix}}"/>
+                    <x id="INTERPOLATION_3" equiv-text="{{price | number:'1.2-2'}}"/>
+                    <x id="INTERPOLATION_2" equiv-text="{{suffix}}"/>
+                    <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>
 
                     !</target>
                 <context-group purpose="location">
@@ -2350,12 +2376,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.payments.giveItATry" datatype="html">
-                <source>You've never had a chance to see Lumeer for <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"></x>
-                    Business<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"></x>
-                    . Give it a try today!</source>
-                <target>Ještě nikdy jste neměli Lumeerův program<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"></x>
+                <source>You've never had a chance to see Lumeer for <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>Business<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>. Give it a try today!</source>
+                <target>Ještě nikdy jste neměli Lumeerův program<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
 
-                    Business<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"></x>
+                    Business<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>
 
                     . Zkuste to již dnes!</target>
                 <context-group purpose="location">
@@ -2364,12 +2388,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.state.trial" datatype="html">
-                <source>You are on the <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"></x>
-                    Free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"></x>
-                     program now.</source>
-                <target>Jste nyní na programu <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"></x>
+                <source>You are on the <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>Free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> program now.</source>
+                <target>Jste nyní na programu <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
 
-                    Zdarma<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"></x>.
+                    Zdarma<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>.
 
                      </target>
                 <context-group purpose="location">
@@ -2394,14 +2416,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.state.newFeature" datatype="html">
-                <source>
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"></x>
-                    Verified<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"></x>
-                     updates and new features</source>
+                <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Verified<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> updates and new features</source>
                 <target>
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"></x>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 
-                    Ověřené<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"></x>
+                    Ověřené<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 
                     aktualizace a funkce</target>
                 <context-group purpose="location">
@@ -2422,14 +2441,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.state.nextDaySupport" datatype="html">
-                <source>
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"></x>
-                    Next business day<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"></x>
-                     e-mail support</source>
+                <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Next business day<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> e-mail support</source>
                 <target>
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"></x>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 
-                    Do dalšího pracovního dne<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"></x>
+                    Do dalšího pracovního dne<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 
                     dostanete pomoc e-mailem</target>
                 <context-group purpose="location">
@@ -2450,12 +2466,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.state.backupAndRecovery" datatype="html">
-                <source>Data backup and <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"></x>
-                    next business day recovery<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"></x>
-                </source>
-                <target>Zálohování dat a <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"></x>
+                <source>Data backup and <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>next business day recovery<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/></source>
+                <target>Zálohování dat a <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 
-                    obnova do dalšího pracovního dne<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"></x>
+                    obnova do dalšího pracovního dne<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
@@ -2475,14 +2489,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.state.powerfulServer" datatype="html">
-                <source>
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"></x>
-                    Powerful<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"></x>
-                     shared server resources</source>
+                <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Powerful<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> shared server resources</source>
                 <target>
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"></x>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 
-                    Výkonné<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"></x>
+                    Výkonné<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 
                     servery v cloudu</target>
                 <context-group purpose="location">
@@ -2503,14 +2514,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.state.unlimitedProjects" datatype="html">
-                <source>
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"></x>
-                    Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"></x>
-                     projects, users and collections</source>
+                <source><x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Unlimited<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> projects, users and collections</source>
                 <target>
-                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"></x>
+                    <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>
 
-                    Neomezené<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"></x>
+                    Neomezené<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>
 
                     projekty, uživatelé a kolekce</target>
                 <context-group purpose="location">
@@ -2523,15 +2531,12 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.state.unlimitedProjects.warn" datatype="html">
-                <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"></x>
-                     users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"></x>
-                     projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"></x>
-                     collections.</source>
-                <target>Nyní máte jen<x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"></x>
+                <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/> users, <x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/> projects, <x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/> collections.</source>
+                <target>Nyní máte jen<x id="INTERPOLATION" equiv-text="{{serviceLimits?.users}}"/>
 
-                    uživatele,<x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"></x>
+                    uživatele,<x id="INTERPOLATION_1" equiv-text="{{serviceLimits?.projects}}"/>
 
-                    projekt,<x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"></x>
+                    projekt,<x id="INTERPOLATION_2" equiv-text="{{serviceLimits?.files}}"/>
 
                     kolekcí.</target>
                 <context-group purpose="location">
@@ -2552,9 +2557,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.state.dataLimit.warn" datatype="html">
-                <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.documents}}"></x>
-                     records available.</source>
-                <target>Nyní máte k dispozici pouze<x id="INTERPOLATION" equiv-text="{{serviceLimits?.documents}}"></x>
+                <source>Now you have only <x id="INTERPOLATION" equiv-text="{{serviceLimits?.documents}}"/> records available.</source>
+                <target>Nyní máte k dispozici pouze<x id="INTERPOLATION" equiv-text="{{serviceLimits?.documents}}"/>
 
                     záznamů.</target>
                 <context-group purpose="location">
@@ -2563,12 +2567,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.order.onBusiness" datatype="html">
-                <source>Congratulations, <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"></x>
-                    Business<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"></x>
-                     program active!</source>
-                <target>Gratulujeme,<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"></x>
+                <source>Congratulations, <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>Business<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> program active!</source>
+                <target>Gratulujeme,<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>
 
-                    Business<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"></x>
+                    Business<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>
 
                     program je aktivní!</target>
                 <context-group purpose="location">
@@ -2577,9 +2579,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organizations.tab.detail.basic.active" datatype="html">
-                <source>Subscription is active until <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"></x>
-                </source>
-                <target>Předplatné je aktivní do<x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"></x>
+                <source>Subscription is active until <x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"/></source>
+                <target>Předplatné je aktivní do<x id="INTERPOLATION" equiv-text="{{serviceLimits.validUntil | date : 'mediumDate'}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
@@ -2588,17 +2589,15 @@
             </trans-unit>
             <trans-unit id="organizations.tab.detail.basic.allInclusive" datatype="html">
                 <source>
-                    <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"></x>
-                    <x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"></x>
-                    <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"></x>
-                    All features included<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"></x>
-                </source>
+    <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i>"/><x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/>
+    <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/>All features included<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
+  </source>
                 <target>
-                    <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"></x>
-                    <x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"></x>
-                    <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"></x>
+                    <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i>"/>
+                    <x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i>"/>
+                    <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/>
 
-                    Všechny funcke jsou přístupné<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"></x>
+                    Všechny funcke jsou přístupné<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-state/payments-state.component.ts</context>
@@ -2607,7 +2606,8 @@
             </trans-unit>
             <trans-unit id="chart.query.invalid" datatype="html">
                 <source>Your query results cannot be shown using chart perspective. The query
-  needs to specify exactly one collection.</source>
+  needs to specify exactly one collection.
+</source>
                 <target>Výsledky Vašeho hledání nemohou být zobrazeny v grafu. Hledání musí obsahovat jen jednu kolekci.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/chart/chart-perspective.component.ts</context>
@@ -2615,10 +2615,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="perspective.underConstruction" datatype="html">
-                <source>This perspective is currently under construction. It is highly experimental, buggy and not reliable.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"></x>
-
-            Please use with caution. Do not use for any sensitive data.</source>
-                <target>Tento pohled je aktuálně ve fázi prototypování. Je pouze experimentální, značně chybový a nespolehlivý.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"></x>
+                <source>
+            This perspective is currently under construction. It is highly experimental, buggy and not reliable.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
+            Please use with caution. Do not use for any sensitive data.
+          </source>
+                <target>Tento pohled je aktuálně ve fázi prototypování. Je pouze experimentální, značně chybový a nespolehlivý.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
 
                     Používejte pouze na vlastní riziko. Nevkládejte citlivá data.</target>
                 <context-group purpose="location">
@@ -2651,7 +2652,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="chart.loading" datatype="html">
-                <source>Loading...</source>
+                <source>
+  Loading...
+</source>
                 <target>Načítání...</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/chart/chart-perspective.component.ts</context>
@@ -2667,7 +2670,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="search.all.loading" datatype="html">
-                <source>Loading...</source>
+                <source>
+    Loading...
+  </source>
                 <target>Načítání...</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
@@ -2675,7 +2680,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="search.all.records" datatype="html">
-                <source>Records</source>
+                <source>
+        Records
+      </source>
                 <target>Záznamy</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
@@ -2683,7 +2690,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="search.all.views" datatype="html">
-                <source>Views</source>
+                <source>
+        Views
+      </source>
                 <target>Pohledy</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
@@ -3115,13 +3124,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organization.payments.paidWarning.text" datatype="html">
-                <source>Your current subscription lasts until <x id="INTERPOLATION" equiv-text="{{0}}"></x>
-                    . Are you sure you want to proceed with an order with earlier start date of <x id="INTERPOLATION_1" equiv-text="{{1}}"></x>
-                    ?
+                <source>Your current subscription lasts until <x id="INTERPOLATION" equiv-text="{{0}}"/>. Are you sure you want to proceed with an order with earlier start date of <x id="INTERPOLATION_1" equiv-text="{{1}}"/>?
  In case you want to add more users, please contact support@lumeer.io.</source>
-                <target>Vaše předplatné běží do<x id="INTERPOLATION" equiv-text="{{0}}"></x>
+                <target>Vaše předplatné běží do<x id="INTERPOLATION" equiv-text="{{0}}"/>
 
-                    . Určitě chcete pokračovat s objednávkou s dřívějším datem (<x id="INTERPOLATION_1" equiv-text="{{1}}"></x>
+                    . Určitě chcete pokračovat s objednávkou s dřívějším datem (<x id="INTERPOLATION_1" equiv-text="{{1}}"/>
 
                     ) a mít předplatná, která se překrývají? V případě, že chcete přidat více uživatelů, kontaktujte prosím support@lumeer.io.</target>
                 <context-group purpose="location">
@@ -3171,10 +3178,11 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="isChrome" datatype="html">
-                <source>Lumeer works best in Google Chrome browser. Only this way we can guarantee you the best user experience.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"></x>
-
-            Using Lumeer in a different browser is at your own risk.</source>
-                <target>Lumeer pracuje nejlépe v prohlížeči Google Chrome. Jedině tak jsme schopní Vám zaručit nejlepší uživatelskou přívětivost.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"></x>
+                <source>
+            Lumeer works best in Google Chrome browser. Only this way we can guarantee you the best user experience.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
+            Using Lumeer in a different browser is at your own risk.
+          </source>
+                <target>Lumeer pracuje nejlépe v prohlížeči Google Chrome. Jedině tak jsme schopní Vám zaručit nejlepší uživatelskou přívětivost.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
 
                     Používání aplikace Lumeer v jiném prohlížeči je na vaši vlastní zodpovědnost.</target>
                 <context-group purpose="location">
@@ -3207,7 +3215,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.postit.name.duplicity" datatype="html">
-                <source>Sorry, this name is already taken. Try another?</source>
+                <source>
+    Sorry, this name is already taken. Try another?
+  </source>
                 <target>Je mi líto, toto jméno již někdo používá. Zkuste jiné!</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.ts</context>
@@ -3215,7 +3225,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="search.result.more" datatype="html">
-                <source>See all</source>
+                <source>
+        See all
+      </source>
                 <target>Zobrazit vše</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
@@ -3343,7 +3355,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="users.user.email.invalid" datatype="html">
-                <source>Please enter a valid e-mail address (e.g. alan.turing@lumeer.io).</source>
+                <source>
+  Please enter a valid e-mail address (e.g. alan.turing@lumeer.io).
+</source>
                 <target>Prosím zadejte platnou e-mailovou adresu (např. alan.turing@lumeer.io).</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/shared/users/new-user/new-user.component.ts</context>
@@ -3359,9 +3373,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.menu.createNew" datatype="html">
-                <source>Create New <x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"></x>
-                </source>
-                <target>Vytvořit<x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"></x>
+                <source>Create New <x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"/></source>
+                <target>Vytvořit<x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-menu.component.ts</context>
@@ -3465,9 +3478,10 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.new.dialog.title" datatype="html">
-                <source>Create new <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"></x>
-                </source>
-                <target>Vytvořit<x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"></x>
+                <source>
+  Create new <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"/>
+  </source>
+                <target>Vytvořit<x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.ts</context>
@@ -3499,7 +3513,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.new.dialog.icon.label" datatype="html">
-                <source>Icon:</source>
+                <source>
+            Icon:
+          </source>
                 <target>Ikona:</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.ts</context>
@@ -3507,7 +3523,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.new.dialog.icon.label.hint" datatype="html">
-                <source>(click the icon to change it)</source>
+                <source>
+            (click the icon to change it)
+          </source>
                 <target>(změňte ikonu kliknutím)</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.ts</context>
@@ -3515,7 +3533,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.new.dialog.invalid" datatype="html">
-                <source>We are sorry, but something went wrong.</source>
+                <source>We are sorry, but something went wrong.
+      </source>
                 <target>Je mi líto, ale něco se porouchalo.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.ts</context>
@@ -3531,12 +3550,12 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.new.dialog.code.label" datatype="html">
-                <source>Code:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup&gt;"></x>
-                    *<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup&gt;"></x>
-                </source>
-                <target>Kód:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup&gt;"></x>
+                <source>
+    Code:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup>"/>*<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup>"/>
+  </source>
+                <target>Kód:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup>"/>
 
-                    *<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup&gt;"></x>
+                    *<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup>"/>
                 </target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/create-resource/resource-code-input/resource-code-input.component.ts</context>
@@ -3552,7 +3571,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.new.dialog.code.error.length.min" datatype="html">
-                <source>Code must have at least 2 characters.</source>
+                <source>
+            Code must have at least 2 characters.
+          </source>
                 <target>Kód musí mít minimálně 2 znaky.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/create-resource/resource-code-input/resource-code-input.component.ts</context>
@@ -3560,7 +3581,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.new.dialog.code.error.length.max" datatype="html">
-                <source>Code can have 5 characters at most.</source>
+                <source>
+            Code can have 5 characters at most.
+          </source>
                 <target>Kód může mít maximálně 5 znaků.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/create-resource/resource-code-input/resource-code-input.component.ts</context>
@@ -3568,7 +3591,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.new.dialog.code.error.duplicity" datatype="html">
-                <source>Sorry, this code is already taken. Try another!</source>
+                <source>
+            Sorry, this code is already taken. Try another!
+          </source>
                 <target>Je mi líto, tento kód už někdo používá. Zkuste jiný!</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/create-resource/resource-code-input/resource-code-input.component.ts</context>
@@ -3600,7 +3625,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="dialog.feedback.message.required" datatype="html">
-                <source>You need to fill in the message.</source>
+                <source>
+          You need to fill in the message.
+        </source>
                 <target>Musíte vyplnit zprávu.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/dialog/feedback-dialog.component.ts</context>
@@ -3608,7 +3635,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="dialog.feedback.message.label" datatype="html">
-                <source>Describe how we can improve the application to better fit your needs:</source>
+                <source>
+          Describe how we can improve the application to better fit your needs:
+        </source>
                 <target>Popište, jak bychom mohli aplikaci vylepšit, aby lépe vyhovovala vaším potřebám:</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/dialog/dialog/feedback-dialog.component.ts</context>
@@ -3640,7 +3669,9 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="search.all.collections" datatype="html">
-                <source>Collections</source>
+                <source>
+        Collections
+      </source>
                 <target>Kolekce</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
@@ -3760,7 +3791,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="button.cancel" datatype="html">
-                <source>Cancel</source>
+                <source>Cancel
+          </source>
                 <target>Zrušit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.ts</context>
@@ -3884,7 +3916,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="create.new.attribute" datatype="html">
-                <source>Create new attribute</source>
+                <source>Create new attribute
+    </source>
                 <target>Vytvořit nový atribut</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/table/header-cell/table-header-cell.component.ts</context>
@@ -3896,7 +3929,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="create.new.link" datatype="html">
-                <source>Create new link</source>
+                <source>Create new link
+      </source>
                 <target>Vytvořit nové propojení</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/perspectives/table/header-cell/table-header-cell.component.ts</context>
