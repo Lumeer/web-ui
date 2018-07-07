@@ -12,9 +12,10 @@
     "i18n-merge": "xliffmerge --profile xliffmerge.json en cs",
     "lint": "ng lint",
     "ng": "ng",
-    "start": "rm -f ./src/environments/.env.json; ng serve",
-    "start:cs": "rm -f ./src/environments/.env.json; ng serve --configuration=cs",
-    "start:en": "rm -f ./src/environments/.env.json; ng serve --configuration=en"
+    "reset-env": "echo '{}' > ./src/environments/.env.json",
+    "start": "npm run reset-env; ng serve",
+    "start:cs": "npm run reset-env; ng serve --configuration=cs",
+    "start:en": "npm run reset-env; ng serve --configuration=en"
   },
   "repository": {
     "type": "git",
