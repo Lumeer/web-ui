@@ -76,13 +76,7 @@ export enum TableColumnType {
 
 }
 
-export interface TableColumn {
-
-  type: TableColumnType;
-
-}
-
-export class TableSingleColumn implements TableColumn {
+export class TableSingleColumn {
 
   public readonly type = TableColumnType.SINGLE;
   public readonly uniqueId = Math.random().toString(36).substr(2, 9);
@@ -94,7 +88,7 @@ export class TableSingleColumn implements TableColumn {
 
 }
 
-export class TableCompoundColumn implements TableColumn {
+export class TableCompoundColumn {
 
   public readonly type = TableColumnType.COMPOUND;
 
@@ -104,7 +98,7 @@ export class TableCompoundColumn implements TableColumn {
 
 }
 
-export class TableHiddenColumn implements TableColumn {
+export class TableHiddenColumn {
 
   public readonly type = TableColumnType.HIDDEN;
 
@@ -112,6 +106,8 @@ export class TableHiddenColumn implements TableColumn {
   }
 
 }
+
+export type TableColumn = TableSingleColumn | TableCompoundColumn | TableHiddenColumn;
 
 export interface TableConfig {
 

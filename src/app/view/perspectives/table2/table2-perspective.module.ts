@@ -44,7 +44,6 @@ import {TableRowsComponent} from './body/rows/table-rows.component';
 import {TableBodyComponent} from './body/table-body.component';
 import {TableCaptionComponent} from './header/collection/caption/table-caption.component';
 import {TableHeaderCollectionComponent} from './header/collection/table-header-collection.component';
-import {TableCompoundColumnComponent} from './header/column-group/compound-column/table-compound-column.component';
 import {TableHiddenColumnComponent} from './header/column-group/hidden-column/table-hidden-column.component';
 import {TableAttributeSuggestionsComponent} from './header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './header/column-group/single-column/context-menu/table-column-context-menu.component';
@@ -81,7 +80,6 @@ import {Table2PerspectiveComponent} from './table2-perspective.component';
     TableCaptionComponent,
     TableColumnGroupComponent,
     TableSingleColumnComponent,
-    TableCompoundColumnComponent,
     TableLinkInfoComponent,
     TableHiddenColumnComponent,
     TableColumnContextMenuComponent,
