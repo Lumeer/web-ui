@@ -2,18 +2,38 @@
   <div class="muuri {{columnGroupId | prefix:containerClassPrefix}} h-100">
     <div *ngFor="let column of columns; trackBy: trackByCollectionAndAttribute.bind(this); index as columnIndex"
          class="muuri-item h-100">
-      <div class="muuri-item-content h-100">
-        <table-compound-column *ngIf="column | isCompoundColumn"
-                               [table]="table"
-                               [column]="column"
-                               [cursor]="cursor | columnChildCursor:columnIndex"
-                               class="d-block">
-        </table-compound-column>
+      <div *ngIf="cursor | columnChildCursor:columnIndex as columnCursor"
+           class="muuri-item-content h-100">
+        <div *ngIf="column | isCompoundColumn"
+             mwlResizable
+             [enableGhostResize]="true"
+             [ghostElementPositioning]="'absolute'"
+             [resizeEdges]="column | resizeEdges:table:cursor"
+             [resizeSnapGrid]="{left: 10, right: 10}"
+             [style.width.px]="column | columnWidth"
+             [validateResize]="column | resizeValidate"
+             (resizeEnd)="onResizeEnd(columnCursor, $event)">
+          <div class="d-flex flex-column">
+            <table-single-column [table]="table"
+                                 [cursor]="columnCursor"
+                                 [column]="column.parent"
+                                 [leaf]="!column.children.length"
+                                 [style.height.px]="column | columnHeight:table:cursor"
+                                 class="d-block">
+            </table-single-column>
+            <table-column-group *ngIf="column.children.length"
+                                [table]="table"
+                                [cursor]="columnCursor"
+                                [columns]="column.children"
+                                class="d-block">
+            </table-column-group>
+          </div>
+        </div>
 
         <table-hidden-column *ngIf="column | isHiddenColumn"
                              [table]="table"
                              [column]="column"
-                             [cursor]="cursor | columnChildCursor:columnIndex"
+                             [cursor]="columnCursor"
                              class="d-block h-100">
         </table-hidden-column>
       </div>

@@ -19,6 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, NgZone, OnChanges, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {ResizeEvent} from 'angular-resizable-element';
 import {AppState} from '../../../../../core/store/app.state';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableColumn, TableColumnType, TableCompoundColumn, TableModel} from '../../../../../core/store/tables/table.model';
@@ -124,6 +125,11 @@ export class TableColumnGroupComponent implements OnChanges {
       const {parent} = column as TableCompoundColumn;
       return part.collectionId + ':' + (parent.attributeId || parent.uniqueId);
     }
+  }
+
+  public onResizeEnd(cursor: TableHeaderCursor, event: ResizeEvent): void {
+    const delta = Number(event.edges.right);
+    this.store.dispatch(new TablesAction.ResizeColumn({cursor, delta}));
   }
 
 }

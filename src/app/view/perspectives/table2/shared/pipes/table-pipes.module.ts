@@ -55,6 +55,7 @@ import { TableWidthPipe } from './table-width.pipe';
 import { CursorEqualsPipe } from './cursor-equals.pipe';
 import { ExtractValuePipe } from './extract-value.pipe';
 import { AffectedCellPipe } from './affected-cell.pipe';
+import { ResizeValidatePipe } from './resize-validate.pipe';
 
 @NgModule({
   imports: [
@@ -97,6 +98,7 @@ import { AffectedCellPipe } from './affected-cell.pipe';
     CursorEqualsPipe,
     ExtractValuePipe,
     AffectedCellPipe,
+    ResizeValidatePipe,
   ], exports: [
     DataPipe,
     EntityCreatedPipe,
@@ -134,6 +136,7 @@ import { AffectedCellPipe } from './affected-cell.pipe';
     CursorEqualsPipe,
     ExtractValuePipe,
     AffectedCellPipe,
+    ResizeValidatePipe,
   ],
   providers: [
     AttributeNameChangedPipe

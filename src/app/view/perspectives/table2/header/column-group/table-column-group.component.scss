@@ -8,3 +8,7 @@
   border-top: 1px solid $light;
   border-left: 1px solid $light;
 }
+
+mwlResizable {
+  box-sizing: border-box; // required for the enableGhostResize option to work
+}
