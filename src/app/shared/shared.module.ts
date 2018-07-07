@@ -39,6 +39,9 @@ import {TagModule} from './tag/tag.module';
 import {TopPanelModule} from './top-panel/top-panel.module';
 import {UsersModule} from './users/users.module';
 import {DirectivesModule} from './directives/directives.module';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {WarningMessageModule} from './warning-message/warning-message.module';
+import {SearchBoxModule} from './top-panel/search-box/search-box.module';
 
 @NgModule({
   imports: [
@@ -50,6 +53,7 @@ import {DirectivesModule} from './directives/directives.module';
     UsersModule,
     TagModule,
     InputModule,
+    InfiniteScrollModule,
     PostItCollectionsModule,
     DocumentModule,
     PreviewResultsModule,
@@ -57,6 +61,7 @@ import {DirectivesModule} from './directives/directives.module';
     PipesModule,
     DirectivesModule,
     TopPanelModule,
+    WarningMessageModule
   ],
   declarations: [
     SizeSliderComponent,
@@ -76,6 +81,8 @@ import {DirectivesModule} from './directives/directives.module';
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
     UsersModule,
+    SearchBoxModule,
+    InfiniteScrollModule,
     SliderComponent,
     PipesModule,
     TagModule,
@@ -86,6 +93,7 @@ import {DirectivesModule} from './directives/directives.module';
     LinksModule,
     DirectivesModule,
     TopPanelModule,
+    WarningMessageModule
   ]
 })
 export class SharedModule {

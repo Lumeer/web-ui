@@ -31,6 +31,8 @@ import {ClickOutsideModule} from 'ng-click-outside';
 import {PickerModule} from '../picker/picker.module';
 import {LayoutItemDirective} from '../utils/layout/layout-item.directive';
 import {RouterModule} from '@angular/router';
+import {WarningMessageModule} from '../warning-message/warning-message.module';
+import {EmptyCollectionsComponent} from './empty-collections/empty-collections.component';
 
 @NgModule({
   imports: [
@@ -39,7 +41,8 @@ import {RouterModule} from '@angular/router';
     PickerModule,
     ClickOutsideModule,
     RouterModule,
-    PipesModule
+    PipesModule,
+    WarningMessageModule
   ],
   declarations: [
     LayoutItemDirective,
@@ -48,6 +51,7 @@ import {RouterModule} from '@angular/router';
     PostItCollectionNameComponent,
     PostItCollectionAddButtonComponent,
     PostItCollectionImportButtonComponent,
+    EmptyCollectionsComponent
   ],
   exports: [
     PostItCollectionsComponent,

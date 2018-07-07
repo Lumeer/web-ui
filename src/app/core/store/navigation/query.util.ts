@@ -107,3 +107,7 @@ export function conditionFromString(condition: string): ConditionType {
 export function queryIsNotEmpty(query: QueryModel): boolean {
   return query && Object.values(query).find(val => val instanceof Array ? val.length > 0 : val);
 }
+
+export function queryIsEmpty(query: QueryModel): boolean {
+  return query && Object.values(query).every(val => val instanceof Array ? val.length === 0 : !val);
+}

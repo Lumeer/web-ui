@@ -17,18 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 
-@Pipe({
-  name: 'documentCollection'
+@Component({
+  selector: 'empty-search',
+  templateUrl: './empty-search.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocumentCollectionPipe implements PipeTransform {
-
-  public transform(document: DocumentModel, collections: CollectionModel[]): CollectionModel {
-    const collectionId = document && document.collectionId;
-    return collectionId && collections.find(coll => coll.id === collectionId);
-  }
+export class EmptySearchComponent {
 
 }

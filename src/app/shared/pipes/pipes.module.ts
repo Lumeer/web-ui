@@ -34,6 +34,7 @@ import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PixelPipe} from './pixel.pipe';
 import {PrefixPipe} from './prefix.pipe';
 import {WorkspaceSetPipe} from './workspace-set.pipe';
+import {EmptyQueryPipe} from './empty-query.pipe';
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import {WorkspaceSetPipe} from './workspace-set.pipe';
     PerspectiveIconPipe,
     FilterPerspectivesPipe,
     EmptyPipe,
+    EmptyQueryPipe,
     PermissionsPipe,
     LengthGreaterThanPipe,
     DefaultAttributePipe,
@@ -66,6 +68,7 @@ import {WorkspaceSetPipe} from './workspace-set.pipe';
     PerspectiveIconPipe,
     FilterPerspectivesPipe,
     EmptyPipe,
+    EmptyQueryPipe,
     PermissionsPipe,
     LengthGreaterThanPipe,
     DefaultAttributePipe,

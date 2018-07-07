@@ -18,17 +18,16 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {QueryModel} from '../../core/store/navigation/query.model';
+import {queryIsEmpty} from '../../core/store/navigation/query.util';
 
 @Pipe({
-  name: 'documentCollection'
+  name: 'emptyQuery'
 })
-export class DocumentCollectionPipe implements PipeTransform {
+export class EmptyQueryPipe implements PipeTransform {
 
-  public transform(document: DocumentModel, collections: CollectionModel[]): CollectionModel {
-    const collectionId = document && document.collectionId;
-    return collectionId && collections.find(coll => coll.id === collectionId);
+  public transform(query: QueryModel): boolean {
+    return queryIsEmpty(query);
   }
 
 }

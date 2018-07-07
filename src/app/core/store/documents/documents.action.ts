@@ -67,7 +67,7 @@ export namespace DocumentsAction {
   export class GetSuccess implements Action {
     public readonly type = DocumentsActionType.GET_SUCCESS;
 
-    public constructor(public payload: { documents: DocumentModel[] }) {
+    public constructor(public payload: { documents: DocumentModel[], query: QueryModel }) {
     }
   }
 

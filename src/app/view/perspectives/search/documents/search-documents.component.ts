@@ -17,17 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
+
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
-import {filter, map, tap} from 'rxjs/operators';
-import {isArray, isNullOrUndefined} from 'util';
+import {filter} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {selectDocumentsByQuery, selectDocumentsQueries} from '../../../../core/store/documents/documents.state';
-import {selectQuery} from '../../../../core/store/navigation/navigation.state';
-import {areQueriesEqual} from '../../../../core/store/navigation/query.helper';
+import {selectCurrentQueryLoaded, selectDocumentsByCustomQuery} from '../../../../core/store/documents/documents.state';
+import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
 import {UserSettingsService} from '../../../../core/user-settings.service';
@@ -35,15 +34,24 @@ import {SizeType} from '../../../../shared/slider/size-type';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
-import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {PerspectiveService} from '../../../../core/perspective.service';
 import {Perspective} from '../../perspective';
+import {QueryConverter} from '../../../../core/store/navigation/query.converter';
+import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {Router} from '@angular/router';
+import {searchDocumentEntriesHtml, searchDocumentValuesHtml} from './search-document-html-helper';
+
+const PAGE_SIZE = 40;
 
 @Component({
+  selector: 'search-documents',
   templateUrl: './search-documents.component.html',
   styleUrls: ['./search-documents.component.scss']
 })
 export class SearchDocumentsComponent implements OnInit, OnDestroy {
+
+  @Input()
+  public maxLines: number = -1;
 
   @ViewChild('sTemplate')
   private sTempl: TemplateRef<any>;
@@ -58,15 +66,20 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   private xlTempl: TemplateRef<any>;
 
   public size: SizeType;
-  public documents$: Observable<DocumentModel[]>;
+  public documentsMap: { [documentId: string]: DocumentModel };
   public expandedDocumentIds: string[] = [];
-  public loaded: boolean = false;
-
   public collections: { [collectionId: string]: CollectionModel };
-  private currentQuery: QueryModel;
-  private subscriptions: Subscription = new Subscription();
+  public documentsOrder: string[] = [];
+  public loaded$: Observable<boolean>;
+  public query: QueryModel;
+
+  private page = 0;
+  private workspace: Workspace;
+  private subscriptions = new Subscription();
+  private documentsSubscription: Subscription;
 
   constructor(private store: Store<AppState>,
+              private router: Router,
               private userSettingsService: UserSettingsService,
               private perspectiveService: PerspectiveService) {
   }
@@ -77,7 +90,14 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
+    if (this.documentsSubscription) {
+      this.documentsSubscription.unsubscribe();
+    }
     this.subscriptions.unsubscribe();
+  }
+
+  public getDocuments(): DocumentModel[] {
+    return Object.values(this.documentsMap);
   }
 
   public onSizeChange(newSize: SizeType) {
@@ -113,29 +133,15 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     return this.expandedDocumentIds.includes(document.id);
   }
 
-  public createDefaultAttributeHtml(document: DocumentModel): string {
-    if (isNullOrUndefined(document.data)) {
-      return '';
-    }
-
-    const defaultAttributeId = this.getDefaultAttributeId(document);
-    const value = document.data[defaultAttributeId] || '';
-
-    return this.valueHtml(value);
-  }
-
   public toggleDocument(document: DocumentModel) {
     const newIds = this.isDocumentOpened(document) ? this.expandedDocumentIds.filter(id => id !== document.id)
       : [...this.expandedDocumentIds, document.id];
     this.store.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: newIds}}));
   }
 
-  public onLinkClick(document: DocumentModel) {
-    // TODO
-  }
-
-  public onCommentClick(document: DocumentModel) {
-    // TODO
+  public onScrollDown(event: any) {
+    this.page++;
+    this.fetchDocuments();
   }
 
   public onDetailClick(document: DocumentModel) {
@@ -143,86 +149,24 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public createValuesHtml(document: DocumentModel): string {
-    return this.getValues(document)
-      .map(value => `<span class="search-documents-value">${value}</span>`)
-      .join(', ');
-  }
-
-  private getValues(document: DocumentModel): any[] {
-    if (isNullOrUndefined(document.data)) {
-      return [];
-    }
-    return this.getValuesFromArray(Object.values(document.data));
-  }
-
-  private getValuesFromAny(value: any): string[] | string {
-    if (isArray(value)) {
-      return this.getValuesFromArray(value as any[]);
-    } else {
-      return value as string;
-    }
-  }
-
-  private getValuesFromArray(array: any[]): string[] {
-    let values: string[] = [];
-    for (const value of array) {
-      values = values.concat(this.getValuesFromAny(value));
-    }
-    return values;
+    return searchDocumentValuesHtml(document);
   }
 
   public createEntriesHtml(document: DocumentModel): string {
-    if (isNullOrUndefined(document.data)) {
-      return '';
-    }
-
-    return Object.keys(document.data)
-      .map(attributeId => `${this.attributeHtml(attributeId, document)}${this.valueHtml(document.data[attributeId])}`)
-      .join(', ');
-  }
-
-  public getAttributeName(collection: CollectionModel, attributeId: string): string {
-    const attribute = collection && collection.attributes.find(attr => attr.id === attributeId);
-    return attribute && attribute.name;
-  }
-
-  private attributeHtml(attributeId: string, document: DocumentModel): string {
     const collection = this.collections[document.collectionId];
-    return `<i class="${this.attributeHtmlClasses(attributeId, document)}">${this.getAttributeName(collection, attributeId)}</i>: `;
+    return searchDocumentEntriesHtml(document, collection);
   }
 
-  private attributeHtmlClasses(attributeId: string, document: DocumentModel): string {
-    return `text-attribute ${this.isDefaultAttribute(attributeId, document) ? 'text-default-attribute' : ''}`;
+  public trackByDocument(index: number, document: DocumentModel): string {
+    return document.id;
   }
 
-  private isDefaultAttribute(attributeId: string, document: DocumentModel): boolean {
-    return attributeId === this.getDefaultAttributeId(document);
+  public onShowAll() {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'records'], {queryParams: {query: QueryConverter.toString(this.query)}});
   }
 
-  private getDefaultAttributeId(document: DocumentModel): string {
-    const collection = this.collections[document.collectionId];
-    return getDefaultAttributeId(collection);
-  }
-
-  private valueHtml(value: any): string {
-    if (isNullOrUndefined(value)) {
-      return '';
-    } else if (isArray(value)) {
-      return `[${this.arrayHtml(value as any[])}]`;
-    } else {
-      return `<span class="search-documents-value">${value.toString()}</span>`;
-    }
-  }
-
-  private arrayHtml(array: any[]): string {
-    let html = '';
-    for (let i = 0; i < array.length; i++) {
-      html += this.valueHtml(array[i]);
-      if (i !== array.length - 1) {
-        html += ', ';
-      }
-    }
-    return html;
+  private workspacePath(): string {
+    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
   private initSettings() {
@@ -231,28 +175,21 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    const querySubscription = this.store.select(selectQuery)
-      .pipe(
-        filter(query => !isNullOrUndefined(query)),
-        map(query => ({...query, page: 0, pageSize: 100})), // TODO implement pagination logic
-        tap(query => this.store.dispatch(new DocumentsAction.Get({query}))),
-      ).subscribe(query => this.currentQuery = query);
-    this.subscriptions.add(querySubscription);
+    const navigationSubscription = this.store.select(selectNavigation).pipe(
+      filter(navigation => !!navigation.workspace && !!navigation.query)
+    ).subscribe(navigation => {
+      this.workspace = navigation.workspace;
+      this.query = navigation.query;
+      this.clearData();
+      this.fetchDocuments();
+    });
+    this.subscriptions.add(navigationSubscription);
 
     const searchConfigSubscription = this.store.select(selectViewSearchConfig)
       .subscribe(config => this.expandedDocumentIds = config && config.expandedDocumentIds.slice() || []);
     this.subscriptions.add(searchConfigSubscription);
 
-    const loadedSubscription = this.store.select(selectDocumentsQueries)
-      .pipe(
-        map(queries => queries.filter(query => areQueriesEqual(query, this.currentQuery)))
-      )
-      .subscribe(queries => this.loaded = queries && queries.length > 0);
-    this.subscriptions.add(loadedSubscription);
-
-    this.documents$ = this.store.select(selectDocumentsByQuery).pipe(
-      map(documents => documents.filter(doc => doc.id))
-    );
+    this.loaded$ = this.store.select(selectCurrentQueryLoaded);
 
     const collectionSubscription = this.store.select(selectCollectionsByQuery)
       .subscribe(collections => this.collections = collections.reduce((acc, coll) => {
@@ -261,4 +198,56 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
       }, {}));
     this.subscriptions.add(collectionSubscription);
   }
+
+  private clearData() {
+    this.page = 0;
+    this.documentsMap = {};
+    this.documentsOrder = [];
+  }
+
+  private fetchDocuments() {
+    this.store.dispatch(new DocumentsAction.Get({query: this.getPaginationQuery()}));
+    this.subscribeDocuments();
+  }
+
+  private getPaginationQuery(): QueryModel {
+    return {...this.query, page: this.page, pageSize: PAGE_SIZE};
+  }
+
+  private subscribeDocuments() {
+    if (this.documentsSubscription) {
+      this.documentsSubscription.unsubscribe();
+    }
+    const pageSize = PAGE_SIZE * (this.page + 1);
+    const query = {...this.query, page: 0, pageSize};
+    this.documentsSubscription = this.store.select(selectDocumentsByCustomQuery(query, true)).pipe(
+      filter(documents => !!documents)
+    ).subscribe(documents => {
+      this.mapNewDocuments(documents);
+    });
+  }
+
+  private mapNewDocuments(documents: DocumentModel[]) {
+    const documentsMap = documents.reduce((acc, doc) => {
+      acc[doc.correlationId || doc.id] = doc;
+      return acc;
+    }, {});
+
+    const newDocumentsMap = this.documentsOrder.reduce((acc, key) => {
+      const doc = documentsMap[key];
+      if (doc) {
+        acc[key] = doc;
+        delete documentsMap[key];
+      }
+      return acc;
+    }, {});
+
+    for (const [key, value] of Object.entries(documentsMap)) {
+      newDocumentsMap[key] = value;
+      this.documentsOrder.push(key);
+    }
+
+    this.documentsMap = newDocumentsMap;
+  }
+
 }

@@ -17,14 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Document} from '../../../../core/dto/document';
+import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {CommonModule} from '@angular/common';
 
-export interface SearchDocument {
+import {EmptyStateComponent} from './empty-state/empty-state.component';
+import {EmptySearchComponent} from './empty-search/empty-search.component';
 
-  document: Document;
-  collectionName?: string;
-  collectionIcon?: string;
-  collectionColor?: string;
-  opened?: boolean;
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule,
+  ],
+  declarations: [
+    EmptySearchComponent,
+    EmptyStateComponent
+  ],
+  exports: [
+    EmptySearchComponent,
+    EmptyStateComponent
+  ]
+})
+export class WarningMessageModule {
 
 }

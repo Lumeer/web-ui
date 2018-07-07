@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {filter, withLatestFrom} from 'rxjs/operators';
@@ -25,13 +25,12 @@ import {Subscription} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectDocumentsByCustomQuery} from '../../../core/store/documents/documents.state';
+import {selectCurrentQueryLoaded, selectDocumentsByCustomQuery} from '../../../core/store/documents/documents.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
 import {selectCollectionsByQuery} from '../../../core/store/collections/collections.state';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
 import {userRolesInResource} from '../../../shared/utils/resource.utils';
-import {Role} from '../../../core/model/role';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {UserSettingsService} from '../../../core/user-settings.service';
 import {SizeType} from '../../../shared/slider/size-type';
@@ -39,6 +38,7 @@ import {selectNavigation} from '../../../core/store/navigation/navigation.state'
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {SelectionHelper} from './util/selection-helper';
 import {DocumentUiService} from '../../../core/ui/document-ui.service';
+import {Observable} from 'rxjs/index';
 
 @Component({
   selector: 'post-it-perspective',
@@ -58,18 +58,26 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     }
   }
 
-  @ViewChild('postItLayout')
-  public postItLayout: ElementRef;
+  @ViewChild('postItLayout') set content(content: ElementRef) {
+    if (content) {
+      this.postItLayout = content;
+      this.createLayout();
+    } else {
+      this.destroyLayout();
+    }
+  }
 
   public perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
-  public collections: { [collectionId: string]: CollectionModel };
+  public collections: CollectionModel[];
   public collectionRoles: { [collectionId: string]: string[] };
   public postItsOrder: string[] = [];
   public selectionHelper: SelectionHelper;
-  public layoutManager: PostItLayout;
+  public layout: PostItLayout;
   public size: SizeType;
   public query: QueryModel;
+  public loaded$: Observable<boolean>;
 
+  private postItLayout: ElementRef;
   private page = 0;
   private workspace: Workspace;
   private subscriptions = new Subscription();
@@ -80,13 +88,13 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<AppState>,
               private zone: NgZone,
+              private changeDetector: ChangeDetectorRef,
               private documentUiService: DocumentUiService,
               private userSettingsService: UserSettingsService) {
   }
 
   public ngOnInit(): void {
     this.initSettings();
-    this.createLayoutManager();
     this.createSelectionHelper();
     this.subscribeData();
   }
@@ -103,8 +111,15 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return Object.values(this.postIts);
   }
 
-  private createLayoutManager() {
-    this.layoutManager = new PostItLayout(this.postItLayout.nativeElement, true, this.zone);
+  private destroyLayout() {
+    this.layout = null;
+  }
+
+  private createLayout() {
+    if (!this.layout) {
+      this.layout = new PostItLayout(this.postItLayout, false, this.zone);
+      this.changeDetector.detectChanges();
+    }
   }
 
   private createSelectionHelper() {
@@ -117,16 +132,14 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.subscribeCollections();
     this.subscribeNavigation();
+    this.loaded$ = this.store.select(selectCurrentQueryLoaded);
   }
 
   private subscribeCollections() {
     const collectionsSubscription = this.store.select(selectCollectionsByQuery).pipe(
       withLatestFrom(this.store.select(selectCurrentUserForWorkspace))
     ).subscribe(([collections, user]) => {
-      this.collections = collections.reduce((acc, coll) => {
-        acc[coll.id] = coll;
-        return acc;
-      }, {});
+      this.collections = collections;
       this.collectionRoles = collections.reduce((roles, collection) => {
         roles[collection.id] = userRolesInResource(user, collection);
         return roles;
@@ -156,7 +169,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private getNumRows(key: string): number {
     const documentModel = this.postIts[key];
     if (documentModel) {
-      const collection = this.collections[documentModel.collectionId];
+      const collection = this.collections.find(coll => coll.id === documentModel.collectionId);
       return this.documentUiService.getRows$(collection, documentModel).getValue().length - 1;
     } else {
       return 0;
@@ -225,19 +238,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.store.dispatch(new DocumentsAction.Create({document: documentModel}));
   }
 
-  public hasSingleCollection(): boolean {
-    return this.getCollectionIds().length === 1;
-  }
-
-  public hasCreateRights(): boolean {
-    const keys = this.getCollectionIds();
-    return keys.length === 1 && this.collectionRoles[keys[0]].includes(Role.Write);
-  }
-
-  private getCollectionIds(): string[] {
-    return this.collections && Object.keys(this.collections) || [];
-  }
-
   public onScrollDown(event: any) {
     this.loadNextPage();
   }
@@ -248,7 +248,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public postItChanged() {
-    this.layoutManager.refresh();
+    this.layout.refresh();
   }
 
   public removePostIt(documentModel: DocumentModel) {
@@ -285,7 +285,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     userSettings.searchSize = newSize;
     this.userSettingsService.updateUserSettings(userSettings);
 
-    this.layoutManager.refresh();
+    this.layout.refresh();
   }
 
   private initSettings() {

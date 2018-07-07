@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgZone} from '@angular/core';
+import {ElementRef, NgZone} from '@angular/core';
 
 import {Subject, Subscription} from 'rxjs';
 import {throttleTime} from 'rxjs/operators';
@@ -28,7 +28,7 @@ export class PostItLayout {
   private refreshSubject = new Subject();
   private subscriptions = new Subscription();
 
-  constructor(private gridElement: any,
+  constructor(private gridElement: ElementRef,
               private dragEnabled: boolean,
               private zone: NgZone) {
     this.initGrid();
@@ -37,7 +37,7 @@ export class PostItLayout {
   private initGrid() {
     this.runSafely(() => {
       this.grid = new window['Muuri'](
-        this.gridElement,
+        this.gridElement.nativeElement,
         {
           layoutDuration: 200,
           layoutEasing: 'ease',
@@ -97,7 +97,6 @@ export class PostItLayout {
   }
 
   private onRefresh() {
-
     setTimeout(() => {
       this.grid
         .refreshItems()

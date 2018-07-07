@@ -17,14 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 
 import {AppState} from '../../../../core/store/app.state';
 import {Observable, Subscription, combineLatest} from 'rxjs';
-import {selectViewsByQuery} from '../../../../core/store/views/views.state';
-import {ViewsAction} from '../../../../core/store/views/views.action';
+import {selectViewsByQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../../core/store/navigation/workspace.model';
 import {ViewModel} from '../../../../core/store/views/view.model';
@@ -32,6 +31,9 @@ import {selectAllCollections} from '../../../../core/store/collections/collectio
 import {selectAllLinkTypes} from '../../../../core/store/link-types/link-types.state';
 import {QueryData} from '../../../../shared/top-panel/search-box/query-data';
 import {filter} from 'rxjs/operators';
+import {Perspective} from '../../perspective';
+import {QueryConverter} from '../../../../core/store/navigation/query.converter';
+import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {isNullOrUndefined} from 'util';
 
 @Component({
@@ -40,13 +42,18 @@ import {isNullOrUndefined} from 'util';
 })
 export class SearchViewsComponent implements OnInit, OnDestroy {
 
-  public views$: Observable<ViewModel[]>;
+  @Input()
+  public maxLines: number = -1;
 
-  private navigationSubscription: Subscription;
-  private dataSubscription: Subscription;
+  public views$: Observable<ViewModel[]>;
+  public queryData: QueryData;
+
+  private subscriptions = new Subscription();
+
+  private viewsLoaded: boolean;
 
   private workspace: Workspace;
-  public queryData: QueryData;
+  public query: QueryModel;
 
   constructor(private router: Router,
               private store: Store<AppState>) {
@@ -59,34 +66,51 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.navigationSubscription) {
-      this.navigationSubscription.unsubscribe();
-    }
-    if (this.dataSubscription) {
-      this.dataSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   private subscribeToNavigation() {
-    this.navigationSubscription = this.store.select(selectNavigation).pipe(
-      filter(navigation => !isNullOrUndefined(navigation.workspace))
+    const navigationSubscription = this.store.select(selectNavigation).pipe(
+      filter(navigation => !!navigation.workspace && !!navigation.query)
     ).subscribe(
       navigation => {
         this.workspace = navigation.workspace;
-        this.store.dispatch(new ViewsAction.Get({query: navigation.query}));
+        this.query = navigation.query;
       }
     );
+    this.subscriptions.add(navigationSubscription);
   }
 
   private subscribeToData() {
-    this.dataSubscription = combineLatest(
+    const dataSubscription = combineLatest(
       this.store.select(selectAllCollections),
       this.store.select(selectAllLinkTypes)
     ).subscribe(([collections, linkTypes]) => this.queryData = {collections, linkTypes});
+    this.subscriptions.add(dataSubscription);
+
+    const loadedSubscription = this.store.select(selectViewsLoaded)
+      .subscribe(loaded => this.viewsLoaded = loaded);
+    this.subscriptions.add(loadedSubscription);
+  }
+
+  public isLoading(): boolean {
+    return isNullOrUndefined(this.viewsLoaded) || isNullOrUndefined(this.query);
   }
 
   public showView(view: ViewModel) {
     this.router.navigate(['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}]);
+  }
+
+  public trackByView(index: number, view: ViewModel): string {
+    return view.id;
+  }
+
+  public onShowAll() {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'views'], {queryParams: {query: QueryConverter.toString(this.query)}});
+  }
+
+  private workspacePath(): string {
+    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 
 }

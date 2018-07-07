@@ -25,6 +25,12 @@ export function areQueriesEqual(first: QueryModel, second: QueryModel): boolean 
   return QueryConverter.toString(first) === QueryConverter.toString(second);
 }
 
+export function areQueriesEqualExceptPagination(first: QueryModel, second: QueryModel): boolean {
+  const firstWithoutPagination = {...first, page: null, pageSize: null};
+  const secondWithoutPagination = {...second, page: null, pageSize: null};
+  return QueryConverter.toString(firstWithoutPagination) === QueryConverter.toString(secondWithoutPagination);
+}
+
 export function hasQueryNewLink(oldQuery: QueryModel, newQuery: QueryModel) {
   if (!deepArrayEquals(oldQuery.collectionIds, newQuery.collectionIds)) {
     return false;

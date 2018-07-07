@@ -1,31 +1,39 @@
-<div class="mt-2">
-  <div *ngIf="loading()" i18n="@@search.all.loading">
-    Loading...
-  </div>
+<div class="mt-2" *ngIf="dataLoaded$ | async">
 
-  <ng-container *ngIf="!loading()">
-    <div *ngIf="emptySearch()" class="alert alert-warning" i18n="@@search.result.empty">
-      We are sorry, but we have not found anything. Please do a more accurate search.
-    </div>
-    <div *ngIf="collections.length > 0">
+  <ng-container *ngIf="hasCollection || hasView || hasDocument; else noData">
+
+    <ng-container *ngIf="hasCollection">
       <div class="h3 ml-3 my-2" i18n="@@search.all.collections">
         Collections
       </div>
       <post-it-collections [maxShown]="5"></post-it-collections>
-    </div>
-    <div *ngIf="documents.length > 0">
-      <hr *ngIf="collections.length > 0">
+    </ng-container>
+
+    <ng-container *ngIf="hasDocument">
+      <hr *ngIf="hasCollection">
       <div class="h3 ml-3 my-2" i18n="@@search.all.records">
         Records
       </div>
-      <post-it-perspective class="perspective"></post-it-perspective>
-    </div>
-    <div *ngIf="views.length > 0">
-      <hr *ngIf="collections.length > 0 || documents.length > 0">
+      <search-documents [maxLines]="5"></search-documents>
+    </ng-container>
+
+    <ng-container *ngIf="hasView">
+      <hr *ngIf="hasCollection || hasDocument">
       <div class="h3 ml-3 my-2" i18n="@@search.all.views">
         Views
       </div>
-      <search-views class="perspective"></search-views>
-    </div>
+      <search-views [maxLines]="5"></search-views>
+    </ng-container>
+
   </ng-container>
+
 </div>
+
+<ng-template #noData>
+  <empty-search *ngIf="!(query | emptyQuery)"></empty-search>
+  <empty-state *ngIf="query | emptyQuery"
+               [icon]="'fa fa-file-times'">
+    <h3 i18n="@@search.records.empty.title">No data yet!</h3>
+    <div i18n="@@search.records.empty.subtitle">Choose another tab and create your first data.</div>
+  </empty-state>
+</ng-template>

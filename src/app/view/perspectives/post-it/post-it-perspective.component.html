@@ -1,38 +1,58 @@
-<div class="container-fluid" infiniteScroll
-     [infiniteScrollDistance]="2"
-     (scrolled)="onScrollDown($event)">
-  <div class="my-2 d-flex align-items-center">
-    <add-document
-      [query]="query"
-      [hasCollection]="hasSingleCollection()"
-      [hasRights]="hasCreateRights()"
-      (createPostIt)="createPostIt($event)">
-    </add-document>
+<ng-container *ngIf="loaded$ | async">
 
-    <size-slider class="ml-auto"
-                 [defaultSize]="size"
-                 (newSize)="onSizeChange($event)">
-    </size-slider>
-  </div>
+  <div *ngIf="postItsOrder.length; else noDocuments"
+       class="container-fluid" infiniteScroll
+       [infiniteScrollDistance]="2"
+       (scrolled)="onScrollDown($event)">
+    <div class="my-2 d-flex align-items-center">
+      <add-document
+        *ngIf="collections?.length === 1 && (collections[0] | permissions:'write' | async)"
+        [query]="query"
+        (createPostIt)="createPostIt($event)">
+      </add-document>
 
-  <div class="post-it-document-layout row" #postItLayout>
-    <div class="layout-item {{size | postItColumnStyle}} mb-3"
-         layout-item
-         [layout]="layoutManager"
-         *ngFor="let doc of getDocuments(); trackBy:trackByDocument; let idx = index"
-         id="{{perspectiveId}}#{{doc.correlationId || doc.id}}">
-      <post-it-document
-        class="card post-it"
-        [ngClass]="doc.id ? 'initialized': 'uninitialized'"
-        [collection]="doc | documentCollection:collections"
-        [collectionRoles]="doc | documentCollectionRoles:collectionRoles"
-        [index]="idx"
-        [documentModel]="doc"
-        [perspectiveId]="perspectiveId"
-        [selectionHelper]="selectionHelper"
-        (remove)="removePostIt(doc)"
-        (sizeChange)="postItChanged()"></post-it-document>
+      <size-slider class="ml-auto"
+                   [defaultSize]="size"
+                   (newSize)="onSizeChange($event)">
+      </size-slider>
+    </div>
+
+    <div class="post-it-document-layout row" #postItLayout>
+
+      <ng-container *ngIf="layout">
+
+        <div class="layout-item {{size | postItColumnStyle}} mb-3"
+             layout-item
+             [layout]="layout"
+             *ngFor="let doc of getDocuments(); trackBy:trackByDocument; let idx = index"
+             id="{{perspectiveId}}#{{doc.correlationId || doc.id}}">
+          <post-it-document
+            class="card post-it"
+            [ngClass]="doc.id ? 'initialized': 'uninitialized'"
+            [collection]="doc | documentCollection:collections"
+            [collectionRoles]="doc | documentCollectionRoles:collectionRoles"
+            [index]="idx"
+            [documentModel]="doc"
+            [perspectiveId]="perspectiveId"
+            [selectionHelper]="selectionHelper"
+            (remove)="removePostIt(doc)"
+            (sizeChange)="postItChanged()">
+          </post-it-document>
+
+        </div>
+
+      </ng-container>
 
     </div>
   </div>
-</div>
+
+</ng-container>
+
+<ng-template #noDocuments>
+  <empty-search *ngIf="!(query | emptyQuery)"></empty-search>
+  <empty-state *ngIf="query | emptyQuery"
+               [icon]="'far fa-file-square'">
+    <h3 i18n="@@search.records.empty.title">No records yet!</h3>
+    <div i18n="@@search.records.empty.subtitle">Add your first record by selecting some collection.</div>
+  </empty-state>
+</ng-template>
