@@ -1,13 +1,13 @@
 <empty-search *ngIf="!(query | emptyQuery)"></empty-search>
 <empty-state *ngIf="query | emptyQuery"
              [icon]="'far fa-times-square'">
-  <h3 i18n="@@search.collections.empty.title">No collections yet!</h3>
+  <h3 i18n="@@search.collections.empty.title">There are no Collections yet!</h3>
   <div i18n="@@search.collections.empty.subtitle.norights"
-       *ngIf="!(project | permissions:'write' | async)">Sorry, but you do not have permissions to add some.
+       *ngIf="!(project | permissions:'write' | async)">I am sorry but you do not have permissions to add collections.
   </div>
 
   <div *ngIf="project | permissions:'write' | async">
-    <div i18n="@@search.collections.empty.subtitle" class="text-center mb-3">Add your first collection or import some.</div>
+    <div i18n="@@search.collections.empty.subtitle" class="text-center mb-3">Add your first collection or import one.</div>
     <post-it-collection-add-button [disabled]="false"
                                    (clicked)="onNewCollection()">
     </post-it-collection-add-button>

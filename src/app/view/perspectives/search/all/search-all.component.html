@@ -33,7 +33,7 @@
   <empty-search *ngIf="!(query | emptyQuery)"></empty-search>
   <empty-state *ngIf="query | emptyQuery"
                [icon]="'fa fa-file-times'">
-    <h3 i18n="@@search.records.empty.title">No data yet!</h3>
-    <div i18n="@@search.records.empty.subtitle">Choose another tab and create your first data.</div>
+    <h3 i18n="@@search.records.empty.title">Your project is empty!</h3>
+    <div i18n="@@search.records.empty.subtitle">Go to the Collections tab and create your first collection.</div>
   </empty-state>
 </ng-template>

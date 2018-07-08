@@ -84,7 +84,7 @@
       <button (click)="onShareClick()"
               class="btn btn-primary"
               type="button"
-              title="Share" i18n-title="@@view.button.share">Share
+              title="Share" i18n-title="@@view.button.share" i18n="@@view.button.share">Share
       </button>
     </div>
   </div>
@@ -92,7 +92,7 @@
 <div *ngIf="view | viewChanged:name:(config$ | async):(perspective$ | async):(query$ | async)"
      class="small text-right text-warning">
   <i class="far fa-exclamation-triangle text-warning mr-1"
-     title="Changes are not saved yet" i18n-title="@@view.indicator.not.saved">
+     title="Changes are not saved yet" i18n-title="@@view.changes.not.saved">
   </i>
-  Changes are not saved yet!
+  <span i18n="@@view.changes.not.saved">Changes are not saved yet!</span>
 </div>

@@ -50,7 +50,7 @@
   <empty-search *ngIf="!(query | emptyQuery)"></empty-search>
   <empty-state *ngIf="query | emptyQuery"
                [icon]="'fa fa-file-times'">
-    <h3 i18n="@@search.records.empty.title">No records yet!</h3>
-    <div i18n="@@search.records.empty.subtitle">Add your first record by selecting some collection.</div>
+    <h3 i18n="@@search.records.empty.title">There are no Records yet!</h3>
+    <div i18n="@@search.records.empty.subtitle">Open a collection by clicking on it and add your first record.</div>
   </empty-state>
 </ng-template>
