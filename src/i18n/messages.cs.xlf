@@ -40,22 +40,13 @@
             </trans-unit>
             <trans-unit id="search.result.empty" datatype="html">
                 <source>
-  We are sorry, but we have not found anything. Please do a more accurate search.
-</source>
+    We are sorry, but we have not found anything. Please do a more accurate search.
+  </source>
                 <target>Je nám líto, ale nic jsme nenašli. Zkuste jednodušší hledání.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-                    <context context-type="linenumber">3</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
-                    <context context-type="linenumber">7</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.ts</context>
-                    <context context-type="linenumber">2</context>
-                </context-group>
-            </trans-unit>
+
+
+
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-search/empty-search.component.ts</context><context context-type="linenumber">6</context></context-group></trans-unit>
             <trans-unit id="collection.document.count" datatype="html">
                 <source>Record Count</source>
                 <target>Počet záznamů</target>
@@ -366,14 +357,7 @@
                     <context context-type="linenumber">62</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="view.indicator.not.saved" datatype="html">
-                <source>Changes are not saved yet</source>
-                <target>Změny nebyly uloženy</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
-                    <context context-type="linenumber">95</context>
-                </context-group>
-            </trans-unit>
+
             <trans-unit id="view.button.save" datatype="html">
                 <source>Save</source>
                 <target>Uložit</target>
@@ -391,7 +375,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="view.button.share" datatype="html">
-                <source>Share</source>
+                <source>Share
+      </source>
                 <target>Sdílet</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
@@ -967,16 +952,7 @@
                     <context context-type="linenumber">25</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="search.perspective.result.empty" datatype="html">
-                <source>
-    I am sorry, I did not find anything. Please try another search!
-  </source>
-                <target state="translated">Je mi líto, nic jsem nenašel. Zkuste hledat něco jiného!</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.ts</context>
-                    <context context-type="linenumber">9</context>
-                </context-group>
-            </trans-unit>
+
             <trans-unit id="table.header.menu.add.column.next" datatype="html">
                 <source>Add column right</source>
                 <target state="translated">Přidat sloupec vpravo</target>
@@ -1874,11 +1850,8 @@
             <trans-unit id="document.post.it.add" datatype="html">
                 <source>Add Record</source>
                 <target>Vytvořit záznam</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/post-it/add-document/add-document.component.ts</context>
-                    <context context-type="linenumber">8</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/post-it/add-document/add-document.component.ts</context><context context-type="linenumber">7</context></context-group></trans-unit>
             <trans-unit id="organizations.tab.detail" datatype="html">
                 <source>Detail</source>
                 <target>Detail</target>
@@ -2638,36 +2611,21 @@
                     <context context-type="linenumber">4</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="search.all.loading" datatype="html">
-                <source>
-    Loading...
-  </source>
-                <target>Načítání...</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
-                    <context context-type="linenumber">2</context>
-                </context-group>
-            </trans-unit>
+
             <trans-unit id="search.all.records" datatype="html">
                 <source>
         Records
       </source>
                 <target>Záznamy</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
-                    <context context-type="linenumber">18</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context><context context-type="linenumber">14</context></context-group></trans-unit>
             <trans-unit id="search.all.views" datatype="html">
                 <source>
         Views
       </source>
                 <target>Pohledy</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
-                    <context context-type="linenumber">25</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit>
             <trans-unit id="table.body.row.add.above" datatype="html">
                 <source>Add row above</source>
                 <target>Přidat řádek nad</target>
@@ -3195,11 +3153,11 @@
             </trans-unit>
             <trans-unit id="search.result.more" datatype="html">
                 <source>
-          See all
-        </source>
+            See all
+          </source>
                 <target>Zobrazit vše</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">58</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.ts</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.ts</context><context context-type="linenumber">13</context></context-group></trans-unit>
             <trans-unit id="document.detail.remove" datatype="html">
                 <source>Remove Document</source>
                 <target>Odstranit dokument</target>
@@ -3626,11 +3584,8 @@
         Collections
       </source>
                 <target>Kolekce</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
-                    <context context-type="linenumber">11</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context><context context-type="linenumber">6</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.defaultAttribute" datatype="html">
                 <source>Set as displayed attribute</source>
                 <target>Nastavit jako hlavní atribut</target>
@@ -3910,6 +3865,82 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.collections.empty.title" datatype="html">
+        <source>There are no Collections yet!</source><target>Ještě nemáte žádnou kolekci!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/post-it-collections/empty-collections/empty-collections.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.collections.empty.subtitle.norights" datatype="html">
+        <source>I am sorry but you do not have permissions to add collections.
+  </source><target>Je mi líto, ale nemáte ani oprávnění nějakou kolekci vytvořit.
+  </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/post-it-collections/empty-collections/empty-collections.component.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.collections.empty.subtitle" datatype="html">
+        <source>Add your first collection or import one.</source><target>Vytvořte svoji první kolekci, nebo nějakou importujte.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/post-it-collections/empty-collections/empty-collections.component.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.records.empty.title" datatype="html">
+        <source>There are no Records yet!</source><target>Nemátě ještě žádné záznamy!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/post-it/post-it-perspective.component.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.records.empty.subtitle" datatype="html">
+        <source>Open a collection by clicking on it and add your first record.</source><target>Otevřete si kolekci kliknutím a něco si zaznamenejte.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/post-it/post-it-perspective.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.views.empty.title" datatype="html">
+        <source>There are no Views yet!</source><target>Nemáte ještě žádné pohledy!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.views.empty.subtitle" datatype="html">
+        <source>Search for something, switch the View, set a name and save the resulting page.</source><target>Něco vyhledejte, zvolte si pohled, pojmenujte a uložte si výslednou stránku.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit><trans-unit id="@@files.input.button.empty" datatype="html">
+        <source>File input is empty</source><target>Jméno souboru je prázdné</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/post-it-collections/import-button/post-it-collection-import-button.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="view.changes.not.saved" datatype="html">
+        <source>Changes are not saved yet</source><target>Změny nejsou uloženy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
+          <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit></body>
     </file>

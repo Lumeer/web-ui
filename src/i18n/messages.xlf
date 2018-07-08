@@ -130,29 +130,27 @@
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.ts</context>
           <context context-type="linenumber">84</context>
         </context-group>
-      </trans-unit><trans-unit id="search.result.empty" datatype="html">
+      </trans-unit><trans-unit id="search.result.more" datatype="html">
         <source>
-  We are sorry, but we have not found anything. Please do a more accurate search.
-</source>
+            See all
+          </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.ts</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="linenumber">25</context>
         </context-group>
-      </trans-unit><trans-unit id="search.result.more" datatype="html">
-        <source>
-          See all
-        </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="query.item.button.remove" datatype="html">
+        <source>Remove query item</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/search-box/query-item/query-item.component.ts</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit><trans-unit id="tag.remove" datatype="html">
         <source>Remove tag</source>
@@ -232,6 +230,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.ts</context>
           <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.result.empty" datatype="html">
+        <source>
+    We are sorry, but we have not found anything. Please do a more accurate search.
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/warning-message/empty-search/empty-search.component.ts</context>
+          <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit><trans-unit id="resource.settings.back" datatype="html">
         <source>Back</source>
@@ -354,6 +360,25 @@
           <context context-type="sourcefile">app/shared/post-it-collections/import-button/post-it-collection-import-button.component.ts</context>
           <context context-type="linenumber">5</context>
         </context-group>
+      </trans-unit><trans-unit id="search.collections.empty.title" datatype="html">
+        <source>There are no Collections yet!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/post-it-collections/empty-collections/empty-collections.component.ts</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.collections.empty.subtitle.norights" datatype="html">
+        <source>I am sorry but you do not have permissions to add collections.
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/post-it-collections/empty-collections/empty-collections.component.ts</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.collections.empty.subtitle" datatype="html">
+        <source>Add your first collection or import one.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/post-it-collections/empty-collections/empty-collections.component.ts</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
       </trans-unit><trans-unit id="remove.row" datatype="html">
         <source>Remove Row</source>
         <context-group purpose="location">
@@ -385,12 +410,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-menu.component.ts</context>
           <context context-type="linenumber">25</context>
-        </context-group>
-      </trans-unit><trans-unit id="query.item.button.remove" datatype="html">
-        <source>Remove query item</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/search-box/query-item/query-item.component.ts</context>
-          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit><trans-unit id="panel.plan.free" datatype="html">
         <source>Free Plan</source>
@@ -961,6 +980,34 @@
           <context context-type="sourcefile">app/dialog/dialog/feedback-dialog.component.ts</context>
           <context context-type="linenumber">32</context>
         </context-group>
+      </trans-unit><trans-unit id="search.records.empty.title" datatype="html">
+        <source>There are no Records yet!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/post-it/post-it-perspective.component.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.ts</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.records.empty.subtitle" datatype="html">
+        <source>Open a collection by clicking on it and add your first record.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/post-it/post-it-perspective.component.ts</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
       </trans-unit><trans-unit id="table.query.invalid" datatype="html">
         <source>Your query results cannot be shown using table perspective. The query needs to specify exactly one collection.
 </source>
@@ -1026,22 +1073,31 @@
           <context context-type="linenumber">80</context>
         </context-group>
       </trans-unit><trans-unit id="view.button.share" datatype="html">
-        <source>Share</source>
+        <source>Share
+      </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
           <context context-type="linenumber">87</context>
         </context-group>
-      </trans-unit><trans-unit id="view.indicator.not.saved" datatype="html">
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+      </trans-unit><trans-unit id="view.changes.not.saved" datatype="html">
         <source>Changes are not saved yet</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
           <context context-type="linenumber">95</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
       </trans-unit><trans-unit id="document.post.it.add" datatype="html">
         <source>Add Record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/post-it/add-document/add-document.component.ts</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="document.button.remove" datatype="html">
         <source>Remove Record</source>
@@ -1822,21 +1878,13 @@
           <context context-type="sourcefile">app/view/perspectives/chart/components/attribute-select/attribute-select.component.ts</context>
           <context context-type="linenumber">4</context>
         </context-group>
-      </trans-unit><trans-unit id="search.all.loading" datatype="html">
-        <source>
-    Loading...
-  </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
       </trans-unit><trans-unit id="search.all.collections" datatype="html">
         <source>
         Collections
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit><trans-unit id="search.all.records" datatype="html">
         <source>
@@ -1844,7 +1892,7 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit><trans-unit id="search.all.views" datatype="html">
         <source>
@@ -1852,7 +1900,7 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit><trans-unit id="search.tab.all" datatype="html">
         <source>All</source>
@@ -1878,13 +1926,17 @@
           <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.ts</context>
           <context context-type="linenumber">39</context>
         </context-group>
-      </trans-unit><trans-unit id="search.perspective.result.empty" datatype="html">
-        <source>
-    I am sorry, I did not find anything. Please try another search!
-  </source>
+      </trans-unit><trans-unit id="search.views.empty.title" datatype="html">
+        <source>There are no Views yet!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.ts</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.views.empty.subtitle" datatype="html">
+        <source>Search for something, switch the View, set a name and save the resulting page.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.ts</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit><trans-unit id="smartdoc.query.invalid" datatype="html">
         <source>Your query results cannot be shown using smart document perspective. The query needs to specify exactly one collection.
@@ -2790,6 +2842,13 @@
         <source>Choose</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/picker/color-picker/color-picker.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="@@files.input.button.empty" datatype="html">
+        <source>File input is empty</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/post-it-collections/import-button/post-it-collection-import-button.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
