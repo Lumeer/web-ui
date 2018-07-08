@@ -21,6 +21,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {PipesModule} from '../pipes/pipes.module';
+import {LumeerLogoComponent} from './lumeer-logo/lumeer-logo.component';
 import {ResourceMenuModule} from './resource-menu/resource-menu.module';
 import {SearchBoxModule} from './search-box/search-box.module';
 import {TopPanelComponent} from './top-panel.component';
@@ -40,10 +41,12 @@ import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
     TopPanelComponent,
     TopPanelWrapperComponent,
     UserMenuComponent,
-    LanguageLinkPipe
+    LanguageLinkPipe,
+    LumeerLogoComponent
   ],
   exports: [
-    TopPanelWrapperComponent
+    TopPanelWrapperComponent,
+    LumeerLogoComponent
   ]
 })
 export class TopPanelModule {

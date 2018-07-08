@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
@@ -25,15 +26,14 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {UserService} from '../../rest';
+import {AppState} from '../app.state';
+import {CommonAction} from '../common/common.action';
 import {NotificationsAction} from '../notifications/notifications.action';
+import {selectOrganizationsDictionary} from '../organizations/organizations.state';
+import {RouterAction} from '../router/router.action';
 import {DefaultWorkspaceConverter, UserConverter} from './user.converter';
 import {UsersAction, UsersActionType} from './users.action';
-import {AppState} from '../app.state';
-import {GlobalService} from '../../rest/global.service';
 import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
-import {HttpErrorResponse} from '@angular/common/http';
-import {RouterAction} from '../router/router.action';
-import {selectOrganizationsDictionary} from '../organizations/organizations.state';
 
 @Injectable()
 export class UsersEffects {
@@ -48,7 +48,7 @@ export class UsersEffects {
       map(dtos => ({organizationId: action.payload.organizationId, users: dtos.map(dto => UserConverter.fromDto(dto))})),
       map(({organizationId, users}) => new UsersAction.GetSuccess({organizationId, users})),
       catchError(error => of(new UsersAction.GetFailure({error: error})))
-    )),
+    ))
   );
 
   @Effect()
@@ -64,10 +64,40 @@ export class UsersEffects {
   @Effect()
   public getCurrentUser$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.GetCurrentUser>(UsersActionType.GET_CURRENT_USER),
-    mergeMap(() => this.globalService.getCurrentUser().pipe(
-      map(user => UserConverter.fromDto(user))
-    )),
-    map(user => new UsersAction.GetCurrentUserSuccess({user}))
+    mergeMap(() => this.userService.getCurrentUser().pipe(
+      map(user => UserConverter.fromDto(user)),
+      map(user => new UsersAction.GetCurrentUserSuccess({user})),
+      catchError(() => {
+        const message = this.i18n({id: 'currentUser.get.fail', value: 'Failed to get user details'});
+        return of(new NotificationsAction.Error({message}));
+      })
+    ))
+  );
+
+  @Effect()
+  public patchCurrentUser$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.PatchCurrentUser>(UsersActionType.PATCH_CURRENT_USER),
+    mergeMap(action => {
+      const dto = UserConverter.toDto(action.payload.user);
+      return this.userService.patchCurrentUser(dto).pipe(
+        map(user => UserConverter.fromDto(user)),
+        mergeMap(user => {
+          const actions: Action[] = [new UsersAction.GetCurrentUserSuccess({user})];
+          if (action.payload.onSuccess) {
+            actions.push(new CommonAction.ExecuteCallback({callback: action.payload.onSuccess}));
+          }
+          return actions;
+        }),
+        catchError(() => {
+          if (action.payload.onFailure) {
+            action.payload.onFailure();
+          }
+
+          const message = this.i18n({id: 'currentUser.patch.fail', value: 'Failed to update user details'});
+          return of(new NotificationsAction.Error({message}));
+        })
+      );
+    })
   );
 
   @Effect()
@@ -81,7 +111,7 @@ export class UsersEffects {
         map(user => new UsersAction.CreateSuccess({user: user})),
         catchError(error => of(new UsersAction.CreateFailure({error, organizationId: action.payload.organizationId})))
       );
-    }),
+    })
   );
 
   @Effect()
@@ -159,7 +189,7 @@ export class UsersEffects {
     ofType<UsersAction.SaveDefaultWorkspace>(UsersActionType.SAVE_DEFAULT_WORKSPACE),
     concatMap(action => {
       const defaultWorkspaceDto = DefaultWorkspaceConverter.toDto(action.payload.defaultWorkspace);
-      return this.globalService.saveDefaultWorkspace(defaultWorkspaceDto).pipe(
+      return this.userService.saveDefaultWorkspace(defaultWorkspaceDto).pipe(
         withLatestFrom(this.store$.select(selectCurrentUser)),
         map(([result, user]) =>
           new UsersAction.SaveDefaultWorkspaceSuccess({
@@ -185,8 +215,7 @@ export class UsersEffects {
   constructor(private actions$: Actions,
               private i18n: I18n,
               private store$: Store<AppState>,
-              private userService: UserService,
-              private globalService: GlobalService) {
+              private userService: UserService) {
   }
 
 }

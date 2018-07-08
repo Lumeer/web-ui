@@ -19,12 +19,15 @@
 
 import {DefaultWorkspace} from './default-workspace';
 
-export interface User {
+export interface UserDto {
 
   id?: string;
   name?: string;
   email: string;
   groups: { [organizationId: string]: string[] };
   defaultWorkspace?: DefaultWorkspace;
+  agreement?: boolean;
+  agreementDate?: number;
+  newsletter?: boolean;
 
 }

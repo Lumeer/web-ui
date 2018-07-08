@@ -35,5 +35,5 @@ export {Resource} from './resource';
 export {SuggestionType} from './suggestion-type';
 export {Suggestions} from './suggestions';
 export {UserSettings} from './user.settings';
-export {User} from './user';
+export {UserDto} from './user.dto';
 export {View} from './view';

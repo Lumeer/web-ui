@@ -57,11 +57,7 @@ export class UserMenuComponent {
   }
 
   public onLogoutClick() {
-    if (environment.auth) {
-      this.authService.logout();
-    } else {
-      console.warn('Cannot log out. Authentication is disabled.');
-    }
+    this.authService.logout();
   }
 
 }

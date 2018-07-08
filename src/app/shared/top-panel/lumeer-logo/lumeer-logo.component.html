@@ -1,0 +1,20 @@
+<ng-template #logo>
+  <img [style.height.px]="height"
+       class="lumeer-logo"
+       src="assets/img/lumeer.svg">
+  <div *ngIf="text"
+       [style.line-height.px]="height"
+       class="lumeer-header text-uppercase pl-2">
+    {{ text }}
+  </div>
+</ng-template>
+
+<a *ngIf="link"
+   [routerLink]="link"
+   class="d-flex justify-content-center">
+  <ng-container *ngTemplateOutlet="logo"></ng-container>
+</a>
+<span *ngIf="!link"
+      class="d-flex justify-content-center">
+  <ng-container *ngTemplateOutlet="logo"></ng-container>
+</span>

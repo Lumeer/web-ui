@@ -19,7 +19,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {AUTH_REDIRECT_KEY} from '../auth.service';
+import {AuthService} from '../auth.service';
 
 @Component({
   selector: 'logout',
@@ -27,11 +27,12 @@ import {AUTH_REDIRECT_KEY} from '../auth.service';
 })
 export class LogoutComponent implements OnInit {
 
-  public constructor(private router: Router) {
+  public constructor(private authService: AuthService,
+                     private router: Router) {
   }
 
   public ngOnInit() {
-    const path = localStorage.getItem(AUTH_REDIRECT_KEY) || '/';
+    const path = this.authService.getLoginRedirectPath();
     this.router.navigate([path]);
   }
 
