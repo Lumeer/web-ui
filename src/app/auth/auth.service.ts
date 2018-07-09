@@ -28,7 +28,7 @@ import {environment} from '../../environments/environment';
 import {AppState} from '../core/store/app.state';
 import {UsersAction} from '../core/store/users/users.action';
 
-export const AUTH_REDIRECT_KEY = 'auth_login_redirect';
+const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
 const ID_TOKEN_KEY = 'auth_id_token';
 const EXPIRES_AT_KEY = 'auth_expires_at';
@@ -62,7 +62,8 @@ export class AuthService {
     });
   }
 
-  public login(): void {
+  public login(redirectPath: string): void {
+    this.saveLoginRedirectPath(redirectPath);
     this.auth0.authorize();
   }
 
@@ -90,12 +91,19 @@ export class AuthService {
   }
 
   public logout(): void {
+    if (!environment.auth) {
+      console.warn('Cannot log out. Authentication is disabled.');
+      return;
+    }
+
     // Remove tokens and expiry time from localStorage
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(ID_TOKEN_KEY);
     localStorage.removeItem(EXPIRES_AT_KEY);
 
     this.unscheduleRenewal();
+
+    this.saveLoginRedirectPath(this.router.url);
 
     window.location.assign(this.getLogoutUrl());
   }
@@ -174,6 +182,15 @@ export class AuthService {
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
     }
+  }
+
+  public getLoginRedirectPath(): string {
+    const redirectPath = localStorage.getItem(REDIRECT_KEY) || '/';
+    return redirectPath !== '/agreement' ? redirectPath : '/';
+  }
+
+  public saveLoginRedirectPath(path: string) {
+    localStorage.setItem(REDIRECT_KEY, path);
   }
 
 }

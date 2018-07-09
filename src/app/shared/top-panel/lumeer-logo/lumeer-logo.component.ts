@@ -17,25 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {GroupModel} from '../groups/group.model';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
-export interface UserModel {
+@Component({
+  selector: 'lumeer-logo',
+  templateUrl: './lumeer-logo.component.html',
+  styleUrls: ['./lumeer-logo.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class LumeerLogoComponent {
 
-  id?: string;
-  name?: string;
-  email: string;
-  groupsMap: { [organizationId: string]: string[]; };
-  groups?: GroupModel[];
-  defaultWorkspace?: DefaultWorkspaceModel;
-  agreement?: boolean;
-  agreementDate?: Date;
-  newsletter?: boolean;
+  @Input()
+  public height: number;
 
-}
+  @Input()
+  public link: any[];
 
-export interface DefaultWorkspaceModel {
-  organizationCode?: string;
-  organizationId: string;
-  projectCode?: string;
-  projectId: string;
+  @Input()
+  public text: string;
+
 }

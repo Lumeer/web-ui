@@ -21,7 +21,7 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../core/notifications/notification.service';
-import {GlobalService} from '../../core/rest/global.service';
+import {UserService} from '../../core/rest';
 import {DialogService} from '../dialog.service';
 
 const FEEDBACK_KEY = 'feedback_message';
@@ -38,9 +38,9 @@ export class FeedbackDialogComponent implements OnInit {
   });
 
   public constructor(private dialogService: DialogService,
-                     private globalService: GlobalService,
                      private i18n: I18n,
-                     private notificationService: NotificationService) {
+                     private notificationService: NotificationService,
+                     private userService: UserService) {
   }
 
   public ngOnInit() {
@@ -59,7 +59,7 @@ export class FeedbackDialogComponent implements OnInit {
   }
 
   private sendFeedback(message: string) {
-    this.globalService.sendFeedback(message).subscribe(
+    this.userService.sendFeedback(message).subscribe(
       () => {
         this.notifyOnSuccess();
         localStorage.removeItem(FEEDBACK_KEY);

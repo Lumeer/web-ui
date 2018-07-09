@@ -33,7 +33,6 @@ import {NotificationsModule} from './notifications/notifications.module';
 import {CollectionService} from './rest/collection.service';
 import {DocumentService} from './rest/document.service';
 import {EventService} from './rest/event.service';
-import {GlobalService} from './rest/global.service';
 import {GroupService} from './rest/group.service';
 import {httpInterceptorProviders} from './rest/http-interceptors';
 import {ImportService} from './rest/import.service';
@@ -85,7 +84,6 @@ import {ProjectValidators} from './validators/project.validators';
     LinkInstanceService,
     LinkTypeService,
     EventService,
-    GlobalService,
     WorkspaceGuard,
     CollectionValidators,
     OrganizationValidators,

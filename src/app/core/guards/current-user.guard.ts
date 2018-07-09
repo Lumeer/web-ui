@@ -18,25 +18,27 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
-
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
-import {tap, filter, take, catchError, map} from 'rxjs/operators';
-import {AppState} from '../store/app.state';
-import {selectCurrentUserForWorkspace} from '../store/users/users.state';
-import {UsersAction} from '../store/users/users.action';
+import {catchError, filter, first, map, tap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
+import {AuthService} from '../../auth/auth.service';
+import {AppState} from '../store/app.state';
+import {UsersAction} from '../store/users/users.action';
+import {selectCurrentUserForWorkspace} from '../store/users/users.state';
 
 @Injectable()
 export class CurrentUserGuard implements CanActivate {
 
-  constructor(private store: Store<AppState>) {
+  constructor(private authService: AuthService,
+              private router: Router,
+              private store: Store<AppState>) {
   }
 
   public canActivate(next: ActivatedRouteSnapshot,
                      state: RouterStateSnapshot): Observable<boolean> {
-    return this.checkStore().pipe(
+    return this.checkStore(state).pipe(
       catchError((err, caught) => {
         console.error(err);
         console.error(caught);
@@ -45,7 +47,7 @@ export class CurrentUserGuard implements CanActivate {
     );
   }
 
-  private checkStore(): Observable<boolean> {
+  private checkStore(state: RouterStateSnapshot): Observable<boolean> {
     return this.store.select(selectCurrentUserForWorkspace).pipe(
       tap(currentUser => {
         if (isNullOrUndefined(currentUser)) {
@@ -53,8 +55,15 @@ export class CurrentUserGuard implements CanActivate {
         }
       }),
       filter(currentUser => !isNullOrUndefined(currentUser)),
-      take(1),
-      map(() => true)
+      first(),
+      map(user => {
+        if (!user.agreement) {
+          this.authService.saveLoginRedirectPath(state.url);
+          this.router.navigate(['/', 'agreement']);
+        }
+
+        return user.agreement;
+      })
     );
   }
 }

@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
 import {environment} from '../../environments/environment';
-import {AUTH_REDIRECT_KEY, AuthService} from './auth.service';
+import {AuthService} from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,8 +32,7 @@ export class AuthGuard implements CanActivate {
 
   public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (environment.auth && !this.authService.isAuthenticated()) {
-      localStorage.setItem(AUTH_REDIRECT_KEY, state.url);
-      this.authService.login();
+      this.authService.login(state.url);
       return false;
     }
     return true;

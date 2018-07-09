@@ -21,9 +21,11 @@ import {Injectable} from '@angular/core';
 
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {User} from '../dto';
+import {UserDto} from '../dto';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
+import {DefaultWorkspace} from '../dto/default-workspace';
+import {FeedbackDto} from '../dto/feedback.dto';
 
 @Injectable()
 export class UserService {
@@ -31,25 +33,46 @@ export class UserService {
   constructor(private httpClient: HttpClient) {
   }
 
-  public createUser(organizationId: string, user: User): Observable<User> {
-    return this.httpClient.post<User>(this.apiPrefix(organizationId), user);
+  public createUser(organizationId: string, user: UserDto): Observable<UserDto> {
+    return this.httpClient.post<UserDto>(this.organizationUsersApiPrefix(organizationId), user);
   }
 
-  public updateUser(organizationId: string, id: string, user: User): Observable<User> {
-    return this.httpClient.put<User>(this.apiPrefix(organizationId, user.id), user);
+  public updateUser(organizationId: string, id: string, user: UserDto): Observable<UserDto> {
+    return this.httpClient.put<UserDto>(this.organizationUsersApiPrefix(organizationId, user.id), user);
   }
 
   public deleteUser(organizationId: string, id: string): Observable<string> {
-    return this.httpClient.delete(this.apiPrefix(organizationId, id), {observe: 'response', responseType: 'text'})
+    return this.httpClient.delete(this.organizationUsersApiPrefix(organizationId, id), {observe: 'response', responseType: 'text'})
       .pipe(map(() => id));
   }
 
-  public getUsers(organizationId: string): Observable<User[]> {
-    return this.httpClient.get<User[]>(this.apiPrefix(organizationId));
+  public getUsers(organizationId: string): Observable<UserDto[]> {
+    return this.httpClient.get<UserDto[]>(this.organizationUsersApiPrefix(organizationId));
   }
 
-  private apiPrefix(organizationId: string, userId?: string): string {
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/users${userId ? `/${userId}` : ''}`;
+  private organizationUsersApiPrefix(organizationId: string, userId?: string): string {
+    return `${this.usersApiPrefix()}/organizations/${organizationId}/users${userId ? `/${userId}` : ''}`;
+  }
+
+  public getCurrentUser(): Observable<UserDto> {
+    return this.httpClient.get<UserDto>(`${this.usersApiPrefix()}/current`);
+  }
+
+  public patchCurrentUser(user: Partial<UserDto>): Observable<UserDto> {
+    return this.httpClient.patch<UserDto>(`${this.usersApiPrefix()}/current`, user);
+  }
+
+  public saveDefaultWorkspace(defaultWorkspace: DefaultWorkspace): Observable<any> {
+    return this.httpClient.put(`${this.usersApiPrefix()}/workspace`, defaultWorkspace);
+  }
+
+  public sendFeedback(message: string): Observable<void> {
+    const feedback: FeedbackDto = {message};
+    return this.httpClient.post<void>(`${this.usersApiPrefix()}/feedback`, feedback);
+  }
+
+  private usersApiPrefix(): string {
+    return `${environment.apiUrl}/rest/users`;
   }
 
 }

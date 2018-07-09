@@ -1,0 +1,61 @@
+<div class="card border-light mb-3">
+  <div class="card-header">
+    <lumeer-logo [height]="48"
+                 [text]="'Lumeer'">
+    </lumeer-logo>
+  </div>
+  <div class="card-body">
+    <p i18n="@@agreement.welcome.message">Welcome to Lumeer! Please, accept our terms before using the application for the first time.</p>
+    <form [formGroup]="form"
+          (submit)="onSubmit()">
+      <div *ngIf="agreement.dirty && agreement.errors"
+           class="alert alert-danger"
+           i18n="@@confirm.required">
+        You need to agree to the terms.
+      </div>
+      <div class="form-group form-check">
+        <input [formControlName]="agreementName"
+               [id]="agreementName"
+               [name]="agreementName"
+               class="form-check-input"
+               type="checkbox">
+        <label [for]="agreementName"
+               class="form-check-label">
+          <span i18n="@@label.terms.start">I have read</span>
+          <a [href]="termsOfServiceLink"
+             i18n="@@termsOfService"
+             target="_blank">Terms of Service</a>
+          <span i18n="@@and">and</span>
+          <a [href]="privacyPolicyLink"
+             i18n="@@privacyPolicy"
+             target="_blank">Privacy Policy</a>
+          <span i18n="@@label.terms.end">and I agree to them.</span>
+        </label>
+      </div>
+      <div class="form-group form-check">
+        <input [formControlName]="newsletterName"
+               [id]="newsletterName"
+               [name]="newsletterName"
+               class="form-check-input"
+               type="checkbox">
+        <label [for]="newsletterName"
+               class="form-check-label"
+               i18n="@@label.newsletter.subscribe">
+        <span i18n="@@label.newsletter.start">Subscribe me to Lumeer Newsletter (see </span>
+          <a [href]="dataProcessingAgreementLink"
+             i18n="@@dpa"
+             target="_blank">Data Processing Agreement</a>
+          <span i18n="@@label.newsletter.end">).</span>
+        </label>
+      </div>
+      <button [disabled]="loading"
+              class="btn btn-success"
+              type="submit">
+        <span class="text-uppercase"
+              i18n="@@button.continue">Continue</span>
+        &nbsp;
+        <i class="fa fa-chevron-right"></i>
+      </button>
+    </form>
+  </div>
+</div>

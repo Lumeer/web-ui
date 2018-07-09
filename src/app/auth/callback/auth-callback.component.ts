@@ -23,7 +23,7 @@ import {Store} from '@ngrx/store';
 import {filter, first} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {selectCurrentUser} from '../../core/store/users/users.state';
-import {AUTH_REDIRECT_KEY} from '../auth.service';
+import {AuthService} from '../auth.service';
 
 @Component({
   selector: 'auth-callback',
@@ -31,12 +31,13 @@ import {AUTH_REDIRECT_KEY} from '../auth.service';
 })
 export class AuthCallbackComponent implements OnInit {
 
-  public constructor(private router: Router,
+  public constructor(private authService: AuthService,
+                     private router: Router,
                      private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    const path = localStorage.getItem(AUTH_REDIRECT_KEY) || '/';
+    const path = this.authService.getLoginRedirectPath();
 
     this.store.select(selectCurrentUser).pipe(
       filter(user => !!user),

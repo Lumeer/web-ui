@@ -19,7 +19,7 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {CommentsComponent} from './comments/comments.component';
 import {DocumentModule} from './document/document.module';
@@ -47,6 +47,7 @@ import {SearchBoxModule} from './top-panel/search-box/search-box.module';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     PickerModule,
     DragAndDropModule,
@@ -75,6 +76,7 @@ import {SearchBoxModule} from './top-panel/search-box/search-box.module';
     CommonModule,
     DragAndDropModule,
     FormsModule,
+    ReactiveFormsModule,
     PostItCollectionsModule,
     SizeSliderComponent,
     CommentsComponent,

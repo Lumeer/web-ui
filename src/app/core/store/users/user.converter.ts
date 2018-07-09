@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {User} from '../../dto';
+import {UserDto} from '../../dto';
 import {DefaultWorkspaceModel, UserModel} from './user.model';
 import {DefaultWorkspace} from '../../dto/default-workspace';
 
@@ -45,22 +45,27 @@ export class DefaultWorkspaceConverter {
 
 export class UserConverter {
 
-  public static fromDto(dto: User): UserModel {
+  public static fromDto(dto: UserDto): UserModel {
     return {
       id: dto.id,
       name: dto.name,
       email: dto.email,
       groupsMap: dto.groups,
-      defaultWorkspace: dto.defaultWorkspace ? DefaultWorkspaceConverter.fromDto(dto.defaultWorkspace) : null
+      defaultWorkspace: dto.defaultWorkspace ? DefaultWorkspaceConverter.fromDto(dto.defaultWorkspace) : null,
+      agreement: dto.agreement,
+      agreementDate: dto.agreementDate ? new Date(dto.agreementDate) : undefined,
+      newsletter: dto.newsletter
     };
   }
 
-  public static toDto(user: UserModel): User {
+  public static toDto(user: Partial<UserModel>): UserDto {
     return {
       id: user.id,
       name: user.name,
       email: user.email,
-      groups: user.groupsMap
+      groups: user.groupsMap,
+      agreement: user.agreement,
+      newsletter: user.newsletter
     };
   }
 

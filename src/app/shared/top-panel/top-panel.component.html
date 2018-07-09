@@ -1,13 +1,10 @@
 <div class="grid">
   <div #workspacePanel class="d-flex justify-content-left workspace-panel">
     <div class="panel-item mr-1">
-      <a [routerLink]="['/']"
-         class="d-flex">
-        <img class="lumeer-logo" src="assets/img/lumeer.svg">
-        <div *ngIf="!(workspace | workspaceSet)" class="lumeer-header text-uppercase pl-2">
-          Lumeer
-        </div>
-      </a>
+      <lumeer-logo [height]="48"
+                   [link]="['/']"
+                   [text]="!(workspace | workspaceSet) ? 'Lumeer' : null">
+      </lumeer-logo>
     </div>
     <div class="d-flex"
          *ngIf="workspace | workspaceSet">

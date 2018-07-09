@@ -9,30 +9,6 @@ $top-panel-height: 48px;
   white-space: nowrap;
 }
 
-.lumeer-logo {
-  height: $top-panel-height;
-  position: relative;
-  bottom: 3px;
-  z-index: $zindex-popover;
-
-  &:hover {
-    transform: scale(1.2, 1.2);
-  }
-
-  transition: transform 0.15s ease-in-out;
-}
-
-.lumeer-header {
-  color: $primary;
-  font-size: $h4-font-size;
-  font-weight: bold;
-}
-.home-button {
-  position: relative;
-  bottom: 2px;
-  left: 15px;
-}
-
 .grid {
   display: grid;
   grid-gap: 10px;

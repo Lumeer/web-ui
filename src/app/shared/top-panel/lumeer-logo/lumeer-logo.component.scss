@@ -1,0 +1,20 @@
+@import '../../variables';
+@import '../../bootstrap_var';
+
+.lumeer-logo {
+  position: relative;
+  bottom: 3px;
+  z-index: $zindex-popover;
+
+  &:hover {
+    transform: scale(1.2, 1.2);
+  }
+
+  transition: transform 0.15s ease-in-out;
+}
+
+.lumeer-header {
+  color: $primary;
+  font-size: $h4-font-size;
+  font-weight: bold;
+}

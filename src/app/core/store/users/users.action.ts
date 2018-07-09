@@ -29,6 +29,8 @@ export enum UsersActionType {
   GET_CURRENT_USER = '[Users] Get current user',
   GET_CURRENT_USER_SUCCESS = '[Users] Get current user:: Success',
 
+  PATCH_CURRENT_USER = '[Users] Patch Current',
+
   SAVE_DEFAULT_WORKSPACE = '[Users] Save default workspace',
   SAVE_DEFAULT_WORKSPACE_SUCCESS = '[Users] Save default workspace :: Success',
   SAVE_DEFAULT_WORKSPACE_FAILURE = '[Users] Save default workspace :: Failure',
@@ -73,6 +75,13 @@ export namespace UsersAction {
     public readonly type = UsersActionType.GET_CURRENT_USER_SUCCESS;
 
     public constructor(public payload: { user: UserModel }) {
+    }
+  }
+
+  export class PatchCurrentUser implements Action {
+    public readonly type = UsersActionType.PATCH_CURRENT_USER;
+
+    public constructor(public payload: { user: Partial<UserModel>, onSuccess: () => void, onFailure: () => void }) {
     }
   }
 
@@ -121,7 +130,7 @@ export namespace UsersAction {
   export class CreateFailure implements Action {
     public readonly type = UsersActionType.CREATE_FAILURE;
 
-    public constructor(public payload: { error: any , organizationId: string}) {
+    public constructor(public payload: { error: any, organizationId: string }) {
     }
   }
 
@@ -172,7 +181,7 @@ export namespace UsersAction {
   }
 
   export type All = Get | GetSuccess | GetFailure |
-    GetCurrentUser | GetCurrentUserSuccess |
+    GetCurrentUser | GetCurrentUserSuccess | PatchCurrentUser |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
     SaveDefaultWorkspace | SaveDefaultWorkspaceSuccess | SaveDefaultWorkspaceFailure |

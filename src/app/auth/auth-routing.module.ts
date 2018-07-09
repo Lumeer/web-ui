@@ -19,10 +19,17 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import {AuthGuard} from './auth.guard';
 import {AuthCallbackComponent} from './callback/auth-callback.component';
 import {LogoutComponent} from './logout/logout.component';
+import {AgreementComponent} from './terms-confirm/agreement.component';
 
 const authRoutes: Routes = [
+  {
+    path: 'agreement',
+    canActivate: [AuthGuard],
+    component: AgreementComponent
+  },
   {
     path: 'auth',
     component: AuthCallbackComponent
