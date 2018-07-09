@@ -103,8 +103,6 @@ export class AuthService {
 
     this.unscheduleRenewal();
 
-    this.saveLoginRedirectPath(this.router.url);
-
     window.location.assign(this.getLogoutUrl());
   }
 
