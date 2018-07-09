@@ -8,11 +8,6 @@
     <p i18n="@@agreement.welcome.message">Welcome to Lumeer! Please, accept our terms before using the application for the first time.</p>
     <form [formGroup]="form"
           (submit)="onSubmit()">
-      <div *ngIf="agreement.dirty && agreement.errors"
-           class="alert alert-danger"
-           i18n="@@confirm.required">
-        You need to agree to the terms.
-      </div>
       <div class="form-group form-check">
         <input [formControlName]="agreementName"
                [id]="agreementName"
@@ -48,7 +43,7 @@
           <span i18n="@@label.newsletter.end">).</span>
         </label>
       </div>
-      <button [disabled]="loading"
+      <button [disabled]="form.invalid || loading"
               class="btn btn-success"
               type="submit">
         <span class="text-uppercase"

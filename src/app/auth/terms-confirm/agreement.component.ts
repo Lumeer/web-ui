@@ -88,9 +88,6 @@ export class AgreementComponent implements OnInit, OnDestroy {
   }
 
   public onSubmit() {
-    this.agreement.markAsDirty();
-    this.newsletter.markAsDirty();
-
     if (this.form.invalid) {
       return;
     }
