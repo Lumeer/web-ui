@@ -3934,7 +3934,7 @@
           <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
-        <source>Welcome to Lumeer! Please, accept our terms before using the application for the first time.</source><target state="new">Welcome to Lumeer! Please, accept our terms before using the application for the first time.</target>
+        <source>Welcome to Lumeer! Please, accept our terms before using the application for the first time.</source><target>Lumeer Vás vítá! Toto je Vaše první přihlášení. Než budete pokračovat, odsouhlaste prosím obchodní podmínky a přihlaste se k odběru Novinek. Děkujeme!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
           <context context-type="linenumber">8</context>
@@ -3998,19 +3998,19 @@
           <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit><trans-unit id="button.continue" datatype="html">
-        <source>Continue</source><target state="new">Continue</target>
+        <source>Continue</source><target>Pokračovat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
           <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit><trans-unit id="currentUser.get.fail" datatype="html">
-        <source>Failed to get user details</source><target state="new">Failed to get user details</target>
+        <source>Failed to get user details</source><target>Nepodařilo se načíst nastavení uživatele</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="currentUser.patch.fail" datatype="html">
-        <source>Failed to update user details</source><target state="new">Failed to update user details</target>
+        <source>Failed to update user details</source><target>Nepodařilo se uložit nastavení uživatele</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
           <context context-type="linenumber">1</context>
