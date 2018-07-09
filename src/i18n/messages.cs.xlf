@@ -9,21 +9,15 @@
                 <target>
                     <x id="ICU" equiv-text="{upozornění, plural, =0 {...} =1 {...} =2 {...} =3 {...} =4 {...} other {...}}"/>
                 </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/top-panel/top-panel.component.ts</context>
-                    <context context-type="linenumber">58</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/top-panel.component.ts</context><context context-type="linenumber">55</context></context-group></trans-unit>
             <trans-unit id="cfb40a3883978597fcd2f0b863a75a5f3df84fbd" datatype="html">
                 <source>{VAR_PLURAL, plural, =0 {No new notifications} =1 {One new notification} =2 {2 new notifications} =3 {3 new notifications} =4 {4 new notifications} other {<x id="INTERPOLATION" equiv-text="{{notifications}}"/> new notifications} }</source>
                 <target>{VAR_PLURAL, plural, =0 {Žádná nová upozornění} =1 {Jedno nové upozornění} =2 {2 nová upozornění} =3 {3 nová upozornění} =4 {4 nová upozornění} other {<x id="INTERPOLATION" equiv-text="{{notifications}}"/>
 
                      nových upozornění} }</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/top-panel/top-panel.component.ts</context>
-                    <context context-type="linenumber">59</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/top-panel.component.ts</context><context context-type="linenumber">56</context></context-group></trans-unit>
             <trans-unit id="menu.account" datatype="html">
                 <source>Account</source>
                 <target>Účet</target>
@@ -3316,11 +3310,8 @@
             <trans-unit id="panel.plan.free" datatype="html">
                 <source>Free Plan</source>
                 <target>Verze Zdarma</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/top-panel/top-panel.component.ts</context>
-                    <context context-type="linenumber">51</context>
-                </context-group>
-            </trans-unit>
+
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/top-panel.component.ts</context><context context-type="linenumber">48</context></context-group></trans-unit>
 
             <trans-unit id="menu.sendFeedback" datatype="html">
                 <source>Send Feedback</source>
@@ -3941,6 +3932,88 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
           <context context-type="linenumber">97</context>
+        </context-group>
+      </trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
+        <source>Welcome to Lumeer! Please, accept our terms before using the application for the first time.</source><target>Lumeer Vás vítá! Toto je Vaše první přihlášení. Než budete pokračovat, odsouhlaste prosím obchodní podmínky a přihlaste se k odběru Novinek. Děkujeme!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="confirm.required" datatype="html">
+        <source>
+        You need to agree to the terms.
+      </source><target>
+        Musíte odsouhlasit obchodní podmínky.
+      </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="label.terms.start" datatype="html">
+        <source>I have read</source><target>Přečetl(a) jsem si</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit><trans-unit id="termsOfService" datatype="html">
+        <source>Terms of Service</source><target>Všeobecné obchodní podmínky</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit><trans-unit id="and" datatype="html">
+        <source>and</source><target>a</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit><trans-unit id="privacyPolicy" datatype="html">
+        <source>Privacy Policy</source><target>Zásady ochrany osobních údajů</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="label.terms.end" datatype="html">
+        <source>and I agree to them.</source><target>a souhlasím s nimi.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="label.newsletter.start" datatype="html">
+        <source>Subscribe me to Lumeer Newsletter (see </source><target>Příhlasit se k odběru Novinek Lumeera (souhlasím se </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit><trans-unit id="dpa" datatype="html">
+        <source>Data Processing Agreement</source><target>Zpracováním osobních údajů</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit><trans-unit id="label.newsletter.end" datatype="html">
+        <source>).</source><target>).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit><trans-unit id="button.continue" datatype="html">
+        <source>Continue</source><target>Pokračovat</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit><trans-unit id="currentUser.get.fail" datatype="html">
+        <source>Failed to get user details</source><target>Nepodařilo se načíst nastavení uživatele</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="currentUser.patch.fail" datatype="html">
+        <source>Failed to update user details</source><target>Nepodařilo se uložit nastavení uživatele</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit></body>
     </file>
