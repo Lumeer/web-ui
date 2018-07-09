@@ -3934,76 +3934,39 @@
           <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
-        <source>Welcome to Lumeer! Please, accept our terms before using the application for the first time.</source><target>Lumeer Vás vítá! Toto je Vaše první přihlášení. Než budete pokračovat, odsouhlaste prosím obchodní podmínky a přihlaste se k odběru Novinek. Děkujeme!</target>
+        <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source><target>Lumeer Vás vítá! Toto je Vaše první přihlášení. Než budete pokračovat, odsouhlaste prosím obchodní podmínky a přihlaste se k odběru Novinek. Děkujeme!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
           <context context-type="linenumber">8</context>
         </context-group>
-      </trans-unit><trans-unit id="confirm.required" datatype="html">
-        <source>
-        You need to agree to the terms.
-      </source><target>
-        Musíte odsouhlasit obchodní podmínky.
-      </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
       </trans-unit><trans-unit id="label.terms.start" datatype="html">
         <source>I have read</source><target>Přečetl(a) jsem si</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-      </trans-unit><trans-unit id="termsOfService" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="termsOfService" datatype="html">
         <source>Terms of Service</source><target>Všeobecné obchodní podmínky</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-      </trans-unit><trans-unit id="and" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="and" datatype="html">
         <source>and</source><target>a</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-      </trans-unit><trans-unit id="privacyPolicy" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="privacyPolicy" datatype="html">
         <source>Privacy Policy</source><target>Zásady ochrany osobních údajů</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
-          <context context-type="linenumber">31</context>
-        </context-group>
-      </trans-unit><trans-unit id="label.terms.end" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="label.terms.end" datatype="html">
         <source>and I agree to them.</source><target>a souhlasím s nimi.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-      </trans-unit><trans-unit id="label.newsletter.start" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="label.newsletter.start" datatype="html">
         <source>Subscribe me to Lumeer Newsletter (see </source><target>Příhlasit se k odběru Novinek Lumeera (souhlasím se </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-      </trans-unit><trans-unit id="dpa" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="dpa" datatype="html">
         <source>Data Processing Agreement</source><target>Zpracováním osobních údajů</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit><trans-unit id="label.newsletter.end" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="label.newsletter.end" datatype="html">
         <source>).</source><target>).</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
-          <context context-type="linenumber">47</context>
-        </context-group>
-      </trans-unit><trans-unit id="button.continue" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="button.continue" datatype="html">
         <source>Continue</source><target>Pokračovat</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
-          <context context-type="linenumber">54</context>
-        </context-group>
-      </trans-unit><trans-unit id="currentUser.get.fail" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="currentUser.get.fail" datatype="html">
         <source>Failed to get user details</source><target>Nepodařilo se načíst nastavení uživatele</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
