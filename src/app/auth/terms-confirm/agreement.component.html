@@ -5,7 +5,7 @@
     </lumeer-logo>
   </div>
   <div class="card-body">
-    <p i18n="@@agreement.welcome.message">Welcome to Lumeer! Please, accept our terms before using the application for the first time.</p>
+    <p i18n="@@agreement.welcome.message">Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</p>
     <form [formGroup]="form"
           (submit)="onSubmit()">
       <div class="form-group form-check">
@@ -34,8 +34,7 @@
                class="form-check-input"
                type="checkbox">
         <label [for]="newsletterName"
-               class="form-check-label"
-               i18n="@@label.newsletter.subscribe">
+               class="form-check-label">
         <span i18n="@@label.newsletter.start">Subscribe me to Lumeer Newsletter (see </span>
           <a [href]="dataProcessingAgreementLink"
              i18n="@@dpa"
