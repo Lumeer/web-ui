@@ -19,10 +19,15 @@
 
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {Title} from '@angular/platform-browser';
+import {Store} from '@ngrx/store';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
+import * as jsSHA from 'jssha';
 import {SnotifyService} from 'ng-snotify';
+import {filter, first} from 'rxjs/operators';
 import {environment} from '../environments/environment';
 import {AuthService} from './auth/auth.service';
+import {AppState} from './core/store/app.state';
+import {selectCurrentUser} from './core/store/users/users.state';
 
 @Component({
   selector: 'lmr-app',
@@ -40,6 +45,7 @@ export class AppComponent implements OnInit {
   constructor(private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
               private authService: AuthService,
               private snotifyService: SnotifyService,
+              private store$: Store<AppState>,
               private title: Title) {
     this.title.setTitle('Lumeer - Easy Business Booster');
 
@@ -58,9 +64,12 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    this.authService.getUserProfile().then(profile => {
-      const [, userId] = profile.sub.split('|', 2);
-      this.angulartics2GoogleAnalytics.setUsername(userId);
+    this.store$.select(selectCurrentUser).pipe(
+      filter(user => !!user),
+      first()
+    ).subscribe(user => {
+      const userHash = hashUserId(user.id);
+      this.angulartics2GoogleAnalytics.setUsername(userHash);
     });
   }
 
@@ -86,4 +95,14 @@ export class AppComponent implements OnInit {
     });
   }
 
+}
+
+function hashUserId(userId: string): string {
+  if (userId) {
+    const sha3 = new jsSHA('SHA3-512', 'TEXT');
+    sha3.update(userId);
+    return sha3.getHash('HEX');
+  }
+
+  return 'unknown';
 }
