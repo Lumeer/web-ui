@@ -58,7 +58,7 @@ export class AuthService {
       responseType: 'token id_token',
       audience: document.location.origin.replace(':7000', ':8080') + '/',
       redirectUri,
-      scope: 'openid profile'
+      scope: 'openid profile email'
     });
   }
 
