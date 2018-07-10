@@ -81,7 +81,8 @@
               (click)="onCopy()">
         <i class="fas fa-copy"></i>
       </button>
-      <button (click)="onShareClick()"
+      <button [disabled]="!view.code"
+              (click)="onShareClick()"
               class="btn btn-primary"
               type="button"
               title="Share" i18n-title="@@view.button.share" i18n="@@view.button.share">Share

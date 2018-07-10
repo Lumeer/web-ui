@@ -129,18 +129,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onShareClick() {
-    const message = this.i18n(
-      {
-        id: 'view.share.notWorking',
-        value: 'This feature is currently under construction. Your view can be currently accessed only by you.'
-      });
-    const title = this.i18n({id: 'view.share.underConstruction', value: 'Under Construction'});
-    const okButtonText = this.i18n({id: 'button.ok', value: 'OK'});
-
-    this.notificationService.confirm(message, title, [
-      {text: okButtonText, bold: true},
-    ]);
-    // TODO this.dialogService.openShareViewDialog();
+    this.dialogService.openShareViewDialog();
   }
 
   private dispatchActionsOnChangePerspective(perspective: string) {

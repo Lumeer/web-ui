@@ -6,6 +6,7 @@
       <view-detail *ngFor="let view of (maxLines > 0 ? (views | slice:0:maxLines) : views); trackBy:trackByView"
                    [view]="view"
                    [queryData]="queryData"
+                   (delete)="onDeleteView(view)"
                    (clicked)="showView(view)">
       </view-detail>
       <div class="clickable d-flex justify-content-end" [style.font-size.%]="150"

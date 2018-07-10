@@ -118,9 +118,9 @@ export class ViewsEffects {
       const viewDto = ViewConverter.convertToDto(action.payload.view);
 
       return this.viewService.updateView(action.payload.viewCode, viewDto).pipe(
-          map(dto => ViewConverter.convertToModel(dto)),
-          map((view) => new ViewsAction.UpdateSuccess({view: view, nextAction: action.payload.nextAction})),
-          catchError((error) => of(new ViewsAction.UpdateFailure({error: error})))
+        map(dto => ViewConverter.convertToModel(dto)),
+        map((view) => new ViewsAction.UpdateSuccess({view: view, nextAction: action.payload.nextAction})),
+        catchError((error) => of(new ViewsAction.UpdateFailure({error: error})))
       );
     }),
   );
@@ -145,6 +145,27 @@ export class ViewsEffects {
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'view.update.fail', value: 'Failed to update view'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public delete$: Observable<Action> = this.actions$.pipe(
+    ofType<ViewsAction.Delete>(ViewsActionType.DELETE),
+    mergeMap(action => {
+      return this.viewService.deleteView(action.payload.viewCode).pipe(
+        map(() => new ViewsAction.DeleteSuccess(action.payload)),
+        catchError((error) => of(new ViewsAction.DeleteFailure({error: error})))
+      );
+    }),
+  );
+
+  @Effect()
+  public deleteFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<ViewsAction.DeleteFailure>(ViewsActionType.DELETE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'view.delete.fail', value: 'Failed to delete view'});
       return new NotificationsAction.Error({message});
     })
   );

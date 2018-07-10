@@ -24,6 +24,7 @@ import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
 import {View} from '../dto';
 import {PermissionService} from './permission.service';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class ViewService extends PermissionService {
@@ -38,6 +39,12 @@ export class ViewService extends PermissionService {
 
   public getView(code: string): Observable<View> {
     return this.httpClient.get<View>(this.apiPrefix(code));
+  }
+
+  public deleteView(code: string): Observable<string> {
+    return this.httpClient.delete(this.apiPrefix(code)).pipe(
+      map(() => code)
+    );
   }
 
   public getViews(pageNumber?: number, pageSize?: number): Observable<View[]> {

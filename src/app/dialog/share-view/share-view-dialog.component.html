@@ -12,7 +12,8 @@
       <div class="dropdown" *ngIf="text && suggestions.length > 0">
         <div class="dropdown-menu show suggestions">
           <div class="dropdown-item"
-               *ngFor="let suggestion of suggestions"
+               *ngFor="let suggestion of suggestions; let index = index"
+               [class.selected]="index === selectedIndex"
                (click)="onSuggestionClick(suggestion)">
             {{suggestion}}
           </div>
@@ -29,7 +30,7 @@
       <input class="border-0 flex-grow-2 py-1 px-2 mt-1 ml-1"
              [(ngModel)]="text"
              (keydown)="onKeyDown($event)"
-             (keyup)="onKeyUp($event)"
+             (input)="suggest()"
              (focus)="suggest()"
              [placeholder]="removeHtmlComments(inputPlaceholder)"/>
     </div>

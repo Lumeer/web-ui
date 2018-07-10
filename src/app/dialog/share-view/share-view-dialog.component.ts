@@ -42,7 +42,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
 
   public emails: string[] = [];
   public text = '';
-
+  public selectedIndex: number;
   public users: UserModel[] = [];
   public suggestions: string[];
 
@@ -68,16 +68,6 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  public onKeyUp(event: KeyboardEvent) {
-    switch (event.keyCode) {
-      case KeyCode.Enter:
-        return;
-      case KeyCode.Backspace:
-      default:
-        this.suggest();
-    }
-  }
-
   public onKeyDown(event: KeyboardEvent) {
     switch (event.keyCode) {
       case KeyCode.Backspace:
@@ -86,6 +76,24 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
       case KeyCode.Enter:
         this.addItemOrShare();
         return;
+      case KeyCode.UpArrow:
+      case KeyCode.DownArrow:
+        this.onUpAndDownArrowKeysDown(event);
+        return;
+    }
+  }
+
+  private onUpAndDownArrowKeysDown(event: KeyboardEvent) {
+    if (this.suggestions.length === 0) {
+      return;
+    }
+
+    event.preventDefault();
+    const direction = event.keyCode === KeyCode.UpArrow ? -1 : 1;
+
+    const newIndex = isNullOrUndefined(this.selectedIndex) ? 0 : this.selectedIndex + direction;
+    if (newIndex >= 0 && newIndex < this.suggestions.length) {
+      this.selectedIndex = newIndex;
     }
   }
 
@@ -107,23 +115,39 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   }
 
   private addItem(text: string) {
-    this.emails.push(text);
-    this.text = '';
+    if (!isNullOrUndefined(this.selectedIndex) && this.selectedIndex < this.suggestions.length) {
+      this.emails.push(this.suggestions[this.selectedIndex]);
+      this.text = '';
+    } else {
+      const userChoosen = this.emails.find(email => email.toLowerCase() === text.toLowerCase());
+      const user = this.users.find(user => user.email.toLowerCase() === text.toLowerCase());
+      if (!userChoosen && user) {
+        this.emails.push(user.email);
+        this.text = '';
+      }
+    }
   }
 
   public suggest() {
     this.suggestions = this.users
       .map(user => user.email)
-      .filter(username => username.includes(this.text))
+      .filter(username => username.toLowerCase().includes(this.text.toLowerCase()))
       .filter(username => !this.emails.includes(username));
+
+    this.recomputeSelectedIndex();
+  }
+
+  private recomputeSelectedIndex() {
+    if (this.suggestions.length === 0 || !this.text) {
+      this.selectedIndex = null;
+    } else if (!isNullOrUndefined(this.selectedIndex)) {
+      this.selectedIndex = Math.min(this.selectedIndex, this.suggestions.length - 1);
+    }
+    console.log('newselindex', this.selectedIndex);
   }
 
   public onSuggestionClick(text: string) {
     this.addItem(text);
-  }
-
-  public hideSuggestions() {
-    this.suggestions = [];
   }
 
   public share() {

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
 import {QueryItem} from './model/query-item';
 import {FormGroup} from '@angular/forms';
@@ -25,7 +25,8 @@ import {FormGroup} from '@angular/forms';
 @Component({
   selector: 'query-item',
   templateUrl: './query-item.component.html',
-  styleUrls: ['./query-item.component.scss']
+  styleUrls: ['./query-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QueryItemComponent {
 

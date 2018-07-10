@@ -38,6 +38,10 @@ export enum ViewsActionType {
   UPDATE_SUCCESS = '[Views] Update :: Success',
   UPDATE_FAILURE = '[Views] Update :: Failure',
 
+  DELETE = '[Views] Delete',
+  DELETE_SUCCESS = '[Views] Delete :: Success',
+  DELETE_FAILURE = '[Views] Delete :: Failure',
+
   CHANGE_CONFIG = '[Views] Change Config',
   CHANGE_DETAIL_CONFIG = '[Views] Change Detail Config',
   CHANGE_POSTIT_CONFIG = '[Views] Change Post-it Config',
@@ -124,6 +128,27 @@ export namespace ViewsAction {
     }
   }
 
+  export class Delete implements Action {
+    public readonly type = ViewsActionType.DELETE;
+
+    public constructor(public payload: { viewCode: string }) {
+    }
+  }
+
+  export class DeleteSuccess implements Action {
+    public readonly type = ViewsActionType.DELETE_SUCCESS;
+
+    public constructor(public payload: { viewCode: string }) {
+    }
+  }
+
+  export class DeleteFailure implements Action {
+    public readonly type = ViewsActionType.DELETE_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
   export class ChangeConfig implements Action {
     public readonly type = ViewsActionType.CHANGE_CONFIG;
 
@@ -187,6 +212,7 @@ export namespace ViewsAction {
   export type All = GetByCode | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
+    Delete | DeleteSuccess | DeleteFailure |
     ChangeConfig | ChangeDetailConfig | ChangePostItConfig | ChangeSearchConfig | ChangeSmartDocConfig | ChangeTableConfig | ChangeTable2Config |
     SetCursor |
     Clear;
