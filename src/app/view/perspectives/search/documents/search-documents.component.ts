@@ -68,7 +68,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public size: SizeType;
   public documentsMap: { [documentId: string]: DocumentModel };
   public expandedDocumentIds: string[] = [];
-  public collections: { [collectionId: string]: CollectionModel };
+  public collectionsMap: { [collectionId: string]: CollectionModel };
   public documentsOrder: string[] = [];
   public loaded$: Observable<boolean>;
   public query: QueryModel;
@@ -145,7 +145,11 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public onDetailClick(document: DocumentModel) {
-    this.perspectiveService.switchPerspective(Perspective.Detail, this.collections[document.collectionId], document);
+    this.perspectiveService.switchPerspective(Perspective.Detail, this.collectionsMap[document.collectionId], document);
+  }
+
+  public switchPerspectiveToTable() {
+    this.perspectiveService.switchPerspective(Perspective.Table);
   }
 
   public createValuesHtml(document: DocumentModel): string {
@@ -153,7 +157,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public createEntriesHtml(document: DocumentModel): string {
-    const collection = this.collections[document.collectionId];
+    const collection = this.collectionsMap[document.collectionId];
     return searchDocumentEntriesHtml(document, collection);
   }
 
@@ -174,6 +178,10 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
   }
 
+  public getCollections() {
+    return this.collectionsMap ? Object.values(this.collectionsMap) : [];
+  }
+
   private subscribeData() {
     const navigationSubscription = this.store.select(selectNavigation).pipe(
       filter(navigation => !!navigation.workspace && !!navigation.query)
@@ -192,7 +200,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.loaded$ = this.store.select(selectCurrentQueryLoaded);
 
     const collectionSubscription = this.store.select(selectCollectionsByQuery)
-      .subscribe(collections => this.collections = collections.reduce((acc, coll) => {
+      .subscribe(collections => this.collectionsMap = collections.reduce((acc, coll) => {
         acc[coll.id] = coll;
         return acc;
       }, {}));

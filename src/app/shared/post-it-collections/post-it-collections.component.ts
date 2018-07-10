@@ -21,7 +21,7 @@ import {ChangeDetectorRef, Component, ElementRef, HostListener, Input, NgZone, O
 
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {filter, withLatestFrom} from 'rxjs/operators';
+import {filter, take, withLatestFrom} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
@@ -44,10 +44,11 @@ import {queryIsNotEmpty} from '../../core/store/navigation/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {PostItCollectionComponent} from './post-it-collection.component/post-it-collection.component';
 import {Perspective} from '../../view/perspectives/perspective';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import * as Icons from '../picker/icon-picker/icons';
 import * as Colors from '../picker/color-picker/colors';
+import {QueryAction} from '../../core/model/query-action';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -94,6 +95,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
               private router: Router,
               private store: Store<AppState>,
               private zone: NgZone,
+              private activatedRoute: ActivatedRoute,
               private changeDetector: ChangeDetectorRef,
               private notificationService: NotificationService,) {
   }
@@ -110,6 +112,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
+    this.subscribeOnRoute();
     this.subscribeOnNavigation();
     this.subscribeOnCollections();
     this.dispatchActions();
@@ -145,15 +148,18 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public newCollection() {
+  public createNewCollection() {
     const newCollection = {
       ...this.emptyCollection(),
       correlationId: CorrelationIdGenerator.generate()
     };
 
-    this.collections.unshift(newCollection);
-
-    this.checkNumberOfUncreatedCollections();
+    if (this.collections) {
+      this.collections.unshift(newCollection);
+      this.checkNumberOfUncreatedCollections();
+    } else {
+      this.collections = [newCollection];
+    }
   }
 
   public onFavoriteChange(collectionId: string, data: { favorite: boolean, onlyStore: boolean }) {
@@ -228,6 +234,17 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       this.layout = new PostItLayout(this.postItLayout, false, this.zone);
       this.changeDetector.detectChanges();
     }
+  }
+
+  private subscribeOnRoute() {
+    this.activatedRoute.queryParams.pipe(
+      take(1)
+    ).subscribe(queryParams => {
+      const action = queryParams['action'];
+      if (action && action === QueryAction.CreateCollection) {
+        this.createNewCollection();
+      }
+    });
   }
 
   private subscribeOnNavigation() {

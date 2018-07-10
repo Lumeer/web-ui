@@ -111,3 +111,8 @@ export function queryIsNotEmpty(query: QueryModel): boolean {
 export function queryIsEmpty(query: QueryModel): boolean {
   return query && Object.values(query).every(val => val instanceof Array ? val.length === 0 : !val);
 }
+
+export function isSingleCollectionQuery(query: QueryModel): boolean {
+  return query && Object.entries(query)
+    .every(([key, value]) => value instanceof Array ? key === 'collectionIds' ? value.length > 0 : value.length === 0 : !value);
+}

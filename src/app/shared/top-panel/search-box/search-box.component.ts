@@ -188,7 +188,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       return true;
     }
     for (let i = 0; i < queryItems.length; i++) {
-      if (this.queryItems[i].value !== queryItems[i].value) {
+      if (this.queryItems[i] !== queryItems[i]) {
         return true;
       }
     }
