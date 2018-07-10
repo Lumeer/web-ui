@@ -117,7 +117,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private createLayout() {
     if (!this.layout) {
-      this.layout = new PostItLayout(this.postItLayout, false, this.zone);
+      this.layout = new PostItLayout(this.postItLayout, true, this.zone);
       this.changeDetector.detectChanges();
     }
   }

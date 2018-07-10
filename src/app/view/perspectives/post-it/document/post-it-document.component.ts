@@ -26,7 +26,7 @@ import {AttributeModel, CollectionModel} from '../../../../core/store/collection
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {DocumentUiService} from '../../../../core/ui/document-ui.service';
 import {UiRow} from '../../../../core/ui/ui-row';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {SelectionHelper} from '../util/selection-helper';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 
@@ -147,7 +147,9 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
     if (this.collection && this.documentModel && !this.documentUiService.isInited(this.collection, this.documentModel)) {
       this.initedDocumentKey = this.getDocumentKey();
       this.documentUiService.init(this.collection, this.documentModel);
-      this.rows$ = this.documentUiService.getRows$(this.collection, this.documentModel).asObservable();
+      this.rows$ = this.documentUiService.getRows$(this.collection, this.documentModel).asObservable().pipe(
+        tap(rows => this.checkRowsLength(rows.length))
+      );
       this.favorite$ = this.documentUiService.getFavorite$(this.collection, this.documentModel).asObservable();
       this.unusedAttributes$ = this.rows$.pipe(
         map(rows => this.collection.attributes.filter(attribute =>
