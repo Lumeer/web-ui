@@ -43,7 +43,6 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
 
 function extractPerspectiveIdFromUrl(url: string): string {
   const urlSegments = url.split('/');
-  console.log(urlSegments);
 
   if (urlSegments.length > 5 && urlSegments[1] === 'w' && urlSegments[4] === 'view') {
     const viewIndex = 4;
