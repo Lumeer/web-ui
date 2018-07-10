@@ -2,11 +2,11 @@
 
   <ng-container *ngIf="collections.length; else noCollections">
 
-    <div class="d-flex mb-2">
+    <div class="d-flex mt-2">
       <post-it-collection-add-button
         class="ml-1"
         [disabled]="!(project | permissions:'write' | async)"
-        (clicked)="newCollection()">
+        (clicked)="createNewCollection()">
       </post-it-collection-add-button>
 
       <post-it-collection-import-button
@@ -66,7 +66,7 @@
 <ng-template #noCollections>
   <empty-collections [project]="project"
                      [query]="query"
-                     (newCollection)="newCollection()"
+                     (newCollection)="createNewCollection()"
                      (import)="onImportCollection($event)"
                      (error)="notifyOfError($event)">
   </empty-collections>

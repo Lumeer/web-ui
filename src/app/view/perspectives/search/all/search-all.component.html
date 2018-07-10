@@ -30,10 +30,8 @@
 </div>
 
 <ng-template #noData>
-  <empty-search *ngIf="!(query | emptyQuery)"></empty-search>
-  <empty-state *ngIf="query | emptyQuery"
-               [icon]="'fa fa-file-times'">
-    <h3 i18n="@@search.records.empty.title">Your project is empty!</h3>
-    <div i18n="@@search.records.empty.subtitle">Go to the Collections tab and create your first collection.</div>
-  </empty-state>
+  <empty-data
+    [query]="query"
+    (collectionsTab)="switchToCollectionsTab()">
+  </empty-data>
 </ng-template>

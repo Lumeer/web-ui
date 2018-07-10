@@ -35,6 +35,7 @@ import {PixelPipe} from './pixel.pipe';
 import {PrefixPipe} from './prefix.pipe';
 import {WorkspaceSetPipe} from './workspace-set.pipe';
 import {EmptyQueryPipe} from './empty-query.pipe';
+import {SingleCollectionQueryPipe} from './single-collection-query.pipe';
 
 @NgModule({
   imports: [
@@ -57,6 +58,7 @@ import {EmptyQueryPipe} from './empty-query.pipe';
     PageSlicePipe,
     WorkspaceSetPipe,
     HighlightTextPipe,
+    SingleCollectionQueryPipe
   ],
   exports: [
     LightenColorPipe,
@@ -75,6 +77,7 @@ import {EmptyQueryPipe} from './empty-query.pipe';
     PageSlicePipe,
     WorkspaceSetPipe,
     HighlightTextPipe,
+    SingleCollectionQueryPipe
   ]
 })
 export class PipesModule {

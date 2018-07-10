@@ -1,0 +1,6 @@
+<empty-search *ngIf="!(query | emptyQuery)"></empty-search>
+<empty-state *ngIf="query | emptyQuery"
+             [icon]="'fa fa-eye-slash'">
+  <h3 i18n="@@search.views.empty.title">There are no Views yet!</h3>
+  <div i18n="@@search.views.empty.subtitle">Search for something, switch the View, set a name and save the resulting page.</div>
+</empty-state>

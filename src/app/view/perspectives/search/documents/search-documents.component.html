@@ -14,7 +14,7 @@
         [size]="size"
         [document]="document"
         [isOpened]="isDocumentOpened(document) || isXlTemplatePresented()"
-        [collection]="collections[document.collectionId]">
+        [collection]="collectionsMap[document.collectionId]">
         <ng-container *ngTemplateOutlet="getTemplate(document); context: { $implicit: document}"></ng-container>
       </search-document-header>
       <hr/>
@@ -47,10 +47,9 @@
 </ng-template>
 
 <ng-template #noDocuments>
-  <empty-search *ngIf="!(query | emptyQuery)"></empty-search>
-  <empty-state *ngIf="query | emptyQuery"
-               [icon]="'fa fa-file-times'">
-    <h3 i18n="@@search.records.empty.title">There are no Records yet!</h3>
-    <div i18n="@@search.records.empty.subtitle">Open a collection by clicking on it and add your first record.</div>
-  </empty-state>
+  <empty-documents
+    (tablePerspective)="switchPerspectiveToTable()"
+    [collections]="getCollections()"
+    [query]="query">
+  </empty-documents>
 </ng-template>
