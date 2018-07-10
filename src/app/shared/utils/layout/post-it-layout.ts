@@ -20,7 +20,7 @@
 import {ElementRef, NgZone} from '@angular/core';
 
 import {Subject, Subscription} from 'rxjs';
-import {throttleTime} from 'rxjs/operators';
+import {debounceTime} from 'rxjs/operators';
 
 export class PostItLayout {
 
@@ -70,7 +70,7 @@ export class PostItLayout {
     });
 
     const subscription = this.refreshSubject.pipe(
-      throttleTime(200)
+      debounceTime(200)
     ).subscribe(() => {
       this.onRefresh();
     });
