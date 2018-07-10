@@ -122,7 +122,7 @@ export class UsersEffects {
     map(([action, organizations]) => {
       const organization = organizations[action.payload.organizationId];
       if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-        const title = this.i18n({id: 'serviceLimits.trial', value: 'Trial Service'});
+        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'user.create.serviceLimits',
           value: 'You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?'
