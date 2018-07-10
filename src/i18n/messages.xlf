@@ -233,7 +233,7 @@
         </context-group>
       </trans-unit><trans-unit id="search.result.empty" datatype="html">
         <source>
-    We are sorry, but we have not found anything. Please do a more accurate search.
+    I am sorry but I did not find anything. Please try a more general search.
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/warning-message/empty-search/empty-search.component.ts</context>
@@ -394,6 +394,14 @@
           <context context-type="linenumber">8</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.ts</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/smartdoc/side-panel/smartdoc-side-panel.component.ts</context>
           <context context-type="linenumber">46</context>
         </context-group>
@@ -532,6 +540,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.detail.type" datatype="html">
+        <source>{VAR_SELECT, select, organization {Organization} project {Project} other {} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-detail/resource-detail.component.ts</context>
+          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="resource.detail.organization.invite" datatype="html">
         <source>Invite Colleagues</source>
@@ -944,7 +958,7 @@
           <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit><trans-unit id="resource.new.dialog.invalid" datatype="html">
-        <source>We are sorry, but something went wrong.
+        <source>I am sorry, something went wrong.
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.ts</context>
@@ -1047,12 +1061,16 @@
           <context context-type="linenumber">55</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context>
+          <context context-type="linenumber">5</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.ts</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.ts</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit><trans-unit id="search.records.empty.subtitle" datatype="html">
         <source>Open a collection by clicking on it and add your first record.</source>
@@ -1061,12 +1079,12 @@
           <context context-type="linenumber">56</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.ts</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.ts</context>
+          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="table.query.invalid" datatype="html">
         <source>Your query results cannot be shown using table perspective. The query needs to specify exactly one collection.
@@ -1986,17 +2004,35 @@
           <context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.ts</context>
           <context context-type="linenumber">39</context>
         </context-group>
+      </trans-unit><trans-unit id="search.records.empty.subtitle.singleCollection" datatype="html">
+        <source>Let&apos;s add some Records into</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.records.empty.button" datatype="html">
+        <source>Open this collection in Table</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.records.empty.button.title" datatype="html">
+        <source>Open collection</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
       </trans-unit><trans-unit id="search.views.empty.title" datatype="html">
         <source>There are no Views yet!</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.ts</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="sourcefile">app/view/perspectives/search/views/empty-views/empty-views.component.ts</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit><trans-unit id="search.views.empty.subtitle" datatype="html">
         <source>Search for something, switch the View, set a name and save the resulting page.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.ts</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="sourcefile">app/view/perspectives/search/views/empty-views/empty-views.component.ts</context>
+          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="smartdoc.query.invalid" datatype="html">
         <source>Your query results cannot be shown using smart document perspective. The query needs to specify exactly one collection.
@@ -3100,7 +3136,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="organizations.tab.detail.order.discount" datatype="html">
-        <source>Beta Program discount for Early Adopters!</source>
+        <source>Special Early Bird Prices!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.ts</context>
           <context context-type="linenumber">1</context>

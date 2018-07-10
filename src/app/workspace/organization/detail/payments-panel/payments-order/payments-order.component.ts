@@ -78,7 +78,7 @@ export class PaymentsOrderComponent implements OnInit {
   constructor(private i18n: I18n,
               private router: Router,
               private store: Store<AppState>) {
-    this.discountDescription = this.i18n({ id: 'organizations.tab.detail.order.discount', value: 'Beta Program discount for Early Adopters!' });
+    this.discountDescription = this.i18n({ id: 'organizations.tab.detail.order.discount', value: 'Special Early Bird Prices!' });
   }
 
   public ngOnInit() {
