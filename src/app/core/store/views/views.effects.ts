@@ -27,7 +27,7 @@ import {isNullOrUndefined} from 'util';
 import {View} from '../../dto';
 import {SearchService, ViewService} from '../../rest';
 import {AppState} from '../app.state';
-import {selectWorkspace} from '../navigation/navigation.state';
+import {selectSearchTab, selectWorkspace} from '../navigation/navigation.state';
 import {Workspace} from '../navigation/workspace.model';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {RouterAction} from '../router/router.action';
@@ -35,6 +35,7 @@ import {ViewConverter} from './view.converter';
 import {ViewModel} from './view.model';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {selectViewsDictionary} from './views.state';
+import {Perspective} from '../../../view/perspectives/perspective';
 
 @Injectable()
 export class ViewsEffects {
@@ -92,11 +93,17 @@ export class ViewsEffects {
   public createSuccess$: Observable<Action> = this.actions$.pipe(
     ofType(ViewsActionType.CREATE_SUCCESS),
     withLatestFrom(this.store$.select(selectWorkspace)),
-    flatMap(([action, workspace]: [ViewsAction.CreateSuccess, Workspace]) => {
+    withLatestFrom(this.store$.select(selectSearchTab)),
+    flatMap(([[action, workspace], searchTab]: [[ViewsAction.CreateSuccess, Workspace], string]) => {
       const message = this.i18n({id: 'view.create.success', value: 'View has been created'});
+      let paths = ['w', workspace.organizationCode, workspace.projectCode, 'view', {vc: action.payload.view.code}];
+      if (!isNullOrUndefined(searchTab)) {
+        paths.push(Perspective.Search);
+        paths.push(searchTab);
+      }
       return [
         new NotificationsAction.Success({message}),
-        new RouterAction.Go({path: ['w', workspace.organizationCode, workspace.projectCode, 'view', {vc: action.payload.view.code}]})
+        new RouterAction.Go({path: paths, extras: {queryParamsHandling: 'merge'}})
       ];
     })
   );

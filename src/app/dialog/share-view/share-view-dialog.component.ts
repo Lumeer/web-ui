@@ -143,7 +143,6 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     } else if (!isNullOrUndefined(this.selectedIndex)) {
       this.selectedIndex = Math.min(this.selectedIndex, this.suggestions.length - 1);
     }
-    console.log('newselindex', this.selectedIndex);
   }
 
   public onSuggestionClick(text: string) {

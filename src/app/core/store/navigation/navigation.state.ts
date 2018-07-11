@@ -28,6 +28,7 @@ export interface NavigationState {
   query: QueryModel;
   workspace: Workspace;
   perspective?: Perspective;
+  searchTab?: string;
   viewName?: string;
   url: string;
 
@@ -45,4 +46,5 @@ export const selectNavigation = (state: AppState) => state.navigation;
 export const selectQuery = createSelector(selectNavigation, (state: NavigationState) => state.query);
 export const selectPerspective = createSelector(selectNavigation, (state: NavigationState) => state.perspective);
 export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);
+export const selectSearchTab = createSelector(selectNavigation, (state: NavigationState) => state.searchTab);
 export const selectUrl = createSelector(selectNavigation, state => state.url);

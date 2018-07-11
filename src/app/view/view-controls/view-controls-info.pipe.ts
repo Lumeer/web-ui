@@ -22,18 +22,31 @@ import {areQueriesEqual} from '../../core/store/navigation/query.helper';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {ViewConfigModel, ViewModel} from '../../core/store/views/view.model';
 import {Perspective} from '../perspectives/perspective';
+import {PermissionsPipe} from '../../shared/pipes/permissions.pipe';
+import {Observable, of, combineLatest as observableCombineLatest} from 'rxjs';
+import {Role} from '../../core/model/role';
+import {map} from 'rxjs/operators';
 
 @Pipe({
-  name: 'viewChanged'
+  name: 'viewControlsInfo'
 })
-export class ViewChangedPipe implements PipeTransform {
+export class ViewControlsInfoPipe implements PipeTransform {
 
-  public transform(view: ViewModel, name: string, config: ViewConfigModel, perspective: Perspective, query: QueryModel): boolean {
+  constructor(private permissionsPipe: PermissionsPipe) {
+  }
+
+  public transform(view: ViewModel, name: string, config: ViewConfigModel, perspective: Perspective, query: QueryModel): Observable<{ viewChanged: boolean, canClone: boolean, canManage: boolean, canShare: boolean }> {
     if (!view || !view.code) {
-      return !!name;
+      return of({viewChanged: !!name, canClone: false, canManage: true, canShare: false});
     }
 
-    return isNameChanged(view, name) || isConfigChanged(view, config, perspective) || isPerspectiveChanged(view, perspective) || isQueryChanged(view, query);
+    const viewChanged = isNameChanged(view, name) || isConfigChanged(view, config, perspective) || isQueryChanged(view, query);
+
+    return observableCombineLatest(this.permissionsPipe.transform(view, Role.Clone),
+      this.permissionsPipe.transform(view, Role.Manage),
+      this.permissionsPipe.transform(view, Role.Share)).pipe(
+      map(([canClone, canManage, canShare]) => ({viewChanged, canClone, canManage, canShare}))
+    );
   }
 
 }
@@ -44,10 +57,6 @@ function isNameChanged(view: ViewModel, name: string): boolean {
 
 function isConfigChanged(view: ViewModel, config: ViewConfigModel, perspective: Perspective): boolean {
   return JSON.stringify(config[perspective]) !== JSON.stringify(view.config[perspective]);
-}
-
-function isPerspectiveChanged(view: ViewModel, perspective: Perspective): boolean {
-  return view.perspective !== perspective;
 }
 
 function isQueryChanged(view: ViewModel, query: QueryModel): boolean {
