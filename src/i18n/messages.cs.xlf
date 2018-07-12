@@ -297,23 +297,17 @@
             <trans-unit id="view.share.dialog.title" datatype="html">
                 <source>Share View</source>
                 <target>Sdílet pohled</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context>
-                    <context context-type="linenumber">3</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context><context context-type="linenumber">4</context></context-group></trans-unit>
             <trans-unit id="view.share.dialog.input.placeholder" datatype="html">
                 <source>
-        <x id="ICU" equiv-text="{emails.length, select, 0 {...} other {...}}"/>
+        Enter users' emails...
       </source>
                 <target>
                     <x id="ICU" equiv-text="{emails.length, select, 0 {...} other {...}}"/>
                 </target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context>
-                    <context context-type="linenumber">24</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit>
             <trans-unit id="view.not.exist" datatype="html">
                 <source>View does not exist!
       </source>
@@ -326,57 +320,36 @@
             <trans-unit id="view.perspective.name" datatype="html">
                 <source>{VAR_SELECT, select, detail {Detail} postit {Post-it} chart {Chart} search {Search} table {Table} table2 {Table 2} smartdoc {Smart document} }</source>
                 <target>{VAR_SELECT, select, detail {Detail} postit {Lepíky} chart {Graf} search {Hledání} table {Tabulka} table2 {Tabulka 2} smartdoc {Chytrý dokument} }</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
-                    <context context-type="linenumber">23</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
-                    <context context-type="linenumber">33</context>
-                </context-group>
-            </trans-unit>
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">34</context></context-group></trans-unit>
             <trans-unit id="view.perspective" datatype="html">
                 <source>Perspective</source>
                 <target>Pohled</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
-                    <context context-type="linenumber">14</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">15</context></context-group></trans-unit>
             <trans-unit id="view.untitled" datatype="html">
                 <source>Type a title of this page, save, and share!</source>
                 <target>Pojmenujte tuto obrazovku, uložte a sdílejte!</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
-                    <context context-type="linenumber">62</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">64</context></context-group></trans-unit>
 
             <trans-unit id="view.button.save" datatype="html">
                 <source>Save</source>
                 <target>Uložit</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
-                    <context context-type="linenumber">70</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">72</context></context-group></trans-unit>
             <trans-unit id="view.button.copy" datatype="html">
                 <source>Copy</source>
                 <target>Kopírovat</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
-                    <context context-type="linenumber">80</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">82</context></context-group></trans-unit>
             <trans-unit id="view.button.share" datatype="html">
                 <source>Share
-      </source>
+        </source>
                 <target>Sdílet</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
-                    <context context-type="linenumber">87</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">90</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">90</context></context-group></trans-unit>
             <trans-unit id="view.overwrite.dialog.title" datatype="html">
                 <source>View already exists</source>
                 <target>Pohled už existuje</target>
@@ -938,14 +911,7 @@
                     <context context-type="linenumber">26</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="91514b0fd2d4dd72e262f175a24fb7e91da8c39e" datatype="html">
-                <source>{VAR_SELECT, select, 0 {Enter users' emails...} other {} }</source>
-                <target state="final">{VAR_SELECT, select, 0 {Zadejte emaily uživatelů...} other {} }</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context>
-                    <context context-type="linenumber">25</context>
-                </context-group>
-            </trans-unit>
+            
 
             <trans-unit id="table.header.menu.add.column.next" datatype="html">
                 <source>Add column right</source>
@@ -1320,67 +1286,25 @@
             <trans-unit id="button.yes" datatype="html">
                 <source>Yes</source>
                 <target state="final">Ano</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/ui/document-ui.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/ui/document-ui.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="button.no" datatype="html">
                 <source>No</source>
                 <target state="final">Ne</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/ui/document-ui.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/ui/document-ui.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="organizations.get.fail" datatype="html">
                 <source>Failed to get organizations</source>
                 <target state="final">Organizace nelze načíst</target>
@@ -1549,14 +1473,7 @@
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="view.shared.success" datatype="html">
-                <source>View has been shared with the selected users</source>
-                <target>Pohled nyní sdílíte s vybranými uživateli</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/dialog/share-view/share-view-dialog.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-            </trans-unit>
+            
             <trans-unit id="organization.delete.dialog.message" datatype="html">
                 <source>Organization is about to be permanently deleted.</source>
                 <target state="final">Chystáte se navždy smazat organizaci.</target>
@@ -2570,23 +2487,11 @@
             <trans-unit id="button.close" datatype="html">
                 <source>Close</source>
                 <target>Zavřít</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/app.component.ts</context>
-                    <context context-type="linenumber">10</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context>
-                    <context context-type="linenumber">38</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/chart/chart-perspective.component.ts</context>
-                    <context context-type="linenumber">18</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/perspectives/smartdoc/smartdoc-perspective.component.ts</context>
-                    <context context-type="linenumber">22</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/app.component.ts</context><context context-type="linenumber">10</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/chart-perspective.component.ts</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/smartdoc/smartdoc-perspective.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit>
             <trans-unit id="chart.loading" datatype="html">
                 <source>
   Loading...
@@ -2815,19 +2720,10 @@
             <trans-unit id="button.ok" datatype="html">
                 <source>OK</source>
                 <target>OK</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="organization.contact.get.fail" datatype="html">
                 <source>Cannot read contact information</source>
                 <target>Nelze načíst kontaktní údaje</target>
@@ -2959,11 +2855,8 @@
             <trans-unit id="user.permission.icon" datatype="html">
                 <source>{VAR_SELECT, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share} }</source>
                 <target>{VAR_SELECT, select, READ {číst} MANAGE {spravovat} WRITE {zapisovat} CLONE {kopírovat} COMMENT {komentovat} SHARE {sdílet} }</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/role-title.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="chart.axis.x.name" datatype="html">
                 <source>X Axis</source>
                 <target>Osa X</target>
@@ -2980,22 +2873,8 @@
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="view.share.notWorking" datatype="html">
-                <source>This feature is currently under construction. Your view can be currently accessed only by you.</source>
-                <target>Ačkoliv na sdílení usilovně pracujeme, ještě plně nefunguje. Nyní je pohled přístupný pouze Vám.</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="view.share.underConstruction" datatype="html">
-                <source>Under Construction</source>
-                <target>Ve vývoji</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-            </trans-unit>
+            
+            
             <trans-unit id="organization.payments.addUsers.title" datatype="html">
                 <source>Add Users</source>
                 <target>Přidat uživatele</target>
@@ -3151,7 +3030,7 @@
           </source>
                 <target>Zobrazit vše</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.ts</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.ts</context><context context-type="linenumber">13</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.ts</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.ts</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.ts</context><context context-type="linenumber">14</context></context-group></trans-unit>
             <trans-unit id="document.detail.remove" datatype="html">
                 <source>Remove Document</source>
                 <target>Odstranit dokument</target>
@@ -3235,11 +3114,8 @@
             <trans-unit id="users.header.email" datatype="html">
                 <source>Email</source>
                 <target>E-mail</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/users/user-list/user-list.component.ts</context>
-                    <context context-type="linenumber">18</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user-list/user-list.component.ts</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit>
             <trans-unit id="users.header.search.placeholder" datatype="html">
                 <source>Search user...</source>
                 <target>Hledat uživatele...</target>
@@ -3259,11 +3135,8 @@
             <trans-unit id="users.actions.remove" datatype="html">
                 <source>Remove User</source>
                 <target>Odstranit uživatele</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/users/user/user.component.ts</context>
-                    <context context-type="linenumber">25</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user/user.component.ts</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-user/share-user.component.ts</context><context context-type="linenumber">16</context></context-group></trans-unit>
             <trans-unit id="users.add.button" datatype="html">
                 <source>Invite user</source>
                 <target>Pozvat uživatele</target>
@@ -3557,19 +3430,13 @@
             <trans-unit id="view.perspective.guide.select" datatype="html">
                 <source>1. Select View</source>
                 <target>1. Zvolte pohled</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
-                    <context context-type="linenumber">6</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">7</context></context-group></trans-unit>
             <trans-unit id="view.perspective.guide.title" datatype="html">
                 <source>2. Set Title</source>
                 <target>2. Zadejte název</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
-                    <context context-type="linenumber">47</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">48</context></context-group></trans-unit>
             <trans-unit id="search.all.collections" datatype="html">
                 <source>
         Collections
@@ -3693,35 +3560,14 @@
                 <source>Cancel
           </source>
                 <target>Zrušit</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.ts</context>
-                    <context context-type="linenumber">23</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/resource/header/resource-header.component.ts</context>
-                    <context context-type="linenumber">16</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.ts</context>
-                    <context context-type="linenumber">28</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.ts</context>
-                    <context context-type="linenumber">26</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.ts</context>
-                    <context context-type="linenumber">17</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.ts</context>
-                    <context context-type="linenumber">62</context>
-                </context-group>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/dialog/dialog/feedback-dialog.component.ts</context>
-                    <context context-type="linenumber">31</context>
-                </context-group>
-            </trans-unit>
+                
+                
+                
+                
+                
+                
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.ts</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.ts</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-chooser/icon-chooser.component.ts</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-collection/create-collection-dialog.component.ts</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-link/create-link-dialog.component.ts</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/create-resource/create-resource-dialog.component.ts</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/dialog/dialog/feedback-dialog.component.ts</context><context context-type="linenumber">31</context></context-group></trans-unit>
             <trans-unit id="button.create" datatype="html">
                 <source>Create</source>
                 <target>Vytvořit</target>
@@ -3749,11 +3595,8 @@
             <trans-unit id="button.share" datatype="html">
                 <source>Share</source>
                 <target>Sdílet</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context>
-                    <context context-type="linenumber">39</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context><context context-type="linenumber">56</context></context-group></trans-unit>
             <trans-unit id="remove.row" datatype="html">
                 <source>Remove Row</source>
                 <target>Odstranit řádek</target>
@@ -3895,15 +3738,9 @@
         </context-group>
       </trans-unit><trans-unit id="view.changes.not.saved" datatype="html">
         <source>Changes are not saved yet</source><target>Změny nejsou uloženy</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
-          <context context-type="linenumber">95</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
-          <context context-type="linenumber">97</context>
-        </context-group>
-      </trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">98</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
         <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source><target>Lumeer Vás vítá! Toto je Vaše první přihlášení. Než budete pokračovat, odsouhlaste prosím obchodní podmínky a přihlaste se k odběru Novinek. Děkujeme!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
@@ -3971,6 +3808,58 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context>
           <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit><trans-unit id="delete" datatype="html">
+        <source>Delete</source><target state="new">Delete</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/views/view-detail/view-detail.component.ts</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="view.delete.fail" datatype="html">
+        <source>Failed to delete view</source><target state="new">Failed to delete view</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="view.change.permission.fail" datatype="html">
+        <source>Failed to change view permissions</source><target state="new">Failed to change view permissions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="views.delete.message" datatype="html">
+        <source>View is about to be permanently deleted.</source><target state="new">View is about to be permanently deleted.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="views.delete.title" datatype="html">
+        <source>Delete view?</source><target state="new">Delete view?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="view.discard.changes.message" datatype="html">
+        <source>Some changes was made to view. Save it or discard changes.</source><target state="new">Some changes was made to view. Save it or discard changes.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="discard" datatype="html">
+        <source>Discard</source><target state="new">Discard</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="save" datatype="html">
+        <source>Save</source><target state="new">Save</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit></body>
     </file>
