@@ -43,10 +43,9 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
 
 function extractPerspectiveIdFromUrl(url: string): string {
   const urlSegments = url.split('/');
-  const viewIndex = urlSegments.findIndex(segment => segment.startsWith('view'));
 
-  if (viewIndex && urlSegments.length > viewIndex + 1) {
-    const perspectiveSegment = urlSegments[viewIndex + 1];
+  if (urlSegments.length > 5 && urlSegments[1] === 'w' && urlSegments[4].startsWith('view')) {
+    const perspectiveSegment = urlSegments[5];
     const perspectiveNames = Object.values(Perspective).join('|');
     const regex = new RegExp(`^(${perspectiveNames}).*`);
     return perspectiveSegment.replace(regex, '$1');
