@@ -41,11 +41,11 @@ export abstract class PermissionService {
     return this.httpClient.get<Permissions>(`${this.actualApiPrefix()}/permissions`);
   }
 
-  public updateUserPermission(userPermissions: Permission, workspace?: Workspace): Observable<Permission> {
+  public updateUserPermission(userPermissions: Permission[], workspace?: Workspace): Observable<Permission> {
     return this.httpClient.put<Permission>(`${this.actualApiPrefix(workspace)}/permissions/users`, userPermissions);
   }
 
-  public updateGroupPermission(userPermissions: Permission, workspace?: Workspace): Observable<Permission> {
+  public updateGroupPermission(userPermissions: Permission[], workspace?: Workspace): Observable<Permission> {
     return this.httpClient.put<Permission>(`${this.actualApiPrefix(workspace)}/permissions/groups`, userPermissions);
   }
 

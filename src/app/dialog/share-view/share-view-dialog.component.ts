@@ -20,18 +20,22 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {filter} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
+import {filter, map, mergeMap} from 'rxjs/operators';
+import {Subscription, combineLatest as observableCombineLatest} from 'rxjs';
 import {isNullOrUndefined} from 'util';
-import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {UserModel} from '../../core/store/users/user.model';
 import {UsersAction} from '../../core/store/users/users.action';
-import {selectAllUsers} from '../../core/store/users/users.state';
+import {selectAllUsers, selectCurrentUser} from '../../core/store/users/users.state';
 import {KeyCode} from '../../shared/key-code';
 import {HtmlModifier} from '../../shared/utils/html-modifier';
+import {ActivatedRoute} from '@angular/router';
+import {selectViewByCode} from '../../core/store/views/views.state';
+import {ViewModel} from '../../core/store/views/view.model';
+import {ViewsAction} from '../../core/store/views/views.action';
+import {PermissionType} from '../../core/store/permissions/permissions.model';
 
 @Component({
   selector: 'share-view-dialog',
@@ -40,39 +44,35 @@ import {HtmlModifier} from '../../shared/utils/html-modifier';
 })
 export class ShareViewDialogComponent implements OnInit, OnDestroy {
 
-  public emails: string[] = [];
+  public selectedUsers: UserModel[] = [];
+  public userRoles: { [id: string]: string[] };
+  public initialUserRoles: { [id: string]: string[] };
   public text = '';
   public selectedIndex: number;
   public users: UserModel[] = [];
   public suggestions: string[];
+  public view: ViewModel;
+  public currentUser: UserModel;
 
   private organization: OrganizationModel;
-  private organizationSubscription: Subscription;
-  private usersSubscription: Subscription;
+  private subscriptions = new Subscription();
 
   public constructor(private i18n: I18n,
-                     private notificationService: NotificationService,
+                     private route: ActivatedRoute,
                      private store: Store<AppState>) {
   }
 
   public ngOnInit() {
+    this.subscribeToView();
     this.subscribeData();
   }
 
   public ngOnDestroy() {
-    if (this.organizationSubscription) {
-      this.organizationSubscription.unsubscribe();
-    }
-    if (this.usersSubscription) {
-      this.usersSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   public onKeyDown(event: KeyboardEvent) {
     switch (event.keyCode) {
-      case KeyCode.Backspace:
-        this.removeItem();
-        return;
       case KeyCode.Enter:
         this.addItemOrShare();
         return;
@@ -81,6 +81,20 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
         this.onUpAndDownArrowKeysDown(event);
         return;
     }
+  }
+
+  public deleteUser(user: UserModel) {
+    delete this.userRoles[user.id];
+    this.userRoles = {...this.userRoles};
+    this.selectedUsers = this.selectedUsers.filter(u => u.id !== user.id);
+  }
+
+  public onNewRoles(user: UserModel, roles: string[]) {
+    this.userRoles = {...this.userRoles, [user.id]: roles};
+  }
+
+  public getUserRoles(user: UserModel): string[] {
+    return this.userRoles[user.id] || [];
   }
 
   private onUpAndDownArrowKeysDown(event: KeyboardEvent) {
@@ -97,16 +111,9 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  private removeItem() {
-    if (this.text === '') {
-      event.preventDefault();
-      this.emails.pop();
-    }
-  }
-
   private addItemOrShare() {
     if (this.text.trim() === '') {
-      if (this.emails.length > 0) {
+      if (this.selectedUsers.length > 0) {
         this.share();
       }
     } else {
@@ -116,23 +123,34 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
 
   private addItem(text: string) {
     if (!isNullOrUndefined(this.selectedIndex) && this.selectedIndex < this.suggestions.length) {
-      this.emails.push(this.suggestions[this.selectedIndex]);
-      this.text = '';
+      this.addUserWithEmail(this.suggestions[this.selectedIndex]);
     } else {
-      const userChoosen = this.emails.find(email => email.toLowerCase() === text.toLowerCase());
-      const user = this.users.find(user => user.email.toLowerCase() === text.toLowerCase());
-      if (!userChoosen && user) {
-        this.emails.push(user.email);
-        this.text = '';
+      const userChosen = this.selectedUsers.find(u => u.email.toLowerCase() === text.toLowerCase());
+      const user = this.users.find(u => u.email.toLowerCase() === text.toLowerCase());
+      if (!userChosen && user) {
+        this.addUser(user);
       }
     }
+  }
+
+  private addUserWithEmail(email: string) {
+    const user = this.users.find(u => u.email === email);
+    if (user) {
+      this.addUser(user);
+    }
+  }
+
+  private addUser(user: UserModel) {
+    this.userRoles = {...this.userRoles, [user.id]: []};
+    this.selectedUsers = [...this.selectedUsers, user];
+    this.text = '';
   }
 
   public suggest() {
     this.suggestions = this.users
       .map(user => user.email)
-      .filter(username => username.toLowerCase().includes(this.text.toLowerCase()))
-      .filter(username => !this.emails.includes(username));
+      .filter(email => email.toLowerCase().includes(this.text.toLowerCase()))
+      .filter(email => !this.selectedUsers.find(user => user.email === email));
 
     this.recomputeSelectedIndex();
   }
@@ -150,16 +168,40 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   }
 
   public share() {
-    const message = this.i18n({id: 'view.shared.success', value: 'View has been shared with the selected users'});
-    this.notificationService.success(message);
+    const permissions = Object.keys(this.userRoles).map(id => ({id, roles: this.userRoles[id]}));
+    this.store.dispatch(new ViewsAction.SetPermissions({viewCode: this.view.code, type: PermissionType.Users, permissions}));
   }
 
   public removeHtmlComments(html: HTMLElement): string {
     return HtmlModifier.removeHtmlComments(html);
   }
 
+  private subscribeToView() {
+    const subscription = this.route.paramMap.pipe(
+      map(params => params.get('viewCode')),
+      filter(viewCode => !!viewCode),
+      mergeMap(viewCode => observableCombineLatest(this.store.select(selectViewByCode(viewCode)),
+        this.store.select(selectAllUsers)))
+    ).subscribe(([view, users]) => {
+      this.view = view;
+      this.users = users;
+      this.selectedUsers = this.view.permissions.users.reduce((acc, userPerm) => {
+        const user = users.find(u => u.id === userPerm.id);
+        if (user) {
+          acc.push(user);
+        }
+        return acc;
+      }, []);
+      this.userRoles = this.view.permissions.users.reduce((acc, userPerm) => {
+        acc[userPerm.id] = userPerm.roles;
+        return acc;
+      }, {});
+      this.initialUserRoles = {...this.userRoles};
+    });
+  }
+
   private subscribeData() {
-    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+    const organizationSubscription = this.store.select(selectOrganizationByWorkspace)
       .pipe(filter(organization => !isNullOrUndefined(organization)))
       .subscribe(organization => {
         if (isNullOrUndefined(this.organization) || this.organization.id !== organization.id) {
@@ -167,8 +209,14 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
         }
         this.organization = organization;
       });
-    this.usersSubscription = this.store.select(selectAllUsers)
-      .subscribe(users => this.users = users);
+    this.subscriptions.add(organizationSubscription);
+
+    const currentUserSubscription = this.store.select(selectCurrentUser)
+      .subscribe(user => this.currentUser = user);
+  }
+
+  public trackByUser(index: number, user: UserModel): string {
+    return user.id;
   }
 
 }

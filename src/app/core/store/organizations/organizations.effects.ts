@@ -206,9 +206,9 @@ export class OrganizationsEffects {
 
       let observable;
       if (action.payload.type === PermissionType.Users) {
-        observable = this.organizationService.updateUserPermission(permissionDto, workspace);
+        observable = this.organizationService.updateUserPermission([permissionDto], workspace);
       } else {
-        observable = this.organizationService.updateGroupPermission(permissionDto, workspace);
+        observable = this.organizationService.updateGroupPermission([permissionDto], workspace);
       }
 
       return observable.pipe(

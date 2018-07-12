@@ -22,9 +22,9 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
-import {catchError, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, concatMap, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
-import {View} from '../../dto';
+import {Permission, View} from '../../dto';
 import {SearchService, ViewService} from '../../rest';
 import {AppState} from '../app.state';
 import {selectSearchTab, selectWorkspace} from '../navigation/navigation.state';
@@ -36,6 +36,8 @@ import {ViewModel} from './view.model';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {selectViewsDictionary} from './views.state';
 import {Perspective} from '../../../view/perspectives/perspective';
+import {PermissionsConverter} from '../permissions/permissions.converter';
+import {PermissionType} from '../permissions/permissions.model';
 
 @Injectable()
 export class ViewsEffects {
@@ -96,7 +98,7 @@ export class ViewsEffects {
     withLatestFrom(this.store$.select(selectSearchTab)),
     flatMap(([[action, workspace], searchTab]: [[ViewsAction.CreateSuccess, Workspace], string]) => {
       const message = this.i18n({id: 'view.create.success', value: 'View has been created'});
-      let paths = ['w', workspace.organizationCode, workspace.projectCode, 'view', {vc: action.payload.view.code}];
+      const paths = ['w', workspace.organizationCode, workspace.projectCode, 'view', {vc: action.payload.view.code}];
       if (!isNullOrUndefined(searchTab)) {
         paths.push(Perspective.Search);
         paths.push(searchTab);
@@ -173,6 +175,36 @@ export class ViewsEffects {
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'view.delete.fail', value: 'Failed to delete view'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public setPermission$ = this.actions$.pipe(
+    ofType<ViewsAction.SetPermissions>(ViewsActionType.SET_PERMISSIONS),
+    concatMap(action => {
+      const permissionsDto: Permission[] = action.payload.permissions
+        .map(model => PermissionsConverter.toPermissionDto(model));
+
+      let observable;
+      if (action.payload.type === PermissionType.Users) {
+        observable = this.viewService.updateUserPermission(permissionsDto);
+      } else {
+        observable = this.viewService.updateGroupPermission(permissionsDto);
+      }
+      return observable.pipe(
+        concatMap(() => of(new ViewsAction.SetPermissionsSuccess(action.payload))),
+        catchError((error) => of(new ViewsAction.SetPermissionsFailure({error})))
+      );
+    })
+  );
+
+  @Effect()
+  public setPermissionFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<ViewsAction.SetPermissionsFailure>(ViewsActionType.SET_PERMISSIONS_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'view.change.permission.fail', value: 'Failed to change view permissions'});
       return new NotificationsAction.Error({message});
     })
   );

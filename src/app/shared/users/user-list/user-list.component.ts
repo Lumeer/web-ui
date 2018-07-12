@@ -78,13 +78,8 @@ export class UserListComponent {
     return this.currentUser && this.currentUser.id || '';
   }
 
-  public getUserPermission(userId: string): PermissionModel {
+  private getUserPermission(userId: string): PermissionModel {
     return this.resource && this.resource.permissions && this.resource.permissions.users && this.resource.permissions.users.find(perm => perm.id === userId);
-  }
-
-  public getUserRoles(userId: string): string[] {
-    const userPermission = this.getUserPermission(userId);
-    return userPermission && userPermission.roles || [];
   }
 
   public onUserRolesChanged(userId: string, data: { roles: string[], onlyStore: boolean }) {

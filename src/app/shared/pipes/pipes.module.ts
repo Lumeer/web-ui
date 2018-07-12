@@ -36,6 +36,10 @@ import {PrefixPipe} from './prefix.pipe';
 import {WorkspaceSetPipe} from './workspace-set.pipe';
 import {EmptyQueryPipe} from './empty-query.pipe';
 import {SingleCollectionQueryPipe} from './single-collection-query.pipe';
+import {ResourceRolesPipe} from './resource-roles.pipe';
+import {RoleColorPipe} from './role-color.pipe';
+import {RoleTitlePipe} from './role-title.pipe';
+import {UserRolesInResource} from './user-roles-in-resource.pipe';
 
 @NgModule({
   imports: [
@@ -58,7 +62,11 @@ import {SingleCollectionQueryPipe} from './single-collection-query.pipe';
     PageSlicePipe,
     WorkspaceSetPipe,
     HighlightTextPipe,
-    SingleCollectionQueryPipe
+    SingleCollectionQueryPipe,
+    ResourceRolesPipe,
+    RoleColorPipe,
+    RoleTitlePipe,
+    UserRolesInResource
   ],
   exports: [
     LightenColorPipe,
@@ -77,7 +85,11 @@ import {SingleCollectionQueryPipe} from './single-collection-query.pipe';
     PageSlicePipe,
     WorkspaceSetPipe,
     HighlightTextPipe,
-    SingleCollectionQueryPipe
+    SingleCollectionQueryPipe,
+    ResourceRolesPipe,
+    RoleColorPipe,
+    RoleTitlePipe,
+    UserRolesInResource
   ]
 })
 export class PipesModule {

@@ -24,7 +24,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Subscription, Observable} from 'rxjs';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
-import {selectPerspective, selectQuery, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {selectPerspective, selectQuery, selectSearchTab, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
@@ -54,7 +54,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   public view: ViewModel;
 
   @Output()
-  public save = new EventEmitter<{ name: string, resetView: boolean }>();
+  public save = new EventEmitter<string>();
 
   public name: string;
 
@@ -65,6 +65,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   private currentQuery: QueryModel;
   private currentPerspective: Perspective;
   private currentConfig: ViewConfigModel;
+  private searchTab?: string;
   private workspace: Workspace;
 
   public readonly perspectives = Object.values(Perspective);
@@ -80,6 +81,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToWorkspace());
+    this.subscriptions.add(this.subscribeToSearchTab());
 
     this.config$ = this.store.select(selectViewConfig).pipe(
       tap(config => this.currentConfig = config)
@@ -94,6 +96,10 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeToWorkspace(): Subscription {
     return this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+  }
+
+  private subscribeToSearchTab(): Subscription {
+    return this.store.select(selectSearchTab).subscribe(tab => this.searchTab = tab);
   }
 
   public onNameInput(name: string) {
@@ -192,7 +198,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onShareClick() {
-    this.dialogService.openShareViewDialog();
+    this.dialogService.openShareViewDialog(this.view.code);
   }
 
   private dispatchActionsOnChangePerspective(perspective: string) {

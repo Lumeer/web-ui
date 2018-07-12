@@ -1,13 +1,10 @@
 <dialog-wrapper [type]="'success'"
+                [submitDisabled]="!(initialUserRoles | viewPermissionsChanged:userRoles)"
                 (submit)="share()">
   <span class="title" i18n="@@view.share.dialog.title">Share View</span>
 
   <div class="body">
     <div class="d-flex flex-wrap w-100 pb-1 pr-1">
-      <div class="email py-1 px-2 mt-1 ml-1"
-           *ngFor="let email of emails">
-        {{email}}
-      </div>
 
       <div class="dropdown" *ngIf="text && suggestions.length > 0">
         <div class="dropdown-menu show suggestions">
@@ -23,19 +20,38 @@
       <!-- TODO remove once Angular supports ICU messages in attributes -->
       <div hidden>
       <span #inputPlaceholder i18n="@@view.share.dialog.input.placeholder">
-        {emails.length, select, 0 {Enter users' emails...} other {}}
+        Enter users' emails...
       </span>
       </div>
 
-      <input class="border-0 flex-grow-2 py-1 px-2 mt-1 ml-1"
+      <input class="border-0 py-1 px-2 mt-1 ml-1 flex-grow-1"
              [(ngModel)]="text"
              (keydown)="onKeyDown($event)"
              (input)="suggest()"
              (focus)="suggest()"
              [placeholder]="removeHtmlComments(inputPlaceholder)"/>
     </div>
+
+    <table class="table table-striped table-sm">
+      <thead>
+        <tr>
+          <th><span i18n="@@users.header.email">Email</span></th>
+          <th><span>Roles</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr share-user *ngFor="let user of selectedUsers; trackBy:trackByUser"
+            [canRemove]="currentUser?.id !== user.id"
+            [roles]="getUserRoles(user)"
+            [email]="user.email"
+            (rolesChange)="onNewRoles(user, $event)"
+            (delete)="deleteUser(user)">
+        </tr>
+      </tbody>
+
+    </table>
   </div>
 
-  <span class="button-cancel" i18n="@@button.close">Close</span>
+  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
   <span class="button-submit" i18n="@@button.share">Share</span>
 </dialog-wrapper>

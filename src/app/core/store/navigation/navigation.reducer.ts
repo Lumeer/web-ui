@@ -55,17 +55,17 @@ function extractPerspectiveIdFromUrl(url: string): string {
 }
 
 function tryToParseSearchTabPath(url: string): string | null {
-  let questionIndex = url.indexOf("?");
+  let questionIndex = url.indexOf('?');
   if (questionIndex === -1) {
     questionIndex = url.length;
   }
 
-  const paths = url.substring(0, questionIndex).split("/");
-  let currentIndex = paths.indexOf("w");
+  const paths = url.substring(0, questionIndex).split('/');
+  let currentIndex = paths.indexOf('w');
   if (currentIndex !== -1 && paths.length > currentIndex + 3) {
     currentIndex += 3; // skip workspace paths
 
-    if (paths[currentIndex].startsWith("view") && paths.length > currentIndex++) {
+    if (paths[currentIndex].startsWith('view') && paths.length > currentIndex++) {
       const perspective = perspectivesMap[paths[currentIndex]];
       if (perspective === Perspective.Search && paths.length > currentIndex++) {
         return paths[currentIndex];
@@ -75,7 +75,6 @@ function tryToParseSearchTabPath(url: string): string | null {
 
   return null;
 }
-
 
 function onRouterCancel(state: NavigationState, action: RouterCancelAction<AppState>): NavigationState {
   return action.payload.storeState.navigation;

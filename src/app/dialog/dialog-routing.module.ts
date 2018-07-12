@@ -54,7 +54,7 @@ const routes: Routes = [
     outlet: 'dialog'
   },
   {
-    path: DialogPath.SHARE_VIEW,
+    path: `${DialogPath.SHARE_VIEW}/:viewCode`,
     component: ShareViewDialogComponent,
     outlet: 'dialog'
   },

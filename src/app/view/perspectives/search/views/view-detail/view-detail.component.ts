@@ -64,10 +64,10 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
 
   public trackByQueryItem(index: number, queryItem: QueryItem): string {
-    return `${queryItem.type}:${queryItem.value}`
+    return `${queryItem.type}:${queryItem.value}`;
   }
 
-  public onDelete(){
+  public onDelete() {
     this.delete.emit();
   }
 

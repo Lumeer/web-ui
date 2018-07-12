@@ -250,9 +250,9 @@ export class ProjectsEffects {
 
       let observable;
       if (action.payload.type === PermissionType.Users) {
-        observable = this.projectService.updateUserPermission(permissionDto, workspace);
+        observable = this.projectService.updateUserPermission([permissionDto], workspace);
       } else {
-        observable = this.projectService.updateGroupPermission(permissionDto, workspace);
+        observable = this.projectService.updateGroupPermission([permissionDto], workspace);
       }
 
       return observable.pipe(

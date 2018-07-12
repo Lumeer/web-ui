@@ -79,8 +79,8 @@ export class DialogService {
     this.navigateToDialog([DialogPath.OVERWRITE_VIEW, existingViewCode]);
   }
 
-  public openShareViewDialog() {
-    this.navigateToDialog([DialogPath.SHARE_VIEW]);
+  public openShareViewDialog(viewCode: string) {
+    this.navigateToDialog([DialogPath.SHARE_VIEW, viewCode]);
   }
 
   public isDialogOpen(): boolean {

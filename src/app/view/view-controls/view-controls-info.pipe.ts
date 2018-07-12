@@ -35,7 +35,8 @@ export class ViewControlsInfoPipe implements PipeTransform {
   constructor(private permissionsPipe: PermissionsPipe) {
   }
 
-  public transform(view: ViewModel, name: string, config: ViewConfigModel, perspective: Perspective, query: QueryModel): Observable<{ viewChanged: boolean, canClone: boolean, canManage: boolean, canShare: boolean }> {
+  public transform(view: ViewModel, name: string, config: ViewConfigModel, perspective: Perspective, query: QueryModel)
+    : Observable<{ viewChanged: boolean, canClone: boolean, canManage: boolean, canShare: boolean }> {
     if (!view || !view.code) {
       return of({viewChanged: !!name, canClone: false, canManage: true, canShare: false});
     }

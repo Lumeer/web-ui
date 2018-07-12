@@ -22,6 +22,7 @@ import {QueryModel} from '../navigation/query.model';
 import {SmartDocModel} from '../smartdoc/smartdoc.model';
 import {TableConfig} from '../tables/table.model';
 import {DetailConfigModel, PostItConfigModel, SearchConfigModel, TableConfigModel, ViewConfigModel, ViewCursor, ViewModel} from './view.model';
+import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 
 export enum ViewsActionType {
 
@@ -41,6 +42,10 @@ export enum ViewsActionType {
   DELETE = '[Views] Delete',
   DELETE_SUCCESS = '[Views] Delete :: Success',
   DELETE_FAILURE = '[Views] Delete :: Failure',
+
+  SET_PERMISSIONS = '[Views] Set Permission',
+  SET_PERMISSIONS_SUCCESS = '[Views] Set Permission :: Success',
+  SET_PERMISSIONS_FAILURE = '[Views] Set Permission :: Failure',
 
   CHANGE_CONFIG = '[Views] Change Config',
   CHANGE_DETAIL_CONFIG = '[Views] Change Detail Config',
@@ -123,6 +128,27 @@ export namespace ViewsAction {
 
   export class UpdateFailure implements Action {
     public readonly type = ViewsActionType.UPDATE_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
+  export class SetPermissions implements Action {
+    public readonly type = ViewsActionType.SET_PERMISSIONS;
+
+    public constructor(public payload: { viewCode: string, type: PermissionType, permissions: PermissionModel[] }) {
+    }
+  }
+
+  export class SetPermissionsSuccess implements Action {
+    public readonly type = ViewsActionType.SET_PERMISSIONS_SUCCESS;
+
+    public constructor(public payload: { viewCode: string, type: PermissionType, permissions: PermissionModel[] }) {
+    }
+  }
+
+  export class SetPermissionsFailure implements Action {
+    public readonly type = ViewsActionType.SET_PERMISSIONS_FAILURE;
 
     public constructor(public payload: { error: any }) {
     }
@@ -211,6 +237,7 @@ export namespace ViewsAction {
 
   export type All = GetByCode | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
+    SetPermissions | SetPermissionsSuccess | SetPermissionsFailure |
     Update | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure |
     ChangeConfig | ChangeDetailConfig | ChangePostItConfig | ChangeSearchConfig | ChangeSmartDocConfig | ChangeTableConfig | ChangeTable2Config |
