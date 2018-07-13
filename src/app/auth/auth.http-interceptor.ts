@@ -17,16 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Router} from '@angular/router';
+import {EMPTY, Observable, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {AuthService} from './auth.service';
 
 @Injectable()
 export class AuthHttpInterceptor implements HttpInterceptor {
 
-  public constructor(private authService: AuthService) {
+  public constructor(private authService: AuthService,
+                     private router: Router) {
   }
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -40,7 +43,15 @@ export class AuthHttpInterceptor implements HttpInterceptor {
       },
       withCredentials: true
     });
-    return next.handle(authRequest);
+    return next.handle(authRequest).pipe(
+      catchError(error => {
+        if (error instanceof HttpErrorResponse && error.status === 401) {
+          this.authService.login(this.router.url);
+          return EMPTY;
+        }
+        return throwError(error);
+      })
+    );
   }
 
 }
