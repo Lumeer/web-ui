@@ -17,18 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
 import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
-
 import {Document} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
-import {mergeMap, map} from 'rxjs/operators';
 
 // TODO send data attribute without '_id'
 @Injectable()
@@ -42,17 +41,7 @@ export class DocumentService {
   }
 
   public createDocument(document: Document): Observable<Document> {
-    return this.httpClient.post(this.apiPrefix(document.collectionId), document, {
-      observe: 'response',
-      responseType: 'text'
-    }).pipe(
-      map(response => response.headers.get('Location').split('/').pop()),
-      mergeMap(id => {
-        document.id = id;
-        document.creationDate = Date.now();
-        return of(document);
-      })
-    );
+    return this.httpClient.post<Document>(this.apiPrefix(document.collectionId), document);
   }
 
   public updateDocument(document: Document): Observable<Document> {
