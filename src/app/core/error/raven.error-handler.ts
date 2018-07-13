@@ -28,11 +28,11 @@ if (environment.sentryDsn) {
 @Injectable()
 export class RavenErrorHandler implements ErrorHandler {
 
-  public handleError(err: any): void {
-    console.error(err);
+  public handleError(error: any): void {
+    console.error(error);
 
     if (environment.sentryDsn) {
-      Raven.captureException(err.originalError || err);
+      Raven.captureException(error.originalError || error);
     }
   }
 

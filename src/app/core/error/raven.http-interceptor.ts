@@ -30,7 +30,7 @@ export class RavenHttpInterceptor implements HttpInterceptor {
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError(error => {
-        if (environment.sentryDsn) {
+        if (environment.sentryDsn && error.status !== 402) {
           Raven.captureException(error);
         }
 
