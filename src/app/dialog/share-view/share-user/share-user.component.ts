@@ -46,10 +46,6 @@ export class ShareUserComponent {
 
   public viewResourceType = ResourceType.View;
 
-  public hasRole(role: Role): boolean {
-    return this.roles && this.roles.includes(role);
-  }
-
   public toggleRole(role: Role) {
     const newRoles = this.roles.includes(role) ? this.roles.filter(r => r !== role)
       : [...this.roles, role];

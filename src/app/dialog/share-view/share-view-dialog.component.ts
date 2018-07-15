@@ -93,10 +93,6 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     this.userRoles = {...this.userRoles, [user.id]: roles};
   }
 
-  public getUserRoles(user: UserModel): string[] {
-    return this.userRoles[user.id] || [];
-  }
-
   private onUpAndDownArrowKeysDown(event: KeyboardEvent) {
     if (this.suggestions.length === 0) {
       return;
