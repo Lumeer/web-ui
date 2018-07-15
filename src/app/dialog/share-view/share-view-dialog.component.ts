@@ -177,7 +177,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToView() {
-    const subscription = this.route.paramMap.pipe(
+    this.subscriptions.add(this.route.paramMap.pipe(
       map(params => params.get('viewCode')),
       filter(viewCode => !!viewCode),
       mergeMap(viewCode => observableCombineLatest(this.store.select(selectViewByCode(viewCode)),
@@ -197,22 +197,21 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
         return acc;
       }, {});
       this.initialUserRoles = {...this.userRoles};
-    });
+    }));
   }
 
   private subscribeData() {
-    const organizationSubscription = this.store.select(selectOrganizationByWorkspace)
+    this.subscriptions.add(this.store.select(selectOrganizationByWorkspace)
       .pipe(filter(organization => !isNullOrUndefined(organization)))
       .subscribe(organization => {
         if (isNullOrUndefined(this.organization) || this.organization.id !== organization.id) {
           this.store.dispatch(new UsersAction.Get({organizationId: organization.id}));
         }
         this.organization = organization;
-      });
-    this.subscriptions.add(organizationSubscription);
+      }));
 
-    const currentUserSubscription = this.store.select(selectCurrentUser)
-      .subscribe(user => this.currentUser = user);
+    this.subscriptions.add(this.store.select(selectCurrentUser)
+      .subscribe(user => this.currentUser = user));
   }
 
   public trackByUser(index: number, user: UserModel): string {

@@ -37,6 +37,7 @@ import {ResourceNameInputComponent} from './create-resource/resource-name-input/
 import { FeedbackDialogComponent } from './dialog/feedback-dialog.component';
 import {ShareUserComponent} from './share-view/share-user/share-user.component';
 import {ViewPermissionsChangedPipe} from './share-view/view-permissions-changed.pipe';
+import {UserRolesPipe} from './share-view/user-roles.pipe';
 
 @NgModule({
   imports: [
@@ -60,7 +61,8 @@ import {ViewPermissionsChangedPipe} from './share-view/view-permissions-changed.
     ResourceCodeInputComponent,
     ResourceNameInputComponent,
     FeedbackDialogComponent,
-    ViewPermissionsChangedPipe
+    ViewPermissionsChangedPipe,
+    UserRolesPipe
   ],
   providers: [
     DialogService

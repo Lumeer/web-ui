@@ -12,7 +12,7 @@
 
 <td>
   <i *ngFor="let role of resourceType | resourceRoles"
-     class="fas fa-fw {{role | roleColor}} mx-1"
+     class="fas fa-fw {{role | roleIcon}} mx-1"
      [class.role-clickable]="changeRoles"
      [class.role-selected]="hasRole(role)"
      aria-hidden="true"

@@ -42,7 +42,7 @@
       <tbody>
         <tr share-user *ngFor="let user of selectedUsers; trackBy:trackByUser"
             [canRemove]="currentUser?.id !== user.id"
-            [roles]="getUserRoles(user)"
+            [roles]="user | userRoles:userRoles"
             [email]="user.email"
             (rolesChange)="onNewRoles(user, $event)"
             (delete)="deleteUser(user)">

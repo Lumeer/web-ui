@@ -18,31 +18,15 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-
-import {Role} from '../../core/model/role';
+import {UserModel} from '../../core/store/users/user.model';
 
 @Pipe({
-  name: 'roleColor'
+  name: 'userRoles'
 })
-export class RoleColorPipe implements PipeTransform {
+export class UserRolesPipe implements PipeTransform {
 
-  public transform(role: Role): string {
-    switch (role) {
-      case Role.Read:
-        return 'fa-book';
-      case Role.Manage:
-        return 'fa-cog';
-      case Role.Write:
-        return 'fa-pencil';
-      case Role.Clone:
-        return 'fa-clone';
-      case Role.Comment:
-        return 'fa-comment-alt';
-      case Role.Share:
-        return 'fa-share-square';
-      default:
-        return '';
-    }
+  public transform(user: UserModel, userRoles: { [id: string]: string[] }): string[] {
+    return userRoles[user.id] || [];
   }
 
 }
