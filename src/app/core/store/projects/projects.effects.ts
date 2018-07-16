@@ -214,9 +214,13 @@ export class ProjectsEffects {
       return this.projectService.deleteProject(organization.code, project.code).pipe(
         withLatestFrom(this.store$.select(selectProjectsCodes)),
         flatMap(([, projectCodes]) => {
-          const codes = projectCodes[action.payload.organizationId].filter(code => code !== project.code);
-          return [new ProjectsAction.DeleteSuccess(action.payload),
-            new ProjectsAction.GetCodesSuccess({organizationId: action.payload.organizationId, projectCodes: codes})];
+          const actions: Action[] = [new ProjectsAction.DeleteSuccess(action.payload)];
+          let codes = projectCodes[action.payload.organizationId];
+          if (!isNullOrUndefined(codes)) {
+            codes = codes.filter(code => code !== project.code);
+            actions.push(new ProjectsAction.GetCodesSuccess({organizationId: action.payload.organizationId, projectCodes: codes}));
+          }
+          return actions;
         }),
         catchError(error => of(new ProjectsAction.DeleteFailure({error: error})))
       );
@@ -246,9 +250,9 @@ export class ProjectsEffects {
 
       let observable;
       if (action.payload.type === PermissionType.Users) {
-        observable = this.projectService.updateUserPermission(permissionDto, workspace);
+        observable = this.projectService.updateUserPermission([permissionDto], workspace);
       } else {
-        observable = this.projectService.updateGroupPermission(permissionDto, workspace);
+        observable = this.projectService.updateGroupPermission([permissionDto], workspace);
       }
 
       return observable.pipe(

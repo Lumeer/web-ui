@@ -18,13 +18,13 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, NavigationExtras} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Subscription, Observable} from 'rxjs';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
-import {selectPerspective, selectQuery, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {selectPerspective, selectQuery, selectSearchTab, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
@@ -34,6 +34,8 @@ import {ViewsAction} from '../../core/store/views/views.action';
 import {selectViewConfig} from '../../core/store/views/views.state';
 import {DialogService} from '../../dialog/dialog.service';
 import {Perspective} from '../perspectives/perspective';
+import {tap} from 'rxjs/operators';
+import {areQueriesEqual} from '../../core/store/navigation/query.helper';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -60,7 +62,12 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   public perspective$: Observable<Perspective>;
   public query$: Observable<QueryModel>;
 
+  private currentQuery: QueryModel;
+  private currentPerspective: Perspective;
+  private currentConfig: ViewConfigModel;
+  private searchTab?: string;
   private workspace: Workspace;
+
   public readonly perspectives = Object.values(Perspective);
 
   private subscriptions = new Subscription();
@@ -74,14 +81,25 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToWorkspace());
+    this.subscriptions.add(this.subscribeToSearchTab());
 
-    this.config$ = this.store.select(selectViewConfig);
-    this.perspective$ = this.store.select(selectPerspective);
-    this.query$ = this.store.select(selectQuery);
+    this.config$ = this.store.select(selectViewConfig).pipe(
+      tap(config => this.currentConfig = config)
+    );
+    this.perspective$ = this.store.select(selectPerspective).pipe(
+      tap(perspective => this.currentPerspective = perspective),
+    );
+    this.query$ = this.store.select(selectQuery).pipe(
+      tap(query => this.currentQuery = query)
+    );
   }
 
   private subscribeToWorkspace(): Subscription {
     return this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
+  }
+
+  private subscribeToSearchTab(): Subscription {
+    return this.store.select(selectSearchTab).subscribe(tab => this.searchTab = tab);
   }
 
   public onNameInput(name: string) {
@@ -90,6 +108,13 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.view) {
+      const previousCode = changes.view.previousValue && changes.view.previousValue.code;
+      const currentCode = changes.view.currentValue.code;
+
+      if (previousCode && !currentCode) {
+        this.navigateToUrlWithoutView();
+      }
+
       if (this.view && this.view.name) {
         this.name = this.view.name;
       } else {
@@ -102,16 +127,60 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  public onSelectPerspective(perspective: string) {
-    const path: any[] = ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view'];
-    if (this.workspace.viewCode) {
-      path.push({vc: this.workspace.viewCode});
+  public onInputBlur(canManage: boolean) {
+    if (!this.view.code || !canManage || this.name) {
+      return;
     }
-    path.push(perspective);
+
+    const queryChanged = !areQueriesEqual(this.view.query, this.currentQuery);
+    const configChanged = JSON.stringify(this.currentConfig[this.currentPerspective]) !== JSON.stringify(this.view.config[this.currentPerspective]);
+
+    if (queryChanged || configChanged) {
+      this.askToDiscardChanges();
+    } else {
+      this.navigateToUrlWithoutView();
+    }
+  }
+
+  private askToDiscardChanges() {
+    const message = this.i18n({id: 'view.discard.changes.message', value: 'Some changes was made to view. Save it or discard changes.'});
+    const title = this.i18n({id: 'view.discard.changes.message', value: 'Save view'});
+    const discard = this.i18n({id: 'discard', value: 'Discard'});
+    const save = this.i18n({id: 'save', value: 'Save'});
+
+    this.notificationService.confirm(message, title, [
+      {text: discard, action: () => this.navigateToUrlWithoutView(), bold: false},
+      {text: save, action: () => this.save.emit(this.view.name)}
+    ]);
+  }
+
+  public navigateToUrlWithoutView() {
+    const path: any[] = [...this.workspacePaths(), ...['view', this.currentPerspective]];
+    if (this.currentPerspective === Perspective.Search && this.searchTab) {
+      path.push(this.searchTab);
+    }
+
+    this.store.dispatch(new RouterAction.Go({path, extras: {queryParamsHandling: 'merge'}}));
+  }
+
+  public onSelectPerspective(perspective: string) {
+    if (perspective === this.currentPerspective) {
+      return;
+    }
+
+    const path: any[] = [...this.workspacePaths(), ...['view', perspective]];
+    let extras: NavigationExtras = null;
+    if (!this.workspace.viewCode) {
+      extras = {queryParamsHandling: 'merge'};
+    }
 
     this.dispatchActionsOnChangePerspective(perspective);
 
-    this.store.dispatch(new RouterAction.Go({path, extras: {queryParamsHandling: 'merge'}}));
+    this.store.dispatch(new RouterAction.Go({path, extras}));
+  }
+
+  private workspacePaths(): any[] {
+    return ['w', this.workspace.organizationCode, this.workspace.projectCode];
   }
 
   public onSave() {
@@ -129,18 +198,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onShareClick() {
-    const message = this.i18n(
-      {
-        id: 'view.share.notWorking',
-        value: 'This feature is currently under construction. Your view can be currently accessed only by you.'
-      });
-    const title = this.i18n({id: 'view.share.underConstruction', value: 'Under Construction'});
-    const okButtonText = this.i18n({id: 'button.ok', value: 'OK'});
-
-    this.notificationService.confirm(message, title, [
-      {text: okButtonText, bold: true},
-    ]);
-    // TODO this.dialogService.openShareViewDialog();
+    this.dialogService.openShareViewDialog(this.view.code);
   }
 
   private dispatchActionsOnChangePerspective(perspective: string) {

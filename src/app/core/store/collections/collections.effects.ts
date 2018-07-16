@@ -449,9 +449,9 @@ export class CollectionsEffects {
 
       let observable;
       if (action.payload.type === PermissionType.Users) {
-        observable = this.collectionService.updateUserPermission(permissionDto, workspace);
+        observable = this.collectionService.updateUserPermission([permissionDto], workspace);
       } else {
-        observable = this.collectionService.updateGroupPermission(permissionDto, workspace);
+        observable = this.collectionService.updateGroupPermission([permissionDto], workspace);
       }
       return observable.pipe(
         concatMap(() => of()),

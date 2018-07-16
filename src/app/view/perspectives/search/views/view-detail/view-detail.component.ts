@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 
 import {perspectiveIconsMap} from '../../../perspective';
 import {ViewModel} from '../../../../../core/store/views/view.model';
@@ -28,9 +28,10 @@ import {QueryItemsConverter} from '../../../../../shared/top-panel/search-box/qu
 @Component({
   selector: 'view-detail',
   templateUrl: './view-detail.component.html',
-  styleUrls: ['./view-detail.component.scss']
+  styleUrls: ['./view-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewDetailComponent implements OnInit {
+export class ViewDetailComponent implements OnInit, OnChanges {
 
   @Input()
   public view: ViewModel;
@@ -41,10 +42,17 @@ export class ViewDetailComponent implements OnInit {
   @Output()
   public clicked = new EventEmitter();
 
+  @Output()
+  public delete = new EventEmitter();
+
   public queryItems: QueryItem[] = [];
 
   public ngOnInit() {
-      this.createQueryItems();
+    this.createQueryItems();
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    this.createQueryItems();
   }
 
   public getIconForPerspective(perspective: string): string {
@@ -53,6 +61,14 @@ export class ViewDetailComponent implements OnInit {
 
   public onClicked() {
     this.clicked.emit();
+  }
+
+  public trackByQueryItem(index: number, queryItem: QueryItem): string {
+    return `${queryItem.type}:${queryItem.value}`;
+  }
+
+  public onDelete() {
+    this.delete.emit();
   }
 
   private createQueryItems() {

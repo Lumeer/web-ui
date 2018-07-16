@@ -1,0 +1,21 @@
+@import "../../../shared/variables";
+
+i {
+  transition: all 0.25s ease;
+}
+
+.role-selected {
+  color: $success;
+
+  &:hover {
+    color: $success-hover;
+  }
+}
+
+i:not(.role-selected){
+  color: $secondary;
+
+  &:hover {
+    color: $secondary-hover;
+  }
+}

@@ -35,6 +35,9 @@ import {Perspective} from '../../perspective';
 import {QueryConverter} from '../../../../core/store/navigation/query.converter';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {isNullOrUndefined} from 'util';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {ViewsAction} from '../../../../core/store/views/views.action';
+import {NotificationService} from '../../../../core/notifications/notification.service';
 
 @Component({
   selector: 'search-views',
@@ -56,6 +59,8 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   public query: QueryModel;
 
   constructor(private router: Router,
+              private i18n: I18n,
+              private notificationService: NotificationService,
               private store: Store<AppState>) {
   }
 
@@ -91,6 +96,26 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
     const loadedSubscription = this.store.select(selectViewsLoaded)
       .subscribe(loaded => this.viewsLoaded = loaded);
     this.subscriptions.add(loadedSubscription);
+  }
+
+  public onDeleteView(view: ViewModel) {
+    const message = this.i18n({id: 'views.delete.message', value: 'View is about to be permanently deleted.'});
+    const title = this.i18n({id: 'views.delete.title', value: 'Delete view?'});
+    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+
+    this.notificationService.confirm(
+      message,
+      title,
+      [
+        {text: yesButtonText, action: () => this.deleteView(view), bold: false},
+        {text: noButtonText}
+      ]
+    );
+  }
+
+  public deleteView(view: ViewModel) {
+    this.store.dispatch(new ViewsAction.Delete({viewCode: view.code}));
   }
 
   public isLoading(): boolean {

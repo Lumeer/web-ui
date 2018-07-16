@@ -105,49 +105,6 @@ export class UserComponent implements OnInit, OnDestroy {
     this.userDeleted.emit(this.user);
   }
 
-  public getRoles(): Role[] {
-    switch (this.resourceType) {
-      case ResourceType.Organization:
-        return [Role.Read, Role.Write, Role.Manage];
-      case ResourceType.Project:
-        return [Role.Read, Role.Write, Role.Manage];
-      case ResourceType.Collection:
-        return [Role.Read, Role.Write, Role.Share, Role.Manage];
-      case ResourceType.View:
-        return [Role.Read, Role.Clone, Role.Manage];
-      default:
-        return [];
-    }
-  }
-
-  public getIconForRole(role: Role): string {
-    switch (role) {
-      case Role.Read:
-        return 'fa-book';
-      case Role.Manage:
-        return 'fa-cog';
-      case Role.Write:
-        return 'fa-pencil';
-      case Role.Clone:
-        return 'fa-clone';
-      case Role.Comment:
-        return 'fa-comment-alt';
-      case Role.Share:
-        return 'fa-share-square';
-      default:
-        return '';
-    }
-  }
-
-  public getTitleForRole(role: Role): string {
-    return this.i18n({
-      id: 'user.permission.icon',
-      value: '{role, select, READ {read} MANAGE {manage} WRITE {write} CLONE {clone} COMMENT {comment} SHARE {share}}'
-    }, {
-      role: role
-    });
-  }
-
   public hasRole(role: Role): boolean {
     return this.userRoles.includes(role);
   }

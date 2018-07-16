@@ -11,12 +11,12 @@
 </td>
 
 <td>
-  <i *ngFor="let role of getRoles()"
-     class="fas fa-fw {{getIconForRole(role)}} mx-1"
+  <i *ngFor="let role of resourceType | resourceRoles"
+     class="fas fa-fw {{role | roleIcon}} mx-1"
      [class.role-clickable]="changeRoles"
      [class.role-selected]="hasRole(role)"
      aria-hidden="true"
-     [title]="getTitleForRole(role)"
+     [title]="role | roleTitle"
      (click)="toggleRole(role)">
   </i>
   <i class="fas fa-fw fa-trash text-danger mx-2 cursor-pointer"

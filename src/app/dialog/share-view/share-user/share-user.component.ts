@@ -18,55 +18,42 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-
-import {QueryItem} from './model/query-item';
-import {FormGroup} from '@angular/forms';
+import {ResourceType} from '../../../core/model/resource-type';
+import {Role} from '../../../core/model/role';
 
 @Component({
-  selector: 'query-item',
-  templateUrl: './query-item.component.html',
-  styleUrls: ['./query-item.component.scss'],
+  selector: '[share-user]',
+  templateUrl: './share-user.component.html',
+  styleUrls: ['./share-user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class QueryItemComponent {
+export class ShareUserComponent {
 
   @Input()
-  public queryItem: QueryItem;
+  public canRemove: boolean;
 
   @Input()
-  public queryItemForm: FormGroup;
+  public email: string;
 
   @Input()
-  public readonly: boolean;
+  public roles: string[];
 
   @Output()
-  public remove = new EventEmitter();
+  public delete = new EventEmitter();
 
   @Output()
-  public enter = new EventEmitter();
+  public rolesChange = new EventEmitter<string[]>();
 
-  @Output()
-  public change = new EventEmitter();
+  public viewResourceType = ResourceType.View;
 
-  public onRemove() {
-    this.remove.emit();
+  public toggleRole(role: Role) {
+    const newRoles = this.roles.includes(role) ? this.roles.filter(r => r !== role)
+      : [...this.roles, role];
+    this.rolesChange.emit(newRoles);
   }
 
-  public onEnter() {
-    this.enter.emit();
-  }
-
-  public isFormValid(): boolean {
-    if (this.readonly || !this.queryItemForm) {
-      return true;
-    }
-    return this.queryItemForm.valid;
-  }
-
-  public onQueryItemChanged() {
-    if (this.isFormValid()) {
-      this.change.emit();
-    }
+  public onDelete() {
+    this.delete.emit();
   }
 
 }

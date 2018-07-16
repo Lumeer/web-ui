@@ -20,7 +20,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, first, map, take} from 'rxjs/operators';
+import {filter, first, map, take, tap} from 'rxjs/operators';
 import {Query} from '../core/dto';
 import {AppState} from '../core/store/app.state';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
@@ -31,6 +31,7 @@ import {ViewModel} from '../core/store/views/view.model';
 import {ViewsAction} from '../core/store/views/views.action';
 import {selectAllViews, selectViewByCode, selectViewConfig} from '../core/store/views/views.state';
 import {DialogService} from '../dialog/dialog.service';
+import {Perspective} from './perspectives/perspective';
 
 @Component({
   templateUrl: './view.component.html',
@@ -63,10 +64,6 @@ export class ViewComponent implements OnInit, OnDestroy {
       this.workspace = navigation.workspace;
       this.query = navigation.query;
 
-      if (!navigation.workspace) {
-        return;
-      }
-
       if (navigation.workspace.viewCode) {
         this.loadView(navigation.workspace.viewCode);
       } else {
@@ -77,6 +74,11 @@ export class ViewComponent implements OnInit, OnDestroy {
 
   private bindToViews() {
     this.viewsExist$ = this.store.select(selectAllViews).pipe(
+      tap(views => {
+        if (this.view.code && !views.find(v => v.code === this.view.code)) {
+          this.loadQuery({});
+        }
+      }),
       map(views => views && views.length > 0)
     );
   }

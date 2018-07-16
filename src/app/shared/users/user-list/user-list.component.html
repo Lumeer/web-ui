@@ -39,7 +39,7 @@
             [editable]="canEditUser(user.id)"
             [changeRoles]="canChangeRoles(user.id)"
             [expanded]="expanded[user.email]"
-            [userRoles]="getUserRoles(user.id)"
+            [userRoles]="user | userRolesInResource:resource"
             (expandedChange)="(expanded[user.email] = !expanded[user.email])"
             (rolesUpdate)="onUserRolesChanged(user.id, $event)"
             (userUpdated)="userUpdated.emit($event)"

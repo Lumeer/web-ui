@@ -19,6 +19,7 @@
 
 import {ViewsAction, ViewsActionType} from './views.action';
 import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
+import {PermissionType} from '../permissions/permissions.model';
 
 export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
   switch (action.type) {
@@ -28,6 +29,10 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return viewsAdapter.addOne(action.payload.view, state);
     case ViewsActionType.UPDATE_SUCCESS:
       return viewsAdapter.updateOne({id: action.payload.view.code, changes: action.payload.view}, state);
+    case ViewsActionType.DELETE_SUCCESS:
+      return viewsAdapter.removeOne(action.payload.viewCode, state);
+    case ViewsActionType.SET_PERMISSIONS_SUCCESS:
+      return onSetPermissions(state, action);
     case ViewsActionType.CHANGE_CONFIG:
       return {...state, config: action.payload.config};
     case ViewsActionType.CHANGE_DETAIL_CONFIG:
@@ -49,4 +54,14 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
     default:
       return state;
   }
+}
+
+function onSetPermissions(state: ViewsState, action: ViewsAction.SetPermissionsSuccess): ViewsState {
+  let permissions = state.entities[action.payload.viewCode].permissions;
+  if (action.payload.type === PermissionType.Users) {
+    permissions = {...permissions, users: action.payload.permissions};
+  } else {
+    permissions = {...permissions, groups: action.payload.permissions};
+  }
+  return viewsAdapter.updateOne({id: action.payload.viewCode, changes: {permissions}}, state);
 }

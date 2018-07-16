@@ -22,6 +22,7 @@ import {QueryModel} from '../navigation/query.model';
 import {SmartDocModel} from '../smartdoc/smartdoc.model';
 import {TableConfig} from '../tables/table.model';
 import {DetailConfigModel, PostItConfigModel, SearchConfigModel, TableConfigModel, ViewConfigModel, ViewCursor, ViewModel} from './view.model';
+import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 
 export enum ViewsActionType {
 
@@ -37,6 +38,14 @@ export enum ViewsActionType {
   UPDATE = '[Views] Update',
   UPDATE_SUCCESS = '[Views] Update :: Success',
   UPDATE_FAILURE = '[Views] Update :: Failure',
+
+  DELETE = '[Views] Delete',
+  DELETE_SUCCESS = '[Views] Delete :: Success',
+  DELETE_FAILURE = '[Views] Delete :: Failure',
+
+  SET_PERMISSIONS = '[Views] Set Permission',
+  SET_PERMISSIONS_SUCCESS = '[Views] Set Permission :: Success',
+  SET_PERMISSIONS_FAILURE = '[Views] Set Permission :: Failure',
 
   CHANGE_CONFIG = '[Views] Change Config',
   CHANGE_DETAIL_CONFIG = '[Views] Change Detail Config',
@@ -124,6 +133,48 @@ export namespace ViewsAction {
     }
   }
 
+  export class SetPermissions implements Action {
+    public readonly type = ViewsActionType.SET_PERMISSIONS;
+
+    public constructor(public payload: { viewCode: string, type: PermissionType, permissions: PermissionModel[] }) {
+    }
+  }
+
+  export class SetPermissionsSuccess implements Action {
+    public readonly type = ViewsActionType.SET_PERMISSIONS_SUCCESS;
+
+    public constructor(public payload: { viewCode: string, type: PermissionType, permissions: PermissionModel[] }) {
+    }
+  }
+
+  export class SetPermissionsFailure implements Action {
+    public readonly type = ViewsActionType.SET_PERMISSIONS_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
+  export class Delete implements Action {
+    public readonly type = ViewsActionType.DELETE;
+
+    public constructor(public payload: { viewCode: string }) {
+    }
+  }
+
+  export class DeleteSuccess implements Action {
+    public readonly type = ViewsActionType.DELETE_SUCCESS;
+
+    public constructor(public payload: { viewCode: string }) {
+    }
+  }
+
+  export class DeleteFailure implements Action {
+    public readonly type = ViewsActionType.DELETE_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
   export class ChangeConfig implements Action {
     public readonly type = ViewsActionType.CHANGE_CONFIG;
 
@@ -186,7 +237,9 @@ export namespace ViewsAction {
 
   export type All = GetByCode | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
+    SetPermissions | SetPermissionsSuccess | SetPermissionsFailure |
     Update | UpdateSuccess | UpdateFailure |
+    Delete | DeleteSuccess | DeleteFailure |
     ChangeConfig | ChangeDetailConfig | ChangePostItConfig | ChangeSearchConfig | ChangeSmartDocConfig | ChangeTableConfig | ChangeTable2Config |
     SetCursor |
     Clear;
