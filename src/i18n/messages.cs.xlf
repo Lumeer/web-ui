@@ -304,7 +304,7 @@
         Enter users' emails...
       </source>
                 <target>
-                    <x id="ICU" equiv-text="{emails.length, select, 0 {...} other {...}}"/>
+                    Zadejte emaily kolegů...
                 </target>
                 
             <context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit>
