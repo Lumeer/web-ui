@@ -20,7 +20,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {filter, first} from 'rxjs/operators';
+import {filter, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {AuthService} from '../auth.service';
@@ -39,10 +39,14 @@ export class AuthCallbackComponent implements OnInit {
   public ngOnInit() {
     const path = this.authService.getLoginRedirectPath();
 
+    const urls = path.split('?', 2);
+    const params = this.router.parseUrl(path).queryParams;
+    const queryParams = urls.length > 1 ? {queryParams: params} : undefined;
+
     this.store.select(selectCurrentUser).pipe(
       filter(user => !!user),
-      first()
-    ).subscribe(user => this.router.navigate([path]));
+      take(1)
+    ).subscribe(user => this.router.navigate([urls[0]], queryParams));
   }
 
 }
