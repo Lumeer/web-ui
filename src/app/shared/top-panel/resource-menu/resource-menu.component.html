@@ -6,22 +6,26 @@
   </resource-detail>
 
   <resource-list
-    *ngIf="isOrganizationType()"
+    *ngIf="type | isOrganizationType"
     [currentCode]="resource?.code"
     [organizations]="organizations$ | async"
     (onResourceSelect)="selectResource($event)">
   </resource-list>
   <resource-list
-    *ngIf="!isOrganizationType()"
+    *ngIf="!(type | isOrganizationType)"
     [currentCode]="resource?.code"
     [projects]="projects$ | async"
     (onResourceSelect)="selectResource($event)">
   </resource-list>
 
-  <div class="dropdown-divider"></div>
+  <ng-container *ngIf="resource | canCreateResource:type | async">
 
-  <a class="dropdown-item" (click)="newResource()">
-    <i class="fas fa-plus text-success mr-1"></i>
-    <span i18n="@@resource.menu.createNew">Create New {type, select, organization {Organization} project {Project} other {}}</span>
-  </a>
+    <div class="dropdown-divider"></div>
+
+    <a class="dropdown-item" (click)="newResource()">
+      <i class="fas fa-plus text-success mr-1"></i>
+      <span i18n="@@resource.menu.createNew">Create New {type, select, organization {Organization} project {Project} other {}}</span>
+    </a>
+
+  </ng-container>
 </div>

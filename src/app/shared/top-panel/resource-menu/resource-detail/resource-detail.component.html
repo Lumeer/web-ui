@@ -8,21 +8,22 @@
   <h6 class="card-subtitle mb-2 text-muted">{{resource?.name}}</h6>
 
   <p class="card-text">
-    <ng-container *ngIf="isOrganizationType()">
-      <resource-status-line [organization]="organization$ | async"></resource-status-line>
-      <button (click)="goToOrganizationSettings('users')" class="ml-3 btn btn-primary btn-sm">
+    <ng-container *ngIf="type | isOrganizationType">
+      <resource-status-line [organization]="organization"></resource-status-line>
+      <button (click)="goToOrganizationSettings('users')" class="ml-3 btn btn-primary btn-sm"
+      *ngIf="organization | permissions:'manage' | async">
         <i class="fas fa-user-plus mr-1"></i>
         <span i18n="@@resource.detail.organization.invite">Invite Colleagues</span>
       </button>
     </ng-container>
-    <ng-container *ngIf="!isOrganizationType()">
-      <resource-status-line *ngIf="!isOrganizationType()" [project]="project$ | async"></resource-status-line>
+    <ng-container *ngIf="!(type | isOrganizationType)">
+      <resource-status-line [project]="project"></resource-status-line>
     </ng-container>
   </p>
 
   <p class="card-text">{{resource?.description}}</p>
 
-  <div *ngIf="isOrganizationType()" class="text-center">
+  <div *ngIf="(type | isOrganizationType) && (organization | permissions:'manage' | async)" class="text-center">
     <button (click)="goToOrganizationSettings('detail')" href="#" class="btn btn-primary btn-sm mr-2">
       <i class="fas fa-cog mr-1"></i>
       <span i18n="@@resource.detail.organization.configure">Configure</span>
@@ -33,7 +34,7 @@
     </button>
   </div>
 
-  <div *ngIf="!isOrganizationType()" class="text-center">
+  <div *ngIf="!(type | isOrganizationType) && (project | permissions:'manage' | async)" class="text-center">
     <button (click)="goToProjectSettings('users')" class="btn btn-primary btn-sm">
       <i class="fas fa-cog mr-1"></i>
       <span i18n="@@resource.detail.organization.configure">Configure</span>
