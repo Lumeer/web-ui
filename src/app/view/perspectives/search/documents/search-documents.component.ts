@@ -125,11 +125,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     }
   }
 
-  public isXlTemplatePresented(): boolean {
-    return this.size === SizeType.XL;
-  }
-
-  public isDocumentOpened(document: DocumentModel): boolean {
+  private isDocumentOpened(document: DocumentModel): boolean {
     return this.expandedDocumentIds.includes(document.id);
   }
 

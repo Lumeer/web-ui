@@ -6,7 +6,7 @@
 
 <div>
   <i class="{{collection?.icon}} fa-fw"
-     [class.bigger-icon]="showBiggerIcon()"
+     [class.bigger-icon]="(size | isNotSmallSize) || isOpened"
      [style.color]="collection?.color"
      *ngIf="collection" aria-hidden="true"></i>
 </div>

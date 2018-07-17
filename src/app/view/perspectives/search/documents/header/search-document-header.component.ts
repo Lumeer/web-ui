@@ -62,8 +62,4 @@ export class SearchDocumentHeaderComponent {
     return searchDocumentDefaultAttributeHtml(this.document, this.collection);
   }
 
-  public showBiggerIcon(): boolean {
-    return this.size !== SizeType.S;
-  }
-
 }
