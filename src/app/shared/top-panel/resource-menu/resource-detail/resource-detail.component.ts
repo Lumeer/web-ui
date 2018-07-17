@@ -30,6 +30,8 @@ import {Store} from '@ngrx/store';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 import {Subscription} from 'rxjs';
+import {filter, tap} from 'rxjs/operators';
+import {UsersAction} from '../../../../core/store/users/users.action';
 
 @Component({
   selector: 'resource-detail',
@@ -52,8 +54,10 @@ export class ResourceDetailComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.subscriptions.add(this.store.select(selectOrganizationByWorkspace)
-      .subscribe(organization => this.organization = organization));
+    this.subscriptions.add(this.store.select(selectOrganizationByWorkspace).pipe(
+      filter(organization => !!organization),
+      tap(organization => this.store.dispatch(new UsersAction.Get({organizationId: organization.id})))
+    ).subscribe(organization => this.organization = organization));
     this.subscriptions.add(this.store.select(selectProjectByWorkspace)
       .subscribe(project => this.project = project));
   }
