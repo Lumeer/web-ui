@@ -143,10 +143,10 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private askToDiscardChanges() {
-    const message = this.i18n({id: 'view.discard.changes.message', value: 'Some changes was made to view. Save it or discard changes.'});
-    const title = this.i18n({id: 'view.discard.changes.message', value: 'Save view'});
-    const discard = this.i18n({id: 'discard', value: 'Discard'});
-    const save = this.i18n({id: 'save', value: 'Save'});
+    const message = this.i18n({id: 'view.discard.changes.message', value: 'The view has changed. Save the changes or discard them.'});
+    const title = this.i18n({id: 'view.discard.changes.message.title', value: 'Save view'});
+    const discard = this.i18n({id: 'button.discard', value: 'Discard'});
+    const save = this.i18n({id: 'button.save', value: 'Save'});
 
     this.notificationService.confirm(message, title, [
       {text: discard, action: () => this.navigateToUrlWithoutView(), bold: false},

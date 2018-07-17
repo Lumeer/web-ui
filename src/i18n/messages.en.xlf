@@ -245,18 +245,7 @@
       <target state="final">Perspective</target><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="view.untitled" datatype="html">
         <source>Type a title of this page, save, and share!</source>
         
-      <target state="final">Type a title of this page, save, and share!</target><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="view.button.save" datatype="html">
-        <source>Save</source>
-        
-      <target state="final">Save</target><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">72</context></context-group></trans-unit><trans-unit id="view.button.copy" datatype="html">
-        <source>Copy</source>
-        
-      <target state="final">Copy</target><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">82</context></context-group></trans-unit><trans-unit id="view.button.share" datatype="html">
-        <source>Share
-        </source>
-        
-      <target state="final">Share
-        </target><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">90</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="view.overwrite.dialog.title" datatype="html">
+      <target state="final">Type a title of this page, save, and share!</target><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="view.overwrite.dialog.title" datatype="html">
         <source>View already exists</source>
         
       <target state="final">View already exists</target><context-group purpose="location"><context context-type="sourcefile">app/dialog/overwrite-view/overwrite-view-dialog.component.ts</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="view.overwrite.dialog.body" datatype="html">
@@ -2095,17 +2084,11 @@
         </context-group>
       </trans-unit><trans-unit id="resource.menu.createNew" datatype="html">
         <source>Create New <x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"/></source><target state="final">Create New <x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-menu.component.ts</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-      </trans-unit><trans-unit id="741fc2503ff25b365c7610d0f5f5f112f3dcb7c5" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-menu.component.ts</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="741fc2503ff25b365c7610d0f5f5f112f3dcb7c5" datatype="html">
         <source>{VAR_SELECT, select, organization {Organization} project {Project} other {} }</source><target state="final">{VAR_SELECT, select, organization {Organization} project {Project} other {} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-menu.component.ts</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-      </trans-unit><trans-unit id="panel.plan.free" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-menu.component.ts</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="panel.plan.free" datatype="html">
         <source>Free Plan</source><target state="final">Free Plan</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/top-panel.component.ts</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="menu.sendFeedback" datatype="html">
@@ -2114,27 +2097,15 @@
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.ts</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="resource.detail.organization.invite" datatype="html">
         <source>Invite Colleagues</source><target state="final">Invite Colleagues</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-detail/resource-detail.component.ts</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.detail.organization.configure" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-detail/resource-detail.component.ts</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="resource.detail.organization.configure" datatype="html">
         <source>Configure</source><target state="final">Configure</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-detail/resource-detail.component.ts</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-detail/resource-detail.component.ts</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.detail.organization.upgrade" datatype="html">
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-detail/resource-detail.component.ts</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-detail/resource-detail.component.ts</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="resource.detail.organization.upgrade" datatype="html">
         <source>Upgrade Plan</source><target state="final">Upgrade Plan</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-detail/resource-detail.component.ts</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-      </trans-unit><trans-unit id="collections.tab.attributes.new.header" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-detail/resource-detail.component.ts</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="collections.tab.attributes.new.header" datatype="html">
         <source>Add a new attribute</source><target state="final">Add a new attribute</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
@@ -2424,7 +2395,7 @@
       </trans-unit><trans-unit id="button.share" datatype="html">
         <source>Share</source><target state="final">Share</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="remove.row" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/dialog/share-view/share-view-dialog.component.ts</context><context context-type="linenumber">56</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">90</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">90</context></context-group></trans-unit><trans-unit id="remove.row" datatype="html">
         <source>Remove Row</source><target state="final">Remove Row</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/key-value/key-value.component.ts</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body-cell/table-body-cell.component.ts</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table2/body/rows/row/cell-group/data-cell-menu/table-data-cell-menu.component.ts</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="button.select" datatype="html">
@@ -2495,12 +2466,12 @@
         
         
         
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/post-it/post-it-perspective.component.ts</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context><context context-type="linenumber">5</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.ts</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="search.records.empty.subtitle" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-records/empty-records.component.ts</context><context context-type="linenumber">5</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-records/empty-records.component.ts</context><context context-type="linenumber">19</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.ts</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="search.records.empty.subtitle" datatype="html">
         <source>Open a collection by clicking on it and add your first record.</source><target state="final">Open a collection by clicking on it and add your first record.</target>
         
         
         
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/post-it/post-it-perspective.component.ts</context><context context-type="linenumber">56</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.ts</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="search.views.empty.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-records/empty-records.component.ts</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.ts</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="search.views.empty.title" datatype="html">
         <source>There are no Views yet!</source><target state="final">There are no Views yet!</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/empty-views/empty-views.component.ts</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="search.views.empty.subtitle" datatype="html">
@@ -2569,23 +2540,14 @@
         </context-group>
       </trans-unit><trans-unit id="search.records.empty.subtitle.singleCollection" datatype="html">
         <source>Let's add some Records into</source><target state="final">Let's add some Records into</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.records.empty.button" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-records/empty-records.component.ts</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="search.records.empty.button" datatype="html">
         <source>Open this collection in Table</source><target state="final">Open this collection in Table</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context>
-          <context context-type="linenumber">18</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.records.empty.button.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="search.records.empty.button.title" datatype="html">
         <source>Open collection</source><target state="final">Open collection</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit><trans-unit id="delete" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.ts</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="delete" datatype="html">
         <source>Delete</source><target state="final">Delete</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/view-detail/view-detail.component.ts</context>
@@ -2616,7 +2578,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="view.discard.changes.message" datatype="html">
-        <source>Some changes was made to view. Save it or discard changes.</source><target state="final">Some changes was made to view. Save it or discard changes.</target>
+        <source>The view has changed. Save the changes or discard them.</source><target state="final">The view has changed. Save the changes or discard them.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -2625,14 +2587,26 @@
           <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="discard" datatype="html">
-        <source>Discard</source><target state="final">Discard</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="save" datatype="html">
+      </trans-unit><trans-unit id="button.save" datatype="html">
         <source>Save</source><target state="final">Save</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit><trans-unit id="button.copy" datatype="html">
+        <source>Copy</source><target state="final">Copy</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+      </trans-unit><trans-unit id="view.discard.changes.message.title" datatype="html">
+        <source>Save view</source><target state="final">Save view</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="button.discard" datatype="html">
+        <source>Discard</source><target state="final">Discard</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
           <context context-type="linenumber">1</context>
