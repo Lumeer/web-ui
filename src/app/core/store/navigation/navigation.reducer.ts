@@ -38,6 +38,7 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigationActi
     perspective: perspectivesMap[extractPerspectiveIdFromUrl(url)],
     viewName: queryParams['viewName'],
     searchTab: tryToParseSearchTabPath(url),
+    previousUrl: state.url,
     url
   };
 }

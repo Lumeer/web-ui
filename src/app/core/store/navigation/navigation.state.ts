@@ -31,6 +31,7 @@ export interface NavigationState {
   searchTab?: string;
   viewName?: string;
   url: string;
+  previousUrl?: string;
 
 }
 
@@ -48,3 +49,4 @@ export const selectPerspective = createSelector(selectNavigation, (state: Naviga
 export const selectWorkspace = createSelector(selectNavigation, (state: NavigationState) => state.workspace);
 export const selectSearchTab = createSelector(selectNavigation, (state: NavigationState) => state.searchTab);
 export const selectUrl = createSelector(selectNavigation, state => state.url);
+export const selectPreviousUrl = createSelector(selectNavigation, state => state.previousUrl);

@@ -23,7 +23,7 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, Subscription} from 'rxjs';
-import {filter, map, tap} from 'rxjs/operators';
+import {filter, map, take, tap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -36,6 +36,7 @@ import {ResourceType} from '../../core/model/resource-type';
 import {Location} from '@angular/common';
 import {Perspective} from '../../view/perspectives/perspective';
 import {ProjectModel} from '../../core/store/projects/project.model';
+import {selectPreviousUrl} from '../../core/store/navigation/navigation.state';
 
 @Component({
   templateUrl: './organization-settings.component.html'
@@ -48,6 +49,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
 
   private organizationSubscription: Subscription;
   private firstProject: ProjectModel = null;
+  private previousUrl: string;
 
   constructor(private i18n: I18n,
               private router: Router,
@@ -116,8 +118,11 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   public goBack(): void {
-    if (window.history.length > 1) {
-      this.location.back();
+    if (this.previousUrl && this.previousUrl !== '/') {
+      const urls = this.previousUrl.split('?', 2);
+      const params = this.router.parseUrl(this.previousUrl).queryParams;
+      const queryParams = urls.length > 1 ? {queryParams: params} : undefined;
+      this.router.navigate([urls[0]], queryParams);
     } else if (this.firstProject) {
       this.router.navigate(['w', this.organization.code, this.firstProject.code, 'view', Perspective.Search, 'all']);
     }
@@ -137,6 +142,9 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
       .pipe(filter(organization => !isNullOrUndefined(organization)))
       .subscribe(organization => this.organization = organization);
+
+    this.store.select(selectPreviousUrl).pipe(take(1))
+      .subscribe(url => this.previousUrl = url);
   }
 
   private deleteOrganization() {

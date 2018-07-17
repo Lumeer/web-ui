@@ -24,7 +24,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
 import {ResourceType} from '../../core/model/resource-type';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
@@ -38,7 +38,7 @@ import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {Workspace} from '../../core/store/navigation/workspace.model';
-import {selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Perspective} from '../../view/perspectives/perspective';
 import {Location} from '@angular/common';
 
@@ -52,6 +52,7 @@ export class ProjectSettingsComponent implements OnInit {
   public workspace: Workspace;
 
   private subscription = new Subscription();
+  private previousUrl: string;
 
   constructor(private i18n: I18n,
               private router: Router,
@@ -123,8 +124,11 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public goBack(): void {
-    if (window.history.length > 1) {
-      this.location.back();
+    if (this.previousUrl && this.previousUrl !== '/') {
+      const urls = this.previousUrl.split('?', 2);
+      const params = this.router.parseUrl(this.previousUrl).queryParams;
+      const queryParams = urls.length > 1 ? {queryParams: params} : undefined;
+      this.router.navigate([urls[0]], queryParams);
     } else {
       this.router.navigate(['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', Perspective.Search, 'all']);
     }
@@ -143,6 +147,9 @@ export class ProjectSettingsComponent implements OnInit {
       .pipe(filter(workspace => !isNullOrUndefined(workspace)))
       .subscribe(workspace => this.workspace = workspace)
     );
+
+    this.store.select(selectPreviousUrl).pipe(take(1))
+      .subscribe(url => this.previousUrl = url);
   }
 
   private clearStore() {

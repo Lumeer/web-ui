@@ -22,7 +22,7 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
-import {filter, map} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 import {Subscription, Observable} from 'rxjs';
 import {isNullOrUndefined} from 'util';
 import {Query} from '../../core/dto';
@@ -31,7 +31,7 @@ import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
-import {selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {ResourceType} from '../../core/model/resource-type';
@@ -48,6 +48,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
 
   private subscription = new Subscription();
   private workspace: Workspace;
+  private previousUrl: string;
 
   constructor(private i18n: I18n,
               private notificationService: NotificationService,
@@ -108,12 +109,19 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   public removeCollection(): void {
     if (this.collection) {
       this.store.dispatch(new CollectionsAction.Delete({collectionId: this.collection.id}));
-      this.goToCollectionsPage();
+      this.onBack();
     }
   }
 
-  public goToCollectionsPage(): void {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections']);
+  public onBack(): void {
+    if (this.previousUrl && this.previousUrl !== '/') {
+      const urls = this.previousUrl.split('?', 2);
+      const params = this.router.parseUrl(this.previousUrl).queryParams;
+      const queryParams = urls.length > 1 ? {queryParams: params} : undefined;
+      this.router.navigate([urls[0]], queryParams);
+    } else {
+      this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections']);
+    }
   }
 
   public documentsQuery(collectionId: string): string {
@@ -144,6 +152,9 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
         this.collection = collection;
       });
     this.subscription.add(sub2);
+
+    this.store.select(selectPreviousUrl).pipe(take(1))
+      .subscribe(url => this.previousUrl = url);
   }
 
 }
