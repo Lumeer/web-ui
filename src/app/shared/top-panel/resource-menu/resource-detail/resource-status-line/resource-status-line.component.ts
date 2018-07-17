@@ -28,6 +28,7 @@ import {selectUsersForWorkspace} from '../../../../../core/store/users/users.sta
 import {filter, map} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {selectAllCollections} from '../../../../../core/store/collections/collections.state';
+import {UsersAction} from '../../../../../core/store/users/users.action';
 
 @Component({
   selector: 'resource-status-line',
@@ -50,6 +51,7 @@ export class ResourceStatusLineComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (this.organization) {
+      this.store.dispatch(new UsersAction.Get({organizationId: this.organization.id}));
       this.projectsCount$ = this.store.select(selectProjectsForWorkspace).pipe(
         filter(projects => !isNullOrUndefined(projects)),
         map(projects => projects.length)
