@@ -75,12 +75,11 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (this.collection && this.documentModel && this.initedDocumentKey !== this.getDocumentKey()) {
-      const changed = this.initDocumentServiceIfNeeded();
-      if (changed) {
-        this.sizeChange.emit();
-      }
+    const changed = this.initDocumentServiceIfNeeded();
+    if (changed) {
+      this.sizeChange.emit();
     }
+
   }
 
   public onRemove() {
@@ -132,7 +131,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public suggestionListId(): string {
-    return `${ this.perspectiveId }${ this.documentModel.correlationId || this.documentModel.id }`;
+    return `${ this.perspectiveId }${ this.getDocumentKey() }`;
   }
 
   public getDocumentKey(): string {
@@ -144,9 +143,11 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private initDocumentServiceIfNeeded(): boolean {
-    if (this.collection && this.documentModel && !this.documentUiService.isInited(this.collection, this.documentModel)) {
+    if (this.collection && this.documentModel && this.initedDocumentKey !== this.getDocumentKey()) {
       this.initedDocumentKey = this.getDocumentKey();
-      this.documentUiService.init(this.collection, this.documentModel);
+      if (!this.documentUiService.isInited(this.collection, this.documentModel)) {
+        this.documentUiService.init(this.collection, this.documentModel);
+      }
       this.rows$ = this.documentUiService.getRows$(this.collection, this.documentModel).asObservable().pipe(
         tap(rows => this.checkRowsLength(rows.length))
       );
