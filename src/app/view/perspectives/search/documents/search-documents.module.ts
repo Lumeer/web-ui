@@ -37,9 +37,7 @@ import {IsNotSmallSizePipe} from './pipes/is-not-small-size.pipe';
     SearchDocumentsComponent,
     EmptyDocumentsComponent,
     SearchDocumentHeaderComponent,
-    IsDocumentOpenedPipe,
-    IsXlargeSizePipe,
-    IsNotSmallSizePipe
+    IsDocumentOpenedPipe
   ],
   exports: [
     SearchDocumentsComponent

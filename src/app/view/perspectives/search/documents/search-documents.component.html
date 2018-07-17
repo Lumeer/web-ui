@@ -13,7 +13,7 @@
         (detail)="onDetailClick(document)"
         [size]="size"
         [document]="document"
-        [isOpened]="(expandedDocumentIds | isDocumentOpened:document) || (size | isXlargeSize)"
+        [isOpened]="(expandedDocumentIds | isDocumentOpened:document) || size === 'XL'"
         [collection]="collectionsMap[document.collectionId]">
         <ng-container *ngTemplateOutlet="getTemplate(document); context: { $implicit: document}"></ng-container>
       </search-document-header>
