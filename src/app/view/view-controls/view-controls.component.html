@@ -69,7 +69,7 @@
                 [class.btn-outline-secondary]="!(name && viewControlsInfo.viewChanged && viewControlsInfo.canManage)"
                 [class.disabled]="!(name && viewControlsInfo.viewChanged && viewControlsInfo.canManage)"
                 type="button"
-                title="Save" i18n-title="@@view.button.save"
+                title="Save" i18n-title="@@button.save"
                 (click)="onSave()">
           <i class="fas fa-save"></i>
         </button>
@@ -79,7 +79,7 @@
                 [class.btn-outline-secondary]="!(view.code && viewControlsInfo.canClone)"
                 [class.disabled]="!(view.code && viewControlsInfo.canClone)"
                 type="button"
-                title="Copy" i18n-title="@@view.button.copy"
+                title="Copy" i18n-title="@@button.copy"
                 (click)="onCopy()">
           <i class="fas fa-copy"></i>
         </button>
@@ -87,7 +87,7 @@
                 (click)="onShareClick()"
                 class="btn btn-primary"
                 type="button"
-                title="Share" i18n-title="@@view.button.share" i18n="@@view.button.share">Share
+                title="Share" i18n-title="@@button.share" i18n="@@button.share">Share
         </button>
       </div>
     </div>
