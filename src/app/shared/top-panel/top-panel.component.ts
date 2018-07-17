@@ -143,9 +143,9 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  public goToOrganization(code: string) {
+  public goToOrganizationDetail() {
     if (this.workspace && this.workspace.organizationCode) {
-      this.router.navigate(['w', this.workspace.organizationCode, code]);
+      this.router.navigate(['organization', this.workspace.organizationCode, 'detail']);
     }
   }
 
