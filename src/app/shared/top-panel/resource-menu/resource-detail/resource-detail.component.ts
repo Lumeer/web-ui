@@ -53,12 +53,12 @@ export class ResourceDetailComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.subscriptions.add(this.store.select(selectOrganizationByWorkspace)
-      .subscribe( organization => this.organization = organization));
+      .subscribe(organization => this.organization = organization));
     this.subscriptions.add(this.store.select(selectProjectByWorkspace)
       .subscribe(project => this.project = project));
   }
 
-  public ngOnDestroy(){
+  public ngOnDestroy() {
     this.subscriptions.unsubscribe();
   }
 

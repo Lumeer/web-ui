@@ -53,7 +53,7 @@ export class CanCreateResourcePipe implements PipeTransform {
         mergeMap(organization => this.permissionsPipe.transform(organization, Role.Write))
       );
     }
-    return of(true)
+    return of(true);
   }
 
 }
