@@ -17,32 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {CommonModule} from '@angular/common';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {QueryModel} from '../../../../core/store/navigation/query.model';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
-import {EmptyStateComponent} from './empty-state/empty-state.component';
-import {EmptySearchComponent} from './empty-search/empty-search.component';
-import {EmptyRecordsComponent} from './empty-records/empty-records.component';
-import {PipesModule} from '../pipes/pipes.module';
-
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    PipesModule
-  ],
-  declarations: [
-    EmptySearchComponent,
-    EmptyStateComponent,
-    EmptyRecordsComponent
-  ],
-  exports: [
-    EmptySearchComponent,
-    EmptyStateComponent,
-    EmptyRecordsComponent
-  ]
+@Component({
+  selector: 'empty-post-its',
+  templateUrl: './empty-post-its.component.html'
 })
-export class WarningMessageModule {
+export class EmptyPostItsComponent {
+
+  @Input()
+  public query: QueryModel;
+
+  @Input()
+  public collections: CollectionModel[];
+
+  @Output()
+  public createPostIt = new EventEmitter<DocumentModel>();
+
+  public onCreatePostIt(documentModel: DocumentModel) {
+    this.createPostIt.emit(documentModel);
+  }
 
 }

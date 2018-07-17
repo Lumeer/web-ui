@@ -7,6 +7,7 @@
     <div class="my-2 d-flex align-items-center">
       <add-document
         *ngIf="collections?.length === 1 && (collections[0] | permissions:'write' | async)"
+        [collection]="collections[0]"
         [query]="query"
         (createPostIt)="createPostIt($event)">
       </add-document>
@@ -49,10 +50,9 @@
 </ng-container>
 
 <ng-template #noDocuments>
-  <empty-search *ngIf="!(query | emptyQuery)"></empty-search>
-  <empty-state *ngIf="query | emptyQuery"
-               [icon]="'far fa-file-square'">
-    <h3 i18n="@@search.records.empty.title">There are no Records yet!</h3>
-    <div i18n="@@search.records.empty.subtitle">Open a collection by clicking on it and add your first record.</div>
-  </empty-state>
+  <empty-post-its
+    [query]="query"
+    [collections]="collections"
+    (createPostIt)="createPostIt($event)">
+  </empty-post-its>
 </ng-template>
