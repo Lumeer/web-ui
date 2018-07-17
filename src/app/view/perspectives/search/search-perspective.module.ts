@@ -24,18 +24,16 @@ import {SharedModule} from '../../../shared/shared.module';
 import {PostItPerspectiveModule} from '../post-it/post-it-perspective.module';
 import {SearchAllComponent} from './all/search-all.component';
 import {SearchCollectionsComponent} from './collections/search-collections.component';
-import {SearchDocumentsComponent} from './documents/search-documents.component';
 import {SearchLinksComponent} from './links/search-links.component';
 import {SearchPerspectiveRoutingModule} from './search-perspective-routing.module';
 import {SearchPerspectiveComponent} from './search-perspective.component';
 import {SearchResultsDirective} from './search-results.directive';
 import {SearchViewsComponent} from './views/search-views.component';
 import {ViewDetailComponent} from './views/view-detail/view-detail.component';
-import {SearchDocumentHeaderComponent} from './documents/header/search-document-header.component';
 import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
 import {EmptyDataComponent} from './all/empty-data/empty-data.component';
 import {EmptyViewsComponent} from './views/empty-views/empty-views.component';
-import {EmptyDocumentsComponent} from './documents/empty-documents/empty-documents.component';
+import {SearchDocumentsModule} from './documents/search-documents.module';
 
 @NgModule({
   imports: [
@@ -44,18 +42,16 @@ import {EmptyDocumentsComponent} from './documents/empty-documents/empty-documen
     PostItPerspectiveModule,
     SearchBoxModule,
     WarningMessageModule,
-    SearchPerspectiveRoutingModule
+    SearchPerspectiveRoutingModule,
+    SearchDocumentsModule
   ],
   declarations: [
     SearchAllComponent,
     SearchCollectionsComponent,
-    SearchDocumentsComponent,
     SearchLinksComponent,
     SearchPerspectiveComponent,
-    SearchDocumentHeaderComponent,
     SearchResultsDirective,
     SearchViewsComponent,
-    EmptyDocumentsComponent,
     EmptyDataComponent,
     EmptyViewsComponent,
     ViewDetailComponent
@@ -63,7 +59,6 @@ import {EmptyDocumentsComponent} from './documents/empty-documents/empty-documen
   entryComponents: [
     SearchAllComponent,
     SearchCollectionsComponent,
-    SearchDocumentsComponent,
     SearchLinksComponent,
     SearchPerspectiveComponent,
     SearchViewsComponent
