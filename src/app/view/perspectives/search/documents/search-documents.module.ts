@@ -25,8 +25,6 @@ import {SearchDocumentsComponent} from './search-documents.component';
 import {EmptyDocumentsComponent} from './empty-documents/empty-documents.component';
 import {SearchDocumentHeaderComponent} from './header/search-document-header.component';
 import {IsDocumentOpenedPipe} from './pipes/is-document-opened.pipe';
-import {IsXlargeSizePipe} from './pipes/is-xlarge-size.pipe';
-import {IsNotSmallSizePipe} from './pipes/is-not-small-size.pipe';
 
 @NgModule({
   imports: [
