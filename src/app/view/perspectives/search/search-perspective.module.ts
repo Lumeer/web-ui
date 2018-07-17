@@ -33,9 +33,9 @@ import {SearchViewsComponent} from './views/search-views.component';
 import {ViewDetailComponent} from './views/view-detail/view-detail.component';
 import {SearchDocumentHeaderComponent} from './documents/header/search-document-header.component';
 import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
-import {EmptyDocumentsComponent} from './documents/empty-documents/empty-documents.component';
 import {EmptyDataComponent} from './all/empty-data/empty-data.component';
 import {EmptyViewsComponent} from './views/empty-views/empty-views.component';
+import {EmptyDocumentsComponent} from './documents/empty-documents/empty-documents.component';
 
 @NgModule({
   imports: [
