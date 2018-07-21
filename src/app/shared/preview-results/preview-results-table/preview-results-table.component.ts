@@ -19,9 +19,9 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {AttributeModel, CollectionModel} from '../../../core/store/collections/collection.model';
 
-export const PAGE_SIZE = 100;
+const PAGE_SIZE = 100;
 
 @Component({
   selector: 'preview-results-table',
@@ -30,8 +30,6 @@ export const PAGE_SIZE = 100;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PreviewResultsTableComponent implements OnInit {
-
-  public static readonly PAGE_SIZE = 100;
 
   @Input()
   public documents: DocumentModel[];
@@ -64,19 +62,19 @@ export class PreviewResultsTableComponent implements OnInit {
   }
 
   private countPage(): void {
-    this.page = Math.floor(this.activeIndex / PreviewResultsTableComponent.PAGE_SIZE);
+    this.page = Math.floor(this.activeIndex / PAGE_SIZE);
   }
 
   public selectPage(page: number) {
     this.page = page;
   }
 
-  public canActivatePage(page: number): boolean {
-    return ((page < this.page) && (page >= 0)) ||
-      ((page > this.page) && (page < Math.ceil(this.documents.length / PreviewResultsTableComponent.PAGE_SIZE)));
+  public trackByAttribute(index: number, attribute: AttributeModel): string {
+    return attribute.correlationId || attribute.id;
   }
 
-  public pageEndIndex(page: number): number {
-    return Math.min((page + 1) * 100, this.documents.length);
+  public trackByDocument(index: number, document: DocumentModel): string {
+    return document.correlationId || document.id;
   }
+
 }

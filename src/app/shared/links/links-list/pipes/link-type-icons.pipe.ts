@@ -17,35 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-
+import {Pipe, PipeTransform} from '@angular/core';
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 
-@Component({
-  selector: 'links-list-tabs',
-  templateUrl: './links-list-tabs.component.html',
-  styleUrls: ['./links-list-tabs.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+@Pipe({
+  name: 'linkTypeIcons'
 })
-export class LinksListTabsComponent {
+export class LinkTypeIconsPipe implements PipeTransform {
 
-  @Input()
-  public linkTypes: LinkTypeModel[];
-
-  @Input()
-  public selectedLinkType: LinkTypeModel;
-
-  @Output()
-  public select = new EventEmitter<LinkTypeModel>();
-
-  public selectLink(linkType: LinkTypeModel) {
-    if (!this.selectedLinkType || this.selectedLinkType.id !== linkType.id) {
-      this.select.emit(linkType)
-    }
-  }
-
-  public trackByLinkTypes(index: number, linkType: LinkTypeModel): string {
-    return linkType.id;
+  public transform(linkType: LinkTypeModel): string[] {
+    return linkType.collections && linkType.collections.map(coll => coll.icon) || [];
   }
 
 }

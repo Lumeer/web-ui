@@ -1,43 +1,40 @@
 <ng-container *ngIf="collection">
   <div class="row">
     <div class="col text-right">
-      <strong>{{page * 100 + 1}}&mdash;{{pageEndIndex(page)}}</strong>&nbsp;<span i18n="@@count.of">of</span>&nbsp;{{documents.length}}
-      <a *ngIf="canActivatePage(page - 1)" (click)="selectPage(page - 1)"><i
+      <strong>{{documents.length > 0 ? page * pageSize + 1 : 0}}&mdash;{{page | pageEndIndex:pageSize:documents.length}}</strong>
+      &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{documents.length}}
+      <a *ngIf="page - 1 | canActivatePage:pageSize:documents.length" (click)="selectPage(page - 1)"><i
         class="clickable fas fa-angle-double-left"></i></a>
-      <i *ngIf="!canActivatePage(page - 1)" class="fas fa-angle-double-left"></i>
-      <a *ngIf="canActivatePage(page + 1)" (click)="selectPage(page + 1)"><i
+      <i *ngIf="!(page - 1 | canActivatePage:pageSize:documents.length)" class="fas fa-angle-double-left"></i>
+      <a *ngIf="page + 1 | canActivatePage:pageSize:documents.length" (click)="selectPage(page + 1)"><i
         class="clickable fas fa-angle-double-right"></i></a>
-      <i *ngIf="!canActivatePage(page + 1)" class="fas fa-angle-double-right"></i>
+      <i *ngIf="!(page + 1 | canActivatePage:pageSize:documents.length)" class="fas fa-angle-double-right"></i>
     </div>
   </div>
   <div class="table-responsive h-10em">
     <table class="table table-sm" id="preview-results-table">
       <thead>
-      <tr>
-        <th *ngFor="let attr of collection.attributes" scope="col" title="{{attr.name}}">{{attr.name}}</th>
-      </tr>
+        <tr>
+          <th *ngFor="let attr of collection.attributes; trackBy:trackByAttribute" scope="col" title="{{attr.name}}">{{attr.name}}</th>
+        </tr>
       </thead>
       <tbody>
-      <tr *ngIf="documents.length === 0">
-        <td [attr.colspan]="collection.attributes.length" class="text-center" i18n="@@shared.preview.results.noResults">
-          No documents found.
-        </td>
-      </tr>
-      <ng-container
-        *ngFor="let r of (documents | slice : (page * pageSize) : ((page + 1) * pageSize)); let idx = index;">
-        <tr class="clickable-row {{activeIndex == idx + (page * pageSize) ? 'active' : ''}}"
-            (click)="activate(idx + (page * pageSize))">
-          <td *ngFor="let attr of collection.attributes" title="{{r.data[attr.id]}}">{{r.data[attr.id]}}</td>
+        <tr *ngIf="documents.length === 0">
+          <td [attr.colspan]="collection.attributes.length" class="text-center" i18n="@@shared.preview.results.noResults">
+            No documents found.
+          </td>
         </tr>
-      </ng-container>
+        <ng-container
+          *ngFor="let r of (documents | slice : (page * pageSize) : ((page + 1) * pageSize)); trackBy:trackByDocument; let idx = index;">
+          <tr class="clickable-row {{activeIndex == idx + (page * pageSize) ? 'active' : ''}}"
+              (click)="activate(idx + (page * pageSize))">
+            <td *ngFor="let attr of collection.attributes" title="{{r.data[attr.id]}}">{{r.data[attr.id]}}</td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>
-  <span class="small float-right text-primary" title.i18n="@@shared.preview-results.scrollable"
-        title="You can scroll the table...">
-    <i class="fas fa-arrows-h"></i>
-  </span>
-  <span class="small float-right text-primary" title.i18n="@@shared.preview-results.scrollable"
+  <span class="small float-right text-primary" i18n-title="@@shared.preview-results.scrollable"
         title="You can scroll the table...">
     <i class="fas fa-arrows-v" style="top: -1em; left: 2em; position: relative;"></i>
   </span>

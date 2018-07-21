@@ -1,49 +1,42 @@
-<div class="row">
-  <div class="col small text-right">
-    <strong>1&mdash;100</strong>&nbsp;of&nbsp;234
-    <a href="#"><i class="fas fa-angle-double-left"></i></a>
-    <a href="#"><i class="fas fa-angle-double-right"></i></a>
-  </div>
-</div>
-<div class="table-responsive">
-  <table class="table table-sm">
-    <thead>
-      <tr>
-        <th *ngIf="linkAttrCount > 0" [attr.colspan]="linkAttrCount" [title]="linkName">
-          <icons-presenter [icons]="linkIcons" [colors]="linkColors" [title]="linkName">
-          </icons-presenter>
-          {{linkName}}
-        </th>
-        <th [attr.colspan]="attributes.length - linkAttrCount" [title]="collectionName" [class.border-left]="linkAttrCount > 0">
-          <i [class]="collectionIcon" [style.color]="collectionColor"></i>&nbsp;{{collectionName}}
-        </th>
-      </tr>
-      <tr>
-        <th *ngFor="let attr of attributes; let j = index;" scope="col" title="{{attr}}" [class.border-left]="linkAttrCount == j && linkAttrCount > 0">{{attr}}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let r of data; let idx = index"
-          class="clickable-row"
-          (click)="openLinked(idx)">
-        <td *ngFor="let attr of attributes; let i = index;"
-            title="{{r[attr]}}"
-            [class.border-left]="linkAttrCount == i && linkAttrCount > 0"
-            [class.always-white]="i < linkAttrCount">
-          <input-box *ngIf="i < linkAttrCount"
-                     class="flex-grow-2 my-1"
-                     [maxLines]="1"
-                     [editable]="true"
-                     [canStayEmpty]="true"
-                     [initialValue]="r[attr]"
-                     (newValue)="r[attr] = $event">
-          </input-box>
-          <span *ngIf="i >= linkAttrCount">{{r[attr]}}</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<span class="small float-right text-primary" title.i18n="@@shared.preview-results.scrollable" title="You can scroll the table...">
-  <i class="fas fa-arrows-h"></i>
-</span>
+<ng-container *ngIf="{collection: collection$ | async, documents: documents$ | async} as data">
+  <ng-container *ngIf="data.collection && data.documents">
+    <div class="row">
+      <div class="col text-right">
+        <strong>{{data.documents.length > 0 ? page * pageSize + 1 : 0}}&mdash;{{page | pageEndIndex:pageSize:data.documents.length}}</strong>
+        &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{data.documents.length}}
+        <a *ngIf="page - 1 | canActivatePage:pageSize:data.documents.length" (click)="page = page - 1"><i
+          class="clickable fas fa-angle-double-left"></i></a>
+        <i *ngIf="!(page - 1 | canActivatePage:pageSize:data.documents.length)" class="fas fa-angle-double-left"></i>
+        <a *ngIf="page + 1 | canActivatePage:pageSize:data.documents.length" (click)="page = page + 1"><i
+          class="clickable fas fa-angle-double-right"></i></a>
+        <i *ngIf="!(page + 1 | canActivatePage:pageSize:data.documents.length)" class="fas fa-angle-double-right"></i>
+      </div>
+    </div>
+    <div class="table-responsive h-10em">
+      <table class="table table-sm" id="preview-results-table">
+        <thead>
+          <tr>
+            <th *ngFor="let attr of data.collection.attributes; trackBy:trackByAttribute" scope="col" title="{{attr.name}}">{{attr.name}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="data.documents.length === 0">
+            <td [attr.colspan]="data.collection.attributes.length" class="text-center" i18n="@@shared.preview.results.noResults">
+              No documents found.
+            </td>
+          </tr>
+          <ng-container
+            *ngFor="let r of (data.documents | slice : (page * pageSize) : ((page + 1) * pageSize)); trackBy:trackByDocument; let idx = index;">
+            <tr class="clickable-row" (dblclick)="documentSelected(data.documents[idx + (page * pageSize)])">
+              <td *ngFor="let attr of collection.attributes" title="{{r.data[attr.id]}}">{{r.data[attr.id]}}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <span class="small float-right text-primary" i18n-title="@@shared.preview-results.scrollable"
+          title="You can scroll the table...">
+    <i class="fas fa-arrows-v" style="top: -1em; left: 2em; position: relative;"></i>
+  </span>
+  </ng-container>
+</ng-container>

@@ -21,20 +21,19 @@ import {ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Out
 import {Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
-import {selectCollectionById, selectCollectionsByQuery} from '../../core/store/collections/collections.state';
+import {selectCollectionsByQuery} from '../../core/store/collections/collections.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {filter, take, tap, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectDocumentsByCustomQuery} from '../../core/store/documents/documents.state';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
-import {ConditionType, QueryModel} from '../../core/store/navigation/query.model';
+import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {selectViewCursor} from '../../core/store/views/views.state';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
-import {QueryConverter} from '../../core/store/navigation/query.converter';
 import {generateDocumentData} from '../../core/store/documents/document.utils';
 
 @Component({
@@ -53,16 +52,12 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
 
   public documents$: Observable<DocumentModel[]>;
 
-  public collection$: Observable<CollectionModel>;
-
   public activeIndex = 0;
 
   private allSubscriptions = new Subscription();
   private dataSubscription: Subscription;
 
   private query: QueryModel;
-
-  private collectionQuery: QueryModel;
 
   @Output()
   public selectCollection = new EventEmitter<CollectionModel>();
@@ -73,7 +68,8 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
   private collectionsCount = -1;
   private documentsCount = -1;
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private store: Store<AppState>) {
+  }
 
   public ngOnInit() {
     this.subscribeAll();
@@ -97,7 +93,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
     ).subscribe(navigation => this.updateNavigation(navigation.query)));
 
     // initialize when we do not select anything
-    this.allSubscriptions.add(this.collections$.pipe(filter(collections => !!collections), take(1), withLatestFrom(this.store.select(selectViewCursor)))
+    this.allSubscriptions.add(this.collections$.pipe(take(1), withLatestFrom(this.store.select(selectViewCursor)))
       .subscribe(([collections, cursor]) => {
         this.collectionsCount = collections.length;
         if (!this.selectedCollection) {
@@ -145,52 +141,49 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateDataSubscription() {
-    if (this.collectionQuery) {
-      if (this.dataSubscription) {
-        this.dataSubscription.unsubscribe();
-      }
-
-      this.documents$ = this.store.select(selectDocumentsByCustomQuery(this.collectionQuery));
-      this.collection$ = this.store.select(selectCollectionById(this.selectedCollection.id));
-
-      this.dataSubscription = this.documents$.pipe(filter(documents => !!documents),
-        tap(documents => {
-          this.documentsCount = documents.length;
-        }),
-        withLatestFrom(this.store.select(selectViewCursor)))
-        .subscribe(([documents, cursor]) => {
-
-          if (documents.length > 0) {
-
-            let idx;
-            if (cursor && cursor.documentId) {
-              idx = documents.findIndex(d => d.id === cursor.documentId);
-            }
-            if (!idx || idx < 0) {
-              idx = 0;
-            }
-
-            if (this.activeIndex !== idx || !this.selectedDocument) {
-              this.activeIndex = idx;
-
-              // we might get different index when a new document was added but it is already selected
-              if ((!this.selectedDocument || this.selectedDocument.id !== documents[idx].id) && documents.length > idx) {
-                this.setActiveDocument(documents[idx]);
-              }
-            }
-          } else {
-            this.setActiveDocument(null);
-          }
-        });
+  private updateDataSubscription(collectionQuery: QueryModel) {
+    if (this.dataSubscription) {
+      this.dataSubscription.unsubscribe();
     }
+
+    this.documents$ = this.store.select(selectDocumentsByCustomQuery(collectionQuery));
+
+    this.dataSubscription = this.documents$.pipe(filter(documents => !!documents),
+      tap(documents => {
+        this.documentsCount = documents.length;
+      }),
+      withLatestFrom(this.store.select(selectViewCursor)))
+      .subscribe(([documents, cursor]) => {
+
+        if (documents.length > 0) {
+
+          let idx;
+          if (cursor && cursor.documentId) {
+            idx = documents.findIndex(d => d.id === cursor.documentId);
+          }
+          if (!idx || idx < 0) {
+            idx = 0;
+          }
+
+          if (this.activeIndex !== idx || !this.selectedDocument) {
+            this.activeIndex = idx;
+
+            // we might get different index when a new document was added but it is already selected
+            if ((!this.selectedDocument || this.selectedDocument.id !== documents[idx].id) && documents.length > idx) {
+              this.setActiveDocument(documents[idx]);
+            }
+          }
+        } else {
+          this.setActiveDocument(null);
+        }
+      });
   }
 
   private getData() {
     if (this.selectedCollection) {
-      this.collectionQuery = { ...this.query, collectionIds: [this.selectedCollection.id] };
-      this.updateDataSubscription();
-      this.store.dispatch(new DocumentsAction.Get({ query: this.collectionQuery }));
+      const collectionQuery = {...this.query, collectionIds: [this.selectedCollection.id]};
+      this.updateDataSubscription(collectionQuery);
+      this.store.dispatch(new DocumentsAction.Get({query: collectionQuery}));
     }
   }
 
@@ -206,10 +199,9 @@ export class PreviewResultsComponent implements OnInit, OnDestroy {
         collectionId: this.selectedCollection.id,
         correlationId: CorrelationIdGenerator.generate(),
         data: generateDocumentData(this.selectedCollection, this.query.filters)
-        },
+      },
       callback: id => {
         this.store.dispatch(new ViewsAction.SetCursor({cursor: {collectionId: this.selectedCollection.id, documentId: id}}));
-
       }
     }));
   }

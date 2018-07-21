@@ -1,16 +1,14 @@
-<ul class="float-right">
-  <li class="nav-item">
-    <button class="btn btn-sm btn-primary" (click)="createNewLink()"><i class="fas fa-link"></i>&nbsp;New Link</button>
-  </li>
-</ul>
 <ul class="nav nav-tabs">
-  <li *ngFor="let link of links;" class="nav-item">
+  <li *ngFor="let linkType of linkTypes; trackBy:trackByLinkTypes" class="nav-item">
     <a
-      class="nav-link {{link === selectedLink ? 'active' : ''}}"
-      title="{{link}}"
-      (click)="selectLink(link)">
-      <icons-presenter [colors]="getLinkColors(link)" [icons]="getLinkIcons(link)" [title]="link"></icons-presenter>
-      {{link}}
+      class="nav-link text-truncate {{linkType === selectedLinkType ? 'active' : ''}}"
+      title="{{linkType.name}}"
+      (click)="selectLink(linkType)">
+      <icons-presenter
+        [colors]="linkType | linkTypeColors"
+        [icons]="linkType | linkTypeIcons"
+        [title]="linkType.name"></icons-presenter>
+      {{linkType.name}}
     </a>
   </li>
 </ul>
