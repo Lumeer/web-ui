@@ -112,9 +112,6 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
       this.summary$ = this.getSummary$();
       this.favorite$ = this.getFavorite$();
       this.rows$ = this.getRows$();
-
-      const query = {documentIds: [this.document.id]};
-      this.store.dispatch(new LinkInstancesAction.Get({query}));
     }
   }
 

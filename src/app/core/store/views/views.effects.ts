@@ -22,7 +22,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
-import {catchError, concatMap, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {Permission, View} from '../../dto';
 import {SearchService, ViewService} from '../../rest';
@@ -58,9 +58,8 @@ export class ViewsEffects {
   public getByCode$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.GetByCode>(ViewsActionType.GET_BY_CODE),
     withLatestFrom(this.store$.select(selectViewsDictionary)),
-    skipWhile(([action, views]) => action.payload.viewCode in views),
+    filter(([action, views]) => !(action.payload.viewCode in views)),
     mergeMap(([action]) => this.viewService.getView(action.payload.viewCode).pipe(
-      skipWhile((dto: View) => isNullOrUndefined(dto)), // TODO can probably be removed once views are not stored in webstorage
       map((dto: View) => ViewConverter.convertToModel(dto)),
       map((view: ViewModel) => new ViewsAction.GetSuccess({views: [view]})),
       catchError((error) => of(new ViewsAction.GetFailure({error: error})))

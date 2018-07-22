@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AttributeModel, CollectionModel} from '../../../core/store/collections/collection.model';
 
@@ -29,7 +29,7 @@ const PAGE_SIZE = 100;
   styleUrls: ['./preview-results-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PreviewResultsTableComponent implements OnInit {
+export class PreviewResultsTableComponent implements OnChanges {
 
   @Input()
   public documents: DocumentModel[];
@@ -38,31 +38,31 @@ export class PreviewResultsTableComponent implements OnInit {
   public collection: CollectionModel;
 
   @Input()
-  public activeIndex = 0;
+  public selectedDocumentId: string;
 
   public page = 0;
 
   @Output()
   public selectDocument = new EventEmitter<DocumentModel>();
 
-  @Output('activate')
-  public activateEvent = new EventEmitter<number>();
-
   public readonly pageSize = PAGE_SIZE;
 
-  public ngOnInit() {
-    this.countPage();
+  public ngOnChanges(changes: SimpleChanges) {
+    if (this.documents && this.selectedDocumentId) {
+      const index = this.documents.findIndex(doc => doc.id === this.selectedDocumentId);
+      if (index !== -1) {
+        this.countPage(index);
+      }
+    }
   }
 
   public activate(index: number) {
-    this.activeIndex = index;
-    this.countPage();
-    this.selectDocument.emit(this.documents[this.activeIndex]);
-    this.activateEvent.emit(this.activeIndex);
+    this.selectDocument.emit(this.documents[index]);
+    this.countPage(index);
   }
 
-  private countPage(): void {
-    this.page = Math.floor(this.activeIndex / PAGE_SIZE);
+  private countPage(index: number): void {
+    this.page = Math.floor(index / PAGE_SIZE);
   }
 
   public selectPage(page: number) {

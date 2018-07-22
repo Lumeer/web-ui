@@ -14,7 +14,8 @@
       <div class="col">
         <links-list-table
           [linkType]="activeLinkType"
-          [document]="document">
+          [document]="document"
+          (select)="select.emit($event)">
         </links-list-table>
       </div>
     </div>

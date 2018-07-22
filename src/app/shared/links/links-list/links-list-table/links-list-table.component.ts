@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -26,8 +26,11 @@ import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
 import {getOtherLinkedCollectionId} from '../../../utils/link-type.utils';
-import {map} from 'rxjs/operators';
+import {map, mergeMap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
+import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
+import {getOtherLinkedDocumentId, LinkInstanceModel} from '../../../../core/store/link-instances/link-instance.model';
+import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
 
 const PAGE_SIZE = 100;
 
@@ -42,6 +45,8 @@ export class LinksListTableComponent implements OnChanges {
   @Input() public linkType: LinkTypeModel;
 
   @Input() public document: DocumentModel;
+
+  @Output() public select = new EventEmitter<{ collection: CollectionModel, document: DocumentModel }>();
 
   public collection$: Observable<CollectionModel>;
 
@@ -66,11 +71,23 @@ export class LinksListTableComponent implements OnChanges {
           return collectionsMap[collectionId];
         })
       );
+      this.documents$ = this.store.select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id])).pipe(
+        map(linkInstances => this.convertLinkInstancesToDocumentIds(linkInstances, this.document.id)),
+        mergeMap(ids => this.store.select(selectDocumentsByIds(ids)))
+      );
     }
   }
 
-  public documentSelected(document: DocumentModel) {
+  private convertLinkInstancesToDocumentIds(linkInstances: LinkInstanceModel[], documentId: string): string[] {
+    return linkInstances.reduce((acc, linkInstance) => {
+      const otherId = getOtherLinkedDocumentId(linkInstance, documentId);
+      acc.push(otherId);
+      return acc;
+    }, []);
+  }
 
+  public documentSelected(collection: CollectionModel, document: DocumentModel) {
+    this.select.emit({collection, document});
   }
 
   public trackByAttribute(index: number, attribute: AttributeModel): string {

@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DocumentDataModel} from '../documents/document.model';
-
 export interface LinkInstanceModel {
 
   id?: string;

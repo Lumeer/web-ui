@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
-import {concatMap, filter, first, flatMap, map, mergeMap, skipWhile, withLatestFrom} from 'rxjs/operators';
+import {concatMap, filter, first, flatMap, map, mergeMap, withLatestFrom} from 'rxjs/operators';
 import {getArrayDifference} from '../../../shared/utils/array.utils';
 import {generateAttributeName} from '../../../shared/utils/attribute.utils';
 import {AppState} from '../app.state';
@@ -56,7 +56,7 @@ export class TablesEffects {
     withLatestFrom(
       this.store$.select(selectViewTable2Config),
       this.store$.select(selectCollectionsLoaded).pipe(
-        skipWhile(loaded => !loaded),
+        filter(loaded => loaded),
         mergeMap(() => this.store$.select(selectAllCollections))
       )
     ),

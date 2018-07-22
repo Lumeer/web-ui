@@ -40,7 +40,7 @@ export class LinksListTabsComponent {
 
   public selectLink(linkType: LinkTypeModel) {
     if (!this.selectedLinkType || this.selectedLinkType.id !== linkType.id) {
-      this.select.emit(linkType)
+      this.select.emit(linkType);
     }
   }
 

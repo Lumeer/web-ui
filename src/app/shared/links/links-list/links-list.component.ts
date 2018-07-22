@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Observable, combineLatest as observableCombineLatest} from 'rxjs';
 import {LinkTypeModel} from '../../../core/store/link-types/link-type.model';
@@ -27,6 +27,7 @@ import {Store} from '@ngrx/store';
 import {map, tap} from 'rxjs/operators';
 import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
 
 @Component({
   selector: 'links-list',
@@ -37,6 +38,8 @@ export class LinksListComponent implements OnChanges {
 
   @Input() public document: DocumentModel;
 
+  @Output() public select = new EventEmitter<{ collection: CollectionModel, document: DocumentModel }>();
+
   public linkTypes$: Observable<LinkTypeModel[]>;
   public activeLinkType: LinkTypeModel;
 
@@ -46,11 +49,13 @@ export class LinksListComponent implements OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    this.renewSubscriptions()
+    this.renewSubscriptions();
   }
 
   public onSelectLink(linkType: LinkTypeModel) {
     this.activeLinkType = linkType;
+
+    this.readDocuments(linkType);
   }
 
   private renewSubscriptions() {
@@ -69,14 +74,23 @@ export class LinksListComponent implements OnChanges {
   }
 
   private initActiveLinkType(linkTypes: LinkTypeModel[]) {
-    if (linkTypes.length == 0) {
-      this.activeLinkType = null;
+    let selectLinkType: LinkTypeModel;
+    if (linkTypes.length === 0) {
+      selectLinkType = null;
     } else if (this.activeLinkType) {
-      this.activeLinkType = linkTypes.find(linkType => linkType.id === this.activeLinkType.id) || linkTypes[0];
+      selectLinkType = linkTypes.find(linkType => linkType.id === this.activeLinkType.id) || linkTypes[0];
     } else {
-      this.activeLinkType = linkTypes[0];
+      selectLinkType = linkTypes[0];
     }
 
+    this.onSelectLink(selectLinkType);
+  }
+
+  private readDocuments(linkType: LinkTypeModel) {
+    if (linkType) {
+      const query = {linkTypeIds: [linkType.id]}; // TODO maybe we can find efficient way to fetch linked documents
+      this.store.dispatch(new DocumentsAction.Get({query}));
+    }
   }
 
 }
