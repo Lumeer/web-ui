@@ -50,7 +50,7 @@ export class LinksListTableComponent implements OnChanges {
 
   public collection$: Observable<CollectionModel>;
 
-  public documents$: Observable<DocumentModel>;
+  public documents$: Observable<DocumentModel[]>;
 
   public page = 0;
 
