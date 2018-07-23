@@ -55,7 +55,9 @@ const notPrintableKeys: number[] = [
   KeyCode.PageBackward,
   KeyCode.PageForward,
   KeyCode.PauseBreak,
-  KeyCode.SelectKey
+  KeyCode.SelectKey,
+  KeyCode.LeftWindowKey,
+  KeyCode.RightWindowKey,
 ];
 
 export function isKeyPrintable(keyCode: number): boolean {
