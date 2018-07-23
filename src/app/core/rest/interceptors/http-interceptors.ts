@@ -17,25 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {SharedModule} from '../shared/shared.module';
-import {AuthRoutingModule} from './auth-routing.module';
-import {AuthCallbackComponent} from './callback/auth-callback.component';
-import {LogoutComponent} from './logout/logout.component';
-import {AgreementComponent} from './agreement/agreement.component';
-import { SessionExpiredComponent } from './session-expired/session-expired.component';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {AuthHttpInterceptor} from './auth.http-interceptor';
+import {RavenHttpInterceptor} from './raven.http-interceptor';
+import {SessionHttpInterceptor} from './session.http-interceptor';
 
-@NgModule({
-  imports: [
-    AuthRoutingModule,
-    SharedModule
-  ],
-  declarations: [
-    AuthCallbackComponent,
-    LogoutComponent,
-    AgreementComponent,
-    SessionExpiredComponent
-  ]
-})
-export class AuthModule {
-}
+export const httpInterceptorProviders = [
+  {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
+  {provide: HTTP_INTERCEPTORS, useClass: RavenHttpInterceptor, multi: true},
+  {provide: HTTP_INTERCEPTORS, useClass: SessionHttpInterceptor, multi: true},
+];

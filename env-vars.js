@@ -13,6 +13,7 @@ config.LUMEER_ENGINE = env.LUMEER_ENGINE;
 config.SENTRY_DSN = env.SENTRY_DSN;
 config.AUTH_CLIENT_ID = env.AUTH_CLIENT_ID;
 config.AUTH_DOMAIN = env.AUTH_DOMAIN;
+config.SESSION_TIMEOUT = env.SESSION_TIMEOUT;
 
 writeFileSync('./src/environments/.env.json', JSON.stringify(config));
 

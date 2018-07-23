@@ -35,6 +35,7 @@ $ LUMEER_ENV=production \
 > I18N_LOCALE=en \
 > SENTRY_DSN=https://<key>@sentry.io/<project> \
 > BUILD_NUMBER=42 \
+> SESSION_TIMEOUT=30 \
 > LUMEER_ENGINE=lumeer-engine \
 > mvn clean package -Dcontext.root=en
 ```
@@ -43,6 +44,7 @@ $ LUMEER_ENV=production \
  * `I18N_LOCALE`: language to be used in the application (`en`, `cs` or empty to use default `en`)
  * `SENTRY_DSN`: Sentry Data Source Name, if set it activates Sentry (recommended for production only)
  * `BUILD_NUMBER`: build number to be shown in the application
+ * `SESSIONT_TIMEOUT`: user inactivity time before session expiration (in minutes)
  * `LUMEER_ENGINE`: back-end deployment context root
  * `context.root`: front-end deployment context root
 

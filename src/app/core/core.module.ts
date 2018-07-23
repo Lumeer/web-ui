@@ -25,7 +25,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {SharedModule} from '../shared/shared.module';
-import {WorkspaceGuard} from '../workspace/workspace.guard';
 import {RavenErrorHandler} from './error/raven.error-handler';
 import {GuardsModule} from './guards/guards.module';
 import {HomeComponent} from './home.component';
@@ -34,8 +33,8 @@ import {CollectionService} from './rest/collection.service';
 import {DocumentService} from './rest/document.service';
 import {EventService} from './rest/event.service';
 import {GroupService} from './rest/group.service';
-import {httpInterceptorProviders} from './rest/http-interceptors';
 import {ImportService} from './rest/import.service';
+import {httpInterceptorProviders} from './rest/interceptors/http-interceptors';
 import {LinkInstanceService} from './rest/link-instance.service';
 import {LinkTypeService} from './rest/link-type.service';
 import {OrganizationService} from './rest/organization.service';
@@ -84,7 +83,6 @@ import {ProjectValidators} from './validators/project.validators';
     LinkInstanceService,
     LinkTypeService,
     EventService,
-    WorkspaceGuard,
     CollectionValidators,
     OrganizationValidators,
     ProjectValidators

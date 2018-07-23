@@ -17,11 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {AuthHttpInterceptor} from '../../auth/auth.http-interceptor';
-import {RavenHttpInterceptor} from '../error/raven.http-interceptor';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import * as Raven from 'raven-js';
+import {Observable, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+import {environment} from '../../../../environments/environment';
 
-export const httpInterceptorProviders = [
-  {provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true},
-  {provide: HTTP_INTERCEPTORS, useClass: RavenHttpInterceptor, multi: true},
-];
+@Injectable()
+export class RavenHttpInterceptor implements HttpInterceptor {
+
+  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(request).pipe(
+      catchError(error => {
+        if (environment.sentryDsn && error.status !== 402) {
+          Raven.captureException(error);
+        }
+
+        return throwError(error);
+      })
+    );
+  }
+
+}

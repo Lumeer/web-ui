@@ -1,0 +1,18 @@
+<div class="card border-light mb-3">
+  <div class="card-header">
+    <lumeer-logo [height]="48"
+                 [text]="'Lumeer'">
+    </lumeer-logo>
+  </div>
+  <div class="card-body">
+    <p i18n="@@session.expired.message">You have been inactive for {{sessionTimeout}} minutes and your session has expired. If you want to continue working, the application needs to be reloaded.</p>
+
+    <a [href]="redirectUrl$ | async"
+            class="btn btn-success">
+        <span class="text-uppercase"
+              i18n="@@button.continue">Continue</span>
+      &nbsp;
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+</div>
