@@ -22,7 +22,9 @@ import * as Raven from 'raven-js';
 import {environment} from '../../../environments/environment';
 
 if (environment.sentryDsn) {
-  Raven.config(environment.sentryDsn).install();
+  Raven.config(environment.sentryDsn, {
+    release: environment.buildNumber
+  }).install();
 }
 
 @Injectable()
