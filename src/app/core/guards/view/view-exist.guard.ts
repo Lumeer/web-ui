@@ -22,7 +22,7 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {filter, map, switchMap, take, withLatestFrom} from 'rxjs/operators';
+import {filter, map, skipWhile, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {NotificationService} from '../../notifications/notification.service';
 import {AppState} from '../../store/app.state';
@@ -49,7 +49,7 @@ export class ViewExistGuard implements CanActivate {
     }
 
     return this.store.select(selectViewsLoaded).pipe(
-      filter((loaded) => !loaded),
+      skipWhile((loaded) => !loaded),
       switchMap(() => this.store.select(selectViewByCode(viewCode))),
       take(1),
       withLatestFrom(this.store.select(selectNavigation)),

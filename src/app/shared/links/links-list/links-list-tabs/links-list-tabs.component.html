@@ -5,8 +5,8 @@
       title="{{linkType.name}}"
       (click)="selectLink(linkType)">
       <icons-presenter
-        [colors]="linkType | linkTypeColors"
-        [icons]="linkType | linkTypeIcons"
+        [colors]="linkType.collections | colors"
+        [icons]="linkType.collections | icons"
         [title]="linkType.name"></icons-presenter>
       {{linkType.name}}
     </a>

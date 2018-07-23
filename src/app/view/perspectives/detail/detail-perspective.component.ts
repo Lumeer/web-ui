@@ -57,7 +57,7 @@ export class DetailPerspectiveComponent {
     this.select(collection, document);
   }
 
-  private select(collection: CollectionModel, document: DocumentModel) {
+  private select(collection: CollectionModel, document?: DocumentModel) {
     this.selectedCollection = collection;
     this.selectedDocument = document;
 

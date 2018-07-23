@@ -26,7 +26,7 @@ import {Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectUserById} from '../../../core/store/users/users.state';
-import {concatMap, filter, map, take} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {UsersAction} from '../../../core/store/users/users.action';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
@@ -36,9 +36,6 @@ import {UiRow} from '../../../core/ui/ui-row';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {PerspectiveService} from '../../../core/perspective.service';
-import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {selectLinkTypesByDocumentId} from '../../../core/store/link-types/link-types.state';
-import {selectLinkInstancesByTypeAndDocuments} from '../../../core/store/link-instances/link-instances.state';
 
 @Component({
   selector: 'document-detail',

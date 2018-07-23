@@ -34,9 +34,9 @@
   </div>
   <div class="col small text-right d-flex align-bottom text-notice">
     <div class="justify-content-end w-100">
-      <span>Version {{document.dataVersion}}</span><br/>
-      <span>Created on {{document.creationDate | date : 'mediumDate'}} by {{createdBy$ | async}}</span>
-      <span *ngIf="document.updateDate"><br/>Last modified on {{document.updateDate | date : 'mediumDate'}} by {{updatedBy$ | async}}</span>
+      <span i18n="@@document.detail.version">Version {{document.dataVersion}}</span><br/>
+      <span i18n="@@document.detail.createdBy">Created on {{document.creationDate | date : 'mediumDate'}} by {{createdBy$ | async}}</span>
+      <span *ngIf="document.updateDate" i18n="@@document.detail.modifiedBy"><br/>Last modified on {{document.updateDate | date : 'mediumDate'}} by {{updatedBy$ | async}}</span>
     </div>
   </div>
 </div>
