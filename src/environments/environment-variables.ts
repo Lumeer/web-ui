@@ -33,6 +33,7 @@ export interface EnvironmentVariables {
   i18nFormat: string;
   locale: string;
   sentryDsn: string;
+  sessionTimeout: number;
 
 }
 
@@ -43,6 +44,7 @@ const buildNumber = env['BUILD_NUMBER'];
 const i18nFormat = env['I18N_FORMAT'];
 const locale: string = env['I18N_LOCALE'] || 'en';
 const sentryDsn: string = env['SENTRY_DSN'];
+const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
 
 export const environmentVariables: EnvironmentVariables = {
 
@@ -52,6 +54,7 @@ export const environmentVariables: EnvironmentVariables = {
   buildNumber,
   i18nFormat,
   locale,
-  sentryDsn
+  sentryDsn,
+  sessionTimeout
 
 };

@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, first, map, tap} from 'rxjs/operators';
@@ -29,15 +29,22 @@ import {UsersAction} from '../store/users/users.action';
 import {selectCurrentUserForWorkspace} from '../store/users/users.state';
 
 @Injectable()
-export class CurrentUserGuard implements CanActivate {
+export class CurrentUserGuard implements CanActivate, CanActivateChild {
 
   constructor(private authService: AuthService,
               private router: Router,
               private store: Store<AppState>) {
   }
 
-  public canActivate(next: ActivatedRouteSnapshot,
-                     state: RouterStateSnapshot): Observable<boolean> {
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    return this.isCurrentUserLoaded(state);
+  }
+
+  public canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+    return this.isCurrentUserLoaded(state);
+  }
+
+  private isCurrentUserLoaded(state: RouterStateSnapshot): Observable<boolean> {
     return this.checkStore(state).pipe(
       catchError((err, caught) => {
         console.error(err);
@@ -66,4 +73,5 @@ export class CurrentUserGuard implements CanActivate {
       })
     );
   }
+
 }

@@ -19,24 +19,49 @@
 
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import * as Raven from 'raven-js';
-import {Observable, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
+import {Router} from '@angular/router';
+import {EMPTY, Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
-export class RavenHttpInterceptor implements HttpInterceptor {
+export class SessionHttpInterceptor implements HttpInterceptor {
+
+  private sessionExpirationTime: Date;
+
+  private redirected: boolean;
+
+  public constructor(private router: Router) {
+  }
 
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(request).pipe(
-      catchError(error => {
-        if (environment.sentryDsn && error.status !== 402) {
-          Raven.captureException(error);
-        }
+    if (new Date() > this.sessionExpirationTime) {
+      this.handleExpiredSession();
+      return EMPTY;
+    }
 
-        return throwError(error);
+    return next.handle(request).pipe(
+      tap(() => {
+        this.sessionExpirationTime = new Date();
+        this.sessionExpirationTime.setMinutes(this.sessionExpirationTime.getMinutes() + environment.sessionTimeout);
+        this.redirected = false;
       })
     );
+  }
+
+  private handleExpiredSession() {
+    if (!this.redirected) {
+      this.redirected = true;
+      this.navigateToSessionExpiredPage();
+    }
+  }
+
+  private navigateToSessionExpiredPage() {
+    this.router.navigate(['/', 'session-expired'], {
+      queryParams: {
+        redirectUrl: this.router.url
+      }
+    });
   }
 
 }

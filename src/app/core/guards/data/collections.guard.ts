@@ -18,36 +18,32 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
+
 import {Store} from '@ngrx/store';
-import {Observable, of} from 'rxjs';
-import {catchError, filter, take, tap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {first, mergeMap, skipWhile, tap} from 'rxjs/operators';
 import {AppState} from '../../store/app.state';
-import {ViewsAction} from '../../store/views/views.action';
-import {selectViewsLoaded} from '../../store/views/views.state';
+import {CollectionModel} from '../../store/collections/collection.model';
+import {CollectionsAction} from '../../store/collections/collections.action';
+import {selectAllCollections, selectCollectionsLoaded} from '../../store/collections/collections.state';
 
 @Injectable()
-export class ViewsLoadedGuard implements CanActivate {
+export class CollectionsGuard implements Resolve<CollectionModel[]> {
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store$: Store<AppState>) {
   }
 
-  public canActivate(next: ActivatedRouteSnapshot,
-                     state: RouterStateSnapshot): Observable<boolean> {
-    return this.checkAndLoadViews().pipe(
-      catchError(() => of(false))
-    );
-  }
-
-  private checkAndLoadViews(): Observable<boolean> {
-    return this.store.select(selectViewsLoaded).pipe(
+  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<CollectionModel[]> {
+    return this.store$.select(selectCollectionsLoaded).pipe(
       tap(loaded => {
         if (!loaded) {
-          this.store.dispatch(new ViewsAction.Get({query: {}}));
+          this.store$.dispatch(new CollectionsAction.Get({query: {}}));
         }
       }),
-      filter(loaded => loaded),
-      take(1)
+      skipWhile(loaded => !loaded),
+      mergeMap(() => this.store$.select(selectAllCollections)),
+      first()
     );
   }
 

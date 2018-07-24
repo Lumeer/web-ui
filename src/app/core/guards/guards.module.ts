@@ -19,14 +19,15 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {CollectionsGuard} from './collections.guard';
-import {LinkTypesGuard} from './link-types.guard';
-import {PageNotFoundGuard} from './page-not-found.guard';
-import {ViewExistGuard} from './view/view-exist.guard';
-import {ViewRedirectGuard} from './view/view-redirect.guard';
-import {ViewsLoadedGuard} from './view/views-loaded.guard';
-import {CurrentUserGuard} from './current-user.guard';
 import {AppRedirectGuard} from './app-redirect.guard';
+import {CurrentUserGuard} from './current-user.guard';
+import {CollectionsGuard} from './data/collections.guard';
+import {LinkTypesGuard} from './data/link-types.guard';
+import {OrganizationsGuard} from './data/organizations.guard';
+import {ProjectsGuard} from './data/projects.guard';
+import {ViewsGuard} from './data/views.guard';
+import {PageNotFoundGuard} from './page-not-found.guard';
+import {ViewRedirectGuard} from './view-redirect.guard';
 
 @NgModule({
   imports: [
@@ -37,11 +38,12 @@ import {AppRedirectGuard} from './app-redirect.guard';
     CollectionsGuard,
     LinkTypesGuard,
     PageNotFoundGuard,
-    ViewExistGuard,
-    ViewsLoadedGuard,
+    ViewsGuard,
     ViewRedirectGuard,
     CurrentUserGuard,
-    AppRedirectGuard
+    AppRedirectGuard,
+    OrganizationsGuard,
+    ProjectsGuard,
   ]
 })
 export class GuardsModule {

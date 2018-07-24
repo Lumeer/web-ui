@@ -1,0 +1,31 @@
+$session-width: 350px;
+
+:host {
+  height: 100%;
+  width: 100%;
+  background: radial-gradient(#40404b, #111118) rgba(34,34,40,0.94);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  box-shadow: 0 0 40px 4px #111118;
+  width: $session-width;
+}
+
+label > *::after {
+  content: '\2009';
+}
+
+a {
+  position: relative;
+  right: 1px;
+  top: 1px;
+  height: 4.375rem;
+  line-height: 3.625rem;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin: 0.5rem -1.25rem -1.25rem;
+  width: $session-width;
+}

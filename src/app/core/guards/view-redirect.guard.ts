@@ -22,11 +22,11 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map, skipWhile, switchMap, take, withLatestFrom} from 'rxjs/operators';
-import {AppState} from '../../store/app.state';
-import {selectWorkspace} from '../../store/navigation/navigation.state';
-import {QueryConverter} from '../../store/navigation/query.converter';
-import {selectViewByCode, selectViewsLoaded} from '../../store/views/views.state';
-import {Perspective} from '../../../view/perspectives/perspective';
+import {AppState} from '../store/app.state';
+import {selectWorkspace} from '../store/navigation/navigation.state';
+import {QueryConverter} from '../store/navigation/query.converter';
+import {selectViewByCode, selectViewsLoaded} from '../store/views/views.state';
+import {Perspective} from '../../view/perspectives/perspective';
 
 @Injectable()
 export class ViewRedirectGuard implements CanActivate {

@@ -22,7 +22,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from './auth.guard';
 import {AuthCallbackComponent} from './callback/auth-callback.component';
 import {LogoutComponent} from './logout/logout.component';
-import {AgreementComponent} from './terms-confirm/agreement.component';
+import {SessionExpiredComponent} from './session-expired/session-expired.component';
+import {AgreementComponent} from './agreement/agreement.component';
 
 const authRoutes: Routes = [
   {
@@ -37,6 +38,10 @@ const authRoutes: Routes = [
   {
     path: 'logout',
     component: LogoutComponent
+  },
+  {
+    path: 'session-expired',
+    component: SessionExpiredComponent
   }
 ];
 

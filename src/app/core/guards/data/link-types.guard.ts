@@ -18,37 +18,33 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot} from '@angular/router';
+import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 
 import {Store} from '@ngrx/store';
-import {Observable, of} from 'rxjs';
-import {tap, filter, take, catchError} from 'rxjs/operators';
-import {AppState} from '../store/app.state';
-import {selectCollectionsLoaded} from '../store/collections/collections.state';
-import {CollectionsAction} from '../store/collections/collections.action';
+import {Observable} from 'rxjs';
+import {first, mergeMap, skipWhile, tap} from 'rxjs/operators';
+import {AppState} from '../../store/app.state';
+import {LinkTypeModel} from '../../store/link-types/link-type.model';
+import {LinkTypesAction} from '../../store/link-types/link-types.action';
+import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../store/link-types/link-types.state';
 
 @Injectable()
-export class CollectionsGuard implements CanActivate {
+export class LinkTypesGuard implements Resolve<LinkTypeModel[]> {
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store$: Store<AppState>) {
   }
 
-  public canActivate(next: ActivatedRouteSnapshot,
-                     state: RouterStateSnapshot): Observable<boolean> {
-    return this.checkStore().pipe(
-      catchError(() => of(false))
-    );
-  }
-
-  private checkStore(): Observable<boolean> {
-    return this.store.select(selectCollectionsLoaded).pipe(
+  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<LinkTypeModel[]> {
+    return this.store$.select(selectLinkTypesLoaded).pipe(
       tap(loaded => {
         if (!loaded) {
-          this.store.dispatch(new CollectionsAction.Get({query: {}}));
+          this.store$.dispatch(new LinkTypesAction.Get({query: {}}));
         }
       }),
-      filter(loaded => loaded),
-      take(1)
+      skipWhile(loaded => !loaded),
+      mergeMap(() => this.store$.select(selectAllLinkTypes)),
+      first()
     );
   }
+
 }
