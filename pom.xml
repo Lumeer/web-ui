@@ -82,6 +82,20 @@
                      <goal>exec</goal>
                   </goals>
                </execution>
+              <execution>
+                <id>sentry-upload-sourcemaps</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>./sentry-upload-sourcemaps.sh</executable>
+                  <workingDirectory>${basedir}</workingDirectory>
+                  <environmentVariables>
+                    <PUBLIC_PATH>/${context.root}/</PUBLIC_PATH>
+                  </environmentVariables>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
             </executions>
          </plugin>
       </plugins>
