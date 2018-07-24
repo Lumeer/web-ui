@@ -32,7 +32,7 @@ export class DocumentConverter {
       data: data,
       favorite: dto.favorite,
       creationDate: new Date(dto.creationDate),
-      updateDate: new Date(dto.updateDate),
+      updateDate: dto.updateDate ? new Date(dto.updateDate) : null,
       createdBy: dto.createdBy,
       updatedBy: dto.updatedBy,
       dataVersion: dto.dataVersion,

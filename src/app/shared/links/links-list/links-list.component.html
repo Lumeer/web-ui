@@ -1,11 +1,23 @@
-<div class="row justify-content-center">
-  <div class="col">
-    <h5>Links to other documents</h5>
-    <links-list-tabs [links]="links" [selectedLink]="selectedLink"></links-list-tabs>
-  </div>
-</div>
-<div class="row justify-content-center">
-  <div class="col">
-    <links-list-table></links-list-table>
-  </div>
-</div>
+<ng-container *ngIf="linkTypes$ | async as linkTypes">
+  <ng-container *ngIf="linkTypes.length > 0">
+    <div class="row justify-content-center">
+      <div class="col">
+        <h5>Links to other documents</h5>
+        <links-list-tabs
+          [linkTypes]="linkTypes"
+          [selectedLinkType]="activeLinkType"
+          (select)="onSelectLink($event)">
+        </links-list-tabs>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col">
+        <links-list-table
+          [linkType]="activeLinkType"
+          [document]="document"
+          (select)="select.emit($event)">
+        </links-list-table>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>

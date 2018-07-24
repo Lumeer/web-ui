@@ -17,45 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 
-declare const $: any;
+import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 
 @Component({
   selector: 'links-list-tabs',
   templateUrl: './links-list-tabs.component.html',
-  styleUrls: ['./links-list-tabs.component.scss']
+  styleUrls: ['./links-list-tabs.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinksListTabsComponent {
 
   @Input()
-  public links: string[];
+  public linkTypes: LinkTypeModel[];
 
   @Input()
-  public selectedLink: string;
+  public selectedLinkType: LinkTypeModel;
 
   @Output()
-  public select = new EventEmitter<string>();
+  public select = new EventEmitter<LinkTypeModel>();
 
-  public selectLink(linkName: string) {
-    this.selectedLink = linkName;
-    this.select.emit(linkName);
+  public selectLink(linkType: LinkTypeModel) {
+    if (!this.selectedLinkType || this.selectedLinkType.id !== linkType.id) {
+      this.select.emit(linkType);
+    }
   }
 
-  public getLinkColors(linkName: string) {
-    const colors = [['#e06666', '#f6b26b'], ['#ffd966', '#93c47d'], ['#76a5af', '#6fa8dc'], ['#8e7cc3', '#c27ba0']];
-
-    return colors[this.links.indexOf(linkName)];
-  }
-
-  public getLinkIcons(linkName: string) {
-    const icon = [['fas fa-cubes', 'fas fa-curling'], ['fas fa-cut', 'fas fa-database'], ['fas fa-deaf', 'fas fa-desktop'], ['fas fa-deaf', 'fas fa-cubes']];
-
-    return icon[this.links.indexOf(linkName)];
-  }
-
-  public createNewLink() {
-    $(`#newLinkDialogModal`).modal('show');
+  public trackByLinkTypes(index: number, linkType: LinkTypeModel): string {
+    return linkType.id;
   }
 
 }

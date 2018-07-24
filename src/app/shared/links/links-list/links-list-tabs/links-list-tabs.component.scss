@@ -1,19 +1,13 @@
 @import "../../../variables";
 
-:host {
+a.nav-link {
+  max-width: 20rem;
 
-  a.nav-link {
-    max-width: 15rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  &:not(.active) {
+    color: $primary;
+  }
 
-    &:not(.active) {
-      color: $primary;
-    }
-
-    &:hover:not(.active) {
-      color: $primary-hover;
-    }
+  &:hover:not(.active) {
+    color: $primary-hover;
   }
 }

@@ -56,7 +56,8 @@ export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean) 
 
 export const selectDocumentById = (id: string) => createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);
 
-export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary, documentsMap => ids.map(id => documentsMap[id]));
+export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary,
+  documentsMap => ids.map(id => documentsMap[id]).filter(doc => doc));
 
 function filterDocuments(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
   return filterDocumentsByQuery(documents, query);

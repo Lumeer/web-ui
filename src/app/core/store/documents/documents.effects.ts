@@ -23,7 +23,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {catchError, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
 import {CollectionService, DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
@@ -47,7 +47,7 @@ export class DocumentsEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Get>(DocumentsActionType.GET),
     withLatestFrom(this.store$.select(selectDocumentsQueries)),
-    skipWhile(([action, queries]) => queries.some(query => areQueriesEqual(query, action.payload.query))),
+    filter(([action, queries]) => !queries.find(query => areQueriesEqual(query, action.payload.query))),
     mergeMap(([action]) => {
       const queryDto = QueryConverter.toDto(action.payload.query);
 

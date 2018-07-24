@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {AttributeModel, CollectionModel} from '../../../core/store/collections/collection.model';
 
-export const PAGE_SIZE = 100;
+const PAGE_SIZE = 100;
 
 @Component({
   selector: 'preview-results-table',
@@ -29,9 +29,7 @@ export const PAGE_SIZE = 100;
   styleUrls: ['./preview-results-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PreviewResultsTableComponent implements OnInit {
-
-  public static readonly PAGE_SIZE = 100;
+export class PreviewResultsTableComponent implements OnChanges {
 
   @Input()
   public documents: DocumentModel[];
@@ -40,43 +38,43 @@ export class PreviewResultsTableComponent implements OnInit {
   public collection: CollectionModel;
 
   @Input()
-  public activeIndex = 0;
+  public selectedDocumentId: string;
 
   public page = 0;
 
   @Output()
   public selectDocument = new EventEmitter<DocumentModel>();
 
-  @Output('activate')
-  public activateEvent = new EventEmitter<number>();
-
   public readonly pageSize = PAGE_SIZE;
 
-  public ngOnInit() {
-    this.countPage();
+  public ngOnChanges(changes: SimpleChanges) {
+    if (this.documents && this.selectedDocumentId) {
+      const index = this.documents.findIndex(doc => doc.id === this.selectedDocumentId);
+      if (index !== -1) {
+        this.countPage(index);
+      }
+    }
   }
 
   public activate(index: number) {
-    this.activeIndex = index;
-    this.countPage();
-    this.selectDocument.emit(this.documents[this.activeIndex]);
-    this.activateEvent.emit(this.activeIndex);
+    this.selectDocument.emit(this.documents[index]);
+    this.countPage(index);
   }
 
-  private countPage(): void {
-    this.page = Math.floor(this.activeIndex / PreviewResultsTableComponent.PAGE_SIZE);
+  private countPage(index: number): void {
+    this.page = Math.floor(index / PAGE_SIZE);
   }
 
   public selectPage(page: number) {
     this.page = page;
   }
 
-  public canActivatePage(page: number): boolean {
-    return ((page < this.page) && (page >= 0)) ||
-      ((page > this.page) && (page < Math.ceil(this.documents.length / PreviewResultsTableComponent.PAGE_SIZE)));
+  public trackByAttribute(index: number, attribute: AttributeModel): string {
+    return attribute.correlationId || attribute.id;
   }
 
-  public pageEndIndex(page: number): number {
-    return Math.min((page + 1) * 100, this.documents.length);
+  public trackByDocument(index: number, document: DocumentModel): string {
+    return document.correlationId || document.id;
   }
+
 }

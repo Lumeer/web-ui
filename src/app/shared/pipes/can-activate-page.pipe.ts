@@ -17,16 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface LinkInstanceModel {
+import {Pipe, PipeTransform} from '@angular/core';
 
-  id?: string;
-  linkTypeId: string;
-  documentIds: [string, string];
+@Pipe({
+  name: 'canActivatePage'
+})
+export class CanActivatePagePipe implements PipeTransform {
 
-  data?: { [attributeId: string]: any };
+  public transform(page: number, pageSize: number, maxItems: number): boolean {
+    return page >= 0 && page < Math.ceil(maxItems / pageSize);
+  }
 
-}
-
-export function getOtherLinkedDocumentId(linkInstance: LinkInstanceModel, documentId: string): string {
-  return linkInstance.documentIds[0] === documentId ? linkInstance.documentIds[1] : linkInstance.documentIds[0];
 }

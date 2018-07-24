@@ -94,7 +94,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     }
 
     if (this.collection && this.document) {
-      this.last = { collection: this.collection, document: this.document };
+      this.last = {collection: this.collection, document: this.document};
       this.documentUiService.init(this.collection, this.document);
 
       this.createdBy$ = this.store.select(selectUserById(this.document.createdBy))

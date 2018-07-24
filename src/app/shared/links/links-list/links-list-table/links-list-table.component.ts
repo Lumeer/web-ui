@@ -17,54 +17,85 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+
+import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
+import {AppState} from '../../../../core/store/app.state';
+import {Store} from '@ngrx/store';
+import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
+import {getOtherLinkedCollectionId} from '../../../utils/link-type.utils';
+import {map, mergeMap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
+import {getOtherLinkedDocumentId, LinkInstanceModel} from '../../../../core/store/link-instances/link-instance.model';
+import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
+
+const PAGE_SIZE = 100;
 
 @Component({
   selector: 'links-list-table',
   templateUrl: './links-list-table.component.html',
-  styleUrls: ['./links-list-table.component.scss']
+  styleUrls: ['./links-list-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinksListTableComponent {
+export class LinksListTableComponent implements OnChanges {
 
-  public data = [
-    { 'Attr1': 'Sed ut', 'Attr2': 10, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'error sit', 'Attr2': 1, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'voluptatem', 'Attr2': 32, 'Attr3': 'et quasi architecto beatae vitae dicta', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'accusantium', 'Attr2': 16, 'Attr3': 'voluptatem sequi nesciunt. Neque porro', 'Attr4': 'Quis autem vel'},
-    { 'Attr1': 'doloremque', 'Attr2': 98, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'laudantium', 'Attr2': 456, 'Attr3': 'quaerat voluptatem. Ut enim', 'Attr4': 'dolor sit amet'},
-    { 'Attr1': 'eaque', 'Attr2': 78, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'ipsa quae', 'Attr2': 23, 'Attr3': 'nisi ut aliquid ex ea commodi consequatur?', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'ab illo', 'Attr2': 65, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'inventore', 'Attr2': 84, 'Attr3': 'in ea voluptate velit esse quam nihil', 'Attr4': 'vel illum qui dolorem'},
-    { 'Attr1': 'veritatis', 'Attr2': 72, 'Attr3': ' perspiciatis unde omnis iste natus', 'Attr4': 'totam rem aperiam'},
-    { 'Attr1': 'et quasi', 'Attr2': 39, 'Attr3': 'corporis suscipit laboriosam, nisi', 'Attr4': 'totam rem aperiam'}
-  ];
+  @Input() public linkType: LinkTypeModel;
 
-  public attributes = [ 'Attr1', 'Attr2', 'Attr3', 'Attr4', 'Some really very long attribute that does not fit the space'];
+  @Input() public document: DocumentModel;
 
-  @Input()
-  public linkName: string = 'Name1';
+  @Output() public select = new EventEmitter<{ collection: CollectionModel, document: DocumentModel }>();
 
-  @Input()
-  public collectionName: string = 'Collection1';
+  public collection$: Observable<CollectionModel>;
 
-  @Input()
-  public collectionIcon: string = 'fas fa-curling';
+  public documents$: Observable<DocumentModel[]>;
 
-  @Input()
-  public collectionColor: string = '#f6b26b';
+  public page = 0;
 
-  @Input()
-  public linkIcons: string[] = ['fas fa-cubes', 'fas fa-curling'];
+  public readonly pageSize = PAGE_SIZE;
 
-  @Input()
-  public linkColors: string[] = ['#e06666', '#f6b26b'];
-
-  @Input()
-  public linkAttrCount = 2;
-
-  public openLinked(idx) {
-    // TODO
+  public constructor(private store: Store<AppState>) {
   }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    this.renewSubscriptions();
+  }
+
+  private renewSubscriptions() {
+    if (this.linkType && this.document) {
+      this.collection$ = this.store.select(selectCollectionsDictionary).pipe(
+        map(collectionsMap => {
+          const collectionId = getOtherLinkedCollectionId(this.linkType, this.document.collectionId);
+          return collectionsMap[collectionId];
+        })
+      );
+      this.documents$ = this.store.select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id])).pipe(
+        map(linkInstances => this.convertLinkInstancesToDocumentIds(linkInstances, this.document.id)),
+        mergeMap(ids => this.store.select(selectDocumentsByIds(ids)))
+      );
+    }
+  }
+
+  private convertLinkInstancesToDocumentIds(linkInstances: LinkInstanceModel[], documentId: string): string[] {
+    return linkInstances.reduce((acc, linkInstance) => {
+      const otherId = getOtherLinkedDocumentId(linkInstance, documentId);
+      acc.push(otherId);
+      return acc;
+    }, []);
+  }
+
+  public documentSelected(collection: CollectionModel, document: DocumentModel) {
+    this.select.emit({collection, document});
+  }
+
+  public trackByAttribute(index: number, attribute: AttributeModel): string {
+    return attribute.correlationId || attribute.id;
+  }
+
+  public trackByDocument(index: number, document: DocumentModel): string {
+    return document.correlationId || document.id;
+  }
+
 }

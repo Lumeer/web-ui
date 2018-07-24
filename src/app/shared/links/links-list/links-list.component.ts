@@ -17,21 +17,80 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {Observable, combineLatest as observableCombineLatest} from 'rxjs';
+import {LinkTypeModel} from '../../../core/store/link-types/link-type.model';
+import {selectLinkTypesByDocumentId} from '../../../core/store/link-types/link-types.state';
+import {AppState} from '../../../core/store/app.state';
+import {Store} from '@ngrx/store';
+import {map, tap} from 'rxjs/operators';
+import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
 
 @Component({
   selector: 'links-list',
   templateUrl: './links-list.component.html',
-  styleUrls: ['./links-list.component.scss']
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinksListComponent {
+export class LinksListComponent implements OnChanges {
 
-  public links: string[] = [
-    'Name1',
-    'name2',
-    'Name3 ja ja lsdjfh aljsdkf aljsd fajsdf ajds flajsdhfla dsfl ajsdf ajsdhf lasd fladsjhf jadsf ajdfhask',
-  ];
+  @Input() public document: DocumentModel;
 
-  public selectedLink: string = 'Name1';
+  @Output() public select = new EventEmitter<{ collection: CollectionModel, document: DocumentModel }>();
+
+  public linkTypes$: Observable<LinkTypeModel[]>;
+  public activeLinkType: LinkTypeModel;
+
+  private lastDocumentId: string;
+
+  public constructor(private store: Store<AppState>) {
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    this.renewSubscriptions();
+  }
+
+  public onSelectLink(linkType: LinkTypeModel) {
+    this.activeLinkType = linkType;
+
+    this.readDocuments(linkType);
+  }
+
+  private renewSubscriptions() {
+    if (this.document && this.document.id !== this.lastDocumentId) {
+      this.lastDocumentId = this.document.id;
+      this.linkTypes$ = observableCombineLatest(this.store.select(selectLinkTypesByDocumentId(this.document.id)),
+        this.store.select(selectCollectionsDictionary)
+      ).pipe(
+        map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => {
+          const collections: [CollectionModel, CollectionModel] = [collectionsMap[linkType.collectionIds[0]], collectionsMap[linkType.collectionIds[1]]];
+          return {...linkType, collections};
+        })),
+        tap(linkTypes => this.initActiveLinkType(linkTypes))
+      );
+    }
+  }
+
+  private initActiveLinkType(linkTypes: LinkTypeModel[]) {
+    let selectLinkType: LinkTypeModel;
+    if (linkTypes.length === 0) {
+      selectLinkType = null;
+    } else if (this.activeLinkType) {
+      selectLinkType = linkTypes.find(linkType => linkType.id === this.activeLinkType.id) || linkTypes[0];
+    } else {
+      selectLinkType = linkTypes[0];
+    }
+
+    this.onSelectLink(selectLinkType);
+  }
+
+  private readDocuments(linkType: LinkTypeModel) {
+    if (linkType) {
+      const query = {linkTypeIds: [linkType.id]}; // TODO maybe we can find efficient way to fetch linked documents
+      this.store.dispatch(new DocumentsAction.Get({query}));
+    }
+  }
 
 }

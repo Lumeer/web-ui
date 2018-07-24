@@ -23,7 +23,7 @@ import {Router} from '@angular/router';
 import {of, combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {ViewQueryItem} from './query-item/model/view.query-item';
-import {filter, flatMap, map, skipWhile} from 'rxjs/operators';
+import {filter, flatMap, map} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {selectAllCollections, selectCollectionsLoaded} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../../core/store/link-types/link-types.state';
@@ -98,7 +98,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       this.store.select(selectCollectionsLoaded),
       this.store.select(selectLinkTypesLoaded)
     ).pipe(
-      skipWhile(([collections, linkTypes, collectionsLoaded, linkTypesLoaded]) => !collectionsLoaded || !linkTypesLoaded),
+      filter(([collections, linkTypes, collectionsLoaded, linkTypesLoaded]) => collectionsLoaded && linkTypesLoaded),
       map(([collections, linkTypes]) => {
         return {
           collections: collections.filter(collection => collection && collection.id),

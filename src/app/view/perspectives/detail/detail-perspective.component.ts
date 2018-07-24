@@ -17,10 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@angular/core';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {QueryModel} from '../../../core/store/navigation/query.model';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {AppState} from '../../../core/store/app.state';
+import {Store} from '@ngrx/store';
 
 @Component({
   selector: 'detail-perspective',
@@ -30,8 +32,6 @@ import {QueryModel} from '../../../core/store/navigation/query.model';
 })
 export class DetailPerspectiveComponent {
 
-  public query: QueryModel;
-
   @Input()
   public embedded: boolean;
 
@@ -39,11 +39,35 @@ export class DetailPerspectiveComponent {
 
   public selectedDocument: DocumentModel;
 
+  public constructor(private store: Store<AppState>,
+                     private detector: ChangeDetectorRef) {
+  }
+
   public selectCollection(collection: CollectionModel) {
-    this.selectedCollection = collection;
+    this.select(collection, undefined);
   }
 
   public selectDocument(document: DocumentModel) {
+    this.select(this.selectedCollection, document);
+    this.loadLinkInstances(document);
+  }
+
+  public selectCollectionAndDocument(data: { collection: CollectionModel, document: DocumentModel }) {
+    const {collection, document} = data;
+    this.select(collection, document);
+  }
+
+  private select(collection: CollectionModel, document?: DocumentModel) {
+    this.selectedCollection = collection;
     this.selectedDocument = document;
+
+    this.detector.detectChanges();
+  }
+
+  private loadLinkInstances(document: DocumentModel) {
+    if (document) {
+      const query = {documentIds: [document.id]};
+      this.store.dispatch(new LinkInstancesAction.Get({query}));
+    }
   }
 }

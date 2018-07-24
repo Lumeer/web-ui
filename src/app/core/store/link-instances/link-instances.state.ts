@@ -43,8 +43,12 @@ export const selectLinkInstancesQueries = createSelector(selectLinkInstancesStat
 
 export const selectLinkInstanceById = (id: string) => createSelector(selectLinkInstancesDictionary,
   linkInstancesMap => linkInstancesMap[id]);
+
 export const selectLinkInstancesByIds = (ids: string[]) => createSelector(selectLinkInstancesDictionary,
   linkInstancesMap => ids.map(id => linkInstancesMap[id]));
+
+export const selectLinkInstancesByDocumentId = (id: string) => createSelector(selectAllLinkInstances,
+  linkInstances => linkInstances.filter(linkInstance => linkInstance.documentIds.includes(id)));
 
 export const selectLinkInstancesByType = (linkTypeId: string) => createSelector(selectAllLinkInstances,
   linkInstances => linkInstances.filter(linkInstance => linkInstance.linkTypeId === linkTypeId));

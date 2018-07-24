@@ -22,7 +22,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {catchError, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkInstanceService} from '../../rest';
 import {AppState} from '../app.state';
 import {areQueriesEqual} from '../navigation/query.helper';
@@ -38,7 +38,7 @@ export class LinkInstancesEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Get>(LinkInstancesActionType.GET),
     withLatestFrom(this.store$.select(selectLinkInstancesQueries)),
-    skipWhile(([action, queries]) => queries.some(query => areQueriesEqual(query, action.payload.query))),
+    filter(([action, queries]) => !queries.find(query => areQueriesEqual(query, action.payload.query))),
     mergeMap(([action]) => this.linkInstanceService.getLinkInstances(action.payload.query).pipe(
       map(dtos => dtos.map(dto => LinkInstanceConverter.fromDto(dto))),
       map(linkInstances => new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})),

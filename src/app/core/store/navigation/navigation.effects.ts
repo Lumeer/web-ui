@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {first, map, mergeMap, skipWhile, withLatestFrom} from 'rxjs/operators';
+import {map, mergeMap, skipWhile, take} from 'rxjs/operators';
 import {AppState} from '../app.state';
 import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
@@ -37,7 +37,7 @@ export class NavigationEffects {
     ofType<NavigationAction.AddLinkToQuery>(NavigationActionType.ADD_LINK_TO_QUERY),
     mergeMap(action => this.store$.select(selectQuery).pipe(
       skipWhile(query => !query),
-      first(),
+      take(1),
       map(query => ({action, query}))
     )),
     map(({action, query}) => {
@@ -52,7 +52,7 @@ export class NavigationEffects {
     ofType<NavigationAction.AddCollectionToQuery>(NavigationActionType.ADD_COLLECTION_TO_QUERY),
     mergeMap(action => this.store$.select(selectQuery).pipe(
       skipWhile(query => !query),
-      first(),
+      take(1),
       map(query => ({action, query}))
     )),
     map(({action, query}) => {
@@ -67,7 +67,7 @@ export class NavigationEffects {
     ofType<NavigationAction.RemoveCollectionFromQuery>(NavigationActionType.REMOVE_COLLECTION_TO_QUERY),
     mergeMap(action => this.store$.select(selectQuery).pipe(
       skipWhile(query => !query),
-      first(),
+      take(1),
       map(query => ({action, query}))
     )),
     map(({action, query}) => {

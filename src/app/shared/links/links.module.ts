@@ -25,12 +25,14 @@ import {LinksListTabsComponent} from './links-list/links-list-tabs/links-list-ta
 import {LinksListTableComponent} from './links-list/links-list-table/links-list-table.component';
 import {PickerModule} from '../picker/picker.module';
 import {InputModule} from '../input/input.module';
+import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
     PickerModule,
-    InputModule
+    InputModule,
+    PipesModule
   ],
   declarations: [
     LinksComponent,

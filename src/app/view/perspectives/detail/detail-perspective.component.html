@@ -1,11 +1,18 @@
-<div class="container">
-  <preview-results (selectCollection)="selectCollection($event)"
-                   (selectDocument)="selectDocument($event)">
+<div class="container-fluid col-12 col-lg-10 col-xl-9">
+  <preview-results
+    [selectedCollection]="selectedCollection"
+    [selectedDocument]="selectedDocument"
+    (selectCollection)="selectCollection($event)"
+    (selectDocument)="selectDocument($event)">
   </preview-results>
   <document-detail *ngIf="selectedDocument"
                    [collection]="selectedCollection"
                    [document]="selectedDocument"
                    [hasWriteAccess]="selectedCollection | permissions:'write' | async">
   </document-detail>
-  <!--links-list></links-list-->
+  <links-list
+    *ngIf="selectedDocument"
+    [document]="selectedDocument"
+    (select)="selectCollectionAndDocument($event)">
+  </links-list>
 </div>

@@ -1,9 +1,14 @@
 @import "../../../variables";
 
 thead {
+  font-size: small;
   color: $gray-500;
   font-style: italic;
   font-weight: bold;
+}
+
+tbody {
+  font-size: small;
 }
 
 th, td {
@@ -16,15 +21,15 @@ th, td {
 .clickable-row {
   cursor: pointer;
 
-  &:hover:not(.active) {
+  &:hover {
     background-color: $gray-100;
   }
 }
 
-.always-white, .always-white:hover {
-  background-color: white !important;
+.table-responsive {
+  resize: vertical;
 }
 
-tr.active {
-  background-color: $light;
+.h-10em {
+  height: 10em;
 }
