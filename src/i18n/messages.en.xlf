@@ -967,11 +967,8 @@
       <target state="final">Delete organization?</target></trans-unit>
       <trans-unit id="organization.not.exist" datatype="html">
         <source>Organization does not exist</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      <target state="final">Organization does not exist</target></trans-unit>
+        
+      <target state="final">Organization does not exist</target><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/data/organizations.guard.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
       <trans-unit id="organization.permission.missing" datatype="html">
         <source>You do not have permission to access this organization</source>
         <context-group purpose="location">
@@ -1020,13 +1017,7 @@
         <source>{VAR_SELECT, select, Project {Project} Organization {Organization} }</source>
         
       <target state="final">{VAR_SELECT, select, Project {Project} Organization {Organization} }</target><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-post-it/resource-post-it.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
-      <trans-unit id="workspace.not.exist" datatype="html">
-        <source>Organization or project does not exist</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/workspace.guard.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      <target state="final">Organization or project does not exist</target></trans-unit>
+      
     <trans-unit id="shared.document.detail.document.indistinguishable" datatype="html">
         <source>Indistinguishable
           document</source>
@@ -1040,12 +1031,12 @@
         
       <target state="final">Add Row</target><context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.ts</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="shared.preview.results.moreResults" datatype="html">
         <source>
-        There are multiple results, please select one…
-      </source>
+            There are multiple results, please select one…
+          </source>
         
       <target state="final">
-        There are multiple results, please select one…
-      </target><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.ts</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="resource.settings.back" datatype="html">
+            There are multiple results, please select one…
+          </target><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="resource.settings.back" datatype="html">
         <source>Back</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/resource/header/resource-header.component.ts</context>
@@ -1081,7 +1072,7 @@
       <target state="final">Import collection</target></trans-unit><trans-unit id="shared.preview.results.noResults" datatype="html">
         <source>No documents found!</source>
         
-      <target state="final">No documents found!</target><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.ts</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="collection.settings.users.count" datatype="html">
+      <target state="final">No documents found!</target><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.ts</context><context context-type="linenumber">52</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.ts</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table.component.ts</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="collection.settings.users.count" datatype="html">
         <source>Number of users</source>
         
       <target state="final">Number of users</target><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="collection.settings.records.count" datatype="html">
@@ -1646,11 +1637,8 @@
         </context-group>
       <target state="final">Enter attribute name.</target></trans-unit><trans-unit id="view.not.found" datatype="html">
         <source>View not found</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/guards/view/view-exist.guard.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      <target state="final">View not found</target></trans-unit><trans-unit id="notification.service.Hey" datatype="html">
+        
+      <target state="final">View not found</target><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/data/views.guard.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="notification.service.Hey" datatype="html">
         <source>Hey</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context>
@@ -1921,11 +1909,8 @@
         </context-group>
       <target state="final">Thank You!</target></trans-unit><trans-unit id="project.not.exist" datatype="html">
         <source>Project does not exist</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      <target state="final">Project does not exist</target></trans-unit><trans-unit id="project.permission.missing" datatype="html">
+        
+      <target state="final">Project does not exist</target><context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/data/projects.guard.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="project.permission.missing" datatype="html">
         <source>You do not have permission to access this project</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context>
@@ -2078,11 +2063,8 @@
         </context-group>
       </trans-unit><trans-unit id="count.of" datatype="html">
         <source>of</source><target state="final">of</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.ts</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.menu.createNew" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.ts</context><context context-type="linenumber">5</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table.component.ts</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="resource.menu.createNew" datatype="html">
         <source>Create New <x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"/></source><target state="final">Create New <x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"/></target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/resource-menu/resource-menu.component.ts</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="741fc2503ff25b365c7610d0f5f5f112f3dcb7c5" datatype="html">
@@ -2489,38 +2471,35 @@
         
       <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">98</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.ts</context><context context-type="linenumber">100</context></context-group></trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
         <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source><target state="final">Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-      </trans-unit><trans-unit id="label.terms.start" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.ts</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="label.terms.start" datatype="html">
         <source>I have read</source><target state="final">I have read</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="termsOfService" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.ts</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="termsOfService" datatype="html">
         <source>Terms of Service</source><target state="final">Terms of Service</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="and" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.ts</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="and" datatype="html">
         <source>and</source><target state="final">and</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="privacyPolicy" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.ts</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="privacyPolicy" datatype="html">
         <source>Privacy Policy</source><target state="final">Privacy Policy</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="label.terms.end" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.ts</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="label.terms.end" datatype="html">
         <source>and I agree to them.</source><target state="final">and I agree to them.</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="label.newsletter.start" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.ts</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="label.newsletter.start" datatype="html">
         <source>Subscribe me to Lumeer Newsletter (see </source><target state="final">Subscribe me to Lumeer Newsletter (see </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="dpa" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.ts</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="dpa" datatype="html">
         <source>Data Processing Agreement</source><target state="final">Data Processing Agreement</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="label.newsletter.end" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.ts</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="label.newsletter.end" datatype="html">
         <source>).</source><target state="final">).</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="button.continue" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.ts</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="button.continue" datatype="html">
         <source>Continue</source><target state="final">Continue</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/terms-confirm/agreement.component.ts</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="currentUser.get.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.ts</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/auth/session-expired/session-expired.component.ts</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="currentUser.get.fail" datatype="html">
         <source>Failed to get user details</source><target state="final">Failed to get user details</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
@@ -2610,6 +2589,46 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
           <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="document.detail.version" datatype="html">
+        <source>Version <x id="INTERPOLATION" equiv-text="{{document.dataVersion}}"/></source><target state="final">Version <x id="INTERPOLATION" equiv-text="{{document.dataVersion}}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit><trans-unit id="document.detail.createdBy" datatype="html">
+        <source>Created on <x id="INTERPOLATION" equiv-text="{{document.creationDate | date : 'mediumDate'}}"/> by <x id="INTERPOLATION_1" equiv-text="{{createdBy$ | async}}"/></source><target state="final">Created on <x id="INTERPOLATION" equiv-text="{{document.creationDate | date : 'mediumDate'}}"/> by <x id="INTERPOLATION_1" equiv-text="{{createdBy$ | async}}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="document.detail.modifiedBy" datatype="html">
+        <source><x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>Last modified on <x id="INTERPOLATION" equiv-text="{{document.updateDate | date : 'mediumDate'}}"/> by <x id="INTERPOLATION_1" equiv-text="{{updatedBy$ | async}}"/></source><target state="final"><x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>Last modified on <x id="INTERPOLATION" equiv-text="{{document.updateDate | date : 'mediumDate'}}"/> by <x id="INTERPOLATION_1" equiv-text="{{updatedBy$ | async}}"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.ts</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit><trans-unit id="session.expired.message" datatype="html">
+        <source>
+      You have been inactive for <x id="INTERPOLATION" equiv-text="{{sessionTimeout}}"/> minutes and the application logged out for security reasons.
+      Click Continue to log in again.
+    </source><target state="final">
+      You have been inactive for <x id="INTERPOLATION" equiv-text="{{sessionTimeout}}"/> minutes and the application logged out for security reasons.
+      Click Continue to log in again.
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/session-expired/session-expired.component.ts</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.preview-results.scrollable" datatype="html">
+        <source>You can scroll the table...</source><target state="final">You can scroll the table...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table.component.ts</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit></body>
   </file>

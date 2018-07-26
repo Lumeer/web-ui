@@ -5,7 +5,10 @@
     </lumeer-logo>
   </div>
   <div class="card-body">
-    <p i18n="@@session.expired.message">You have been inactive for {{sessionTimeout}} minutes and your session has expired. If you want to continue working, the application needs to be reloaded.</p>
+    <p i18n="@@session.expired.message">
+      You have been inactive for {{sessionTimeout}} minutes and the application logged out for security reasons.
+      Click Continue to log in again.
+    </p>
 
     <a [href]="redirectUrl$ | async"
             class="btn btn-success">
