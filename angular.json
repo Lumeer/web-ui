@@ -64,7 +64,7 @@
               "optimization": true,
               "outputHashing": "all",
               "showCircularDependencies": false,
-              "sourceMap": true,
+              "sourceMap": false,
               "vendorChunk": false
             },
             "staging": {
