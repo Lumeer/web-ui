@@ -8,7 +8,7 @@
              mwlResizable
              [enableGhostResize]="true"
              [ghostElementPositioning]="'absolute'"
-             [resizeCursorPrecision]="8"
+             [resizeCursorPrecision]="column?.parent?.attributeId ? 8 : 0"
              [resizeEdges]="column | resizeEdges:table:cursor"
              [resizeSnapGrid]="{left: 10, right: 10}"
              [style.width.px]="column | columnWidth"
