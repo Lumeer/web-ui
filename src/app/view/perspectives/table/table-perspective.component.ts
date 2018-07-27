@@ -17,253 +17,188 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Subscription, Observable, combineLatest} from 'rxjs';
-import {map, switchMap, withLatestFrom} from 'rxjs/operators';
-import {Attribute, Collection, Document, LinkInstance, LinkType, Query} from '../../../core/dto';
-import {CollectionService, DocumentService, LinkInstanceService, LinkTypeService} from '../../../core/rest';
+import {filter} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {selectNavigation, selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
+import {selectNavigation} from '../../../core/store/navigation/navigation.state';
+import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
 import {QueryModel} from '../../../core/store/navigation/query.model';
-import {TableConfigModel, ViewConfigModel} from '../../../core/store/views/view.model';
-import {selectViewConfig, selectViewsDictionary, selectViewsState} from '../../../core/store/views/views.state';
-import {AttributeHelper} from '../../../shared/utils/attribute-helper';
-import {PerspectiveComponent} from '../perspective.component';
-import {AttributeChangeEvent, DataChangeEvent, LinkInstanceEvent, TableLinkEvent} from './event';
-import {TablePart} from './model';
-import {TableManagerService} from './util/table-manager.service';
+import {TableCursor} from '../../../core/store/tables/table-cursor';
+import {DEFAULT_TABLE_ID, TableModel} from '../../../core/store/tables/table.model';
+import {TablesAction} from '../../../core/store/tables/tables.action';
+import {selectTableById, selectTableCursor} from '../../../core/store/tables/tables.state';
+import {Direction} from '../../../shared/direction';
+import {KeyCode} from '../../../shared/key-code';
+import {isKeyPrintable} from '../../../shared/utils/key-code.helper';
+import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
+import {Perspective} from '../perspective';
+import CreateTable = TablesAction.CreateTable;
+import DestroyTable = TablesAction.DestroyTable;
 
 @Component({
   selector: 'table-perspective',
   templateUrl: './table-perspective.component.html',
   styleUrls: ['./table-perspective.component.scss']
 })
-export class TablePerspectiveComponent implements PerspectiveComponent, OnInit, OnDestroy {
+export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
   @Input()
-  public linkedDocument: DocumentModel;
+  public linkInstance: LinkInstanceModel;
 
   @Input()
-  public query: Query;
+  public query: QueryModel;
 
-  @Input()
-  public config: ViewConfigModel = {};
+  @ViewChild('positioner')
+  public positioner: ElementRef;
 
-  @Input()
-  public embedded: boolean;
+  public table: TableModel;
+  private tableId: string;
 
-  @Input()
-  public editable: boolean;
+  public height = 'auto';
 
-  private linkTypeId: string;
+  private selectedCursor: TableCursor;
 
-  constructor(private collectionService: CollectionService,
-              private documentService: DocumentService,
-              private linkInstanceService: LinkInstanceService,
-              private linkTypeService: LinkTypeService,
-              private store: Store<AppState>,
-              private tableManagerService: TableManagerService) {
+  private subscriptions = new Subscription();
+
+  public constructor(private store: Store<AppState>) {
   }
-
-  public parts: TablePart[] = [];
-
-  private subscription: Subscription;
 
   public ngOnInit() {
-    if (this.embedded && this.query) {
-      this.linkTypeId = this.query.linkTypeIds[0];
-      this.initTable();
-      return;
+    this.tableId = this.createTableId();
+    if (this.tableId === DEFAULT_TABLE_ID) {
+      this.calculateHeight();
     }
 
-    this.subscription = combineLatest(
-      this.store.select(selectNavigation),
-      this.store.select(selectViewsDictionary)
-    ).pipe(
-      withLatestFrom(this.store.select(selectViewConfig)),
-      map(([[navigation, views], config]) => {
-        const view = navigation.workspace ? views[navigation.workspace.viewCode] : null;
-        return view ? [navigation.query, view.config] : [navigation.query, config];
-      })
-    ).subscribe(([query, config]: [QueryModel, ViewConfigModel]) => {
-      this.query = query;
-      this.config = config;
-
-      this.initTable();
-    });
+    this.createTableFromQuery();
+    this.subscribeToTable();
+    this.subscribeToSelectedCursor();
   }
 
-  private initTable() {
-    if (!this.isDisplayable()) {
-      return;
-    }
-
-    this.createDefaultConfigFromQuery();
-    this.fetchDataAndCreateTable();
+  private subscribeToSelectedCursor() {
+    this.subscriptions.add(
+      this.store.select(selectTableCursor).subscribe(cursor => this.selectedCursor = cursor)
+    );
   }
 
   public ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
+    this.subscriptions.unsubscribe();
+    this.destroyTable();
+  }
+
+  private createTableFromQuery() {
+    if (this.query) {
+      this.createTable(this.query);
+    } else {
+      this.subscribeToQuery();
     }
   }
 
-  private getTableConfig(): Observable<TableConfigModel> {
-    return this.store.select(selectWorkspace).pipe(
-      switchMap(workspace => {
-        if (workspace.viewCode) {
-          return this.store.select(selectViewsDictionary).pipe(
-            map(views => views[workspace.viewCode].config.table)
-          );
-        } else {
-          return this.store.select(selectViewsState).pipe(
-            map(views => views.config.table)
-          );
-        }
+  private createTable(query: QueryModel) {
+    if (!this.tableId) {
+      throw new Error('tableId has not been set');
+    }
+    this.store.dispatch(new CreateTable({tableId: this.tableId, query}));
+  }
+
+  private destroyTable() {
+    if (!this.tableId || !this.table) {
+      return;
+    }
+    this.store.dispatch(new DestroyTable({tableId: this.tableId}));
+  }
+
+  private subscribeToTable() {
+    this.subscriptions.add(
+      this.store.select(selectTableById(this.tableId)).pipe(
+        filter(table => !!table)
+      ).subscribe(table => {
+        this.table = table;
       })
     );
   }
 
-  private createDefaultConfigFromQuery() {
-    if (!this.config.table) {
-      this.config.table = {
-        parts: [
-          {
-            collectionId: this.query.collectionIds[0],
-            attributeIds: []
-          }
-        ]
-      };
-    }
-  }
-
-  private fetchDataAndCreateTable() {
-    this.tableManagerService.createTableFromConfig(this.query, this.config.table, this.linkTypeId, this.linkedDocument)
-      .subscribe(parts => this.parts = parts);
-  }
-
-  public isDisplayable(): boolean {
-    return this.query && this.query.collectionIds && this.query.collectionIds.length === 1;
-  }
-
-  public extractConfig(): any {
-    this.config.table = this.tableManagerService.extractTableConfig();
-    return this.config;
-  }
-
-  public onDataChange(event: DataChangeEvent) {
-    if (!event.attribute.id) {
-      this.createAttribute(event.collection, event.attribute);
-    }
-
-    const doc = event.document;
-    doc.data[event.attribute.name] = event.value;
-
-    if (doc.id) {
-      this.updateDocument(doc);
-    } else {
-      this.createDocument(doc, () => {
-        if (event.linkedDocument) {
-          this.createLinkInstance(event.linkType, [doc, event.linkedDocument]);
+  private subscribeToQuery() {
+    this.subscriptions.add(
+      this.store.select(selectNavigation).pipe(
+        filter(navigation => navigation.perspective === Perspective.Table && !!navigation.query)
+      ).subscribe(({query}) => {
+        if (areQueriesEqual(this.query, query)) {
+          return;
         }
-      });
+
+        if (this.table && hasQueryNewLink(this.query, query)) {
+          this.addTablePart(query);
+        } else {
+          this.refreshTable(query);
+        }
+
+        this.query = query;
+      })
+    );
+  }
+
+  private addTablePart(query: QueryModel) {
+    const linkTypeId = getNewLinkTypeIdFromQuery(this.query, query);
+    this.store.dispatch(new TablesAction.CreatePart({tableId: this.tableId, linkTypeId}));
+  }
+
+  private refreshTable(query: QueryModel) {
+    this.destroyTable();
+    this.createTable(query);
+  }
+
+  private createTableId(): string {
+    return this.linkInstance ? this.linkInstance.id : DEFAULT_TABLE_ID;
+  }
+
+  public onClickOutside(event: MouseEvent) {
+    if (this.selectedCursor && !event[PERSPECTIVE_CHOOSER_CLICK]) {
+      this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
   }
 
-  private createDocument(doc: Document, successCallback: () => void) {
-    this.documentService.createDocument(doc).subscribe((document: Document) => {
-      this.tableManagerService.documents.push(document);
-
-      successCallback();
-    });
+  private calculateHeight() {
+    const {top} = this.positioner.nativeElement.getBoundingClientRect();
+    const height = window.innerHeight - top;
+    this.height = `${height}px`;
   }
 
-  private updateDocument(doc: Document) {
-    this.documentService.patchDocumentData(doc).subscribe();
+  @HostListener('window:resize')
+  public onResize() {
+    this.calculateHeight();
   }
 
-  public onDeleteDocument(doc: Document) {
-    this.documentService.removeDocument(doc.collectionId, doc.id).subscribe(() => {
-      const index = this.tableManagerService.documents.indexOf(doc);
-      this.tableManagerService.documents.splice(index, 1);
-    });
-  }
-
-  public onCreateAttribute(event: AttributeChangeEvent) {
-    this.createAttribute(event.collection, event.attribute);
-  }
-
-  public onRenameAttribute(event: AttributeChangeEvent) {
-    if (event.attribute.id) {
-      this.updateAttribute(event.collection, event.attribute);
-    } else {
-      this.createAttribute(event.collection, event.attribute);
-    }
-  }
-
-  public onDeleteAttribute(event: AttributeChangeEvent) {
-    this.deleteAttribute(event.collection, event.attribute);
-  }
-
-  private createAttribute(collection: Collection, attribute: Attribute) {
-    this.collectionService.createAttribute(collection.id, attribute).subscribe(() => {
-      collection.attributes.push(attribute);
-    });
-  }
-
-  private updateAttribute(collection: Collection, attribute: Attribute) {
-    this.collectionService.updateAttribute(collection.id, attribute.id, attribute).subscribe();
-  }
-
-  private deleteAttribute(collection: Collection, attribute: Attribute) {
-    this.collectionService.removeAttribute(collection.id, attribute.id).subscribe(() => {
-      AttributeHelper.removeAttributeFromArray(attribute, collection.attributes);
-    });
-  }
-
-  public onAddLinkedPart(event: TableLinkEvent) {
-    if (!event.linkType) {
-      event.linkType = this.createLinkType(event.collection);
+  @HostListener('document:keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    if (!this.selectedCursor) {
+      return;
     }
 
-    this.tableManagerService.addTablePart(event.linkType, event.collection, event.attribute);
-  }
+    switch (event.keyCode) {
+      case KeyCode.LeftArrow:
+        return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Left}));
+      case KeyCode.UpArrow:
+        return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
+      case KeyCode.RightArrow:
+        return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Right}));
+      case KeyCode.DownArrow:
+        return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
+      case KeyCode.Enter:
+      case KeyCode.Backspace:
+      case KeyCode.F2:
+        event.preventDefault();
+        return this.store.dispatch(new TablesAction.EditSelectedCell({}));
+      default:
+        if (!isKeyPrintable(event.keyCode) || event.key === 'Dead') {
+          return;
+        }
 
-  private createLinkType(collection: Collection): LinkType {
-    const lastCollection = this.parts[this.parts.length - 1].collection;
-
-    const linkType: LinkType = {
-      name: lastCollection.name + '-' + collection.name, // TODO input from user
-      collectionIds: [lastCollection.id, collection.id]
-    };
-
-    this.linkTypeService.createLinkType(linkType); // TODO not subscribed
-    this.tableManagerService.linkTypes.push(linkType);
-
-    return linkType;
-  }
-
-  public onCreateLinkInstance(event: LinkInstanceEvent) {
-    this.createLinkInstance(event.linkType, event.documents);
-  }
-
-  public onDeleteLinkInstance(linkInstanceId: string) {
-    this.linkInstanceService.deleteLinkInstance(linkInstanceId).subscribe();
-  }
-
-  private createLinkInstance(linkType: LinkType, documents: [Document, Document]) {
-    const linkInstance: LinkInstance = {
-      linkTypeId: linkType.id,
-      documentIds: [documents[0].id, documents[1].id],
-      data: {}
-    };
-
-    this.linkInstanceService.createLinkInstance(linkInstance).subscribe((instance: LinkInstance) => {
-      linkInstance.id = instance.id;
-      this.tableManagerService.linkInstances.push(linkInstance);
-    });
+        event.preventDefault();
+        return this.store.dispatch(new TablesAction.EditSelectedCell({letter: event.key}));
+    }
   }
 
 }

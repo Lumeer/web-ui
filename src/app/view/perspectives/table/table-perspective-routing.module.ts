@@ -17,8 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {AttributeChangeEvent} from './attribute-change-event';
-export {DataChangeEvent} from './data-change-event';
-export {LinkInstanceEvent} from './link-instance-event';
-export {TableCursorEvent} from './table-cursor-event';
-export {TableLinkEvent} from './table-link-event';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {TablePerspectiveComponent} from './table-perspective.component';
+
+const tableRoutes: Routes = [
+  {
+    path: '',
+    component: TablePerspectiveComponent
+  }
+];
+
+@NgModule({
+  imports: [
+    RouterModule.forChild(tableRoutes)
+  ],
+  exports: [
+    RouterModule
+  ]
+})
+export class TablePerspectiveRoutingModule {
+
+}

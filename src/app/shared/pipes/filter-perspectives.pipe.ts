@@ -34,11 +34,10 @@ export class FilterPerspectivesPipe implements PipeTransform {
 
 function canShowPerspective(perspective: Perspective, query: QueryModel): boolean {
   switch (perspective) {
-    case Perspective.Table2:
-    case Perspective.SmartDoc:
+    case Perspective.Table:
     case Perspective.Chart:
       return isSingleCollectionInQuery(query);
-    case Perspective.Table:
+    case Perspective.SmartDoc:
       return false;
     default:
       return true;

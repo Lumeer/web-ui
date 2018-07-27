@@ -20,7 +20,6 @@
 import {Perspective} from '../../../view/perspectives/perspective';
 import {ResourceModel} from '../../model/resource.model';
 import {QueryModel} from '../navigation/query.model';
-import {SmartDocModel} from '../smartdoc/smartdoc.model';
 import {TableConfig} from '../tables/table.model';
 
 export interface ViewModel extends ResourceModel {
@@ -45,9 +44,7 @@ export interface ViewConfigModel {
   detail?: DetailConfigModel;
   postit?: PostItConfigModel;
   search?: SearchConfigModel;
-  table?: TableConfigModel;
-  table2?: TableConfig;
-  smartdoc?: SmartDocModel;
+  table?: TableConfig;
 
 }
 
@@ -65,19 +62,5 @@ export interface SearchConfigModel {
 
   expandedDocumentIds?: string[];
   searchTab?: string; // TODO maybe create enum
-
-}
-
-export interface TableConfigModel {
-
-  parts: {
-    collectionId: string;
-    attributeIds: string[];
-    sortedBy?: string;
-    sortedDesc?: boolean;
-    linkTypeId?: string;
-    linkAttributeIds?: string[];
-    expandedDocumentIds?: string[];
-  }[];
 
 }

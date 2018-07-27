@@ -29,7 +29,6 @@ import {ViewsGuard} from '../core/guards/data/views.guard';
 import {ViewRedirectGuard} from '../core/guards/view-redirect.guard';
 import {Perspective} from './perspectives/perspective';
 import {PostItPerspectiveComponent} from './perspectives/post-it/post-it-perspective.component';
-import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
 
@@ -64,15 +63,7 @@ const viewRoutes: Routes = [
       },
       {
         path: Perspective.Table,
-        component: TablePerspectiveComponent
-      },
-      {
-        path: Perspective.Table2,
-        loadChildren: './perspectives/table2/table2-perspective.module#Table2PerspectiveModule',
-      },
-      {
-        path: Perspective.SmartDoc,
-        loadChildren: './perspectives/smartdoc/smartdoc-perspective.module#SmartDocPerspectiveModule',
+        loadChildren: './perspectives/table/table-perspective.module#TablePerspectiveModule',
       },
       {
         path: '',
