@@ -30,6 +30,7 @@ import {areTableRowCursorsEqual, TableBodyCursor, TableCursor} from '../../../..
 import {TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TableRow} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {EditedAttribute, selectEditedAttribute, selectTableCursor, selectTablePartLeafColumns} from '../../../../../../../core/store/tables/tables.state';
+import {Direction} from '../../../../../../../shared/direction';
 import {TableDataCellDirective} from '../../../../shared/directives/table-data-cell.directive';
 import {TableEditableCellDirective} from '../../../../shared/directives/table-editable-cell.directive';
 import {TableDataCellMenuComponent} from './data-cell-menu/table-data-cell-menu.component';
@@ -73,7 +74,7 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
 
   public editedValue: string;
 
-  public constructor(private store: Store<AppState>) {
+  public constructor(private store$: Store<AppState>) {
   }
 
   public ngOnInit() {
@@ -84,11 +85,11 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
   }
 
   private bindColumns() {
-    this.columns$ = this.store.select(selectTablePartLeafColumns(this.cursor.tableId, this.cursor.partIndex));
+    this.columns$ = this.store$.select(selectTablePartLeafColumns(this.cursor.tableId, this.cursor.partIndex));
   }
 
   private bindSelectedCursor() {
-    this.selectedCursor$ = this.store.select(selectTableCursor).pipe(
+    this.selectedCursor$ = this.store$.select(selectTableCursor).pipe(
       filter(selectedCursor => {
         const rowBeingSelected = areTableRowCursorsEqual(this.cursor, selectedCursor);
         if (!this.rowSelected && !rowBeingSelected) {
@@ -106,7 +107,7 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.editedAttribute$ = this.store.select(selectEditedAttribute);
+    this.editedAttribute$ = this.store$.select(selectEditedAttribute);
   }
 
   private bindData() {
@@ -122,14 +123,14 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
 
   private bindDocuments(collectionId: string) {
     this.subscriptions.add(
-      this.store.select(selectDocumentsByIds(this.row.documentIds))
+      this.store$.select(selectDocumentsByIds(this.row.documentIds))
         .subscribe(documents => this.documents = documents && documents.length ? documents : [{collectionId, data: {}}])
     );
   }
 
   private bindLinkInstances(linkTypeId: string) {
     this.subscriptions.add(
-      this.store.select(selectLinkInstancesByIds(this.row.linkInstanceIds))
+      this.store$.select(selectLinkInstancesByIds(this.row.linkInstanceIds))
         .subscribe(linkInstances => this.linkInstances = linkInstances) // TODO what if it does not exist?
     );
   }
@@ -150,7 +151,7 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
 
   public onMouseDown(event: MouseEvent, columnIndex: number) {
     const cursor: TableBodyCursor = {...this.cursor, columnIndex};
-    this.store.dispatch(new TablesAction.SetCursor({cursor}));
+    this.store$.dispatch(new TablesAction.SetCursor({cursor}));
     event.stopPropagation();
   }
 
@@ -170,6 +171,10 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
     if (dataCell) {
       dataCell.disableSaving();
     }
+  }
+
+  public onMoveCursor(direction: Direction) {
+    this.store$.dispatch(new TablesAction.MoveCursor({direction}));
   }
 
 }

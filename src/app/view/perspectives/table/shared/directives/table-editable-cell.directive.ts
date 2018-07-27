@@ -18,6 +18,7 @@
  */
 
 import {Directive, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
+import {Direction} from '../../../../../shared/direction';
 import {KeyCode} from '../../../../../shared/key-code';
 import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
 
@@ -69,6 +70,9 @@ export class TableEditableCellDirective {
   @Output()
   public editEnd = new EventEmitter<string>();
 
+  @Output()
+  public moveCursor = new EventEmitter<Direction>();
+
   public edited: boolean;
 
   public constructor(private element: ElementRef) {
@@ -95,8 +99,13 @@ export class TableEditableCellDirective {
     event.stopPropagation();
     switch (event.code) {
       case KeyCode.Enter:
-      case KeyCode.F2:
         this.stopEditing();
+        this.moveCursor.emit(Direction.Down);
+        event.preventDefault();
+        return;
+      case KeyCode.Tab:
+        this.stopEditing();
+        this.moveCursor.emit(Direction.Right);
         event.preventDefault();
         return;
       case KeyCode.Escape:

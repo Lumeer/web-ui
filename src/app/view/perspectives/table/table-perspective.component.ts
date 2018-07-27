@@ -182,6 +182,8 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
       case KeyCode.ArrowUp:
         return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
       case KeyCode.ArrowRight:
+      case KeyCode.Tab:
+        event.preventDefault();
         return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Right}));
       case KeyCode.ArrowDown:
         return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));

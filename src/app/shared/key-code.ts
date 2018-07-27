@@ -40,6 +40,7 @@ export enum KeyCode {
   F11 = 'F11',
   F12 = 'F12',
   Space = 'Space',
+  Tab = 'Tab',
 
 }
 

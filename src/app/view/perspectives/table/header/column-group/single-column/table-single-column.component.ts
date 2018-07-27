@@ -34,6 +34,7 @@ import {findTableColumn, getTablePart, splitColumnPath} from '../../../../../../
 import {TablesAction, TablesActionType} from '../../../../../../core/store/tables/tables.action';
 import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.state';
 import {DialogService} from '../../../../../../dialog/dialog.service';
+import {Direction} from '../../../../../../shared/direction';
 import {extractAttributeLastName, extractAttributeParentName, filterAttributesByDepth} from '../../../../../../shared/utils/attribute.utils';
 import {TableEditableCellDirective} from '../../../shared/directives/table-editable-cell.directive';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
@@ -305,6 +306,12 @@ export class TableSingleColumnComponent implements OnChanges {
 
   private setDefaultCollectionAttribute() {
     this.store$.dispatch(new CollectionsAction.SetDefaultAttribute({collectionId: this.collection.id, attributeId: this.column.attributeId}));
+  }
+
+  public onMoveCursor(direction: Direction) {
+    if (direction === Direction.Right) {
+      this.store$.dispatch(new TablesAction.MoveCursor({direction}));
+    }
   }
 
 }
