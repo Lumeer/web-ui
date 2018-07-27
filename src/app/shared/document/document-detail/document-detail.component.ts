@@ -59,7 +59,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   public summary$: Observable<string>;
   public rows$: Observable<UiRow[]>;
 
-  public readonly PERSPECTIVE_TABLE = Perspective.Table2;
+  public readonly PERSPECTIVE_TABLE = Perspective.Table;
 
   private last: { collection: CollectionModel, document: DocumentModel };
 

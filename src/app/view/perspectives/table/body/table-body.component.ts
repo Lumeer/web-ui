@@ -17,152 +17,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {TablePart, TableRow} from '../model';
-import {DataChangeEvent, LinkInstanceEvent, TableCursorEvent} from '../event';
-import {Direction} from '../../post-it/document-data/direction';
-import {Attribute} from '../../../../core/dto';
-import {TableManagerService} from '../util/table-manager.service';
-import {Document} from '../../../../core/dto/document';
+import {ChangeDetectionStrategy, Component, HostListener, Input, ViewChild} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../core/store/app.state';
+import {QueryModel} from '../../../../core/store/navigation/query.model';
+import {TableModel} from '../../../../core/store/tables/table.model';
+import {TablesAction} from '../../../../core/store/tables/tables.action';
+import {TableRowsComponent} from './rows/table-rows.component';
 
 @Component({
   selector: 'table-body',
   templateUrl: './table-body.component.html',
-  styleUrls: ['./table-body.component.scss']
+  styleUrls: ['./table-body.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableBodyComponent {
 
   @Input()
-  public parts: TablePart[] = [];
+  public table: TableModel;
 
   @Input()
-  public editable = false;
+  public query: QueryModel;
 
-  @Output()
-  public dataChange = new EventEmitter<DataChangeEvent>();
+  @ViewChild(TableRowsComponent)
+  public rowsComponent: TableRowsComponent;
 
-  @Output()
-  public deleteDocument = new EventEmitter<Document>();
-
-  @Output()
-  public createLinkInstance = new EventEmitter<LinkInstanceEvent>();
-
-  @Output()
-  public deleteLinkInstance = new EventEmitter<string>();
-
-  public selectedCell: { row: TableRow, attribute: Attribute };
-  public editedCell: { row: TableRow, attribute: Attribute };
-
-  constructor(private tableManagerService: TableManagerService) {
+  public constructor(private store: Store<AppState>) {
   }
 
-  public rowOffsets(row: TableRow): number[] {
-    return Array.from(new Array(row.countRows()).keys());
-  }
-
-  public findRowNumber(rows: TableRow[], rowNumber: number): TableRow {
-    if (rows.length === 0) {
-      return;
+  @HostListener('click', ['$event'])
+  public onClick(event: MouseEvent) {
+    const rowsClick = this.rowsComponent.element.nativeElement.contains(event.target);
+    if (!rowsClick) {
+      this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
-
-    const part = rows.find(row => row.rowNumber() === rowNumber);
-    if (part) {
-      return part;
-    }
-
-    return this.findRowNumber([].concat.apply([], rows.map(row => row.nextLinkedRows)), rowNumber);
-  }
-
-  public onMoveCursor(event: TableCursorEvent) {
-    switch (event.direction) {
-      case Direction.Left:
-        return this.moveCursorLeft(event.row, event.attribute);
-      case Direction.Right:
-        return this.moveCursorRight(event.row, event.attribute);
-      case Direction.Up:
-        return this.moveCursorUp(event.row, event.attribute);
-      case Direction.Down:
-        return this.moveCursorDown(event.row, event.attribute);
-    }
-  }
-
-  private moveCursorLeft(row: TableRow, attribute: Attribute) {
-    const index = row.part.shownAttributes.indexOf(attribute);
-
-    if (index > 0) {
-      const nextAttribute = row.part.shownAttributes[index - 1];
-      return this.focusTableCell(row, nextAttribute);
-    }
-
-    if (row.previousLinkedRow) {
-      const nextRow = row.previousLinkedRow;
-      const shownAttributes = nextRow.part.shownAttributes;
-      if (shownAttributes.length > 0) {
-        const nextAttribute = shownAttributes[shownAttributes.length - 1];
-        return this.focusTableCell(nextRow, nextAttribute);
-      }
-    }
-  }
-
-  private moveCursorRight(row: TableRow, attribute: Attribute) {
-    const index = row.part.shownAttributes.indexOf(attribute);
-
-    if (index < row.part.shownAttributes.length - 1) {
-      const nextAttribute = row.part.shownAttributes[index + 1];
-      return this.focusTableCell(row, nextAttribute);
-    }
-
-    if (row.nextLinkedRows.length > 0) {
-      const nextRow = row.nextLinkedRows[0];
-      if (nextRow.part.shownAttributes.length > 0) {
-        const nextAttribute = nextRow.part.shownAttributes[0];
-        return this.focusTableCell(nextRow, nextAttribute);
-      }
-    }
-  }
-
-  private moveCursorUp(row: TableRow, attribute: Attribute) {
-    if (row.rowAbove) {
-      this.focusTableCell(row.rowAbove, attribute);
-    }
-  }
-
-  private moveCursorDown(row: TableRow, attribute: Attribute) {
-    if (row.rowBelow) {
-      this.focusTableCell(row.rowBelow, attribute);
-    }
-  }
-
-  private focusTableCell(row: TableRow, attribute: Attribute) {
-    this.selectedCell = {row: row, attribute: attribute};
-  }
-
-  public onLinkCollapse(row: TableRow) {
-    this.tableManagerService.collapseRow(row);
-  }
-
-  public onLinkExpand(row: TableRow) {
-    this.tableManagerService.expandRow(row);
-  }
-
-  public onDataChange(event: DataChangeEvent) {
-    this.dataChange.emit(event);
-  }
-
-  public onDeleteDocument(doc: Document) {
-    this.deleteDocument.emit(doc);
-  }
-
-  public onCreateLinkInstance(event: LinkInstanceEvent) {
-    this.createLinkInstance.emit(event);
-  }
-
-  public onDeleteLinkInstance(linkInstanceId: string) {
-    this.deleteLinkInstance.emit(linkInstanceId);
-  }
-
-  public getPrimaryRows(): TableRow[] {
-    return this.parts.length > 0 ? this.parts[0].rows : [];
   }
 
 }

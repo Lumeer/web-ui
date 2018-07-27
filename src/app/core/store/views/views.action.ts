@@ -19,9 +19,8 @@
 
 import {Action} from '@ngrx/store';
 import {QueryModel} from '../navigation/query.model';
-import {SmartDocModel} from '../smartdoc/smartdoc.model';
 import {TableConfig} from '../tables/table.model';
-import {DetailConfigModel, PostItConfigModel, SearchConfigModel, TableConfigModel, ViewConfigModel, ViewCursor, ViewModel} from './view.model';
+import {DetailConfigModel, PostItConfigModel, SearchConfigModel, ViewConfigModel, ViewCursor, ViewModel} from './view.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
 
 export enum ViewsActionType {
@@ -53,7 +52,6 @@ export enum ViewsActionType {
   CHANGE_SEARCH_CONFIG = '[Views] Change Search Config',
   CHANGE_SMARTDOC_CONFIG = '[Views] Change Smart Document Config',
   CHANGE_TABLE_CONFIG = '[Views] Change Table Config',
-  CHANGE_TABLE2_CONFIG = '[Views] Change Table 2 Config',
 
   SET_CURSOR = '[Views] Set Cursor',
 
@@ -203,22 +201,8 @@ export namespace ViewsAction {
     }
   }
 
-  export class ChangeSmartDocConfig implements Action {
-    public readonly type = ViewsActionType.CHANGE_SMARTDOC_CONFIG;
-
-    public constructor(public payload: { config: SmartDocModel }) {
-    }
-  }
-
   export class ChangeTableConfig implements Action {
     public readonly type = ViewsActionType.CHANGE_TABLE_CONFIG;
-
-    public constructor(public payload: { config: TableConfigModel }) {
-    }
-  }
-
-  export class ChangeTable2Config implements Action {
-    public readonly type = ViewsActionType.CHANGE_TABLE2_CONFIG;
 
     public constructor(public payload: { config: TableConfig }) {
     }
@@ -240,7 +224,7 @@ export namespace ViewsAction {
     SetPermissions | SetPermissionsSuccess | SetPermissionsFailure |
     Update | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure |
-    ChangeConfig | ChangeDetailConfig | ChangePostItConfig | ChangeSearchConfig | ChangeSmartDocConfig | ChangeTableConfig | ChangeTable2Config |
+    ChangeConfig | ChangeDetailConfig | ChangePostItConfig | ChangeSearchConfig | ChangeTableConfig |
     SetCursor |
     Clear;
 
