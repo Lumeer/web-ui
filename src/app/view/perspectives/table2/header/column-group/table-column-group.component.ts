@@ -107,7 +107,7 @@ export class TableColumnGroupComponent implements OnChanges {
 
     const width = item._width;
     const offset = event.srcEvent.offsetX;
-    return 5 < offset && offset < width - 5;
+    return 8 < offset && offset < width - 8;
   }
 
   private layoutContainerClass(): string {

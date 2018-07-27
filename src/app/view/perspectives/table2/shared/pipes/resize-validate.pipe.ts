@@ -23,7 +23,7 @@ import {TableCompoundColumn} from '../../../../../core/store/tables/table.model'
 import {getTableColumnWidth, hasTableColumnChildren} from '../../../../../core/store/tables/table.utils';
 import {getLastFromArray} from '../../../../../shared/utils/array.utils';
 
-const MIN_COLUMN_WIDTH = 20;
+const MIN_COLUMN_WIDTH = 30;
 
 @Pipe({
   name: 'resizeValidate'
