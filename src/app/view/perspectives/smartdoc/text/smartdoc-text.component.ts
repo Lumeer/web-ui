@@ -19,7 +19,7 @@
 
 import {Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import QuillEditor, {DeltaOperation, DeltaStatic, Quill, RangeStatic} from 'quill';
-import * as QuillDeltaToHtmlConverter from 'quill-delta-to-html';
+import QuillDeltaToHtmlConverter from 'quill-delta-to-html';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {SmartDocPartModel} from '../../../../core/store/smartdoc/smartdoc.model';

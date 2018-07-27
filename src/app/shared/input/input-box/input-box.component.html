@@ -1,7 +1,8 @@
 <div class="input"
      #inputParent>
 
-  <div [ngClass]="maxLines !== 1 ? 'input-box-multiline' : 'input-box'"
+  <div #input
+       [ngClass]="maxLines !== 1 ? 'input-box-multiline' : 'input-box'"
        [class]="innerClass"
        [class.frame]="alwaysFrame"
        [class.user]="userData"
@@ -24,7 +25,8 @@
        (input)="onInterimNewValue(input.textContent)"
        (keydown.enter)="input.blur()"
        (keydown.Escape)="input.textContent = mCurrentValue; input.blur()"
-       [attr.spellcheck]="false" #input>
+       [attr.spellcheck]="false"
+       class="h-100">
   </div>
 
 </div>
