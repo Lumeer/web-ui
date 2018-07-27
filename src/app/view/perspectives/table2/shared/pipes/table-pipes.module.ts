@@ -139,7 +139,8 @@ import { ResizeValidatePipe } from './resize-validate.pipe';
     ResizeValidatePipe,
   ],
   providers: [
-    AttributeNameChangedPipe
+    AttributeNameChangedPipe,
+    ColumnBackgroundPipe,
   ]
 })
 export class TablePipesModule {

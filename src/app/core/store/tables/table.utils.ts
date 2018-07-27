@@ -419,3 +419,7 @@ export function isLastTableColumn(cursor: TableCursor, part: TablePart): boolean
 export function isLastTableRow(cursor: TableCursor, table: TableModel): boolean {
   return cursor.rowPath && cursor.rowPath.length === 1 && cursor.rowPath[0] === table.rows.length - 1;
 }
+
+export function getTablePart(table: TableModel, cursor: TableCursor): TablePart {
+  return table.parts[cursor.partIndex];
+}

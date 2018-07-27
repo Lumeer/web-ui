@@ -8,6 +8,7 @@
              mwlResizable
              [enableGhostResize]="true"
              [ghostElementPositioning]="'absolute'"
+             [resizeCursorPrecision]="8"
              [resizeEdges]="column | resizeEdges:table:cursor"
              [resizeSnapGrid]="{left: 10, right: 10}"
              [style.width.px]="column | columnWidth"
@@ -17,6 +18,8 @@
             <table-single-column [table]="table"
                                  [cursor]="columnCursor"
                                  [column]="column.parent"
+                                 [collection]="collection"
+                                 [linkType]="linkType"
                                  [leaf]="!column.children.length"
                                  [style.height.px]="column | columnHeight:table:cursor"
                                  class="d-block">
@@ -25,6 +28,8 @@
                                 [table]="table"
                                 [cursor]="columnCursor"
                                 [columns]="column.children"
+                                [collection]="collection"
+                                [linkType]="linkType"
                                 class="d-block">
             </table-column-group>
           </div>

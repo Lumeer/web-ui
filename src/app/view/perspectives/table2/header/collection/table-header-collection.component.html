@@ -1,11 +1,13 @@
-<div class="d-flex flex-column align-items-start">
-  <table-caption [collection]="collection$ | async"
+<div *ngIf="collection$ | async as collection"
+     class="d-flex flex-column align-items-start">
+  <table-caption [collection]="collection"
                  [style.width]="part | partWidth | pixel"
                  (click)="onCaptionClick()">
   </table-caption>
   <table-column-group [table]="table"
                       [cursor]="cursor"
                       [columns]="part.columns"
+                      [collection]="collection"
                       [class.table-border-left]="cursor | isFirstPart"
                       class="d-block table-border-top">
   </table-column-group>

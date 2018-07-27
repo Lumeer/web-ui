@@ -30,7 +30,7 @@ import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
     '[class.affected]': 'affected && !selected',
     '[class.selected]': 'selected',
     '[class.edited]': 'edited',
-    '[style.cursor]': `edited ? 'text' : 'default'`,
+    '[style.cursor]': `edited ? 'text' : null`,
     '[textContent]': 'value',
     '[title]': `value ? value : ''`,
     '[class.editable-cell]': 'true',
