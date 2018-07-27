@@ -24,8 +24,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class EntityCreatedPipe implements PipeTransform {
 
-  public transform(entity: {id: any}): boolean {
-    return entity && entity.id;
+  public transform(entity: {id?: string}): boolean {
+    return entity && !!entity.id;
   }
 
 }
