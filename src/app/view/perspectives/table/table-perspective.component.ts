@@ -19,8 +19,8 @@
 
 import {Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
@@ -31,8 +31,7 @@ import {DEFAULT_TABLE_ID, TableModel} from '../../../core/store/tables/table.mod
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableById, selectTableCursor} from '../../../core/store/tables/tables.state';
 import {Direction} from '../../../shared/direction';
-import {KeyCode} from '../../../shared/key-code';
-import {isKeyPrintable} from '../../../shared/utils/key-code.helper';
+import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
 import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
 import {Perspective} from '../perspective';
 import CreateTable = TablesAction.CreateTable;
@@ -177,14 +176,14 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
       return;
     }
 
-    switch (event.keyCode) {
-      case KeyCode.LeftArrow:
+    switch (event.code) {
+      case KeyCode.ArrowLeft:
         return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Left}));
-      case KeyCode.UpArrow:
+      case KeyCode.ArrowUp:
         return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
-      case KeyCode.RightArrow:
+      case KeyCode.ArrowRight:
         return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Right}));
-      case KeyCode.DownArrow:
+      case KeyCode.ArrowDown:
         return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
       case KeyCode.Enter:
       case KeyCode.Backspace:
@@ -192,7 +191,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
         event.preventDefault();
         return this.store.dispatch(new TablesAction.EditSelectedCell({}));
       default:
-        if (!isKeyPrintable(event.keyCode) || event.key === 'Dead') {
+        if (!isKeyPrintable(event)) {
           return;
         }
 

@@ -20,15 +20,15 @@
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 
 import {Observable} from 'rxjs';
-import {KeyCode} from '../../../../shared/key-code';
+import {map, tap} from 'rxjs/operators';
 import {Role} from '../../../../core/model/role';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentUiService} from '../../../../core/ui/document-ui.service';
 import {UiRow} from '../../../../core/ui/ui-row';
-import {map, tap} from 'rxjs/operators';
+import {KeyCode} from '../../../../shared/key-code';
 import {SelectionHelper} from '../util/selection-helper';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
 
 @Component({
   selector: 'post-it-document',
@@ -121,11 +121,11 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
 
   private disableScrollOnNavigation(): void {
     const capture = false;
-    const scrollKeys = [KeyCode.UpArrow, KeyCode.DownArrow];
+    const scrollKeys: string[] = [KeyCode.ArrowUp, KeyCode.ArrowDown];
 
-    this.content.nativeElement.addEventListener('keydown', (key: KeyboardEvent) => {
-      if (scrollKeys.includes(key.keyCode)) {
-        key.preventDefault();
+    this.content.nativeElement.addEventListener('keydown', (event: KeyboardEvent) => {
+      if (scrollKeys.includes(event.code)) {
+        event.preventDefault();
       }
     }, capture);
   }

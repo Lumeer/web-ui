@@ -19,10 +19,10 @@
 
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
+import {KeyCode} from '../../../../key-code';
+import {getCaretCharacterOffsetWithin, HtmlModifier} from '../../../../utils/html-modifier';
 
 import {AttributeQueryItem} from '../model/attribute.query-item';
-import {getCaretCharacterOffsetWithin, HtmlModifier} from '../../../../utils/html-modifier';
-import {KeyCode} from '../../../../key-code';
 
 @Component({
   selector: 'attribute-value',
@@ -82,8 +82,8 @@ export class AttributeValueComponent implements OnInit {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    switch (event.keyCode) {
-      case KeyCode.LeftArrow:
+    switch (event.code) {
+      case KeyCode.ArrowLeft:
         this.onLeftArrowKeyDown();
         break;
       case KeyCode.Enter:

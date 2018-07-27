@@ -93,7 +93,7 @@ export class TableEditableCellDirective {
 
   private onKeyDownInEditMode(event: KeyboardEvent) {
     event.stopPropagation();
-    switch (event.keyCode) {
+    switch (event.code) {
       case KeyCode.Enter:
       case KeyCode.F2:
         this.stopEditing();
