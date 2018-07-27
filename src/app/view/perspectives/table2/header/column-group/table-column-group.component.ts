@@ -96,18 +96,22 @@ export class TableColumnGroupComponent implements OnChanges {
       },
       dragEnabled: true,
       dragAxis: 'x',
-      dragStartPredicate: {
-        handle: `.${this.dragClass()}`
-      }
+      dragStartPredicate: (item, event) => this.dragStartPredicate(item, event)
     }, this.zone, ({fromIndex, toIndex}) => this.onMoveColumn(fromIndex, toIndex));
+  }
+
+  private dragStartPredicate(item, event): boolean {
+    if (!event.target.className.includes(`drag-${this.columnGroupId}`)) {
+      return false;
+    }
+
+    const width = item._width;
+    const offset = event.srcEvent.offsetX;
+    return 5 < offset && offset < width - 5;
   }
 
   private layoutContainerClass(): string {
     return this.containerClassPrefix + this.columnGroupId;
-  }
-
-  private dragClass(): string {
-    return `drag-${this.columnGroupId}`;
   }
 
   private createColumnGroupId(): string {
