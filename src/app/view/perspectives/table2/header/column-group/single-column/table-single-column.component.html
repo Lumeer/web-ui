@@ -1,38 +1,35 @@
-<ng-container *ngIf="{attribute: attribute$ | async, collection: collection$ | async} as data">
-  <div tableEditableCell
-       [cancelOnBlur]="!(data.attribute | entityCreated)"
-       [contextMenu]="contextMenuComponent?.contextMenu"
-       [disabledCharacters]="disabledCharacters"
-       [selected]="selected$ | async"
-       [style.background]="data.collection | columnBackground:(data.attribute | attributeNameChanged:lastName)"
-       [value]="data.attribute | attributeLastName"
-       (valueChange)="onValueChange($event)"
-       (editStart)="onEditStart()"
-       (editEnd)="onEditEnd($event)"
-       (mousedown)="onMouseDown()"
-       class="table-border-right table-border-bottom h-100 font-italic {{cursor | dragClass}}"
-       [class.uninitialized-column]="!column?.attributeId"
-       [class.text-default-attribute]="data.attribute | isDefaultAttribute:(data.collection)">
-  </div>
+<div tableEditableCell
+     [cancelOnBlur]="!(attribute | entityCreated)"
+     [contextMenu]="contextMenuComponent?.contextMenu"
+     [disabledCharacters]="disabledCharacters"
+     [selected]="selected$ | async"
+     [value]="attribute | attributeLastName"
+     (valueChange)="onValueChange($event)"
+     (editStart)="onEditStart()"
+     (editEnd)="onEditEnd($event)"
+     (mousedown)="onMouseDown()"
+     class="table-border-right table-border-bottom h-100 font-italic {{cursor | dragClass}}"
+     [class.uninitialized-column]="!column?.attributeId"
+     [class.text-default-attribute]="attribute | isDefaultAttribute:(collection)">
+</div>
 
-  <table-attribute-suggestions *ngIf="edited && !(data.attribute | entityCreated) && !(data.attribute | attributeParentName)"
-                               [attributeName]="data.attribute | attributeName:lastName"
-                               [collection]="data.collection"
-                               [cursor]="cursor"
-                               [table]="table">
-  </table-attribute-suggestions>
-
-  <table-column-context-menu #contextMenu
-                             *ngIf="data.attribute && cursor"
-                             [attribute]="data.attribute"
+<table-attribute-suggestions *ngIf="edited && !(attribute | entityCreated) && !(attribute | attributeParentName)"
+                             [attributeName]="attribute | attributeName:lastName"
+                             [collection]="collection"
                              [cursor]="cursor"
-                             [defaultAttribute]="data.attribute | isDefaultAttribute:(data.collection)"
-                             [leaf]="leaf"
-                             (add)="onAdd($event)"
-                             (edit)="onEdit()"
-                             (hide)="onHide()"
-                             (remove)="onRemove()"
-                             (setDefaultAttribute)="onSetDefaultAttribute()"
-                             (split)="onSplit()">
-  </table-column-context-menu>
-</ng-container>
+                             [table]="table">
+</table-attribute-suggestions>
+
+<table-column-context-menu #contextMenu
+                           *ngIf="attribute && cursor"
+                           [attribute]="attribute"
+                           [cursor]="cursor"
+                           [defaultAttribute]="attribute | isDefaultAttribute:(collection)"
+                           [leaf]="leaf"
+                           (add)="onAdd($event)"
+                           (edit)="onEdit()"
+                           (hide)="onHide()"
+                           (remove)="onRemove()"
+                           (setDefaultAttribute)="onSetDefaultAttribute()"
+                           (split)="onSplit()">
+</table-column-context-menu>

@@ -185,7 +185,7 @@ function removeLinkedRow(rows: TableRow[], rowPath: number[]): TableRow[] {
   return updatedRows;
 }
 
-export function getTablePart(state: TablesState, cursor: TableHeaderCursor): { table: TableModel, part: TablePart } {
+function getTablePart(state: TablesState, cursor: TableHeaderCursor): { table: TableModel, part: TablePart } {
   const table = state.entities[cursor.tableId];
   const part = table.parts[cursor.partIndex];
   return {table, part};

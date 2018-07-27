@@ -54,8 +54,8 @@ export class TableHeaderComponent {
     };
   }
 
-  public trackByPartIndex(index: number, part: TablePart): number {
-    return part.index;
+  public trackByPartIndexAndEntityId(index: number, part: TablePart): string {
+    return part.index + ':' + (part.collectionId || part.linkTypeId);
   }
 
   public onRowNumberColumnClick() {

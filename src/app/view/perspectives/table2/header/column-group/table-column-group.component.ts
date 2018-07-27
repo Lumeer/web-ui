@@ -21,8 +21,11 @@ import {ChangeDetectionStrategy, Component, Input, NgZone, OnChanges, SimpleChan
 import {Store} from '@ngrx/store';
 import {ResizeEvent} from 'angular-resizable-element';
 import {AppState} from '../../../../../core/store/app.state';
+import {CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableColumn, TableColumnType, TableCompoundColumn, TableModel} from '../../../../../core/store/tables/table.model';
+import {getTablePart} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {deepArrayEquals} from '../../../../../shared/utils/array.utils';
 import {ColumnLayout} from '../../../../../shared/utils/layout/column-layout';
@@ -44,12 +47,18 @@ export class TableColumnGroupComponent implements OnChanges {
   @Input()
   public columns: TableColumn[];
 
+  @Input()
+  public collection: CollectionModel;
+
+  @Input()
+  public linkType: LinkTypeModel;
+
   private columnsLayout: ColumnLayout;
   public columnGroupId: string;
 
   public containerClassPrefix = 'table-';
 
-  public constructor(private store: Store<AppState>,
+  public constructor(private store$: Store<AppState>,
                      private zone: NgZone) {
   }
 
@@ -116,12 +125,12 @@ export class TableColumnGroupComponent implements OnChanges {
       return;
     }
     const cursor = {...this.cursor, columnPath: this.cursor.columnPath.concat(fromIndex)};
-    this.store.dispatch(new TablesAction.MoveColumn({cursor, toIndex}));
+    this.store$.dispatch(new TablesAction.MoveColumn({cursor, toIndex}));
   }
 
   public trackByCollectionAndAttribute(index: number, column: TableColumn): string {
     if (column && column.type === TableColumnType.COMPOUND) {
-      const part = this.table.parts[this.cursor.partIndex];
+      const part = getTablePart(this.table, this.cursor);
       const {parent} = column as TableCompoundColumn;
       return part.collectionId + ':' + (parent.attributeId || parent.uniqueId);
     }
@@ -129,7 +138,7 @@ export class TableColumnGroupComponent implements OnChanges {
 
   public onResizeEnd(cursor: TableHeaderCursor, event: ResizeEvent): void {
     const delta = Number(event.edges.right);
-    this.store.dispatch(new TablesAction.ResizeColumn({cursor, delta}));
+    this.store$.dispatch(new TablesAction.ResizeColumn({cursor, delta}));
   }
 
 }
