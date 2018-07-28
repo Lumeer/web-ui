@@ -43,9 +43,9 @@ import {selectViewTableConfig} from '../views/views.state';
 import {moveTableCursor, TableCursor} from './table-cursor';
 import {convertTableToConfig} from './table.converter';
 import {DEFAULT_ROW_NUMBER_WIDTH, DEFAULT_TABLE_ID, EMPTY_TABLE_ROW, TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
-import {createCollectionPart, createLinkPart, createTableColumnsBySiblingAttributeIds, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
+import {createCollectionPart, createLinkPart, createTableColumnsBySiblingAttributeIds, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, getTablePart, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
-import {selectTableById, selectTableCursor} from './tables.state';
+import {selectTableById, selectTableBySelectedCursor, selectTableCursor} from './tables.state';
 
 @Injectable()
 export class TablesEffects {
@@ -484,6 +484,20 @@ export class TablesEffects {
       return new TablesAction.SetCursor({cursor: nextCursor});
     })
   );
+
+  // @Effect()
+  // public removeSelectedCell$: Observable<Action> = this.actions$.pipe(
+  //   ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL),
+  //   withLatestFrom(
+  //     this.store$.select(selectTableBySelectedCursor),
+  //     this.store$.select(selectTableCursor)
+  //   ),
+  //   filter(([,table, cursor]) => !!table && !!cursor && !!cursor.columnIndex),
+  //   map(([,table, cursor]) => {
+  //     const part = getTablePart(table, cursor);
+  //
+  //   })
+  // );
 
   public constructor(private actions$: Actions,
                      private store$: Store<AppState>) {

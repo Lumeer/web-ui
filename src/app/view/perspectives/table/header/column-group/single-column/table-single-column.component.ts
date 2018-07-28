@@ -86,7 +86,7 @@ export class TableSingleColumnComponent implements OnChanges {
 
   public readonly disabledCharacters = ['.'];
 
-  private editSubscription: Subscription;
+  private selectedSubscriptions = new Subscription();
 
   public constructor(private actions$: Actions,
                      private attributeNameChangedPipe: AttributeNameChangedPipe,
@@ -140,28 +140,28 @@ export class TableSingleColumnComponent implements OnChanges {
       tap(selected => {
         this.edited = selected ? this.edited : false;
 
-        this.bindOrUnbindEditSelectedCell(selected);
+        this.selectedSubscriptions.unsubscribe();
+        if (selected) {
+          this.selectedSubscriptions = new Subscription();
+          this.selectedSubscriptions.add(this.subscribeToEditSelectedCell());
+          this.selectedSubscriptions.add(this.subscribeToRemoveSelectedCell());
+        }
       })
     );
   }
 
-  private bindOrUnbindEditSelectedCell(selected: boolean) {
-    if (selected) {
-      this.editSubscription = this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
-        .subscribe(action => {
-          this.editableCellDirective.startEditing(action.payload.letter);
-        });
-    } else {
-      if (this.editSubscription) {
-        this.editSubscription.unsubscribe();
-      }
-    }
+  private subscribeToEditSelectedCell(): Subscription {
+    return this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
+      .subscribe(action => this.editableCellDirective.startEditing(action.payload.letter));
+  }
+
+  private subscribeToRemoveSelectedCell(): Subscription {
+    return this.actions$.ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL)
+      .subscribe(() => this.onRemove());
   }
 
   public ngOnDestroy() {
-    if (this.editSubscription) {
-      this.editSubscription.unsubscribe();
-    }
+    this.selectedSubscriptions.unsubscribe();
   }
 
   public onValueChange(lastName: string) {

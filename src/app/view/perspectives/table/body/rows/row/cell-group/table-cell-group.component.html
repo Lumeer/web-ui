@@ -1,13 +1,13 @@
-<ng-container *ngIf="{selectedCursor: selectedCursor$ | async}; let row">
+<ng-container *ngIf="{selectedCursor: selectedCursor$ | async, documents: documents$ | async, linkInstances: linkInstances$ | async} as data">
   <ng-container *ngFor="let column of columns$ | async; trackBy: trackByAttributeIds; let columnIndex = index">
     <ng-container *ngIf="column | isSingleColumn; else emptyCell">
-      <ng-container *ngIf="!((documents || linkInstances) | lengthGreaterThan:1); else collapsedCell">
+      <ng-container *ngIf="!((data.documents || data.linkInstances) | lengthGreaterThan:1); else collapsedCell">
         <ng-container *ngIf="{
           cursor: cursor | columnCursor:columnIndex,
-          document: documents ? documents[0] : null,
-          linkInstance: linkInstances ? linkInstances[0] : null,
-          selected: row.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)
-        }; let cell">
+          document: data.documents ? data.documents[0] : null,
+          linkInstance: data.linkInstances ? data.linkInstances[0] : null,
+          selected: data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)
+        } as cell">
           <table-data-cell-suggestions *ngIf="cell.selected && !(cursor | isFirstPart) && !((cell.document | entityCreated) || (cell.linkInstance | entityCreated)) && editedValue"
                                        [column]="column"
                                        [cursor]="cell.cursor"
@@ -25,7 +25,7 @@
           </table-data-cell-menu>
 
           <div tableDataCell
-               [affected]="editedAttribute$ | async | affectedCell:(documents || linkInstances):column"
+               [affected]="editedAttribute$ | async | affectedCell:(data.documents || data.linkInstances):column"
                [column]="column"
                [cursor]="cell.cursor"
                [document]="cell.document"
@@ -47,12 +47,12 @@
       </ng-container>
 
       <ng-template #collapsedCell>
-        <table-collapsed-cell [affected]="editedAttribute$ | async | affectedCell:(documents || linkInstances):column"
+        <table-collapsed-cell [affected]="editedAttribute$ | async | affectedCell:(data.documents || data.linkInstances):column"
                               [column]="column"
                               [cursor]="cursor | columnCursor:columnIndex"
-                              [documents]="documents"
-                              [linkInstances]="linkInstances"
-                              [selected]="row.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
+                              [documents]="data.documents"
+                              [linkInstances]="data.linkInstances"
+                              [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
                               [style.width]="column | columnWidth | pixel"
                               [class.transparent-border-top]="cursor | isFirstRow"
                               (mousedown)="onMouseDown($event, columnIndex)"
