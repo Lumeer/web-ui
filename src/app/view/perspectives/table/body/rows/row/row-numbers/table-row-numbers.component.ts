@@ -20,7 +20,7 @@
 import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableModel, TableRow} from '../../../../../../../core/store/tables/table.model';
-import {calculateRowNumber, countLinkedRows} from '../../../../../../../core/store/tables/table.utils';
+import {calculateRowNumber, countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
 
 @Component({
   selector: 'table-row-numbers',
@@ -55,7 +55,7 @@ export class TableRowNumbersComponent implements OnChanges, AfterViewChecked {
     const widths = this.rowNumberElements.map(element => element.nativeElement.clientWidth);
     const width = Math.max(...widths);
 
-    const tableElement = document.getElementById(`table-${this.table.id}`);
+    const tableElement = getTableElement(this.cursor.tableId);
     const rowNumberColumnWidth = Number((tableElement.style.getPropertyValue('--row-number-column-width') || '0px').slice(0, -2));
 
     if (width > rowNumberColumnWidth) {

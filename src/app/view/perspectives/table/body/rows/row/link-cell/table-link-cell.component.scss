@@ -2,7 +2,7 @@
 
 .link-cell {
   color: $light;
-  width: var(--table-link-info-width);
+  width: var(--link-info-column-width);
 
   &.striped {
     color: $white;
