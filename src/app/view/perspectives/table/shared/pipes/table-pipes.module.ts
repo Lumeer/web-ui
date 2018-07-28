@@ -19,6 +19,7 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {AffectedCellPipe} from './affected-cell.pipe';
 import {AttributeExistPipe} from './attribute-exist.pipe';
 import {AttributeLastNamePipe} from './attribute-last-name.pipe';
 import {AttributeNameChangedPipe} from './attribute-name-changed.pipe';
@@ -30,15 +31,18 @@ import {ColumnChildCursorPipe} from './column-child-cursor.pipe';
 import {ColumnCursorPipe} from './column-cursor.pipe';
 import {ColumnHeightPipe} from './column-height.pipe';
 import {ColumnWidthPipe} from './column-width.pipe';
+import {CursorEqualsPipe} from './cursor-equals.pipe';
 import {DataPipe} from './data.pipe';
 import {DisplayablePipe} from './displayable.pipe';
 import {DragClassPipe} from './drag-class.pipe';
 import {EmbeddedPipe} from './embedded.pipe';
 import {EntityCreatedPipe} from './entity-created.pipe';
 import {ExpandablePipe} from './expandable.pipe';
+import {ExtractValuePipe} from './extract-value.pipe';
 import {HeaderHeightPipe} from './header-height.pipe';
 import {IsCompoundColumnPipe} from './is-compound-column.pipe';
 import {IsFirstPartPipe} from './is-first-part.pipe';
+import {IsFirstRowPipe} from './is-first-row.pipe';
 import {IsHiddenColumnPipe} from './is-hidden-column.pipe';
 import {IsLastPartPipe} from './is-last-part.pipe';
 import {IsSingleColumnPipe} from './is-single-column.pipe';
@@ -49,13 +53,7 @@ import {PartCursorPipe} from './part-cursor.pipe';
 import {PartWidthPipe} from './part-width.pipe';
 import {PartPipe} from './part.pipe';
 import {ResizeEdgesPipe} from './resize-edges.pipe';
-import {RowNumberWidthPipe} from './row-number-width.pipe';
-import { IsFirstRowPipe } from './is-first-row.pipe';
-import { TableWidthPipe } from './table-width.pipe';
-import { CursorEqualsPipe } from './cursor-equals.pipe';
-import { ExtractValuePipe } from './extract-value.pipe';
-import { AffectedCellPipe } from './affected-cell.pipe';
-import { ResizeValidatePipe } from './resize-validate.pipe';
+import {ResizeValidatePipe} from './resize-validate.pipe';
 
 @NgModule({
   imports: [
@@ -68,7 +66,6 @@ import { ResizeValidatePipe } from './resize-validate.pipe';
     IsLastPartPipe,
     NextPartCursorPipe,
     NextRowCursorPipe,
-    RowNumberWidthPipe,
     ExpandablePipe,
     CollapsiblePipe,
     DisplayablePipe,
@@ -94,7 +91,6 @@ import { ResizeValidatePipe } from './resize-validate.pipe';
     AttributeExistPipe,
     EmbeddedPipe,
     IsFirstRowPipe,
-    TableWidthPipe,
     CursorEqualsPipe,
     ExtractValuePipe,
     AffectedCellPipe,
@@ -106,7 +102,6 @@ import { ResizeValidatePipe } from './resize-validate.pipe';
     IsLastPartPipe,
     NextPartCursorPipe,
     NextRowCursorPipe,
-    RowNumberWidthPipe,
     ExpandablePipe,
     CollapsiblePipe,
     DisplayablePipe,
@@ -132,7 +127,6 @@ import { ResizeValidatePipe } from './resize-validate.pipe';
     AttributeExistPipe,
     EmbeddedPipe,
     IsFirstRowPipe,
-    TableWidthPipe,
     CursorEqualsPipe,
     ExtractValuePipe,
     AffectedCellPipe,

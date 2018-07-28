@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
@@ -53,6 +53,9 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
   @ViewChild('positioner')
   public positioner: ElementRef;
 
+  @HostBinding('id')
+  public elementId: string;
+
   public table: TableModel;
   private tableId: string;
 
@@ -67,6 +70,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.tableId = this.createTableId();
+    this.elementId = `table-${this.tableId}`;
     if (this.tableId === DEFAULT_TABLE_ID) {
       this.calculateHeight();
     }
