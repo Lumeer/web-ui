@@ -120,9 +120,19 @@ export class TableEditableCellDirective {
   }
 
   @HostListener('input', ['$event'])
-  public onInput(event: KeyboardEvent) {
+  public onInput(event: Event) {
     const value = event.target['innerText'];
     this.valueChange.emit(value);
+  }
+
+  @HostListener('paste', ['$event'])
+  public onPaste(event: KeyboardEvent) {
+    event.preventDefault();
+
+    const clipboardData: DataTransfer = event['clipboardData'] || window['clipboardData'];
+    const value = clipboardData.getData('text/plain');
+
+    document.execCommand('insertHTML', false, value);
   }
 
   @HostListener('edit', ['$event'])
