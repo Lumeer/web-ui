@@ -33,3 +33,7 @@
   @extend %highlighted;
   outline: $danger solid 2px;
 }
+
+.data-input {
+  cursor: default;
+}
