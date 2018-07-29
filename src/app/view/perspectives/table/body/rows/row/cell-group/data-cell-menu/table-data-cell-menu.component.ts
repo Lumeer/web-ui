@@ -28,6 +28,7 @@ import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-c
 import {EMPTY_TABLE_ROW, TableModel} from '../../../../../../../../core/store/tables/table.model';
 import {findTableRow, splitRowPath} from '../../../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
+import {Direction} from '../../../../../../../../shared/direction';
 
 @Component({
   selector: 'table-data-cell-menu',
@@ -57,7 +58,7 @@ export class TableDataCellMenuComponent implements OnChanges {
 
   public created: boolean;
 
-  public constructor(private store: Store<AppState>) {
+  public constructor(private store$: Store<AppState>) {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -74,7 +75,10 @@ export class TableDataCellMenuComponent implements OnChanges {
     const rowPath = parentPath.concat(rowIndex + indexDelta);
     const cursor = {...this.cursor, rowPath};
 
-    this.store.dispatch(new TablesAction.ReplaceRows({cursor, rows: [EMPTY_TABLE_ROW], deleteCount: 0}));
+    this.store$.dispatch(new TablesAction.ReplaceRows({cursor, rows: [EMPTY_TABLE_ROW], deleteCount: 0}));
+    if (indexDelta > 0) {
+      this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
+    }
   }
 
   public onRemoveRow() {
@@ -82,7 +86,7 @@ export class TableDataCellMenuComponent implements OnChanges {
     // TODO response from server might be slow and some change can be done to the table in the meantime
     const removeRowAction = new TablesAction.RemoveRow({cursor: this.cursor});
     if (this.document && this.document.id) {
-      this.store.dispatch(new DocumentsAction.DeleteConfirm({
+      this.store$.dispatch(new DocumentsAction.DeleteConfirm({
         collectionId: this.document.collectionId,
         documentId: this.document.id,
         nextAction: removeRowAction
@@ -92,14 +96,14 @@ export class TableDataCellMenuComponent implements OnChanges {
     if (this.linkInstance && this.linkInstance.id) {
       // TODO
     }
-    this.store.dispatch(removeRowAction);
+    this.store$.dispatch(removeRowAction);
   }
 
   public onUnlinkRow() {
     const linkInstanceId = findTableRow(this.table.rows, this.cursor.rowPath).linkInstanceIds[0];
     // TODO what is 'this' if the component is destroyed in the meantime?
-    const callback = () => this.store.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
-    this.store.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId, callback}));
+    const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
+    this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId, callback}));
   }
 
 }
