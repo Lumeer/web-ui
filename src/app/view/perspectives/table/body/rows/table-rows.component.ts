@@ -32,11 +32,7 @@ import {Direction} from '../../../../../shared/direction';
 @Component({
   selector: 'table-rows',
   templateUrl: './table-rows.component.html',
-  host: {
-    '[class.d-flex]': 'true',
-    '[class.flex-column]': 'true',
-    '[style.width]': `'min-content'`
-  },
+  styleUrls: ['./table-rows.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableRowsComponent implements OnChanges, OnDestroy {
