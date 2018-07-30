@@ -21,9 +21,10 @@ import {AfterViewChecked, Component, ElementRef, Input, OnInit, ViewChild} from 
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {filter, map, mergeMap, take} from 'rxjs/operators';
-import {Resource} from '../../core/dto/index';
+import {Resource} from '../../core/dto';
+import {ServiceLevelType} from '../../core/dto/service-level-type';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
@@ -37,6 +38,7 @@ import {OrganizationModel} from '../../core/store/organizations/organization.mod
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
 import {ServiceLimitsAction} from '../../core/store/organizations/service-limits/service-limits.action';
+import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {selectProjectByWorkspace, selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from '../../core/store/projects/projects.state';
@@ -66,6 +68,8 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
   public organization: OrganizationModel;
   public project: ProjectModel;
 
+  public freePlan$: Observable<boolean>;
+
   private subscriptions = new Subscription();
 
   public notificationsDisabled: boolean;
@@ -76,7 +80,7 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
   constructor(private dialogService: DialogService,
               private i18n: I18n,
               private notificationService: NotificationService,
-              private store: Store<AppState>,
+              private store$: Store<AppState>,
               private router: Router,
               private userSettingsService: UserSettingsService) {
   }
@@ -86,15 +90,23 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
     this.subscribeToOrganization();
     this.subscribeToProject();
 
-    this.store.dispatch(new OrganizationsAction.Get());
-    this.store.dispatch(new ServiceLimitsAction.GetAll());
+    this.store$.dispatch(new OrganizationsAction.Get());
+    this.store$.dispatch(new ServiceLimitsAction.GetAll());
 
     this.notificationsDisabled = this.userSettingsService.getUserSettings().notificationsDisabled;
+
+    this.bindServiceLimits();
+  }
+
+  private bindServiceLimits() {
+    this.freePlan$ = this.store$.select(selectServiceLimitsByWorkspace).pipe(
+      map(serviceLimits => serviceLimits && serviceLimits.serviceLevel === ServiceLevelType.FREE)
+    );
   }
 
   private subscribeToNavigation() {
     this.subscriptions.add(
-      this.store.select(selectNavigation).subscribe(navigation => {
+      this.store$.select(selectNavigation).subscribe(navigation => {
         this.workspace = navigation.workspace;
       })
     );
@@ -102,13 +114,13 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
 
   private subscribeToOrganization() {
     this.subscriptions.add(
-      this.store.select(selectOrganizationByWorkspace).subscribe(organization => this.organization = organization)
+      this.store$.select(selectOrganizationByWorkspace).subscribe(organization => this.organization = organization)
     );
   }
 
   private subscribeToProject() {
     this.subscriptions.add(
-      this.store.select(selectProjectByWorkspace).subscribe(project => this.project = project)
+      this.store$.select(selectProjectByWorkspace).subscribe(project => this.project = project)
     );
   }
 
@@ -137,9 +149,9 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
 
   private goToWorkspace(selectProject: boolean) {
     if (this.organization && this.project) {
-      this.store.dispatch(new OrganizationsAction.Select({organizationId: this.organization.id}));
-      this.store.dispatch(new ProjectsAction.Select({projectId: selectProject ? this.project.id : null}));
-      this.store.dispatch(new RouterAction.Go({path: ['workspace']}));
+      this.store$.dispatch(new OrganizationsAction.Select({organizationId: this.organization.id}));
+      this.store$.dispatch(new ProjectsAction.Select({projectId: selectProject ? this.project.id : null}));
+      this.store$.dispatch(new RouterAction.Go({path: ['workspace']}));
     }
   }
 
@@ -153,18 +165,18 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
     if (organization && project) {
       this.updateDefaultWorkspace(organization, project);
       this.clearStore();
-      this.store.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
-      this.store.dispatch(new ProjectsAction.Select({projectId: project.id}));
-      this.store.dispatch(new RouterAction.Go({path: ['w', organization.code, project.code, 'view', 'search', 'all']}));
+      this.store$.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
+      this.store$.dispatch(new ProjectsAction.Select({projectId: project.id}));
+      this.store$.dispatch(new RouterAction.Go({path: ['w', organization.code, project.code, 'view', 'search', 'all']}));
     }
   }
 
   private clearStore() {
-    this.store.dispatch(new CollectionsAction.Clear());
-    this.store.dispatch(new DocumentsAction.Clear());
-    this.store.dispatch(new LinkInstancesAction.Clear());
-    this.store.dispatch(new LinkTypesAction.Clear());
-    this.store.dispatch(new ViewsAction.Clear());
+    this.store$.dispatch(new CollectionsAction.Clear());
+    this.store$.dispatch(new DocumentsAction.Clear());
+    this.store$.dispatch(new LinkInstancesAction.Clear());
+    this.store$.dispatch(new LinkTypesAction.Clear());
+    this.store$.dispatch(new ViewsAction.Clear());
   }
 
   private updateDefaultWorkspace(organization: OrganizationModel, project: ProjectModel) {
@@ -174,7 +186,7 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
       projectId: project.id,
       projectCode: project.code
     };
-    this.store.dispatch(new UsersAction.SaveDefaultWorkspace({defaultWorkspace}));
+    this.store$.dispatch(new UsersAction.SaveDefaultWorkspace({defaultWorkspace}));
   }
 
   public removeHtmlComments(html: HTMLElement): string {
@@ -186,11 +198,11 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
   }
 
   public selectOrganization(organization: OrganizationModel): void {
-    this.store.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
+    this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
 
-    this.store.select(selectProjectsLoadedForOrganization(organization.id)).pipe(
+    this.store$.select(selectProjectsLoadedForOrganization(organization.id)).pipe(
       filter(loaded => loaded),
-      mergeMap(() => this.store.select(selectProjectsByOrganizationId(organization.id))),
+      mergeMap(() => this.store$.select(selectProjectsByOrganizationId(organization.id))),
       take(1),
       map(projects => projects.length > 0 ? projects[0] : undefined)
     ).subscribe(project => {
