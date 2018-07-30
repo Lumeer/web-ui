@@ -9,38 +9,46 @@ $top-panel-height: 48px;
   white-space: nowrap;
 }
 
-.grid {
+:host {
   display: grid;
   grid-gap: 10px;
+  grid-template-areas: "logo user-panel" "workspace-panel workspace-panel" "search-box search-box";
   grid-template-columns: 1fr 1fr;
   align-items: center;
 }
 
+.logo {
+  grid-area: logo;
+  justify-self: start;
+}
+
+.workspace-panel {
+  grid-area: workspace-panel;
+}
+
 .search-box {
-  grid-row: 2;
-  grid-column: 1 / span 2;
+  grid-area: search-box;
+}
+
+.user-panel {
+  grid-area: user-panel;
+}
+
+@media (min-width: 576px) and (max-width: 1199.98px) {
+  :host {
+    grid-template-areas: "logo workspace-panel user-panel" "search-box search-box search-box";
+    grid-template-columns: auto auto 1fr;
+  }
 }
 
 @media (min-width: 1200px) {
 
-  .grid {
-    grid-template-columns: auto 1fr auto;
-  }
-
-  .workspace-panel {
-    grid-row: 1;
-    grid-column: 1;
-  }
-
-  .search-box {
-    display: block;
-    grid-row: 1;
-    grid-column: 2;
+  :host {
+    grid-template-areas: "logo workspace-panel search-box user-panel";
+    grid-template-columns: auto auto 1fr auto;
   }
 
   .user-panel {
-    grid-row: 1;
-    grid-column: 3;
     width: var(--top-panel-side-width);
   }
 

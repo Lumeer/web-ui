@@ -1,5 +1,29 @@
 @import "../../../styles/variables";
 
+.view-controls-grid {
+  display: grid;
+  grid-template-areas: "perspective" "view-name";
+
+  @media (min-width: 576px) {
+    grid-template-areas: "perspective view-name";
+    grid-template-columns: auto 1fr;
+  }
+}
+
+.perspective {
+  grid-area: perspective;
+}
+
+@media (max-width: 575.98px) {
+  .view-arrow {
+    display: none;
+  }
+}
+
+.view-name {
+  grid-area: view-name;
+}
+
 .dropdown {
   cursor: default;
 }
