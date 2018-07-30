@@ -18,24 +18,24 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {combineLatest as observableCombineLatest, Subscription} from 'rxjs';
 import {filter, map, mergeMap} from 'rxjs/operators';
-import {Subscription, combineLatest as observableCombineLatest} from 'rxjs';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
+import {PermissionType} from '../../core/store/permissions/permissions.model';
 import {UserModel} from '../../core/store/users/user.model';
 import {UsersAction} from '../../core/store/users/users.action';
 import {selectAllUsers, selectCurrentUser} from '../../core/store/users/users.state';
-import {KeyCode} from '../../shared/key-code';
-import {HtmlModifier} from '../../shared/utils/html-modifier';
-import {ActivatedRoute} from '@angular/router';
-import {selectViewByCode} from '../../core/store/views/views.state';
 import {ViewModel} from '../../core/store/views/view.model';
 import {ViewsAction} from '../../core/store/views/views.action';
-import {PermissionType} from '../../core/store/permissions/permissions.model';
+import {selectViewByCode} from '../../core/store/views/views.state';
+import {KeyCode} from '../../shared/key-code';
+import {HtmlModifier} from '../../shared/utils/html-modifier';
 
 @Component({
   selector: 'share-view-dialog',
@@ -72,12 +72,12 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    switch (event.keyCode) {
+    switch (event.code) {
       case KeyCode.Enter:
         this.addItemOrShare();
         return;
-      case KeyCode.UpArrow:
-      case KeyCode.DownArrow:
+      case KeyCode.ArrowUp:
+      case KeyCode.ArrowDown:
         this.onUpAndDownArrowKeysDown(event);
         return;
     }
@@ -99,7 +99,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
     }
 
     event.preventDefault();
-    const direction = event.keyCode === KeyCode.UpArrow ? -1 : 1;
+    const direction = event.code === KeyCode.ArrowUp ? -1 : 1;
 
     const newIndex = isNullOrUndefined(this.selectedIndex) ? 0 : this.selectedIndex + direction;
     if (newIndex >= 0 && newIndex < this.suggestions.length) {

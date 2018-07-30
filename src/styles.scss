@@ -1,9 +1,10 @@
-@import "variables";
+@import "~ng-snotify/styles/material.css";
+@import "styles/variables";
 @import "~bootstrap/scss/bootstrap";
-@import "bootswatch";
+@import "styles/bootswatch";
 
 $flag-icon-css-path: '~flag-icon-css/flags' !default;
-@import '../../../node_modules/flag-icon-css/sass/flag-icon';
+@import '../node_modules/flag-icon-css/sass/flag-icon';
 
 *[contenteditable] {
   -webkit-user-select: auto !important;
@@ -15,7 +16,6 @@ html {
 }
 
 body {
-  counter-reset: row-number;
   height: 100%;
   margin: 0;
 }
@@ -32,6 +32,10 @@ a {
 
 a:hover {
   text-decoration: none;
+}
+
+a.disabled {
+  cursor: default;
 }
 
 .flex-grow-2 {

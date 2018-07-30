@@ -64,6 +64,7 @@ export enum TablesActionType {
   COLLAPSE_ROWS = '[Tables] Collapse Rows',
 
   EDIT_SELECTED_CELL = '[Tables] Edit Selected Cell',
+  REMOVE_SELECTED_CELL = '[Tables] Remove Selected Cell',
   COPY_CELL = '[Tables] Copy Cell',
   PASTE_CELL = '[Tables] Paste Cell',
   MOVE_CELL = '[Tables] Move Cell',
@@ -267,6 +268,10 @@ export namespace TablesAction {
     }
   }
 
+  export class RemoveSelectedCell implements Action {
+    public readonly type = TablesActionType.REMOVE_SELECTED_CELL;
+  }
+
   export class SetEditedAttribute implements Action {
     public readonly type = TablesActionType.SET_EDITED_ATTRIBUTE;
 
@@ -282,5 +287,5 @@ export namespace TablesAction {
     ReplaceRows | AddRows | AddLinkedRows | RemoveRow |
     CollapseRows | ExpandRows |
     SetCursor | MoveCursor |
-    EditSelectedCell | SetEditedAttribute;
+    EditSelectedCell | RemoveSelectedCell | SetEditedAttribute;
 }

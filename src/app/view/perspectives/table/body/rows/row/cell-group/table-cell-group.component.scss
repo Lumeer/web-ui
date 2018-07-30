@@ -1,4 +1,4 @@
-@import "../../../../../../../shared/variables";
+@import "../../../../../../../../styles/variables";
 
 :host {
   display: flex;
@@ -32,4 +32,13 @@
 .invalid {
   @extend %highlighted;
   outline: $danger solid 2px;
+}
+
+.data-input {
+  cursor: default;
+  min-height: 1px;
+
+  &[contenteditable="true"]:empty::before {
+    content: none; // Firefox fix
+  }
 }

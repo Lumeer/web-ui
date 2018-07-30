@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
-import {filter} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {filter, map} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {selectDocumentsByIds} from '../../../../../../../core/store/documents/documents.state';
@@ -30,6 +30,7 @@ import {areTableRowCursorsEqual, TableBodyCursor, TableCursor} from '../../../..
 import {TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TableRow} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {EditedAttribute, selectEditedAttribute, selectTableCursor, selectTablePartLeafColumns} from '../../../../../../../core/store/tables/tables.state';
+import {Direction} from '../../../../../../../shared/direction';
 import {TableDataCellDirective} from '../../../../shared/directives/table-data-cell.directive';
 import {TableEditableCellDirective} from '../../../../shared/directives/table-editable-cell.directive';
 import {TableDataCellMenuComponent} from './data-cell-menu/table-data-cell-menu.component';
@@ -40,7 +41,7 @@ import {TableDataCellMenuComponent} from './data-cell-menu/table-data-cell-menu.
   styleUrls: ['./table-cell-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableCellGroupComponent implements OnInit, OnDestroy {
+export class TableCellGroupComponent implements OnInit {
 
   @Input()
   public table: TableModel;
@@ -60,10 +61,8 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
   @ViewChildren(TableEditableCellDirective)
   public editableCells: QueryList<TableEditableCellDirective>;
 
-  public documents: DocumentModel[];
-  public linkInstances: LinkInstanceModel[];
-
-  private subscriptions = new Subscription();
+  public documents$: Observable<DocumentModel[]>;
+  public linkInstances$: Observable<LinkInstanceModel[]>;
 
   public columns$: Observable<TableColumn[]>;
   public editedAttribute$: Observable<EditedAttribute>;
@@ -73,7 +72,7 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
 
   public editedValue: string;
 
-  public constructor(private store: Store<AppState>) {
+  public constructor(private store$: Store<AppState>) {
   }
 
   public ngOnInit() {
@@ -84,11 +83,11 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
   }
 
   private bindColumns() {
-    this.columns$ = this.store.select(selectTablePartLeafColumns(this.cursor.tableId, this.cursor.partIndex));
+    this.columns$ = this.store$.select(selectTablePartLeafColumns(this.cursor.tableId, this.cursor.partIndex));
   }
 
   private bindSelectedCursor() {
-    this.selectedCursor$ = this.store.select(selectTableCursor).pipe(
+    this.selectedCursor$ = this.store$.select(selectTableCursor).pipe(
       filter(selectedCursor => {
         const rowBeingSelected = areTableRowCursorsEqual(this.cursor, selectedCursor);
         if (!this.rowSelected && !rowBeingSelected) {
@@ -106,7 +105,7 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.editedAttribute$ = this.store.select(selectEditedAttribute);
+    this.editedAttribute$ = this.store$.select(selectEditedAttribute);
   }
 
   private bindData() {
@@ -121,21 +120,14 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
   }
 
   private bindDocuments(collectionId: string) {
-    this.subscriptions.add(
-      this.store.select(selectDocumentsByIds(this.row.documentIds))
-        .subscribe(documents => this.documents = documents && documents.length ? documents : [{collectionId, data: {}}])
+    this.documents$ = this.store$.select(selectDocumentsByIds(this.row.documentIds)).pipe(
+      map(documents => documents && documents.length ? documents : [{collectionId, data: {}}])
     );
   }
 
   private bindLinkInstances(linkTypeId: string) {
-    this.subscriptions.add(
-      this.store.select(selectLinkInstancesByIds(this.row.linkInstanceIds))
-        .subscribe(linkInstances => this.linkInstances = linkInstances) // TODO what if it does not exist?
-    );
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    // TODO what if it does not exist?
+    this.linkInstances$ = this.store$.select(selectLinkInstancesByIds(this.row.linkInstanceIds));
   }
 
   public trackByAttributeIds(index: number, column: TableColumn): string {
@@ -150,7 +142,7 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
 
   public onMouseDown(event: MouseEvent, columnIndex: number) {
     const cursor: TableBodyCursor = {...this.cursor, columnIndex};
-    this.store.dispatch(new TablesAction.SetCursor({cursor}));
+    this.store$.dispatch(new TablesAction.SetCursor({cursor}));
     event.stopPropagation();
   }
 
@@ -170,6 +162,10 @@ export class TableCellGroupComponent implements OnInit, OnDestroy {
     if (dataCell) {
       dataCell.disableSaving();
     }
+  }
+
+  public onMoveCursor(direction: Direction) {
+    this.store$.dispatch(new TablesAction.MoveCursor({direction}));
   }
 
 }

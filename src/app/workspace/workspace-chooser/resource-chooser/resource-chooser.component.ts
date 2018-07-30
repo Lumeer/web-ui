@@ -22,15 +22,15 @@ import {Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, Out
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {isNullOrUndefined} from 'util';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../core/constants';
-import {NotificationService} from '../../../core/notifications/notification.service';
-import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generator';
-import {OrganizationModel} from '../../../core/store/organizations/organization.model';
-import {KeyCode} from '../../../shared/key-code';
-import {ServiceLimitsModel} from '../../../core/store/organizations/service-limits/service-limits.model';
 import {ServiceLevelType} from '../../../core/dto/service-level-type';
 import {ResourceType} from '../../../core/model/resource-type';
 import {ResourceModel} from '../../../core/model/resource.model';
+import {NotificationService} from '../../../core/notifications/notification.service';
+import {CorrelationIdGenerator} from '../../../core/store/correlation-id.generator';
+import {OrganizationModel} from '../../../core/store/organizations/organization.model';
+import {ServiceLimitsModel} from '../../../core/store/organizations/service-limits/service-limits.model';
 import {animateOpacityFromUp} from '../../../shared/animations';
+import {KeyCode} from '../../../shared/key-code';
 
 const squareSize: number = 200;
 const arrowSize: number = 40;
@@ -39,7 +39,7 @@ const arrowSize: number = 40;
   selector: 'resource-chooser',
   templateUrl: './resource-chooser.component.html',
   styleUrls: ['./resource-chooser.component.scss'],
-  animations: [ animateOpacityFromUp ]
+  animations: [animateOpacityFromUp]
 })
 export class ResourceChooserComponent implements OnChanges {
 
@@ -151,7 +151,9 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   private getActiveIndex(): number {
-    if (isNullOrUndefined(this.resources) || isNullOrUndefined(this.selectedId)) { return -1; }
+    if (isNullOrUndefined(this.resources) || isNullOrUndefined(this.selectedId)) {
+      return -1;
+    }
     return this.resources.findIndex(resource => resource.id === this.selectedId);
   }
 
@@ -268,7 +270,7 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   public onKeyDown(event: KeyboardEvent, element: HTMLElement) {
-    if (event.keyCode === KeyCode.Enter) {
+    if (event.code === KeyCode.Enter) {
       element.blur();
     }
   }

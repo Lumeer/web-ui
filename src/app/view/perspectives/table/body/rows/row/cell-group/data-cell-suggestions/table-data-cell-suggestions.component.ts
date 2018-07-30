@@ -72,7 +72,7 @@ export class TableDataCellSuggestionsComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('value')) {
+    if (changes.value) {
       this.filter$.next(this.value);
     }
   }

@@ -27,15 +27,12 @@ import {QueryModel} from '../../../../../core/store/navigation/query.model';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {EMPTY_TABLE_ROW, TableModel, TableRow} from '../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
+import {Direction} from '../../../../../shared/direction';
 
 @Component({
   selector: 'table-rows',
   templateUrl: './table-rows.component.html',
-  host: {
-    '[class.d-flex]': 'true',
-    '[class.flex-column]': 'true',
-    '[style.width]': `'min-content'`
-  },
+  styleUrls: ['./table-rows.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableRowsComponent implements OnChanges, OnDestroy {
@@ -54,7 +51,7 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
   private subscriptions = new Subscription();
 
   public constructor(public element: ElementRef,
-                     private store: Store<AppState>) {
+                     private store$: Store<AppState>) {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -83,12 +80,12 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
   }
 
   private retrieveDocuments() {
-    this.store.dispatch(new DocumentsAction.Get({query: this.query}));
+    this.store$.dispatch(new DocumentsAction.Get({query: this.query}));
   }
 
   private bindDocuments() {
     this.subscriptions.add(
-      this.store.select(selectDocumentsByQuery).subscribe(documents => {
+      this.store$.select(selectDocumentsByQuery).subscribe(documents => {
         const cursor: TableBodyCursor = {
           tableId: this.table.id,
           rowPath: [this.table.rows.length - 1],
@@ -100,7 +97,8 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
           .map(document => ({...EMPTY_TABLE_ROW, documentIds: [document.id]}))
           .concat({...EMPTY_TABLE_ROW, rowId: Math.random().toString(36).substr(2, 9)});
         if (rows.length > 1) {
-          this.store.dispatch(new TablesAction.ReplaceRows({cursor, rows, deleteCount: 1}));
+          this.store$.dispatch(new TablesAction.ReplaceRows({cursor, rows, deleteCount: 1}));
+          this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
         }
       })
     );

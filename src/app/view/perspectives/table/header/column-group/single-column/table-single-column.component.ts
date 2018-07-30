@@ -34,6 +34,7 @@ import {findTableColumn, getTablePart, splitColumnPath} from '../../../../../../
 import {TablesAction, TablesActionType} from '../../../../../../core/store/tables/tables.action';
 import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.state';
 import {DialogService} from '../../../../../../dialog/dialog.service';
+import {Direction} from '../../../../../../shared/direction';
 import {extractAttributeLastName, extractAttributeParentName, filterAttributesByDepth} from '../../../../../../shared/utils/attribute.utils';
 import {TableEditableCellDirective} from '../../../shared/directives/table-editable-cell.directive';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
@@ -85,7 +86,7 @@ export class TableSingleColumnComponent implements OnChanges {
 
   public readonly disabledCharacters = ['.'];
 
-  private editSubscription: Subscription;
+  private selectedSubscriptions = new Subscription();
 
   public constructor(private actions$: Actions,
                      private attributeNameChangedPipe: AttributeNameChangedPipe,
@@ -139,28 +140,28 @@ export class TableSingleColumnComponent implements OnChanges {
       tap(selected => {
         this.edited = selected ? this.edited : false;
 
-        this.bindOrUnbindEditSelectedCell(selected);
+        this.selectedSubscriptions.unsubscribe();
+        if (selected) {
+          this.selectedSubscriptions = new Subscription();
+          this.selectedSubscriptions.add(this.subscribeToEditSelectedCell());
+          this.selectedSubscriptions.add(this.subscribeToRemoveSelectedCell());
+        }
       })
     );
   }
 
-  private bindOrUnbindEditSelectedCell(selected: boolean) {
-    if (selected) {
-      this.editSubscription = this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
-        .subscribe(action => {
-          this.editableCellDirective.startEditing(action.payload.letter);
-        });
-    } else {
-      if (this.editSubscription) {
-        this.editSubscription.unsubscribe();
-      }
-    }
+  private subscribeToEditSelectedCell(): Subscription {
+    return this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
+      .subscribe(action => this.editableCellDirective.startEditing(action.payload.letter));
+  }
+
+  private subscribeToRemoveSelectedCell(): Subscription {
+    return this.actions$.ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL)
+      .subscribe(() => this.onRemove());
   }
 
   public ngOnDestroy() {
-    if (this.editSubscription) {
-      this.editSubscription.unsubscribe();
-    }
+    this.selectedSubscriptions.unsubscribe();
   }
 
   public onValueChange(lastName: string) {
@@ -305,6 +306,12 @@ export class TableSingleColumnComponent implements OnChanges {
 
   private setDefaultCollectionAttribute() {
     this.store$.dispatch(new CollectionsAction.SetDefaultAttribute({collectionId: this.collection.id, attributeId: this.column.attributeId}));
+  }
+
+  public onMoveCursor(direction: Direction) {
+    if (direction === Direction.Right) {
+      this.store$.dispatch(new TablesAction.MoveCursor({direction}));
+    }
   }
 
 }

@@ -65,43 +65,53 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
   @Output()
   public edit = new EventEmitter<string>();
 
-  private editSubscription: Subscription;
+  private selectedSubscriptions = new Subscription();
 
   private savingDisabled: boolean;
 
   public constructor(private actions$: Actions,
-                     private store: Store<AppState>) {
+                     private store$: Store<AppState>) {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.selected) {
-      this.bindOrUnbindEditSelectedCell();
-    }
-  }
-
-  private bindOrUnbindEditSelectedCell() {
-    if (this.selected) {
-      this.editSubscription = this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
-        .subscribe(action => {
-          this.edit.emit(action.payload.letter);
-        });
-    } else {
-      if (this.editSubscription) {
-        this.editSubscription.unsubscribe();
+      this.selectedSubscriptions.unsubscribe();
+      if (this.selected) {
+        this.selectedSubscriptions = new Subscription();
+        this.selectedSubscriptions.add(this.subscribeToEditSelectedCell());
+        this.selectedSubscriptions.add(this.subscribeToRemoveSelectedCell());
       }
     }
   }
 
-  public ngOnDestroy() {
-    if (this.editSubscription) {
-      this.editSubscription.unsubscribe();
+  private subscribeToEditSelectedCell(): Subscription {
+    return this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
+      .subscribe(action => this.edit.emit(action.payload.letter));
+  }
+
+  private subscribeToRemoveSelectedCell(): Subscription {
+    return this.actions$.ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL)
+      .subscribe(() => this.deleteCellData());
+  }
+
+  private deleteCellData() {
+    if (this.isEntityInitialized() && !!this.value) {
+      this.updateData(null);
     }
+  }
+
+  private isEntityInitialized(): boolean {
+    return !!(this.document && this.document.id) || !!(this.linkInstance && this.linkInstance.id);
+  }
+
+  public ngOnDestroy() {
+    this.selectedSubscriptions.unsubscribe();
   }
 
   @HostListener('editStart')
   public onEditStart() {
     if (this.document.id) {
-      this.store.dispatch(new TablesAction.SetEditedAttribute({
+      this.store$.dispatch(new TablesAction.SetEditedAttribute({
         editedAttribute: {
           documentId: this.document.id,
           attributeId: this.column.attributeId
@@ -120,7 +130,7 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
 
   private clearEditedAttribute() {
     if (this.document.id) {
-      this.store.dispatch(new TablesAction.SetEditedAttribute({editedAttribute: null}));
+      this.store$.dispatch(new TablesAction.SetEditedAttribute({editedAttribute: null}));
     }
   }
 
@@ -159,7 +169,7 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
       const createDocumentAction = new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback()});
       const newAttribute = {name: attributeName, constraints: []};
 
-      this.store.dispatch(new CollectionsAction.CreateAttributes({
+      this.store$.dispatch(new CollectionsAction.CreateAttributes({
         collectionId: this.document.collectionId,
         attributes: [newAttribute],
         nextAction: createDocumentAction,
@@ -169,7 +179,7 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
       const data = {[attributeId]: value};
       const document: DocumentModel = {...this.document, data: data};
 
-      this.store.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback()}));
+      this.store$.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback()}));
     }
   }
 
@@ -179,7 +189,7 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
     return attributes => {
       const attribute = attributes.find(attr => attr.name === attributeName);
       if (attribute) {
-        this.store.dispatch(new TablesAction.InitColumn({cursor, attributeId: attribute.id}));
+        this.store$.dispatch(new TablesAction.InitColumn({cursor, attributeId: attribute.id}));
       }
     };
   }
@@ -199,7 +209,7 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
         linkTypeId,
         documentIds: [previousRow.documentIds[0], documentId]
       };
-      this.store.dispatch(new LinkInstancesAction.Create({
+      this.store$.dispatch(new LinkInstancesAction.Create({
         linkInstance,
         callback: () => this.expandLinkedRow()
       }));
@@ -208,7 +218,7 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
 
   private expandLinkedRow() {
     const cursor = {...this.cursor, rowPath: this.cursor.rowPath.slice(0, -1)};
-    this.store.dispatch(new TablesAction.ExpandRows({cursor}));
+    this.store$.dispatch(new TablesAction.ExpandRows({cursor}));
   }
 
   private updateDocument(attributeId: string, attributeName: string, value: string) {
@@ -217,7 +227,7 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
       const patchDocumentAction = new DocumentsAction.PatchData({document});
       const newAttribute = {name: attributeName, constraints: []};
 
-      this.store.dispatch(new CollectionsAction.CreateAttributes({
+      this.store$.dispatch(new CollectionsAction.CreateAttributes({
         collectionId: this.document.collectionId,
         attributes: [newAttribute],
         nextAction: patchDocumentAction,
@@ -225,7 +235,7 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
       }));
     } else {
       const document = {collectionId: this.document.collectionId, id: this.document.id, data: {[attributeId]: value}};
-      this.store.dispatch(new DocumentsAction.PatchData({document}));
+      this.store$.dispatch(new DocumentsAction.PatchData({document}));
     }
   }
 

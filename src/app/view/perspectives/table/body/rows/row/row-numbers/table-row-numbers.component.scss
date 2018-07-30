@@ -1,0 +1,8 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.row-number {
+  min-width: var(--row-number-column-width);
+}

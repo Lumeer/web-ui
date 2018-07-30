@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
@@ -31,8 +31,7 @@ import {DEFAULT_TABLE_ID, TableModel} from '../../../core/store/tables/table.mod
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableById, selectTableCursor} from '../../../core/store/tables/tables.state';
 import {Direction} from '../../../shared/direction';
-import {KeyCode} from '../../../shared/key-code';
-import {isKeyPrintable} from '../../../shared/utils/key-code.helper';
+import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
 import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
 import {Perspective} from '../perspective';
 import CreateTable = TablesAction.CreateTable;
@@ -54,6 +53,9 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
   @ViewChild('positioner')
   public positioner: ElementRef;
 
+  @HostBinding('id')
+  public elementId: string;
+
   public table: TableModel;
   private tableId: string;
 
@@ -63,11 +65,12 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  public constructor(private store: Store<AppState>) {
+  public constructor(private store$: Store<AppState>) {
   }
 
   public ngOnInit() {
     this.tableId = this.createTableId();
+    this.elementId = `table-${this.tableId}`;
     if (this.tableId === DEFAULT_TABLE_ID) {
       this.calculateHeight();
     }
@@ -79,7 +82,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeToSelectedCursor() {
     this.subscriptions.add(
-      this.store.select(selectTableCursor).subscribe(cursor => this.selectedCursor = cursor)
+      this.store$.select(selectTableCursor).subscribe(cursor => this.selectedCursor = cursor)
     );
   }
 
@@ -100,19 +103,19 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
     if (!this.tableId) {
       throw new Error('tableId has not been set');
     }
-    this.store.dispatch(new CreateTable({tableId: this.tableId, query}));
+    this.store$.dispatch(new CreateTable({tableId: this.tableId, query}));
   }
 
   private destroyTable() {
     if (!this.tableId || !this.table) {
       return;
     }
-    this.store.dispatch(new DestroyTable({tableId: this.tableId}));
+    this.store$.dispatch(new DestroyTable({tableId: this.tableId}));
   }
 
   private subscribeToTable() {
     this.subscriptions.add(
-      this.store.select(selectTableById(this.tableId)).pipe(
+      this.store$.select(selectTableById(this.tableId)).pipe(
         filter(table => !!table)
       ).subscribe(table => {
         this.table = table;
@@ -122,7 +125,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeToQuery() {
     this.subscriptions.add(
-      this.store.select(selectNavigation).pipe(
+      this.store$.select(selectNavigation).pipe(
         filter(navigation => navigation.perspective === Perspective.Table && !!navigation.query)
       ).subscribe(({query}) => {
         if (areQueriesEqual(this.query, query)) {
@@ -142,7 +145,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
   private addTablePart(query: QueryModel) {
     const linkTypeId = getNewLinkTypeIdFromQuery(this.query, query);
-    this.store.dispatch(new TablesAction.CreatePart({tableId: this.tableId, linkTypeId}));
+    this.store$.dispatch(new TablesAction.CreatePart({tableId: this.tableId, linkTypeId}));
   }
 
   private refreshTable(query: QueryModel) {
@@ -156,7 +159,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
   public onClickOutside(event: MouseEvent) {
     if (this.selectedCursor && !event[PERSPECTIVE_CHOOSER_CLICK]) {
-      this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
+      this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
   }
 
@@ -177,27 +180,32 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
       return;
     }
 
-    switch (event.keyCode) {
-      case KeyCode.LeftArrow:
-        return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Left}));
-      case KeyCode.UpArrow:
-        return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
-      case KeyCode.RightArrow:
-        return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Right}));
-      case KeyCode.DownArrow:
-        return this.store.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
-      case KeyCode.Enter:
+    switch (event.code) {
+      case KeyCode.ArrowLeft:
+        return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Left}));
+      case KeyCode.ArrowUp:
+        return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Up}));
+      case KeyCode.ArrowRight:
+      case KeyCode.Tab:
+        event.preventDefault();
+        return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Right}));
+      case KeyCode.ArrowDown:
+        return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
       case KeyCode.Backspace:
+      case KeyCode.Delete:
+        event.preventDefault();
+        return this.store$.dispatch(new TablesAction.RemoveSelectedCell());
+      case KeyCode.Enter:
       case KeyCode.F2:
         event.preventDefault();
-        return this.store.dispatch(new TablesAction.EditSelectedCell({}));
+        return this.store$.dispatch(new TablesAction.EditSelectedCell({}));
       default:
-        if (!isKeyPrintable(event.keyCode) || event.key === 'Dead') {
+        if (!isKeyPrintable(event)) {
           return;
         }
 
         event.preventDefault();
-        return this.store.dispatch(new TablesAction.EditSelectedCell({letter: event.key}));
+        return this.store$.dispatch(new TablesAction.EditSelectedCell({letter: event.key}));
     }
   }
 

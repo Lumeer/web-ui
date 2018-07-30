@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Store} from '@ngrx/store';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
@@ -32,11 +32,6 @@ import {selectCurrentUser} from './core/store/users/users.state';
 @Component({
   selector: 'lmr-app',
   templateUrl: './app.component.html',
-  styleUrls: [
-    './shared/common.scss',
-    './app.component.scss'
-  ],
-  encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {
 

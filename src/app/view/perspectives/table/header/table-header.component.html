@@ -1,7 +1,7 @@
 <div class="d-flex">
-  <div [style.min-width]="table | rowNumberWidth"
-       [style.width]="table | rowNumberWidth"
-       (click)="onRowNumberColumnClick()"></div>
+  <div (click)="onRowNumberColumnClick()"
+       class="row-number-header">
+  </div>
   <ng-container *ngFor="let part of table.parts; trackBy: trackByPartIndexAndEntityId">
     <table-header-collection *ngIf="part.collectionId"
                              [cursor]="cursor | partCursor:part.index"

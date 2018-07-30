@@ -82,7 +82,7 @@ export class CreateLinkDialogComponent implements OnInit, OnDestroy {
         withLatestFrom(this.store.select(selectAllCollections))
       ).subscribe(([linkCollectionIds, collections]) => {
         this.collections = collections.filter(collection => linkCollectionIds.includes(collection.id));
-        this.linkNameInput.setValue(this.collections.map(collection => collection.name).join('-'));
+        this.linkNameInput.setValue(this.collections.map(collection => collection.name).join(' '));
       })
     );
   }

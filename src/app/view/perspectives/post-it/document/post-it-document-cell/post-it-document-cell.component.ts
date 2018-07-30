@@ -18,9 +18,9 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, HostListener, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {KeyCode} from '../../../../../shared/key-code';
 
 import {SelectionHelper} from '../../util/selection-helper';
-import {KeyCode} from '../../../../../shared/key-code';
 
 @Component({
   selector: 'post-it-document-cell',
@@ -52,24 +52,24 @@ export class PostItDocumentCellComponent implements OnChanges {
 
   @HostListener('focus', ['$event'])
   public hostFocus(event: FocusEvent) {
-    if(event) {
+    if (event) {
       this.focus.emit();
     }
   }
 
   @HostListener('keydown', ['$event'])
   public keydown(event: KeyboardEvent) {
-    switch (event.keyCode) {
-      case KeyCode.RightArrow:
+    switch (event.code) {
+      case KeyCode.ArrowRight:
         this.selectionHelper.moveRight();
         break;
-      case KeyCode.LeftArrow:
+      case KeyCode.ArrowLeft:
         this.selectionHelper.moveLeft();
         break;
-      case KeyCode.DownArrow:
+      case KeyCode.ArrowDown:
         this.selectionHelper.moveDown();
         break;
-      case KeyCode.UpArrow:
+      case KeyCode.ArrowUp:
         this.selectionHelper.moveUp();
         break;
       case KeyCode.Enter:

@@ -20,6 +20,8 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
 import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
+import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
+import {getTableElement} from '../../../../../../core/store/tables/table.utils';
 
 @Component({
   selector: 'table-link-info',
@@ -28,6 +30,9 @@ import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.m
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableLinkInfoComponent implements AfterViewInit {
+
+  @Input()
+  public cursor: TableHeaderCursor;
 
   @Input()
   public collections: CollectionModel[];
@@ -52,8 +57,9 @@ export class TableLinkInfoComponent implements AfterViewInit {
   }
 
   private setTableLinkInfoWidthCssVariable() {
+    const tableElement = getTableElement(this.cursor.tableId);
     const width = this.linkMenu.nativeElement.clientWidth;
-    document.body.style.setProperty('--table-link-info-width', `${width}px`);
+    tableElement.style.setProperty('--link-info-column-width', `${width}px`);
   }
 
 }

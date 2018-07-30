@@ -1,5 +1,5 @@
 :host {
   overflow-y: auto;
-  min-width: min-content; // TODO verify on Edge
   display: block;
+  counter-reset: row-number;
 }

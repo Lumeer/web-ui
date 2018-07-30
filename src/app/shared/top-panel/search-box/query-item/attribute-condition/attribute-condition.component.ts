@@ -18,9 +18,9 @@
  */
 
 import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {AbstractControl, FormGroup} from '@angular/forms';
 
 import {Subject} from 'rxjs';
-import {AbstractControl, FormGroup} from '@angular/forms';
 import {KeyCode} from '../../../../key-code';
 import {getCaretCharacterOffsetWithin, HtmlModifier} from '../../../../utils/html-modifier';
 import {AttributeQueryItem} from '../model/attribute.query-item';
@@ -98,12 +98,12 @@ export class AttributeConditionComponent implements OnInit {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    switch (event.keyCode) {
-      case KeyCode.DownArrow:
-      case KeyCode.UpArrow:
+    switch (event.code) {
+      case KeyCode.ArrowDown:
+      case KeyCode.ArrowUp:
         this.onUpAndDownArrowKeysDown(event);
         break;
-      case KeyCode.RightArrow:
+      case KeyCode.ArrowRight:
         this.onRightArrowKeyDown();
         break;
       case KeyCode.Enter:
@@ -118,7 +118,7 @@ export class AttributeConditionComponent implements OnInit {
 
   public onUpAndDownArrowKeysDown(event: KeyboardEvent) {
     event.preventDefault();
-    const direction = event.keyCode === KeyCode.UpArrow ? -1 : 1;
+    const direction = event.code === KeyCode.ArrowUp ? -1 : 1;
     this.moveSuggestionSelection$.next(direction);
   }
 

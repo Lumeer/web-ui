@@ -42,7 +42,7 @@ import {ViewsAction} from '../views/views.action';
 import {selectViewTableConfig} from '../views/views.state';
 import {moveTableCursor, TableCursor} from './table-cursor';
 import {convertTableToConfig} from './table.converter';
-import {DEFAULT_ROW_NUMBER_WIDTH, DEFAULT_TABLE_ID, EMPTY_TABLE_ROW, TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
+import {DEFAULT_TABLE_ID, EMPTY_TABLE_ROW, TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
 import {createCollectionPart, createLinkPart, createTableColumnsBySiblingAttributeIds, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {selectTableById, selectTableCursor} from './tables.state';
@@ -72,8 +72,7 @@ export class TablesEffects {
           id: action.payload.tableId,
           parts: [part],
           documentIds: new Set<string>(),
-          rows: [EMPTY_TABLE_ROW],
-          rowNumberWidth: DEFAULT_ROW_NUMBER_WIDTH // TODO calculate dynamically
+          rows: [EMPTY_TABLE_ROW]
         }
       });
 
@@ -484,6 +483,20 @@ export class TablesEffects {
       return new TablesAction.SetCursor({cursor: nextCursor});
     })
   );
+
+  // @Effect()
+  // public removeSelectedCell$: Observable<Action> = this.actions$.pipe(
+  //   ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL),
+  //   withLatestFrom(
+  //     this.store$.select(selectTableBySelectedCursor),
+  //     this.store$.select(selectTableCursor)
+  //   ),
+  //   filter(([,table, cursor]) => !!table && !!cursor && !!cursor.columnIndex),
+  //   map(([,table, cursor]) => {
+  //     const part = getTablePart(table, cursor);
+  //
+  //   })
+  // );
 
   public constructor(private actions$: Actions,
                      private store$: Store<AppState>) {

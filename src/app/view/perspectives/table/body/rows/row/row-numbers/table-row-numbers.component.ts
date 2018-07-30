@@ -17,20 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableModel, TableRow} from '../../../../../../../core/store/tables/table.model';
-import {calculateRowNumber, countLinkedRows} from '../../../../../../../core/store/tables/table.utils';
+import {calculateRowNumber, countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
 
 @Component({
   selector: 'table-row-numbers',
   templateUrl: './table-row-numbers.component.html',
-  host: {
-    'class': 'd-flex flex-column'
-  },
+  styleUrls: ['./table-row-numbers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableRowNumbersComponent implements OnChanges {
+export class TableRowNumbersComponent implements OnChanges, AfterViewChecked {
 
   @Input()
   public table: TableModel;
@@ -41,6 +39,9 @@ export class TableRowNumbersComponent implements OnChanges {
   @Input()
   public row: TableRow;
 
+  @ViewChildren('rowNumber')
+  public rowNumberElements: QueryList<ElementRef>;
+
   public rowIndexes: number[] = [];
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -50,8 +51,16 @@ export class TableRowNumbersComponent implements OnChanges {
     }
   }
 
-  public rowNumberWidth(): string {
-    return `${this.table.rowNumberWidth}px`;
+  public ngAfterViewChecked() {
+    const widths = this.rowNumberElements.map(element => element.nativeElement.clientWidth);
+    const width = Math.max(...widths);
+
+    const tableElement = getTableElement(this.cursor.tableId);
+    const rowNumberColumnWidth = Number((tableElement.style.getPropertyValue('--row-number-column-width') || '0px').slice(0, -2));
+
+    if (width > rowNumberColumnWidth) {
+      tableElement.style.setProperty('--row-number-column-width', `${width}px`);
+    }
   }
 
   public rowNumbers(): number[] {

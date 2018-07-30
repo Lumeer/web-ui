@@ -33,8 +33,6 @@ export interface TableModel {
   rows: TableRow[];
   expanded?: boolean;
 
-  rowNumberWidth?: number;
-
 }
 
 export interface TableRow {

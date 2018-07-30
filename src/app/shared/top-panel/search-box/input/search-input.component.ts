@@ -75,15 +75,15 @@ export class SearchInputComponent {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    switch (event.keyCode) {
+    switch (event.code) {
       case KeyCode.Backspace:
         this.onBackspaceKeyDown();
         return;
       case KeyCode.Escape:
         this.onEscapeKeyDown();
         return;
-      case KeyCode.DownArrow:
-      case KeyCode.UpArrow:
+      case KeyCode.ArrowDown:
+      case KeyCode.ArrowUp:
         this.onUpAndDownArrowKeysDown(event);
         return;
       case KeyCode.Enter:
@@ -94,7 +94,7 @@ export class SearchInputComponent {
 
   public onUpAndDownArrowKeysDown(event: KeyboardEvent) {
     event.preventDefault();
-    const direction = event.keyCode === KeyCode.UpArrow ? -1 : 1;
+    const direction = event.code === KeyCode.ArrowUp ? -1 : 1;
     this.moveSuggestionSelection$.next(direction);
   }
 

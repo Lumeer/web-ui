@@ -18,6 +18,7 @@
  */
 
 import {Directive, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
+import {Direction} from '../../../../../shared/direction';
 import {KeyCode} from '../../../../../shared/key-code';
 import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
 
@@ -69,6 +70,9 @@ export class TableEditableCellDirective {
   @Output()
   public editEnd = new EventEmitter<string>();
 
+  @Output()
+  public moveCursor = new EventEmitter<Direction>();
+
   public edited: boolean;
 
   public constructor(private element: ElementRef) {
@@ -93,10 +97,15 @@ export class TableEditableCellDirective {
 
   private onKeyDownInEditMode(event: KeyboardEvent) {
     event.stopPropagation();
-    switch (event.keyCode) {
+    switch (event.code) {
       case KeyCode.Enter:
-      case KeyCode.F2:
         this.stopEditing();
+        this.moveCursor.emit(Direction.Down);
+        event.preventDefault();
+        return;
+      case KeyCode.Tab:
+        this.stopEditing();
+        this.moveCursor.emit(Direction.Right);
         event.preventDefault();
         return;
       case KeyCode.Escape:
@@ -111,9 +120,19 @@ export class TableEditableCellDirective {
   }
 
   @HostListener('input', ['$event'])
-  public onInput(event: KeyboardEvent) {
-    const value = event.target['innerText'];
-    this.valueChange.emit(value);
+  public onInput(event: Event) {
+    const value = event.target['innerText'] || '';
+    this.valueChange.emit(value.trim());
+  }
+
+  @HostListener('paste', ['$event'])
+  public onPaste(event: KeyboardEvent) {
+    event.preventDefault();
+
+    const clipboardData: DataTransfer = event['clipboardData'] || window['clipboardData'];
+    const value = clipboardData.getData('text/plain');
+
+    document.execCommand('insertHTML', false, value);
   }
 
   @HostListener('edit', ['$event'])

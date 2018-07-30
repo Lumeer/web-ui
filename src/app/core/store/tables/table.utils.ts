@@ -423,3 +423,7 @@ export function isLastTableRow(cursor: TableCursor, table: TableModel): boolean 
 export function getTablePart(table: TableModel, cursor: TableCursor): TablePart {
   return table.parts[cursor.partIndex];
 }
+
+export function getTableElement(tableId: string): HTMLElement {
+  return document.getElementById(`table-${tableId}`);
+}
