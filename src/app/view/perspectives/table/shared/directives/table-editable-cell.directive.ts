@@ -121,8 +121,8 @@ export class TableEditableCellDirective {
 
   @HostListener('input', ['$event'])
   public onInput(event: Event) {
-    const value = event.target['innerText'];
-    this.valueChange.emit(value);
+    const value = event.target['innerText'] || '';
+    this.valueChange.emit(value.trim());
   }
 
   @HostListener('paste', ['$event'])
