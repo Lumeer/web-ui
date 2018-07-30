@@ -6,4 +6,7 @@
         [title]="suggestion.text"
         class="ml-2"></span>
 </div>
-<span class="font-weight-light font-italic ml-3">{{suggestion.type}}</span>
+<span class="font-weight-light font-italic ml-3"
+      i18n="@@query.suggestion.type">
+  {suggestion.type, select, Attribute {Attribute} Collection {Collection} Document {Document} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted}}
+</span>
