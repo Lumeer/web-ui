@@ -35,13 +35,13 @@
                [contextMenu]="dataCellMenu?.contextMenu"
                [readonly]="false"
                [selected]="cell.selected"
-               [value]="(cell.document | extractValue:column) || (cell.linkInstance | extractValue:column)"
+               [value]="(cell.document | extractValue:column) || (cell.linkInstance | extractValue:column) || ''"
                (valueChange)="onValueChange($event)"
                [class.transparent-border-top]="cursor | isFirstRow"
                [style.width]="column | columnWidth | pixel"
                (mousedown)="onMouseDown($event, columnIndex)"
                (moveCursor)="onMoveCursor($event)"
-               class="d-block table-border-right table-border-bottom data-input">
+               class="table-border-right table-border-bottom data-input">
           </div>
         </ng-container>
       </ng-container>

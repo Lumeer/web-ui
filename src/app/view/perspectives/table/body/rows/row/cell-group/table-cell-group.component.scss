@@ -36,4 +36,9 @@
 
 .data-input {
   cursor: default;
+  min-height: 1px;
+
+  &[contenteditable="true"]:empty::before {
+    content: none; // Firefox fix
+  }
 }
