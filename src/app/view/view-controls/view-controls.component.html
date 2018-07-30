@@ -1,47 +1,49 @@
 <ng-container *ngIf="view | viewControlsInfo:name:(config$ | async):(perspective$ | async):(query$ | async) | async as viewControlsInfo">
-  <form class="form-inline d-flex flex-nowrap mt-2">
-    <div class="input-group flex-nowrap mb-2">
-      <div class="input-group-prepend">
-      <span class="input-group-text">
-        <strong *ngIf="novice"
-                i18n="@@view.perspective.guide.select">1.&nbsp;Select View</strong>
-        <i *ngIf="!novice"
-           class="far fa-eye fa-fw">
-        </i>
-      </span>
-      </div>
-      <div *ngVar="perspective$ | async as perspective"
-           (click)="onPerspectiveChooserClick($event)"
-           title="Perspective" i18n-title="@@view.perspective">
-        <button aria-expanded="false"
-                aria-haspopup="true"
-                class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
-                data-toggle="dropdown"
-                id="perspectiveDropdown"
-                type="button">
-          <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
-          <span class="ml-sm-1 text-nowrap"
-                i18n="@@view.perspective.name">{perspective, select, detail {Detail} postit {Post-it} chart {Chart} search {Search} table {Table} smartdoc {Smart document}}</span>
-        </button>
-        <div aria-labelledby="perspectiveDropdown"
-             class="dropdown-menu">
-          <a *ngFor="let aperspective of perspectives | filterPerspectives:view.query"
-             [class.active]="perspective === aperspective"
-             (click)="onSelectPerspective(aperspective)"
-             class="dropdown-item">
-            <i class="fa-fw {{aperspective | perspectiveIcon}}"></i>
-            <span class="ml-1 text-nowrap"
-                  i18n="@@view.perspective.name">{aperspective, select, detail {Detail} postit {Post-it} chart {Chart} search {Search} table {Table} smartdoc {Smart document}}</span>
-          </a>
+  <form class="view-controls-grid mt-2">
+    <div class="perspective d-flex align-items-center justify-content-start">
+      <div class="input-group flex-nowrap mr-2 mb-2">
+        <div class="input-group-prepend">
+        <span class="input-group-text">
+          <strong *ngIf="novice"
+                  i18n="@@view.perspective.guide.select">1.&nbsp;Select View</strong>
+          <i *ngIf="!novice"
+             class="far fa-eye fa-fw">
+          </i>
+        </span>
+        </div>
+        <div *ngVar="perspective$ | async as perspective"
+             (click)="onPerspectiveChooserClick($event)"
+             title="Perspective" i18n-title="@@view.perspective">
+          <button aria-expanded="false"
+                  aria-haspopup="true"
+                  class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
+                  data-toggle="dropdown"
+                  id="perspectiveDropdown"
+                  type="button">
+            <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
+            <span class="ml-sm-1 text-nowrap"
+                  i18n="@@view.perspective.name">{perspective, select, detail {Detail} postit {Post-it} chart {Chart} search {Search} table {Table} smartdoc {Smart document}}</span>
+          </button>
+          <div aria-labelledby="perspectiveDropdown"
+               class="dropdown-menu">
+            <a *ngFor="let aperspective of perspectives | filterPerspectives:view.query"
+               [class.active]="perspective === aperspective"
+               (click)="onSelectPerspective(aperspective)"
+               class="dropdown-item">
+              <i class="fa-fw {{aperspective | perspectiveIcon}}"></i>
+              <span class="ml-1 text-nowrap"
+                    i18n="@@view.perspective.name">{aperspective, select, detail {Detail} postit {Post-it} chart {Chart} search {Search} table {Table} smartdoc {Smart document}}</span>
+            </a>
+          </div>
         </div>
       </div>
+
+      <i *ngIf="novice"
+         class="view-arrow fas fa-arrow-circle-right mr-2 mb-2 text-muted">
+      </i>
     </div>
 
-    <i *ngIf="novice"
-       class="fas fa-arrow-circle-right ml-2 mb-2 text-muted">
-    </i>
-
-    <div class="input-group flex-nowrap flex-fill ml-2 mb-2">
+    <div class="view-name input-group flex-nowrap flex-fill mb-2">
       <div class="input-group-prepend">
       <span class="input-group-text">
         <strong *ngIf="novice"
