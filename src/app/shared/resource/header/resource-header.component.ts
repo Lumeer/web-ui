@@ -17,18 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
 
 import {ResourceType} from '../../../core/model/resource-type';
 import {ResourceModel} from '../../../core/model/resource.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+
+declare let $: any;
 
 @Component({
   selector: 'resource-header',
   templateUrl: './resource-header.component.html',
   styleUrls: ['./resource-header.component.scss']
 })
-export class ResourceHeaderComponent {
+export class ResourceHeaderComponent implements AfterViewInit {
 
   @Input() public resourceType: ResourceType;
   @Input() public resource: ResourceModel;
@@ -44,13 +46,14 @@ export class ResourceHeaderComponent {
   private oldIcon: string;
   private oldColor: string;
   private clickedComponent: any;
+  private colorPickerVisible: boolean;
 
   constructor(private i18n: I18n) {
   }
 
   @HostListener('document:click', ['$event'])
   public documentClicked($event): void {
-    if (this.clickedComponent && $event.target !== this.clickedComponent) {
+    if (this.colorPickerVisible && this.clickedComponent && $event.target !== this.clickedComponent) {
       this.resource.icon = this.oldIcon || this.resource.icon;
       this.resource.color = this.oldColor || this.resource.color;
       $event.stopPropagation();
@@ -156,5 +159,14 @@ export class ResourceHeaderComponent {
     this.clickedComponent = $event.target;
     this.oldColor = this.resource.color;
     this.oldIcon = this.resource.icon;
+  }
+
+  public ngAfterViewInit(): void {
+    $('#dropdown-header').on('shown.bs.dropdown', () => {
+      this.colorPickerVisible = true;
+    });
+    $('#dropdown-header').on('hidden.bs.dropdown', () => {
+      this.colorPickerVisible = false;
+    });
   }
 }
