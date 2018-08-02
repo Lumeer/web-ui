@@ -58,13 +58,15 @@ export class IconComponent implements AfterViewInit {
 
   public dropdownId: string;
 
+  private visible: boolean = false;
+
   public constructor() {
     this.dropdownId = 'dropdown-' + IconComponent.generateId();
   }
 
   @HostListener('document:click', ['$event'])
   public documentClicked($event): void {
-    if (this.clickedComponent && $event.target !== this.clickedComponent) {
+    if (this.visible && this.clickedComponent && $event.target !== this.clickedComponent) {
       this.icon = this.oldIcon || this.icon;
       this.color = this.oldColor || this.color;
       $event.stopPropagation();
@@ -76,7 +78,10 @@ export class IconComponent implements AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    $(`#${this.dropdownId}`).on('hide.bs.dropdown', () => this.detectChanges());
+    let dropdown = $(`#${this.dropdownId}`);
+    dropdown.on('hide.bs.dropdown', () => this.detectChanges());
+    dropdown.on('hidden.bs.dropdown', () => this.visible = false);
+    dropdown.on('shown.bs.dropdown', () => this.visible = true);
   }
 
   public detectChanges(): void {
