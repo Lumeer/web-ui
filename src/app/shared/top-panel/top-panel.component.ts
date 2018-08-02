@@ -129,7 +129,7 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
 
   public ngAfterViewChecked() {
     const logoWidth = this.logo.nativeElement.clientWidth;
-    const workspacePanelWidth = this.workspacePanel.nativeElement.clientWidth;
+    const workspacePanelWidth = this.workspacePanel ? this.workspacePanel.nativeElement.clientWidth : 0;
     const width = logoWidth + 10 + workspacePanelWidth;
     document.body.style.setProperty('--top-panel-side-width', `${width}px`);
   }
