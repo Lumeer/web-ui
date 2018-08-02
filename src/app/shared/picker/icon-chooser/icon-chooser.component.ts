@@ -78,7 +78,7 @@ export class IconComponent implements AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    let dropdown = $(`#${this.dropdownId}`);
+    const dropdown = $(`#${this.dropdownId}`);
     dropdown.on('hide.bs.dropdown', () => this.detectChanges());
     dropdown.on('hidden.bs.dropdown', () => this.visible = false);
     dropdown.on('shown.bs.dropdown', () => this.visible = true);
