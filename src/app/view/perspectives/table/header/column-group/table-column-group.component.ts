@@ -56,6 +56,8 @@ export class TableColumnGroupComponent implements OnChanges {
   private columnsLayout: ColumnLayout;
   public columnGroupId: string;
 
+  public resizedColumnIndex: number;
+
   public containerClassPrefix = 'table-';
 
   public constructor(private store$: Store<AppState>,
@@ -140,7 +142,13 @@ export class TableColumnGroupComponent implements OnChanges {
     }
   }
 
+  public onResizeStart(columnIndex: number, event: ResizeEvent) {
+    this.resizedColumnIndex = columnIndex;
+  }
+
   public onResizeEnd(cursor: TableHeaderCursor, event: ResizeEvent): void {
+    this.resizedColumnIndex = null;
+
     const delta = Number(event.edges.right);
     this.store$.dispatch(new TablesAction.ResizeColumn({cursor, delta}));
   }
