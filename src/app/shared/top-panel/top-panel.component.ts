@@ -168,30 +168,10 @@ export class TopPanelComponent implements OnInit, AfterViewChecked {
 
   public goToProject(organization: OrganizationModel, project: ProjectModel) {
     if (organization && project) {
-      this.updateDefaultWorkspace(organization, project);
-      this.clearStore();
       this.store$.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
       this.store$.dispatch(new ProjectsAction.Select({projectId: project.id}));
       this.store$.dispatch(new RouterAction.Go({path: ['w', organization.code, project.code, 'view', 'search', 'all']}));
     }
-  }
-
-  private clearStore() {
-    this.store$.dispatch(new CollectionsAction.Clear());
-    this.store$.dispatch(new DocumentsAction.Clear());
-    this.store$.dispatch(new LinkInstancesAction.Clear());
-    this.store$.dispatch(new LinkTypesAction.Clear());
-    this.store$.dispatch(new ViewsAction.Clear());
-  }
-
-  private updateDefaultWorkspace(organization: OrganizationModel, project: ProjectModel) {
-    const defaultWorkspace = {
-      organizationId: organization.id,
-      organizationCode: organization.code,
-      projectId: project.id,
-      projectCode: project.code
-    };
-    this.store$.dispatch(new UsersAction.SaveDefaultWorkspace({defaultWorkspace}));
   }
 
   public removeHtmlComments(html: HTMLElement): string {

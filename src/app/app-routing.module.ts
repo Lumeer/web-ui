@@ -21,7 +21,6 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
 import {AuthGuard} from './auth/auth.guard';
-import {AppRedirectGuard} from './core/guards/app-redirect.guard';
 import {CurrentUserGuard} from './core/guards/current-user.guard';
 import {PageNotFoundGuard} from './core/guards/page-not-found.guard';
 import {HomeComponent} from './core/home.component';
@@ -31,7 +30,7 @@ const appRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    canActivate: [AuthGuard, CurrentUserGuard, AppRedirectGuard],
+    canActivate: [AuthGuard, CurrentUserGuard],
     component: HomeComponent
   },
   {

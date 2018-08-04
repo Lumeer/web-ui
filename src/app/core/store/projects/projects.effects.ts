@@ -17,29 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
+import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-
+import {Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
+import {RouteFinder} from '../../../shared/utils/route-finder';
+import {Permission} from '../../dto';
 import {ProjectService} from '../../rest';
 import {AppState} from '../app.state';
+import {CollectionsAction} from '../collections/collections.action';
+import {CommonAction} from '../common/common.action';
+import {DocumentsAction} from '../documents/documents.action';
+import {LinkInstancesAction} from '../link-instances/link-instances.action';
+import {LinkTypesAction} from '../link-types/link-types.action';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary, selectSelectedOrganization} from '../organizations/organizations.state';
+import {PermissionsConverter} from '../permissions/permissions.converter';
+import {PermissionType} from '../permissions/permissions.model';
+import {RouterAction} from '../router/router.action';
+import {UsersAction} from '../users/users.action';
+import {selectCurrentUser} from '../users/users.state';
+import {ViewsAction} from '../views/views.action';
 import {ProjectConverter} from './project.converter';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {selectProjectsCodes, selectProjectsDictionary, selectProjectsLoaded} from './projects.state';
-import {isNullOrUndefined} from 'util';
-import {Permission} from '../../dto';
-import {PermissionType} from '../permissions/permissions.model';
-import {PermissionsConverter} from '../permissions/permissions.converter';
-import {HttpErrorResponse} from '@angular/common/http';
-import {RouterAction} from '../router/router.action';
-import {RouteFinder} from '../../../shared/utils/route-finder';
-import {Router} from '@angular/router';
-import {CommonAction} from '../common/common.action';
 
 @Injectable()
 export class ProjectsEffects {
@@ -220,6 +226,9 @@ export class ProjectsEffects {
             codes = codes.filter(code => code !== project.code);
             actions.push(new ProjectsAction.GetCodesSuccess({organizationId: action.payload.organizationId, projectCodes: codes}));
           }
+          if (action.payload.onSuccess) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => action.payload.onSuccess()}));
+          }
           return actions;
         }),
         catchError(error => of(new ProjectsAction.DeleteFailure({error: error})))
@@ -272,6 +281,38 @@ export class ProjectsEffects {
     map(() => {
       const message = this.i18n({id: 'project.permission.change.fail', value: 'Failed to change project permission'});
       return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public switchWorkspace$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.SwitchWorkspace>(ProjectsActionType.SWITCH_WORKSPACE),
+    withLatestFrom(this.store$.select(selectCurrentUser)),
+    mergeMap(([action, user]) => {
+      const {organizationId, projectId} = action.payload;
+      const workspace = user.defaultWorkspace;
+      if (workspace && workspace.organizationId === organizationId && workspace.projectId === projectId) {
+        return [];
+      }
+
+      return [
+        new UsersAction.SaveDefaultWorkspace({defaultWorkspace: {organizationId, projectId}}),
+        new ProjectsAction.ClearWorkspaceData()
+      ];
+    })
+  );
+
+  @Effect()
+  public clearWorkspaceData$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.ClearWorkspaceData>(ProjectsActionType.CLEAR_WORKSPACE_DATA),
+    mergeMap(() => {
+      return [
+        new CollectionsAction.Clear(),
+        new DocumentsAction.Clear(),
+        new LinkInstancesAction.Clear(),
+        new LinkTypesAction.Clear(),
+        new ViewsAction.Clear(),
+      ];
     })
   );
 

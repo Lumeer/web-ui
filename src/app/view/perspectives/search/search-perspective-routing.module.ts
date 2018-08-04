@@ -19,10 +19,10 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import {DocumentsGuard} from '../../../core/guards/data/documents.guard';
 import {SearchAllComponent} from './all/search-all.component';
 import {SearchCollectionsComponent} from './collections/search-collections.component';
 import {SearchDocumentsComponent} from './documents/search-documents.component';
-import {SearchLinksComponent} from './links/search-links.component';
 import {SearchPerspectiveComponent} from './search-perspective.component';
 import {SearchViewsComponent} from './views/search-views.component';
 
@@ -33,7 +33,10 @@ const searchRoutes: Routes = [
     children: [
       {
         path: 'all',
-        component: SearchAllComponent
+        component: SearchAllComponent,
+        resolve: {
+          documents: DocumentsGuard // TODO move to view guards
+        }
       },
       {
         path: 'collections',

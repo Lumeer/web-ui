@@ -23,10 +23,9 @@ import {AuthGuard} from '../auth/auth.guard';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
-import {OrganizationsGuard} from '../core/guards/data/organizations.guard';
-import {ProjectsGuard} from '../core/guards/data/projects.guard';
 import {ViewsGuard} from '../core/guards/data/views.guard';
 import {ViewRedirectGuard} from '../core/guards/view-redirect.guard';
+import {WorkspaceGuard} from '../core/guards/workspace.guard';
 import {Perspective} from './perspectives/perspective';
 import {PostItPerspectiveComponent} from './perspectives/post-it/post-it-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
@@ -35,10 +34,8 @@ import {ViewComponent} from './view.component';
 const viewRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/view',
-    canActivate: [AuthGuard, CurrentUserGuard],
+    canActivate: [AuthGuard, CurrentUserGuard, WorkspaceGuard],
     resolve: {
-      organizations: OrganizationsGuard,
-      projects: ProjectsGuard,
       collections: CollectionsGuard,
       linkTypes: LinkTypesGuard,
       views: ViewsGuard

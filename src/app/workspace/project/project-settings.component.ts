@@ -17,30 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Location} from '@angular/common';
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-
+import {Observable, Subscription} from 'rxjs';
+import {filter, map, take} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
+import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
-import {filter, map, take} from 'rxjs/operators';
-import {Observable, Subscription} from 'rxjs';
-import {ResourceType} from '../../core/model/resource-type';
-import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
-import {isNullOrUndefined} from 'util';
-import {ProjectModel} from '../../core/store/projects/project.model';
-import {selectAllUsers} from '../../core/store/users/users.state';
-import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
-import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {ViewsAction} from '../../core/store/views/views.action';
-import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
-import {Workspace} from '../../core/store/navigation/workspace.model';
 import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {Workspace} from '../../core/store/navigation/workspace.model';
+import {ProjectModel} from '../../core/store/projects/project.model';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
+import {selectAllUsers} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
-import {Location} from '@angular/common';
 
 @Component({
   templateUrl: './project-settings.component.html'
@@ -93,7 +87,6 @@ export class ProjectSettingsComponent implements OnInit {
     const organizationCode = this.workspace && this.workspace.organizationCode;
     const projectCode = this.project && this.project.code;
     if (organizationCode && projectCode) {
-      this.clearStore();
       this.router.navigate(['/w', organizationCode, projectCode, 'view', Perspective.Search, 'collections']);
     }
   }
@@ -152,17 +145,12 @@ export class ProjectSettingsComponent implements OnInit {
       .subscribe(url => this.previousUrl = url);
   }
 
-  private clearStore() {
-    this.store.dispatch(new CollectionsAction.Clear());
-    this.store.dispatch(new DocumentsAction.Clear());
-    this.store.dispatch(new LinkInstancesAction.Clear());
-    this.store.dispatch(new LinkTypesAction.Clear());
-    this.store.dispatch(new ViewsAction.Clear());
-  }
-
   private deleteProject() {
-    this.store.dispatch(new ProjectsAction.Delete({organizationId: this.project.organizationId, projectId: this.project.id}));
-    this.goBack();
+    this.store.dispatch(new ProjectsAction.Delete({
+      organizationId: this.project.organizationId,
+      projectId: this.project.id,
+      onSuccess: () => this.router.navigate(['/'])
+    }));
   }
 
   private updateProject(project: ProjectModel) {

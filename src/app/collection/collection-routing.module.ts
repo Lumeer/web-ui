@@ -21,8 +21,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../auth/auth.guard';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
-import {OrganizationsGuard} from '../core/guards/data/organizations.guard';
-import {ProjectsGuard} from '../core/guards/data/projects.guard';
+import {WorkspaceGuard} from '../core/guards/workspace.guard';
 import {CollectionSettingsGuard} from './collection-settings.guard';
 import {CollectionSettingsComponent} from './settings/collection-settings.component';
 import {CollectionAttributesComponent} from './settings/tab/attributes/collection-attributes.component';
@@ -33,11 +32,7 @@ import {CollectionUsersComponent} from './settings/tab/users/collection-users.co
 const collectionRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/c/:collectionId',
-    canActivate: [AuthGuard, CurrentUserGuard, CollectionSettingsGuard],
-    resolve: {
-      organizations: OrganizationsGuard,
-      projects: ProjectsGuard
-    },
+    canActivate: [AuthGuard, CurrentUserGuard, WorkspaceGuard, CollectionSettingsGuard],
     component: CollectionSettingsComponent,
     children: [
       {

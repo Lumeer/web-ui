@@ -25,7 +25,7 @@ import {Subscription} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectCurrentQueryLoaded, selectDocumentsByCustomQuery} from '../../../core/store/documents/documents.state';
+import {selectCurrentQueryDocumentsLoaded, selectDocumentsByCustomQuery} from '../../../core/store/documents/documents.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
 import {selectCollectionsByQuery} from '../../../core/store/collections/collections.state';
@@ -132,7 +132,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.subscribeCollections();
     this.subscribeNavigation();
-    this.loaded$ = this.store.select(selectCurrentQueryLoaded);
+    this.loaded$ = this.store.select(selectCurrentQueryDocumentsLoaded);
   }
 
   private subscribeCollections() {

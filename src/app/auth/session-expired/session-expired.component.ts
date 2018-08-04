@@ -20,9 +20,12 @@
 import {Location} from '@angular/common';
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
+import {AppState} from '../../core/store/app.state';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
 
 @Component({
   selector: 'session-expired',
@@ -36,7 +39,8 @@ export class SessionExpiredComponent implements OnInit {
   public redirectUrl$: Observable<string>;
 
   public constructor(private location: Location,
-                     private route: ActivatedRoute) {
+                     private route: ActivatedRoute,
+                     private store$: Store<AppState>) {
   }
 
   public ngOnInit() {
@@ -54,7 +58,8 @@ export class SessionExpiredComponent implements OnInit {
   }
 
   private clearStore() {
-    // TODO implement just in case of back button disabling not working in all browsers
+    // TODO maybe clear other stores as well
+    this.store$.dispatch(new ProjectsAction.ClearWorkspaceData());
   }
 
   private bindRedirectUrl() {

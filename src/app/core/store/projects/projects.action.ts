@@ -18,8 +18,8 @@
  */
 
 import {Action} from '@ngrx/store';
-import {ProjectModel} from './project.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
+import {ProjectModel} from './project.model';
 
 export enum ProjectsActionType {
 
@@ -49,7 +49,10 @@ export enum ProjectsActionType {
 
   CHANGE_PERMISSION = '[Projects] Change Permission',
   CHANGE_PERMISSION_SUCCESS = '[Projects] Change Permission :: Success',
-  CHANGE_PERMISSION_FAILURE = '[Projects] Change Permission :: Failure'
+  CHANGE_PERMISSION_FAILURE = '[Projects] Change Permission :: Failure',
+
+  SWITCH_WORKSPACE = '[Projects] Switch Workspace',
+  CLEAR_WORKSPACE_DATA = '[Projects] Clear Workspace Data'
 
 }
 
@@ -149,7 +152,11 @@ export namespace ProjectsAction {
   export class Delete implements Action {
     public readonly type = ProjectsActionType.DELETE;
 
-    public constructor(public payload: { organizationId: string, projectId: string }) {
+    public constructor(public payload: {
+      organizationId: string,
+      projectId: string,
+      onSuccess?: () => void
+    }) {
     }
   }
 
@@ -195,11 +202,23 @@ export namespace ProjectsAction {
     }
   }
 
+  export class SwitchWorkspace implements Action {
+    public readonly type = ProjectsActionType.SWITCH_WORKSPACE;
+
+    public constructor(public payload: { organizationId: string, projectId: string }) {
+    }
+  }
+
+  export class ClearWorkspaceData implements Action {
+    public readonly type = ProjectsActionType.CLEAR_WORKSPACE_DATA;
+  }
+
   export type All = Select |
     Get | GetSuccess | GetFailure | GetOneSuccess |
     GetCodes | GetCodesSuccess | GetCodesFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure | Select |
-    ChangePermission | ChangePermissionSuccess | ChangePermissionFailure;
+    ChangePermission | ChangePermissionSuccess | ChangePermissionFailure |
+    SwitchWorkspace | ClearWorkspaceData;
 }
