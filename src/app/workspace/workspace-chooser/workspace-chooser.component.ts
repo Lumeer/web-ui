@@ -18,39 +18,32 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-
+import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {filter, first, map, mergeMap, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
+import {ResourceType} from '../../core/model/resource-type';
+import {Role} from '../../core/model/role';
 import {AppState} from '../../core/store/app.state';
-import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
-import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
+import {selectGroupsDictionary} from '../../core/store/groups/groups.state';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {selectAllOrganizations, selectOrganizationById, selectOrganizationCodes, selectSelectedOrganization, selectSelectedOrganizationId} from '../../core/store/organizations/organizations.state';
+import {ServiceLimitsAction} from '../../core/store/organizations/service-limits/service-limits.action';
+import {ServiceLimitsModel} from '../../core/store/organizations/service-limits/service-limits.model';
+import {selectAllServiceLimits} from '../../core/store/organizations/service-limits/service-limits.state';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {selectProjectById, selectProjectsCodesForSelectedOrganization, selectProjectsForSelectedOrganization, selectSelectedProject, selectSelectedProjectId} from '../../core/store/projects/projects.state';
 import {RouterAction} from '../../core/store/router/router.action';
-import {ViewsAction} from '../../core/store/views/views.action';
-import {UserSettingsService} from '../../core/user-settings.service';
-import {Router} from '@angular/router';
-import {userHasRoleInResource, userRolesInResource} from '../../shared/utils/resource.utils';
 import {UserModel} from '../../core/store/users/user.model';
 import {mapGroupsOnUser, selectCurrentUser, selectCurrentUserForOrganization} from '../../core/store/users/users.state';
-import {selectGroupsDictionary} from '../../core/store/groups/groups.state';
-import {ServiceLimitsAction} from '../../core/store/organizations/service-limits/service-limits.action';
-import {selectAllServiceLimits} from '../../core/store/organizations/service-limits/service-limits.state';
-import {ServiceLimitsModel} from '../../core/store/organizations/service-limits/service-limits.model';
-import {Role} from '../../core/model/role';
-import {Perspective} from '../../view/perspectives/perspective';
-import {ResourceType} from '../../core/model/resource-type';
-import {UsersAction} from '../../core/store/users/users.action';
+import {UserSettingsService} from '../../core/user-settings.service';
 import {animateOpacityFromUp} from '../../shared/animations';
+import {userHasRoleInResource, userRolesInResource} from '../../shared/utils/resource.utils';
+import {Perspective} from '../../view/perspectives/perspective';
 
 const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'aturing@lumeer.io'];
 
@@ -58,7 +51,7 @@ const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'aturing@lume
   selector: 'workspace-chooser',
   templateUrl: './workspace-chooser.component.html',
   styleUrls: ['./workspace-chooser.component.scss'],
-  animations: [ animateOpacityFromUp ]
+  animations: [animateOpacityFromUp]
 })
 export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
@@ -173,8 +166,6 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
       ).pipe(first())
         .subscribe(([organization, project]) => {
           if (organization && project) {
-            this.updateDefaultWorkspace(organization, project);
-            this.clearStore();
             this.router.navigate(['/w', organization.code, project.code, 'view', Perspective.Search, 'collections']);
           }
         });
@@ -191,19 +182,6 @@ export class WorkspaceChooserComponent implements OnInit, OnDestroy {
 
   public projectItemType(): ResourceType {
     return ResourceType.Project;
-  }
-
-  private clearStore() {
-    this.store.dispatch(new CollectionsAction.Clear());
-    this.store.dispatch(new DocumentsAction.Clear());
-    this.store.dispatch(new LinkInstancesAction.Clear());
-    this.store.dispatch(new LinkTypesAction.Clear());
-    this.store.dispatch(new ViewsAction.Clear());
-  }
-
-  private updateDefaultWorkspace(organization: OrganizationModel, project: ProjectModel) {
-    const defaultWorkspace = {organizationId: organization.id, projectId: project.id};
-    this.store.dispatch(new UsersAction.SaveDefaultWorkspace({defaultWorkspace}));
   }
 
   private bindData() {

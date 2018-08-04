@@ -95,7 +95,7 @@ const effects = [
   imports: [
     StoreModule.forRoot(reducers, {initialState: initialAppState}),
     EffectsModule.forRoot(effects),
-    environment.storeDevtools ? StoreDevtoolsModule.instrument({maxAge: 15}) : []
+    environment.storeDevtools ? StoreDevtoolsModule.instrument({maxAge: 25}) : []
   ],
   declarations: []
 })

@@ -46,7 +46,7 @@ export const selectDocumentsByQuery = createSelector(selectAllDocuments, selectQ
   (documents, query): DocumentModel[] => filterDocuments(sortDocumentsByCreationDate(documents), query)
 );
 
-export const selectCurrentQueryLoaded = createSelector(selectDocumentsQueries, selectQuery, (queries, currentQuery) =>
+export const selectCurrentQueryDocumentsLoaded = createSelector(selectDocumentsQueries, selectQuery, (queries, currentQuery) =>
   !!queries.find(query => areQueriesEqualExceptPagination(query, currentQuery))
 );
 

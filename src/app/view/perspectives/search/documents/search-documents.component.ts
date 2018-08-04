@@ -25,7 +25,7 @@ import {filter} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {selectCurrentQueryLoaded, selectDocumentsByCustomQuery} from '../../../../core/store/documents/documents.state';
+import {selectCurrentQueryDocumentsLoaded, selectDocumentsByCustomQuery} from '../../../../core/store/documents/documents.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectViewSearchConfig} from '../../../../core/store/views/views.state';
@@ -193,7 +193,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
       .subscribe(config => this.expandedDocumentIds = config && config.expandedDocumentIds.slice() || []);
     this.subscriptions.add(searchConfigSubscription);
 
-    this.loaded$ = this.store.select(selectCurrentQueryLoaded);
+    this.loaded$ = this.store.select(selectCurrentQueryDocumentsLoaded);
 
     const collectionSubscription = this.store.select(selectCollectionsByQuery)
       .subscribe(collections => this.collectionsMap = collections.reduce((acc, coll) => {

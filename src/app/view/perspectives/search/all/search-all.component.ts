@@ -18,21 +18,19 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
-
-import {Observable, Subscription, combineLatest as observableCombineLatest} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
+import {filter, map} from 'rxjs/operators';
+import {QueryAction} from '../../../../core/model/query-action';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsByQuery, selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
-import {selectViewsByQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
-import {selectCurrentQueryLoaded, selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
-import {filter, map, tap} from 'rxjs/operators';
-import {selectNavigation, selectQuery} from '../../../../core/store/navigation/navigation.state';
+import {selectCurrentQueryDocumentsLoaded, selectDocumentsByQuery} from '../../../../core/store/documents/documents.state';
+import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
-import {DocumentsAction} from '../../../../core/store/documents/documents.action';
-import {Router} from '@angular/router';
-import {Perspective} from '../../perspective';
 import {Workspace} from '../../../../core/store/navigation/workspace.model';
-import {QueryAction} from '../../../../core/model/query-action';
+import {selectViewsByQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
+import {Perspective} from '../../perspective';
 
 @Component({
   templateUrl: './search-all.component.html'
@@ -65,16 +63,16 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   }
 
   private subscribeDataInfo() {
-    this.dataLoaded$ = observableCombineLatest(this.store.select(selectCollectionsLoaded),
+    this.dataLoaded$ = combineLatest(
+      this.store.select(selectCollectionsLoaded),
       this.store.select(selectViewsLoaded),
-      this.store.select(selectCurrentQueryLoaded)
+      this.store.select(selectCurrentQueryDocumentsLoaded)
     ).pipe(
-      map(([collectionsLoaded, viewLoaded, documentsLoaded]) => collectionsLoaded && viewLoaded && documentsLoaded)
+      map(([collectionsLoaded, viewLoaded, documentsLoaded]) => collectionsLoaded && viewLoaded && documentsLoaded),
     );
 
     const navigationSubscription = this.store.select(selectNavigation).pipe(
-      filter(navigation => !!navigation.workspace && !!navigation.query),
-      tap(navigation => this.loadDocument(navigation.query))
+      filter(navigation => !!navigation.workspace && !!navigation.query)
     ).subscribe(
       navigation => {
         this.workspace = navigation.workspace;
@@ -97,11 +95,6 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       map(documents => documents && documents.length > 0)
     ).subscribe(hasDocument => this.hasDocument = hasDocument);
     this.subscriptions.add(documentSubscription);
-  }
-
-  private loadDocument(query: QueryModel) {
-    const querySingleDocument = {...query, page: 0, pageSize: 1};
-    this.store.dispatch(new DocumentsAction.Get({query: querySingleDocument}));
   }
 
   private workspacePath(): string {

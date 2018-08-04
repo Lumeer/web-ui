@@ -17,11 +17,120 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {combineLatest, Observable, Subscription} from 'rxjs/index';
+import {filter, first, map, switchMap, tap} from 'rxjs/operators';
+import {AppState} from './store/app.state';
+import {OrganizationModel} from './store/organizations/organization.model';
+import {OrganizationsAction} from './store/organizations/organizations.action';
+import {selectAllOrganizations, selectOrganizationsLoaded} from './store/organizations/organizations.state';
+import {ProjectModel} from './store/projects/project.model';
+import {ProjectsAction} from './store/projects/projects.action';
+import {selectAllProjects, selectProjectsLoaded} from './store/projects/projects.state';
+import {DefaultWorkspaceModel} from './store/users/user.model';
+import {selectCurrentUser} from './store/users/users.state';
 
 @Component({
   template: ''
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+
+  public constructor(private router: Router,
+                     private store$: Store<AppState>) {
+  }
+
+  public ngOnInit() {
+    this.redirectToWorkspace();
+  }
+
+  private redirectToWorkspace(): Subscription {
+    return combineLatest(
+      this.getDefaultWorkspace(),
+      this.getOrganizationsAndProjects()
+    ).pipe(
+      first()
+    ).subscribe(([workspace, {organizations, projects}]) => {
+      if (organizations.length > 0 && projects.length > 0) {
+        if (workspace) {
+          this.navigateToWorkspaceProject(workspace, organizations, projects);
+        } else {
+          this.navigateToAnyProject(organizations, projects);
+        }
+      } else {
+        this.navigateToWorkspaceChooser();
+      }
+    });
+  }
+
+  private navigateToWorkspaceProject(workspace: DefaultWorkspaceModel, organizations: OrganizationModel[], projects: ProjectModel[]) {
+    const workspaceOrganization = workspace.organizationId && organizations.find(org => org.id === workspace.organizationId);
+    const workspaceProject = workspace.projectId && projects.find(proj => proj.id === workspace.projectId);
+
+    if (workspaceOrganization && workspaceProject) {
+      this.navigateToProject(workspaceOrganization, workspaceProject);
+    } else if (workspaceOrganization) {
+      const project = projects.find(proj => proj.organizationId === workspaceOrganization.id);
+      if (project) {
+        this.navigateToProject(workspaceOrganization, project);
+      } else {
+        this.navigateToAnyProject(organizations, projects);
+      }
+    } else {
+      this.navigateToAnyProject(organizations, projects);
+    }
+  }
+
+  private navigateToAnyProject(organizations: OrganizationModel[], projects: ProjectModel[]) {
+    const organization = organizations.find(org => projects.some(proj => proj.organizationId === org.id));
+    if (!organization) {
+      this.navigateToWorkspaceChooser();
+    } else {
+      const project = projects.find(proj => proj.organizationId === organization.id);
+      this.navigateToProject(organization, project);
+    }
+  }
+
+  private navigateToProject(organization: OrganizationModel, project: ProjectModel) {
+    this.router.navigate(['/', 'w', organization.code, project.code, 'view', 'search']);
+  }
+
+  private navigateToWorkspaceChooser() {
+    this.router.navigate(['/', 'workspace']);
+  }
+
+  private getDefaultWorkspace(): Observable<DefaultWorkspaceModel> {
+    return this.store$.select(selectCurrentUser).pipe(
+      filter(user => !!user),
+      map(user => user.defaultWorkspace)
+    );
+  }
+
+  private getOrganizations(): Observable<OrganizationModel[]> {
+    return this.store$.select(selectOrganizationsLoaded).pipe(
+      tap(loaded => {
+        if (!loaded) {
+          this.store$.dispatch(new OrganizationsAction.Get());
+        }
+      }),
+      filter(loaded => loaded),
+      switchMap(() => this.store$.select(selectAllOrganizations))
+    );
+  }
+
+  private getOrganizationsAndProjects(): Observable<{ organizations: OrganizationModel[], projects: ProjectModel[] }> {
+    return combineLatest(
+      this.getOrganizations().pipe(
+        tap(organizations => organizations.forEach(org => this.store$.dispatch(new ProjectsAction.Get({organizationId: org.id}))))
+      ),
+      this.store$.select(selectProjectsLoaded)
+    ).pipe(
+      filter(([organizations, projectsLoaded]) => organizations.every(org => projectsLoaded[org.id])),
+      switchMap(([organizations]) => this.store$.select(selectAllProjects).pipe(
+        map((projects: ProjectModel[]) => ({organizations, projects}))
+      ))
+    );
+  }
 
 }

@@ -43,6 +43,10 @@ export class CanCreateResourcePipe implements PipeTransform {
   }
 
   public transform(resource: ResourceModel, type: ResourceType, projects: ProjectModel[]): Observable<boolean> {
+    if (!resource) {
+      return of(false);
+    }
+
     if (type === ResourceType.Organization) {
       return this.store$.select(selectCurrentUser).pipe(
         map(user => allowedEmails.includes(user.email))

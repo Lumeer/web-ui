@@ -19,12 +19,9 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {AppRedirectGuard} from './app-redirect.guard';
 import {CurrentUserGuard} from './current-user.guard';
 import {CollectionsGuard} from './data/collections.guard';
 import {LinkTypesGuard} from './data/link-types.guard';
-import {OrganizationsGuard} from './data/organizations.guard';
-import {ProjectsGuard} from './data/projects.guard';
 import {ViewsGuard} from './data/views.guard';
 import {PageNotFoundGuard} from './page-not-found.guard';
 import {ViewRedirectGuard} from './view-redirect.guard';
@@ -41,9 +38,6 @@ import {ViewRedirectGuard} from './view-redirect.guard';
     ViewsGuard,
     ViewRedirectGuard,
     CurrentUserGuard,
-    AppRedirectGuard,
-    OrganizationsGuard,
-    ProjectsGuard,
   ]
 })
 export class GuardsModule {
