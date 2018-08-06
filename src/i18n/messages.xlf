@@ -2044,7 +2044,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="collection.delete.dialog.message" datatype="html">
-        <source>Are you sure you want to remove the file?</source>
+        <source>Do you really want to remove this collection?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -2153,28 +2153,6 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="organization.not.exist" datatype="html">
-        <source>Organization does not exist</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/guards/data/organizations.guard.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="project.not.exist" datatype="html">
-        <source>Project does not exist</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/guards/data/projects.guard.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="view.not.found" datatype="html">
         <source>View not found</source>
         <context-group purpose="location">
@@ -2186,6 +2164,28 @@
         <source>Page not found</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/guards/page-not-found.guard.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="organization.not.exist" datatype="html">
+        <source>Organization does not exist</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="project.not.exist" datatype="html">
+        <source>Project does not exist</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

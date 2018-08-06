@@ -570,7 +570,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.delete.dialog.message" datatype="html">
-                <source>Are you sure you want to remove the file?</source>
+                <source>Do you really want to remove this collection?</source>
                 <target>Opravdu chcete smazat tuto kolekci?</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context>
@@ -1020,7 +1020,7 @@
                 <source>Organization does not exist</source>
                 <target state="final">Organizace neexistuje</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/data/organizations.guard.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.guard.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="organization.permission.missing" datatype="html">
                 <source>You do not have permission to access this organization</source>
                 <target state="final">Nemáte přístupové právo k této organizaci</target>
@@ -2140,7 +2140,7 @@
                 <source>Project does not exist</source>
                 <target>Projekt neexistuje</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/data/projects.guard.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/workspace.guard.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.guard.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="project.permission.missing" datatype="html">
                 <source>You do not have permission to access this project</source>
                 <target>Nemáte oprávnění přistupovat k tomuto projektu</target>
