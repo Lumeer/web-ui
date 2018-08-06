@@ -42,7 +42,7 @@ const appRoutes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, {scrollPositionRestoration: 'top'}),
     StoreRouterConnectingModule
   ],
   exports: [RouterModule],
