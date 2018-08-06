@@ -23,7 +23,7 @@ import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 import {filter, map, take} from 'rxjs/operators';
-import {Subscription, Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {isNullOrUndefined} from 'util';
 import {Query} from '../../core/dto';
 import {NotificationService} from '../../core/notifications/notification.service';
@@ -97,7 +97,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   }
 
   public onDelete(): void {
-    const message = this.i18n({id: 'collection.delete.dialog.message', value: 'Are you sure you want to remove the file?'});
+    const message = this.i18n({id: 'collection.delete.dialog.message', value: 'Do you really want to remove this collection?'});
     const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
 
     this.notificationService.confirm(message, title, [
