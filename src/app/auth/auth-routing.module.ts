@@ -19,6 +19,7 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import {CurrentUserGuard} from '../core/guards/current-user.guard';
 import {AuthGuard} from './auth.guard';
 import {AuthCallbackComponent} from './callback/auth-callback.component';
 import {LogoutComponent} from './logout/logout.component';
@@ -33,6 +34,7 @@ const authRoutes: Routes = [
   },
   {
     path: 'auth',
+    canActivate: [CurrentUserGuard],
     component: AuthCallbackComponent
   },
   {
