@@ -200,7 +200,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
         event.preventDefault();
         return this.store$.dispatch(new TablesAction.EditSelectedCell({}));
       default:
-        if (!isKeyPrintable(event)) {
+        if (!isKeyPrintable(event) || event.ctrlKey || event.altKey || event.metaKey) {
           return;
         }
 
