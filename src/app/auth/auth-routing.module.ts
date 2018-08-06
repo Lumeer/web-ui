@@ -19,12 +19,11 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {CurrentUserGuard} from '../core/guards/current-user.guard';
+import {AgreementComponent} from './agreement/agreement.component';
 import {AuthGuard} from './auth.guard';
 import {AuthCallbackComponent} from './callback/auth-callback.component';
 import {LogoutComponent} from './logout/logout.component';
 import {SessionExpiredComponent} from './session-expired/session-expired.component';
-import {AgreementComponent} from './agreement/agreement.component';
 
 const authRoutes: Routes = [
   {
@@ -34,7 +33,6 @@ const authRoutes: Routes = [
   },
   {
     path: 'auth',
-    canActivate: [CurrentUserGuard],
     component: AuthCallbackComponent
   },
   {

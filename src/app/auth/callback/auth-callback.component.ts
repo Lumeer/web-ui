@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
@@ -27,7 +28,17 @@ import {AuthService} from '../auth.service';
 
 @Component({
   selector: 'auth-callback',
-  template: ''
+  templateUrl: './auth-callback.component.html',
+  styleUrls: ['./auth-callback.component.scss'],
+  animations: [
+    trigger('slowlyShow', [
+      state('shown', style({opacity: 1})),
+      transition('void => *', [
+        style({opacity: 0}),
+        animate('5s ease-in-out')
+      ])
+    ])
+  ]
 })
 export class AuthCallbackComponent implements OnInit {
 
@@ -37,16 +48,28 @@ export class AuthCallbackComponent implements OnInit {
   }
 
   public ngOnInit() {
+    if (this.authService.isAuthenticated()) {
+      this.navigateToApplication();
+      return;
+    }
+
+    this.store.select(selectCurrentUser).pipe(
+      filter(user => !!user),
+      take(1)
+    ).subscribe(() => this.navigateToApplication());
+  }
+
+  private navigateToApplication() {
     const path = this.authService.getLoginRedirectPath();
+    if (!path) {
+      this.router.navigate(['/']);
+    }
 
     const urls = path.split('?', 2);
     const params = this.router.parseUrl(path).queryParams;
     const queryParams = urls.length > 1 ? {queryParams: params} : undefined;
 
-    this.store.select(selectCurrentUser).pipe(
-      filter(user => !!user),
-      take(1)
-    ).subscribe(user => this.router.navigate([urls[0]], queryParams));
+    this.router.navigate([urls[0]], queryParams);
   }
 
 }

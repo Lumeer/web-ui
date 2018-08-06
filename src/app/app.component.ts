@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Store} from '@ngrx/store';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
@@ -29,11 +29,16 @@ import {AuthService} from './auth/auth.service';
 import {AppState} from './core/store/app.state';
 import {selectCurrentUser} from './core/store/users/users.state';
 
+declare let $: any;
+
 @Component({
   selector: 'lmr-app',
   templateUrl: './app.component.html',
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('browserWarning')
+  public browserWarning: ElementRef;
 
   public isChrome = true;
 
@@ -88,6 +93,21 @@ export class AppComponent implements OnInit {
         pauseOnHover: false
       }
     });
+  }
+
+  public ngAfterViewInit() {
+    if (!this.browserWarning || !this.browserWarning.nativeElement) {
+      return;
+    }
+
+    this.setBrowserWarningHeight();
+
+    $('#browserAlert').on('closed.bs.alert', () => this.setBrowserWarningHeight());
+  }
+
+  private setBrowserWarningHeight() {
+    const warningHeight = this.browserWarning.nativeElement.clientHeight;
+    document.body.style.setProperty('--browser-warning-height', `${warningHeight}px`);
   }
 
 }

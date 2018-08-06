@@ -38,6 +38,8 @@ export function usersReducer(state: UsersState = initialUsersState, action: User
         id: action.payload.user.id,
         changes: {defaultWorkspace: action.payload.defaultWorkspace}
       }, newState);
+    case UsersActionType.SET_PENDING:
+      return {...state, pending: action.payload.pending};
     case UsersActionType.CLEAR:
       return initialUsersState;
     default:

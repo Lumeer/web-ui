@@ -47,6 +47,8 @@ export enum UsersActionType {
   DELETE_SUCCESS = '[Users] Delete :: Success',
   DELETE_FAILURE = '[Users] Delete :: Failure',
 
+  SET_PENDING = '[Users] Set Pending',
+
   CLEAR = '[Users] Clear',
 
 }
@@ -176,6 +178,13 @@ export namespace UsersAction {
     }
   }
 
+  export class SetPending implements Action {
+    public readonly type = UsersActionType.SET_PENDING;
+
+    public constructor(public payload: { pending: boolean }) {
+    }
+  }
+
   export class Clear implements Action {
     public readonly type = UsersActionType.CLEAR;
   }
@@ -185,5 +194,6 @@ export namespace UsersAction {
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
     SaveDefaultWorkspace | SaveDefaultWorkspaceSuccess | SaveDefaultWorkspaceFailure |
-    Delete | DeleteSuccess | DeleteFailure | Clear;
+    Delete | DeleteSuccess | DeleteFailure |
+    SetPending | Clear;
 }

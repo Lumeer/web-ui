@@ -1,8 +1,10 @@
-<div *ngIf="!isChrome"
+<div #browserWarning
+     *ngIf="!isChrome"
      class="container">
   <div class="row">
     <div class="col text-center">
       <div class="alert alert-danger alert-dismissible fade show mt-2"
+           id="browserAlert"
            role="alert">
         <i class="fa-2x far fa-exclamation-triangle float-left mt-2"></i>&nbsp;
         <span class="text-center"
