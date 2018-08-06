@@ -23,7 +23,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, of} from 'rxjs';
+import {from, Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {UserService} from '../../rest';
 import {AppState} from '../app.state';
@@ -64,12 +64,19 @@ export class UsersEffects {
   @Effect()
   public getCurrentUser$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.GetCurrentUser>(UsersActionType.GET_CURRENT_USER),
+    tap(() => this.store$.dispatch(new UsersAction.SetPending({pending: true}))),
     mergeMap(() => this.userService.getCurrentUser().pipe(
       map(user => UserConverter.fromDto(user)),
-      map(user => new UsersAction.GetCurrentUserSuccess({user})),
+      mergeMap(user => [
+        new UsersAction.GetCurrentUserSuccess({user}),
+        new UsersAction.SetPending({pending: false})
+      ]),
       catchError(() => {
         const message = this.i18n({id: 'currentUser.get.fail', value: 'Failed to get user details'});
-        return of(new NotificationsAction.Error({message}));
+        return from([
+          new UsersAction.SetPending({pending: false}),
+          new NotificationsAction.Error({message})
+        ]);
       })
     ))
   );

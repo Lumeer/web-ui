@@ -18,18 +18,19 @@
  */
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {createSelector} from '@ngrx/store';
-import {AppState} from '../app.state';
-import {UserModel} from './user.model';
-import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
-import {selectGroupsDictionary} from '../groups/groups.state';
-import {filterUserFunctions, filterUsersByOrganization} from './user.filters';
-import {GroupModel} from '../groups/group.model';
-import {OrganizationModel} from '../organizations/organization.model';
 import {Dictionary} from '@ngrx/entity/src/models';
+import {createSelector} from '@ngrx/store';
 import {isNullOrUndefined} from 'util';
+import {AppState} from '../app.state';
+import {GroupModel} from '../groups/group.model';
+import {selectGroupsDictionary} from '../groups/groups.state';
+import {OrganizationModel} from '../organizations/organization.model';
+import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
+import {filterUserFunctions, filterUsersByOrganization} from './user.filters';
+import {UserModel} from './user.model';
 
 export interface UsersState extends EntityState<UserModel> {
+  pending: boolean;
   loadedForOrganizationId: string;
   currentUser: UserModel;
 }
@@ -37,6 +38,7 @@ export interface UsersState extends EntityState<UserModel> {
 export const usersAdapter = createEntityAdapter<UserModel>();
 
 export const initialUsersState: UsersState = usersAdapter.getInitialState({
+  pending: false,
   loadedForOrganizationId: undefined,
   currentUser: undefined
 });
@@ -49,6 +51,8 @@ export const selectAllUsers = createSelector(selectAllUsersRaw, users => filterU
 export const selectUsersLoadedForOrganization = createSelector(selectUsersState, usersState => usersState.loadedForOrganizationId);
 
 export const selectCurrentUser = createSelector(selectUsersState, usersState => usersState.currentUser);
+
+export const selectUsersPending = createSelector(selectUsersState, state => state.pending);
 
 export const selectUserById = (userId: string) => createSelector(selectUsersDictionary, usersMap => usersMap[userId]);
 
