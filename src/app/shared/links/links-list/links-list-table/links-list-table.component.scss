@@ -1,14 +1,9 @@
 @import "../../../../../styles/variables";
 
 thead {
-  font-size: small;
   color: $gray-500;
   font-style: italic;
   font-weight: bold;
-}
-
-tbody {
-  font-size: small;
 }
 
 th, td {
@@ -32,4 +27,8 @@ th, td {
 
 .h-10em {
   height: 10em;
+}
+
+.always-white, .always-white:hover {
+  background-color: white !important;
 }

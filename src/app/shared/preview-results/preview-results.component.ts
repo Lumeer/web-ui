@@ -120,8 +120,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
 
     this.dataSubscription.unsubscribe();
     this.dataSubscription = this.documents$.pipe(
-      filter(documents => documents.length > 0 && (!this.selectedDocument || !documents.find(doc => doc.id === this.selectedDocument.id))),
-      take(1),
+      filter(documents => !!documents.length),
       withLatestFrom(this.store.select(selectViewCursor)))
       .subscribe(([documents, cursor]) => {
         let document: DocumentModel;
@@ -136,12 +135,19 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
       });
   }
 
+  private updateNavigation(query: QueryModel): void {
+    this.query = query;
+    if (this.selectedCollection) {
+      this.getData(this.selectedCollection);
+    }
+  }
+
   private subscribeAll() {
     this.collections$ = this.store.select(selectCollectionsByQuery);
 
     this.allSubscriptions.add(this.store.select(selectNavigation).pipe(
       filter(navigation => this.validWorkspace(navigation.workspace))
-    ).subscribe(navigation => this.query = navigation.query));
+    ).subscribe(navigation => this.updateNavigation(navigation.query)));
 
     // initialize when we do not select anything
     this.allSubscriptions.add(this.collections$.pipe(
