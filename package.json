@@ -15,7 +15,8 @@
     "reset-env": "echo '{}' > ./src/environments/.env.json",
     "start": "npm run reset-env; ng serve",
     "start:cs": "npm run reset-env; ng serve --configuration=cs",
-    "start:en": "npm run reset-env; ng serve --configuration=en"
+    "start:en": "npm run reset-env; ng serve --configuration=en",
+    "workaround": "sed -i '' -e 's|/\\*\\*|/*|' node_modules/plotly.js/src/lib/polygon.js"
   },
   "repository": {
     "type": "git",
