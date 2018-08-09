@@ -1689,7 +1689,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/app.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/chart-perspective.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/app.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/chart-perspective.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit>
             <trans-unit id="chart.loading" datatype="html">
                 <source>
   Loading...
@@ -2166,7 +2166,7 @@
 
                     Používání aplikace Lumeer v jiném prohlížeči je na vaši vlastní zodpovědnost.</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/app.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/app.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit>
             <trans-unit id="collection.document.icon.set" datatype="html">
                 <source>Click icon to set it</source>
                 <target>Klikněte na ikonu pro její zvolení</target>
@@ -2847,6 +2847,13 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="1d33c27b8cb0bf2fac09eba6cc0b5d1eab6fd264" datatype="html">
         <source>{VAR_SELECT, select, Attribute {Attribute} Collection {Collection} Document {Document} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted} }</source><target>{VAR_SELECT, select, Attribute {Atribut} Collection {Kolekce} Document {Dokument} Fulltext {Text} Link {Vazba} View {Pohled} Deleted {Odstraněno} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit></body>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="f04b9f9f099710febb28cda72e37702b7a28112a" datatype="html">
+        <source>Welcome to Lumeer</source><target state="new">Lumeer Vás Vítá</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/callback/auth-callback.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">auth.welcome</note>
+      </trans-unit></body>
     </file>
 </xliff>

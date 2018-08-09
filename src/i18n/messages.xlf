@@ -15,13 +15,13 @@
           </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit><trans-unit id="button.close" datatype="html">
         <source>Close</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">18</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/chart-perspective.component.html</context>
@@ -299,6 +299,13 @@
           <context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context>
           <context context-type="linenumber">37</context>
         </context-group>
+      </trans-unit><trans-unit id="f04b9f9f099710febb28cda72e37702b7a28112a" datatype="html">
+        <source>Welcome to Lumeer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/callback/auth-callback.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <note priority="1" from="description">auth.welcome</note>
       </trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
         <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source>
         <context-group purpose="location">
