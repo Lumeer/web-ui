@@ -21,6 +21,7 @@ import {createSelector} from '@ngrx/store';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {QueryModel} from './query.model';
+import {SearchTab} from './search-tab';
 import {Workspace} from './workspace.model';
 
 export interface NavigationState {
@@ -28,7 +29,7 @@ export interface NavigationState {
   query: QueryModel;
   workspace: Workspace;
   perspective?: Perspective;
-  searchTab?: string;
+  searchTab?: SearchTab;
   viewName?: string;
   url: string;
   previousUrl?: string;

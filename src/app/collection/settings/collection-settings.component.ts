@@ -21,22 +21,24 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Observable, Subscription} from 'rxjs';
 
 import {filter, map, take} from 'rxjs/operators';
-import {Observable, Subscription} from 'rxjs';
 import {isNullOrUndefined} from 'util';
 import {Query} from '../../core/dto';
+import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
+import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
+import {SearchTab} from '../../core/store/navigation/search-tab';
 import {Workspace} from '../../core/store/navigation/workspace.model';
-import {ResourceType} from '../../core/model/resource-type';
-import {Perspective} from '../../view/perspectives/perspective';
 import {selectAllUsers} from '../../core/store/users/users.state';
+import {Perspective} from '../../view/perspectives/perspective';
 
 @Component({
   templateUrl: './collection-settings.component.html'
@@ -46,14 +48,15 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   public collection: CollectionModel;
   public userCount$: Observable<number>;
 
-  private subscription = new Subscription();
   private workspace: Workspace;
   private previousUrl: string;
+
+  private subscriptions = new Subscription();
 
   constructor(private i18n: I18n,
               private notificationService: NotificationService,
               private router: Router,
-              private store: Store<AppState>) {
+              private store$: Store<AppState>) {
   }
 
   public ngOnInit() {
@@ -61,7 +64,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   public onNewName(name: string) {
@@ -93,7 +96,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   }
 
   private updateCollection(collection: CollectionModel) {
-    this.store.dispatch(new CollectionsAction.Update({collection}));
+    this.store$.dispatch(new CollectionsAction.Update({collection}));
   }
 
   public onDelete(): void {
@@ -108,20 +111,18 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
 
   public removeCollection(): void {
     if (this.collection) {
-      this.store.dispatch(new CollectionsAction.Delete({collectionId: this.collection.id}));
+      this.store$.dispatch(new CollectionsAction.Delete({collectionId: this.collection.id}));
       this.onBack();
     }
   }
 
   public onBack(): void {
-    if (this.previousUrl && this.previousUrl !== '/') {
-      const urls = this.previousUrl.split('?', 2);
-      const params = this.router.parseUrl(this.previousUrl).queryParams;
-      const queryParams = urls.length > 1 ? {queryParams: params} : undefined;
-      this.router.navigate([urls[0]], queryParams);
-    } else {
-      this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections']);
-    }
+    this.store$.dispatch(new NavigationAction.NavigateToPreviousUrl({
+      previousUrl: this.previousUrl,
+      organizationCode: this.workspace.organizationCode,
+      projectCode: this.workspace.projectCode,
+      searchTab: SearchTab.Collections
+    }));
   }
 
   public documentsQuery(collectionId: string): string {
@@ -138,23 +139,26 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToStore() {
-    this.userCount$ = this.store.select(selectAllUsers)
+    this.userCount$ = this.store$.select(selectAllUsers)
       .pipe(map(users => users ? users.length : 0));
 
-    const sub1 = this.store.select(selectWorkspace).pipe(
+    const sub1 = this.store$.select(selectWorkspace).pipe(
       filter(workspace => !isNullOrUndefined(workspace))
     ).subscribe(workspace => this.workspace = workspace);
-    this.subscription.add(sub1);
+    this.subscriptions.add(sub1);
 
-    const sub2 = this.store.select(selectCollectionByWorkspace)
+    const sub2 = this.store$.select(selectCollectionByWorkspace)
       .pipe(filter(collection => !isNullOrUndefined(collection)))
       .subscribe(collection => {
         this.collection = collection;
       });
-    this.subscription.add(sub2);
+    this.subscriptions.add(sub2);
 
-    this.store.select(selectPreviousUrl).pipe(take(1))
-      .subscribe(url => this.previousUrl = url);
+    this.subscriptions.add(
+      this.store$.select(selectPreviousUrl).pipe(take(1))
+        .subscribe(url => this.previousUrl = url)
+    );
+
   }
 
 }

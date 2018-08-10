@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Location} from '@angular/common';
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
@@ -28,6 +27,7 @@ import {isNullOrUndefined} from 'util';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
+import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {ProjectModel} from '../../core/store/projects/project.model';
@@ -45,14 +45,14 @@ export class ProjectSettingsComponent implements OnInit {
   public project: ProjectModel;
   public workspace: Workspace;
 
-  private subscription = new Subscription();
   private previousUrl: string;
+
+  private subscriptions = new Subscription();
 
   constructor(private i18n: I18n,
               private router: Router,
-              private store: Store<AppState>,
-              private notificationService: NotificationService,
-              private location: Location) {
+              private store$: Store<AppState>,
+              private notificationService: NotificationService) {
   }
 
   public ngOnInit() {
@@ -60,7 +60,7 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   public getResourceType(): ResourceType {
@@ -117,36 +117,35 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public goBack(): void {
-    if (this.previousUrl && this.previousUrl !== '/') {
-      const urls = this.previousUrl.split('?', 2);
-      const params = this.router.parseUrl(this.previousUrl).queryParams;
-      const queryParams = urls.length > 1 ? {queryParams: params} : undefined;
-      this.router.navigate([urls[0]], queryParams);
-    } else {
-      this.router.navigate(['w', this.workspace.organizationCode, this.workspace.projectCode, 'view', Perspective.Search, 'all']);
-    }
+    this.store$.dispatch(new NavigationAction.NavigateToPreviousUrl({
+      previousUrl: this.previousUrl,
+      organizationCode: this.workspace.organizationCode,
+      projectCode: this.workspace.projectCode
+    }));
   }
 
   private subscribeToStore() {
-    this.userCount$ = this.store.select(selectAllUsers)
+    this.userCount$ = this.store$.select(selectAllUsers)
       .pipe(map(users => users ? users.length : 0));
 
-    this.subscription.add(this.store.select(selectProjectByWorkspace)
+    this.subscriptions.add(this.store$.select(selectProjectByWorkspace)
       .pipe(filter(project => !isNullOrUndefined(project)))
       .subscribe(project => this.project = project)
     );
 
-    this.subscription.add(this.store.select(selectWorkspace)
+    this.subscriptions.add(this.store$.select(selectWorkspace)
       .pipe(filter(workspace => !isNullOrUndefined(workspace)))
       .subscribe(workspace => this.workspace = workspace)
     );
 
-    this.store.select(selectPreviousUrl).pipe(take(1))
-      .subscribe(url => this.previousUrl = url);
+    this.subscriptions.add(
+      this.store$.select(selectPreviousUrl).pipe(take(1))
+        .subscribe(url => this.previousUrl = url)
+    );
   }
 
   private deleteProject() {
-    this.store.dispatch(new ProjectsAction.Delete({
+    this.store$.dispatch(new ProjectsAction.Delete({
       organizationId: this.project.organizationId,
       projectId: this.project.id,
       onSuccess: () => this.router.navigate(['/'])
@@ -154,6 +153,6 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   private updateProject(project: ProjectModel) {
-    this.store.dispatch(new ProjectsAction.Update({project}));
+    this.store$.dispatch(new ProjectsAction.Update({project}));
   }
 }

@@ -18,25 +18,22 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, Subscription} from 'rxjs';
 import {filter, map, take, tap} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
+import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
+import {NavigationAction} from '../../core/store/navigation/navigation.action';
+import {selectPreviousUrl} from '../../core/store/navigation/navigation.state';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
+import {ProjectModel} from '../../core/store/projects/project.model';
 import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
-import {ResourceType} from '../../core/model/resource-type';
-import {Location} from '@angular/common';
-import {Perspective} from '../../view/perspectives/perspective';
-import {ProjectModel} from '../../core/store/projects/project.model';
-import {selectPreviousUrl} from '../../core/store/navigation/navigation.state';
 
 @Component({
   templateUrl: './organization-settings.component.html'
@@ -47,15 +44,14 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   public projectsCount$: Observable<number>;
   public organization: OrganizationModel;
 
-  private organizationSubscription: Subscription;
   private firstProject: ProjectModel = null;
   private previousUrl: string;
 
+  private subscriptions = new Subscription();
+
   constructor(private i18n: I18n,
-              private router: Router,
-              private store: Store<AppState>,
-              private notificationService: NotificationService,
-              private location: Location) {
+              private store$: Store<AppState>,
+              private notificationService: NotificationService) {
   }
 
   public ngOnInit() {
@@ -63,9 +59,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.organizationSubscription) {
-      this.organizationSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   public getResourceType(): ResourceType {
@@ -117,43 +111,44 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     this.goBack();
   }
 
-  public goBack(): void {
-    if (this.previousUrl && this.previousUrl !== '/') {
-      const urls = this.previousUrl.split('?', 2);
-      const params = this.router.parseUrl(this.previousUrl).queryParams;
-      const queryParams = urls.length > 1 ? {queryParams: params} : undefined;
-      this.router.navigate([urls[0]], queryParams);
-    } else if (this.firstProject) {
-      this.router.navigate(['w', this.organization.code, this.firstProject.code, 'view', Perspective.Search, 'all']);
-    }
+  public goBack() {
+    this.store$.dispatch(new NavigationAction.NavigateToPreviousUrl({
+      previousUrl: this.previousUrl,
+      organizationCode: this.organization.code,
+      projectCode: this.firstProject ? this.firstProject.code : null
+    }));
   }
 
   private subscribeToStore() {
-    this.userCount$ = this.store.select(selectAllUsers)
+    this.userCount$ = this.store$.select(selectAllUsers)
       .pipe(map(users => users ? users.length : 0));
 
-    this.projectsCount$ = this.store.select(selectProjectsForWorkspace)
+    this.projectsCount$ = this.store$.select(selectProjectsForWorkspace)
       .pipe(tap(projects => {
         if (projects && projects.length > 0) {
           this.firstProject = projects[0];
         }
       }), map(projects => projects ? projects.length : 0));
 
-    this.organizationSubscription = this.store.select(selectOrganizationByWorkspace)
-      .pipe(filter(organization => !isNullOrUndefined(organization)))
-      .subscribe(organization => this.organization = organization);
+    this.subscriptions.add(
+      this.store$.select(selectOrganizationByWorkspace)
+        .pipe(filter(organization => !isNullOrUndefined(organization)))
+        .subscribe(organization => this.organization = organization)
+    );
 
-    this.store.select(selectPreviousUrl).pipe(take(1))
-      .subscribe(url => this.previousUrl = url);
+    this.subscriptions.add(
+      this.store$.select(selectPreviousUrl).pipe(take(1))
+        .subscribe(url => this.previousUrl = url)
+    );
   }
 
   private deleteOrganization() {
-    this.store.dispatch(new OrganizationsAction.Delete({organizationId: this.organization.id}));
+    this.store$.dispatch(new OrganizationsAction.Delete({organizationId: this.organization.id}));
     this.goBack();
   }
 
   private updateOrganization(organization: OrganizationModel) {
-    this.store.dispatch(new OrganizationsAction.Update({organization}));
+    this.store$.dispatch(new OrganizationsAction.Update({organization}));
   }
 
 }
