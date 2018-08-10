@@ -19,10 +19,11 @@
 
 import {ROUTER_CANCEL, ROUTER_NAVIGATION, RouterCancelAction, RouterNavigationAction} from '@ngrx/router-store';
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
+import {AppState} from '../app.state';
 import {RouterStateUrl} from '../router/lumeer-router-state-serializer';
 import {NavigationState} from './navigation.state';
 import {QueryConverter} from './query.converter';
-import {AppState} from '../app.state';
+import {SearchTab, searchTabsMap} from './search-tab';
 
 function onRouterNavigation(state: NavigationState, action: RouterNavigationAction<RouterStateUrl>): NavigationState {
   const {data, params, queryParams, url} = action.payload.routerState;
@@ -54,7 +55,7 @@ function extractPerspectiveIdFromUrl(url: string): string {
   }
 }
 
-function tryToParseSearchTabPath(url: string): string | null {
+function tryToParseSearchTabPath(url: string): SearchTab | null {
   let questionIndex = url.indexOf('?');
   if (questionIndex === -1) {
     questionIndex = url.length;
@@ -68,7 +69,7 @@ function tryToParseSearchTabPath(url: string): string | null {
     if (paths[currentIndex].startsWith('view') && paths.length > currentIndex++) {
       const perspective = perspectivesMap[paths[currentIndex]];
       if (perspective === Perspective.Search && paths.length > currentIndex++) {
-        return paths[currentIndex];
+        return searchTabsMap[paths[currentIndex]];
       }
     }
   }

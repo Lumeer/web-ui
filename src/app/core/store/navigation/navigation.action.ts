@@ -18,13 +18,16 @@
  */
 
 import {Action} from '@ngrx/store';
+import {SearchTab} from './search-tab';
 
 export enum NavigationActionType {
 
   ADD_LINK_TO_QUERY = '[Navigation] Add Link to Query',
 
   ADD_COLLECTION_TO_QUERY = '[Navigation] Add Collection to Query',
-  REMOVE_COLLECTION_TO_QUERY = '[Navigation] Remove Collection fromQuery'
+  REMOVE_COLLECTION_TO_QUERY = '[Navigation] Remove Collection fromQuery',
+
+  NAVIGATE_TO_PREVIOUS_URL = '[Navigation] Navigate To Previous URL'
 
 }
 
@@ -48,6 +51,18 @@ export namespace NavigationAction {
     public readonly type = NavigationActionType.REMOVE_COLLECTION_TO_QUERY;
 
     public constructor(public payload: { collectionId: string }) {
+    }
+  }
+
+  export class NavigateToPreviousUrl implements Action {
+    public readonly type = NavigationActionType.NAVIGATE_TO_PREVIOUS_URL;
+
+    constructor(public payload: {
+      previousUrl: string,
+      organizationCode: string,
+      projectCode: string,
+      searchTab?: SearchTab,
+    }) {
     }
   }
 

@@ -18,16 +18,18 @@
  */
 
 import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {map, mergeMap, skipWhile, take} from 'rxjs/operators';
+import {filter, map, mergeMap, skipWhile, take, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../app.state';
 import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
-import {selectQuery} from './navigation.state';
+import {selectPreviousUrl, selectQuery} from './navigation.state';
 import {QueryConverter} from './query.converter';
 import {QueryModel} from './query.model';
+import {SearchTab} from './search-tab';
 
 @Injectable()
 export class NavigationEffects {
@@ -81,7 +83,34 @@ export class NavigationEffects {
     })
   );
 
+  @Effect()
+  public navigateToPreviousUrl$: Observable<Action> = this.actions$.pipe(
+    ofType<NavigationAction.NavigateToPreviousUrl>(NavigationActionType.NAVIGATE_TO_PREVIOUS_URL),
+    filter(action => !!action.payload.organizationCode && !!action.payload.projectCode),
+    map(action => {
+      const {organizationCode, projectCode, searchTab, previousUrl} = action.payload;
+
+      if (!previousUrl || previousUrl === '/') {
+        return new RouterAction.Go({
+          path: ['/', 'w', organizationCode, projectCode, 'search', (searchTab || SearchTab.All)]
+        });
+      }
+
+      const [url] = previousUrl.split('?', 2);
+      const queryParams = this.router.parseUrl(previousUrl).queryParams;
+
+      const [, w, , , ...page] = url.split('/');
+      if (w !== 'w') {
+        return new RouterAction.Go({path: [url], queryParams});
+      }
+
+      const path = ['/', 'w', organizationCode, projectCode, ...page];
+      return new RouterAction.Go({path, queryParams});
+    })
+  );
+
   constructor(private actions$: Actions,
+              private router: Router,
               private store$: Store<AppState>) {
   }
 
