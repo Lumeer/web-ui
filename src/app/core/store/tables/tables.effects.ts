@@ -53,6 +53,10 @@ export class TablesEffects {
   @Effect()
   public createTable$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.CreateTable>(TablesActionType.CREATE_TABLE),
+    filter(action => {
+      const {query} = action.payload;
+      return query && query.collectionIds && query.collectionIds.length === 1;
+    }),
     withLatestFrom(
       this.store$.select(selectViewTableConfig),
       this.store$.select(selectCollectionsLoaded).pipe(
@@ -96,6 +100,7 @@ export class TablesEffects {
     ).pipe(
       first()
     )),
+    filter(([table]) => !!table),
     mergeMap(([table, tableCursor]) => {
       if (tableCursor && tableCursor.tableId === table.id) {
         return this.createViewCursorFromTable(table, tableCursor).pipe(
