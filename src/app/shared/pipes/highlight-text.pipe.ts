@@ -25,15 +25,15 @@ import {isNullOrUndefined} from 'util';
 })
 export class HighlightTextPipe implements PipeTransform {
 
-  public transform(value: string, prefix: string): string {
-    if (isNullOrUndefined(value)) {
+  public transform(text: string, part: string, prefixOnly?: boolean): string {
+    if (isNullOrUndefined(text)) {
       return '';
     }
-    const match = value.match(new RegExp(prefix, 'i'));
-    if (!match) {
-      return value;
+    const match = text.match(new RegExp(part, 'i'));
+    if (!match || (prefixOnly && match.index > 0)) {
+      return text;
     }
-    return value.replace(match.toString(), `<span class="text-success">${match}</span>`);
+    return text.replace(match.toString(), `<span class="text-success">${match}</span>`);
   }
 
 }

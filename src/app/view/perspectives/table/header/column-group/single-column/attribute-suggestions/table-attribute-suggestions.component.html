@@ -1,4 +1,4 @@
-<div *ngIf="!(collection | attributeExist:attributeName) || !(linkedAttributes$ | async | empty) || !(allAttributes$ | async | empty)"
+<div *ngIf="lastName && (!(collection | attributeExist:attributeName) || !(linkedAttributes$ | async | empty) || !(allAttributes$ | async | empty))"
      class="dropdown">
   <div class="dropdown-menu show">
     <ng-container *ngIf="collection && !(collection | attributeExist:attributeName)">
@@ -31,7 +31,7 @@
                            [icons]="[linkedAttribute.collection.icon]"
                            class="mr-1">
           </icons-presenter>
-          <span [innerHtml]="linkedAttribute.collection.name + '.' + (linkedAttribute.attribute.name | highlightText: lastName)"></span>
+          <span [innerHtml]="(linkedAttribute.collection.name | highlightText:lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:lastName:true)"></span>
           <small class="text-secondary ml-1">({{linkedAttribute.linkType.name}})</small>
         </a>
       </ng-container>
@@ -51,7 +51,7 @@
                            [icons]="[linkedAttribute.collection.icon]"
                            class="mr-1">
           </icons-presenter>
-          <span [innerHtml]="linkedAttribute.collection.name + '.' + (linkedAttribute.attribute.name | highlightText: lastName)"></span>
+          <span [innerHtml]="(linkedAttribute.collection.name | highlightText:lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:lastName:true)"></span>
         </a>
       </ng-container>
     </ng-container>

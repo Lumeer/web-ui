@@ -72,14 +72,14 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   public allAttributes$: Observable<LinkedAttribute[]>;
 
   public constructor(private dialogService: DialogService,
-                     private store: Store<AppState>) {
+                     private store$: Store<AppState>) {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.attributeName && this.attributeName) {
+    if (changes.attributeName) {
       this.lastName = extractAttributeLastName(this.attributeName);
     }
-    if ((changes.collection || changes.attributeName) && this.collection && this.attributeName && this.lastName) {
+    if ((changes.collection || changes.attributeName) && this.collection) {
       this.linkedAttributes$ = this.suggestLinkedAttributes();
       this.allAttributes$ = this.suggestAllAttributes();
     }
@@ -90,7 +90,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
       name: this.attributeName,
       constraints: []
     };
-    this.store.dispatch(new CollectionsAction.CreateAttributes({
+    this.store$.dispatch(new CollectionsAction.CreateAttributes({
       collectionId: this.collection.id,
       attributes: [attribute],
       callback: attributes => this.initColumn(attributes)
@@ -100,7 +100,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   private initColumn(attributes: AttributeModel[]) {
     const attribute = attributes.find(attr => attr.name === this.attributeName);
     if (attribute) {
-      this.store.dispatch(new TablesAction.InitColumn({
+      this.store$.dispatch(new TablesAction.InitColumn({
         cursor: this.cursor,
         attributeId: attribute.id
       }));
@@ -108,21 +108,21 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   }
 
   public useLinkType(linkType: LinkTypeModel) {
-    this.store.dispatch(new TablesAction.RemoveColumn({cursor: this.cursor}));
-    this.store.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
+    this.store$.dispatch(new TablesAction.RemoveColumn({cursor: this.cursor}));
+    this.store$.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
   }
 
   public createLinkType(collection: CollectionModel) {
-    this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
+    this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
     const linkCollectionIds = [this.collection.id, collection.id].join(',');
     this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => this.useLinkType(linkType));
   }
 
   public suggestLinkedAttributes(): Observable<LinkedAttribute[]> {
     return combineLatest(
-      this.store.select(selectLinkTypesByCollectionId(this.collection.id)),
-      this.store.select(selectCollectionsDictionary),
-      this.store.select(selectQuery)
+      this.store$.select(selectLinkTypesByCollectionId(this.collection.id)),
+      this.store$.select(selectCollectionsDictionary),
+      this.store$.select(selectQuery)
     ).pipe(
       map(([linkTypes, collectionsMap, query]) => linkTypes
         .filter(linkType => !query.linkTypeIds || !query.linkTypeIds.includes(linkType.id))
@@ -136,7 +136,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
 
           return filtered.concat(
             collection.attributes
-              .filter(attribute => attribute.name.toLowerCase().startsWith(this.lastName.toLowerCase()))
+              .filter(attribute => this.isMatchingAttribute(collection, attribute))
               .map(attribute => ({linkType, collection, attribute}))
               .filter(newAttribute => filtered.every(existingAttribute => !equalLinkedAttributes(newAttribute, existingAttribute)))
           );
@@ -146,7 +146,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   }
 
   public suggestAllAttributes(): Observable<LinkedAttribute[]> {
-    return this.store.select(selectAllCollections).pipe(
+    return this.store$.select(selectAllCollections).pipe(
       map((collections: CollectionModel[]) => collections.reduce<LinkedAttribute[]>((filtered, collection) => {
         if (filtered.length >= MAX_SUGGESTIONS_COUNT) {
           return filtered.slice(0, 5);
@@ -154,12 +154,16 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
 
         return filtered.concat(
           collection.attributes
-            .filter(attribute => attribute.name.toLowerCase().startsWith(this.lastName.toLowerCase()))
+            .filter(attribute => this.isMatchingAttribute(collection, attribute))
             .map(attribute => ({collection, attribute}))
             .filter(newAttribute => filtered.every(existingAttribute => !equalLinkedAttributes(newAttribute, existingAttribute)))
         );
       }, []))
     );
+  }
+
+  private isMatchingAttribute(collection: CollectionModel, attribute: AttributeModel): boolean {
+    return this.lastName && (attribute.name.toLowerCase().startsWith(this.lastName.toLowerCase()) || collection.name.toLowerCase().startsWith(this.lastName));
   }
 
 }
