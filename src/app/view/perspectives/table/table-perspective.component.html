@@ -6,14 +6,14 @@
 
 <div #positioner></div>
 <div *ngIf="query | displayable"
-     [style.height]="height"
      (clickOutside)="onClickOutside($event)"
-     class="table d-flex flex-column m-0">
+     class="table-wrapper d-flex flex-column m-0">
   <table-header [table]="table"
-                class="d-block px-4">
+                class="pl-3">
   </table-header>
   <table-body [table]="table"
               [query]="query"
-              class="d-block flex-grow-1 px-4 pb-4">
+              (scroll)="onBodyScroll($event)"
+              class="flex-grow-1 pl-3 pb-3">
   </table-body>
 </div>
