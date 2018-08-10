@@ -2,6 +2,7 @@
   <div (click)="onRowNumberColumnClick()"
        class="row-number-header">
   </div>
+
   <ng-container *ngFor="let part of table.parts; trackBy: trackByPartIndexAndEntityId">
     <table-header-collection *ngIf="part.collectionId"
                              [cursor]="cursor | partCursor:part.index"
@@ -14,4 +15,7 @@
                        [part]="part">
     </table-header-link>
   </ng-container>
+
+  <div class="px-2"></div>
+  <div class="scrollbar-placeholder"></div>
 </div>

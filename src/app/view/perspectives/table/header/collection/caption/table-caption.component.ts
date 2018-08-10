@@ -17,8 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Input} from '@angular/core';
 import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
+import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
+import {getTableElement} from '../../../../../../core/store/tables/table.utils';
 
 @Component({
   selector: 'table-caption',
@@ -26,9 +28,23 @@ import {CollectionModel} from '../../../../../../core/store/collections/collecti
   styleUrls: ['./table-caption.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableCaptionComponent {
+export class TableCaptionComponent implements AfterViewChecked {
 
   @Input()
   public collection: CollectionModel;
+
+  @Input()
+  public cursor: TableHeaderCursor;
+
+  constructor(private element: ElementRef) {
+  }
+
+  public ngAfterViewChecked() {
+    const element = this.element.nativeElement as HTMLElement;
+    const height = element.offsetHeight;
+
+    const tableElement = getTableElement(this.cursor.tableId);
+    tableElement.style.setProperty('--caption-height', `${height}px`);
+  }
 
 }

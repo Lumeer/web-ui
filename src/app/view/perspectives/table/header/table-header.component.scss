@@ -1,3 +1,13 @@
+:host {
+  display: block;
+  min-height: calc(var(--caption-height) + var(--column-group-height));
+  overflow: hidden;
+}
+
 .row-number-header {
   min-width: var(--row-number-column-width);
+}
+
+.scrollbar-placeholder {
+  min-width: var(--scrollbar-width);
 }

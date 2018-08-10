@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, NgZone, OnChanges, SimpleChanges} from '@angular/core';
+import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Input, NgZone, OnChanges, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ResizeEvent} from 'angular-resizable-element';
 import {AppState} from '../../../../../core/store/app.state';
@@ -25,7 +25,7 @@ import {CollectionModel} from '../../../../../core/store/collections/collection.
 import {LinkTypeModel} from '../../../../../core/store/link-types/link-type.model';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableColumn, TableColumnType, TableCompoundColumn, TableModel} from '../../../../../core/store/tables/table.model';
-import {getTablePart} from '../../../../../core/store/tables/table.utils';
+import {getTableElement, getTablePart} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {deepArrayEquals} from '../../../../../shared/utils/array.utils';
 import {ColumnLayout} from '../../../../../shared/utils/layout/column-layout';
@@ -36,7 +36,7 @@ import {ColumnLayout} from '../../../../../shared/utils/layout/column-layout';
   styleUrls: ['./table-column-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableColumnGroupComponent implements OnChanges {
+export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
 
   @Input()
   public table: TableModel;
@@ -60,7 +60,8 @@ export class TableColumnGroupComponent implements OnChanges {
 
   public containerClassPrefix = 'table-';
 
-  public constructor(private store$: Store<AppState>,
+  public constructor(private element: ElementRef,
+                     private store$: Store<AppState>,
                      private zone: NgZone) {
   }
 
@@ -124,6 +125,14 @@ export class TableColumnGroupComponent implements OnChanges {
     if (this.columnsLayout) {
       this.columnsLayout.destroy();
     }
+  }
+
+  public ngAfterViewChecked() {
+    const element = this.element.nativeElement as HTMLElement;
+    const height = element.offsetHeight;
+
+    const tableElement = getTableElement(this.cursor.tableId);
+    tableElement.style.setProperty('--column-group-height', `${height}px`);
   }
 
   private onMoveColumn(fromIndex: number, toIndex: number) {

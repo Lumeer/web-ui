@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
@@ -28,6 +28,7 @@ import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../..
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {TableCursor} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableModel} from '../../../core/store/tables/table.model';
+import {getTableElement} from '../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableById, selectTableCursor} from '../../../core/store/tables/tables.state';
 import {Direction} from '../../../shared/direction';
@@ -37,12 +38,14 @@ import {Perspective} from '../perspective';
 import CreateTable = TablesAction.CreateTable;
 import DestroyTable = TablesAction.DestroyTable;
 
+declare let $: any;
+
 @Component({
   selector: 'table-perspective',
   templateUrl: './table-perspective.component.html',
   styleUrls: ['./table-perspective.component.scss']
 })
-export class TablePerspectiveComponent implements OnInit, OnDestroy {
+export class TablePerspectiveComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   @Input()
   public linkInstance: LinkInstanceModel;
@@ -71,13 +74,16 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.tableId = this.createTableId();
     this.elementId = `table-${this.tableId}`;
-    if (this.tableId === DEFAULT_TABLE_ID) {
-      this.calculateHeight();
-    }
 
     this.createTableFromQuery();
     this.subscribeToTable();
     this.subscribeToSelectedCursor();
+  }
+
+  public ngAfterViewChecked() {
+    if (this.tableId === DEFAULT_TABLE_ID) {
+      this.calculateHeight();
+    }
   }
 
   private subscribeToSelectedCursor() {
@@ -166,7 +172,8 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
   private calculateHeight() {
     const {top} = this.positioner.nativeElement.getBoundingClientRect();
     const height = window.innerHeight - top;
-    this.height = `${height}px`;
+    const tableElement = getTableElement(this.tableId);
+    tableElement.style.setProperty('--table-height', `${height}px`);
   }
 
   @HostListener('window:resize')
@@ -207,6 +214,11 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
         event.preventDefault();
         return this.store$.dispatch(new TablesAction.EditSelectedCell({letter: event.key}));
     }
+  }
+
+  public onBodyScroll(event: Event) {
+    const scrollLeft: number = event.target['scrollLeft'];
+    $('table-header').scrollLeft(scrollLeft);
   }
 
 }

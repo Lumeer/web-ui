@@ -1,6 +1,7 @@
 <div *ngIf="collection$ | async as collection"
-     class="d-flex flex-column align-items-start">
+     class="d-flex flex-column align-items-start h-100">
   <table-caption [collection]="collection"
+                 [cursor]="cursor"
                  [style.width]="part | partWidth | pixel"
                  (click)="onCaptionClick()">
   </table-caption>
