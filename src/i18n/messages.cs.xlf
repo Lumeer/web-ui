@@ -2847,13 +2847,20 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="1d33c27b8cb0bf2fac09eba6cc0b5d1eab6fd264" datatype="html">
         <source>{VAR_SELECT, select, Attribute {Attribute} Collection {Collection} Document {Document} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted} }</source><target>{VAR_SELECT, select, Attribute {Atribut} Collection {Kolekce} Document {Dokument} Fulltext {Text} Link {Vazba} View {Pohled} Deleted {Odstraněno} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="f04b9f9f099710febb28cda72e37702b7a28112a" datatype="html">
-        <source>Welcome to Lumeer</source><target state="new">Lumeer Vás Vítá</target>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="36a27bc69d262b9208cb6d0da1e5fe4e094809c4" datatype="html">
+        <source>Welcome to Lumeer!</source><target>Lumeer Vás vítá!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/callback/auth-callback.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">5</context>
         </context-group>
         <note priority="1" from="description">auth.welcome</note>
+      </trans-unit><trans-unit id="9ee2d9a5e0ece64d5e206d9cac9012f9e9c6f03c" datatype="html">
+        <source>Click here if not redirected automatically in 5 seconds...</source><target>Klikněte zde, pokud se aplikace sama nenačte do 5 vteřin...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/callback/auth-callback.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <note priority="1" from="description">auth.redirect</note>
       </trans-unit></body>
     </file>
 </xliff>

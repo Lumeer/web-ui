@@ -299,13 +299,20 @@
           <context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context>
           <context context-type="linenumber">37</context>
         </context-group>
-      </trans-unit><trans-unit id="f04b9f9f099710febb28cda72e37702b7a28112a" datatype="html">
-        <source>Welcome to Lumeer</source>
+      </trans-unit><trans-unit id="36a27bc69d262b9208cb6d0da1e5fe4e094809c4" datatype="html">
+        <source>Welcome to Lumeer!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/callback/auth-callback.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">5</context>
         </context-group>
         <note priority="1" from="description">auth.welcome</note>
+      </trans-unit><trans-unit id="9ee2d9a5e0ece64d5e206d9cac9012f9e9c6f03c" datatype="html">
+        <source>Click here if not redirected automatically in 5 seconds...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/callback/auth-callback.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <note priority="1" from="description">auth.redirect</note>
       </trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
         <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source>
         <context-group purpose="location">
