@@ -35,7 +35,7 @@ import {AuthService} from '../auth.service';
       state('shown', style({opacity: 1})),
       transition('void => *', [
         style({opacity: 0}),
-        animate('5s ease-in-out')
+        animate('3s 5s ease-in-out')
       ])
     ])
   ]

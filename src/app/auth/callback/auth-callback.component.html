@@ -1,4 +1,10 @@
-<a @slowlyShow
-   [routerLink]="['/']"
-   class="btn btn-success btn-lg"
-   i18n="auth.welcome">Welcome to Lumeer</a>
+<div class="h-100 row align-items-center">
+  <div class="col">
+    <div @slowlyShow class="text-center">
+      <img src="assets/img/lumeer.svg" height="100">
+      <h3 i18n="auth.welcome" class="mt-2">Welcome to Lumeer!</h3>
+      <a [routerLink]="['/']"
+         i18n="auth.redirect">Click here if not redirected automatically in 5 seconds...</a>
+    </div>
+  </div>
+</div>
