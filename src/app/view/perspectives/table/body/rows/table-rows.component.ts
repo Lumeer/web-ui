@@ -98,7 +98,6 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
           .concat({...EMPTY_TABLE_ROW, rowId: Math.random().toString(36).substr(2, 9)});
         if (rows.length > 1) {
           this.store$.dispatch(new TablesAction.ReplaceRows({cursor, rows, deleteCount: 1}));
-          this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
         }
       })
     );
