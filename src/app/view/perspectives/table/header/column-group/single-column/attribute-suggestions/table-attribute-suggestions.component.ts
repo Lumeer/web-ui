@@ -163,7 +163,8 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   }
 
   private isMatchingAttribute(collection: CollectionModel, attribute: AttributeModel): boolean {
-    return this.lastName && (attribute.name.toLowerCase().startsWith(this.lastName.toLowerCase()) || collection.name.toLowerCase().startsWith(this.lastName));
+    return this.lastName && (attribute.name.toLowerCase().startsWith(this.lastName.toLowerCase())
+      || collection.name.toLowerCase().startsWith(this.lastName.toLowerCase()));
   }
 
 }
