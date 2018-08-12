@@ -531,7 +531,7 @@ export class TablesEffects {
 
     const {attributeId} = (column as TableCompoundColumn).parent;
     const row = findTableRow(table.rows, cursor.rowPath);
-    if (row.documentIds.length !== 1) {
+    if (!row || !row.documentIds || row.documentIds.length !== 1) {
       return of(null);
     }
 
