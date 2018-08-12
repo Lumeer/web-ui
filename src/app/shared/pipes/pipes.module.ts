@@ -43,6 +43,7 @@ import {UserRolesInResource} from './user-roles-in-resource.pipe';
 import {IncludesPipe} from './includes.pipe';
 import {CanActivatePagePipe} from './can-activate-page.pipe';
 import {PageEndIndexPipe} from './page-end-index.pipe';
+import { LogPipe } from './log.pipe';
 
 @NgModule({
   imports: [
@@ -72,7 +73,8 @@ import {PageEndIndexPipe} from './page-end-index.pipe';
     UserRolesInResource,
     IncludesPipe,
     CanActivatePagePipe,
-    PageEndIndexPipe
+    PageEndIndexPipe,
+    LogPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -98,7 +100,8 @@ import {PageEndIndexPipe} from './page-end-index.pipe';
     UserRolesInResource,
     IncludesPipe,
     CanActivatePagePipe,
-    PageEndIndexPipe
+    PageEndIndexPipe,
+    LogPipe,
   ]
 })
 export class PipesModule {

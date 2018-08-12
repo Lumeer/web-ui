@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, AfterViewInit, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
@@ -53,9 +53,6 @@ export class TablePerspectiveComponent implements OnInit, AfterViewChecked, OnDe
   @Input()
   public query: QueryModel;
 
-  @ViewChild('positioner')
-  public positioner: ElementRef;
-
   @HostBinding('id')
   public elementId: string;
 
@@ -68,7 +65,8 @@ export class TablePerspectiveComponent implements OnInit, AfterViewChecked, OnDe
 
   private subscriptions = new Subscription();
 
-  public constructor(private store$: Store<AppState>) {
+  public constructor(private element: ElementRef,
+                     private store$: Store<AppState>) {
   }
 
   public ngOnInit() {
@@ -170,7 +168,7 @@ export class TablePerspectiveComponent implements OnInit, AfterViewChecked, OnDe
   }
 
   private calculateHeight() {
-    const {top} = this.positioner.nativeElement.getBoundingClientRect();
+    const {top} = this.element.nativeElement.getBoundingClientRect();
     const height = window.innerHeight - top;
     const tableElement = getTableElement(this.tableId);
     tableElement.style.setProperty('--table-height', `${height}px`);
@@ -218,7 +216,7 @@ export class TablePerspectiveComponent implements OnInit, AfterViewChecked, OnDe
 
   public onBodyScroll(event: Event) {
     const scrollLeft: number = event.target['scrollLeft'];
-    $('table-header').scrollLeft(scrollLeft);
+    $('table-header > div').css('left', -scrollLeft);
   }
 
 }
