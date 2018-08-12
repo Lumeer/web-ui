@@ -4,13 +4,10 @@
      i18n="@@table.query.invalid">Your query results cannot be shown using table perspective. The query needs to specify exactly one collection.
 </div>
 
-<div #positioner></div>
 <div *ngIf="query | displayable"
      (clickOutside)="onClickOutside($event)"
      class="table-wrapper d-flex flex-column m-0">
-  <table-header [table]="table"
-                class="pl-3">
-  </table-header>
+  <table-header [table]="table"></table-header>
   <table-body [table]="table"
               [query]="query"
               (scroll)="onBodyScroll($event)"
