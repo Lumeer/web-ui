@@ -33,7 +33,6 @@
                [table]="table"
                tableEditableCell
                [contextMenu]="dataCellMenu?.contextMenu"
-               [readonly]="false"
                [selected]="cell.selected"
                [value]="(cell.document | extractValue:column) || (cell.linkInstance | extractValue:column) || ''"
                (valueChange)="onValueChange($event)"
