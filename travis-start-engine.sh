@@ -1,0 +1,22 @@
+#!/bin/bash
+echo "Downloading engine..."
+git clone git@github.com:Lumeer/engine.git
+cd engine
+
+echo "Building engine..."
+mvn install -DskipTests
+cd war
+
+echo "Starting engine..."
+export SKIP_LIMITS=true
+export SKIP_SECURITY=true
+mvn -s settings.xml wildfly:run -PstartEngine &
+echo $! > ../../engine.pid
+
+echo "Waiting for engine to start..."
+while ! test -f "target/wildfly-run/wildfly-13.0.0.Final/standalone/tmp/startup-marker"; do
+  sleep 2
+done
+sleep 5
+
+echo "Engine started!"

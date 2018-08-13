@@ -1,4 +1,8 @@
 language: node_js
+cache:
+  directories:
+    - ~/.npm
+    - ~/.cache
 before_install:
   - "npm i -g npm@latest"
 node_js:
