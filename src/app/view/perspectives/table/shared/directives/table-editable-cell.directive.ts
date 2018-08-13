@@ -135,12 +135,12 @@ export class TableEditableCellDirective {
     document.execCommand('insertHTML', false, value);
   }
 
-  @HostListener('edit', ['$event'])
-  public onEdit(letter?: string) {
-    this.startEditing(letter);
+  @HostListener('edit')
+  public onEdit() {
+    this.startEditing();
   }
 
-  public startEditing(letter?: string) {
+  public startEditing() {
     if (this.edited || this.readonly) {
       return;
     }
@@ -148,9 +148,6 @@ export class TableEditableCellDirective {
     this.edited = true;
 
     const {nativeElement} = this.element;
-    if (letter && !this.isCharacterDisabled(letter)) {
-      nativeElement.textContent = letter;
-    }
 
     this.editStart.emit();
     setTimeout(() => {
