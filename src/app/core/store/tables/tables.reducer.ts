@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Direction} from '../../../shared/direction';
 import {copyAndSpliceArray} from '../../../shared/utils/array.utils';
 import {TableHeaderCursor} from './table-cursor';
 import {TableColumn, TableModel, TablePart, TableRow} from './table.model';
@@ -44,6 +45,8 @@ export function tablesReducer(state = initialTablesState(), action: TablesAction
       return replaceRows(state, action);
     case TablesActionType.REMOVE_ROW:
       return removeRow(state, action);
+    case TablesActionType.MOVE_CURSOR:
+      return {...state, moveCursorDown: action.payload.direction === Direction.Down};
     case TablesActionType.SET_CURSOR:
       return {...state, cursor: action.payload.cursor};
     case TablesActionType.SET_EDITED_ATTRIBUTE:

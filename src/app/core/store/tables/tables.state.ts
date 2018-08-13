@@ -29,6 +29,7 @@ export interface TablesState extends EntityState<TableModel> {
 
   cursor: TableCursor;
   editedAttribute: EditedAttribute;
+  moveCursorDown: boolean;
 
 }
 
@@ -45,7 +46,8 @@ export const tablesAdapter = createEntityAdapter<TableModel>({selectId: table =>
 export function initialTablesState(): TablesState {
   return tablesAdapter.getInitialState({
     cursor: null,
-    editedAttribute: null
+    editedAttribute: null,
+    moveCursorDown: false
   });
 }
 
@@ -80,3 +82,5 @@ export const selectTablePart = (tableId: string, partIndex: number) =>
   createSelector(selectTableById(tableId), table => table ? table.parts[partIndex] : null);
 export const selectTablePartLeafColumns = (tableId: string, partIndex: number) =>
   createSelector(selectTablePart(tableId, partIndex), part => part ? filterLeafColumns(part.columns) : []);
+
+export const selectMoveTableCursorDown = createSelector(selectTablesState, state => state.moveCursorDown);

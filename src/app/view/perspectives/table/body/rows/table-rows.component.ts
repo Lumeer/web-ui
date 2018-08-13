@@ -20,6 +20,7 @@
 import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChange, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
+import {withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {selectDocumentsByQuery} from '../../../../../core/store/documents/documents.state';
@@ -27,6 +28,7 @@ import {QueryModel} from '../../../../../core/store/navigation/query.model';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {EMPTY_TABLE_ROW, TableModel, TableRow} from '../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
+import {selectMoveTableCursorDown} from '../../../../../core/store/tables/tables.state';
 import {Direction} from '../../../../../shared/direction';
 
 @Component({
@@ -85,7 +87,9 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
 
   private bindDocuments() {
     this.subscriptions.add(
-      this.store$.select(selectDocumentsByQuery).subscribe(documents => {
+      this.store$.select(selectDocumentsByQuery).pipe(
+        withLatestFrom(this.store$.select(selectMoveTableCursorDown))
+      ).subscribe(([documents, moveCursorDown]) => {
         const cursor: TableBodyCursor = {
           tableId: this.table.id,
           rowPath: [this.table.rows.length - 1],
@@ -98,6 +102,9 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
           .concat({...EMPTY_TABLE_ROW, rowId: Math.random().toString(36).substr(2, 9)});
         if (rows.length > 1) {
           this.store$.dispatch(new TablesAction.ReplaceRows({cursor, rows, deleteCount: 1}));
+          if (moveCursorDown) {
+            this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
+          }
         }
       })
     );
