@@ -3,6 +3,10 @@ cache:
   directories:
     - ~/.npm
     - ~/.cache
+addons:
+  apt:
+    packages:
+      - xvfb
 before_install:
   - "npm i -g npm@latest"
 node_js:
