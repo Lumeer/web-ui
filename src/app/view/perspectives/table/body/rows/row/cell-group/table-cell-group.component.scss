@@ -1,4 +1,5 @@
 @import "../../../../../../../../styles/variables";
+@import "../../../../../../../../styles/bootstrap_var";
 
 :host {
   display: flex;
@@ -40,5 +41,10 @@
 
   &[contenteditable="true"]:empty::before {
     content: none; // Firefox fix
+  }
+
+  &:not(.edited) {
+    color: transparent;
+    text-shadow: 0 0 0 $body-color;
   }
 }

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChange, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, SimpleChange, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {withLatestFrom} from 'rxjs/operators';
@@ -114,8 +114,11 @@ export class TableRowsComponent implements OnChanges, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  public onScroll() {
-    // TODO change query in order to load more documents
+  @HostListener('click', ['$event'])
+  public onClick(event: MouseEvent) {
+    if (event.target === this.element.nativeElement) {
+      this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
+    }
   }
 
   public trackByDocumentId(index: number, row: TableRow): string {
