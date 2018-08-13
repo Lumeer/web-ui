@@ -86,7 +86,7 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
 
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
-      .subscribe(action => this.edit.emit(action.payload.letter));
+      .subscribe(() => this.edit.emit());
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {
