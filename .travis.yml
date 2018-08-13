@@ -10,3 +10,4 @@ node_js:
 script:
   - "npm run lint"
   - "npm run build"
+  - "npm run cypress:run --  --record --key b43d988f-5145-4a2b-9df3-ce3b1607f203"
