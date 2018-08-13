@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Directive, ElementRef, EventEmitter, HostListener, Input, Output} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Direction} from '../../../../../shared/direction';
 import {KeyCode} from '../../../../../shared/key-code';
 import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
@@ -27,7 +27,8 @@ import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
   host: {
     '[attr.spellcheck]': 'false',
     '[attr.tabindex]': 'selected ? 1 : null',
-    '[attr.contenteditable]': 'edited',
+    '[attr.contenteditable]': 'true',
+    '[attr.disabled]': '!edited',
     '[class.affected]': 'affected && !selected',
     '[class.selected]': 'selected',
     '[class.edited]': 'edited',
@@ -41,7 +42,7 @@ import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
     '[class.overflow-hidden]': 'true'
   }
 })
-export class TableEditableCellDirective {
+export class TableEditableCellDirective implements OnChanges {
 
   @Input()
   public affected: boolean;
@@ -76,6 +77,18 @@ export class TableEditableCellDirective {
   public edited: boolean;
 
   public constructor(private element: ElementRef) {
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.selected && this.selected) {
+      setTimeout(() => {
+        const element = this.element.nativeElement as HTMLElement;
+        if (document.activeElement !== element) {
+          element.focus();
+          HtmlModifier.setCursorAtTextContentEnd(element);
+        }
+      });
+    }
   }
 
   @HostListener('blur')
@@ -135,12 +148,12 @@ export class TableEditableCellDirective {
     document.execCommand('insertHTML', false, value);
   }
 
-  @HostListener('edit', ['$event'])
-  public onEdit(letter?: string) {
-    this.startEditing(letter);
+  @HostListener('edit')
+  public onEdit() {
+    this.startEditing();
   }
 
-  public startEditing(letter?: string) {
+  public startEditing() {
     if (this.edited || this.readonly) {
       return;
     }
@@ -148,9 +161,6 @@ export class TableEditableCellDirective {
     this.edited = true;
 
     const {nativeElement} = this.element;
-    if (letter && !this.isCharacterDisabled(letter)) {
-      nativeElement.textContent = letter;
-    }
 
     this.editStart.emit();
     setTimeout(() => {

@@ -1,4 +1,5 @@
 @import "../../../../../../../styles/variables";
+@import "../../../../../../../styles/bootstrap_var";
 
 %highlighted {
   position: relative;
@@ -26,5 +27,16 @@
 
   &.selected {
     color: $primary;
+  }
+}
+
+div[contenteditable=true]:not(.edited) {
+  cursor: default;
+  color: transparent;
+  text-shadow: 0 0 0 $body-color;
+
+  &.text-default-attribute {
+    color: transparent !important;
+    text-shadow: 0 0 0 $body-color;
   }
 }
