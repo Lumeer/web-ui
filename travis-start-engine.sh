@@ -8,7 +8,7 @@ if [ -d ~/.engine ]; then
   git pull origin devel
 else
   echo "Downloading engine..."
-  git clone git@github.com:Lumeer/engine.git ~/.engine
+  git clone https://github.com/Lumeer/engine.git ~/.engine
   git checkout devel
   cd ~/.engine
 fi

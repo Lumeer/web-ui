@@ -3,6 +3,7 @@ cache:
   directories:
     - ~/.npm
     - ~/.cache
+    - ~/.engine
 addons:
   apt:
     packages:
