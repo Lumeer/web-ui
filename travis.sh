@@ -11,6 +11,7 @@ touch $BUILD_OUTPUT
 dump_output() {
    echo Tailing the last 500 lines of output:
    tail -500 $BUILD_OUTPUT
+   truncate -s 0 $BUILD_OUTPUT
 }
 error_handler() {
   echo ERROR: An error was encountered with the build.
@@ -26,12 +27,18 @@ bash -c "while true; do echo \$(date) - building ...; sleep $PING_SLEEP; done" &
 PING_LOOP_PID=$!
 
 npm run lint >> $BUILD_OUTPUT 2>&1
-npm run build >> $BUILD_OUTPUT 2>&1
-./travis-start-engine.sh >> $BUILD_OUTPUT 2>&1
-npm run cypress:run --  --record --key b43d988f-5145-4a2b-9df3-ce3b1607f203 >> $BUILD_OUTPUT 2>&1
-./travis-stop-engine.sh >> $BUILD_OUTPUT 2>&1
+dump_output
 
-# The build finished without returning an error so dump a tail of the output
+npm run build >> $BUILD_OUTPUT 2>&1
+dump_output
+
+./travis-start-engine.sh >> $BUILD_OUTPUT 2>&1
+dump_output
+
+npm run cypress:run --  --record --key b43d988f-5145-4a2b-9df3-ce3b1607f203 >> $BUILD_OUTPUT 2>&1
+dump_output
+
+./travis-stop-engine.sh >> $BUILD_OUTPUT 2>&1
 dump_output
 
 # nicely terminate the ping output loop

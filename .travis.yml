@@ -5,6 +5,7 @@ cache:
     - ~/.cache
     - ~/.engine
     - ~/.m2
+  timeout: 900
 jdk:
   - oraclejdk10
 addons:
