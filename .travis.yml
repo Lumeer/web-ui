@@ -13,8 +13,8 @@ before_install:
 node_js:
   - "lts/*"
 script:
-  - "npm run lint"
-  - "npm run build"
+#  - "npm run lint"
+#  - "npm run build"
   - "./travis-start-engine.sh"
   - "npm run cypress:run --  --record --key b43d988f-5145-4a2b-9df3-ce3b1607f203"
   - "./travis-stop-engine.sh"
