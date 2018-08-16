@@ -1,5 +1,5 @@
 #!/bin/bash
-$ORIG=$(pwd)
+ORIG=$(pwd)
 
 if [ -d ~/.engine -a -f ~/.engine/.git ]; then
   echo "Pulling latest engine updates..."

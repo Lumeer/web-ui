@@ -4,6 +4,9 @@ cache:
     - ~/.npm
     - ~/.cache
     - ~/.engine
+    - ~/.m2
+jdk:
+  - oraclejdk10
 addons:
   apt:
     packages:
