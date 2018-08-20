@@ -5,6 +5,10 @@ set -e
 export PING_SLEEP=30s
 export WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export BUILD_OUTPUT=$WORKDIR/build.out
+export TERM=dumb
+export NODE_DISABLE_COLORS=true
+
+npm config set color false
 
 touch $BUILD_OUTPUT
 

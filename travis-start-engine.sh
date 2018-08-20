@@ -14,13 +14,13 @@ else
 fi
 
 echo "Building engine..."
-mvn install -DskipTests
+mvn install -DskipTests -B
 cd war
 
 echo "Starting engine..."
 export SKIP_LIMITS=true
 export SKIP_SECURITY=true
-mvn -s settings.xml wildfly:run -PstartEngine &
+mvn -s settings.xml wildfly:run -PstartEngine -B &
 echo $! > $ORIG/engine.pid
 
 echo "Waiting for engine to start..."
