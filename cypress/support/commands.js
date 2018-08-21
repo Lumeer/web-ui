@@ -45,5 +45,21 @@ Cypress.Commands.add('dismissAgreement', () => {
         bearer: token
       }
     })
+
+    cy.request({
+      method: 'GET',
+      url: Cypress.env('engineUrl') + 'rest/users/current',
+      auth: {
+        bearer: token
+      }
+    }).its('body').its('agreement').should('eq', true)
+
+    cy.request({
+      method: 'GET',
+      url: Cypress.env('engineUrl') + 'rest/organizations',
+      auth: {
+        bearer: token
+      }
+    }).its('body').its('length').should('gt', 0)
   })
 })
