@@ -402,7 +402,7 @@ export class DocumentUi {
   private getCollisionWarning(): string {
     return this.i18n({
       id: 'shared.document.detail.attribute.collision',
-      value: 'The attribute name is already used in this document.'
+      value: 'The attribute name is already used in this record.'
     });
   }
 

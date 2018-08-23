@@ -46,13 +46,27 @@ Cypress.Commands.add('dismissAgreement', () => {
       }
     })
 
-    cy.request({
-      method: 'GET',
-      url: Cypress.env('engineUrl') + 'rest/users/current',
-      auth: {
-        bearer: token
-      }
-    }).its('body').its('agreement').should('eq', true)
+    function pollAgreementStatus(tries = 0) {
+      cy.request({
+        method: 'GET',
+        url: Cypress.env('engineUrl') + 'rest/users/current',
+        auth: {
+          bearer: token
+        }
+      }).its('body').then((user) => {
+        if (user.agreement) {
+          return
+        }
+
+        if (tries < 10) {
+          pollAgreementStatus(tries + 1)
+        } else {
+          assert.fail(false, true, "Expected user agreement to be true")
+        }
+      })
+    }
+
+    pollAgreementStatus()
 
     cy.request({
       method: 'GET',

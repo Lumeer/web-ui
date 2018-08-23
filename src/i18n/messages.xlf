@@ -156,13 +156,13 @@
         </context-group>
       </trans-unit><trans-unit id="shared.document.detail.document.indistinguishable" datatype="html">
         <source>Indistinguishable
-          document</source>
+          Record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.remove" datatype="html">
-        <source>Remove Document</source>
+        <source>Remove Record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context>
           <context context-type="linenumber">14</context>
@@ -216,13 +216,13 @@
           <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit><trans-unit id="create.new.document" datatype="html">
-        <source>Create New Document</source>
+        <source>Create New Record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit><trans-unit id="shared.preview.results.addDocument" datatype="html">
-        <source>Add Document</source>
+        <source>Add Record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context>
           <context context-type="linenumber">5</context>
@@ -236,7 +236,7 @@
           <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit><trans-unit id="shared.preview.results.noResults" datatype="html">
-        <source>No documents found!</source>
+        <source>No records found!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context>
           <context context-type="linenumber">52</context>
@@ -690,8 +690,8 @@
           <context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-      </trans-unit><trans-unit id="1d33c27b8cb0bf2fac09eba6cc0b5d1eab6fd264" datatype="html">
-        <source>{VAR_SELECT, select, Attribute {Attribute} Collection {Collection} Document {Document} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted} }</source>
+      </trans-unit><trans-unit id="38df58d1012788800b671cef6e4252cf172c94aa" datatype="html">
+        <source>{VAR_SELECT, select, Attribute {Attribute} Collection {Collection} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
           <context context-type="linenumber">11</context>
@@ -1490,7 +1490,7 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.order.perUserMonth" datatype="html">
-        <source>per user and month</source>
+        <source> per user and month</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context>
           <context context-type="linenumber">17</context>
@@ -2767,7 +2767,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="shared.document.detail.attribute.collision" datatype="html">
-        <source>The attribute name is already used in this document.</source>
+        <source>The attribute name is already used in this record.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/ui/document-ui.ts</context>
           <context context-type="linenumber">1</context>
@@ -2888,7 +2888,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="query.item.deleted.document" datatype="html">
-        <source>Deleted document</source>
+        <source>Deleted record</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/pipes/query-item-text.pipe.ts</context>
           <context context-type="linenumber">1</context>

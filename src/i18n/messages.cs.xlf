@@ -1108,8 +1108,8 @@
             <context-group purpose="location"><context context-type="sourcefile">app/dialog/shared/collection-name-input/collection-name-input.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit>
             <trans-unit id="shared.document.detail.document.indistinguishable" datatype="html">
                 <source>Indistinguishable
-          document</source>
-                <target>Nerozlišitelný dokument</target>
+          Record</source>
+                <target>Nerozlišitelný záznam</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit>
             <trans-unit id="document.detail.attribute.add" datatype="html">
@@ -1152,8 +1152,8 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/import-button/post-it-collection-import-button.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit>
             <trans-unit id="shared.preview.results.noResults" datatype="html">
-                <source>No documents found!</source>
-                <target>Nenalezeny žádné dokumenty!</target>
+                <source>No records found!</source>
+                <target>Nenalezeny žádné záznamy!</target>
 
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context><context context-type="linenumber">52</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit>
@@ -1368,7 +1368,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit>
             <trans-unit id="organizations.tab.detail.order.perUserMonth" datatype="html">
-                <source>per user and month</source>
+                <source> per user and month</source>
                 <target>za uživatele a měsíc</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
@@ -2012,8 +2012,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="shared.document.detail.attribute.collision" datatype="html">
-                <source>The attribute name is already used in this document.</source>
-                <target>Tento název atributu je v dokumentu již použit.</target>
+                <source>The attribute name is already used in this record.</source>
+                <target>Tento název atributu je v záznamu již použit.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/ui/document-ui.ts</context>
                     <context context-type="linenumber">1</context>
@@ -2197,8 +2197,8 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.html</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
             <trans-unit id="document.detail.remove" datatype="html">
-                <source>Remove Document</source>
-                <target>Odstranit dokument</target>
+                <source>Remove Record</source>
+                <target>Odstranit záznam</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
             <trans-unit id="document.detail.favorite.remove" datatype="html">
@@ -2218,8 +2218,8 @@
             <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
 
             <trans-unit id="shared.preview.results.addDocument" datatype="html">
-                <source>Add Document</source>
-                <target>Nový dokument</target>
+                <source>Add Record</source>
+                <target>Nový záznam</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit>
             <trans-unit id="icon-picker.select.icon" datatype="html">
@@ -2527,8 +2527,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="query.item.deleted.document" datatype="html">
-                <source>Deleted document</source>
-                <target>Odstraněný dokument</target>
+                <source>Deleted record</source>
+                <target>Odstraněný záznam</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/pipes/query-item-text.pipe.ts</context>
                     <context context-type="linenumber">1</context>
@@ -2632,8 +2632,8 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/add-button/post-it-collection-add-button.component.html</context><context context-type="linenumber">8</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit>
             <trans-unit id="create.new.document" datatype="html">
-                <source>Create New Document</source>
-                <target>Vytvořit nový dokument</target>
+                <source>Create New Record</source>
+                <target>Vytvořit nový záznam</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit>
             <trans-unit id="menu.logout" datatype="html">
@@ -2844,10 +2844,7 @@
   <x id="ICU" equiv-text="{suggestion.type, select, Attribute {...} Collection {...} Document {...} Fulltext {...} Link {...} View {...} Deleted {...}}"/>
 </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="1d33c27b8cb0bf2fac09eba6cc0b5d1eab6fd264" datatype="html">
-        <source>{VAR_SELECT, select, Attribute {Attribute} Collection {Collection} Document {Document} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted} }</source><target>{VAR_SELECT, select, Attribute {Atribut} Collection {Kolekce} Document {Dokument} Fulltext {Text} Link {Vazba} View {Pohled} Deleted {Odstraněno} }</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="36a27bc69d262b9208cb6d0da1e5fe4e094809c4" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="36a27bc69d262b9208cb6d0da1e5fe4e094809c4" datatype="html">
         <source>Welcome to Lumeer!</source><target>Lumeer Vás vítá!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/callback/auth-callback.component.html</context>
@@ -2861,6 +2858,12 @@
           <context context-type="linenumber">7</context>
         </context-group>
         <note priority="1" from="description">auth.redirect</note>
+      </trans-unit><trans-unit id="38df58d1012788800b671cef6e4252cf172c94aa" datatype="html">
+        <source>{VAR_SELECT, select, Attribute {Attribute} Collection {Collection} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted} }</source><target>{VAR_SELECT, select, Attribute {Atribut} Collection {Kolekce} Document {Záznam} Fulltext {Text} Link {Vazba} View {Pohled} Deleted {Smazáno} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
       </trans-unit></body>
     </file>
 </xliff>
