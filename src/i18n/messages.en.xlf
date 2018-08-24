@@ -794,10 +794,10 @@
       
     <trans-unit id="shared.document.detail.document.indistinguishable" datatype="html">
         <source>Indistinguishable
-          document</source>
+          Record</source>
         
       <target state="final">Indistinguishable
-          document</target><context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="document.detail.attribute.add" datatype="html">
+          Record</target><context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="document.detail.attribute.add" datatype="html">
         <source>Add Row</source>
         
       <target state="final">Add Row</target><context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="shared.preview.results.moreResults" datatype="html">
@@ -826,9 +826,9 @@
         <source>Import collection</source>
         
       <target state="final">Import collection</target><context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/import-button/post-it-collection-import-button.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="shared.preview.results.noResults" datatype="html">
-        <source>No documents found!</source>
+        <source>No records found!</source>
         
-      <target state="final">No documents found!</target><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context><context context-type="linenumber">52</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="collection.settings.users.count" datatype="html">
+      <target state="final">No records found!</target><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context><context context-type="linenumber">52</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="collection.settings.users.count" datatype="html">
         <source>Number of users</source>
         
       <target state="final">Number of users</target><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="collection.settings.records.count" datatype="html">
@@ -959,9 +959,9 @@
         
         
       <target state="final">Subscription Duration</target><context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="organizations.tab.detail.order.perUserMonth" datatype="html">
-        <source>per user and month</source>
+        <source> per user and month</source>
         
-      <target state="final">per user and month</target><context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="organizations.tab.detail.order.bestOffer" datatype="html">
+      <target state="final"> per user and month</target><context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="organizations.tab.detail.order.bestOffer" datatype="html">
         <source>-17% Best offer!</source>
         
       <target state="final">-17% Best offer!</target><context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="organizations.tab.detail.order.values" datatype="html">
@@ -1372,9 +1372,9 @@
         <source>The attribute name cannot be empty.</source>
         
       <target state="final">The attribute name cannot be empty.</target><context-group purpose="location"><context context-type="sourcefile">src/app/core/ui/document-ui.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="shared.document.detail.attribute.collision" datatype="html">
-        <source>The attribute name is already used in this document.</source>
+        <source>The attribute name is already used in this record.</source>
         
-      <target state="final">The attribute name is already used in this document.</target><context-group purpose="location"><context context-type="sourcefile">src/app/core/ui/document-ui.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="inputBox.placeholder.default" datatype="html">
+      <target state="final">The attribute name is already used in this record.</target><context-group purpose="location"><context context-type="sourcefile">src/app/core/ui/document-ui.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="inputBox.placeholder.default" datatype="html">
         <source>Write text here...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/input/input-box/input-box.component.ts</context>
@@ -1507,7 +1507,7 @@
           </target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.html</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="document.detail.remove" datatype="html">
-        <source>Remove Document</source><target state="final">Remove Document</target>
+        <source>Remove Record</source><target state="final">Remove Record</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="document.detail.favorite.remove" datatype="html">
         <source>Remove from favorites</source><target state="final">Remove from favorites</target>
@@ -1519,7 +1519,7 @@
         <source>View in:</source><target state="final">View in:</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="shared.preview.results.addDocument" datatype="html">
-        <source>Add Document</source><target state="final">Add Document</target>
+        <source>Add Record</source><target state="final">Add Record</target>
         
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="icon-picker.select.icon" datatype="html">
@@ -1742,7 +1742,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.item.deleted.document" datatype="html">
-        <source>Deleted document</source><target state="final">Deleted document</target>
+        <source>Deleted record</source><target state="final">Deleted record</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/search-box/query-item/pipes/query-item-text.pipe.ts</context>
           <context context-type="linenumber">1</context>
@@ -1807,7 +1807,7 @@
         <source>Create New Collection</source><target state="final">Create New Collection</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/add-button/post-it-collection-add-button.component.html</context><context context-type="linenumber">8</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/empty-data/empty-data.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="create.new.document" datatype="html">
-        <source>Create New Document</source><target state="final">Create New Document</target>
+        <source>Create New Record</source><target state="final">Create New Record</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="menu.logout" datatype="html">
         <source>Logout</source><target state="final">Logout</target>
@@ -2012,10 +2012,7 @@
   <x id="ICU" equiv-text="{suggestion.type, select, Attribute {...} Collection {...} Document {...} Fulltext {...} Link {...} View {...} Deleted {...}}"/>
 </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="1d33c27b8cb0bf2fac09eba6cc0b5d1eab6fd264" datatype="html">
-        <source>{VAR_SELECT, select, Attribute {Attribute} Collection {Collection} Document {Document} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted} }</source><target state="final">{VAR_SELECT, select, Attribute {Attribute} Collection {Collection} Document {Document} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted} }</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="36a27bc69d262b9208cb6d0da1e5fe4e094809c4" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="36a27bc69d262b9208cb6d0da1e5fe4e094809c4" datatype="html">
         <source>Welcome to Lumeer!</source><target state="final">Welcome to Lumeer!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/callback/auth-callback.component.html</context>
@@ -2029,6 +2026,12 @@
           <context context-type="linenumber">7</context>
         </context-group>
         <note priority="1" from="description">auth.redirect</note>
+      </trans-unit><trans-unit id="38df58d1012788800b671cef6e4252cf172c94aa" datatype="html">
+        <source>{VAR_SELECT, select, Attribute {Attribute} Collection {Collection} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted} }</source><target state="final">{VAR_SELECT, select, Attribute {Attribute} Collection {Collection} Document {Record} Fulltext {Fulltext} Link {Link} View {View} Deleted {Deleted} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
       </trans-unit></body>
   </file>
 </xliff>

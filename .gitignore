@@ -1,6 +1,9 @@
 target/
 dist/
 node_modules/
+engine/
+cypress/videos/
+cypress/screenshots/
 
 .idea/
 *.iml

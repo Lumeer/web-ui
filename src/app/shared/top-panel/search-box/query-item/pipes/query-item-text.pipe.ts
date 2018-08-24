@@ -68,7 +68,7 @@ export class QueryItemTextPipe implements PipeTransform {
   private deletedDocumentText(): string {
     return this.i18n({
       id: 'query.item.deleted.document',
-      value: 'Deleted document'
+      value: 'Deleted record'
     });
   }
 

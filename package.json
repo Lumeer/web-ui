@@ -16,7 +16,8 @@
     "start": "npm run reset-env; ng serve",
     "start:cs": "npm run reset-env; ng serve --configuration=cs",
     "start:en": "npm run reset-env; ng serve --configuration=en",
-    "workaround": "sed -i -e 's|/\\*\\*|/*|' node_modules/plotly.js/src/lib/polygon.js"
+    "workaround": "sed -i -e 's|/\\*\\*|/*|' node_modules/plotly.js/src/lib/polygon.js",
+    "cypress:run": "npx cypress run"
   },
   "repository": {
     "type": "git",
@@ -79,6 +80,7 @@
     "@types/node": "^8.10.21",
     "@types/plotly.js": "^1.38.5",
     "codelyzer": "^4.4.2",
+    "cypress": "^3.1.0",
     "jasmine": "~3.1.0",
     "jasmine-core": "~3.1.0",
     "jasmine-spec-reporter": "~4.2.1",
