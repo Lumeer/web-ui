@@ -2,7 +2,14 @@
   <h5 i18n="@@organizations.tab.detail.order.prolong">Keep your Lumeer for Business active!</h5>
   <p i18n="@@organizations.tab.detail.order.activeUntil">Subscription is active until {{serviceLimits.validUntil | date : 'mediumDate'}}. <strong>Extend it today!</strong></p>
 </ng-container>
-<h5 *ngIf="trial" i18n="@@organizations.tab.detail.order.get">Get Lumeer for Business now!</h5>
+<h5 *ngIf="trial">
+  <span *ngIf="discountAmount <= 0" class="badge-pill badge-danger p-2" i18n="@@organizations.tab.detail.order.get">
+    Get Lumeer for Business now!
+  </span>
+  <span *ngIf="discountAmount > 0" i18n="@@organizations.tab.detail.order.get">
+    Get Lumeer for Business now!
+  </span>
+</h5>
 <div style="cursor: default;" *ngIf="discountAmount > 0" class="btn btn-lg btn-danger">
   {{discountDescription}} <span class="badge badge-success">-{{discountAmount}}%</span>
 </div>
@@ -10,20 +17,22 @@
   <div class="form-group">
     <label *ngIf="trial" for="subscriptionLength" i18n="@@organizations.tab.detail.order.duration">Subscription Duration</label>
     <label *ngIf="!trial" for="subscriptionLength" i18n="@@organizations.tab.detail.order.duration">Subscription Extension</label>
-    <div class="form-control">
+    <div class="form-group">
       <div class="mb-2">{{subscriptionLength}} =
         <del *ngIf="discountAmount > 0">{{discountInfoPerUser}}</del>
         <strong>{{prefix}}{{pricePerUser}}{{suffix}}</strong>
         <span i18n="@@organizations.tab.detail.order.perUserMonth">&nbsp;per user and month</span>
         <span *ngIf="discount" class="badge badge-pill badge-success ml-1" i18n="@@organizations.tab.detail.order.bestOffer">-17% Best offer!</span>
       </div>
-      <slider
-        i18n-values="@@organizations.tab.detail.order.values"
-        values="1 month|2 months|3 months|6 months|1 year|2 years|3 years"
-        default="4"
-        id="subscriptionLength"
-        (onSlide)="sliderValue($event)">
-      </slider>
+      <div>
+        <slider
+          i18n-values="@@organizations.tab.detail.order.values"
+          values="1 month|2 months|3 months|6 months|1 year|2 years|3 years"
+          default="4"
+          id="subscriptionLength"
+          (onSlide)="sliderValue($event)">
+        </slider>
+      </div>
     </div>
   </div>
   <div class="form-group">
