@@ -3057,8 +3057,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="organization.payments.disabled.message" datatype="html">
-        <source>Thank you very much for your interest. We have recorded your order.
- Automated payments are not fully operational yet. We will get in touch with you soon!</source>
+        <source>Thank you for your interest. Payments not available . We&apos;ll get in touch with you soon!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context>
           <context context-type="linenumber">1</context>

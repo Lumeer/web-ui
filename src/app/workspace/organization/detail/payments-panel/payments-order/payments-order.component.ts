@@ -44,7 +44,7 @@ export class PaymentsOrderComponent implements OnInit {
   private static USD_FULL = 9.9;
   private static USD_SALE = 8.3;
 
-  public discountAmount = 50;
+  public discountAmount = 0;
   public discountDescription: string;
 
   @Output()
@@ -128,7 +128,8 @@ export class PaymentsOrderComponent implements OnInit {
   }
 
   private calculatePriceFromMonthly(monthlyPrice: number): number {
-    return Math.round(this.months * this.numberOfUsers * monthlyPrice * (this.discountAmount / 100) * 100) / 100;
+    return Math.round(this.months * this.numberOfUsers * monthlyPrice
+      * (this.discountAmount > 0 ? (this.discountAmount / 100) : 1) * 100) / 100;
   }
 
   public sliderValue($event) {
