@@ -18,7 +18,6 @@
  */
 
 import {Directive, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {Direction} from '../../../../../shared/direction';
 import {KeyCode} from '../../../../../shared/key-code';
 import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
 
@@ -72,7 +71,7 @@ export class TableEditableCellDirective implements OnChanges {
   public editEnd = new EventEmitter<string>();
 
   @Output()
-  public moveCursor = new EventEmitter<Direction>();
+  public editKeyDown = new EventEmitter<KeyboardEvent>();
 
   public edited: boolean;
 
@@ -110,19 +109,21 @@ export class TableEditableCellDirective implements OnChanges {
 
   private onKeyDownInEditMode(event: KeyboardEvent) {
     event.stopPropagation();
+
+    this.editKeyDown.emit(event);
+
     switch (event.code) {
       case KeyCode.Enter:
-        this.stopEditing();
-        this.moveCursor.emit(Direction.Down);
-        event.preventDefault();
-        return;
       case KeyCode.Tab:
         this.stopEditing();
-        this.moveCursor.emit(Direction.Right);
         event.preventDefault();
         return;
       case KeyCode.Escape:
         this.stopEditing(true);
+        event.preventDefault();
+        return;
+      case KeyCode.ArrowUp:
+      case KeyCode.ArrowDown:
         event.preventDefault();
         return;
     }
@@ -146,11 +147,6 @@ export class TableEditableCellDirective implements OnChanges {
     const value = clipboardData.getData('text/plain');
 
     document.execCommand('insertHTML', false, value);
-  }
-
-  @HostListener('edit')
-  public onEdit() {
-    this.startEditing();
   }
 
   public startEditing() {

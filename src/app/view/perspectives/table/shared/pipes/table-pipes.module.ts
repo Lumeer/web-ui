@@ -54,6 +54,9 @@ import {PartWidthPipe} from './part-width.pipe';
 import {PartPipe} from './part.pipe';
 import {ResizeEdgesPipe} from './resize-edges.pipe';
 import {ResizeValidatePipe} from './resize-validate.pipe';
+import { DocumentHintColumnsPipe } from './document-hint-columns.pipe';
+import { PreviousLinkedRowPipe } from './previous-linked-row.pipe';
+import { LinkedDocumentIdsPipe } from './linked-document-ids.pipe';
 
 @NgModule({
   imports: [
@@ -95,6 +98,9 @@ import {ResizeValidatePipe} from './resize-validate.pipe';
     ExtractValuePipe,
     AffectedCellPipe,
     ResizeValidatePipe,
+    DocumentHintColumnsPipe,
+    PreviousLinkedRowPipe,
+    LinkedDocumentIdsPipe,
   ], exports: [
     DataPipe,
     EntityCreatedPipe,
@@ -131,6 +137,9 @@ import {ResizeValidatePipe} from './resize-validate.pipe';
     ExtractValuePipe,
     AffectedCellPipe,
     ResizeValidatePipe,
+    DocumentHintColumnsPipe,
+    PreviousLinkedRowPipe,
+    LinkedDocumentIdsPipe,
   ],
   providers: [
     AttributeNameChangedPipe,

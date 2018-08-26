@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
@@ -29,11 +29,7 @@ import {selectLinkInstancesByIds} from '../../../../../../../core/store/link-ins
 import {areTableRowCursorsEqual, TableBodyCursor, TableCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableColumn, TableColumnType, TableCompoundColumn, TableHiddenColumn, TableModel, TableRow} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
-import {EditedAttribute, selectEditedAttribute, selectTableCursor, selectTablePartLeafColumns} from '../../../../../../../core/store/tables/tables.state';
-import {Direction} from '../../../../../../../shared/direction';
-import {TableDataCellDirective} from '../../../../shared/directives/table-data-cell.directive';
-import {TableEditableCellDirective} from '../../../../shared/directives/table-editable-cell.directive';
-import {TableDataCellMenuComponent} from './data-cell-menu/table-data-cell-menu.component';
+import {selectTableCursor, selectTablePartLeafColumns} from '../../../../../../../core/store/tables/tables.state';
 
 @Component({
   selector: 'table-cell-group',
@@ -52,32 +48,19 @@ export class TableCellGroupComponent implements OnInit {
   @Input()
   public row: TableRow;
 
-  @ViewChild(TableDataCellMenuComponent)
-  public dataCellMenu: TableDataCellMenuComponent;
-
-  @ViewChildren(TableDataCellDirective)
-  public dataCells: QueryList<TableDataCellDirective>;
-
-  @ViewChildren(TableEditableCellDirective)
-  public editableCells: QueryList<TableEditableCellDirective>;
-
   public documents$: Observable<DocumentModel[]>;
   public linkInstances$: Observable<LinkInstanceModel[]>;
 
   public columns$: Observable<TableColumn[]>;
-  public editedAttribute$: Observable<EditedAttribute>;
   public selectedCursor$: Observable<TableCursor>;
 
   private rowSelected: boolean;
-
-  public editedValue: string;
 
   public constructor(private store$: Store<AppState>) {
   }
 
   public ngOnInit() {
     this.bindColumns();
-    this.bindEditedAttribute();
     this.bindSelectedCursor();
     this.bindData();
   }
@@ -98,14 +81,6 @@ export class TableCellGroupComponent implements OnInit {
         return true;
       })
     );
-  }
-
-  private bindEditedAttribute() {
-    if (this.cursor.partIndex === 0) {
-      return;
-    }
-
-    this.editedAttribute$ = this.store$.select(selectEditedAttribute);
   }
 
   private bindData() {
@@ -144,28 +119,6 @@ export class TableCellGroupComponent implements OnInit {
     const cursor: TableBodyCursor = {...this.cursor, columnIndex};
     this.store$.dispatch(new TablesAction.SetCursor({cursor}));
     event.stopPropagation();
-  }
-
-  public onEdit() {
-    const editableCell = this.editableCells.find(cell => cell.selected === true);
-    if (editableCell) {
-      editableCell.startEditing();
-    }
-  }
-
-  public onValueChange(value: string) {
-    this.editedValue = value;
-  }
-
-  public onLinkCreate(cursor: TableBodyCursor) {
-    const dataCell = this.dataCells.find(cell => cell.cursor.columnIndex === cursor.columnIndex);
-    if (dataCell) {
-      dataCell.disableSaving();
-    }
-  }
-
-  public onMoveCursor(direction: Direction) {
-    this.store$.dispatch(new TablesAction.MoveCursor({direction}));
   }
 
 }

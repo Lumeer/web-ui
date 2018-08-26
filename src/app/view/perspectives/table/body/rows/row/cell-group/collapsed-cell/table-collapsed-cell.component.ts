@@ -17,12 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
+import {distinctUntilChanged, map} from 'rxjs/operators';
+import {AppState} from '../../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
 import {LinkInstanceModel} from '../../../../../../../../core/store/link-instances/link-instance.model';
 import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
 import {TableSingleColumn} from '../../../../../../../../core/store/tables/table.model';
+import {selectEditedAttribute} from '../../../../../../../../core/store/tables/tables.state';
 
 @Component({
   selector: 'table-collapsed-cell',
@@ -30,10 +34,7 @@ import {TableSingleColumn} from '../../../../../../../../core/store/tables/table
   styleUrls: ['./table-collapsed-cell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableCollapsedCellComponent implements OnChanges {
-
-  @Input()
-  public affected: boolean;
+export class TableCollapsedCellComponent implements OnInit, OnChanges {
 
   @Input()
   public column: TableSingleColumn;
@@ -53,6 +54,23 @@ export class TableCollapsedCellComponent implements OnChanges {
   public affected$: Observable<boolean>;
 
   public values = '';
+
+  constructor(private store$: Store<AppState>) {
+  }
+
+  public ngOnInit() {
+    this.bindAffected();
+  }
+
+  private bindAffected() {
+    this.affected$ = this.store$.select(selectEditedAttribute).pipe(
+      map(edited => edited && edited.attributeId === this.column.attributeId &&
+        (!!(this.documents && this.documents.find(doc => doc.id === edited.documentId))
+          || !!(this.linkInstances && this.linkInstances.find(link => link.id === edited.linkInstanceId)))
+      ),
+      distinctUntilChanged()
+    );
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.column || changes.documents || changes.linkInstances) {

@@ -1,0 +1,19 @@
+<div *ngIf="documents$ | async as documents"
+     [style.right.px]="columns | suggestionColumnOffset:attributeId">
+  <div *ngIf="documents.length"
+       class="dropdown">
+    <div class="dropdown-menu show">
+      <div *ngFor="let doc of documents; index as documentIndex"
+           [class.selected]="(selectedIndex$ | async) === documentIndex"
+           (mousedown)="onCreateLink(doc)"
+           class="dropdown-item p-0 d-flex">
+        <div *ngFor="let column of columns"
+             [class.font-weight-bold]="column.attributeId === attributeId"
+             [style.width.px]="column.width"
+             [innerHtml]="column.attributeId === attributeId ? (doc.data[column.attributeId] | highlightText: value) : doc.data[column.attributeId]"
+             class="p-1">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

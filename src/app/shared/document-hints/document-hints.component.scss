@@ -1,0 +1,13 @@
+@import '../../../styles/variables';
+
+:host {
+  position: absolute;
+
+  & > div {
+    position: relative;
+  }
+}
+
+.selected {
+  background-color: $gray-300;
+}

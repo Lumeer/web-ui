@@ -35,6 +35,7 @@ import {TablesAction, TablesActionType} from '../../../../../../core/store/table
 import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.state';
 import {DialogService} from '../../../../../../dialog/dialog.service';
 import {Direction} from '../../../../../../shared/direction';
+import {KeyCode} from '../../../../../../shared/key-code';
 import {extractAttributeLastName, extractAttributeParentName, filterAttributesByDepth} from '../../../../../../shared/utils/attribute.utils';
 import {TableEditableCellDirective} from '../../../shared/directives/table-editable-cell.directive';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
@@ -222,7 +223,7 @@ export class TableSingleColumnComponent implements OnChanges {
 
   private updateCollectionAttribute(attribute: AttributeModel) {
     this.store$.dispatch(new CollectionsAction.ChangeAttribute({
-      collectionId: this.linkType.id,
+      collectionId: this.collection.id,
       attributeId: attribute.id,
       attribute
     }));
@@ -308,9 +309,10 @@ export class TableSingleColumnComponent implements OnChanges {
     this.store$.dispatch(new CollectionsAction.SetDefaultAttribute({collectionId: this.collection.id, attributeId: this.column.attributeId}));
   }
 
-  public onMoveCursor(direction: Direction) {
-    if (direction === Direction.Right) {
-      this.store$.dispatch(new TablesAction.MoveCursor({direction}));
+  public onEditKeyDown(event: KeyboardEvent) {
+    switch (event.code) {
+      case KeyCode.Tab:
+        return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Right}));
     }
   }
 

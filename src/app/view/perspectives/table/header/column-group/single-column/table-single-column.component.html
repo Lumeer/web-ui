@@ -7,8 +7,8 @@
      (valueChange)="onValueChange($event)"
      (editStart)="onEditStart()"
      (editEnd)="onEditEnd($event)"
+     (editKeyDown)="onEditKeyDown($event)"
      (mousedown)="onMouseDown()"
-     (moveCursor)="onMoveCursor($event)"
      class="table-border-right table-border-bottom h-100 font-italic {{cursor | dragClass}}"
      [class.uninitialized-column]="!column?.attributeId"
      [class.text-default-attribute]="attribute | isDefaultAttribute:(collection)">
