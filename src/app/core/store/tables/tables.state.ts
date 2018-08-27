@@ -72,10 +72,8 @@ export const selectTableBySelectedCursor = createSelector(selectTablesDictionary
 
 export const selectEditedAttribute = createSelector(selectTablesState, state => state.editedAttribute);
 export const selectAffected = (attribute: EditedAttribute) => createSelector(selectEditedAttribute, editedAttribute => {
-  return attribute && editedAttribute &&
-    attribute.documentId === editedAttribute.documentId &&
-    attribute.linkInstanceId === editedAttribute.linkInstanceId &&
-    attribute.attributeId === editedAttribute.attributeId;
+  return attribute && editedAttribute && attribute.attributeId === editedAttribute.attributeId &&
+    (attribute.documentId === editedAttribute.documentId || attribute.linkInstanceId === editedAttribute.linkInstanceId);
 });
 
 export const selectTablePart = (tableId: string, partIndex: number) =>

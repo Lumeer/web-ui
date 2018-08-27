@@ -22,6 +22,7 @@ import {Actions} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
+import {isNullOrUndefined} from 'util';
 import {AppState} from '../../../../../../../../core/store/app.state';
 import {AttributeModel} from '../../../../../../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../../../../../../core/store/collections/collections.action';
@@ -93,7 +94,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private bindAffected() {
-    if (this.cursor.partIndex === 0) {
+    if (this.cursor.partIndex < 2) {
       return;
     }
 
@@ -176,15 +177,12 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public onEditEnd(value: string) {
     this.clearEditedAttribute();
 
-    const selectedSuggestion = this.suggestions && this.suggestions.isSelected();
-
-    if (value && !selectedSuggestion) {
+    if (this.suggestions && this.suggestions.isSelected()) {
+      this.suggestions.useSelection();
+    } else if (!isNullOrUndefined(value)) { // TODO maybe null values in the future
       this.saveData(value);
     }
 
-    if (selectedSuggestion) {
-      this.suggestions.useSelection();
-    }
     this.checkSuggesting();
   }
 
@@ -199,7 +197,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private saveData(value: string) {
-    if (this.savingDisabled || this.getValue() === value) {
+    if (this.savingDisabled || this.getValue() === value || (!value && !this.isEntityInitialized())) {
       return;
     }
 
@@ -294,15 +292,29 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         callback: this.replaceTableColumnCallback(attributeName)
       }));
     } else {
+      // TODO what if user does not have permissions to see all columns?
       if (this.cursor.partIndex > 0 && !value && !Object.entries(this.document.data)
         .filter(([k]) => k !== attributeId)
         .some(([, v]) => v)) {
-        this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
+        this.deleteDocument();
       } else {
         const document = {collectionId: this.document.collectionId, id: this.document.id, data: {[attributeId]: value}};
         this.store$.dispatch(new DocumentsAction.PatchData({document}));
       }
     }
+  }
+
+  private deleteDocument() {
+    const removeRowAction = new TablesAction.RemoveRow({cursor: this.cursor});
+    if (this.document && this.document.id) {
+      this.store$.dispatch(new DocumentsAction.Delete({
+        collectionId: this.document.collectionId,
+        documentId: this.document.id,
+        nextAction: removeRowAction
+      }));
+      return;
+    }
+    this.store$.dispatch(removeRowAction);
   }
 
   private updateLinkInstanceData(key: string, name: string, value: string) {

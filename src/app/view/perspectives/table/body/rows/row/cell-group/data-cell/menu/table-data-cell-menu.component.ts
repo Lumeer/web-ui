@@ -102,7 +102,7 @@ export class TableDataCellMenuComponent implements OnChanges {
   public onUnlinkRow() {
     const linkInstanceId = findTableRow(this.table.rows, this.cursor.rowPath).linkInstanceIds[0];
     const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
-    this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId, callback}));
+    this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId, callback}));
   }
 
 }

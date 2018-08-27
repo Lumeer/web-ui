@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* tslint:disable */
 export class CountriesData {
   public static getCountries() {
     return [{

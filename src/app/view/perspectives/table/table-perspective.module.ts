@@ -52,7 +52,6 @@ import {TableColumnGroupComponent} from './header/column-group/table-column-grou
 import {TableLinkInfoComponent} from './header/link/info/table-link-info.component';
 import {TableHeaderLinkComponent} from './header/link/table-header-link.component';
 import {TableHeaderComponent} from './header/table-header.component';
-import {TableDataCellDirective} from './shared/directives/table-data-cell.directive';
 import {TableEditableCellDirective} from './shared/directives/table-editable-cell.directive';
 import {TablePipesModule} from './shared/pipes/table-pipes.module';
 import {TablePerspectiveRoutingModule} from './table-perspective-routing.module';
@@ -96,7 +95,6 @@ import {TablePerspectiveComponent} from './table-perspective.component';
     TableCollapsedCellComponent,
     TableRowNumbersComponent,
     TableEditableCellDirective,
-    TableDataCellDirective,
     TableDataCellComponent,
   ],
   exports: [

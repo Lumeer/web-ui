@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/* tslint:disable:max-line-length */
 export class HtmlModifier {
 
   public static removeHtmlComments(html: HTMLElement): string {
@@ -42,23 +43,23 @@ export class HtmlModifier {
 
 export function getCaretCharacterOffsetWithin(element) {
   let caretOffset = 0;
-  let doc = element.ownerDocument || element.document;
-  let win = doc.defaultView || doc.parentWindow;
+  const doc = element.ownerDocument || element.document;
+  const win = doc.defaultView || doc.parentWindow;
   let sel;
-  if (typeof win.getSelection != "undefined") {
+  if (typeof win.getSelection !== 'undefined') {
     sel = win.getSelection();
     if (sel.rangeCount > 0) {
-      let range = win.getSelection().getRangeAt(0);
-      let preCaretRange = range.cloneRange();
+      const range = win.getSelection().getRangeAt(0);
+      const preCaretRange = range.cloneRange();
       preCaretRange.selectNodeContents(element);
       preCaretRange.setEnd(range.endContainer, range.endOffset);
       caretOffset = preCaretRange.toString().length;
     }
-  } else if ((sel = doc.selection) && sel.type != "Control") {
-    let textRange = sel.createRange();
-    let preCaretTextRange = doc.body.createTextRange();
+  } else if ((sel = doc.selection) && sel.type !== 'Control') {
+    const textRange = sel.createRange();
+    const preCaretTextRange = doc.body.createTextRange();
     preCaretTextRange.moveToElementText(element);
-    preCaretTextRange.setEndPoint("EndToEnd", textRange);
+    preCaretTextRange.setEndPoint('EndToEnd', textRange);
     caretOffset = preCaretTextRange.text.length;
   }
   return caretOffset;
