@@ -148,10 +148,7 @@
               "src/tsconfig.spec.json"
             ],
             "exclude": [
-              "**/node_modules/**",
-              "**/countries.data.ts",
-              "**/validator.ts",
-              "**/html-modifier.ts"
+              "**/node_modules/**"
             ]
           }
         }
