@@ -9,20 +9,21 @@
       "projectType": "application",
       "prefix": "",
       "schematics": {
-        "@ngrx/schematics:component": {
+        "@schematics/angular:component": {
+          "changeDetection": "OnPush",
           "spec": false,
           "styleext": "scss"
         },
-        "@ngrx/schematics:guard": {
+        "@schematics/angular:guard": {
           "spec": false
         },
-        "@ngrx/schematics:module": {
+        "@schematics/angular:module": {
           "spec": false
         },
-        "@ngrx/schematics:pipe": {
+        "@schematics/angular:pipe": {
           "spec": false
         },
-        "@ngrx/schematics:service": {
+        "@schematics/angular:service": {
           "spec": false
         }
       },

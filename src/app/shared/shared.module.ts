@@ -21,7 +21,10 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {CommentsComponent} from './comments/comments.component';
+import {DirectivesModule} from './directives/directives.module';
+import {DocumentHintsModule} from './document-hints/document-hints.module';
 import {DocumentModule} from './document/document.module';
 import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 import {InputModule} from './input/input.module';
@@ -36,12 +39,10 @@ import {ResourceHeaderComponent} from './resource/header/resource-header.compone
 import {SizeSliderComponent} from './slider/size-slider.component';
 import {SliderComponent} from './slider/slider.component';
 import {TagModule} from './tag/tag.module';
+import {SearchBoxModule} from './top-panel/search-box/search-box.module';
 import {TopPanelModule} from './top-panel/top-panel.module';
 import {UsersModule} from './users/users.module';
-import {DirectivesModule} from './directives/directives.module';
-import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {WarningMessageModule} from './warning-message/warning-message.module';
-import {SearchBoxModule} from './top-panel/search-box/search-box.module';
 
 @NgModule({
   imports: [
@@ -62,7 +63,8 @@ import {SearchBoxModule} from './top-panel/search-box/search-box.module';
     PipesModule,
     DirectivesModule,
     TopPanelModule,
-    WarningMessageModule
+    WarningMessageModule,
+    DocumentHintsModule,
   ],
   declarations: [
     SizeSliderComponent,
@@ -95,7 +97,8 @@ import {SearchBoxModule} from './top-panel/search-box/search-box.module';
     LinksModule,
     DirectivesModule,
     TopPanelModule,
-    WarningMessageModule
+    WarningMessageModule,
+    DocumentHintsModule,
   ]
 })
 export class SharedModule {

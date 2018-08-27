@@ -34,8 +34,8 @@ import {TableRowGroupFooterComponent} from './body/row-group/footer/table-row-gr
 import {TableRowGroupHeaderComponent} from './body/row-group/header/table-row-group-header.component';
 import {TableRowGroupComponent} from './body/row-group/table-row-group.component';
 import {TableCollapsedCellComponent} from './body/rows/row/cell-group/collapsed-cell/table-collapsed-cell.component';
-import {TableDataCellMenuComponent} from './body/rows/row/cell-group/data-cell-menu/table-data-cell-menu.component';
-import {TableDataCellSuggestionsComponent} from './body/rows/row/cell-group/data-cell-suggestions/table-data-cell-suggestions.component';
+import {TableDataCellMenuComponent} from './body/rows/row/cell-group/data-cell/menu/table-data-cell-menu.component';
+import {TableDataCellComponent} from './body/rows/row/cell-group/data-cell/table-data-cell.component';
 import {TableCellGroupComponent} from './body/rows/row/cell-group/table-cell-group.component';
 import {TableLinkCellComponent} from './body/rows/row/link-cell/table-link-cell.component';
 import {TableRowNumbersComponent} from './body/rows/row/row-numbers/table-row-numbers.component';
@@ -95,9 +95,9 @@ import {TablePerspectiveComponent} from './table-perspective.component';
     TableDataCellMenuComponent,
     TableCollapsedCellComponent,
     TableRowNumbersComponent,
-    TableDataCellSuggestionsComponent,
     TableEditableCellDirective,
     TableDataCellDirective,
+    TableDataCellComponent,
   ],
   exports: [
     TablePerspectiveComponent

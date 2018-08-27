@@ -17,29 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Directive, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {Actions} from '@ngrx/effects';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs/index';
-import {AppState} from '../../../../../core/store/app.state';
-import {AttributeModel} from '../../../../../core/store/collections/collection.model';
-import {CollectionsAction} from '../../../../../core/store/collections/collections.action';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
-import {LinkInstanceModel} from '../../../../../core/store/link-instances/link-instance.model';
-import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
-import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableModel, TableSingleColumn} from '../../../../../core/store/tables/table.model';
-import {findTableRow} from '../../../../../core/store/tables/table.utils';
-import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {distinctUntilChanged} from 'rxjs/operators';
+import {AppState} from '../../../../../../../../core/store/app.state';
+import {AttributeModel} from '../../../../../../../../core/store/collections/collection.model';
+import {CollectionsAction} from '../../../../../../../../core/store/collections/collections.action';
+import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
+import {DocumentsAction} from '../../../../../../../../core/store/documents/documents.action';
+import {LinkInstanceModel} from '../../../../../../../../core/store/link-instances/link-instance.model';
+import {LinkInstancesAction} from '../../../../../../../../core/store/link-instances/link-instances.action';
+import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
+import {TableModel, TableSingleColumn} from '../../../../../../../../core/store/tables/table.model';
+import {findTableRow} from '../../../../../../../../core/store/tables/table.utils';
+import {TablesAction, TablesActionType} from '../../../../../../../../core/store/tables/tables.action';
+import {selectAffected} from '../../../../../../../../core/store/tables/tables.state';
+import {Direction} from '../../../../../../../../shared/direction';
+import {DocumentHintsComponent} from '../../../../../../../../shared/document-hints/document-hints.component';
+import {isKeyPrintable, KeyCode} from '../../../../../../../../shared/key-code';
+import {TableEditableCellDirective} from '../../../../../shared/directives/table-editable-cell.directive';
+import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 
-@Directive({
-  selector: '[tableDataCell]',
-  host: {
-    '[class.uninitialized-column]': '!column?.attributeId'
-  }
+@Component({
+  selector: 'table-data-cell',
+  templateUrl: './table-data-cell.component.html',
+  styleUrls: ['./table-data-cell.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableDataCellDirective implements OnChanges, OnDestroy {
+export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public cursor: TableBodyCursor;
@@ -59,11 +66,19 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
   @Input()
   public table: TableModel;
 
-  @Input()
-  public value: string;
+  @ViewChild(TableDataCellMenuComponent)
+  public menuComponent: TableDataCellMenuComponent;
 
-  @Output()
-  public edit = new EventEmitter<string>();
+  @ViewChild(DocumentHintsComponent)
+  public suggestions: DocumentHintsComponent;
+
+  @ViewChild(TableEditableCellDirective)
+  public editableCell: TableEditableCellDirective;
+
+  public affected$: Observable<boolean>;
+  public suggesting$ = new BehaviorSubject(false);
+
+  public editedValue: string;
 
   private selectedSubscriptions = new Subscription();
 
@@ -71,6 +86,24 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
 
   public constructor(private actions$: Actions,
                      private store$: Store<AppState>) {
+  }
+
+  public ngOnInit() {
+    this.bindAffected();
+  }
+
+  private bindAffected() {
+    if (this.cursor.partIndex === 0) {
+      return;
+    }
+
+    this.affected$ = this.store$.select(selectAffected({
+      attributeId: this.column.attributeId,
+      documentId: this.document && this.document.id,
+      linkInstanceId: this.linkInstance && this.linkInstance.id
+    })).pipe(
+      distinctUntilChanged()
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -82,11 +115,22 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
         this.selectedSubscriptions.add(this.subscribeToRemoveSelectedCell());
       }
     }
+    if (changes.document || changes.linkInstace) {
+      this.checkSuggesting();
+    }
+  }
+
+  private checkSuggesting() {
+    if (this.cursor.partIndex < 2) {
+      return;
+    }
+
+    this.suggesting$.next(!this.isEntityInitialized() || !this.editedValue);
   }
 
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
-      .subscribe(() => this.edit.emit());
+      .subscribe(() => this.editableCell.startEditing());
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {
@@ -95,9 +139,19 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
   }
 
   private deleteCellData() {
-    if (this.isEntityInitialized() && !!this.value) {
+    if (this.isEntityInitialized() && !!this.getValue()) {
       this.updateData(null);
     }
+  }
+
+  private getValue(): any {
+    if (this.document && this.document.data) {
+      return this.document.data[this.column.attributeId];
+    }
+    if (this.linkInstance && this.linkInstance.data) {
+      return this.linkInstance.data[this.column.attributeId];
+    }
+    return '';
   }
 
   private isEntityInitialized(): boolean {
@@ -108,7 +162,6 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
     this.selectedSubscriptions.unsubscribe();
   }
 
-  @HostListener('editStart')
   public onEditStart() {
     if (this.document.id) {
       this.store$.dispatch(new TablesAction.SetEditedAttribute({
@@ -120,12 +173,19 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
     }
   }
 
-  @HostListener('editEnd', ['$event'])
   public onEditEnd(value: string) {
     this.clearEditedAttribute();
-    if (value) {
+
+    const selectedSuggestion = this.suggestions && this.suggestions.isSelected();
+
+    if (value && !selectedSuggestion) {
       this.saveData(value);
     }
+
+    if (selectedSuggestion) {
+      this.suggestions.useSelection();
+    }
+    this.checkSuggesting();
   }
 
   private clearEditedAttribute() {
@@ -139,7 +199,7 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
   }
 
   private saveData(value: string) {
-    if (this.savingDisabled || this.value === value) {
+    if (this.savingDisabled || this.getValue() === value) {
       return;
     }
 
@@ -211,12 +271,12 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
       };
       this.store$.dispatch(new LinkInstancesAction.Create({
         linkInstance,
-        callback: () => this.expandLinkedRow()
+        callback: () => this.expandRows()
       }));
     };
   }
 
-  private expandLinkedRow() {
+  private expandRows() {
     const cursor = {...this.cursor, rowPath: this.cursor.rowPath.slice(0, -1)};
     this.store$.dispatch(new TablesAction.ExpandRows({cursor}));
   }
@@ -234,13 +294,68 @@ export class TableDataCellDirective implements OnChanges, OnDestroy {
         callback: this.replaceTableColumnCallback(attributeName)
       }));
     } else {
-      const document = {collectionId: this.document.collectionId, id: this.document.id, data: {[attributeId]: value}};
-      this.store$.dispatch(new DocumentsAction.PatchData({document}));
+      if (this.cursor.partIndex > 0 && !value && !Object.entries(this.document.data)
+        .filter(([k]) => k !== attributeId)
+        .some(([, v]) => v)) {
+        this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
+      } else {
+        const document = {collectionId: this.document.collectionId, id: this.document.id, data: {[attributeId]: value}};
+        this.store$.dispatch(new DocumentsAction.PatchData({document}));
+      }
     }
   }
 
   private updateLinkInstanceData(key: string, name: string, value: string) {
     // TODO dispatch patch link instance action
+  }
+
+  public onEdit() {
+    if (this.editableCell) {
+      this.editableCell.startEditing();
+    }
+  }
+
+  public onValueChange(value: string) {
+    this.editedValue = value;
+
+    if (!value && this.cursor.partIndex > 1) {
+      this.suggesting$.next(true);
+    }
+  }
+
+  public onLinkCreate() {
+    this.disableSaving();
+
+    if (this.isEntityInitialized()) {
+      this.deleteLinkInstance();
+    }
+  }
+
+  public createLinkCallback() {
+    this.expandRows();
+  }
+
+  private deleteLinkInstance() {
+    const linkInstanceId = findTableRow(this.table.rows, this.cursor.rowPath).linkInstanceIds[0];
+    const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
+    this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId, callback}));
+  }
+
+  public onEditKeyDown(event: KeyboardEvent) {
+    switch (event.code) {
+      case KeyCode.ArrowDown:
+        return this.suggestions && this.suggestions.moveSelection(Direction.Down);
+      case KeyCode.ArrowUp:
+        return this.suggestions && this.suggestions.moveSelection(Direction.Up);
+      case KeyCode.Enter:
+        return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
+      case KeyCode.Tab:
+        return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Right}));
+    }
+
+    if (isKeyPrintable(event) && this.suggestions) {
+      return this.suggestions.clearSelection();
+    }
   }
 
 }

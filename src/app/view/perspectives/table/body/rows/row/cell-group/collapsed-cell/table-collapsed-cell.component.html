@@ -1,5 +1,5 @@
 <div #collapsedCell
-     [class.affected]="affected"
+     [class.affected]="affected$ | async"
      [class.selected]="selected"
      [style.cursor]="'default'"
      [title]="values"
