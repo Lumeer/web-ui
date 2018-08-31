@@ -1,11 +1,13 @@
-<div class="dropdown" *ngIf="suggestions.length > 0">
-  <div class="dropdown-menu show suggestions">
-    <search-suggestion-item class="dropdown-item d-flex justify-content-between"
-                            *ngFor="let suggestion of suggestions; let suggestionIndex = index"
-                            [class.selected]="suggestionIndex == selectedIndex"
-                            [suggestion]="suggestion"
-                            [text]="text"
-                            (mousedown)="onUseSuggestion(suggestion)">
-    </search-suggestion-item>
+<ng-container *ngIf="suggestions$ | async as suggestions">
+  <div class="dropdown" *ngIf="suggestions.length > 0">
+    <div class="dropdown-menu show suggestions">
+      <search-suggestion-item *ngFor="let suggestion of suggestions; let suggestionIndex = index"
+                              class="dropdown-item d-flex justify-content-between"
+                              [class.selected]="suggestionIndex === (selectedIndex$ | async)"
+                              [suggestion]="suggestion"
+                              [text]="text"
+                              (mousedown)="onUseSuggestion(suggestion)">
+      </search-suggestion-item>
+    </div>
   </div>
-</div>
+</ng-container>

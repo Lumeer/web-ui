@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
-import {LinkType, Suggestions} from '../../../../../core/dto/index';
+import {Observable, of} from 'rxjs';
+import {LinkType, Suggestions} from '../../../../../core/dto';
 import {CollectionConverter} from '../../../../../core/store/collections/collection.converter';
 import {CollectionModel} from '../../../../../core/store/collections/collection.model';
 import {LinkTypeConverter} from '../../../../../core/store/link-types/link-type.converter';
@@ -34,6 +34,10 @@ import {ViewQueryItem} from '../../query-item/model/view.query-item';
 export class SuggestionsConverter {
 
   public static convertSuggestionsToQueryItems(suggestions: Suggestions, allCollections: CollectionModel[]): Observable<QueryItem[]> {
+    if (!suggestions) {
+      return of([]);
+    }
+
     const attributes: CollectionModel[] = suggestions.attributes.map(collection => CollectionConverter.fromDto(collection));
     const collections: CollectionModel[] = suggestions.collections.map(collection => CollectionConverter.fromDto(collection));
     const views: ViewModel[] = suggestions.views.map(view => ViewConverter.convertToModel(view));

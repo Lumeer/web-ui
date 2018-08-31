@@ -6,17 +6,16 @@
 </div>
 
 <input #searchInput
-       [(ngModel)]="text"
+       [value]="text"
        [placeholder]="removeHtmlComments(inputPlaceholder)"
        (blur)="onBlur()"
        (focus)="onFocus()"
+       (input)="onInput($event)"
        (keydown)="onKeyDown($event)"
        (keyup.enter)="onEnterKeyUp()"
        class="w-100 py-1 px-2"/>
 
 <search-suggestions [queryItems]="queryItems"
-                    [moveSelection$]="moveSuggestionSelection$"
-                    [useSelection$]="useSuggestionSelection$"
                     [text]="suggesting ? text : ''"
                     (useSuggestion)="onUseSuggestion($event)">
 </search-suggestions>
