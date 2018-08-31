@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable, Subject, Subscription} from 'rxjs';
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {catchError, debounceTime, map, mergeMap, startWith, switchMap, withLatestFrom} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
+import {catchError, debounceTime, map, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators';
 import {Suggestions, SuggestionType} from '../../../../../core/dto/index';
 import {SearchService} from '../../../../../core/rest/index';
 import {AppState} from '../../../../../core/store/app.state';
@@ -34,7 +34,7 @@ import {SuggestionsConverter} from './suggestions.converter';
   selector: 'search-suggestions',
   templateUrl: './search-suggestions.component.html',
   styleUrls: ['./search-suggestions.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit {
 
@@ -44,34 +44,24 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   @Input()
   public text: string;
 
-  @Input()
-  public moveSelection$: Observable<number>;
-
-  @Input()
-  public useSelection$: Observable<string>;
-
   @Output()
   public useSuggestion = new EventEmitter<QueryItem>();
 
-  public suggestions: QueryItem[] = [];
-  public selectedIndex = -1;
+  public suggestions$ = new BehaviorSubject<QueryItem[]>([]);
+  public selectedIndex$ = new BehaviorSubject(-1);
 
   public suggesting = true;
 
-  private searchTerms$ = new Subject<string>();
-  private suggestionsSubscription: Subscription;
+  private searchTerms$ = new BehaviorSubject('');
 
-  private moveSelectionSubscription: Subscription;
-  private useSelectionSubscription: Subscription;
+  private subscriptions = new Subscription();
 
   constructor(private searchService: SearchService,
               private store: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.suggestQueryItems();
-    this.subscribeToMoveSelection();
-    this.subscribeToUseSelection();
+    this.subscriptions.add(this.subscribeToSearchTerms());
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -80,27 +70,15 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     }
     if (changes.hasOwnProperty('text')) {
       this.searchTerms$.next(this.text);
-      if (!this.text) {
-        this.updateSuggestions([]);
-      }
     }
   }
 
   public ngOnDestroy() {
-    if (this.moveSelectionSubscription) {
-      this.moveSelectionSubscription.unsubscribe();
-    }
-    if (this.useSelectionSubscription) {
-      this.useSelectionSubscription.unsubscribe();
-    }
-    if (this.suggestionsSubscription) {
-      this.suggestionsSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
-  private suggestQueryItems() {
-    this.suggestionsSubscription = this.searchTerms$.pipe(
-      startWith(''),
+  private subscribeToSearchTerms(): Subscription {
+    return this.searchTerms$.pipe(
       debounceTime(300),
       switchMap(text => this.retrieveSuggestions(text)),
       withLatestFrom(this.store.select(selectAllCollections)),
@@ -112,23 +90,21 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
         console.error(error);
         return of<QueryItem[]>();
       })
-    ).subscribe((suggestions: QueryItem[]) => this.updateSuggestions(suggestions));
-  }
-
-  private updateSuggestions(suggestions: QueryItem[]) {
-    this.suggestions = suggestions;
-    this.selectedIndex = -1;
+    ).subscribe(suggestions => {
+      this.suggestions$.next(suggestions);
+      this.selectedIndex$.next(-1);
+    });
   }
 
   private retrieveSuggestions(text: string): Observable<Suggestions> {
     if (this.suggesting && text) {
       return this.searchService.suggest(text.toLowerCase(), SuggestionType.All);
     }
-    return of<Suggestions>();
+    return of<Suggestions>(null);
   }
 
   private addFulltextSuggestion(queryItems: QueryItem[]): QueryItem[] {
-    if (!this.isFullTextPresented()) {
+    if (!this.isFullTextPresented() && this.text) {
       return queryItems.concat(new FulltextQueryItem(this.text));
     } else {
       return queryItems;
@@ -148,20 +124,17 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     }));
   }
 
-  private subscribeToMoveSelection() {
-    this.moveSelectionSubscription = this.moveSelection$.subscribe(direction => {
-      const selectedIndex = this.selectedIndex + direction;
-      if (0 <= selectedIndex && selectedIndex < this.suggestions.length) {
-        this.selectedIndex = selectedIndex;
-      }
-    });
+  public moveSelection(direction: number) {
+    const selectedIndex = this.selectedIndex$.getValue() + direction;
+    if (0 <= selectedIndex && selectedIndex < this.suggestions$.getValue().length) {
+      this.selectedIndex$.next(selectedIndex);
+    }
   }
 
-  private subscribeToUseSelection() {
-    this.useSelectionSubscription = this.useSelection$.subscribe(text => {
-      const queryItem = this.selectedIndex >= 0 && this.suggestions[this.selectedIndex] ? this.suggestions[this.selectedIndex] : new FulltextQueryItem(text);
-      this.onUseSuggestion(queryItem);
-    });
+  public useSelection(text: string) {
+    const selectedIndex = this.selectedIndex$.getValue();
+    const queryItem = this.suggestions$.getValue()[selectedIndex] || new FulltextQueryItem(text);
+    this.onUseSuggestion(queryItem);
   }
 
   private isFullTextPresented(): boolean {
@@ -174,7 +147,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     }
 
     this.useSuggestion.emit(queryItem);
-    this.suggestions = [];
+    this.suggestions$.next([]);
   }
 
 }

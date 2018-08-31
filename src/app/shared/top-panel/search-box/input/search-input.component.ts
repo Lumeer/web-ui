@@ -17,16 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {Subject} from 'rxjs';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {KeyCode} from '../../../key-code';
 import {HtmlModifier} from '../../../utils/html-modifier';
 import {QueryItem} from '../query-item/model/query-item';
+import {SearchSuggestionsComponent} from './suggestions/search-suggestions.component';
 
 @Component({
   selector: 'search-input',
   templateUrl: './search-input.component.html',
-  styleUrls: ['./search-input.component.scss']
+  styleUrls: ['./search-input.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchInputComponent {
 
@@ -45,11 +46,11 @@ export class SearchInputComponent {
   @ViewChild('searchInput')
   private searchInput: ElementRef;
 
+  @ViewChild(SearchSuggestionsComponent)
+  public searchSuggestions: SearchSuggestionsComponent;
+
   public suggesting: boolean;
   public text = '';
-
-  public moveSuggestionSelection$ = new Subject<number>();
-  public useSuggestionSelection$ = new Subject<string>();
 
   public onUseSuggestion(suggestion: QueryItem) {
     this.addQueryItem.emit(suggestion);
@@ -74,6 +75,10 @@ export class SearchInputComponent {
     this.suggesting = true;
   }
 
+  public onInput(event: Event) {
+    this.text = event.target['value'];
+  }
+
   public onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Backspace:
@@ -95,7 +100,7 @@ export class SearchInputComponent {
   public onUpAndDownArrowKeysDown(event: KeyboardEvent) {
     event.preventDefault();
     const direction = event.code === KeyCode.ArrowUp ? -1 : 1;
-    this.moveSuggestionSelection$.next(direction);
+    this.searchSuggestions.moveSelection(direction);
   }
 
   public onBackspaceKeyDown() {
@@ -111,7 +116,7 @@ export class SearchInputComponent {
 
   public onEnterKeyUp() {
     if (this.text) {
-      this.useSuggestionSelection$.next(this.text);
+      this.searchSuggestions.useSelection(this.text);
     } else {
       this.search.emit();
     }
