@@ -1,10 +1,11 @@
 @import '../../../styles/variables';
 
 :host {
-  position: absolute;
+  display: block;
+  transform: scale(1);
 
   & > div {
-    position: relative;
+    position: fixed;
   }
 }
 
