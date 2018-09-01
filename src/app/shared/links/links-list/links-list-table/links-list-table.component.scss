@@ -1,5 +1,7 @@
 @import "../../../../../styles/variables";
 
+$fixed-column-width: 5em;
+
 thead {
   color: $gray-500;
   font-style: italic;
@@ -18,11 +20,35 @@ th, td {
 
   &:hover {
     background-color: $gray-100;
+
+    .fixed-column {
+      opacity: 1 !important;
+    }
   }
 }
 
 .table-responsive {
   resize: vertical;
+  width: calc(100% - #{$fixed-column-width});
+  margin-right: $fixed-column-width;
+}
+
+.fixed-column {
+  padding: 0 1em;
+  position: absolute;
+  right: 0;
+  opacity: 0;
+  width: $fixed-column-width;
+  transition: opacity $animation-color-duration;
+
+  i {
+    font-size: 1em;
+    margin-right: 1em;
+
+    :last-child {
+      margin-right: 0;
+    }
+  }
 }
 
 .h-10em {

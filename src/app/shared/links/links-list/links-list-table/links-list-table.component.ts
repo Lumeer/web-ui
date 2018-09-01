@@ -31,6 +31,7 @@ import {Observable} from 'rxjs';
 import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
 import {getOtherLinkedDocumentId, LinkInstanceModel} from '../../../../core/store/link-instances/link-instance.model';
 import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
+import {LinkRowModel} from './link-row.model';
 
 const PAGE_SIZE = 100;
 
@@ -48,9 +49,11 @@ export class LinksListTableComponent implements OnChanges {
 
   @Output() public select = new EventEmitter<{ collection: CollectionModel, document: DocumentModel }>();
 
+  @Output() public unlink = new EventEmitter<string>();
+
   public collection$: Observable<CollectionModel>;
 
-  public documents$: Observable<DocumentModel[]>;
+  public linkRows$: Observable<LinkRowModel[]>;
 
   public page = 0;
 
@@ -71,31 +74,53 @@ export class LinksListTableComponent implements OnChanges {
           return collectionsMap[collectionId];
         })
       );
-      this.documents$ = this.store.select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id])).pipe(
-        map(linkInstances => this.convertLinkInstancesToDocumentIds(linkInstances, this.document.id)),
-        mergeMap(ids => this.store.select(selectDocumentsByIds(ids)))
+      this.linkRows$ = this.store.select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id])).pipe(
+        mergeMap(linkInstances => this.fetchDocumentsForLinkInstances(linkInstances).pipe(
+          map(documents => this.joinLinkInstancesWithDocuments(linkInstances, documents))
+        ))
       );
     }
   }
 
+  private fetchDocumentsForLinkInstances(linkInstances: LinkInstanceModel[]): Observable<DocumentModel[]> {
+    const documentsIds = this.convertLinkInstancesToDocumentIds(linkInstances, this.document.id);
+    return this.store.select(selectDocumentsByIds(documentsIds));
+  }
+
   private convertLinkInstancesToDocumentIds(linkInstances: LinkInstanceModel[], documentId: string): string[] {
     return linkInstances.reduce((acc, linkInstance) => {
-      const otherId = getOtherLinkedDocumentId(linkInstance, documentId);
-      acc.push(otherId);
+      const otherDocumentId = getOtherLinkedDocumentId(linkInstance, documentId);
+      acc.push(otherDocumentId);
       return acc;
     }, []);
   }
 
-  public documentSelected(collection: CollectionModel, document: DocumentModel) {
+  private joinLinkInstancesWithDocuments(linkInstances: LinkInstanceModel[], documents: DocumentModel[]): LinkRowModel[] {
+    return linkInstances.reduce((rows, linkInstance) => {
+      const otherDocumentId = getOtherLinkedDocumentId(linkInstance, this.document.id);
+      const document = documents.find(doc => doc.id === otherDocumentId);
+      if (document) {
+        rows.push({linkInstance, document});
+      }
+      return rows;
+    }, []);
+  }
+
+  public documentSelected(collection: CollectionModel, linkRow: LinkRowModel) {
+    const document = linkRow.document;
     this.select.emit({collection, document});
+  }
+
+  public unlinkDocument(linkRow: LinkRowModel) {
+    this.unlink.emit(linkRow.linkInstance.id);
   }
 
   public trackByAttribute(index: number, attribute: AttributeModel): string {
     return attribute.correlationId || attribute.id;
   }
 
-  public trackByDocument(index: number, document: DocumentModel): string {
-    return document.correlationId || document.id;
+  public trackByDocument(index: number, linkRow: LinkRowModel): string {
+    return linkRow.document.correlationId || linkRow.document.id;
   }
 
 }
