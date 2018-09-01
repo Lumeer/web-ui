@@ -120,7 +120,8 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
 
     this.dataSubscription.unsubscribe();
     this.dataSubscription = this.documents$.pipe(
-      filter(documents => !!documents.length),
+      filter(documents => this.shouldChangeSelectedDocument(documents)),
+      take(1),
       withLatestFrom(this.store.select(selectViewCursor)))
       .subscribe(([documents, cursor]) => {
         let document: DocumentModel;
@@ -135,7 +136,11 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
       });
   }
 
-  private updateNavigation(query: QueryModel): void {
+  private shouldChangeSelectedDocument(documents: DocumentModel[]): boolean{
+    return documents.length > 0 && (!this.selectedDocument || !documents.find(doc => doc.id === this.selectedDocument.id));
+  }
+
+  private updateNavigation(query: QueryModel) {
     this.query = query;
     if (this.selectedCollection) {
       this.getData(this.selectedCollection);
@@ -151,7 +156,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
 
     // initialize when we do not select anything
     this.allSubscriptions.add(this.collections$.pipe(
-      filter(collections => collections.length > 0 && (!this.selectedCollection || !collections.find(coll => coll.id === this.selectedCollection.id))),
+      filter(collections => this.shouldChangeSelectedCollection(collections)),
       take(1),
       withLatestFrom(this.store.select(selectViewCursor))
     ).subscribe(([collections, cursor]) => {
@@ -166,6 +171,10 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
       this.setActiveCollection(collection);
     }));
 
+  }
+
+  private shouldChangeSelectedCollection(collections: CollectionModel[]): boolean {
+    return collections.length > 0 && (!this.selectedCollection || !collections.find(coll => coll.id === this.selectedCollection.id));
   }
 
   private validWorkspace(workspace: Workspace): boolean {

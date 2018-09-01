@@ -25,11 +25,11 @@
           </td>
         </tr>
         <ng-container
-          *ngFor="let r of (documents | slice : (page * pageSize) : ((page + 1) * pageSize)); trackBy:trackByDocument; let idx = index;">
+          *ngFor="let document of (documents | slice : (page * pageSize) : ((page + 1) * pageSize)); trackBy:trackByDocument">
           <tr class="clickable-row"
-              [class.active]="documents[idx + (page * pageSize)].id === selectedDocumentId"
-              (click)="activate(idx + (page * pageSize))">
-            <td *ngFor="let attr of collection.attributes" title="{{r.data[attr.id]}}">{{r.data[attr.id]}}</td>
+              [class.active]="document.id === selectedDocumentId"
+              (click)="activate(document)">
+            <td *ngFor="let attr of collection.attributes" title="{{document.data[attr.id]}}">{{document.data[attr.id]}}</td>
           </tr>
         </ng-container>
       </tbody>
