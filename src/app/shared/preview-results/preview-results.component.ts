@@ -99,7 +99,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
     if (isCollectionIncluded) {
       this.getData(this.selectedCollection);
     } else {
-      this.updateDefaultCollectionSubscription()
+      this.updateDefaultCollectionSubscription();
     }
 
   }
