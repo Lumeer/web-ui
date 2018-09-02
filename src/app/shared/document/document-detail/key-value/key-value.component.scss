@@ -1,7 +1,9 @@
+@import "../../../../../styles/variables";
+
 :host {
   .button-remove {
     opacity: 0;
-    transition: opacity 0.25s ease;
+    transition: opacity $animation-color-duration;
   }
 
   &:hover, &:focus, &:active {

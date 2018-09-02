@@ -28,6 +28,7 @@ import {map, tap} from 'rxjs/operators';
 import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 
 @Component({
   selector: 'links-list',
@@ -56,6 +57,10 @@ export class LinksListComponent implements OnChanges {
     this.activeLinkType = linkType;
 
     this.readDocuments(linkType);
+  }
+
+  public unLinkDocument(linkInstanceId: string) {
+    this.store.dispatch(new LinkInstancesAction.Delete({linkInstanceId}));
   }
 
   private renewSubscriptions() {

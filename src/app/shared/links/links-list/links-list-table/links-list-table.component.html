@@ -1,15 +1,15 @@
-<ng-container *ngIf="{collection: collection$ | async, documents: documents$ | async} as data">
-  <ng-container *ngIf="data.collection && data.documents">
+<ng-container *ngIf="{collection: collection$ | async, linkRows: linkRows$ | async} as data">
+  <ng-container *ngIf="data.collection && data.linkRows">
     <div class="row">
       <div class="col text-right">
-        <strong>{{data.documents.length > 0 ? page * pageSize + 1 : 0}}&mdash;{{page | pageEndIndex:pageSize:data.documents.length}}</strong>
-        &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{data.documents.length}}
-        <a *ngIf="page - 1 | canActivatePage:pageSize:data.documents.length" (click)="page = page - 1"><i
+        <strong>{{data.linkRows.length > 0 ? page * pageSize + 1 : 0}}&mdash;{{page | pageEndIndex:pageSize:data.linkRows.length}}</strong>
+        &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{data.linkRows.length}}
+        <a *ngIf="page - 1 | canActivatePage:pageSize:data.linkRows.length" (click)="page = page - 1"><i
           class="clickable fas fa-angle-double-left"></i></a>
-        <i *ngIf="!(page - 1 | canActivatePage:pageSize:data.documents.length)" class="fas fa-angle-double-left"></i>
-        <a *ngIf="page + 1 | canActivatePage:pageSize:data.documents.length" (click)="page = page + 1"><i
+        <i *ngIf="!(page - 1 | canActivatePage:pageSize:data.linkRows.length)" class="fas fa-angle-double-left"></i>
+        <a *ngIf="page + 1 | canActivatePage:pageSize:data.linkRows.length" (click)="page = page + 1"><i
           class="clickable fas fa-angle-double-right"></i></a>
-        <i *ngIf="!(page + 1 | canActivatePage:pageSize:data.documents.length)" class="fas fa-angle-double-right"></i>
+        <i *ngIf="!(page + 1 | canActivatePage:pageSize:data.linkRows.length)" class="fas fa-angle-double-right"></i>
       </div>
     </div>
     <div class="table-responsive h-10em">
@@ -17,18 +17,25 @@
         <thead>
           <tr>
             <th *ngFor="let attr of data.collection.attributes; trackBy:trackByAttribute" scope="col" title="{{attr.name}}">{{attr.name}}</th>
+            <th class="fixed-column border-0"></th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngIf="data.documents.length === 0">
+          <tr *ngIf="data.linkRows.length === 0">
             <td [attr.colspan]="data.collection.attributes.length" class="text-center" i18n="@@shared.preview.results.noResults">
               No records found.
             </td>
           </tr>
           <ng-container
-            *ngFor="let r of (data.documents | slice : (page * pageSize) : ((page + 1) * pageSize)); trackBy:trackByDocument; let idx = index;">
-            <tr class="clickable-row" (dblclick)="documentSelected(data.collection, data.documents[idx + (page * pageSize)])">
-              <td *ngFor="let attr of data.collection.attributes" title="{{r.data[attr.id]}}">{{r.data[attr.id]}}</td>
+            *ngFor="let linkRow of (data.linkRows | slice : (page * pageSize) : ((page + 1) * pageSize)); trackBy:trackByDocument">
+            <tr class="clickable-row" (dblclick)="documentSelected(data.collection, linkRow)">
+              <td *ngFor="let attr of data.collection.attributes" title="{{linkRow.document.data[attr.id]}}">{{linkRow.document.data[attr.id]}}</td>
+              <td class="fixed-column border-0">
+                <i class="fas fa-eye clickable" (click)="documentSelected(data.collection, linkRow)"
+                   title.i18n="@@select" title="Select" aria-hidden="true"></i>
+                <i class="fas fa-unlink clickable" (click)="unlinkDocument(linkRow)"
+                   title.i18n="@@unlink" title="Unlink" aria-hidden="true"></i>
+              </td>
             </tr>
           </ng-container>
         </tbody>

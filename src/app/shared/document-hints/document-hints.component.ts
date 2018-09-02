@@ -98,7 +98,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
       mergeMap(documents => this.filter$.pipe(
         map(typedValue => documents.filter(document => {
           const value = document.data[this.attributeId];
-          return value.toLowerCase().includes(typedValue.toLowerCase());
+          return value && value.toString().toLowerCase().includes(typedValue.toLowerCase());
         }).slice(0, this.limit)),
         tap(hints => this.hintsCount = hints.length)
       ))
