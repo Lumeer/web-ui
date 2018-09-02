@@ -23,6 +23,8 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {AppState} from '../../../core/store/app.state';
 import {Store} from '@ngrx/store';
+import {QueryAction} from '../../../core/model/query-action';
+import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 
 @Component({
   selector: 'detail-perspective',
@@ -54,6 +56,7 @@ export class DetailPerspectiveComponent {
 
   public selectCollectionAndDocument(data: { collection: CollectionModel, document: DocumentModel }) {
     const {collection, document} = data;
+    this.setQueryWithCollection(collection);
     this.select(collection, document);
   }
 
@@ -69,5 +72,10 @@ export class DetailPerspectiveComponent {
       const query = {documentIds: [document.id]};
       this.store.dispatch(new LinkInstancesAction.Get({query}));
     }
+  }
+
+  private setQueryWithCollection(collection: CollectionModel) {
+    const query = {collectionIds: [collection.id]};
+    this.store.dispatch(new NavigationAction.SetQuery({query}));
   }
 }

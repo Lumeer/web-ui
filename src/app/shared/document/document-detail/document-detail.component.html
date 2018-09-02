@@ -1,6 +1,6 @@
 <div class="row mt-2 mb-2">
-  <div class="col-8 d-flex align-bottom align-self-end text-truncate">
-    <div class="align-text-bottom">
+  <div class="col-8 d-flex align-bottom align-self-end">
+    <div class="align-text-bottom w-100">
       <h4>
         <span [style.color]="collection?.color"><i class="{{collection?.icon}} mr-2"></i>{{collection?.name}}</span>&nbsp;
         <strong *ngIf="summary$ | async">{{summary$ | async}}</strong>

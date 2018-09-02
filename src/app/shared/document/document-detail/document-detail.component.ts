@@ -61,9 +61,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   public readonly PERSPECTIVE_TABLE = Perspective.Table;
 
-  private last: { collection: CollectionModel, document: DocumentModel };
-
-  private subscriptions = new Subscription();
+  private usersSubscription = new Subscription();
 
   constructor(private i18n: I18n,
               private store: Store<AppState>,
@@ -84,27 +82,23 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.renewSubscriptions();
+    this.fetchUsers();
+  }
+
+  private fetchUsers() {
+    this.usersSubscription = this.store.select(selectOrganizationByWorkspace)
+      .pipe(filter(org => !isNullOrUndefined(org)), take(1))
+      .subscribe(org => this.store.dispatch(new UsersAction.Get({organizationId: org.id})));
   }
 
   private renewSubscriptions(): void {
-    this.subscriptions.unsubscribe();
-    if (this.last) {
-      this.documentUiService.destroy(this.last.collection, this.last.document);
-    }
-
     if (this.collection && this.document) {
-      this.last = {collection: this.collection, document: this.document};
       this.documentUiService.init(this.collection, this.document);
 
       this.createdBy$ = this.store.select(selectUserById(this.document.createdBy))
         .pipe(filter(user => !isNullOrUndefined(user)), map(user => user.name || user.email || 'Guest'));
       this.updatedBy$ = this.store.select(selectUserById(this.document.updatedBy))
         .pipe(filter(user => !isNullOrUndefined(user)), map(user => user.name || user.email || 'Guest'));
-
-      this.subscriptions.add(this.store.select(selectOrganizationByWorkspace)
-        .pipe(filter(org => !isNullOrUndefined(org)), take(1))
-        .subscribe(org => this.store.dispatch(new UsersAction.Get({organizationId: org.id}))));
 
       this.summary$ = this.getSummary$();
       this.favorite$ = this.getFavorite$();
@@ -113,7 +107,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    this.usersSubscription.unsubscribe();
     this.documentUiService.destroy(this.collection, this.document);
   }
 

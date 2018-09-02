@@ -89,7 +89,7 @@ export class DocumentUi {
   }
 
   private prepareUpdatedDocument(): DocumentModel {
-    const updatedDocument = { ...this.document };
+    const updatedDocument = {...this.document};
 
     let dirty = this.patchNewAttributes(updatedDocument);
     dirty = dirty || this.patchExistingAttributes(updatedDocument);
@@ -273,14 +273,12 @@ export class DocumentUi {
           this.addedRows.splice(rowByName, 1);
         }
 
-        if (attr.usageCount > 0 && this.document.data[attr.id] !== undefined) {
-          this.rows.push({
-            id: attr.id,
-            correlationId: attr.correlationId,
-            name: attr.name,
-            value: this.document.data[attr.id]
-          });
-        }
+        this.rows.push({
+          id: attr.id,
+          correlationId: attr.correlationId,
+          name: attr.name,
+          value: this.document.data[attr.id] || ''
+        });
       });
 
       this.rowsChanged();
