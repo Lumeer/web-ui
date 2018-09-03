@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
@@ -45,7 +45,7 @@ declare let $: any;
   templateUrl: './table-perspective.component.html',
   styleUrls: ['./table-perspective.component.scss']
 })
-export class TablePerspectiveComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class TablePerspectiveComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input()
   public linkInstance: LinkInstanceModel;
@@ -78,7 +78,7 @@ export class TablePerspectiveComponent implements OnInit, AfterViewChecked, OnDe
     this.subscribeToSelectedCursor();
   }
 
-  public ngAfterViewChecked() {
+  public ngAfterViewInit() {
     if (this.tableId === DEFAULT_TABLE_ID) {
       this.calculateHeight();
     }

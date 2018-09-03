@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableModel, TableRow} from '../../../../../../../core/store/tables/table.model';
 import {calculateRowNumber, countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
@@ -28,7 +28,7 @@ import {calculateRowNumber, countLinkedRows, getTableElement} from '../../../../
   styleUrls: ['./table-row-numbers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableRowNumbersComponent implements OnChanges, AfterViewChecked {
+export class TableRowNumbersComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public table: TableModel;
@@ -51,7 +51,7 @@ export class TableRowNumbersComponent implements OnChanges, AfterViewChecked {
     }
   }
 
-  public ngAfterViewChecked() {
+  public ngAfterViewInit() {
     const widths = this.rowNumberElements.map(element => element.nativeElement.clientWidth);
     const width = Math.max(...widths);
 

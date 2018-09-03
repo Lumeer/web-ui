@@ -57,6 +57,7 @@ import {ResizeValidatePipe} from './resize-validate.pipe';
 import { DocumentHintColumnsPipe } from './document-hint-columns.pipe';
 import { PreviousLinkedRowPipe } from './previous-linked-row.pipe';
 import { LinkedDocumentIdsPipe } from './linked-document-ids.pipe';
+import { RowPositionTopPipe } from './row-position-top.pipe';
 
 @NgModule({
   imports: [
@@ -101,6 +102,7 @@ import { LinkedDocumentIdsPipe } from './linked-document-ids.pipe';
     DocumentHintColumnsPipe,
     PreviousLinkedRowPipe,
     LinkedDocumentIdsPipe,
+    RowPositionTopPipe,
   ], exports: [
     DataPipe,
     EntityCreatedPipe,
@@ -140,6 +142,7 @@ import { LinkedDocumentIdsPipe } from './linked-document-ids.pipe';
     DocumentHintColumnsPipe,
     PreviousLinkedRowPipe,
     LinkedDocumentIdsPipe,
+    RowPositionTopPipe,
   ],
   providers: [
     AttributeNameChangedPipe,

@@ -8,7 +8,6 @@
                        [linkInstance]="data.linkInstances ? data.linkInstances[0] : null"
                        [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
                        [table]="table"
-                       [class.transparent-border-top]="cursor | isFirstRow"
                        (mousedown)="onMouseDown($event, columnIndex)">
       </table-data-cell>
 
@@ -19,7 +18,6 @@
                               [linkInstances]="data.linkInstances"
                               [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
                               [style.width]="column | columnWidth | pixel"
-                              [class.transparent-border-top]="cursor | isFirstRow"
                               (mousedown)="onMouseDown($event, columnIndex)"
                               class="d-block table-border-right table-border-bottom">
         </table-collapsed-cell>

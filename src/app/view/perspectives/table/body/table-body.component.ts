@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
@@ -32,7 +32,7 @@ import {TableRowsComponent} from './rows/table-rows.component';
   styleUrls: ['./table-body.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableBodyComponent implements AfterViewChecked {
+export class TableBodyComponent implements AfterViewInit {
 
   @Input()
   public table: TableModel;
@@ -47,7 +47,7 @@ export class TableBodyComponent implements AfterViewChecked {
                      private store: Store<AppState>) {
   }
 
-  public ngAfterViewChecked() {
+  public ngAfterViewInit() {
     this.setScrollbarWidth();
   }
 

@@ -3,6 +3,8 @@
 :host {
   display: block;
   transform: scale(1);
+  position: relative;
+  z-index: 10;
 
   & > div {
     position: fixed;
