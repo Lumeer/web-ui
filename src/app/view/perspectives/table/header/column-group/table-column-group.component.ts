@@ -141,6 +141,7 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
     }
     const cursor = {...this.cursor, columnPath: this.cursor.columnPath.concat(fromIndex)};
     this.store$.dispatch(new TablesAction.MoveColumn({cursor, toIndex}));
+    this.store$.dispatch(new TablesAction.SaveConfig({cursor}));
   }
 
   public trackByCollectionAndAttribute(index: number, column: TableColumn): string {

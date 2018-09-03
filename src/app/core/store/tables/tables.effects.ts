@@ -113,7 +113,6 @@ export class TablesEffects {
       const actions: Action[] = [new TablesAction.RemoveTable({tableId: table.id})];
 
       if (table.id === DEFAULT_TABLE_ID) {
-        actions.push(new ViewsAction.ChangeTableConfig({config: convertTableToConfig(table)}));
         actions.push(new ViewsAction.SetCursor({cursor: viewCursor}));
       }
 
@@ -152,6 +151,7 @@ export class TablesEffects {
           tableId: table.id,
           parts: [linkTypePart, collectionPart]
         }),
+        // TODO get data only in guards
         new DocumentsAction.Get({
           query: {
             collectionIds: [collection.id]
@@ -160,6 +160,12 @@ export class TablesEffects {
         new LinkInstancesAction.Get({
           query: {
             linkTypeIds: [linkType.id]
+          }
+        }),
+        new TablesAction.SaveConfig({
+          cursor: {
+            tableId: action.payload.tableId,
+            partIndex: lastIndex + 2
           }
         })
       ];
@@ -272,8 +278,8 @@ export class TablesEffects {
     flatMap(({action, part, collection}) => {
       const childNames = ['A', 'B'];
 
-      const path = action.payload.cursor.columnPath;
-      const column = findTableColumn(part.columns, path) as TableCompoundColumn;
+      const {cursor} = action.payload;
+      const column = findTableColumn(part.columns, cursor.columnPath) as TableCompoundColumn;
 
       const oldAttribute = collection.attributes.find(attribute => attribute.id === column.parent.attributeId);
 
@@ -282,8 +288,11 @@ export class TablesEffects {
       const secondChildAttributeAction = createSecondChildAttributeAction(collection, oldAttribute, childNames[1], parentAttributeAction);
       const firstChildAttributeAction = createFirstChildAttributeAction(collection, oldAttribute, childNames[0], secondChildAttributeAction);
 
-      const deselectAction = new TablesAction.SetCursor({cursor: null});
-      return [firstChildAttributeAction, deselectAction];
+      return [
+        firstChildAttributeAction,
+        new TablesAction.SetCursor({cursor: null}),
+        new TablesAction.SaveConfig({cursor})
+      ];
     })
   );
 
@@ -291,11 +300,12 @@ export class TablesEffects {
   public hideColumn$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.HideColumn>(TablesActionType.HIDE_COLUMN),
     mergeMap(action => this.getLatestTable(action)),
-    map(({action, table}) => {
-      const part: TablePart = table.parts[action.payload.cursor.partIndex];
-      const {parentPath, columnIndex} = splitColumnPath(action.payload.cursor.columnPath);
+    mergeMap(({action, table}) => {
+      const {cursor} = action.payload;
+      const part: TablePart = table.parts[cursor.partIndex];
+      const {parentPath, columnIndex} = splitColumnPath(cursor.columnPath);
 
-      const column = findTableColumn(part.columns, action.payload.cursor.columnPath) as TableCompoundColumn;
+      const column = findTableColumn(part.columns, cursor.columnPath) as TableCompoundColumn;
 
       const pathBefore = parentPath.concat(columnIndex - 1);
       const columnBefore = columnIndex > 0 ? findTableColumn(part.columns, pathBefore) : null;
@@ -304,33 +314,39 @@ export class TablesEffects {
       const columnAfter = findTableColumn(part.columns, parentPath.concat(columnIndex + 1));
       const hiddenAfter: boolean = columnAfter && columnAfter.type === TableColumnType.HIDDEN;
 
+      const actions: Action[] = [];
+
       if (hiddenBefore && hiddenAfter) {
         const mergedColumn = mergeHiddenColumns(columnBefore as TableHiddenColumn, columnAfter as TableHiddenColumn);
-        return new TablesAction.ReplaceColumns({
-          cursor: {...action.payload.cursor, columnPath: pathBefore},
+        actions.push(new TablesAction.ReplaceColumns({
+          cursor: {...cursor, columnPath: pathBefore},
           deleteCount: 3,
           columns: [extendHiddenColumn(mergedColumn, column.parent.attributeId)]
-        });
+        }));
       }
       if (hiddenBefore && !hiddenAfter) {
-        return new TablesAction.ReplaceColumns({
-          cursor: {...action.payload.cursor, columnPath: pathBefore},
+        actions.push(new TablesAction.ReplaceColumns({
+          cursor: {...cursor, columnPath: pathBefore},
           deleteCount: 2,
           columns: [extendHiddenColumn(columnBefore as TableHiddenColumn, column.parent.attributeId)]
-        });
+        }));
       }
       if (!hiddenBefore && hiddenAfter) {
-        return new TablesAction.ReplaceColumns({
-          cursor: action.payload.cursor,
+        actions.push(new TablesAction.ReplaceColumns({
+          cursor,
           deleteCount: 2,
           columns: [extendHiddenColumn(columnAfter as TableHiddenColumn, column.parent.attributeId)]
-        });
+        }));
       }
-      return new TablesAction.ReplaceColumns({
-        cursor: action.payload.cursor,
-        deleteCount: 1,
-        columns: [new TableHiddenColumn([column.parent.attributeId])]
-      });
+      if (!hiddenBefore && !hiddenAfter) {
+        actions.push(new TablesAction.ReplaceColumns({
+          cursor,
+          deleteCount: 1,
+          columns: [new TableHiddenColumn([column.parent.attributeId])]
+        }));
+      }
+
+      return actions.concat(new TablesAction.SaveConfig({cursor}));
     })
   );
 
@@ -356,22 +372,27 @@ export class TablesEffects {
         );
       }
     }),
-    map(({action, part, attributes}) => {
-      const hiddenColumn = findTableColumn(part.columns, action.payload.cursor.columnPath) as TableHiddenColumn;
+    mergeMap(({action, part, attributes}) => {
+      const {cursor, attributeIds} = action.payload;
 
-      const columns = createTableColumnsBySiblingAttributeIds(attributes, action.payload.attributeIds);
+      const hiddenColumn = findTableColumn(part.columns, cursor.columnPath) as TableHiddenColumn;
 
-      const attributeIds = getArrayDifference(hiddenColumn.attributeIds, action.payload.attributeIds);
-      if (attributeIds.length > 0) {
-        const updatedHiddenColumn: TableHiddenColumn = {...hiddenColumn, attributeIds};
+      const columns = createTableColumnsBySiblingAttributeIds(attributes, attributeIds);
+
+      const hiddenAttributeIds = getArrayDifference(hiddenColumn.attributeIds, attributeIds);
+      if (hiddenAttributeIds.length > 0) {
+        const updatedHiddenColumn: TableHiddenColumn = {...hiddenColumn, attributeIds: hiddenAttributeIds};
         columns.push(updatedHiddenColumn);
       }
 
-      return new TablesAction.ReplaceColumns({
-        cursor: action.payload.cursor,
-        deleteCount: 1,
-        columns
-      });
+      return [
+        new TablesAction.ReplaceColumns({
+          cursor: action.payload.cursor,
+          deleteCount: 1,
+          columns
+        }),
+        new TablesAction.SaveConfig({cursor})
+      ];
     })
   );
 
@@ -383,13 +404,15 @@ export class TablesEffects {
       map(table => ({action, table}))
     )),
     flatMap(({action, table}) => {
-      const part: TablePart = table.parts[action.payload.cursor.partIndex];
-      const column = findTableColumn(part.columns, action.payload.cursor.columnPath);
+      const {cursor} = action.payload;
+      const part: TablePart = table.parts[cursor.partIndex];
+      const column = findTableColumn(part.columns, cursor.columnPath);
       const attributeId = getAttributeIdFromColumn(column);
 
       return [
-        new TablesAction.ReplaceColumns({cursor: action.payload.cursor, deleteCount: 1}),
-        new CollectionsAction.RemoveAttribute({collectionId: part.collectionId, attributeId})
+        new TablesAction.ReplaceColumns({cursor, deleteCount: 1}),
+        new CollectionsAction.RemoveAttribute({collectionId: part.collectionId, attributeId}),
+        new TablesAction.SaveConfig({cursor})
       ];
     })
   );
@@ -397,20 +420,22 @@ export class TablesEffects {
   @Effect()
   public resizeColumn$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.ResizeColumn>(TablesActionType.RESIZE_COLUMN),
-    mergeMap(action => this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
-      first(),
-      map(table => {
-        const part: TablePart = table.parts[action.payload.cursor.partIndex];
-        const column = findTableColumn(part.columns, action.payload.cursor.columnPath) as TableCompoundColumn;
-        const resizedColumn = resizeLastColumnChild(column, action.payload.delta);
+    mergeMap(action => this.getLatestTable(action)),
+    mergeMap(({action, table}) => {
+      const {cursor} = action.payload;
+      const part: TablePart = table.parts[cursor.partIndex];
+      const column = findTableColumn(part.columns, cursor.columnPath) as TableCompoundColumn;
+      const resizedColumn = resizeLastColumnChild(column, action.payload.delta);
 
-        return new TablesAction.ReplaceColumns({
-          cursor: action.payload.cursor,
+      return [
+        new TablesAction.ReplaceColumns({
+          cursor,
           deleteCount: 1,
           columns: [resizedColumn]
-        });
-      })
-    ))
+        }),
+        new TablesAction.SaveConfig({cursor})
+      ];
+    })
   );
 
   @Effect()
@@ -434,7 +459,7 @@ export class TablesEffects {
         actions.push(new TablesAction.AddColumn({cursor: {...cursor, columnPath: [cursor.columnPath[0] + 1]}}));
       }
 
-      return actions;
+      return actions.concat(new TablesAction.SaveConfig({cursor}));
     })
   );
 
@@ -451,7 +476,10 @@ export class TablesEffects {
       }
 
       const updatedRow: TableRow = {...row, linkedRows: [], expanded: false};
-      return [new TablesAction.ReplaceRows({cursor, rows: [updatedRow], deleteCount: 1})];
+      return [
+        new TablesAction.ReplaceRows({cursor, rows: [updatedRow], deleteCount: 1}),
+        new TablesAction.SaveConfig({cursor})
+      ];
     })
   );
 
@@ -469,7 +497,10 @@ export class TablesEffects {
 
       const updatedRow: TableRow = {...row, linkedRows: [], expanded: true};
 
-      return [new TablesAction.ReplaceRows({cursor, rows: [updatedRow], deleteCount: 1})];
+      return [
+        new TablesAction.ReplaceRows({cursor, rows: [updatedRow], deleteCount: 1}),
+        new TablesAction.SaveConfig({cursor})
+      ];
     })
   );
 
@@ -489,19 +520,13 @@ export class TablesEffects {
     })
   );
 
-  // @Effect()
-  // public removeSelectedCell$: Observable<Action> = this.actions$.pipe(
-  //   ofType<TablesAction.RemoveSelectedCell>(TablesActionType.REMOVE_SELECTED_CELL),
-  //   withLatestFrom(
-  //     this.store$.select(selectTableBySelectedCursor),
-  //     this.store$.select(selectTableCursor)
-  //   ),
-  //   filter(([,table, cursor]) => !!table && !!cursor && !!cursor.columnIndex),
-  //   map(([,table, cursor]) => {
-  //     const part = getTablePart(table, cursor);
-  //
-  //   })
-  // );
+  @Effect()
+  public saveConfig$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.SaveConfig>(TablesActionType.SAVE_CONFIG),
+    filter(action => action.payload.cursor.tableId === DEFAULT_TABLE_ID),
+    mergeMap(action => this.getLatestTable(action)),
+    map(({table}) => new ViewsAction.ChangeTableConfig({config: convertTableToConfig(table)}))
+  );
 
   public constructor(private actions$: Actions,
                      private store$: Store<AppState>) {

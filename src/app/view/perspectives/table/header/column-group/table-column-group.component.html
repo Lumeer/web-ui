@@ -15,7 +15,8 @@
              [style.width.px]="column | columnWidth"
              [validateResize]="column | resizeValidate"
              (resizeStart)="onResizeStart(columnIndex, $event)"
-             (resizeEnd)="onResizeEnd(columnCursor, $event)">
+             (resizeEnd)="onResizeEnd(columnCursor, $event)"
+             class="resizable-column">
           <div class="d-flex flex-column">
             <table-single-column [table]="table"
                                  [cursor]="columnCursor"
