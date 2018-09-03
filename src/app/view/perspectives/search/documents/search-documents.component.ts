@@ -76,7 +76,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   private page = 0;
   private workspace: Workspace;
   private subscriptions = new Subscription();
-  private documentsSubscription: Subscription;
+  private documentsSubscription = new Subscription();
 
   constructor(private store: Store<AppState>,
               private router: Router,
@@ -90,9 +90,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.documentsSubscription) {
-      this.documentsSubscription.unsubscribe();
-    }
+    this.documentsSubscription.unsubscribe();
     this.subscriptions.unsubscribe();
   }
 
@@ -149,7 +147,8 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public createValuesHtml(document: DocumentModel): string {
-    return searchDocumentValuesHtml(document);
+    const collection = this.collectionsMap[document.collectionId];
+    return searchDocumentValuesHtml(document, collection);
   }
 
   public createEntriesHtml(document: DocumentModel): string {
@@ -219,9 +218,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private subscribeDocuments() {
-    if (this.documentsSubscription) {
-      this.documentsSubscription.unsubscribe();
-    }
+    this.documentsSubscription.unsubscribe();
     const pageSize = PAGE_SIZE * (this.page + 1);
     const query = {...this.query, page: 0, pageSize};
     this.documentsSubscription = this.store.select(selectDocumentsByCustomQuery(query, true)).pipe(
