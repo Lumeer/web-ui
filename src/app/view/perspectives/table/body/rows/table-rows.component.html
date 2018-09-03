@@ -1,5 +1,15 @@
-<table-row *ngFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex;"
-           [table]="table"
-           [cursor]="cursor | nextRowCursor:rowIndex"
-           [row]="row">
-</table-row>
+<ng-container *ngFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex;">
+  <table-row *ngIf="cursor | nextRowCursor:rowIndex as rowCursor"
+             [table]="table"
+             [cursor]="rowCursor"
+             [row]="row"
+             class="position-absolute"
+             [style.top.px]="table | rowPositionTop : rowIndex"
+             [style.contain]="'layout'">
+  </table-row>
+</ng-container>
+
+<div class="position-absolute"
+     [style.top.px]="table | rowPositionTop : table.rows.length">
+  &nbsp;
+</div>

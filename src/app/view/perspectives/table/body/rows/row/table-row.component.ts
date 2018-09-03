@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import {SimpleChange} from '@angular/core/src/change_detection/change_detection_util';
 import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {AppState} from '../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
@@ -34,15 +34,14 @@ import {TablesAction} from '../../../../../../core/store/tables/tables.action';
 @Component({
   selector: 'table-row',
   templateUrl: './table-row.component.html',
+  styleUrls: ['./table-row.component.scss'],
   host: {
     '[class.bg-light]': 'striped',
     '[class.bg-white]': '!striped',
-    '[class.d-flex]': 'true',
-    '[class.h-100]': 'true'
   },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableRowComponent implements OnChanges, OnDestroy {
+export class TableRowComponent implements AfterViewInit, OnChanges, OnDestroy {
 
   @Input()
   public table: TableModel;
@@ -57,9 +56,24 @@ export class TableRowComponent implements OnChanges, OnDestroy {
 
   public striped: boolean;
 
+  public visible$ = new BehaviorSubject(false);
+  private intersectionObserver = new IntersectionObserver(entries => this.detectVisibility(entries));
+
   private linkInstancesSubscription: Subscription;
 
-  public constructor(private store: Store<AppState>) {
+  public constructor(private element: ElementRef,
+                     private store: Store<AppState>) {
+  }
+
+  public ngAfterViewInit() {
+    this.intersectionObserver.observe(this.element.nativeElement);
+  }
+
+  private detectVisibility(entries: IntersectionObserverEntry[]) {
+    const visible = entries && entries[0] && entries[0].isIntersecting;
+    if (visible !== this.visible$.getValue()) {
+      this.visible$.next(visible);
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -146,6 +160,7 @@ export class TableRowComponent implements OnChanges, OnDestroy {
     if (this.linkInstancesSubscription) {
       this.linkInstancesSubscription.unsubscribe();
     }
+    this.intersectionObserver.disconnect();
   }
 
   public isFirstPart(): boolean {
