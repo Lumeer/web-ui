@@ -2,6 +2,11 @@
 
 $fixed-column-width: 5em;
 
+table {
+  table-layout: auto;
+  width: 100%;
+}
+
 thead {
   color: $gray-500;
   font-style: italic;
@@ -13,6 +18,25 @@ th, td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  height: 2em;
+  vertical-align: middle;
+  width: auto !important;
+}
+
+td:last-child, th:last-child {
+  position: sticky;
+  text-align: end;
+  right: 0;
+  z-index: 1;
+}
+
+th:last-child {
+  z-index: 2
+}
+
+.table-responsive {
+  width: 100%;
+  overflow: auto;
 }
 
 .clickable-row {
@@ -21,40 +45,21 @@ th, td {
   &:hover {
     background-color: $gray-100;
 
-    .fixed-column {
+    .fixed-column i {
       opacity: 1 !important;
     }
   }
 }
 
-.table-responsive {
-  resize: vertical;
-  width: calc(100% - #{$fixed-column-width});
-  margin-right: $fixed-column-width;
-}
-
 .fixed-column {
-  padding: 0 1em;
-  position: absolute;
-  right: 0;
-  opacity: 0;
-  width: $fixed-column-width;
-  transition: opacity $animation-color-duration;
+  background: white;
 
   i {
-    font-size: 1em;
-    margin-right: 1em;
-
-    :last-child {
-      margin-right: 0;
-    }
+    transition: opacity $animation-color-duration;
+    opacity: 0;
   }
 }
 
 .h-10em {
   height: 10em;
-}
-
-.always-white, .always-white:hover {
-  background-color: white !important;
 }

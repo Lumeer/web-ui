@@ -12,7 +12,7 @@
         <i *ngIf="!(page + 1 | canActivatePage:pageSize:data.linkRows.length)" class="fas fa-angle-double-right"></i>
       </div>
     </div>
-    <div class="table-responsive h-10em">
+    <div class="h-10em table-responsive">
       <table class="table table-sm" id="preview-results-table">
         <thead>
           <tr>
@@ -31,7 +31,7 @@
             <tr class="clickable-row" (dblclick)="documentSelected(data.collection, linkRow)">
               <td *ngFor="let attr of data.collection.attributes" title="{{linkRow.document.data[attr.id]}}">{{linkRow.document.data[attr.id]}}</td>
               <td class="fixed-column border-0">
-                <i class="fas fa-eye clickable" (click)="documentSelected(data.collection, linkRow)"
+                <i class="fas fa-eye clickable mr-1" (click)="documentSelected(data.collection, linkRow)"
                    title.i18n="@@select" title="Select" aria-hidden="true"></i>
                 <i class="fas fa-unlink clickable" (click)="unlinkDocument(linkRow)"
                    title.i18n="@@unlink" title="Unlink" aria-hidden="true"></i>

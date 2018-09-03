@@ -16,6 +16,8 @@ th, td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  height: 2em;
+  vertical-align: middle;
 }
 
 .clickable-row {
