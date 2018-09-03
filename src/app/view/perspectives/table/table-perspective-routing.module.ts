@@ -19,12 +19,14 @@
 
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
+import {SaveTableConfigGuard} from './save-table-config.guard';
 import {TablePerspectiveComponent} from './table-perspective.component';
 
 const tableRoutes: Routes = [
   {
     path: '',
-    component: TablePerspectiveComponent
+    component: TablePerspectiveComponent,
+    canDeactivate: [SaveTableConfigGuard],
   }
 ];
 

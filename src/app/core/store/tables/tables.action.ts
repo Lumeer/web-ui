@@ -76,6 +76,9 @@ export enum TablesActionType {
 
   ADD_FUNCTION = '[Tables] Add Function',
   REMOVE_FUNCTION = '[Tables] Remove Function',
+
+  SAVE_CONFIG = '[Tables] Save Config',
+
 }
 
 export namespace TablesAction {
@@ -276,6 +279,13 @@ export namespace TablesAction {
     }
   }
 
+  export class SaveConfig implements Action {
+    public readonly type = TablesActionType.SAVE_CONFIG;
+
+    public constructor(public payload: { cursor: TableCursor }) {
+    }
+  }
+
   export type All = CreateTable | AddTable | DestroyTable | RemoveTable |
     CreatePart | AddPart | SwitchParts | RemovePart |
     AddColumn | SplitColumn | ReplaceColumns | RemoveColumn |
@@ -284,5 +294,6 @@ export namespace TablesAction {
     ReplaceRows | AddRows | AddLinkedRows | RemoveRow |
     CollapseRows | ExpandRows |
     SetCursor | MoveCursor |
-    EditSelectedCell | RemoveSelectedCell | SetEditedAttribute;
+    EditSelectedCell | RemoveSelectedCell | SetEditedAttribute |
+    SaveConfig;
 }
