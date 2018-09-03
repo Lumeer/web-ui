@@ -1,0 +1,17 @@
+<tr *ngIf="linkRows.length === 0; else rows">
+  <td [attr.colspan]="collection.attributes.length" class="text-center" i18n="@@shared.preview.results.noResults">
+    No records found.
+  </td>
+</tr>
+<ng-container #rows
+  *ngFor="let linkRow of linkRows; trackBy:trackByDocument">
+  <tr class="clickable-row" (dblclick)="documentSelected(collection, linkRow)">
+    <td *ngFor="let attr of collection.attributes" title="{{linkRow.document.data[attr.id]}}">{{linkRow.document.data[attr.id]}}</td>
+    <td class="fixed-column border-0">
+      <i class="fas fa-eye clickable mr-1" (click)="documentSelected(collection, linkRow)"
+         title.i18n="@@select" title="Select" aria-hidden="true"></i>
+      <i class="fas fa-unlink clickable" (click)="unlinkDocument(linkRow)"
+         title.i18n="@@unlink" title="Unlink" aria-hidden="true"></i>
+    </td>
+  </tr>
+</ng-container>

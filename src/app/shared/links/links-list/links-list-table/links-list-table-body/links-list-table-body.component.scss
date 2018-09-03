@@ -1,0 +1,22 @@
+@import "../../../../../../styles/variables";
+
+.clickable-row {
+  cursor: pointer;
+
+  &:hover {
+    background-color: $gray-100;
+
+    .fixed-column i {
+      opacity: 1 !important;
+    }
+  }
+}
+
+.fixed-column {
+  background: white;
+
+  i {
+    transition: opacity $animation-color-duration;
+    opacity: 0;
+  }
+}

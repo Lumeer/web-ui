@@ -38,7 +38,7 @@ const PAGE_SIZE = 100;
 @Component({
   selector: 'links-list-table',
   templateUrl: './links-list-table.component.html',
-  styleUrls: ['./links-list-table.component.scss'],
+  styleUrls: ['./links-list-table.component.scss', './links-list-table.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinksListTableComponent implements OnChanges {
@@ -104,23 +104,6 @@ export class LinksListTableComponent implements OnChanges {
       }
       return rows;
     }, []);
-  }
-
-  public documentSelected(collection: CollectionModel, linkRow: LinkRowModel) {
-    const document = linkRow.document;
-    this.select.emit({collection, document});
-  }
-
-  public unlinkDocument(linkRow: LinkRowModel) {
-    this.unlink.emit(linkRow.linkInstance.id);
-  }
-
-  public trackByAttribute(index: number, attribute: AttributeModel): string {
-    return attribute.correlationId || attribute.id;
-  }
-
-  public trackByDocument(index: number, linkRow: LinkRowModel): string {
-    return linkRow.document.correlationId || linkRow.document.id;
   }
 
 }
