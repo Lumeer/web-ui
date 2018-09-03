@@ -273,12 +273,14 @@ export class DocumentUi {
           this.addedRows.splice(rowByName, 1);
         }
 
-        this.rows.push({
-          id: attr.id,
-          correlationId: attr.correlationId,
-          name: attr.name,
-          value: this.document.data[attr.id] || ''
-        });
+        if (attr.usageCount > 0 && this.document.data[attr.id] !== undefined) {
+          this.rows.push({
+            id: attr.id,
+            correlationId: attr.correlationId,
+            name: attr.name,
+            value: this.document.data[attr.id] || ''
+          });
+        }
       });
 
       this.rowsChanged();
