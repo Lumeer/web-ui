@@ -59,6 +59,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
 
   private allSubscriptions = new Subscription();
   private dataSubscription = new Subscription();
+  private collectionSubscription = new Subscription();
 
   private query: QueryModel;
   private lastCollectionId: string;
@@ -68,44 +69,72 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
 
   public ngOnInit() {
     this.subscribeAll();
+    this.updateDefaultCollectionSubscription();
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeAll();
-    this.updateCursor();
+  private subscribeAll() {
+    this.collections$ = this.store.select(selectCollectionsByQuery);
+
+    this.allSubscriptions.add(this.store.select(selectNavigation).pipe(
+      filter(navigation => this.validWorkspace(navigation.workspace)),
+      withLatestFrom(this.store.select(selectCollectionsByQuery))
+    ).subscribe(([navigation, collections]) => {
+      this.query = navigation.query;
+      this.checkCollectionsAfterQueryChange(collections);
+    }));
+
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (this.selectedCollection && this.selectedCollection.id !== this.lastCollectionId) {
-      this.lastCollectionId = this.selectedCollection.id;
-      this.getData(this.selectedCollection);
+  private validWorkspace(workspace: Workspace): boolean {
+    return !!(workspace && workspace.organizationCode && workspace.projectCode);
+  }
+
+  private checkCollectionsAfterQueryChange(newCollections: CollectionModel[]) {
+    if (!this.selectedCollection) {
+      return;
     }
+
+    const isCollectionIncluded = !!newCollections.find(coll => coll.id === this.selectedCollection.id);
+
+    if (isCollectionIncluded) {
+      this.getData(this.selectedCollection);
+    } else {
+      this.updateDefaultCollectionSubscription();
+    }
+
+  }
+
+  private updateDefaultCollectionSubscription() {
+    this.collectionSubscription.unsubscribe();
+    this.collectionSubscription = this.store.select(selectCollectionsByQuery).pipe(
+      filter(collections => this.shouldChangeSelectedCollection(collections)),
+      take(1),
+      withLatestFrom(this.store.select(selectViewCursor))
+    ).subscribe(([collections, cursor]) => {
+      let collection: CollectionModel;
+      if (cursor && cursor.collectionId) {
+        collection = collections.find(c => c.id === cursor.collectionId);
+      }
+      if (!collection) {
+        collection = collections[0];
+      }
+
+      this.setActiveCollection(collection);
+    });
+  }
+
+  private shouldChangeSelectedCollection(collections: CollectionModel[]): boolean {
+    return collections.length > 0 && (!this.selectedCollection || !collections.find(coll => coll.id === this.selectedCollection.id));
   }
 
   public setActiveCollection(collection: CollectionModel) {
     this.selectCollection.emit(collection);
   }
 
-  public setActiveDocument(document: DocumentModel) {
-    this.selectDocument.emit(document);
-  }
-
-  public onNewDocument() {
-    this.store.dispatch(new DocumentsAction.Create({
-      document: {
-        collectionId: this.selectedCollection.id,
-        correlationId: CorrelationIdGenerator.generate(),
-        data: generateDocumentData(this.selectedCollection, this.query.filters)
-      },
-      callback: id => {
-        this.store.dispatch(new ViewsAction.SetCursor({cursor: {collectionId: this.selectedCollection.id, documentId: id}}));
-      }
-    }));
-  }
-
-  private updateCursor() {
-    if (this.selectedCollection && this.selectedDocument) {
-      this.store.dispatch(new ViewsAction.SetCursor({cursor: {collectionId: this.selectedCollection.id, documentId: this.selectedDocument.id}}));
+  public ngOnChanges(changes: SimpleChanges) {
+    if (this.selectedCollection && this.selectedCollection.id !== this.lastCollectionId) {
+      this.lastCollectionId = this.selectedCollection.id;
+      this.getData(this.selectedCollection);
     }
   }
 
@@ -120,7 +149,8 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
 
     this.dataSubscription.unsubscribe();
     this.dataSubscription = this.documents$.pipe(
-      filter(documents => !!documents.length),
+      filter(documents => this.shouldChangeSelectedDocument(documents)),
+      take(1),
       withLatestFrom(this.store.select(selectViewCursor)))
       .subscribe(([documents, cursor]) => {
         let document: DocumentModel;
@@ -135,46 +165,42 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
       });
   }
 
-  private updateNavigation(query: QueryModel): void {
-    this.query = query;
-    if (this.selectedCollection) {
-      this.getData(this.selectedCollection);
-    }
+  private shouldChangeSelectedDocument(documents: DocumentModel[]): boolean {
+    return documents.length > 0 && (!this.selectedDocument || !documents.find(doc => doc.id === this.selectedDocument.id));
   }
 
-  private subscribeAll() {
-    this.collections$ = this.store.select(selectCollectionsByQuery);
-
-    this.allSubscriptions.add(this.store.select(selectNavigation).pipe(
-      filter(navigation => this.validWorkspace(navigation.workspace))
-    ).subscribe(navigation => this.updateNavigation(navigation.query)));
-
-    // initialize when we do not select anything
-    this.allSubscriptions.add(this.collections$.pipe(
-      filter(collections => collections.length > 0 && (!this.selectedCollection || !collections.find(coll => coll.id === this.selectedCollection.id))),
-      take(1),
-      withLatestFrom(this.store.select(selectViewCursor))
-    ).subscribe(([collections, cursor]) => {
-      let collection: CollectionModel;
-      if (cursor && cursor.collectionId) {
-        collection = collections.find(c => c.id === cursor.collectionId);
-      }
-      if (!collection) {
-        collection = collections[0];
-      }
-
-      this.setActiveCollection(collection);
-    }));
-
+  public setActiveDocument(document: DocumentModel) {
+    this.selectDocument.emit(document);
   }
 
-  private validWorkspace(workspace: Workspace): boolean {
-    return !!(workspace && workspace.organizationCode && workspace.projectCode);
+  public ngOnDestroy() {
+    this.unsubscribeAll();
+    this.updateCursor();
   }
 
   private unsubscribeAll() {
     this.allSubscriptions.unsubscribe();
     this.dataSubscription.unsubscribe();
+    this.collectionSubscription.unsubscribe();
+  }
+
+  private updateCursor() {
+    if (this.selectedCollection && this.selectedDocument) {
+      this.store.dispatch(new ViewsAction.SetCursor({cursor: {collectionId: this.selectedCollection.id, documentId: this.selectedDocument.id}}));
+    }
+  }
+
+  public onNewDocument() {
+    this.store.dispatch(new DocumentsAction.Create({
+      document: {
+        collectionId: this.selectedCollection.id,
+        correlationId: CorrelationIdGenerator.generate(),
+        data: generateDocumentData(this.selectedCollection, this.query.filters)
+      },
+      callback: id => {
+        this.store.dispatch(new ViewsAction.SetCursor({cursor: {collectionId: this.selectedCollection.id, documentId: id}}));
+      }
+    }));
   }
 
 }

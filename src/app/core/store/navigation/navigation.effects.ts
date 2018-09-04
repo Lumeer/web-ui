@@ -109,6 +109,12 @@ export class NavigationEffects {
     })
   );
 
+  @Effect()
+  public setQuery$: Observable<Action> = this.actions$.pipe(
+    ofType<NavigationAction.SetQuery>(NavigationActionType.SET_QUERY),
+    map(action => newQueryAction(action.payload.query))
+  );
+
   constructor(private actions$: Actions,
               private router: Router,
               private store$: Store<AppState>) {

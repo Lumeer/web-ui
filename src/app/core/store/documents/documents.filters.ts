@@ -51,7 +51,8 @@ function filterDocumentsByFulltext(documents: DocumentModel[], query: QueryModel
     return documents;
   }
 
-  return documents.filter(document => Object.values(document.data).some(value => (value as string || '').toLowerCase().includes(query.fulltext.toLowerCase())));
+  return documents.filter(document => Object.values(document.data).some(value => (value || '').toString().toLowerCase()
+    .includes(query.fulltext.toLowerCase())));
 }
 
 function filterDocumentsByFilters(documents: DocumentModel[], query: QueryModel): DocumentModel[] {

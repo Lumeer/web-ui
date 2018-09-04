@@ -19,6 +19,7 @@
 
 import {Action} from '@ngrx/store';
 import {SearchTab} from './search-tab';
+import {QueryModel} from './query.model';
 
 export enum NavigationActionType {
 
@@ -27,7 +28,9 @@ export enum NavigationActionType {
   ADD_COLLECTION_TO_QUERY = '[Navigation] Add Collection to Query',
   REMOVE_COLLECTION_TO_QUERY = '[Navigation] Remove Collection fromQuery',
 
-  NAVIGATE_TO_PREVIOUS_URL = '[Navigation] Navigate To Previous URL'
+  NAVIGATE_TO_PREVIOUS_URL = '[Navigation] Navigate To Previous URL',
+
+  SET_QUERY = '[Navigation] Set query'
 
 }
 
@@ -51,6 +54,14 @@ export namespace NavigationAction {
     public readonly type = NavigationActionType.REMOVE_COLLECTION_TO_QUERY;
 
     public constructor(public payload: { collectionId: string }) {
+    }
+  }
+
+  export class SetQuery implements Action {
+    public readonly type = NavigationActionType.SET_QUERY;
+
+    public constructor(public payload: { query: QueryModel }) {
+
     }
   }
 

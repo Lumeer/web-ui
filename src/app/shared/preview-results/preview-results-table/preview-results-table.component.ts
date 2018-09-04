@@ -49,19 +49,23 @@ export class PreviewResultsTableComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.documents && this.selectedDocumentId) {
-      const index = this.documents.findIndex(doc => doc.id === this.selectedDocumentId);
-      if (index !== -1) {
-        this.countPage(index);
-      }
+      this.countPageForDocument(this.selectedDocumentId);
     }
   }
 
-  public activate(index: number) {
-    this.selectDocument.emit(this.documents[index]);
-    this.countPage(index);
+  public activate(document: DocumentModel) {
+    this.selectDocument.emit(document);
+    this.countPageForDocument(document.id);
   }
 
-  private countPage(index: number): void {
+  private countPageForDocument(documentId: string) {
+    const index = this.documents.findIndex(doc => doc.id === documentId);
+    if (index !== -1) {
+      this.countPage(index);
+    }
+  }
+
+  private countPage(index: number) {
     this.page = Math.floor(index / PAGE_SIZE);
   }
 

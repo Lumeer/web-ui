@@ -11,6 +11,12 @@ tbody {
   font-size: small;
 }
 
+.sticky-header {
+  position: sticky;
+  top: -1px;
+  background: white;
+}
+
 th, td {
   max-width: 20rem;
   white-space: nowrap;
