@@ -5,10 +5,12 @@
 
   &:hover {
     background-color: $gray-100;
+  }
+}
 
-    .fixed-column i {
-      opacity: 1 !important;
-    }
+.table-row:hover {
+  .fixed-column i {
+    opacity: 1 !important;
   }
 }
 

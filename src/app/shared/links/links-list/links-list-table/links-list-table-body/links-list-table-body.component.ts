@@ -40,17 +40,27 @@ export class LinksListTableBodyComponent {
 
   @Output() public unlink = new EventEmitter<string>();
 
+  @Output() public removeLinkRow = new EventEmitter<string>();
+
   public documentSelected(collection: CollectionModel, linkRow: LinkRowModel) {
     const document = linkRow.document;
     this.select.emit({collection, document});
   }
 
-  public unlinkDocument(linkRow: LinkRowModel) {
-    this.unlink.emit(linkRow.linkInstance.id);
+  public removeEmptyLinkRow(linkRow: LinkRowModel) {
+    if (linkRow.correlationId) {
+      this.removeLinkRow.emit(linkRow.correlationId);
+    }
   }
 
-  public trackByDocument(index: number, linkRow: LinkRowModel): string {
-    return linkRow.document.correlationId || linkRow.document.id;
+  public unlinkDocument(linkRow: LinkRowModel) {
+    if (linkRow.linkInstance) {
+      this.unlink.emit(linkRow.linkInstance.id);
+    }
+  }
+
+  public trackByLinkRow(index: number, linkRow: LinkRowModel): string {
+    return linkRow.document && (linkRow.correlationId || linkRow.document.id) || linkRow.correlationId;
   }
 
 }

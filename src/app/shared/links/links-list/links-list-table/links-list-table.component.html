@@ -21,17 +21,25 @@
                [collection]="data.collection"
                [linkRows]="data.linkRows | slice : (page * pageSize) : ((page + 1) * pageSize)"
                (select)="select.emit($event)"
+               (removeLinkRow)="removeLinkRowByCorrelationId($event)"
                (unlink)="unlink.emit($event)">
         </tbody>
       </table>
     </div>
     <span class="small float-right text-primary" title.i18n="@@shared.preview-results.scrollable"
           title="You can scroll the table...">
-    <i class="fas fa-arrows-h"></i>
-  </span>
+      <i class="fas fa-arrows-h"></i>
+    </span>
     <span class="small float-right text-primary" i18n-title="@@shared.preview-results.scrollable"
           title="You can scroll the table...">
-    <i class="fas fa-arrows-v" style="top: -1em; left: 2em; position: relative;"></i>
-  </span>
+      <i class="fas fa-arrows-v" style="top: -1em; left: 2em; position: relative;"></i>
+    </span>
+    <button type="button"
+            class="my-2 btn btn-sm btn-primary"
+            [disabled]="!(data.collection | permissions:'write' | async)"
+            (click)="createNewLinkedDocumentIfNeeded()">
+      <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;
+      <span class="font-weight-bold" i18n="@@create.new.link">Create new linked Record</span>
+    </button>
   </ng-container>
 </ng-container>

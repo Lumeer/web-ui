@@ -22,7 +22,8 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 
 export interface LinkRowModel {
 
-  linkInstance: LinkInstanceModel;
-  document: DocumentModel;
+  linkInstance?: LinkInstanceModel;
+  document?: DocumentModel;
+  correlationId?: string;
 
 }

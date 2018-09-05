@@ -3,10 +3,16 @@
     No records found.
   </td>
 </tr>
-<ng-container #rows
-  *ngFor="let linkRow of linkRows; trackBy:trackByDocument">
-  <tr class="clickable-row" (dblclick)="documentSelected(collection, linkRow)">
-    <td *ngFor="let attr of collection.attributes" title="{{linkRow.document.data[attr.id]}}">{{linkRow.document.data[attr.id]}}</td>
+<ng-container #rows *ngFor="let linkRow of linkRows; trackBy:trackByLinkRow">
+  <ng-container *ngTemplateOutlet="linkRow.document ? clickableRow : editableRow; context: { $implicit: linkRow}">
+  </ng-container>
+</ng-container>
+
+<ng-template #clickableRow let-linkRow>
+  <tr class="clickable-row table-row" (dblclick)="documentSelected(collection, linkRow)">
+    <td *ngFor="let attr of collection.attributes" title="{{linkRow.document.data[attr.id]}}">
+      {{linkRow.document.data[attr.id]}}
+    </td>
     <td class="fixed-column border-0">
       <i class="fas fa-eye clickable mr-1" (click)="documentSelected(collection, linkRow)"
          title.i18n="@@select" title="Select" aria-hidden="true"></i>
@@ -14,4 +20,17 @@
          title.i18n="@@unlink" title="Unlink" aria-hidden="true"></i>
     </td>
   </tr>
-</ng-container>
+</ng-template>
+
+<ng-template #editableRow let-linkRow>
+  <tr class="table-row" id="{{linkRow.correlationId}}">
+    <td *ngFor="let attr of collection.attributes">
+      <div class="h-100" contenteditable="true"></div>
+    </td>
+    <td class="fixed-column border-0">
+      <i class="fas fa-trash clickable clickable-danger" (click)="removeEmptyLinkRow(linkRow)"
+         title.i18n="@@remove" title="Remove" aria-hidden="true"></i>
+    </td>
+  </tr>
+
+</ng-template>

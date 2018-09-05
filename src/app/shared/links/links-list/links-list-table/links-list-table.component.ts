@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
 
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -32,8 +32,13 @@ import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link
 import {getOtherLinkedDocumentId, LinkInstanceModel} from '../../../../core/store/link-instances/link-instance.model';
 import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
 import {LinkRowModel} from './link-row.model';
+import {Subscription} from 'rxjs/internal/Subscription';
+import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
+import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
+import {isNullOrUndefined} from 'util';
+import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 10;
 
 @Component({
   selector: 'links-list-table',
@@ -41,7 +46,7 @@ const PAGE_SIZE = 100;
   styleUrls: ['./links-list-table.component.scss', './links-list-table.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LinksListTableComponent implements OnChanges {
+export class LinksListTableComponent implements OnChanges, OnDestroy {
 
   @Input() public linkType: LinkTypeModel;
 
@@ -53,13 +58,19 @@ export class LinksListTableComponent implements OnChanges {
 
   public collection$: Observable<CollectionModel>;
 
-  public linkRows$: Observable<LinkRowModel[]>;
+  public linkRows$ = new BehaviorSubject<LinkRowModel[]>([]);
 
   public page = 0;
 
   public readonly pageSize = PAGE_SIZE;
 
+  private linksSubscription = new Subscription();
+
   public constructor(private store: Store<AppState>) {
+  }
+
+  public ngOnDestroy() {
+    this.linksSubscription.unsubscribe();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -74,11 +85,13 @@ export class LinksListTableComponent implements OnChanges {
           return collectionsMap[collectionId];
         })
       );
-      this.linkRows$ = this.store.select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id])).pipe(
+
+      this.linksSubscription.unsubscribe();
+      this.linksSubscription = this.store.select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id])).pipe(
         mergeMap(linkInstances => this.fetchDocumentsForLinkInstances(linkInstances).pipe(
           map(documents => this.joinLinkInstancesWithDocuments(linkInstances, documents))
         ))
-      );
+      ).subscribe(linkRows => this.mergeNewLinkRows(linkRows));
     }
   }
 
@@ -104,6 +117,54 @@ export class LinksListTableComponent implements OnChanges {
       }
       return rows;
     }, []);
+  }
+
+  private mergeNewLinkRows(linkRows: LinkRowModel[]) {
+    // TODO filter and merge
+    this.linkRows$.next(linkRows);
+  }
+
+  public createNewLinkedDocumentIfNeeded() {
+    const currentLinkRows = this.linkRows$.getValue();
+    const correlationId = CorrelationIdGenerator.generate();
+    this.linkRows$.next(currentLinkRows.concat([{correlationId}]));
+
+    this.goToLastPage(currentLinkRows.length);
+    this.scrollToNewLinkRow(correlationId);
+  }
+
+  private goToLastPage(sizeBeforeAdd: number) {
+    this.page = Math.floor(sizeBeforeAdd / this.pageSize);
+  }
+
+  private scrollToNewLinkRow(correlationId: string) {
+    setTimeout(() => {
+      const element = document.getElementById(correlationId);
+      if (element) {
+        const scrollableParent = element.parentElement.parentElement.parentElement;
+        if (scrollableParent) {
+          scrollableParent.scrollTop = Number.MAX_SAFE_INTEGER;
+        }
+      }
+    })
+  }
+
+  public removeLinkRowByCorrelationId(correlationId: string) {
+    const currentLinkRows = this.linkRows$.getValue();
+    const filteredLinkRows = currentLinkRows.filter(linkRow => linkRow.correlationId !== correlationId);
+
+    const shouldEmitNewValue = currentLinkRows.length !== filteredLinkRows.length;
+    if (shouldEmitNewValue) {
+      this.linkRows$.next(filteredLinkRows);
+      this.decrementPageIfNeeded(filteredLinkRows.length);
+    }
+  }
+
+  private decrementPageIfNeeded(sizeAfterRemove: number) {
+    const maximumPage = Math.ceil(sizeAfterRemove / this.pageSize);
+    if (this.page >= maximumPage) {
+      this.page--;
+    }
   }
 
 }
