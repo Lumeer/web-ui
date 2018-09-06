@@ -17,8 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, QueryList, ViewChildren} from '@angular/core';
 import {AttributeModel, CollectionModel} from '../../../../../core/store/collections/collection.model';
+import {DocumentHintColumn} from '../../../../document-hints/document-hint-column';
 
 @Component({
   selector: '[links-list-table-header]',
@@ -28,11 +29,19 @@ import {AttributeModel, CollectionModel} from '../../../../../core/store/collect
 })
 export class LinksListTableHeaderComponent {
 
+  @ViewChildren('headerCell')
+  public cells: QueryList<ElementRef>;
+
   @Input()
   public collection: CollectionModel;
 
   public trackByAttribute(index: number, attribute: AttributeModel): string {
     return attribute.correlationId || attribute.id;
+  }
+
+  public getColumns(): DocumentHintColumn[] {
+    return this.cells.toArray()
+      .map(cell => ({attributeId: cell.nativeElement.id, width: cell.nativeElement.clientWidth}));
   }
 
 }

@@ -23,8 +23,9 @@
        [attr.placeholder]="mPlaceholder"
        [attr.title]="title"
        (input)="onInterimNewValue(input.textContent)"
-       (keydown.enter)="input.blur()"
+       (keydown.enter)="onEnter(); input.blur()"
        (keydown.Escape)="input.textContent = mCurrentValue; input.blur()"
+       (keydown)="onKeyDown($event)"
        [attr.spellcheck]="false"
        class="h-100">
   </div>

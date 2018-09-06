@@ -1,5 +1,5 @@
 <div *ngIf="documents$ | async as documents"
-     [style.right.px]="columns | suggestionColumnOffset:attributeId">
+     [style.right.px]="calculatePosition ? (columns | suggestionColumnOffset:attributeId) : null">
   <div *ngIf="documents.length"
        class="dropdown">
     <div class="dropdown-menu show">

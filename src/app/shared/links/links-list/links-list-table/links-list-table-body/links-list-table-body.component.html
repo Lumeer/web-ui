@@ -25,12 +25,36 @@
 <ng-template #editableRow let-linkRow>
   <tr class="table-row" id="{{linkRow.correlationId}}">
     <td *ngFor="let attr of collection.attributes">
-      <div class="h-100" contenteditable="true"></div>
+
+      <input-box [paddingRem]="0.25"
+                 [placeholder]="'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'"
+                 [canStayEmpty]="true"
+                 [maxLines]="1"
+                 [emitAllChanges]="true"
+                 (blur)="onBlur()"
+                 (enter)="onEnterKeyDown()"
+                 (keyDown)="onKeyDown($event)"
+                 (focus)="onFocus(linkRow.correlationId, attr.id, $event)"
+                 (newValue)="onValueChanged(linkRow.correlationId, attr.id, $event)">
+      </input-box>
     </td>
     <td class="fixed-column border-0">
       <i class="fas fa-trash clickable clickable-danger" (click)="removeEmptyLinkRow(linkRow)"
          title.i18n="@@remove" title="Remove" aria-hidden="true"></i>
     </td>
+
   </tr>
+
+  <document-hints
+    *ngIf="linkRow.correlationId === selectedLinkRowCorrId && document && linkType && suggestingAttributeId && suggestingValue"
+    [attributeId]="suggestingAttributeId"
+    [value]="suggestingValue"
+    [columns]="columns"
+    [calculatePosition]="false"
+    [excludedDocumentIds]="usedDocumentIds"
+    [linkedDocumentId]="document.id"
+    [linkTypeId]="linkType.id"
+    [collectionId]="collection.id">
+  </document-hints>
 
 </ng-template>

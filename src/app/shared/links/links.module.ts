@@ -29,13 +29,16 @@ import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {LinksListTableHeaderComponent} from './links-list/links-list-table/links-list-table-header/links-list-table-header.component';
 import {LinksListTableBodyComponent} from './links-list/links-list-table/links-list-table-body/links-list-table-body.component';
+import {DocumentHintsModule} from '../document-hints/document-hints.module';
+import {LinkRowsDocumentIdsPipe} from './links-list/links-list-table/link-rows-document-ids.pipe';
 
 @NgModule({
   imports: [
     CommonModule,
     PickerModule,
     InputModule,
-    PipesModule
+    PipesModule,
+    DocumentHintsModule
   ],
   declarations: [
     LinksComponent,
@@ -43,7 +46,8 @@ import {LinksListTableBodyComponent} from './links-list/links-list-table/links-l
     LinksListTabsComponent,
     LinksListTableComponent,
     LinksListTableHeaderComponent,
-    LinksListTableBodyComponent
+    LinksListTableBodyComponent,
+    LinkRowsDocumentIdsPipe
   ],
   exports: [
     LinksComponent,

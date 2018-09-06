@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild} from '@angular/core';
 
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
@@ -35,8 +35,7 @@ import {LinkRowModel} from './link-row.model';
 import {Subscription} from 'rxjs/internal/Subscription';
 import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
-import {isNullOrUndefined} from 'util';
-import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
+import {LinksListTableHeaderComponent} from './links-list-table-header/links-list-table-header.component';
 
 const PAGE_SIZE = 10;
 
@@ -48,6 +47,9 @@ const PAGE_SIZE = 10;
 })
 export class LinksListTableComponent implements OnChanges, OnDestroy {
 
+  @ViewChild(LinksListTableHeaderComponent)
+  public headerComponent: LinksListTableHeaderComponent;
+
   @Input() public linkType: LinkTypeModel;
 
   @Input() public document: DocumentModel;
@@ -57,11 +59,8 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
   @Output() public unlink = new EventEmitter<string>();
 
   public collection$: Observable<CollectionModel>;
-
   public linkRows$ = new BehaviorSubject<LinkRowModel[]>([]);
-
   public page = 0;
-
   public readonly pageSize = PAGE_SIZE;
 
   private linksSubscription = new Subscription();
@@ -146,7 +145,7 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
           scrollableParent.scrollTop = Number.MAX_SAFE_INTEGER;
         }
       }
-    })
+    });
   }
 
   public removeLinkRowByCorrelationId(correlationId: string) {

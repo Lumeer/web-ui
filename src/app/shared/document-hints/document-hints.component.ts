@@ -64,6 +64,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges {
   @Input()
   public value: string;
 
+  @Input()
+  public calculatePosition: boolean = true;
+
   @Output()
   public linkCreate = new EventEmitter();
 

@@ -18,6 +18,10 @@
                [collection]="data.collection">
         </thead>
         <tbody links-list-table-body
+               [columns]="headerComponent?.getColumns()"
+               [usedDocumentIds]="data.linkRows | linkRowsDocumentIds"
+               [document]="document"
+               [linkType]="linkType"
                [collection]="data.collection"
                [linkRows]="data.linkRows | slice : (page * pageSize) : ((page + 1) * pageSize)"
                (select)="select.emit($event)"

@@ -1,6 +1,7 @@
 <tr>
   <th class="sticky-header"
       *ngFor="let attr of collection.attributes; trackBy:trackByAttribute"
+      #headerCell id="{{attr.id}}"
       scope="col" title="{{attr.name}}">{{attr.name}}
   </th>
   <th class="border-0" [style.background]="'white'"></th>
