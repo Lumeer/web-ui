@@ -156,10 +156,7 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
     setTimeout(() => {
       const element = document.getElementById(correlationId);
       if (element) {
-        const scrollableParent = element.parentElement.parentElement.parentElement;
-        if (scrollableParent) {
-          scrollableParent.scrollTop = Number.MAX_SAFE_INTEGER;
-        }
+        element.scrollIntoView();
       }
     });
   }

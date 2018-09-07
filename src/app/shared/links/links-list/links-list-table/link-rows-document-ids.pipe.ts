@@ -26,12 +26,8 @@ import {LinkRowModel} from './link-row.model';
 export class LinkRowsDocumentIdsPipe implements PipeTransform {
 
   public transform(linkRows: LinkRowModel[]): string[] {
-    return linkRows.reduce((ids, linkRow) => {
-      if (linkRow.document) {
-        ids.push(linkRow.document.id);
-      }
-      return ids;
-    }, []);
+    return linkRows.filter(linkRow => !!linkRow.document)
+      .map(linkRow => linkRow.document.id);
   }
 
 }
