@@ -11,7 +11,8 @@
              [class.font-weight-bold]="column.attributeId === attributeId"
              [style.width.px]="column.width"
              [innerHtml]="column.attributeId === attributeId ? (doc.data[column.attributeId] | highlightText: value) : doc.data[column.attributeId]"
-             class="p-1">
+             [title]="doc.data[column.attributeId] || ''"
+             class="text-truncate cursor-default p-1">
         </div>
       </div>
     </div>
