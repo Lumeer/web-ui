@@ -1,9 +1,9 @@
-<tr *ngIf="linkRows.length === 0; else rows">
+<tr *ngIf="linkRows.length === 0">
   <td [attr.colspan]="collection.attributes.length" class="text-center" i18n="@@shared.preview.results.noResults">
     No records found.
   </td>
 </tr>
-<ng-container #rows *ngFor="let linkRow of linkRows; trackBy:trackByLinkRow">
+<ng-container *ngFor="let linkRow of linkRows; trackBy:trackByLinkRow">
   <ng-container *ngTemplateOutlet="linkRow.document ? clickableRow : editableRow; context: { $implicit: linkRow}">
   </ng-container>
 </ng-container>
