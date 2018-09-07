@@ -22,8 +22,8 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 
-export function searchDocumentValuesHtml(document: DocumentModel): string {
-  return searchDocumentGetValues(document)
+export function searchDocumentValuesHtml(document: DocumentModel, collection: CollectionModel): string {
+  return searchDocumentGetValues(document, collection)
     .map(value => `<span class="search-documents-value">${value}</span>`)
     .join(', ');
 }
@@ -33,7 +33,10 @@ export function searchDocumentEntriesHtml(document: DocumentModel, collection: C
     return '';
   }
 
+  const collectionAttributesIds = collection.attributes.map(attribute => attribute.id);
+
   return Object.keys(document.data)
+    .filter(documentKey => collectionAttributesIds.includes(documentKey))
     .map(attributeId => `${searchDocumentAttributeHtml(attributeId, collection)}${searchDocumentValueHtml(document.data[attributeId])}`)
     .join(', ');
 }
@@ -49,11 +52,17 @@ export function searchDocumentDefaultAttributeHtml(document: DocumentModel, coll
   return searchDocumentValueHtml(value);
 }
 
-function searchDocumentGetValues(document: DocumentModel): any[] {
+function searchDocumentGetValues(document: DocumentModel, collection: CollectionModel): any[] {
   if (isNullOrUndefined(document.data)) {
     return [];
   }
-  return searchDocumentGetValuesFromArray(Object.values(document.data));
+
+  const collectionAttributesIds = collection.attributes.map(attribute => attribute.id);
+  const filteredDocumentValues = Object.entries(document.data)
+    .filter(([key]) => collectionAttributesIds.includes(key))
+    .map(([key, value]) => value);
+
+  return searchDocumentGetValuesFromArray(filteredDocumentValues);
 }
 
 function searchDocumentGetValuesFromAny(value: any): string[] {
