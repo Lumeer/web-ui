@@ -24,7 +24,7 @@ import {DocumentHintColumn} from '../../../../document-hints/document-hint-colum
 @Component({
   selector: '[links-list-table-header]',
   templateUrl: './links-list-table-header.component.html',
-  styleUrls: ['./../links-list-table.scss', './links-list-table-header.component.scss'],
+  styleUrls: ['./links-list-table-header.component.scss', './../links-list-table.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinksListTableHeaderComponent {

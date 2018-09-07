@@ -27,17 +27,15 @@ import {Store} from '@ngrx/store';
 import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
 import {getOtherLinkedCollectionId} from '../../../utils/link-type.utils';
 import {map, mergeMap} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {Observable, Subscription, BehaviorSubject} from 'rxjs';
 import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
 import {getOtherLinkedDocumentId, LinkInstanceModel} from '../../../../core/store/link-instances/link-instance.model';
 import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
 import {LinkRowModel} from './link-row.model';
-import {Subscription} from 'rxjs/internal/Subscription';
-import {BehaviorSubject} from 'rxjs/internal/BehaviorSubject';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 import {LinksListTableHeaderComponent} from './links-list-table-header/links-list-table-header.component';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 100;
 
 @Component({
   selector: 'links-list-table',
@@ -63,6 +61,7 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
   public page = 0;
   public readonly pageSize = PAGE_SIZE;
 
+  private lastSelection: { linkType: LinkTypeModel, document: DocumentModel };
   private linksSubscription = new Subscription();
 
   public constructor(private store: Store<AppState>) {
@@ -90,7 +89,7 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
         mergeMap(linkInstances => this.fetchDocumentsForLinkInstances(linkInstances).pipe(
           map(documents => this.joinLinkInstancesWithDocuments(linkInstances, documents))
         ))
-      ).subscribe(linkRows => this.mergeNewLinkRows(linkRows));
+      ).subscribe(linkRows => this.handleNewLinkRows(linkRows));
     }
   }
 
@@ -118,12 +117,29 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
     }, []);
   }
 
-  private mergeNewLinkRows(linkRows: LinkRowModel[]) {
-    // TODO filter and merge
-    this.linkRows$.next(linkRows);
+  private handleNewLinkRows(linkRows: LinkRowModel[]) {
+    if (this.lastSelection && this.lastSelection.document === this.document && this.lastSelection.linkType === this.linkType) {
+      this.mergeLinkRows(linkRows);
+    } else {
+      this.lastSelection = {linkType: this.linkType, document: this.document};
+      this.linkRows$.next(linkRows);
+    }
   }
 
-  public createNewLinkedDocumentIfNeeded() {
+  private mergeLinkRows(linkRows: LinkRowModel[]) {
+    const currentLinkRows = this.linkRows$.getValue();
+    const createdLinkRows = currentLinkRows.filter(linkRow => linkRow.document && linkRow.linkInstance);
+    let emptyLinkRows = currentLinkRows.filter(linkRow => linkRow.correlationId);
+
+    if (linkRows.length > createdLinkRows.length && emptyLinkRows.length > 0) {
+      emptyLinkRows = emptyLinkRows.slice(1);
+    }
+
+    const newLinkRows = linkRows.concat(emptyLinkRows);
+    this.linkRows$.next(newLinkRows);
+  }
+
+  public createNewLinkedDocument() {
     const currentLinkRows = this.linkRows$.getValue();
     const correlationId = CorrelationIdGenerator.generate();
     this.linkRows$.next(currentLinkRows.concat([{correlationId}]));

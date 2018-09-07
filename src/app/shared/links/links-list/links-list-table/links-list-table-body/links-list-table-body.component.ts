@@ -116,7 +116,7 @@ export class LinksListTableBodyComponent {
     }
   }
 
-  public onEnterKeyDown(){
+  public onEnterKeyDown() {
     return this.suggestions && this.suggestions.isSelected() && this.suggestions.useSelection();
   }
 
