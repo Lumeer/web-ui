@@ -17,13 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkInstanceModel} from '../../../../core/store/link-instances/link-instance.model';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {Pipe, PipeTransform} from '@angular/core';
+import {LinkRowModel} from './link-row.model';
 
-export interface LinkRowModel {
+@Pipe({
+  name: 'linkRowsDocumentIds'
+})
+export class LinkRowsDocumentIdsPipe implements PipeTransform {
 
-  linkInstance?: LinkInstanceModel;
-  document?: DocumentModel;
-  correlationId?: string;
+  public transform(linkRows: LinkRowModel[]): string[] {
+    return linkRows.filter(linkRow => !!linkRow.document)
+      .map(linkRow => linkRow.document.id);
+  }
 
 }

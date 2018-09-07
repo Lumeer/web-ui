@@ -14,40 +14,36 @@
     </div>
     <div class="h-10em table-responsive">
       <table class="table table-sm" id="preview-results-table">
-        <thead>
-          <tr>
-            <th class="sticky-header" *ngFor="let attr of data.collection.attributes; trackBy:trackByAttribute" scope="col" title="{{attr.name}}">{{attr.name}}</th>
-            <th class="fixed-column border-0"></th>
-          </tr>
+        <thead links-list-table-header
+               [collection]="data.collection">
         </thead>
-        <tbody>
-          <tr *ngIf="data.linkRows.length === 0">
-            <td [attr.colspan]="data.collection.attributes.length" class="text-center" i18n="@@shared.preview.results.noResults">
-              No records found.
-            </td>
-          </tr>
-          <ng-container
-            *ngFor="let linkRow of (data.linkRows | slice : (page * pageSize) : ((page + 1) * pageSize)); trackBy:trackByDocument">
-            <tr class="clickable-row" (dblclick)="documentSelected(data.collection, linkRow)">
-              <td *ngFor="let attr of data.collection.attributes" title="{{linkRow.document.data[attr.id]}}">{{linkRow.document.data[attr.id]}}</td>
-              <td class="fixed-column border-0">
-                <i class="fas fa-eye clickable mr-1" (click)="documentSelected(data.collection, linkRow)"
-                   title.i18n="@@select" title="Select" aria-hidden="true"></i>
-                <i class="fas fa-unlink clickable" (click)="unlinkDocument(linkRow)"
-                   title.i18n="@@unlink" title="Unlink" aria-hidden="true"></i>
-              </td>
-            </tr>
-          </ng-container>
+        <tbody links-list-table-body
+               [columns]="headerComponent?.getColumns()"
+               [usedDocumentIds]="data.linkRows | linkRowsDocumentIds"
+               [document]="document"
+               [linkType]="linkType"
+               [collection]="data.collection"
+               [linkRows]="data.linkRows | slice : (page * pageSize) : ((page + 1) * pageSize)"
+               (select)="select.emit($event)"
+               (removeLinkRow)="removeLinkRowByCorrelationId($event)"
+               (unlink)="unlink.emit($event)">
         </tbody>
       </table>
     </div>
     <span class="small float-right text-primary" title.i18n="@@shared.preview-results.scrollable"
           title="You can scroll the table...">
-    <i class="fas fa-arrows-h"></i>
-  </span>
+      <i class="fas fa-arrows-h"></i>
+    </span>
     <span class="small float-right text-primary" i18n-title="@@shared.preview-results.scrollable"
           title="You can scroll the table...">
-    <i class="fas fa-arrows-v" style="top: -1em; left: 2em; position: relative;"></i>
-  </span>
+      <i class="fas fa-arrows-v" style="top: -1em; left: 2em; position: relative;"></i>
+    </span>
+    <button type="button"
+            class="my-2 btn btn-sm btn-primary"
+            [disabled]="!(data.collection | permissions:'write' | async)"
+            (click)="createNewLinkedDocument()">
+      <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;
+      <span class="font-weight-bold" i18n="@@create.new.link">Create new linked Record</span>
+    </button>
   </ng-container>
 </ng-container>

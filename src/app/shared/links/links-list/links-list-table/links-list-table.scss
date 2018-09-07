@@ -1,0 +1,33 @@
+@import "../../../../../styles/variables";
+
+table {
+  table-layout: auto;
+  width: 100%;
+}
+
+thead {
+  color: $gray-500;
+  font-style: italic;
+  font-weight: bold;
+}
+
+th, td {
+  max-width: 20rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 2em;
+  vertical-align: middle;
+  width: auto !important;
+}
+
+td:last-child, th:last-child {
+  position: sticky;
+  text-align: end;
+  right: 0;
+  z-index: 1;
+}
+
+th:last-child {
+  z-index: 2
+}

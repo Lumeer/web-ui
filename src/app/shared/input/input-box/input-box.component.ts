@@ -52,10 +52,12 @@ export class InputBoxComponent implements OnInit {
   @Input() public textAttribute: boolean = false;
   @Input() public innerClass: string = '';
 
-  @Output() public focus: EventEmitter<void> = new EventEmitter();
+  @Output() public focus: EventEmitter<string> = new EventEmitter();
   @Output() public blur: EventEmitter<void> = new EventEmitter();
   @Output() public newValue: EventEmitter<string> = new EventEmitter();
   @Output() public emptyValue: EventEmitter<void> = new EventEmitter();
+  @Output() public enter = new EventEmitter();
+  @Output() public keyDown = new EventEmitter<KeyboardEvent>();
 
   public mCurrentValue: string;
   public mFontSizeRem: number;
@@ -111,7 +113,7 @@ export class InputBoxComponent implements OnInit {
   }
 
   public onFocus() {
-    this.focus.emit();
+    this.focus.emit(this.mCurrentValue);
     this.addFocusToInputParent();
   }
 
@@ -142,6 +144,14 @@ export class InputBoxComponent implements OnInit {
     if (this.emitAllChanges) {
       this.onNewValue(textContent);
     }
+  }
+
+  public onKeyDown(event: KeyboardEvent) {
+    this.keyDown.emit(event);
+  }
+
+  public onEnter() {
+    this.enter.emit();
   }
 
 }

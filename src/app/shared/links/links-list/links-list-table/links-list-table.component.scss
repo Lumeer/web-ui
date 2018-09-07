@@ -1,69 +1,9 @@
 @import "../../../../../styles/variables";
 
-$fixed-column-width: 5em;
-
-table {
-  table-layout: auto;
-  width: 100%;
-}
-
-thead {
-  color: $gray-500;
-  font-style: italic;
-  font-weight: bold;
-}
-
-th, td {
-  max-width: 20rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  height: 2em;
-  vertical-align: middle;
-  width: auto !important;
-}
-
-td:last-child, th:last-child {
-  position: sticky;
-  text-align: end;
-  right: 0;
-  z-index: 1;
-}
-
-th:last-child {
-  z-index: 2
-}
-
 .table-responsive {
   width: 100%;
+  resize: vertical;
   overflow: auto;
-}
-
-.sticky-header {
-  position: sticky;
-  top: -1px;
-  background: white;
-}
-
-.clickable-row {
-  cursor: pointer;
-
-  &:hover {
-    background-color: $gray-100;
-
-    .fixed-column i {
-      opacity: 1 !important;
-    }
-  }
-}
-
-.fixed-column {
-  background: white;
-
-  i {
-    transition: opacity $animation-color-duration;
-    opacity: 0;
-  }
 }
 
 .h-10em {

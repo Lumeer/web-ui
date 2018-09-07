@@ -29,6 +29,7 @@ import {selectCollectionsDictionary} from '../../../core/store/collections/colle
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {LinkRowModel} from './links-list-table/link-row.model';
 
 @Component({
   selector: 'links-list',
@@ -56,7 +57,9 @@ export class LinksListComponent implements OnChanges {
   public onSelectLink(linkType: LinkTypeModel) {
     this.activeLinkType = linkType;
 
-    this.readDocuments(linkType);
+    if (linkType) {
+      this.readDocuments(linkType);
+    }
   }
 
   public unLinkDocument(linkInstanceId: string) {
