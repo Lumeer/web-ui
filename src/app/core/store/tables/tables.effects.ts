@@ -545,7 +545,7 @@ export class TablesEffects {
     }
 
     const part = table.parts[cursor.partIndex];
-    if (!part.collectionId) {
+    if (!part || !part.collectionId) {
       return of(null);
     }
 
