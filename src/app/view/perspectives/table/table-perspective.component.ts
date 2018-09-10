@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, AfterViewInit, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
@@ -27,7 +27,7 @@ import {selectNavigation} from '../../../core/store/navigation/navigation.state'
 import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {TableCursor} from '../../../core/store/tables/table-cursor';
-import {DEFAULT_TABLE_ID, TableModel} from '../../../core/store/tables/table.model';
+import {DEFAULT_TABLE_ID, TableColumnType, TableModel} from '../../../core/store/tables/table.model';
 import {getTableElement} from '../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableById, selectTableCursor} from '../../../core/store/tables/tables.state';
@@ -123,8 +123,29 @@ export class TablePerspectiveComponent implements OnInit, AfterViewInit, OnDestr
         filter(table => !!table)
       ).subscribe(table => {
         this.table = table;
+        this.switchPartsIfFirstEmpty(table);
       })
     );
+  }
+
+  private switchPartsIfFirstEmpty(table: TableModel) {
+    if (table.parts.length !== 3) {
+      return;
+    }
+
+    const empty = !table.parts[0].columns.find(column =>
+      (column.type === TableColumnType.HIDDEN && column.attributeIds && column.attributeIds.length > 0)
+      || (column.type === TableColumnType.COMPOUND && !!column.parent.attributeId)
+    );
+
+    if (empty) {
+      this.store$.dispatch(new TablesAction.SwitchParts({
+        cursor: {
+          tableId: table.id,
+          partIndex: 0
+        }
+      }));
+    }
   }
 
   private subscribeToQuery() {
