@@ -36,6 +36,9 @@ import {UiRow} from '../../../core/ui/ui-row';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {PerspectiveService} from '../../../core/perspective.service';
+import {QueryModel} from '../../../core/store/navigation/query.model';
+import {selectQuery} from '../../../core/store/navigation/navigation.state';
+import {QueryConverter} from '../../../core/store/navigation/query.converter';
 
 @Component({
   selector: 'document-detail',
@@ -59,9 +62,8 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   public summary$: Observable<string>;
   public rows$: Observable<UiRow[]>;
 
-  public readonly PERSPECTIVE_TABLE = Perspective.Table;
-
-  private usersSubscription = new Subscription();
+  private query: QueryModel;
+  private subscriptions = new Subscription();
 
   constructor(private i18n: I18n,
               private store: Store<AppState>,
@@ -86,9 +88,12 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   private fetchUsers() {
-    this.usersSubscription = this.store.select(selectOrganizationByWorkspace)
+    this.subscriptions.add(this.store.select(selectOrganizationByWorkspace)
       .pipe(filter(org => !isNullOrUndefined(org)), take(1))
-      .subscribe(org => this.store.dispatch(new UsersAction.Get({organizationId: org.id})));
+      .subscribe(org => this.store.dispatch(new UsersAction.Get({organizationId: org.id}))));
+
+    this.subscriptions.add(this.store.select(selectQuery)
+      .subscribe(query => this.query = query));
   }
 
   private renewSubscriptions(): void {
@@ -107,7 +112,7 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.usersSubscription.unsubscribe();
+    this.subscriptions.unsubscribe();
     this.documentUiService.destroy(this.collection, this.document);
   }
 
@@ -150,7 +155,11 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
     return this.documentUiService.getTrackBy(this.collection, this.document);
   }
 
-  public goTo(perspective: string): void {
-    this.perspective.switchPerspective(perspectivesMap[perspective], this.collection, this.document);
+  public goToTablePerspective(): void {
+    let collectionQuery: string = null;
+    if (this.query && this.query.collectionIds && this.query.collectionIds.length !== 1) {
+      collectionQuery = QueryConverter.toString({collectionIds: [this.collection.id]});
+    }
+    this.perspective.switchPerspective(perspectivesMap[Perspective.Table], this.collection, this.document, collectionQuery);
   }
 }

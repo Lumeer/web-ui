@@ -28,6 +28,7 @@ import {Router} from '@angular/router';
 import {selectWorkspace} from './store/navigation/navigation.state';
 import {filter, take} from 'rxjs/operators';
 import {selectViewCursor} from './store/views/views.state';
+import {QueryModel} from './store/navigation/query.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,9 +36,10 @@ import {selectViewCursor} from './store/views/views.state';
 export class PerspectiveService {
 
   constructor(private store: Store<AppState>,
-              private router: Router) {}
+              private router: Router) {
+  }
 
-  public switchPerspective(perspective: Perspective, collection?: CollectionModel, document?: DocumentModel): void {
+  public switchPerspective(perspective: Perspective, collection?: CollectionModel, document?: DocumentModel, queryToSet?: string): void {
     if (collection && document) { // do we have any document selected?
       // update cursor
       this.store.dispatch(new ViewsAction.SetCursor({
@@ -49,18 +51,23 @@ export class PerspectiveService {
         filter(cursor => cursor.collectionId === collection.id && cursor.documentId === document.id),
         take(1)
       ).subscribe(cursor => {
-        this.navigateToPerspective(perspective);
+        this.navigateToPerspective(perspective, queryToSet);
       });
     } else {
-      this.navigateToPerspective(perspective);
+      this.navigateToPerspective(perspective, queryToSet);
     }
   }
 
-  private navigateToPerspective(perspective: Perspective): void {
+  private navigateToPerspective(perspective: Perspective, queryToSet?: string): void {
     this.store.select(selectWorkspace).pipe(take(1)).subscribe(workspace => {
       const viewPath: any[] = ['w', workspace.organizationCode, workspace.projectCode, 'view'];
       viewPath.push(perspective.toString());
-      this.router.navigate(viewPath, {queryParamsHandling: 'preserve'});
+
+      if (queryToSet) {
+        this.router.navigate(viewPath, {queryParams: {query: queryToSet}});
+      } else {
+        this.router.navigate(viewPath, {queryParamsHandling: 'preserve'});
+      }
     });
   }
 }
