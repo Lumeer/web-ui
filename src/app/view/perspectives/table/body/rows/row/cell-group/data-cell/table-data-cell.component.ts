@@ -177,13 +177,19 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public onEditEnd(value: string) {
     this.clearEditedAttribute();
 
-    if (this.suggestions && this.suggestions.isSelected()) {
-      this.suggestions.useSelection();
-    } else if (!isNullOrUndefined(value)) { // TODO maybe null values in the future
-      this.saveData(value);
+    if (!isNullOrUndefined(value)) { // TODO maybe null values in the future
+      this.useSelectionOrSave(value);
     }
 
     this.checkSuggesting();
+  }
+
+  private useSelectionOrSave(value: string) {
+    if (this.suggestions && this.suggestions.isSelected()) {
+      this.suggestions.useSelection();
+    } else {
+      this.saveData(value);
+    }
   }
 
   private clearEditedAttribute() {
