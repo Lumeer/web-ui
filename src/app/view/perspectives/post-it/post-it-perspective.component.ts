@@ -204,17 +204,15 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private mapNewDocuments(documents: DocumentModel[]) {
     const documentsMap = documents.reduce((acc, doc) => {
-      acc[doc.correlationId || doc.id] = doc;
+      acc[doc.id] = doc;
       return acc;
     }, {});
 
-    for (const correlationId of this.creatingCorrelationsIds) {
-      if (documentsMap[correlationId]) {
-        this.postItsOrder.splice(0, 0, correlationId);
-      }
-    }
-
-    this.creatingCorrelationsIds = this.creatingCorrelationsIds.filter(corrId => !documentsMap[corrId]);
+    documents.filter(doc => doc.correlationId && this.creatingCorrelationsIds.includes(doc.correlationId))
+      .forEach(document => {
+        this.postItsOrder.unshift(document.id);
+        this.creatingCorrelationsIds = this.creatingCorrelationsIds.filter(corrId => corrId !== document.correlationId);
+      });
 
     const newPostIts = this.postItsOrder.reduce((acc, key) => {
       const doc = documentsMap[key];
