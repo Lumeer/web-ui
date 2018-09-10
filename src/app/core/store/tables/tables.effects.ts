@@ -125,6 +125,7 @@ export class TablesEffects {
     ofType<TablesAction.CreatePart>(TablesActionType.CREATE_PART),
     mergeMap(action => this.store$.select(selectTableById(action.payload.tableId)).pipe(
       first(),
+      filter(table => !!table),
       map(table => ({action, table}))
     )),
     mergeMap(item => this.store$.select(selectLinkTypeById(item.action.payload.linkTypeId)).pipe(
@@ -545,7 +546,7 @@ export class TablesEffects {
     }
 
     const part = table.parts[cursor.partIndex];
-    if (!part.collectionId) {
+    if (!part || !part.collectionId) {
       return of(null);
     }
 

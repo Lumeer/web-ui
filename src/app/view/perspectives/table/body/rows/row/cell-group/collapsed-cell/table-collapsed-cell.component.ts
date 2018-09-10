@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
@@ -26,7 +26,9 @@ import {DocumentModel} from '../../../../../../../../core/store/documents/docume
 import {LinkInstanceModel} from '../../../../../../../../core/store/link-instances/link-instance.model';
 import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
 import {TableSingleColumn} from '../../../../../../../../core/store/tables/table.model';
+import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
 import {selectEditedAttribute} from '../../../../../../../../core/store/tables/tables.state';
+import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.component';
 
 @Component({
   selector: 'table-collapsed-cell',
@@ -50,6 +52,9 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
 
   @Input()
   public selected: boolean;
+
+  @ViewChild(TableCollapsedCellMenuComponent)
+  public menuComponent: TableCollapsedCellMenuComponent;
 
   public affected$: Observable<boolean>;
 
@@ -92,6 +97,11 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
       return this.linkInstances.map(linkInstance => linkInstance.data);
     }
     return [];
+  }
+
+  public onExpand() {
+    const cursor = {...this.cursor, rowPath: this.cursor.rowPath.slice(0, -1)};
+    this.store$.dispatch(new TablesAction.ExpandRows({cursor}));
   }
 
 }

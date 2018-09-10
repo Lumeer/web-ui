@@ -56,6 +56,7 @@ import {TableEditableCellDirective} from './shared/directives/table-editable-cel
 import {TablePipesModule} from './shared/pipes/table-pipes.module';
 import {TablePerspectiveRoutingModule} from './table-perspective-routing.module';
 import {TablePerspectiveComponent} from './table-perspective.component';
+import { TableCollapsedCellMenuComponent } from './body/rows/row/cell-group/collapsed-cell/menu/table-collapsed-cell-menu.component';
 
 @NgModule({
   imports: [
@@ -96,6 +97,7 @@ import {TablePerspectiveComponent} from './table-perspective.component';
     TableRowNumbersComponent,
     TableEditableCellDirective,
     TableDataCellComponent,
+    TableCollapsedCellMenuComponent,
   ],
   exports: [
     TablePerspectiveComponent

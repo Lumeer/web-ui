@@ -1,4 +1,7 @@
+<table-collapsed-cell-menu (expand)="onExpand()"></table-collapsed-cell-menu>
+
 <div #collapsedCell
+     [contextMenu]="menuComponent?.contextMenu"
      [class.affected]="affected$ | async"
      [class.selected]="selected"
      [style.cursor]="'default'"
