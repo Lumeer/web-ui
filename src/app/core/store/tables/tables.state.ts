@@ -18,12 +18,11 @@
  */
 
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {createFeatureSelector, createSelector} from '@ngrx/store';
+import {createSelector} from '@ngrx/store';
+import {AppState} from '../app.state';
 import {areTableBodyCursorsEqual, areTableHeaderCursorsEqual, TableCursor} from './table-cursor';
 import {TableModel} from './table.model';
 import {filterLeafColumns} from './table.utils';
-
-export const TABLE_FEATURE_NAME = 'tables';
 
 export interface TablesState extends EntityState<TableModel> {
 
@@ -43,15 +42,13 @@ export interface EditedAttribute {
 
 export const tablesAdapter = createEntityAdapter<TableModel>({selectId: table => table.id});
 
-export function initialTablesState(): TablesState {
-  return tablesAdapter.getInitialState({
-    cursor: null,
-    editedAttribute: null,
-    moveCursorDown: false
-  });
-}
+export const initialTablesState = tablesAdapter.getInitialState({
+  cursor: null,
+  editedAttribute: null,
+  moveCursorDown: false
+});
 
-export const selectTablesState = createFeatureSelector<TablesState>(TABLE_FEATURE_NAME);
+export const selectTablesState = (state: AppState) => state.tables;
 
 export const selectTablesDictionary = createSelector(selectTablesState, tablesAdapter.getSelectors().selectEntities);
 export const selectTableById = (tableId: string) =>

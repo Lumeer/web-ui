@@ -17,19 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableModel, TableConfigRow} from '../../../../../core/store/tables/table.model';
-import {findTableRow, splitRowPath} from '../../../../../core/store/tables/table.utils';
-
-@Pipe({
-  name: 'previousLinkedRow'
-})
-export class PreviousLinkedRowPipe implements PipeTransform {
-
-  public transform(table: TableModel, cursor: TableBodyCursor): TableConfigRow {
-    const {parentPath} = splitRowPath(cursor.rowPath);
-    return findTableRow(table.config.rows, parentPath);
-  }
-
+export function areConfigsEqual(config1: any, config2: any): boolean {
+  return JSON.stringify(config1) === JSON.stringify(config2);
 }

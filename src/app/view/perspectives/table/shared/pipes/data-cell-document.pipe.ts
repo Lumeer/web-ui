@@ -18,18 +18,24 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableModel, TableConfigRow} from '../../../../../core/store/tables/table.model';
-import {findTableRow, splitRowPath} from '../../../../../core/store/tables/table.utils';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {TableConfigRow, TablePart} from '../../../../../core/store/tables/table.model';
 
 @Pipe({
-  name: 'previousLinkedRow'
+  name: 'dataCellDocument'
 })
-export class PreviousLinkedRowPipe implements PipeTransform {
+export class DataCellDocumentPipe implements PipeTransform {
 
-  public transform(table: TableModel, cursor: TableBodyCursor): TableConfigRow {
-    const {parentPath} = splitRowPath(cursor.rowPath);
-    return findTableRow(table.config.rows, parentPath);
+  public transform(documents: DocumentModel[], part: TablePart, row: TableConfigRow): DocumentModel {
+    if (documents && documents[0]) {
+      return documents[0];
+    }
+
+    return {
+      collectionId: part.collectionId,
+      correlationId: row.correlationId,
+      data: {}
+    };
   }
 
 }

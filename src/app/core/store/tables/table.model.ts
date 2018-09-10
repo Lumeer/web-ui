@@ -29,29 +29,9 @@ export interface TableModel {
 
   parts: TablePart[];
 
-  documentIds: Set<string>;
-  rows: TableRow[];
-  expanded?: boolean;
+  config?: TableConfig;
 
 }
-
-export interface TableRow {
-
-  linkInstanceIds: string[];
-  documentIds: string[];
-
-  expanded?: boolean;
-  linkedRows?: TableRow[];
-
-  rowId?: string;
-
-}
-
-export const EMPTY_TABLE_ROW: TableRow = {
-  documentIds: [],
-  linkInstanceIds: [],
-  linkedRows: []
-};
 
 export interface TablePart {
 
@@ -110,6 +90,7 @@ export type TableColumn = TableSingleColumn | TableCompoundColumn | TableHiddenC
 export interface TableConfig {
 
   parts: TableConfigPart[];
+  rows: TableConfigRow[];
 
 }
 
@@ -128,5 +109,16 @@ export interface TableConfigColumn {
   attributeIds: string[];
   width?: number;
   children?: TableConfigColumn[];
+
+}
+
+export interface TableConfigRow {
+
+  correlationId?: string;
+  documentId?: string;
+  linkInstanceId?: string;
+
+  linkedRows: TableConfigRow[];
+  expanded?: boolean;
 
 }

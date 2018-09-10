@@ -19,9 +19,11 @@
 
 import {Action} from '@ngrx/store';
 import {Direction} from '../../../shared/direction';
+import {DocumentModel} from '../documents/document.model';
+import {LinkInstanceModel} from '../link-instances/link-instance.model';
 import {QueryModel} from '../navigation/query.model';
 import {TableBodyCursor, TableCursor, TableHeaderCursor} from './table-cursor';
-import {TableColumn, TableConfig, TableModel, TablePart, TableRow} from './table.model';
+import {TableColumn, TableConfig, TableConfigRow, TableModel, TablePart} from './table.model';
 import {EditedAttribute} from './tables.state';
 
 export enum TablesActionType {
@@ -52,6 +54,12 @@ export enum TablesActionType {
   LOAD_ROWS = '[Tables] Load Rows',
   DISPOSE_ROWS = '[Tables] Dispose Rows',
 
+  SYNC_PRIMARY_ROWS = '[Tables] Sync Primary Rows',
+  SYNC_LINKED_ROWS = '[Tables] Sync Linked Rows',
+  ADD_PRIMARY_ROWS = '[Tables] Add Primary Rows',
+  INIT_ROWS = '[Tables] Init Rows',
+  CLEAN_ROWS = '[Tables] Clean Rows',
+
   ADD_ROWS = '[Tables] Add Rows',
   ADD_LINKED_ROWS = '[Tables] Add Linked Rows',
   REPLACE_ROWS = '[Tables] Replace Rows',
@@ -77,8 +85,6 @@ export enum TablesActionType {
   ADD_FUNCTION = '[Tables] Add Function',
   REMOVE_FUNCTION = '[Tables] Remove Function',
 
-  SAVE_CONFIG = '[Tables] Save Config',
-
 }
 
 export namespace TablesAction {
@@ -92,7 +98,7 @@ export namespace TablesAction {
   export class CreateTable implements Action {
     public readonly type = TablesActionType.CREATE_TABLE;
 
-    public constructor(public payload: { tableId: string, query: QueryModel }) {
+    public constructor(public payload: { tableId: string, query: QueryModel, config: TableConfig }) {
     }
   }
 
@@ -208,24 +214,79 @@ export namespace TablesAction {
     }
   }
 
-  export class ReplaceRows implements Action {
-    public readonly type = TablesActionType.REPLACE_ROWS;
+  /**
+   * Synchronizes primary rows in table config with documents matching the query.
+   * Inserts rows for new documents at the end of the table.
+   * Removes rows with not existing documents.
+   * Updates existing rows with correlationId for just created documents.
+   */
+  export class SyncPrimaryRows implements Action {
+    public readonly type = TablesActionType.SYNC_PRIMARY_ROWS;
 
-    public constructor(public payload: { cursor: TableBodyCursor, rows: TableRow[], deleteCount: number }) {
+    public constructor(public payload: { cursor: TableBodyCursor, query: QueryModel }) {
     }
   }
 
-  export class AddRows implements Action {
-    public readonly type = TablesActionType.ADD_ROWS;
+  /**
+   * Synchronizes linked rows in table config with documents and link instances.
+   * Inserts rows for new documents at the end of the table.
+   * Updates existing rows with correlationId for just created documents (and link instances).
+   */
+  export class SyncLinkedRows implements Action {
+    public readonly type = TablesActionType.SYNC_LINKED_ROWS;
 
-    public constructor(public payload: { cursor: TableBodyCursor, rows: TableRow[] }) {
+    public constructor(public payload: { cursor: TableBodyCursor }) {
     }
   }
 
+  /**
+   * Adds rows to the first table part. If append is true, the rows are added at the end (before last empty row).
+   * Otherwise, they are put into exact position based on rowPath value in cursor.
+   *
+   */
+  export class AddPrimaryRows implements Action {
+    public readonly type = TablesActionType.ADD_PRIMARY_ROWS;
+
+    public constructor(public payload: { cursor: TableBodyCursor, rows: TableConfigRow[], append?: boolean }) {
+    }
+  }
+
+  /**
+   * Adds rows to the linked table part. If append is true, the rows are added at the end.
+   * Otherwise, they are put into exact position based on rowPath value in cursor.
+   *
+   */
   export class AddLinkedRows implements Action {
     public readonly type = TablesActionType.ADD_LINKED_ROWS;
 
-    public constructor(public payload: { cursor: TableBodyCursor, linkedRows: TableRow[] }) {
+    public constructor(public payload: { cursor: TableBodyCursor, linkedRows: TableConfigRow[], append?: boolean }) {
+    }
+  }
+
+  /**
+   * Adds documentId (and linkInstanceId) to the rows that have correlationId matching some of the provided documents.
+   */
+  export class InitRows implements Action {
+    public readonly type = TablesActionType.INIT_ROWS;
+
+    public constructor(public payload: { cursor: TableBodyCursor, documents: DocumentModel[], linkInstances: LinkInstanceModel[] }) {
+    }
+  }
+
+  /**
+   * Remove rows containing documentId (or linkInstanceId) for not existing document (or link instance)
+   */
+  export class CleanRows implements Action {
+    public readonly type = TablesActionType.CLEAN_ROWS;
+
+    public constructor(public payload: { cursor: TableBodyCursor, documents: DocumentModel[], linkInstances: LinkInstanceModel[] }) {
+    }
+  }
+
+  export class ReplaceRows implements Action {
+    public readonly type = TablesActionType.REPLACE_ROWS;
+
+    public constructor(public payload: { cursor: TableBodyCursor, rows: TableConfigRow[], deleteCount: number }) {
     }
   }
 
@@ -279,21 +340,14 @@ export namespace TablesAction {
     }
   }
 
-  export class SaveConfig implements Action {
-    public readonly type = TablesActionType.SAVE_CONFIG;
-
-    public constructor(public payload: { cursor: TableCursor }) {
-    }
-  }
-
   export type All = CreateTable | AddTable | DestroyTable | RemoveTable |
     CreatePart | AddPart | SwitchParts | RemovePart |
     AddColumn | SplitColumn | ReplaceColumns | RemoveColumn |
     HideColumn | ShowColumns |
     MoveColumn | ResizeColumn | InitColumn |
-    ReplaceRows | AddRows | AddLinkedRows | RemoveRow |
+    SyncPrimaryRows | SyncLinkedRows |
+    AddPrimaryRows | AddLinkedRows | InitRows | CleanRows | ReplaceRows | RemoveRow |
     CollapseRows | ExpandRows |
     SetCursor | MoveCursor |
-    EditSelectedCell | RemoveSelectedCell | SetEditedAttribute |
-    SaveConfig;
+    EditSelectedCell | RemoveSelectedCell | SetEditedAttribute;
 }

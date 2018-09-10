@@ -8,7 +8,7 @@
      (clickOutside)="onClickOutside($event)"
      class="table-wrapper d-flex flex-column m-0">
   <table-header [table]="table"></table-header>
-  <table-body [table]="table"
+  <table-body [tableId]="tableId"
               [query]="query"
               (scroll)="onBodyScroll($event)"
               class="flex-grow-1 pl-3">

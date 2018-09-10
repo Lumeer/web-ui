@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {PermissionType} from '../permissions/permissions.model';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
-import {PermissionType} from '../permissions/permissions.model';
 
 export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
   switch (action.type) {
@@ -35,14 +35,8 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return onSetPermissions(state, action);
     case ViewsActionType.CHANGE_CONFIG:
       return {...state, config: action.payload.config};
-    case ViewsActionType.CHANGE_DETAIL_CONFIG:
-      return {...state, config: {...state.config, detail: action.payload.config}};
-    case ViewsActionType.CHANGE_POSTIT_CONFIG:
-      return {...state, config: {...state.config, postit: action.payload.config}};
     case ViewsActionType.CHANGE_SEARCH_CONFIG:
       return {...state, config: {...state.config, search: action.payload.config}};
-    case ViewsActionType.CHANGE_TABLE_CONFIG:
-      return {...state, config: {...state.config, table: action.payload.config}};
     case ViewsActionType.SET_CURSOR:
       return {...state, cursor: action.payload.cursor};
     case ViewsActionType.CLEAR:

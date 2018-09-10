@@ -1,0 +1,15 @@
+<table-cell-group [cursor]="cursor"
+                  [rows]="rows"
+                  [style.width]="linkInstancePart$ | async | partWidth | pixel">
+</table-cell-group>
+
+<table-cell-group [cursor]="cursor | nextPartCursor"
+                  [rows]="rows"
+                  [style.width]="documentPart$ | async | partWidth | pixel">
+</table-cell-group>
+
+<table-linked-rows *ngIf="hasNextParts$ | async"
+                   [cursor]="cursor | nextPartCursor"
+                   [rows]="rows"
+                   [striped]="striped">
+</table-linked-rows>

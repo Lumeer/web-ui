@@ -32,8 +32,10 @@ import {ColumnCursorPipe} from './column-cursor.pipe';
 import {ColumnHeightPipe} from './column-height.pipe';
 import {ColumnWidthPipe} from './column-width.pipe';
 import {CursorEqualsPipe} from './cursor-equals.pipe';
+import {DataCellDocumentPipe} from './data-cell-document.pipe';
 import {DataPipe} from './data.pipe';
 import {DisplayablePipe} from './displayable.pipe';
+import {DocumentHintColumnsPipe} from './document-hint-columns.pipe';
 import {DragClassPipe} from './drag-class.pipe';
 import {EmbeddedPipe} from './embedded.pipe';
 import {EntityCreatedPipe} from './entity-created.pipe';
@@ -46,18 +48,17 @@ import {IsFirstRowPipe} from './is-first-row.pipe';
 import {IsHiddenColumnPipe} from './is-hidden-column.pipe';
 import {IsLastPartPipe} from './is-last-part.pipe';
 import {IsSingleColumnPipe} from './is-single-column.pipe';
+import {LinkedDocumentIdsPipe} from './linked-document-ids.pipe';
 import {MaxPartsPipe} from './max-parts.pipe';
 import {NextPartCursorPipe} from './next-part-cursor.pipe';
 import {NextRowCursorPipe} from './next-row-cursor.pipe';
 import {PartCursorPipe} from './part-cursor.pipe';
 import {PartWidthPipe} from './part-width.pipe';
 import {PartPipe} from './part.pipe';
+import {PreviousLinkedRowPipe} from './previous-linked-row.pipe';
 import {ResizeEdgesPipe} from './resize-edges.pipe';
 import {ResizeValidatePipe} from './resize-validate.pipe';
-import { DocumentHintColumnsPipe } from './document-hint-columns.pipe';
-import { PreviousLinkedRowPipe } from './previous-linked-row.pipe';
-import { LinkedDocumentIdsPipe } from './linked-document-ids.pipe';
-import { RowPositionTopPipe } from './row-position-top.pipe';
+import {RowPositionTopPipe} from './row-position-top.pipe';
 
 @NgModule({
   imports: [
@@ -103,6 +104,7 @@ import { RowPositionTopPipe } from './row-position-top.pipe';
     PreviousLinkedRowPipe,
     LinkedDocumentIdsPipe,
     RowPositionTopPipe,
+    DataCellDocumentPipe,
   ], exports: [
     DataPipe,
     EntityCreatedPipe,
@@ -143,6 +145,7 @@ import { RowPositionTopPipe } from './row-position-top.pipe';
     PreviousLinkedRowPipe,
     LinkedDocumentIdsPipe,
     RowPositionTopPipe,
+    DataCellDocumentPipe,
   ],
   providers: [
     AttributeNameChangedPipe,

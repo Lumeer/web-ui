@@ -18,18 +18,20 @@
  */
 
 import {Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {filter} from 'rxjs/operators';
+import {filter, first, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
 import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query.helper';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {TableCursor} from '../../../core/store/tables/table-cursor';
-import {DEFAULT_TABLE_ID, TableColumnType, TableModel} from '../../../core/store/tables/table.model';
+import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../../core/store/tables/table.model';
 import {TablesAction} from '../../../core/store/tables/tables.action';
+import {selectTableConfig} from '../../../core/store/tables/tables.selector';
 import {selectTableById, selectTableCursor} from '../../../core/store/tables/tables.state';
+import {selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
 import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
@@ -56,9 +58,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
   public elementId: string;
 
   public table: TableModel;
-  private tableId: string;
-
-  public height = 'auto';
+  public tableId: string;
 
   private selectedCursor: TableCursor;
 
@@ -72,7 +72,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
     this.tableId = this.createTableId();
     this.elementId = `table-${this.tableId}`;
 
-    this.createTableFromQuery();
+    this.initTable();
     this.subscribeToTable();
     this.subscribeToSelectedCursor();
   }
@@ -88,19 +88,26 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
     this.destroyTable();
   }
 
-  private createTableFromQuery() {
+  private initTable() {
+    this.store$.pipe(
+      select(selectPerspectiveViewConfig),
+      first()
+    ).subscribe(config => this.createTableFromQuery(config));
+  }
+
+  private createTableFromQuery(config: TableConfig) {
     if (this.query) {
-      this.createTable(this.query);
+      this.createTable(this.query); // TODO pass config from parent to embedded table
     } else {
-      this.subscribeToQuery();
+      this.subscribeToQuery(config);
     }
   }
 
-  private createTable(query: QueryModel) {
+  private createTable(query: QueryModel, config?: TableConfig) {
     if (!this.tableId) {
       throw new Error('tableId has not been set');
     }
-    this.store$.dispatch(new CreateTable({tableId: this.tableId, query}));
+    this.store$.dispatch(new CreateTable({tableId: this.tableId, query, config}));
   }
 
   private destroyTable() {
@@ -141,11 +148,13 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
     }
   }
 
-  private subscribeToQuery() {
+  private subscribeToQuery(initConfig: TableConfig) {
     this.subscriptions.add(
-      this.store$.select(selectNavigation).pipe(
-        filter(navigation => navigation.perspective === Perspective.Table && !!navigation.query)
-      ).subscribe(({query}) => {
+      this.store$.pipe(
+        select(selectNavigation),
+        filter(navigation => navigation.perspective === Perspective.Table && !!navigation.query),
+        withLatestFrom(this.store$.pipe(select(selectTableConfig)))
+      ).subscribe(([{query}, config]) => {
         if (areQueriesEqual(this.query, query)) {
           return;
         }
@@ -153,7 +162,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
         if (this.table && hasQueryNewLink(this.query, query)) {
           this.addTablePart(query);
         } else {
-          this.refreshTable(query);
+          this.refreshTable(query, config || initConfig);
         }
 
         this.query = query;
@@ -166,9 +175,9 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new TablesAction.CreatePart({tableId: this.tableId, linkTypeId}));
   }
 
-  private refreshTable(query: QueryModel) {
+  private refreshTable(query: QueryModel, config: TableConfig) {
     this.destroyTable();
-    this.createTable(query);
+    this.createTable(query, config);
   }
 
   private createTableId(): string {
