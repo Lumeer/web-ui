@@ -243,6 +243,13 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       const action = queryParams['action'];
       if (action && action === QueryAction.CreateCollection) {
         this.createNewCollection();
+
+        let myQueryParams = Object.assign({}, queryParams);
+        delete myQueryParams.action;
+        this.router.navigate([], {
+          relativeTo: this.activatedRoute,
+          queryParams: myQueryParams
+        });
       }
     });
   }
