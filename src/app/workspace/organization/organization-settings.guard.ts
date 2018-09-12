@@ -22,7 +22,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, combineLatest, of} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {filter, mergeMap, take} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
@@ -33,7 +33,6 @@ import {UsersAction} from '../../core/store/users/users.action';
 import {WorkspaceService} from '../workspace.service';
 import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 
 @Injectable()
 export class OrganizationSettingsGuard implements CanActivate {
@@ -85,7 +84,7 @@ export class OrganizationSettingsGuard implements CanActivate {
   }
 
   private dispatchErrorActions(message: string) {
-    this.router.navigate(['/workspace']);
+    this.router.navigate(['/auth']);
     this.store.dispatch(new NotificationsAction.Error({message}));
   }
 

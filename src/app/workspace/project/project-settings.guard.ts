@@ -22,7 +22,7 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '
 
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, combineLatest, of} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {filter, map, mergeMap, take} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../core/store/app.state';
@@ -98,7 +98,7 @@ export class ProjectSettingsGuard implements CanActivate {
   }
 
   private dispatchErrorActions(message: string) {
-    this.router.navigate(['/workspace']);
+    this.router.navigate(['/auth']);
     this.store.dispatch(new NotificationsAction.Error({message}));
   }
 
