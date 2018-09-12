@@ -22,11 +22,11 @@ import {Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {filter, map, mergeMap, skipWhile, take, withLatestFrom} from 'rxjs/operators';
+import {filter, map, mergeMap, skipWhile, take} from 'rxjs/operators';
 import {AppState} from '../app.state';
 import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
-import {selectPreviousUrl, selectQuery} from './navigation.state';
+import {selectQuery} from './navigation.state';
 import {QueryConverter} from './query.converter';
 import {QueryModel} from './query.model';
 import {SearchTab} from './search-tab';
@@ -92,7 +92,7 @@ export class NavigationEffects {
 
       if (!previousUrl || previousUrl === '/') {
         return new RouterAction.Go({
-          path: ['/', 'w', organizationCode, projectCode, 'search', (searchTab || SearchTab.All)]
+          path: ['/', 'w', organizationCode, projectCode, 'view', 'search', (searchTab || SearchTab.All)]
         });
       }
 
