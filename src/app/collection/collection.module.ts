@@ -30,6 +30,7 @@ import {PickerModule} from '../shared/picker/picker.module';
 import {UsersModule} from '../shared/users/users.module';
 import {AttributeFilterPipe} from './settings/tab/attributes/attribute-filter.pipe';
 import {LinkTypeComponent} from './settings/tab/link-types/link-type/link-type.component';
+import {LinkTypeFilterPipe} from './settings/tab/link-types/link-type-filter.pipe';
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import {LinkTypeComponent} from './settings/tab/link-types/link-type/link-type.c
   ],
   declarations: [
     AttributeFilterPipe,
+    LinkTypeFilterPipe,
     CollectionSettingsComponent,
     CollectionUsersComponent,
     CollectionAttributesComponent,

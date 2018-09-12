@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {NotificationService} from '../../../../core/notifications/notification.service';
@@ -31,13 +31,20 @@ import {selectLinkTypesByCollectionId} from '../../../../core/store/link-types/l
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
+import {Subscription} from 'rxjs/index';
+import {isNullOrUndefined} from 'util';
 
 @Component({
-  templateUrl: './collection-link-types.component.html'
+  templateUrl: './collection-link-types.component.html',
+  styleUrls: ['./collection-link-types.component.scss']
 })
-export class CollectionLinkTypesComponent implements OnInit {
+export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
 
-  public linkTypes$: Observable<LinkTypeModel[]>;
+  public linkTypes: LinkTypeModel[] = [];
+  public collection: CollectionModel;
+  public searchString: String;
+
+  private subscriptions = new Subscription();
 
   constructor(private i18n: I18n,
               private notificationService: NotificationService,
@@ -49,10 +56,19 @@ export class CollectionLinkTypesComponent implements OnInit {
   }
 
   private subscribeData() {
-    this.linkTypes$ = this.store.select(selectCollectionByWorkspace).pipe(
+    this.subscriptions.add(this.store.select(selectCollectionByWorkspace).pipe(
       filter(collection => !!collection),
-      mergeMap(collection => this.selectLinkTypesForCollection(collection.id))
+      mergeMap(collection => this.selectLinkTypesForCollection(collection.id)))
+      .subscribe(linkTypes => this.linkTypes = linkTypes)
     );
+    this.subscriptions.add(this.store.select(selectCollectionByWorkspace)
+      .pipe(filter(collection => !isNullOrUndefined(collection)))
+      .subscribe(collection => this.collection = collection)
+    );
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   private selectLinkTypesForCollection(collectionId: string): Observable<LinkTypeModel[]> {

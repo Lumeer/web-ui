@@ -25,7 +25,7 @@ import {selectLinkInstancesByType} from '../../../../../core/store/link-instance
 import {BehaviorSubject, Subscription} from 'rxjs';
 
 @Component({
-  selector: 'link-type',
+  selector: '[link-type]',
   templateUrl: './link-type.component.html',
   styleUrls: ['./link-type.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
