@@ -106,7 +106,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public getTemplate(document: DocumentModel): TemplateRef<any> {
-    if (this.isDocumentOpened(document)) {
+    if (this.isDocumentExplicitlyExpanded(document)) {
       return this.xlTempl;
     }
     switch (this.size) {
@@ -123,12 +123,12 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private isDocumentOpened(document: DocumentModel): boolean {
+  private isDocumentExplicitlyExpanded(document: DocumentModel): boolean {
     return this.expandedDocumentIds.includes(document.id);
   }
 
   public toggleDocument(document: DocumentModel) {
-    const newIds = this.isDocumentOpened(document) ? this.expandedDocumentIds.filter(id => id !== document.id)
+    const newIds = this.isDocumentExplicitlyExpanded(document) ? this.expandedDocumentIds.filter(id => id !== document.id)
       : [...this.expandedDocumentIds, document.id];
     this.store.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: newIds}}));
   }
@@ -153,7 +153,11 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   public createEntriesHtml(document: DocumentModel): string {
     const collection = this.collectionsMap[document.collectionId];
-    return searchDocumentEntriesHtml(document, collection);
+    return searchDocumentEntriesHtml(document, collection, this.isDocumentExpanded(document));
+  }
+
+  private isDocumentExpanded(document: DocumentModel): boolean {
+    return this.isDocumentExplicitlyExpanded(document) || this.size === SizeType.XL;
   }
 
   public trackByDocument(index: number, document: DocumentModel): string {

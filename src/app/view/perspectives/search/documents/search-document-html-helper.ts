@@ -24,11 +24,12 @@ import {getDefaultAttributeId} from '../../../../core/store/collections/collecti
 
 export function searchDocumentValuesHtml(document: DocumentModel, collection: CollectionModel): string {
   return searchDocumentGetValues(document, collection)
+    .filter(value => value)
     .map(value => `<span class="search-documents-value">${value}</span>`)
     .join(', ');
 }
 
-export function searchDocumentEntriesHtml(document: DocumentModel, collection: CollectionModel): string {
+export function searchDocumentEntriesHtml(document: DocumentModel, collection: CollectionModel, showEmptyValues: boolean): string {
   if (isNullOrUndefined(document.data)) {
     return '';
   }
@@ -36,7 +37,7 @@ export function searchDocumentEntriesHtml(document: DocumentModel, collection: C
   const collectionAttributesIds = collection.attributes.map(attribute => attribute.id);
 
   return Object.keys(document.data)
-    .filter(documentKey => collectionAttributesIds.includes(documentKey))
+    .filter(attributeId => collectionAttributesIds.includes(attributeId) && (showEmptyValues || document.data[attributeId]))
     .map(attributeId => `${searchDocumentAttributeHtml(attributeId, collection)}${searchDocumentValueHtml(document.data[attributeId])}`)
     .join(', ');
 }
