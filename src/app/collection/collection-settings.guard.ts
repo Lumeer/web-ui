@@ -33,9 +33,9 @@ import {OrganizationModel} from '../core/store/organizations/organization.model'
 import {NotificationsAction} from '../core/store/notifications/notifications.action';
 import {UsersAction} from '../core/store/users/users.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {selectAllOrganizations} from '../core/store/organizations/organizations.state';
 import {userHasManageRoleInResource} from '../shared/utils/resource.utils';
 import {selectCurrentUserForWorkspace} from '../core/store/users/users.state';
+import {WorkspaceService} from '../workspace/workspace.service';
 
 @Injectable()
 export class CollectionSettingsGuard implements CanActivate {
@@ -43,6 +43,7 @@ export class CollectionSettingsGuard implements CanActivate {
   constructor(private i18n: I18n,
               private router: Router,
               private collectionService: CollectionService,
+              private workspaceService: WorkspaceService,
               private store: Store<AppState>) {
   }
 
@@ -52,13 +53,13 @@ export class CollectionSettingsGuard implements CanActivate {
 
     return this.loadCollections().pipe(
       mergeMap(() => this.store.select(selectCollectionById(collectionId))),
-      withLatestFrom(this.store.select(selectAllOrganizations)),
-      mergeMap(([collection, organizations]) => this.store.select(selectCurrentUserForWorkspace).pipe(
+      withLatestFrom(this.workspaceService.getOrganizationFromStoreOrApi(organizationCode)),
+      mergeMap(([collection, organization]) => this.store.select(selectCurrentUserForWorkspace).pipe(
         filter(user => !isNullOrUndefined(user)),
         take(1),
-        map(user => ({collection, organizations, user}))
+        map(user => ({collection, organization, user}))
       )),
-      map(({collection, organizations, user}) => {
+      map(({collection, organization, user}) => {
         if (isNullOrUndefined(collection)) {
           this.dispatchErrorActionsNotExist();
           return false;
@@ -69,7 +70,6 @@ export class CollectionSettingsGuard implements CanActivate {
           return false;
         }
 
-        const organization = organizations.find(org => org.code === organizationCode);
         this.dispatchDataEvents(organization, collection);
         return true;
       }),
@@ -103,7 +103,7 @@ export class CollectionSettingsGuard implements CanActivate {
   }
 
   private dispatchErrorActions(message: string) {
-    this.router.navigate(['/workspace']);
+    this.router.navigate(['/auth']);
     this.store.dispatch(new NotificationsAction.Error({message}));
   }
 
