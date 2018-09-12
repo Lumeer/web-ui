@@ -17,6 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+export interface Event {
+
+  id?: string;
+  fireReasons: EventFireReason[];
+  callback: EventCallback;
+  parameters: EventParameter[];
+  automatic?: boolean;
+
+}
+
+export interface EventCallback {
+
+  name: string;
+  hasValue?: boolean;
+  value?: string;
+
+}
+
 export enum EventFireReason {
 
   documentCreate = 'new record',
@@ -26,5 +44,13 @@ export enum EventFireReason {
   attributeCreate = 'new attribute',
   attributeEdit = 'attribute edit',
   attributeRemove = 'attribute removal'
+
+}
+
+export interface EventParameter {
+
+  name: string;
+  value: any;
+  possibleValues: any[];
 
 }

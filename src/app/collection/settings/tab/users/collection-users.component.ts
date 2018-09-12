@@ -19,13 +19,12 @@
 
 import {Component} from '@angular/core';
 
-import {CollectionTabComponent} from '../collection-tab.component';
 import {ResourceType} from '../../../../core/model/resource-type';
 
 @Component({
   templateUrl: './collection-users.component.html'
 })
-export class CollectionUsersComponent extends CollectionTabComponent {
+export class CollectionUsersComponent {
 
   public getResourceType(): ResourceType {
     return ResourceType.Collection;

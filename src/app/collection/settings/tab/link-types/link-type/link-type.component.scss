@@ -1,0 +1,16 @@
+@import "../../../../../../styles/variables";
+
+:host {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+
+  &:hover .delete {
+    opacity: 1 !important;
+  }
+}
+
+.delete {
+  opacity: 0;
+  transition: opacity $animation-color-duration;
+}
