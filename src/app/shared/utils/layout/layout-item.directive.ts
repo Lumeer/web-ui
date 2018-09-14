@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Directive, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, Input, OnDestroy} from '@angular/core';
 import {PostItLayout} from './post-it-layout';
 
 @Directive({

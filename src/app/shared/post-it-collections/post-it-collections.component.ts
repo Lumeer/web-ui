@@ -329,7 +329,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       .map(collection => collection.correlationId)
       .concat(uncreatedCorrelationIds);
 
-    this.correlationIdsOrder = this.correlationIdsOrder.filter(correlationId => currentUsedCorrelationIds.includes(correlationId))
+    this.correlationIdsOrder = this.correlationIdsOrder.filter(correlationId => currentUsedCorrelationIds.includes(correlationId));
   }
 
   private deleteInitializedPostIt(collection: CollectionModel) {
