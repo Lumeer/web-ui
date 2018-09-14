@@ -74,7 +74,7 @@ export class FeedbackDialogComponent implements OnInit {
   }
 
   private notifyOnError() {
-    const message = this.i18n({id: 'dialog.feedback.error', value: 'Failed to send feedback.'});
+    const message = this.i18n({id: 'dialog.feedback.error', value: 'Could not send feedback.'});
     this.notificationService.error(message);
   }
 
