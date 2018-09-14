@@ -17,176 +17,109 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {Router} from '@angular/router';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {finalize, map} from 'rxjs/operators';
-import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../../core/constants';
-import {Collection} from '../../../../core/dto';
 import {NotificationService} from '../../../../core/notifications/notification.service';
-import {LinkTypeService} from '../../../../core/rest';
 import {AppState} from '../../../../core/store/app.state';
-import {CollectionTabComponent} from '../collection-tab.component';
-import {LinkTypeModel} from './LinkTypeModel';
-import {selectAllCollections} from '../../../../core/store/collections/collections.state';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Observable, combineLatest as observableCombineLatest, Subscription, BehaviorSubject} from 'rxjs';
+import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
+import {selectCollectionByWorkspace, selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
+import {filter, map, mergeMap, tap} from 'rxjs/operators';
+import {selectLinkTypesByCollectionId} from '../../../../core/store/link-types/link-types.state';
+import {CollectionModel} from '../../../../core/store/collections/collection.model';
+import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
+import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
+import {isNullOrUndefined} from 'util';
 
 @Component({
-  selector: 'collection-link-types',
   templateUrl: './collection-link-types.component.html',
-  styleUrls: ['./collection-link-types.component.scss']
+  styleUrls: ['./collection-link-types.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CollectionLinkTypesComponent extends CollectionTabComponent implements OnInit {
+export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
 
-  @ViewChildren('name')
-  public linkTypeNameInput: QueryList<ElementRef>;
+  public linkTypes$: Observable<LinkTypeModel[]>;
+  public collection$: Observable<CollectionModel>;
+  public searchString$ =  new BehaviorSubject<string>('');
 
-  public linkTypes: LinkTypeModel[] = [];
+  private subscriptions = new Subscription();
 
-  public collections: { [collectionId: string]: Collection } = {};
-
-  constructor(private linkTypeService: LinkTypeService,
-              private router: Router,
+  constructor(private i18n: I18n,
               private notificationService: NotificationService,
-              store: Store<AppState>) {
-    super(store);
+              private store: Store<AppState>) {
   }
 
-  public ngOnInit(): void {
-    super.ngOnInit();
+  public ngOnInit() {
+    this.subscribeData();
+  }
 
-    this.store.select(selectAllCollections).subscribe(
-      collections => this.collections = collections.reduce((acc, coll) => {
-        acc[coll.id] = coll;
-        return acc;
-      }, {})
+  private subscribeData() {
+    this.linkTypes$ = this.store.select(selectCollectionByWorkspace).pipe(
+      filter(collection => !!collection),
+      mergeMap(collection => this.selectLinkTypesForCollection(collection.id)));
+
+    this.collection$ = this.store.select(selectCollectionByWorkspace)
+      .pipe(filter(collection => !isNullOrUndefined(collection)));
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
+  private selectLinkTypesForCollection(collectionId: string): Observable<LinkTypeModel[]> {
+    return observableCombineLatest(this.store.select(selectLinkTypesByCollectionId(collectionId)),
+      this.store.select(selectCollectionsDictionary)
+    ).pipe(
+      map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => {
+        const collections: [CollectionModel, CollectionModel] = [collectionsMap[linkType.collectionIds[0]], collectionsMap[linkType.collectionIds[1]]];
+        return {...linkType, collections};
+      })),
+      tap(linkTypes => this.fetchLinkInstances(linkTypes))
     );
   }
 
-  private initializeLinkTypes(): void {
-    this.linkTypes = [];
-    this.linkTypeService.getLinkTypes({collectionIds: [this.collection.id]}).pipe(
-      map(linkTypes => linkTypes.filter(linkType => linkType.collectionIds[0] === this.collection.id))
-    ).subscribe(
-      linkTypes => this.linkTypes = linkTypes.map(linkType => new LinkTypeModel(linkType)),
-      error => this.notificationService.error('Failed fetching LinkTypes')
-    );
+  private fetchLinkInstances(linkTypes: LinkTypeModel[]) {
+    const query = {linkTypeIds: linkTypes.map(link => link.id)};
+    this.store.dispatch(new LinkInstancesAction.Get({query}));
   }
 
-  public changeCollection(collectionId: string): void {
-    this.router.navigate([this.workspacePath(), 'c', collectionId, 'linktypes']);
+  public onSearchInputChanged(newString: string) {
+    this.searchString$.next(newString);
   }
 
-  public emptyLinkType(): LinkTypeModel {
-    return new LinkTypeModel(null, this.collection.id);
-  }
-
-  public addLinkType(): void {
-    const newLinkType = this.emptyLinkType();
-    this.linkTypes.push(newLinkType);
-    setTimeout(() => this.linkTypeNameInput.last && this.linkTypeNameInput.last.nativeElement.focus());
-  }
-
-  public createLinkType(linkTypeModel: LinkTypeModel): void {
-    if (linkTypeModel.initialized) {
-      throw new Error(`Link Type Model ${linkTypeModel} already initialized`);
-    }
-
-    if (linkTypeModel.initializing) {
-      return;
-    }
-
-    linkTypeModel.initializing = true;
-    this.linkTypeService.createLinkType(linkTypeModel.data)
-      .pipe(
-        finalize(() => linkTypeModel.initializing = false)
-      )
-      .subscribe(
-        linkType => {
-          linkTypeModel.initialized = true;
-          linkTypeModel.data.id = linkType.id;
-        },
-        error => {
-          this.notificationService.error('Failed creating link type');
-        }
-      );
-  }
-
-  public updateLinkType(linkTypeModel: LinkTypeModel): void {
-    this.linkTypeService.updateLinkType(linkTypeModel.data.id, linkTypeModel.data).subscribe(
-      linkType => linkTypeModel.data = linkType,
-      error => this.notificationService.error('Failed updating link type')
-    );
-  }
-
-  public changeToCollection(linkTypeModel: LinkTypeModel, collectionId: string): void {
-    this.notificationService.confirm('Are you sure you want to change linked file?', 'Delete?', [
-      {
-        text: 'Yes', action: () => {
-          linkTypeModel.changeLinkedCollection(collectionId);
-          this.updateLinkType(linkTypeModel);
-        }, bold: false
-      },
-      {
-        text: 'No'
-      }
-    ]);
-  }
-
-  public deleteLinkType(linkTypeModel: LinkTypeModel): void {
-    this.notificationService.confirm('Are you sure you want to delete link type?', 'Delete?', [
-      {
-        text: 'Yes', action: () => {
-          this.linkTypeService.deleteLinkType(linkTypeModel.data.id).subscribe(
-            () => this.removeLinkType(linkTypeModel),
-            error => this.notificationService.error('Failed removing link type')
-          );
-        }, bold: false
-      },
-      {
-        text: 'No'
-      }
-    ]);
-  }
-
-  public removeLinkType(removedLinkTypeModel: LinkTypeModel): void {
-    const index = this.linkTypes.findIndex(linkTypeModel => linkTypeModel === removedLinkTypeModel);
-    if (index !== -1) {
-      this.linkTypes.splice(index, 1);
-    }
-  }
-
-  public getLinkedCollection(linkTypeModel: LinkTypeModel): Collection {
-    if (linkTypeModel.initialized) {
-      return this.collections[linkTypeModel.data.collectionIds[1]];
+  public onDeleteLinkType(linkType: LinkTypeModel, usageCount: number) {
+    if (usageCount === 0) {
+      this.deleteLinkType(linkType);
     } else {
-      return {
-        code: '',
-        icon: DEFAULT_ICON,
-        color: DEFAULT_COLOR,
-        name: '',
-        description: '',
-        attributes: []
-      };
+      this.confirmDeletionLinkType(linkType);
     }
   }
 
-  public possibleToCollectionIds(linkTypeModel: LinkTypeModel): string[] {
-    const excludedIds = [this.collection.id];
+  private confirmDeletionLinkType(linkType: LinkTypeModel) {
+    const title = this.i18n({id: 'collection.tab.linktypes.delete.title', value: 'Delete linktype?'});
+    const message = this.i18n({id: 'collection.tab.linktypes.delete.message', value: 'Are you sure to delete "{{name}}" and all its links?.'}, {
+      name: linkType.name
+    });
+    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
+    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
-    if (linkTypeModel.initialized) {
-      excludedIds.push(linkTypeModel.data.collectionIds[1]);
-    }
-
-    return Object
-      .keys(this.collections)
-      .filter(collectionId => !excludedIds.includes(collectionId));
+    this.notificationService.confirm(
+      message, title,
+      [
+        {text: yesButtonText, action: () => this.deleteLinkType(linkType), bold: false},
+        {text: noButtonText}
+      ]
+    );
   }
 
-  public searchLinkTypesQueryParams(linkTypeModel: LinkTypeModel): object {
-    return {
-      query: JSON.stringify({linkNames: [linkTypeModel.data.name]})
-    };
+  private deleteLinkType(linkType: LinkTypeModel) {
+    this.store.dispatch(new LinkTypesAction.Delete({linkTypeId: linkType.id}));
+  }
+
+  public trackByLinkType(linkType: LinkTypeModel, index: number): string {
+    return linkType.id;
   }
 
 }

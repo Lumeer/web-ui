@@ -23,7 +23,7 @@ import {Store} from '@ngrx/store';
 import {Observable, of, EMPTY} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {LocalStorage} from '../../shared/utils/local-storage';
-import {Event} from '../dto/Event';
+import {Event} from '../dto/event';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';

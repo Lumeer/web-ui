@@ -87,10 +87,6 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
     this.updateCollection(collection);
   }
 
-  public onNewCode(code: string) {
-    // TODO
-  }
-
   public getResourceType(): ResourceType {
     return ResourceType.Collection;
   }

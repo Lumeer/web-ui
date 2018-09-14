@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Observable, combineLatest as observableCombineLatest} from 'rxjs';
 import {LinkTypeModel} from '../../../core/store/link-types/link-type.model';
-import {selectLinkTypesByDocumentId} from '../../../core/store/link-types/link-types.state';
+import {selectLinkTypesByCollectionId, selectLinkTypesByDocumentId} from '../../../core/store/link-types/link-types.state';
 import {AppState} from '../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {map, tap} from 'rxjs/operators';
@@ -40,12 +40,14 @@ export class LinksListComponent implements OnChanges {
 
   @Input() public document: DocumentModel;
 
+  @Input() public collection: CollectionModel;
+
   @Output() public select = new EventEmitter<{ collection: CollectionModel, document: DocumentModel }>();
 
   public linkTypes$: Observable<LinkTypeModel[]>;
   public activeLinkType: LinkTypeModel;
 
-  private lastDocumentId: string;
+  private lastCollectionId: string;
 
   public constructor(private store: Store<AppState>) {
   }
@@ -67,9 +69,9 @@ export class LinksListComponent implements OnChanges {
   }
 
   private renewSubscriptions() {
-    if (this.document && this.document.id !== this.lastDocumentId) {
-      this.lastDocumentId = this.document.id;
-      this.linkTypes$ = observableCombineLatest(this.store.select(selectLinkTypesByDocumentId(this.document.id)),
+    if (this.collection && this.collection.id !== this.lastCollectionId) {
+      this.lastCollectionId = this.collection.id;
+      this.linkTypes$ = observableCombineLatest(this.store.select(selectLinkTypesByCollectionId(this.collection.id)),
         this.store.select(selectCollectionsDictionary)
       ).pipe(
         map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => {

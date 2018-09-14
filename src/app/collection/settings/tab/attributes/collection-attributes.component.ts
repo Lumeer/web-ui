@@ -19,7 +19,6 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 
-import {HtmlModifier} from '../../../../shared/utils/html-modifier';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
@@ -106,7 +105,7 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
   }
 
   public showAttributeDeleteDialog(attribute: AttributeModel, onCancel?: () => void) {
-    const title = this.i18n({id: 'collection.tab.attributes.delete.message', value: 'Delete attribute?'});
+    const title = this.i18n({id: 'collection.tab.attributes.delete.title', value: 'Delete attribute?'});
     const message = this.i18n({id: 'collection.tab.attributes.delete.message', value: 'Attribute "{{name}}" is about to be permanently deleted.'}, {
       name: attribute.name
     });

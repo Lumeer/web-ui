@@ -25,15 +25,18 @@ import {WorkspaceGuard} from '../core/guards/workspace.guard';
 import {CollectionSettingsGuard} from './collection-settings.guard';
 import {CollectionSettingsComponent} from './settings/collection-settings.component';
 import {CollectionAttributesComponent} from './settings/tab/attributes/collection-attributes.component';
-import {CollectionEventsComponent} from './settings/tab/events/collection-events.component';
 import {CollectionLinkTypesComponent} from './settings/tab/link-types/collection-link-types.component';
 import {CollectionUsersComponent} from './settings/tab/users/collection-users.component';
+import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 
 const collectionRoutes: Routes = [
   {
     path: 'w/:organizationCode/:projectCode/c/:collectionId',
     canActivate: [AuthGuard, CurrentUserGuard, WorkspaceGuard, CollectionSettingsGuard],
     component: CollectionSettingsComponent,
+    resolve: {
+      linkTypes: LinkTypesGuard
+    },
     children: [
       {
         path: 'attributes',
@@ -42,10 +45,6 @@ const collectionRoutes: Routes = [
       {
         path: 'linktypes',
         component: CollectionLinkTypesComponent
-      },
-      {
-        path: 'events',
-        component: CollectionEventsComponent
       },
       {
         path: 'users',
