@@ -43,9 +43,8 @@ echo "Starting backend..."
 dump_output
 
 echo "Starting UI..."
-npm start #>> $BUILD_OUTPUT 2>&1 &
+npm start >> $BUILD_OUTPUT 2>&1 &
 while ! curl --output /dev/null --silent -r 0-0 --fail "http://localhost:7000/ui"; do
-  echo "Waiting for UI to start"
   sleep 3
 done
 
