@@ -27,7 +27,6 @@ import {BehaviorSubject, Subscription} from 'rxjs';
 @Component({
   selector: '[link-type]',
   templateUrl: './link-type.component.html',
-  styleUrls: ['./link-type.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkTypeComponent implements OnInit, OnDestroy, OnChanges {
