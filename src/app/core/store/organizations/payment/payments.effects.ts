@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {catchError, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {Actions, Effect, ofType} from '@ngrx/effects';
@@ -54,7 +54,7 @@ export class PaymentsEffects {
     ofType<PaymentsAction.GetPaymentsFailure>(PaymentsActionType.GET_PAYMENTS_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.payments.get.fail', value: 'Cannot read information about your previous service orders'});
+      const message = this.i18n({id: 'organization.payments.get.fail', value: 'Could not read information about your previous service orders'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -83,7 +83,7 @@ export class PaymentsEffects {
     ofType<PaymentsAction.GetPaymentFailure>(PaymentsActionType.GET_PAYMENT_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.payment.get.fail', value: 'Cannot read information about your previous service order'});
+      const message = this.i18n({id: 'organization.payment.get.fail', value: 'Could not read information about your previous service order'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -107,7 +107,7 @@ export class PaymentsEffects {
     ofType<PaymentsAction.CreatePaymentFailure>(PaymentsActionType.CREATE_PAYMENT_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.payment.create.fail', value: 'Cannot create your new service order'});
+      const message = this.i18n({id: 'organization.payment.create.fail', value: 'Could not create your new service order'});
       return new NotificationsAction.Error({message});
     })
   );

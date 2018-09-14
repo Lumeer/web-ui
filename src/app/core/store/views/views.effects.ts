@@ -71,7 +71,7 @@ export class ViewsEffects {
     ofType<ViewsAction.GetFailure>(ViewsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'views.get.fail', value: 'Failed to get views'});
+      const message = this.i18n({id: 'views.get.fail', value: 'Could not get views'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -114,7 +114,7 @@ export class ViewsEffects {
     ofType<ViewsAction.CreateFailure>(ViewsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'view.create.fail', value: 'Failed to create view'});
+      const message = this.i18n({id: 'view.create.fail', value: 'Could not create the view'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -152,7 +152,7 @@ export class ViewsEffects {
     ofType<ViewsAction.UpdateFailure>(ViewsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'view.update.fail', value: 'Failed to update view'});
+      const message = this.i18n({id: 'view.update.fail', value: 'Could not update the view'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -173,7 +173,7 @@ export class ViewsEffects {
     ofType<ViewsAction.DeleteFailure>(ViewsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'view.delete.fail', value: 'Failed to delete view'});
+      const message = this.i18n({id: 'view.delete.fail', value: 'Could not delete the view'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -203,7 +203,7 @@ export class ViewsEffects {
     ofType<ViewsAction.SetPermissionsFailure>(ViewsActionType.SET_PERMISSIONS_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'view.change.permission.fail', value: 'Failed to change view permissions'});
+      const message = this.i18n({id: 'view.change.permission.fail', value: 'Could not change the view permissions'});
       return new NotificationsAction.Error({message});
     })
   );

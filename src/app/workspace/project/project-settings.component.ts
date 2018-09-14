@@ -68,7 +68,7 @@ export class ProjectSettingsComponent implements OnInit {
   }
 
   public onDelete(): void {
-    const message = this.i18n({id: 'project.delete.dialog.message', value: 'Project is about to be permanently deleted.'});
+    const message = this.i18n({id: 'project.delete.dialog.message', value: 'Do you really want to permanently delete this project?'});
     const title = this.i18n({id: 'project.delete.dialog.title', value: 'Delete project?'});
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
     const noButtonText = this.i18n({id: 'button.no', value: 'No'});
@@ -77,8 +77,8 @@ export class ProjectSettingsComponent implements OnInit {
       message,
       title,
       [
-        {text: yesButtonText, action: () => this.deleteProject(), bold: false},
-        {text: noButtonText}
+        {text: noButtonText},
+        {text: yesButtonText, action: () => this.deleteProject(), bold: false}
       ]
     );
   }

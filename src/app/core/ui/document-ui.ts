@@ -418,8 +418,8 @@ export class DocumentUi {
       const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
       this.notificationService.confirm(message, title, [
-        {text: yesButtonText, action: () => this.removeRow(idx), bold: false},
-        {text: noButtonText}
+        {text: noButtonText},
+        {text: yesButtonText, action: () => this.removeRow(idx), bold: false}
       ]);
     } else {
       this.removeRow(idx);

@@ -22,7 +22,7 @@ import {Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 
 import {AppState} from '../../../../core/store/app.state';
-import {Observable, Subscription, combineLatest} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {selectViewsByQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../../core/store/navigation/workspace.model';
@@ -99,7 +99,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   }
 
   public onDeleteView(view: ViewModel) {
-    const message = this.i18n({id: 'views.delete.message', value: 'View is about to be permanently deleted.'});
+    const message = this.i18n({id: 'views.delete.message', value: 'Do you really want to permanently delete this view?'});
     const title = this.i18n({id: 'views.delete.title', value: 'Delete view?'});
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
     const noButtonText = this.i18n({id: 'button.no', value: 'No'});
@@ -108,8 +108,8 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
       message,
       title,
       [
-        {text: yesButtonText, action: () => this.deleteView(view), bold: false},
-        {text: noButtonText}
+        {text: noButtonText},
+        {text: yesButtonText, action: () => this.deleteView(view), bold: false}
       ]
     );
   }

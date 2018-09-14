@@ -23,7 +23,7 @@ import {Store} from '@ngrx/store';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {AppState} from '../../../../core/store/app.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, combineLatest as observableCombineLatest, Subscription, BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 import {selectCollectionByWorkspace, selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
 import {filter, map, mergeMap, tap} from 'rxjs/operators';
@@ -98,8 +98,11 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
   }
 
   private confirmDeletionLinkType(linkType: LinkTypeModel) {
-    const title = this.i18n({id: 'collection.tab.linktypes.delete.title', value: 'Delete linktype?'});
-    const message = this.i18n({id: 'collection.tab.linktypes.delete.message', value: 'Are you sure to delete "{{name}}" and all its links?.'}, {
+    const title = this.i18n({id: 'collection.tab.linktypes.delete.title', value: 'Delete link type?'});
+    const message = this.i18n({
+      id: 'collection.tab.linktypes.delete.message',
+      value: 'Do you really want to delete the link type "{{name}}" and all its usages?'
+    }, {
       name: linkType.name
     });
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});

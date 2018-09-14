@@ -292,7 +292,7 @@ export class TableSingleColumnComponent implements OnChanges {
     const title = this.i18n({id: 'table.delete.column.dialog.title', value: 'Delete this column?'});
     const message = this.i18n({
       id: 'table.delete.column.dialog.message',
-      value: 'Deleting a column will permanently remove the attribute from the collection.'
+      value: 'Do you really want to delete the column? This will remove the attribute from the collection permanently.'
     });
 
     return new NotificationsAction.Confirm({title, message, action});

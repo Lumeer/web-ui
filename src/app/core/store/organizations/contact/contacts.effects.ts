@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {Actions, Effect, ofType} from '@ngrx/effects';
@@ -46,7 +46,7 @@ export class ContactsEffects {
     ofType<ContactsAction.GetContactFailure>(ContactsActionType.GET_CONTACT_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.contact.get.fail', value: 'Cannot read contact information'});
+      const message = this.i18n({id: 'organization.contact.get.fail', value: 'Could not read contact information'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -65,7 +65,7 @@ export class ContactsEffects {
     ofType<ContactsAction.GetContactFailure>(ContactsActionType.SET_CONTACT_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.contact.set.fail', value: 'Cannot save contact information'});
+      const message = this.i18n({id: 'organization.contact.set.fail', value: 'Could not save contact information'});
       return new NotificationsAction.Error({message});
     })
   );

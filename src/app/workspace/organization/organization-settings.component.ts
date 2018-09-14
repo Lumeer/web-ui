@@ -67,7 +67,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   public onDelete() {
-    const message = this.i18n({id: 'organization.delete.dialog.message', value: 'Organization is about to be permanently deleted.'});
+    const message = this.i18n({id: 'organization.delete.dialog.message', value: 'Do you really want to permanently delete this organization?'});
     const title = this.i18n({id: 'organization.delete.dialog.title', value: 'Delete organization?'});
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
     const noButtonText = this.i18n({id: 'button.no', value: 'No'});
@@ -76,8 +76,8 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
       message,
       title,
       [
-        {text: yesButtonText, action: () => this.deleteOrganization(), bold: false},
-        {text: noButtonText}
+        {text: noButtonText},
+        {text: yesButtonText, action: () => this.deleteOrganization(), bold: false}
       ]
     );
   }

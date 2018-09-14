@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
@@ -51,7 +51,7 @@ export class LinkInstancesEffects {
     ofType<LinkInstancesAction.GetFailure>(LinkInstancesActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'link.instances.get.fail', value: 'Failed to get links'});
+      const message = this.i18n({id: 'link.instances.get.fail', value: 'Could not get links'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -81,7 +81,7 @@ export class LinkInstancesEffects {
     ofType<LinkInstancesAction.CreateFailure>(LinkInstancesActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'link.instance.create.fail', value: 'Failed to create link'});
+      const message = this.i18n({id: 'link.instance.create.fail', value: 'Could not create the link'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -105,7 +105,7 @@ export class LinkInstancesEffects {
     ofType<LinkInstancesAction.UpdateFailure>(LinkInstancesActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'link.instance.update.fail', value: 'Failed to update link'});
+      const message = this.i18n({id: 'link.instance.update.fail', value: 'Could not update the link'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -130,7 +130,7 @@ export class LinkInstancesEffects {
     ofType<LinkInstancesAction.DeleteConfirm>(LinkInstancesActionType.DELETE_CONFIRM),
     map((action: LinkInstancesAction.DeleteConfirm) => {
       const title = this.i18n({id: 'link.instance.delete.dialog.title', value: 'Delete link'});
-      const message = this.i18n({id: 'link.instance.delete.dialog.message', value: 'Do you really want to delete link between records?'});
+      const message = this.i18n({id: 'link.instance.delete.dialog.message', value: 'Do you really want to delete this link between records?'});
 
       return new NotificationsAction.Confirm({
         title,
@@ -145,7 +145,7 @@ export class LinkInstancesEffects {
     ofType<LinkInstancesAction.DeleteFailure>(LinkInstancesActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'link.instance.delete.fail', value: 'Failed to delete link'});
+      const message = this.i18n({id: 'link.instance.delete.fail', value: 'Could not delete the link'});
       return new NotificationsAction.Error({message});
     })
   );
