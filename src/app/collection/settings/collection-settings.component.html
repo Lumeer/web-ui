@@ -8,8 +8,7 @@
       (colorChange)="onNewColor($event)"
       (iconChange)="onNewIcon($event)"
       (descriptionChange)="onNewDescription($event)"
-      (nameChange)="onNewName($event)"
-      (codeChange)="onNewCode($event)">
+      (nameChange)="onNewName($event)">
       <div class="d-flex flex-row text-primary flex-nowrap align-items-center mr-3"
            [style.color]="collection.color"
            title="Number of users" i18n-title="@@collection.settings.users.count">
@@ -36,7 +35,7 @@
           Attributes
         </a>
       </li>
-      <!--li role="presentation" class="nav-item">
+      <li role="presentation" class="nav-item">
         <a [routerLink]="['linktypes']"
            routerLinkActive="active"
            class="nav-link"
@@ -44,14 +43,6 @@
           Link Types
         </a>
       </li>
-      <li role="presentation" class="nav-item">
-        <a [routerLink]="['events']"
-           routerLinkActive="active"
-           class="nav-link"
-           i18n="@@collection.config.tab.events">
-          Events
-        </a>
-      </li-->
       <li role="presentation" class="nav-item">
         <a [routerLink]="['users']"
            routerLinkActive="active"

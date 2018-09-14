@@ -17,6 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+export interface Event {
+
+  id?: string;
+  fireReasons: EventFireReason[];
+  callback: EventCallback;
+  parameters: EventParameter[];
+  automatic?: boolean;
+
+}
+
+export interface EventCallback {
+
+  name: string;
+  hasValue?: boolean;
+  value?: string;
+
+}
+
+export enum EventFireReason {
+
+  documentCreate = 'new record',
+  documentEdit = 'record edit',
+  documentRemove = 'record removal',
+
+  attributeCreate = 'new attribute',
+  attributeEdit = 'attribute edit',
+  attributeRemove = 'attribute removal'
+
+}
+
 export interface EventParameter {
 
   name: string;
@@ -24,15 +54,3 @@ export interface EventParameter {
   possibleValues: any[];
 
 }
-
-export const documentStickyness: EventParameter = {
-  name: 'record stickyness',
-  value: 'yes',
-  possibleValues: ['yes', 'no']
-};
-
-export const ascending: EventParameter = {
-  name: 'ascending',
-  value: true,
-  possibleValues: [true, false]
-};

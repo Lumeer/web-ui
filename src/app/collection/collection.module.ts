@@ -25,13 +25,12 @@ import {CollectionSettingsComponent} from './settings/collection-settings.compon
 import {CollectionLinkTypesComponent} from './settings/tab/link-types/collection-link-types.component';
 import {CollectionAttributesComponent} from './settings/tab/attributes/collection-attributes.component';
 import {CollectionUsersComponent} from './settings/tab/users/collection-users.component';
-import {CollectionEventsComponent} from './settings/tab/events/collection-events.component';
 import {CollectionSettingsGuard} from './collection-settings.guard';
-import {LinkAttributeListComponent} from './settings/tab/link-attribute-list/link-attribute-list.component';
-import {CollectionTabComponent} from './settings/tab/collection-tab.component';
 import {PickerModule} from '../shared/picker/picker.module';
 import {UsersModule} from '../shared/users/users.module';
 import {AttributeFilterPipe} from './settings/tab/attributes/attribute-filter.pipe';
+import {LinkTypeComponent} from './settings/tab/link-types/link-type/link-type.component';
+import {LinkTypeFilterPipe} from './settings/tab/link-types/link-type-filter.pipe';
 
 @NgModule({
   imports: [
@@ -42,13 +41,12 @@ import {AttributeFilterPipe} from './settings/tab/attributes/attribute-filter.pi
   ],
   declarations: [
     AttributeFilterPipe,
-    LinkAttributeListComponent,
-    CollectionTabComponent,
+    LinkTypeFilterPipe,
     CollectionSettingsComponent,
     CollectionUsersComponent,
     CollectionAttributesComponent,
-    CollectionEventsComponent,
-    CollectionLinkTypesComponent
+    CollectionLinkTypesComponent,
+    LinkTypeComponent
   ],
   providers: [
     CollectionSettingsGuard

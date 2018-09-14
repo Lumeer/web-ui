@@ -21,7 +21,7 @@ export {Attribute} from './attribute';
 export {Collection} from './collection';
 export {Contact} from './contact';
 export {Document} from './document';
-export {Event} from './Event';
+export {Event} from './event';
 export {Group} from './group';
 export {LinkInstance} from './link-instance';
 export {LinkType} from './link-type';

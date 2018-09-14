@@ -17,14 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum EventFireReason {
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-  documentCreate = 'new record',
-  documentEdit = 'record edit',
-  documentRemove = 'record removal',
+import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 
-  attributeCreate = 'new attribute',
-  attributeEdit = 'attribute edit',
-  attributeRemove = 'attribute removal'
+@Pipe({
+  name: 'linkTypeFilter'
+})
+@Injectable()
+export class LinkTypeFilterPipe implements PipeTransform {
 
+  public transform(linkTypes: LinkTypeModel[], value: string): any[] {
+    if (!linkTypes || !value) {
+      return linkTypes;
+    }
+    return linkTypes.filter(lt => lt.name.toLowerCase().includes(value.toLocaleLowerCase()));
+  }
 }

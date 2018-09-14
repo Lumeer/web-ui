@@ -13,6 +13,7 @@
   <links-list
     *ngIf="selectedDocument"
     [document]="selectedDocument"
+    [collection]="selectedCollection"
     (select)="selectCollectionAndDocument($event)">
   </links-list>
 </div>

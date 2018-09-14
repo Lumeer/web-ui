@@ -41,7 +41,6 @@ export class DialogService {
 
   public closeDialog() {
     this.callback = null;
-    this.open = false;
     this.navigateToDialog(null);
   }
 
@@ -88,7 +87,7 @@ export class DialogService {
   }
 
   private navigateToDialog(path: any[]) {
-    this.open = true;
+    this.open = !!path;
     return this.router.navigate(['', {outlets: {dialog: path}}], {queryParamsHandling: 'preserve'});
   }
 
