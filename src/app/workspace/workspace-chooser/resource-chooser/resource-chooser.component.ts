@@ -235,7 +235,7 @@ export class ResourceChooserComponent implements OnChanges {
       const message = this.i18n(
         {
           id: 'resource.delete.dialog.message',
-          value: 'Are you sure you want to remove {resourceType, select, Project {project} Organization {organization}} {{resourceCode}}?'
+          value: 'Do you really want to delete {resourceType, select, Project {project} Organization {organization}} {{resourceCode}}?'
         },
         {
           resourceType: this.resourceType,
@@ -247,8 +247,8 @@ export class ResourceChooserComponent implements OnChanges {
       const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
       this.notificationService.confirm(message, title, [
-        {text: yesButtonText, action: () => this.resourceDelete.emit(resource.id), bold: false},
-        {text: noButtonText}
+        {text: noButtonText},
+        {text: yesButtonText, action: () => this.resourceDelete.emit(resource.id), bold: false}
       ]);
     } else {
       this.newResources = this.newResources.filter(newRes => newRes.correlationId !== resource.correlationId);

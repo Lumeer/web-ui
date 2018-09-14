@@ -49,8 +49,8 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context><context context-type="linenumber">65</context></context-group></trans-unit>
             <trans-unit id="collection.button.remove" datatype="html">
-                <source>Remove Collection</source>
-                <target>Odstranit soubor</target>
+                <source>Delete Collection</source>
+                <target>Smazat kolekci</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit>
             <trans-unit id="search.input.placeholder" datatype="html">
@@ -73,92 +73,35 @@
 
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/button/search-button.component.html</context><context context-type="linenumber">7</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/search-box/button/search-button.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit>
-            <trans-unit id="collection.config.link.types.list.attribute" datatype="html">
-                <source>
-      Attribute
-    </source>
-                <target>Atribut</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-attribute-list/link-attribute-list.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit>
             <trans-unit id="collection.config.tab.attributes" datatype="html">
                 <source>
           Attributes
         </source>
                 <target>Atributy</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit>
             <trans-unit id="collection.config.tab.permissions" datatype="html">
                 <source>
           Users
         </source>
                 <target>Uživatelé</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit>
-            <trans-unit id="collection.config.tab.events.on" datatype="html">
-                <source>On</source>
-                <target>Při</target>
+            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/events/collection-events.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit>
-            <trans-unit id="collection.config.tab.events.automatic" datatype="html">
-                <source>
-          automatic
-      </source>
-                <target>automaticky</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/events/collection-events.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
-            <trans-unit id="collection.config.tab.events.do" datatype="html">
-                <source>Do</source>
-                <target>Proveď</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/events/collection-events.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit>
-            <trans-unit id="collection.config.tab.events.parameters" datatype="html">
-                <source>Parameters</source>
-                <target>Parametry</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/events/collection-events.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit>
-            <trans-unit id="collection.config.tab.events.add" datatype="html">
-                <source>
-        Add Event
-      </source>
-                <target>Přidat událost</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/events/collection-events.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit>
-            <trans-unit id="collection.config.tab.events.add.title" datatype="html">
-                <source>Add new event</source>
-                <target>Vytvořit novou událost</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/events/collection-events.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit>
-            <trans-unit id="collection.config.tab.link.types.open" datatype="html">
-                <source>Open</source>
-                <target>Otevřít</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit>
-            <trans-unit id="collection.config.tab.link.types.rename" datatype="html">
-                <source>Rename</source>
-                <target>Přejmenovat</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit>
-            <trans-unit id="collection.config.tab.link.types.go.to" datatype="html">
-                <source>Go to <x id="INTERPOLATION" equiv-text="{{ getLinkedCollection(linkTypeModel).name }}"/></source>
-                <target>Přejít na <x id="INTERPOLATION" equiv-text="{{ getLinkedCollection(linkTypeModel).name }}"/>
-                </target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit>
-            <trans-unit id="collection.config.tab.link.types.add" datatype="html">
-                <source>
-        Add link Type
-      </source>
-                <target>Zadat propojení</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit>
-            <trans-unit id="collection.config.tab.link.types.add.title" datatype="html">
-                <source>Add new link Type</source>
-                <target>Zadat nové propojení</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit>
             <trans-unit id="document.button.remove" datatype="html">
-                <source>Remove Record</source>
-                <target>Odstranit záznam</target>
+                <source>Delete Record</source>
+                <target>Smazat záznam</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/post-it/document/post-it-document-header/post-it-document-header.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
             <trans-unit id="document.button.edit" datatype="html">
@@ -195,7 +138,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/search-perspective.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit>
             <trans-unit id="table.query.invalid" datatype="html">
-                <source>Your query results cannot be shown using table perspective. The query needs to specify exactly one collection.
+                <source>Table perspective cannot show the results of your query. The query needs to have exactly one collection.
 </source>
                 <target>Výsledky Vašeho hledání nemohou být zobrazeny v tabulce. Hledání musí obsahovat jen jednu kolekci.</target>
 
@@ -248,18 +191,18 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/dialog/overwrite-view/overwrite-view-dialog.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit>
             <trans-unit id="view.overwrite.dialog.body" datatype="html">
-                <source>Do you really want to overwrite view </source>
-                <target>Chcete přepsat tento pohled</target>
+                <source>Do you really want to overwrite view</source>
+                <target>Chcete přepsat pohled</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/dialog/overwrite-view/overwrite-view-dialog.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit>
             <trans-unit id="view.overwrite.dialog.button.close" datatype="html">
-                <source>No, do not save</source>
-                <target>Ne, nepřepisovat</target>
+                <source>No</source>
+                <target>Ne</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/dialog/overwrite-view/overwrite-view-dialog.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit>
             <trans-unit id="view.overwrite.dialog.button.save" datatype="html">
-                <source>Yes, overwrite</source>
-                <target>Ano, přepsat</target>
+                <source>Yes</source>
+                <target>Ano</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/dialog/overwrite-view/overwrite-view-dialog.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit>
             <trans-unit id="table.link.expand" datatype="html">
@@ -295,11 +238,11 @@
 
             <trans-unit id="table.header.suggestion.link.existing" datatype="html">
                 <source>Use existing link
-        </source>
-                <target>Použít exsitující propojení</target>
+          </source>
+                <target>Použít existující propojení</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.sort.ascending" datatype="html">
                 <source>Sort ascending</source>
                 <target>Řadit vzestupně (A-Z)</target>
@@ -331,8 +274,8 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit>
             <trans-unit id="table.header.menu.remove" datatype="html">
-                <source>Remove column</source>
-                <target>Odstranit sloupec</target>
+                <source>Delete column</source>
+                <target>Smazat sloupec</target>
 
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit>
@@ -388,8 +331,8 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/workspace/workspace-chooser/resource-post-it/resource-post-it.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit>
             <trans-unit id="resource.postit.remove" datatype="html">
-                <source>Remove</source>
-                <target>Odstranit</target>
+                <source>Delete</source>
+                <target>Smazat</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/workspace/workspace-chooser/resource-post-it/resource-post-it.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit>
             <trans-unit id="resource.postit.code" datatype="html">
@@ -511,7 +454,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit>
             <trans-unit id="table.header.switch.parts" datatype="html">
-                <source>Switch collections</source>
+                <source>Switch collections order</source>
                 <target>Obrátit pořadí kolekcí</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/link/info/table-link-info.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
@@ -570,7 +513,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.delete.dialog.message" datatype="html">
-                <source>Do you really want to remove this collection?</source>
+                <source>Do you really want to delete this collection?</source>
                 <target>Opravdu chcete smazat tuto kolekci?</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context>
@@ -602,7 +545,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collections.get.fail" datatype="html">
-                <source>Failed to get collections</source>
+                <source>Could not get collections</source>
                 <target>Kolekce nelze načíst</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
@@ -610,7 +553,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.create.fail" datatype="html">
-                <source>Failed to create collection</source>
+                <source>Could not create collection</source>
                 <target>Kolekci nelze vytvořit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
@@ -618,7 +561,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.import.fail" datatype="html">
-                <source>Failed to import collection</source>
+                <source>Could not import collection</source>
                 <target>Kolekci nelze importovat</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
@@ -626,7 +569,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.update.fail" datatype="html">
-                <source>Failed to update collection</source>
+                <source>Could not update collection</source>
                 <target>Kolekci nelze změnit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
@@ -634,7 +577,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.delete.fail" datatype="html">
-                <source>Failed to delete collection</source>
+                <source>Could not delete collection</source>
                 <target>Kolekci nelze smazat</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
@@ -642,7 +585,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.add.favorite.fail" datatype="html">
-                <source>Failed to add favorite collection</source>
+                <source>Could not add the collection to favorites</source>
                 <target>Kolekci nelze přidat mezi oblíbené</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
@@ -650,7 +593,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.remove.favorite.fail" datatype="html">
-                <source>Failed to remove favorite collection</source>
+                <source>Could not remove the collection from favorites</source>
                 <target>Kolekci nelze odebrat z oblíbených</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
@@ -658,23 +601,23 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.change.attribute.fail" datatype="html">
-                <source>Failed to change attribute</source>
-                <target state="final">Atribut nelze změnit</target>
+                <source>Could not change the attribute</source>
+                <target state="translated">Atribut nelze změnit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.remove.attribute.fail" datatype="html">
-                <source>Failed to remove attribute</source>
-                <target state="final">Atribut nelze odstranit</target>
+                <source>Could not delete the attribute</source>
+                <target state="translated">Atribut nelze smazat</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.change.permission.fail" datatype="html">
-                <source>Failed to change collection permission</source>
+                <source>Could not change the collection permissions</source>
                 <target>Nelze nastavit přístupová práva ke kolekci</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
@@ -682,24 +625,24 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="documents.get.fail" datatype="html">
-                <source>Failed to get records</source>
-                <target state="final">Nelze načíst záznamy</target>
+                <source>Could not get records</source>
+                <target state="translated">Nelze načíst záznamy</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="document.create.fail" datatype="html">
-                <source>Failed to create record</source>
-                <target state="final">Nelze vytvořit záznam</target>
+                <source>Could not create the record</source>
+                <target state="translated">Nelze vytvořit záznam</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="document.update.fail" datatype="html">
-                <source>Failed to update record</source>
-                <target state="final">Nelze změnit záznam</target>
+                <source>Could not update the record</source>
+                <target state="translated">Nelze změnit záznam</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
                     <context context-type="linenumber">1</context>
@@ -726,47 +669,47 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="document.delete.fail" datatype="html">
-                <source>Failed to delete record</source>
-                <target state="final">Záznam nelze smazat</target>
+                <source>Could not delete the record</source>
+                <target state="translated">Záznam nelze smazat</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="groups.get.fail" datatype="html">
-                <source>Failed to get groups</source>
-                <target state="final">Skupiny nelze načíst</target>
+                <source>Could not get groups</source>
+                <target state="translated">Skupiny nelze načíst</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/groups/groups.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="group.create.fail" datatype="html">
-                <source>Failed to create group</source>
-                <target state="final">Skupinu nelze vytvořit</target>
+                <source>Could not create the group</source>
+                <target state="translated">Skupinu nelze vytvořit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/groups/groups.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="group.update.fail" datatype="html">
-                <source>Failed to update group</source>
-                <target state="final">Skupinu nelze změnit</target>
+                <source>Could not update the group</source>
+                <target state="translated">Skupinu nelze změnit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/groups/groups.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="group.delete.fail" datatype="html">
-                <source>Failed to delete group</source>
-                <target state="final">Skupinu nelze smazat</target>
+                <source>Could not delete the group</source>
+                <target state="translated">Skupinu nelze smazat</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/groups/groups.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="link.instances.get.fail" datatype="html">
-                <source>Failed to get links</source>
+                <source>Could not get links</source>
                 <target>Propojení nelze smazat</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
@@ -774,7 +717,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="link.instance.create.fail" datatype="html">
-                <source>Failed to create link</source>
+                <source>Could not create the link</source>
                 <target>Propojení nelze vytvořit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
@@ -782,7 +725,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="link.instance.update.fail" datatype="html">
-                <source>Failed to update link</source>
+                <source>Could not update the link</source>
                 <target>Propojení nelze změnit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
@@ -790,7 +733,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="link.instance.delete.fail" datatype="html">
-                <source>Failed to delete link</source>
+                <source>Could not delete the link</source>
                 <target>Propojení nelze změnit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
@@ -798,7 +741,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="link.types.get.fail" datatype="html">
-                <source>Failed to get link types</source>
+                <source>Could not get link types</source>
                 <target>Propojení kolekcí nelze načíst</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
@@ -806,7 +749,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="link.type.create.fail" datatype="html">
-                <source>Failed to create link type</source>
+                <source>Could not create the link type</source>
                 <target>Kolekce nelze propojit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
@@ -814,7 +757,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="link.type.update.fail" datatype="html">
-                <source>Failed to update link type</source>
+                <source>Could not update the link type</source>
                 <target>Propojení kolekce nelze změnit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
@@ -822,8 +765,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="link.type.delete.fail" datatype="html">
-                <source>Failed to delete link type</source>
-                <target>Propojení kolekcí nelze odstranit</target>
+                <source>Could not delete the link type</source>
+                <target>Propojení kolekcí nelze smazat</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
                     <context context-type="linenumber">1</context>
@@ -839,7 +782,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/ui/document-ui.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/ui/document-ui.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="button.no" datatype="html">
                 <source>No</source>
                 <target state="final">Ne</target>
@@ -850,66 +793,66 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/ui/document-ui.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/ui/document-ui.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/workspace-chooser/resource-chooser/resource-chooser.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="organizations.get.fail" datatype="html">
-                <source>Failed to get organizations</source>
-                <target state="final">Organizace nelze načíst</target>
+                <source>Could not get organizations</source>
+                <target state="translated">Organizace nelze načíst</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="organization.create.fail" datatype="html">
-                <source>Failed to create organization</source>
-                <target state="final">Organizaci nelze vytvořit</target>
+                <source>Could not create the organization</source>
+                <target state="translated">Organizaci nelze vytvořit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="organization.update.fail" datatype="html">
-                <source>Failed to update organization</source>
-                <target state="final">Organizaci nelze změnit</target>
+                <source>Could not update the organization</source>
+                <target state="translated">Organizaci nelze změnit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="organization.delete.fail" datatype="html">
-                <source>Failed to delete organization</source>
-                <target state="final">Organizaci nelze smazat</target>
+                <source>Could not delete the organization</source>
+                <target state="translated">Organizaci nelze smazat</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="projects.get.fail" datatype="html">
-                <source>Failed to get projects</source>
-                <target state="final">Projekty nelze načíst</target>
+                <source>Could not get projects</source>
+                <target state="translated">Projekty nelze načíst</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="project.create.fail" datatype="html">
-                <source>Failed to create project</source>
-                <target state="final">Projekt nelze vytvořit</target>
+                <source>Could not create the project</source>
+                <target state="translated">Projekt nelze vytvořit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="project.update.fail" datatype="html">
-                <source>Failed to update project</source>
-                <target state="final">Projekt nelze změnit</target>
+                <source>Could not update the project</source>
+                <target state="translated">Projekt nelze změnit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="project.delete.fail" datatype="html">
-                <source>Failed to delete project</source>
-                <target state="final">Projekt nelze smazat</target>
+                <source>Could not delete the project</source>
+                <target state="translated">Projekt nelze smazat</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context>
                     <context context-type="linenumber">1</context>
@@ -918,40 +861,40 @@
 
 
             <trans-unit id="users.get.fail" datatype="html">
-                <source>Failed to get users</source>
-                <target state="final">Uživatele nelze načíst</target>
+                <source>Could not get users</source>
+                <target state="translated">Uživatele nelze načíst</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="user.create.fail" datatype="html">
-                <source>Failed to create user</source>
-                <target state="final">Uživatele nelze vytvořit</target>
+                <source>Could not add the user</source>
+                <target state="translated">Uživatele nelze vytvořit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="user.update.fail" datatype="html">
-                <source>Failed to update user</source>
-                <target state="final">Uživatele nelze změnit</target>
+                <source>Could not update the user</source>
+                <target state="translated">Uživatele nelze změnit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="user.delete.fail" datatype="html">
-                <source>Failed to delete user</source>
-                <target state="final">Uživatele nelze smazat</target>
+                <source>Could not delete the user</source>
+                <target state="translated">Uživatele nelze smazat</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="views.get.fail" datatype="html">
-                <source>Failed to get views</source>
-                <target state="final">Pohledy nelze načíst</target>
+                <source>Could not get views</source>
+                <target state="translated">Pohledy nelze načíst</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
                     <context context-type="linenumber">1</context>
@@ -966,8 +909,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="view.create.fail" datatype="html">
-                <source>Failed to create view</source>
-                <target state="final">Pohled nelze vytvořit</target>
+                <source>Could not create the view</source>
+                <target state="translated">Pohled nelze vytvořit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
                     <context context-type="linenumber">1</context>
@@ -982,8 +925,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="view.update.fail" datatype="html">
-                <source>Failed to update view</source>
-                <target state="final">Pohled nelze změnit</target>
+                <source>Could not update the view</source>
+                <target state="translated">Pohled nelze změnit</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
                     <context context-type="linenumber">1</context>
@@ -995,14 +938,14 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="table.delete.column.dialog.message" datatype="html">
-                <source>Deleting a column will permanently remove the attribute from the collection.</source>
-                <target>Smazání sloupce odstraní i odpovídající atribut ze všech záznamů v kolekci.</target>
+                <source>Do you really want to delete the column? This will remove the attribute from the collection permanently.</source>
+                <target>Chcete skutečně smazat tento sloupec? Smazání sloupce odstraní i odpovídající atribut ze všech záznamů v kolekci.</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
 
             <trans-unit id="organization.delete.dialog.message" datatype="html">
-                <source>Organization is about to be permanently deleted.</source>
-                <target state="final">Chystáte se navždy smazat organizaci.</target>
+                <source>Do you really want to permanently delete this organization?</source>
+                <target state="translated">Chcete tuto organizaci skutečně trvale smazat?</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context>
                     <context context-type="linenumber">1</context>
@@ -1030,8 +973,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="project.delete.dialog.message" datatype="html">
-                <source>Project is about to be permanently deleted.</source>
-                <target state="final">Chystáte se navždy smazat projekt.</target>
+                <source>Do you really want to permanently delete this project?</source>
+                <target state="translated">Chcete skutečně navždy smazat tento projekt?</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context>
                     <context context-type="linenumber">1</context>
@@ -1046,7 +989,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="resource.delete.dialog.message" datatype="html">
-                <source>Are you sure you want to remove <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>?</source>
+                <source>Do you really want to delete <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/> <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>?</source>
                 <target state="translated">Skutečně chcete smazat <x id="ICU" equiv-text="{resourceType, select, Project {...} Organization {...}}"/>
 
                     } <x id="INTERPOLATION" equiv-text="{{resourceCode}}"/>
@@ -1131,7 +1074,7 @@
             <context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit>
             <trans-unit id="resource.settings.delete" datatype="html">
                 <source>Delete</source>
-                <target>Odstranit</target>
+                <target>Smazat</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit>
             <trans-unit id="collection.post.it.create.title" datatype="html">
@@ -1161,12 +1104,12 @@
                 <source>Number of users</source>
                 <target>Počet uživatelů</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
             <trans-unit id="collection.settings.records.count" datatype="html">
                 <source>Number of records</source>
                 <target>Počet záznamů</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit>
             <trans-unit id="collections.tab.attributes.attribute" datatype="html">
                 <source>Attribute</source>
                 <target>Atribut</target>
@@ -1199,11 +1142,7 @@
                 <target>Nastavit hlavní atribut</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/collection-attributes.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit>
-            <trans-unit id="collection.config.tab.events.remove.event.fire.reason" datatype="html">
-                <source>Remove event fire reason</source>
-                <target>Ostranit spouštěč události</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/events/collection-events.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit>
 
             <trans-unit id="document.post.it.add" datatype="html">
                 <source>Add Record</source>
@@ -1746,8 +1685,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.tab.attributes.delete.message" datatype="html">
-                <source>Delete attribute?</source>
-                <target>Smazat atribut?</target>
+                <source>Do you really want to delete attribute "<x id="INTERPOLATION" equiv-text="{{name}}"/>"?</source>
+                <target>Chcete skutečně smazat atribut "<x id="INTERPOLATION" equiv-text="{{name}}"/>"?</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
                     <context context-type="linenumber">1</context>
@@ -1847,7 +1786,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.attribute.default.set.fail" datatype="html">
-                <source>Failed to set displayed attribute id</source>
+                <source>Could not set the displayed attribute id</source>
                 <target>Nelze nastavit hlavní atribut</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
@@ -1855,7 +1794,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="collection.create.attributes.fail" datatype="html">
-                <source>Failed to create attributes</source>
+                <source>Could not create attributes</source>
                 <target>Nelze vytvořit atribut</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
@@ -1871,7 +1810,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="document.add.favorite.fail" datatype="html">
-                <source>Failed to add favorite record</source>
+                <source>Could not add the record to favorites</source>
                 <target>Záznam nelze přidat do oblíbených</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
@@ -1879,7 +1818,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="document.remove.favorite.fail" datatype="html">
-                <source>Failed to remove favorite record</source>
+                <source>Could not remove the record from favorites</source>
                 <target>Záznam nelze odebrat z oblíbených</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context>
@@ -1895,7 +1834,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="link.instance.delete.dialog.message" datatype="html">
-                <source>Do you really want to delete link between records?</source>
+                <source>Do you really want to delete this link between records?</source>
                 <target>Chcete skutečně smazat propojení mezi záznamy?</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
@@ -1910,7 +1849,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/workspace/organization/detail/payments-panel/payments-panel.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="organization.contact.get.fail" datatype="html">
-                <source>Cannot read contact information</source>
+                <source>Could not read contact information</source>
                 <target>Nelze načíst kontaktní údaje</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/organizations/contact/contacts.effects.ts</context>
@@ -1918,7 +1857,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organization.contact.set.fail" datatype="html">
-                <source>Cannot save contact information</source>
+                <source>Could not save contact information</source>
                 <target>Nelze uložit kontaktní údaje</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/organizations/contact/contacts.effects.ts</context>
@@ -1926,7 +1865,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organization.permission.change.fail" datatype="html">
-                <source>Failed to change organization permission</source>
+                <source>Could not change the organization permissions</source>
                 <target>Nelze nastavit oprávnění organizace</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context>
@@ -1934,7 +1873,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organization.payments.get.fail" datatype="html">
-                <source>Cannot read information about your previous service orders</source>
+                <source>Could not read information about your previous service orders</source>
                 <target>Nelze načíst údaje o předchozích objednávkách služeb</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context>
@@ -1942,7 +1881,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organization.payment.get.fail" datatype="html">
-                <source>Cannot read information about your previous service order</source>
+                <source>Could not read information about your previous service order</source>
                 <target>Nelze načíst údaje o předchozí objednávce služby</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context>
@@ -1950,7 +1889,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organization.payment.create.fail" datatype="html">
-                <source>Cannot create your new service order</source>
+                <source>Could not create your new service order</source>
                 <target>Nelze vytvořit novou objednávku služby</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/organizations/payment/payments.effects.ts</context>
@@ -1958,7 +1897,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organization.serviceLimits.getAll.fail" datatype="html">
-                <source>Cannot read information about your service levels and subscriptions</source>
+                <source>Could not read information about your service levels and subscriptions</source>
                 <target>Nelze načíst údaje o vašich aktivovaných programech a předplatném</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/organizations/service-limits/service-limits.effects.ts</context>
@@ -1966,7 +1905,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="organization.serviceLimits.get.fail" datatype="html">
-                <source>Cannot read information about your service level and subscription</source>
+                <source>Could not read information about your service level and subscription</source>
                 <target>Nelze načíst údaje o vašem aktivovaném programu a předplatném</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/organizations/service-limits/service-limits.effects.ts</context>
@@ -1982,7 +1921,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="project.permission.change.fail" datatype="html">
-                <source>Failed to change project permission</source>
+                <source>Could not change the project permissions</source>
                 <target>Nelze nastavit oprávnění projektu</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context>
@@ -2187,7 +2126,7 @@
                 <source>
     Sorry, this name is already taken. Try another?
   </source>
-                <target>Je mi líto, toto jméno již někdo používá. Zkuste jiné!</target>
+                <target>Je mi líto, ale toto jméno již někdo používá. Zkuste jiné!</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collection.component/post-it-collection.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit>
             <trans-unit id="search.result.more" datatype="html">
@@ -2199,7 +2138,7 @@
             <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/post-it-collections.component.html</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/search-documents.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/search-views.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
             <trans-unit id="document.detail.remove" datatype="html">
                 <source>Remove Record</source>
-                <target>Odstranit záznam</target>
+                <target>Smazat záznam</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/document/document-detail/document-detail.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
             <trans-unit id="document.detail.favorite.remove" datatype="html">
@@ -2331,7 +2270,7 @@
             <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/collection-attributes.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit>
             <trans-unit id="remove.attribute" datatype="html">
                 <source>Remove Attribute</source>
-                <target>Odstranit atribut</target>
+                <target>Smazat atribut</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/collection-attributes.component.html</context><context context-type="linenumber">92</context></context-group></trans-unit>
             <trans-unit id="collection.tab.attributes.none" datatype="html">
@@ -2480,7 +2419,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit>
             <trans-unit id="user.defaultWorkspace.save.fail" datatype="html">
-                <source>Failed to save default workspace</source>
+                <source>Could not save the default workspace</source>
                 <target>Nelze uložit výchozí organizace a projekt.</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
@@ -2568,16 +2507,16 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="users.user.delete.message" datatype="html">
-                <source>User is about to be permanently deleted.</source>
-                <target>Chystáte se trvale odstranit uživatele.</target>
+                <source>Do you want to permanently remove this user?</source>
+                <target>Chcete skutečně trvale odstranit tohoto uživatele?</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="users.user.delete.title" datatype="html">
-                <source>Delete user?</source>
-                <target>Smazat uživatele?</target>
+                <source>Remove user?</source>
+                <target>Odstranit uživatele?</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
                     <context context-type="linenumber">1</context>
@@ -2644,17 +2583,17 @@
             <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-menu/user-menu.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit>
             <trans-unit id="create.new.attribute" datatype="html">
                 <source>Create new attribute
-      </source>
+        </source>
                 <target>Vytvořit nový atribut</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit>
             <trans-unit id="create.new.link" datatype="html">
                 <source>Create new linked Record</source>
                 <target>Vytvořit nové propojení</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list-table/links-list-table.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit>
             <trans-unit id="button.choose" datatype="html">
                 <source>Choose</source>
                 <target>Vybrat</target>
@@ -2737,13 +2676,13 @@
         <source>Continue</source><target>Pokračovat</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">49</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/auth/session-expired/session-expired.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="currentUser.get.fail" datatype="html">
-        <source>Failed to get user details</source><target>Nepodařilo se načíst nastavení uživatele</target>
+        <source>Could not get user details</source><target>Nepodařilo se načíst nastavení uživatele</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="currentUser.patch.fail" datatype="html">
-        <source>Failed to update user details</source><target>Nepodařilo se uložit nastavení uživatele</target>
+        <source>Could not update user details</source><target>Nepodařilo se uložit nastavení uživatele</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
           <context context-type="linenumber">1</context>
@@ -2763,32 +2702,32 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/empty-documents/empty-documents.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="delete" datatype="html">
         <source>Delete</source><target>Odstranit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/view-detail/view-detail.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="view.delete.fail" datatype="html">
-        <source>Failed to delete view</source><target>Pohled se nepodařilo odstranit</target>
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/link-type/link-type.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/view-detail/view-detail.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="view.delete.fail" datatype="html">
+        <source>Could not delete the view</source><target>Pohled se nepodařilo smazat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="view.change.permission.fail" datatype="html">
-        <source>Failed to change view permissions</source><target>Nepodařilo se nastavit přístupová práva k pohledu</target>
+        <source>Could not change the view permissions</source><target>Nepodařilo se nastavit přístupová práva k pohledu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="views.delete.message" datatype="html">
-        <source>View is about to be permanently deleted.</source><target>Chystáte se pohled travle odstranit.</target>
+        <source>Do you really want to permanently delete this view?</source><target>Chcete skutečně navždy smazat tento pohled?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="views.delete.title" datatype="html">
-        <source>Delete view?</source><target>Odstranit pohled?</target>
+        <source>Delete view?</source><target>Smazat pohled?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="view.discard.changes.message" datatype="html">
-        <source>The view has changed. Save the changes or discard them.</source><target>Pohled se změnil. Uložte změny, nebo je zahoďte.</target>
+        <source>The view was changed. Do you want to save the changes?</source><target>Pohled se změnil. Uložte změny, nebo je zahoďte.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -2875,6 +2814,59 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/attributes/collection-attributes.component.html</context>
           <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.link.types" datatype="html">
+        <source>
+          Link Types
+        </source><target>
+          Propojení
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
+        <source>Name</source><target>Název</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.linkTypes.search.placeholder" datatype="html">
+        <source>Link type name...</source><target>Název propojení...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.linkTypes.search.title" datatype="html">
+        <source>Search for link types</source><target>Vyhledat propojení</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="links.count" datatype="html">
+        <source>Number of links</source><target>Počet použití tohoto propojení</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/link-types/link-type/link-type.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.tab.attributes.delete.title" datatype="html">
+        <source>Delete attribute?</source><target>Smazat atribut?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.tab.linktypes.delete.title" datatype="html">
+        <source>Delete link type?</source><target>Zrušit propojení?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.tab.linktypes.delete.message" datatype="html">
+        <source>Do you really want to delete the link type "<x id="INTERPOLATION" equiv-text="{{name}}"/>" and all its usages?</source>
+        <target>Opravdu chcete smazat propojení "<x id="INTERPOLATION" equiv-text="{{name}}"/>" a všechna jeho použití?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit></body>
     </file>

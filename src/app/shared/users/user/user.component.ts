@@ -86,8 +86,8 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   public onDelete() {
-    const message = this.i18n({id: 'users.user.delete.message', value: 'User is about to be permanently deleted.'});
-    const title = this.i18n({id: 'users.user.delete.title', value: 'Delete user?'});
+    const message = this.i18n({id: 'users.user.delete.message', value: 'Do you want to permanently remove this user?'});
+    const title = this.i18n({id: 'users.user.delete.title', value: 'Remove user?'});
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
     const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
@@ -95,8 +95,8 @@ export class UserComponent implements OnInit, OnDestroy {
       message,
       title,
       [
-        {text: yesButtonText, action: () => this.deleteUser(), bold: false},
-        {text: noButtonText}
+        {text: noButtonText},
+        {text: yesButtonText, action: () => this.deleteUser(), bold: false}
       ]
     );
   }

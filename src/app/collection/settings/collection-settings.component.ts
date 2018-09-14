@@ -96,12 +96,12 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   }
 
   public onDelete(): void {
-    const message = this.i18n({id: 'collection.delete.dialog.message', value: 'Do you really want to remove this collection?'});
+    const message = this.i18n({id: 'collection.delete.dialog.message', value: 'Do you really want to delete this collection?'});
     const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
 
     this.notificationService.confirm(message, title, [
-      {text: 'Yes', action: () => this.removeCollection(), bold: false},
-      {text: 'No'}
+      {text: 'No'},
+      {text: 'Yes', action: () => this.removeCollection(), bold: false}
     ]);
   }
 

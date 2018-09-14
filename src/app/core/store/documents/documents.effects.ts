@@ -23,7 +23,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {catchError, filter, flatMap, map, mergeMap, skipWhile, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {CollectionService, DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
@@ -64,7 +64,7 @@ export class DocumentsEffects {
     ofType<DocumentsAction.GetFailure>(DocumentsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'documents.get.fail', value: 'Failed to get records'});
+      const message = this.i18n({id: 'documents.get.fail', value: 'Could not get records'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -128,10 +128,11 @@ export class DocumentsEffects {
           action: new RouterAction.Go({
             path: ['/organization', organization.code, 'detail'],
             extras: {fragment: 'orderService'}
-          })
+          }),
+          yesFirst: true
         });
       }
-      const errorMessage = this.i18n({id: 'document.create.fail', value: 'Failed to create record'});
+      const errorMessage = this.i18n({id: 'document.create.fail', value: 'Could not create the record'});
       return new NotificationsAction.Error({message: errorMessage});
     })
   );
@@ -153,7 +154,7 @@ export class DocumentsEffects {
     ofType<DocumentsAction.AddFavoriteFailure>(DocumentsActionType.ADD_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'document.add.favorite.fail', value: 'Failed to add favorite record'});
+      const message = this.i18n({id: 'document.add.favorite.fail', value: 'Could not add the record to favorites'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -175,7 +176,7 @@ export class DocumentsEffects {
     ofType<DocumentsAction.RemoveFavoriteFailure>(DocumentsActionType.REMOVE_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'document.remove.favorite.fail', value: 'Failed to remove favorite record'});
+      const message = this.i18n({id: 'document.remove.favorite.fail', value: 'Could not remove the record from favorites'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -185,7 +186,7 @@ export class DocumentsEffects {
     ofType<DocumentsAction.UpdateFailure>(DocumentsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'document.update.fail', value: 'Failed to update record'});
+      const message = this.i18n({id: 'document.update.fail', value: 'Could not update the record'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -280,7 +281,7 @@ export class DocumentsEffects {
     ofType<DocumentsAction.DeleteFailure>(DocumentsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'document.delete.fail', value: 'Failed to delete record'});
+      const message = this.i18n({id: 'document.delete.fail', value: 'Could not delete the record'});
       return new NotificationsAction.Error({message});
     })
   );

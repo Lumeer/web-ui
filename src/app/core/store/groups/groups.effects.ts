@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action} from '@ngrx/store';
@@ -46,7 +46,7 @@ export class GroupsEffects {
     ofType<GroupsAction.GetFailure>(GroupsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'groups.get.fail', value: 'Failed to get groups'});
+      const message = this.i18n({id: 'groups.get.fail', value: 'Could not get groups'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -70,7 +70,7 @@ export class GroupsEffects {
     ofType<GroupsAction.CreateFailure>(GroupsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'group.create.fail', value: 'Failed to create group'});
+      const message = this.i18n({id: 'group.create.fail', value: 'Could not create the group'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -94,7 +94,7 @@ export class GroupsEffects {
     ofType<GroupsAction.UpdateFailure>(GroupsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'group.update.fail', value: 'Failed to update group'});
+      const message = this.i18n({id: 'group.update.fail', value: 'Could not update the group'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -113,7 +113,7 @@ export class GroupsEffects {
     ofType<GroupsAction.DeleteFailure>(GroupsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'group.delete.fail', value: 'Failed to delete group'});
+      const message = this.i18n({id: 'group.delete.fail', value: 'Could not delete the group'});
       return new NotificationsAction.Error({message});
     })
   );

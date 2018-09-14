@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {catchError, flatMap, map, mergeMap, filter, tap, withLatestFrom, concatMap} from 'rxjs/operators';
+import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {RouteFinder} from '../../../shared/utils/route-finder';
 import {OrganizationService} from '../../rest';
 import {AppState} from '../app.state';
@@ -60,7 +60,7 @@ export class OrganizationsEffects {
     ofType<OrganizationsAction.GetFailure>(OrganizationsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organizations.get.fail', value: 'Failed to get organizations'});
+      const message = this.i18n({id: 'organizations.get.fail', value: 'Could not get organizations'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -115,7 +115,7 @@ export class OrganizationsEffects {
     ofType<OrganizationsAction.CreateFailure>(OrganizationsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.create.fail', value: 'Failed to create organization'});
+      const message = this.i18n({id: 'organization.create.fail', value: 'Could not create the organization'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -161,7 +161,7 @@ export class OrganizationsEffects {
     ofType<OrganizationsAction.UpdateFailure>(OrganizationsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.update.fail', value: 'Failed to update organization'});
+      const message = this.i18n({id: 'organization.update.fail', value: 'Could not update the organization'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -190,7 +190,7 @@ export class OrganizationsEffects {
     ofType<OrganizationsAction.DeleteFailure>(OrganizationsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.delete.fail', value: 'Failed to delete organization'});
+      const message = this.i18n({id: 'organization.delete.fail', value: 'Could not delete the organization'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -226,7 +226,7 @@ export class OrganizationsEffects {
     ofType<OrganizationsAction.ChangePermissionFailure>(OrganizationsActionType.CHANGE_PERMISSION_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.permission.change.fail', value: 'Failed to change organization permission'});
+      const message = this.i18n({id: 'organization.permission.change.fail', value: 'Could not change the organization permissions'});
       return new NotificationsAction.Error({message});
     })
   );

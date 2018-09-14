@@ -56,7 +56,7 @@ export class UsersEffects {
     ofType<UsersAction.GetFailure>(UsersActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'users.get.fail', value: 'Failed to get users'});
+      const message = this.i18n({id: 'users.get.fail', value: 'Could not get users'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -72,7 +72,7 @@ export class UsersEffects {
         new UsersAction.SetPending({pending: false})
       ]),
       catchError(() => {
-        const message = this.i18n({id: 'currentUser.get.fail', value: 'Failed to get user details'});
+        const message = this.i18n({id: 'currentUser.get.fail', value: 'Could not get user details'});
         return from([
           new UsersAction.SetPending({pending: false}),
           new NotificationsAction.Error({message})
@@ -100,7 +100,7 @@ export class UsersEffects {
             action.payload.onFailure();
           }
 
-          const message = this.i18n({id: 'currentUser.patch.fail', value: 'Failed to update user details'});
+          const message = this.i18n({id: 'currentUser.patch.fail', value: 'Could not update user details'});
           return of(new NotificationsAction.Error({message}));
         })
       );
@@ -140,10 +140,11 @@ export class UsersEffects {
           action: new RouterAction.Go({
             path: ['/organization', organization.code, 'detail'],
             extras: {fragment: 'orderService'}
-          })
+          }),
+          yesFirst: true
         });
       }
-      const errorMessage = this.i18n({id: 'user.create.fail', value: 'Failed to create user'});
+      const errorMessage = this.i18n({id: 'user.create.fail', value: 'Could not add the user'});
       return new NotificationsAction.Error({message: errorMessage});
     })
   );
@@ -167,7 +168,7 @@ export class UsersEffects {
     ofType<UsersAction.UpdateFailure>(UsersActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'user.update.fail', value: 'Failed to update user'});
+      const message = this.i18n({id: 'user.update.fail', value: 'Could not update the user'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -186,7 +187,7 @@ export class UsersEffects {
     ofType<UsersAction.DeleteFailure>(UsersActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'user.delete.fail', value: 'Failed to delete user'});
+      const message = this.i18n({id: 'user.delete.fail', value: 'Could not delete the user'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -214,7 +215,7 @@ export class UsersEffects {
     ofType<UsersAction.SaveDefaultWorkspaceFailure>(UsersActionType.SAVE_DEFAULT_WORKSPACE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'user.defaultWorkspace.save.fail', value: 'Failed to save default workspace'});
+      const message = this.i18n({id: 'user.defaultWorkspace.save.fail', value: 'Could not save the default workspace'});
       return new NotificationsAction.Error({message});
     })
   );

@@ -69,7 +69,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.GetFailure>(CollectionsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collections.get.fail', value: 'Failed to get collections'});
+      const message = this.i18n({id: 'collections.get.fail', value: 'Could not get collections'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -133,10 +133,11 @@ export class CollectionsEffects {
           action: new RouterAction.Go({
             path: ['/organization', organization.code, 'detail'],
             extras: {fragment: 'orderService'}
-          })
+          }),
+          yesFirst: true
         });
       }
-      const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Failed to create collection'});
+      const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Could not create collection'});
       return new NotificationsAction.Error({message: errorMessage});
     })
   );
@@ -180,10 +181,11 @@ export class CollectionsEffects {
           action: new RouterAction.Go({
             path: ['/organization', organization.code, 'detail'],
             extras: {fragment: 'orderService'}
-          })
+          }),
+          yesFirst: true
         });
       }
-      const errorMessage = this.i18n({id: 'collection.import.fail', value: 'Failed to import collection'});
+      const errorMessage = this.i18n({id: 'collection.import.fail', value: 'Could not import collection'});
       return new NotificationsAction.Error({message: errorMessage});
     })
   );
@@ -225,7 +227,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.update.fail', value: 'Failed to update collection'});
+      const message = this.i18n({id: 'collection.update.fail', value: 'Could not update collection'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -261,7 +263,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.DeleteFailure>(CollectionsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.delete.fail', value: 'Failed to delete collection'});
+      const message = this.i18n({id: 'collection.delete.fail', value: 'Could not delete collection'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -280,7 +282,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.AddFavoriteFailure>(CollectionsActionType.ADD_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.add.favorite.fail', value: 'Failed to add favorite collection'});
+      const message = this.i18n({id: 'collection.add.favorite.fail', value: 'Could not add the collection to favorites'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -299,7 +301,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.RemoveFavoriteFailure>(CollectionsActionType.REMOVE_FAVORITE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.remove.favorite.fail', value: 'Failed to remove favorite collection'});
+      const message = this.i18n({id: 'collection.remove.favorite.fail', value: 'Could not remove the collection from favorites'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -325,7 +327,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.SetDefaultAttributeFailure>(CollectionsActionType.SET_DEFAULT_ATTRIBUTE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.attribute.default.set.fail', value: 'Failed to set displayed attribute id'});
+      const message = this.i18n({id: 'collection.attribute.default.set.fail', value: 'Could not set the displayed attribute id'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -371,7 +373,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.CreateAttributesFailure>(CollectionsActionType.CREATE_ATTRIBUTES_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.create.attributes.fail', value: 'Failed to create attributes'});
+      const message = this.i18n({id: 'collection.create.attributes.fail', value: 'Could not create attributes'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -403,7 +405,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.ChangeAttributeFailure>(CollectionsActionType.CHANGE_ATTRIBUTE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.change.attribute.fail', value: 'Failed to change attribute'});
+      const message = this.i18n({id: 'collection.change.attribute.fail', value: 'Could not change the attribute'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -435,7 +437,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.RemoveAttributeFailure>(CollectionsActionType.REMOVE_ATTRIBUTE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.remove.attribute.fail', value: 'Failed to remove attribute'});
+      const message = this.i18n({id: 'collection.remove.attribute.fail', value: 'Could not delete the attribute'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -468,7 +470,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.ChangePermissionFailure>(CollectionsActionType.CHANGE_PERMISSION_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.change.permission.fail', value: 'Failed to change collection permission'});
+      const message = this.i18n({id: 'collection.change.permission.fail', value: 'Could not change the collection permissions'});
       return new NotificationsAction.Error({message});
     })
   );

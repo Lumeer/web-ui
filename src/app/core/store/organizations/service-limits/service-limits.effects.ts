@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {catchError, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {Actions, Effect, ofType} from '@ngrx/effects';
@@ -54,7 +54,10 @@ export class ServiceLimitsEffects {
     ofType<ServiceLimitsAction.GetAllFailure>(ServiceLimitsActionType.GET_ALL_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.serviceLimits.getAll.fail', value: 'Cannot read information about your service levels and subscriptions'});
+      const message = this.i18n({
+        id: 'organization.serviceLimits.getAll.fail',
+        value: 'Could not read information about your service levels and subscriptions'
+      });
       return new NotificationsAction.Error({message});
     })
   );
@@ -78,7 +81,7 @@ export class ServiceLimitsEffects {
     ofType<ServiceLimitsAction.GetServiceLimitsFailure>(ServiceLimitsActionType.GET_SERVICE_LIMITS_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'organization.serviceLimits.get.fail', value: 'Cannot read information about your service level and subscription'});
+      const message = this.i18n({id: 'organization.serviceLimits.get.fail', value: 'Could not read information about your service level and subscription'});
       return new NotificationsAction.Error({message});
     })
   );

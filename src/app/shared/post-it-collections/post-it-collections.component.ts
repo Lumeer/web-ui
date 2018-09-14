@@ -300,7 +300,7 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   private deleteInitializedPostIt(collection: CollectionModel) {
     const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
-    const message = this.i18n({id: 'collection.delete.dialog.message', value: 'Do you really want to remove this collection?'});
+    const message = this.i18n({id: 'collection.delete.dialog.message', value: 'Do you really want to delete this collection?'});
 
     this.store.dispatch(new NotificationsAction.Confirm(
       {

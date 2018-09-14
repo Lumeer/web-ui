@@ -76,7 +76,7 @@ export class ProjectsEffects {
     ofType<ProjectsAction.GetFailure>(ProjectsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'projects.get.fail', value: 'Failed to get projects'});
+      const message = this.i18n({id: 'projects.get.fail', value: 'Could not get projects'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -154,10 +154,11 @@ export class ProjectsEffects {
           action: new RouterAction.Go({
             path: ['/organization', organization.code, 'detail'],
             extras: {fragment: 'orderService'}
-          })
+          }),
+          yesFirst: true
         });
       }
-      const errorMessage = this.i18n({id: 'project.create.fail', value: 'Failed to create project'});
+      const errorMessage = this.i18n({id: 'project.create.fail', value: 'Could not create the project'});
       return new NotificationsAction.Error({message: errorMessage});
     })
   );
@@ -205,7 +206,7 @@ export class ProjectsEffects {
     ofType<ProjectsAction.UpdateFailure>(ProjectsActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'project.update.fail', value: 'Failed to update project'});
+      const message = this.i18n({id: 'project.update.fail', value: 'Could not update the project'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -241,7 +242,7 @@ export class ProjectsEffects {
     ofType<ProjectsAction.DeleteFailure>(ProjectsActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'project.delete.fail', value: 'Failed to delete project'});
+      const message = this.i18n({id: 'project.delete.fail', value: 'Could not delete the project'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -279,7 +280,7 @@ export class ProjectsEffects {
     ofType<ProjectsAction.ChangePermissionFailure>(ProjectsActionType.CHANGE_PERMISSION_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'project.permission.change.fail', value: 'Failed to change project permission'});
+      const message = this.i18n({id: 'project.permission.change.fail', value: 'Could not change the project permissions'});
       return new NotificationsAction.Error({message});
     })
   );

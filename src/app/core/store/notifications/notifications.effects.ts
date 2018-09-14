@@ -36,11 +36,17 @@ export class NotificationsEffects {
     tap(action => {
       const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
       const noButtonText = this.i18n({id: 'button.no', value: 'No'});
+      const yesButton = {text: yesButtonText, action: () => this.store$.dispatch(action.payload.action)};
+      const noButton = {text: noButtonText};
 
-      const buttons: SnotifyButton[] = [
-        {text: yesButtonText, action: () => this.store$.dispatch(action.payload.action)},
-        {text: noButtonText}
-      ];
+      const buttons: SnotifyButton[] = [];
+      if (action.payload.yesFirst) {
+        buttons.push(yesButton);
+        buttons.push(noButton);
+      } else {
+        buttons.push(noButton);
+        buttons.push(yesButton);
+      }
       this.notificationService.confirm(action.payload.message, action.payload.title, buttons);
     })
   );

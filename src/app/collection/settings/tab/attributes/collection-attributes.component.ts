@@ -106,7 +106,7 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
 
   public showAttributeDeleteDialog(attribute: AttributeModel, onCancel?: () => void) {
     const title = this.i18n({id: 'collection.tab.attributes.delete.title', value: 'Delete attribute?'});
-    const message = this.i18n({id: 'collection.tab.attributes.delete.message', value: 'Attribute "{{name}}" is about to be permanently deleted.'}, {
+    const message = this.i18n({id: 'collection.tab.attributes.delete.message', value: 'Do you really want to delete attribute "{{name}}"?'}, {
       name: attribute.name
     });
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
@@ -116,8 +116,8 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
       message,
       title,
       [
-        {text: yesButtonText, action: () => this.deleteAttribute(attribute), bold: false},
-        {text: noButtonText, action: onCancel}
+        {text: noButtonText, action: onCancel},
+        {text: yesButtonText, action: () => this.deleteAttribute(attribute), bold: false}
       ]
     );
   }

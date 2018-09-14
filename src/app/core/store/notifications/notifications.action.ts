@@ -34,7 +34,7 @@ export namespace NotificationsAction {
   export class Confirm implements Action {
     public readonly type = NotificationsActionType.CONFIRM;
 
-    public constructor(public payload: { title: string, message: string, action: Action }) {
+    public constructor(public payload: { title: string, message: string, action: Action, yesFirst?: boolean }) {
     }
   }
 

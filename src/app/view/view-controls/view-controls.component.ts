@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDe
 import {ActivatedRoute, NavigationExtras} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Subscription, Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {selectPerspective, selectQuery, selectSearchTab, selectWorkspace} from '../../core/store/navigation/navigation.state';
@@ -143,14 +143,14 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private askToDiscardChanges() {
-    const message = this.i18n({id: 'view.discard.changes.message', value: 'The view has changed. Save the changes or discard them.'});
+    const message = this.i18n({id: 'view.discard.changes.message', value: 'The view was changed. Do you want to save the changes?'});
     const title = this.i18n({id: 'view.discard.changes.message.title', value: 'Save view'});
     const discard = this.i18n({id: 'button.discard', value: 'Discard'});
     const save = this.i18n({id: 'button.save', value: 'Save'});
 
     this.notificationService.confirm(message, title, [
-      {text: discard, action: () => this.navigateToUrlWithoutView(), bold: false},
-      {text: save, action: () => this.save.emit(this.view.name)}
+      {text: save, action: () => this.save.emit(this.view.name)},
+      {text: discard, action: () => this.navigateToUrlWithoutView(), bold: false}
     ]);
   }
 

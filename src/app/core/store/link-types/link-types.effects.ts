@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {of, Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
@@ -60,7 +60,7 @@ export class LinkTypesEffects {
     ofType<LinkTypesAction.GetFailure>(LinkTypesActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'link.types.get.fail', value: 'Failed to get link types'});
+      const message = this.i18n({id: 'link.types.get.fail', value: 'Could not get link types'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -93,7 +93,7 @@ export class LinkTypesEffects {
     ofType<LinkTypesAction.CreateFailure>(LinkTypesActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'link.type.create.fail', value: 'Failed to create link type'});
+      const message = this.i18n({id: 'link.type.create.fail', value: 'Could not create the link type'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -117,7 +117,7 @@ export class LinkTypesEffects {
     ofType<LinkTypesAction.UpdateFailure>(LinkTypesActionType.UPDATE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'link.type.update.fail', value: 'Failed to update link type'});
+      const message = this.i18n({id: 'link.type.update.fail', value: 'Could not update the link type'});
       return new NotificationsAction.Error({message});
     })
   );
@@ -136,7 +136,7 @@ export class LinkTypesEffects {
     ofType<LinkTypesAction.DeleteFailure>(LinkTypesActionType.DELETE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'link.type.delete.fail', value: 'Failed to delete link type'});
+      const message = this.i18n({id: 'link.type.delete.fail', value: 'Could not delete the link type'});
       return new NotificationsAction.Error({message});
     })
   );
