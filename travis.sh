@@ -31,19 +31,19 @@ bash -c "while true; do echo \$(date) - building ...; sleep $PING_SLEEP; done" &
 PING_LOOP_PID=$!
 
 echo "Linting..."
-npm run lint >> $BUILD_OUTPUT 2>&1
-dump_output
+npm run lint #>> $BUILD_OUTPUT 2>&1
+#dump_output
 
 echo "Building UI..."
-npm run build >> $BUILD_OUTPUT 2>&1
-dump_output
+npm run build #>> $BUILD_OUTPUT 2>&1
+#dump_output
 
 echo "Starting backend..."
-./travis-start-engine.sh >> $BUILD_OUTPUT 2>&1
-dump_output
+./travis-start-engine.sh #>> $BUILD_OUTPUT 2>&1
+#dump_output
 
 echo "Starting UI..."
-npm start >> $BUILD_OUTPUT 2>&1 &
+npm start #>> $BUILD_OUTPUT 2>&1 &
 while ! curl --output /dev/null --silent -r 0-0 --fail "http://localhost:7000/ui"; do
   sleep 3
 done
