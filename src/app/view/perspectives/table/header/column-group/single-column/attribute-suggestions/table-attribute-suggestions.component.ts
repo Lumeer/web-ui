@@ -19,8 +19,8 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {combineLatest, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {filter, first, map, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {AttributeModel, CollectionModel} from '../../../../../../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
@@ -34,7 +34,8 @@ import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cu
 import {TableModel} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {DialogService} from '../../../../../../../dialog/dialog.service';
-import {extractAttributeLastName} from '../../../../../../../shared/utils/attribute.utils';
+import {Direction} from '../../../../../../../shared/direction';
+import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
 
 interface LinkedAttribute {
 
@@ -71,6 +72,12 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
   public linkedAttributes$: Observable<LinkedAttribute[]>;
   public allAttributes$: Observable<LinkedAttribute[]>;
 
+  public newCount = 0;
+  public linkedCount = 0;
+  private allCount = 0;
+
+  public selectedIndex$ = new BehaviorSubject(-1);
+
   public constructor(private dialogService: DialogService,
                      private store$: Store<AppState>) {
   }
@@ -80,6 +87,7 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
       this.lastName = extractAttributeLastName(this.attributeName);
     }
     if ((changes.collection || changes.attributeName) && this.collection) {
+      this.newCount = Number(!findAttributeByName(this.collection.attributes, this.attributeName)); // TODO add support for nested attributes
       this.linkedAttributes$ = this.suggestLinkedAttributes();
       this.allAttributes$ = this.suggestAllAttributes();
     }
@@ -141,7 +149,8 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
               .filter(newAttribute => filtered.every(existingAttribute => !equalLinkedAttributes(newAttribute, existingAttribute)))
           );
         }, [])
-      )
+      ),
+      tap(suggestions => this.linkedCount = suggestions.length)
     );
   }
 
@@ -158,13 +167,62 @@ export class TableAttributeSuggestionsComponent implements OnChanges {
             .map(attribute => ({collection, attribute}))
             .filter(newAttribute => filtered.every(existingAttribute => !equalLinkedAttributes(newAttribute, existingAttribute)))
         );
-      }, []))
+      }, [])),
+      tap(suggestions => this.allCount = suggestions.length)
     );
   }
 
   private isMatchingAttribute(collection: CollectionModel, attribute: AttributeModel): boolean {
     return this.lastName && (attribute.name.toLowerCase().startsWith(this.lastName.toLowerCase())
       || collection.name.toLowerCase().startsWith(this.lastName.toLowerCase()));
+  }
+
+  public moveSelection(direction: Direction) {
+    const index = this.selectedIndex$.getValue();
+
+    if (direction === Direction.Up && index > -1) {
+      this.selectedIndex$.next(index - 1);
+    }
+    if (direction === Direction.Down && index < this.newCount + this.linkedCount + this.allCount - 1) {
+      this.selectedIndex$.next(index + 1);
+    }
+  }
+
+  public useSelection() {
+    const index = this.selectedIndex$.getValue();
+    if (index < 0) {
+      return;
+    }
+
+    if (index === 0 && this.newCount === 1) {
+      return this.createAttribute();
+    }
+
+    if (this.newCount <= index && index < this.newCount + this.linkedCount) {
+      this.linkedAttributes$.pipe(
+        first(),
+        map(suggestions => suggestions[index - this.newCount]),
+        filter(suggestion => !!suggestion && !!suggestion.linkType)
+      ).subscribe(suggestion => this.useLinkType(suggestion.linkType));
+      return;
+    }
+
+    if (this.newCount + this.linkedCount <= index && index < this.newCount + this.linkedCount + this.allCount) {
+      this.allAttributes$.pipe(
+        first(),
+        map(suggestions => suggestions[index - this.linkedCount - this.newCount]),
+        filter(suggestion => !!suggestion && !!suggestion.collection)
+      ).subscribe(suggestion => this.createLinkType(suggestion.collection));
+      return;
+    }
+  }
+
+  public clearSelection() {
+    this.selectedIndex$.next(-1);
+  }
+
+  public isSelected(): boolean {
+    return this.selectedIndex$.getValue() >= 0;
   }
 
 }

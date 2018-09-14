@@ -35,11 +35,12 @@ import {TablesAction, TablesActionType} from '../../../../../../core/store/table
 import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.state';
 import {DialogService} from '../../../../../../dialog/dialog.service';
 import {Direction} from '../../../../../../shared/direction';
-import {KeyCode} from '../../../../../../shared/key-code';
+import {isKeyPrintable, KeyCode} from '../../../../../../shared/key-code';
 import {extractAttributeLastName, extractAttributeParentName, filterAttributesByDepth} from '../../../../../../shared/utils/attribute.utils';
 import {TableEditableCellDirective} from '../../../shared/directives/table-editable-cell.directive';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
 import {ColumnBackgroundPipe} from '../../../shared/pipes/column-background.pipe';
+import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
 
 @Component({
@@ -70,6 +71,9 @@ export class TableSingleColumnComponent implements OnChanges {
 
   @ViewChild(TableEditableCellDirective)
   public editableCellDirective: TableEditableCellDirective;
+
+  @ViewChild(TableAttributeSuggestionsComponent)
+  public suggestions: TableAttributeSuggestionsComponent;
 
   @ViewChild(TableColumnContextMenuComponent)
   public contextMenuComponent: TableColumnContextMenuComponent;
@@ -177,6 +181,11 @@ export class TableSingleColumnComponent implements OnChanges {
   public onEditEnd(lastName: string) {
     this.edited = false;
     if (!lastName || this.dialogService.isDialogOpen()) {
+      return;
+    }
+
+    if (this.suggestions && this.suggestions.isSelected()) {
+      this.suggestions.useSelection();
       return;
     }
 
@@ -311,8 +320,16 @@ export class TableSingleColumnComponent implements OnChanges {
 
   public onEditKeyDown(event: KeyboardEvent) {
     switch (event.code) {
+      case KeyCode.ArrowDown:
+        return this.suggestions && this.suggestions.moveSelection(Direction.Down);
+      case KeyCode.ArrowUp:
+        return this.suggestions && this.suggestions.moveSelection(Direction.Up);
       case KeyCode.Tab:
         return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Right}));
+    }
+
+    if (isKeyPrintable(event) && this.suggestions) {
+      return this.suggestions.clearSelection();
     }
   }
 

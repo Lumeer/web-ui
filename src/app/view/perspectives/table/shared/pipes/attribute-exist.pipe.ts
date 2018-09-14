@@ -28,7 +28,7 @@ export class AttributeExistPipe implements PipeTransform {
 
   public transform(collection: CollectionModel, attributeName: string): boolean {
     if (collection) {
-      return !!findAttributeByName(collection.attributes, attributeName);
+      return !!findAttributeByName(collection.attributes, attributeName); // TODO add support for nested attributes
     }
     return false;
   }
