@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {AppState} from '../../../../core/store/app.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, combineLatest as observableCombineLatest} from 'rxjs';
+import {Observable, combineLatest as observableCombineLatest, Subscription, BehaviorSubject} from 'rxjs';
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 import {selectCollectionByWorkspace, selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
 import {filter, map, mergeMap, tap} from 'rxjs/operators';
@@ -31,18 +31,18 @@ import {selectLinkTypesByCollectionId} from '../../../../core/store/link-types/l
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
-import {Subscription} from 'rxjs/index';
 import {isNullOrUndefined} from 'util';
 
 @Component({
   templateUrl: './collection-link-types.component.html',
-  styleUrls: ['./collection-link-types.component.scss']
+  styleUrls: ['./collection-link-types.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
 
-  public linkTypes: LinkTypeModel[] = [];
-  public collection: CollectionModel;
-  public searchString: String;
+  public linkTypes$: Observable<LinkTypeModel[]>;
+  public collection$: Observable<CollectionModel>;
+  public searchString$ =  new BehaviorSubject<string>('');
 
   private subscriptions = new Subscription();
 
@@ -56,15 +56,12 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    this.subscriptions.add(this.store.select(selectCollectionByWorkspace).pipe(
+    this.linkTypes$ = this.store.select(selectCollectionByWorkspace).pipe(
       filter(collection => !!collection),
-      mergeMap(collection => this.selectLinkTypesForCollection(collection.id)))
-      .subscribe(linkTypes => this.linkTypes = linkTypes)
-    );
-    this.subscriptions.add(this.store.select(selectCollectionByWorkspace)
-      .pipe(filter(collection => !isNullOrUndefined(collection)))
-      .subscribe(collection => this.collection = collection)
-    );
+      mergeMap(collection => this.selectLinkTypesForCollection(collection.id)));
+
+    this.collection$ = this.store.select(selectCollectionByWorkspace)
+      .pipe(filter(collection => !isNullOrUndefined(collection)));
   }
 
   public ngOnDestroy() {
@@ -86,6 +83,10 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
   private fetchLinkInstances(linkTypes: LinkTypeModel[]) {
     const query = {linkTypeIds: linkTypes.map(link => link.id)};
     this.store.dispatch(new LinkInstancesAction.Get({query}));
+  }
+
+  public onSearchInputChanged(newString: string) {
+    this.searchString$.next(newString);
   }
 
   public onDeleteLinkType(linkType: LinkTypeModel, usageCount: number) {

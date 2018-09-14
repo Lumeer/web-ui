@@ -1,6 +1,6 @@
 <div class="my-4">
   <table class="table table-striped table-sm">
-    <thead [style.background-color]="collection.color | lightenColor:.5">
+    <thead [style.background-color]="(collection$ | async).color | lightenColor:.5">
       <tr>
         <th i18n="@@collections.tab.linkTypes.name">Name</th>
         <th [style.width.%]="30" class="text-right">
@@ -12,7 +12,7 @@
                    placeholder="Search link type..."
                    i18n-placeholder="@@collections.tab.linkTypes.search.placeholder"
                    title="Search for link types" i18n-title="@@collections.tab.linkTypes.search.title"
-                   [(ngModel)]="searchString">
+                   (input)="onSearchInputChanged($event.target.value)">
           </div>
         </th>
       </tr>
@@ -20,7 +20,7 @@
     <tbody>
 
       <tr link-type
-          *ngFor="let linkType of linkTypes | linkTypeFilter:searchString; trackBy:trackByLinkType"
+          *ngFor="let linkType of linkTypes$ | async | linkTypeFilter:(searchString$ | async); trackBy:trackByLinkType"
           [linkType]="linkType"
           (delete)="onDeleteLinkType(linkType, $event)">
       </tr>
