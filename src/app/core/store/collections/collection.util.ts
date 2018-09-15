@@ -51,7 +51,7 @@ export function mergeCollections(collectionsA: CollectionModel[], collectionsB: 
   return collectionsA.concat(collectionsBToAdd);
 }
 
-export function getCollectionIdsFromFilters(filters: string[]): string[] {
+export function getCollectionsIdsFromFilters(filters: string[]): string[] {
   return filters && filters.map(filter => QueryConverter.parseFilter(filter))
     .filter(filter => !!filter)
     .map(filter => filter.collectionId) || [];

@@ -20,7 +20,7 @@
 import {CollectionModel} from './collection.model';
 import {QueryModel} from '../navigation/query.model';
 import {DocumentModel} from '../documents/document.model';
-import {getCollectionIdsFromFilters, mergeCollections} from './collection.util';
+import {getCollectionsIdsFromFilters, mergeCollections} from './collection.util';
 import {groupDocumentsByCollection} from '../documents/document.utils';
 import {filterDocumentsByFulltext} from '../documents/documents.filters';
 
@@ -54,7 +54,7 @@ function filterCollectionsByFulltext(collections: CollectionModel[], documents: 
 
   return collections.filter(collection => {
     const documentByCollections = documentsByCollectionsMap[collection.id] || [];
-    return filterDocumentsByFulltext(documentByCollections, fulltext).length > 0
+    return filterDocumentsByFulltext(documentByCollections, fulltext).length > 0;
   });
 }
 
@@ -71,7 +71,7 @@ function filterCollectionsByFilters(collections: CollectionModel[], filters: str
     return [];
   }
 
-  const collectionIdsFromFilters = getCollectionIdsFromFilters(filters);
+  const collectionIdsFromFilters = getCollectionsIdsFromFilters(filters);
 
   return filterCollectionsByCollectionIds(collections, collectionIdsFromFilters);
 }
@@ -81,7 +81,7 @@ function filterCollectionsByDocumentsIds(collections: CollectionModel[], documen
     return [];
   }
 
-  let collectionsIdsFromDocuments = documents.reduce((collectionIds, document) => {
+  const collectionsIdsFromDocuments = documents.reduce((collectionIds, document) => {
     if (documentsIds.includes(document.id) && !collectionIds.includes(document.collectionId)) {
       collectionIds.push(document.collectionId);
     }
@@ -91,7 +91,3 @@ function filterCollectionsByDocumentsIds(collections: CollectionModel[], documen
 
   return filterCollectionsByCollectionIds(collections, collectionsIdsFromDocuments);
 }
-
-
-
-

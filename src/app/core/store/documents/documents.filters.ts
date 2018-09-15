@@ -22,7 +22,7 @@ import {AttributeFilter, ConditionType, QueryModel} from '../navigation/query.mo
 import {DocumentModel} from './document.model';
 import {QueryConverter} from '../navigation/query.converter';
 import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
-import {getCollectionIdsFromFilters} from '../collections/collection.util';
+import {getCollectionsIdsFromFilters} from '../collections/collection.util';
 
 export function filterDocumentsByQuery(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
   documents = documents.filter(document => typeof(document) === 'object')
@@ -62,7 +62,7 @@ function filterDocumentsByFiltersAndFulltext(documents: DocumentModel[], query: 
   let filteredDocuments = [];
   const documentsByCollectionsMap = groupDocumentsByCollection(documents);
 
-  for (let collectionId of collectionIdsFromQuery) {
+  for (const collectionId of collectionIdsFromQuery) {
     const documentsByCollection = documentsByCollectionsMap[collectionId];
     filteredDocuments = mergeDocuments(filteredDocuments, filterCollectionDocumentsByFiltersAndFulltext(documentsByCollection, query));
   }
@@ -71,8 +71,8 @@ function filterDocumentsByFiltersAndFulltext(documents: DocumentModel[], query: 
 }
 
 function getCollectionIdsFromQuery(query: QueryModel): string[] {
-  let collectionsIds = query.collectionIds || [];
-  return collectionsIds.concat(getCollectionIdsFromFilters(query.filters));
+  const collectionsIds = query.collectionIds || [];
+  return collectionsIds.concat(getCollectionsIdsFromFilters(query.filters));
 }
 
 function filterCollectionDocumentsByFiltersAndFulltext(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
