@@ -34,3 +34,12 @@ export function getDefaultAttributeId(collection: CollectionModel): string {
 
   return '';
 }
+
+export function sortCollectionsByFavoriteAndLastUsed(collections: CollectionModel[]): CollectionModel[] {
+  return collections.sort((a, b) => {
+    if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
+        return b.lastTimeUsed.getTime() - a.lastTimeUsed.getTime();
+    }
+    return a.favorite ? -1 : 1;
+  });
+}
