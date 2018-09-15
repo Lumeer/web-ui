@@ -43,7 +43,7 @@ export const selectAllDocuments = createSelector(selectDocumentsState, documents
 export const selectDocumentsDictionary = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectEntities);
 export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
 export const selectDocumentsByQuery = createSelector(selectAllDocuments, selectQuery,
-  (documents, query): DocumentModel[] => filterDocuments(sortDocumentsByCreationDate(documents), query)
+  (documents, query): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents), query)
 );
 
 export const selectCurrentQueryDocumentsLoaded = createSelector(selectDocumentsQueries, selectQuery, (queries, currentQuery) =>
@@ -51,14 +51,10 @@ export const selectCurrentQueryDocumentsLoaded = createSelector(selectDocumentsQ
 );
 
 export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean) => createSelector(selectAllDocuments,
-  (documents): DocumentModel[] => filterDocuments(sortDocumentsByCreationDate(documents, desc), query)
+  (documents): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query)
 );
 
 export const selectDocumentById = (id: string) => createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);
 
 export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary,
   documentsMap => ids.map(id => documentsMap[id]).filter(doc => doc));
-
-function filterDocuments(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
-  return filterDocumentsByQuery(documents, query);
-}

@@ -27,6 +27,22 @@ export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc
   return sortedDocuments.sort((a, b) => (a.creationDate.getTime() - b.creationDate.getTime()) * (sortDesc ? -1 : 1));
 }
 
+export function mergeDocuments(documentsA: DocumentModel[], documentsB: DocumentModel[]): DocumentModel[] {
+  const documentsAIds = documentsA.map(collection => collection.id);
+  const documentsBToAdd = documentsB.filter(collection => !documentsAIds.includes(collection.id));
+  return documentsA.concat(documentsBToAdd);
+}
+
+export function groupDocumentsByCollection(documents: DocumentModel[]): { [documentId: string]: [DocumentModel] } {
+  return documents.reduce((map, document) => {
+    if (!map[document.collectionId]) {
+      map[document.collectionId] = [];
+    }
+    map[document.collectionId].push(document);
+    return map;
+  }, {});
+}
+
 export function generateDocumentData(collection: CollectionModel, filters: string[]): { [attributeId: string]: any } {
   if (!collection) {
     return [];

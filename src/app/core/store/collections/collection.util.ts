@@ -18,6 +18,7 @@
  */
 
 import {CollectionModel} from './collection.model';
+import {QueryConverter} from '../navigation/query.converter';
 
 export function getDefaultAttributeId(collection: CollectionModel): string {
   if (collection.defaultAttributeId) {
@@ -38,8 +39,20 @@ export function getDefaultAttributeId(collection: CollectionModel): string {
 export function sortCollectionsByFavoriteAndLastUsed(collections: CollectionModel[]): CollectionModel[] {
   return collections.sort((a, b) => {
     if ((a.favorite && b.favorite) || (!a.favorite && !b.favorite)) {
-        return b.lastTimeUsed.getTime() - a.lastTimeUsed.getTime();
+      return b.lastTimeUsed.getTime() - a.lastTimeUsed.getTime();
     }
     return a.favorite ? -1 : 1;
   });
+}
+
+export function mergeCollections(collectionsA: CollectionModel[], collectionsB: CollectionModel[]): CollectionModel[] {
+  const collectionsAIds = collectionsA.map(collection => collection.id);
+  const collectionsBToAdd = collectionsB.filter(collection => !collectionsAIds.includes(collection.id));
+  return collectionsA.concat(collectionsBToAdd);
+}
+
+export function getCollectionIdsFromFilters(filters: string[]): string[] {
+  return filters && filters.map(filter => QueryConverter.parseFilter(filter))
+    .filter(filter => !!filter)
+    .map(filter => filter.collectionId) || [];
 }
