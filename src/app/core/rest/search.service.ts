@@ -19,13 +19,12 @@
 
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {Collection} from '../dto/collection';
-import {Document} from '../dto/document';
+import {DocumentDto} from '../dto/document.dto';
 import {Query} from '../dto/query';
 import {SuggestionType} from '../dto/suggestion-type';
 import {Suggestions} from '../dto/suggestions';
@@ -57,8 +56,8 @@ export class SearchService {
     return this.http.post<Collection[]>(`${this.searchPath(workspace)}/collections`, query);
   }
 
-  public searchDocuments(query: Query): Observable<Document[]> {
-    return this.http.post<Document[]>(`${this.searchPath()}/documents`, query);
+  public searchDocuments(query: Query): Observable<DocumentDto[]> {
+    return this.http.post<DocumentDto[]>(`${this.searchPath()}/documents`, query);
   }
 
   public searchViews(query: Query): Observable<View[]> {

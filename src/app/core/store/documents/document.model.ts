@@ -33,11 +33,6 @@ export interface DocumentModel {
   dataVersion?: number;
 
   correlationId?: string;
+  parentId?: string;
 
-}
-
-export interface DocumentDataModel {
-  attributeId?: string;
-  name?: string;
-  value?: any;
 }

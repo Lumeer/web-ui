@@ -17,16 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class Document {
+export interface DocumentDto {
 
-  public id: string;
-  public collectionId: string;
-  public creationDate?: number;
-  public updateDate?: number;
-  public createdBy?: string;
-  public updatedBy?: string;
-  public dataVersion?: number;
-  public data: { [attributeId: string]: any } = {};
-  public favorite?: boolean;
+  id: string;
+  collectionId: string;
+  parentId?: string;
+  creationDate?: number;
+  updateDate?: number;
+  createdBy?: string;
+  updatedBy?: string;
+  dataVersion?: number;
+  data: { [attributeId: string]: any };
+  favorite?: boolean;
 
 }

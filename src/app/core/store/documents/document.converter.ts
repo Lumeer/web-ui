@@ -17,36 +17,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Document} from '../../dto';
+import {DocumentDto} from '../../dto';
 import {DocumentModel} from './document.model';
 
-export class DocumentConverter {
+export function convertDocumentDtoToModel(dto: DocumentDto, correlationId?: string): DocumentModel {
+  const data = {...dto.data};
+  delete data['_id'];
 
-  public static fromDto(dto: Document, correlationId?: string): DocumentModel {
-    const data = {...dto.data};
-    delete data['_id'];
+  return {
+    id: dto.id,
+    collectionId: dto.collectionId,
+    parentId: dto.parentId,
+    data: data,
+    favorite: dto.favorite,
+    creationDate: new Date(dto.creationDate),
+    updateDate: dto.updateDate ? new Date(dto.updateDate) : null,
+    createdBy: dto.createdBy,
+    updatedBy: dto.updatedBy,
+    dataVersion: dto.dataVersion,
+    correlationId: correlationId
+  };
+}
 
-    return {
-      id: dto.id,
-      collectionId: dto.collectionId,
-      data: data,
-      favorite: dto.favorite,
-      creationDate: new Date(dto.creationDate),
-      updateDate: dto.updateDate ? new Date(dto.updateDate) : null,
-      createdBy: dto.createdBy,
-      updatedBy: dto.updatedBy,
-      dataVersion: dto.dataVersion,
-      correlationId: correlationId
-    };
-  }
-
-  public static toDto(model: DocumentModel): Document {
-    return {
-      id: model.id,
-      collectionId: model.collectionId,
-      data: model.data,
-      favorite: model.favorite
-    };
-  }
-
+export function convertDocumentModelToDto(model: DocumentModel | Partial<DocumentModel>): DocumentDto {
+  return {
+    id: model.id,
+    collectionId: model.collectionId,
+    parentId: model.parentId,
+    data: model.data,
+    favorite: model.favorite
+  };
 }
