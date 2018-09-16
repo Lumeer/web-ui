@@ -21,49 +21,95 @@ import {isNullOrUndefined} from 'util';
 import {AttributeFilter, ConditionType, QueryModel} from '../navigation/query.model';
 import {DocumentModel} from './document.model';
 import {QueryConverter} from '../navigation/query.converter';
+import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
+import {getCollectionsIdsFromFilters} from '../collections/collection.util';
 
 export function filterDocumentsByQuery(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
   documents = documents.filter(document => typeof(document) === 'object')
     .filter(document => document);
-  if (!query) {
+
+  if (!query || !containsDocumentsQueryField(query)) {
     return documents;
   }
 
-  let filteredDocuments = filterDocumentsByCollections(documents, query);
-  filteredDocuments = filterDocumentsByFulltext(filteredDocuments, query);
-  filteredDocuments = filterDocumentsByFilters(filteredDocuments, query);
+  let filteredDocuments = filterDocumentsByDocumentsIds(documents, query.documentIds);
+  filteredDocuments = mergeDocuments(filteredDocuments, filterDocumentsByFiltersAndFulltext(documents, query));
 
   return paginate(filteredDocuments, query);
 }
 
-function filterDocumentsByCollections(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
-  if (!hasCollectionsFilter(query)) {
-    return documents;
-  }
-
-  return documents.filter(document => {
-    return query.collectionIds.includes(document.collectionId);
-  });
+function containsDocumentsQueryField(query: QueryModel): boolean {
+  return (query.collectionIds && query.collectionIds.length > 0)
+    || (query.documentIds && query.documentIds.length > 0)
+    || (query.filters && query.filters.length > 0) || !!query.fulltext;
 }
 
-function filterDocumentsByFulltext(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
-  if (!query.fulltext) {
-    return documents;
+function filterDocumentsByDocumentsIds(documents: DocumentModel[], documentsIds: string[]): DocumentModel[] {
+  if (!documentsIds || documentsIds.length === 0) {
+    return [];
+  }
+
+  return documents.filter(document => documentsIds.includes(document.id));
+}
+
+function filterDocumentsByFiltersAndFulltext(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
+  const collectionIdsFromQuery = getCollectionIdsFromQuery(query);
+
+  if (collectionIdsFromQuery.length === 0 && query.fulltext) {
+    return filterDocumentsByFulltext(documents, query.fulltext);
+  }
+
+  let filteredDocuments = [];
+  const documentsByCollectionsMap = groupDocumentsByCollection(documents);
+
+  for (const collectionId of collectionIdsFromQuery) {
+    const documentsByCollection = documentsByCollectionsMap[collectionId];
+    filteredDocuments = mergeDocuments(filteredDocuments, filterCollectionDocumentsByFiltersAndFulltext(documentsByCollection, query));
+  }
+
+  return filteredDocuments;
+}
+
+function getCollectionIdsFromQuery(query: QueryModel): string[] {
+  const collectionsIds = query.collectionIds || [];
+  return collectionsIds.concat(getCollectionsIdsFromFilters(query.filters));
+}
+
+function filterCollectionDocumentsByFiltersAndFulltext(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
+  if (hasFiltersAndFulltext(query)) {
+    const filteredDocuments = filterDocumentsByFulltext(documents, query.fulltext);
+    return filterDocumentsByFilters(filteredDocuments, query.filters);
+  } else if (query.fulltext) {
+    return filterDocumentsByFulltext(documents, query.fulltext);
+  } else if (query.filters && query.filters.length > 0) {
+    return filterDocumentsByFilters(documents, query.filters);
+  }
+
+  return documents;
+}
+
+function hasFiltersAndFulltext(query: QueryModel): boolean {
+  return !!query.fulltext && (query.filters && query.filters.length > 0);
+}
+
+export function filterDocumentsByFulltext(documents: DocumentModel[], fulltext: string): DocumentModel[] {
+  if (!fulltext) {
+    return [];
   }
 
   return documents.filter(document => Object.values(document.data).some(value => (value || '').toString().toLowerCase()
-    .includes(query.fulltext.toLowerCase())));
+    .includes(fulltext.toLowerCase())));
 }
 
-function filterDocumentsByFilters(documents: DocumentModel[], query: QueryModel): DocumentModel[] {
-  if (!query.filters || query.filters.length === 0) {
-    return documents;
+function filterDocumentsByFilters(documents: DocumentModel[], filters: string[]): DocumentModel[] {
+  if (!filters || filters.length === 0) {
+    return [];
   }
 
-  const filters = query.filters.map(filter => QueryConverter.parseFilter(filter))
+  const attributeFilters = filters.map(filter => QueryConverter.parseFilter(filter))
     .filter(filter => !isNullOrUndefined(filter));
 
-  return documents.filter(document => documentMeetsFilters(document, filters));
+  return documents.filter(document => documentMeetsFilters(document, attributeFilters));
 }
 
 function documentMeetsFilters(document: DocumentModel, filters: AttributeFilter[]): boolean {
@@ -90,10 +136,6 @@ function documentMeetFilter(document: DocumentModel, filter: AttributeFilter): b
       return data <= filter.value;
   }
   return true;
-}
-
-function hasCollectionsFilter(query: QueryModel): boolean {
-  return query.collectionIds && query.collectionIds.length > 0;
 }
 
 function paginate(documents: DocumentModel[], query: QueryModel) {
