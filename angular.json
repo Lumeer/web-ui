@@ -38,7 +38,9 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/browserconfig.xml",
+              "src/manifest.json"
             ],
             "styles": [
               "src/styles.scss"
