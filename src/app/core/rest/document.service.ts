@@ -24,7 +24,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {environment} from '../../../environments/environment';
-import {Document} from '../dto';
+import {DocumentDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
@@ -40,20 +40,24 @@ export class DocumentService {
     this.store.select(selectWorkspace).subscribe(workspace => this.workspace = workspace);
   }
 
-  public createDocument(document: Document): Observable<Document> {
-    return this.httpClient.post<Document>(this.apiPrefix(document.collectionId), document);
+  public createDocument(document: DocumentDto): Observable<DocumentDto> {
+    return this.httpClient.post<DocumentDto>(this.apiPrefix(document.collectionId), document);
   }
 
-  public updateDocument(document: Document): Observable<Document> {
-    return this.httpClient.put<Document>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data)
+  public patchDocument(collectionId: string, documentId: string, document: Partial<DocumentDto>): Observable<DocumentDto> {
+    return this.httpClient.patch<DocumentDto>(`${this.apiPrefix(collectionId)}/${documentId}`, document);
+  }
+
+  public updateDocumentData(document: DocumentDto): Observable<DocumentDto> {
+    return this.httpClient.put<DocumentDto>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data)
       .pipe(map(returnedDocument => {
           return {...returnedDocument, collectionId: document.collectionId};
         })
       );
   }
 
-  public patchDocumentData(document: Document): Observable<Document> {
-    return this.httpClient.patch<Document>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data);
+  public patchDocumentData(document: DocumentDto): Observable<DocumentDto> {
+    return this.httpClient.patch<DocumentDto>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data);
   }
 
   public removeDocument(collectionId: string, documentId: string): Observable<HttpResponse<any>> {
@@ -63,7 +67,7 @@ export class DocumentService {
     );
   }
 
-  public addFavorite(collectionId: string, documentId: string,): Observable<any> {
+  public addFavorite(collectionId: string, documentId: string): Observable<any> {
     return this.httpClient.post(`${this.apiPrefix(collectionId)}/${documentId}/favorite`, {});
   }
 
@@ -71,11 +75,11 @@ export class DocumentService {
     return this.httpClient.delete(`${this.apiPrefix(collectionId)}/${documentId}/favorite`);
   }
 
-  public getDocument(collectionId: string, documentId: string): Observable<Document> {
-    return this.httpClient.get<Document>(`${this.apiPrefix(collectionId)}/${documentId}`);
+  public getDocument(collectionId: string, documentId: string): Observable<DocumentDto> {
+    return this.httpClient.get<DocumentDto>(`${this.apiPrefix(collectionId)}/${documentId}`);
   }
 
-  public getDocuments(collectionId: string, pageNumber?: number, pageSize?: number): Observable<Document[]> {
+  public getDocuments(collectionId: string, pageNumber?: number, pageSize?: number): Observable<DocumentDto[]> {
     const queryParams = new HttpParams();
 
     if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
@@ -83,7 +87,7 @@ export class DocumentService {
         .set('size', pageSize.toString());
     }
 
-    return this.httpClient.get<Document[]>(this.apiPrefix(collectionId), {params: queryParams});
+    return this.httpClient.get<DocumentDto[]>(this.apiPrefix(collectionId), {params: queryParams});
   }
 
   private apiPrefix(collectionId: string): string {

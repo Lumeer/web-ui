@@ -17,12 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Observable, of} from 'rxjs';
+import {HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Observable, of} from 'rxjs';
 import {catchError, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {CollectionService, DocumentService, SearchService} from '../../rest';
 import {AppState} from '../app.state';
@@ -32,13 +33,12 @@ import {selectCollectionById} from '../collections/collections.state';
 import {QueryConverter} from '../navigation/query.converter';
 import {areQueriesEqual} from '../navigation/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
-import {DocumentConverter} from './document.converter';
+import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
+import {RouterAction} from '../router/router.action';
+import {convertDocumentDtoToModel, convertDocumentModelToDto} from './document.converter';
 import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {selectDocumentById, selectDocumentsQueries} from './documents.state';
-import {HttpErrorResponse} from '@angular/common/http';
-import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
-import {RouterAction} from '../router/router.action';
 
 @Injectable()
 export class DocumentsEffects {
@@ -52,7 +52,7 @@ export class DocumentsEffects {
       const queryDto = QueryConverter.toDto(action.payload.query);
 
       return this.searchService.searchDocuments(queryDto).pipe(
-        map(dtos => dtos.map(dto => DocumentConverter.fromDto(dto))),
+        map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),
         map(documents => new DocumentsAction.GetSuccess({documents: documents, query: action.payload.query})),
         catchError((error) => of(new DocumentsAction.GetFailure({error: error})))
       );
@@ -73,10 +73,10 @@ export class DocumentsEffects {
   public create$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Create>(DocumentsActionType.CREATE),
     mergeMap(action => {
-      const documentDto = DocumentConverter.toDto(action.payload.document);
+      const documentDto = convertDocumentModelToDto(action.payload.document);
 
       return this.documentService.createDocument(documentDto).pipe(
-        map(dto => DocumentConverter.fromDto(dto, action.payload.document.correlationId)),
+        map(dto => convertDocumentDtoToModel(dto, action.payload.document.correlationId)),
         withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
         tap(([document]) => {
           const callback = action.payload.callback;
@@ -90,21 +90,6 @@ export class DocumentsEffects {
             new DocumentsAction.CreateSuccess({document})
           ];
         }),
-        // flatMap(([{action, document}, collectionEntities]) => {
-        //   const collection = collectionEntities[document.collectionId];
-        //   const actions: Action[] = [
-        //     new DocumentsAction.CreateSuccess({document}),
-        //     createSyncCollectionAction(collection, document, null)
-        //   ];
-        //
-        //   const nextAction = action.payload.nextAction;
-        //   if (nextAction && nextAction.type === LinkInstancesActionType.CREATE) {
-        //     (nextAction as LinkInstancesAction.Create).payload.linkInstance.documentIds[1] = document.id;
-        //     actions.push(nextAction);
-        //   }
-        //
-        //   return actions;
-        // }),
         catchError((error) => of(new DocumentsAction.CreateFailure({error: error})))
       );
     })
@@ -138,6 +123,26 @@ export class DocumentsEffects {
   );
 
   @Effect()
+  public patch$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.Patch>(DocumentsActionType.PATCH),
+    mergeMap(action => {
+      const documentDto = convertDocumentModelToDto(action.payload.document);
+      return this.documentService.patchDocument(action.payload.collectionId, action.payload.documentId, documentDto).pipe(
+        map(dto => convertDocumentDtoToModel(dto)),
+        withLatestFrom(
+          this.store$.select(selectCollectionById(documentDto.collectionId)),
+          this.store$.select(selectDocumentById(documentDto.id))
+        ),
+        flatMap(([document, collection, oldDocument]) => [
+          createSyncCollectionAction(collection, document, oldDocument),
+          new DocumentsAction.UpdateSuccess({document})
+        ]),
+        catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
+      );
+    })
+  );
+
+  @Effect()
   public addFavorite$ = this.actions$.pipe(
     ofType<DocumentsAction.AddFavorite>(DocumentsActionType.ADD_FAVORITE),
     mergeMap(action => this.documentService.addFavorite(action.payload.collectionId, action.payload.documentId).pipe(
@@ -146,7 +151,7 @@ export class DocumentsEffects {
         documentId: action.payload.documentId,
         error: error
       })))
-    )),
+    ))
   );
 
   @Effect()
@@ -168,7 +173,7 @@ export class DocumentsEffects {
         documentId: action.payload.documentId,
         error: error
       })))
-    )),
+    ))
   );
 
   @Effect()
@@ -195,9 +200,9 @@ export class DocumentsEffects {
   public updateData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.UpdateData>(DocumentsActionType.UPDATE_DATA),
     mergeMap(action => {
-      const documentDto = DocumentConverter.toDto(action.payload.document);
-      return this.documentService.updateDocument(documentDto).pipe(
-        map(dto => DocumentConverter.fromDto(dto)),
+      const documentDto = convertDocumentModelToDto(action.payload.document);
+      return this.documentService.updateDocumentData(documentDto).pipe(
+        map(dto => convertDocumentDtoToModel(dto)),
         withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
         withLatestFrom(this.store$.select(selectDocumentById(documentDto.id))),
         flatMap(([[document, collection], oldDocument]) => {
@@ -209,16 +214,16 @@ export class DocumentsEffects {
         }),
         catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
       );
-    }),
+    })
   );
 
   @Effect()
   public patchData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.PatchData>(DocumentsActionType.PATCH_DATA),
     mergeMap(action => {
-      const documentDto = DocumentConverter.toDto(action.payload.document);
+      const documentDto = convertDocumentModelToDto(action.payload.document);
       return this.documentService.patchDocumentData(documentDto).pipe(
-        map(dto => DocumentConverter.fromDto(dto)),
+        map(dto => convertDocumentDtoToModel(dto)),
         withLatestFrom(this.store$.select(selectCollectionById(documentDto.collectionId))),
         withLatestFrom(this.store$.select(selectDocumentById(documentDto.id))),
         flatMap(([[document, collection], oldDocument]) => {
@@ -229,7 +234,7 @@ export class DocumentsEffects {
         }),
         catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
       );
-    }),
+    })
   );
 
   @Effect()
@@ -255,7 +260,7 @@ export class DocumentsEffects {
         }),
         catchError((error) => of(new DocumentsAction.DeleteFailure({error: error})))
       );
-    }),
+    })
   );
 
   @Effect()

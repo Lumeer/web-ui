@@ -31,6 +31,8 @@ export enum DocumentsActionType {
   CREATE_SUCCESS = '[Documents] Create :: Success',
   CREATE_FAILURE = '[Documents] Create :: Failure',
 
+  PATCH = '[Documents] Patch Document',
+
   UPDATE_SUCCESS = '[Documents] Update :: Success',
   UPDATE_FAILURE = '[Documents] Update :: Failure',
 
@@ -96,6 +98,13 @@ export namespace DocumentsAction {
     public readonly type = DocumentsActionType.CREATE_FAILURE;
 
     public constructor(public payload: { error: any }) {
+    }
+  }
+
+  export class Patch implements Action {
+    public readonly type = DocumentsActionType.PATCH;
+
+    public constructor(public payload: { collectionId: string, documentId: string, document: Partial<DocumentModel>}) {
     }
   }
 
@@ -211,6 +220,7 @@ export namespace DocumentsAction {
   export type All =
     Get | GetSuccess | GetFailure |
     Create | CreateSuccess | CreateFailure |
+    Patch |
     AddFavorite | AddFavoriteSuccess | AddFavoriteFailure |
     RemoveFavorite | RemoveFavoriteSuccess | RemoveFavoriteFailure |
     UpdateData | PatchData | UpdateSuccess | UpdateFailure |
