@@ -63,7 +63,7 @@ function filterDocumentsByFiltersAndFulltext(documents: DocumentModel[], query: 
   const documentsByCollectionsMap = groupDocumentsByCollection(documents);
 
   for (const collectionId of collectionIdsFromQuery) {
-    const documentsByCollection = documentsByCollectionsMap[collectionId];
+    const documentsByCollection = documentsByCollectionsMap[collectionId] || [];
     filteredDocuments = mergeDocuments(filteredDocuments, filterCollectionDocumentsByFiltersAndFulltext(documentsByCollection, query));
   }
 
