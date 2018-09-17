@@ -177,8 +177,14 @@ export class OrganizationsEffects {
         flatMap(([, organizationCodes]) => {
           const codes = organizationCodes.filter(code => code !== organization.code);
 
-          return [new OrganizationsAction.DeleteSuccess(action.payload),
+          const actions: Action[] = [new OrganizationsAction.DeleteSuccess(action.payload),
             new OrganizationsAction.GetCodesSuccess({organizationCodes: codes})];
+
+          if (action.payload.onSuccess) {
+            actions.push(new CommonAction.ExecuteCallback({callback: () => action.payload.onSuccess()}));
+          }
+
+          return actions;
         }),
         catchError(error => of(new OrganizationsAction.DeleteFailure({error: error})))
       );

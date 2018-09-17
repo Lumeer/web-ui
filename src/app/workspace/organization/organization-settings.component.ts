@@ -34,6 +34,7 @@ import {selectOrganizationByWorkspace} from '../../core/store/organizations/orga
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
+import {Router} from '@angular/router';
 
 @Component({
   templateUrl: './organization-settings.component.html'
@@ -50,6 +51,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(private i18n: I18n,
+              private router: Router,
               private store$: Store<AppState>,
               private notificationService: NotificationService) {
   }
@@ -143,8 +145,10 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   private deleteOrganization() {
-    this.store$.dispatch(new OrganizationsAction.Delete({organizationId: this.organization.id}));
-    this.goBack();
+    this.store$.dispatch(new OrganizationsAction.Delete({
+      organizationId: this.organization.id,
+      onSuccess: () => this.router.navigate(['/'])
+    }));
   }
 
   private updateOrganization(organization: OrganizationModel) {

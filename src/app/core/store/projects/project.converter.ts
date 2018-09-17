@@ -34,6 +34,7 @@ export class ProjectConverter {
       description: dto.description,
       correlationId: correlationId,
       collectionsCount: dto.collectionsCount,
+      nonRemovable: dto.nonRemovable,
       permissions: PermissionsConverter.fromDto(dto.permissions)
     };
   }

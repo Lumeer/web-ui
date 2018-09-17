@@ -30,5 +30,6 @@ export interface ResourceModel {
   permissions?: PermissionsModel;
 
   correlationId?: string;
+  nonRemovable?: boolean;
 
 }
