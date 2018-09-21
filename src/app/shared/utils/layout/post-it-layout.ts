@@ -26,11 +26,13 @@ export class PostItLayout {
 
   private grid = null;
   private refreshSubject = new Subject();
+  private notifySubject = new Subject<string[]>();
   private subscriptions = new Subscription();
 
   constructor(private gridElement: ElementRef,
               private dragEnabled: boolean,
-              private zone: NgZone) {
+              private zone: NgZone,
+              private onOrderChange?: (orderedIds: string[]) => void) {
     this.initGrid();
   }
 
@@ -45,6 +47,9 @@ export class PostItLayout {
           dragSortInterval: 200,
           dragReleaseDuration: 200,
           dragReleaseEasing: 'ease',
+          sortData: {
+            order: (item, element) => parseInt(element.getAttribute('order'), 10)
+          },
           layoutOnResize: 200,
           layoutOnInit: true,
           layout: {
@@ -75,12 +80,19 @@ export class PostItLayout {
       this.onRefresh();
     });
 
+    const notifySubscription = this.notifySubject.pipe(
+      debounceTime(400)
+    ).subscribe((ids) => {
+      this.onNotifyAboutOrderChange(ids);
+    });
+
     this.subscriptions.add(subscription);
+    this.subscriptions.add(notifySubscription);
   }
 
   public addItem(newElement: any, index: number) {
     this.runSafely(() => {
-      const added = this.grid.add(newElement, {index: index});
+      this.grid.add(newElement, {index: index});
       this.updateIndices();
     });
   }
@@ -105,12 +117,45 @@ export class PostItLayout {
     });
   }
 
+  public sort() {
+    setTimeout(() => {
+      this.grid
+        .refreshSortData()
+        .sort('order');
+    });
+  }
+
+  public setOrder(orderedIds: string[]) {
+    this.runSafely(() => {
+      for (let i = 0; i < orderedIds.length; i++) {
+        const gridItem = this.grid.getItems().find(item => this.getPostItId(item.getElement()) === orderedIds[i]);
+        if (gridItem) {
+          gridItem.getElement().setAttribute('order', i);
+        }
+      }
+      this.sort();
+    });
+  }
+
   private updateIndices() {
     this.runSafely(() => {
+      const orderedIds = [];
       this.grid.getItems().forEach((item, i) => {
         item.getElement().setAttribute('order', i);
+        orderedIds.push(this.getPostItId(item.getElement()));
       });
+      this.notifySubject.next(orderedIds);
     });
+  }
+
+  private onNotifyAboutOrderChange(orderedIds: string[]) {
+    if (this.onOrderChange) {
+      this.onOrderChange(orderedIds);
+    }
+  }
+
+  private getPostItId(element: Element): string {
+    return element.getAttribute('key');
   }
 
   private runSafely(fun: () => void) {

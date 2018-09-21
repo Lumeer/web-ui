@@ -17,10 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 import {createSelector} from '@ngrx/store';
 import {PostItConfigModel} from '../views/view.model';
-import {SizeType} from '../../../shared/slider/size-type';
 import {AppState} from '../app.state';
 
 export interface PostItState extends PostItConfigModel {
@@ -28,7 +26,7 @@ export interface PostItState extends PostItConfigModel {
 }
 
 export const initialPostItState: PostItState = {
-  size: SizeType.M,
+  size: undefined,
   documentIdsOrder: []
 };
 

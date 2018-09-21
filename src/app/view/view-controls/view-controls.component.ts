@@ -30,8 +30,7 @@ import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {RouterAction} from '../../core/store/router/router.action';
 import {ViewConfigModel, ViewModel} from '../../core/store/views/view.model';
-import {ViewsAction} from '../../core/store/views/views.action';
-import {selectViewConfig} from '../../core/store/views/views.state';
+import {selectCurrentViewConfig} from '../../core/store/views/views.state';
 import {DialogService} from '../../dialog/dialog.service';
 import {Perspective} from '../perspectives/perspective';
 import {tap} from 'rxjs/operators';
@@ -83,7 +82,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.add(this.subscribeToWorkspace());
     this.subscriptions.add(this.subscribeToSearchTab());
 
-    this.config$ = this.store.select(selectViewConfig).pipe(
+    this.config$ = this.store.select(selectCurrentViewConfig).pipe(
       tap(config => this.currentConfig = config)
     );
     this.perspective$ = this.store.select(selectPerspective).pipe(
@@ -174,8 +173,6 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       extras = {queryParamsHandling: 'merge'};
     }
 
-    this.dispatchActionsOnChangePerspective(perspective);
-
     this.store.dispatch(new RouterAction.Go({path, extras}));
   }
 
@@ -199,12 +196,6 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public onShareClick() {
     this.dialogService.openShareViewDialog(this.view.code);
-  }
-
-  private dispatchActionsOnChangePerspective(perspective: string) {
-    if (perspective === Perspective.Search.valueOf()) {
-      this.store.dispatch(new ViewsAction.ChangeSearchConfig({config: {expandedDocumentIds: []}}));
-    }
   }
 
   public onPerspectiveChooserClick(event: MouseEvent) {

@@ -1,6 +1,6 @@
 <ng-container *ngIf="loaded$ | async">
 
-  <div *ngIf="postItsOrder.length; else noDocuments"
+  <div *ngIf="getDocuments().length; else noDocuments"
        class="container-fluid" infiniteScroll
        [infiniteScrollDistance]="2"
        (scrolled)="onScrollDown($event)">
@@ -13,7 +13,7 @@
       </add-document>
 
       <size-slider class="ml-auto"
-                   [defaultSize]="size"
+                   [defaultSize]="size$ | async"
                    (newSize)="onSizeChange($event)">
       </size-slider>
     </div>
@@ -22,10 +22,11 @@
 
       <ng-container *ngIf="layout">
 
-        <div class="layout-item {{size | postItColumnStyle}} mb-3"
+        <div class="layout-item {{size$ | async | postItColumnStyle}} mb-3"
              layout-item
              [layout]="layout"
              *ngFor="let doc of getDocuments(); trackBy:trackByDocument; let idx = index"
+             attr.key="{{doc.id}}"
              id="{{perspectiveId}}#{{doc.correlationId || doc.id}}">
           <post-it-document
             class="card post-it"

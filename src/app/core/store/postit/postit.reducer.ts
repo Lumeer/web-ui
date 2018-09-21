@@ -17,47 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ViewsAction, ViewsActionType} from './views.action';
-import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
-import {PermissionType} from '../permissions/permissions.model';
+import {initialPostItState, PostItState} from './postit.state';
+import {PostItAction, PostItActionType} from './postit.action';
 
-export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
+export function postItReducer(state: PostItState = initialPostItState, action: PostItAction.All): PostItState {
   switch (action.type) {
-    case ViewsActionType.GET_SUCCESS:
-      return viewsAdapter.addMany(action.payload.views, {...state, loaded: true});
-    case ViewsActionType.CREATE_SUCCESS:
-      return viewsAdapter.addOne(action.payload.view, state);
-    case ViewsActionType.UPDATE_SUCCESS:
-      return viewsAdapter.updateOne({id: action.payload.view.code, changes: action.payload.view}, state);
-    case ViewsActionType.DELETE_SUCCESS:
-      return viewsAdapter.removeOne(action.payload.viewCode, state);
-    case ViewsActionType.SET_PERMISSIONS_SUCCESS:
-      return onSetPermissions(state, action);
-    case ViewsActionType.CHANGE_CONFIG:
-      return {...state, config: action.payload.config};
-    case ViewsActionType.CHANGE_DETAIL_CONFIG:
-      return {...state, config: {...state.config, detail: action.payload.config}};
-    case ViewsActionType.CHANGE_POSTIT_CONFIG:
-      return {...state, config: {...state.config, postit: action.payload.config}};
-    case ViewsActionType.CHANGE_SEARCH_CONFIG:
-      return {...state, config: {...state.config, search: action.payload.config}};
-    case ViewsActionType.CHANGE_TABLE_CONFIG:
-      return {...state, config: {...state.config, table: action.payload.config}};
-    case ViewsActionType.SET_CURSOR:
-      return {...state, cursor: action.payload.cursor};
-    case ViewsActionType.CLEAR:
-      return initialViewsState;
+    case PostItActionType.CHANGE_SIZE:
+      return {...state, size: action.payload.size};
+    case PostItActionType.CHANGE_ORDER:
+      return {...state, documentIdsOrder: action.payload.documentIdsOrder};
+    case PostItActionType.CLEAR:
+      return initialPostItState;
     default:
       return state;
   }
-}
-
-function onSetPermissions(state: ViewsState, action: ViewsAction.SetPermissionsSuccess): ViewsState {
-  let permissions = state.entities[action.payload.viewCode].permissions;
-  if (action.payload.type === PermissionType.Users) {
-    permissions = {...permissions, users: action.payload.permissions};
-  } else {
-    permissions = {...permissions, groups: action.payload.permissions};
-  }
-  return viewsAdapter.updateOne({id: action.payload.viewCode, changes: {permissions}}, state);
 }

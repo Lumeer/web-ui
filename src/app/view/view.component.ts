@@ -27,11 +27,10 @@ import {NavigationState, selectNavigation, selectPerspective} from '../core/stor
 import {QueryModel} from '../core/store/navigation/query.model';
 import {Workspace} from '../core/store/navigation/workspace.model';
 import {RouterAction} from '../core/store/router/router.action';
-import {ViewModel} from '../core/store/views/view.model';
+import {ViewConfigModel, ViewModel} from '../core/store/views/view.model';
 import {ViewsAction} from '../core/store/views/views.action';
-import {selectAllViews, selectViewByCode, selectViewConfig} from '../core/store/views/views.state';
+import {selectAllViews, selectCurrentViewConfig, selectViewByCode} from '../core/store/views/views.state';
 import {DialogService} from '../dialog/dialog.service';
-import {Perspective} from './perspectives/perspective';
 
 @Component({
   templateUrl: './view.component.html',
@@ -116,7 +115,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   public onSave(name: string) {
     this.subscriptions.add(
       combineLatest(
-        this.store.select(selectViewConfig),
+        this.store.select(selectCurrentViewConfig),
         this.store.select(selectPerspective)
       ).pipe(take(1)).subscribe(([config, perspective]) => {
         const view: ViewModel = {...this.view, query: this.query, name, config, perspective};
