@@ -81,7 +81,7 @@ export class PostItLayout {
     });
 
     const notifySubscription = this.notifySubject.pipe(
-      debounceTime(400)
+      debounceTime(200)
     ).subscribe((ids) => {
       this.onNotifyAboutOrderChange(ids);
     });
