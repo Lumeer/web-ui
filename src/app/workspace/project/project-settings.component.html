@@ -1,5 +1,6 @@
 <top-panel-wrapper>
-  <div class="col-12 col-lg-11 col-xl-10 m-auto" *ngIf="project">
+  <div *ngIf="project"
+       class="col-12 col-lg-11 col-xl-10 m-auto content">
     <resource-header
       [resource]="project"
       [resourceType]="getResourceType()"

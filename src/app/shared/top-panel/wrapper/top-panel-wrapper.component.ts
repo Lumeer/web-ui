@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'top-panel-wrapper',
@@ -25,9 +26,41 @@ import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
   styleUrls: ['./top-panel-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopPanelWrapperComponent {
+export class TopPanelWrapperComponent implements OnInit, AfterViewInit {
 
   @Input()
   public searchBoxShown: boolean;
+
+  @ViewChild('topPanel')
+  public element: ElementRef;
+
+  public mobile$ = new BehaviorSubject(true);
+
+  public ngOnInit() {
+    this.detectMobileResolution();
+  }
+
+  public ngAfterViewInit() {
+    this.setTopPanelHeight();
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.detectMobileResolution();
+    this.setTopPanelHeight();
+  }
+
+  public onHeightChange() {
+    this.setTopPanelHeight();
+  }
+
+  private detectMobileResolution() {
+    this.mobile$.next(window.matchMedia('(max-width: 767.98px)').matches);
+  }
+
+  private setTopPanelHeight() {
+    const element = this.element.nativeElement as HTMLElement;
+    document.body.style.setProperty('--top-panel-height', `${element.clientHeight}px`);
+  }
 
 }

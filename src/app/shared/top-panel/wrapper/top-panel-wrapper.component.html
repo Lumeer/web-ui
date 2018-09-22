@@ -1,6 +1,11 @@
-<div class="px-3 py-2 w-100">
-  <top-panel [searchBoxShown]="searchBoxShown"></top-panel>
+<div #topPanel
+     class="px-2 px-sm-3 py-2 w-100">
+  <top-panel [mobile]="mobile$ | async"
+             [searchBoxShown]="searchBoxShown"
+             (heightChange)="onHeightChange()">
+    <ng-content select=".controls"></ng-content>
+  </top-panel>
 </div>
 <div class="w-100 flex-grow-1">
-  <ng-content></ng-content>
+  <ng-content select=".content"></ng-content>
 </div>

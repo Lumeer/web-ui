@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ResourceType} from '../../../../core/model/resource-type';
+import {ResourceType} from '../../../../../core/model/resource-type';
 
 @Pipe({
   name: 'isOrganizationType'

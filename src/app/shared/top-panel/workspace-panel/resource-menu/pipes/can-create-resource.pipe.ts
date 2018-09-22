@@ -21,15 +21,15 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
 import {filter, map, mergeMap} from 'rxjs/operators';
-import {ResourceType} from '../../../../core/model/resource-type';
-import {ResourceModel} from '../../../../core/model/resource.model';
-import {Role} from '../../../../core/model/role';
-import {AppState} from '../../../../core/store/app.state';
-import {selectOrganizationById} from '../../../../core/store/organizations/organizations.state';
-import {selectServiceLimitsByOrganizationId} from '../../../../core/store/organizations/service-limits/service-limits.state';
-import {ProjectModel} from '../../../../core/store/projects/project.model';
-import {selectCurrentUser} from '../../../../core/store/users/users.state';
-import {PermissionsPipe} from '../../../pipes/permissions.pipe';
+import {ResourceType} from '../../../../../core/model/resource-type';
+import {ResourceModel} from '../../../../../core/model/resource.model';
+import {Role} from '../../../../../core/model/role';
+import {AppState} from '../../../../../core/store/app.state';
+import {selectOrganizationById} from '../../../../../core/store/organizations/organizations.state';
+import {selectServiceLimitsByOrganizationId} from '../../../../../core/store/organizations/service-limits/service-limits.state';
+import {ProjectModel} from '../../../../../core/store/projects/project.model';
+import {selectCurrentUser} from '../../../../../core/store/users/users.state';
+import {PermissionsPipe} from '../../../../pipes/permissions.pipe';
 
 const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'kubedo8@gmail.com', 'livoratom@gmail.com'];
 

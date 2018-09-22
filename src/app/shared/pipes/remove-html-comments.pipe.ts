@@ -17,25 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, Input} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
+import {HtmlModifier} from '../utils/html-modifier';
 
-@Component({
-  selector: 'lumeer-logo',
-  templateUrl: './lumeer-logo.component.html',
-  styleUrls: ['./lumeer-logo.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+@Pipe({
+  name: 'removeHtmlComments'
 })
-export class LumeerLogoComponent {
+export class RemoveHtmlCommentsPipe implements PipeTransform {
 
-  @Input()
-  public height: number;
-
-  @Input()
-  public link: any[];
-
-  @Input()
-  public text: string;
-
-  constructor(public element: ElementRef) {
+  public transform(html: HTMLElement): string {
+    return HtmlModifier.removeHtmlComments(html);
   }
+
 }

@@ -17,25 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular/core';
 
 @Component({
-  selector: 'lumeer-logo',
-  templateUrl: './lumeer-logo.component.html',
-  styleUrls: ['./lumeer-logo.component.scss'],
+  selector: 'controls-toggle',
+  templateUrl: './controls-toggle.component.html',
+  styleUrls: ['./controls-toggle.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LumeerLogoComponent {
+export class ControlsToggleComponent {
 
-  @Input()
-  public height: number;
+  @Output()
+  public toggle = new EventEmitter();
 
-  @Input()
-  public link: any[];
-
-  @Input()
-  public text: string;
-
-  constructor(public element: ElementRef) {
-  }
 }

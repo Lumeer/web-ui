@@ -1,0 +1,46 @@
+<ul *ngIf="{organization: organization$ | async, project: project$ | async} as data"
+    class="navbar navbar-triangle my-0 p-0 mr-3 flex-nowrap">
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle"
+       href="#"
+       id="navbarDropdown1"
+       role="button"
+       data-toggle="dropdown"
+       aria-haspopup="true"
+       aria-expanded="false">
+      <i [class]="data.organization?.icon"
+         [style.color]="data.organization?.color">
+      </i>
+      &nbsp;{{data.organization?.code}}
+    </a>
+    <resource-menu
+      labelledBy="navbarDropdown1"
+      [type]="organizationResourceType"
+      [resource]="data.organization"
+      [workspace]="workspace"
+      (onResourceSelect)="selectOrganization($event)"
+      (onNewResource)="createNewOrganization()">
+    </resource-menu>
+  </li>
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle"
+       href="#"
+       id="navbarDropdown2"
+       role="button"
+       data-toggle="dropdown"
+       aria-haspopup="true"
+       aria-expanded="false">
+      <i [class]="data.project?.icon"
+         [style.color]="data.project?.color"></i>
+      &nbsp;{{data.project?.code}}
+    </a>
+    <resource-menu
+      labelledBy="navbarDropdown2"
+      [type]="projectResourceType"
+      [resource]="data.project"
+      [workspace]="workspace"
+      (onResourceSelect)="selectProject(data.organization, $event)"
+      (onNewResource)="createNewProject(data.organization)">
+    </resource-menu>
+  </li>
+</ul>

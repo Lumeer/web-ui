@@ -44,6 +44,7 @@ import {IncludesPipe} from './includes.pipe';
 import {CanActivatePagePipe} from './can-activate-page.pipe';
 import {PageEndIndexPipe} from './page-end-index.pipe';
 import { LogPipe } from './log.pipe';
+import { RemoveHtmlCommentsPipe } from './remove-html-comments.pipe';
 
 @NgModule({
   imports: [
@@ -75,6 +76,7 @@ import { LogPipe } from './log.pipe';
     CanActivatePagePipe,
     PageEndIndexPipe,
     LogPipe,
+    RemoveHtmlCommentsPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -102,6 +104,7 @@ import { LogPipe } from './log.pipe';
     CanActivatePagePipe,
     PageEndIndexPipe,
     LogPipe,
+    RemoveHtmlCommentsPipe,
   ]
 })
 export class PipesModule {
