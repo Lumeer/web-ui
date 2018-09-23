@@ -143,7 +143,7 @@ export namespace OrganizationsAction {
   export class Delete implements Action {
     public readonly type = OrganizationsActionType.DELETE;
 
-    public constructor(public payload: { organizationId: string }) {
+    public constructor(public payload: { organizationId: string, onSuccess?: () => void }) {
     }
   }
 
@@ -178,7 +178,7 @@ export namespace OrganizationsAction {
   export class ChangePermissionSuccess implements Action {
     public readonly type = OrganizationsActionType.CHANGE_PERMISSION_SUCCESS;
 
-    public constructor(public payload: { organizationId: string, type: PermissionType, permission: PermissionModel}) {
+    public constructor(public payload: { organizationId: string, type: PermissionType, permission: PermissionModel }) {
     }
   }
 
@@ -194,6 +194,6 @@ export namespace OrganizationsAction {
     GetCodes | GetCodesSuccess | GetCodesFailure |
     Create | CreateSuccess | CreateFailure |
     Update | UpdateSuccess | UpdateFailure |
-    Delete | DeleteSuccess | DeleteFailure  | Select |
+    Delete | DeleteSuccess | DeleteFailure | Select |
     ChangePermission | ChangePermissionSuccess | ChangePermissionFailure;
 }

@@ -32,6 +32,7 @@ export class OrganizationConverter {
       color: dto.color,
       description: dto.description,
       correlationId: correlationId,
+      nonRemovable: dto.nonRemovable,
       permissions: PermissionsConverter.fromDto(dto.permissions)
     };
   }

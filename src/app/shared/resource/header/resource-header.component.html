@@ -7,10 +7,10 @@
      [style.color]="resource.color" data-toggle="dropdown" (click)="storeIconAndColor($event)"></i>
   <div class="dropdown-menu">
     <color-picker dropdownId="dropdown-header" class="dropdown-item" [(color)]="resource.color"
-                  ></color-picker>
+    ></color-picker>
     <div class="dropdown-divider"></div>
     <icon-picker dropdownId="dropdown-header" class="dropdown-item" [(icon)]="resource.icon"
-                 ></icon-picker>
+    ></icon-picker>
     <div class="dropdown-divider"></div>
     <div class="text-right mx-2">
       <button class="btn btn-outline-secondary btn-sm" (click)="revertSelectedColor($event)" i18n="@@button.cancel">Cancel</button>
@@ -32,7 +32,7 @@
   </input-box>
 
   <div class="d-flex flex-row flex-nowrap align-items-center ml-auto">
-    <i class="fas fa-fw fa-trash text-danger mr-2 cursor-pointer"
+    <i *ngIf="!resource.nonRemovable" class="fas fa-fw fa-trash text-danger mr-2 cursor-pointer"
        (click)="onDelete()"
        title="Delete" i18n-title="@@resource.settings.delete"
        aria-hidden="true"></i>

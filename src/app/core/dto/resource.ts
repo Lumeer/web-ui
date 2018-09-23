@@ -27,6 +27,7 @@ export interface Resource {
   color?: string;
   icon?: string;
   description: string;
+  nonRemovable?: boolean;
   permissions?: Permissions;
 
 }
