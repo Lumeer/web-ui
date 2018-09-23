@@ -32,6 +32,7 @@ import {initialViewsState, ViewsState} from './views/views.state';
 import {ContactsState, initialContactsState} from './organizations/contact/contacts.state';
 import {initialServiceLimitsState, ServiceLimitsState} from './organizations/service-limits/service-limits.state';
 import {initialPaymentsState, PaymentsState} from './organizations/payment/payments.state';
+import {initialPostItState, PostItState} from './postit/postit.state';
 
 export interface AppState {
 
@@ -49,7 +50,7 @@ export interface AppState {
   router: RouterReducerState<RouterStateUrl>;
   users: UsersState;
   views: ViewsState;
-
+  postIts: PostItState;
 }
 
 export function initialAppState(): AppState {
@@ -67,6 +68,7 @@ export function initialAppState(): AppState {
     projects: initialProjectsState,
     router: null,
     users: initialUsersState,
-    views: initialViewsState
+    views: initialViewsState,
+    postIts: initialPostItState
   };
 }

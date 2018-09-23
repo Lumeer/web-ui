@@ -21,6 +21,7 @@ import {Perspective} from '../../../view/perspectives/perspective';
 import {ResourceModel} from '../../model/resource.model';
 import {QueryModel} from '../navigation/query.model';
 import {TableConfig} from '../tables/table.model';
+import {SizeType} from '../../../shared/slider/size-type';
 
 export interface ViewModel extends ResourceModel {
 
@@ -53,9 +54,8 @@ export interface DetailConfigModel {
 }
 
 export interface PostItConfigModel {
-
+  size?: SizeType;
   documentIdsOrder?: string[];
-
 }
 
 export interface SearchConfigModel {

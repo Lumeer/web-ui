@@ -19,6 +19,7 @@
 
 import {AttributePropertySelection} from '../document-data/attribute-property-selection';
 import {isNullOrUndefined} from 'util';
+import {BehaviorSubject} from 'rxjs';
 
 export const ATTRIBUTE_COLUMN = 0;
 
@@ -28,7 +29,7 @@ export class SelectionHelper {
 
   private selection: AttributePropertySelection = this.emptySelection();
 
-  constructor(private postItsOrder: () => string[],
+  constructor(private postItsOrder$: BehaviorSubject<string[]>,
               private documentNumRows: (key: string) => number,
               private documentsPerRow: () => number,
               private perspectiveId: string) {
@@ -76,11 +77,12 @@ export class SelectionHelper {
       this.focusCurrent(newRow, newColumn);
     } else { // now we need select post-it below
       const index = this.selection.index + 1;
-      if (index < this.postItsOrder().length) {
+      if (index < this.postItsOrder$.getValue().length) {
         const currentParentElement = this.getCurrentFocusedParentElement();
         if (currentParentElement) {
           const parentRect = currentParentElement.getBoundingClientRect();
-          const {parentElement, key} = this.findParentElementToFocusVertically(index, this.postItsOrder().length - 1, parentRect.left, parentRect.right, false);
+          const {parentElement, key} = this.findParentElementToFocusVertically(index, this.postItsOrder$.getValue().length - 1,
+            parentRect.left, parentRect.right, false);
           if (parentElement && key) {
             this.focus(0, newColumn, key, false);
           }
@@ -161,8 +163,8 @@ export class SelectionHelper {
       this.focus(newRow, newColumn, this.selection.key, true);
     } else { // now we need select post-it below
       const index = this.selection.index + 1;
-      if (index < this.postItsOrder().length) {
-        this.focus(0, ATTRIBUTE_COLUMN, this.postItsOrder()[index], true);
+      if (index < this.postItsOrder$.getValue().length) {
+        this.focus(0, ATTRIBUTE_COLUMN, this.postItsOrder$.getValue()[index], true);
       }
     }
   }
@@ -201,7 +203,7 @@ export class SelectionHelper {
 
       this.selection.row = row;
       this.selection.column = column;
-      this.selection.index = this.postItsOrder().findIndex(ord => ord === key);
+      this.selection.index = this.postItsOrder$.getValue().findIndex(ord => ord === key);
       this.selection.key = key;
     }
   }
@@ -241,7 +243,7 @@ export class SelectionHelper {
 
   private findParentElementToFocusHorizontally(excludeIndex: number, fromX: number, toX: number, fromY: number, toY: number)
     : { parentElement: HTMLElement | null, key: string | null } {
-    const keys = this.postItsOrder();
+    const keys = this.postItsOrder$.getValue();
     const y = fromY - (fromY - toY) / 2;
     let minDistance = Number.MAX_SAFE_INTEGER;
     let minDistanceElement: HTMLElement;
@@ -275,7 +277,7 @@ export class SelectionHelper {
 
   private findParentElementToFocusVertically(fromIndex: number, toIndex: number, left: number, right: number, up?: boolean)
     : { parentElement: HTMLElement | null, key: string | null } {
-    const keys = this.postItsOrder();
+    const keys = this.postItsOrder$.getValue();
     for (let i = fromIndex; up ? i >= toIndex : i <= toIndex; up ? i-- : i++) {
       const key = keys[i];
       const el = document.getElementById(this.getParentId(key));

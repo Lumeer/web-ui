@@ -20,8 +20,8 @@
 import {ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {filter, withLatestFrom} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
+import {filter, map, take, withLatestFrom} from 'rxjs/operators';
+import {Subscription, combineLatest as observableCombineLatest} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -38,7 +38,11 @@ import {selectNavigation} from '../../../core/store/navigation/navigation.state'
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {SelectionHelper} from './util/selection-helper';
 import {DocumentUiService} from '../../../core/ui/document-ui.service';
-import {Observable} from 'rxjs/index';
+import {Observable, BehaviorSubject} from 'rxjs';
+import {selectCurrentView} from '../../../core/store/views/views.state';
+import {PostItConfigModel, ViewModel} from '../../../core/store/views/view.model';
+import {PostItAction} from '../../../core/store/postit/postit.action';
+import {selectPostItsOrder, selectPostItsSize} from '../../../core/store/postit/postit.state';
 
 @Component({
   selector: 'post-it-perspective',
@@ -70,10 +74,10 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   public perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
   public collections: CollectionModel[];
   public collectionRoles: { [collectionId: string]: string[] };
-  public postItsOrder: string[] = [];
   public selectionHelper: SelectionHelper;
   public layout: PostItLayout;
-  public size: SizeType;
+  public size$ = new BehaviorSubject<SizeType>(this.defaultSize());
+  public postItsOrder$ = new BehaviorSubject<string[]>([]);
   public query: QueryModel;
   public loaded$: Observable<boolean>;
 
@@ -94,7 +98,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.initSettings();
     this.createSelectionHelper();
     this.subscribeData();
   }
@@ -117,22 +120,80 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private createLayout() {
     if (!this.layout) {
-      this.layout = new PostItLayout(this.postItLayout, true, this.zone);
+      this.layout = new PostItLayout(this.postItLayout, true, this.zone, (orderedIds) => this.onPostItOrderChanged(orderedIds));
       this.changeDetector.detectChanges();
+      this.layout.setOrder(this.postItsOrder$.getValue());
     }
   }
 
+  private onPostItOrderChanged(orderedIds: string[]) {
+    this.store.dispatch(new PostItAction.ChangeOrder({documentIdsOrder: orderedIds}));
+  }
+
   private createSelectionHelper() {
-    this.selectionHelper = new SelectionHelper(() => this.postItsOrder,
+    this.selectionHelper = new SelectionHelper(this.postItsOrder$,
       (key: string) => this.getNumRows(key),
       () => this.getNumberColumns(),
       this.perspectiveId);
   }
 
+  private getNumberColumns(): number {
+    switch (this.size$.getValue()) {
+      case SizeType.S:
+        return 6;
+      case SizeType.M:
+        return 4;
+      case SizeType.L:
+        return 3;
+      case SizeType.XL:
+        return 2;
+      default:
+        return 4;
+    }
+  }
+
   private subscribeData() {
+    this.initConfig();
     this.subscribeCollections();
     this.subscribeNavigation();
+    this.subscribeToConfig();
     this.loaded$ = this.store.select(selectCurrentQueryDocumentsLoaded);
+  }
+
+  private initConfig() {
+    this.store.select(selectCurrentView).pipe(
+      filter(view => !!view),
+      take(1)
+    ).subscribe(view => {
+      if (view.config && view.config.postit) {
+        this.dispatchInitConfigActions(view.config.postit);
+      }
+    });
+  }
+
+  private dispatchInitConfigActions(postItConfig: PostItConfigModel) {
+    this.store.dispatch(new PostItAction.ChangeSize({size: postItConfig.size}));
+    this.store.dispatch(new PostItAction.ChangeOrder({documentIdsOrder: postItConfig.documentIdsOrder}));
+  }
+
+  private subscribeToConfig() {
+    this.subscriptions.add(
+      observableCombineLatest(this.store.select(selectPostItsSize), this.store.select(selectCurrentView)).pipe(
+        map(([size, view]) => size || this.viewPostItSize(view) || this.defaultSize()),
+        filter(size => this.size$.getValue() !== size)
+      ).subscribe(size => {
+        this.size$.next(size);
+        if (this.layout) {
+          this.layout.refresh();
+        }
+      }));
+
+    this.subscriptions.add(this.store.select(selectPostItsOrder)
+      .subscribe(order => this.postItsOrder$.next(order)));
+  }
+
+  private viewPostItSize(view: ViewModel): SizeType | null {
+    return view && view.config && view.config.postit && view.config.postit.size || null;
   }
 
   private subscribeCollections() {
@@ -162,7 +223,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private clearData() {
     this.page = 0;
-    this.postItsOrder = [];
+    this.postItsOrder$.next([]);
+    this.creatingCorrelationsIds = [];
     this.postIts = {};
   }
 
@@ -196,25 +258,40 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     const pageSize = this.getPageSize() * (this.page + 1);
     const query = {...this.query, page: 0, pageSize};
     this.documentsSubscription = this.store.select(selectDocumentsByCustomQuery(query, true)).pipe(
-      filter(documents => !!documents)
-    ).subscribe(documents => {
-      this.mapNewDocuments(documents);
+      filter((documents) => !!documents),
+      withLatestFrom(this.store.select(selectCurrentView))
+    ).subscribe(([documents, view]) => {
+      if (view && view.config && view.config.postit) {
+        this.mapNewDocumentsWithConfig(documents, view.config.postit);
+      } else {
+        this.mapNewDocuments(documents);
+      }
     });
   }
 
   private mapNewDocuments(documents: DocumentModel[]) {
+    this.mapNewDocumentsWithPriority(documents, []);
+  }
+
+  private mapNewDocumentsWithConfig(documents: DocumentModel[], config: PostItConfigModel) {
+    this.mapNewDocumentsWithPriority(documents, config.documentIdsOrder);
+  }
+
+  private mapNewDocumentsWithPriority(documents: DocumentModel[], priorityIds: string[]) {
     const documentsMap = documents.reduce((acc, doc) => {
       acc[doc.id] = doc;
       return acc;
     }, {});
 
+    const newPostItsOrder = [...this.postItsOrder$.getValue()];
+
     documents.filter(doc => doc.correlationId && this.creatingCorrelationsIds.includes(doc.correlationId))
       .forEach(document => {
-        this.postItsOrder.unshift(document.id);
+        newPostItsOrder.unshift(document.id);
         this.creatingCorrelationsIds = this.creatingCorrelationsIds.filter(corrId => corrId !== document.correlationId);
       });
 
-    const newPostIts = this.postItsOrder.reduce((acc, key) => {
+    const newPostIts = newPostItsOrder.reduce((acc, key) => {
       const doc = documentsMap[key];
       if (doc) {
         acc[key] = doc;
@@ -223,9 +300,16 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       return acc;
     }, {});
 
+    priorityIds.forEach(id => {
+      const doc = documentsMap[id];
+      if (doc) {
+        newPostIts[doc.id] = doc;
+        delete documentsMap[doc.id];
+      }
+    });
+
     for (const [key, value] of Object.entries(documentsMap)) {
       newPostIts[key] = value;
-      this.postItsOrder.push(key);
     }
 
     this.postIts = newPostIts;
@@ -241,8 +325,14 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private loadNextPage() {
-    this.page++;
-    this.fetchDocuments();
+    if (this.shouldFetchNextPage()) {
+      this.page++;
+      this.fetchDocuments();
+    }
+  }
+
+  private shouldFetchNextPage() {
+    return this.getDocuments().length >= (this.page + 1) * this.getPageSize();
   }
 
   public postItChanged() {
@@ -262,33 +352,20 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     return documentModel.correlationId || documentModel.id;
   }
 
-  private getNumberColumns(): number {
-    switch (this.size) {
-      case SizeType.S:
-        return 6;
-      case SizeType.M:
-        return 4;
-      case SizeType.L:
-        return 3;
-      case SizeType.XL:
-        return 2;
-      default:
-        return 4;
-    }
+  public onSizeChange(newSize: SizeType) {
+    this.updateDefaultSize(newSize);
+    this.store.dispatch(new PostItAction.ChangeSize({size: newSize}));
   }
 
-  public onSizeChange(newSize: SizeType) {
-    this.size = newSize;
+  private updateDefaultSize(newSize: SizeType) {
     const userSettings = this.userSettingsService.getUserSettings();
     userSettings.searchSize = newSize;
     this.userSettingsService.updateUserSettings(userSettings);
-
-    this.layout.refresh();
   }
 
-  private initSettings() {
+  private defaultSize(): SizeType {
     const userSettings = this.userSettingsService.getUserSettings();
-    this.size = userSettings.searchSize ? userSettings.searchSize : SizeType.M;
+    return userSettings.searchSize ? userSettings.searchSize : SizeType.M;
   }
 
 }

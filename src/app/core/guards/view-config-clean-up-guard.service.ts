@@ -24,6 +24,8 @@ import {Observable} from 'rxjs';
 import {ViewComponent} from '../../view/view.component';
 import {AppState} from '../store/app.state';
 import {ViewsAction} from '../store/views/views.action';
+import {PostItAction} from '../store/postit/postit.action';
+import {Perspective, perspectivesMap} from '../../view/perspectives/perspective';
 
 @Injectable({
   providedIn: 'root'
@@ -40,9 +42,20 @@ export class ViewConfigCleanUpGuard implements CanDeactivate<ViewComponent> {
     const [, viewCode] = nextState.url.match(/vc=([0-9a-z]*)/) || [null, null];
     const perspective = currentRoute.firstChild && currentRoute.firstChild.url && currentRoute.firstChild.url[0] && currentRoute.firstChild.url[0].path;
     if (perspective && !nextState.url.includes(perspective) && !viewCode) {
-      this.store$.dispatch(new ViewsAction.ChangeConfig({config: {}}));
+      this.clearPerspective(perspectivesMap[perspective]);
     }
     return true;
+  }
+
+  private clearPerspective(perspective: Perspective) {
+    switch (perspective) {
+      case Perspective.PostIt: {
+        this.store$.dispatch(new PostItAction.Clear());
+        break;
+      }
+      default:
+        this.store$.dispatch(new ViewsAction.ChangeConfig({config: {}}));
+    }
   }
 
 }
