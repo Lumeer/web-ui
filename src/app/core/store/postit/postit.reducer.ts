@@ -23,9 +23,9 @@ import {PostItAction, PostItActionType} from './postit.action';
 export function postItReducer(state: PostItState = initialPostItState, action: PostItAction.All): PostItState {
   switch (action.type) {
     case PostItActionType.CHANGE_SIZE:
-      return {...state, size: action.payload.size};
+      return {...state, config: {...state.config, size: action.payload.size}};
     case PostItActionType.CHANGE_ORDER:
-      return {...state, documentIdsOrder: action.payload.documentIdsOrder};
+      return {...state, config: {...state.config, documentIdsOrder: action.payload.documentIdsOrder}};
     case PostItActionType.CLEAR:
       return initialPostItState;
     default:

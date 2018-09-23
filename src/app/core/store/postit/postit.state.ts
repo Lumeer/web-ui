@@ -21,16 +21,17 @@ import {createSelector} from '@ngrx/store';
 import {PostItConfigModel} from '../views/view.model';
 import {AppState} from '../app.state';
 
-export interface PostItState extends PostItConfigModel {
-
+export interface PostItState {
+  config: PostItConfigModel;
 }
 
 export const initialPostItState: PostItState = {
-  size: undefined,
-  documentIdsOrder: []
+  config: {size: undefined, documentIdsOrder: []}
 };
 
 export const selectPostItState = (state: AppState) => state.postIts;
 
-export const selectPostItsSize = createSelector(selectPostItState, state => state.size);
-export const selectPostItsOrder = createSelector(selectPostItState, state => state.documentIdsOrder);
+export const selectPostItConfig = createSelector(selectPostItState, state => state.config);
+
+export const selectPostItsSize = createSelector(selectPostItConfig, config => config.size);
+export const selectPostItsOrder = createSelector(selectPostItConfig, config => config.documentIdsOrder);

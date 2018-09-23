@@ -23,7 +23,7 @@ import {AppState} from '../app.state';
 import {selectNavigation, selectQuery} from '../navigation/navigation.state';
 import {ViewFilters} from './view.filters';
 import {ViewConfigModel, ViewCursor, ViewModel} from './view.model';
-import {selectPostItState} from '../postit/postit.state';
+import {selectPostItConfig} from '../postit/postit.state';
 
 export interface ViewsState extends EntityState<ViewModel> {
 
@@ -59,4 +59,4 @@ export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (v
 
 export const selectViewCursor = createSelector(selectViewsState, state => state.cursor);
 
-export const selectCurrentViewConfig = createSelector(selectViewConfig, selectPostItState, (config, postItState) => ({...config, postit: postItState}));
+export const selectCurrentViewConfig = createSelector(selectViewConfig, selectPostItConfig, (config, postItConfig) => ({...config, postit: postItConfig}));
