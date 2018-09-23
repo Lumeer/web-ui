@@ -35,7 +35,7 @@
               </div>
             </div>
           </ng-container>
-          <a class="text-danger" (click)="onDelete(); $event.stopPropagation()"
+          <a class="text-danger" *ngIf="!resource.id || (hasManageRole() && !resource.nonRemovable)" (click)="onDelete(); $event.stopPropagation()"
              title="Delete" i18n-title="@@resource.postit.remove">
             <i class="fas fa fa-trash" aria-hidden="true"></i>
           </a>
