@@ -184,8 +184,5 @@
       }
     }
   },
-  "defaultProject": "lumeer",
-  "cli": {
-    "defaultCollection": "@ngrx/schematics"
-  }
+  "defaultProject": "lumeer"
 }

@@ -91,5 +91,10 @@
       "check-operator",
       "check-type"
     ]
+  },
+  "linterOptions": {
+    "exclude": [
+      "**/node_modules/**"
+    ]
   }
 }

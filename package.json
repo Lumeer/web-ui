@@ -10,7 +10,8 @@
     "i18n-html": "ng xi18n --output-path i18n",
     "i18n-ts": "ngx-extractor -i \"src/app/**/*.ts\" -f xlf -o src/i18n/messages.xlf",
     "i18n-merge": "xliffmerge --profile xliffmerge.json en cs",
-    "lint": "ng lint",
+    "lint": "ng lint lumeer",
+    "tslint": "tslint --project ./src/tsconfig.app.json",
     "ng": "ng",
     "reset-env": "echo '{}' > ./src/environments/.env.json",
     "start": "npm run reset-env; ng serve",
@@ -81,6 +82,7 @@
     "@types/plotly.js": "^1.38.5",
     "codelyzer": "^4.4.2",
     "cypress": "^3.1.0",
+    "husky": "^1.0.0-rc.15",
     "jasmine": "~3.1.0",
     "jasmine-core": "~3.1.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -89,11 +91,25 @@
     "karma-coverage-istanbul-reporter": "~2.0.0",
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^1.2.0",
+    "lint-staged": "^7.3.0",
     "ngx-i18nsupport": "^0.16.3",
     "protractor": "~5.4.0",
     "rxjs-tslint-rules": "^4.7.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~2.9.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "linters": {
+      "*.ts": [
+        "npm run tslint",
+        "git add"
+      ]
+    }
   }
 }
