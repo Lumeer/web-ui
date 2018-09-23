@@ -51,3 +51,4 @@ export const selectWorkspace = createSelector(selectNavigation, (state: Navigati
 export const selectSearchTab = createSelector(selectNavigation, (state: NavigationState) => state.searchTab);
 export const selectUrl = createSelector(selectNavigation, state => state.url);
 export const selectPreviousUrl = createSelector(selectNavigation, state => state.previousUrl);
+export const selectViewCode = createSelector(selectWorkspace, workspace => workspace && workspace.viewCode);
