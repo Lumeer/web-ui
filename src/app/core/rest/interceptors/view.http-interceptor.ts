@@ -45,7 +45,7 @@ export class ViewHttpInterceptor implements HttpInterceptor {
 
         return next.handle(request);
       })
-    )
+    );
 
   }
 
