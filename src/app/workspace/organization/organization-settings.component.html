@@ -1,5 +1,6 @@
 <top-panel-wrapper>
-  <div class="col-12 col-lg-11 col-xl-10 m-auto" *ngIf="organization">
+  <div *ngIf="organization"
+       class="col-12 col-lg-11 col-xl-10 m-auto content">
     <resource-header
       [resource]="organization"
       [resourceType]="getResourceType()"

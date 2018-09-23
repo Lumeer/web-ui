@@ -18,19 +18,17 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-
-import {Resource} from '../../../core/dto/index';
-import {Workspace} from '../../../core/store/navigation/workspace.model';
-import {Observable} from 'rxjs/index';
-import {OrganizationsAction} from '../../../core/store/organizations/organizations.action';
-import {selectAllOrganizations} from '../../../core/store/organizations/organizations.state';
-import {OrganizationModel} from '../../../core/store/organizations/organization.model';
-import {ProjectModel} from '../../../core/store/projects/project.model';
-import {AppState} from '../../../core/store/app.state';
 import {Store} from '@ngrx/store';
-import {selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
-import {ResourceType} from '../../../core/model/resource-type';
-import {ProjectsAction} from '../../../core/store/projects/projects.action';
+import {Observable} from 'rxjs';
+import {Resource} from '../../../../core/dto';
+import {ResourceType} from '../../../../core/model/resource-type';
+import {AppState} from '../../../../core/store/app.state';
+import {Workspace} from '../../../../core/store/navigation/workspace.model';
+import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
+import {selectAllOrganizations} from '../../../../core/store/organizations/organizations.state';
+import {ProjectModel} from '../../../../core/store/projects/project.model';
+import {ProjectsAction} from '../../../../core/store/projects/projects.action';
+import {selectProjectsForWorkspace} from '../../../../core/store/projects/projects.state';
 
 @Component({
   selector: 'resource-menu',

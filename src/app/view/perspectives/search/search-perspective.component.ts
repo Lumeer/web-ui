@@ -27,7 +27,8 @@ import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {QueryConverter} from '../../../core/store/navigation/query.converter';
 
 @Component({
-  templateUrl: './search-perspective.component.html'
+  templateUrl: './search-perspective.component.html',
+  styleUrls: ['./search-perspective.component.scss']
 })
 export class SearchPerspectiveComponent {
 

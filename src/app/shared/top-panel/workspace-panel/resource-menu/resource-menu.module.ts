@@ -24,7 +24,7 @@ import {ResourceDetailComponent} from './resource-detail/resource-detail.compone
 import {ResourceMenuComponent} from './resource-menu.component';
 import {ResourceListComponent} from './resource-list/resource-list.component';
 import {IsOrganizationTypePipe} from './pipes/is-organization-type.pipe';
-import {PipesModule} from '../../pipes/pipes.module';
+import {PipesModule} from '../../../pipes/pipes.module';
 import {CanCreateResourcePipe} from './pipes/can-create-resource.pipe';
 
 @NgModule({

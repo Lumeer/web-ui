@@ -1,20 +1,23 @@
 <top-panel-wrapper [searchBoxShown]="true">
-  <div class="d-flex mx-3 mb-4">
-    <div class="d-none d-xl-block side-panel pointer-events-none"></div>
-    <div class="flex-grow-1">
-      <view-controls *ngIf="view"
-                     [novice]="!(viewsExist$ | async)"
-                     [view]="view"
-                     (save)="onSave($event)">
-      </view-controls>
+  <view-controls *ngIf="view"
+                 [novice]="!(viewsExist$ | async)"
+                 [view]="view"
+                 (save)="onSave($event)"
+                 class="controls">
+  </view-controls>
 
-      <div *ngIf="!view"
-           class="alert alert-warning"
-           i18n="@@view.not.exist">View does not exist!
+  <div class="content">
+    <div class="d-flex mx-3">
+      <div class="d-none d-xl-block side-panel pointer-events-none"></div>
+      <div class="flex-grow-1">
+        <div *ngIf="!view"
+             class="alert alert-warning mb-4"
+             i18n="@@view.not.exist">View does not exist!
+        </div>
       </div>
+      <div class="d-none d-xl-block side-panel pointer-events-none"></div>
     </div>
-    <div class="d-none d-xl-block side-panel pointer-events-none"></div>
-  </div>
 
-  <router-outlet></router-outlet>
+    <router-outlet></router-outlet>
+  </div>
 </top-panel-wrapper>

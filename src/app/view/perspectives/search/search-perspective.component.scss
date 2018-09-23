@@ -1,0 +1,7 @@
+@import '../../../../styles/bootstrap_var';
+
+@include media-breakpoint-down(xs) {
+  .nav-link {
+    padding: 0.5rem 0.8rem;
+  }
+}

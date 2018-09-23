@@ -21,7 +21,7 @@
 export class HtmlModifier {
 
   public static removeHtmlComments(html: HTMLElement): string {
-    return html.innerHTML.replace(/<!--[\s\S]*?-->/g, '').trim();
+    return html && html.innerHTML && html.innerHTML.replace(/<!--[\s\S]*?-->/g, '').trim();
   }
 
   public static shadeColor(color: string, percent: number): string {

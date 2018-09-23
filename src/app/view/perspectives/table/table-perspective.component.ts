@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
@@ -28,7 +28,6 @@ import {areQueriesEqual, getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../..
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {TableCursor} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableColumnType, TableModel} from '../../../core/store/tables/table.model';
-import {getTableElement} from '../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableById, selectTableCursor} from '../../../core/store/tables/tables.state';
 import {Direction} from '../../../shared/direction';
@@ -45,7 +44,7 @@ declare let $: any;
   templateUrl: './table-perspective.component.html',
   styleUrls: ['./table-perspective.component.scss']
 })
-export class TablePerspectiveComponent implements OnInit, AfterViewInit, OnDestroy {
+export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
   @Input()
   public linkInstance: LinkInstanceModel;
@@ -76,12 +75,6 @@ export class TablePerspectiveComponent implements OnInit, AfterViewInit, OnDestr
     this.createTableFromQuery();
     this.subscribeToTable();
     this.subscribeToSelectedCursor();
-  }
-
-  public ngAfterViewInit() {
-    if (this.tableId === DEFAULT_TABLE_ID) {
-      this.calculateHeight();
-    }
   }
 
   private subscribeToSelectedCursor() {
@@ -186,18 +179,6 @@ export class TablePerspectiveComponent implements OnInit, AfterViewInit, OnDestr
     if (this.selectedCursor && !event[PERSPECTIVE_CHOOSER_CLICK]) {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
-  }
-
-  private calculateHeight() {
-    const {top} = this.element.nativeElement.getBoundingClientRect();
-    const height = window.innerHeight - top;
-    const tableElement = getTableElement(this.tableId);
-    tableElement.style.setProperty('--table-height', `${height}px`);
-  }
-
-  @HostListener('window:resize')
-  public onResize() {
-    this.calculateHeight();
   }
 
   @HostListener('document:keydown', ['$event'])

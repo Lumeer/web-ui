@@ -17,213 +17,93 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewChecked, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import {AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, Subscription} from 'rxjs';
-import {filter, map, mergeMap, take} from 'rxjs/operators';
-import {Resource} from '../../core/dto';
-import {ServiceLevelType} from '../../core/dto/service-level-type';
-import {ResourceType} from '../../core/model/resource-type';
-import {NotificationService} from '../../core/notifications/notification.service';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
-import {selectNavigation} from '../../core/store/navigation/navigation.state';
+import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
-import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
-import {ServiceLimitsAction} from '../../core/store/organizations/service-limits/service-limits.action';
-import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
-import {ProjectModel} from '../../core/store/projects/project.model';
-import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {selectProjectByWorkspace, selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from '../../core/store/projects/projects.state';
-import {RouterAction} from '../../core/store/router/router.action';
-import {UserSettingsService} from '../../core/user-settings.service';
-import {DialogService} from '../../dialog/dialog.service';
-import {HtmlModifier} from '../utils/html-modifier';
+import {LumeerLogoComponent} from './lumeer-logo/lumeer-logo.component';
+import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.component';
 
 @Component({
   selector: 'top-panel',
   templateUrl: './top-panel.component.html',
-  styleUrls: ['./top-panel.component.scss']
+  styleUrls: ['./top-panel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopPanelComponent implements OnInit, AfterViewChecked {
+export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
+
+  @Input()
+  public mobile: boolean;
 
   @Input()
   public searchBoxShown: boolean;
 
-  @ViewChild('logo')
-  public logo: ElementRef;
+  @Output()
+  public heightChange = new EventEmitter();
 
-  @ViewChild('workspacePanel')
-  public workspacePanel: ElementRef;
+  @ViewChild(LumeerLogoComponent)
+  public logo: LumeerLogoComponent;
 
-  public notifications = 0;
+  @ViewChild(WorkspacePanelComponent)
+  public workspacePanel: WorkspacePanelComponent;
 
-  public workspace: Workspace;
-  public organization: OrganizationModel;
-  public project: ProjectModel;
+  public readonly lineHeight = 48;
 
-  public freePlan$: Observable<boolean>;
+  public controlsShown$ = new BehaviorSubject(true);
+  public workspace$: Observable<Workspace>;
 
-  private subscriptions = new Subscription();
-
-  public notificationsDisabled: boolean;
-
-  public readonly organizationResourceType = ResourceType.Organization;
-  public readonly projectResourceType = ResourceType.Project;
-
-  constructor(private dialogService: DialogService,
-              private i18n: I18n,
-              private notificationService: NotificationService,
-              private store$: Store<AppState>,
-              private router: Router,
-              private userSettingsService: UserSettingsService) {
+  constructor(private element: ElementRef,
+              private store$: Store<AppState>) {
   }
 
   public ngOnInit() {
-    this.subscribeToNavigation();
-    this.subscribeToOrganization();
-    this.subscribeToProject();
+    this.workspace$ = this.store$.select(selectWorkspace);
 
     this.store$.dispatch(new OrganizationsAction.Get());
-    this.store$.dispatch(new ServiceLimitsAction.GetAll());
-
-    this.notificationsDisabled = this.userSettingsService.getUserSettings().notificationsDisabled;
-
-    this.bindServiceLimits();
   }
 
-  private bindServiceLimits() {
-    this.freePlan$ = this.store$.select(selectServiceLimitsByWorkspace).pipe(
-      map(serviceLimits => serviceLimits && serviceLimits.serviceLevel === ServiceLevelType.FREE)
-    );
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.mobile) {
+      this.controlsShown$.next(!this.mobile);
+      setTimeout(() => this.heightChange.emit());
+    }
   }
 
-  private subscribeToNavigation() {
-    this.subscriptions.add(
-      this.store$.select(selectNavigation).subscribe(navigation => {
-        this.workspace = navigation.workspace;
-      })
-    );
-  }
-
-  private subscribeToOrganization() {
-    this.subscriptions.add(
-      this.store$.select(selectOrganizationByWorkspace).subscribe(organization => this.organization = organization)
-    );
-  }
-
-  private subscribeToProject() {
-    this.subscriptions.add(
-      this.store$.select(selectProjectByWorkspace).subscribe(project => this.project = project)
-    );
+  public ngAfterViewInit() {
+    this.setTopPanelLineHeight();
   }
 
   public ngAfterViewChecked() {
-    const logoWidth = this.logo.nativeElement.clientWidth;
-    const workspacePanelWidth = this.workspacePanel ? this.workspacePanel.nativeElement.clientWidth : 0;
+    this.setTopPanelSideWidth();
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.setTopPanelSideWidth();
+  }
+
+  private setTopPanelLineHeight() {
+    const element = this.element.nativeElement as HTMLElement;
+    element.style.setProperty('--top-panel-line-height', `${this.lineHeight}px`);
+  }
+
+  private setTopPanelSideWidth() {
+    if (this.mobile) {
+      return;
+    }
+
+    const logoWidth = this.logo.element.nativeElement.clientWidth;
+    const workspacePanelWidth = this.workspacePanel ? this.workspacePanel.element.nativeElement.clientWidth : 0;
     const width = logoWidth + 10 + workspacePanelWidth;
     document.body.style.setProperty('--top-panel-side-width', `${width}px`);
   }
 
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-  }
-
-  public disableNotifications() {
-    const userSettings = this.userSettingsService.getUserSettings();
-    userSettings.notificationsDisabled = !this.notificationsDisabled;
-    this.userSettingsService.updateUserSettings(userSettings);
-  }
-
-  public goToWorkspaceOrganization(): void {
-    this.goToWorkspace(false);
-  }
-
-  public goToWorkspaceProject(): void {
-    this.goToWorkspace(true);
-  }
-
-  private goToWorkspace(selectProject: boolean) {
-    if (this.organization && this.project) {
-      this.store$.dispatch(new OrganizationsAction.Select({organizationId: this.organization.id}));
-      this.store$.dispatch(new ProjectsAction.Select({projectId: selectProject ? this.project.id : null}));
-      this.store$.dispatch(new RouterAction.Go({path: ['workspace']}));
-    }
-  }
-
-  public goToOrganizationDetail() {
-    if (this.workspace && this.workspace.organizationCode) {
-      this.router.navigate(['organization', this.workspace.organizationCode, 'detail']);
-    }
-  }
-
-  public goToProject(organization: OrganizationModel, project: ProjectModel) {
-    if (organization && project) {
-      this.store$.dispatch(new OrganizationsAction.Select({organizationId: organization.id}));
-      this.store$.dispatch(new ProjectsAction.Select({projectId: project.id}));
-      this.store$.dispatch(new RouterAction.Go({path: ['w', organization.code, project.code, 'view', 'search', 'all']}));
-    }
-  }
-
-  public removeHtmlComments(html: HTMLElement): string {
-    return HtmlModifier.removeHtmlComments(html);
-  }
-
-  public workspacePath(): string {
-    return `w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
-  }
-
-  public selectOrganization(organization: OrganizationModel): void {
-    this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
-
-    this.store$.select(selectProjectsLoadedForOrganization(organization.id)).pipe(
-      filter(loaded => loaded),
-      mergeMap(() => this.store$.select(selectProjectsByOrganizationId(organization.id))),
-      take(1),
-      map(projects => projects.length > 0 ? projects[0] : undefined)
-    ).subscribe(project => {
-      if (project) {
-        this.goToProject(organization as OrganizationModel, project);
-      } else {
-        this.createNewProject(organization);
-      }
-    });
-  }
-
-  public selectProject(project: Resource): void {
-    this.goToProject(this.organization, project as ProjectModel);
-  }
-
-  public createNewOrganization(): void {
-    this.dialogService.openCreateOrganizationDialog(organization => this.onCreateOrganization(organization));
-  }
-
-  public createNewProject(parentOrganization: OrganizationModel): void {
-    this.dialogService.openCreateProjectDialog(parentOrganization.id, project => this.onCreateProject(parentOrganization, project));
-  }
-
-  private onCreateOrganization(organization: OrganizationModel) {
-    const successMessage = this.i18n({
-      id: 'organization.create.success',
-      value: 'Organization was successfully created'
-    });
-
-    this.notificationService.success(successMessage);
-    this.createNewProject(organization);
-  }
-
-  private onCreateProject(organization: OrganizationModel, project: ProjectModel) {
-    const successMessage = this.i18n({
-      id: 'project.create.success',
-      value: 'Project was successfully created'
-    });
-
-    this.notificationService.success(successMessage);
-
-    this.goToProject(organization, project);
+  public onToggleControls() {
+    this.controlsShown$.next(!this.controlsShown$.getValue());
+    setTimeout(() => this.heightChange.emit());
   }
 
 }

@@ -1,71 +1,30 @@
-<div #logo
-     class="logo panel-item">
-  <lumeer-logo [height]="48"
+<ng-container *ngIf="{workspace: workspace$ | async, controlsShown: controlsShown$ | async} as state">
+  <lumeer-logo [height]="lineHeight"
                [link]="['/']"
-               [text]="!(workspace | workspaceSet) ? 'Lumeer' : null">
+               [text]="!(state.workspace | workspaceSet) ? 'Lumeer' : null"
+               class="logo">
   </lumeer-logo>
-</div>
-<div #workspacePanel
-     class="workspace-panel d-flex"
-     *ngIf="workspace | workspaceSet">
-  <ul class="navbar navbar-triangle my-0 p-0 mr-3 flex-nowrap">
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i [class]="organization?.icon" [style.color]="organization?.color"></i>&nbsp;{{organization?.code}}
-      </a>
-      <resource-menu
-        labelledBy="navbarDropdown1"
-        [type]="organizationResourceType"
-        [resource]="organization"
-        [workspace]="workspace"
-        (onResourceSelect)="selectOrganization($event)"
-        (onNewResource)="createNewOrganization()">
-      </resource-menu>
-    </li>
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i [class]="project?.icon" [style.color]="project?.color"></i>&nbsp;{{project?.code}}
-      </a>
-      <resource-menu
-        labelledBy="navbarDropdown2"
-        [type]="projectResourceType"
-        [resource]="project"
-        [workspace]="workspace"
-        (onResourceSelect)="selectProject($event)"
-        (onNewResource)="createNewProject(organization)">
-      </resource-menu>
-    </li>
-  </ul>
-</div>
 
-<div class="d-flex justify-content-end user-panel">
+  <controls-toggle *ngIf="mobile"
+                   (toggle)="onToggleControls()"
+                   class="controls-toggle">
+  </controls-toggle>
 
-  <div *ngIf="freePlan$ | async"
-       class="panel-item">
-    <a (click)="goToOrganizationDetail()">
-      <span class="bagde badge-danger badge-pill mr-2 py-1" i18n="@@panel.plan.free">Free&nbsp;Plan</span>
-    </a>
+  <workspace-panel *ngIf="state.controlsShown && (state.workspace | workspaceSet)"
+                   [workspace]="state.workspace"
+                   class="workspace-panel">
+  </workspace-panel>
+
+  <user-panel [workspace]="state.workspace"
+              class="user-panel">
+  </user-panel>
+
+  <search-box *ngIf="state.controlsShown && (state.workspace | workspaceSet) && searchBoxShown"
+              class="search-box">
+  </search-box>
+
+  <div *ngIf="state.controlsShown"
+       class="controls">
+    <ng-content></ng-content>
   </div>
-
-  <!-- TODO remove once Angular supports ICU messages in attributes -->
-  <div hidden>
-        <span #notificationsTitle
-              i18n="@@panel.notifications">
-          {notifications, plural, =0 {No new notifications} =1 {One new notification} =2 {2 new notifications} =3 {3 new notifications} =4 {4 new notifications} other { {{notifications}} new notifications}}
-        </span>
-  </div>
-
-  <div class="panel-item mx-2"
-       [title]="removeHtmlComments(notificationsTitle)">
-    <i *ngIf="notifications === 0"
-       class="fa fa-bell fa-lg text-secondary"></i>
-    <i *ngIf="notifications > 0"
-       class="fa fa-bell fa-lg text-warning"></i>
-  </div>
-
-  <user-menu></user-menu>
-</div>
-
-<search-box *ngIf="(workspace | workspaceSet) && searchBoxShown"
-            class="search-box">
-</search-box>
+</ng-container>

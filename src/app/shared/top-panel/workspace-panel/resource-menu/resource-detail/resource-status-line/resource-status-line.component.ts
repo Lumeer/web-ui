@@ -18,16 +18,16 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {ProjectModel} from '../../../../../core/store/projects/project.model';
-import {OrganizationModel} from '../../../../../core/store/organizations/organization.model';
-import {AppState} from '../../../../../core/store/app.state';
+import {ProjectModel} from '../../../../../../core/store/projects/project.model';
+import {OrganizationModel} from '../../../../../../core/store/organizations/organization.model';
+import {AppState} from '../../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {selectProjectsForWorkspace} from '../../../../../core/store/projects/projects.state';
-import {selectUsersForWorkspace} from '../../../../../core/store/users/users.state';
+import {selectProjectsForWorkspace} from '../../../../../../core/store/projects/projects.state';
+import {selectUsersForWorkspace} from '../../../../../../core/store/users/users.state';
 import {filter, map} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
-import {selectAllCollections} from '../../../../../core/store/collections/collections.state';
+import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
 
 @Component({
   selector: 'resource-status-line',

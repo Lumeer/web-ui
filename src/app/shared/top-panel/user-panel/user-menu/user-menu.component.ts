@@ -22,11 +22,11 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/index';
-import {environment} from '../../../../environments/environment';
-import {AuthService} from '../../../auth/auth.service';
-import {AppState} from '../../../core/store/app.state';
-import {selectUrl} from '../../../core/store/navigation/navigation.state';
-import {DialogService} from '../../../dialog/dialog.service';
+import {environment} from '../../../../../environments/environment';
+import {AuthService} from '../../../../auth/auth.service';
+import {AppState} from '../../../../core/store/app.state';
+import {selectUrl} from '../../../../core/store/navigation/navigation.state';
+import {DialogService} from '../../../../dialog/dialog.service';
 
 @Component({
   selector: 'user-menu',

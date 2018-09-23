@@ -18,20 +18,19 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-
-import {Workspace} from '../../../../core/store/navigation/workspace.model';
-import {Resource} from '../../../../core/dto';
 import {Router} from '@angular/router';
-import {OrganizationModel} from '../../../../core/store/organizations/organization.model';
-import {ProjectModel} from '../../../../core/store/projects/project.model';
-import {ResourceType} from '../../../../core/model/resource-type';
-import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
-import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
-import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 import {Subscription} from 'rxjs';
 import {filter, tap} from 'rxjs/operators';
-import {UsersAction} from '../../../../core/store/users/users.action';
+import {Resource} from '../../../../../core/dto';
+import {ResourceType} from '../../../../../core/model/resource-type';
+import {AppState} from '../../../../../core/store/app.state';
+import {Workspace} from '../../../../../core/store/navigation/workspace.model';
+import {OrganizationModel} from '../../../../../core/store/organizations/organization.model';
+import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
+import {ProjectModel} from '../../../../../core/store/projects/project.model';
+import {selectProjectByWorkspace} from '../../../../../core/store/projects/projects.state';
+import {UsersAction} from '../../../../../core/store/users/users.action';
 
 @Component({
   selector: 'resource-detail',

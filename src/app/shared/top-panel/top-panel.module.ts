@@ -21,12 +21,15 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {PipesModule} from '../pipes/pipes.module';
+import {ControlsToggleComponent} from './controls-toggle/controls-toggle.component';
 import {LumeerLogoComponent} from './lumeer-logo/lumeer-logo.component';
-import {ResourceMenuModule} from './resource-menu/resource-menu.module';
+import {ResourceMenuModule} from './workspace-panel/resource-menu/resource-menu.module';
 import {SearchBoxModule} from './search-box/search-box.module';
 import {TopPanelComponent} from './top-panel.component';
-import {LanguageLinkPipe} from './user-menu/language-link.pipe';
-import {UserMenuComponent} from './user-menu/user-menu.component';
+import {LanguageLinkPipe} from './user-panel/user-menu/language-link.pipe';
+import {UserMenuComponent} from './user-panel/user-menu/user-menu.component';
+import {UserPanelComponent} from './user-panel/user-panel.component';
+import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.component';
 import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
 
 @NgModule({
@@ -42,7 +45,10 @@ import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
     TopPanelWrapperComponent,
     UserMenuComponent,
     LanguageLinkPipe,
-    LumeerLogoComponent
+    LumeerLogoComponent,
+    WorkspacePanelComponent,
+    UserPanelComponent,
+    ControlsToggleComponent
   ],
   exports: [
     TopPanelWrapperComponent,
