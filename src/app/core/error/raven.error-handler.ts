@@ -23,7 +23,8 @@ import {environment} from '../../../environments/environment';
 
 if (environment.sentryDsn) {
   Raven.config(environment.sentryDsn, {
-    release: environment.buildNumber
+    release: environment.buildNumber,
+    environment: environment.production ? 'production' : 'development'
   }).install();
 }
 
