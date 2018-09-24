@@ -26,7 +26,8 @@ import {ResourceModel} from '../../core/model/resource.model';
 export class IconsPipe implements PipeTransform {
 
   public transform(entities: ResourceModel[]): string[] {
-    return entities.map(entity => entity.icon);
+    return entities.filter(entity => !!entity)
+      .map(entity => entity.icon);
   }
 
 }

@@ -20,6 +20,10 @@
 import {TableColumn, TableColumnType, TableCompoundColumn, TableConfig, TableConfigColumn, TableConfigPart, TableHiddenColumn, TableModel, TablePart} from './table.model';
 
 export function convertTableToConfig(table: TableModel): TableConfig {
+  if (!table) {
+    return null;
+  }
+
   const parts: TableConfigPart[] = table.parts.map(part => convertTablePartToConfig(part));
   return {parts};
 }
