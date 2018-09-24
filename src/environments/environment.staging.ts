@@ -25,5 +25,6 @@ export const environment: Environment = {
   auth: true,
   production: false,
   storeDevtools: true,
+  name: 'staging',
   ...environmentVariables
 };

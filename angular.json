@@ -85,7 +85,7 @@
               "optimization": true,
               "outputHashing": "all",
               "showCircularDependencies": false,
-              "sourceMap": false,
+              "sourceMap": true,
               "vendorChunk": false
             },
             "cs": {

@@ -3,7 +3,7 @@
 export SENTRY_ORG=answer-institute-sro
 export SENTRY_PROJECT=lumeerio
 
-if [ "$LUMEER_ENV" != "production" ]
+if [ "$LUMEER_ENV" != "production" -o "$LUMEER_ENV" != "staging" ]
 then
   exit 0
 fi
