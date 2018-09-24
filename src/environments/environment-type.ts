@@ -25,5 +25,5 @@ export interface Environment extends EnvironmentVariables {
   auth: boolean;
   production: boolean;
   storeDevtools: boolean;
-
+  name?: string;
 }
