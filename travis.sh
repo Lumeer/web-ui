@@ -34,19 +34,15 @@ echo "Linting..."
 npm run lint >> $BUILD_OUTPUT 2>&1
 dump_output
 
-echo "Building UI..."
-npm run build >> $BUILD_OUTPUT 2>&1
-dump_output
+echo "Starting UI..."
+npm run start:en >> $BUILD_OUTPUT 2>&1 &
+while ! curl --output /dev/null --silent -r 0-0 --fail "http://localhost:7000/ui"; do
+  sleep 3
+done
 
 echo "Starting backend..."
 ./travis-start-engine.sh >> $BUILD_OUTPUT 2>&1
 dump_output
-
-echo "Starting UI..."
-npm start >> $BUILD_OUTPUT 2>&1 &
-while ! curl --output /dev/null --silent -r 0-0 --fail "http://localhost:7000/ui"; do
-  sleep 3
-done
 
 echo "Testing UI..."
 npm run cypress:run --  --record --key b43d988f-5145-4a2b-9df3-ce3b1607f203 >> $BUILD_OUTPUT 2>&1
