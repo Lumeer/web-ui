@@ -41,9 +41,9 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   @Input() public documentModel: DocumentModel;
   @Input() public index: number;
   @Input() public collection: CollectionModel;
-  @Input() public collectionRoles: string[];
   @Input() public perspectiveId: string;
   @Input() public selectionHelper: SelectionHelper;
+  @Input() public canManageConfig: boolean;
 
   @Output() public remove = new EventEmitter();
   @Output() public sizeChange = new EventEmitter();
@@ -55,7 +55,6 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   public unusedAttributes$: Observable<AttributeModel[]>;
 
   public initedDocumentKey: string;
-  public hasWriteRole = false;
   private currentRowsLength: number;
 
   public constructor(private documentUiService: DocumentUiService) {
@@ -64,8 +63,6 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   public ngOnInit() {
     this.disableScrollOnNavigation();
     this.initDocumentServiceIfNeeded();
-
-    this.hasWriteRole = this.collectionRoles && this.collectionRoles.includes(Role.Write);
   }
 
   public ngOnDestroy() {

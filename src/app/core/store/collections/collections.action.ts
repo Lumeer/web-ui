@@ -89,9 +89,6 @@ export namespace CollectionsAction {
 
   export class Get implements Action {
     public readonly type = CollectionsActionType.GET;
-
-    public constructor(public payload: { query: QueryModel, workspace?: Workspace }) {
-    }
   }
 
   export class GetSuccess implements Action {

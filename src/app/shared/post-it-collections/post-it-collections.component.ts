@@ -26,7 +26,7 @@ import {Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {selectCollectionsByQuery, selectCollectionsLoaded} from '../../core/store/collections/collections.state';
+import {selectCollectionsLoaded} from '../../core/store/collections/collections.state';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
@@ -49,6 +49,7 @@ import * as Icons from '../picker/icon-picker/icons';
 import * as Colors from '../picker/color-picker/colors';
 import {QueryAction} from '../../core/model/query-action';
 import {sortCollectionsByFavoriteAndLastUsed} from '../../core/store/collections/collection.util';
+import {selectCollectionsByQuery} from '../../core/store/documents/documents.state';
 
 const UNCREATED_THRESHOLD = 5;
 

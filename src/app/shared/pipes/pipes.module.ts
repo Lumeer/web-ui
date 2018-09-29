@@ -45,6 +45,7 @@ import {CanActivatePagePipe} from './can-activate-page.pipe';
 import {PageEndIndexPipe} from './page-end-index.pipe';
 import { LogPipe } from './log.pipe';
 import { RemoveHtmlCommentsPipe } from './remove-html-comments.pipe';
+import {CollectionPermissionsPipe} from './collection-permissions.pipe';
 
 @NgModule({
   imports: [
@@ -77,6 +78,7 @@ import { RemoveHtmlCommentsPipe } from './remove-html-comments.pipe';
     PageEndIndexPipe,
     LogPipe,
     RemoveHtmlCommentsPipe,
+    CollectionPermissionsPipe
   ],
   exports: [
     LightenColorPipe,
@@ -105,6 +107,7 @@ import { RemoveHtmlCommentsPipe } from './remove-html-comments.pipe';
     PageEndIndexPipe,
     LogPipe,
     RemoveHtmlCommentsPipe,
+    CollectionPermissionsPipe
   ]
 })
 export class PipesModule {

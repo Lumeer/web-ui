@@ -53,10 +53,9 @@ export class CollectionsEffects {
     withLatestFrom(this.store$.select(selectCollectionsLoaded)),
     filter(([action, loaded]) => !loaded),
     map(([action]) => action),
-    mergeMap((action) => {
-      const queryDto = QueryConverter.toDto(action.payload.query);
+    mergeMap(() => {
 
-      return this.searchService.searchCollections(queryDto, action.payload.workspace).pipe(
+      return this.collectionService.getCollections().pipe(
         map((dtos: Collection[]) => dtos.map(dto => CollectionConverter.fromDto(dto))),
         map((collections) => new CollectionsAction.GetSuccess({collections: collections})),
         catchError((error) => of(new CollectionsAction.GetFailure({error: error})))

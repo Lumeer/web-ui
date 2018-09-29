@@ -90,6 +90,10 @@ export class PostItLayout {
     this.subscriptions.add(notifySubscription);
   }
 
+  public setDrag(enabled: boolean) {
+    this.grid.dragEnabled = enabled;
+  }
+
   public addItem(newElement: any, index: number) {
     this.runSafely(() => {
       this.grid.add(newElement, {index: index});

@@ -30,7 +30,7 @@ import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {AxisSelectModel} from './model/axis-select-model';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {selectCollectionsByQuery} from '../../../core/store/collections/collections.state';
+import {selectCollectionsByQuery} from '../../../core/store/documents/documents.state';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 
 @Component({

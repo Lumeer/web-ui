@@ -28,7 +28,6 @@ import {PostItDocumentHeaderComponent} from './document/post-it-document-header/
 import {PostItDocumentCellComponent} from './document/post-it-document-cell/post-it-document-cell.component';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {PostItColumnStylePipe} from './pipes/post-it-column-style';
-import {DocumentCollectionRolesPipe} from './pipes/document-collection-roles.pipe';
 import {DocumentCollectionPipe} from './pipes/document-collection.pipe';
 import {EmptyPostItsComponent} from './empty-post-its/empty-post-its.component';
 
@@ -45,7 +44,6 @@ import {EmptyPostItsComponent} from './empty-post-its/empty-post-its.component';
     PostItDocumentHeaderComponent,
     PostItDocumentCellComponent,
     PostItColumnStylePipe,
-    DocumentCollectionRolesPipe,
     DocumentCollectionPipe,
     EmptyPostItsComponent
   ],

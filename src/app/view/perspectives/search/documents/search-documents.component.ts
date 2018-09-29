@@ -33,7 +33,7 @@ import {UserSettingsService} from '../../../../core/user-settings.service';
 import {SizeType} from '../../../../shared/slider/size-type';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
+import {selectCollectionsByQuery} from '../../../../core/store/documents/documents.state';
 import {PerspectiveService} from '../../../../core/perspective.service';
 import {Perspective} from '../../perspective';
 import {QueryConverter} from '../../../../core/store/navigation/query.converter';

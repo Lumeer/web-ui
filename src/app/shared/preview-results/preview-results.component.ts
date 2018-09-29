@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDe
 import {Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
-import {selectCollectionsByQuery} from '../../core/store/collections/collections.state';
+import {selectCollectionsByQuery} from '../../core/store/documents/documents.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {filter, take, withLatestFrom} from 'rxjs/operators';
 import {DocumentModel} from '../../core/store/documents/document.model';
