@@ -60,6 +60,14 @@ export class DocumentService {
     return this.httpClient.patch<DocumentDto>(`${this.apiPrefix(document.collectionId)}/${document.id}/data`, document.data);
   }
 
+  public updateDocumentMetaData(document: DocumentDto): Observable<DocumentDto> {
+    return this.httpClient.put<DocumentDto>(`${this.apiPrefix(document.collectionId)}/${document.id}/meta`, document.metaData);
+  }
+
+  public patchDocumentMetaData(document: DocumentDto): Observable<DocumentDto> {
+    return this.httpClient.patch<DocumentDto>(`${this.apiPrefix(document.collectionId)}/${document.id}/meta`, document.metaData);
+  }
+
   public removeDocument(collectionId: string, documentId: string): Observable<HttpResponse<any>> {
     return this.httpClient.delete(
       `${this.apiPrefix(collectionId)}/${documentId}`,

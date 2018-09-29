@@ -238,6 +238,30 @@ export class DocumentsEffects {
   );
 
   @Effect()
+  public patchMetaData$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.PatchMetaData>(DocumentsActionType.PATCH_META_DATA),
+    mergeMap(action => {
+      const documentDto = convertDocumentModelToDto(action.payload.document);
+      return this.documentService.patchDocumentMetaData(documentDto).pipe(
+        map(dto => new DocumentsAction.UpdateSuccess({document: convertDocumentDtoToModel(dto)})),
+        catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
+      );
+    })
+  );
+
+  @Effect()
+  public updateMetaData$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.UpdateMetaData>(DocumentsActionType.UPDATE_META_DATA),
+    mergeMap(action => {
+      const documentDto = convertDocumentModelToDto(action.payload.document);
+      return this.documentService.updateDocumentMetaData(documentDto).pipe(
+        map(dto => new DocumentsAction.UpdateSuccess({document: convertDocumentDtoToModel(dto)})),
+        catchError((error) => of(new DocumentsAction.UpdateFailure({error: error})))
+      );
+    })
+  );
+
+  @Effect()
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Delete>(DocumentsActionType.DELETE),
     mergeMap(action => {

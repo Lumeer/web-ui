@@ -39,6 +39,9 @@ export enum DocumentsActionType {
   UPDATE_DATA = '[Documents] Update Data',
   PATCH_DATA = '[Documents] Patch Data',
 
+  UPDATE_META_DATA = '[Documents] Update Meta Data',
+  PATCH_META_DATA = '[Documents] Patch Meta Data',
+
   ADD_FAVORITE = '[Documents] Add Favorite',
   ADD_FAVORITE_SUCCESS = '[Documents] Add Favorite :: Success',
   ADD_FAVORITE_FAILURE = '[Documents] Add Favorite :: Failure',
@@ -136,6 +139,20 @@ export namespace DocumentsAction {
     }
   }
 
+  export class UpdateMetaData implements Action {
+    public readonly type = DocumentsActionType.UPDATE_META_DATA;
+
+    public constructor(public payload: { document: DocumentModel }) {
+    }
+  }
+
+  export class PatchMetaData implements Action {
+    public readonly type = DocumentsActionType.PATCH_META_DATA;
+
+    public constructor(public payload: { document: DocumentModel }) {
+    }
+  }
+
   export class Delete implements Action {
     public readonly type = DocumentsActionType.DELETE;
 
@@ -223,7 +240,7 @@ export namespace DocumentsAction {
     Patch |
     AddFavorite | AddFavoriteSuccess | AddFavoriteFailure |
     RemoveFavorite | RemoveFavoriteSuccess | RemoveFavoriteFailure |
-    UpdateData | PatchData | UpdateSuccess | UpdateFailure |
+    UpdateData | PatchData | UpdateMetaData | PatchMetaData | UpdateSuccess | UpdateFailure |
     Delete | DeleteSuccess | DeleteFailure | DeleteConfirm |
     Clear | ClearByCollection;
 }

@@ -24,6 +24,8 @@ export interface DocumentModel {
   data: { [attributeId: string]: any };
   newData?: { [attributeName: string]: {value: any, correlationId?: string} };
 
+  metaData?: { [key: string]: any }
+
   favorite?: boolean;
 
   creationDate?: Date;
