@@ -21,11 +21,10 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDe
 import {Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
-import {selectCollectionsByQuery} from '../../core/store/documents/documents.state';
+import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {filter, take, withLatestFrom} from 'rxjs/operators';
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {selectDocumentsByCustomQuery} from '../../core/store/documents/documents.state';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {Workspace} from '../../core/store/navigation/workspace.model';

@@ -23,17 +23,7 @@ import {AppState} from '../app.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {QueryModel} from '../navigation/query.model';
 import {DocumentModel} from './document.model';
-import {sortDocumentsByCreationDate} from './document.utils';
-import {filterDocumentsByQuery} from './documents.filters';
 import {areQueriesEqualExceptPagination} from '../navigation/query.helper';
-import {selectAllCollections, selectCollectionsDictionary} from '../collections/collections.state';
-import {selectAllLinkTypes} from '../link-types/link-types.state';
-import {selectCurrentView} from '../views/views.state';
-import {getCollectionsIdsFromDocuments, getCollectionsIdsFromView} from '../collections/collection.util';
-import {selectCurrentUser} from '../users/users.state';
-import {userHasRoleInResource} from '../../../shared/utils/resource.utils';
-import {Role} from '../../model/role';
-import {filterCollectionsByQuery} from '../collections/collections.filters';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   queries: QueryModel[];
@@ -50,37 +40,12 @@ export const selectDocumentsState = (state: AppState) => state.documents;
 export const selectAllDocuments = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectAll);
 export const selectDocumentsDictionary = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectEntities);
 export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
-export const selectDocumentsByQuery = createSelector(selectAllDocuments, selectQuery,
-  (documents, query): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents), query)
-);
 
 export const selectCurrentQueryDocumentsLoaded = createSelector(selectDocumentsQueries, selectQuery, (queries, currentQuery) =>
   !!queries.find(query => areQueriesEqualExceptPagination(query, currentQuery))
-);
-
-const selectDocumentsByReadPermission = createSelector(selectAllDocuments, selectCollectionsDictionary, selectAllLinkTypes,
-  selectCurrentView, selectCurrentUser, (documents, collectionsMap, linkTypes, view, user) => {
-    const documentsCollections = getCollectionsIdsFromDocuments(documents).map(collectionId => collectionsMap[collectionId])
-      .filter(collection => !!collection);
-    const collectionIdsFromView = getCollectionsIdsFromView(view, linkTypes, documents);
-    const allowedCollectionIds = documentsCollections.reduce((ids, collection) => {
-      if (userHasRoleInResource(user, collection, Role.Read) ||
-        (collectionIdsFromView && collectionIdsFromView.includes(collection.id) && userHasRoleInResource(user, view, Role.Read))) {
-        ids.push(collection.id);
-      }
-      return ids;
-    }, []);
-    return documents.filter(document => allowedCollectionIds.includes(document.collectionId));
-  });
-
-export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean) => createSelector(selectDocumentsByReadPermission,
-  (documents): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query)
 );
 
 export const selectDocumentById = (id: string) => createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);
 
 export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary,
   documentsMap => ids.map(id => documentsMap[id]).filter(doc => doc));
-
-export const selectCollectionsByQuery = createSelector(selectAllCollections, selectAllDocuments, selectQuery,
-  (collections, documents, query) => filterCollectionsByQuery(collections, documents, query));

@@ -23,7 +23,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {filter, first, map, mergeMap, tap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {selectDocumentsByCustomQuery} from '../../core/store/documents/documents.state';
+import {selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {Direction} from '../direction';

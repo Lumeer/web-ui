@@ -25,8 +25,9 @@ import {filter, first, mergeMap, tap} from 'rxjs/operators';
 import {AppState} from '../../store/app.state';
 import {DocumentModel} from '../../store/documents/document.model';
 import {DocumentsAction} from '../../store/documents/documents.action';
-import {selectCurrentQueryDocumentsLoaded, selectDocumentsByQuery} from '../../store/documents/documents.state';
+import {selectCurrentQueryDocumentsLoaded} from '../../store/documents/documents.state';
 import {selectQuery} from '../../store/navigation/navigation.state';
+import {selectDocumentsByQuery} from '../../store/common/permissions.selectors';
 
 @Injectable({
   providedIn: 'root'
