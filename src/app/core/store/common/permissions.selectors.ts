@@ -37,7 +37,7 @@ export const selectCollectionsByReadPermission = createSelector(selectAllDocumen
   selectCurrentView, selectCurrentUser, (documents, collections, linkTypes, view, user) => {
     const collectionIdsFromView = getCollectionsIdsFromView(view, linkTypes, documents);
     return collections.filter(collection => userHasRoleInResource(user, collection, Role.Read)
-      || (collectionIdsFromView && collectionIdsFromView.includes(collection.id) && userHasRoleInResource(user, view, Role.Read)))
+      || (collectionIdsFromView && collectionIdsFromView.includes(collection.id) && userHasRoleInResource(user, view, Role.Read)));
   });
 
 export const selectCollectionsByQuery = createSelector(selectCollectionsByReadPermission, selectAllDocuments, selectQuery,
