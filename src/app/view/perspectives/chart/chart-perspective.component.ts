@@ -20,7 +20,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AppState} from '../../../core/store/app.state';
 import {Store} from '@ngrx/store';
-import {selectDocumentsByQuery} from '../../../core/store/documents/documents.state';
 import {Subscription, combineLatest} from 'rxjs';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
@@ -30,7 +29,7 @@ import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {AxisSelectModel} from './model/axis-select-model';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {selectCollectionsByQuery} from '../../../core/store/documents/documents.state';
+import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 
 @Component({

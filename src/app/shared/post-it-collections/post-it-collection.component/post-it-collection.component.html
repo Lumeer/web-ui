@@ -1,4 +1,6 @@
 <div class="card post-it"
+     *ngIf="{write: collection | collectionPermissions:'write' | async,
+              manage: collection | collectionPermissions:'manage' | async} as permissions"
      [class.selected]="selected"
      [class.uninitialized]="!collection.id"
      [class.initialized]="collection.id">
@@ -44,7 +46,7 @@
       </a>
     </div>
 
-    <div *ngIf="collection.id" class="toggle-favorite opacity-content clickable clickable-warning"
+    <div *ngIf="collection.id && permissions.write" class="toggle-favorite opacity-content clickable clickable-warning"
          [ngClass]="{'panel-visible' : focused}"
          [class.always-visible]="collection.favorite">
       <a *ngIf="collection.favorite" title="Remove from favorites"
@@ -64,7 +66,7 @@
       <div id="dropdown-{{collection.id}}">
         <a title="Configure" i18n-title="@@collection.button.configure"
            class="rounded-left"
-           *ngIf="hasManageRole()"
+           *ngIf="permissions.manage"
            [routerLink]="[workspacePath(), 'c', collection.id, 'attributes']">
           <i class="fas fa-fw fa-cog" aria-hidden="true"></i></a>
       </div>
@@ -87,7 +89,7 @@
 
   <post-it-collection-name
     [collectionName]="collection.name"
-    [editable]="hasWriteRole() || !collection.id"
+    [editable]="!collection.id || permissions.manage"
     [nameFormControl]="nameFormControl"
     (changed)="onNameChanged($event)"
     (selected)="onNameSelect()"

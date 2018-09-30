@@ -23,7 +23,7 @@ import {Subscription} from 'rxjs';
 import {withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
-import {selectDocumentsByQuery} from '../../../../../core/store/documents/documents.state';
+import {selectDocumentsByQuery} from '../../../../../core/store/common/permissions.selectors';
 import {QueryModel} from '../../../../../core/store/navigation/query.model';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {EMPTY_TABLE_ROW, TableModel, TableRow} from '../../../../../core/store/tables/table.model';

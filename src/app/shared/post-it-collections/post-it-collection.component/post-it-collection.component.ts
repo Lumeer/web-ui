@@ -22,7 +22,6 @@ import {CollectionModel} from '../../../core/store/collections/collection.model'
 import {Workspace} from '../../../core/store/navigation/workspace.model';
 import {QueryConverter} from '../../../core/store/navigation/query.converter';
 import {QueryModel} from '../../../core/store/navigation/query.model';
-import {Role} from '../../../core/model/role';
 import {Subject, Subscription} from 'rxjs';
 import {isNullOrUndefined} from 'util';
 import {debounceTime, filter} from 'rxjs/operators';
@@ -42,7 +41,6 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
   @Input() public collection: CollectionModel;
   @Input() public focused: boolean;
   @Input() public selected: boolean;
-  @Input() public userRoles: string[];
   @Input() public workspace: Workspace;
 
   @Output() public resize = new EventEmitter();
@@ -173,14 +171,6 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
     return QueryConverter.toString(query);
   }
 
-  public hasManageRole(): boolean {
-    return this.hasRole(Role.Manage);
-  }
-
-  public hasWriteRole(): boolean {
-    return this.hasRole(Role.Write);
-  }
-
   public refreshValidators() {
     this.nameFormControl.updateValueAndValidity();
   }
@@ -206,11 +196,6 @@ export class PostItCollectionComponent implements OnInit, OnChanges, OnDestroy {
     this.togglePanelVisible($event, true);
     $event.stopPropagation();
     $(`#${this.newDropdownId}`).dropdown('toggle');
-  }
-
-  private hasRole(role: string): boolean {
-    const roles = this.userRoles || [];
-    return roles.includes(role);
   }
 
   private subscribeData() {
