@@ -14,9 +14,13 @@
       {{linkRow.document.data[attr.id]}}
     </td>
     <td class="fixed-column border-0">
-      <i class="fas fa-eye clickable mr-1" (click)="documentSelected(collection, linkRow)"
+      <i class="fas fa-eye clickable mr-1"
+         *ngIf="collection | permissions:'read' | async"
+         (click)="documentSelected(collection, linkRow)"
          title.i18n="@@select" title="Select" aria-hidden="true"></i>
-      <i class="fas fa-unlink clickable" (click)="unlinkDocument(linkRow)"
+      <i class="fas fa-unlink clickable"
+         *ngIf="collection | collectionPermissions:'write' | async"
+         (click)="unlinkDocument(linkRow)"
          title.i18n="@@unlink" title="Unlink" aria-hidden="true"></i>
     </td>
   </tr>
