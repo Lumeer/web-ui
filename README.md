@@ -42,9 +42,11 @@ $ LUMEER_ENV=production \
 
  * `LUMEER_ENV`: environment in which the application runs (`staging`, `production` or empty)
  * `I18N_LOCALE`: language to be used in the application (`en`, `cs` or empty to use default `en`)
+ * `AUTH_CLIENT_ID`: client ID of Auth0 application
+ * `AUTH_DOMAIN`: base URL for Auth0 authentication
  * `SENTRY_DSN`: Sentry Data Source Name, if set it activates Sentry (recommended for production only)
  * `BUILD_NUMBER`: build number to be shown in the application
- * `SESSIONT_TIMEOUT`: user inactivity time before session expiration (in minutes)
+ * `SESSION_TIMEOUT`: user inactivity time before session expiration (in minutes)
  * `LUMEER_ENGINE`: back-end deployment context root
  * `context.root`: front-end deployment context root
 
