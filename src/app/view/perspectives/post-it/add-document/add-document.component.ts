@@ -17,13 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
-import {AppState} from '../../../../core/store/app.state';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
-import {selectCollectionsByQuery} from '../../../../core/store/collections/collections.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CorrelationIdGenerator} from '../../../../core/store/correlation-id.generator';
 import {QueryModel} from '../../../../core/store/navigation/query.model';
@@ -35,6 +31,9 @@ import {generateDocumentData} from '../../../../core/store/documents/document.ut
   styleUrls: ['./add-document.component.scss']
 })
 export class PostItAddDocumentComponent {
+
+  @Input()
+  public disabled: boolean;
 
   @Input()
   public query: QueryModel;

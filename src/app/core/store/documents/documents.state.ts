@@ -26,6 +26,14 @@ import {DocumentModel} from './document.model';
 import {sortDocumentsByCreationDate} from './document.utils';
 import {filterDocumentsByQuery} from './documents.filters';
 import {areQueriesEqualExceptPagination} from '../navigation/query.helper';
+import {selectAllCollections, selectCollectionsDictionary} from '../collections/collections.state';
+import {selectAllLinkTypes} from '../link-types/link-types.state';
+import {selectCurrentView} from '../views/views.state';
+import {getCollectionsIdsFromDocuments, getCollectionsIdsFromView} from '../collections/collection.util';
+import {selectCurrentUser} from '../users/users.state';
+import {userHasRoleInResource} from '../../../shared/utils/resource.utils';
+import {Role} from '../../model/role';
+import {filterCollectionsByQuery} from '../collections/collections.filters';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   queries: QueryModel[];
@@ -50,7 +58,22 @@ export const selectCurrentQueryDocumentsLoaded = createSelector(selectDocumentsQ
   !!queries.find(query => areQueriesEqualExceptPagination(query, currentQuery))
 );
 
-export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean) => createSelector(selectAllDocuments,
+const selectDocumentsByReadPermission = createSelector(selectAllDocuments, selectCollectionsDictionary, selectAllLinkTypes,
+  selectCurrentView, selectCurrentUser, (documents, collectionsMap, linkTypes, view, user) => {
+    const documentsCollections = getCollectionsIdsFromDocuments(documents).map(collectionId => collectionsMap[collectionId])
+      .filter(collection => !!collection);
+    const collectionIdsFromView = getCollectionsIdsFromView(view, linkTypes, documents);
+    const allowedCollectionIds = documentsCollections.reduce((ids, collection) => {
+      if (userHasRoleInResource(user, collection, Role.Read) ||
+        (collectionIdsFromView && collectionIdsFromView.includes(collection.id) && userHasRoleInResource(user, view, Role.Read))) {
+        ids.push(collection.id);
+      }
+      return ids;
+    }, []);
+    return documents.filter(document => allowedCollectionIds.includes(document.collectionId));
+  });
+
+export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean) => createSelector(selectDocumentsByReadPermission,
   (documents): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query)
 );
 
@@ -58,3 +81,6 @@ export const selectDocumentById = (id: string) => createSelector(selectDocuments
 
 export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary,
   documentsMap => ids.map(id => documentsMap[id]).filter(doc => doc));
+
+export const selectCollectionsByQuery = createSelector(selectAllCollections, selectAllDocuments, selectQuery,
+  (collections, documents, query) => filterCollectionsByQuery(collections, documents, query));

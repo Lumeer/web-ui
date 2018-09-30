@@ -17,11 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 
 import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {Role} from '../../../../core/model/role';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -36,14 +35,14 @@ import {SelectionHelper} from '../util/selection-helper';
   styleUrls: ['./post-it-document.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
+export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
 
   @Input() public documentModel: DocumentModel;
   @Input() public index: number;
   @Input() public collection: CollectionModel;
-  @Input() public collectionRoles: string[];
   @Input() public perspectiveId: string;
   @Input() public selectionHelper: SelectionHelper;
+  @Input() public canManageConfig: boolean;
 
   @Output() public remove = new EventEmitter();
   @Output() public sizeChange = new EventEmitter();
@@ -55,17 +54,13 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   public unusedAttributes$: Observable<AttributeModel[]>;
 
   public initedDocumentKey: string;
-  public hasWriteRole = false;
   private currentRowsLength: number;
 
   public constructor(private documentUiService: DocumentUiService) {
   }
 
   public ngOnInit() {
-    this.disableScrollOnNavigation();
     this.initDocumentServiceIfNeeded();
-
-    this.hasWriteRole = this.collectionRoles && this.collectionRoles.includes(Role.Write);
   }
 
   public ngOnDestroy() {
@@ -80,6 +75,10 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
       this.sizeChange.emit();
     }
 
+  }
+
+  public ngAfterViewInit() {
+    this.disableScrollOnNavigation();
   }
 
   public onRemove() {

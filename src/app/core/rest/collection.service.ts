@@ -68,12 +68,13 @@ export class CollectionService extends PermissionService {
   }
 
   public getCollections(pageNumber?: number, pageSize?: number): Observable<Collection[]> {
-    const queryParams = new HttpParams();
+    let queryParams = new HttpParams();
 
     if (!isNullOrUndefined(pageNumber) && !isNullOrUndefined(pageSize)) {
-      queryParams.set('page', pageNumber.toString())
+      queryParams = queryParams.set('page', pageNumber.toString())
         .set('size', pageSize.toString());
     }
+    queryParams = queryParams.set('fromViews', 'true');
 
     return this.httpClient.get<Collection[]>(this.apiPrefix(), {params: queryParams});
   }
