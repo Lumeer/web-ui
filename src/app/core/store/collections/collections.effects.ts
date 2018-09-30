@@ -26,12 +26,11 @@ import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {Collection, Permission} from '../../dto';
-import {CollectionService, ImportService, SearchService} from '../../rest';
+import {CollectionService, ImportService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
-import {QueryConverter} from '../navigation/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {PermissionsConverter} from '../permissions/permissions.converter';
@@ -53,10 +52,9 @@ export class CollectionsEffects {
     withLatestFrom(this.store$.select(selectCollectionsLoaded)),
     filter(([action, loaded]) => !loaded),
     map(([action]) => action),
-    mergeMap((action) => {
-      const queryDto = QueryConverter.toDto(action.payload.query);
+    mergeMap(() => {
 
-      return this.searchService.searchCollections(queryDto, action.payload.workspace).pipe(
+      return this.collectionService.getCollections().pipe(
         map((dtos: Collection[]) => dtos.map(dto => CollectionConverter.fromDto(dto))),
         map((collections) => new CollectionsAction.GetSuccess({collections: collections})),
         catchError((error) => of(new CollectionsAction.GetFailure({error: error})))
@@ -217,7 +215,7 @@ export class CollectionsEffects {
 
           return actions;
         }),
-        catchError((error) => of(new CollectionsAction.CreateFailure({error})))
+        catchError((error) => of(new CollectionsAction.UpdateFailure({error})))
       );
     })
   );
@@ -479,8 +477,7 @@ export class CollectionsEffects {
               private store$: Store<AppState>,
               private collectionService: CollectionService,
               private i18n: I18n,
-              private importService: ImportService,
-              private searchService: SearchService) {
+              private importService: ImportService) {
   }
 
 }

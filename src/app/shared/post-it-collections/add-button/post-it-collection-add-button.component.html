@@ -1,6 +1,7 @@
 <button type="button"
         class="btn btn-sm btn-primary"
-        *ngIf="!disabled"
+        [disabled]="disabled"
+        [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
         title="Add collection"
         i18n-title="@@collection.post.it.create.title"
         (click)="add()">

@@ -1,65 +1,68 @@
-<post-it-document-header
-  class="card-header px-2 py-1 d-flex"
-  [collection]="collection"
-  [readonly]="!hasWriteRole"
-  [favorite]="favorite$ | async"
-  [initialized]="documentModel.id"
-  (remove)="onRemove()"
-  (toggleFavorite)="onToggleFavorite()"
-  (edit)="onEdit()">
-</post-it-document-header>
+<ng-container *ngIf="{write: collection | collectionPermissions:'write' | async} as permissions">
+  <post-it-document-header
+    class="card-header px-2 py-1 d-flex w-100"
+    [class.cursor-move]="canManageConfig"
+    [collection]="collection"
+    [readonly]="!permissions.write"
+    [favorite]="favorite$ | async"
+    [initialized]="documentModel.id"
+    (remove)="onRemove()"
+    (toggleFavorite)="onToggleFavorite()"
+    (edit)="onEdit()">
+  </post-it-document-header>
 
-<div class="card-body p-2">
-  <ul class="m-0 p-0" #content>
-    <ng-container *ngFor="let row of rows$ | async; trackBy:getTrackBy(); let idx = index">
+  <div class="card-body p-2">
+    <ul class="m-0 p-0" #content>
+      <ng-container *ngFor="let row of rows$ | async; trackBy:getTrackBy(); let idx = index">
 
-      <li class="w-100" *ngIf="!row.remove">
-        <post-it-document-cell
-          class="w-50"
-          [key]="getDocumentKey()"
-          [row]="idx"
-          [index]="index"
-          [readonly]="!hasWriteRole"
-          [column]="0"
-          [additionalClasses]="isDefaultAttribute(row.id) ? 'attribute text-default-attribute' : 'attribute'"
-          [perspectiveId]="perspectiveId"
-          [selectionHelper]="selectionHelper"
-          [suggestionListId]="suggestionListId()"
-          [model]="row.newName || row.name"
-          (remove)="onRemoveRow(idx)"
-          (update)="onUpdateRow(idx, $event, row.newValue || row.value)"
-          (focus)="selectionHelper.focusCellSpan(idx, 0, getDocumentKey())"
-          (enter)="selectionHelper.moveToNextInput()">
-        </post-it-document-cell>
+        <li class="w-100" *ngIf="!row.remove">
+          <post-it-document-cell
+            class="w-50"
+            [key]="getDocumentKey()"
+            [row]="idx"
+            [index]="index"
+            [readonly]="!permissions.write"
+            [column]="0"
+            [additionalClasses]="isDefaultAttribute(row.id) ? 'attribute text-default-attribute' : 'attribute'"
+            [perspectiveId]="perspectiveId"
+            [selectionHelper]="selectionHelper"
+            [suggestionListId]="suggestionListId()"
+            [model]="row.newName || row.name"
+            (remove)="onRemoveRow(idx)"
+            (update)="onUpdateRow(idx, $event, row.newValue || row.value)"
+            (focus)="selectionHelper.focusCellSpan(idx, 0, getDocumentKey())"
+            (enter)="selectionHelper.moveToNextInput()">
+          </post-it-document-cell>
 
-        <post-it-document-cell
-          class="w-50"
-          [key]="getDocumentKey()"
-          [row]="idx"
-          [index]="index"
-          [readonly]="!hasWriteRole"
-          [column]="1"
-          [perspectiveId]="perspectiveId"
-          [selectionHelper]="selectionHelper"
-          [model]="row.newValue || row.value"
-          (remove)="onUpdateRow(idx, row.newName || row.name, '')"
-          (update)="onUpdateRow(idx, row.newName || row.name, $event)"
-          (focus)="selectionHelper.focusCellSpan(idx, 1, getDocumentKey())"
-          (enter)="selectionHelper.moveToNextInput()">
-        </post-it-document-cell>
+          <post-it-document-cell
+            class="w-50"
+            [key]="getDocumentKey()"
+            [row]="idx"
+            [index]="index"
+            [readonly]="!permissions.write"
+            [column]="1"
+            [perspectiveId]="perspectiveId"
+            [selectionHelper]="selectionHelper"
+            [model]="row.newValue || row.value"
+            (remove)="onUpdateRow(idx, row.newName || row.name, '')"
+            (update)="onUpdateRow(idx, row.newName || row.name, $event)"
+            (focus)="selectionHelper.focusCellSpan(idx, 1, getDocumentKey())"
+            (enter)="selectionHelper.moveToNextInput()">
+          </post-it-document-cell>
+        </li>
+
+      </ng-container>
+
+
+      <li class="w-100" *ngIf="permissions.write">
+        <div class="w-100 h-100 clickable" (click)="addAttrRow()">
+          <i class="fas fa-plus pt-2 pl-1"></i>
+        </div>
       </li>
+    </ul>
+  </div>
 
-    </ng-container>
-
-
-    <li class="w-100" *ngIf="hasWriteRole">
-      <div class="w-100 h-100 clickable" (click)="addAttrRow()">
-        <i class="fas fa-plus pt-2 pl-1"></i>
-      </div>
-    </li>
-  </ul>
-</div>
-
-<datalist *ngIf="documentModel" id="{{ suggestionListId() }}">
-  <option *ngFor="let attribute of unusedAttributes$ | async">{{ attribute.name }}</option>
-</datalist>
+  <datalist *ngIf="documentModel" id="{{ suggestionListId() }}">
+    <option *ngFor="let attribute of unusedAttributes$ | async">{{ attribute.name }}</option>
+  </datalist>
+</ng-container>

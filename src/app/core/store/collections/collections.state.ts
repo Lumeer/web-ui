@@ -21,10 +21,8 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {selectLinkTypeById} from '../link-types/link-types.state';
-import {selectQuery, selectWorkspace} from '../navigation/navigation.state';
+import {selectWorkspace} from '../navigation/navigation.state';
 import {CollectionModel} from './collection.model';
-import {filterCollectionsByQuery} from './collections.filters';
-import {selectAllDocuments} from '../documents/documents.state';
 
 export interface CollectionsState extends EntityState<CollectionModel> {
 
@@ -45,8 +43,6 @@ export const selectCollectionsState = (state: AppState) => state.collections;
 export const selectAllCollections = createSelector(selectCollectionsState, collectionsAdapter.getSelectors().selectAll);
 export const selectCollectionsDictionary = createSelector(selectCollectionsState, collectionsAdapter.getSelectors().selectEntities);
 export const selectCollectionsLoaded = createSelector(selectCollectionsState, (state: CollectionsState) => state.loaded);
-export const selectCollectionsByQuery = createSelector(selectAllCollections, selectAllDocuments, selectQuery,
-  (collections, documents, query) => filterCollectionsByQuery(collections, documents, query));
 
 export const selectCollectionByWorkspace = createSelector(selectCollectionsDictionary, selectWorkspace, (collections, workspace) => {
   return workspace && workspace.collectionId ? collections[workspace.collectionId] : null;

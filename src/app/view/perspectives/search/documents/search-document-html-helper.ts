@@ -23,6 +23,10 @@ import {CollectionModel} from '../../../../core/store/collections/collection.mod
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 
 export function searchDocumentValuesHtml(document: DocumentModel, collection: CollectionModel): string {
+  if (!document.data || !collection) {
+    return '';
+  }
+
   return searchDocumentGetValues(document, collection)
     .filter(value => value)
     .map(value => `<span class="search-documents-value">${value}</span>`)
@@ -30,7 +34,7 @@ export function searchDocumentValuesHtml(document: DocumentModel, collection: Co
 }
 
 export function searchDocumentEntriesHtml(document: DocumentModel, collection: CollectionModel, showEmptyValues: boolean): string {
-  if (isNullOrUndefined(document.data)) {
+  if (!document.data || !collection) {
     return '';
   }
 
@@ -54,10 +58,6 @@ export function searchDocumentDefaultAttributeHtml(document: DocumentModel, coll
 }
 
 function searchDocumentGetValues(document: DocumentModel, collection: CollectionModel): any[] {
-  if (isNullOrUndefined(document.data)) {
-    return [];
-  }
-
   const collectionAttributesIds = collection.attributes.map(attribute => attribute.id);
   const filteredDocumentValues = Object.entries(document.data)
     .filter(([key]) => collectionAttributesIds.includes(key))

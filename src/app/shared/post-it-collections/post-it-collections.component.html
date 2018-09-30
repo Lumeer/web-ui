@@ -32,7 +32,6 @@
           [focused]="panelVisible && focusedPanel === idx"
           [selected]="selectedCollection === collection"
           [workspace]="workspace"
-          [userRoles]="getRoles(collection)"
           (resize)="forceLayout()"
           (select)="onCollectionSelect(collection)"
           (unselect)="onCollectionUnselect()"

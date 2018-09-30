@@ -30,7 +30,10 @@ export class SizeSliderComponent implements OnInit {
   @ViewChild('slider')
   public slider: ElementRef;
 
+  @Input() public disabled: boolean;
+
   @Input() public defaultSize: SizeType;
+
   @Output() public newSize: EventEmitter<SizeType> = new EventEmitter();
 
   private trackingMouse: boolean = false;
@@ -49,7 +52,7 @@ export class SizeSliderComponent implements OnInit {
 
   @HostListener('document:mousedown', ['$event'])
   public onMouseDown(event: any) {
-    if (this.clickedInside) {
+    if (!this.disabled && this.clickedInside) {
       this.trackingMouse = true;
       this.calculateNewPosition(event);
     }
@@ -57,22 +60,26 @@ export class SizeSliderComponent implements OnInit {
 
   @HostListener('document:mousemove', ['$event'])
   public onMouseMove(event: any) {
-    if (this.trackingMouse) {
+    if (!this.disabled && this.trackingMouse) {
       this.calculateNewPosition(event);
     }
   }
 
   @HostListener('document:mouseup', ['$event'])
   public onMouseUp(event: any) {
-    if (this.trackingMouse) {
-      this.trackingMouse = false;
-      this.calculateNewPosition(event);
+    if (!this.disabled) {
+      if (this.trackingMouse) {
+        this.trackingMouse = false;
+        this.calculateNewPosition(event);
+      }
+      this.clickedInside = false;
     }
-    this.clickedInside = false;
   }
 
   public onMouseDownInsideComponent() {
-    this.clickedInside = true;
+    if (!this.disabled) {
+      this.clickedInside = true;
+    }
   }
 
   private calculateNewPosition(event: any) {

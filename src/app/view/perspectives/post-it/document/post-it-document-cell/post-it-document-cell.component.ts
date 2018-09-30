@@ -90,7 +90,9 @@ export class PostItDocumentCellComponent implements OnChanges {
   }
 
   public onRemove() {
-    this.remove.emit();
+    if (!this.readonly) {
+      this.remove.emit();
+    }
   }
 
   public onEnter() {
@@ -98,8 +100,10 @@ export class PostItDocumentCellComponent implements OnChanges {
   }
 
   public onBlur() {
-    this.model = this.model.trim();
-    this.update.emit(this.model);
+    if (!this.readonly) {
+      this.model = this.model.trim();
+      this.update.emit(this.model);
+    }
   }
 
 }

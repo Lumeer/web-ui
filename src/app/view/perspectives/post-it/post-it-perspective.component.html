@@ -6,13 +6,14 @@
        (scrolled)="onScrollDown($event)">
     <div class="my-2 d-flex align-items-center">
       <add-document
-        *ngIf="collections?.length === 1 && (collections[0] | permissions:'write' | async)"
+        [disabled]="!(collections?.length === 1 && (collections[0] | collectionPermissions:'write' | async))"
         [collection]="collections[0]"
         [query]="query"
         (createPostIt)="createPostIt($event)">
       </add-document>
 
       <size-slider class="ml-auto"
+                   [disabled]="!canManageConfig"
                    [defaultSize]="size$ | async"
                    (newSize)="onSizeChange($event)">
       </size-slider>
@@ -30,9 +31,9 @@
              id="{{perspectiveId}}#{{doc.correlationId || doc.id}}">
           <post-it-document
             class="card post-it"
+            [canManageConfig]="canManageConfig"
             [ngClass]="doc.id ? 'initialized': 'uninitialized'"
             [collection]="doc | documentCollection:collections"
-            [collectionRoles]="doc | documentCollectionRoles:collectionRoles"
             [index]="idx"
             [documentModel]="doc"
             [perspectiveId]="perspectiveId"

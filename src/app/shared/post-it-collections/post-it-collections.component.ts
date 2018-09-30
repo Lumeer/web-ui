@@ -26,7 +26,7 @@ import {Subscription} from 'rxjs';
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {selectCollectionsByQuery, selectCollectionsLoaded} from '../../core/store/collections/collections.state';
+import {selectCollectionsLoaded} from '../../core/store/collections/collections.state';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
@@ -37,7 +37,6 @@ import {selectProjectByWorkspace} from '../../core/store/projects/projects.state
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {userRolesInResource} from '../utils/resource.utils';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {queryIsNotEmpty} from '../../core/store/navigation/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
@@ -49,6 +48,7 @@ import * as Icons from '../picker/icon-picker/icons';
 import * as Colors from '../picker/color-picker/colors';
 import {QueryAction} from '../../core/model/query-action';
 import {sortCollectionsByFavoriteAndLastUsed} from '../../core/store/collections/collection.util';
+import {selectCollectionsByQuery} from '../../core/store/common/permissions.selectors';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -76,7 +76,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
 
   public collections: CollectionModel[];
   public correlationIdsOrder: string[] = [];
-  public collectionRoles: { [collectionId: string]: string[] };
   public selectedCollection: CollectionModel;
   public panelVisible: boolean = false;
   public clickedComponent: any;
@@ -202,10 +201,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
     this.store.dispatch(new CollectionsAction.Create({collection: newCollection, callback: (collection) => this.onCreateCollection(collection)}));
   }
 
-  public getRoles(collection: CollectionModel): string[] {
-    return this.collectionRoles && this.collectionRoles[collection.id] || [];
-  }
-
   public trackByCollection(index: number, collection: CollectionModel): string {
     return collection.correlationId || collection.id;
   }
@@ -287,10 +282,6 @@ export class PostItCollectionsComponent implements OnInit, OnDestroy {
       withLatestFrom(this.store.select(selectCurrentUserForWorkspace))
     ).subscribe(([collections, user]) => {
       this.collections = this.sortCollectionsFromStore(collections);
-      this.collectionRoles = collections.reduce((roles, collection) => {
-        roles[collection.id] = userRolesInResource(user, collection);
-        return roles;
-      }, {});
     });
     this.subscriptions.add(collectionsSubscription);
 

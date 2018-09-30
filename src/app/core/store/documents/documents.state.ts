@@ -23,8 +23,6 @@ import {AppState} from '../app.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {QueryModel} from '../navigation/query.model';
 import {DocumentModel} from './document.model';
-import {sortDocumentsByCreationDate} from './document.utils';
-import {filterDocumentsByQuery} from './documents.filters';
 import {areQueriesEqualExceptPagination} from '../navigation/query.helper';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
@@ -42,16 +40,9 @@ export const selectDocumentsState = (state: AppState) => state.documents;
 export const selectAllDocuments = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectAll);
 export const selectDocumentsDictionary = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectEntities);
 export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
-export const selectDocumentsByQuery = createSelector(selectAllDocuments, selectQuery,
-  (documents, query): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents), query)
-);
 
 export const selectCurrentQueryDocumentsLoaded = createSelector(selectDocumentsQueries, selectQuery, (queries, currentQuery) =>
   !!queries.find(query => areQueriesEqualExceptPagination(query, currentQuery))
-);
-
-export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean) => createSelector(selectAllDocuments,
-  (documents): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query)
 );
 
 export const selectDocumentById = (id: string) => createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);

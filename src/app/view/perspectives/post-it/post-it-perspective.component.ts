@@ -20,17 +20,15 @@
 import {ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {filter, map, take, withLatestFrom} from 'rxjs/operators';
-import {Subscription, combineLatest as observableCombineLatest} from 'rxjs';
+import {filter, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
+import {Subscription, combineLatest as observableCombineLatest, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectCurrentQueryDocumentsLoaded, selectDocumentsByCustomQuery} from '../../../core/store/documents/documents.state';
+import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {QueryModel} from '../../../core/store/navigation/query.model';
 import {PostItLayout} from '../../../shared/utils/layout/post-it-layout';
-import {selectCollectionsByQuery} from '../../../core/store/collections/collections.state';
-import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
-import {userRolesInResource} from '../../../shared/utils/resource.utils';
+import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {UserSettingsService} from '../../../core/user-settings.service';
 import {SizeType} from '../../../shared/slider/size-type';
@@ -43,6 +41,8 @@ import {selectCurrentView} from '../../../core/store/views/views.state';
 import {PostItConfigModel, ViewModel} from '../../../core/store/views/view.model';
 import {PostItAction} from '../../../core/store/postit/postit.action';
 import {selectPostItsOrder, selectPostItsSize} from '../../../core/store/postit/postit.state';
+import {PermissionsPipe} from '../../../shared/pipes/permissions.pipe';
+import {Role} from '../../../core/model/role';
 
 @Component({
   selector: 'post-it-perspective',
@@ -73,13 +73,13 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   public perspectiveId = String(Math.floor(Math.random() * 1000000000000000) + 1);
   public collections: CollectionModel[];
-  public collectionRoles: { [collectionId: string]: string[] };
   public selectionHelper: SelectionHelper;
   public layout: PostItLayout;
   public size$ = new BehaviorSubject<SizeType>(this.defaultSize());
   public postItsOrder$ = new BehaviorSubject<string[]>([]);
   public query: QueryModel;
   public loaded$: Observable<boolean>;
+  public canManageConfig = false;
 
   private postItLayout: ElementRef;
   private page = 0;
@@ -92,6 +92,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<AppState>,
               private zone: NgZone,
+              private permissionsPipe: PermissionsPipe,
               private changeDetector: ChangeDetectorRef,
               private documentUiService: DocumentUiService,
               private userSettingsService: UserSettingsService) {
@@ -120,7 +121,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private createLayout() {
     if (!this.layout) {
-      this.layout = new PostItLayout(this.postItLayout, true, this.zone, (orderedIds) => this.onPostItOrderChanged(orderedIds));
+      this.layout = new PostItLayout(this.postItLayout, this.canManageConfig, this.zone, (orderedIds) => this.onPostItOrderChanged(orderedIds));
       this.changeDetector.detectChanges();
       this.layout.setOrder(this.postItsOrder$.getValue());
     }
@@ -157,6 +158,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.subscribeCollections();
     this.subscribeNavigation();
     this.subscribeToConfig();
+    this.subscribeToView();
     this.loaded$ = this.store.select(selectCurrentQueryDocumentsLoaded);
   }
 
@@ -197,15 +199,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeCollections() {
-    const collectionsSubscription = this.store.select(selectCollectionsByQuery).pipe(
-      withLatestFrom(this.store.select(selectCurrentUserForWorkspace))
-    ).subscribe(([collections, user]) => {
-      this.collections = collections;
-      this.collectionRoles = collections.reduce((roles, collection) => {
-        roles[collection.id] = userRolesInResource(user, collection);
-        return roles;
-      }, {});
-    });
+    const collectionsSubscription = this.store.select(selectCollectionsByQuery)
+      .subscribe(collections => this.collections = collections);
     this.subscriptions.add(collectionsSubscription);
   }
 
@@ -226,6 +221,23 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.postItsOrder$.next([]);
     this.creatingCorrelationsIds = [];
     this.postIts = {};
+  }
+
+  private subscribeToView() {
+    const subscription = this.store.select(selectCurrentView).pipe(
+      mergeMap(view => {
+        if (!view) {
+          return of(true);
+        }
+        return this.permissionsPipe.transform(view, Role.Manage);
+      })
+    ).subscribe(viewHasManageRole => {
+      this.canManageConfig = viewHasManageRole;
+      if (this.layout) {
+        this.layout.setDrag(viewHasManageRole);
+      }
+    });
+    this.subscriptions.add(subscription);
   }
 
   private getNumRows(key: string): number {
