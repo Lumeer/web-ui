@@ -21,7 +21,6 @@ import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnC
 
 import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
-import {Role} from '../../../../core/model/role';
 import {AttributeModel, CollectionModel} from '../../../../core/store/collections/collection.model';
 import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -48,7 +47,13 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   @Output() public remove = new EventEmitter();
   @Output() public sizeChange = new EventEmitter();
 
-  @ViewChild('content') public content: ElementRef;
+  @ViewChild('content') set content(content: ElementRef) {
+    if (content) {
+      this.contentLayout = content;
+      this.disableScrollOnNavigation();
+    }
+  }
+  private contentLayout: ElementRef;
 
   public rows$: Observable<UiRow[]>;
   public favorite$: Observable<boolean>;
@@ -61,7 +66,6 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public ngOnInit() {
-    this.disableScrollOnNavigation();
     this.initDocumentServiceIfNeeded();
   }
 
@@ -120,7 +124,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
     const capture = false;
     const scrollKeys: string[] = [KeyCode.ArrowUp, KeyCode.ArrowDown];
 
-    this.content.nativeElement.addEventListener('keydown', (event: KeyboardEvent) => {
+    this.contentLayout.nativeElement.addEventListener('keydown', (event: KeyboardEvent) => {
       if (scrollKeys.includes(event.code)) {
         event.preventDefault();
       }

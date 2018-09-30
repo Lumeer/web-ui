@@ -1,5 +1,5 @@
 <div class="box" [style.width]="componentWidth + 'px'"
-     [class.cursor-pointer]="!disabled"
+     [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
      (mousedown)="onMouseDownInsideComponent()">
   <div class="d-flex captions">
     <div *ngFor="let size of sizes" class="col text-center align-self-center p-0">
