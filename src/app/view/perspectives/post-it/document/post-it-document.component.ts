@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 
 import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
@@ -35,7 +35,7 @@ import {SelectionHelper} from '../util/selection-helper';
   styleUrls: ['./post-it-document.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
+export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
 
   @Input() public documentModel: DocumentModel;
   @Input() public index: number;
@@ -47,13 +47,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
   @Output() public remove = new EventEmitter();
   @Output() public sizeChange = new EventEmitter();
 
-  @ViewChild('content') set content(content: ElementRef) {
-    if (content) {
-      this.contentLayout = content;
-      this.disableScrollOnNavigation();
-    }
-  }
-  private contentLayout: ElementRef;
+  @ViewChild('content') public content: ElementRef;
 
   public rows$: Observable<UiRow[]>;
   public favorite$: Observable<boolean>;
@@ -81,6 +75,10 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
       this.sizeChange.emit();
     }
 
+  }
+
+  public ngAfterViewInit() {
+    this.disableScrollOnNavigation();
   }
 
   public onRemove() {
@@ -124,7 +122,7 @@ export class PostItDocumentComponent implements OnInit, OnDestroy, OnChanges {
     const capture = false;
     const scrollKeys: string[] = [KeyCode.ArrowUp, KeyCode.ArrowDown];
 
-    this.contentLayout.nativeElement.addEventListener('keydown', (event: KeyboardEvent) => {
+    this.content.nativeElement.addEventListener('keydown', (event: KeyboardEvent) => {
       if (scrollKeys.includes(event.code)) {
         event.preventDefault();
       }
