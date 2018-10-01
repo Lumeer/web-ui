@@ -32,13 +32,14 @@ import {DocumentModel} from '../documents/document.model';
 import {filterDocumentsByQuery} from '../documents/documents.filters';
 import {sortDocumentsByCreationDate} from '../documents/document.utils';
 import {QueryModel} from '../navigation/query.model';
+import {isArraySubset} from '../../../shared/utils/array.utils';
 
 export const selectCollectionsByReadPermission = createSelector(selectAllDocuments, selectAllCollections, selectAllLinkTypes,
   selectCurrentView, selectCurrentUser, (documents, collections, linkTypes, view, user) => {
     const collectionIdsFromView = getCollectionsIdsFromView(view, linkTypes, documents);
     return collections.filter(collection => userHasRoleInResource(user, collection, Role.Read)
       || (collectionIdsFromView && collectionIdsFromView.includes(collection.id) && userHasRoleInResource(user, view, Role.Read)));
-  });
+  }); // TODO check collection role for author of view
 
 export const selectCollectionsByQuery = createSelector(selectCollectionsByReadPermission, selectAllDocuments, selectQuery,
   (collections, documents, query) => filterCollectionsByQuery(collections, documents, query));
@@ -55,3 +56,11 @@ export const selectDocumentsByQuery = createSelector(selectDocumentsByReadPermis
 export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean) => createSelector(selectDocumentsByReadPermission,
   (documents): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query)
 );
+
+export const selectLinkTypesByReadPermission = createSelector(selectAllLinkTypes, selectCollectionsByReadPermission, (linkTypes, collections) => {
+  const allowedCollectionIds = collections.map(collection => collection.id);
+  return linkTypes.filter(linkType => isArraySubset(allowedCollectionIds, linkType.collectionIds));
+});
+
+export const selectLinkTypesByCollectionId = (collectionId: string) =>
+  createSelector(selectLinkTypesByReadPermission, linkTypes => linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId)));

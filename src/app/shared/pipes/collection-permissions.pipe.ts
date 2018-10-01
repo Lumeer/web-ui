@@ -57,6 +57,7 @@ export class CollectionPermissionsPipe implements PipeTransform {
         }
 
         return this.userHasRoleInView(currentUser, collection, role);
+        // TODO check if author has role in resource
       })
     );
   }

@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Observable, combineLatest as observableCombineLatest} from 'rxjs';
 import {LinkTypeModel} from '../../../core/store/link-types/link-type.model';
-import {selectLinkTypesByCollectionId, selectLinkTypesByDocumentId} from '../../../core/store/link-types/link-types.state';
+import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {AppState} from '../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {map, tap} from 'rxjs/operators';
@@ -29,7 +29,6 @@ import {selectCollectionsDictionary} from '../../../core/store/collections/colle
 import {CollectionModel} from '../../../core/store/collections/collection.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {LinkRowModel} from './links-list-table/link-row.model';
 
 @Component({
   selector: 'links-list',

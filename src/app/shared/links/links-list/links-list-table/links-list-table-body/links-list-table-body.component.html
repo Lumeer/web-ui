@@ -1,5 +1,5 @@
 <tr *ngIf="linkRows.length === 0">
-  <td [attr.colspan]="collection.attributes.length" class="text-center" i18n="@@shared.preview.results.noResults">
+  <td [attr.colspan]="otherCollection.attributes.length" class="text-center" i18n="@@shared.preview.results.noResults">
     No records found.
   </td>
 </tr>
@@ -9,17 +9,17 @@
 </ng-container>
 
 <ng-template #clickableRow let-linkRow>
-  <tr class="clickable-row table-row" (dblclick)="documentSelected(collection, linkRow)">
-    <td *ngFor="let attr of collection.attributes" title="{{linkRow.document.data[attr.id]}}">
+  <tr class="clickable-row table-row" (dblclick)="documentSelected(otherCollection, linkRow)">
+    <td *ngFor="let attr of otherCollection.attributes" title="{{linkRow.document.data[attr.id]}}">
       {{linkRow.document.data[attr.id]}}
     </td>
     <td class="fixed-column border-0">
       <i class="fas fa-eye clickable mr-1"
-         *ngIf="collection | permissions:'read' | async"
-         (click)="documentSelected(collection, linkRow)"
+         *ngIf="otherCollection | permissions:'read' | async"
+         (click)="documentSelected(otherCollection, linkRow)"
          title.i18n="@@select" title="Select" aria-hidden="true"></i>
       <i class="fas fa-unlink clickable"
-         *ngIf="collection | collectionPermissions:'write' | async"
+         *ngIf="write"
          (click)="unlinkDocument(linkRow)"
          title.i18n="@@unlink" title="Unlink" aria-hidden="true"></i>
     </td>
@@ -28,7 +28,7 @@
 
 <ng-template #editableRow let-linkRow>
   <tr class="table-row" id="{{linkRow.correlationId}}">
-    <td *ngFor="let attr of collection.attributes">
+    <td *ngFor="let attr of otherCollection.attributes">
 
       <input-box [paddingRem]="0.25"
                  [placeholder]="'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'"
@@ -58,7 +58,7 @@
     [excludedDocumentIds]="usedDocumentIds"
     [linkedDocumentId]="document.id"
     [linkTypeId]="linkType.id"
-    [collectionId]="collection.id">
+    [collectionId]="otherCollection.id">
   </document-hints>
 
 </ng-template>

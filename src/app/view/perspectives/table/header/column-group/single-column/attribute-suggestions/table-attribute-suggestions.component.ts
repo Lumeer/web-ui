@@ -27,7 +27,7 @@ import {CollectionsAction} from '../../../../../../../core/store/collections/col
 import {selectAllCollections, selectCollectionsDictionary} from '../../../../../../../core/store/collections/collections.state';
 import {LinkTypeHelper} from '../../../../../../../core/store/link-types/link-type.helper';
 import {LinkTypeModel} from '../../../../../../../core/store/link-types/link-type.model';
-import {selectLinkTypesByCollectionId} from '../../../../../../../core/store/link-types/link-types.state';
+import {selectLinkTypesByCollectionId} from '../../../../../../../core/store/common/permissions.selectors';
 import {NavigationAction} from '../../../../../../../core/store/navigation/navigation.action';
 import {selectQuery} from '../../../../../../../core/store/navigation/navigation.state';
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
