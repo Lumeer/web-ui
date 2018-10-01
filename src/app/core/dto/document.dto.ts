@@ -28,6 +28,7 @@ export interface DocumentDto {
   updatedBy?: string;
   dataVersion?: number;
   data: { [attributeId: string]: any };
+  metaData?: { [key: string]: any };
   favorite?: boolean;
 
 }
