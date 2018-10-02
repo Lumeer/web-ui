@@ -23,7 +23,7 @@ import {selectAllLinkTypes} from '../link-types/link-types.state';
 import {selectCurrentView} from '../views/views.state';
 import {selectCurrentUser} from '../users/users.state';
 import {getCollectionsIdsFromView} from '../collections/collection.util';
-import {userHasRoleInResource} from '../../../shared/utils/resource.utils';
+import {authorHasRoleInView, userHasRoleInResource} from '../../../shared/utils/resource.utils';
 import {Role} from '../../model/role';
 import {selectAllDocuments} from '../documents/documents.state';
 import {selectQuery} from '../navigation/navigation.state';
@@ -38,8 +38,9 @@ export const selectCollectionsByReadPermission = createSelector(selectAllDocumen
   selectCurrentView, selectCurrentUser, (documents, collections, linkTypes, view, user) => {
     const collectionIdsFromView = getCollectionsIdsFromView(view, linkTypes, documents);
     return collections.filter(collection => userHasRoleInResource(user, collection, Role.Read)
-      || (collectionIdsFromView && collectionIdsFromView.includes(collection.id) && userHasRoleInResource(user, view, Role.Read)));
-  }); // TODO check collection role for author of view
+      || (collectionIdsFromView && collectionIdsFromView.includes(collection.id)
+        && userHasRoleInResource(user, view, Role.Read) && authorHasRoleInView(view, collection.id, Role.Read)));
+  });
 
 export const selectCollectionsByQuery = createSelector(selectCollectionsByReadPermission, selectAllDocuments, selectQuery,
   (collections, documents, query) => filterCollectionsByQuery(collections, documents, query));

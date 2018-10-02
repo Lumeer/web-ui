@@ -22,15 +22,14 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {catchError, map, mergeMap, tap} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
-import {LinkInstancesAction} from '../link-instances/link-instances.action';
-import {QueryConverter} from '../navigation/query.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {LinkTypeConverter} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
+import {selectLinkTypesLoaded} from './link-types.state';
 
 @Injectable()
 export class LinkTypesEffects {
@@ -38,18 +37,12 @@ export class LinkTypesEffects {
   @Effect()
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.Get>(LinkTypesActionType.GET),
-    mergeMap((action) => {
-      const queryDto = QueryConverter.toDto(action.payload.query);
-
-      return this.linkTypeService.getLinkTypes(queryDto).pipe(
+    withLatestFrom(this.store$.select(selectLinkTypesLoaded)),
+    filter(([action, loaded]) => !loaded),
+    mergeMap(() => {
+      return this.linkTypeService.getLinkTypes().pipe(
         map(dtos => dtos.map(dto => LinkTypeConverter.fromDto(dto))),
-        mergeMap(linkTypes => {
-          const actions: Action[] = [new LinkTypesAction.GetSuccess({linkTypes: linkTypes, query: action.payload.query})];
-          if (action.payload.loadInstances) {
-            actions.push(new LinkInstancesAction.Get({query: action.payload.query}));
-          }
-          return actions;
-        }),
+        map(linkTypes => new LinkTypesAction.GetSuccess({linkTypes: linkTypes})),
         catchError((error) => of(new LinkTypesAction.GetFailure({error: error})))
       );
     }),

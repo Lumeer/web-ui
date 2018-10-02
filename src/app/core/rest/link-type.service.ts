@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
 
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {LinkType, Query} from '../dto';
+import {LinkType} from '../dto';
 import {AppState} from '../store/app.state';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {Workspace} from '../store/navigation/workspace.model';
@@ -55,8 +55,9 @@ export class LinkTypeService {
       .pipe(map(() => id));
   }
 
-  public getLinkTypes(query: Query): Observable<LinkType[]> {
-    return this.httpClient.post<LinkType[]>(this.restApiPrefix() + '/search', query);
+  public getLinkTypes(): Observable<LinkType[]> {
+    const queryParams = new HttpParams().set('fromViews', 'true');
+    return this.httpClient.get<LinkType[]>(this.restApiPrefix(), {params: queryParams});
   }
 
   private restApiPrefix(id?: string): string {

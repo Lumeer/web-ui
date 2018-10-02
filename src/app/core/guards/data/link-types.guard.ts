@@ -38,7 +38,7 @@ export class LinkTypesGuard implements Resolve<LinkTypeModel[]> {
     return this.store$.select(selectLinkTypesLoaded).pipe(
       tap(loaded => {
         if (!loaded) {
-          this.store$.dispatch(new LinkTypesAction.Get({query: {}}));
+          this.store$.dispatch(new LinkTypesAction.Get());
         }
       }),
       skipWhile(loaded => !loaded),

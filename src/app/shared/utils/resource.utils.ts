@@ -21,6 +21,7 @@ import {ResourceModel} from '../../core/model/resource.model';
 import {Role} from '../../core/model/role';
 import {UserModel} from '../../core/store/users/user.model';
 import {PermissionModel} from '../../core/store/permissions/permissions.model';
+import {ViewModel} from '../../core/store/views/view.model';
 
 export function userHasManageRoleInResource(user: UserModel, resource: ResourceModel): boolean {
   return userHasRoleInResource(user, resource, Role.Manage);
@@ -55,4 +56,10 @@ function userGroupRoles(user: UserModel, permissions: PermissionModel[]): string
     }
     return allRoles;
   }, []);
+}
+
+export function authorHasRoleInView(view: ViewModel, collectionId: string, role: string): boolean {
+  const authorRights = view.authorRights || {};
+  const collectionRoles = authorRights[collectionId] || [];
+  return collectionRoles.includes(role);
 }
