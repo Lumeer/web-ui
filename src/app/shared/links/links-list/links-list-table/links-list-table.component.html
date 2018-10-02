@@ -1,9 +1,5 @@
 <ng-container *ngIf="{otherCollection: otherCollection$ | async, linkRows: linkRows$ | async} as data">
-<<<<<<< HEAD
   <ng-container *ngIf="data.otherCollection && data.linkRows">
-=======
-  <ng-container *ngIf="data.collection && data.linkRows">
->>>>>>> Links permissions in detail
     <div class="row">
       <div class="col text-right">
         <strong>{{data.linkRows.length > 0 ? page * pageSize + 1 : 0}}&mdash;{{page | pageEndIndex:pageSize:data.linkRows.length}}</strong>
