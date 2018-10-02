@@ -61,5 +61,5 @@ function userGroupRoles(user: UserModel, permissions: PermissionModel[]): string
 export function authorHasRoleInView(view: ViewModel, collectionId: string, role: string): boolean {
   const authorRights = view.authorRights || {};
   const collectionRoles = authorRights[collectionId] || [];
-  return collectionRoles.includes(role);
+  return collectionRoles.includes(role.toUpperCase());
 }

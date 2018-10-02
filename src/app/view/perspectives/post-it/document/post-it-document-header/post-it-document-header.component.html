@@ -9,16 +9,16 @@
   </span>
 
   <div class="d-flex align-self-center ml-auto">
-    <i class="icon text-danger fas fa-trash p-1"
+    <i class="icon text-danger fas fa-trash p-1 cursor-pointer"
        *ngIf="!readonly"
        title="Delete Record" i18n-title="@@document.button.remove"
        (click)="onRemove()"></i>
-    <i class="icon text-success fas fa-pencil p-1"
+    <i class="icon text-success fas fa-pencil p-1 cursor-pointer"
        *ngIf="!readonly"
        title="Edit Record" i18n-title="@@document.button.edit"
        (click)="onEdit()"></i>
     <i *ngIf="initialized && directRead"
-       class="icon text-warning fa-star button p-1"
+       class="icon text-warning fa-star button p-1 cursor-pointer"
        [class.always-visible]="favorite"
        title="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"
        i18n-title="@@collection.document.favorite"

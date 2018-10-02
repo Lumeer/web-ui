@@ -33,6 +33,7 @@ import {selectViewCursor} from '../../core/store/views/views.state';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {generateDocumentData} from '../../core/store/documents/document.utils';
+import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
 
 @Component({
   selector: 'preview-results',
@@ -55,6 +56,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   public collections$: Observable<CollectionModel[]>;
 
   public documents$: Observable<DocumentModel[]>;
+  public loaded$: Observable<boolean>;
 
   private allSubscriptions = new Subscription();
   private dataSubscription = new Subscription();
@@ -141,6 +143,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
     const collectionQuery = {...this.query, collectionIds: [collection.id]};
     this.updateDataSubscription(collectionQuery);
     this.store.dispatch(new DocumentsAction.Get({query: collectionQuery}));
+    this.loaded$ = this.store.select(selectQueryDocumentsLoaded(collectionQuery));
   }
 
   private updateDataSubscription(collectionQuery: QueryModel) {

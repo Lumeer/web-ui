@@ -42,7 +42,7 @@ export class ViewsGuard implements Resolve<ViewModel[]> {
     return this.store$.select(selectViewsLoaded).pipe(
       tap(loaded => {
         if (!loaded) {
-          this.store$.dispatch(new ViewsAction.Get({query: {}}));
+          this.store$.dispatch(new ViewsAction.Get());
         }
       }),
       skipWhile(loaded => !loaded),

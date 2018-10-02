@@ -20,6 +20,9 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AttributeModel, CollectionModel} from '../../../core/store/collections/collection.model';
+import {Observable} from 'rxjs';
+import {AppState} from '../../../core/store/app.state';
+import {Store} from '@ngrx/store';
 
 const PAGE_SIZE = 100;
 
@@ -40,12 +43,20 @@ export class PreviewResultsTableComponent implements OnChanges {
   @Input()
   public selectedDocumentId: string;
 
+  @Input()
+  public loaded: boolean;
+
   public page = 0;
 
   @Output()
   public selectDocument = new EventEmitter<DocumentModel>();
 
   public readonly pageSize = PAGE_SIZE;
+
+  public loaded$: Observable<boolean>;
+
+  constructor(private store: Store<AppState>) {
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.documents && this.selectedDocumentId) {

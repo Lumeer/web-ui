@@ -25,7 +25,7 @@ import {Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {Permission, View} from '../../dto';
-import {SearchService, ViewService} from '../../rest';
+import {ViewService} from '../../rest';
 import {AppState} from '../app.state';
 import {selectSearchTab, selectWorkspace} from '../navigation/navigation.state';
 import {Workspace} from '../navigation/workspace.model';
@@ -34,7 +34,7 @@ import {RouterAction} from '../router/router.action';
 import {ViewConverter} from './view.converter';
 import {ViewModel} from './view.model';
 import {ViewsAction, ViewsActionType} from './views.action';
-import {selectViewsDictionary} from './views.state';
+import {selectViewsDictionary, selectViewsLoaded} from './views.state';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions.model';
@@ -45,8 +45,10 @@ export class ViewsEffects {
   @Effect()
   public get: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.Get>(ViewsActionType.GET),
-    mergeMap((action) => {
-      return this.searchService.searchViews(action.payload.query).pipe(
+    withLatestFrom(this.store$.select(selectViewsLoaded)),
+    filter(([action, loaded]) => !loaded),
+    mergeMap(() => {
+      return this.viewService.getViews().pipe(
         map((dtos: View[]) => dtos.map(dto => ViewConverter.convertToModel(dto))),
         map((views: ViewModel[]) => new ViewsAction.GetSuccess({views})),
         catchError((error) => of(new ViewsAction.GetFailure({error: error})))
@@ -211,8 +213,7 @@ export class ViewsEffects {
   constructor(private actions$: Actions,
               private i18n: I18n,
               private store$: Store<AppState>,
-              private viewService: ViewService,
-              private searchService: SearchService) {
+              private viewService: ViewService) {
   }
 
 }

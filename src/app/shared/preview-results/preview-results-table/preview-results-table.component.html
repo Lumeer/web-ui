@@ -1,4 +1,4 @@
-<ng-container *ngIf="collection">
+<ng-container *ngIf="loaded && collection">
   <div class="row">
     <div class="col text-right">
       <strong>{{documents.length > 0 ? page * pageSize + 1 : 0}}&mdash;{{page | pageEndIndex:pageSize:documents.length}}</strong>

@@ -18,7 +18,6 @@
  */
 
 import {Action} from '@ngrx/store';
-import {QueryModel} from '../navigation/query.model';
 import {TableConfig} from '../tables/table.model';
 import {DetailConfigModel, PostItConfigModel, SearchConfigModel, ViewConfigModel, ViewCursor, ViewModel} from './view.model';
 import {PermissionModel, PermissionType} from '../permissions/permissions.model';
@@ -63,9 +62,6 @@ export namespace ViewsAction {
 
   export class Get implements Action {
     public readonly type = ViewsActionType.GET;
-
-    public constructor(public payload: { query: QueryModel }) {
-    }
   }
 
   export class GetByCode implements Action {
