@@ -1,5 +1,4 @@
 <ng-container *ngIf="{write: collection | collectionPermissions:'write' | async,
-                      manage: collection | collectionPermissions:'manage' | async,
                       directRead: collection | permissions:'read' | async} as permissions">
   <div class="row mt-2 mb-2">
     <div class="col-8 d-flex align-bottom align-self-end">
@@ -14,12 +13,12 @@
         <div class="toolbar">
           <i class="fas fa-fw fa-trash text-danger clickable clickable-danger"
              aria-hidden="true"
-             *ngIf="permissions.manage"
+             *ngIf="permissions.write"
              title="Remove Record"
              i18n-title="@@document.detail.remove"
              (click)="onRemoveDocument()"
           ></i>
-          <ng-container *ngIf="permissions.manage">
+          <ng-container *ngIf="permissions.directRead">
             <i *ngIf="favorite$ | async" class="fas fa-fw fa-star ml-2 mr-4 text-warning clickable clickable-warning"
                title="Remove from favorites"
                i18n-title="@@document.detail.favorite.remove"

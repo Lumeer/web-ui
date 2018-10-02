@@ -57,7 +57,7 @@ export class LinksListTableBodyComponent {
   public linkRows: LinkRowModel[];
 
   @Input()
-  public write: boolean;
+  public readonly: boolean;
 
   @Output() public select = new EventEmitter<{ collection: CollectionModel, document: DocumentModel }>();
 

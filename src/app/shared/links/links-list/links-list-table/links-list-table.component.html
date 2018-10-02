@@ -24,7 +24,7 @@
                  [usedDocumentIds]="data.linkRows | linkRowsDocumentIds"
                  [document]="document"
                  [linkType]="linkType"
-                 [write]="permissions.write"
+                 [readonly]="!permissions.write"
                  [otherCollection]="data.otherCollection"
                  [linkRows]="data.linkRows | slice : (page * pageSize) : ((page + 1) * pageSize)"
                  (select)="select.emit($event)"
