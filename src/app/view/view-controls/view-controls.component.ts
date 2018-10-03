@@ -162,16 +162,18 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.store.dispatch(new RouterAction.Go({path, extras: {queryParamsHandling: 'merge'}}));
   }
 
-  public onSelectPerspective(perspective: string) {
+  public onSelectPerspective(perspective: string, canManage: boolean) {
     if (perspective === this.currentPerspective) {
       return;
     }
 
-    const path: any[] = [...this.workspacePaths(), ...['view', perspective]];
+    const path: any[] = [...this.workspacePaths(), 'view'];
     let extras: NavigationExtras = null;
-    if (!this.workspace.viewCode) {
+    if (canManage || !this.workspace.viewCode) {
+      path.push({vc: this.workspace.viewCode});
       extras = {queryParamsHandling: 'merge'};
     }
+    path.push(perspective);
 
     this.store.dispatch(new RouterAction.Go({path, extras}));
   }
