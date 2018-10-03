@@ -36,7 +36,7 @@ export class ResourceRolesPipe implements PipeTransform {
       case ResourceType.Collection:
         return [Role.Read, Role.Write, Role.Manage];
       case ResourceType.View:
-        return [Role.Read, Role.Write, Role.Clone, Role.Manage, Role.Share];
+        return [Role.Read, Role.Write, Role.Manage];
       default:
         return [];
     }

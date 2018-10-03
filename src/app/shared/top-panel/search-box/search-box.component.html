@@ -12,6 +12,7 @@
 
       <search-input #searchInput
                     [queryItems]="queryItems"
+                    [currentView]="currentView$ | async"
                     (addQueryItem)="onAddQueryItem($event)"
                     (removeQueryItem)="onRemoveLastQueryItem()"
                     (search)="onSearch()"

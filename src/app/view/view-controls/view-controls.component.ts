@@ -35,6 +35,7 @@ import {DialogService} from '../../dialog/dialog.service';
 import {Perspective} from '../perspectives/perspective';
 import {tap} from 'rxjs/operators';
 import {areQueriesEqual} from '../../core/store/navigation/query.helper';
+import {NavigationAction} from '../../core/store/navigation/navigation.action';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -154,12 +155,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public navigateToUrlWithoutView() {
-    const path: any[] = [...this.workspacePaths(), ...['view', this.currentPerspective]];
-    if (this.currentPerspective === Perspective.Search && this.searchTab) {
-      path.push(this.searchTab);
-    }
-
-    this.store.dispatch(new RouterAction.Go({path, extras: {queryParamsHandling: 'merge'}}));
+    this.store.dispatch(new NavigationAction.RemoveViewFromUrl({keepQuery: false}));
   }
 
   public onSelectPerspective(perspective: string, canManage: boolean) {
