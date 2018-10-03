@@ -18,18 +18,19 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
+import {NavigationExtras, Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {filter, map, mergeMap, skipWhile, take} from 'rxjs/operators';
+import {filter, map, mergeMap, skipWhile, take, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../app.state';
 import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
-import {selectQuery} from './navigation.state';
+import {selectNavigation, selectQuery} from './navigation.state';
 import {QueryConverter} from './query.converter';
 import {QueryModel} from './query.model';
 import {SearchTab} from './search-tab';
+import {Perspective} from '../../../view/perspectives/perspective';
 
 @Injectable()
 export class NavigationEffects {
@@ -66,7 +67,7 @@ export class NavigationEffects {
 
   @Effect()
   public removeCollectionFromQuery$: Observable<Action> = this.actions$.pipe(
-    ofType<NavigationAction.RemoveCollectionFromQuery>(NavigationActionType.REMOVE_COLLECTION_TO_QUERY),
+    ofType<NavigationAction.RemoveCollectionFromQuery>(NavigationActionType.REMOVE_COLLECTION_FROM_QUERY),
     mergeMap(action => this.store$.select(selectQuery).pipe(
       skipWhile(query => !query),
       take(1),
@@ -113,6 +114,27 @@ export class NavigationEffects {
   public setQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.SetQuery>(NavigationActionType.SET_QUERY),
     map(action => newQueryAction(action.payload.query))
+  );
+
+  @Effect()
+  public removeViewFromUrl$: Observable<Action> = this.actions$.pipe(
+    ofType<NavigationAction.RemoveViewFromUrl>(NavigationActionType.REMOVE_VIEW_FROM_URL),
+    withLatestFrom(this.store$.select(selectNavigation)),
+    filter(([action, navigation]) => !!navigation.workspace && !!navigation.perspective),
+    map(([action, navigation]) => {
+      const organizationCode = navigation.workspace.organizationCode;
+      const projectCode = navigation.workspace.projectCode;
+      const perspective = navigation.perspective;
+      const searchTab = navigation.searchTab;
+
+      const path: any[] = ['w', organizationCode, projectCode, ...['view', perspective]];
+      if (perspective === Perspective.Search && searchTab) {
+        path.push(searchTab);
+      }
+
+      const extras: NavigationExtras = action.payload.keepQuery ? {queryParamsHandling: 'merge'} : null;
+      return new RouterAction.Go({path, extras});
+    })
   );
 
   constructor(private actions$: Actions,
