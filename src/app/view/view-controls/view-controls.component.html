@@ -86,7 +86,7 @@
                 (click)="onCopy()">
           <i class="fas fa-copy"></i>
         </button>
-        <button [disabled]="!(view.code && viewControlsInfo.canShare)"
+        <button [disabled]="!(view.code && viewControlsInfo.canManage)"
                 (click)="onShareClick()"
                 class="btn btn-primary"
                 type="button"
