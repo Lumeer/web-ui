@@ -1,10 +1,11 @@
 <ul *ngIf="{organization: organization$ | async, project: project$ | async} as data"
     class="navbar navbar-triangle my-0 p-0 mr-3 flex-nowrap">
   <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle"
+    <a class="nav-link dropdown-toggle text-truncate"
        href="#"
        id="navbarDropdown1"
        role="button"
+       [style.maxWidth.rem]="10"
        data-toggle="dropdown"
        aria-haspopup="true"
        aria-expanded="false">
@@ -23,10 +24,11 @@
     </resource-menu>
   </li>
   <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle"
+    <a class="nav-link dropdown-toggle text-truncate"
        href="#"
        id="navbarDropdown2"
        role="button"
+       [style.maxWidth.rem]="10"
        data-toggle="dropdown"
        aria-haspopup="true"
        aria-expanded="false">

@@ -47,9 +47,6 @@ export class PostItLayout {
           dragSortInterval: 200,
           dragReleaseDuration: 200,
           dragReleaseEasing: 'ease',
-          sortData: {
-            order: (item, element) => parseInt(element.getAttribute('order'), 10)
-          },
           layoutOnResize: 200,
           layoutOnInit: true,
           layout: {
@@ -121,24 +118,29 @@ export class PostItLayout {
     });
   }
 
-  public sort() {
-    setTimeout(() => {
-      this.grid
-        .refreshSortData()
-        .sort('order');
-    });
+  public setOrder(orderedIds: string[]) {
+    const sortedItems = [];
+    const gridItemsMap = this.createGridItemsMap();
+
+    for (let i = 0; i < orderedIds.length; i++) {
+      const gridItem = this.grid.getItems().find(item => this.getPostItId(item.getElement()) === orderedIds[i]);
+      if (gridItem) {
+        sortedItems.push(gridItem);
+        delete gridItemsMap[orderedIds[i]];
+      }
+    }
+
+    const otherItems = Object.values(gridItemsMap);
+    const newItems = [...sortedItems, ...otherItems];
+
+    this.grid.sort(newItems, {layout: 'instant'});
   }
 
-  public setOrder(orderedIds: string[]) {
-    this.runSafely(() => {
-      for (let i = 0; i < orderedIds.length; i++) {
-        const gridItem = this.grid.getItems().find(item => this.getPostItId(item.getElement()) === orderedIds[i]);
-        if (gridItem) {
-          gridItem.getElement().setAttribute('order', i);
-        }
-      }
-      this.sort();
-    });
+  private createGridItemsMap(): { [key: string]: any } {
+    return this.grid.getItems().reduce((map, item) => {
+      map[this.getPostItId(item.getElement())] = item;
+      return map;
+    }, {});
   }
 
   private updateIndices() {

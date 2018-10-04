@@ -164,9 +164,11 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     const path: any[] = [...this.workspacePaths(), 'view'];
+    if (canManage && this.workspace.viewCode) {
+      path.push({vc: this.workspace.viewCode});
+    }
     let extras: NavigationExtras = null;
     if (canManage || !this.workspace.viewCode) {
-      path.push({vc: this.workspace.viewCode});
       extras = {queryParamsHandling: 'merge'};
     }
     path.push(perspective);

@@ -1,6 +1,6 @@
 <ng-container *ngIf="loaded$ | async">
 
-  <div *ngIf="getDocuments().length; else noDocuments"
+  <div *ngIf="documents.length; else noDocuments"
        class="container-fluid" infiniteScroll
        [infiniteScrollDistance]="2"
        (scrolled)="onScrollDown($event)">
@@ -26,7 +26,7 @@
         <div class="layout-item {{size$ | async | postItColumnStyle}} mb-3"
              layout-item
              [layout]="layout"
-             *ngFor="let doc of getDocuments(); trackBy:trackByDocument; let idx = index"
+             *ngFor="let doc of documents; trackBy:trackByDocument; let idx = index"
              attr.key="{{doc.id}}"
              id="{{perspectiveId}}#{{doc.correlationId || doc.id}}">
           <post-it-document
