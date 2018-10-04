@@ -34,10 +34,12 @@ import {RouterAction} from '../router/router.action';
 import {ViewConverter} from './view.converter';
 import {ViewModel} from './view.model';
 import {ViewsAction, ViewsActionType} from './views.action';
-import {selectViewsDictionary, selectViewsLoaded} from './views.state';
+import {selectCurrentView, selectViewsDictionary, selectViewsLoaded} from './views.state';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {PermissionType} from '../permissions/permissions.model';
+import {NavigationAction} from '../navigation/navigation.action';
+import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
 
 @Injectable()
 export class ViewsEffects {
@@ -164,7 +166,15 @@ export class ViewsEffects {
     ofType<ViewsAction.Delete>(ViewsActionType.DELETE),
     mergeMap(action => {
       return this.viewService.deleteView(action.payload.viewCode).pipe(
-        map(() => new ViewsAction.DeleteSuccess(action.payload)),
+        withLatestFrom(this.store$.select(selectCurrentView)),
+        flatMap(([_, view]) => {
+          const actions: Action[] = [new ViewsAction.DeleteSuccess(action.payload)];
+          if (view && view.code === action.payload.viewCode) {
+            actions.push(new RemoveViewFromUrl({keepQuery: false}));
+          }
+
+          return actions;
+        }),
         catchError((error) => of(new ViewsAction.DeleteFailure({error: error})))
       );
     }),

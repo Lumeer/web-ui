@@ -26,11 +26,13 @@ export enum NavigationActionType {
   ADD_LINK_TO_QUERY = '[Navigation] Add Link to Query',
 
   ADD_COLLECTION_TO_QUERY = '[Navigation] Add Collection to Query',
-  REMOVE_COLLECTION_TO_QUERY = '[Navigation] Remove Collection fromQuery',
+  REMOVE_COLLECTION_FROM_QUERY = '[Navigation] Remove Collection from Query',
 
   NAVIGATE_TO_PREVIOUS_URL = '[Navigation] Navigate To Previous URL',
 
-  SET_QUERY = '[Navigation] Set query'
+  SET_QUERY = '[Navigation] Set query',
+
+  REMOVE_VIEW_FROM_URL = '[Navigation] Remove view from URL'
 
 }
 
@@ -51,7 +53,7 @@ export namespace NavigationAction {
   }
 
   export class RemoveCollectionFromQuery implements Action {
-    public readonly type = NavigationActionType.REMOVE_COLLECTION_TO_QUERY;
+    public readonly type = NavigationActionType.REMOVE_COLLECTION_FROM_QUERY;
 
     public constructor(public payload: { collectionId: string }) {
     }
@@ -61,6 +63,14 @@ export namespace NavigationAction {
     public readonly type = NavigationActionType.SET_QUERY;
 
     public constructor(public payload: { query: QueryModel }) {
+
+    }
+  }
+
+  export class RemoveViewFromUrl implements Action {
+    public readonly type = NavigationActionType.REMOVE_VIEW_FROM_URL;
+
+    public constructor(public payload: { keepQuery: boolean }) {
 
     }
   }

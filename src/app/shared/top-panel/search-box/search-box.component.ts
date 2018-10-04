@@ -20,7 +20,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {of, combineLatest as observableCombineLatest, Observable, Subscription} from 'rxjs';
+import {of, combineLatest as observableCombineLatest, Observable, Subscription, BehaviorSubject} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {ViewQueryItem} from './query-item/model/view.query-item';
 import {filter, flatMap, map} from 'rxjs/operators';
@@ -38,6 +38,12 @@ import {QueryItemsConverter} from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {queryItemToForm} from '../../../core/store/navigation/query.util';
 import {isNullOrUndefined} from 'util';
+import {PermissionsPipe} from '../../pipes/permissions.pipe';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {UserModel} from '../../../core/store/users/user.model';
+import {selectCurrentView} from '../../../core/store/views/views.state';
+import {userHasManageRoleInResource} from '../../utils/resource.utils';
+import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 
 const allowAutomaticSubmission = true;
 
@@ -50,26 +56,34 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public queryItems: QueryItem[] = [];
   public form: FormGroup;
   public queryItemsControl: FormArray;
+  public currentView$ = new BehaviorSubject<ViewModel>(null);
 
-  private querySubscription: Subscription;
-  private navigationSubscription: Subscription;
+  private subscriptions = new Subscription();
 
   private workspace: Workspace;
   private perspective: Perspective;
+  private currentUser: UserModel;
 
   constructor(private router: Router,
+              private permissionsPipe: PermissionsPipe,
               private store: Store<AppState>,
               private formBuilder: FormBuilder) {
   }
 
   public ngOnInit() {
+    this.subscribeViewData();
     this.subscribeToQuery();
     this.subscribeToNavigation();
     this.initForm();
   }
 
+  private subscribeViewData() {
+    this.subscriptions.add(this.store.select(selectCurrentUser).subscribe(user => this.currentUser = user));
+    this.subscriptions.add(this.store.select(selectCurrentView).subscribe(view => this.currentView$.next(view)));
+  }
+
   private subscribeToQuery() {
-    this.querySubscription = this.store.select(selectQuery).pipe(
+    const querySubscription = this.store.select(selectQuery).pipe(
       filter(query => !isNullOrUndefined(query)),
       flatMap(query => observableCombineLatest(
         of(query),
@@ -81,14 +95,16 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       this.queryItems = queryItems;
       this.initForm(this.queryItems);
     });
+    this.subscriptions.add(querySubscription);
   }
 
   private subscribeToNavigation() {
-    this.navigationSubscription = this.store.select(selectNavigation)
+    const navigationSubscription = this.store.select(selectNavigation)
       .subscribe(navigation => {
         this.workspace = navigation.workspace;
         this.perspective = navigation.perspective;
       });
+    this.subscriptions.add(navigationSubscription);
   }
 
   private loadData(): Observable<QueryData> {
@@ -109,12 +125,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (this.querySubscription) {
-      this.querySubscription.unsubscribe();
-    }
-    if (this.navigationSubscription) {
-      this.navigationSubscription.unsubscribe();
-    }
+    this.subscriptions.unsubscribe();
   }
 
   public onAddQueryItem(queryItem: QueryItem) {
@@ -125,18 +136,25 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   public onRemoveQueryItem(index: number) {
-    this.queryItems.splice(index, 1);
-    this.queryItemsControl.removeAt(index);
+    if (this.shouldInvalidateQuery()) {
+      this.store.dispatch(new NavigationAction.RemoveViewFromUrl({keepQuery: false}));
+    } else {
+      this.queryItems.splice(index, 1);
+      this.queryItems = [...this.queryItems];
+      this.queryItemsControl.removeAt(index);
 
-    this.onQueryItemsChanged();
+      this.onQueryItemsChanged();
+    }
+  }
+
+  private shouldInvalidateQuery(): boolean {
+    const currentView = this.currentView$.getValue();
+    return currentView && !userHasManageRoleInResource(this.currentUser, currentView);
   }
 
   public onRemoveLastQueryItem() {
     const lastIndex = this.queryItems.length - 1;
-    this.queryItems.pop();
-    this.queryItemsControl.removeAt(lastIndex);
-
-    this.onQueryItemsChanged();
+    this.onRemoveQueryItem(lastIndex);
   }
 
   public onQueryItemsChanged() {

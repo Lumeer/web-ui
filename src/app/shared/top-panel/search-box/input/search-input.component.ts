@@ -22,6 +22,7 @@ import {KeyCode} from '../../../key-code';
 import {HtmlModifier} from '../../../utils/html-modifier';
 import {QueryItem} from '../query-item/model/query-item';
 import {SearchSuggestionsComponent} from './suggestions/search-suggestions.component';
+import {ViewModel} from '../../../../core/store/views/view.model';
 
 @Component({
   selector: 'search-input',
@@ -33,6 +34,9 @@ export class SearchInputComponent {
 
   @Input()
   public queryItems: QueryItem[] = [];
+
+  @Input()
+  public currentView: ViewModel;
 
   @Output()
   public addQueryItem = new EventEmitter<QueryItem>();

@@ -27,7 +27,7 @@ import {NavigationState, selectNavigation, selectPerspective} from '../core/stor
 import {QueryModel} from '../core/store/navigation/query.model';
 import {Workspace} from '../core/store/navigation/workspace.model';
 import {RouterAction} from '../core/store/router/router.action';
-import {ViewConfigModel, ViewModel} from '../core/store/views/view.model';
+import {ViewModel} from '../core/store/views/view.model';
 import {ViewsAction} from '../core/store/views/views.action';
 import {selectAllViews, selectCurrentViewConfig, selectViewByCode} from '../core/store/views/views.state';
 import {DialogService} from '../dialog/dialog.service';

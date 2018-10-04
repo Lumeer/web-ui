@@ -80,6 +80,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   public query: QueryModel;
   public loaded$: Observable<boolean>;
   public canManageConfig = false;
+  public documents: DocumentModel[];
 
   private postItLayout: ElementRef;
   private page = 0;
@@ -88,7 +89,6 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private documentsSubscription = new Subscription();
 
   private creatingCorrelationsIds: string[] = [];
-  private postIts: { [documentId: string]: DocumentModel };
 
   constructor(private store: Store<AppState>,
               private zone: NgZone,
@@ -104,15 +104,8 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    if (this.documentsSubscription) {
-      this.documentsSubscription.unsubscribe();
-    }
-
+    this.documentsSubscription.unsubscribe();
     this.subscriptions.unsubscribe();
-  }
-
-  public getDocuments(): DocumentModel[] {
-    return Object.values(this.postIts);
   }
 
   private destroyLayout() {
@@ -163,7 +156,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private initConfig() {
-    this.store.select(selectCurrentView).pipe(
+    const subscription = this.store.select(selectCurrentView).pipe(
       filter(view => !!view),
       take(1)
     ).subscribe(view => {
@@ -171,6 +164,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
         this.dispatchInitConfigActions(view.config.postit);
       }
     });
+    this.subscriptions.add(subscription);
   }
 
   private dispatchInitConfigActions(postItConfig: PostItConfigModel) {
@@ -182,11 +176,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       observableCombineLatest(this.store.select(selectPostItsSize), this.store.select(selectCurrentView)).pipe(
         map(([size, view]) => size || this.viewPostItSize(view)),
-        tap(size => {
-          if (!size) {
-            this.store.dispatch(new PostItAction.ChangeSize({size: this.defaultSize()}));
-          }
-        }),
+        tap(size => !size ? this.store.dispatch(new PostItAction.ChangeSize({size: this.defaultSize()})) : null),
         filter(size => size && this.size$.getValue() !== size)
       ).subscribe(size => {
         this.size$.next(size);
@@ -225,17 +215,12 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
     this.page = 0;
     this.postItsOrder$.next([]);
     this.creatingCorrelationsIds = [];
-    this.postIts = {};
+    this.documents = [];
   }
 
   private subscribeToView() {
     const subscription = this.store.select(selectCurrentView).pipe(
-      mergeMap(view => {
-        if (!view) {
-          return of(true);
-        }
-        return this.permissionsPipe.transform(view, Role.Manage);
-      })
+      mergeMap(view => view ? this.permissionsPipe.transform(view, Role.Manage) : of(true))
     ).subscribe(viewHasManageRole => {
       this.canManageConfig = viewHasManageRole;
       if (this.layout) {
@@ -246,7 +231,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private getNumRows(key: string): number {
-    const documentModel = this.postIts[key];
+    const documentModel = this.documents.find(doc => doc.id === key);
     if (documentModel) {
       const collection = this.collections.find(coll => coll.id === documentModel.collectionId);
       return this.documentUiService.getRows$(collection, documentModel).getValue().length - 1;
@@ -300,36 +285,39 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
       return acc;
     }, {});
 
-    const newPostItsOrder = [...this.postItsOrder$.getValue()];
+    const newOrderIds = [];
 
     documents.filter(doc => doc.correlationId && this.creatingCorrelationsIds.includes(doc.correlationId))
       .forEach(document => {
-        newPostItsOrder.unshift(document.id);
+        newOrderIds.push(document.id);
+        delete documentsMap[document.id];
         this.creatingCorrelationsIds = this.creatingCorrelationsIds.filter(corrId => corrId !== document.correlationId);
       });
 
-    const newPostIts = newPostItsOrder.reduce((acc, key) => {
-      const doc = documentsMap[key];
+    this.postItsOrder$.getValue().forEach(id => {
+      const doc = documentsMap[id];
       if (doc) {
-        acc[key] = doc;
-        delete documentsMap[key];
+        newOrderIds.push(id);
+        delete documentsMap[id];
       }
-      return acc;
-    }, {});
+    });
 
     priorityIds.forEach(id => {
       const doc = documentsMap[id];
       if (doc) {
-        newPostIts[doc.id] = doc;
-        delete documentsMap[doc.id];
+        newOrderIds.push(id);
+        delete documentsMap[id];
       }
     });
 
-    for (const [key, value] of Object.entries(documentsMap)) {
-      newPostIts[key] = value;
-    }
+    newOrderIds.push(...Object.keys(documentsMap));
 
-    this.postIts = newPostIts;
+    this.documents = documents;
+    setTimeout(() => {
+      if (this.layout) {
+        this.layout.setOrder(newOrderIds);
+      }
+    });
   }
 
   public createPostIt(documentModel: DocumentModel) {
@@ -349,11 +337,13 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private shouldFetchNextPage() {
-    return this.getDocuments().length >= (this.page + 1) * this.getPageSize();
+    return this.documents.length >= (this.page + 1) * this.getPageSize();
   }
 
   public postItChanged() {
-    this.layout.refresh();
+    if (this.layout) {
+      this.layout.refresh();
+    }
   }
 
   public removePostIt(documentModel: DocumentModel) {

@@ -1,7 +1,7 @@
 <div class="card-body pt-2">
   <div class="small text-secondary mb-2" i18n="@@resource.detail.type">{type, select, organization {Organization} project {Project} other {}}</div>
 
-  <h5 class="card-title">
+  <h5 class="card-title text-truncate">
     <i [class]="resource?.icon" [class.mr-1]="true" [style.color]="resource?.color"></i>
     {{resource?.code}}
   </h5>

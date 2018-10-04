@@ -28,7 +28,7 @@
                class="dropdown-menu">
             <a *ngFor="let aperspective of perspectives | filterPerspectives:view.query"
                [class.active]="perspective === aperspective"
-               (click)="onSelectPerspective(aperspective)"
+               (click)="onSelectPerspective(aperspective, viewControlsInfo.canManage)"
                class="dropdown-item">
               <i class="fa-fw {{aperspective | perspectiveIcon}}"></i>
               <span class="ml-1 text-nowrap"
@@ -56,6 +56,7 @@
       <input #viewNameInput
              [class.font-italic]="!view.code || view.name !== name"
              [value]="name"
+             [disabled]="view && !viewControlsInfo.canManage"
              (input)="onNameInput(viewNameInput.value)"
              id="viewName"
              name="viewName"
@@ -85,7 +86,7 @@
                 (click)="onCopy()">
           <i class="fas fa-copy"></i>
         </button>
-        <button [disabled]="!(view.code && viewControlsInfo.canShare)"
+        <button [disabled]="!(view.code && viewControlsInfo.canManage)"
                 (click)="onShareClick()"
                 class="btn btn-primary"
                 type="button"
