@@ -122,10 +122,8 @@ export class NavigationEffects {
     withLatestFrom(this.store$.select(selectNavigation)),
     filter(([action, navigation]) => !!navigation.workspace && !!navigation.perspective),
     map(([action, navigation]) => {
-      const organizationCode = navigation.workspace.organizationCode;
-      const projectCode = navigation.workspace.projectCode;
-      const perspective = navigation.perspective;
-      const searchTab = navigation.searchTab;
+      const {organizationCode, projectCode} = navigation.workspace;
+      const {perspective, searchTab} = navigation;
 
       const path: any[] = ['w', organizationCode, projectCode, ...['view', perspective]];
       if (perspective === Perspective.Search && searchTab) {
