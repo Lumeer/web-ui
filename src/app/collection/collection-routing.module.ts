@@ -28,6 +28,7 @@ import {CollectionAttributesComponent} from './settings/tab/attributes/collectio
 import {CollectionLinkTypesComponent} from './settings/tab/link-types/collection-link-types.component';
 import {CollectionUsersComponent} from './settings/tab/users/collection-users.component';
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
+import {CollectionsGuard} from '../core/guards/data/collections.guard';
 
 const collectionRoutes: Routes = [
   {
@@ -35,7 +36,8 @@ const collectionRoutes: Routes = [
     canActivate: [AuthGuard, CurrentUserGuard, WorkspaceGuard, CollectionSettingsGuard],
     component: CollectionSettingsComponent,
     resolve: {
-      linkTypes: LinkTypesGuard
+      linkTypes: LinkTypesGuard,
+      collections: CollectionsGuard
     },
     children: [
       {

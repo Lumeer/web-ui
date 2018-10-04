@@ -7,8 +7,7 @@
   </preview-results>
   <document-detail *ngIf="selectedDocument"
                    [collection]="selectedCollection"
-                   [document]="selectedDocument"
-                   [hasWriteAccess]="selectedCollection | permissions:'write' | async">
+                   [document]="selectedDocument">
   </document-detail>
   <links-list
     *ngIf="selectedDocument"

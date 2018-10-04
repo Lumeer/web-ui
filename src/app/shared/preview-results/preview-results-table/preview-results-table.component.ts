@@ -40,6 +40,9 @@ export class PreviewResultsTableComponent implements OnChanges {
   @Input()
   public selectedDocumentId: string;
 
+  @Input()
+  public loaded: boolean;
+
   public page = 0;
 
   @Output()

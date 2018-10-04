@@ -45,6 +45,9 @@ export const selectCurrentQueryDocumentsLoaded = createSelector(selectDocumentsQ
   !!queries.find(query => areQueriesEqualExceptPagination(query, currentQuery))
 );
 
+export const selectQueryDocumentsLoaded = (query: QueryModel) => createSelector(selectDocumentsQueries,
+  queries => !!queries.find(q => areQueriesEqualExceptPagination(q, query)));
+
 export const selectDocumentById = (id: string) => createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);
 
 export const selectDocumentsByIds = (ids: string[]) => createSelector(selectDocumentsDictionary,

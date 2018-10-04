@@ -25,5 +25,6 @@ export interface View extends Resource {
   perspective: string;
   query: Query;
   config: any; // TODO create DTO
+  authorRights?: { [collectionId: string]: string[] };
 
 }

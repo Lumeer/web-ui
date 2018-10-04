@@ -38,6 +38,8 @@ export class PostItDocumentHeaderComponent {
 
   @Input() public readonly: boolean;
 
+  @Input() public directRead: boolean;
+
   @Output() public remove = new EventEmitter();
 
   @Output() public edit = new EventEmitter();

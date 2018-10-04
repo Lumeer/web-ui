@@ -23,7 +23,7 @@ import {selectAllLinkTypes} from '../link-types/link-types.state';
 import {selectCurrentView} from '../views/views.state';
 import {selectCurrentUser} from '../users/users.state';
 import {getCollectionsIdsFromView} from '../collections/collection.util';
-import {userHasRoleInResource} from '../../../shared/utils/resource.utils';
+import {authorHasRoleInView, userHasRoleInResource} from '../../../shared/utils/resource.utils';
 import {Role} from '../../model/role';
 import {selectAllDocuments} from '../documents/documents.state';
 import {selectQuery} from '../navigation/navigation.state';
@@ -32,12 +32,14 @@ import {DocumentModel} from '../documents/document.model';
 import {filterDocumentsByQuery} from '../documents/documents.filters';
 import {sortDocumentsByCreationDate} from '../documents/document.utils';
 import {QueryModel} from '../navigation/query.model';
+import {isArraySubset} from '../../../shared/utils/array.utils';
 
 export const selectCollectionsByReadPermission = createSelector(selectAllDocuments, selectAllCollections, selectAllLinkTypes,
   selectCurrentView, selectCurrentUser, (documents, collections, linkTypes, view, user) => {
     const collectionIdsFromView = getCollectionsIdsFromView(view, linkTypes, documents);
     return collections.filter(collection => userHasRoleInResource(user, collection, Role.Read)
-      || (collectionIdsFromView && collectionIdsFromView.includes(collection.id) && userHasRoleInResource(user, view, Role.Read)));
+      || (collectionIdsFromView && collectionIdsFromView.includes(collection.id)
+        && userHasRoleInResource(user, view, Role.Read) && authorHasRoleInView(view, collection.id, Role.Read)));
   });
 
 export const selectCollectionsByQuery = createSelector(selectCollectionsByReadPermission, selectAllDocuments, selectQuery,
@@ -55,3 +57,11 @@ export const selectDocumentsByQuery = createSelector(selectDocumentsByReadPermis
 export const selectDocumentsByCustomQuery = (query: QueryModel, desc?: boolean) => createSelector(selectDocumentsByReadPermission,
   (documents): DocumentModel[] => filterDocumentsByQuery(sortDocumentsByCreationDate(documents, desc), query)
 );
+
+export const selectLinkTypesByReadPermission = createSelector(selectAllLinkTypes, selectCollectionsByReadPermission, (linkTypes, collections) => {
+  const allowedCollectionIds = collections.map(collection => collection.id);
+  return linkTypes.filter(linkType => isArraySubset(allowedCollectionIds, linkType.collectionIds));
+});
+
+export const selectLinkTypesByCollectionId = (collectionId: string) =>
+  createSelector(selectLinkTypesByReadPermission, linkTypes => linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId)));

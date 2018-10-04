@@ -52,11 +52,13 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
 
   @Input() public document: DocumentModel;
 
+  @Input() public collection: CollectionModel;
+
   @Output() public select = new EventEmitter<{ collection: CollectionModel, document: DocumentModel }>();
 
   @Output() public unlink = new EventEmitter<string>();
 
-  public collection$: Observable<CollectionModel>;
+  public otherCollection$: Observable<CollectionModel>;
   public linkRows$ = new BehaviorSubject<LinkRowModel[]>([]);
   public page = 0;
   public readonly pageSize = PAGE_SIZE;
@@ -77,7 +79,7 @@ export class LinksListTableComponent implements OnChanges, OnDestroy {
 
   private renewSubscriptions() {
     if (this.linkType && this.document) {
-      this.collection$ = this.store.select(selectCollectionsDictionary).pipe(
+      this.otherCollection$ = this.store.select(selectCollectionsDictionary).pipe(
         map(collectionsMap => {
           const collectionId = getOtherLinkedCollectionId(this.linkType, this.document.collectionId);
           return collectionsMap[collectionId];

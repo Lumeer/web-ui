@@ -1,9 +1,11 @@
-<ng-container *ngIf="{write: collection | collectionPermissions:'write' | async} as permissions">
+<ng-container *ngIf="{write: collection | collectionPermissions:'write' | async,
+                      directRead: collection | permissions:'read' | async} as permissions">
   <post-it-document-header
     class="card-header px-2 py-1 d-flex w-100"
     [class.cursor-move]="canManageConfig"
     [collection]="collection"
     [readonly]="!permissions.write"
+    [directRead]="permissions.directRead"
     [favorite]="favorite$ | async"
     [initialized]="documentModel.id"
     (remove)="onRemove()"

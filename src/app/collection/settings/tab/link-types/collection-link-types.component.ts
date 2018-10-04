@@ -27,7 +27,7 @@ import {BehaviorSubject, combineLatest as observableCombineLatest, Observable, S
 import {LinkTypeModel} from '../../../../core/store/link-types/link-type.model';
 import {selectCollectionByWorkspace, selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
 import {filter, map, mergeMap, tap} from 'rxjs/operators';
-import {selectLinkTypesByCollectionId} from '../../../../core/store/link-types/link-types.state';
+import {selectLinkTypesByCollectionId} from '../../../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../../../core/store/collections/collection.model';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';

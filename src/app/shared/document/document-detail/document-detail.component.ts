@@ -53,9 +53,6 @@ export class DocumentDetailComponent implements OnInit, OnDestroy {
 
   public document: DocumentModel;
 
-  @Input()
-  public hasWriteAccess = false;
-
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;
   public favorite$: Observable<boolean>;

@@ -28,6 +28,7 @@ export interface ViewModel extends ResourceModel {
   perspective: Perspective;
   query: QueryModel;
   config: ViewConfigModel;
+  authorRights?: { [collectionId: string]: string[] };
 
 }
 

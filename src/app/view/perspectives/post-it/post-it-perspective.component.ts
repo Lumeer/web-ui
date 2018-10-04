@@ -20,7 +20,7 @@
 import {ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {filter, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
+import {filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {Subscription, combineLatest as observableCombineLatest, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -181,8 +181,13 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeToConfig() {
     this.subscriptions.add(
       observableCombineLatest(this.store.select(selectPostItsSize), this.store.select(selectCurrentView)).pipe(
-        map(([size, view]) => size || this.viewPostItSize(view) || this.defaultSize()),
-        filter(size => this.size$.getValue() !== size)
+        map(([size, view]) => size || this.viewPostItSize(view)),
+        tap(size => {
+          if (!size) {
+            this.store.dispatch(new PostItAction.ChangeSize({size: this.defaultSize()}));
+          }
+        }),
+        filter(size => size && this.size$.getValue() !== size)
       ).subscribe(size => {
         this.size$.next(size);
         if (this.layout) {

@@ -33,7 +33,8 @@ export class ViewConverter {
       query: QueryConverter.fromDto(dto.query),
       perspective: perspectivesMap[dto.perspective],
       config: dto.config,
-      permissions: PermissionsConverter.fromDto(dto.permissions)
+      permissions: PermissionsConverter.fromDto(dto.permissions),
+      authorRights: dto.authorRights
     };
   }
 

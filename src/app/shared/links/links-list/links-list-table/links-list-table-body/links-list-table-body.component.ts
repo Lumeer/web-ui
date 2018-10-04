@@ -51,10 +51,13 @@ export class LinksListTableBodyComponent {
   public usedDocumentIds: string[];
 
   @Input()
-  public collection: CollectionModel;
+  public otherCollection: CollectionModel;
 
   @Input()
   public linkRows: LinkRowModel[];
+
+  @Input()
+  public readonly: boolean;
 
   @Output() public select = new EventEmitter<{ collection: CollectionModel, document: DocumentModel }>();
 

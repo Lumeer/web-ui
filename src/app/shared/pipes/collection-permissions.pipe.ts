@@ -23,7 +23,7 @@ import {Observable, of, combineLatest as observableCombineLatest} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {userHasRoleInResource} from '../utils/resource.utils';
+import {authorHasRoleInView, userHasRoleInResource} from '../utils/resource.utils';
 import {UserModel} from '../../core/store/users/user.model';
 import {selectCurrentView} from '../../core/store/views/views.state';
 import {ViewModel} from '../../core/store/views/view.model';
@@ -69,7 +69,7 @@ export class CollectionPermissionsPipe implements PipeTransform {
         }
 
         return this.viewContainsCollection(view, collection).pipe(
-          map(contains => contains && userHasRoleInResource(user, view, role))
+          map(contains => contains && userHasRoleInResource(user, view, role) && authorHasRoleInView(view, collection.id, role))
         );
       })
     );

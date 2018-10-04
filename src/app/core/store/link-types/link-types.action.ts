@@ -47,15 +47,12 @@ export namespace LinkTypesAction {
 
   export class Get implements Action {
     public readonly type = LinkTypesActionType.GET;
-
-    public constructor(public payload: { query: QueryModel, loadInstances?: boolean }) {
-    }
   }
 
   export class GetSuccess implements Action {
     public readonly type = LinkTypesActionType.GET_SUCCESS;
 
-    public constructor(public payload: { linkTypes: LinkTypeModel[], query: QueryModel }) {
+    public constructor(public payload: { linkTypes: LinkTypeModel[]}) {
     }
   }
 
