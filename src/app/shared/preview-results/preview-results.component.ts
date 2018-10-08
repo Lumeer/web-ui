@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
@@ -56,7 +56,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   public collections$: Observable<CollectionModel[]>;
 
   public documents$: Observable<DocumentModel[]>;
-  public loaded$: Observable<boolean>;
+  public loaded$ = new BehaviorSubject<boolean>(false);
 
   private allSubscriptions = new Subscription();
   private dataSubscription = new Subscription();
@@ -143,7 +143,8 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
     const collectionQuery = {...this.query, collectionIds: [collection.id]};
     this.updateDataSubscription(collectionQuery);
     this.store.dispatch(new DocumentsAction.Get({query: collectionQuery}));
-    this.loaded$ = this.store.select(selectQueryDocumentsLoaded(collectionQuery));
+    this.allSubscriptions.add(this.store.select(selectQueryDocumentsLoaded(collectionQuery))
+      .subscribe(loaded => this.loaded$.next(loaded)));
   }
 
   private updateDataSubscription(collectionQuery: QueryModel) {

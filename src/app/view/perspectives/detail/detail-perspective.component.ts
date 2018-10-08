@@ -23,7 +23,6 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {AppState} from '../../../core/store/app.state';
 import {Store} from '@ngrx/store';
-import {QueryAction} from '../../../core/model/query-action';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 
 @Component({
@@ -76,6 +75,6 @@ export class DetailPerspectiveComponent {
 
   private setQueryWithCollection(collection: CollectionModel) {
     const query = {collectionIds: [collection.id]};
-    this.store.dispatch(new NavigationAction.SetQuery({query}));
+    this.store.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query}));
   }
 }

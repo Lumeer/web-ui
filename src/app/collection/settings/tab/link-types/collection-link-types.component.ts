@@ -42,7 +42,7 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
 
   public linkTypes$: Observable<LinkTypeModel[]>;
   public collection$: Observable<CollectionModel>;
-  public searchString$ =  new BehaviorSubject<string>('');
+  public searchString$ = new BehaviorSubject<string>('');
 
   private subscriptions = new Subscription();
 
@@ -111,8 +111,8 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
     this.notificationService.confirm(
       message, title,
       [
-        {text: yesButtonText, action: () => this.deleteLinkType(linkType), bold: false},
-        {text: noButtonText}
+        {text: noButtonText},
+        {text: yesButtonText, action: () => this.deleteLinkType(linkType), bold: false}
       ]
     );
   }

@@ -137,7 +137,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   public onRemoveQueryItem(index: number) {
     if (this.shouldInvalidateQuery()) {
-      this.store.dispatch(new NavigationAction.RemoveViewFromUrl({keepQuery: false}));
+      this.store.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: {}}));
     } else {
       this.queryItems.splice(index, 1);
       this.queryItems = [...this.queryItems];
