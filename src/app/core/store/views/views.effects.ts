@@ -170,7 +170,7 @@ export class ViewsEffects {
         flatMap(([_, view]) => {
           const actions: Action[] = [new ViewsAction.DeleteSuccess(action.payload)];
           if (view && view.code === action.payload.viewCode) {
-            actions.push(new RemoveViewFromUrl({keepQuery: false}));
+            actions.push(new RemoveViewFromUrl({setQuery: {}}));
           }
 
           return actions;

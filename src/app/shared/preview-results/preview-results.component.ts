@@ -18,12 +18,12 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../core/store/collections/collection.model';
-import {filter, take, withLatestFrom} from 'rxjs/operators';
+import {filter, map, take, tap, withLatestFrom} from 'rxjs/operators';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../core/store/navigation/query.model';
@@ -33,7 +33,8 @@ import {selectViewCursor} from '../../core/store/views/views.state';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {generateDocumentData} from '../../core/store/documents/document.utils';
-import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
+import {selectDocumentsQueries, selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
+import {areQueriesEqualExceptPagination} from '../../core/store/navigation/query.helper';
 
 @Component({
   selector: 'preview-results',
@@ -56,7 +57,7 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   public collections$: Observable<CollectionModel[]>;
 
   public documents$: Observable<DocumentModel[]>;
-  public loaded$: Observable<boolean>;
+  public loaded$ = new BehaviorSubject<boolean>(false);
 
   private allSubscriptions = new Subscription();
   private dataSubscription = new Subscription();
@@ -143,7 +144,8 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
     const collectionQuery = {...this.query, collectionIds: [collection.id]};
     this.updateDataSubscription(collectionQuery);
     this.store.dispatch(new DocumentsAction.Get({query: collectionQuery}));
-    this.loaded$ = this.store.select(selectQueryDocumentsLoaded(collectionQuery));
+    this.allSubscriptions.add(this.store.select(selectQueryDocumentsLoaded(collectionQuery))
+      .subscribe(loaded => this.loaded$.next(loaded)));
   }
 
   private updateDataSubscription(collectionQuery: QueryModel) {

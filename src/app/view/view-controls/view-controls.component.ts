@@ -138,7 +138,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     if (queryChanged || configChanged) {
       this.askToDiscardChanges();
     } else {
-      this.navigateToUrlWithoutView();
+      this.navigateToUrlWithoutView({});
     }
   }
 
@@ -154,8 +154,8 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     ]);
   }
 
-  public navigateToUrlWithoutView() {
-    this.store.dispatch(new NavigationAction.RemoveViewFromUrl({keepQuery: false}));
+  public navigateToUrlWithoutView(query?: QueryModel) {
+    this.store.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query}));
   }
 
   public onSelectPerspective(perspective: string, canManage: boolean) {
