@@ -23,7 +23,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
 import {CollectionModel} from '../../core/store/collections/collection.model';
-import {filter, map, take, tap, withLatestFrom} from 'rxjs/operators';
+import {filter, take, withLatestFrom} from 'rxjs/operators';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {selectNavigation} from '../../core/store/navigation/navigation.state';
 import {QueryModel} from '../../core/store/navigation/query.model';
@@ -33,8 +33,7 @@ import {selectViewCursor} from '../../core/store/views/views.state';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {CorrelationIdGenerator} from '../../core/store/correlation-id.generator';
 import {generateDocumentData} from '../../core/store/documents/document.utils';
-import {selectDocumentsQueries, selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
-import {areQueriesEqualExceptPagination} from '../../core/store/navigation/query.helper';
+import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
 
 @Component({
   selector: 'preview-results',
