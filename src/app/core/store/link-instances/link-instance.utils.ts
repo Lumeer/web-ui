@@ -17,19 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
-import {TableModel, TableConfigRow} from '../../../../../core/store/tables/table.model';
-import {findTableRow, splitRowPath} from '../../../../../core/store/tables/table.utils';
+import {LinkInstance} from '../../dto';
+import {LinkInstanceModel} from './link-instance.model';
 
-@Pipe({
-  name: 'previousLinkedRow'
-})
-export class PreviousLinkedRowPipe implements PipeTransform {
+export function isDocumentInLinkInstance(linkInstance: LinkInstanceModel, documentId: string): boolean {
+  return linkInstance.documentIds.some(id => id === documentId);
+}
 
-  public transform(table: TableModel, cursor: TableBodyCursor): TableConfigRow {
-    const {parentPath} = splitRowPath(cursor.rowPath);
-    return findTableRow(table.config.rows, parentPath);
-  }
+export function findLinkInstanceByDocumentId(linkInstances: LinkInstanceModel[], documentId: string): LinkInstance {
+  return linkInstances.find(linkInstance => isDocumentInLinkInstance(linkInstance, documentId));
+}
 
+export function getOtherDocumentIdFromLinkInstance(linkInstance: LinkInstanceModel, documentId: string): string {
+  const {documentIds} = linkInstance;
+  return documentIds[0] === documentId ? documentIds[1] : documentIds[0];
 }

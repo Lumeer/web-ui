@@ -18,28 +18,26 @@
  */
 
 import {NgModule} from '@angular/core';
-import {EffectsModule} from '@ngrx/effects';
-import {StoreModule} from '@ngrx/store';
 import {ResizableModule} from 'angular-resizable-element';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {ContextMenuModule} from 'ngx-contextmenu';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
-import {TablesEffects} from '../../../core/store/tables/tables.effects';
-import {tablesReducer} from '../../../core/store/tables/tables.reducer';
-import {initialTablesState, TABLE_FEATURE_NAME} from '../../../core/store/tables/tables.state';
 import {PickerModule} from '../../../shared/picker/picker.module';
 import {PipesModule} from '../../../shared/pipes/pipes.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {TableRowGroupFooterComponent} from './body/row-group/footer/table-row-group-footer.component';
 import {TableRowGroupHeaderComponent} from './body/row-group/header/table-row-group-header.component';
 import {TableRowGroupComponent} from './body/row-group/table-row-group.component';
-import {TableCollapsedCellComponent} from './body/rows/row/cell-group/collapsed-cell/table-collapsed-cell.component';
-import {TableDataCellMenuComponent} from './body/rows/row/cell-group/data-cell/menu/table-data-cell-menu.component';
-import {TableDataCellComponent} from './body/rows/row/cell-group/data-cell/table-data-cell.component';
-import {TableCellGroupComponent} from './body/rows/row/cell-group/table-cell-group.component';
-import {TableLinkCellComponent} from './body/rows/row/link-cell/table-link-cell.component';
-import {TableRowNumbersComponent} from './body/rows/row/row-numbers/table-row-numbers.component';
-import {TableRowComponent} from './body/rows/row/table-row.component';
+import {TableCollapsedCellMenuComponent} from './body/rows/cell-group/collapsed-cell/menu/table-collapsed-cell-menu.component';
+import {TableCollapsedCellComponent} from './body/rows/cell-group/collapsed-cell/table-collapsed-cell.component';
+import {TableDataCellMenuComponent} from './body/rows/cell-group/data-cell/menu/table-data-cell-menu.component';
+import {TableDataCellComponent} from './body/rows/cell-group/data-cell/table-data-cell.component';
+import {TableCellGroupComponent} from './body/rows/cell-group/table-cell-group.component';
+import {TableLinkCellComponent} from './body/rows/linked-rows/link-cell/table-link-cell.component';
+import {TableLinkedRowComponent} from './body/rows/linked-rows/linked-row/table-linked-row.component';
+import {TableLinkedRowsComponent} from './body/rows/linked-rows/table-linked-rows.component';
+import {TableRowNumbersComponent} from './body/rows/primary-row/row-numbers/table-row-numbers.component';
+import {TablePrimaryRowComponent} from './body/rows/primary-row/table-primary-row.component';
 import {TableRowsComponent} from './body/rows/table-rows.component';
 import {TableBodyComponent} from './body/table-body.component';
 import {TableCaptionComponent} from './header/collection/caption/table-caption.component';
@@ -56,15 +54,12 @@ import {TableEditableCellDirective} from './shared/directives/table-editable-cel
 import {TablePipesModule} from './shared/pipes/table-pipes.module';
 import {TablePerspectiveRoutingModule} from './table-perspective-routing.module';
 import {TablePerspectiveComponent} from './table-perspective.component';
-import { TableCollapsedCellMenuComponent } from './body/rows/row/cell-group/collapsed-cell/menu/table-collapsed-cell-menu.component';
 
 @NgModule({
   imports: [
     SharedModule,
     PickerModule,
     PipesModule,
-    StoreModule.forFeature(TABLE_FEATURE_NAME, tablesReducer, {initialState: initialTablesState}),
-    EffectsModule.forFeature([TablesEffects]),
     ContextMenuModule,
     ClickOutsideModule,
     ResizableModule,
@@ -88,7 +83,6 @@ import { TableCollapsedCellMenuComponent } from './body/rows/row/cell-group/coll
     TableRowGroupComponent,
     TableRowGroupHeaderComponent,
     TableRowGroupFooterComponent,
-    TableRowComponent,
     TableCellGroupComponent,
     TableLinkCellComponent,
     TableRowsComponent,
@@ -98,6 +92,9 @@ import { TableCollapsedCellMenuComponent } from './body/rows/row/cell-group/coll
     TableEditableCellDirective,
     TableDataCellComponent,
     TableCollapsedCellMenuComponent,
+    TableLinkedRowsComponent,
+    TablePrimaryRowComponent,
+    TableLinkedRowComponent,
   ],
   exports: [
     TablePerspectiveComponent

@@ -27,6 +27,7 @@ import {initialNavigationState, NavigationState} from './navigation/navigation.s
 import {initialOrganizationsState, OrganizationsState} from './organizations/organizations.state';
 import {initialProjectsState, ProjectsState} from './projects/projects.state';
 import {RouterStateUrl} from './router/lumeer-router-state-serializer';
+import {initialTablesState, TablesState} from './tables/tables.state';
 import {initialUsersState, UsersState} from './users/users.state';
 import {initialViewsState, ViewsState} from './views/views.state';
 import {ContactsState, initialContactsState} from './organizations/contact/contacts.state';
@@ -48,6 +49,7 @@ export interface AppState {
   payments: PaymentsState;
   projects: ProjectsState;
   router: RouterReducerState<RouterStateUrl>;
+  tables: TablesState;
   users: UsersState;
   views: ViewsState;
   postIts: PostItState;
@@ -67,6 +69,7 @@ export function initialAppState(): AppState {
     payments: initialPaymentsState,
     projects: initialProjectsState,
     router: null,
+    tables: initialTablesState,
     users: initialUsersState,
     views: initialViewsState,
     postIts: initialPostItState

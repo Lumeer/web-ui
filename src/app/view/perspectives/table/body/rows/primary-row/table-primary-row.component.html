@@ -1,0 +1,22 @@
+<table-row-numbers [cursor]="cursor"
+                   [row]="row"
+                   (click)="unsetCursor.emit()"
+                   class="table-border-right bg-white">
+</table-row-numbers>
+
+<ng-container *ngIf="visible$ | async">
+  <table-cell-group [cursor]="cursor"
+                    [rows]="[row]"
+                    [style.width]="part$ | async | partWidth | pixel">
+  </table-cell-group>
+
+  <table-linked-rows *ngIf="hasNextParts$ | async"
+                     [cursor]="cursor"
+                     [rows]="[row]"
+                     [striped]="striped">
+  </table-linked-rows>
+
+  <div (click)="unsetCursor.emit()"
+       class="px-2 bg-white">
+  </div>
+</ng-container>

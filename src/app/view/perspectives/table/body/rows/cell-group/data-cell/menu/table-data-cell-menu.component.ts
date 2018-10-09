@@ -19,16 +19,16 @@
 
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {AppState} from '../../../../../../../../../core/store/app.state';
-import {DocumentModel} from '../../../../../../../../../core/store/documents/document.model';
-import {DocumentsAction} from '../../../../../../../../../core/store/documents/documents.action';
-import {LinkInstanceModel} from '../../../../../../../../../core/store/link-instances/link-instance.model';
-import {LinkInstancesAction} from '../../../../../../../../../core/store/link-instances/link-instances.action';
-import {TableBodyCursor} from '../../../../../../../../../core/store/tables/table-cursor';
-import {EMPTY_TABLE_ROW, TableModel} from '../../../../../../../../../core/store/tables/table.model';
-import {findTableRow, splitRowPath} from '../../../../../../../../../core/store/tables/table.utils';
-import {TablesAction} from '../../../../../../../../../core/store/tables/tables.action';
-import {Direction} from '../../../../../../../../../shared/direction';
+import {AppState} from '../../../../../../../../core/store/app.state';
+import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
+import {DocumentsAction} from '../../../../../../../../core/store/documents/documents.action';
+import {LinkInstanceModel} from '../../../../../../../../core/store/link-instances/link-instance.model';
+import {LinkInstancesAction} from '../../../../../../../../core/store/link-instances/link-instances.action';
+import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
+import {TableModel} from '../../../../../../../../core/store/tables/table.model';
+import {createEmptyTableRow, findTableRow, splitRowPath} from '../../../../../../../../core/store/tables/table.utils';
+import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
+import {Direction} from '../../../../../../../../shared/direction';
 
 @Component({
   selector: 'table-data-cell-menu',
@@ -48,7 +48,7 @@ export class TableDataCellMenuComponent implements OnChanges {
   public linkInstance: LinkInstanceModel;
 
   @Input()
-  public table: TableModel;
+  public table: TableModel; // TODO remove
 
   @Output()
   public edit = new EventEmitter();
@@ -75,7 +75,14 @@ export class TableDataCellMenuComponent implements OnChanges {
     const rowPath = parentPath.concat(rowIndex + indexDelta);
     const cursor = {...this.cursor, rowPath};
 
-    this.store$.dispatch(new TablesAction.ReplaceRows({cursor, rows: [EMPTY_TABLE_ROW], deleteCount: 0}));
+    const emptyRow = createEmptyTableRow();
+
+    if (this.cursor.partIndex === 0) {
+      this.store$.dispatch(new TablesAction.AddPrimaryRows({cursor, rows: [emptyRow]}));
+    } else {
+      this.store$.dispatch(new TablesAction.AddLinkedRows({cursor, linkedRows: [emptyRow]}));
+    }
+
     if (indexDelta > 0) {
       this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
     }
@@ -100,7 +107,7 @@ export class TableDataCellMenuComponent implements OnChanges {
   }
 
   public onUnlinkRow() {
-    const linkInstanceId = findTableRow(this.table.rows, this.cursor.rowPath).linkInstanceIds[0];
+    const linkInstanceId = findTableRow(this.table.config.rows, this.cursor.rowPath).linkInstanceId;
     const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
     this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId, callback}));
   }

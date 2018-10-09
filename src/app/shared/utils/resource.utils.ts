@@ -63,3 +63,7 @@ export function authorHasRoleInView(view: ViewModel, collectionId: string, role:
   const collectionRoles = authorRights[collectionId] || [];
   return collectionRoles.includes(role.toUpperCase());
 }
+
+export function generateCorrelationId(): string {
+  return Date.now() + ':' + Math.random();
+}

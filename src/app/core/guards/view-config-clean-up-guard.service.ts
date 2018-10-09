@@ -21,11 +21,11 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanDeactivate, RouterStateSnapshot} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
+import {Perspective, perspectivesMap} from '../../view/perspectives/perspective';
 import {ViewComponent} from '../../view/view.component';
 import {AppState} from '../store/app.state';
-import {ViewsAction} from '../store/views/views.action';
 import {PostItAction} from '../store/postit/postit.action';
-import {Perspective, perspectivesMap} from '../../view/perspectives/perspective';
+import {ViewsAction} from '../store/views/views.action';
 
 @Injectable({
   providedIn: 'root'
@@ -50,9 +50,9 @@ export class ViewConfigCleanUpGuard implements CanDeactivate<ViewComponent> {
   private clearPerspective(perspective: Perspective) {
     switch (perspective) {
       case Perspective.PostIt: {
-        this.store$.dispatch(new PostItAction.Clear());
-        break;
+        return this.store$.dispatch(new PostItAction.Clear());
       }
+      // TODO maybe clear table config as well
       default:
         this.store$.dispatch(new ViewsAction.ChangeConfig({config: {}}));
     }

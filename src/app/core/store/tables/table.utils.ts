@@ -19,10 +19,13 @@
 
 import {copyAndSpliceArray, getLastFromArray} from '../../../shared/utils/array.utils';
 import {filterDirectAttributeChildren, findAttributeByName, generateAttributeName, splitAttributeName} from '../../../shared/utils/attribute.utils';
+import {generateCorrelationId} from '../../../shared/utils/resource.utils';
 import {AttributeModel, CollectionModel} from '../collections/collection.model';
+import {DocumentModel} from '../documents/document.model';
+import {LinkInstanceModel} from '../link-instances/link-instance.model';
 import {LinkTypeModel} from '../link-types/link-type.model';
 import {TableCursor} from './table-cursor';
-import {TableColumn, TableColumnType, TableCompoundColumn, TableConfig, TableConfigColumn, TableConfigPart, TableHiddenColumn, TableModel, TablePart, TableRow, TableSingleColumn} from './table.model';
+import {TableColumn, TableColumnType, TableCompoundColumn, TableConfig, TableConfigColumn, TableConfigPart, TableConfigRow, TableHiddenColumn, TableModel, TablePart, TableSingleColumn} from './table.model';
 
 export function findTableColumn(columns: TableColumn[], path: number[]): TableColumn {
   const index = getColumnIndex(path);
@@ -357,7 +360,7 @@ export function calculateColumnsWidth(columns: TableColumn[]): number {
   return columns.reduce((width, column) => width + getTableColumnWidth(column), 0);
 }
 
-export function findTableRow(rows: TableRow[], rowPath: number[]): TableRow {
+export function findTableRow(rows: TableConfigRow[], rowPath: number[]): TableConfigRow {
   if (!rowPath || rowPath.length === 0) {
     return null;
   }
@@ -372,30 +375,8 @@ export function findTableRow(rows: TableRow[], rowPath: number[]): TableRow {
   return row && findTableRow(row.linkedRows, childPath);
 }
 
-export function getTableRowsByPart(rows: TableRow[], currentIndex: number, partIndex: number): TableRow[] {
-  if (currentIndex === partIndex) {
-    return rows;
-  }
-
-  return rows.reduce((linkedRows, row) => {
-    if (row.linkedRows && row.linkedRows.length > 0) {
-      return linkedRows.concat(row.linkedRows);
-    }
-    return linkedRows;
-  }, []);
-}
-
-export function calculateRowNumber(table: TableModel, rowIndex: number): number {
-  if (rowIndex === 0) {
-    return 1;
-  }
-
-  const previousRow = table.rows[rowIndex - 1];
-  return calculateRowNumber(table, rowIndex - 1) + countLinkedRows(previousRow);
-}
-
-export function countLinkedRows(row: TableRow): number {
-  if (!row.linkedRows || row.linkedRows.length === 0) {
+export function countLinkedRows(row: TableConfigRow): number {
+  if (!row || !row.linkedRows || row.linkedRows.length === 0 || !row.expanded) {
     return 1;
   }
 
@@ -416,14 +397,40 @@ export function isLastTableColumn(cursor: TableCursor, part: TablePart): boolean
     (cursor.columnIndex && cursor.columnIndex === part.columns.length - 1);
 }
 
-export function isLastTableRow(cursor: TableCursor, table: TableModel): boolean {
-  return cursor.rowPath && cursor.rowPath.length === 1 && cursor.rowPath[0] === table.rows.length - 1;
-}
-
 export function getTablePart(table: TableModel, cursor: TableCursor): TablePart {
   return table.parts[cursor.partIndex];
 }
 
 export function getTableElement(tableId: string): HTMLElement {
   return document.getElementById(`table-${tableId}`);
+}
+
+export function createEmptyTableRow(): TableConfigRow {
+  return {
+    correlationId: generateCorrelationId(),
+    linkedRows: []
+  };
+}
+
+export function createTableRow(document: DocumentModel, linkInstance?: LinkInstanceModel): TableConfigRow {
+  return {
+    documentId: document.id,
+    linkInstanceId: linkInstance && linkInstance.id,
+    linkedRows: []
+  };
+}
+
+export function isTableRowExpanded(rows: TableConfigRow[], rowPath: number[]): boolean {
+  if (rowPath.length === 0) {
+    return true;
+  }
+
+  const [index, ...childPath] = rowPath;
+  const row = rows[index];
+
+  if (childPath.length === 0) {
+    return row.linkedRows.length === 0 || row.expanded;
+  }
+
+  return !!row && row.expanded && isTableRowExpanded(row.linkedRows, childPath);
 }

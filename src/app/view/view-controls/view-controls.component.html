@@ -1,4 +1,4 @@
-<ng-container *ngIf="view | viewControlsInfo:name:(config$ | async):(perspective$ | async):(query$ | async) | async as viewControlsInfo">
+<ng-container *ngIf="{permissions: view | viewControlsInfo:name:(config$ | async):(perspective$ | async):(query$ | async) | async, viewChanged: viewChanged$ | async} as state">
   <form class="view-controls-grid mt-2">
     <div class="perspective d-flex align-items-center justify-content-start">
       <div class="input-group flex-nowrap mr-2 mb-2">
@@ -28,7 +28,7 @@
                class="dropdown-menu">
             <a *ngFor="let aperspective of perspectives | filterPerspectives:view.query"
                [class.active]="perspective === aperspective"
-               (click)="onSelectPerspective(aperspective, viewControlsInfo.canManage)"
+               (click)="onSelectPerspective(aperspective, state.permissions.canManage)"
                class="dropdown-item">
               <i class="fa-fw {{aperspective | perspectiveIcon}}"></i>
               <span class="ml-1 text-nowrap"
@@ -56,37 +56,37 @@
       <input #viewNameInput
              [class.font-italic]="!view.code || view.name !== name"
              [value]="name"
-             [disabled]="view && !viewControlsInfo.canManage"
+             [disabled]="view && !state.permissions.canManage"
              (input)="onNameInput(viewNameInput.value)"
              id="viewName"
              name="viewName"
-             (blur)="onInputBlur(viewControlsInfo.canManage)"
+             (blur)="onInputBlur(state.permissions.canManage)"
              type="text"
              class="form-control"
              autocomplete="off"
              placeholder="Type a title of this page, save, and share!" i18n-placeholder="@@view.untitled">
       <div class="input-group-append">
-        <button [disabled]="!(name && viewControlsInfo.viewChanged && viewControlsInfo.canManage)"
+        <button [disabled]="!(name && (!view.code || state.viewChanged) && state.permissions.canManage)"
                 class="btn"
-                [class.btn-primary]="name && viewControlsInfo.viewChanged && viewControlsInfo.canManage"
-                [class.btn-outline-secondary]="!(name && viewControlsInfo.viewChanged && viewControlsInfo.canManage)"
-                [class.disabled]="!(name && viewControlsInfo.viewChanged && viewControlsInfo.canManage)"
+                [class.btn-primary]="name && (!view.code || state.viewChanged) && state.permissions.canManage"
+                [class.btn-outline-secondary]="!(name && (!view.code || state.viewChanged) && state.permissions.canManage)"
+                [class.disabled]="!(name && (!view.code || state.viewChanged) && state.permissions.canManage)"
                 type="button"
                 title="Save" i18n-title="@@button.save"
                 (click)="onSave()">
           <i class="fas fa-save"></i>
         </button>
-        <button [disabled]="!(view.code && viewControlsInfo.canClone)"
+        <button [disabled]="!(view.code && state.permissions.canClone)"
                 class="btn btn-primary"
-                [class.btn-primary]="view.code && viewControlsInfo.canClone"
-                [class.btn-outline-secondary]="!(view.code && viewControlsInfo.canClone)"
-                [class.disabled]="!(view.code && viewControlsInfo.canClone)"
+                [class.btn-primary]="view.code && state.permissions.canClone"
+                [class.btn-outline-secondary]="!(view.code && state.permissions.canClone)"
+                [class.disabled]="!(view.code && state.permissions.canClone)"
                 type="button"
                 title="Copy" i18n-title="@@button.copy"
                 (click)="onCopy()">
           <i class="fas fa-copy"></i>
         </button>
-        <button [disabled]="!(view.code && viewControlsInfo.canManage)"
+        <button [disabled]="!(view.code && state.permissions.canManage)"
                 (click)="onShareClick()"
                 class="btn btn-primary"
                 type="button"
@@ -95,7 +95,7 @@
       </div>
     </div>
   </form>
-  <div *ngIf="viewControlsInfo.viewChanged && viewControlsInfo.canManage"
+  <div *ngIf="state.viewChanged && state.permissions.canManage"
        class="small text-right text-warning">
     <i class="far fa-exclamation-triangle mr-1"
        title="Changes are not saved yet" i18n-title="@@view.changes.not.saved">

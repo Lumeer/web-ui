@@ -26,7 +26,7 @@
                 [columns]="table | documentHintColumns:cursor"
                 [createLinkCallback]="createLinkCallback.bind(this)"
                 [excludedDocumentIds]="table | previousLinkedRow:cursor | linkedDocumentIds"
-                [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentIds[0]"
+                [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
                 [linkTypeId]="table.parts[cursor.partIndex - 1].linkTypeId"
                 [value]="editedValue"
                 (linkCreate)="onLinkCreate()">

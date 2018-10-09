@@ -21,13 +21,13 @@ import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChan
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {distinctUntilChanged, map} from 'rxjs/operators';
-import {AppState} from '../../../../../../../../core/store/app.state';
-import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
-import {LinkInstanceModel} from '../../../../../../../../core/store/link-instances/link-instance.model';
-import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
-import {TableSingleColumn} from '../../../../../../../../core/store/tables/table.model';
-import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
-import {selectEditedAttribute} from '../../../../../../../../core/store/tables/tables.state';
+import {AppState} from '../../../../../../../core/store/app.state';
+import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
+import {LinkInstanceModel} from '../../../../../../../core/store/link-instances/link-instance.model';
+import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
+import {TableSingleColumn} from '../../../../../../../core/store/tables/table.model';
+import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
+import {selectEditedAttribute} from '../../../../../../../core/store/tables/tables.state';
 import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.component';
 
 @Component({

@@ -17,10 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {generateCorrelationId} from '../../shared/utils/resource.utils';
+
 export class CorrelationIdGenerator {
 
+  /**
+   * @deprecated use function below instead
+   */
   public static generate(): string {
-    return Date.now() + ':' + Math.random();
+    return generateCorrelationId();
   }
 
 }

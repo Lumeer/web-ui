@@ -19,26 +19,27 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {Actions} from '@ngrx/effects';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged} from 'rxjs/operators';
+import {distinctUntilChanged, first} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
-import {AppState} from '../../../../../../../../core/store/app.state';
-import {AttributeModel} from '../../../../../../../../core/store/collections/collection.model';
-import {CollectionsAction} from '../../../../../../../../core/store/collections/collections.action';
-import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
-import {DocumentsAction} from '../../../../../../../../core/store/documents/documents.action';
-import {LinkInstanceModel} from '../../../../../../../../core/store/link-instances/link-instance.model';
-import {LinkInstancesAction} from '../../../../../../../../core/store/link-instances/link-instances.action';
-import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
-import {TableModel, TableSingleColumn} from '../../../../../../../../core/store/tables/table.model';
-import {findTableRow} from '../../../../../../../../core/store/tables/table.utils';
-import {TablesAction, TablesActionType} from '../../../../../../../../core/store/tables/tables.action';
-import {selectAffected} from '../../../../../../../../core/store/tables/tables.state';
-import {Direction} from '../../../../../../../../shared/direction';
-import {DocumentHintsComponent} from '../../../../../../../../shared/document-hints/document-hints.component';
-import {isKeyPrintable, KeyCode} from '../../../../../../../../shared/key-code';
-import {TableEditableCellDirective} from '../../../../../shared/directives/table-editable-cell.directive';
+import {AppState} from '../../../../../../../core/store/app.state';
+import {AttributeModel} from '../../../../../../../core/store/collections/collection.model';
+import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
+import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
+import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
+import {LinkInstanceModel} from '../../../../../../../core/store/link-instances/link-instance.model';
+import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
+import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
+import {TableModel, TableSingleColumn} from '../../../../../../../core/store/tables/table.model';
+import {findTableRow} from '../../../../../../../core/store/tables/table.utils';
+import {TablesAction, TablesActionType} from '../../../../../../../core/store/tables/tables.action';
+import {selectTableRow} from '../../../../../../../core/store/tables/tables.selector';
+import {selectAffected, selectTableById} from '../../../../../../../core/store/tables/tables.state';
+import {Direction} from '../../../../../../../shared/direction';
+import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
+import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
+import {TableEditableCellDirective} from '../../../../shared/directives/table-editable-cell.directive';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 
 @Component({
@@ -228,27 +229,45 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private createDocument(attributeId: string, attributeName: string, value: string) {
-    if (!attributeId) {
-      const document: DocumentModel = {...this.document, newData: {[attributeName]: {value}}};
-      const createDocumentAction = new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback()});
-      const newAttribute = {name: attributeName, constraints: []};
-
-      this.store$.dispatch(new CollectionsAction.CreateAttributes({
-        collectionId: this.document.collectionId,
-        attributes: [newAttribute],
-        nextAction: createDocumentAction,
-        callback: this.replaceTableColumnCallback(attributeName)
-      }));
-    } else {
-      const data = {[attributeId]: value};
-      const document: DocumentModel = {...this.document, data: data};
-
-      this.store$.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback()}));
-    }
+    this.store$.pipe(
+      select(selectTableById(this.cursor.tableId)),
+      first()
+    ).subscribe(table => {
+      if (!attributeId) {
+        this.createDocumentWithNewAttribute(table, attributeName, value);
+      } else {
+        this.createDocumentWithExistingAttribute(table, attributeId, value);
+      }
+    });
   }
 
-  private replaceTableColumnCallback(attributeName: string): (attributes: AttributeModel[]) => void {
-    const {cursor} = findTableColumnWithCursor(this.table, this.cursor.partIndex, attributeName);
+  private createDocumentWithNewAttribute(table: TableModel, attributeName: string, value: string) {
+    const document: DocumentModel = {...this.document, newData: {[attributeName]: {value}}};
+    const createDocumentAction = new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback(table)});
+    const newAttribute = {name: attributeName, constraints: []};
+
+    this.store$.dispatch(new CollectionsAction.CreateAttributes({
+      collectionId: this.document.collectionId,
+      attributes: [newAttribute],
+      nextAction: createDocumentAction,
+      callback: this.replaceTableColumnCallback(table, attributeName)
+    }));
+  }
+
+  private createDocumentWithExistingAttribute(table: TableModel, attributeId: string, value: string) {
+    this.store$.pipe(
+      select(selectTableRow(this.cursor)),
+      first()
+    ).subscribe(row => {
+      const data = {[attributeId]: value};
+      const document: DocumentModel = {...this.document, correlationId: row.correlationId, data: data};
+
+      this.store$.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback(table)}));
+    });
+  }
+
+  private replaceTableColumnCallback(table: TableModel, attributeName: string): (attributes: AttributeModel[]) => void {
+    const {cursor} = findTableColumnWithCursor(table, this.cursor.partIndex, attributeName);
 
     return attributes => {
       const attribute = attributes.find(attr => attr.name === attributeName);
@@ -258,55 +277,60 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     };
   }
 
-  private createLinkInstanceCallback(): (documentId: string) => void {
+  private createLinkInstanceCallback(table: TableModel): (documentId: string) => void {
     if (this.cursor.partIndex === 0) {
       return null;
     }
 
     // TODO what if table is embedded?
 
-    const {linkTypeId} = this.table.parts[this.cursor.partIndex - 1];
-    const previousRow = findTableRow(this.table.rows, this.cursor.rowPath.slice(0, -1));
+    const {linkTypeId} = table.parts[this.cursor.partIndex - 1];
+    const previousRow = findTableRow(table.config.rows, this.cursor.rowPath.slice(0, -1));
 
     return documentId => {
       const linkInstance: LinkInstanceModel = {
         linkTypeId,
-        documentIds: [previousRow.documentIds[0], documentId]
+        documentIds: [previousRow.documentId, documentId]
       };
-      this.store$.dispatch(new LinkInstancesAction.Create({
-        linkInstance,
-        callback: () => this.expandRows()
-      }));
+      this.store$.dispatch(new LinkInstancesAction.Create({linkInstance}));
     };
-  }
-
-  private expandRows() {
-    const cursor = {...this.cursor, rowPath: this.cursor.rowPath.slice(0, -1)};
-    this.store$.dispatch(new TablesAction.ExpandRows({cursor}));
   }
 
   private updateDocument(attributeId: string, attributeName: string, value: string) {
     if (!attributeId) {
-      const document = {collectionId: this.document.collectionId, id: this.document.id, data: {}, newData: {[attributeName]: {value}}};
-      const patchDocumentAction = new DocumentsAction.PatchData({document});
-      const newAttribute = {name: attributeName, constraints: []};
+      this.updateDocumentWithNewAttribute(attributeName, value);
+    } else {
+      this.updateDocumentWithExistingAttribute(attributeId, value);
+    }
+  }
 
+  private updateDocumentWithNewAttribute(attributeName: string, value: string) {
+    const document = {collectionId: this.document.collectionId, id: this.document.id, data: {}, newData: {[attributeName]: {value}}};
+    const patchDocumentAction = new DocumentsAction.PatchData({document});
+    const newAttribute = {name: attributeName, constraints: []};
+
+    this.store$.pipe(
+      select(selectTableById(this.cursor.tableId)),
+      first()
+    ).subscribe(table => {
       this.store$.dispatch(new CollectionsAction.CreateAttributes({
         collectionId: this.document.collectionId,
         attributes: [newAttribute],
         nextAction: patchDocumentAction,
-        callback: this.replaceTableColumnCallback(attributeName)
+        callback: this.replaceTableColumnCallback(table, attributeName)
       }));
+    });
+  }
+
+  private updateDocumentWithExistingAttribute(attributeId: string, value: string) {
+    // TODO what if user does not have permissions to see all columns?
+    if (this.cursor.partIndex > 0 && !value && !Object.entries(this.document.data)
+      .filter(([k]) => k !== attributeId)
+      .some(([, v]) => v)) {
+      this.deleteDocument();
     } else {
-      // TODO what if user does not have permissions to see all columns?
-      if (this.cursor.partIndex > 0 && !value && !Object.entries(this.document.data)
-        .filter(([k]) => k !== attributeId)
-        .some(([, v]) => v)) {
-        this.deleteDocument();
-      } else {
-        const document = {collectionId: this.document.collectionId, id: this.document.id, data: {[attributeId]: value}};
-        this.store$.dispatch(new DocumentsAction.PatchData({document}));
-      }
+      const document = {collectionId: this.document.collectionId, id: this.document.id, data: {[attributeId]: value}};
+      this.store$.dispatch(new DocumentsAction.PatchData({document}));
     }
   }
 
@@ -349,14 +373,22 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public createLinkCallback() {
-    this.expandRows();
+  public createLinkCallback(linkInstanceId: string, documentId: string) {
+    this.store$.dispatch(new TablesAction.ReplaceRows({
+      cursor: this.cursor,
+      deleteCount: 1,
+      rows: [{documentId, linkInstanceId, linkedRows: []}]
+    }));
   }
 
   private deleteLinkInstance() {
-    const linkInstanceId = findTableRow(this.table.rows, this.cursor.rowPath).linkInstanceIds[0];
-    const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
-    this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId, callback}));
+    this.store$.pipe(
+      select(selectTableRow(this.cursor)),
+      first()
+    ).subscribe(row => {
+      const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
+      this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId: row.linkInstanceId, callback}));
+    });
   }
 
   public onEditKeyDown(event: KeyboardEvent) {

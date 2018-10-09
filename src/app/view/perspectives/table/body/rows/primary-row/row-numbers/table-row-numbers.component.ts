@@ -19,8 +19,8 @@
 
 import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, QueryList, SimpleChanges, ViewChildren} from '@angular/core';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
-import {TableModel, TableRow} from '../../../../../../../core/store/tables/table.model';
-import {calculateRowNumber, countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
+import {TableConfigRow} from '../../../../../../../core/store/tables/table.model';
+import {countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
 
 @Component({
   selector: 'table-row-numbers',
@@ -31,13 +31,10 @@ import {calculateRowNumber, countLinkedRows, getTableElement} from '../../../../
 export class TableRowNumbersComponent implements OnChanges, AfterViewInit {
 
   @Input()
-  public table: TableModel;
-
-  @Input()
   public cursor: TableBodyCursor;
 
   @Input()
-  public row: TableRow;
+  public row: TableConfigRow;
 
   @ViewChildren('rowNumber')
   public rowNumberElements: QueryList<ElementRef>;
@@ -46,12 +43,15 @@ export class TableRowNumbersComponent implements OnChanges, AfterViewInit {
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.row && this.row) {
-      const rowsCount = countLinkedRows(this.row);
-      this.rowIndexes = Array.from(Array(rowsCount).keys());
+      this.rowIndexes = createRowIndexes(this.row);
     }
   }
 
   public ngAfterViewInit() {
+    this.setRowNumberColumnWidth();
+  }
+
+  private setRowNumberColumnWidth() {
     const widths = this.rowNumberElements.map(element => element.nativeElement.clientWidth);
     const width = Math.max(...widths);
 
@@ -63,15 +63,12 @@ export class TableRowNumbersComponent implements OnChanges, AfterViewInit {
     }
   }
 
-  public rowNumbers(): number[] {
-    if (!this.cursor.rowPath || this.cursor.rowPath.length !== 1) {
-      return [];
-    }
-
-    const firstRowNumber = calculateRowNumber(this.table, this.cursor.rowPath[0]);
-    const rowsCount = countLinkedRows(this.row);
-    const indexes = Array.from(Array(rowsCount).keys());
-    return indexes.map(index => firstRowNumber + index);
+  public trackByIndex(index: number) {
+    return index;
   }
 
+}
+
+function createRowIndexes(row: TableConfigRow): number[] {
+  return Array.from(Array(countLinkedRows(row)).keys());
 }
