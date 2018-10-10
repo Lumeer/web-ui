@@ -114,6 +114,7 @@ export class TableEditableCellDirective implements OnChanges {
 
     switch (event.code) {
       case KeyCode.Enter:
+      case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         this.stopEditing();
         event.preventDefault();

@@ -395,6 +395,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       case KeyCode.ArrowUp:
         return this.suggestions && this.suggestions.moveSelection(Direction.Up);
       case KeyCode.Enter:
+      case KeyCode.NumpadEnter:
         return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
       case KeyCode.Tab:
         return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Right}));

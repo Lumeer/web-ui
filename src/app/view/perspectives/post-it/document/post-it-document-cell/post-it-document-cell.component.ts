@@ -73,6 +73,7 @@ export class PostItDocumentCellComponent implements OnChanges {
         this.selectionHelper.moveUp();
         break;
       case KeyCode.Enter:
+      case KeyCode.NumpadEnter:
       case KeyCode.F2:
         this.selectionHelper.focusToggle(true);
         break;

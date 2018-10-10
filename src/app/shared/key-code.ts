@@ -65,6 +65,7 @@ export enum KeyCode {
   KeyX = 'KeyX',
   KeyY = 'KeyY',
   KeyZ = 'KeyZ',
+  NumpadEnter = 'NumpadEnter',
   Space = 'Space',
   Tab = 'Tab',
 

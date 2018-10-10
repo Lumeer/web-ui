@@ -270,7 +270,7 @@ export class ResourceChooserComponent implements OnChanges {
   }
 
   public onKeyDown(event: KeyboardEvent, element: HTMLElement) {
-    if (event.code === KeyCode.Enter) {
+    if (event.code === KeyCode.Enter || event.code === KeyCode.NumpadEnter) {
       element.blur();
     }
   }

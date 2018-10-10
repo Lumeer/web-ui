@@ -96,6 +96,7 @@ export class SearchInputComponent {
         this.onUpAndDownArrowKeysDown(event);
         return;
       case KeyCode.Enter:
+      case KeyCode.NumpadEnter:
         event.preventDefault();
         return;
     }
