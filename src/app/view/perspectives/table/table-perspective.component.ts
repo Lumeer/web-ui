@@ -225,6 +225,11 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
     }
   }
 
+  @HostListener('contextmenu', ['$event'])
+  public onContextMenu(event: MouseEvent) {
+    event.preventDefault();
+  }
+
   public onBodyScroll(event: Event) {
     const scrollLeft: number = event.target['scrollLeft'];
     $('table-header > div').css('left', -scrollLeft);
