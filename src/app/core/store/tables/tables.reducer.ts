@@ -164,7 +164,7 @@ function initRows(state: TablesState, action: TablesAction.InitRows): TablesStat
   const {table} = getTablePart(state, cursor);
 
   const rows = updateRows(table.config.rows, cursor.rowPath, oldRows => {
-    return oldRows.map(row => {
+    const newRows = oldRows.map(row => {
       if (!row.correlationId) {
         return row;
       }
@@ -182,6 +182,13 @@ function initRows(state: TablesState, action: TablesAction.InitRows): TablesStat
         linkInstanceId: linkInstance && linkInstance.id
       };
     });
+
+    const lastRow = newRows[newRows.length - 1];
+    if (cursor.partIndex === 0 && lastRow && lastRow.documentId) {
+      return newRows.concat(createEmptyTableRow());
+    }
+
+    return newRows;
   });
 
   const config = {...table.config, rows};
