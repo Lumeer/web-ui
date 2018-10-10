@@ -22,6 +22,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {combineLatest, Observable, of} from 'rxjs';
 import {concatMap, debounceTime, filter, first, flatMap, map, mergeMap, switchMap, withLatestFrom} from 'rxjs/operators';
+import {Direction} from '../../../shared/direction';
 import {getArrayDifference} from '../../../shared/utils/array.utils';
 import {generateAttributeName} from '../../../shared/utils/attribute.utils';
 import {AppState} from '../app.state';
@@ -49,7 +50,7 @@ import {DEFAULT_TABLE_ID, TableColumn, TableColumnType, TableCompoundColumn, Tab
 import {createCollectionPart, createEmptyTableRow, createLinkPart, createTableColumnsBySiblingAttributeIds, createTableRow, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {selectTablePart, selectTableRow, selectTableRows} from './tables.selector';
-import {selectTableById, selectTableCursor} from './tables.state';
+import {selectMoveTableCursorDown, selectTableById, selectTableCursor} from './tables.state';
 
 @Injectable()
 export class TablesEffects {
@@ -461,10 +462,11 @@ export class TablesEffects {
     debounceTime(100), // otherwise unwanted parallel syncing occurs
     switchMap(action => combineLatest(
       this.store$.pipe(select(selectTableRows(action.payload.cursor.tableId))),
-      this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query)))
+      this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query))),
+      this.store$.pipe(select(selectMoveTableCursorDown))
     ).pipe(
       first(),
-      mergeMap(([rows, documents]) => {
+      mergeMap(([rows, documents, moveCursorDown]) => {
         const {cursor} = action.payload;
 
         const createdDocuments = filterNewlyCreatedDocuments(rows, documents);
@@ -478,6 +480,9 @@ export class TablesEffects {
             documents: createdDocuments,
             linkInstances: []
           }));
+          if (moveCursorDown) {
+            actions.push(new TablesAction.MoveCursor({direction: Direction.Down}));
+          }
         }
 
         const documentIds = new Set(documents.map(doc => doc.id));
