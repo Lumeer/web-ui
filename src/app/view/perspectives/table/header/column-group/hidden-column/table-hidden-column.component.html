@@ -1,7 +1,7 @@
 <div [contextMenu]="contextMenu"
      [style.background]="collection$ | async | columnBackground"
      [style.width.px]="column | columnWidth"
-     (mousedown)="onMouseDown()"
+     (mousedown)="onMouseDown($event)"
      title="Show hidden columns" i18n-title="@@table.header.show.hidden.columns"
      class="table-border-right table-border-bottom text-center h-100">
   <i class="fas fa-ellipsis-v text-secondary"></i>
