@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {Actions} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, first} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {AppState} from '../../../../../../../core/store/app.state';
@@ -31,7 +31,7 @@ import {DocumentsAction} from '../../../../../../../core/store/documents/documen
 import {LinkInstanceModel} from '../../../../../../../core/store/link-instances/link-instance.model';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
 import {findTableColumnWithCursor, TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
-import {TableModel, TableSingleColumn} from '../../../../../../../core/store/tables/table.model';
+import {TableConfigRow, TableModel, TableSingleColumn} from '../../../../../../../core/store/tables/table.model';
 import {findTableRow} from '../../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../../core/store/tables/tables.action';
 import {selectTableRow} from '../../../../../../../core/store/tables/tables.selector';
@@ -229,20 +229,22 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private createDocument(attributeId: string, attributeName: string, value: string) {
-    this.store$.pipe(
-      select(selectTableById(this.cursor.tableId)),
+    combineLatest(
+      this.store$.pipe(select(selectTableById(this.cursor.tableId))),
+      this.store$.pipe(select(selectTableRow(this.cursor)))
+    ).pipe(
       first()
-    ).subscribe(table => {
+    ).subscribe(([table, row]) => {
       if (!attributeId) {
-        this.createDocumentWithNewAttribute(table, attributeName, value);
+        this.createDocumentWithNewAttribute(table, row, attributeName, value);
       } else {
-        this.createDocumentWithExistingAttribute(table, attributeId, value);
+        this.createDocumentWithExistingAttribute(table, row, attributeId, value);
       }
     });
   }
 
-  private createDocumentWithNewAttribute(table: TableModel, attributeName: string, value: string) {
-    const document: DocumentModel = {...this.document, newData: {[attributeName]: {value}}};
+  private createDocumentWithNewAttribute(table: TableModel, row: TableConfigRow, attributeName: string, value: string) {
+    const document: DocumentModel = {...this.document, correlationId: row.correlationId, newData: {[attributeName]: {value}}};
     const createDocumentAction = new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback(table)});
     const newAttribute = {name: attributeName, constraints: []};
 
@@ -254,16 +256,11 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     }));
   }
 
-  private createDocumentWithExistingAttribute(table: TableModel, attributeId: string, value: string) {
-    this.store$.pipe(
-      select(selectTableRow(this.cursor)),
-      first()
-    ).subscribe(row => {
-      const data = {[attributeId]: value};
-      const document: DocumentModel = {...this.document, correlationId: row.correlationId, data: data};
+  private createDocumentWithExistingAttribute(table: TableModel, row: TableConfigRow, attributeId: string, value: string) {
+    const data = {[attributeId]: value};
+    const document: DocumentModel = {...this.document, correlationId: row.correlationId, data: data};
 
-      this.store$.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback(table)}));
-    });
+    this.store$.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback(table)}));
   }
 
   private replaceTableColumnCallback(table: TableModel, attributeName: string): (attributes: AttributeModel[]) => void {
@@ -398,6 +395,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       case KeyCode.ArrowUp:
         return this.suggestions && this.suggestions.moveSelection(Direction.Up);
       case KeyCode.Enter:
+      case KeyCode.NumpadEnter:
         return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
       case KeyCode.Tab:
         return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Right}));

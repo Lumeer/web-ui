@@ -87,6 +87,7 @@ export class AttributeValueComponent implements OnInit {
         this.onLeftArrowKeyDown();
         break;
       case KeyCode.Enter:
+      case KeyCode.NumpadEnter:
         event.preventDefault();
         break;
       case KeyCode.Backspace:

@@ -23,7 +23,7 @@ import {findLinkInstanceByDocumentId} from '../link-instances/link-instance.util
 import {TableBodyCursor, TableHeaderCursor} from './table-cursor';
 import {convertTablePartsToConfig} from './table.converter';
 import {TableColumn, TableConfig, TableConfigRow, TableModel, TablePart} from './table.model';
-import {maxColumnDepth, moveTableColumn, replaceTableColumns, splitRowPath} from './table.utils';
+import {createEmptyTableRow, maxColumnDepth, moveTableColumn, replaceTableColumns, splitRowPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {initialTablesState, tablesAdapter, TablesState} from './tables.state';
 
@@ -124,11 +124,12 @@ function addPrimaryRows(state: TablesState, action: TablesAction.AddPrimaryRows)
 }
 
 function appendPrimaryRows(config: TableConfig, cursor: TableBodyCursor, rows: TableConfigRow[]): TableConfig {
-  const lastRow = config.rows[config.rows.length - 1];
-  if (lastRow.documentId) {
-    return {...config, rows: config.rows.concat(rows)};
+  const existingRows = config.rows || [];
+  const lastRow = existingRows[existingRows.length - 1];
+  if (!lastRow || lastRow.documentId) {
+    return {...config, rows: existingRows.concat(rows)};
   } else {
-    return {...config, rows: config.rows.slice(0, config.rows.length - 1).concat(rows).concat(lastRow)};
+    return {...config, rows: existingRows.slice(0, existingRows.length - 1).concat(rows).concat(createEmptyTableRow())};
   }
 }
 
@@ -163,7 +164,7 @@ function initRows(state: TablesState, action: TablesAction.InitRows): TablesStat
   const {table} = getTablePart(state, cursor);
 
   const rows = updateRows(table.config.rows, cursor.rowPath, oldRows => {
-    return oldRows.map(row => {
+    const newRows = oldRows.map(row => {
       if (!row.correlationId) {
         return row;
       }
@@ -181,6 +182,13 @@ function initRows(state: TablesState, action: TablesAction.InitRows): TablesStat
         linkInstanceId: linkInstance && linkInstance.id
       };
     });
+
+    const lastRow = newRows[newRows.length - 1];
+    if (cursor.partIndex === 0 && lastRow && lastRow.documentId) {
+      return newRows.concat(createEmptyTableRow());
+    }
+
+    return newRows;
   });
 
   const config = {...table.config, rows};

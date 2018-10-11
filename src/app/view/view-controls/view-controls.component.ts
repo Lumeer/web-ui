@@ -125,6 +125,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
         this.name = '';
       }
 
+      this.nameChanged$.next(false);
       this.bindViewChanged(this.view);
     }
   }

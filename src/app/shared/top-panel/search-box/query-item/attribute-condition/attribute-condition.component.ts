@@ -107,6 +107,7 @@ export class AttributeConditionComponent implements OnInit {
         this.onRightArrowKeyDown();
         break;
       case KeyCode.Enter:
+      case KeyCode.NumpadEnter:
       case KeyCode.Space:
         event.preventDefault();
         break;

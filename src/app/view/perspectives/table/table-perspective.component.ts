@@ -212,6 +212,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
         event.preventDefault();
         return this.store$.dispatch(new TablesAction.RemoveSelectedCell());
       case KeyCode.Enter:
+      case KeyCode.NumpadEnter:
       case KeyCode.F2:
         event.preventDefault();
         return this.store$.dispatch(new TablesAction.EditSelectedCell());
@@ -222,6 +223,11 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
         return this.store$.dispatch(new TablesAction.EditSelectedCell());
     }
+  }
+
+  @HostListener('contextmenu', ['$event'])
+  public onContextMenu(event: MouseEvent) {
+    event.preventDefault();
   }
 
   public onBodyScroll(event: Event) {
