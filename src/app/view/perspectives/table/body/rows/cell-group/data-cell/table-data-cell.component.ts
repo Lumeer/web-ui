@@ -42,6 +42,8 @@ import {DocumentHintsComponent} from '../../../../../../../shared/document-hints
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {TableEditableCellDirective} from '../../../../shared/directives/table-editable-cell.directive';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
+import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
+import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 
 @Component({
   selector: 'table-data-cell',
@@ -68,6 +70,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public table: TableModel;
+
+  @Input()
+  public allowedPermissions: AllowedPermissions;
 
   @ViewChild(TableDataCellMenuComponent)
   public menuComponent: TableDataCellMenuComponent;
@@ -406,6 +411,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (isKeyPrintable(event) && this.suggestions) {
       return this.suggestions.clearSelection();
     }
+  }
+
+  public onKeyDown(event: KeyboardEvent) {
+    event[EDITABLE_EVENT] = this.allowedPermissions && this.allowedPermissions.writeWithView;
   }
 
   public onMouseDown(event: MouseEvent) {

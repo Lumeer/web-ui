@@ -29,6 +29,7 @@ import {getTableElement, getTablePart} from '../../../../../core/store/tables/ta
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {deepArrayEquals} from '../../../../../shared/utils/array.utils';
 import {ColumnLayout} from '../../../../../shared/utils/layout/column-layout';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'table-column-group',
@@ -52,6 +53,9 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
 
   @Input()
   public linkType: LinkTypeModel;
+
+  @Input()
+  public allowedPermissions: AllowedPermissions;
 
   private columnsLayout: ColumnLayout;
   public columnGroupId: string;

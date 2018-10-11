@@ -1,15 +1,18 @@
 <div *ngIf="collection$ | async as collection"
      class="d-flex flex-column align-items-start h-100">
-  <table-caption [collection]="collection"
-                 [cursor]="cursor"
-                 [style.width]="part | partWidth | pixel"
-                 (click)="onCaptionClick()">
-  </table-caption>
-  <table-column-group [table]="table"
-                      [cursor]="cursor"
-                      [columns]="part.columns"
-                      [collection]="collection"
-                      [class.table-border-left]="cursor | isFirstPart"
-                      class="d-block table-border-top">
-  </table-column-group>
+  <ng-container *ngIf="collection | collectionPermissions | async as allowedPermissions">
+    <table-caption [collection]="collection"
+                   [cursor]="cursor"
+                   [style.width]="part | partWidth | pixel"
+                   (click)="onCaptionClick()">
+    </table-caption>
+    <table-column-group [table]="table"
+                        [cursor]="cursor"
+                        [columns]="part.columns"
+                        [allowedPermissions]="allowedPermissions"
+                        [collection]="collection"
+                        [class.table-border-left]="cursor | isFirstPart"
+                        class="d-block table-border-top">
+    </table-column-group>
+  </ng-container>
 </div>

@@ -23,7 +23,7 @@ import {Observable, of, combineLatest as observableCombineLatest} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {authorHasRoleInView, userHasRoleInResource} from '../utils/resource.utils';
+import {authorRolesInView, userRolesInResource} from '../utils/resource.utils';
 import {UserModel} from '../../core/store/users/user.model';
 import {selectCurrentView} from '../../core/store/views/views.state';
 import {ViewModel} from '../../core/store/views/view.model';
@@ -31,6 +31,8 @@ import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {selectAllDocuments} from '../../core/store/documents/documents.state';
 import {getCollectionsIdsFromView} from '../../core/store/collections/collection.util';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {Role} from '../../core/model/role';
 
 @Pipe({
   name: 'collectionPermissions',
@@ -44,32 +46,53 @@ export class CollectionPermissionsPipe implements PipeTransform {
   public constructor(private store: Store<AppState>) {
   }
 
-  public transform(collection: CollectionModel, role: string): Observable<boolean> {
+  public transform(collection: CollectionModel): Observable<AllowedPermissions> {
     return this.store.select(selectCurrentUserForWorkspace).pipe(
       mergeMap(currentUser => {
         if (!currentUser || !collection) {
-          return of(false);
+          return of({});
         }
 
-        const hasDirectAccess = userHasRoleInResource(currentUser, collection, role);
-        if (hasDirectAccess) {
-          return of(true);
-        }
+        const userRoles = userRolesInResource(currentUser, collection);
+        const read = userRoles.includes(Role.Read);
+        const write = userRoles.includes(Role.Write);
+        const manage = userRoles.includes(Role.Manage);
 
-        return this.userHasRoleInView(currentUser, collection, role);
+        return this.userPermissionsInView(currentUser, collection).pipe(
+          map(viewAllowedPermissions => {
+            const readWithView = viewAllowedPermissions.readWithView || read;
+            const writeWithView = viewAllowedPermissions.writeWithView || write;
+            const manageWithView = viewAllowedPermissions.manageWithView || manage;
+
+            return {read, write, manage, readWithView, writeWithView, manageWithView};
+          })
+        );
       })
     );
   }
 
-  private userHasRoleInView(user: UserModel, collection: CollectionModel, role: string): Observable<boolean> {
+  private userPermissionsInView(user: UserModel, collection: CollectionModel): Observable<AllowedPermissions> {
     return this.store.select(selectCurrentView).pipe(
       mergeMap(view => {
         if (!view) {
-          return of(false);
+          return of({});
         }
 
         return this.viewContainsCollection(view, collection).pipe(
-          map(contains => contains && userHasRoleInResource(user, view, role) && authorHasRoleInView(view, collection.id, role))
+          map(contains => {
+            if (!contains) {
+              return {};
+            }
+
+            const userRoles = userRolesInResource(user, view);
+            const authorRoles = authorRolesInView(view, collection.id);
+
+            const readView = userRoles.includes(Role.Read) && authorRoles.includes(Role.Read);
+            const writeView = userRoles.includes(Role.Write) && authorRoles.includes(Role.Write);
+            const manageView = userRoles.includes(Role.Manage) && authorRoles.includes(Role.Manage);
+
+            return {readView, writeView, manageView};
+          })
         );
       })
     );

@@ -41,6 +41,8 @@ import DestroyTable = TablesAction.DestroyTable;
 
 declare let $: any;
 
+export const EDITABLE_EVENT = 'editableEvent';
+
 @Component({
   selector: 'table-perspective',
   templateUrl: './table-perspective.component.html',
@@ -197,6 +199,8 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const editableEvent = event[EDITABLE_EVENT];
+
     switch (event.code) {
       case KeyCode.ArrowLeft:
         return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Left}));
@@ -211,14 +215,20 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
       case KeyCode.Backspace:
       case KeyCode.Delete:
         event.preventDefault();
-        return this.store$.dispatch(new TablesAction.RemoveSelectedCell());
+        if (editableEvent) {
+          return this.store$.dispatch(new TablesAction.RemoveSelectedCell());
+        }
+        return;
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.F2:
         event.preventDefault();
-        return this.store$.dispatch(new TablesAction.EditSelectedCell({}));
+        if (editableEvent) {
+          return this.store$.dispatch(new TablesAction.EditSelectedCell({}));
+        }
+        return;
       default:
-        if (!isKeyPrintable(event) || event.ctrlKey || event.altKey || event.metaKey) {
+        if (!isKeyPrintable(event) || event.ctrlKey || event.altKey || event.metaKey || !editableEvent) {
           return;
         }
 

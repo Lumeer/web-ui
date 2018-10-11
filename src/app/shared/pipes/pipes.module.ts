@@ -43,9 +43,12 @@ import {UserRolesInResource} from './user-roles-in-resource.pipe';
 import {IncludesPipe} from './includes.pipe';
 import {CanActivatePagePipe} from './can-activate-page.pipe';
 import {PageEndIndexPipe} from './page-end-index.pipe';
-import { LogPipe } from './log.pipe';
-import { RemoveHtmlCommentsPipe } from './remove-html-comments.pipe';
+import {LogPipe} from './log.pipe';
+import {RemoveHtmlCommentsPipe} from './remove-html-comments.pipe';
 import {CollectionPermissionsPipe} from './collection-permissions.pipe';
+import {LinkTypePermissionsPipe} from './link-type-permissions.pipe';
+import {DocumentPermissionsPipe} from './document-permissions.pipe';
+import {LinkInstancePermissionsPipe} from './link-instance-permissions.pipe';
 
 @NgModule({
   imports: [
@@ -78,7 +81,10 @@ import {CollectionPermissionsPipe} from './collection-permissions.pipe';
     PageEndIndexPipe,
     LogPipe,
     RemoveHtmlCommentsPipe,
-    CollectionPermissionsPipe
+    CollectionPermissionsPipe,
+    LinkTypePermissionsPipe,
+    DocumentPermissionsPipe,
+    LinkInstancePermissionsPipe
   ],
   exports: [
     LightenColorPipe,
@@ -107,7 +113,10 @@ import {CollectionPermissionsPipe} from './collection-permissions.pipe';
     PageEndIndexPipe,
     LogPipe,
     RemoveHtmlCommentsPipe,
-    CollectionPermissionsPipe
+    CollectionPermissionsPipe,
+    LinkTypePermissionsPipe,
+    DocumentPermissionsPipe,
+    LinkInstancePermissionsPipe
   ]
 })
 export class PipesModule {

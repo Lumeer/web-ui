@@ -1,11 +1,11 @@
 <div class="row mt-2 mb-4">
-  <div class="col" *ngIf="{write: selectedCollection | collectionPermissions:'write' | async} as permissions">
+  <div class="col" *ngIf="selectedCollection | collectionPermissions | async as allowedPermissions">
     <button type="button"
             class="btn btn-sm btn-primary"
             title="Add Record"
             i18n-title="@@shared.preview.results.addDocument"
-            [ngClass]="permissions.write ? 'cursor-pointer' : 'cursor-not-allowed'"
-            [disabled]="!permissions.write"
+            [ngClass]="allowedPermissions.writeWithView ? 'cursor-pointer' : 'cursor-not-allowed'"
+            [disabled]="!allowedPermissions.writeWithView"
             (click)="onNewDocument()">
       <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;
       <span class="font-weight-bold" i18n="@@create.new.document">Create New Record</span>

@@ -1,11 +1,10 @@
-<ng-container *ngIf="{write: collection | collectionPermissions:'write' | async,
-                      directRead: collection | permissions:'read' | async} as permissions">
+<ng-container *ngIf="collection | collectionPermissions | async as allowedPermissions">
   <post-it-document-header
     class="card-header px-2 py-1 d-flex w-100"
     [class.cursor-move]="canManageConfig"
     [collection]="collection"
-    [readonly]="!permissions.write"
-    [directRead]="permissions.directRead"
+    [readonly]="!allowedPermissions.writeWithView"
+    [directRead]="allowedPermissions.read"
     [favorite]="favorite$ | async"
     [initialized]="documentModel.id"
     (remove)="onRemove()"
@@ -23,7 +22,7 @@
             [key]="getDocumentKey()"
             [row]="idx"
             [index]="index"
-            [readonly]="!permissions.write"
+            [readonly]="!allowedPermissions.writeWithView"
             [column]="0"
             [additionalClasses]="isDefaultAttribute(row.id) ? 'attribute text-default-attribute' : 'attribute'"
             [perspectiveId]="perspectiveId"
@@ -41,7 +40,7 @@
             [key]="getDocumentKey()"
             [row]="idx"
             [index]="index"
-            [readonly]="!permissions.write"
+            [readonly]="!allowedPermissions.writeWithView"
             [column]="1"
             [perspectiveId]="perspectiveId"
             [selectionHelper]="selectionHelper"
@@ -56,7 +55,7 @@
       </ng-container>
 
 
-      <li class="w-100" *ngIf="permissions.write">
+      <li class="w-100" *ngIf="allowedPermissions.writeWithView">
         <div class="w-100 h-100 clickable" (click)="addAttrRow()">
           <i class="fas fa-plus pt-2 pl-1"></i>
         </div>

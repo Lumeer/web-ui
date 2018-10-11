@@ -1,5 +1,4 @@
-<ng-container *ngIf="{write: collection | collectionPermissions:'write' | async,
-                      directRead: collection | permissions:'read' | async} as permissions">
+<ng-container *ngIf="collection | collectionPermissions | async as allowedPermissions">
   <div class="row mt-2 mb-2">
     <div class="col-8 d-flex align-bottom align-self-end">
       <div class="align-text-bottom w-100">
@@ -13,12 +12,12 @@
         <div class="toolbar">
           <i class="fas fa-fw fa-trash text-danger clickable clickable-danger"
              aria-hidden="true"
-             *ngIf="permissions.write"
+             *ngIf="allowedPermissions.writeWithView"
              title="Remove Record"
              i18n-title="@@document.detail.remove"
              (click)="onRemoveDocument()"
           ></i>
-          <ng-container *ngIf="permissions.directRead">
+          <ng-container *ngIf="allowedPermissions.read">
             <i *ngIf="favorite$ | async" class="fas fa-fw fa-star ml-2 mr-4 text-warning clickable clickable-warning"
                title="Remove from favorites"
                i18n-title="@@document.detail.favorite.remove"
@@ -29,7 +28,7 @@
                i18n-title="@@document.detail.favorite.add"
                (click)="onToggleFavorite()"></i>
           </ng-container>
-          <ng-container *ngIf="permissions.directRead">
+          <ng-container *ngIf="allowedPermissions.read">
             <span i18n="@@document.detail.view.in">View in:</span>
             <button class="btn btn-primary btn-sm ml-2" (click)="goToTablePerspective()">
               <i class="far fa-table mr-1"></i>
@@ -52,13 +51,13 @@
                [key]="row.newName || row.name"
                [value]="row.newValue || row.value"
                [defaultAttribute]="row.id === collection?.defaultAttributeId"
-               [readOnly]="!permissions.write"
+               [readOnly]="!allowedPermissions.writeWithView"
                (change)="submitRowChange(idx, $event)"
                (remove)="onRemoveRow(idx)"
                [warning]="row.warning">
     </key-value>
   </ng-container>
-  <div *ngIf="permissions.write" class="row border-top mb-4">
+  <div *ngIf="allowedPermissions.writeWithView" class="row border-top mb-4">
     <div class="col">
       <button class="btn btn-sm btn-primary my-2" (click)="addAttrRow()">
         <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;

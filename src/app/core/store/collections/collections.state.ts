@@ -50,6 +50,9 @@ export const selectCollectionByWorkspace = createSelector(selectCollectionsDicti
 
 export const selectCollectionById = (id: string) => createSelector(selectCollectionsDictionary, collectionsDictionary => collectionsDictionary[id]);
 
+export const selectCollectionsByIds = (ids: string[]) => createSelector(selectCollectionsDictionary,
+  collectionsDictionary => ids.map(id => collectionsDictionary[id]));
+
 export const selectCollectionsByLinkType = (linkTypeId: string) => createSelector(
   selectCollectionsDictionary, selectLinkTypeById(linkTypeId), (collectionsMap, linkType) => {
     return linkType.collectionIds.map(id => collectionsMap[id]);

@@ -21,6 +21,7 @@
             <table-single-column [table]="table"
                                  [cursor]="columnCursor"
                                  [column]="column.parent"
+                                 [allowedPermissions]="allowedPermissions"
                                  [collection]="collection"
                                  [linkType]="linkType"
                                  [leaf]="!column.children.length"
@@ -31,6 +32,7 @@
                                 [table]="table"
                                 [cursor]="columnCursor"
                                 [columns]="column.children"
+                                [allowedPermissions]="allowedPermissions"
                                 [collection]="collection"
                                 [linkType]="linkType"
                                 class="d-block">
