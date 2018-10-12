@@ -83,15 +83,19 @@ export class TableHiddenColumnComponent implements OnChanges {
     }
   }
 
+  public onClick(event: MouseEvent) {
+    this.showContextMenu(event);
+    event.stopPropagation();
+  }
+
   public onMouseDown(event: MouseEvent) {
     this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
-    setTimeout(() => this.showContextMenu(event), 100);
     event.stopPropagation();
   }
 
   private showContextMenu(event: MouseEvent) {
     this.contextMenuService.show.next({
-      anchorElement: event.target,
+      anchorElement: null,
       contextMenu: this.contextMenuComponent,
       event,
       item: null
