@@ -2,5 +2,5 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: calc(100% - var(--browser-warning-height, 0px));
+  height: calc(100% - var(--auth-callback-offset-top, 0px));
 }
