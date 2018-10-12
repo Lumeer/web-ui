@@ -7,7 +7,7 @@
 <div *ngIf="query | displayable"
      (clickOutside)="onClickOutside($event)"
      class="flex-grow-1 d-flex flex-column m-0 overflow-x-auto">
-  <table-header [table]="table"></table-header>
+  <table-header [table]="table$ | async"></table-header>
   <table-body [tableId]="tableId"
               [query]="query"
               (scroll)="onBodyScroll($event)"
