@@ -26,8 +26,8 @@ import {getTableColumnWidth} from '../../../../../core/store/tables/table.utils'
 })
 export class ColumnWidthPipe implements PipeTransform {
 
-  public transform(column: TableColumn): number {
-    return getTableColumnWidth(column);
+  public transform(column: TableColumn, showHiddenColumns: boolean = false): number {
+    return getTableColumnWidth(column, showHiddenColumns);
   }
 
 }

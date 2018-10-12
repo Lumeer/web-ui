@@ -43,6 +43,9 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
   @Input()
   public row: TableConfigRow;
 
+  @Input()
+  public canManageConfig: boolean;
+
   @Output()
   public unsetCursor = new EventEmitter();
 

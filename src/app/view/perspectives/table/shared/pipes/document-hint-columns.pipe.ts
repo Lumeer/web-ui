@@ -28,12 +28,12 @@ import {DocumentHintColumn} from '../../../../../shared/document-hints/document-
 })
 export class DocumentHintColumnsPipe implements PipeTransform {
 
-  public transform(table: TableModel, cursor: TableBodyCursor): DocumentHintColumn[] {
+  public transform(table: TableModel, cursor: TableBodyCursor, showHiddenColumns: boolean = false): DocumentHintColumn[] {
     return filterLeafColumns(table.parts[cursor.partIndex].columns)
       .filter(column => !(column instanceof TableSingleColumn && !column.attributeId))
       .map(column => ({
         attributeId: (column as TableSingleColumn).attributeId,
-        width: getTableColumnWidth(column)
+        width: getTableColumnWidth(column, showHiddenColumns)
       }));
   }
 

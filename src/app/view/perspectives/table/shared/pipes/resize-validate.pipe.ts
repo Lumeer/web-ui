@@ -30,14 +30,14 @@ const MIN_COLUMN_WIDTH = 30;
 })
 export class ResizeValidatePipe implements PipeTransform {
 
-  public transform(column: TableCompoundColumn): (event: ResizeEvent) => boolean {
+  public transform(column: TableCompoundColumn, showHiddenColumns: boolean = false): (event: ResizeEvent) => boolean {
     return (event: ResizeEvent) => {
       if (!hasTableColumnChildren(column)) {
         return event.rectangle.width >= MIN_COLUMN_WIDTH;
       }
 
       const lastChild = getLastFromArray(column.children);
-      const lastChildWidth = getTableColumnWidth(lastChild);
+      const lastChildWidth = getTableColumnWidth(lastChild, showHiddenColumns);
       const delta = Number(event.edges.right);
       return lastChildWidth + delta >= MIN_COLUMN_WIDTH;
     };

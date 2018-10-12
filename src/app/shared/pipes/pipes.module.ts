@@ -49,6 +49,7 @@ import {CollectionPermissionsPipe} from './collection-permissions.pipe';
 import {LinkTypePermissionsPipe} from './link-type-permissions.pipe';
 import {DocumentPermissionsPipe} from './document-permissions.pipe';
 import {LinkInstancePermissionsPipe} from './link-instance-permissions.pipe';
+import {CanManageConfigPipe} from './can-manage-config.pipe';
 
 @NgModule({
   imports: [
@@ -84,7 +85,8 @@ import {LinkInstancePermissionsPipe} from './link-instance-permissions.pipe';
     CollectionPermissionsPipe,
     LinkTypePermissionsPipe,
     DocumentPermissionsPipe,
-    LinkInstancePermissionsPipe
+    LinkInstancePermissionsPipe,
+    CanManageConfigPipe
   ],
   exports: [
     LightenColorPipe,
@@ -116,7 +118,8 @@ import {LinkInstancePermissionsPipe} from './link-instance-permissions.pipe';
     CollectionPermissionsPipe,
     LinkTypePermissionsPipe,
     DocumentPermissionsPipe,
-    LinkInstancePermissionsPipe
+    LinkInstancePermissionsPipe,
+    CanManageConfigPipe
   ]
 })
 export class PipesModule {

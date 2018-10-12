@@ -22,23 +22,24 @@ import {ViewModel} from './view.model';
 import {isNullOrUndefined} from 'util';
 import {arrayIntersection} from '../../../shared/utils/array.utils';
 
-export class ViewFilters {
+export function filterViewsByQuery(views: ViewModel[], query: QueryModel): ViewModel[] {
+  let filtered = views.slice();
 
-  public static filterByQuery(views: ViewModel[], query: QueryModel): ViewModel[] {
-    let filtered = views.slice();
-
-    if (isNullOrUndefined(query)) {
-      return filtered;
-    }
-
-    if (query.fulltext && query.fulltext.length > 0) {
-      filtered = filtered.filter(view => view.name.toLowerCase().includes(query.fulltext.toLowerCase()));
-    }
-
-    if (query.collectionIds && query.collectionIds.length > 0) {
-      filtered = filtered.filter(view => view.query && arrayIntersection(view.query.collectionIds, query.collectionIds).length > 0);
-    }
-
+  if (isNullOrUndefined(query)) {
     return filtered;
   }
+
+  if (query.fulltext && query.fulltext.length > 0) {
+    filtered = filtered.filter(view => view.name.toLowerCase().includes(query.fulltext.toLowerCase()));
+  }
+
+  if (query.collectionIds && query.collectionIds.length > 0) {
+    filtered = filtered.filter(view => view.query && arrayIntersection(view.query.collectionIds, query.collectionIds).length > 0);
+  }
+
+  return filtered;
+}
+
+export function sortViewsById(views: ViewModel[]): ViewModel[] {
+  return views.sort((a, b) => b.id.localeCompare(a.id));
 }

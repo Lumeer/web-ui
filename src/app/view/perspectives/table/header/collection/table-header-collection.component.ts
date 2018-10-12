@@ -44,6 +44,9 @@ export class TableHeaderCollectionComponent implements OnChanges {
   @Input()
   public table: TableModel;
 
+  @Input()
+  public canManageConfig: boolean;
+
   public collection$: Observable<CollectionModel>;
 
   public constructor(private store: Store<AppState>) {

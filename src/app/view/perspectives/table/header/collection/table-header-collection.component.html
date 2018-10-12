@@ -3,12 +3,13 @@
   <ng-container *ngIf="collection | collectionPermissions | async as allowedPermissions">
     <table-caption [collection]="collection"
                    [cursor]="cursor"
-                   [style.width]="part | partWidth | pixel"
+                   [style.width]="part | partWidth:canManageConfig | pixel"
                    (click)="onCaptionClick()">
     </table-caption>
     <table-column-group [table]="table"
                         [cursor]="cursor"
                         [columns]="part.columns"
+                        [canManageConfig]="canManageConfig"
                         [allowedPermissions]="allowedPermissions"
                         [collection]="collection"
                         [class.table-border-left]="cursor | isFirstPart"

@@ -57,6 +57,9 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   @Input()
   public allowedPermissions: AllowedPermissions;
 
+  @Input()
+  public canManageConfig: boolean;
+
   private columnsLayout: ColumnLayout;
   public columnGroupId: string;
 
@@ -70,7 +73,7 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (this.hasColumnsChanged(changes) || this.hasPathChanged(changes)) {
+    if (this.hasColumnsChanged(changes) || this.hasPathChanged(changes) || this.canManageViewChanged(changes)) {
       this.refreshLayout();
     }
   }
@@ -89,6 +92,13 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
     return this.columns && !deepArrayEquals(this.columns, changes['columns'].previousValue);
   }
 
+  private canManageViewChanged(changes: SimpleChanges): boolean {
+    if (!changes.canManageView) {
+      return false;
+    }
+    return changes.canManageView.previousValue !== changes.canManageView.currentValue;
+  }
+
   private refreshLayout() {
     this.destroyLayout();
     this.initLayout();
@@ -101,7 +111,7 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
         horizontal: true,
         rounding: true
       },
-      dragEnabled: true,
+      dragEnabled: this.canManageConfig,
       dragAxis: 'x',
       dragStartPredicate: (item, event) => this.dragStartPredicate(item, event)
     }, this.zone, ({fromIndex, toIndex}) => this.onMoveColumn(fromIndex, toIndex));

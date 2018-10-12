@@ -27,6 +27,7 @@ export class ViewConverter {
 
   public static convertToModel(dto: View): ViewModel {
     return {
+      id: dto.id,
       code: dto.code,
       name: dto.name,
       description: dto.description,

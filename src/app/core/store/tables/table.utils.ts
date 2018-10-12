@@ -294,23 +294,23 @@ export function resizeLastColumnChild(column: TableCompoundColumn, delta: number
 
 export const HIDDEN_COLUMN_WIDTH = 10;
 
-export function getTableColumnWidth(column: TableColumn): number {
+export function getTableColumnWidth(column: TableColumn, showHiddenColumns: boolean): number {
   switch (column.type) {
     case TableColumnType.COMPOUND:
-      return getCompoundColumnWidth(column as TableCompoundColumn);
+      return getCompoundColumnWidth(column as TableCompoundColumn, showHiddenColumns);
     case TableColumnType.HIDDEN:
-      return HIDDEN_COLUMN_WIDTH;
+      return showHiddenColumns ? HIDDEN_COLUMN_WIDTH : 0;
     case TableColumnType.SINGLE:
       return (column as TableSingleColumn).width;
   }
 }
 
-function getCompoundColumnWidth(column: TableCompoundColumn): number {
+function getCompoundColumnWidth(column: TableCompoundColumn, showHiddenColumns: boolean): number {
   if (column.children.length === 0) {
     return column.parent.width;
   }
 
-  return column.children.reduce((sum, child) => sum + getTableColumnWidth(child), 0);
+  return column.children.reduce((sum, child) => sum + getTableColumnWidth(child, showHiddenColumns), 0);
 }
 
 export function hasTableColumnChildren(column: TableCompoundColumn): boolean {
@@ -356,8 +356,8 @@ export function filterLeafColumns(columns: TableColumn[]): TableColumn[] {
   }, []);
 }
 
-export function calculateColumnsWidth(columns: TableColumn[]): number {
-  return columns.reduce((width, column) => width + getTableColumnWidth(column), 0);
+export function calculateColumnsWidth(columns: TableColumn[], showHiddenColumns: boolean): number {
+  return columns.reduce((width, column) => width + getTableColumnWidth(column, showHiddenColumns), 0);
 }
 
 export function findTableRow(rows: TableConfigRow[], rowPath: number[]): TableConfigRow {

@@ -46,6 +46,9 @@ export class TableHeaderLinkComponent implements OnChanges {
   @Input()
   public part: TablePart;
 
+  @Input()
+  public canManageConfig: boolean;
+
   public collections$: Observable<CollectionModel[]>;
   public linkType$: Observable<LinkTypeModel>;
 

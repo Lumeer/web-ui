@@ -69,6 +69,9 @@ export class TableSingleColumnComponent implements OnChanges {
   public linkType: LinkTypeModel;
 
   @Input()
+  public canManageConfig: boolean;
+
+  @Input()
   public leaf: boolean;
 
   @Input()

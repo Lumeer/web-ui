@@ -44,6 +44,9 @@ export class TableLinkInfoComponent implements AfterViewInit {
   @Input()
   public switchingEnabled: boolean;
 
+  @Input()
+  public canManageView: boolean;
+
   @Output()
   public switchParts = new EventEmitter();
 

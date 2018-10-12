@@ -45,6 +45,9 @@ export class TableCellGroupComponent implements OnChanges {
   @Input()
   public rows: TableConfigRow[];
 
+  @Input()
+  public canManageConfig: boolean;
+
   public documents$: Observable<DocumentModel[]>;
   public linkInstances$: Observable<LinkInstanceModel[]>;
 

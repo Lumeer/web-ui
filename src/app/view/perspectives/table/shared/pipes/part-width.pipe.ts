@@ -26,8 +26,8 @@ import {calculateColumnsWidth, filterLeafColumns} from '../../../../../core/stor
 })
 export class PartWidthPipe implements PipeTransform {
 
-  public transform(part: TablePart): number {
-    return part ? calculateColumnsWidth(filterLeafColumns(part.columns)) : 0;
+  public transform(part: TablePart, showHiddenColumns: boolean = false): number {
+    return part ? calculateColumnsWidth(filterLeafColumns(part.columns), showHiddenColumns) : 0;
   }
 
 }

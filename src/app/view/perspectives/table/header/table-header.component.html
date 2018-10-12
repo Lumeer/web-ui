@@ -7,11 +7,13 @@
     <table-header-collection *ngIf="part.collectionId"
                              [cursor]="cursor | partCursor:part.index"
                              [table]="table"
+                             [canManageConfig]="canManageConfig"
                              [part]="part">
     </table-header-collection>
     <table-header-link *ngIf="part.linkTypeId"
                        [cursor]="cursor | partCursor:part.index"
                        [table]="table"
+                       [canManageConfig]="canManageConfig"
                        [part]="part">
     </table-header-link>
   </ng-container>

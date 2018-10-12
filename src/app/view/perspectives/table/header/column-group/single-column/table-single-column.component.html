@@ -27,6 +27,8 @@
                            *ngIf="attribute && cursor"
                            [attribute]="attribute"
                            [cursor]="cursor"
+                           [canManageConfig]="canManageConfig"
+                           [allowedPermissions]="allowedPermissions"
                            [defaultAttribute]="attribute | isDefaultAttribute:(collection)"
                            [leaf]="leaf"
                            (add)="onAdd($event)"

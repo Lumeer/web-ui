@@ -66,6 +66,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public linkInstance: LinkInstanceModel;
 
   @Input()
+  public canManageConfig: boolean;
+
+  @Input()
   public selected: boolean;
 
   @Input()

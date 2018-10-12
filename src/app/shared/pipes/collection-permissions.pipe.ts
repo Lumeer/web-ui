@@ -87,11 +87,11 @@ export class CollectionPermissionsPipe implements PipeTransform {
             const userRoles = userRolesInResource(user, view);
             const authorRoles = authorRolesInView(view, collection.id);
 
-            const readView = userRoles.includes(Role.Read) && authorRoles.includes(Role.Read);
-            const writeView = userRoles.includes(Role.Write) && authorRoles.includes(Role.Write);
-            const manageView = userRoles.includes(Role.Manage) && authorRoles.includes(Role.Manage);
+            const readWithView = userRoles.includes(Role.Read) && authorRoles.includes(Role.Read);
+            const writeWithView = userRoles.includes(Role.Write) && authorRoles.includes(Role.Write);
+            const manageWithView = userRoles.includes(Role.Manage) && authorRoles.includes(Role.Manage);
 
-            return {readView, writeView, manageView};
+            return {readWithView, writeWithView, manageWithView};
           })
         );
       })

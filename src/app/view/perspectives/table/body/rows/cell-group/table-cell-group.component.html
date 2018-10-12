@@ -8,6 +8,7 @@
                          [column]="column"
                          [cursor]="cursor | columnCursor:columnIndex"
                          [document]="data.documents | dataCellDocument : data.part : rows[0]"
+                         [canManageConfig]="canManageConfig"
                          [linkInstance]="data.linkInstances ? data.linkInstances[0] : null"
                          [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
                          [table]="table$ | async"
@@ -21,13 +22,15 @@
                                 [linkInstances]="data.linkInstances"
                                 [selected]="data.selectedCursor | cursorEquals:(cursor | columnCursor:columnIndex)"
                                 [style.width]="column | columnWidth | pixel"
+                                [style.width]="column | columnWidth:canManageConfig | pixel"
                                 class="d-block table-border-right table-border-bottom">
           </table-collapsed-cell>
         </ng-template>
       </ng-container>
 
       <ng-template #emptyCell>
-        <div [style.width.px]="column | columnWidth"
+        <div *ngIf="canManageConfig"
+             [style.width.px]="column | columnWidth:canManageConfig"
              class="table-border-right table-border-bottom">
         </div>
       </ng-template>

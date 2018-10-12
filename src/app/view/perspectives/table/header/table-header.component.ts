@@ -35,6 +35,9 @@ export class TableHeaderComponent {
   @Input()
   public table: TableModel;
 
+  @Input()
+  public canManageConfig: boolean;
+
   public cursor: TableHeaderCursor;
 
   public constructor(private store: Store<AppState>) {
