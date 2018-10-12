@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
@@ -28,6 +28,7 @@ import {Permission, View} from '../../dto';
 import {ViewService} from '../../rest';
 import {AppState} from '../app.state';
 import {selectSearchTab, selectWorkspace} from '../navigation/navigation.state';
+import {SearchTab} from '../navigation/search-tab';
 import {Workspace} from '../navigation/workspace.model';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {RouterAction} from '../router/router.action';
@@ -96,10 +97,12 @@ export class ViewsEffects {
 
   @Effect()
   public createSuccess$: Observable<Action> = this.actions$.pipe(
-    ofType(ViewsActionType.CREATE_SUCCESS),
-    withLatestFrom(this.store$.select(selectWorkspace)),
-    withLatestFrom(this.store$.select(selectSearchTab)),
-    flatMap(([[action, workspace], searchTab]: [[ViewsAction.CreateSuccess, Workspace], string]) => {
+    ofType<ViewsAction.CreateSuccess>(ViewsActionType.CREATE_SUCCESS),
+    withLatestFrom(
+      this.store$.pipe(select(selectWorkspace)),
+      this.store$.pipe(select(selectSearchTab))
+    ),
+    flatMap(([action, workspace, searchTab]) => {
       const message = this.i18n({id: 'view.create.success', value: 'View has been created'});
       const paths = ['w', workspace.organizationCode, workspace.projectCode, 'view', {vc: action.payload.view.code}];
       if (!isNullOrUndefined(searchTab)) {

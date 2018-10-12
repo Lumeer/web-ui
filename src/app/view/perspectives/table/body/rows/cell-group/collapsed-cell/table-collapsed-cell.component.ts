@@ -104,4 +104,10 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
     this.store$.dispatch(new TablesAction.ExpandRows({cursor}));
   }
 
+  public onMouseDown() {
+    if (!this.selected) {
+      this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
+    }
+  }
+
 }

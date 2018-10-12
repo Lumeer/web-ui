@@ -65,6 +65,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    this.angulartics2GoogleAnalytics.startTracking();
+
     this.store$.select(selectCurrentUser).pipe(
       filter(user => !!user),
       first()

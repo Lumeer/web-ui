@@ -59,7 +59,7 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     ViewModule,
     WorkspaceModule,
     AppRoutingModule, // needs to be declared after all other routing modules
-    Angulartics2Module.forRoot([Angulartics2GoogleAnalytics], angularticsSettings)
+    Angulartics2Module.forRoot(angularticsSettings)
   ],
   providers: [
     {
