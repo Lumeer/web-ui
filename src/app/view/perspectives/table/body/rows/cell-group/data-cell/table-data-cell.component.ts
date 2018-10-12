@@ -132,7 +132,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
-      .subscribe(() => this.editableCell.startEditing());
+      .subscribe((action) => this.editableCell.startEditing(action.payload.clear));
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {
@@ -244,7 +244,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private createDocumentWithNewAttribute(table: TableModel, row: TableConfigRow, attributeName: string, value: string) {
-    const document: DocumentModel = {...this.document, correlationId: row.correlationId, newData: {[attributeName]: {value}}};
+    const document: DocumentModel = {...this.document, correlationId: row && row.correlationId, newData: {[attributeName]: {value}}};
     const createDocumentAction = new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback(table)});
     const newAttribute = {name: attributeName, constraints: []};
 
@@ -258,7 +258,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private createDocumentWithExistingAttribute(table: TableModel, row: TableConfigRow, attributeId: string, value: string) {
     const data = {[attributeId]: value};
-    const document: DocumentModel = {...this.document, correlationId: row.correlationId, data: data};
+    const document: DocumentModel = {...this.document, correlationId: row && row.correlationId, data: data};
 
     this.store$.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback(table)}));
   }

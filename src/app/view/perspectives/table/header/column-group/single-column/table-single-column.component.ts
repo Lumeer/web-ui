@@ -157,7 +157,7 @@ export class TableSingleColumnComponent implements OnChanges {
 
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
-      .subscribe(() => this.editableCellDirective.startEditing());
+      .subscribe((action) => this.editableCellDirective.startEditing(action.payload.clear));
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {

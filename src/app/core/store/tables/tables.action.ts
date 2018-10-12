@@ -327,6 +327,9 @@ export namespace TablesAction {
 
   export class EditSelectedCell implements Action {
     public readonly type = TablesActionType.EDIT_SELECTED_CELL;
+
+    public constructor(public payload: { clear?: boolean }) {
+    }
   }
 
   export class RemoveSelectedCell implements Action {

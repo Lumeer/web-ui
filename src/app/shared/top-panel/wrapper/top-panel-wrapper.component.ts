@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
@@ -26,41 +26,37 @@ import {BehaviorSubject} from 'rxjs';
   styleUrls: ['./top-panel-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopPanelWrapperComponent implements OnInit, AfterViewInit {
+export class TopPanelWrapperComponent implements OnInit, AfterViewChecked {
 
   @Input()
   public searchBoxShown: boolean;
 
-  @ViewChild('topPanel')
-  public element: ElementRef;
-
   public mobile$ = new BehaviorSubject(true);
+
+  constructor(private element: ElementRef) {
+  }
 
   public ngOnInit() {
     this.detectMobileResolution();
   }
 
-  public ngAfterViewInit() {
-    this.setTopPanelHeight();
+  public ngAfterViewChecked() {
+    this.setTopPanelOffsetTop();
   }
 
   @HostListener('window:resize')
   public onWindowResize() {
     this.detectMobileResolution();
-    this.setTopPanelHeight();
-  }
-
-  public onHeightChange() {
-    this.setTopPanelHeight();
+    this.setTopPanelOffsetTop();
   }
 
   private detectMobileResolution() {
     this.mobile$.next(window.matchMedia('(max-width: 767.98px)').matches);
   }
 
-  private setTopPanelHeight() {
+  private setTopPanelOffsetTop() {
     const element = this.element.nativeElement as HTMLElement;
-    document.body.style.setProperty('--top-panel-height', `${element.clientHeight}px`);
+    element.style.setProperty('--top-panel-offset-top', `${element.offsetTop}px`);
   }
 
 }

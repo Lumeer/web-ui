@@ -150,19 +150,23 @@ export class TableEditableCellDirective implements OnChanges {
     document.execCommand('insertHTML', false, value);
   }
 
-  public startEditing() {
+  public startEditing(clear?: boolean) {
     if (this.edited || this.readonly) {
       return;
     }
 
     this.edited = true;
 
-    const {nativeElement} = this.element;
+    const element = this.element.nativeElement as HTMLElement;
+
+    if (clear) {
+      element.textContent = '';
+    }
 
     this.editStart.emit();
     setTimeout(() => {
-      nativeElement.scrollLeft = nativeElement.scrollWidth - nativeElement.clientWidth + 5;
-      HtmlModifier.setCursorAtTextContentEnd(nativeElement);
+      element.scrollLeft = element.scrollWidth - element.clientWidth + 5;
+      HtmlModifier.setCursorAtTextContentEnd(element);
     });
   }
 
@@ -173,17 +177,17 @@ export class TableEditableCellDirective implements OnChanges {
 
     this.edited = false;
 
-    const {nativeElement} = this.element;
+    const element = this.element.nativeElement as HTMLElement;
     if (cancel) {
-      nativeElement.textContent = this.value;
+      element.textContent = this.value;
       this.valueChange.emit(this.value);
       this.editEnd.emit();
     } else {
-      const value = nativeElement.textContent;
+      const value = element.textContent;
       this.editEnd.emit(value);
     }
 
-    nativeElement.scrollLeft = 0;
+    element.scrollLeft = 0;
   }
 
   private isCharacterDisabled(character: string): boolean {

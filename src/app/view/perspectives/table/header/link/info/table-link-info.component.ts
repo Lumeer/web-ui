@@ -18,6 +18,7 @@
  */
 
 import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {ContextMenuComponent, ContextMenuService} from 'ngx-contextmenu';
 import {CollectionModel} from '../../../../../../core/store/collections/collection.model';
 import {LinkTypeModel} from '../../../../../../core/store/link-types/link-type.model';
 import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
@@ -52,6 +53,12 @@ export class TableLinkInfoComponent implements AfterViewInit {
   @ViewChild('linkMenu')
   public linkMenu: ElementRef;
 
+  @ViewChild(ContextMenuComponent)
+  public contextMenuComponent: ContextMenuComponent;
+
+  constructor(private contextMenuService: ContextMenuService) {
+  }
+
   public ngAfterViewInit() {
     this.setTableLinkInfoWidthCssVariable();
   }
@@ -60,6 +67,20 @@ export class TableLinkInfoComponent implements AfterViewInit {
     const tableElement = getTableElement(this.cursor.tableId);
     const width = this.linkMenu.nativeElement.clientWidth;
     tableElement.style.setProperty('--link-info-column-width', `${width}px`);
+  }
+
+  public onClick(event: MouseEvent) {
+    this.showContextMenu(event);
+    event.stopPropagation();
+  }
+
+  private showContextMenu(event: MouseEvent) {
+    this.contextMenuService.show.next({
+      anchorElement: null,
+      contextMenu: this.contextMenuComponent,
+      event,
+      item: null
+    });
   }
 
 }

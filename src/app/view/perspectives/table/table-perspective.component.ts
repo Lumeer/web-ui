@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {filter, first, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
@@ -44,7 +44,8 @@ declare let $: any;
 @Component({
   selector: 'table-perspective',
   templateUrl: './table-perspective.component.html',
-  styleUrls: ['./table-perspective.component.scss']
+  styleUrls: ['./table-perspective.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TablePerspectiveComponent implements OnInit, OnDestroy {
 
@@ -57,7 +58,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
   @HostBinding('id')
   public elementId: string;
 
-  public table: TableModel;
+  public table$ = new BehaviorSubject<TableModel>(null);
   public tableId: string;
 
   private selectedCursor: TableCursor;
@@ -111,7 +112,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private destroyTable() {
-    if (!this.tableId || !this.table) {
+    if (!this.tableId || !this.table$.getValue()) {
       return;
     }
     this.store$.dispatch(new DestroyTable({tableId: this.tableId}));
@@ -122,7 +123,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
       this.store$.select(selectTableById(this.tableId)).pipe(
         filter(table => !!table)
       ).subscribe(table => {
-        this.table = table;
+        this.table$.next(table);
         this.switchPartsIfFirstEmpty(table);
       })
     );
@@ -159,7 +160,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
           return;
         }
 
-        if (this.table && hasQueryNewLink(this.query, query)) {
+        if (this.table$.getValue() && hasQueryNewLink(this.query, query)) {
           this.addTablePart(query);
         } else {
           this.refreshTable(query, config || initConfig);
@@ -215,13 +216,13 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
       case KeyCode.NumpadEnter:
       case KeyCode.F2:
         event.preventDefault();
-        return this.store$.dispatch(new TablesAction.EditSelectedCell());
+        return this.store$.dispatch(new TablesAction.EditSelectedCell({}));
       default:
         if (!isKeyPrintable(event) || event.ctrlKey || event.altKey || event.metaKey) {
           return;
         }
 
-        return this.store$.dispatch(new TablesAction.EditSelectedCell());
+        return this.store$.dispatch(new TablesAction.EditSelectedCell({clear: true}));
     }
   }
 

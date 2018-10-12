@@ -47,7 +47,7 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
   public unsetCursor = new EventEmitter();
 
   public visible$ = new BehaviorSubject(false);
-  private intersectionObserver = new IntersectionObserver(entries => this.detectVisibility(entries));
+  private intersectionObserver: IntersectionObserver;
 
   public hasNextParts$: Observable<boolean>;
   public striped: boolean;
@@ -66,6 +66,19 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   public ngAfterViewInit() {
+    this.initIntersectionObserver();
+  }
+
+  private initIntersectionObserver() {
+    const tableBodyElement = document.querySelector(`#table-${this.cursor.tableId} table-body`);
+
+    this.intersectionObserver = new IntersectionObserver(
+      entries => this.detectVisibility(entries),
+      {
+        root: tableBodyElement,
+        rootMargin: '100px'
+      }
+    );
     this.intersectionObserver.observe(this.element.nativeElement);
   }
 
@@ -77,7 +90,9 @@ export class TablePrimaryRowComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   public ngOnDestroy() {
-    this.intersectionObserver.disconnect();
+    if (this.intersectionObserver) {
+      this.intersectionObserver.disconnect();
+    }
   }
 
 }

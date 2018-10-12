@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Store} from '@ngrx/store';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
@@ -44,6 +44,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   constructor(private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
               private authService: AuthService,
+              private changeDetector: ChangeDetectorRef,
               private snotifyService: SnotifyService,
               private store$: Store<AppState>,
               private title: Title) {
@@ -100,14 +101,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.setBrowserWarningHeight();
-
-    $('#browserAlert').on('closed.bs.alert', () => this.setBrowserWarningHeight());
-  }
-
-  private setBrowserWarningHeight() {
-    const warningHeight = this.browserWarning.nativeElement.clientHeight;
-    document.body.style.setProperty('--browser-warning-height', `${warningHeight}px`);
+    $('#browserAlert').on('closed.bs.alert', () => {
+      // the rest of the page needs to adapt its height
+      this.changeDetector.detectChanges();
+    });
   }
 
 }
