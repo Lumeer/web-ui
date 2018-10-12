@@ -1,5 +1,6 @@
 <div #linkMenu
      [contextMenu]="contextMenu"
+     (click)="onClick($event)"
      class="h-100">
   <icons-presenter [colors]="collections | colors"
                    [icons]="collections | icons"
