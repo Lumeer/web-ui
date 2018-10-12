@@ -91,7 +91,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
   }
 
   private setTopPanelSideWidth() {
-    if (this.mobile) {
+    if (this.mobile || !this.logo) {
       return;
     }
 
