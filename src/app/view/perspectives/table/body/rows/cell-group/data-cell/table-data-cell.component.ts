@@ -132,7 +132,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$.ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL)
-      .subscribe(() => this.editableCell.startEditing());
+      .subscribe((action) => this.editableCell.startEditing(action.payload.clear));
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {

@@ -215,13 +215,13 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
       case KeyCode.NumpadEnter:
       case KeyCode.F2:
         event.preventDefault();
-        return this.store$.dispatch(new TablesAction.EditSelectedCell());
+        return this.store$.dispatch(new TablesAction.EditSelectedCell({}));
       default:
         if (!isKeyPrintable(event) || event.ctrlKey || event.altKey || event.metaKey) {
           return;
         }
 
-        return this.store$.dispatch(new TablesAction.EditSelectedCell());
+        return this.store$.dispatch(new TablesAction.EditSelectedCell({clear: true}));
     }
   }
 
