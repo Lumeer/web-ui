@@ -74,24 +74,26 @@ var meta = '';
 first = true;
 
 vocab.forEach(function(value, key) {
-  if (!first) {
-    meta += ',\n';
-  }
-  first = false;
-
-  var line = '';
-  first_brands = true;
-  line += '[\'' + key.replace('\'', '\\\'') + '\', [\n  ';
-  value.forEach(function(elem) {
-    if (!first_brands) {
-      line += ',\n  ';
+  if (key) {
+    if (!first) {
+      meta += ',\n';
     }
-    first_brands = false;
-    line += '\'' + elem.replace('\'', '\\\'') + '\'';
-  });
-  line += '\n]]';
+    first = false;
 
-  meta += line;
+    var line = '';
+    first_brands = true;
+    line += '[\'' + key.replace('\'', '\\\'') + '\', [\n  ';
+    value.forEach(function(elem) {
+      if (!first_brands) {
+        line += ',\n  ';
+      }
+      first_brands = false;
+      line += '\'' + elem.replace('\'', '\\\'') + '\'';
+    });
+    line += '\n]]';
+
+    meta += line;
+  }
 });
 
 fs.writeFile('./meta', meta, function(err) {});
