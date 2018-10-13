@@ -20,6 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {Actions} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
+import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, first} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
@@ -87,6 +88,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   private savingDisabled: boolean;
 
   public constructor(private actions$: Actions,
+                     private contextMenuService: ContextMenuService,
                      private store$: Store<AppState>) {
   }
 
@@ -404,6 +406,25 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (isKeyPrintable(event) && this.suggestions) {
       return this.suggestions.clearSelection();
     }
+  }
+
+  public onMouseDown(event: MouseEvent) {
+    if (!this.selected) {
+      this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
+    }
+  }
+
+  public onContextMenu(event: MouseEvent) {
+    setTimeout(() => this.showContextMenu(event));
+  }
+
+  private showContextMenu(event: MouseEvent) {
+    this.contextMenuService.show.next({
+      anchorElement: null,
+      contextMenu: this.menuComponent.contextMenu,
+      event,
+      item: null
+    });
   }
 
 }

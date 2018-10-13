@@ -19,6 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
+import {ContextMenuComponent} from 'ngx-contextmenu';
 import {AppState} from '../../../../../../../../core/store/app.state';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../../../core/store/documents/documents.action';
@@ -53,8 +54,8 @@ export class TableDataCellMenuComponent implements OnChanges {
   @Output()
   public edit = new EventEmitter();
 
-  @ViewChild('contextMenu')
-  public contextMenu: ElementRef;
+  @ViewChild(ContextMenuComponent)
+  public contextMenu: ContextMenuComponent;
 
   public created: boolean;
 
