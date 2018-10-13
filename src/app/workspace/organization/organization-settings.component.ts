@@ -21,7 +21,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, Subscription} from 'rxjs';
-import {filter, map, take, tap} from 'rxjs/operators';
+import {filter, map, take, tap, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
@@ -58,8 +58,6 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
-    this.store$.dispatch(new OrganizationsAction.GetCodes());
-    this.organizationCodes$ = this.store$.pipe(select(selectOrganizationCodes));
     this.subscribeToStore();
   }
 
@@ -145,6 +143,11 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
       this.store$.select(selectPreviousUrl).pipe(take(1))
         .subscribe(url => this.previousUrl = url)
     );
+
+    this.store$.dispatch(new OrganizationsAction.GetCodes());
+    this.organizationCodes$ = this.store$.pipe(select(selectOrganizationCodes),
+      withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
+      map(([codes, organization]) => codes && codes.filter(code => code !== organization.code) || []));
   }
 
   private deleteOrganization() {

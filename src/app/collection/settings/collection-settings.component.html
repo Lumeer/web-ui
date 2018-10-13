@@ -3,6 +3,7 @@
     <resource-header
       [resource]="collection"
       [resourceType]="getResourceType()"
+      [restrictedValues]="collectionNames$ | async"
       (back)="onBack()"
       (delete)="onDelete()"
       (colorChange)="onNewColor($event)"

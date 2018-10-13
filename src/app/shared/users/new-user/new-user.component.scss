@@ -10,9 +10,9 @@ input::placeholder {
 }
 
 .form-control.ng-dirty.ng-invalid {
-  border: solid 1px #dc3545;
+  border: solid 1px $danger;
 }
 
 .invalid-message {
-  color: #dc3545 !important;
+  color: $danger !important;
 }

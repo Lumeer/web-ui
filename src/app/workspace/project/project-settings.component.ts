@@ -19,7 +19,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, Subscription} from 'rxjs';
 import {filter, map, take} from 'rxjs/operators';
@@ -32,7 +32,7 @@ import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/na
 import {Workspace} from '../../core/store/navigation/workspace.model';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
+import {selectProjectByWorkspace, selectProjectsCodesForOrganization} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
 
@@ -42,6 +42,7 @@ import {Perspective} from '../../view/perspectives/perspective';
 export class ProjectSettingsComponent implements OnInit {
 
   public userCount$: Observable<number>;
+  public projectCodes$: Observable<string[]>;
   public project: ProjectModel;
   public workspace: Workspace;
 
@@ -130,7 +131,12 @@ export class ProjectSettingsComponent implements OnInit {
 
     this.subscriptions.add(this.store$.select(selectProjectByWorkspace)
       .pipe(filter(project => !isNullOrUndefined(project)))
-      .subscribe(project => this.project = project)
+      .subscribe(project => {
+        this.project = project;
+        this.projectCodes$ = this.store$.pipe(
+          select(selectProjectsCodesForOrganization(project.organizationId)),
+          map(codes => codes && codes.filter(code => code !== project.code) || []));
+      })
     );
 
     this.subscriptions.add(this.store$.select(selectWorkspace)

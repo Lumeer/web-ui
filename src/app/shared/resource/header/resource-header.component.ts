@@ -80,21 +80,30 @@ export class ResourceHeaderComponent implements AfterViewInit {
     this.shouldEmitFirstLine = true;
   }
 
+  public onFirstLineFocus() {
+    this.shouldEmitFirstLine = false;
+  }
+
   public onNewFirstLine(value: string) {
     if (this.shouldEmitFirstLine) {
-      if (this.hasVisibleCode()) {
-        this.codeChange.emit(value);
-      } else {
-        this.nameChange.emit(value);
-      }
-      this.shouldEmitFirstLine = false;
+      this.emitFirstLine(value);
     } else {
       this.checkDuplicate(value);
     }
   }
 
+  private emitFirstLine(value: string) {
+    if (!this.isDuplicate) {
+      if (this.hasVisibleCode()) {
+        this.codeChange.emit(value);
+      } else {
+        this.nameChange.emit(value);
+      }
+    }
+    this.shouldEmitFirstLine = false;
+  }
+
   private checkDuplicate(value: string) {
-    // console.log('checking duplicates', this.restrictedValues);
     this.isDuplicate = !!(this.restrictedValues || []).find(restrictedValue => restrictedValue === value);
   }
 
