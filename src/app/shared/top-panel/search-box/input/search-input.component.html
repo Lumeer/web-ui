@@ -9,7 +9,7 @@
        [value]="text"
        [placeholder]="removeHtmlComments(inputPlaceholder)"
        (blur)="onBlur()"
-       [disabled]="!(currentView && canManageConfig | async)"
+       [disabled]="!(currentView | canManageConfig | async)"
        (focus)="onFocus()"
        (input)="onInput($event)"
        (keydown)="onKeyDown($event)"
