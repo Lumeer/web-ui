@@ -19,14 +19,16 @@
   </div>
 
   <input-box
-    class="flex-grow-2 px-2"
-    [style.width]="'1px'"
+    #firstLineInput
+    class="flex-grow-1 px-2"
+    [style.width.px]="1"
     [initialValue]="firstLineValue()"
     [color]="resource.color"
     [canStayEmpty]="false"
     [fontSizeRem]="2"
     [maxLines]="1"
     [title]="firstLineValue()"
+    (blur)="onFirstLineBlur()"
     [placeholder]="firstLinePlaceholder()"
     (newValue)="onNewFirstLine($event)">
   </input-box>
@@ -42,6 +44,11 @@
 
 </div>
 
+<small class="position-relative invalid-message" [style.left.px]="80"
+       *ngIf="isDuplicate" i18n="@@resource.value.error.duplicity">
+  This {resourceType, select, organization {code} project {code} collection {name}} is already invited. Try another!
+</small>
+
 <div class="col mr-auto py-2 px-0"
      *ngIf="hasVisibleCode()">
   <input-box
@@ -49,6 +56,7 @@
     [color]="resource.color"
     [canStayEmpty]="false"
     [fontSizeRem]="1.5"
+    [emitAllChanges]="true"
     [maxLines]="1"
     [title]="secondLineValue()"
     [placeholder]="secondLinePlaceholder()"

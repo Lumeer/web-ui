@@ -3,7 +3,10 @@
     <div class="card">
       <div class="card-body">
         <h4 class="card-title" i18n="@@users.header.inviteUser">Invite a colleague or a friend</h4>
-        <new-user (userCreated)="userCreated.emit($event)"></new-user>
+        <new-user
+          [users]="users"
+          (userCreated)="userCreated.emit($event)">
+        </new-user>
       </div>
     </div>
   </div>

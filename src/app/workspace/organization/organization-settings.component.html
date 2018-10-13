@@ -4,6 +4,7 @@
     <resource-header
       [resource]="organization"
       [resourceType]="getResourceType()"
+      [restrictedValues]="organizationCodes$ | async"
       (back)="goBack()"
       (delete)="onDelete()"
       (colorChange)="onNewColor($event)"

@@ -18,7 +18,7 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, Subscription} from 'rxjs';
 import {filter, map, take, tap} from 'rxjs/operators';
@@ -30,7 +30,7 @@ import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPreviousUrl} from '../../core/store/navigation/navigation.state';
 import {OrganizationModel} from '../../core/store/organizations/organization.model';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
-import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
+import {selectOrganizationByWorkspace, selectOrganizationCodes} from '../../core/store/organizations/organizations.state';
 import {ProjectModel} from '../../core/store/projects/project.model';
 import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
@@ -43,6 +43,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
 
   public userCount$: Observable<number>;
   public projectsCount$: Observable<number>;
+  public organizationCodes$: Observable<string[]>;
   public organization: OrganizationModel;
 
   private firstProject: ProjectModel = null;
@@ -57,6 +58,8 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
+    this.store$.dispatch(new OrganizationsAction.GetCodes());
+    this.organizationCodes$ = this.store$.pipe(select(selectOrganizationCodes));
     this.subscribeToStore();
   }
 

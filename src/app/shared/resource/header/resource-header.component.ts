@@ -34,6 +34,7 @@ export class ResourceHeaderComponent implements AfterViewInit {
 
   @Input() public resourceType: ResourceType;
   @Input() public resource: ResourceModel;
+  @Input() public restrictedValues: string[];
 
   @Output() public codeChange: EventEmitter<string> = new EventEmitter();
   @Output() public nameChange: EventEmitter<string> = new EventEmitter();
@@ -43,6 +44,9 @@ export class ResourceHeaderComponent implements AfterViewInit {
   @Output() public delete = new EventEmitter();
   @Output() public back = new EventEmitter();
 
+  public isDuplicate: boolean;
+
+  private shouldEmitFirstLine: boolean;
   private oldIcon: string;
   private oldColor: string;
   private clickedComponent: any;
@@ -72,12 +76,26 @@ export class ResourceHeaderComponent implements AfterViewInit {
     this.delete.emit();
   }
 
+  public onFirstLineBlur() {
+    this.shouldEmitFirstLine = true;
+  }
+
   public onNewFirstLine(value: string) {
-    if (this.hasVisibleCode()) {
-      this.codeChange.emit(value);
+    if (this.shouldEmitFirstLine) {
+      if (this.hasVisibleCode()) {
+        this.codeChange.emit(value);
+      } else {
+        this.nameChange.emit(value);
+      }
+      this.shouldEmitFirstLine = false;
     } else {
-      this.nameChange.emit(value);
+      this.checkDuplicate(value);
     }
+  }
+
+  private checkDuplicate(value: string) {
+    // console.log('checking duplicates', this.restrictedValues);
+    this.isDuplicate = !!(this.restrictedValues || []).find(restrictedValue => restrictedValue === value);
   }
 
   public onNewSecondLine(value: string) {
