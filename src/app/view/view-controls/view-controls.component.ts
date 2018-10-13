@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {ActivatedRoute, NavigationExtras} from '@angular/router';
+import {NavigationExtras} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
@@ -78,7 +78,6 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private dialogService: DialogService,
               private notificationService: NotificationService,
               private i18n: I18n,
-              private route: ActivatedRoute,
               private store$: Store<AppState>) {
   }
 

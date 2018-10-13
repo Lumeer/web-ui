@@ -38,6 +38,8 @@ import { FeedbackDialogComponent } from './dialog/feedback-dialog.component';
 import {ShareUserComponent} from './share-view/share-user/share-user.component';
 import {ViewPermissionsChangedPipe} from './share-view/view-permissions-changed.pipe';
 import {UserRolesPipe} from './share-view/user-roles.pipe';
+import {ShareViewInputComponent} from './share-view/share-view-input/share-view-input.component';
+import {ShareViewCopyComponent} from './share-view/share-view-copy/share-view-copy.component';
 
 @NgModule({
   imports: [
@@ -56,6 +58,8 @@ import {UserRolesPipe} from './share-view/user-roles.pipe';
     DialogBaseComponent,
     ShareViewDialogComponent,
     ShareUserComponent,
+    ShareViewInputComponent,
+    ShareViewCopyComponent,
     OverwriteViewDialogComponent,
     CreateResourceDialogComponent,
     ResourceCodeInputComponent,
