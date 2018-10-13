@@ -35,6 +35,7 @@ import {ViewModel} from '../../core/store/views/view.model';
 import {ViewsAction} from '../../core/store/views/views.action';
 import {selectViewByCode} from '../../core/store/views/views.state';
 import {KeyCode} from '../../shared/key-code';
+import {ClipboardService} from '../../core/service/clipboard.service';
 
 @Component({
   selector: 'share-view-dialog',
@@ -58,13 +59,8 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   private organization: OrganizationModel;
   private subscriptions = new Subscription();
 
-  private handler = (e: ClipboardEvent) => {
-    e.clipboardData.setData('text/plain', this.viewShareUrl$.getValue());
-    e.preventDefault();
-    document.removeEventListener('copy', this.handler);
-  }
-
   public constructor(private i18n: I18n,
+                     private clipboardService: ClipboardService,
                      private route: ActivatedRoute,
                      private store: Store<AppState>) {
   }
@@ -80,10 +76,7 @@ export class ShareViewDialogComponent implements OnInit, OnDestroy {
   }
 
   public copyToClipboard() {
-    document.addEventListener('copy', this.handler);
-    setTimeout(() => {
-      document.execCommand('copy');
-    });
+    this.clipboardService.copy(this.viewShareUrl$.getValue());
   }
 
   public onKeyDown(event: KeyboardEvent) {

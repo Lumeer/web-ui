@@ -21,7 +21,7 @@ import {Injectable, NgZone} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Snotify, SnotifyButton, SnotifyPosition, SnotifyService} from 'ng-snotify';
 import {Observable} from 'rxjs';
-import {UserSettingsService} from '../user-settings.service';
+import {UserSettingsService} from '../service/user-settings.service';
 
 @Injectable()
 export class NotificationService {

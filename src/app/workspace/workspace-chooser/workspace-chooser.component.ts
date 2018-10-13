@@ -40,7 +40,7 @@ import {selectProjectById, selectProjectsCodesForSelectedOrganization, selectPro
 import {RouterAction} from '../../core/store/router/router.action';
 import {UserModel} from '../../core/store/users/user.model';
 import {mapGroupsOnUser, selectCurrentUser, selectCurrentUserForOrganization} from '../../core/store/users/users.state';
-import {UserSettingsService} from '../../core/user-settings.service';
+import {UserSettingsService} from '../../core/service/user-settings.service';
 import {animateOpacityFromUp} from '../../shared/animations';
 import {userHasRoleInResource, userRolesInResource} from '../../shared/utils/resource.utils';
 import {Perspective} from '../../view/perspectives/perspective';
