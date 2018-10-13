@@ -17,22 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import {UserSettings} from './dto/user.settings';
-import {LocalStorage} from '../shared/utils/local-storage';
+import {DialogWrapperComponent} from './dialog-wrapper.component';
+import {SharedModule} from '../../../shared/shared.module';
 
-const USER_SETTINGS = 'user-settings';
-
-@Injectable()
-export class UserSettingsService {
-
-  public getUserSettings(): UserSettings {
-    return LocalStorage.get(USER_SETTINGS) || {};
-  }
-
-  public updateUserSettings(userSettings: UserSettings) {
-    LocalStorage.set(USER_SETTINGS, userSettings);
-  }
-
+@NgModule({
+  imports: [
+    CommonModule,
+    SharedModule
+  ],
+  declarations: [
+    DialogWrapperComponent
+  ],
+  exports: [
+    DialogWrapperComponent
+  ]
+})
+export class DialogWrapperModule {
 }

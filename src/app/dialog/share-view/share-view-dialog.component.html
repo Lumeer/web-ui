@@ -4,39 +4,29 @@
   <span class="title" i18n="@@view.share.dialog.title">Share View</span>
 
   <div class="body">
-    <div class="d-flex flex-wrap w-100 pb-1 pr-1">
 
-      <div class="dropdown" *ngIf="text && suggestions.length > 0">
-        <div class="dropdown-menu show suggestions">
-          <div class="dropdown-item"
-               *ngFor="let suggestion of suggestions; let index = index"
-               [class.selected]="index === selectedIndex"
-               (click)="onSuggestionClick(suggestion)">
-            {{suggestion}}
-          </div>
-        </div>
-      </div>
+    <share-view-copy
+      [viewShareUrl]="viewShareUrl$ | async"
+      (copy)="copyToClipboard($event)">
+    </share-view-copy>
 
-      <!-- TODO remove once Angular supports ICU messages in attributes -->
-      <div hidden>
-      <span #inputPlaceholder i18n="@@view.share.dialog.input.placeholder">
-        Enter users' emails...
-      </span>
-      </div>
+    <hr>
 
-      <input class="border-0 py-1 px-2 mt-1 ml-1 flex-grow-1"
-             [(ngModel)]="text"
-             (keydown)="onKeyDown($event)"
-             (input)="suggest()"
-             (focus)="suggest()"
-             [placeholder]="removeHtmlComments(inputPlaceholder)"/>
-    </div>
+    <share-view-input
+      [text]="text$ | async"
+      [suggestions]="suggestions$ | async"
+      [selectedIndex]="selectedIndex$ | async"
+      (inputChanged)="onInputChanged($event)"
+      (suggestionChoose)="onSuggestionClick($event)"
+      (inputKeyDown)="onKeyDown($event)"
+      (suggest)="suggest()">
+    </share-view-input>
 
-    <table class="table table-striped table-sm">
+    <table class="table table-striped table-sm mt-2">
       <thead>
         <tr>
-          <th><span i18n="@@users.header.email">Email</span></th>
-          <th><span>Roles</span></th>
+          <th class="border-top-0"><span i18n="@@users.header.email">Email</span></th>
+          <th class="border-top-0"><span>Roles</span></th>
         </tr>
       </thead>
       <tbody>

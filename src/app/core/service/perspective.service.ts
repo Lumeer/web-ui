@@ -17,18 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Perspective} from '../view/perspectives/perspective';
+import {Perspective} from '../../view/perspectives/perspective';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {AppState} from './store/app.state';
-import {CollectionModel} from './store/collections/collection.model';
-import {DocumentModel} from './store/documents/document.model';
-import {ViewsAction} from './store/views/views.action';
+import {AppState} from '../store/app.state';
+import {CollectionModel} from '../store/collections/collection.model';
+import {DocumentModel} from '../store/documents/document.model';
+import {ViewsAction} from '../store/views/views.action';
 import {Router} from '@angular/router';
-import {selectWorkspace} from './store/navigation/navigation.state';
+import {selectWorkspace} from '../store/navigation/navigation.state';
 import {filter, take} from 'rxjs/operators';
-import {selectViewCursor} from './store/views/views.state';
-import {QueryModel} from './store/navigation/query.model';
+import {selectViewCursor} from '../store/views/views.state';
 
 @Injectable({
   providedIn: 'root'
