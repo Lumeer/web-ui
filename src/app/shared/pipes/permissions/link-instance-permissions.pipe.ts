@@ -41,7 +41,7 @@ export class LinkInstancePermissionsPipe implements PipeTransform {
                      private documentPermissionsPipe: DocumentPermissionsPipe) {
   }
 
-  public transform(linkInstance: LinkInstanceModel, role: string, withView: boolean = true): Observable<AllowedPermissions> {
+  public transform(linkInstance: LinkInstanceModel): Observable<AllowedPermissions> {
     if (!linkInstance) {
       return of({});
     }
