@@ -21,7 +21,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, tap} from 'rxjs/operators';
 import {QueryAction} from '../../../../core/model/query-action';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
@@ -32,6 +32,7 @@ import {Workspace} from '../../../../core/store/navigation/workspace.model';
 import {selectViewsByQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {Perspective} from '../../perspective';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
+import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 
 @Component({
   templateUrl: './search-all.component.html'
@@ -45,6 +46,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   public workspace: Workspace;
   public query: QueryModel;
 
+  private documentsLoaded: boolean;
   private subscriptions = new Subscription();
 
   constructor(private store: Store<AppState>,
@@ -69,6 +71,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       this.store.select(selectViewsLoaded),
       this.store.select(selectCurrentQueryDocumentsLoaded)
     ).pipe(
+      tap(([collectionsLoaded, viewLoaded, documentsLoaded]) => this.documentsLoaded = documentsLoaded),
       map(([collectionsLoaded, viewLoaded, documentsLoaded]) => collectionsLoaded && viewLoaded && documentsLoaded),
     );
 
@@ -78,6 +81,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       navigation => {
         this.workspace = navigation.workspace;
         this.query = navigation.query;
+        this.fetchDocuments();
       }
     );
     this.subscriptions.add(navigationSubscription);
@@ -96,6 +100,11 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       map(documents => documents && documents.length > 0)
     ).subscribe(hasDocument => this.hasDocument = hasDocument);
     this.subscriptions.add(documentSubscription);
+  }
+
+  private fetchDocuments() {
+    const query = {...this.query, page: 0, pageSize: 5};
+    this.store.dispatch(new DocumentsAction.Get({query}));
   }
 
   private workspacePath(): string {

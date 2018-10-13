@@ -49,7 +49,7 @@
       </div>
       <hr/>
     </div>
-    <div class="row" *ngIf="data.loaded && data.collections.length >= 1 && data.documents.length === 0">
+    <div class="row" *ngIf="data.loaded && data.collections.length === 1 && data.documents.length === 0">
       <div class="col justify-content-center text-lg-center">
         <p class="lead font-weight-bold" i18n="@@shared.preview.results.noResults">No records found!</p>
       </div>

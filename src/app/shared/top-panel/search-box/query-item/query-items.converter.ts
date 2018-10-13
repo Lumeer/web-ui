@@ -91,7 +91,7 @@ export class QueryItemsConverter {
     });
   }
 
-  private createCollectionItems(collectionIds: string[]): QueryItem[] {
+  public createCollectionItems(collectionIds: string[]): QueryItem[] {
     return collectionIds.map(collectionId => {
       const collection = this.data.collections.find(col => col.id === collectionId);
       if (!collection) {
