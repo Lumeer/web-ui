@@ -29,7 +29,7 @@ import {selectOrganizationById} from '../../../../../core/store/organizations/or
 import {selectServiceLimitsByOrganizationId} from '../../../../../core/store/organizations/service-limits/service-limits.state';
 import {ProjectModel} from '../../../../../core/store/projects/project.model';
 import {selectCurrentUser} from '../../../../../core/store/users/users.state';
-import {PermissionsPipe} from '../../../../pipes/permissions.pipe';
+import {PermissionsPipe} from '../../../../pipes/permissions/permissions.pipe';
 
 const allowedEmails = ['support@lumeer.io', 'martin@vecerovi.com', 'kubedo8@gmail.com', 'livoratom@gmail.com'];
 

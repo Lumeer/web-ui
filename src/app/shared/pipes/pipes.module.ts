@@ -29,7 +29,6 @@ import {LengthGreaterThanPipe} from './length-greater-than.pipe';
 import {LightenColorPipe} from './lighten-color.pipe';
 import {NativeDatePipe} from './native-date.pipe';
 import {PageSlicePipe} from './page-slice.pipe';
-import {PermissionsPipe} from './permissions.pipe';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PixelPipe} from './pixel.pipe';
 import {PrefixPipe} from './prefix.pipe';
@@ -45,15 +44,12 @@ import {CanActivatePagePipe} from './can-activate-page.pipe';
 import {PageEndIndexPipe} from './page-end-index.pipe';
 import {LogPipe} from './log.pipe';
 import {RemoveHtmlCommentsPipe} from './remove-html-comments.pipe';
-import {CollectionPermissionsPipe} from './collection-permissions.pipe';
-import {LinkTypePermissionsPipe} from './link-type-permissions.pipe';
-import {DocumentPermissionsPipe} from './document-permissions.pipe';
-import {LinkInstancePermissionsPipe} from './link-instance-permissions.pipe';
-import {CanManageConfigPipe} from './can-manage-config.pipe';
+import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    PermissionsPipesModule
   ],
   declarations: [
     LightenColorPipe,
@@ -66,7 +62,6 @@ import {CanManageConfigPipe} from './can-manage-config.pipe';
     FilterPerspectivesPipe,
     EmptyPipe,
     EmptyQueryPipe,
-    PermissionsPipe,
     LengthGreaterThanPipe,
     DefaultAttributePipe,
     PageSlicePipe,
@@ -81,12 +76,7 @@ import {CanManageConfigPipe} from './can-manage-config.pipe';
     CanActivatePagePipe,
     PageEndIndexPipe,
     LogPipe,
-    RemoveHtmlCommentsPipe,
-    CollectionPermissionsPipe,
-    LinkTypePermissionsPipe,
-    DocumentPermissionsPipe,
-    LinkInstancePermissionsPipe,
-    CanManageConfigPipe
+    RemoveHtmlCommentsPipe
   ],
   exports: [
     LightenColorPipe,
@@ -99,7 +89,6 @@ import {CanManageConfigPipe} from './can-manage-config.pipe';
     FilterPerspectivesPipe,
     EmptyPipe,
     EmptyQueryPipe,
-    PermissionsPipe,
     LengthGreaterThanPipe,
     DefaultAttributePipe,
     PageSlicePipe,
@@ -115,11 +104,7 @@ import {CanManageConfigPipe} from './can-manage-config.pipe';
     PageEndIndexPipe,
     LogPipe,
     RemoveHtmlCommentsPipe,
-    CollectionPermissionsPipe,
-    LinkTypePermissionsPipe,
-    DocumentPermissionsPipe,
-    LinkInstancePermissionsPipe,
-    CanManageConfigPipe
+    PermissionsPipesModule
   ]
 })
 export class PipesModule {

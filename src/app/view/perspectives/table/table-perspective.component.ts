@@ -61,6 +61,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
   @HostBinding('id')
   public elementId: string;
 
+  public currentView$: Observable<ViewModel>;
   public table$ = new BehaviorSubject<TableModel>(null);
   public tableId: string;
 

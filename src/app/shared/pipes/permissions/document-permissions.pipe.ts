@@ -21,12 +21,12 @@ import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {mergeMap} from 'rxjs/operators';
-import {AppState} from '../../core/store/app.state';
-import {selectCollectionById} from '../../core/store/collections/collections.state';
+import {AppState} from '../../../core/store/app.state';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {CollectionPermissionsPipe} from './collection-permissions.pipe';
-import {CollectionModel} from '../../core/store/collections/collection.model';
-import {DocumentModel} from '../../core/store/documents/document.model';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 
 @Pipe({
   name: 'documentPermissions',

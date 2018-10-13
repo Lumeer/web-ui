@@ -18,14 +18,14 @@
  */
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {ViewModel} from '../../core/store/views/view.model';
+import {ViewModel} from '../../../core/store/views/view.model';
 import {Observable, of} from 'rxjs';
 import {Store} from '@ngrx/store';
-import {AppState} from '../../core/store/app.state';
-import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
+import {AppState} from '../../../core/store/app.state';
+import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
 import {map} from 'rxjs/operators';
-import {userHasRoleInResource} from '../utils/resource.utils';
-import {Role} from '../../core/model/role';
+import {userHasRoleInResource} from '../../utils/resource.utils';
+import {Role} from '../../../core/model/role';
 
 @Pipe({
   name: 'canManageConfig',

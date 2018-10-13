@@ -21,12 +21,12 @@ import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable, of, combineLatest as observableCombineLatest} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
-import {AppState} from '../../core/store/app.state';
+import {AppState} from '../../../core/store/app.state';
 import {DocumentPermissionsPipe} from './document-permissions.pipe';
-import {LinkInstanceModel} from '../../core/store/link-instances/link-instance.model';
-import {DocumentModel} from '../../core/store/documents/document.model';
-import {selectDocumentsByIds} from '../../core/store/documents/documents.state';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 
 @Pipe({
   name: 'linkInstancePermissions',

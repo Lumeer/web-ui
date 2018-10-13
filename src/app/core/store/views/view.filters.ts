@@ -41,5 +41,5 @@ export function filterViewsByQuery(views: ViewModel[], query: QueryModel): ViewM
 }
 
 export function sortViewsById(views: ViewModel[]): ViewModel[] {
-  return views.sort((a, b) => b.id.localeCompare(a.id));
+  return [...views].sort((a, b) => b.id.localeCompare(a.id));
 }

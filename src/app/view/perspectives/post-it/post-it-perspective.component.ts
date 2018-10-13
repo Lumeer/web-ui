@@ -41,7 +41,7 @@ import {selectCurrentView} from '../../../core/store/views/views.state';
 import {PostItConfigModel, ViewModel} from '../../../core/store/views/view.model';
 import {PostItAction} from '../../../core/store/postit/postit.action';
 import {selectPostItsOrder, selectPostItsSize} from '../../../core/store/postit/postit.state';
-import {CanManageConfigPipe} from '../../../shared/pipes/can-manage-config.pipe';
+import {CanManageConfigPipe} from '../../../shared/pipes/permissions/can-manage-config.pipe';
 
 @Component({
   selector: 'post-it-perspective',

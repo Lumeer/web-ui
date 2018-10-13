@@ -21,18 +21,18 @@ import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable, of, combineLatest as observableCombineLatest} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
-import {AppState} from '../../core/store/app.state';
-import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {authorRolesInView, userRolesInResource} from '../utils/resource.utils';
-import {UserModel} from '../../core/store/users/user.model';
-import {selectCurrentView} from '../../core/store/views/views.state';
-import {ViewModel} from '../../core/store/views/view.model';
-import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
-import {CollectionModel} from '../../core/store/collections/collection.model';
-import {selectAllDocuments} from '../../core/store/documents/documents.state';
-import {getCollectionsIdsFromView} from '../../core/store/collections/collection.util';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
-import {Role} from '../../core/model/role';
+import {AppState} from '../../../core/store/app.state';
+import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
+import {authorRolesInView, userRolesInResource} from '../../utils/resource.utils';
+import {UserModel} from '../../../core/store/users/user.model';
+import {selectCurrentView} from '../../../core/store/views/views.state';
+import {ViewModel} from '../../../core/store/views/view.model';
+import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
+import {CollectionModel} from '../../../core/store/collections/collection.model';
+import {selectAllDocuments} from '../../../core/store/documents/documents.state';
+import {getCollectionsIdsFromView} from '../../../core/store/collections/collection.util';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {Role} from '../../../core/model/role';
 
 @Pipe({
   name: 'collectionPermissions',
