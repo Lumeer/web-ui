@@ -19,12 +19,14 @@
 
 export const icons: string[] = [
   'fa-abacus',
+  'fa-acorn',
   'fa-ad',
   'fa-address-book',
   'fa-address-card',
   'fa-adjust',
   'fa-air-freshener',
   'fa-alarm-clock',
+  'fa-alicorn',
   'fa-align-center',
   'fa-align-justify',
   'fa-align-left',
@@ -45,6 +47,7 @@ export const icons: string[] = [
   'fa-angry',
   'fa-ankh',
   'fa-apple-alt',
+  'fa-apple-crate',
   'fa-archive',
   'fa-archway',
   'fa-arrow-alt-circle-down',
@@ -101,6 +104,8 @@ export const icons: string[] = [
   'fa-atom-alt',
   'fa-audio-description',
   'fa-award',
+  'fa-axe',
+  'fa-axe-battle',
   'fa-backpack',
   'fa-backspace',
   'fa-backward',
@@ -108,6 +113,7 @@ export const icons: string[] = [
   'fa-badge-check',
   'fa-badge-dollar',
   'fa-badge-percent',
+  'fa-badger-honey',
   'fa-balance-scale',
   'fa-balance-scale-left',
   'fa-balance-scale-right',
@@ -122,6 +128,7 @@ export const icons: string[] = [
   'fa-baseball-ball',
   'fa-basketball-ball',
   'fa-basketball-hoop',
+  'fa-bat',
   'fa-bath',
   'fa-battery-bolt',
   'fa-battery-empty',
@@ -143,6 +150,7 @@ export const icons: string[] = [
   'fa-birthday-cake',
   'fa-blanket',
   'fa-blender',
+  'fa-blender-phone',
   'fa-blind',
   'fa-bold',
   'fa-bolt',
@@ -152,11 +160,14 @@ export const icons: string[] = [
   'fa-bong',
   'fa-book',
   'fa-book-alt',
+  'fa-book-dead',
   'fa-book-heart',
   'fa-book-open',
   'fa-book-reader',
+  'fa-book-spells',
   'fa-bookmark',
   'fa-books',
+  'fa-bow-arrow',
   'fa-bowling-ball',
   'fa-bowling-pins',
   'fa-box',
@@ -204,6 +215,10 @@ export const icons: string[] = [
   'fa-camera',
   'fa-camera-alt',
   'fa-camera-retro',
+  'fa-campfire',
+  'fa-campground',
+  'fa-candle-holder',
+  'fa-candy-corn',
   'fa-cannabis',
   'fa-capsules',
   'fa-car',
@@ -230,7 +245,11 @@ export const icons: string[] = [
   'fa-caret-up',
   'fa-cart-arrow-down',
   'fa-cart-plus',
+  'fa-cat',
+  'fa-cauldron',
   'fa-certificate',
+  'fa-chair',
+  'fa-chair-office',
   'fa-chalkboard',
   'fa-chalkboard-teacher',
   'fa-charging-station',
@@ -281,6 +300,7 @@ export const icons: string[] = [
   'fa-circle',
   'fa-circle-notch',
   'fa-city',
+  'fa-claw-marks',
   'fa-clipboard',
   'fa-clipboard-check',
   'fa-clipboard-list',
@@ -291,6 +311,8 @@ export const icons: string[] = [
   'fa-cloud',
   'fa-cloud-download',
   'fa-cloud-download-alt',
+  'fa-cloud-moon',
+  'fa-cloud-sun',
   'fa-cloud-upload',
   'fa-cloud-upload-alt',
   'fa-club',
@@ -300,6 +322,8 @@ export const icons: string[] = [
   'fa-code-commit',
   'fa-code-merge',
   'fa-coffee',
+  'fa-coffee-togo',
+  'fa-coffin',
   'fa-cog',
   'fa-cogs',
   'fa-coins',
@@ -346,7 +370,9 @@ export const icons: string[] = [
   'fa-cookie-bite',
   'fa-copy',
   'fa-copyright',
+  'fa-corn',
   'fa-couch',
+  'fa-cow',
   'fa-credit-card',
   'fa-credit-card-blank',
   'fa-credit-card-front',
@@ -361,6 +387,7 @@ export const icons: string[] = [
   'fa-cubes',
   'fa-curling',
   'fa-cut',
+  'fa-dagger',
   'fa-database',
   'fa-deaf',
   'fa-desktop',
@@ -369,6 +396,12 @@ export const icons: string[] = [
   'fa-diagnoses',
   'fa-diamond',
   'fa-dice',
+  'fa-dice-d10',
+  'fa-dice-d12',
+  'fa-dice-d20',
+  'fa-dice-d4',
+  'fa-dice-d6',
+  'fa-dice-d8',
   'fa-dice-five',
   'fa-dice-four',
   'fa-dice-one',
@@ -382,6 +415,8 @@ export const icons: string[] = [
   'fa-dizzy',
   'fa-dna',
   'fa-do-not-enter',
+  'fa-dog',
+  'fa-dog-leashed',
   'fa-dollar-sign',
   'fa-dolly',
   'fa-dolly-empty',
@@ -395,15 +430,21 @@ export const icons: string[] = [
   'fa-dove',
   'fa-download',
   'fa-drafting-compass',
+  'fa-dragon',
   'fa-draw-circle',
   'fa-draw-polygon',
   'fa-draw-square',
   'fa-drum',
   'fa-drum-steelpan',
+  'fa-drumstick',
+  'fa-drumstick-bite',
+  'fa-duck',
   'fa-dumbbell',
+  'fa-dungeon',
   'fa-ear',
   'fa-edit',
   'fa-eject',
+  'fa-elephant',
   'fa-ellipsis-h',
   'fa-ellipsis-h-alt',
   'fa-ellipsis-v',
@@ -435,6 +476,7 @@ export const icons: string[] = [
   'fa-external-link-square-alt',
   'fa-eye',
   'fa-eye-dropper',
+  'fa-eye-evil',
   'fa-eye-slash',
   'fa-fast-backward',
   'fa-fast-forward',
@@ -454,6 +496,7 @@ export const icons: string[] = [
   'fa-file-check',
   'fa-file-code',
   'fa-file-contract',
+  'fa-file-csv',
   'fa-file-download',
   'fa-file-edit',
   'fa-file-excel',
@@ -487,9 +530,13 @@ export const icons: string[] = [
   'fa-fire-extinguisher',
   'fa-first-aid',
   'fa-fish',
+  'fa-fist-raised',
   'fa-flag',
   'fa-flag-checkered',
+  'fa-flame',
   'fa-flask',
+  'fa-flask-poison',
+  'fa-flask-potion',
   'fa-flushed',
   'fa-folder',
   'fa-folder-minus',
@@ -515,6 +562,7 @@ export const icons: string[] = [
   'fa-gavel',
   'fa-gem',
   'fa-genderless',
+  'fa-ghost',
   'fa-gift',
   'fa-gift-card',
   'fa-glass-martini',
@@ -552,11 +600,14 @@ export const icons: string[] = [
   'fa-h1',
   'fa-h2',
   'fa-h3',
+  'fa-hammer',
+  'fa-hammer-war',
   'fa-hamsa',
   'fa-hand-heart',
   'fa-hand-holding',
   'fa-hand-holding-box',
   'fa-hand-holding-heart',
+  'fa-hand-holding-magic',
   'fa-hand-holding-seedling',
   'fa-hand-holding-usd',
   'fa-hand-holding-water',
@@ -578,9 +629,14 @@ export const icons: string[] = [
   'fa-hands-usd',
   'fa-handshake',
   'fa-handshake-alt',
+  'fa-hanukiah',
   'fa-hashtag',
+  'fa-hat-witch',
+  'fa-hat-wizard',
   'fa-haykal',
   'fa-hdd',
+  'fa-head-side',
+  'fa-head-vr',
   'fa-heading',
   'fa-headphones',
   'fa-headphones-alt',
@@ -591,13 +647,19 @@ export const icons: string[] = [
   'fa-heart-square',
   'fa-heartbeat',
   'fa-helicopter',
+  'fa-helmet-battle',
   'fa-hexagon',
   'fa-highlighter',
+  'fa-hiking',
+  'fa-hippo',
   'fa-history',
+  'fa-hockey-mask',
   'fa-hockey-puck',
   'fa-hockey-sticks',
   'fa-home',
   'fa-home-heart',
+  'fa-hood-cloak',
+  'fa-horse',
   'fa-hospital',
   'fa-hospital-alt',
   'fa-hospital-symbol',
@@ -607,6 +669,8 @@ export const icons: string[] = [
   'fa-hourglass-end',
   'fa-hourglass-half',
   'fa-hourglass-start',
+  'fa-house-damage',
+  'fa-hryvnia',
   'fa-i-cursor',
   'fa-id-badge',
   'fa-id-card',
@@ -634,6 +698,7 @@ export const icons: string[] = [
   'fa-journal-whills',
   'fa-kaaba',
   'fa-key',
+  'fa-key-skeleton',
   'fa-keyboard',
   'fa-keynote',
   'fa-khanda',
@@ -641,7 +706,9 @@ export const icons: string[] = [
   'fa-kiss',
   'fa-kiss-beam',
   'fa-kiss-wink-heart',
+  'fa-kite',
   'fa-kiwi-bird',
+  'fa-knife-kitchen',
   'fa-lambda',
   'fa-lamp',
   'fa-landmark',
@@ -657,6 +724,8 @@ export const icons: string[] = [
   'fa-layer-plus',
   'fa-leaf',
   'fa-leaf-heart',
+  'fa-leaf-maple',
+  'fa-leaf-oak',
   'fa-lemon',
   'fa-less-than',
   'fa-less-than-equal',
@@ -698,10 +767,12 @@ export const icons: string[] = [
   'fa-luchador',
   'fa-luggage-cart',
   'fa-lungs',
+  'fa-mace',
   'fa-magic',
   'fa-magnet',
   'fa-mail-bulk',
   'fa-male',
+  'fa-mandolin',
   'fa-map',
   'fa-map-marked',
   'fa-map-marked-alt',
@@ -725,6 +796,7 @@ export const icons: string[] = [
   'fa-mars-stroke',
   'fa-mars-stroke-h',
   'fa-mars-stroke-v',
+  'fa-mask',
   'fa-medal',
   'fa-medkit',
   'fa-megaphone',
@@ -757,13 +829,18 @@ export const icons: string[] = [
   'fa-money-check',
   'fa-money-check-alt',
   'fa-monitor-heart-rate',
+  'fa-monkey',
   'fa-monument',
   'fa-moon',
   'fa-mortar-pestle',
   'fa-mosque',
   'fa-motorcycle',
+  'fa-mountain',
+  'fa-mountains',
   'fa-mouse-pointer',
   'fa-music',
+  'fa-narwhal',
+  'fa-network-wired',
   'fa-neuter',
   'fa-newspaper',
   'fa-not-equal',
@@ -775,6 +852,7 @@ export const icons: string[] = [
   'fa-oil-temp',
   'fa-om',
   'fa-omega',
+  'fa-otter',
   'fa-outdent',
   'fa-paint-brush',
   'fa-paint-brush-alt',
@@ -796,7 +874,10 @@ export const icons: string[] = [
   'fa-pause',
   'fa-pause-circle',
   'fa-paw',
+  'fa-paw-alt',
+  'fa-paw-claws',
   'fa-peace',
+  'fa-pegasus',
   'fa-pen',
   'fa-pen-alt',
   'fa-pen-fancy',
@@ -820,6 +901,8 @@ export const icons: string[] = [
   'fa-phone-square',
   'fa-phone-volume',
   'fa-pi',
+  'fa-pie',
+  'fa-pig',
   'fa-piggy-bank',
   'fa-pills',
   'fa-place-of-worship',
@@ -854,6 +937,7 @@ export const icons: string[] = [
   'fa-print-slash',
   'fa-procedures',
   'fa-project-diagram',
+  'fa-pumpkin',
   'fa-puzzle-piece',
   'fa-qrcode',
   'fa-question',
@@ -863,7 +947,10 @@ export const icons: string[] = [
   'fa-quote-left',
   'fa-quote-right',
   'fa-quran',
+  'fa-rabbit',
+  'fa-rabbit-fast',
   'fa-racquet',
+  'fa-ram',
   'fa-ramp-loading',
   'fa-random',
   'fa-receipt',
@@ -883,6 +970,7 @@ export const icons: string[] = [
   'fa-retweet',
   'fa-retweet-alt',
   'fa-ribbon',
+  'fa-ring',
   'fa-road',
   'fa-robot',
   'fa-rocket',
@@ -897,6 +985,7 @@ export const icons: string[] = [
   'fa-ruler-horizontal',
   'fa-ruler-triangle',
   'fa-ruler-vertical',
+  'fa-running',
   'fa-rupee-sign',
   'fa-sad-cry',
   'fa-sad-tear',
@@ -906,9 +995,13 @@ export const icons: string[] = [
   'fa-scanner',
   'fa-scanner-keyboard',
   'fa-scanner-touchscreen',
+  'fa-scarecrow',
   'fa-school',
   'fa-screwdriver',
+  'fa-scroll',
+  'fa-scroll-old',
   'fa-scrubber',
+  'fa-scythe',
   'fa-search',
   'fa-search-dollar',
   'fa-search-location',
@@ -922,10 +1015,12 @@ export const icons: string[] = [
   'fa-share-alt',
   'fa-share-alt-square',
   'fa-share-square',
+  'fa-sheep',
   'fa-shekel-sign',
   'fa-shield',
   'fa-shield-alt',
   'fa-shield-check',
+  'fa-shield-cross',
   'fa-ship',
   'fa-shipping-fast',
   'fa-shipping-timed',
@@ -933,6 +1028,7 @@ export const icons: string[] = [
   'fa-shopping-bag',
   'fa-shopping-basket',
   'fa-shopping-cart',
+  'fa-shovel',
   'fa-shower',
   'fa-shredder',
   'fa-shuttle-van',
@@ -959,6 +1055,8 @@ export const icons: string[] = [
   'fa-sitemap',
   'fa-skeleton',
   'fa-skull',
+  'fa-skull-crossbones',
+  'fa-slash',
   'fa-sliders-h',
   'fa-sliders-h-square',
   'fa-sliders-v',
@@ -969,6 +1067,7 @@ export const icons: string[] = [
   'fa-smile-wink',
   'fa-smoking',
   'fa-smoking-ban',
+  'fa-snake',
   'fa-snowflake',
   'fa-socks',
   'fa-solar-panel',
@@ -984,6 +1083,9 @@ export const icons: string[] = [
   'fa-spa',
   'fa-space-shuttle',
   'fa-spade',
+  'fa-spider',
+  'fa-spider-black-widow',
+  'fa-spider-web',
   'fa-spinner',
   'fa-spinner-third',
   'fa-splotch',
@@ -992,6 +1094,8 @@ export const icons: string[] = [
   'fa-square-full',
   'fa-square-root',
   'fa-square-root-alt',
+  'fa-squirrel',
+  'fa-staff',
   'fa-stamp',
   'fa-star',
   'fa-star-and-crescent',
@@ -1025,6 +1129,8 @@ export const icons: string[] = [
   'fa-swatchbook',
   'fa-swimmer',
   'fa-swimming-pool',
+  'fa-sword',
+  'fa-swords',
   'fa-synagogue',
   'fa-sync',
   'fa-sync-alt',
@@ -1092,11 +1198,16 @@ export const icons: string[] = [
   'fa-tired',
   'fa-toggle-off',
   'fa-toggle-on',
+  'fa-toilet-paper',
+  'fa-toilet-paper-alt',
+  'fa-tombstone',
+  'fa-tombstone-alt',
   'fa-toolbox',
   'fa-tooth',
   'fa-toothbrush',
   'fa-torah',
   'fa-torii-gate',
+  'fa-tractor',
   'fa-trademark',
   'fa-traffic-cone',
   'fa-traffic-light',
@@ -1108,8 +1219,10 @@ export const icons: string[] = [
   'fa-transgender-alt',
   'fa-trash',
   'fa-trash-alt',
+  'fa-treasure-chest',
   'fa-tree',
   'fa-tree-alt',
+  'fa-trees',
   'fa-triangle',
   'fa-trophy',
   'fa-trophy-alt',
@@ -1123,6 +1236,8 @@ export const icons: string[] = [
   'fa-truck-ramp',
   'fa-tshirt',
   'fa-tty',
+  'fa-turkey',
+  'fa-turtle',
   'fa-tv',
   'fa-tv-retro',
   'fa-umbrella',
@@ -1130,6 +1245,7 @@ export const icons: string[] = [
   'fa-underline',
   'fa-undo',
   'fa-undo-alt',
+  'fa-unicorn',
   'fa-union',
   'fa-universal-access',
   'fa-university',
@@ -1152,6 +1268,7 @@ export const icons: string[] = [
   'fa-user-edit',
   'fa-user-friends',
   'fa-user-graduate',
+  'fa-user-injured',
   'fa-user-lock',
   'fa-user-md',
   'fa-user-minus',
@@ -1190,26 +1307,33 @@ export const icons: string[] = [
   'fa-volume-off',
   'fa-volume-slash',
   'fa-volume-up',
+  'fa-vr-cardboard',
   'fa-walking',
   'fa-wallet',
+  'fa-wand',
+  'fa-wand-magic',
   'fa-warehouse',
   'fa-warehouse-alt',
   'fa-watch',
   'fa-watch-fitness',
   'fa-weight',
   'fa-weight-hanging',
+  'fa-whale',
+  'fa-wheat',
   'fa-wheelchair',
   'fa-whistle',
   'fa-wifi',
   'fa-wifi-1',
   'fa-wifi-2',
   'fa-wifi-slash',
+  'fa-wind',
   'fa-window',
   'fa-window-alt',
   'fa-window-close',
   'fa-window-maximize',
   'fa-window-minimize',
   'fa-window-restore',
+  'fa-wine-bottle',
   'fa-wine-glass',
   'fa-wine-glass-alt',
   'fa-won-sign',
@@ -1229,6 +1353,7 @@ export const brand: string[] = [
   'fab fa-500px',
   'fab fa-accessible-icon',
   'fab fa-accusoft',
+  'fab fa-acquisitions-incorporated',
   'fab fa-adn',
   'fab fa-adversal',
   'fab fa-affiliatetheme',
@@ -1302,14 +1427,17 @@ export const brand: string[] = [
   'fab fa-creative-commons-sampling-plus',
   'fab fa-creative-commons-share',
   'fab fa-creative-commons-zero',
+  'fab fa-critical-role',
   'fab fa-css3',
   'fab fa-css3-alt',
   'fab fa-cuttlefish',
   'fab fa-d-and-d',
+  'fab fa-d-and-d-beyond',
   'fab fa-dashcube',
   'fab fa-delicious',
   'fab fa-deploydog',
   'fab fa-deskpro',
+  'fab fa-dev',
   'fab fa-deviantart',
   'fab fa-digg',
   'fab fa-digital-ocean',
@@ -1339,6 +1467,7 @@ export const brand: string[] = [
   'fab fa-facebook-f',
   'fab fa-facebook-messenger',
   'fab fa-facebook-square',
+  'fab fa-fantasy-flight-games',
   'fab fa-firefox',
   'fab fa-first-order',
   'fab fa-first-order-alt',
@@ -1471,6 +1600,7 @@ export const brand: string[] = [
   'fab fa-palfed',
   'fab fa-patreon',
   'fab fa-paypal',
+  'fab fa-penny-arcade',
   'fab fa-periscope',
   'fab fa-phabricator',
   'fab fa-phoenix-framework',
@@ -1590,6 +1720,7 @@ export const brand: string[] = [
   'fab fa-wikipedia-w',
   'fab fa-windows',
   'fab fa-wix',
+  'fab fa-wizards-of-the-coast',
   'fab fa-wolf-pack-battalion',
   'fab fa-wordpress',
   'fab fa-wordpress-simple',
@@ -1646,6 +1777,300 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['accusoft', [
     'accusoft'
+  ]],
+  ['acorn', [
+    'acorn'
+  ]],
+  ['fall', [
+    'acorn',
+    'apple-alt',
+    'apple-crate',
+    'axe',
+    'campfire',
+    'campground',
+    'cloud-sun',
+    'coffee',
+    'corn',
+    'drumstick',
+    'football-ball',
+    'hiking',
+    'kite',
+    'leaf-maple',
+    'leaf-oak',
+    'tree',
+    'tree-alt',
+    'trees',
+    'turkey',
+    'wheat',
+    'wind'
+  ]],
+  ['nature', [
+    'acorn',
+    'leaf',
+    'leaf-heart',
+    'leaf-maple',
+    'leaf-oak',
+    'pagelines',
+    'tree',
+    'tree-alt',
+    'trees'
+  ]],
+  ['nut', [
+    'acorn'
+  ]],
+  ['seasonal', [
+    'acorn',
+    'apple-alt',
+    'apple-crate',
+    'axe',
+    'campfire',
+    'campground',
+    'cloud-sun',
+    'coffee',
+    'corn',
+    'drumstick',
+    'football-ball',
+    'hiking',
+    'kite',
+    'leaf-maple',
+    'leaf-oak',
+    'tree',
+    'tree-alt',
+    'trees',
+    'turkey',
+    'wheat',
+    'wind'
+  ]],
+  ['tree', [
+    'acorn',
+    'pagelines',
+    'tree'
+  ]],
+  ['acquisitions-incorporated', [
+    'acquisitions-incorporated'
+  ]],
+  ['Dungeons & Dragons', [
+    'acquisitions-incorporated',
+    'axe-battle',
+    'book-dead',
+    'book-spells',
+    'bow-arrow',
+    'campfire',
+    'critical-role',
+    'd-and-d-beyond',
+    'dagger',
+    'dice-d10',
+    'dice-d12',
+    'dice-d20',
+    'dice-d4',
+    'dice-d6',
+    'dice-d8',
+    'dragon',
+    'dungeon',
+    'eye-evil',
+    'fantasy-flight-games',
+    'fist-raised',
+    'flame',
+    'flask-potion',
+    'hammer-war',
+    'hand-holding-magic',
+    'hat-wizard',
+    'helmet-battle',
+    'hood-cloak',
+    'mace',
+    'mandolin',
+    'paw-claws',
+    'penny-arcade',
+    'ring',
+    'scroll',
+    'scroll-old',
+    'scythe',
+    'shield-cross',
+    'skull-crossbones',
+    'staff',
+    'sword',
+    'swords',
+    'treasure-chest',
+    'wand',
+    'wizards-of-the-coast'
+  ]],
+  ['d&d', [
+    'acquisitions-incorporated',
+    'axe-battle',
+    'book-dead',
+    'book-spells',
+    'bow-arrow',
+    'campfire',
+    'critical-role',
+    'd-and-d-beyond',
+    'dagger',
+    'dice-d10',
+    'dice-d12',
+    'dice-d20',
+    'dice-d4',
+    'dice-d6',
+    'dice-d8',
+    'dragon',
+    'dungeon',
+    'eye-evil',
+    'fantasy-flight-games',
+    'fist-raised',
+    'flame',
+    'flask-potion',
+    'hammer-war',
+    'hand-holding-magic',
+    'hat-wizard',
+    'helmet-battle',
+    'hood-cloak',
+    'mace',
+    'mandolin',
+    'paw-claws',
+    'penny-arcade',
+    'ring',
+    'scroll',
+    'scroll-old',
+    'scythe',
+    'shield-cross',
+    'skull-crossbones',
+    'staff',
+    'sword',
+    'swords',
+    'treasure-chest',
+    'wand',
+    'wizards-of-the-coast'
+  ]],
+  ['dnd', [
+    'acquisitions-incorporated',
+    'axe-battle',
+    'book-dead',
+    'book-spells',
+    'bow-arrow',
+    'campfire',
+    'critical-role',
+    'd-and-d-beyond',
+    'dagger',
+    'dice-d10',
+    'dice-d12',
+    'dice-d20',
+    'dice-d4',
+    'dice-d6',
+    'dice-d8',
+    'dragon',
+    'dungeon',
+    'eye-evil',
+    'fantasy-flight-games',
+    'fist-raised',
+    'flame',
+    'flask-potion',
+    'hammer-war',
+    'hand-holding-magic',
+    'hat-wizard',
+    'helmet-battle',
+    'hood-cloak',
+    'mace',
+    'mandolin',
+    'paw-claws',
+    'penny-arcade',
+    'ring',
+    'scroll',
+    'scroll-old',
+    'scythe',
+    'shield-cross',
+    'skull-crossbones',
+    'staff',
+    'sword',
+    'swords',
+    'treasure-chest',
+    'wand',
+    'wizards-of-the-coast'
+  ]],
+  ['fantasy', [
+    'acquisitions-incorporated',
+    'alicorn',
+    'axe-battle',
+    'blender-phone',
+    'book-dead',
+    'book-spells',
+    'bow-arrow',
+    'critical-role',
+    'd-and-d-beyond',
+    'dagger',
+    'dice-d10',
+    'dice-d12',
+    'dice-d20',
+    'dice-d4',
+    'dice-d6',
+    'dice-d8',
+    'dragon',
+    'dungeon',
+    'eye-evil',
+    'fantasy-flight-games',
+    'fist-raised',
+    'flame',
+    'flask-potion',
+    'hammer-war',
+    'hand-holding-magic',
+    'hat-wizard',
+    'helmet-battle',
+    'hood-cloak',
+    'mace',
+    'mandolin',
+    'paw-claws',
+    'pegasus',
+    'penny-arcade',
+    'ring',
+    'scroll',
+    'scroll-old',
+    'scythe',
+    'shield-cross',
+    'skull-crossbones',
+    'staff',
+    'sword',
+    'swords',
+    'treasure-chest',
+    'unicorn',
+    'wand',
+    'wand-magic',
+    'wizards-of-the-coast'
+  ]],
+  ['game', [
+    'acquisitions-incorporated',
+    'critical-role',
+    'dice',
+    'dice-d10',
+    'dice-d12',
+    'dice-d20',
+    'dice-d4',
+    'dice-d6',
+    'dice-d8',
+    'dice-five',
+    'dice-four',
+    'dice-one',
+    'dice-six',
+    'dice-three',
+    'dice-two',
+    'fantasy-flight-games',
+    'penny-arcade',
+    'trophy',
+    'trophy-alt',
+    'wizards-of-the-coast'
+  ]],
+  ['gaming', [
+    'acquisitions-incorporated',
+    'critical-role',
+    'd-and-d-beyond',
+    'fantasy-flight-games',
+    'headset',
+    'penny-arcade',
+    'wizards-of-the-coast'
+  ]],
+  ['tabletop', [
+    'acquisitions-incorporated',
+    'critical-role',
+    'd-and-d-beyond',
+    'fantasy-flight-games',
+    'penny-arcade',
+    'wizards-of-the-coast'
   ]],
   ['ad', [
     'ad'
@@ -1705,6 +2130,72 @@ export const iconsMeta = new Map<string, string[]>([
   ['algolia', [
     'algolia'
   ]],
+  ['alicorn', [
+    'alicorn'
+  ]],
+  ['fauna', [
+    'alicorn',
+    'badger-honey',
+    'cow',
+    'crow',
+    'dog',
+    'dog-leashed',
+    'dove',
+    'duck',
+    'elephant',
+    'fish',
+    'frog',
+    'hippo',
+    'horse',
+    'kiwi-bird',
+    'monkey',
+    'narwhal',
+    'otter',
+    'pig',
+    'rabbit',
+    'rabbit-fast',
+    'ram',
+    'sheep',
+    'snake',
+    'turtle',
+    'unicorn',
+    'whale'
+  ]],
+  ['horse', [
+    'alicorn',
+    'horse',
+    'pegasus',
+    'unicorn'
+  ]],
+  ['mammmal', [
+    'alicorn',
+    'badger-honey',
+    'cow',
+    'dog',
+    'dog-leashed',
+    'elephant',
+    'hippo',
+    'horse',
+    'monkey',
+    'narwhal',
+    'otter',
+    'pig',
+    'rabbit',
+    'rabbit-fast',
+    'ram',
+    'sheep'
+  ]],
+  ['pegasus', [
+    'alicorn',
+    'pegasus'
+  ]],
+  ['unicorn', [
+    'alicorn',
+    'unicorn'
+  ]],
+  ['wing', [
+    'alicorn'
+  ]],
   ['align-center', [
     'align-center'
   ]],
@@ -1742,6 +2233,7 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['hand', [
     'allergies',
+    'fist-raised',
     'thumbs-down',
     'thumbs-up'
   ]],
@@ -2096,6 +2588,7 @@ export const iconsMeta = new Map<string, string[]>([
     'grin-tongue-squint',
     'grin-tongue-wink',
     'grin-wink',
+    'jack-o-lantern',
     'kiss',
     'kiss-beam',
     'kiss-wink-heart',
@@ -2172,20 +2665,56 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['food', [
     'apple',
+    'apple-alt',
+    'apple-crate',
+    'candy-corn',
     'cookie',
     'cookie-bite',
+    'corn',
+    'drumstick',
     'lemon',
     'stroopwafel',
-    'utensils'
+    'turkey',
+    'utensils',
+    'wheat'
   ]],
   ['fruit', [
-    'apple'
+    'apple',
+    'apple-alt',
+    'apple-crate'
+  ]],
+  ['mac', [
+    'apple',
+    'laptop'
   ]],
   ['osx', [
     'apple'
   ]],
   ['apple-alt', [
     'apple-alt'
+  ]],
+  ['fuji', [
+    'apple-alt',
+    'apple-crate'
+  ]],
+  ['macintosh', [
+    'apple-alt',
+    'apple-crate'
+  ]],
+  ['apple-crate', [
+    'apple-crate'
+  ]],
+  ['bushel', [
+    'apple-crate'
+  ]],
+  ['container', [
+    'apple-crate',
+    'flask-poison',
+    'flask-potion',
+    'toolbox'
+  ]],
+  ['peck', [
+    'apple-crate'
   ]],
   ['apple-pay', [
     'apple-pay'
@@ -2547,7 +3076,8 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['science', [
     'atom',
-    'flask'
+    'flask',
+    'flask-potion'
   ]],
   ['atom-alt', [
     'atom-alt'
@@ -2571,6 +3101,7 @@ export const iconsMeta = new Map<string, string[]>([
     'award',
     'badge-check',
     'shield',
+    'shield-alt',
     'shield-check',
     'star',
     'star-exclamation',
@@ -2598,8 +3129,79 @@ export const iconsMeta = new Map<string, string[]>([
   ['aws', [
     'aws'
   ]],
+  ['axe', [
+    'axe'
+  ]],
+  ['blade', [
+    'axe',
+    'dagger',
+    'scythe',
+    'sword',
+    'swords'
+  ]],
+  ['cut', [
+    'axe',
+    'cut',
+    'knife-kitchen',
+    'utensil-knife'
+  ]],
+  ['outdoors', [
+    'axe',
+    'campfire',
+    'campground',
+    'cloud-sun',
+    'hiking',
+    'kite'
+  ]],
+  ['sharp', [
+    'axe'
+  ]],
+  ['swing', [
+    'axe'
+  ]],
+  ['tool', [
+    'axe',
+    'hammer',
+    'knife-kitchen',
+    'paint-roller',
+    'screwdriver',
+    'utensil-knife',
+    'wrench'
+  ]],
+  ['weapon', [
+    'axe',
+    'bow-arrow',
+    'dagger',
+    'hammer-war',
+    'mace',
+    'scythe',
+    'staff',
+    'sword',
+    'swords',
+    'wand',
+    'wand-magic'
+  ]],
+  ['axe-battle', [
+    'axe-battle'
+  ]],
+  ['barbarian', [
+    'axe-battle'
+  ]],
+  ['gimli', [
+    'axe-battle'
+  ]],
+  ['lumberjack', [
+    'axe-battle'
+  ]],
+  ['melee attack', [
+    'axe-battle',
+    'dagger',
+    'hammer-war',
+    'mace'
+  ]],
   ['backpack', [
-    'backpack'
+    'backpack',
+    'hiking'
   ]],
   ['backspace', [
     'backspace'
@@ -2630,6 +3232,8 @@ export const iconsMeta = new Map<string, string[]>([
     'minus-hexagon',
     'minus-octagon',
     'minus-square',
+    'tombstone',
+    'tombstone-alt',
     'trash',
     'trash-alt',
     'user-minus',
@@ -2673,6 +3277,7 @@ export const iconsMeta = new Map<string, string[]>([
   ['achievement', [
     'badge-check',
     'shield',
+    'shield-alt',
     'shield-check',
     'star',
     'star-exclamation',
@@ -2745,7 +3350,9 @@ export const iconsMeta = new Map<string, string[]>([
     'lock',
     'lock-alt',
     'shield',
-    'shield-check'
+    'shield-alt',
+    'shield-check',
+    'shield-cross'
   ]],
   ['select', [
     'badge-check',
@@ -2776,6 +3383,7 @@ export const iconsMeta = new Map<string, string[]>([
   ['winner', [
     'badge-check',
     'shield',
+    'shield-alt',
     'shield-check',
     'trophy',
     'trophy-alt'
@@ -2794,6 +3402,22 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['badge-percent', [
     'badge-percent'
+  ]],
+  ['badger-honey', [
+    'badger-honey'
+  ]],
+  ['care', [
+    'badger-honey',
+    'box-heart'
+  ]],
+  ['dont', [
+    'badger-honey'
+  ]],
+  ['ewww', [
+    'badger-honey'
+  ]],
+  ['nasty', [
+    'badger-honey'
   ]],
   ['balance-scale', [
     'balance-scale'
@@ -2836,6 +3460,7 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['ban', [
     'ban',
+    'user-slash',
     'volume-slash'
   ]],
   ['abort', [
@@ -2843,6 +3468,10 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['block', [
     'ban',
+    'shield',
+    'shield-alt',
+    'shield-check',
+    'shield-cross',
     'square',
     'stop'
   ]],
@@ -2884,10 +3513,13 @@ export const iconsMeta = new Map<string, string[]>([
     'minus-hexagon',
     'minus-octagon',
     'minus-square',
+    'tombstone',
+    'tombstone-alt',
     'trash',
     'trash-alt',
     'unlink',
     'user-minus',
+    'user-slash',
     'user-times'
   ]],
   ['stop', [
@@ -2915,7 +3547,8 @@ export const iconsMeta = new Map<string, string[]>([
     'band-aid'
   ]],
   ['ouch', [
-    'band-aid'
+    'band-aid',
+    'user-injured'
   ]],
   ['bandcamp', [
     'bandcamp'
@@ -3029,6 +3662,7 @@ export const iconsMeta = new Map<string, string[]>([
     'ellipsis-h-alt',
     'ellipsis-v',
     'ellipsis-v-alt',
+    'hammer',
     'screwdriver',
     'sliders-h',
     'tasks',
@@ -3077,8 +3711,104 @@ export const iconsMeta = new Map<string, string[]>([
   ['basketball-hoop', [
     'basketball-hoop'
   ]],
+  ['bat', [
+    'bat'
+  ]],
+  ['batman', [
+    'bat'
+  ]],
+  ['bruce wayne', [
+    'bat'
+  ]],
+  ['flying', [
+    'bat',
+    'dove',
+    'kite'
+  ]],
+  ['gotham', [
+    'bat'
+  ]],
+  ['halloween', [
+    'bat',
+    'book-dead',
+    'book-spells',
+    'broom',
+    'candle-holder',
+    'candy-corn',
+    'cat',
+    'cauldron',
+    'claw-marks',
+    'cloud-moon',
+    'coffin',
+    'crow',
+    'flask-poison',
+    'flask-potion',
+    'ghost',
+    'hat-witch',
+    'hat-wizard',
+    'hockey-mask',
+    'jack-o-lantern',
+    'key-skeleton',
+    'knife-kitchen',
+    'mask',
+    'scarecrow',
+    'skull-crossbones',
+    'spider',
+    'spider-black-widow',
+    'spider-web',
+    'toilet-paper',
+    'toilet-paper-alt',
+    'tombstone',
+    'tombstone-alt',
+    'wand',
+    'wand-magic'
+  ]],
+  ['holiday', [
+    'bat',
+    'book-dead',
+    'book-spells',
+    'broom',
+    'candle-holder',
+    'candy-corn',
+    'cat',
+    'cauldron',
+    'claw-marks',
+    'cloud-moon',
+    'coffin',
+    'crow',
+    'flask-poison',
+    'flask-potion',
+    'ghost',
+    'hat-witch',
+    'hat-wizard',
+    'hockey-mask',
+    'jack-o-lantern',
+    'key-skeleton',
+    'knife-kitchen',
+    'mask',
+    'scarecrow',
+    'skull-crossbones',
+    'spider',
+    'spider-black-widow',
+    'spider-web',
+    'toilet-paper',
+    'toilet-paper-alt',
+    'tombstone',
+    'tombstone-alt',
+    'wand',
+    'wand-magic'
+  ]],
+  ['mammal', [
+    'bat',
+    'whale'
+  ]],
+  ['wings', [
+    'bat',
+    'pegasus'
+  ]],
   ['bath', [
-    'bath'
+    'bath',
+    'duck'
   ]],
   ['battery-bolt', [
     'battery-bolt'
@@ -3091,6 +3821,7 @@ export const iconsMeta = new Map<string, string[]>([
     'battery-quarter',
     'battery-slash',
     'battery-three-quarters',
+    'flask-poison',
     'plug'
   ]],
   ['status', [
@@ -3170,17 +3901,38 @@ export const iconsMeta = new Map<string, string[]>([
   ['alcohol', [
     'beer',
     'cocktail',
-    'glass-martini'
+    'glass-martini',
+    'wine-bottle',
+    'wine-glass',
+    'wine-glass-alt'
   ]],
   ['bar', [
     'beer',
     'glass-martini'
   ]],
+  ['beverage', [
+    'beer',
+    'cocktail',
+    'coffee',
+    'coffee-togo',
+    'flask-poison',
+    'flask-potion',
+    'glass-martini',
+    'wine-bottle',
+    'wine-glass',
+    'wine-glass-alt'
+  ]],
   ['drink', [
     'beer',
     'cocktail',
     'coffee',
-    'glass-martini'
+    'coffee-togo',
+    'flask-poison',
+    'flask-potion',
+    'glass-martini',
+    'wine-bottle',
+    'wine-glass',
+    'wine-glass-alt'
   ]],
   ['liquor', [
     'beer',
@@ -3188,7 +3940,8 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['mug', [
     'beer',
-    'coffee'
+    'coffee',
+    'coffee-togo'
   ]],
   ['stein', [
     'beer'
@@ -3207,7 +3960,10 @@ export const iconsMeta = new Map<string, string[]>([
     'exclamation',
     'exclamation-circle',
     'exclamation-square',
-    'exclamation-triangle'
+    'exclamation-triangle',
+    'flask-potion',
+    'skull-crossbones',
+    'spider-black-widow'
   ]],
   ['notification', [
     'bell',
@@ -3339,6 +4095,15 @@ export const iconsMeta = new Map<string, string[]>([
   ['blender', [
     'blender'
   ]],
+  ['blender-phone', [
+    'blender-phone'
+  ]],
+  ['appliance', [
+    'blender-phone'
+  ]],
+  ['silly', [
+    'blender-phone'
+  ]],
   ['blind', [
     'blind',
     'eye-slash'
@@ -3378,7 +4143,8 @@ export const iconsMeta = new Map<string, string[]>([
     'bomb'
   ]],
   ['bone', [
-    'bone'
+    'bone',
+    'drumstick'
   ]],
   ['bone-break', [
     'bone-break'
@@ -3412,13 +4178,47 @@ export const iconsMeta = new Map<string, string[]>([
     'smoking'
   ]],
   ['documentation', [
-    'book'
+    'book',
+    'book-dead',
+    'book-spells'
   ]],
   ['read', [
-    'book'
+    'book',
+    'book-dead',
+    'book-spells'
   ]],
   ['book-alt', [
     'book-alt'
+  ]],
+  ['book-dead', [
+    'book-dead'
+  ]],
+  ['crossbones', [
+    'book-dead'
+  ]],
+  ['dark arts', [
+    'book-dead',
+    'book-spells'
+  ]],
+  ['death', [
+    'book-dead',
+    'flask-potion',
+    'skull-crossbones',
+    'tombstone',
+    'tombstone-alt'
+  ]],
+  ['evil', [
+    'book-dead',
+    'book-spells'
+  ]],
+  ['skull', [
+    'book-dead',
+    'skull'
+  ]],
+  ['spell', [
+    'book-dead',
+    'hand-holding-magic',
+    'magic'
   ]],
   ['book-heart', [
     'book-heart'
@@ -3448,6 +4248,49 @@ export const iconsMeta = new Map<string, string[]>([
   ['library', [
     'book-reader'
   ]],
+  ['book-spells', [
+    'book-spells'
+  ]],
+  ['mage', [
+    'book-spells',
+    'hand-holding-magic',
+    'hat-witch',
+    'hat-wizard',
+    'magic',
+    'staff'
+  ]],
+  ['magic', [
+    'book-spells',
+    'cauldron',
+    'flask-potion',
+    'hat-witch',
+    'hat-wizard',
+    'magic',
+    'wand-magic'
+  ]],
+  ['sorcery', [
+    'book-spells',
+    'cauldron'
+  ]],
+  ['voodoo', [
+    'book-spells'
+  ]],
+  ['witch', [
+    'book-spells',
+    'broom',
+    'cauldron',
+    'hand-holding-magic',
+    'hat-wizard',
+    'magic',
+    'wand-magic'
+  ]],
+  ['wizard', [
+    'book-spells',
+    'cauldron',
+    'hand-holding-magic',
+    'magic',
+    'wand-magic'
+  ]],
   ['bookmark', [
     'bookmark'
   ]],
@@ -3460,6 +4303,22 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['books', [
     'books'
+  ]],
+  ['bow-arrow', [
+    'bow-arrow'
+  ]],
+  ['archery', [
+    'bow-arrow',
+    'bullseye-arrow'
+  ]],
+  ['legolas', [
+    'bow-arrow'
+  ]],
+  ['ranged attack', [
+    'bow-arrow'
+  ]],
+  ['ranger', [
+    'bow-arrow'
   ]],
   ['bowling-ball', [
     'bowling-ball'
@@ -3486,9 +4345,6 @@ export const iconsMeta = new Map<string, string[]>([
     'box-full'
   ]],
   ['box-heart', [
-    'box-heart'
-  ]],
-  ['care', [
     'box-heart'
   ]],
   ['box-open', [
@@ -3525,10 +4381,12 @@ export const iconsMeta = new Map<string, string[]>([
     'file-invoice-dollar',
     'hand-holding-usd',
     'hands-usd',
+    'hryvnia',
     'money-bill',
     'money-bill-alt',
     'usd-circle',
-    'usd-square'
+    'usd-square',
+    'yen-sign'
   ]],
   ['usd', [
     'box-usd',
@@ -3622,6 +4480,32 @@ export const iconsMeta = new Map<string, string[]>([
   ['broom', [
     'broom'
   ]],
+  ['clean', [
+    'broom',
+    'solar-panel'
+  ]],
+  ['firebolt', [
+    'broom'
+  ]],
+  ['fly', [
+    'broom',
+    'fighter-jet',
+    'fly',
+    'helicopter',
+    'plane',
+    'plane-arrival',
+    'plane-departure'
+  ]],
+  ['nimbus 2000', [
+    'broom'
+  ]],
+  ['quidditch', [
+    'broom',
+    'quidditch'
+  ]],
+  ['sweep', [
+    'broom'
+  ]],
   ['browser', [
     'browser',
     'chrome',
@@ -3659,7 +4543,9 @@ export const iconsMeta = new Map<string, string[]>([
     'btc'
   ]],
   ['bug', [
-    'bug'
+    'bug',
+    'spider',
+    'spider-black-widow'
   ]],
   ['insect', [
     'bug'
@@ -3698,7 +4584,9 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['announcement', [
     'bullhorn',
-    'megaphone'
+    'megaphone',
+    'scroll',
+    'scroll-old'
   ]],
   ['broadcast', [
     'bullhorn',
@@ -3731,9 +4619,6 @@ export const iconsMeta = new Map<string, string[]>([
     'dot-circle'
   ]],
   ['bullseye-arrow', [
-    'bullseye-arrow'
-  ]],
-  ['archery', [
     'bullseye-arrow'
   ]],
   ['bullseye-pointer', [
@@ -3848,6 +4733,22 @@ export const iconsMeta = new Map<string, string[]>([
   ['calendar-minus', [
     'calendar-minus'
   ]],
+  ['negative', [
+    'calendar-minus',
+    'comment-alt-minus',
+    'comment-minus',
+    'file-minus',
+    'folder-minus',
+    'layer-minus',
+    'map-marker-minus',
+    'minus',
+    'minus-circle',
+    'minus-hexagon',
+    'minus-octagon',
+    'minus-square',
+    'search-minus',
+    'user-minus'
+  ]],
   ['calendar-plus', [
     'calendar-plus'
   ]],
@@ -3864,7 +4765,8 @@ export const iconsMeta = new Map<string, string[]>([
     'plus-circle',
     'plus-hexagon',
     'plus-octagon',
-    'plus-square'
+    'plus-square',
+    'video-plus'
   ]],
   ['create', [
     'calendar-plus',
@@ -3879,7 +4781,8 @@ export const iconsMeta = new Map<string, string[]>([
     'plus-circle',
     'plus-hexagon',
     'plus-octagon',
-    'plus-square'
+    'plus-square',
+    'video-plus'
   ]],
   ['new', [
     'calendar-plus',
@@ -3900,7 +4803,28 @@ export const iconsMeta = new Map<string, string[]>([
     'plus-circle',
     'plus-hexagon',
     'plus-octagon',
-    'plus-square'
+    'plus-square',
+    'video-plus'
+  ]],
+  ['positive', [
+    'calendar-plus',
+    'cart-plus',
+    'comment-alt-plus',
+    'comment-plus',
+    'file-plus',
+    'folder-plus',
+    'layer-plus',
+    'map-marker-plus',
+    'phone-plus',
+    'plus',
+    'plus-circle',
+    'plus-hexagon',
+    'plus-octagon',
+    'plus-square',
+    'search-plus',
+    'smile-beam',
+    'user-plus',
+    'video-plus'
   ]],
   ['calendar-times', [
     'calendar-times'
@@ -3952,6 +4876,85 @@ export const iconsMeta = new Map<string, string[]>([
   ['camera-retro', [
     'camera-retro'
   ]],
+  ['campfire', [
+    'campfire'
+  ]],
+  ['caliente', [
+    'campfire',
+    'fire',
+    'flame'
+  ]],
+  ['campaign', [
+    'campfire'
+  ]],
+  ['camping', [
+    'campfire',
+    'campground'
+  ]],
+  ['fire', [
+    'campfire',
+    'candle-holder',
+    'fire'
+  ]],
+  ['flame', [
+    'campfire',
+    'candle-holder',
+    'fire',
+    'flame'
+  ]],
+  ['gathering', [
+    'campfire'
+  ]],
+  ['heat', [
+    'campfire',
+    'fire',
+    'flame'
+  ]],
+  ['hot', [
+    'campfire',
+    'candle-holder',
+    'fire',
+    'flame'
+  ]],
+  ['meeting', [
+    'campfire',
+    'mind-share'
+  ]],
+  ['tent', [
+    'campfire',
+    'campground'
+  ]],
+  ['wilderness', [
+    'campfire'
+  ]],
+  ['campground', [
+    'campground'
+  ]],
+  ['candle-holder', [
+    'candle-holder'
+  ]],
+  ['light', [
+    'candle-holder',
+    'feather',
+    'feather-alt',
+    'hanukiah',
+    'menorah'
+  ]],
+  ['lit', [
+    'candle-holder'
+  ]],
+  ['wick', [
+    'candle-holder'
+  ]],
+  ['candy-corn', [
+    'candy-corn'
+  ]],
+  ['sugar', [
+    'candy-corn'
+  ]],
+  ['triangles', [
+    'candy-corn'
+  ]],
   ['bud', [
     'cannabis'
   ]],
@@ -3982,7 +4985,8 @@ export const iconsMeta = new Map<string, string[]>([
     'cannabis'
   ]],
   ['pot', [
-    'cannabis'
+    'cannabis',
+    'cauldron'
   ]],
   ['reefer', [
     'cannabis'
@@ -4130,6 +5134,50 @@ export const iconsMeta = new Map<string, string[]>([
   ['cart-plus', [
     'cart-plus'
   ]],
+  ['cat', [
+    'cat'
+  ]],
+  ['feline', [
+    'cat'
+  ]],
+  ['kitten', [
+    'cat'
+  ]],
+  ['kitty', [
+    'cat'
+  ]],
+  ['meow', [
+    'cat'
+  ]],
+  ['pet', [
+    'cat',
+    'dog',
+    'dog-leashed',
+    'paw',
+    'paw-alt',
+    'paw-claws'
+  ]],
+  ['cauldron', [
+    'cauldron'
+  ]],
+  ['boil', [
+    'cauldron'
+  ]],
+  ['bubble', [
+    'cauldron',
+    'comment',
+    'comment-alt',
+    'comments'
+  ]],
+  ['cooking', [
+    'cauldron'
+  ]],
+  ['toil', [
+    'cauldron'
+  ]],
+  ['trouble', [
+    'cauldron'
+  ]],
   ['cc-amazon-pay', [
     'cc-amazon-pay'
   ]],
@@ -4174,6 +5222,22 @@ export const iconsMeta = new Map<string, string[]>([
     'haykal',
     'star',
     'trophy-alt'
+  ]],
+  ['chair', [
+    'chair'
+  ]],
+  ['furniture', [
+    'chair',
+    'chair-office',
+    'couch',
+    'loveseat'
+  ]],
+  ['seat', [
+    'chair',
+    'chair-office'
+  ]],
+  ['chair-office', [
+    'chair-office'
   ]],
   ['chalkboard', [
     'chalkboard'
@@ -4250,7 +5314,8 @@ export const iconsMeta = new Map<string, string[]>([
     'chart-line'
   ]],
   ['activity', [
-    'chart-line'
+    'chart-line',
+    'hiking'
   ]],
   ['dashboard', [
     'chart-line',
@@ -4477,6 +5542,29 @@ export const iconsMeta = new Map<string, string[]>([
     'city',
     'windows'
   ]],
+  ['claw-marks', [
+    'claw-marks'
+  ]],
+  ['attack', [
+    'claw-marks'
+  ]],
+  ['damage', [
+    'claw-marks'
+  ]],
+  ['rip', [
+    'claw-marks'
+  ]],
+  ['scratch', [
+    'claw-marks'
+  ]],
+  ['tear', [
+    'claw-marks',
+    'sad-cry',
+    'sad-tear'
+  ]],
+  ['torn', [
+    'claw-marks'
+  ]],
   ['clipboard', [
     'clipboard',
     'paste'
@@ -4542,6 +5630,32 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['cloud-download-alt', [
     'cloud-download-alt'
+  ]],
+  ['cloud-moon', [
+    'cloud-moon'
+  ]],
+  ['evening', [
+    'cloud-moon'
+  ]],
+  ['night', [
+    'cloud-moon',
+    'moon',
+    'star',
+    'star-exclamation'
+  ]],
+  ['sky', [
+    'cloud-moon',
+    'kite'
+  ]],
+  ['cloud-sun', [
+    'cloud-sun'
+  ]],
+  ['day', [
+    'cloud-sun',
+    'sun'
+  ]],
+  ['daytime', [
+    'cloud-sun'
   ]],
   ['cloud-upload', [
     'cloud-upload',
@@ -4654,16 +5768,35 @@ export const iconsMeta = new Map<string, string[]>([
     'coffee'
   ]],
   ['breakfast', [
-    'coffee'
+    'coffee',
+    'coffee-togo'
   ]],
   ['cafe', [
-    'coffee'
+    'coffee',
+    'coffee-togo'
   ]],
   ['morning', [
-    'coffee'
+    'coffee',
+    'coffee-togo'
   ]],
   ['tea', [
-    'coffee'
+    'coffee',
+    'coffee-togo'
+  ]],
+  ['coffee-togo', [
+    'coffee-togo'
+  ]],
+  ['latte', [
+    'coffee-togo'
+  ]],
+  ['stahhbucks', [
+    'coffee-togo'
+  ]],
+  ['takeout', [
+    'coffee-togo'
+  ]],
+  ['coffin', [
+    'coffin'
   ]],
   ['cog', [
     'cog'
@@ -4685,11 +5818,6 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['comment', [
     'comment'
-  ]],
-  ['bubble', [
-    'comment',
-    'comment-alt',
-    'comments'
   ]],
   ['chat', [
     'comment',
@@ -4981,8 +6109,45 @@ export const iconsMeta = new Map<string, string[]>([
   ['copyright', [
     'copyright'
   ]],
+  ['corn', [
+    'corn'
+  ]],
+  ['cob', [
+    'corn'
+  ]],
+  ['ear', [
+    'corn',
+    'ear'
+  ]],
+  ['kernel', [
+    'corn'
+  ]],
+  ['maize', [
+    'corn'
+  ]],
   ['couch', [
     'couch'
+  ]],
+  ['sofa', [
+    'couch'
+  ]],
+  ['cow', [
+    'cow'
+  ]],
+  ['agriculture', [
+    'cow',
+    'pig',
+    'sheep'
+  ]],
+  ['bovine', [
+    'cow'
+  ]],
+  ['farm', [
+    'cow',
+    'pig'
+  ]],
+  ['moo', [
+    'cow'
   ]],
   ['cpanel', [
     'cpanel'
@@ -5084,6 +6249,9 @@ export const iconsMeta = new Map<string, string[]>([
   ['cricket', [
     'cricket'
   ]],
+  ['critical-role', [
+    'critical-role'
+  ]],
   ['crop', [
     'crop'
   ]],
@@ -5107,7 +6275,9 @@ export const iconsMeta = new Map<string, string[]>([
     'times-circle',
     'times-hexagon',
     'times-octagon',
-    'times-square'
+    'times-square',
+    'tombstone',
+    'tombstone-alt'
   ]],
   ['crosshairs', [
     'crosshairs'
@@ -5124,8 +6294,11 @@ export const iconsMeta = new Map<string, string[]>([
   ['bird', [
     'crow',
     'dove',
+    'duck',
     'feather',
-    'feather-alt'
+    'feather-alt',
+    'kiwi-bird',
+    'turkey'
   ]],
   ['bullfrog', [
     'crow',
@@ -5157,9 +6330,6 @@ export const iconsMeta = new Map<string, string[]>([
   ['curling', [
     'curling'
   ]],
-  ['cut', [
-    'cut'
-  ]],
   ['scissors', [
     'cut'
   ]],
@@ -5168,6 +6338,19 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['d-and-d', [
     'd-and-d'
+  ]],
+  ['d-and-d-beyond', [
+    'd-and-d-beyond'
+  ]],
+  ['dagger', [
+    'dagger'
+  ]],
+  ['rogue', [
+    'dagger',
+    'hood-cloak'
+  ]],
+  ['sting', [
+    'dagger'
   ]],
   ['dashcube', [
     'dashcube'
@@ -5252,6 +6435,9 @@ export const iconsMeta = new Map<string, string[]>([
   ['imac', [
     'desktop-alt'
   ]],
+  ['dev', [
+    'dev'
+  ]],
   ['deviantart', [
     'deviantart'
   ]],
@@ -5289,6 +6475,12 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['chance', [
     'dice',
+    'dice-d10',
+    'dice-d12',
+    'dice-d20',
+    'dice-d4',
+    'dice-d6',
+    'dice-d8',
     'dice-five',
     'dice-four',
     'dice-one',
@@ -5298,6 +6490,12 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['gambling', [
     'dice',
+    'dice-d10',
+    'dice-d12',
+    'dice-d20',
+    'dice-d4',
+    'dice-d6',
+    'dice-d8',
     'dice-five',
     'dice-four',
     'dice-one',
@@ -5305,25 +6503,40 @@ export const iconsMeta = new Map<string, string[]>([
     'dice-three',
     'dice-two'
   ]],
-  ['game', [
+  ['roll', [
     'dice',
+    'dice-d10',
+    'dice-d12',
+    'dice-d20',
+    'dice-d4',
+    'dice-d6',
+    'dice-d8',
     'dice-five',
     'dice-four',
     'dice-one',
     'dice-six',
     'dice-three',
     'dice-two',
-    'trophy',
-    'trophy-alt'
+    'toilet-paper',
+    'toilet-paper-alt'
   ]],
-  ['roll', [
-    'dice',
-    'dice-five',
-    'dice-four',
-    'dice-one',
-    'dice-six',
-    'dice-three',
-    'dice-two'
+  ['dice-d10', [
+    'dice-d10'
+  ]],
+  ['dice-d12', [
+    'dice-d12'
+  ]],
+  ['dice-d20', [
+    'dice-d20'
+  ]],
+  ['dice-d4', [
+    'dice-d4'
+  ]],
+  ['dice-d6', [
+    'dice-d6'
+  ]],
+  ['dice-d8', [
+    'dice-d8'
   ]],
   ['dice-five', [
     'dice-five'
@@ -5388,6 +6601,31 @@ export const iconsMeta = new Map<string, string[]>([
   ['docker', [
     'docker'
   ]],
+  ['dog', [
+    'dog'
+  ]],
+  ['canine', [
+    'dog',
+    'dog-leashed'
+  ]],
+  ['pooch', [
+    'dog',
+    'dog-leashed'
+  ]],
+  ['puppy', [
+    'dog',
+    'dog-leashed'
+  ]],
+  ['woof', [
+    'dog',
+    'dog-leashed'
+  ]],
+  ['dog-leashed', [
+    'dog-leashed'
+  ]],
+  ['walk', [
+    'dog-leashed'
+  ]],
   ['price', [
     'dollar-sign',
     'hand-holding-usd',
@@ -5434,12 +6672,6 @@ export const iconsMeta = new Map<string, string[]>([
   ['dove', [
     'dove'
   ]],
-  ['animal', [
-    'dove'
-  ]],
-  ['flying', [
-    'dove'
-  ]],
   ['peace', [
     'dove',
     'peace'
@@ -5458,6 +6690,9 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['plotting', [
     'drafting-compass'
+  ]],
+  ['dragon', [
+    'dragon'
   ]],
   ['draw-circle', [
     'draw-circle'
@@ -5482,13 +6717,15 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['instrument', [
     'drum',
-    'drum-steelpan'
+    'drum-steelpan',
+    'mandolin'
   ]],
   ['music', [
     'drum',
     'drum-steelpan',
     'headphones',
     'headphones-alt',
+    'mandolin',
     'music',
     'play',
     'volume',
@@ -5538,8 +6775,37 @@ export const iconsMeta = new Map<string, string[]>([
   ['tropical', [
     'drum-steelpan'
   ]],
+  ['drumstick', [
+    'drumstick'
+  ]],
+  ['chicken', [
+    'drumstick'
+  ]],
+  ['leg', [
+    'drumstick'
+  ]],
+  ['poultry', [
+    'drumstick',
+    'turkey'
+  ]],
+  ['turkey', [
+    'drumstick',
+    'turkey'
+  ]],
+  ['drumstick-bite', [
+    'drumstick-bite'
+  ]],
   ['drupal', [
     'drupal'
+  ]],
+  ['duck', [
+    'duck'
+  ]],
+  ['quack', [
+    'duck'
+  ]],
+  ['rubber', [
+    'duck'
   ]],
   ['dumbbell', [
     'dumbbell'
@@ -5551,16 +6817,27 @@ export const iconsMeta = new Map<string, string[]>([
     'dumbbell'
   ]],
   ['strength', [
-    'dumbbell'
+    'dumbbell',
+    'fist-raised'
   ]],
   ['weight-lifting', [
     'dumbbell'
   ]],
+  ['dungeon', [
+    'dungeon'
+  ]],
+  ['door', [
+    'dungeon'
+  ]],
+  ['entrance', [
+    'dungeon',
+    'gopuram'
+  ]],
+  ['gate', [
+    'dungeon'
+  ]],
   ['dyalog', [
     'dyalog'
-  ]],
-  ['ear', [
-    'ear'
   ]],
   ['earlybirds', [
     'earlybirds'
@@ -5627,6 +6904,18 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['elementor', [
     'elementor'
+  ]],
+  ['elephant', [
+    'elephant'
+  ]],
+  ['dumbo', [
+    'elephant'
+  ]],
+  ['pachyderm', [
+    'elephant'
+  ]],
+  ['trunk', [
+    'elephant'
   ]],
   ['ellipsis-h', [
     'ellipsis-h'
@@ -5761,13 +7050,17 @@ export const iconsMeta = new Map<string, string[]>([
     'exclamation',
     'exclamation-circle',
     'exclamation-square',
-    'exclamation-triangle'
+    'exclamation-triangle',
+    'flask-potion',
+    'skull-crossbones',
+    'spider-black-widow'
   ]],
   ['error', [
     'exclamation',
     'exclamation-circle',
     'exclamation-square',
     'exclamation-triangle',
+    'spider-black-widow',
     'times'
   ]],
   ['problem', [
@@ -5785,7 +7078,8 @@ export const iconsMeta = new Map<string, string[]>([
     'exclamation',
     'exclamation-circle',
     'exclamation-square',
-    'exclamation-triangle'
+    'exclamation-triangle',
+    'skull-crossbones'
   ]],
   ['exclamation-circle', [
     'exclamation-circle'
@@ -5839,17 +7133,21 @@ export const iconsMeta = new Map<string, string[]>([
     'eye'
   ]],
   ['see', [
-    'eye'
+    'eye',
+    'eye-evil'
   ]],
   ['seen', [
-    'eye'
+    'eye',
+    'eye-evil'
   ]],
   ['show', [
     'eye',
+    'eye-evil',
     'eye-slash'
   ]],
   ['sight', [
     'eye',
+    'eye-evil',
     'glasses'
   ]],
   ['views', [
@@ -5865,6 +7163,12 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['eyedropper', [
     'eye-dropper'
+  ]],
+  ['eye-evil', [
+    'eye-evil'
+  ]],
+  ['sauron', [
+    'eye-evil'
   ]],
   ['eye-slash', [
     'eye-slash'
@@ -5902,6 +7206,9 @@ export const iconsMeta = new Map<string, string[]>([
   ['facebook-square', [
     'facebook-square'
   ]],
+  ['fantasy-flight-games', [
+    'fantasy-flight-games'
+  ]],
   ['fast-backward', [
     'fast-backward'
   ]],
@@ -5936,11 +7243,6 @@ export const iconsMeta = new Map<string, string[]>([
   ['feather', [
     'feather'
   ]],
-  ['light', [
-    'feather',
-    'feather-alt',
-    'menorah'
-  ]],
   ['plucked', [
     'feather',
     'feather-alt'
@@ -5964,6 +7266,8 @@ export const iconsMeta = new Map<string, string[]>([
   ['profile', [
     'female',
     'file-user',
+    'head-side',
+    'head-vr',
     'male',
     'user',
     'user-alt',
@@ -5992,15 +7296,9 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['fast', [
     'fighter-jet',
+    'rabbit',
+    'rabbit-fast',
     'tachometer'
-  ]],
-  ['fly', [
-    'fighter-jet',
-    'fly',
-    'helicopter',
-    'plane',
-    'plane-arrival',
-    'plane-departure'
   ]],
   ['goose', [
     'fighter-jet'
@@ -6101,11 +7399,18 @@ export const iconsMeta = new Map<string, string[]>([
     'file-contract'
   ]],
   ['binding', [
-    'file-contract'
+    'file-contract',
+    'ring'
   ]],
   ['signature', [
     'file-contract',
     'signature'
+  ]],
+  ['file-csv', [
+    'file-csv'
+  ]],
+  ['spreadsheets', [
+    'file-csv'
   ]],
   ['file-download', [
     'file-download'
@@ -6312,16 +7617,8 @@ export const iconsMeta = new Map<string, string[]>([
   ['unlock', [
     'fingerprint',
     'key',
+    'key-skeleton',
     'unlock'
-  ]],
-  ['fire', [
-    'fire'
-  ]],
-  ['flame', [
-    'fire'
-  ]],
-  ['hot', [
-    'fire'
   ]],
   ['popular', [
     'fire'
@@ -6347,6 +7644,29 @@ export const iconsMeta = new Map<string, string[]>([
   ['fish', [
     'fish'
   ]],
+  ['gold', [
+    'fish',
+    'treasure-chest'
+  ]],
+  ['swimming', [
+    'fish',
+    'whale'
+  ]],
+  ['fist-raised', [
+    'fist-raised'
+  ]],
+  ['ki', [
+    'fist-raised'
+  ]],
+  ['monk', [
+    'fist-raised'
+  ]],
+  ['resist', [
+    'fist-raised'
+  ]],
+  ['unarmed combat', [
+    'fist-raised'
+  ]],
   ['flag', [
     'flag'
   ]],
@@ -6357,13 +7677,42 @@ export const iconsMeta = new Map<string, string[]>([
     'flask'
   ]],
   ['beaker', [
-    'flask'
+    'flask',
+    'flask-potion'
   ]],
   ['experimental', [
     'flask'
   ]],
   ['labs', [
     'flask'
+  ]],
+  ['flask-poison', [
+    'flask-poison'
+  ]],
+  ['health', [
+    'flask-poison',
+    'flask-potion',
+    'medkit'
+  ]],
+  ['flask-potion', [
+    'flask-potion'
+  ]],
+  ['dangerous', [
+    'flask-potion',
+    'spider-black-widow',
+    'user-ninja'
+  ]],
+  ['deadly', [
+    'flask-potion',
+    'skull-crossbones',
+    'spider-black-widow',
+    'user-ninja'
+  ]],
+  ['heal', [
+    'flask-potion'
+  ]],
+  ['mana', [
+    'flask-potion'
   ]],
   ['flickr', [
     'flickr'
@@ -6422,6 +7771,9 @@ export const iconsMeta = new Map<string, string[]>([
   ['football-ball', [
     'football-ball'
   ]],
+  ['pigskin', [
+    'football-ball'
+  ]],
   ['football-helmet', [
     'football-helmet'
   ]],
@@ -6456,6 +7808,12 @@ export const iconsMeta = new Map<string, string[]>([
   ['frog', [
     'frog'
   ]],
+  ['amphibian', [
+    'frog'
+  ]],
+  ['hop', [
+    'frog'
+  ]],
   ['kermit', [
     'frog'
   ]],
@@ -6464,6 +7822,9 @@ export const iconsMeta = new Map<string, string[]>([
     'kiss'
   ]],
   ['prince', [
+    'frog'
+  ]],
+  ['ribbit', [
     'frog'
   ]],
   ['wart', [
@@ -6534,7 +7895,8 @@ export const iconsMeta = new Map<string, string[]>([
     'gavel'
   ]],
   ['hammer', [
-    'gavel'
+    'gavel',
+    'hammer'
   ]],
   ['judge', [
     'gavel'
@@ -6556,6 +7918,30 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['gg-circle', [
     'gg-circle'
+  ]],
+  ['ghost', [
+    'ghost'
+  ]],
+  ['apparition', [
+    'ghost'
+  ]],
+  ['blinky', [
+    'ghost'
+  ]],
+  ['clyde', [
+    'ghost'
+  ]],
+  ['floating', [
+    'ghost'
+  ]],
+  ['inky', [
+    'ghost'
+  ]],
+  ['pinky', [
+    'ghost'
+  ]],
+  ['spirit', [
+    'ghost'
   ]],
   ['gift', [
     'gift'
@@ -6607,7 +7993,8 @@ export const iconsMeta = new Map<string, string[]>([
     'glass-martini'
   ]],
   ['glass', [
-    'glass-martini'
+    'glass-martini',
+    'wine-bottle'
   ]],
   ['martini', [
     'glass-martini'
@@ -6786,7 +8173,8 @@ export const iconsMeta = new Map<string, string[]>([
     'goodreads-g'
   ]],
   ['google', [
-    'google'
+    'google',
+    'vr-cardboard'
   ]],
   ['google-drive', [
     'google-drive'
@@ -6814,9 +8202,6 @@ export const iconsMeta = new Map<string, string[]>([
     'google-wallet'
   ]],
   ['gopuram', [
-    'gopuram'
-  ]],
-  ['entrance', [
     'gopuram'
   ]],
   ['hinduism', [
@@ -6905,6 +8290,7 @@ export const iconsMeta = new Map<string, string[]>([
     'grin-squint',
     'grin-squint-tears',
     'grin-wink',
+    'jack-o-lantern',
     'smile'
   ]],
   ['grin-alt', [
@@ -7013,6 +8399,38 @@ export const iconsMeta = new Map<string, string[]>([
   ['hackerrank', [
     'hackerrank'
   ]],
+  ['admin', [
+    'hammer',
+    'lock',
+    'lock-alt',
+    'lock-open',
+    'lock-open-alt',
+    'screwdriver',
+    'toolbox',
+    'unlock',
+    'unlock-alt'
+  ]],
+  ['fix', [
+    'hammer',
+    'screwdriver',
+    'toolbox',
+    'wrench'
+  ]],
+  ['repair', [
+    'hammer',
+    'screwdriver',
+    'toolbox'
+  ]],
+  ['hammer-war', [
+    'hammer-war'
+  ]],
+  ['cleric', [
+    'hammer-war',
+    'shield'
+  ]],
+  ['dwarf', [
+    'hammer-war'
+  ]],
   ['hamsa', [
     'hamsa'
   ]],
@@ -7025,6 +8443,7 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['jewish', [
     'hamsa',
+    'hanukiah',
     'menorah',
     'star-of-david',
     'synagogue',
@@ -7032,6 +8451,7 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['judaism', [
     'hamsa',
+    'hanukiah',
     'menorah',
     'star-of-david',
     'synagogue',
@@ -7046,6 +8466,7 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['protection', [
     'hamsa',
+    'hockey-mask',
     'umbrella',
     'umbrella-beach'
   ]],
@@ -7060,6 +8481,13 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['hand-holding-heart', [
     'hand-holding-heart'
+  ]],
+  ['hand-holding-magic', [
+    'hand-holding-magic'
+  ]],
+  ['cast', [
+    'hand-holding-magic',
+    'user-injured'
   ]],
   ['hand-holding-seedling', [
     'hand-holding-seedling'
@@ -7182,10 +8610,54 @@ export const iconsMeta = new Map<string, string[]>([
   ['handshake-alt', [
     'handshake-alt'
   ]],
+  ['hanukiah', [
+    'hanukiah'
+  ]],
+  ['candle', [
+    'hanukiah',
+    'menorah'
+  ]],
+  ['hanukkah', [
+    'hanukiah',
+    'menorah'
+  ]],
   ['hashtag', [
     'hashtag',
     'slack',
     'slack-hash'
+  ]],
+  ['hat-witch', [
+    'hat-witch'
+  ]],
+  ['cloth', [
+    'hat-witch',
+    'hat-wizard',
+    'tshirt'
+  ]],
+  ['clothing', [
+    'hat-witch',
+    'hat-wizard',
+    'helmet-battle',
+    'hockey-mask',
+    'hood-cloak',
+    'pied-piper-hat',
+    'tshirt',
+    'user-astronaut',
+    'user-graduate',
+    'user-secret',
+    'user-tie'
+  ]],
+  ['sorceror', [
+    'hat-witch'
+  ]],
+  ['hat-wizard', [
+    'hat-wizard'
+  ]],
+  ['buckle', [
+    'hat-wizard'
+  ]],
+  ['pointy', [
+    'hat-wizard'
   ]],
   ['haykal', [
     'haykal'
@@ -7204,6 +8676,23 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['harddrive', [
     'hdd'
+  ]],
+  ['head-side', [
+    'head-side'
+  ]],
+  ['head-vr', [
+    'head-vr'
+  ]],
+  ['occulus', [
+    'head-vr'
+  ]],
+  ['reality', [
+    'head-vr',
+    'vr-cardboard'
+  ]],
+  ['virtual', [
+    'head-vr',
+    'vr-cardboard'
   ]],
   ['heading', [
     'heading'
@@ -7243,9 +8732,6 @@ export const iconsMeta = new Map<string, string[]>([
     'headset'
   ]],
   ['gamer', [
-    'headset'
-  ]],
-  ['gaming', [
     'headset'
   ]],
   ['live chat', [
@@ -7297,6 +8783,25 @@ export const iconsMeta = new Map<string, string[]>([
   ['flight', [
     'helicopter'
   ]],
+  ['helmet-battle', [
+    'helmet-battle'
+  ]],
+  ['armor', [
+    'helmet-battle',
+    'shield'
+  ]],
+  ['hat', [
+    'helmet-battle',
+    'hood-cloak',
+    'user-secret'
+  ]],
+  ['knight', [
+    'helmet-battle'
+  ]],
+  ['paladin', [
+    'helmet-battle',
+    'shield'
+  ]],
   ['hexagon', [
     'hexagon'
   ]],
@@ -7313,6 +8818,22 @@ export const iconsMeta = new Map<string, string[]>([
     'highlighter',
     'marker'
   ]],
+  ['hiking', [
+    'hiking'
+  ]],
+  ['fitness', [
+    'hiking'
+  ]],
+  ['walking', [
+    'hiking',
+    'walking'
+  ]],
+  ['hippo', [
+    'hippo'
+  ]],
+  ['hungry', [
+    'hippo'
+  ]],
   ['hips', [
     'hips'
   ]],
@@ -7322,6 +8843,18 @@ export const iconsMeta = new Map<string, string[]>([
   ['history', [
     'history'
   ]],
+  ['hockey-mask', [
+    'hockey-mask'
+  ]],
+  ['friday', [
+    'hockey-mask'
+  ]],
+  ['jason', [
+    'hockey-mask'
+  ]],
+  ['thirteenth', [
+    'hockey-mask'
+  ]],
   ['hockey-puck', [
     'hockey-puck'
   ]],
@@ -7329,7 +8862,8 @@ export const iconsMeta = new Map<string, string[]>([
     'hockey-sticks'
   ]],
   ['home', [
-    'home'
+    'home',
+    'house-damage'
   ]],
   ['house', [
     'home'
@@ -7340,11 +8874,23 @@ export const iconsMeta = new Map<string, string[]>([
   ['home-heart', [
     'home-heart'
   ]],
+  ['hood-cloak', [
+    'hood-cloak'
+  ]],
+  ['stealth', [
+    'hood-cloak'
+  ]],
   ['hooli', [
     'hooli'
   ]],
   ['hornbill', [
     'hornbill'
+  ]],
+  ['equus', [
+    'horse'
+  ]],
+  ['neigh', [
+    'horse'
   ]],
   ['emergency room', [
     'hospital',
@@ -7378,8 +8924,17 @@ export const iconsMeta = new Map<string, string[]>([
   ['hourglass-start', [
     'hourglass-start'
   ]],
+  ['house-damage', [
+    'house-damage'
+  ]],
+  ['devastation', [
+    'house-damage'
+  ]],
   ['houzz', [
     'houzz'
+  ]],
+  ['hryvnia', [
+    'hryvnia'
   ]],
   ['html5', [
     'html5'
@@ -7501,6 +9056,16 @@ export const iconsMeta = new Map<string, string[]>([
   ['jack-o-lantern', [
     'jack-o-lantern'
   ]],
+  ['carve', [
+    'jack-o-lantern'
+  ]],
+  ['lantern', [
+    'jack-o-lantern'
+  ]],
+  ['pumpkin', [
+    'jack-o-lantern',
+    'pumpkin'
+  ]],
   ['java', [
     'java'
   ]],
@@ -7563,10 +9128,14 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['password', [
     'key',
+    'key-skeleton',
     'lock-open',
     'lock-open-alt',
     'unlock',
     'unlock-alt'
+  ]],
+  ['key-skeleton', [
+    'key-skeleton'
   ]],
   ['keybase', [
     'keybase'
@@ -7622,7 +9191,8 @@ export const iconsMeta = new Map<string, string[]>([
     'khanda'
   ]],
   ['sword', [
-    'khanda'
+    'khanda',
+    'sword'
   ]],
   ['kickstarter', [
     'kickstarter'
@@ -7649,8 +9219,31 @@ export const iconsMeta = new Map<string, string[]>([
   ['kiss-wink-heart', [
     'kiss-wink-heart'
   ]],
+  ['kite', [
+    'kite'
+  ]],
+  ['air', [
+    'kite',
+    'wind'
+  ]],
+  ['benjamin', [
+    'kite'
+  ]],
+  ['franklin', [
+    'kite'
+  ]],
+  ['wind', [
+    'kite',
+    'wind'
+  ]],
   ['kiwi-bird', [
     'kiwi-bird'
+  ]],
+  ['knife-kitchen', [
+    'knife-kitchen'
+  ]],
+  ['chef', [
+    'knife-kitchen'
   ]],
   ['korvue', [
     'korvue'
@@ -7688,9 +9281,6 @@ export const iconsMeta = new Map<string, string[]>([
     'laptop'
   ]],
   ['dude you\'re getting', [
-    'laptop'
-  ]],
-  ['mac', [
     'laptop'
   ]],
   ['macbook', [
@@ -7731,19 +9321,41 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['eco', [
     'leaf',
+    'leaf-heart',
+    'leaf-maple',
+    'leaf-oak',
     'pagelines'
   ]],
-  ['nature', [
+  ['flora', [
     'leaf',
-    'pagelines'
+    'leaf-heart',
+    'leaf-maple',
+    'leaf-oak',
+    'pagelines',
+    'spa',
+    'tree',
+    'tree-alt',
+    'trees'
   ]],
   ['plant', [
     'leaf',
+    'leaf-heart',
+    'leaf-maple',
+    'leaf-oak',
     'pagelines',
-    'spa'
+    'spa',
+    'tree',
+    'tree-alt',
+    'trees'
   ]],
   ['leaf-heart', [
     'leaf-heart'
+  ]],
+  ['leaf-maple', [
+    'leaf-maple'
+  ]],
+  ['leaf-oak', [
+    'leaf-oak'
   ]],
   ['leanpub', [
     'leanpub'
@@ -7870,16 +9482,6 @@ export const iconsMeta = new Map<string, string[]>([
   ['location-slash', [
     'location-slash'
   ]],
-  ['admin', [
-    'lock',
-    'lock-alt',
-    'lock-open',
-    'lock-open-alt',
-    'screwdriver',
-    'toolbox',
-    'unlock',
-    'unlock-alt'
-  ]],
   ['protect', [
     'lock',
     'lock-alt',
@@ -7944,20 +9546,22 @@ export const iconsMeta = new Map<string, string[]>([
     'lyft',
     'taxi'
   ]],
+  ['mace', [
+    'mace'
+  ]],
+  ['windu', [
+    'mace'
+  ]],
   ['magento', [
     'magento'
   ]],
-  ['magic', [
-    'magic'
-  ]],
   ['autocomplete', [
-    'magic'
+    'magic',
+    'wand-magic'
   ]],
   ['automatic', [
-    'magic'
-  ]],
-  ['wizard', [
-    'magic'
+    'magic',
+    'wand-magic'
   ]],
   ['magnet', [
     'magnet'
@@ -7982,10 +9586,27 @@ export const iconsMeta = new Map<string, string[]>([
   ['mandalorian', [
     'mandalorian'
   ]],
+  ['mandolin', [
+    'mandolin'
+  ]],
+  ['bard', [
+    'mandolin'
+  ]],
+  ['lute', [
+    'mandolin'
+  ]],
+  ['song', [
+    'mandolin'
+  ]],
+  ['strings', [
+    'mandolin'
+  ]],
   ['paper', [
     'map',
     'map-marked',
-    'map-marked-alt'
+    'map-marked-alt',
+    'scroll',
+    'scroll-old'
   ]],
   ['map-marked', [
     'map-marked'
@@ -8077,6 +9698,21 @@ export const iconsMeta = new Map<string, string[]>([
   ['mars-stroke-v', [
     'mars-stroke-v'
   ]],
+  ['mask', [
+    'mask'
+  ]],
+  ['costume', [
+    'mask'
+  ]],
+  ['disguise', [
+    'mask'
+  ]],
+  ['secret', [
+    'mask'
+  ]],
+  ['super hero', [
+    'mask'
+  ]],
   ['mastodon', [
     'mastodon'
   ]],
@@ -8102,9 +9738,6 @@ export const iconsMeta = new Map<string, string[]>([
     'medkit'
   ]],
   ['firstaid', [
-    'medkit'
-  ]],
-  ['health', [
     'medkit'
   ]],
   ['medrt', [
@@ -8140,9 +9773,6 @@ export const iconsMeta = new Map<string, string[]>([
     'memory'
   ]],
   ['menorah', [
-    'menorah'
-  ]],
-  ['candle', [
     'menorah'
   ]],
   ['mercury', [
@@ -8196,9 +9826,6 @@ export const iconsMeta = new Map<string, string[]>([
     'mind-share'
   ]],
   ['brainstorming', [
-    'mind-share'
-  ]],
-  ['meeting', [
     'mind-share'
   ]],
   ['planning', [
@@ -8326,16 +9953,20 @@ export const iconsMeta = new Map<string, string[]>([
   ['monitor-heart-rate', [
     'monitor-heart-rate'
   ]],
+  ['monkey', [
+    'monkey'
+  ]],
+  ['banana', [
+    'monkey'
+  ]],
+  ['tail', [
+    'monkey'
+  ]],
   ['moon', [
     'moon'
   ]],
   ['darker', [
     'moon'
-  ]],
-  ['night', [
-    'moon',
-    'star',
-    'star-exclamation'
   ]],
   ['mortar-pestle', [
     'mortar-pestle'
@@ -8358,14 +9989,26 @@ export const iconsMeta = new Map<string, string[]>([
   ['motorcycle', [
     'motorcycle'
   ]],
+  ['mountain', [
+    'mountain'
+  ]],
+  ['mountains', [
+    'mountains'
+  ]],
   ['mouse-pointer', [
     'mouse-pointer'
   ]],
   ['napster', [
     'napster'
   ]],
+  ['narwhal', [
+    'narwhal'
+  ]],
   ['neos', [
     'neos'
+  ]],
+  ['network-wired', [
+    'network-wired'
   ]],
   ['neuter', [
     'neuter'
@@ -8457,6 +10100,9 @@ export const iconsMeta = new Map<string, string[]>([
   ['osi', [
     'osi'
   ]],
+  ['otter', [
+    'otter'
+  ]],
   ['outdent', [
     'outdent'
   ]],
@@ -8469,10 +10115,6 @@ export const iconsMeta = new Map<string, string[]>([
   ['leaves', [
     'pagelines'
   ]],
-  ['tree', [
-    'pagelines',
-    'tree'
-  ]],
   ['paint-brush', [
     'paint-brush'
   ]],
@@ -8481,11 +10123,6 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['paint-roller', [
     'paint-roller'
-  ]],
-  ['tool', [
-    'paint-roller',
-    'screwdriver',
-    'wrench'
   ]],
   ['palette', [
     'palette'
@@ -8565,8 +10202,18 @@ export const iconsMeta = new Map<string, string[]>([
   ['paw', [
     'paw'
   ]],
-  ['pet', [
-    'paw'
+  ['animal', [
+    'paw',
+    'paw-claws'
+  ]],
+  ['paw-alt', [
+    'paw-alt'
+  ]],
+  ['paw-claws', [
+    'paw-claws'
+  ]],
+  ['beast', [
+    'paw-claws'
   ]],
   ['paypal', [
     'paypal'
@@ -8601,6 +10248,12 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['pennant', [
     'pennant'
+  ]],
+  ['penny-arcade', [
+    'penny-arcade'
+  ]],
+  ['pax', [
+    'penny-arcade'
   ]],
   ['people-carry', [
     'people-carry'
@@ -8672,6 +10325,9 @@ export const iconsMeta = new Map<string, string[]>([
   ['pi', [
     'pi'
   ]],
+  ['pie', [
+    'pie'
+  ]],
   ['pied-piper', [
     'pied-piper'
   ]],
@@ -8681,16 +10337,14 @@ export const iconsMeta = new Map<string, string[]>([
   ['pied-piper-hat', [
     'pied-piper-hat'
   ]],
-  ['clothing', [
-    'pied-piper-hat',
-    'tshirt',
-    'user-astronaut',
-    'user-graduate',
-    'user-secret',
-    'user-tie'
-  ]],
   ['pied-piper-pp', [
     'pied-piper-pp'
+  ]],
+  ['pig', [
+    'pig'
+  ]],
+  ['oink', [
+    'pig'
   ]],
   ['piggy-bank', [
     'piggy-bank'
@@ -8904,9 +10558,6 @@ export const iconsMeta = new Map<string, string[]>([
   ['question-square', [
     'question-square'
   ]],
-  ['quidditch', [
-    'quidditch'
-  ]],
   ['quinscape', [
     'quinscape'
   ]],
@@ -8925,8 +10576,40 @@ export const iconsMeta = new Map<string, string[]>([
   ['r-project', [
     'r-project'
   ]],
+  ['rabbit', [
+    'rabbit'
+  ]],
+  ['bunny', [
+    'rabbit',
+    'rabbit-fast'
+  ]],
+  ['hare', [
+    'rabbit',
+    'rabbit-fast'
+  ]],
+  ['speed', [
+    'rabbit',
+    'rabbit-fast'
+  ]],
+  ['wabbit', [
+    'rabbit',
+    'rabbit-fast'
+  ]],
+  ['rabbit-fast', [
+    'rabbit-fast'
+  ]],
+  ['running', [
+    'rabbit-fast',
+    'running'
+  ]],
   ['racquet', [
     'racquet'
+  ]],
+  ['ram', [
+    'ram'
+  ]],
+  ['horns', [
+    'ram'
   ]],
   ['ramp-loading', [
     'ramp-loading'
@@ -9056,6 +10739,21 @@ export const iconsMeta = new Map<string, string[]>([
   ['lapel', [
     'ribbon'
   ]],
+  ['ring', [
+    'ring'
+  ]],
+  ['Gollum', [
+    'ring'
+  ]],
+  ['band', [
+    'ring'
+  ]],
+  ['jewelry', [
+    'ring'
+  ]],
+  ['precious', [
+    'ring'
+  ]],
   ['rocket', [
     'rocket',
     'space-shuttle'
@@ -9109,6 +10807,12 @@ export const iconsMeta = new Map<string, string[]>([
   ['ruler-vertical', [
     'ruler-vertical'
   ]],
+  ['jog', [
+    'running'
+  ]],
+  ['sprint', [
+    'running'
+  ]],
   ['rupee-sign', [
     'rupee-sign'
   ]],
@@ -9120,10 +10824,6 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['sad-cry', [
     'sad-cry'
-  ]],
-  ['tear', [
-    'sad-cry',
-    'sad-tear'
   ]],
   ['tears', [
     'sad-cry',
@@ -9156,30 +10856,38 @@ export const iconsMeta = new Map<string, string[]>([
   ['scanner-touchscreen', [
     'scanner-touchscreen'
   ]],
+  ['scarecrow', [
+    'scarecrow'
+  ]],
   ['schlix', [
     'schlix'
   ]],
   ['screwdriver', [
     'screwdriver'
   ]],
-  ['container', [
-    'screwdriver',
-    'toolbox'
-  ]],
-  ['fix', [
-    'screwdriver',
-    'toolbox',
-    'wrench'
-  ]],
-  ['repair', [
-    'screwdriver',
-    'toolbox'
-  ]],
   ['scribd', [
     'scribd'
   ]],
+  ['scroll', [
+    'scroll'
+  ]],
+  ['scroll-old', [
+    'scroll-old'
+  ]],
+  ['ancient', [
+    'scroll-old'
+  ]],
+  ['relic', [
+    'scroll-old'
+  ]],
+  ['worn', [
+    'scroll-old'
+  ]],
   ['scrubber', [
     'scrubber'
+  ]],
+  ['scythe', [
+    'scythe'
   ]],
   ['search', [
     'search'
@@ -9265,6 +10973,19 @@ export const iconsMeta = new Map<string, string[]>([
   ['social', [
     'share-square'
   ]],
+  ['sheep', [
+    'sheep'
+  ]],
+  ['farming', [
+    'sheep',
+    'wheat'
+  ]],
+  ['wool', [
+    'sheep'
+  ]],
+  ['yarn', [
+    'sheep'
+  ]],
   ['shekel-sign', [
     'shekel-sign'
   ]],
@@ -9272,14 +10993,34 @@ export const iconsMeta = new Map<string, string[]>([
     'shekel-sign'
   ]],
   ['shield', [
+    'shield'
+  ]],
+  ['defend', [
     'shield',
-    'shield-alt'
+    'shield-alt',
+    'shield-check',
+    'shield-cross'
+  ]],
+  ['defense', [
+    'shield'
+  ]],
+  ['holy', [
+    'shield'
   ]],
   ['shield-alt', [
     'shield-alt'
   ]],
   ['shield-check', [
     'shield-check'
+  ]],
+  ['shield-cross', [
+    'shield-cross'
+  ]],
+  ['crusader', [
+    'shield-cross'
+  ]],
+  ['templar', [
+    'shield-cross'
   ]],
   ['ship', [
     'ship'
@@ -9322,6 +11063,9 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['shopware', [
     'shopware'
+  ]],
+  ['shovel', [
+    'shovel'
   ]],
   ['shower', [
     'shower'
@@ -9480,16 +11224,32 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['skeleton', [
     'skeleton',
-    'skull'
-  ]],
-  ['skull', [
-    'skull'
+    'skull',
+    'skull-crossbones'
   ]],
   ['bones', [
-    'skull'
+    'skull',
+    'skull-crossbones'
   ]],
   ['yorick', [
     'skull'
+  ]],
+  ['skull-crossbones', [
+    'skull-crossbones'
+  ]],
+  ['dead', [
+    'skull-crossbones',
+    'tombstone',
+    'tombstone-alt'
+  ]],
+  ['jolly-roger', [
+    'skull-crossbones'
+  ]],
+  ['pirate', [
+    'skull-crossbones'
+  ]],
+  ['poison', [
+    'skull-crossbones'
   ]],
   ['skyatlas', [
     'skyatlas'
@@ -9502,6 +11262,9 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['slack-hash', [
     'slack-hash'
+  ]],
+  ['slash', [
+    'slash'
   ]],
   ['sliders-h', [
     'sliders-h'
@@ -9555,6 +11318,19 @@ export const iconsMeta = new Map<string, string[]>([
   ['non-smoking', [
     'smoking-ban'
   ]],
+  ['snake', [
+    'snake'
+  ]],
+  ['cobra', [
+    'snake'
+  ]],
+  ['reptile', [
+    'snake',
+    'turtle'
+  ]],
+  ['slither', [
+    'snake'
+  ]],
   ['snapchat', [
     'snapchat'
   ]],
@@ -9574,9 +11350,6 @@ export const iconsMeta = new Map<string, string[]>([
     'socks'
   ]],
   ['solar-panel', [
-    'solar-panel'
-  ]],
-  ['clean', [
     'solar-panel'
   ]],
   ['eco-friendly', [
@@ -9674,6 +11447,31 @@ export const iconsMeta = new Map<string, string[]>([
   ['speakap', [
     'speakap'
   ]],
+  ['spider', [
+    'spider'
+  ]],
+  ['arachnid', [
+    'spider',
+    'spider-black-widow'
+  ]],
+  ['charlotte', [
+    'spider',
+    'spider-black-widow'
+  ]],
+  ['crawl', [
+    'spider',
+    'spider-black-widow'
+  ]],
+  ['eight', [
+    'spider',
+    'spider-black-widow'
+  ]],
+  ['spider-black-widow', [
+    'spider-black-widow'
+  ]],
+  ['spider-web', [
+    'spider-web'
+  ]],
   ['spinner', [
     'spinner'
   ]],
@@ -9709,11 +11507,17 @@ export const iconsMeta = new Map<string, string[]>([
   ['squarespace', [
     'squarespace'
   ]],
+  ['squirrel', [
+    'squirrel'
+  ]],
   ['stack-exchange', [
     'stack-exchange'
   ]],
   ['stack-overflow', [
     'stack-overflow'
+  ]],
+  ['staff', [
+    'staff'
   ]],
   ['stamp', [
     'stamp'
@@ -9860,9 +11664,6 @@ export const iconsMeta = new Map<string, string[]>([
   ['brighten', [
     'sun'
   ]],
-  ['day', [
-    'sun'
-  ]],
   ['lighter', [
     'sun'
   ]],
@@ -9912,6 +11713,9 @@ export const iconsMeta = new Map<string, string[]>([
   ['recreation', [
     'swimming-pool',
     'umbrella-beach'
+  ]],
+  ['swords', [
+    'swords'
   ]],
   ['synagogue', [
     'synagogue'
@@ -10286,6 +12090,42 @@ export const iconsMeta = new Map<string, string[]>([
   ['toggle-on', [
     'toggle-on'
   ]],
+  ['toilet-paper', [
+    'toilet-paper'
+  ]],
+  ['bathroom', [
+    'toilet-paper',
+    'toilet-paper-alt'
+  ]],
+  ['lavatory', [
+    'toilet-paper',
+    'toilet-paper-alt'
+  ]],
+  ['prank', [
+    'toilet-paper',
+    'toilet-paper-alt'
+  ]],
+  ['restroom', [
+    'toilet-paper',
+    'toilet-paper-alt'
+  ]],
+  ['toilet-paper-alt', [
+    'toilet-paper-alt'
+  ]],
+  ['tombstone', [
+    'tombstone'
+  ]],
+  ['cemetery', [
+    'tombstone',
+    'tombstone-alt'
+  ]],
+  ['grave', [
+    'tombstone',
+    'tombstone-alt'
+  ]],
+  ['tombstone-alt', [
+    'tombstone-alt'
+  ]],
   ['toolbox', [
     'toolbox'
   ]],
@@ -10318,6 +12158,9 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['shintoism', [
     'torii-gate'
+  ]],
+  ['tractor', [
+    'tractor'
   ]],
   ['trade-federation', [
     'trade-federation'
@@ -10362,8 +12205,39 @@ export const iconsMeta = new Map<string, string[]>([
   ['trash-o', [
     'trash-alt'
   ]],
+  ['treasure-chest', [
+    'treasure-chest'
+  ]],
+  ['booty', [
+    'treasure-chest'
+  ]],
+  ['hidden', [
+    'treasure-chest'
+  ]],
+  ['loot', [
+    'treasure-chest'
+  ]],
+  ['reward', [
+    'treasure-chest'
+  ]],
+  ['trap', [
+    'treasure-chest'
+  ]],
+  ['bark', [
+    'tree',
+    'tree-alt',
+    'trees'
+  ]],
+  ['forest', [
+    'tree',
+    'tree-alt',
+    'trees'
+  ]],
   ['tree-alt', [
     'tree-alt'
+  ]],
+  ['trees', [
+    'trees'
   ]],
   ['trello', [
     'trello'
@@ -10414,9 +12288,6 @@ export const iconsMeta = new Map<string, string[]>([
   ['tshirt', [
     'tshirt'
   ]],
-  ['cloth', [
-    'tshirt'
-  ]],
   ['tty', [
     'tty'
   ]],
@@ -10425,6 +12296,36 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['tumblr-square', [
     'tumblr-square'
+  ]],
+  ['meal', [
+    'turkey'
+  ]],
+  ['thanksgiving', [
+    'turkey'
+  ]],
+  ['turtle', [
+    'turtle'
+  ]],
+  ['cowabunga', [
+    'turtle'
+  ]],
+  ['donatello', [
+    'turtle'
+  ]],
+  ['leonardo', [
+    'turtle'
+  ]],
+  ['michaelangelo', [
+    'turtle'
+  ]],
+  ['raphael', [
+    'turtle'
+  ]],
+  ['shell', [
+    'turtle'
+  ]],
+  ['slow', [
+    'turtle'
   ]],
   ['tv', [
     'tv'
@@ -10479,6 +12380,9 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['undo-alt', [
     'undo-alt'
+  ]],
+  ['horn', [
+    'unicorn'
   ]],
   ['union', [
     'union'
@@ -10590,6 +12494,12 @@ export const iconsMeta = new Map<string, string[]>([
   ['graduation', [
     'user-graduate'
   ]],
+  ['user-injured', [
+    'user-injured'
+  ]],
+  ['sling', [
+    'user-injured'
+  ]],
   ['user-lock', [
     'user-lock'
   ]],
@@ -10617,9 +12527,6 @@ export const iconsMeta = new Map<string, string[]>([
   ['assassin', [
     'user-ninja'
   ]],
-  ['dangerous', [
-    'user-ninja'
-  ]],
   ['sneaky', [
     'user-ninja'
   ]],
@@ -10630,9 +12537,6 @@ export const iconsMeta = new Map<string, string[]>([
     'user-secret'
   ]],
   ['coat', [
-    'user-secret'
-  ]],
-  ['hat', [
     'user-secret'
   ]],
   ['incognito', [
@@ -10836,23 +12740,26 @@ export const iconsMeta = new Map<string, string[]>([
   ['volume-slash', [
     'volume-slash'
   ]],
-  ['slash', [
-    'volume-slash'
-  ]],
   ['volume-up', [
     'volume-up'
   ]],
   ['higher', [
     'volume-up'
   ]],
+  ['vr-cardboard', [
+    'vr-cardboard'
+  ]],
   ['vuejs', [
     'vuejs'
   ]],
-  ['walking', [
-    'walking'
-  ]],
   ['wallet', [
     'wallet'
+  ]],
+  ['wand', [
+    'wand'
+  ]],
+  ['wand-magic', [
+    'wand-magic'
   ]],
   ['warehouse', [
     'warehouse'
@@ -10888,11 +12795,23 @@ export const iconsMeta = new Map<string, string[]>([
   ['weixin', [
     'weixin'
   ]],
+  ['whale', [
+    'whale'
+  ]],
   ['whatsapp', [
     'whatsapp'
   ]],
   ['whatsapp-square', [
     'whatsapp-square'
+  ]],
+  ['wheat', [
+    'wheat'
+  ]],
+  ['argriculture', [
+    'wheat'
+  ]],
+  ['grain', [
+    'wheat'
   ]],
   ['whistle', [
     'whistle'
@@ -10915,6 +12834,12 @@ export const iconsMeta = new Map<string, string[]>([
   ['wikipedia-w', [
     'wikipedia-w'
   ]],
+  ['blow', [
+    'wind'
+  ]],
+  ['breeze', [
+    'wind'
+  ]],
   ['window-alt', [
     'window-alt'
   ]],
@@ -10930,6 +12855,14 @@ export const iconsMeta = new Map<string, string[]>([
   ['window-restore', [
     'window-restore'
   ]],
+  ['wine-bottle', [
+    'wine-bottle'
+  ]],
+  ['grapes', [
+    'wine-bottle',
+    'wine-glass',
+    'wine-glass-alt'
+  ]],
   ['wine-glass', [
     'wine-glass'
   ]],
@@ -10938,6 +12871,9 @@ export const iconsMeta = new Map<string, string[]>([
   ]],
   ['wix', [
     'wix'
+  ]],
+  ['wizards-of-the-coast', [
+    'wizards-of-the-coast'
   ]],
   ['wolf-pack-battalion', [
     'wolf-pack-battalion'
