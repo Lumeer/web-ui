@@ -2,6 +2,7 @@
   <table-primary-row *ngFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex;"
                      [cursor]="cursor | nextRowCursor : rowIndex"
                      [row]="row"
+                     [canManageConfig]="canManageConfig"
                      (unsetCursor)="unsetCursor()"
                      class="position-absolute"
                      [style.top.px]="table.rows | rowPositionTop : rowIndex"

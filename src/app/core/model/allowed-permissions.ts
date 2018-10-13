@@ -17,17 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
-import {TableColumn} from '../../../../../core/store/tables/table.model';
-import {getTableColumnWidth} from '../../../../../core/store/tables/table.utils';
-
-@Pipe({
-  name: 'columnWidth'
-})
-export class ColumnWidthPipe implements PipeTransform {
-
-  public transform(column: TableColumn, showHiddenColumns: boolean = false): number {
-    return getTableColumnWidth(column, showHiddenColumns);
-  }
-
+export interface AllowedPermissions {
+  readWithView?: boolean;
+  writeWithView?: boolean;
+  manageWithView?: boolean;
+  read?: boolean;
+  write?: boolean;
+  manage?: boolean;
 }

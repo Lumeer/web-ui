@@ -59,9 +59,12 @@ function userGroupRoles(user: UserModel, permissions: PermissionModel[]): string
 }
 
 export function authorHasRoleInView(view: ViewModel, collectionId: string, role: string): boolean {
+  return authorRolesInView(view, collectionId).includes(role.toUpperCase());
+}
+
+export function authorRolesInView(view: ViewModel, collectionId: string): string[] {
   const authorRights = view.authorRights || {};
-  const collectionRoles = authorRights[collectionId] || [];
-  return collectionRoles.includes(role.toUpperCase());
+  return authorRights[collectionId] || [];
 }
 
 export function generateCorrelationId(): string {

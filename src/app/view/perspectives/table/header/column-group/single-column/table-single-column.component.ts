@@ -42,6 +42,8 @@ import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-cha
 import {ColumnBackgroundPipe} from '../../../shared/pipes/column-background.pipe';
 import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
+import {EDITABLE_EVENT} from '../../../table-perspective.component';
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'table-single-column',
@@ -67,7 +69,13 @@ export class TableSingleColumnComponent implements OnChanges {
   public linkType: LinkTypeModel;
 
   @Input()
+  public canManageConfig: boolean;
+
+  @Input()
   public leaf: boolean;
+
+  @Input()
+  public allowedPermissions: AllowedPermissions;
 
   @ViewChild(TableEditableCellDirective)
   public editableCellDirective: TableEditableCellDirective;
@@ -331,6 +339,10 @@ export class TableSingleColumnComponent implements OnChanges {
     if (isKeyPrintable(event) && this.suggestions) {
       return this.suggestions.clearSelection();
     }
+  }
+
+  public onKeyDown(event: KeyboardEvent) {
+    event[EDITABLE_EVENT] = this.allowedPermissions && this.allowedPermissions.writeWithView;
   }
 
 }

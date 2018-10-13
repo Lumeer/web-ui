@@ -30,7 +30,7 @@ import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
 import {QueryModel} from '../../core/store/navigation/query.model';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {ViewConfigModel, ViewModel} from '../../core/store/views/view.model';
-import {PermissionsPipe} from '../../shared/pipes/permissions.pipe';
+import {PermissionsPipe} from '../../shared/pipes/permissions/permissions.pipe';
 import {userHasRoleInResource} from '../../shared/utils/resource.utils';
 import {Perspective} from '../perspectives/perspective';
 

@@ -21,7 +21,7 @@ import {ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnDestro
 
 import {Store} from '@ngrx/store';
 import {filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
-import {Subscription, combineLatest as observableCombineLatest, of} from 'rxjs';
+import {Subscription, combineLatest as observableCombineLatest} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -41,8 +41,7 @@ import {selectCurrentView} from '../../../core/store/views/views.state';
 import {PostItConfigModel, ViewModel} from '../../../core/store/views/view.model';
 import {PostItAction} from '../../../core/store/postit/postit.action';
 import {selectPostItsOrder, selectPostItsSize} from '../../../core/store/postit/postit.state';
-import {PermissionsPipe} from '../../../shared/pipes/permissions.pipe';
-import {Role} from '../../../core/model/role';
+import {CanManageConfigPipe} from '../../../shared/pipes/permissions/can-manage-config.pipe';
 
 @Component({
   selector: 'post-it-perspective',
@@ -92,7 +91,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<AppState>,
               private zone: NgZone,
-              private permissionsPipe: PermissionsPipe,
+              private canManageConfigPipe: CanManageConfigPipe,
               private changeDetector: ChangeDetectorRef,
               private documentUiService: DocumentUiService,
               private userSettingsService: UserSettingsService) {
@@ -220,7 +219,7 @@ export class PostItPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeToView() {
     const subscription = this.store.select(selectCurrentView).pipe(
-      mergeMap(view => view ? this.permissionsPipe.transform(view, Role.Manage) : of(true))
+      mergeMap(view => this.canManageConfigPipe.transform(view))
     ).subscribe(viewHasManageRole => {
       this.canManageConfig = viewHasManageRole;
       if (this.layout) {

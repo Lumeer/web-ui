@@ -1,6 +1,6 @@
 <div [contextMenu]="contextMenu"
      [style.background]="collection$ | async | columnBackground"
-     [style.width.px]="column | columnWidth"
+     [style.width.px]="column | columnWidth:true"
      (click)="onClick($event)"
      (mousedown)="onMouseDown($event)"
      title="Show hidden columns" i18n-title="@@table.header.show.hidden.columns"

@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Subscription} from 'rxjs';
+import {Subscription, Observable, BehaviorSubject} from 'rxjs';
 import {filter, first, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstanceModel} from '../../../core/store/link-instances/link-instance.model';
@@ -31,15 +31,18 @@ import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableConfig} from '../../../core/store/tables/tables.selector';
 import {selectTableById, selectTableCursor} from '../../../core/store/tables/tables.state';
-import {selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
 import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
 import {Perspective} from '../perspective';
 import CreateTable = TablesAction.CreateTable;
 import DestroyTable = TablesAction.DestroyTable;
+import {ViewModel} from '../../../core/store/views/view.model';
 
 declare let $: any;
+
+export const EDITABLE_EVENT = 'editableEvent';
 
 @Component({
   selector: 'table-perspective',
@@ -58,6 +61,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
   @HostBinding('id')
   public elementId: string;
 
+  public currentView$: Observable<ViewModel>;
   public table$ = new BehaviorSubject<TableModel>(null);
   public tableId: string;
 
@@ -76,6 +80,7 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
     this.initTable();
     this.subscribeToTable();
     this.subscribeToSelectedCursor();
+    this.currentView$ = this.store$.select(selectCurrentView);
   }
 
   private subscribeToSelectedCursor() {
@@ -197,6 +202,8 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const editableEvent = event[EDITABLE_EVENT];
+
     switch (event.code) {
       case KeyCode.ArrowLeft:
         return this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Left}));
@@ -211,14 +218,20 @@ export class TablePerspectiveComponent implements OnInit, OnDestroy {
       case KeyCode.Backspace:
       case KeyCode.Delete:
         event.preventDefault();
-        return this.store$.dispatch(new TablesAction.RemoveSelectedCell());
+        if (editableEvent) {
+          return this.store$.dispatch(new TablesAction.RemoveSelectedCell());
+        }
+        return;
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.F2:
         event.preventDefault();
-        return this.store$.dispatch(new TablesAction.EditSelectedCell({}));
+        if (editableEvent) {
+          return this.store$.dispatch(new TablesAction.EditSelectedCell({}));
+        }
+        return;
       default:
-        if (!isKeyPrintable(event) || event.ctrlKey || event.altKey || event.metaKey) {
+        if (!isKeyPrintable(event) || event.ctrlKey || event.altKey || event.metaKey || !editableEvent) {
           return;
         }
 

@@ -26,7 +26,7 @@ import {HtmlModifier} from '../../../../../shared/utils/html-modifier';
   host: {
     '[attr.spellcheck]': 'false',
     '[attr.tabindex]': 'selected ? 1 : null',
-    '[attr.contenteditable]': 'true',
+    '[attr.contenteditable]': '!readonly',
     '[attr.disabled]': '!edited',
     '[class.affected]': 'affected && !selected',
     '[class.selected]': 'selected',
@@ -53,7 +53,7 @@ export class TableEditableCellDirective implements OnChanges {
   public disabledCharacters: string[];
 
   @Input()
-  public readonly: boolean;
+  public readonly: boolean = true;
 
   @Input()
   public selected: boolean;

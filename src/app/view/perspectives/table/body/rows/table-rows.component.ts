@@ -44,6 +44,9 @@ export class TableRowsComponent implements OnChanges {
   @Input()
   public query: QueryModel;
 
+  @Input()
+  public canManageConfig: boolean;
+
   public rows$: Observable<TableConfigRow[]>;
 
   public constructor(public element: ElementRef,

@@ -6,7 +6,7 @@
        (scrolled)="onScrollDown($event)">
     <div class="my-2 d-flex align-items-center">
       <add-document
-        [disabled]="!(collections?.length === 1 && (collections[0] | collectionPermissions:'write' | async))"
+        [disabled]="!(collections?.length === 1 && (collections[0] | collectionPermissions | async)?.writeWithView)"
         [collection]="collections[0]"
         [query]="query"
         (createPostIt)="createPostIt($event)">

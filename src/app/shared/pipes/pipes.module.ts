@@ -29,7 +29,6 @@ import {LengthGreaterThanPipe} from './length-greater-than.pipe';
 import {LightenColorPipe} from './lighten-color.pipe';
 import {NativeDatePipe} from './native-date.pipe';
 import {PageSlicePipe} from './page-slice.pipe';
-import {PermissionsPipe} from './permissions.pipe';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PixelPipe} from './pixel.pipe';
 import {PrefixPipe} from './prefix.pipe';
@@ -43,13 +42,14 @@ import {UserRolesInResource} from './user-roles-in-resource.pipe';
 import {IncludesPipe} from './includes.pipe';
 import {CanActivatePagePipe} from './can-activate-page.pipe';
 import {PageEndIndexPipe} from './page-end-index.pipe';
-import { LogPipe } from './log.pipe';
-import { RemoveHtmlCommentsPipe } from './remove-html-comments.pipe';
-import {CollectionPermissionsPipe} from './collection-permissions.pipe';
+import {LogPipe} from './log.pipe';
+import {RemoveHtmlCommentsPipe} from './remove-html-comments.pipe';
+import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    PermissionsPipesModule
   ],
   declarations: [
     LightenColorPipe,
@@ -62,7 +62,6 @@ import {CollectionPermissionsPipe} from './collection-permissions.pipe';
     FilterPerspectivesPipe,
     EmptyPipe,
     EmptyQueryPipe,
-    PermissionsPipe,
     LengthGreaterThanPipe,
     DefaultAttributePipe,
     PageSlicePipe,
@@ -77,8 +76,7 @@ import {CollectionPermissionsPipe} from './collection-permissions.pipe';
     CanActivatePagePipe,
     PageEndIndexPipe,
     LogPipe,
-    RemoveHtmlCommentsPipe,
-    CollectionPermissionsPipe
+    RemoveHtmlCommentsPipe
   ],
   exports: [
     LightenColorPipe,
@@ -91,7 +89,6 @@ import {CollectionPermissionsPipe} from './collection-permissions.pipe';
     FilterPerspectivesPipe,
     EmptyPipe,
     EmptyQueryPipe,
-    PermissionsPipe,
     LengthGreaterThanPipe,
     DefaultAttributePipe,
     PageSlicePipe,
@@ -107,7 +104,7 @@ import {CollectionPermissionsPipe} from './collection-permissions.pipe';
     PageEndIndexPipe,
     LogPipe,
     RemoveHtmlCommentsPipe,
-    CollectionPermissionsPipe
+    PermissionsPipesModule
   ]
 })
 export class PipesModule {

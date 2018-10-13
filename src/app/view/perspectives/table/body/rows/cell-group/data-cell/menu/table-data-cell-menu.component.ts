@@ -30,6 +30,7 @@ import {TableModel} from '../../../../../../../../core/store/tables/table.model'
 import {createEmptyTableRow, findTableRow, splitRowPath} from '../../../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
 import {Direction} from '../../../../../../../../shared/direction';
+import {AllowedPermissions} from '../../../../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'table-data-cell-menu',
@@ -50,6 +51,9 @@ export class TableDataCellMenuComponent implements OnChanges {
 
   @Input()
   public table: TableModel; // TODO remove
+
+  @Input()
+  public allowedPermissions: AllowedPermissions;
 
   @Output()
   public edit = new EventEmitter();

@@ -21,10 +21,10 @@ import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {ResourceModel} from '../../core/model/resource.model';
-import {AppState} from '../../core/store/app.state';
-import {selectCurrentUserForWorkspace} from '../../core/store/users/users.state';
-import {userHasRoleInResource} from '../utils/resource.utils';
+import {ResourceModel} from '../../../core/model/resource.model';
+import {AppState} from '../../../core/store/app.state';
+import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
+import {userHasRoleInResource} from '../../utils/resource.utils';
 
 @Pipe({
   name: 'permissions',

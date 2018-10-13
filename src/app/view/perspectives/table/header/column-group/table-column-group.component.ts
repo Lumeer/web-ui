@@ -29,6 +29,7 @@ import {getTableElement, getTablePart} from '../../../../../core/store/tables/ta
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {deepArrayEquals} from '../../../../../shared/utils/array.utils';
 import {ColumnLayout} from '../../../../../shared/utils/layout/column-layout';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'table-column-group',
@@ -53,6 +54,12 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   @Input()
   public linkType: LinkTypeModel;
 
+  @Input()
+  public allowedPermissions: AllowedPermissions;
+
+  @Input()
+  public canManageConfig: boolean;
+
   private columnsLayout: ColumnLayout;
   public columnGroupId: string;
 
@@ -66,7 +73,7 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (this.hasColumnsChanged(changes) || this.hasPathChanged(changes)) {
+    if (this.hasColumnsChanged(changes) || this.hasPathChanged(changes) || this.canManageViewChanged(changes)) {
       this.refreshLayout();
     }
   }
@@ -85,6 +92,13 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
     return this.columns && !deepArrayEquals(this.columns, changes['columns'].previousValue);
   }
 
+  private canManageViewChanged(changes: SimpleChanges): boolean {
+    if (!changes.canManageView) {
+      return false;
+    }
+    return changes.canManageView.previousValue !== changes.canManageView.currentValue;
+  }
+
   private refreshLayout() {
     this.destroyLayout();
     this.initLayout();
@@ -97,7 +111,7 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
         horizontal: true,
         rounding: true
       },
-      dragEnabled: true,
+      dragEnabled: this.canManageConfig,
       dragAxis: 'x',
       dragStartPredicate: (item, event) => this.dragStartPredicate(item, event)
     }, this.zone, ({fromIndex, toIndex}) => this.onMoveColumn(fromIndex, toIndex));

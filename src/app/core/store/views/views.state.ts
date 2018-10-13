@@ -25,7 +25,7 @@ import {selectNavigation, selectPerspective, selectQuery} from '../navigation/na
 import {areQueriesEqual} from '../navigation/query.helper';
 import {selectPostItConfig} from '../postit/postit.state';
 import {selectTableConfig} from '../tables/tables.selector';
-import {ViewFilters} from './view.filters';
+import {filterViewsByQuery, sortViewsById} from './view.filters';
 import {ViewConfigModel, ViewCursor, ViewModel} from './view.model';
 import {areConfigsEqual} from './view.utils';
 
@@ -59,7 +59,7 @@ export const selectViewsLoaded = createSelector(selectViewsState, state => state
 export const selectViewConfig = createSelector(selectViewsState, views => views.config);
 export const selectViewSearchConfig = createSelector(selectViewConfig, config => config.search);
 export const selectViewTableConfig = createSelector(selectViewConfig, config => config.table);
-export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (views, query): ViewModel[] => ViewFilters.filterByQuery(views, query));
+export const selectViewsByQuery = createSelector(selectAllViews, selectQuery, (views, query): ViewModel[] => sortViewsById(filterViewsByQuery(views, query)));
 
 export const selectViewCursor = createSelector(selectViewsState, state => state.cursor);
 

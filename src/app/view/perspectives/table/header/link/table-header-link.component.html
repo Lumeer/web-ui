@@ -2,6 +2,7 @@
   <div class="text-white">&zwnj;</div>
   <div class="d-flex table-border-top flex-grow-2 align-items-stretch">
     <table-link-info [cursor]="cursor"
+                     [canManageView]="canManageConfig"
                      [linkType]="linkType$ | async"
                      [collections]="collections$ | async"
                      [switchingEnabled]="table | maxParts:3"

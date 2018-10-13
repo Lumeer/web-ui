@@ -38,7 +38,6 @@ import {QueryItemsConverter} from './query-item/query-items.converter';
 import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {queryItemToForm} from '../../../core/store/navigation/query.util';
 import {isNullOrUndefined} from 'util';
-import {PermissionsPipe} from '../../pipes/permissions.pipe';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {UserModel} from '../../../core/store/users/user.model';
 import {selectCurrentView} from '../../../core/store/views/views.state';
@@ -65,7 +64,6 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private currentUser: UserModel;
 
   constructor(private router: Router,
-              private permissionsPipe: PermissionsPipe,
               private store: Store<AppState>,
               private formBuilder: FormBuilder) {
   }

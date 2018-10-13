@@ -20,6 +20,7 @@
 import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {AttributeModel} from '../../../../../../../core/store/collections/collection.model';
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
+import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'table-column-context-menu',
@@ -40,6 +41,12 @@ export class TableColumnContextMenuComponent {
 
   @Input()
   public leaf: boolean;
+
+  @Input()
+  public canManageConfig: boolean;
+
+  @Input()
+  public allowedPermissions: AllowedPermissions;
 
   @Output()
   public add = new EventEmitter<boolean>();

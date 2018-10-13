@@ -43,6 +43,9 @@ export class TableLinkedRowComponent implements OnChanges {
   @Input()
   public rows: TableConfigRow[];
 
+  @Input()
+  public canManageConfig: boolean;
+
   public linkInstancePart$: Observable<TablePart>;
   public documentPart$: Observable<TablePart>;
 

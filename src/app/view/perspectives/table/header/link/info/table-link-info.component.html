@@ -10,11 +10,13 @@
 
 <context-menu #contextMenu>
   <ng-template (execute)="switchParts.emit()"
+               [enabled]="canManageView"
                contextMenuItem>
     <i class="fa fa-fw fa-exchange mr-1"></i>&nbsp;
     <span i18n="@@table.header.switch.parts">Switch collections order</span>
   </ng-template>
   <ng-template (execute)="removePart.emit()"
+               [enabled]="canManageView"
                contextMenuItem>
     <i class="fa fa-fw fa-plug mr-1"></i>&nbsp;
     <span i18n="@@table.header.remove.part">Disconnect collection</span>

@@ -40,6 +40,9 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
   @Input()
   public query: QueryModel;
 
+  @Input()
+  public canManageConfig: boolean;
+
   @ViewChild(TableRowsComponent)
   public rowsComponent: TableRowsComponent;
 

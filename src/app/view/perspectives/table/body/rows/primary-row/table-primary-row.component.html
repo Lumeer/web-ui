@@ -7,12 +7,14 @@
 <ng-container *ngIf="visible$ | async">
   <table-cell-group [cursor]="cursor"
                     [rows]="[row]"
-                    [style.width]="part$ | async | partWidth | pixel">
+                    [canManageConfig]="canManageConfig"
+                    [style.width]="part$ | async | partWidth:canManageConfig | pixel">
   </table-cell-group>
 
   <table-linked-rows *ngIf="hasNextParts$ | async"
                      [cursor]="cursor"
                      [rows]="[row]"
+                     [canManageConfig]="canManageConfig"
                      [striped]="striped">
   </table-linked-rows>
 

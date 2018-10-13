@@ -12,8 +12,7 @@
         <i *ngIf="!(page + 1 | canActivatePage:pageSize:data.linkRows.length)" class="fas fa-angle-double-right"></i>
       </div>
     </div>
-    <ng-container *ngIf="{write: (data.otherCollection | collectionPermissions:'write' | async)
-                            && (collection| collectionPermissions:'write' | async)} as permissions">
+    <ng-container *ngIf="linkType | linkTypePermissions | async as allowedPermissions">
       <div class="h-10em table-responsive">
         <table class="table table-sm" id="preview-results-table">
           <thead links-list-table-header
@@ -24,7 +23,7 @@
                  [usedDocumentIds]="data.linkRows | linkRowsDocumentIds"
                  [document]="document"
                  [linkType]="linkType"
-                 [readonly]="!permissions.write"
+                 [readonly]="!allowedPermissions.writeWithView"
                  [otherCollection]="data.otherCollection"
                  [linkRows]="data.linkRows | slice : (page * pageSize) : ((page + 1) * pageSize)"
                  (select)="select.emit($event)"
@@ -43,8 +42,8 @@
     </span>
       <button type="button"
               class="my-2 btn btn-sm btn-primary"
-              [ngClass]="permissions.write ? 'cursor-pointer' : 'cursor-not-allowed'"
-              [disabled]="!permissions.write"
+              [ngClass]="allowedPermissions.writeWithView ? 'cursor-pointer' : 'cursor-not-allowed'"
+              [disabled]="!allowedPermissions.writeWithView"
               (click)="createNewLinkedDocument()">
         <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;
         <span class="font-weight-bold" i18n="@@create.new.link">Create new linked Record</span>
