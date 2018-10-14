@@ -35,9 +35,6 @@ export class TableLinkCellComponent {
   public striped: boolean;
 
   @Output()
-  public collapse = new EventEmitter();
-
-  @Output()
-  public expand = new EventEmitter();
+  public toggle = new EventEmitter();
 
 }

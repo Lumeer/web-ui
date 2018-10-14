@@ -5,6 +5,15 @@
 </table-row-numbers>
 
 <ng-container *ngIf="visible$ | async">
+  <table-hierarchy-cell *ngIf="hierarchyMaxLevel$ | async as maxLevel"
+                        [cursor]="cursor"
+                        [level]="hierarchyLevel$ | async"
+                        [maxLevel]="maxLevel"
+                        (toggle)="onHierarchyToggle()"
+                        (click)="unsetCursor.emit()"
+                        class="table-border-right table-border-bottom px-1">
+  </table-hierarchy-cell>
+
   <table-cell-group [cursor]="cursor"
                     [rows]="[row]"
                     [canManageConfig]="canManageConfig"

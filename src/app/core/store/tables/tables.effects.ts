@@ -32,7 +32,7 @@ import {selectAllCollections, selectCollectionById, selectCollectionsLoaded} fro
 import {selectDocumentsByCustomQuery} from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
-import {selectDocumentsByIds} from '../documents/documents.state';
+import {selectDocumentsByIds, selectDocumentsDictionary} from '../documents/documents.state';
 import {findLinkInstanceByDocumentId, getOtherDocumentIdFromLinkInstance} from '../link-instances/link-instance.utils';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
 import {selectLinkInstancesByTypeAndDocuments} from '../link-instances/link-instances.state';
@@ -47,9 +47,9 @@ import {ViewsAction} from '../views/views.action';
 import {moveTableCursor, TableCursor} from './table-cursor';
 import {convertTablePartsToConfig} from './table.converter';
 import {DEFAULT_TABLE_ID, TableColumn, TableColumnType, TableCompoundColumn, TableConfigRow, TableHiddenColumn, TableModel, TablePart, TableSingleColumn} from './table.model';
-import {createCollectionPart, createEmptyTableRow, createLinkPart, createTableColumnsBySiblingAttributeIds, createTableRow, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
+import {isValidHierarchicalRowOrder, createCollectionPart, createEmptyTableRow, createLinkPart, createTableColumnsBySiblingAttributeIds, createTableRow, extendHiddenColumn, findTableColumn, findTableRow, getAttributeIdFromColumn, mergeHiddenColumns, resizeLastColumnChild, splitColumnPath} from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
-import {selectTablePart, selectTableRow, selectTableRows} from './tables.selector';
+import {selectTablePart, selectTableRow, selectTableRows, selectTableRowsWithHierarchyLevels} from './tables.selector';
 import {selectMoveTableCursorDown, selectTableById, selectTableCursor} from './tables.state';
 
 @Injectable()
@@ -462,7 +462,7 @@ export class TablesEffects {
     debounceTime(100), // otherwise unwanted parallel syncing occurs
     switchMap(action => combineLatest(
       this.store$.pipe(select(selectTableRows(action.payload.cursor.tableId))),
-      this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query))),
+      this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query))), // TODO maybe remove links from query
       this.store$.pipe(select(selectMoveTableCursorDown))
     ).pipe(
       first(),
@@ -498,7 +498,7 @@ export class TablesEffects {
           }));
         }
 
-        return actions;
+        return actions.concat(new TablesAction.OrderPrimaryRows({cursor, documents}));
       })
     ))
   );
@@ -555,6 +555,59 @@ export class TablesEffects {
             );
           }),
         );
+      })
+    ))
+  );
+
+  @Effect()
+  public indentRow$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.IndentRow>(TablesActionType.INDENT_ROW),
+    map(action => action.payload.cursor),
+    filter(cursor => cursor.partIndex === 0 && cursor.rowPath[0] > 0),
+    withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
+    mergeMap(([cursor, documentsMap]) => this.store$.pipe(
+      select(selectTableRowsWithHierarchyLevels(cursor.tableId)),
+      first(),
+      map((rows) => {
+        const rowIndex = cursor.rowPath[0];
+        const {row, level} = rows[rowIndex];
+        const {row: newParentRow = undefined} = rows.slice(0, cursor.rowPath[0]).reverse().find(hierarchyRow => hierarchyRow.level === level) || {};
+        const parentDocumentId = newParentRow && newParentRow.documentId;
+
+        if (row.documentId) {
+          const {collectionId, id: documentId} = documentsMap[row.documentId];
+          return new DocumentsAction.PatchMetaData({collectionId, documentId, metaData: {parentId: parentDocumentId}});
+        } else {
+          const updatedRow: TableConfigRow = {...row, parentDocumentId};
+          return new TablesAction.ReplaceRows({cursor, deleteCount: 1, rows: [updatedRow]});
+        }
+      })
+    ))
+  );
+
+  @Effect()
+  public outdentRow$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.OutdentRow>(TablesActionType.OUTDENT_ROW),
+    map(action => action.payload.cursor),
+    filter(cursor => cursor.partIndex === 0),
+    withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
+    mergeMap(([cursor, documentsMap]) => this.store$.pipe(
+      select(selectTableRowsWithHierarchyLevels(cursor.tableId)),
+      first(),
+      map((rows) => {
+        const rowIndex = cursor.rowPath[0];
+        const {row, level} = rows[rowIndex];
+        const {row: previousParentRow = undefined} = rows.slice(0, cursor.rowPath[0]).reverse().find(hierarchyRow => hierarchyRow.level === level - 1) || {};
+        const previousParentDocument = documentsMap[previousParentRow && previousParentRow.documentId];
+        const parentDocumentId = (previousParentDocument && previousParentDocument.metaData && previousParentDocument.metaData.parentId) || null;
+
+        if (row.documentId) {
+          const {collectionId, id: documentId} = documentsMap[row.documentId];
+          return new DocumentsAction.PatchMetaData({collectionId, documentId, metaData: {parentId: parentDocumentId}});
+        } else {
+          const updatedRow: TableConfigRow = {...row, parentDocumentId};
+          return new TablesAction.ReplaceRows({cursor, deleteCount: 1, rows: [updatedRow]});
+        }
       })
     ))
   );

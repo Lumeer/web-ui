@@ -18,6 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
+import {Dictionary} from 'lodash';
 import {Direction} from '../../../shared/direction';
 import {DocumentModel} from '../documents/document.model';
 import {LinkInstanceModel} from '../link-instances/link-instance.model';
@@ -59,6 +60,7 @@ export enum TablesActionType {
   ADD_PRIMARY_ROWS = '[Tables] Add Primary Rows',
   INIT_ROWS = '[Tables] Init Rows',
   CLEAN_ROWS = '[Tables] Clean Rows',
+  ORDER_PRIMARY_ROWS = '[Tables] Order Primary Rows',
 
   ADD_ROWS = '[Tables] Add Rows',
   ADD_LINKED_ROWS = '[Tables] Add Linked Rows',
@@ -68,8 +70,11 @@ export enum TablesActionType {
   REMOVE_ROW = '[Tables] Remove Row',
   SELECT_ROW = '[Tables] Select Row',
 
-  EXPAND_ROWS = '[Tables] Expand Rows',
-  COLLAPSE_ROWS = '[Tables] Collapse Rows',
+  INDENT_ROW = '[Tables] Indent Row',
+  OUTDENT_ROW = '[Tables] Outdent Row',
+  TOGGLE_CHILD_ROWS = '[Tables] Toggle Child Rows',
+
+  TOGGLE_LINKED_ROWS = '[Tables] Toggle Linked Rows',
 
   EDIT_SELECTED_CELL = '[Tables] Edit Selected Cell',
   REMOVE_SELECTED_CELL = '[Tables] Remove Selected Cell',
@@ -247,7 +252,13 @@ export namespace TablesAction {
   export class AddPrimaryRows implements Action {
     public readonly type = TablesActionType.ADD_PRIMARY_ROWS;
 
-    public constructor(public payload: { cursor: TableBodyCursor, rows: TableConfigRow[], append?: boolean }) {
+    public constructor(public payload: {
+      cursor: TableBodyCursor,
+      rows: TableConfigRow[],
+      append?: boolean,
+      documentsMap?: Dictionary<DocumentModel>,
+      below?: boolean
+    }) {
     }
   }
 
@@ -297,15 +308,42 @@ export namespace TablesAction {
     }
   }
 
-  export class CollapseRows implements Action {
-    public readonly type = TablesActionType.COLLAPSE_ROWS;
+  export class OrderPrimaryRows implements Action {
+    public readonly type = TablesActionType.ORDER_PRIMARY_ROWS;
+
+    public constructor(public payload: { cursor: TableBodyCursor, documents: DocumentModel[] }) {
+    }
+  }
+
+  export class IndentRow implements Action {
+    public readonly type = TablesActionType.INDENT_ROW;
 
     public constructor(public payload: { cursor: TableBodyCursor }) {
     }
   }
 
-  export class ExpandRows implements Action {
-    public readonly type = TablesActionType.EXPAND_ROWS;
+  export class OutdentRow implements Action {
+    public readonly type = TablesActionType.OUTDENT_ROW;
+
+    public constructor(public payload: { cursor: TableBodyCursor }) {
+    }
+  }
+
+  /**
+   * Collapses or expands child rows in a hierarchical table.
+   */
+  export class ToggleChildRows implements Action {
+    public readonly type = TablesActionType.TOGGLE_CHILD_ROWS;
+
+    public constructor(public payload: { cursor: TableBodyCursor }) {
+    }
+  }
+
+  /**
+   * Collapses or expands linked rows in a hierarchical table.
+   */
+  export class ToggleLinkedRows implements Action {
+    public readonly type = TablesActionType.TOGGLE_LINKED_ROWS;
 
     public constructor(public payload: { cursor: TableBodyCursor }) {
     }
@@ -348,9 +386,9 @@ export namespace TablesAction {
     AddColumn | SplitColumn | ReplaceColumns | RemoveColumn |
     HideColumn | ShowColumns |
     MoveColumn | ResizeColumn | InitColumn |
-    SyncPrimaryRows | SyncLinkedRows |
+    SyncPrimaryRows | SyncLinkedRows | OrderPrimaryRows |
     AddPrimaryRows | AddLinkedRows | InitRows | CleanRows | ReplaceRows | RemoveRow |
-    CollapseRows | ExpandRows |
+    IndentRow | OutdentRow | ToggleChildRows | ToggleLinkedRows |
     SetCursor | MoveCursor |
     EditSelectedCell | RemoveSelectedCell | SetEditedAttribute;
 }

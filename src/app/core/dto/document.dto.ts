@@ -27,8 +27,11 @@ export interface DocumentDto {
   createdBy?: string;
   updatedBy?: string;
   dataVersion?: number;
-  data: { [attributeId: string]: any };
-  metaData?: { [key: string]: any };
+  data: DocumentDataDto;
+  metaData?: DocumentMetaDataDto;
   favorite?: boolean;
 
 }
+
+export type DocumentDataDto = { [attributeId: string]: any };
+export type DocumentMetaDataDto = { [key: string]: any };

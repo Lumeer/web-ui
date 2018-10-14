@@ -72,12 +72,8 @@ export class TableLinkedRowsComponent implements OnChanges {
     );
   }
 
-  public onExpand() {
-    this.store$.dispatch(new TablesAction.ExpandRows({cursor: this.cursor}));
-  }
-
-  public onCollapse() {
-    this.store$.dispatch(new TablesAction.CollapseRows({cursor: this.cursor}));
+  public onToggle() {
+    this.store$.dispatch(new TablesAction.ToggleLinkedRows({cursor: this.cursor}));
   }
 
   public trackByLinkInstanceId(index: number, linkedRow: TableConfigRow): string | object {

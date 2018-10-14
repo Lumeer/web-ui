@@ -2,16 +2,16 @@
   <div [class.striped]="striped"
        class="link-cell h-100">
     <a *ngIf="row | expandable"
-       (click)="expand.emit()"
-       (keyup.enter)="expand.emit()"
+       (click)="toggle.emit()"
+       (keyup.enter)="toggle.emit()"
        class="d-flex h-100 m-0"
        title="Expand"
        i18n-title="@@table.link.expand">
       <i class="fa fa-expand m-auto"></i>
     </a>
     <a *ngIf="row | collapsible"
-       (click)="collapse.emit()"
-       (keyup.enter)="collapse.emit()"
+       (click)="toggle.emit()"
+       (keyup.enter)="toggle.emit()"
        class="d-flex h-100 m-0"
        title="Collapse"
        i18n-title="@@table.link.collapse">

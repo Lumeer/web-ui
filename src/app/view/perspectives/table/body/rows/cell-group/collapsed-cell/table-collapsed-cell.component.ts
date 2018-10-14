@@ -101,7 +101,7 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
 
   public onExpand() {
     const cursor = {...this.cursor, rowPath: this.cursor.rowPath.slice(0, -1)};
-    this.store$.dispatch(new TablesAction.ExpandRows({cursor}));
+    this.store$.dispatch(new TablesAction.ToggleLinkedRows({cursor}));
   }
 
   public onMouseDown() {

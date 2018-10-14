@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Dictionary} from 'lodash';
 import {DocumentModel} from './document.model';
 import {ConditionType} from '../navigation/query.model';
 import {QueryConverter} from '../navigation/query.converter';
@@ -81,4 +82,14 @@ export function generateDocumentData(collection: CollectionModel, filters: strin
   }
 
   return data;
+}
+
+export function calculateDocumentHierarchyLevel(documentId: string, documentIdsFilter: Set<string>, documentsMap: Dictionary<DocumentModel>): number {
+  if (!documentId || !documentIdsFilter.has(documentId)) {
+    return 0;
+  }
+
+  const document = documentsMap[documentId];
+  const parentDocumentId = document && document.metaData && document.metaData.parentId;
+  return 1 + calculateDocumentHierarchyLevel(parentDocumentId, documentIdsFilter, documentsMap);
 }

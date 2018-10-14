@@ -118,6 +118,8 @@ export interface TableConfigRow {
   documentId?: string;
   linkInstanceId?: string;
 
+  parentDocumentId?: string;
+
   linkedRows: TableConfigRow[];
   expanded?: boolean;
 
