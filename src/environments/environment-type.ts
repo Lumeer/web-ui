@@ -26,4 +26,5 @@ export interface Environment extends EnvironmentVariables {
   production: boolean;
   storeDevtools: boolean;
   name?: string;
+  paymentGw: string;
 }

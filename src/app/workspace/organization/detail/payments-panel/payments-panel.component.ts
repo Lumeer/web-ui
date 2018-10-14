@@ -171,11 +171,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   public ngAfterViewInit(): void {
     const script = this.document.createElement('script');
     script.type = 'text/javascript';
-    if (environment.production) {
-      script.src = 'https://gate.gopay.com/gp-gw/js/embed.js';
-    } else {
-      script.src = 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js';
-    }
+    script.src = environment.paymentGw;
     this.elementRef.nativeElement.appendChild(script);
   }
 }
