@@ -142,7 +142,7 @@ export class InputBoxComponent implements OnInit {
 
   public onInterimNewValue(textContent: string | null) {
     if (this.emitAllChanges) {
-      this.onNewValue(textContent);
+      this.newValue.emit(textContent);
     }
   }
 

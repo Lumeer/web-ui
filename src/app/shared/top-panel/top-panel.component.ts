@@ -60,6 +60,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, Afte
     this.workspace$ = this.store$.select(selectWorkspace);
 
     this.store$.dispatch(new OrganizationsAction.Get());
+    this.store$.dispatch(new OrganizationsAction.GetCodes());
   }
 
   public ngOnChanges(changes: SimpleChanges) {

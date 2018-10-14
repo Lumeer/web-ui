@@ -19,11 +19,11 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable, Subscription} from 'rxjs';
 
-import {filter, map, take} from 'rxjs/operators';
+import {filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {isNullOrUndefined} from 'util';
 import {Query} from '../../core/dto';
 import {ResourceType} from '../../core/model/resource-type';
@@ -31,7 +31,7 @@ import {NotificationService} from '../../core/notifications/notification.service
 import {AppState} from '../../core/store/app.state';
 import {CollectionModel} from '../../core/store/collections/collection.model';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
-import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
+import {selectCollectionByWorkspace, selectCollectionNames} from '../../core/store/collections/collections.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {QueryConverter} from '../../core/store/navigation/query.converter';
@@ -46,6 +46,7 @@ import {Perspective} from '../../view/perspectives/perspective';
 export class CollectionSettingsComponent implements OnInit, OnDestroy {
 
   public collection: CollectionModel;
+  public collectionNames$: Observable<string[]>;
   public userCount$: Observable<number>;
 
   private workspace: Workspace;
@@ -155,6 +156,11 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
         .subscribe(url => this.previousUrl = url)
     );
 
+    this.store$.dispatch(new CollectionsAction.GetNames());
+    this.collectionNames$ = this.store$.pipe(select(selectCollectionNames),
+      withLatestFrom(this.store$.pipe(select(selectCollectionByWorkspace))),
+      map(([names, collection]) => names && names.filter(name => name !== collection.name) || [])
+    );
   }
 
 }
