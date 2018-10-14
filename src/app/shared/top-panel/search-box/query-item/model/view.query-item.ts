@@ -21,6 +21,7 @@ import {ViewModel} from '../../../../../core/store/views/view.model';
 import {perspectiveIconsMap} from '../../../../../view/perspectives/perspective';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
+import {CollectionQueryItem} from './collection.query-item';
 
 export class ViewQueryItem implements QueryItem {
 
@@ -40,6 +41,10 @@ export class ViewQueryItem implements QueryItem {
 
   public get value(): string {
     return this.view.code;
+  }
+
+  public dependsOn(queryItem: QueryItem): boolean {
+    return false;
   }
 
 }

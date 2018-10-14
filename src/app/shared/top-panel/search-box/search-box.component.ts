@@ -20,10 +20,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {of, combineLatest as observableCombineLatest, Observable, Subscription, BehaviorSubject} from 'rxjs';
-import {Store} from '@ngrx/store';
+import {BehaviorSubject, combineLatest as observableCombineLatest, Observable, of, Subscription} from 'rxjs';
+import {select, Store} from '@ngrx/store';
 import {ViewQueryItem} from './query-item/model/view.query-item';
-import {filter, flatMap, map} from 'rxjs/operators';
+import {filter, flatMap, map, tap} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {selectAllCollections, selectCollectionsLoaded} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../../core/store/link-types/link-types.state';
@@ -43,6 +43,8 @@ import {UserModel} from '../../../core/store/users/user.model';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {userHasManageRoleInResource} from '../../utils/resource.utils';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
+import {AttributeQueryItem} from './query-item/model/attribute.query-item';
+import {LinkQueryItem} from './query-item/model/link.query-item';
 
 const allowAutomaticSubmission = true;
 
@@ -62,6 +64,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private workspace: Workspace;
   private perspective: Perspective;
   private currentUser: UserModel;
+  private queryData: QueryData;
 
   constructor(private router: Router,
               private store: Store<AppState>,
@@ -76,17 +79,18 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private subscribeViewData() {
-    this.subscriptions.add(this.store.select(selectCurrentUser).subscribe(user => this.currentUser = user));
-    this.subscriptions.add(this.store.select(selectCurrentView).subscribe(view => this.currentView$.next(view)));
+    this.subscriptions.add(this.store.pipe(select(selectCurrentUser)).subscribe(user => this.currentUser = user));
+    this.subscriptions.add(this.store.pipe(select(selectCurrentView)).subscribe(view => this.currentView$.next(view)));
   }
 
   private subscribeToQuery() {
-    const querySubscription = this.store.select(selectQuery).pipe(
+    const querySubscription = this.store.pipe(select(selectQuery)).pipe(
       filter(query => !isNullOrUndefined(query)),
       flatMap(query => observableCombineLatest(
         of(query),
         this.loadData()
       )),
+      tap(([query, data]) => this.queryData = data),
       map(([query, data]) => new QueryItemsConverter(data).fromQuery(query)),
       filter(queryItems => this.itemsChanged(queryItems))
     ).subscribe(queryItems => {
@@ -97,7 +101,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNavigation() {
-    const navigationSubscription = this.store.select(selectNavigation)
+    const navigationSubscription = this.store.pipe(select(selectNavigation))
       .subscribe(navigation => {
         this.workspace = navigation.workspace;
         this.perspective = navigation.perspective;
@@ -107,10 +111,10 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   private loadData(): Observable<QueryData> {
     return observableCombineLatest(
-      this.store.select(selectAllCollections),
-      this.store.select(selectAllLinkTypes),
-      this.store.select(selectCollectionsLoaded),
-      this.store.select(selectLinkTypesLoaded)
+      this.store.pipe(select(selectAllCollections)),
+      this.store.pipe(select(selectAllLinkTypes)),
+      this.store.pipe(select(selectCollectionsLoaded)),
+      this.store.pipe(select(selectLinkTypesLoaded))
     ).pipe(
       filter(([collections, linkTypes, collectionsLoaded, linkTypesLoaded]) => collectionsLoaded && linkTypesLoaded),
       map(([collections, linkTypes]) => {
@@ -127,20 +131,56 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   public onAddQueryItem(queryItem: QueryItem) {
-    this.queryItems.push(queryItem);
-    this.queryItemsControl.push(queryItemToForm(queryItem));
+    this.addPrerequisiteItems(queryItem);
+    this.addQueryItem(queryItem);
 
     this.onQueryItemsChanged();
+  }
+
+  private addPrerequisiteItems(queryItem: QueryItem) {
+    const prerequisiteItems = this.getPrerequisiteQueryItems(queryItem);
+    prerequisiteItems.filter(item => !this.isQueryItemPresented(item))
+      .forEach(item => this.addQueryItem(item));
+  }
+
+  private getPrerequisiteQueryItems(queryItem: QueryItem): QueryItem[] {
+    switch (queryItem.type) {
+      case QueryItemType.Attribute: {
+        const collectionId = (queryItem as AttributeQueryItem).collection.id;
+        return new QueryItemsConverter(this.queryData).createCollectionItems([collectionId]);
+      }
+      case QueryItemType.Link: {
+        const collectionId = (queryItem as LinkQueryItem).collectionIds[0];
+        return new QueryItemsConverter(this.queryData).createCollectionItems([collectionId]);
+      }
+      default:
+        return [];
+    }
+  }
+
+  private isQueryItemPresented(queryItem: QueryItem): boolean {
+    return !!this.queryItems.find(item => item.value === queryItem.value);
+  }
+
+  private addQueryItem(queryItem: QueryItem) {
+    this.queryItems.push(queryItem);
+    this.queryItemsControl.push(queryItemToForm(queryItem));
+  }
+
+  public onRemoveLastQueryItem() {
+    const lastIndex = this.queryItems.length - 1;
+    this.onRemoveQueryItem(lastIndex);
   }
 
   public onRemoveQueryItem(index: number) {
     if (this.shouldInvalidateQuery()) {
       this.store.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: {}}));
     } else {
-      this.queryItems.splice(index, 1);
-      this.queryItems = [...this.queryItems];
-      this.queryItemsControl.removeAt(index);
+      const queryItemToRemove = this.queryItems[index];
+      this.removeQueryItem(index);
+      this.removeDependentItems(queryItemToRemove);
 
+      this.queryItems = [...this.queryItems];
       this.onQueryItemsChanged();
     }
   }
@@ -150,9 +190,18 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     return currentView && !userHasManageRoleInResource(this.currentUser, currentView);
   }
 
-  public onRemoveLastQueryItem() {
-    const lastIndex = this.queryItems.length - 1;
-    this.onRemoveQueryItem(lastIndex);
+  private removeQueryItem(index: number) {
+    this.queryItems.splice(index, 1);
+    this.queryItemsControl.removeAt(index);
+  }
+
+  private removeDependentItems(removedQueryItem: QueryItem) {
+    for (let i = this.queryItems.length - 1; i >= 0; i--) {
+      const queryItem = this.queryItems[i];
+      if (queryItem.dependsOn(removedQueryItem)) {
+        this.removeQueryItem(i);
+      }
+    }
   }
 
   public onQueryItemsChanged() {

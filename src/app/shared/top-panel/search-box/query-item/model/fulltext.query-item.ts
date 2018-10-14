@@ -19,6 +19,7 @@
 
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
+import {CollectionQueryItem} from './collection.query-item';
 
 export class FulltextQueryItem implements QueryItem {
 
@@ -29,6 +30,10 @@ export class FulltextQueryItem implements QueryItem {
 
   public get value(): string {
     return this.text;
+  }
+
+  public dependsOn(queryItem: QueryItem): boolean {
+    return false;
   }
 
 }
