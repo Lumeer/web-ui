@@ -1,13 +1,13 @@
 language: java
-sudo: false
+sudo: required
 dist: trusty
-#cache:
-#  directories:
-#    - ~/.npm
-#    - ~/.cache
-#    - ~/.engine
-#    - ~/.m2
-#  timeout: 900
+cache:
+  directories:
+    - ~/.npm
+    - ~/.cache
+    - ~/.engine
+    - ~/.m2
+  timeout: 900
 jdk:
   - oraclejdk10
 addons:
