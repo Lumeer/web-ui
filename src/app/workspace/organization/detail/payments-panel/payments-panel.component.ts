@@ -35,8 +35,9 @@ import {selectLastCreatedPayment} from '../../../../core/store/organizations/pay
 import {DatePipe, DOCUMENT} from '@angular/common';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import {ServiceLevelType} from '../../../../core/dto/service-level-type';
-import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
 import {NotificationService} from '../../../../core/notifications/notification.service';
+import {environment} from '../../../../../environments/environment';
+import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
 
 @Component({
   selector: 'payments-panel',
@@ -150,7 +151,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   public callGoPay($event: string) {
-    const message = this.i18n(
+    /*const message = this.i18n(
       {
         id: 'organization.payments.disabled.message',
         value: `Thank you for your interest. Payments not available. We'll get in touch with you soon!`
@@ -160,17 +161,21 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
 
     this.notificationService.confirm(message, title, [
       {text: okButtonText, bold: true},
-    ]);
+    ]);*/
 
     if (!isNullOrUndefined($event) && $event !== '') {
-      //(window as any)._gopay.checkout({gatewayUrl: $event, inline: true});
+      (window as any)._gopay.checkout({gatewayUrl: $event, inline: true});
     }
   }
 
   public ngAfterViewInit(): void {
     const script = this.document.createElement('script');
     script.type = 'text/javascript';
-    script.src = 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js';
+    if (environment.production) {
+      script.src = 'https://gate.gopay.com/gp-gw/js/embed.js';
+    } else {
+      script.src = 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js';
+    }
     this.elementRef.nativeElement.appendChild(script);
   }
 }
